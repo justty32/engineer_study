@@ -320,6 +320,9 @@ $$t_{cq}+t_{logic,min} \ge t_{h}+\delta$$
 - **實體設計進階**：電源完整性與 IR drop、訊號完整性與串擾分析、布局繞線最佳化、時脈網格設計。
 - **客製與類比混合**：全客製佈局、記憶體編譯器（SRAM compiler）、類比/混合訊號（AMS）整合與雜訊隔離。
 - **驗證方法學**：UVM、形式驗證（formal）、等價性檢查（LEC）、模擬加速與硬體仿真（emulation）。
+- **可製造性設計（DFM, Design for Manufacturability）**：在佈局階段納入製程變異考量，包括 litho-friendly layout（限制單向多晶矽/金屬方向）、CMP 金屬密度填充、冗餘通孔（redundant via）插入與 critical area 最小化，以提高良率。
+- **3D IC 與矽通孔（TSV）**：垂直堆疊多層晶片並以穿透矽基板的金屬通孔連接，可大幅縮短互連距離、降低延遲與功耗、實現異質晶片整合（邏輯＋記憶體＋感測器）；設計挑戰含熱管理、TSV 佔用面積、測試存取與時序/電源協同設計。
+- **先進封裝（advanced packaging）**：2.5D 矽中介層（interposer）、扇出型晶圓級封裝（FOWLP）、嵌入式多晶片互連橋接（EMIB）等技術，在封裝層實現高密度晶片間互連，是 chiplet 生態系的關鍵支撐。
 - **NoC 與 SoC 整合**：晶片網路（Network-on-Chip）、IP 整合、UPF 電源意圖描述。
 
 ## 11. 博士研究方向（列表）
@@ -328,6 +331,8 @@ $$t_{cq}+t_{logic,min} \ge t_{h}+\delta$$
 - 次／近臨界與超低電壓運算，最小能量點設計與韌性電路。
 - 機器學習加速器與記憶體內運算（in-memory computing）、類比運算電路。
 - 3D IC 與異質整合（chiplet、矽中介層、TSV）下的熱、功率、時序協同設計。
+- 單晶 3D 整合（monolithic 3D integration）：以低熱預算製程逐層建構電晶體與互連（而非 bonding 預製晶片），實現奈米級垂直互連密度，打破傳統 TSV 的對準與間距限制。
+- Chiplet 生態系：標準化晶片間互連介面（UCIe、BoW）、電源管理、熱模擬與測試策略的系統級設計方法。
 - 變異性與可靠度：老化（aging, BTI/HCI）、製程變異下的統計設計與自我修復。
 - 近似計算（approximate computing）與隨機計算的能效取捨。
 - 自動化／ML 驅動的 EDA：用機器學習做佈局繞線、時序最佳化、設計空間探索。

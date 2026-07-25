@@ -161,6 +161,9 @@ CAD（電腦輔助設計）讓上述工作從手繪走向電腦。對軟體背�
 - **生成式設計與拓樸最佳化（generative design / topology optimization）**：給定載重與限制，讓演算法生成最省材料的形狀。
 - **MBD（model-based definition）**：把公差、GD&T、註記直接掛在 3D 模型上，逐步取代 2D 工程圖。
 - **GPS 與公差堆疊分析（tolerance stack-up）**：以統計 / 最壞情況分析裝配公差累積。
+- **GD&T 進階公差設計**：最大實體條件（MMC）／最小實體條件（LMC）的 bonus tolerance 策略、基準參照框架（DRF）的最優設計、功能檢具設計，將幾何公差選擇與成本權衡系統化。
+- **VR／AR 輔助設計與審查**：在虛擬／擴增實境中檢視 3D 模型、進行組裝模擬與人因評估，縮短設計審查迴圈。
+- **製造業數位孿生（digital twin for manufacturing）**：以 CAD 模型為核心，串接即時製程數據與品質回饋，實現設計–製造閉迴路優化。
 
 ## 博士研究方向（列表）
 
@@ -170,6 +173,8 @@ CAD（電腦輔助設計）讓上述工作從手繪走向電腦。對軟體背�
 - 公差合成與成本最佳化的多目標方法
 - 跨領域 CAD/CAE/CAM 整合與數位主線（digital thread）
 - 點雲到 B-rep 的高保真逆向重建
+- 計算幾何與網格生成（computational geometry for meshing）：Delaunay 三角剖分、Voronoi 圖、幾何簡化與修復之演算法基礎
+- 拓樸最佳化與 CAD 無縫整合：由最佳化密度場自動重建參數化 CAD 曲面，實現最佳化→設計→製造的數位主線閉環
 
 ## 參考來源
 

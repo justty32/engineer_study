@@ -198,13 +198,13 @@ CAE 結果可信度的兩道關卡，務必分清：
 
 ## 碩士層級延伸（簡短）
 
-- **非線性 FEM**：大變形、塑性、超彈性、接觸與摩擦——方程變非線性，需 Newton–Raphson 迭代。
-- **顯式動力學（explicit dynamics）**：碰撞、衝擊、衝壓成形（如 LS-DYNA），用顯式時間積分。
-- **高保真紊流**：LES、DES、DNS 的數值方法與次格尺度模型。
-- **多物理與耦合**：流固耦合（FSI）、熱—結構—流體耦合、電磁—熱耦合。
-- **降階模型（ROM）與代理模型**：用少數模態或機器學習加速重複分析與最佳化。
-- **自適應網格（adaptive mesh refinement）**：依誤差估計自動加密網格。
-- **拓樸最佳化（topology optimization）**：以 FEM 為核心，自動演化出最省材料的結構形狀。
+- **非線性 FEM**：大變形（幾何非線性，Updated / Total Lagrangian 描述）、塑性（$J_2$ 流動理論）、超彈性（Mooney–Rivlin、Ogden 等材料模型）、接觸與摩擦（罰函數法／Lagrange 乘子法、接觸對搜尋）——方程變非線性，需 Newton–Raphson 迭代並搭配步長控制（弧長法 Riks method 穿越極限點）。
+- **顯式動力學（explicit dynamics）**：以中心差分顯式時間積分處理極短時程的碰撞、衝擊、衝壓成形、爆炸（如 LS-DYNA、Abaqus/Explicit），條件穩定（CFL 限制），時間步長由最小元素尺寸與材料音速決定。
+- **多物理耦合**：雙向流固耦合（FSI，以 Arbitrary Lagrangian-Eulerian 或 immersed boundary 處理移動邊界）、熱—應力耦合（引擎、電子封裝）、壓電耦合、聲—結構耦合。
+- **拓樸最佳化（topology optimization）**：以 SIMP（固體等向材料懲罰法）或水平集法（level-set）在設計域內自動分配材料，最小化柔度（最大化剛度）或滿足頻率／熱傳目標，輸出 CAD 可解讀的幾何。
+- **CFD 紊流模型比較與選用**：從工業主力 $k$-$\omega$ SST（近壁精準、分離流好）到 RSM（雷諾應力模型，針對強非等向性流），再到 LES（大渦模擬，解析大尺度、模擬小尺度，對非穩態分離流與氣動噪音遠優於 RANS）、DES（混合 RANS-LES，近壁 RANS／遠場 LES）與 DNS（直接數值模擬，解析所有尺度，$Re$ 受限於算力），各模型的成本–精度–適用場景對照。
+- **降階模型（ROM）與代理模型**：用少數模態（POD）或機器學習（高斯過程、神經網路）建立快速近似模型，加速重複分析、最佳化與即時數位孿生。
+- **自適應網格（adaptive mesh refinement）**：依誤差估計（後驗誤差，如 Zienkiewicz–Zhu 法）自動加密應力梯度大處的網格。
 
 ## 博士研究方向（列表）
 
@@ -216,8 +216,11 @@ CAE 結果可信度的兩道關卡，務必分清：
 - 等幾何分析（isogeometric analysis, IGA，CAD 與 FEM 整合）
 - 自適應網格與後驗誤差估計（a posteriori error estimation）
 - 無網格法（meshfree / particle methods，如 SPH、PFEM）
+- 相場法（phase-field methods）：以彌散界面描述裂紋擴展、相變、晶粒成長等不連續現象，無需顯式追蹤界面，在斷裂力學與微結構模擬中快速發展
+- 資料驅動 CAE（data-driven CAE）：以實驗或高保真模擬資料直接取代經驗本構模型，或建立代理模型加速重複分析
+- 浸入邊界法（immersed boundary methods）：將複雜幾何嵌入背景卡式網格中，免除貼體網格生成瓶頸，在流固耦合與移動邊界問題中具獨特優勢
 - 拓樸最佳化與生成式設計
-- 機器學習加速／取代 PDE 求解（physics-informed neural networks, PINN；神經算子）
+- 機器學習加速／取代 PDE 求解（physics-informed neural networks, PINN；神經算子 Neural Operator／FNO）
 
 ## 參考來源
 
