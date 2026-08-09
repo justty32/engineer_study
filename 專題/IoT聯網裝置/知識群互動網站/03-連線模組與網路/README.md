@@ -4,7 +4,7 @@
 
 八個模組涵蓋 bearer 初篩、host 介面、AT/URC、退避、會話、資料預算、keepalive/PSM 與 supervisor。runtime 僅三個靜態檔案。
 
-預定 GitHub Pages：<https://justty32.github.io/engineer_study/iot-connectivity/>
+GitHub Pages：<https://justty32.github.io/engineer_study/iot-connectivity/>
 
 ```bash
 python3 -m http.server 4177 --directory '專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路'

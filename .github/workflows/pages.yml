@@ -23,6 +23,9 @@ on:
       - "專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路/index.html"
       - "專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路/styles.css"
       - "專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路/app.js"
+      - "專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC/index.html"
+      - "專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC/styles.css"
+      - "專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC/app.js"
   workflow_dispatch:
 
 permissions:
@@ -94,6 +97,16 @@ jobs:
             cp "$connectivity_site/index.html" _site/iot-connectivity/index.html
             cp "$connectivity_site/styles.css" _site/iot-connectivity/styles.css
             cp "$connectivity_site/app.js" _site/iot-connectivity/app.js
+          fi
+
+          rf_site='專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC'
+          if [ -f "$rf_site/index.html" ] && \
+            [ -f "$rf_site/styles.css" ] && \
+            [ -f "$rf_site/app.js" ]; then
+            mkdir -p _site/iot-rf-antenna
+            cp "$rf_site/index.html" _site/iot-rf-antenna/index.html
+            cp "$rf_site/styles.css" _site/iot-rf-antenna/styles.css
+            cp "$rf_site/app.js" _site/iot-rf-antenna/app.js
           fi
 
       - name: Upload Pages artifact

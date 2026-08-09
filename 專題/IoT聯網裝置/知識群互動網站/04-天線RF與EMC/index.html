@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IoT 天線、RF、EMC 與法規邊界</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>IoT 天線、RF、EMC 與法規邊界</h1>
+    <p>以工程模型檢視波長、鏈路、匹配、佈局、天線、失諧、EMI 與法規 gate。</p>
+    <nav aria-label="模組導覽">
+      <a data-nav="wave-region" href="#wave-region">波長與遠場</a>
+      <a data-nav="link-budget" href="#link-budget">鏈路預算</a>
+      <a data-nav="impedance-match" href="#impedance-match">阻抗失配</a>
+      <a data-nav="rf-layout" href="#rf-layout">RF 佈局</a>
+      <a data-nav="antenna-choice" href="#antenna-choice">天線初篩</a>
+      <a data-nav="detuning" href="#detuning">失諧</a>
+      <a data-nav="edge-emi" href="#edge-emi">Edge EMI</a>
+      <a data-nav="compliance" href="#compliance">法規 gate</a>
+    </nav>
+    <section aria-label="學習進度">
+      <p id="progress-label" aria-live="polite">已完成 0 / 8 個模組</p>
+      <div class="progress-track" role="progressbar" aria-label="網站學習進度" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0">
+        <span id="progress-fill" class="progress-fill"></span>
+      </div>
+      <button type="button" id="reset-progress">重設整體進度</button>
+    </section>
+  </header>
+  <main>
+    <section id="wave-region" data-module="wave-region"><h2>1. 波長、電氣長度與遠場</h2><form><fieldset><legend>輸入</legend>
+      <label for="wave-frequency-mhz">頻率 (MHz)</label><input id="wave-frequency-mhz" type="number" value="2400" min="0" step="any">
+      <label for="wave-epsilon-eff">有效介電常數</label><input id="wave-epsilon-eff" type="number" value="4" min="0" step="any">
+      <label for="wave-trace-mm">走線長度 (mm)</label><input id="wave-trace-mm" type="number" value="50" min="0" step="any">
+      <label for="wave-size-mm">最大尺寸 D (mm)</label><input id="wave-size-mm" type="number" value="80" min="0" step="any">
+      <label for="wave-distance-mm">觀測距離 (mm)</label><input id="wave-distance-mm" type="number" value="1000" min="0" step="any">
+    </fieldset><fieldset aria-live="polite"><legend>結果</legend>
+      <p>自由空間波長：<output id="wave-free-wavelength"></output></p><p>導波波長：<output id="wave-guided-wavelength"></output></p><p>相位：<output id="wave-phase"></output></p><p>遠場邊界：<output id="wave-far-boundary"></output></p><p>區域判讀：<output id="wave-region-verdict"></output></p><p>狀態：<output id="wave-status"></output></p><p>回饋：<output id="wave-feedback"></output></p>
+    </fieldset><button type="button" data-complete="wave-region">完成單元</button><button type="button" data-reset-module="wave-region">重設單元</button></form></section>
+
+    <section id="link-budget" data-module="link-budget"><h2>2. 自由空間鏈路預算</h2><form><fieldset><legend>輸入</legend>
+      <label for="link-tx-dbm">發射功率 (dBm)</label><input id="link-tx-dbm" type="number" value="10" step="any"><label for="link-tx-gain-dbi">發射天線增益 (dBi)</label><input id="link-tx-gain-dbi" type="number" value="2" step="any"><label for="link-rx-gain-dbi">接收天線增益 (dBi)</label><input id="link-rx-gain-dbi" type="number" value="2" step="any"><label for="link-loss-db">額外損耗 (dB)</label><input id="link-loss-db" type="number" value="2" min="0" step="any"><label for="link-frequency-mhz">頻率 (MHz)</label><input id="link-frequency-mhz" type="number" value="2400" min="0" step="any"><label for="link-distance-km">距離 (km)</label><input id="link-distance-km" type="number" value="0.1" min="0" step="any"><label for="link-sensitivity-dbm">接收靈敏度 (dBm)</label><input id="link-sensitivity-dbm" type="number" value="-95" step="any"><label for="link-required-margin-db">需求餘裕 (dB)</label><input id="link-required-margin-db" type="number" value="10" min="0" step="any">
+    </fieldset><fieldset aria-live="polite"><legend>結果</legend><p>自由空間路徑損耗：<output id="link-fspl"></output></p><p>接收功率：<output id="link-received"></output></p><p>鏈路餘裕：<output id="link-margin"></output></p><p>Headroom：<output id="link-headroom"></output></p><p>狀態：<output id="link-status"></output></p><p>回饋：<output id="link-feedback"></output></p></fieldset><button type="button" data-complete="link-budget">完成單元</button><button type="button" data-reset-module="link-budget">重設單元</button></form></section>
+
+    <section id="impedance-match" data-module="impedance-match"><h2>3. 阻抗失配</h2><form><fieldset><legend>輸入</legend><label for="match-z0">特性阻抗 Z0 (Ω)</label><input id="match-z0" type="number" value="50" min="0" step="any"><label for="match-r">負載電阻 R (Ω)</label><input id="match-r" type="number" value="75" min="0" step="any"><label for="match-x">負載電抗 X (Ω)</label><input id="match-x" type="number" value="0" step="any"></fieldset><fieldset aria-live="polite"><legend>結果</legend><p>反射係數：<output id="match-gamma"></output></p><p>回波損耗：<output id="match-return-loss"></output></p><p>VSWR：<output id="match-vswr"></output></p><p>反射功率：<output id="match-reflected-power"></output></p><p>失配損耗：<output id="match-loss"></output></p><p>狀態：<output id="match-status"></output></p><p>回饋：<output id="match-feedback"></output></p></fieldset><button type="button" data-complete="impedance-match">完成單元</button><button type="button" data-reset-module="impedance-match">重設單元</button></form></section>
+
+    <section id="rf-layout" data-module="rf-layout"><h2>4. RF 饋線與 layout gate</h2><form><fieldset><legend>輸入</legend><label for="layout-case">天線情境</label><select id="layout-case"><option value="pcb" selected>PCB 天線</option><option value="chip">晶片天線</option><option value="external">外接天線</option></select><label><input id="layout-impedance" type="checkbox" data-layout-check checked> Controlled impedance</label><label><input id="layout-ground" type="checkbox" data-layout-check checked> Continuous ground</label><label><input id="layout-short" type="checkbox" data-layout-check checked> Short / no stub</label><label><input id="layout-vias" type="checkbox" data-layout-check checked> Ground vias / connector launch</label><label><input id="layout-pi" type="checkbox" data-layout-check> π match</label><label><input id="layout-keepout" type="checkbox" data-layout-check> Antenna keep-out</label><label><input id="layout-guideline" type="checkbox" data-layout-check> Vendor / module guideline</label></fieldset><fieldset aria-live="polite"><legend>結果</legend><p>第一缺口：<output id="layout-first"></output></p><p>第二缺口：<output id="layout-second"></output></p><p>已勾選數：<output id="layout-count"></output></p><p>阻擋原因：<output id="layout-blocker"></output></p><p>狀態：<output id="layout-status"></output></p><p>回饋：<output id="layout-feedback"></output></p></fieldset><button type="button" data-complete="rf-layout">完成單元</button><button type="button" data-reset-module="rf-layout">重設單元</button></form></section>
+
+    <section id="antenna-choice" data-module="antenna-choice"><h2>5. 天線型式初篩</h2><form><fieldset><legend>輸入</legend><label for="antenna-enclosure">外殼</label><select id="antenna-enclosure"><option value="plastic" selected>塑膠</option><option value="metal">金屬</option></select><label for="antenna-space">可用空間</label><select id="antenna-space"><option value="tiny" selected>很小</option><option value="roomy">充裕</option></select><label for="antenna-cert">認證策略</label><select id="antenna-cert"><option value="reuse" selected>重用認證</option><option value="custom">自訂</option></select><label for="antenna-tuning">調諧能力</label><select id="antenna-tuning"><option value="limited" selected>有限</option><option value="vna">有 VNA</option></select><label for="antenna-cost">成本彈性</label><select id="antenna-cost"><option value="low" selected>低成本</option><option value="flexible">彈性</option></select></fieldset><fieldset aria-live="polite"><legend>結果</legend><p>首選：<output id="antenna-verdict"></output></p><p>備選：<output id="antenna-runner-up"></output></p><p>取捨：<output id="antenna-tradeoff"></output></p><p>狀態：<output id="antenna-status"></output></p><p>回饋：<output id="antenna-feedback"></output></p></fieldset><button type="button" data-complete="antenna-choice">完成單元</button><button type="button" data-reset-module="antenna-choice">重設單元</button></form></section>
+
+    <section id="detuning" data-module="detuning"><h2>6. 介質負載與失諧</h2><form><fieldset><legend>輸入</legend><label for="detune-frequency-mhz">原始頻率 (MHz)</label><input id="detune-frequency-mhz" type="number" value="2400" min="0" step="any"><label for="detune-epsilon-before">負載前有效介電常數</label><input id="detune-epsilon-before" type="number" value="2.5" min="0" step="any"><label for="detune-epsilon-after">負載後有效介電常數</label><input id="detune-epsilon-after" type="number" value="3.2" min="0" step="any"><label for="detune-bandwidth-mhz">原可用頻寬 (MHz)</label><input id="detune-bandwidth-mhz" type="number" value="100" min="0" step="any"></fieldset><fieldset aria-live="polite"><legend>結果</legend><p>新頻率：<output id="detune-new-frequency"></output></p><p>頻率偏移：<output id="detune-shift-mhz"></output></p><p>偏移百分比：<output id="detune-shift-percent"></output></p><p>原頻帶邊界：<output id="detune-band-edge"></output></p><p>狀態：<output id="detune-status"></output></p><p>回饋：<output id="detune-feedback"></output></p></fieldset><button type="button" data-complete="detuning">完成單元</button><button type="button" data-reset-module="detuning">重設單元</button></form></section>
+
+    <section id="edge-emi" data-module="edge-emi"><h2>7. Edge rate 與 EMI 邊界</h2><form><fieldset><legend>輸入</legend><label for="edge-rise-ns">上升時間 (ns)</label><input id="edge-rise-ns" type="number" value="2" min="0" step="any"><label for="edge-epsilon-eff">有效介電常數</label><input id="edge-epsilon-eff" type="number" value="3.5" min="0" step="any"><label for="edge-trace-mm">走線長度 (mm)</label><input id="edge-trace-mm" type="number" value="80" min="0" step="any"></fieldset><fieldset aria-live="polite"><legend>結果</legend><p>膝點頻率：<output id="edge-knee-frequency"></output></p><p>導波波長：<output id="edge-guided-wavelength"></output></p><p>臨界長度：<output id="edge-critical-length"></output></p><p>長度比：<output id="edge-length-ratio"></output></p><p>判讀：<output id="edge-verdict"></output></p><p>狀態：<output id="edge-status"></output></p><p>回饋：<output id="edge-feedback"></output></p></fieldset><button type="button" data-complete="edge-emi">完成單元</button><button type="button" data-reset-module="edge-emi">重設單元</button></form></section>
+
+    <section id="compliance" data-module="compliance"><h2>8. 預認證與整機法規 gate</h2><form><fieldset><legend>輸入</legend><label for="compliance-case">整合情境</label><select id="compliance-case"><option value="same-integration" selected>相同整合</option><option value="antenna-change">更換天線</option><option value="enclosure-change">更換外殼</option><option value="new-market">新市場</option></select><label for="compliance-near-body">近身使用</label><select id="compliance-near-body"><option value="no" selected>否</option><option value="yes">是</option></select><label><input id="compliance-market" type="checkbox" data-compliance-check checked> Market</label><label><input id="compliance-module-scope" type="checkbox" data-compliance-check checked> Module scope</label><label><input id="compliance-antenna-list" type="checkbox" data-compliance-check checked> Antenna list</label><label><input id="compliance-rf-prescan" type="checkbox" data-compliance-check> RF prescan</label><label><input id="compliance-emc-prescan" type="checkbox" data-compliance-check> EMC prescan</label><label><input id="compliance-sar" type="checkbox" data-compliance-check> SAR / exposure evaluation</label><label><input id="compliance-docs" type="checkbox" data-compliance-check> Documents / marking</label></fieldset><fieldset aria-live="polite"><legend>結果</legend><p>第一缺口：<output id="compliance-first"></output></p><p>第二缺口：<output id="compliance-second"></output></p><p>已勾選數：<output id="compliance-count"></output></p><p>阻擋原因：<output id="compliance-blocker"></output></p><p>狀態：<output id="compliance-status"></output></p><p>回饋：<output id="compliance-feedback"></output></p></fieldset><button type="button" data-complete="compliance">完成單元</button><button type="button" data-reset-module="compliance">重設單元</button></form></section>
+  </main>
+</body>
+</html>
