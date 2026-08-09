@@ -17,6 +17,9 @@ on:
       - "專題/IoT聯網裝置/知識群互動網站/01-板級電源與PCB/index.html"
       - "專題/IoT聯網裝置/知識群互動網站/01-板級電源與PCB/styles.css"
       - "專題/IoT聯網裝置/知識群互動網站/01-板級電源與PCB/app.js"
+      - "專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS/index.html"
+      - "專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS/styles.css"
+      - "專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS/app.js"
   workflow_dispatch:
 
 permissions:
@@ -68,6 +71,16 @@ jobs:
             cp "$pcb_site/index.html" _site/iot-power-pcb/index.html
             cp "$pcb_site/styles.css" _site/iot-power-pcb/styles.css
             cp "$pcb_site/app.js" _site/iot-power-pcb/app.js
+          fi
+
+          firmware_site='專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS'
+          if [ -f "$firmware_site/index.html" ] && \
+            [ -f "$firmware_site/styles.css" ] && \
+            [ -f "$firmware_site/app.js" ]; then
+            mkdir -p _site/iot-firmware-rtos
+            cp "$firmware_site/index.html" _site/iot-firmware-rtos/index.html
+            cp "$firmware_site/styles.css" _site/iot-firmware-rtos/styles.css
+            cp "$firmware_site/app.js" _site/iot-firmware-rtos/app.js
           fi
 
       - name: Upload Pages artifact

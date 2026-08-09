@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IoT 嵌入式韌體與 RTOS｜互動學習</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳至主要內容</a>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <p class="eyebrow">IOT EMBEDDED WORKSPACE</p>
+        <h1>嵌入式韌體、驅動與 RTOS</h1>
+        <p class="subtitle">用時序、CPU、RAM 與故障證據建立韌體設計判斷</p>
+      </div>
+      <div class="progress-panel">
+        <div class="progress-heading"><span>學習進度</span><span id="progress-label">0 / 8 模組</span></div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" aria-label="網站學習進度"><span id="progress-fill" class="progress-fill"></span></div>
+        <button class="button button-quiet" id="reset-progress" type="button">重設全部進度</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <nav class="module-nav" aria-label="學習模組導覽">
+        <span class="nav-label">Modules</span>
+        <button class="nav-item is-active" type="button" data-nav="architecture"><span class="nav-index">01</span><span>架構抉擇</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="event-loop"><span class="nav-index">02</span><span>非阻塞 event loop</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="interrupts"><span class="nav-index">03</span><span>ISR 延遲預算</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="driver-io"><span class="nav-index">04</span><span>Polling／DMA</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="scheduler"><span class="nav-index">05</span><span>RMS／EDF 排程</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="synchronization"><span class="nav-index">06</span><span>同步與交棒</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="low-power"><span class="nav-index">07</span><span>Tickless 低功耗</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="reliability"><span class="nav-index">08</span><span>復原與更新</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <div class="nav-note"><span class="status-dot" aria-hidden="true"></span><span>教學預算，仍需目標板量測</span></div>
+      </nav>
+
+      <main id="main-content" class="workspace">
+        <div class="workspace-heading">
+          <div><p class="section-kicker">FIRMWARE EVIDENCE</p><h2>IoT 韌體設計判斷台</h2></div>
+          <p class="heading-note">時序、CPU、RAM 與故障證據共同決定設計邊界。</p>
+        </div>
+
+        <section class="module-section is-current" id="module-architecture" data-module="architecture" aria-labelledby="architecture-title">
+          <div class="module-header"><div><span class="module-number">01</span><h3 id="architecture-title">架構抉擇：裸機、superloop 或 RTOS</h3></div><button class="complete-button" type="button" data-complete="architecture">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>需求輪廓</h4><span class="panel-tag">INPUTS</span></div>
+              <p class="panel-intro">分數只提供架構提示；RTOS 不是功能數量的直接判定。</p>
+              <div class="field-grid two-col">
+                <div class="field"><label for="arch-task-count">任務數 <span>count</span></label><input id="arch-task-count" type="number" value="3" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="arch-deadline-count">有 deadline 的任務 <span>count</span></label><input id="arch-deadline-count" type="number" value="2" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="arch-blocking-flows">阻塞流程 <span>count</span></label><input id="arch-blocking-flows" type="number" value="2" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="arch-ram-kb">可用 RAM <span>KiB</span></label><input id="arch-ram-kb" type="number" value="64" min="0.01" step="1" inputmode="decimal"></div>
+                <div class="field field-span"><label for="arch-team-size">維護團隊人數 <span>people</span></label><input id="arch-team-size" type="number" value="2" min="1" step="1" inputmode="numeric"></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">判斷提示</span><code>RTOS：任務／期限／阻塞／團隊；bare-metal：簡單、無期限、RAM 緊</code><small>正式選擇仍需估算每任務堆疊、同步複雜度並做原型量測。</small></div>
+              <button class="reset-button" type="button" data-reset-module="architecture">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>架構提示</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col"><div class="metric metric-accent-blue"><span>RTOS 分數</span><strong id="arch-rtos-score">—</strong></div><div class="metric metric-accent-yellow"><span>Bare-metal 分數</span><strong id="arch-bare-score">—</strong></div></div>
+              <div class="comparison-row"><span>建議架構</span><strong id="arch-verdict">—</strong></div>
+              <div id="arch-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="arch-feedback" class="feedback" aria-live="polite">從時序與資源限制開始，而不是從「功能多寡」直接決定是否使用 RTOS。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-event-loop" data-module="event-loop" aria-labelledby="event-loop-title">
+          <div class="module-header"><div><span class="module-number">02</span><h3 id="event-loop-title">非阻塞 event loop 與最壞回應</h3></div><button class="complete-button" type="button" data-complete="event-loop">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>一圈工作時間</h4><span class="panel-tag">INPUTS · ms</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="loop-sensor-ms">Sensor 步驟 <span>ms</span></label><input id="loop-sensor-ms" type="number" value="2" min="0" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="loop-protocol-ms">Protocol 步驟 <span>ms</span></label><input id="loop-protocol-ms" type="number" value="3" min="0" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="loop-log-ms">Log 步驟 <span>ms</span></label><input id="loop-log-ms" type="number" value="1" min="0" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="loop-busy-ms">Busy-wait <span>ms</span></label><input id="loop-busy-ms" type="number" value="0" min="0" step="0.1" inputmode="decimal"></div>
+                <div class="field field-span"><label for="loop-deadline-ms">事件 deadline <span>ms</span></label><input id="loop-deadline-ms" type="number" value="10" min="0.01" step="0.1" inputmode="decimal"></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">教學模型</span><code>T_loop = sensor + protocol + log + busy；slack = deadline − T_loop</code><small>最壞回應以事件剛好錯過一次服務的一圈時間近似。</small></div>
+              <button class="reset-button" type="button" data-reset-module="event-loop">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>迴圈預算</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col"><div class="metric metric-accent-blue"><span>Loop cycle</span><strong id="loop-cycle-ms">— ms</strong></div><div class="metric"><span>最壞回應</span><strong id="loop-worst-response-ms">— ms</strong></div><div class="metric metric-accent-green"><span>剩餘裕度</span><strong id="loop-slack-ms">— ms</strong></div><div class="metric metric-accent-yellow"><span>Busy share</span><strong id="loop-busy-share">— %</strong></div></div>
+              <div class="timeline" aria-label="event loop 時間組成"><div class="timeline-item"><span>Sensor</span><i data-loop-segment="sensor"></i></div><div class="timeline-item"><span>Protocol</span><i data-loop-segment="protocol"></i></div><div class="timeline-item"><span>Log</span><i data-loop-segment="log"></i></div><div class="timeline-item timeline-item-warn"><span>Busy</span><i data-loop-segment="busy"></i></div></div>
+              <div id="loop-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="loop-feedback" class="feedback" aria-live="polite">保持每圈短小且不等待；長工作可拆成狀態機、timer、ISR、DMA 或 RTOS 阻塞 API。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-interrupts" data-module="interrupts" aria-labelledby="interrupts-title">
+          <div class="module-header"><div><span class="module-number">03</span><h3 id="interrupts-title">ISR 延遲預算與反應時間</h3></div><button class="complete-button" type="button" data-complete="interrupts">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>中斷條件</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="irq-disabled-us">關中斷區段 <span>µs</span></label><input id="irq-disabled-us" type="number" value="12" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="irq-higher-duration-us">高優先 ISR 時間 <span>µs</span></label><input id="irq-higher-duration-us" type="number" value="18" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="irq-higher-count">高優先次數 <span>count</span></label><input id="irq-higher-count" type="number" value="2" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="irq-entry-us">ISR 入口成本 <span>µs</span></label><input id="irq-entry-us" type="number" value="2" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="irq-handler-us">目標 handler <span>µs</span></label><input id="irq-handler-us" type="number" value="15" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="irq-rate-hz">觸發頻率 <span>Hz</span></label><input id="irq-rate-hz" type="number" value="1000" min="0" step="100" inputmode="decimal"></div>
+                <div class="field field-span"><label for="irq-deadline-us">反應期限 <span>µs</span></label><input id="irq-deadline-us" type="number" value="100" min="0.01" step="1" inputmode="decimal"></div>
+              </div>
+              <button class="reset-button" type="button" data-reset-module="interrupts">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>延遲時間線</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="timeline timeline-vertical" aria-label="ISR 延遲時間線"><div class="timeline-item"><span>關中斷</span><strong id="irq-line-disabled">12 µs</strong></div><div class="timeline-item"><span>高優先 ISR</span><strong id="irq-line-higher">36 µs</strong></div><div class="timeline-item"><span>入口成本</span><strong id="irq-line-entry">2 µs</strong></div><div class="timeline-item timeline-item-target"><span>目標 handler</span><strong id="irq-line-handler">15 µs</strong></div></div>
+              <div class="metric-grid two-col"><div class="metric"><span>起始延遲</span><strong id="irq-start-latency">— µs</strong></div><div class="metric"><span>總反應時間</span><strong id="irq-response-time">— µs</strong></div><div class="metric metric-accent-green"><span>Headroom</span><strong id="irq-headroom">— µs</strong></div><div class="metric metric-accent-yellow"><span>ISR CPU load</span><strong id="irq-cpu-load">— %</strong></div></div>
+              <div id="irq-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="irq-feedback" class="feedback" aria-live="polite">ISR 只清旗標、取最少資料並交棒；不要在中斷上下文中等待或做長時間解析。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-driver-io" data-module="driver-io" aria-labelledby="driver-io-title">
+          <div class="module-header"><div><span class="module-number">04</span><h3 id="driver-io-title">Polling、interrupt 與 DMA 的 CPU 成本</h3></div><button class="complete-button" type="button" data-complete="driver-io">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>資料流條件</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="io-bytes">每次資料量 <span>bytes</span></label><input id="io-bytes" type="number" value="256" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="io-rate">傳輸頻率 <span>/s</span></label><input id="io-rate" type="number" value="500" min="0" step="10" inputmode="decimal"></div>
+                <div class="field"><label for="io-cycles-byte">每 byte CPU 成本 <span>cycles</span></label><input id="io-cycles-byte" type="number" value="80" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="io-dma-setup-cycles">DMA setup 成本 <span>cycles</span></label><input id="io-dma-setup-cycles" type="number" value="800" min="0" step="10" inputmode="numeric"></div>
+                <div class="field field-span"><label for="io-cpu-mhz">CPU 頻率 <span>MHz</span></label><input id="io-cpu-mhz" type="number" value="80" min="0.01" step="1" inputmode="decimal"></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">教學模型</span><code>U_poll = bytes × rate × cycles / F_CPU；U_DMA = rate × setup / F_CPU</code><small>未計 bus contention、DMA 記憶體限制、cache coherency 與 setup latency。</small></div>
+              <button class="reset-button" type="button" data-reset-module="driver-io">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>驅動資料流比較</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col"><div class="metric metric-accent-blue"><span>吞吐量</span><strong id="io-throughput">— KiB/s</strong></div><div class="metric metric-accent-yellow"><span>Polling CPU</span><strong id="io-polling-load">— %</strong></div><div class="metric metric-accent-green"><span>DMA CPU</span><strong id="io-dma-load">— %</strong></div><div class="metric"><span>CPU 節省</span><strong id="io-cpu-saved">— %</strong></div></div>
+              <div class="comparison-row"><span>資料流建議</span><strong id="io-verdict">—</strong></div>
+              <div class="utilization-bar" aria-label="Polling 與 DMA CPU 負載"><div><span>Polling</span><i data-io-bar="polling"></i></div><div><span>DMA</span><i data-io-bar="dma"></i></div></div>
+              <div id="io-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="io-feedback" class="feedback" aria-live="polite">DMA 省下 CPU 不代表零成本；仍要設計完成通知、緩衝區生命週期與資料一致性。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-scheduler" data-module="scheduler" aria-labelledby="scheduler-title">
+          <div class="module-header"><div><span class="module-number">05</span><h3 id="scheduler-title">RMS／EDF 與堆疊 RAM 預算</h3></div><button class="complete-button" type="button" data-complete="scheduler">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>三個週期任務</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="task-stack">
+                <fieldset class="task-card"><legend>Task 1</legend><div class="field-grid three-col"><div class="field"><label for="task1-c">執行時間 <span>ms</span></label><input id="task1-c" type="number" value="1" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="task1-t">週期 <span>ms</span></label><input id="task1-t" type="number" value="5" min="0.01" step="0.1" inputmode="decimal"></div><div class="field"><label for="task1-stack">Stack <span>B</span></label><input id="task1-stack" type="number" value="512" min="0" step="64" inputmode="numeric"></div></div></fieldset>
+                <fieldset class="task-card"><legend>Task 2</legend><div class="field-grid three-col"><div class="field"><label for="task2-c">執行時間 <span>ms</span></label><input id="task2-c" type="number" value="1" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="task2-t">週期 <span>ms</span></label><input id="task2-t" type="number" value="10" min="0.01" step="0.1" inputmode="decimal"></div><div class="field"><label for="task2-stack">Stack <span>B</span></label><input id="task2-stack" type="number" value="768" min="0" step="64" inputmode="numeric"></div></div></fieldset>
+                <fieldset class="task-card"><legend>Task 3</legend><div class="field-grid three-col"><div class="field"><label for="task3-c">執行時間 <span>ms</span></label><input id="task3-c" type="number" value="2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="task3-t">週期 <span>ms</span></label><input id="task3-t" type="number" value="20" min="0.01" step="0.1" inputmode="decimal"></div><div class="field"><label for="task3-stack">Stack <span>B</span></label><input id="task3-stack" type="number" value="1024" min="0" step="64" inputmode="numeric"></div></div></fieldset>
+              </div>
+              <div class="field-grid two-col scheduler-memory"><div class="field"><label for="kernel-ram">Kernel RAM <span>B</span></label><input id="kernel-ram" type="number" value="2048" min="0" step="128" inputmode="numeric"></div><div class="field"><label for="ram-budget">RAM budget <span>B</span></label><input id="ram-budget" type="number" value="16384" min="0.01" step="512" inputmode="numeric"></div></div>
+              <button class="reset-button" type="button" data-reset-module="scheduler">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>排程與記憶體篩檢</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col"><div class="metric metric-accent-blue"><span>Utilization</span><strong id="sched-utilization">— %</strong></div><div class="metric"><span>RM bound（n=3）</span><strong id="sched-rm-bound">— %</strong></div><div class="metric"><span>RAM used</span><strong id="sched-ram-used">— B</strong></div><div class="metric metric-accent-green"><span>RAM headroom</span><strong id="sched-ram-headroom">— B</strong></div></div>
+              <div class="result-list"><div class="result-line"><span>RMS 充分條件</span><strong id="sched-rm-result">—</strong></div><div class="result-line"><span>EDF 條件</span><strong id="sched-edf-result">—</strong></div></div>
+              <div id="scheduler-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="scheduler-feedback" class="feedback" aria-live="polite">RM bound 是充分條件，不是所有可排程工作的硬上限；仍需 RTA、blocking、jitter 與 stack watermark。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-synchronization" data-module="synchronization" aria-labelledby="synchronization-title">
+          <div class="module-header"><div><span class="module-number">06</span><h3 id="synchronization-title">同步原語與 ISR 交棒</h3></div><button class="complete-button" type="button" data-complete="synchronization">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>情境組合</h4><span class="panel-tag">SELECT</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="sync-kind">資料情境</label><select id="sync-kind"><option value="event">事件</option><option value="data" selected>資料</option><option value="shared-resource">共享資源</option></select></div>
+                <div class="field"><label for="sync-producer">Producer</label><select id="sync-producer"><option value="isr" selected>ISR</option><option value="task">Task</option></select></div>
+                <div class="field"><label for="sync-consumers">Consumer 數量</label><select id="sync-consumers"><option value="one" selected>單一</option><option value="many">多個</option></select></div>
+                <div class="field"><label for="sync-primitive">同步原語</label><select id="sync-primitive"><option value="notification">Notification</option><option value="binary-semaphore">Binary semaphore</option><option value="queue" selected>Queue</option><option value="mutex">Mutex</option></select></div>
+                <div class="field"><label for="sync-priority-inheritance">Priority inheritance</label><select id="sync-priority-inheritance"><option value="yes" selected>有</option><option value="no">無</option></select></div>
+                <div class="field"><label for="sync-lock-order">Lock order</label><select id="sync-lock-order"><option value="fixed" selected>固定</option><option value="unordered">未固定</option><option value="none">沒有巢狀鎖</option></select></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">交棒原則</span><code>ISR 產生事件 → FromISR API → queue／semaphore／notification → task 消費</code><small>Primitive 不能取代 timeout 策略與固定 lock order。</small></div>
+              <button class="reset-button" type="button" data-reset-module="synchronization">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>相容性檢查</h4><span class="panel-tag panel-tag-live">GATE</span></div>
+              <div class="comparison-row"><span>建議原語</span><strong id="sync-verdict">—</strong></div>
+              <div class="next-step"><span>第一個阻擋項</span><strong id="sync-blocker">—</strong></div>
+              <div id="sync-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待檢查</span></div>
+              <p id="sync-feedback" class="feedback" aria-live="polite">資料通常需要 queue；共享資源需要 mutex 與 priority inheritance。ISR 不可走會阻塞的路徑。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-low-power" data-module="low-power" aria-labelledby="low-power-title">
+          <div class="module-header"><div><span class="module-number">07</span><h3 id="low-power-title">Tickless 與低功耗 break-even</h3></div><button class="complete-button" type="button" data-complete="low-power">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>週期電流輪廓</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="power-run-ma">Run 電流 <span>mA</span></label><input id="power-run-ma" type="number" value="15" min="0.01" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="power-sleep-ua">Sleep 電流 <span>µA</span></label><input id="power-sleep-ua" type="number" value="20" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="power-wake-ma">Wake 電流 <span>mA</span></label><input id="power-wake-ma" type="number" value="10" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="power-wake-ms">Wake 時間 <span>ms</span></label><input id="power-wake-ms" type="number" value="5" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="power-active-ms">Active 時間 <span>ms</span></label><input id="power-active-ms" type="number" value="50" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="power-period-s">週期 <span>s</span></label><input id="power-period-s" type="number" value="10" min="0.01" step="1" inputmode="decimal"></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">Break-even 模型</span><code>T_be = I_wake × T_wake / (I_run − I_sleep)</code><small>Tickless 只移除 tick 喚醒；周邊時脈、GPIO 漏電與完整電流剖面仍須處理。</small></div>
+              <button class="reset-button" type="button" data-reset-module="low-power">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>週期平均</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col"><div class="metric metric-accent-blue"><span>Sleep 時間</span><strong id="power-sleep-time">— ms</strong></div><div class="metric"><span>平均電流</span><strong id="power-average-current">— mA</strong></div><div class="metric metric-accent-green"><span>Sleep share</span><strong id="power-sleep-share">— %</strong></div><div class="metric metric-accent-green"><span>相對節省</span><strong id="power-saving">— %</strong></div><div class="metric metric-accent-yellow metric-span-two"><span>Break-even interval</span><strong id="power-break-even">— ms</strong></div></div>
+              <div class="utilization-bar power-profile" aria-label="Run、Wake、Sleep 週期比例"><div><span>Run</span><i data-power-bar="run"></i></div><div><span>Wake</span><i data-power-bar="wake"></i></div><div><span>Sleep</span><i data-power-bar="sleep"></i></div></div>
+              <div id="low-power-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="low-power-feedback" class="feedback" aria-live="polite">睡眠值得不值得，取決於喚醒成本、週期與整機的實際漏電，而不只是 MCU datasheet 的 sleep 電流。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-reliability" data-module="reliability" aria-labelledby="reliability-title">
+          <div class="module-header"><div><span class="module-number">08</span><h3 id="reliability-title">Watchdog、持久化與更新復原</h3></div><button class="complete-button" type="button" data-complete="reliability">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>故障情境與復原 gate</h4><span class="panel-tag">CHECKLIST</span></div>
+              <div class="field choice-field"><label for="reliability-case">故障情境</label><select id="reliability-case"><option value="hang" selected>Hang／無回應</option><option value="brownout-write">Brownout 寫入中斷</option><option value="update-loss">更新中斷</option><option value="stack-overflow">Stack overflow</option></select></div>
+              <div class="checklist reliability-checklist">
+                <label class="check-row"><input id="reliability-watchdog" type="checkbox" data-reliability-check checked><span><strong>Watchdog 與 reset cause</strong><small>保留重置原因與最後 heartbeat</small></span></label>
+                <label class="check-row"><input id="reliability-bor" type="checkbox" data-reliability-check checked><span><strong>Brownout reset（BOR）</strong><small>低電壓時進入可控狀態</small></span></label>
+                <label class="check-row"><input id="reliability-safe-state" type="checkbox" data-reliability-check checked><span><strong>Safe state</strong><small>故障後輸出與致動器保持安全</small></span></label>
+                <label class="check-row"><input id="reliability-stack-monitor" type="checkbox" data-reliability-check checked><span><strong>Stack watermark／guard</strong><small>保存峰值使用證據</small></span></label>
+                <label class="check-row"><input id="reliability-atomic-write" type="checkbox" data-reliability-check><span><strong>Atomic write</strong><small>雙區、CRC 或 journal 防止半寫入</small></span></label>
+                <label class="check-row"><input id="reliability-ab-slot" type="checkbox" data-reliability-check><span><strong>A/B slot</strong><small>保留可開機的備援映像</small></span></label>
+                <label class="check-row"><input id="reliability-rollback" type="checkbox" data-reliability-check><span><strong>Rollback</strong><small>新映像啟動失敗時回復</small></span></label>
+              </div>
+              <button class="reset-button" type="button" data-reset-module="reliability">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>固定順序診斷</h4><span class="panel-tag panel-tag-live">GATE</span></div>
+              <div class="diagnosis-list"><div class="diagnosis-row"><span>第一步</span><strong id="reliability-first">—</strong></div><div class="diagnosis-row"><span>第二步</span><strong id="reliability-second">—</strong></div></div>
+              <div class="metric-grid two-col"><div class="metric"><span>已完成檢查</span><strong id="reliability-count">— / 7</strong></div><div class="metric metric-accent-yellow"><span>下一個 gate</span><strong id="reliability-next">—</strong></div></div>
+              <div id="reliability-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待檢查</span></div>
+              <p id="reliability-feedback" class="feedback" aria-live="polite">復原 gate 通過不代表 secure boot、安全更新、簽章信任鏈或量產驗證已完成。</p>
+            </div>
+          </div>
+        </section>
+
+        <footer class="workspace-footer"><span>來源：韌體：架構與電源管理、E1、E2、E3</span><span>教學模型，不取代 WCET、RTA、watermark、電流剖面與故障注入。</span></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

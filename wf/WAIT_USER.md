@@ -13,3 +13,4 @@
 - 以手機實際開啟 [IoT 聯網裝置互動站](https://justty32.github.io/engineer_study/iot-device/)，確認模組導覽、數字輸入、韌體狀態機、重設與進度保存可操作，且沒有頁面水平溢位或文字重疊。
 - 以手機實際開啟 [電力系統互動站](https://justty32.github.io/engineer_study/power-systems/)，確認模組導覽、功角／頻率切換、數字輸入、N-1 狀態、重設與進度保存可操作，且沒有頁面水平溢位或文字重疊。
 - 以手機實際開啟 [IoT 板級電源與 PCB 互動站](https://justty32.github.io/engineer_study/iot-power-pcb/)，確認頂部模組導覽、數字輸入、檢查表、重設與進度保存可操作，且沒有頁面水平溢位或文字重疊。
+- 以手機實際開啟 [IoT 嵌入式韌體與 RTOS 互動站](https://justty32.github.io/engineer_study/iot-firmware-rtos/)，確認模組導覽、任務輸入、同步選擇、復原檢查表、重設與進度保存可操作，且沒有頁面水平溢位或文字重疊。
