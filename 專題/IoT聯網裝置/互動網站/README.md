@@ -4,6 +4,8 @@
 
 這是一個零依賴、可離線運作的互動學習工作台。內容涵蓋系統分層、連線選型、功耗與瞬態供電、韌體狀態機、現場診斷與量產閘門。
 
+線上版本：[GitHub Pages / IoT 聯網裝置](https://justty32.github.io/engineer_study/iot-device/)
+
 ## 本機啟動
 
 在 repo 根目錄執行：

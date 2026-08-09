@@ -6,7 +6,7 @@
 
 ## 互動學習網站
 
-- [開啟 IoT 聯網裝置互動工作台](互動網站/index.html)
+- [開啟 IoT 聯網裝置互動工作台（GitHub Pages）](https://justty32.github.io/engineer_study/iot-device/)
 - [網站內容來源、模型邊界與本機啟動方式](互動網站/README.md)
 - [驗收紀錄](互動網站/驗收紀錄.md)
 

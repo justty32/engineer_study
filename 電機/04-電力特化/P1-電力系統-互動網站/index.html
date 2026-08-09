@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="電力系統八模組互動學習控制室工作台">
+  <title>電力系統互動工作台</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">跳至工作區</a>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <p class="eyebrow">P1 / POWER SYSTEMS</p>
+        <h1>電力系統互動工作台</h1>
+        <p class="subtitle">從升壓、標么到調度的八個可計算模型</p>
+      </div>
+      <div class="progress-panel">
+        <div class="progress-heading">
+          <span id="progress-label">完成進度 0 / 8</span>
+          <button id="reset-progress" class="button button-quiet" type="button">重設全部進度</button>
+        </div>
+        <div class="progress-track" role="progressbar" aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0">
+          <span id="progress-fill" class="progress-fill"></span>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <nav class="module-nav" aria-label="學習模組導覽">
+        <div class="nav-label">模組目錄</div>
+        <button class="nav-item is-active" type="button" data-nav="transmission"><span class="nav-index">01</span><span>高壓輸電</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="perunit"><span class="nav-index">02</span><span>標么制</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="threephase"><span class="nav-index">03</span><span>三相與功因</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="flow"><span class="nav-index">04</span><span>DC 潮流與 N-1</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="fault"><span class="nav-index">05</span><span>故障序網</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="protection"><span class="nav-index">06</span><span>保護協調</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="stability"><span class="nav-index">07</span><span>穩定與頻率</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="dispatch"><span class="nav-index">08</span><span>經濟調度</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <div class="nav-note">
+          <span class="status-dot status-dot-cyan" aria-hidden="true"></span>
+          <span>模型狀態：離線可用</span>
+        </div>
+      </nav>
+
+      <main id="workspace" class="workspace">
+        <div class="workspace-heading">
+          <div>
+            <p class="section-kicker">LIVE STUDY CONSOLE</p>
+            <h2>電力系統決策訓練</h2>
+          </div>
+          <p class="heading-note">大學核心｜8 個模組｜離線模型</p>
+        </div>
+
+        <section class="module-section is-current" data-module="transmission" aria-labelledby="transmission-title">
+          <div class="module-header">
+            <div><span class="module-number">01</span><h3 id="transmission-title">高壓輸電｜固定功率下的線損取捨</h3></div>
+            <button class="complete-button" type="button" data-complete="transmission">標記完成</button>
+          </div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>案例參數</h4><span class="panel-tag">INPUT</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="transmit-power">輸送功率 <span>MW</span></label><input id="transmit-power" type="number" value="100" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="transmit-pf">功率因數 <span>PF</span></label><input id="transmit-pf" type="number" value="1" min="0" max="1" step="0.01" inputmode="decimal"></div>
+                <div class="field"><label for="transmit-resistance">每相電阻 <span>Ω</span></label><input id="transmit-resistance" type="number" value="2" min="0" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="voltage-low">低壓線電壓 <span>kV</span></label><input id="voltage-low" type="number" value="69" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="voltage-high">高壓線電壓 <span>kV</span></label><input id="voltage-high" type="number" value="345" min="0" step="1" inputmode="decimal"></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">計算式</span><code>I = P / (√3 V PF)&nbsp;&nbsp; P<sub>loss</sub> = 3I²R</code></div>
+              <button class="reset-button" type="button" data-reset-module="transmission">↺ 重設本案例</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>輸電觀測</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid three-col">
+                <div class="metric"><span>69 kV 電流</span><strong id="current-low">836.7 A</strong></div>
+                <div class="metric"><span>345 kV 電流</span><strong id="current-high">167.3 A</strong></div>
+                <div class="metric"><span>低壓線損</span><strong id="loss-low">4.201 MW</strong></div>
+                <div class="metric"><span>高壓線損</span><strong id="loss-high">0.168 MW</strong></div>
+                <div class="metric metric-wide"><span>線損相對比</span><strong id="loss-ratio">25.0 ×</strong></div>
+              </div>
+              <div class="flow-strip" aria-label="發電到負載的輸電路徑">
+                <span class="flow-node">發電</span><b>→</b><span class="flow-node">升壓</span><b>→</b><span class="flow-node flow-node-emphasis">輸電</span><b>→</b><span class="flow-node">降壓</span><b>→</b><span class="flow-node">負載</span>
+              </div>
+              <p id="transmission-feedback" class="feedback" aria-live="polite">電壓提高 5 倍，同功率下電流降為 1/5；I²R 線損降為 1/25。模型不含電暈、無功、穩定與設備成本。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" data-module="perunit" aria-labelledby="perunit-title">
+          <div class="module-header"><div><span class="module-number">02</span><h3 id="perunit-title">標么制｜把不同電壓區放到共同基準</h3></div><button class="complete-button" type="button" data-complete="perunit">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel"><div class="panel-heading"><h4>系統與元件基準</h4><span class="panel-tag">INPUT</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="base-power">基準功率 <span>MVA</span></label><input id="base-power" type="number" value="100" min="0" step="10" inputmode="decimal"></div>
+                <div class="field"><label for="base-voltage">基準電壓 <span>kV</span></label><input id="base-voltage" type="number" value="161" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="actual-voltage">實際電壓 <span>kV</span></label><input id="actual-voltage" type="number" value="154" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="actual-impedance">實際阻抗 <span>Ω</span></label><input id="actual-impedance" type="number" value="12" min="0" step="1" inputmode="decimal"></div>
+              </div>
+              <div class="subheading">阻抗換基準</div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="old-zpu">舊標么阻抗 <span>p.u.</span></label><input id="old-zpu" type="number" value="0.1" min="0" step="0.01" inputmode="decimal"></div>
+                <div class="field"><label for="old-base-power">舊基準功率 <span>MVA</span></label><input id="old-base-power" type="number" value="50" min="0" step="10" inputmode="decimal"></div>
+                <div class="field"><label for="old-base-voltage">舊基準電壓 <span>kV</span></label><input id="old-base-voltage" type="number" value="161" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="new-base-power">新基準功率 <span>MVA</span></label><input id="new-base-power" type="number" value="100" min="0" step="10" inputmode="decimal"></div>
+                <div class="field"><label for="new-base-voltage">新基準電壓 <span>kV</span></label><input id="new-base-voltage" type="number" value="161" min="0" step="1" inputmode="decimal"></div>
+              </div>
+              <button class="reset-button" type="button" data-reset-module="perunit">↺ 重設本案例</button>
+            </div>
+            <div class="panel result-panel"><div class="panel-heading"><h4>基準觀測</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid three-col"><div class="metric"><span>基準電流</span><strong id="base-current">358.6 A</strong></div><div class="metric"><span>基準阻抗</span><strong id="base-impedance">259.21 Ω</strong></div><div class="metric"><span>電壓標么值</span><strong id="voltage-pu">0.9565 p.u.</strong></div><div class="metric"><span>實際阻抗標么值</span><strong id="impedance-pu">0.0463 p.u.</strong></div><div class="metric metric-wide"><span>換基準後阻抗</span><strong id="converted-zpu">0.2000 p.u.</strong></div></div>
+              <div class="comparison-row"><span class="comparison-label">元件銘牌</span><span class="comparison-line"></span><span class="comparison-label">系統共同基準</span></div>
+              <p id="perunit-feedback" class="feedback" aria-live="polite">標么值是實際量除以基準量；當電壓基準依變壓器匝比選取時，不同電壓區可用同一張等效網路分析。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" data-module="threephase" aria-labelledby="threephase-title">
+          <div class="module-header"><div><span class="module-number">03</span><h3 id="threephase-title">三相與功因｜用無功補償釋放線路容量</h3></div><button class="complete-button" type="button" data-complete="threephase">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel"><div class="panel-heading"><h4>負載與補償目標</h4><span class="panel-tag">INPUT</span></div>
+              <div class="field-grid two-col"><div class="field"><label for="pf-voltage">線電壓 <span>kV</span></label><input id="pf-voltage" type="number" value="11.4" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="pf-real-power">實功 <span>kW</span></label><input id="pf-real-power" type="number" value="1000" min="0" step="100" inputmode="decimal"></div><div class="field"><label for="pf-initial">初始功率因數 <span>PF</span></label><input id="pf-initial" type="number" value="0.75" min="0" max="1" step="0.01" inputmode="decimal"></div><div class="field"><label for="pf-target">目標功率因數 <span>PF</span></label><input id="pf-target" type="number" value="0.95" min="0" max="1" step="0.01" inputmode="decimal"></div></div>
+              <div class="formula-box"><span class="formula-label">功率分量</span><code>P = √3VI PF&nbsp;&nbsp; Q = P tan(cos⁻¹PF)</code></div><button class="reset-button" type="button" data-reset-module="threephase">↺ 重設本案例</button>
+            </div>
+            <div class="panel result-panel"><div class="panel-heading"><h4>功率三角與線路反應</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="power-bars"><div class="power-bar-row"><span>初始電流</span><span class="bar-track"><i class="bar-fill bar-fill-warm" style="width:100%"></i></span><strong id="current-initial">67.53 A</strong></div><div class="power-bar-row"><span>補償後電流</span><span class="bar-track"><i class="bar-fill bar-fill-cool" style="width:79%"></i></span><strong id="current-target">53.31 A</strong></div></div>
+              <div class="metric-grid three-col"><div class="metric"><span>初始無功</span><strong id="reactive-initial">881.92 kvar</strong></div><div class="metric"><span>目標無功</span><strong id="reactive-target">328.68 kvar</strong></div><div class="metric"><span>電容補償</span><strong id="capacitor-kvar">553.23 kvar</strong></div><div class="metric metric-wide"><span>同電阻線損下降</span><strong id="loss-reduction">37.67%</strong></div></div>
+              <p id="threephase-feedback" class="feedback" aria-live="polite">電容提供 kvar，降低線電流與視在功率；負載真正消耗的 kW 不會因補償而降低。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" data-module="flow" aria-labelledby="flow-title">
+          <div class="module-header"><div><span class="module-number">04</span><h3 id="flow-title">DC 潮流與 N-1｜從相角差找出壅塞</h3></div><button class="complete-button" type="button" data-complete="flow">標記完成</button></div>
+          <div class="module-grid module-grid-wide">
+            <div class="panel input-panel"><div class="panel-heading"><h4>三母線注入與事故</h4><span class="panel-tag">INPUT</span></div><div class="field-grid two-col"><div class="field"><label for="flow-generation">Bus 2 發電 <span>MW</span></label><input id="flow-generation" type="number" value="40" step="10" inputmode="decimal"></div><div class="field"><label for="flow-load">Bus 3 負載 <span>MW</span></label><input id="flow-load" type="number" value="100" min="0" step="10" inputmode="decimal"></div><div class="field field-span"><label for="contingency">單線跳脫</label><select id="contingency"><option value="none">無跳脫</option><option value="line-12">跳脫 1–2</option><option value="line-13">跳脫 1–3</option><option value="line-23">跳脫 2–3</option></select></div></div><div class="assumption-note"><b>固定拓樸</b> Bus 1 為 slack、θ₁ = 0；基準 100 MVA。x₁₂=0.20 / 80 MW，x₁₃=0.25 / 80 MW，x₂₃=0.40 / 70 MW。</div><button class="reset-button" type="button" data-reset-module="flow">↺ 重設本案例</button></div>
+            <div class="panel result-panel"><div class="panel-heading"><h4>母線與線路狀態</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="metric-grid three-col"><div class="metric"><span>Slack 補平衡</span><strong id="slack-power">60.0 MW</strong></div><div class="metric"><span>Bus 2 相角</span><strong id="angle-bus-2">0.1348°</strong></div><div class="metric"><span>Bus 3 相角</span><strong id="angle-bus-3">−8.7629°</strong></div></div><div class="line-list" aria-label="三母線線路潮流"><div class="line-row line-row-head"><span>線路</span><span>潮流 / 方向</span><span>利用率</span><span>狀態</span></div><div class="line-row"><span class="line-name">1–2</span><strong id="flow-12">−1.18 MW ←</strong><span class="utilization"><i style="width:2%"></i><em>1.5%</em></span><span class="state state-ok">● 正常</span></div><div class="line-row"><span class="line-name">1–3</span><strong id="flow-13">61.18 MW →</strong><span class="utilization"><i style="width:76%"></i><em>76.5%</em></span><span class="state state-ok">● 正常</span></div><div class="line-row"><span class="line-name">2–3</span><strong id="flow-23">38.82 MW →</strong><span class="utilization"><i style="width:55%"></i><em>55.5%</em></span><span class="state state-ok">● 正常</span></div></div><div id="flow-status" class="status-box status-ok"><span class="status-symbol">✓</span><span>基準情境：三條線路均未過載</span></div><p id="flow-feedback" class="feedback" aria-live="polite">DC 潮流忽略電阻、損失、無功與電壓幅值變化；slack 自動補平衡。</p></div>
+          </div>
+        </section>
+
+        <section class="module-section" data-module="fault" aria-labelledby="fault-title">
+          <div class="module-header"><div><span class="module-number">05</span><h3 id="fault-title">故障序網｜依故障型態連接三個序網</h3></div><button class="complete-button" type="button" data-complete="fault">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel"><div class="panel-heading"><h4>故障點參數</h4><span class="panel-tag">INPUT</span></div><div class="field-grid two-col"><div class="field field-span"><label for="fault-type">故障型態</label><select id="fault-type"><option value="three-phase">三相故障</option><option value="slg">單相接地 SLG</option><option value="line-line">線間故障 LL</option></select></div><div class="field"><label for="fault-voltage">故障電壓 <span>p.u.</span></label><input id="fault-voltage" type="number" value="1" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="z-positive">正序阻抗 Z₁ <span>p.u.</span></label><input id="z-positive" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="z-negative">負序阻抗 Z₂ <span>p.u.</span></label><input id="z-negative" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="z-zero">零序阻抗 Z₀ <span>p.u.</span></label><input id="z-zero" type="number" value="0.5" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="fault-base-power">基準功率 <span>MVA</span></label><input id="fault-base-power" type="number" value="100" min="0" step="10" inputmode="decimal"></div><div class="field"><label for="fault-base-voltage">基準電壓 <span>kV</span></label><input id="fault-base-voltage" type="number" value="161" min="0" step="1" inputmode="decimal"></div></div><button class="reset-button" type="button" data-reset-module="fault">↺ 重設本案例</button></div>
+            <div class="panel result-panel"><div class="panel-heading"><h4>序網連接診斷</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="sequence-list"><div class="sequence-row"><span class="sequence-name">正序 1</span><span id="sequence-positive" class="sequence-state sequence-used">使用</span><span class="sequence-path">故障電壓源 → Z₁</span></div><div class="sequence-row"><span class="sequence-name">負序 2</span><span id="sequence-negative" class="sequence-state sequence-unused">不使用</span><span class="sequence-path">依型態串接</span></div><div class="sequence-row"><span class="sequence-name">零序 0</span><span id="sequence-zero" class="sequence-state sequence-unused">不使用</span><span class="sequence-path">依接地回路決定</span></div></div><div class="metric-grid three-col"><div class="metric metric-wide"><span>故障電流</span><strong id="fault-current-pu">5.000 p.u.</strong></div><div class="metric"><span>基準電流</span><strong>0.3586 kA</strong></div><div class="metric"><span>實際故障電流</span><strong id="fault-current-ka">1.793 kA</strong></div></div><p id="fault-feedback" class="feedback" aria-live="polite">三相故障對稱，只使用正序網；故障電流為 Vᶠ / Z₁。阻抗為理想序網等效，不含故障阻抗與暫態衰減。</p></div>
+          </div>
+        </section>
+
+        <section class="module-section" data-module="protection" aria-labelledby="protection-title">
+          <div class="module-header"><div><span class="module-number">06</span><h3 id="protection-title">保護協調｜讓主保護先動、後備保護接手</h3></div><button class="complete-button" type="button" data-complete="protection">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel"><div class="panel-heading"><h4>電驛整定教學值</h4><span class="panel-tag">INPUT</span></div><div class="field-grid two-col"><div class="field field-span"><label for="relay-fault-current">故障電流 <span>A</span></label><input id="relay-fault-current" type="number" value="1200" min="0" step="100" inputmode="decimal"></div><div class="field"><label for="relay-main-pickup">主保護拾取 <span>A</span></label><input id="relay-main-pickup" type="number" value="200" min="0" step="50" inputmode="decimal"></div><div class="field"><label for="relay-main-tms">主保護 TMS</label><input id="relay-main-tms" type="number" value="0.15" min="0" step="0.05" inputmode="decimal"></div><div class="field"><label for="relay-backup-pickup">後備拾取 <span>A</span></label><input id="relay-backup-pickup" type="number" value="300" min="0" step="50" inputmode="decimal"></div><div class="field"><label for="relay-backup-tms">後備 TMS</label><input id="relay-backup-tms" type="number" value="0.9" min="0" step="0.05" inputmode="decimal"></div><div class="field"><label for="relay-margin-target">目標時間裕度 <span>s</span></label><input id="relay-margin-target" type="number" value="0.2" min="0" step="0.05" inputmode="decimal"></div></div><button class="reset-button" type="button" data-reset-module="protection">↺ 重設本案例</button></div>
+            <div class="panel result-panel"><div class="panel-heading"><h4>時間階梯</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="relay-ladder"><div class="relay-ladder-row"><span>主保護 51</span><span class="time-track"><i class="time-main" style="width:10%"></i></span><strong id="relay-main-time">0.030 s</strong></div><div class="relay-ladder-row"><span>後備保護</span><span class="time-track"><i class="time-backup" style="width:54%"></i></span><strong id="relay-backup-time">0.300 s</strong></div></div><div class="metric-grid three-col"><div class="metric metric-wide"><span>時間裕度</span><strong id="relay-margin">0.270 s</strong></div></div><div id="relay-status" class="status-box status-ok"><span class="status-symbol">✓</span><span>協調通過｜後備晚於主保護</span></div><p id="relay-feedback" class="feedback" aria-live="polite">這是無量綱反時限教學曲線，不是 IEC/IEEE 實際曲線。選擇性要求故障區域的主保護先動，上游後備保留時間裕度。</p></div>
+          </div>
+        </section>
+
+        <section class="module-section" data-module="stability" aria-labelledby="stability-title">
+          <div class="module-header"><div><span class="module-number">07</span><h3 id="stability-title">穩定與頻率｜比較動態能量與調頻反應</h3></div><button class="complete-button" type="button" data-complete="stability">標記完成</button></div>
+          <div class="segmented-control" role="group" aria-label="穩定度模型切換"><button type="button" class="segment-button is-selected" data-stability-mode="angle" aria-pressed="true">功角／等面積</button><button type="button" class="segment-button" data-stability-mode="frequency" aria-pressed="false">頻率／droop</button></div>
+          <div class="stability-panel" data-stability-panel="angle"><div class="module-grid"><div class="panel input-panel"><div class="panel-heading"><h4>單機無窮匯流排</h4><span class="panel-tag">ANGLE</span></div><div class="field-grid two-col"><div class="field"><label for="stability-pm">機械輸入 Pₘ <span>p.u.</span></label><input id="stability-pm" type="number" value="0.8" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="stability-pre-max">故障前 Pmax <span>p.u.</span></label><input id="stability-pre-max" type="number" value="1.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="stability-fault-max">故障中 Pmax <span>p.u.</span></label><input id="stability-fault-max" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="stability-post-max">清除後 Pmax <span>p.u.</span></label><input id="stability-post-max" type="number" value="1.0" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="stability-h">慣性常數 H <span>s</span></label><input id="stability-h" type="number" value="5" min="0" step="0.5" inputmode="decimal"></div><div class="field"><label for="clearing-time">故障清除時間 <span>s</span></label><input id="clearing-time" type="number" value="0.1" min="0" step="0.01" inputmode="decimal"></div></div><div class="assumption-note"><b>假設</b> 60 Hz、固定 dt = 0.0005 s；用擺動方程式估算第一擺，不代表完整多機暫態模擬。</div><button class="reset-button" type="button" data-reset-module="stability">↺ 重設本案例</button></div><div class="panel result-panel"><div class="panel-heading"><h4>等面積判定</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="metric-grid three-col"><div class="metric"><span>初始角 δ₀</span><strong id="initial-angle">41.81°</strong></div><div class="metric"><span>清除角 δc</span><strong id="clearing-angle">49.01°</strong></div><div class="metric"><span>加速面積 Aacc</span><strong id="accelerating-area">0.0827</strong></div><div class="metric metric-wide"><span>最大減速面積 Adec,max</span><strong id="decelerating-area">0.1688</strong></div></div><div id="stability-status" class="status-box status-ok"><span class="status-symbol">✓</span><span>暫態穩定｜減速面積足以吸收加速面積</span></div><p id="stability-feedback" class="feedback" aria-live="polite">快速清除故障可降低轉子角累積的加速能量；需同時比較清除角、加速面積與減速面積。</p></div></div></div>
+          <div class="stability-panel is-hidden" data-stability-panel="frequency"><div class="module-grid"><div class="panel input-panel"><div class="panel-heading"><h4>頻率事件</h4><span class="panel-tag">FREQUENCY</span></div><div class="field-grid two-col"><div class="field"><label for="frequency-nominal">額定頻率 <span>Hz</span></label><input id="frequency-nominal" type="number" value="60" min="0" step="1" inputmode="decimal"></div><div class="field"><label for="frequency-h">慣性常數 H <span>s</span></label><input id="frequency-h" type="number" value="5" min="0" step="0.5" inputmode="decimal"></div><div class="field"><label for="frequency-step">功率失衡 ΔP <span>p.u.</span></label><input id="frequency-step" type="number" value="0.1" step="0.01" inputmode="decimal"></div><div class="field"><label for="frequency-droop">下垂係數 R</label><input id="frequency-droop" type="number" value="0.05" min="0" step="0.01" inputmode="decimal"></div><div class="field"><label for="frequency-damping">負載阻尼 D</label><input id="frequency-damping" type="number" value="1" min="0" step="0.1" inputmode="decimal"></div></div><div class="assumption-note"><b>模型邊界</b> 只估算慣性與 aggregate droop；不含 governor 時間常數、AGC、限幅與負載卸除。</div></div><div class="panel result-panel"><div class="panel-heading"><h4>頻率反應</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="metric-grid three-col"><div class="metric"><span>初始 RoCoF</span><strong id="frequency-rocof">−0.600 Hz/s</strong></div><div class="metric metric-wide"><span>一次調頻後頻率</span><strong id="frequency-steady">59.714 Hz</strong></div></div><p id="frequency-feedback" class="feedback" aria-live="polite">慣性先限制頻率變化率；droop 與負載阻尼共同決定教學模型的穩態頻率偏移。</p></div></div></div>
+        </section>
+
+        <section class="module-section" data-module="dispatch" aria-labelledby="dispatch-title">
+          <div class="module-header"><div><span class="module-number">08</span><h3 id="dispatch-title">經濟調度｜在供需、成本與備轉間平衡</h3></div><button class="complete-button" type="button" data-complete="dispatch">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel"><div class="panel-heading"><h4>系統需求與機組成本</h4><span class="panel-tag">INPUT</span></div><div class="subheading">系統條件</div><div class="field-grid two-col"><div class="field"><label for="dispatch-load">系統負載 <span>MW</span></label><input id="dispatch-load" type="number" value="190" min="0" step="10" inputmode="decimal"></div><div class="field"><label for="dispatch-renewable">再生能源 <span>MW</span></label><input id="dispatch-renewable" type="number" value="30" step="10" inputmode="decimal"></div><div class="field"><label for="dispatch-storage">儲能出力 <span>MW</span></label><input id="dispatch-storage" type="number" value="10" step="10" inputmode="decimal"><small>正值放電，負值充電</small></div><div class="field"><label for="dispatch-reserve">備轉要求 <span>MW</span></label><input id="dispatch-reserve" type="number" value="20" min="0" step="10" inputmode="decimal"></div></div><div class="subheading">G1 成本與限制</div><div class="field-grid four-col"><div class="field"><label for="g1-a">a</label><input id="g1-a" type="number" value="0.01" min="0" step="0.01" inputmode="decimal"></div><div class="field"><label for="g1-b">b</label><input id="g1-b" type="number" value="10" step="1" inputmode="decimal"></div><div class="field"><label for="g1-min">Pmin <span>MW</span></label><input id="g1-min" type="number" value="20" min="0" step="10" inputmode="decimal"></div><div class="field"><label for="g1-max">Pmax <span>MW</span></label><input id="g1-max" type="number" value="120" min="0" step="10" inputmode="decimal"></div></div><div class="subheading">G2 成本與限制</div><div class="field-grid four-col"><div class="field"><label for="g2-a">a</label><input id="g2-a" type="number" value="0.02" min="0" step="0.01" inputmode="decimal"></div><div class="field"><label for="g2-b">b</label><input id="g2-b" type="number" value="8" step="1" inputmode="decimal"></div><div class="field"><label for="g2-min">Pmin <span>MW</span></label><input id="g2-min" type="number" value="10" min="0" step="10" inputmode="decimal"></div><div class="field"><label for="g2-max">Pmax <span>MW</span></label><input id="g2-max" type="number" value="100" min="0" step="10" inputmode="decimal"></div></div><button class="reset-button" type="button" data-reset-module="dispatch">↺ 重設本案例</button></div>
+            <div class="panel result-panel"><div class="panel-heading"><h4>調度結果</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="metric-grid three-col"><div class="metric"><span>淨傳統負載</span><strong id="net-load">150 MW</strong></div><div class="metric"><span>G1 出力</span><strong id="g1-output">66.67 MW</strong></div><div class="metric"><span>G2 出力</span><strong id="g2-output">83.33 MW</strong></div><div class="metric"><span>邊際成本 λ</span><strong id="dispatch-lambda">11.333</strong></div><div class="metric"><span>總成本</span><strong id="dispatch-cost">1516.67 / h</strong></div><div class="metric"><span>向上餘裕</span><strong id="reserve-headroom">70 MW</strong></div></div><div id="dispatch-status" class="status-box status-ok"><span class="status-symbol">✓</span><span>備轉要求滿足｜無損兩機教學調度</span></div><p id="dispatch-feedback" class="feedback" aria-live="polite">無損且未碰上下限時，最優條件是兩機增量成本相等。這不是含網損 ED、UC 或真實市場出清。</p><div class="decision-strip"><span class="decision-label">現代電網觀察</span><span>IBR 可能降低慣性與短路容量</span><span>儲能可提供調頻與備轉</span><span>需再檢查 N-1 與壅塞</span></div></div>
+          </div>
+        </section>
+
+        <footer class="workspace-footer"><span>來源：P1 電力系統（上／下）</span><span>教學模型，不取代正式系統研究、電驛整定或市場出清。</span></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
