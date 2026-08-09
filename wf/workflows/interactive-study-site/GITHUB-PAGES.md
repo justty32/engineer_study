@@ -17,6 +17,10 @@
     index.html
     styles.css
     app.js
+  iot-power-pcb/
+    index.html
+    styles.css
+    app.js
 ```
 
 原始碼仍留在各知識來源的 `互動網站/` 目錄；GitHub Actions 只在 runner 上組合 `_site/` artifact，不把產出複製回 repo，也不把整個筆記庫當 Pages 根目錄。
@@ -40,7 +44,7 @@
 ## URL 與相對路徑
 
 - 網站不得假設部署於 domain root；案例內部資產使用相對路徑，例如 `./styles.css`、`./app.js`。
-- 總入口使用相對連結 `./iot-device/`、`./power-systems/`。
+- 總入口使用相對連結 `./iot-device/`、`./power-systems/`、`./iot-power-pcb/`。
 - 原始筆記的 repo 連結若要公開，使用 GitHub blob URL；若只作開發來源，則不顯示成 Pages 內的失效相對連結。
 
 ## 部署驗證

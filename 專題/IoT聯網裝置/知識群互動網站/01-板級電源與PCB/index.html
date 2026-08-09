@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IoT 板級電源與 PCB｜互動學習</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳至主要內容</a>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <p class="eyebrow">IoT HARDWARE WORKSPACE</p>
+        <h1>板級電源與 PCB</h1>
+        <p class="subtitle">從電源樹、回流路徑到 bring-up 的設計證據練習</p>
+      </div>
+      <div class="progress-panel">
+        <div class="progress-heading">
+          <span>學習進度</span>
+          <span id="progress-label">0 / 8 模組</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" aria-label="網站學習進度">
+          <span id="progress-fill" class="progress-fill"></span>
+        </div>
+        <button class="button button-quiet" id="reset-progress" type="button">重設全部進度</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <nav class="module-nav" aria-label="學習模組導覽">
+        <span class="nav-label">Modules</span>
+        <button class="nav-item is-active" type="button" data-nav="power-tree"><span class="nav-index">01</span><span>電源樹與裕度</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="regulator"><span class="nav-index">02</span><span>穩壓器熱效率</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="battery"><span class="nav-index">03</span><span>睡眠漏電與電池</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="decoupling"><span class="nav-index">04</span><span>瞬態與去耦</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="schematic"><span class="nav-index">05</span><span>原理圖與 BOM</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="stackup"><span class="nav-index">06</span><span>疊層與回流</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="rf-layout"><span class="nav-index">07</span><span>RF 與天線</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="release"><span class="nav-index">08</span><span>Release 與 bring-up</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <div class="nav-note"><span class="status-dot status-dot-cyan" aria-hidden="true"></span><span>目前為教學近似模型</span></div>
+      </nav>
+
+      <main id="main-content" class="workspace">
+        <div class="workspace-heading">
+          <div>
+            <p class="section-kicker">DESIGN EVIDENCE</p>
+            <h2>IoT 板級硬體檢查台</h2>
+          </div>
+          <p class="heading-note">調整參數後觀察因果關係，再用完成按鈕記錄學習進度。</p>
+        </div>
+
+        <section class="module-section is-current" id="module-power-tree" data-module="power-tree" aria-labelledby="power-tree-title">
+          <div class="module-header">
+            <div><span class="module-number">01</span><h3 id="power-tree-title">電源樹與負載裕度</h3></div>
+            <button class="complete-button" type="button" data-complete="power-tree">標記完成</button>
+          </div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>負載假設</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="tree-margin">設計裕度 <span>%</span></label><input id="tree-margin" type="number" value="30" min="0" max="200" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="load-digital">數位負載 <span>mA</span></label><input id="load-digital" type="number" value="60" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="load-radio-average">Radio 平均 <span>mA</span></label><input id="load-radio-average" type="number" value="100" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="load-radio-peak">Radio 峰值 <span>mA</span></label><input id="load-radio-peak" type="number" value="2000" min="0" step="10" inputmode="decimal"></div>
+                <div class="field"><label for="load-clean">Clean rail <span>mA</span></label><input id="load-clean" type="number" value="20" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="load-core">Core rail <span>mA</span></label><input id="load-core" type="number" value="10" min="0" step="1" inputmode="decimal"></div>
+              </div>
+              <div class="rail-list" aria-label="電源域電壓"><div><span>Digital</span><strong>3.3 V</strong></div><div><span>Radio</span><strong>3.8 V</strong></div><div><span>Clean</span><strong>3.3 V</strong></div><div><span>Core</span><strong>1.8 V</strong></div></div>
+              <div class="formula-box"><span class="formula-label">教學模型</span><code>I_design = I × (1 + 裕度 / 100)</code><small>Radio 峰值不能用平均值取代；Clean rail 與高電流 Radio 分域。</small></div>
+              <button class="reset-button" type="button" data-reset-module="power-tree">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>電源樹預算</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="power-bars">
+                <div class="power-bar-row"><span>Digital 3.3 V</span><span class="bar-track"><i class="bar-fill bar-fill-cool" data-rail-bar="digital"></i></span><strong id="rail-digital-design">— mA</strong></div>
+                <div class="power-bar-row"><span>Radio 平均</span><span class="bar-track"><i class="bar-fill bar-fill-warm" data-rail-bar="radio"></i></span><strong id="rail-radio-design">— mA</strong></div>
+                <div class="power-bar-row"><span>Radio 峰值</span><span class="bar-track"><i class="bar-fill bar-fill-warm" data-rail-bar="radio-peak"></i></span><strong id="rail-radio-peak">— mA</strong></div>
+                <div class="power-bar-row"><span>Clean 3.3 V</span><span class="bar-track"><i class="bar-fill bar-fill-cool" data-rail-bar="clean"></i></span><strong id="rail-clean-design">— mA</strong></div>
+                <div class="power-bar-row"><span>Core 1.8 V</span><span class="bar-track"><i class="bar-fill bar-fill-cool" data-rail-bar="core"></i></span><strong id="rail-core-design">— mA</strong></div>
+              </div>
+              <div class="metric-grid two-col"><div class="metric"><span>連續功率（含裕度）</span><strong id="tree-continuous-power">— W</strong></div><div class="metric"><span>峰值功率（含裕度）</span><strong id="tree-peak-power">— W</strong></div></div>
+              <div id="tree-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="tree-feedback" class="feedback" aria-live="polite">調整負載與裕度後，檢查各 rail 是否仍有足夠的峰值供電能力。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-regulator" data-module="regulator" aria-labelledby="regulator-title">
+          <div class="module-header"><div><span class="module-number">02</span><h3 id="regulator-title">LDO / buck 的熱、效率與 dropout</h3></div><button class="complete-button" type="button" data-complete="regulator">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>穩壓器條件</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="reg-vin">輸入電壓 <span>V</span></label><input id="reg-vin" type="number" value="5" min="0.01" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="reg-vin-min">最低輸入 <span>V</span></label><input id="reg-vin-min" type="number" value="4.5" min="0.01" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="reg-vout">輸出電壓 <span>V</span></label><input id="reg-vout" type="number" value="3.3" min="0.01" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="reg-current">負載電流 <span>A</span></label><input id="reg-current" type="number" value="0.2" min="0.0001" step="0.01" inputmode="decimal"></div>
+                <div class="field"><label for="reg-dropout">Dropout <span>V</span></label><input id="reg-dropout" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="reg-theta">熱阻 θJA <span>°C/W</span></label><input id="reg-theta" type="number" value="50" min="0.01" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="reg-ta">環境溫度 <span>°C</span></label><input id="reg-ta" type="number" value="25" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="buck-efficiency">Buck 效率 <span>%</span></label><input id="buck-efficiency" type="number" value="90" min="0.01" max="100" step="1" inputmode="decimal"></div>
+              </div>
+              <div class="field choice-field"><label for="noise-priority">優先順序</label><select id="noise-priority"><option value="balanced" selected>平衡</option><option value="quiet">低雜訊</option><option value="efficiency">效率</option></select></div>
+              <button class="reset-button" type="button" data-reset-module="regulator">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>比較結果</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col"><div class="metric"><span>LDO 損耗</span><strong id="ldo-loss">— W</strong></div><div class="metric"><span>LDO 效率</span><strong id="ldo-efficiency">— %</strong></div><div class="metric"><span>LDO 接面溫度</span><strong id="ldo-junction">— °C</strong></div><div class="metric"><span>Dropout headroom</span><strong id="dropout-headroom">— V</strong></div><div class="metric"><span>Buck 損耗</span><strong id="buck-loss">— W</strong></div><div class="metric"><span>Buck 接面溫度</span><strong id="buck-junction">— °C</strong></div></div>
+              <div class="comparison-row"><span class="comparison-label">建議</span><span id="regulator-verdict">—</span></div>
+              <div id="regulator-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="regulator-feedback" class="feedback" aria-live="polite">LDO 將壓差轉成熱；buck 的效率優勢伴隨切換雜訊與佈局要求。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-battery" data-module="battery" aria-labelledby="battery-title">
+          <div class="module-header"><div><span class="module-number">03</span><h3 id="battery-title">睡眠漏電、平均電流與電池壽命</h3></div><button class="complete-button" type="button" data-complete="battery">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>狀態與隱性負載</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="state-inputs">
+                <div class="state-row"><span>睡眠</span><label for="sleep-current">電流 <input id="sleep-current" type="number" value="0.01" min="0" step="0.001" inputmode="decimal"></label><label for="sleep-share">佔比 <input id="sleep-share" type="number" value="99" min="0" max="100" step="0.1" inputmode="decimal"> %</label></div>
+                <div class="state-row"><span>運作</span><label for="active-current">電流 <input id="active-current" type="number" value="30" min="0" step="1" inputmode="decimal"></label><label for="active-share">佔比 <input id="active-share" type="number" value="0.9" min="0" max="100" step="0.1" inputmode="decimal"> %</label></div>
+                <div class="state-row"><span>發射</span><label for="tx-current">電流 <input id="tx-current" type="number" value="200" min="0" step="1" inputmode="decimal"></label><label for="tx-share">佔比 <input id="tx-share" type="number" value="0.1" min="0" max="100" step="0.1" inputmode="decimal"> %</label></div>
+              </div>
+              <div class="field-grid two-col compact-fields"><div class="field"><label for="regulator-iq">穩壓器 Iq <span>mA</span></label><input id="regulator-iq" type="number" value="0.005" min="0" step="0.001" inputmode="decimal"></div><div class="field"><label for="board-leakage">板級漏電 <span>mA</span></label><input id="board-leakage" type="number" value="0.002" min="0" step="0.001" inputmode="decimal"></div><div class="field"><label for="battery-capacity">電池容量 <span>mAh</span></label><input id="battery-capacity" type="number" value="2000" min="0.01" step="100" inputmode="decimal"></div><div class="field"><label for="battery-derating">可用折扣 <span>0–1</span></label><input id="battery-derating" type="number" value="0.8" min="0.01" max="1" step="0.05" inputmode="decimal"></div></div>
+              <p class="inline-note">三種狀態佔比必須合計 100%；此處不含溫度、老化、截止電壓與脈衝能力。</p>
+              <button class="reset-button" type="button" data-reset-module="battery">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>壽命估算</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col"><div class="metric"><span>Duty 平均電流</span><strong id="duty-average">— mA</strong></div><div class="metric"><span>隱性負載</span><strong id="hidden-current">— mA</strong></div><div class="metric"><span>總平均電流</span><strong id="total-average">— mA</strong></div><div class="metric"><span>估算壽命</span><strong id="battery-hours">— h</strong></div><div class="metric"><span>估算日數</span><strong id="battery-days">— d</strong></div><div class="metric"><span>隱性負載占比</span><strong id="leakage-share">— %</strong></div></div>
+              <div id="battery-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="battery-feedback" class="feedback" aria-live="polite">睡眠比例高時，Iq、LED、上拉與未關閉周邊可能成為主要耗電來源。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-decoupling" data-module="decoupling" aria-labelledby="decoupling-title">
+          <div class="module-header"><div><span class="module-number">04</span><h3 id="decoupling-title">通訊脈衝、ESR 與去耦電容</h3></div><button class="complete-button" type="button" data-complete="decoupling">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>瞬態條件</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col"><div class="field"><label for="pulse-step">電流步階 <span>A</span></label><input id="pulse-step" type="number" value="0.5" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="pulse-duration">脈衝時間 <span>ms</span></label><input id="pulse-duration" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="pulse-esr">電容 ESR <span>Ω</span></label><input id="pulse-esr" type="number" value="0.05" min="0" step="0.01" inputmode="decimal"></div><div class="field"><label for="pulse-capacitance">電容量 <span>µF</span></label><input id="pulse-capacitance" type="number" value="470" min="0.01" step="10" inputmode="decimal"></div><div class="field field-span"><label for="pulse-allowable">允許壓降 <span>V</span></label><input id="pulse-allowable" type="number" value="0.3" min="0.01" step="0.1" inputmode="decimal"></div></div>
+              <div class="formula-box"><span class="formula-label">教學模型</span><code>ΔV = ΔI × ESR + ΔI × Δt / C</code><small>電容要靠近模組；正式設計仍要看 ESL 與 regulator 動態響應。</small></div>
+              <button class="reset-button" type="button" data-reset-module="decoupling">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>電源完整性估算</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col"><div class="metric"><span>ESR 壓降</span><strong id="esr-drop">— V</strong></div><div class="metric"><span>電容性壓降</span><strong id="capacitive-drop">— V</strong></div><div class="metric"><span>總壓降</span><strong id="total-drop">— V</strong></div><div class="metric"><span>目標阻抗</span><strong id="target-impedance">— Ω</strong></div><div class="metric"><span>有效阻抗</span><strong id="effective-impedance">— Ω</strong></div><div class="metric"><span>最低電容量</span><strong id="minimum-capacitance">— µF</strong></div></div>
+              <div id="decoupling-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="decoupling-feedback" class="feedback" aria-live="polite">把高頻 100 nF、中頻 1–10 µF 與低頻 bulk 視為不同頻段的分工。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-schematic" data-module="schematic" aria-labelledby="schematic-title">
+          <div class="module-header"><div><span class="module-number">05</span><h3 id="schematic-title">原理圖、ERC、封裝與 BOM release</h3></div><button class="complete-button" type="button" data-complete="schematic">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>設計交付檢查</h4><span class="panel-tag">GATE</span></div>
+              <p class="panel-intro">依固定順序確認電源、啟動、料件、可觀測性、接口保護與 ERC。</p>
+              <div class="checklist">
+                <label class="check-row"><input id="check-decoupling" type="checkbox" data-schematic-check checked><span><strong>去耦已放置</strong><small>電源腳旁有對應儲能與高頻去耦</small></span></label>
+                <label class="check-row"><input id="check-reset-boot" type="checkbox" data-schematic-check checked><span><strong>RESET / BOOT 已確認</strong><small>上電與韌體進入路徑可追蹤</small></span></label>
+                <label class="check-row"><input id="check-package-part" type="checkbox" data-schematic-check checked><span><strong>封裝與料號已確認</strong><small>符號、封裝、替代料互相一致</small></span></label>
+                <label class="check-row"><input id="check-testpoints" type="checkbox" data-schematic-check><span><strong>測試點已安排</strong><small>電源軌、RESET、BOOT、SWD/JTAG 可量測</small></span></label>
+                <label class="check-row"><input id="check-interface-protection" type="checkbox" data-schematic-check><span><strong>接口保護已安排</strong><small>ESD / TVS 位於接口端且路徑先保護</small></span></label>
+                <label class="check-row"><input id="check-erc" type="checkbox" data-schematic-check><span><strong>ERC 已完成</strong><small>未連接腳、電源短路與警告已處理</small></span></label>
+              </div>
+              <button class="reset-button" type="button" data-reset-module="schematic">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>閘門狀態</h4><span class="panel-tag panel-tag-live">GATE</span></div>
+              <div class="metric"><span>已完成項目</span><strong id="schematic-count">— / 6</strong></div>
+              <div class="next-step"><span>第一個缺口</span><strong id="schematic-next">—</strong></div>
+              <div id="schematic-status" class="status-box status-warn" data-state="warn" aria-live="polite"><span>尚有缺口</span></div>
+              <p id="schematic-feedback" class="feedback" aria-live="polite">全部完成才可進入 layout review；這不代表設計已正確或可量產。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-stackup" data-module="stackup" aria-labelledby="stackup-title">
+          <div class="module-header"><div><span class="module-number">06</span><h3 id="stackup-title">疊層、回流路徑與 SI 風險</h3></div><button class="complete-button" type="button" data-complete="stackup">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>版圖條件</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col"><div class="field"><label for="stackup-layers">板層</label><select id="stackup-layers"><option value="4" selected>4 層：訊號／地／電源／訊號</option><option value="2">2 層</option></select></div><div class="field"><label for="signal-edge">邊緣速度</label><select id="signal-edge"><option value="fast" selected>快</option><option value="slow">慢</option></select></div><div class="field"><label for="route-length">走線長度</label><select id="route-length"><option value="long" selected>長</option><option value="short">短</option></select></div><div class="field"><label for="reference-plane">參考平面</label><select id="reference-plane"><option value="continuous" selected>連續</option><option value="broken">破碎</option></select></div><div class="field"><label for="crosses-split">是否跨越裂縫</label><select id="crosses-split"><option value="no" selected>否</option><option value="yes">是</option></select></div><div class="field"><label for="controlled-impedance">受控阻抗</label><select id="controlled-impedance"><option value="yes" selected>有</option><option value="no">無</option></select></div></div>
+              <p class="inline-note">分數是教材規則，不是阻抗計算或 sign-off；先處理回流，再談線寬。</p>
+              <button class="reset-button" type="button" data-reset-module="stackup">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>回流與訊號完整性</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid three-col"><div class="metric"><span>回流路徑</span><strong id="return-risk">—</strong></div><div class="metric"><span>SI 判斷</span><strong id="si-risk">—</strong></div><div class="metric"><span>教學分數</span><strong id="stackup-score">—</strong></div></div>
+              <div id="stackup-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待檢查</span></div>
+              <p id="stackup-feedback" class="feedback" aria-live="polite">邊緣速度比時脈頻率更能決定 SI 風險；完整參考地可讓回流維持在訊號下方。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-rf-layout" data-module="rf-layout" aria-labelledby="rf-title">
+          <div class="module-header"><div><span class="module-number">07</span><h3 id="rf-title">RF 饋線、π 匹配與天線淨空</h3></div><button class="complete-button" type="button" data-complete="rf-layout">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>RF layout checklist</h4><span class="panel-tag">GATE</span></div>
+              <div class="field"><label for="antenna-type">天線類型</label><select id="antenna-type"><option value="chip" selected>晶片天線</option><option value="pcb">PCB 走線天線</option><option value="external">外接天線</option></select></div>
+              <div class="checklist rf-checklist">
+                <label class="check-row"><input id="rf-50ohm" type="checkbox" data-rf-check checked><span><strong>50 Ω 饋線</strong><small>線寬依板廠疊層資料確認</small></span></label>
+                <label class="check-row"><input id="rf-short-route" type="checkbox" data-rf-check checked><span><strong>路徑短直</strong><small>避免不必要的繞線與過孔</small></span></label>
+                <label class="check-row"><input id="rf-ground-reference" type="checkbox" data-rf-check checked><span><strong>完整參考地</strong><small>維持連續回流與接地過孔</small></span></label>
+                <label class="check-row"><input id="rf-pi-match" type="checkbox" data-rf-check checked><span><strong>π 型匹配位置</strong><small>保留量測後調諧空間</small></span></label>
+                <label class="check-row"><input id="rf-keepout" type="checkbox" data-rf-check checked><span><strong>天線 keep-out</strong><small>依天線類型保留周邊禁布區</small></span></label>
+                <label class="check-row"><input id="rf-vendor-guide" type="checkbox" data-rf-check checked><span><strong>Vendor guideline</strong><small>以模組／天線廠商規則為準</small></span></label>
+                <label class="check-row"><input id="rf-metal-clear" type="checkbox" data-rf-check checked><span><strong>電池與金屬淨空</strong><small>避免放入天線有效區</small></span></label>
+              </div>
+              <button class="reset-button" type="button" data-reset-module="rf-layout">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>必要條件</h4><span class="panel-tag panel-tag-live">GATE</span></div>
+              <div class="metric"><span>已完成檢查</span><strong id="rf-count">— / 7</strong></div>
+              <div class="next-step"><span>第一個阻擋項</span><strong id="rf-blocker">—</strong></div>
+              <div id="rf-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待檢查</span></div>
+              <p id="rf-feedback" class="feedback" aria-live="polite">所有類型都需要 50 Ω、短路徑、完整參考地、π 位置與 vendor guideline；PCB／晶片天線另需淨空與金屬清除。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-release" data-module="release" aria-labelledby="release-title">
+          <div class="module-header"><div><span class="module-number">08</span><h3 id="release-title">EMC、ESD、DFM 與 bring-up 診斷</h3></div><button class="complete-button" type="button" data-complete="release">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>故障情境與 release gate</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col"><div class="field"><label for="failure-case">故障情境</label><select id="failure-case"><option value="tx-reset" selected>發射時重啟</option><option value="poor-range">距離不佳</option><option value="emissions">EMC 超標</option><option value="no-program">無法燒錄</option></select></div><div class="field"><label for="esd-location">ESD 保護位置</label><select id="esd-location"><option value="connector" selected>接口端</option><option value="ic">IC 旁</option><option value="none">未配置</option></select></div><div class="field field-span"><label for="esd-path">ESD 電流路徑</label><select id="esd-path"><option value="protected-first" selected>先經保護再進 IC</option><option value="bypass">繞過保護進 IC</option></select></div></div>
+              <div class="checklist release-checklist">
+                <label class="check-row"><input id="release-testpoints" type="checkbox" data-release-check checked><span><strong>測試點可達</strong><small>各電源軌、RESET、BOOT、EN 可量測</small></span></label>
+                <label class="check-row"><input id="release-dfm-rules" type="checkbox" data-release-check checked><span><strong>DFM 規則已審查</strong><small>線寬、孔徑、阻焊與極性標記已確認</small></span></label>
+                <label class="check-row"><input id="release-manufacturing-files" type="checkbox" data-release-check checked><span><strong>製造檔已備妥</strong><small>BOM、座標、Gerber / ODB++、鑽孔資料</small></span></label>
+                <label class="check-row"><input id="release-bringup-plan" type="checkbox" data-release-check checked><span><strong>Bring-up 計畫已排定</strong><small>限流上電與逐軌量測順序明確</small></span></label>
+                <label class="check-row"><input id="release-reflow-review" type="checkbox" data-release-check checked><span><strong>Reflow 檢查已完成</strong><small>鋼網、極性、冷焊與溫度曲線有記錄</small></span></label>
+              </div>
+              <button class="reset-button" type="button" data-reset-module="release">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>下一個可量測動作</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="diagnosis-list"><div class="diagnosis-row"><span>第一步</span><strong id="diagnosis-first">—</strong></div><div class="diagnosis-row"><span>第二步</span><strong id="diagnosis-second">—</strong></div></div>
+              <div class="metric"><span>Release gate</span><strong id="release-count">— / 5</strong></div>
+              <div id="release-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待檢查</span></div>
+              <p id="release-feedback" class="feedback" aria-live="polite">完成檢查仍不代表 EMC、ESD、DFM 或量產驗證已完成；請保留可觀測證據。</p>
+            </div>
+          </div>
+        </section>
+
+        <footer class="workspace-footer"><span>來源：硬體：電源與電池、硬體：PCB 設計實務</span><span>教學模型，不取代 datasheet、板廠疊層資料或正式驗證。</span></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
