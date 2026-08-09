@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="IoT 聯網裝置的端到端工程互動學習工作台">
+  <title>IoT 聯網裝置工作台</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div id="app-shell">
+    <aside class="sidebar" aria-label="網站導覽">
+      <div class="brand-block">
+        <p class="eyebrow">ENGINEER STUDY / IOT</p>
+        <p class="brand-title">IoT 聯網裝置</p>
+        <p class="brand-subtitle">硬體 × 韌體 × 量產</p>
+      </div>
+
+      <nav id="module-nav" aria-label="學習模組">
+        <p class="nav-label">工作台模組</p>
+        <button class="nav-item is-active" type="button" data-nav="mission">
+          <span class="nav-index">00</span><span>任務總覽</span>
+        </button>
+        <button class="nav-item" type="button" data-nav="architecture">
+          <span class="nav-index">01</span><span>系統地圖</span>
+        </button>
+        <button class="nav-item" type="button" data-nav="connectivity">
+          <span class="nav-index">02</span><span>連線選型</span>
+        </button>
+        <button class="nav-item" type="button" data-nav="power">
+          <span class="nav-index">03</span><span>功耗實驗室</span>
+        </button>
+        <button class="nav-item" type="button" data-nav="pulse">
+          <span class="nav-index">04</span><span>瞬態供電</span>
+        </button>
+        <button class="nav-item" type="button" data-nav="firmware">
+          <span class="nav-index">05</span><span>韌體狀態機</span>
+        </button>
+        <button class="nav-item" type="button" data-nav="diagnosis">
+          <span class="nav-index">06</span><span>現場診斷</span>
+        </button>
+        <button class="nav-item" type="button" data-nav="production">
+          <span class="nav-index">07</span><span>量產閘門</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="progress-heading">
+          <span>主線進度</span>
+          <output id="progress-label">0 / 8</output>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="主線進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span id="progress-fill" style="width: 0%"></span>
+        </div>
+        <button id="reset-progress" class="text-button" type="button">清除學習進度</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="breadcrumb">互動學習網站 / IoT 聯網裝置</p>
+          <p class="topbar-context">離線工程工作台 <span class="status-dot" aria-hidden="true"></span> 本機模式</p>
+        </div>
+        <div class="topbar-meta">
+          <span class="meta-chip">大學概論</span>
+          <span class="meta-chip">8 個模組</span>
+        </div>
+      </header>
+
+      <div class="content-wrap">
+        <section id="module-mission" class="learning-module mission-module" data-module="mission" aria-labelledby="mission-title">
+          <div class="module-kicker"><span class="module-number">00</span><span>MISSION CONTROL</span><span class="kicker-line"></span><span>目前模組</span></div>
+          <div class="mission-heading">
+            <div>
+              <h1 id="mission-title">IoT 聯網裝置工作台</h1>
+              <p class="lede">從一次週期取樣開始，把電源、資料、控制與量產證據串成一個可追溯的裝置設計。</p>
+            </div>
+            <div class="mission-status" aria-label="目前學習狀態">
+              <span class="status-label">目前模組</span>
+              <strong>任務總覽</strong>
+              <span class="status-value">準備開始</span>
+            </div>
+          </div>
+
+          <div class="workbench-grid">
+            <article class="panel summary-panel">
+              <div class="panel-heading">
+                <div><span class="section-tag">SYSTEM SNAPSHOT</span><h2>週期上傳裝置</h2></div>
+                <span class="panel-state state-ready">待設計</span>
+              </div>
+              <div class="snapshot-flow" aria-label="裝置摘要資料流">
+                <div class="snapshot-node"><span class="node-code">SEN</span><strong>感測器</strong><small>I²C / ADC</small></div>
+                <span class="flow-arrow" aria-hidden="true">→</span>
+                <div class="snapshot-node"><span class="node-code">MCU</span><strong>ARM MCU</strong><small>取樣 / 打包</small></div>
+                <span class="flow-arrow" aria-hidden="true">→</span>
+                <div class="snapshot-node"><span class="node-code">NET</span><strong>通訊模組</strong><small>UART + AT</small></div>
+                <span class="flow-arrow" aria-hidden="true">→</span>
+                <div class="snapshot-node"><span class="node-code">CLOUD</span><strong>雲端端點</strong><small>MQTT / HTTP</small></div>
+              </div>
+              <div class="snapshot-footer">
+                <div><span class="metric-label">週期</span><strong>取樣 → 上傳 → 睡眠</strong></div>
+                <div><span class="metric-label">設計邊界</span><strong>外部供電或電池</strong></div>
+                <div><span class="metric-label">核心風險</span><strong>峰值供電與重連</strong></div>
+              </div>
+            </article>
+
+            <aside class="panel task-panel">
+              <div class="panel-heading compact-heading"><span class="section-tag">MISSION BRIEF</span><span class="task-count">01 / 08</span></div>
+              <h2>完成一份初版設計</h2>
+              <p>你是板級硬體與韌體整合工程師。每個決策都要留下可量測、可診斷、可量產的證據。</p>
+              <ul class="task-list">
+                <li><span class="task-marker">01</span><span>說清楚資料、控制與能量路徑</span></li>
+                <li><span class="task-marker">02</span><span>在連線、功耗與覆蓋間取捨</span></li>
+                <li><span class="task-marker">03</span><span>讓故障能回到具體證據</span></li>
+                <li><span class="task-marker">04</span><span>把測試、佈建與追溯帶進量產</span></li>
+              </ul>
+              <button class="primary-button" type="button" data-complete="mission">標記任務總覽完成</button>
+            </aside>
+          </div>
+
+          <div class="mission-lower-grid">
+            <article class="panel compact-panel">
+              <span class="section-tag">DESIGN ASSUMPTIONS</span>
+              <h2>本工作台的裝置假設</h2>
+              <div class="assumption-grid">
+                <div><strong>感測</strong><span>週期讀取環境值與電池電壓</span></div>
+                <div><strong>主控</strong><span>ARM Cortex-M 級 MCU</span></div>
+                <div><strong>連線</strong><span>外購模組處理註冊、IP 與 TLS</span></div>
+                <div><strong>生命週期</strong><span>EVT → DVT → PVT → MP</span></div>
+              </div>
+            </article>
+            <article class="panel compact-panel accent-panel">
+              <span class="section-tag">READING MODE</span>
+              <h2>先看證據，再做判斷</h2>
+              <p>數值是前期估算，狀態是可觀察模型，清單是進入下一階段前的證據門檻。</p>
+              <p class="muted-note">不連真實裝置、不連雲端、不取代 datasheet 或正式認證。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="module-architecture" class="learning-module" data-module="architecture" aria-labelledby="architecture-title">
+          <div class="module-kicker"><span class="module-number">01</span><span>ARCHITECTURE</span><span class="kicker-line"></span><span>端到端責任邊界</span></div>
+          <div class="module-heading-row"><div><h2 id="architecture-title">系統地圖</h2><p class="module-intro">切換資料、控制或能量路徑，再點選節點辨識每一層負責什麼。</p></div><button class="outline-button" type="button" data-complete="architecture">完成系統地圖</button></div>
+          <div class="mode-switcher" role="group" aria-label="系統路徑模式">
+            <button type="button" class="mode-button is-selected" data-flow="data">資料流</button>
+            <button type="button" class="mode-button" data-flow="control">控制流</button>
+            <button type="button" class="mode-button" data-flow="energy">能量流</button>
+          </div>
+          <div class="architecture-layout">
+            <div class="system-map panel" aria-label="IoT 系統 HTML CSS 示意圖">
+              <div class="map-caption"><span>DEVICE / EDGE / CLOUD</span><span class="map-legend"><i class="legend-dot data-dot"></i>目前顯示：資料</span></div>
+              <div class="system-lane lane-device"><span class="lane-label">端裝置</span><div class="system-node node-sensor" data-node="sensor" role="button" tabindex="0"><span class="node-code">SEN</span><strong>感測器</strong><small>I²C / SPI / ADC</small></div><span class="system-connector"></span><div class="system-node node-mcu" data-node="mcu" role="button" tabindex="0"><span class="node-code">MCU</span><strong>ARM MCU</strong><small>應用與驅動</small></div><span class="system-connector"></span><div class="system-node node-module" data-node="module" role="button" tabindex="0"><span class="node-code">MOD</span><strong>通訊模組</strong><small>UART + AT / IP</small></div></div>
+              <div class="system-lane lane-board"><span class="lane-label">板級支援</span><div class="system-node node-power" data-node="power" role="button" tabindex="0"><span class="node-code">PWR</span><strong>電源樹</strong><small>輸入 / 穩壓 / 去耦</small></div><span class="system-connector connector-long"></span><div class="system-node node-antenna" data-node="antenna" role="button" tabindex="0"><span class="node-code">RF</span><strong>天線</strong><small>50 Ω / keep-out</small></div></div>
+              <div class="system-lane lane-network"><span class="lane-label">網路與雲</span><div class="system-node node-network" data-node="network" role="button" tabindex="0"><span class="node-code">NET</span><strong>基地台 / AP</strong><small>無線接入</small></div><span class="system-connector connector-long"></span><div class="system-node node-cloud" data-node="cloud" role="button" tabindex="0"><span class="node-code">CLOUD</span><strong>雲端端點</strong><small>MQTT / HTTP / API</small></div></div>
+              <div class="map-note"><span class="signal-sample"></span><span>資料路徑：感測值 → 封包 → 無線接入 → 雲端儲存與協調</span></div>
+            </div>
+            <article id="architecture-detail" class="panel detail-panel" aria-live="polite">
+              <div class="detail-header"><span class="section-tag">NODE DETAIL / DATA</span><span class="detail-index">01</span></div>
+              <h3>感測器 · Sensor</h3>
+              <dl class="detail-list"><div><dt>責任</dt><dd>以 I²C、SPI 或 ADC 取得可校驗的原始量測值。</dd></div><div><dt>輸入</dt><dd>供電、取樣命令、時脈與環境物理量。</dd></div><div><dt>輸出</dt><dd>數位寄存器資料或類比電壓，交給 MCU 驅動。</dd></div><div><dt>常見故障</dt><dd>未上電、位址衝突、啟動時間不足或睡眠後未恢復。</dd></div></dl>
+              <p class="detail-hint">目前節點的責任、輸入輸出與常見故障會顯示於此。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="module-connectivity" class="learning-module" data-module="connectivity" aria-labelledby="connectivity-title">
+          <div class="module-kicker"><span class="module-number">02</span><span>LINK SELECTION</span><span class="kicker-line"></span><span>教學啟發式</span></div>
+          <div class="module-heading-row"><div><h2 id="connectivity-title">連線選型</h2><p class="module-intro">調整產品條件，觀察 BLE、Wi-Fi、LoRa 與 NB-IoT 的相對取捨。</p></div><button class="outline-button" type="button" data-complete="connectivity">完成連線選型</button></div>
+          <div class="selector-grid panel">
+            <label class="field-label" for="link-range"><span>部署距離</span><select id="link-range" name="link-range"><option value="near">近距離，室內單一空間</option><option value="campus">園區或建築群</option><option value="wide">跨區域廣域覆蓋</option></select></label>
+            <label class="field-label" for="link-payload"><span>資料負載</span><select id="link-payload" name="link-payload"><option value="small">少量遙測，數 KB / 日</option><option value="medium">中量資料，週期上傳</option><option value="large">高吞吐量，含 OTA</option></select></label>
+            <label class="field-label" for="link-power"><span>能源條件</span><select id="link-power" name="link-power"><option value="battery">電池優先，需長待機</option><option value="balanced">容量與效能折衷</option><option value="mains">外部供電，效能優先</option></select></label>
+            <label class="field-label" for="link-infra"><span>基礎設施</span><select id="link-infra" name="link-infra"><option value="owned">可控制 AP / 閘道器</option><option value="shared">使用既有公共網路</option><option value="none">現場不保證有網路</option></select></label>
+          </div>
+          <div class="results-heading"><div><span class="section-tag">COMPARISON RESULT</span><h3>候選方案排序</h3></div><span class="heuristic-note">分數為教學模型，不取代法規、資費與現場測試</span></div>
+          <div id="link-results" class="link-results" aria-live="polite">
+            <article class="link-card link-card-featured" data-link-option="ble"><div class="link-top"><span class="protocol-mark">BLE</span><span class="score-badge">82 / 100</span></div><h4>Bluetooth Low Energy</h4><p class="link-fit">近距離、電池、已有閘道器時優先</p><ul><li>低功耗，適合感測器週期廣播</li><li>可把網路責任交給手機或閘道器</li></ul></article>
+            <article class="link-card" data-link-option="wifi"><div class="link-top"><span class="protocol-mark">Wi-Fi</span><span class="score-badge">68 / 100</span></div><h4>Wi-Fi</h4><p class="link-fit">有 AP 且資料量或 OTA 較大時合理</p><ul><li>吞吐量高，應用與更新較直接</li><li>連線與發射尖峰通常帶來較高功耗</li></ul></article>
+            <article class="link-card" data-link-option="lora"><div class="link-top"><span class="protocol-mark">LoRa</span><span class="score-badge">61 / 100</span></div><h4>LoRa</h4><p class="link-fit">低速、長距離、可自建閘道器</p><ul><li>小封包與低頻率上傳很有優勢</li><li>吞吐量、下行與區域規範是限制</li></ul></article>
+            <article class="link-card" data-link-option="nbiot"><div class="link-top"><span class="protocol-mark">NB-IoT</span><span class="score-badge">57 / 100</span></div><h4>NB-IoT</h4><p class="link-fit">需要蜂巢式廣域覆蓋與低速遙測</p><ul><li>不必自建現場網路，覆蓋可延伸</li><li>註冊延遲、資費與電信商入網需確認</li></ul></article>
+          </div>
+          <p class="module-note"><strong>判讀提醒：</strong>LPWAN 的核心取捨是長距離、低功耗、低速率；連線技術選對，也仍要驗證天線、電源峰值、模組預認證與部署條件。</p>
+        </section>
+
+        <section id="module-power" class="learning-module" data-module="power" aria-labelledby="power-title">
+          <div class="module-kicker"><span class="module-number">03</span><span>POWER LAB</span><span class="kicker-line"></span><span>週期估算</span></div>
+          <div class="module-heading-row"><div><h2 id="power-title">功耗實驗室</h2><p class="module-intro">用狀態電流與時間比例建立平均電流，再把容量與折扣換算成理想壽命。</p></div><button class="outline-button" type="button" data-complete="power">完成功耗實驗</button></div>
+          <div class="power-layout">
+            <form class="panel input-panel" aria-label="功耗輸入參數">
+              <div class="panel-heading"><div><span class="section-tag">INPUT PROFILE</span><h3>狀態電流剖面</h3></div><span class="unit-label">mA / s</span></div>
+              <div class="state-input-row"><div class="state-name"><span class="state-swatch sleep-swatch"></span><strong>Sleep</strong><small>低功耗等待</small></div><label for="sleep-current">電流 <input id="sleep-current" type="number" value="0.01" min="0" step="0.01"><span>mA</span></label><label for="sleep-time">時間 <input id="sleep-time" type="number" value="99" min="0" step="0.1"><span>s</span></label></div>
+              <div class="state-input-row"><div class="state-name"><span class="state-swatch sample-swatch"></span><strong>Sample</strong><small>感測與處理</small></div><label for="sample-current">電流 <input id="sample-current" type="number" value="30" min="0" step="0.1"><span>mA</span></label><label for="sample-time">時間 <input id="sample-time" type="number" value="0.9" min="0" step="0.1"><span>s</span></label></div>
+              <div class="state-input-row"><div class="state-name"><span class="state-swatch transmit-swatch"></span><strong>Transmit</strong><small>連線與發射</small></div><label for="tx-current">電流 <input id="tx-current" type="number" value="200" min="0" step="0.1"><span>mA</span></label><label for="tx-time">時間 <input id="tx-time" type="number" value="0.1" min="0" step="0.1"><span>s</span></label></div>
+              <div class="battery-inputs"><label class="field-label" for="battery-capacity"><span>電池容量</span><span class="input-with-unit"><input id="battery-capacity" type="number" value="2000" min="1" step="10"><em>mAh</em></span></label><label class="field-label" for="battery-derating"><span>可用容量折扣 η</span><span class="input-with-unit"><input id="battery-derating" type="number" value="0.8" min="0" max="1" step="0.05"><em>×</em></span></label></div>
+              <p class="formula-line">I<sub>avg</sub> = Σ(I<sub>i</sub> × t<sub>i</sub>) / Σt<sub>i</sub></p>
+            </form>
+            <div class="power-output-stack">
+              <article class="panel output-panel"><div class="output-heading"><span class="section-tag">ESTIMATE</span><span class="panel-state state-ready">理想估算</span></div><div class="result-grid"><div class="result-cell"><span>平均電流</span><strong id="average-current">0.480</strong><small>mA</small></div><div class="result-cell"><span>電池壽命</span><strong id="battery-life-hours">3334.0</strong><small>小時</small></div><div class="result-cell"><span>換算天數</span><strong id="battery-life-days">138.9</strong><small>天</small></div></div><div id="power-bars" class="power-bars" aria-label="各狀態電流比較"><div class="bar-label"><span>Sleep</span><span data-power-value="sleep">0.010 mA</span></div><div class="bar-track"><span class="bar-sleep" data-power-bar="sleep" style="width: 1%"></span></div><div class="bar-label"><span>Sample</span><span data-power-value="sample">30.00 mA</span></div><div class="bar-track"><span class="bar-sample" data-power-bar="sample" style="width: 15%"></span></div><div class="bar-label"><span>Transmit</span><span data-power-value="transmit">200.0 mA</span></div><div class="bar-track"><span class="bar-active" data-power-bar="transmit" style="width: 100%"></span></div></div></article>
+              <aside class="callout warning-callout"><strong>不要把平均值當成峰值</strong><p>發射瞬間仍可能需要 1.5–2 A；供電能力與去耦要另外驗證。</p></aside>
+            </div>
+          </div>
+          <p class="module-note"><strong>公式邊界：</strong>T<sub>life</sub> = C<sub>batt</sub>η / I<sub>avg</sub> 只代表理想估算，未含溫度、老化、自放電、轉換損耗與電池脈衝能力。</p>
+        </section>
+
+        <section id="module-pulse" class="learning-module" data-module="pulse" aria-labelledby="pulse-title">
+          <div class="module-kicker"><span class="module-number">04</span><span>TRANSIENT POWER</span><span class="kicker-line"></span><span>前期估算</span></div>
+          <div class="module-heading-row"><div><h2 id="pulse-title">瞬態供電</h2><p class="module-intro">分開看 ESR 立刻造成的壓降，以及電容在短暫階躍中能提供的電荷。</p></div><button class="outline-button" type="button" data-complete="pulse">完成瞬態估算</button></div>
+          <div class="pulse-layout">
+            <form class="panel input-panel" aria-label="瞬態供電輸入參數">
+              <div class="panel-heading"><div><span class="section-tag">PULSE INPUT</span><h3>負載階躍</h3></div><span class="unit-label">教學近似</span></div>
+              <div class="two-column-fields"><label class="field-label" for="pulse-delta-current"><span>ΔI 電流階躍</span><span class="input-with-unit"><input id="pulse-delta-current" type="number" value="0.5" min="0" step="0.1"><em>A</em></span></label><label class="field-label" for="pulse-duration"><span>Δt 持續時間</span><span class="input-with-unit"><input id="pulse-duration" type="number" value="0.2" min="0" step="0.1"><em>ms</em></span></label><label class="field-label" for="pulse-esr"><span>ESR 等效串聯電阻</span><span class="input-with-unit"><input id="pulse-esr" type="number" value="0.05" min="0" step="0.01"><em>Ω</em></span></label><label class="field-label" for="pulse-capacitance"><span>現有電容</span><span class="input-with-unit"><input id="pulse-capacitance" type="number" value="470" min="1" step="10"><em>µF</em></span></label><label class="field-label full-field" for="pulse-allowable-droop"><span>允許總壓降</span><span class="input-with-unit"><input id="pulse-allowable-droop" type="number" value="0.3" min="0.001" step="0.01"><em>V</em></span></label></div>
+              <div class="pulse-formulas"><span>ΔV<sub>ESR</sub> = ΔI × ESR</span><span>ΔV<sub>C</sub> = ΔI × Δt / C</span></div>
+            </form>
+            <article class="panel output-panel pulse-result-panel"><div class="output-heading"><span class="section-tag">VOLTAGE MARGIN</span><span class="panel-state state-warning">請確認餘裕</span></div><div class="result-grid pulse-results"><div class="result-cell"><span>最低需求電容</span><strong id="pulse-cap-required">400</strong><small>µF</small></div><div class="result-cell"><span>ESR 壓降</span><strong id="pulse-esr-droop">0.025</strong><small>V</small></div><div class="result-cell"><span>總壓降</span><strong id="pulse-total-droop">0.238</strong><small>V</small></div></div><div id="pulse-verdict" class="verdict verdict-warning"><strong>目前條件可進入前期設計</strong><p>總壓降低於 0.30 V，但還需要把電源動態響應、走線與模組 datasheet 納入驗證。</p></div></article>
+          </div>
+          <p class="module-note"><strong>適用範圍：</strong>這是「電容獨力支撐短暫電流階躍」的前期估算；若 ΔV<sub>ESR</sub> ≥ ΔV<sub>allow</sub>，只增加電容量也無法滿足條件。</p>
+        </section>
+
+        <section id="module-firmware" class="learning-module" data-module="firmware" aria-labelledby="firmware-title">
+          <div class="module-kicker"><span class="module-number">05</span><span>FIRMWARE STATE MACHINE</span><span class="kicker-line"></span><span>事件驅動</span></div>
+          <div class="module-heading-row"><div><h2 id="firmware-title">韌體狀態機</h2><p class="module-intro">把長時間註冊、非同步 URC、逾時與重連放進可觀察的狀態轉移。</p></div><button class="outline-button" type="button" data-complete="firmware">完成狀態機練習</button></div>
+          <div class="firmware-layout">
+            <article class="panel state-machine-panel"><div class="panel-heading"><div><span class="section-tag">CURRENT STATE</span><h3>連線管理器</h3></div><span id="firmware-state" class="state-pill state-online">ONLINE</span></div><div class="state-strip"><div class="state-step"><span>OFF</span><small>斷電</small></div><span>→</span><div class="state-step"><span>BOOT</span><small>啟動</small></div><span>→</span><div class="state-step"><span>INIT</span><small>自檢</small></div><span>→</span><div class="state-step active"><span>ONLINE</span><small>可上傳</small></div></div><div class="state-secondary"><span>REGISTERING</span><span>BACKOFF</span><span>HARD_RESET</span><span>SLEEP</span></div><p class="state-explanation">ONLINE 可接受 <code>link-drop</code> 並轉入 BACKOFF；在 OFF 收到同一事件則是無效事件，必須留下原因。</p></article>
+            <article class="panel event-panel"><div class="panel-heading"><div><span class="section-tag">INJECT EVENT</span><h3>注入事件</h3></div><button id="firmware-reset" class="small-button" type="button">重設狀態</button></div><div class="event-grid"><button type="button" data-fw-event="power">power</button><button type="button" data-fw-event="init-ok">init-ok</button><button type="button" data-fw-event="register-ok">register-ok</button><button type="button" data-fw-event="timeout">timeout</button><button type="button" data-fw-event="link-drop">link-drop</button><button type="button" data-fw-event="retry">retry</button><button type="button" data-fw-event="no-response">no-response</button><button type="button" data-fw-event="sleep">sleep</button><button type="button" data-fw-event="wake">wake</button></div><div id="firmware-log" class="firmware-log" aria-live="polite"><p><time>09:41:02</time><span class="log-info">INFO</span> 模組註冊成功，連線管理器進入 ONLINE。</p><p><time>09:40:57</time><span class="log-event">EVENT</span> 收到 +CEREG URC，交由 URC handler 分流。</p><p><time>09:40:31</time><span class="log-info">INFO</span> AT 引擎完成初始化，等待註冊事件。</p></div></article>
+          </div>
+          <div class="state-rules"><span><strong>timeout</strong> → BACKOFF</span><span><strong>no-response</strong> 累積多次 → HARD_RESET</span><span><strong>retry</strong> → 有界退避，不 busy-wait</span><span><strong>成功重連</strong> → 重設失敗計數</span></div>
+        </section>
+
+        <section id="module-diagnosis" class="learning-module" data-module="diagnosis" aria-labelledby="diagnosis-title">
+          <div class="module-kicker"><span class="module-number">06</span><span>FIELD DIAGNOSIS</span><span class="kicker-line"></span><span>建立證據鏈</span></div>
+          <div class="module-heading-row"><div><h2 id="diagnosis-title">現場診斷</h2><p class="module-intro">從症狀安排最有資訊量的量測順序，讓根因跨過硬體與韌體邊界仍可被驗證。</p></div><button class="outline-button" type="button" data-complete="diagnosis">完成診斷練習</button></div>
+          <div class="diagnosis-cases" role="group" aria-label="故障情境">
+            <button class="case-button is-selected" type="button" data-case="reset"><span class="case-code">CASE A</span><strong>偶發模組重啟</strong><small>發射時掉線或重開</small></button>
+            <button class="case-button" type="button" data-case="drain"><span class="case-code">CASE B</span><strong>電池過快耗盡</strong><small>睡眠電流高於預期</small></button>
+            <button class="case-button" type="button" data-case="storm"><span class="case-code">CASE C</span><strong>重連風暴</strong><small>逾時後反覆重試</small></button>
+          </div>
+          <div class="diagnosis-layout"><article class="panel checklist-panel"><div class="panel-heading"><div><span class="section-tag">MEASUREMENT ORDER</span><h3>可選檢查</h3></div><span class="panel-state state-ready">0 / 4 已選</span></div><label class="check-row"><input type="checkbox" data-diagnostic-check="rail"><span><strong>量模組電源軌與電流脈衝</strong><small>先把症狀對齊到發射時間點</small></span></label><label class="check-row"><input type="checkbox" data-diagnostic-check="bulk-cap"><span><strong>檢查 bulk cap、ESR 與走線</strong><small>確認儲能與低阻抗回路</small></span></label><label class="check-row"><input type="checkbox" data-diagnostic-check="brownout"><span><strong>比對欠壓與重置紀錄</strong><small>把波形與 firmware log 對時</small></span></label><label class="check-row"><input type="checkbox" data-diagnostic-check="at-log"><span><strong>查看 URC / AT log 與 backoff</strong><small>辨識掉線、逾時與重連責任</small></span></label></article><article class="panel evidence-panel"><div class="panel-heading"><div><span class="section-tag">EVIDENCE CHAIN</span><h3>目前證據</h3></div><span class="evidence-count">2 件待確認</span></div><div id="diagnosis-evidence" class="evidence-list"><div class="evidence-item evidence-signal"><span>波形</span><strong>TX 脈衝時電源軌下降</strong><small>需要確認最低電壓與欠壓門檻的時間關係</small></div><div class="evidence-item"><span>事件</span><strong>重置後重新進入註冊</strong><small>可能是電源問題，也可能是模組看門狗</small></div></div><div id="diagnosis-feedback" class="diagnosis-feedback" aria-live="polite"><strong>建議起點</strong><p>先量模組電源軌與電流脈衝，再看 bulk cap、ESR、走線與欠壓紀錄。</p></div></article></div>
+          <div class="diagnosis-principles"><span>症狀</span><b>→</b><span>證據</span><b>→</b><span>假設</span><b>→</b><span>實驗</span><b>→</b><span>結論</span></div>
+        </section>
+
+        <section id="module-production" class="learning-module" data-module="production" aria-labelledby="production-title">
+          <div class="module-kicker"><span class="module-number">07</span><span>PRODUCTION GATE</span><span class="kicker-line"></span><span>上市路徑</span></div>
+          <div class="module-heading-row"><div><h2 id="production-title">量產閘門</h2><p class="module-intro">把設計驗證、產測、佈建、射頻與追溯證據排進正確的上市路徑。</p></div><button class="outline-button" type="button" data-complete="production">完成量產閘門</button></div>
+          <div class="stage-switcher" role="group" aria-label="量產階段"><button class="stage-button is-selected" type="button" data-stage="EVT">EVT<span>功能</span></button><button class="stage-button" type="button" data-stage="DVT">DVT<span>性能</span></button><button class="stage-button" type="button" data-stage="PVT">PVT<span>量產</span></button><button class="stage-button" type="button" data-stage="MP">MP<span>維運</span></button></div>
+          <div class="production-layout"><article class="panel production-checklist"><div class="panel-heading"><div><span class="section-tag">GATE CHECKLIST</span><h3>EVT 進入 / 退出證據</h3></div><span class="panel-state state-warning">3 項缺口</span></div><label class="check-row production-row"><input type="checkbox" data-production-task="test-points" data-stage="EVT,DVT,PVT,MP"><span><strong>測試點與 SWD / JTAG 可達</strong><small>DFT 讓燒錄、量測與故障隔離可執行</small></span><em>EVT</em></label><label class="check-row production-row"><input type="checkbox" data-production-task="fct" data-stage="DVT,PVT,MP"><span><strong>FCT 驗證上電、介面與功能</strong><small>ICT 先攔結構問題，FCT 再驗整機行為</small></span><em>DVT</em></label><label class="check-row production-row"><input type="checkbox" data-production-task="firmware" data-stage="PVT,MP"><span><strong>產測韌體與讀回驗證</strong><small>燒錄版本、唯一識別資料要留下結果</small></span><em>PVT</em></label><label class="check-row production-row"><input type="checkbox" data-production-task="provisioning" data-stage="PVT,MP"><span><strong>Provisioning：序號、MAC、金鑰、憑證</strong><small>不可重複，失敗品不得直接流入下一站</small></span><em>PVT</em></label><label class="check-row production-row"><input type="checkbox" data-production-task="rf-emc" data-stage="DVT,PVT,MP"><span><strong>RF / EMC 前測與天線條件</strong><small>頻率、功率、頻譜、天線與屏蔽治具需可追溯</small></span><em>DVT</em></label><label class="check-row production-row"><input type="checkbox" data-production-task="trace-log" data-stage="PVT,MP"><span><strong>可追溯 log 與返修紀錄</strong><small>連回板號、韌體版本、站別、操作者與結果</small></span><em>MP</em></label></article><aside class="panel production-feedback-panel"><div class="panel-heading"><div><span class="section-tag">GATE FEEDBACK</span><h3>階段閘門</h3></div><span class="stage-readout">CURRENT: EVT</span></div><div id="production-feedback" class="gate-feedback"><div class="gate-meter"><span style="width: 25%"></span></div><strong>尚未具備退出 EVT 的完整證據</strong><p>目前缺少可量測的測試點、基本功能驗證與可重現的測試紀錄。先建立能觀察問題的入口，再擴大到性能與量產。</p><dl><div><dt>進入條件</dt><dd>需求、原理圖、關鍵元件與基本 DFT</dd></div><div><dt>退出條件</dt><dd>功能路徑可運作，風險與失效紀錄可回溯</dd></div></dl></div><div class="certification-note"><strong>認證邊界</strong><p>完成清單不代表取得 FCC、CE、NCC 或電信商認證。模組預認證仍受天線、整合條件與目標市場限制。</p></div></aside></div>
+        </section>
+
+        <footer class="site-footer"><span>IoT 聯網裝置互動學習網站</span><span>內容來源：engineer_study 專題筆記</span></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

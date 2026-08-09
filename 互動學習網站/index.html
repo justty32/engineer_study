@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="工程學習互動網站主題入口">
+  <title>工程學習｜互動網站</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="site-shell">
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">ENGINEER STUDY / INTERACTIVE</p>
+        <h1>互動學習網站</h1>
+      </div>
+      <p class="header-note">離線、零依賴的工程學習工作台</p>
+    </header>
+
+    <section class="topic-list" aria-labelledby="topic-heading">
+      <div class="section-heading">
+        <div>
+          <p class="section-label">TOPICS</p>
+          <h2 id="topic-heading">主題清單</h2>
+        </div>
+        <p class="topic-count">目前 1 個可用主題</p>
+      </div>
+
+      <div class="topics">
+        <a class="topic-row topic-row-active" href="./iot-device/">
+          <span class="topic-index">01</span>
+          <span class="topic-copy">
+            <strong>IoT 聯網裝置</strong>
+            <span>從系統分層、連線選型到功耗、韌體狀態機與量產閘門。</span>
+          </span>
+          <span class="topic-status"><i aria-hidden="true"></i>可開始</span>
+          <span class="topic-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <div class="topic-row topic-row-disabled" aria-disabled="true">
+          <span class="topic-index">02</span>
+          <span class="topic-copy">
+            <strong>電力系統</strong>
+            <span>電力系統基礎的互動學習工作台。</span>
+          </span>
+          <span class="topic-status topic-status-muted"><i aria-hidden="true"></i>製作中</span>
+          <span class="topic-arrow topic-arrow-muted" aria-hidden="true">—</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>ENGINEER STUDY</span>
+      <span>純靜態部署 · 無外部資產</span>
+    </footer>
+  </main>
+</body>
+</html>

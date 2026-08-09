@@ -45,4 +45,4 @@
 
 ## 給協作的 AI
 
-工作慣例與背景說明見 [`CLAUDE.md`](CLAUDE.md)。
+AI agent 的工作入口見 [`AGENTS.md`](AGENTS.md)；Claude Code 亦可由 [`CLAUDE.md`](CLAUDE.md) 轉入。

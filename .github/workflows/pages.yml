@@ -1,0 +1,74 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/pages.yml"
+      - "互動學習網站/index.html"
+      - "互動學習網站/styles.css"
+      - "專題/IoT聯網裝置/互動網站/index.html"
+      - "專題/IoT聯網裝置/互動網站/styles.css"
+      - "專題/IoT聯網裝置/互動網站/app.js"
+      - "電機/04-電力特化/P1-電力系統-互動網站/index.html"
+      - "電機/04-電力特化/P1-電力系統-互動網站/styles.css"
+      - "電機/04-電力特化/P1-電力系統-互動網站/app.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Assemble static site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/iot-device
+          cp '互動學習網站/index.html' _site/index.html
+          cp '互動學習網站/styles.css' _site/styles.css
+          cp '專題/IoT聯網裝置/互動網站/index.html' _site/iot-device/index.html
+          cp '專題/IoT聯網裝置/互動網站/styles.css' _site/iot-device/styles.css
+          cp '專題/IoT聯網裝置/互動網站/app.js' _site/iot-device/app.js
+
+          power_site='電機/04-電力特化/P1-電力系統-互動網站'
+          if [ -f "$power_site/index.html" ] && \
+            [ -f "$power_site/styles.css" ] && \
+            [ -f "$power_site/app.js" ]; then
+            mkdir -p _site/power-systems
+            cp "$power_site/index.html" _site/power-systems/index.html
+            cp "$power_site/styles.css" _site/power-systems/styles.css
+            cp "$power_site/app.js" _site/power-systems/app.js
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
