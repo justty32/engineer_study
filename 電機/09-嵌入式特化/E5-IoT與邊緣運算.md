@@ -4,6 +4,7 @@
 > 名詞對照見 [中英名詞對照表 → 嵌入式](../中英名詞對照表-4.md#嵌入式)。
 
 > 互動練習：[IoT 連線模組、協定與網路](https://justty32.github.io/engineer_study/iot-connectivity/)。
+> 互動練習：[IoT 裝置安全、佈建、量產與生命週期](https://justty32.github.io/engineer_study/iot-security-production/)。
 
 ## 這科在學什麼
 

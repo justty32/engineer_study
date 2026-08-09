@@ -4,7 +4,7 @@
 
 八個模組涵蓋電氣長度、鏈路預算、阻抗失配、RF layout、天線選型、機構失諧、edge-rate／EMI 與法規 gate。runtime 預定只有三個靜態檔案。
 
-預定 GitHub Pages：<https://justty32.github.io/engineer_study/iot-rf-antenna/>
+GitHub Pages：<https://justty32.github.io/engineer_study/iot-rf-antenna/>
 
 ```bash
 python3 -m http.server 4178 --directory '專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC'

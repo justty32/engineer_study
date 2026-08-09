@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>裝置安全與量產生命週期</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="page-heading">
+      <p class="eyebrow">IoT 聯網裝置</p>
+      <h1>裝置安全與量產生命週期</h1>
+      <p>從威脅初篩、每裝置身分到量產與退役，逐步檢查安全設計的必要證據。</p>
+    </div>
+    <nav aria-label="模組導覽">
+      <ol>
+        <li><a href="#threat-model" data-nav="threat-model">威脅初篩</a></li>
+        <li><a href="#device-identity" data-nav="device-identity">裝置身分</a></li>
+        <li><a href="#secure-boot" data-nav="secure-boot">Secure boot</a></li>
+        <li><a href="#ota-budget" data-nav="ota-budget">OTA 預算</a></li>
+        <li><a href="#update-recovery" data-nav="update-recovery">更新復原</a></li>
+        <li><a href="#provisioning-line" data-nav="provisioning-line">產線佈建</a></li>
+        <li><a href="#production-gate" data-nav="production-gate">量產證據</a></li>
+        <li><a href="#fleet-lifecycle" data-nav="fleet-lifecycle">機群生命週期</a></li>
+      </ol>
+    </nav>
+  </header>
+
+  <main>
+    <section class="progress-panel" aria-labelledby="progress-title" data-progress-key="engineerStudy.iotSecurityProduction.v1">
+      <h2 id="progress-title">學習進度</h2>
+      <p id="progress-label" aria-live="polite">已完成 0 / 8 個模組</p>
+      <div class="progress-track" role="progressbar" aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0">
+        <span id="progress-fill" class="progress-fill"></span>
+      </div>
+      <button type="button" id="reset-progress">重設全部進度</button>
+    </section>
+
+    <div class="module-list">
+      <section id="threat-model" class="module" data-module="threat-model" aria-labelledby="threat-model-title">
+        <header><p class="module-number">01</p><h2 id="threat-model-title">威脅面初篩</h2><p>先以攻擊面、影響與規模判斷控制優先順序。</p></header>
+        <div class="module-grid">
+          <form class="controls" aria-label="威脅面初篩輸入">
+            <fieldset><legend>威脅情境</legend>
+              <label for="threat-vector">威脅向量</label>
+              <select id="threat-vector" name="threat-vector"><option value="remote" selected>遠端 remote</option><option value="physical">實體 physical</option><option value="supply-chain">供應鏈 supply-chain</option></select>
+              <label for="threat-impact">影響類型</label>
+              <select id="threat-impact" name="threat-impact"><option value="data">資料 data</option><option value="control" selected>控制 control</option><option value="safety">安全 safety</option></select>
+              <label for="threat-scale">影響規模</label>
+              <select id="threat-scale" name="threat-scale"><option value="single">單一裝置 single</option><option value="fleet" selected>機群 fleet</option></select>
+              <label for="threat-update">更新能力</label>
+              <select id="threat-update" name="threat-update"><option value="available" selected>可更新 available</option><option value="none">無更新 none</option></select>
+            </fieldset>
+          </form>
+          <div class="results" aria-live="polite"><h3>初篩結果</h3><dl>
+            <div><dt>優先級</dt><dd id="threat-priority"></dd></div><div><dt>第一控制</dt><dd id="threat-first-control"></dd></div><div><dt>第二控制</dt><dd id="threat-second-control"></dd></div><div><dt>狀態</dt><dd id="threat-status"></dd></div>
+          </dl><p id="threat-feedback"></p></div>
+        </div>
+        <footer><button type="button" data-complete="threat-model">標記完成</button><button type="button" data-reset-module="threat-model">重設模組</button></footer>
+      </section>
+
+      <section id="device-identity" class="module" data-module="device-identity" aria-labelledby="device-identity-title">
+        <header><p class="module-number">02</p><h2 id="device-identity-title">每裝置身分 gate</h2><p>依固定順序建立可驗證、可輪替、可撤銷的身分閉環。</p></header>
+        <div class="module-grid"><form class="controls" aria-label="每裝置身分檢查"><fieldset><legend>必要檢查</legend>
+          <label><input id="identity-unique" type="checkbox" data-identity-check checked> 唯一裝置身分 unique identity</label>
+          <label><input id="identity-key-nonexport" type="checkbox" data-identity-check checked> 不可匯出私鑰 non-exportable private key</label>
+          <label><input id="identity-cert-chain" type="checkbox" data-identity-check checked> 憑證信任鏈 certificate trust chain</label>
+          <label><input id="identity-mutual-auth" type="checkbox" data-identity-check> 雙向認證 mutual authentication</label>
+          <label><input id="identity-rotation" type="checkbox" data-identity-check> 身分輪替 rotation</label>
+          <label><input id="identity-revocation" type="checkbox" data-identity-check> 身分撤銷 revocation</label>
+        </fieldset></form><div class="results" aria-live="polite"><h3>Gate 結果</h3><dl>
+          <div><dt>第一缺口</dt><dd id="identity-first"></dd></div><div><dt>第二缺口</dt><dd id="identity-second"></dd></div><div><dt>已完成</dt><dd id="identity-count"></dd></div><div><dt>阻擋原因</dt><dd id="identity-blocker"></dd></div><div><dt>狀態</dt><dd id="identity-status"></dd></div>
+        </dl><p id="identity-feedback"></p></div></div>
+        <footer><button type="button" data-complete="device-identity">標記完成</button><button type="button" data-reset-module="device-identity">重設模組</button></footer>
+      </section>
+
+      <section id="secure-boot" class="module" data-module="secure-boot" aria-labelledby="secure-boot-title">
+        <header><p class="module-number">03</p><h2 id="secure-boot-title">Secure boot 鏈</h2><p>以信任根驗證每一段啟動鏈，並保留授權復原路徑。</p></header>
+        <div class="module-grid"><form class="controls" aria-label="Secure boot 檢查"><fieldset><legend>啟動情境與必要檢查</legend>
+          <label for="boot-case">啟動情境</label><select id="boot-case" name="boot-case"><option value="normal" selected>正常啟動 normal</option><option value="tampered-image">映像遭竄改 tampered-image</option><option value="downgrade">降版 downgrade</option><option value="debug-attach">除錯連接 debug-attach</option></select>
+          <label><input id="boot-root-key" type="checkbox" data-boot-check checked> 不可變信任根／金鑰 immutable root/key</label><label><input id="boot-bootloader-signature" type="checkbox" data-boot-check checked> bootloader 簽章</label><label><input id="boot-app-signature" type="checkbox" data-boot-check checked> 應用程式簽章</label><label><input id="boot-antirollback" type="checkbox" data-boot-check> 防回滾 anti-rollback</label><label><input id="boot-debug-lock" type="checkbox" data-boot-check> 除錯鎖定 debug lock</label><label><input id="boot-fail-closed" type="checkbox" data-boot-check> 失敗關閉 fail closed</label><label><input id="boot-recovery" type="checkbox" data-boot-check> 簽章復原 signed recovery</label>
+        </fieldset></form><div class="results" aria-live="polite"><h3>鏈結結果</h3><dl><div><dt>第一缺口</dt><dd id="boot-first"></dd></div><div><dt>第二缺口</dt><dd id="boot-second"></dd></div><div><dt>已完成</dt><dd id="boot-count"></dd></div><div><dt>阻擋原因</dt><dd id="boot-blocker"></dd></div><div><dt>狀態</dt><dd id="boot-status"></dd></div></dl><p id="boot-feedback"></p></div></div>
+        <footer><button type="button" data-complete="secure-boot">標記完成</button><button type="button" data-reset-module="secure-boot">重設模組</button></footer>
+      </section>
+
+      <section id="ota-budget" class="module" data-module="ota-budget" aria-labelledby="ota-budget-title">
+        <header><p class="module-number">04</p><h2 id="ota-budget-title">A/B OTA 容量與傳輸預算</h2><p>用固定公式檢查雙槽容量、餘裕與傳輸時間。</p></header>
+        <div class="module-grid"><form class="controls" aria-label="OTA 預算輸入"><fieldset><legend>容量與傳輸參數</legend>
+          <label for="ota-flash-kib">Flash 容量 KiB</label><input id="ota-flash-kib" type="number" value="2048" min="0" step="1">
+          <label for="ota-boot-kib">Boot 佔用 KiB</label><input id="ota-boot-kib" type="number" value="128" min="0" step="1">
+          <label for="ota-image-kib">映像大小 KiB</label><input id="ota-image-kib" type="number" value="700" min="0" step="1">
+          <label for="ota-slots">槽位數</label><input id="ota-slots" type="number" value="2" min="1" step="1">
+          <label for="ota-scratch-kib">Scratch KiB</label><input id="ota-scratch-kib" type="number" value="128" min="0" step="1">
+          <label for="ota-config-kib">Config KiB</label><input id="ota-config-kib" type="number" value="64" min="0" step="1">
+          <label for="ota-rate-kib-s">傳輸速率 KiB/s</label><input id="ota-rate-kib-s" type="number" value="16" min="0" step="any">
+          <label for="ota-delivery-factor">傳輸倍率</label><input id="ota-delivery-factor" type="number" value="1.2" min="1" step="any">
+        </fieldset></form><div class="results" aria-live="polite"><h3>預算結果</h3><dl><div><dt>必要容量</dt><dd id="ota-required-kib"></dd></div><div><dt>容量餘裕</dt><dd id="ota-headroom-kib"></dd></div><div><dt>傳輸量</dt><dd id="ota-transfer-kib"></dd></div><div><dt>傳輸時間</dt><dd id="ota-transfer-seconds"></dd></div><div><dt>判定</dt><dd id="ota-verdict"></dd></div><div><dt>狀態</dt><dd id="ota-status"></dd></div></dl><p id="ota-feedback"></p></div></div>
+        <footer><button type="button" data-complete="ota-budget">標記完成</button><button type="button" data-reset-module="ota-budget">重設模組</button></footer>
+      </section>
+
+      <section id="update-recovery" class="module" data-module="update-recovery" aria-labelledby="update-recovery-title">
+        <header><p class="module-number">05</p><h2 id="update-recovery-title">更新故障復原 gate</h2><p>針對斷電、簽章失敗、首次啟動失敗與機群回歸建立處置路徑。</p></header>
+        <div class="module-grid"><form class="controls" aria-label="更新故障復原檢查"><fieldset><legend>故障情境與必要檢查</legend>
+          <label for="update-case">故障情境</label><select id="update-case" name="update-case"><option value="power-loss" selected>更新中斷電 power-loss</option><option value="signature-fail">簽章失敗 signature-fail</option><option value="first-boot-fail">首次啟動失敗 first-boot-fail</option><option value="fleet-regression">機群回歸 fleet-regression</option></select>
+          <label><input id="update-authenticity" type="checkbox" data-update-check checked> 簽章真實性 authenticity</label><label><input id="update-integrity" type="checkbox" data-update-check checked> 完整性／雜湊 integrity/hash</label><label><input id="update-inactive-slot" type="checkbox" data-update-check checked> 非作用槽 inactive slot</label><label><input id="update-atomic-switch" type="checkbox" data-update-check> 原子切換 atomic switch</label><label><input id="update-health-confirm" type="checkbox" data-update-check> 啟動健康確認 boot health confirmation</label><label><input id="update-rollback" type="checkbox" data-update-check> 回滾 rollback</label><label><input id="update-staged-rollout" type="checkbox" data-update-check> 分階段發布／暫停 staged rollout/pause</label><label><input id="update-observability" type="checkbox" data-update-check> 可觀測性 observability</label>
+        </fieldset></form><div class="results" aria-live="polite"><h3>復原結果</h3><dl><div><dt>第一缺口</dt><dd id="update-first"></dd></div><div><dt>第二缺口</dt><dd id="update-second"></dd></div><div><dt>已完成</dt><dd id="update-count"></dd></div><div><dt>阻擋原因</dt><dd id="update-blocker"></dd></div><div><dt>狀態</dt><dd id="update-status"></dd></div></dl><p id="update-feedback"></p></div></div>
+        <footer><button type="button" data-complete="update-recovery">標記完成</button><button type="button" data-reset-module="update-recovery">重設模組</button></footer>
+      </section>
+
+      <section id="provisioning-line" class="module" data-module="provisioning-line" aria-labelledby="provisioning-line-title">
+        <header><p class="module-number">06</p><h2 id="provisioning-line-title">產線佈建 gate</h2><p>檢查 station 授權、密鑰綁定、失敗隔離與可追溯紀錄。</p></header>
+        <div class="module-grid"><form class="controls" aria-label="產線佈建檢查"><fieldset><legend>佈建情境與必要檢查</legend>
+          <label for="provisioning-case">佈建情境</label><select id="provisioning-case" name="provisioning-case"><option value="new-device" selected>新裝置 new-device</option><option value="rework">返工 rework</option><option value="certificate-rotation">憑證輪替 certificate-rotation</option></select>
+          <label><input id="provisioning-station-auth" type="checkbox" data-provisioning-check checked> station 授權 station authorization</label><label><input id="provisioning-unique-id" type="checkbox" data-provisioning-check checked> 唯一序號／MAC unique serial/MAC</label><label><input id="provisioning-key-nonexport" type="checkbox" data-provisioning-check checked> 不可匯出金鑰 non-exportable key</label><label><input id="provisioning-cert-bind" type="checkbox" data-provisioning-check> 憑證綁定 certificate binding</label><label><input id="provisioning-readback" type="checkbox" data-provisioning-check> 回讀／線上挑戰 readback/online challenge</label><label><input id="provisioning-quarantine" type="checkbox" data-provisioning-check> 失敗品隔離 failure quarantine</label><label><input id="provisioning-audit" type="checkbox" data-provisioning-check> 稽核軌跡 audit trace</label><label><input id="provisioning-debug-lock" type="checkbox" data-provisioning-check> 除錯鎖定 debug lock</label>
+        </fieldset></form><div class="results" aria-live="polite"><h3>佈建結果</h3><dl><div><dt>第一缺口</dt><dd id="provisioning-first"></dd></div><div><dt>第二缺口</dt><dd id="provisioning-second"></dd></div><div><dt>已完成</dt><dd id="provisioning-count"></dd></div><div><dt>阻擋原因</dt><dd id="provisioning-blocker"></dd></div><div><dt>狀態</dt><dd id="provisioning-status"></dd></div></dl><p id="provisioning-feedback"></p></div></div>
+        <footer><button type="button" data-complete="provisioning-line">標記完成</button><button type="button" data-reset-module="provisioning-line">重設模組</button></footer>
+      </section>
+
+      <section id="production-gate" class="module" data-module="production-gate" aria-labelledby="production-gate-title">
+        <header><p class="module-number">07</p><h2 id="production-gate-title">EVT 到 MP 證據 gate</h2><p>依階段累積測試、更新、佈建、追溯與變更控制證據。</p></header>
+        <div class="module-grid"><form class="controls" aria-label="量產階段檢查"><fieldset><legend>量產階段與必要檢查</legend>
+          <label for="production-stage">量產階段</label><select id="production-stage" name="production-stage"><option value="EVT">EVT</option><option value="DVT" selected>DVT</option><option value="PVT">PVT</option><option value="MP">MP</option></select>
+          <label><input id="production-test-points" type="checkbox" data-production-check checked> 測試點／SWD test points/SWD</label><label><input id="production-fct" type="checkbox" data-production-check checked> ICT／FCT</label><label><input id="production-secure-update" type="checkbox" data-production-check> Secure boot／OTA 證據</label><label><input id="production-rf-emc" type="checkbox" data-production-check> RF／EMC 預掃 prescan</label><label><input id="production-fixture" type="checkbox" data-production-check> 量產治具 production fixture</label><label><input id="production-provisioning" type="checkbox" data-production-check> 佈建 provisioning</label><label><input id="production-traceability" type="checkbox" data-production-check> 追溯性 traceability</label><label><input id="production-change-control" type="checkbox" data-production-check> 變更控制 change control</label>
+        </fieldset></form><div class="results" aria-live="polite"><h3>階段結果</h3><dl><div><dt>第一缺口</dt><dd id="production-first"></dd></div><div><dt>第二缺口</dt><dd id="production-second"></dd></div><div><dt>已完成</dt><dd id="production-count"></dd></div><div><dt>阻擋原因</dt><dd id="production-blocker"></dd></div><div><dt>狀態</dt><dd id="production-status"></dd></div></dl><p id="production-feedback"></p></div></div>
+        <footer><button type="button" data-complete="production-gate">標記完成</button><button type="button" data-reset-module="production-gate">重設模組</button></footer>
+      </section>
+
+      <section id="fleet-lifecycle" class="module" data-module="fleet-lifecycle" aria-labelledby="fleet-lifecycle-title">
+        <header><p class="module-number">08</p><h2 id="fleet-lifecycle-title">機群事件與退役 gate</h2><p>處理遭入侵、憑證過期、遺失裝置與退役後的身分和資料。</p></header>
+        <div class="module-grid"><form class="controls" aria-label="機群生命週期檢查"><fieldset><legend>事件情境與必要檢查</legend>
+          <label for="lifecycle-case">事件情境</label><select id="lifecycle-case" name="lifecycle-case"><option value="compromised" selected>遭入侵 compromised</option><option value="certificate-expired">憑證過期 certificate-expired</option><option value="lost-device">裝置遺失 lost-device</option><option value="retire">退役 retire</option></select>
+          <label><input id="lifecycle-identify" type="checkbox" data-lifecycle-check checked> 識別影響範圍 identify scope</label><label><input id="lifecycle-quarantine" type="checkbox" data-lifecycle-check checked> 隔離 quarantine</label><label><input id="lifecycle-revoke" type="checkbox" data-lifecycle-check> 撤銷身分 revoke identity</label><label><input id="lifecycle-rotate" type="checkbox" data-lifecycle-check> 輪替受影響憑證 rotate affected credentials</label><label><input id="lifecycle-patch" type="checkbox" data-lifecycle-check> 修補 patch</label><label><input id="lifecycle-verify" type="checkbox" data-lifecycle-check> 驗證復原 verify recovery</label><label><input id="lifecycle-wipe" type="checkbox" data-lifecycle-check> 清除本機資料 wipe local data</label><label><input id="lifecycle-audit" type="checkbox" data-lifecycle-check> 保留稽核證據 retain audit evidence</label>
+        </fieldset></form><div class="results" aria-live="polite"><h3>生命週期結果</h3><dl><div><dt>第一缺口</dt><dd id="lifecycle-first"></dd></div><div><dt>第二缺口</dt><dd id="lifecycle-second"></dd></div><div><dt>已完成</dt><dd id="lifecycle-count"></dd></div><div><dt>阻擋原因</dt><dd id="lifecycle-blocker"></dd></div><div><dt>狀態</dt><dd id="lifecycle-status"></dd></div></dl><p id="lifecycle-feedback"></p></div></div>
+        <footer><button type="button" data-complete="fleet-lifecycle">標記完成</button><button type="button" data-reset-module="fleet-lifecycle">重設模組</button></footer>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
