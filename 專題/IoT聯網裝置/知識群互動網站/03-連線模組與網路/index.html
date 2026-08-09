@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IoT 連線模組與網路｜互動學習</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳至主要內容</a>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <p class="eyebrow">IOT CONNECTIVITY WORKSPACE</p>
+        <h1>連線模組與網路</h1>
+        <p class="subtitle">從 bearer 初篩、AT 引擎到會話復原與故障升級</p>
+      </div>
+      <div class="progress-panel">
+        <div class="progress-heading"><span>學習進度</span><span id="progress-label">0 / 8 模組</span></div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" aria-label="網站學習進度"><span id="progress-fill" class="progress-fill"></span></div>
+        <button class="button button-quiet" id="reset-progress" type="button">重設全部進度</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <nav class="module-nav" aria-label="學習模組導覽">
+        <span class="nav-label">Modules</span>
+        <button class="nav-item is-active" type="button" data-nav="bearer-choice"><span class="nav-index">01</span><span>Bearer 選型</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="host-link"><span class="nav-index">02</span><span>Host 介面容量</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="at-engine"><span class="nav-index">03</span><span>AT / URC 引擎</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="backoff"><span class="nav-index">04</span><span>指數退避</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="session"><span class="nav-index">05</span><span>分層會話</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="data-budget"><span class="nav-index">06</span><span>資料預算</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="keepalive"><span class="nav-index">07</span><span>Keepalive / PSM</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <button class="nav-item" type="button" data-nav="supervisor"><span class="nav-index">08</span><span>Supervisor 升級</span><span class="nav-mark" aria-hidden="true">○</span></button>
+        <div class="nav-note"><span class="status-dot" aria-hidden="true"></span><span>目前為教學近似模型</span></div>
+      </nav>
+
+      <main id="main-content" class="workspace">
+        <div class="workspace-heading">
+          <div><p class="section-kicker">DEVICE-SIDE CONNECTION EVIDENCE</p><h2>IoT 連線工作台</h2></div>
+          <p class="heading-note">調整條件觀察因果關係，再用完成按鈕記錄學習進度。</p>
+        </div>
+
+        <section class="module-section is-current" id="module-bearer-choice" data-module="bearer-choice" aria-labelledby="bearer-choice-title">
+          <div class="module-header"><div><span class="module-number">01</span><h3 id="bearer-choice-title">Bearer 選型與連線取捨</h3></div><button class="complete-button" type="button" data-complete="bearer-choice">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>場景條件</h4><span class="panel-tag">INPUTS</span></div>
+              <p class="panel-intro">先用代理變數做第一輪篩選，不把結果當成覆蓋、認證或採購保證。</p>
+              <div class="field-grid">
+                <div class="field"><label for="bearer-range">距離範圍</label><select id="bearer-range"><option value="room">房間內</option><option value="campus">園區內</option><option value="wide" selected>廣域</option></select></div>
+                <div class="field"><label for="bearer-payload">Payload 大小</label><select id="bearer-payload"><option value="small" selected>小</option><option value="medium">中</option><option value="high">高</option></select></div>
+                <div class="field"><label for="bearer-power">供電方式</label><select id="bearer-power"><option value="coin" selected>鈕扣電池</option><option value="battery">一般電池</option><option value="mains">市電</option></select></div>
+                <div class="field"><label for="bearer-infrastructure">基礎設施</label><select id="bearer-infrastructure"><option value="private">私有部署</option><option value="operator" selected>電信商</option></select></div>
+                <div class="field"><label for="bearer-downlink">下行需求</label><select id="bearer-downlink"><option value="rare" selected>很少</option><option value="frequent">頻繁</option></select></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">初篩觀念</span><code>距離 × 資料量 × 供電 × 部署 × 下行</code><small>實際仍須查覆蓋、成本、認證與場域量測。</small></div>
+              <button class="reset-button" type="button" data-reset-module="bearer-choice">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>初篩結果</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="result-list">
+                <div class="result-line"><span>首選 bearer</span><strong id="bearer-verdict">—</strong></div>
+                <div class="result-line"><span>備選 bearer</span><strong id="bearer-runner-up">—</strong></div>
+                <div class="result-line"><span>主要取捨</span><strong id="bearer-tradeoff">—</strong></div>
+              </div>
+              <div id="bearer-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="bearer-feedback" class="feedback" aria-live="polite">預設情境應以 NB-IoT 為首選、LTE-M 為備選，並保留實測與成本驗證。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-host-link" data-module="host-link" aria-labelledby="host-link-title">
+          <div class="module-header"><div><span class="module-number">02</span><h3 id="host-link-title">Host 介面容量與 flow control</h3></div><button class="complete-button" type="button" data-complete="host-link">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>UART 預算</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="host-baud">Baud rate <span>bit/s</span></label><input id="host-baud" type="number" value="115200" min="0.01" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="host-bits-byte">每 byte 位元數 <span>bit</span></label><input id="host-bits-byte" type="number" value="10" min="0.01" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="host-payload-bytes">Payload <span>B</span></label><input id="host-payload-bytes" type="number" value="512" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="host-message-rate">訊息速率 <span>/s</span></label><input id="host-message-rate" type="number" value="10" min="0" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="host-burst-rate">Burst 速率 <span>B/s</span></label><input id="host-burst-rate" type="number" value="20000" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="host-burst-ms">Burst 時間 <span>ms</span></label><input id="host-burst-ms" type="number" value="100" min="0" step="1" inputmode="decimal"></div>
+                <div class="field field-span"><label for="host-buffer-bytes">接收緩衝區 <span>B</span></label><input id="host-buffer-bytes" type="number" value="2048" min="0.01" step="1" inputmode="numeric"></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">容量模型</span><code>R_UART = baud / bits_byte</code><small>平均足夠不代表 burst 不會讓接收端溢位。</small></div>
+              <button class="reset-button" type="button" data-reset-module="host-link">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>流量與緩衝結果</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col">
+                <div class="metric metric-accent-blue"><span>介面容量</span><strong id="host-capacity">— B/s</strong></div>
+                <div class="metric metric-accent-green"><span>穩態資料率</span><strong id="host-steady-rate">— B/s</strong></div>
+                <div class="metric metric-accent-yellow"><span>利用率</span><strong id="host-utilization">— %</strong></div>
+                <div class="metric metric-accent-orange"><span>Burst 超額</span><strong id="host-burst-excess">— B</strong></div>
+                <div class="metric metric-accent-blue metric-span-two"><span>緩衝餘裕</span><strong id="host-buffer-headroom">— B</strong></div>
+              </div>
+              <div id="host-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="host-feedback" class="feedback" aria-live="polite">預設條件應能承受穩態流量與 burst，仍可評估 RTS/CTS、DMA 或環形緩衝。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-at-engine" data-module="at-engine" aria-labelledby="at-engine-title">
+          <div class="module-header"><div><span class="module-number">03</span><h3 id="at-engine-title">AT / URC 解析狀態</h3></div><button class="complete-button" type="button" data-complete="at-engine">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>收到一行資料</h4><span class="panel-tag">STATE INPUTS</span></div>
+              <div class="field-grid">
+                <div class="field"><label for="at-state">目前狀態</label><select id="at-state"><option value="idle">Idle</option><option value="wait" selected>Wait response</option><option value="data">Transparent data</option></select></div>
+                <div class="field"><label for="at-line">收到的行類型</label><select id="at-line"><option value="ok">OK</option><option value="error">ERROR</option><option value="urc" selected>URC</option><option value="payload">Payload</option><option value="prompt">Prompt</option></select></div>
+                <div class="field"><label for="at-command-pending">命令是否 pending</label><select id="at-command-pending"><option value="yes" selected>是</option><option value="no">否</option></select></div>
+                <div class="field"><label for="at-urc-handler">URC handler</label><select id="at-urc-handler"><option value="yes" selected>已註冊</option><option value="no">未註冊</option></select></div>
+                <div class="field"><label for="at-transparent-guard">透傳 guard</label><select id="at-transparent-guard"><option value="yes" selected>已建立</option><option value="no">未建立</option></select></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">分流原則</span><code>URC ≠ command response</code><small>先分類、再派送；不要在 ISR 中 busy-wait 等回應。</small></div>
+              <button class="reset-button" type="button" data-reset-module="at-engine">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>狀態機動作</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="state-flow">
+                <div class="state-step"><span>分類</span><strong id="at-classification">—</strong></div>
+                <div class="flow-arrow" aria-hidden="true">→</div>
+                <div class="state-step"><span>動作</span><strong id="at-action">—</strong></div>
+                <div class="flow-arrow" aria-hidden="true">→</div>
+                <div class="state-step"><span>下一狀態</span><strong id="at-next-state">—</strong></div>
+              </div>
+              <div id="at-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待分流</span></div>
+              <p id="at-feedback" class="feedback" aria-live="polite">預設 URC 應獨立送至 handler，命令仍維持 wait。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-backoff" data-module="backoff" aria-labelledby="backoff-title">
+          <div class="module-header"><div><span class="module-number">04</span><h3 id="backoff-title">有上限的指數退避</h3></div><button class="complete-button" type="button" data-complete="backoff">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>重試參數</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="backoff-base">基礎等待 <span>s</span></label><input id="backoff-base" type="number" value="2" min="0.01" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="backoff-attempt">目前 attempt <span>整數</span></label><input id="backoff-attempt" type="number" value="4" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="backoff-cap">等待上限 <span>s</span></label><input id="backoff-cap" type="number" value="60" min="0.01" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="backoff-jitter">Jitter <span>%</span></label><input id="backoff-jitter" type="number" value="20" min="0" max="100" step="1" inputmode="decimal"></div>
+                <div class="field field-span"><label for="backoff-max-retries">最大重試次數 <span>整數</span></label><input id="backoff-max-retries" type="number" value="6" min="0" step="1" inputmode="numeric"></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">退避模型</span><code>dₙ = min(cap, base × 2ⁿ)</code><small>每一項先套 cap，再加入 cumulative 等待。</small></div>
+              <button class="reset-button" type="button" data-reset-module="backoff">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>等待預算</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col">
+                <div class="metric metric-accent-blue"><span>Nominal delay</span><strong id="backoff-nominal">— s</strong></div>
+                <div class="metric metric-accent-yellow"><span>Jitter 最小</span><strong id="backoff-min">— s</strong></div>
+                <div class="metric metric-accent-yellow"><span>Jitter 最大</span><strong id="backoff-max">— s</strong></div>
+                <div class="metric metric-accent-green metric-span-two"><span>累積等待</span><strong id="backoff-cumulative">— s</strong></div>
+              </div>
+              <div id="backoff-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="backoff-feedback" class="feedback" aria-live="polite">預設 attempt 4 的 nominal delay 應為 32.0 s；超過最大重試次數時交給 supervisor。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-session" data-module="session" aria-labelledby="session-title">
+          <div class="module-header"><div><span class="module-number">05</span><h3 id="session-title">分層會話重建</h3></div><button class="complete-button" type="button" data-complete="session">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>依賴 gate</h4><span class="panel-tag">CHECKLIST</span></div>
+              <div class="field choice-field"><label for="session-case">診斷情境</label><select id="session-case"><option value="network-drop" selected>網路掉線</option><option value="dns-time">DNS / 時間問題</option><option value="tls-fail">TLS 失敗</option><option value="app-session">應用會話中斷</option></select></div>
+              <div class="checklist">
+                <label class="check-row"><input id="session-registration" type="checkbox" data-session-check checked><span><strong>Registration</strong><small>註冊與 URC 狀態可確認</small></span></label>
+                <label class="check-row"><input id="session-ip" type="checkbox" data-session-check checked><span><strong>IP layer</strong><small>位址與路由已取得</small></span></label>
+                <label class="check-row"><input id="session-time-dns" type="checkbox" data-session-check checked><span><strong>Time / DNS</strong><small>時間源與名稱解析可用</small></span></label>
+                <label class="check-row"><input id="session-socket" type="checkbox" data-session-check><span><strong>Socket</strong><small>傳輸端點已建立</small></span></label>
+                <label class="check-row"><input id="session-tls" type="checkbox" data-session-check><span><strong>TLS</strong><small>安全通道已建立</small></span></label>
+                <label class="check-row"><input id="session-app" type="checkbox" data-session-check><span><strong>App session</strong><small>訂閱、QoS 與 sequence 可恢復</small></span></label>
+              </div>
+              <button class="reset-button" type="button" data-reset-module="session">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>重建順序</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="diagnosis-list">
+                <div class="diagnosis-row"><span>第一缺口</span><strong id="session-first">—</strong></div>
+                <div class="diagnosis-row"><span>第二觀察</span><strong id="session-second">—</strong></div>
+                <div class="diagnosis-row"><span>完成 gate</span><strong id="session-count">— / 6</strong></div>
+                <div class="diagnosis-row"><span>下一步</span><strong id="session-next">—</strong></div>
+              </div>
+              <div id="session-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待檢查</span></div>
+              <p id="session-feedback" class="feedback" aria-live="polite">固定順序為 registration → IP → time/DNS → socket → TLS → app session。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-data-budget" data-module="data-budget" aria-labelledby="data-budget-title">
+          <div class="module-header"><div><span class="module-number">06</span><h3 id="data-budget-title">Payload 與資料預算</h3></div><button class="complete-button" type="button" data-complete="data-budget">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>資料模型</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="data-payload">Payload <span>B</span></label><input id="data-payload" type="number" value="100" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="data-encoding-ratio">編碼比例 <span>0–2</span></label><input id="data-encoding-ratio" type="number" value="0.6" min="0.0001" max="2" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="data-overhead">額外 overhead <span>B</span></label><input id="data-overhead" type="number" value="40" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="data-messages-day">每日訊息數 <span>count</span></label><input id="data-messages-day" type="number" value="24" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="data-delivery-factor">交付倍率 <span>≥1</span></label><input id="data-delivery-factor" type="number" value="1.1" min="1" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="data-days">計算天數 <span>day</span></label><input id="data-days" type="number" value="30" min="0.01" step="1" inputmode="numeric"></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">資料預算</span><code>wire = payload × ratio + overhead</code><small>還要留意 IP/TCP/TLS、握手與營運商計量規則。</small></div>
+              <button class="reset-button" type="button" data-reset-module="data-budget">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>流量估算</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col">
+                <div class="metric metric-accent-blue"><span>Wire / message</span><strong id="data-wire-message">— B</strong></div>
+                <div class="metric metric-accent-green"><span>每日資料量</span><strong id="data-daily">— B/day</strong></div>
+                <div class="metric metric-accent-blue"><span>計算期間</span><strong id="data-period">— B/30d</strong></div>
+                <div class="metric metric-accent-yellow"><span>未編碼 baseline</span><strong id="data-baseline">— B</strong></div>
+                <div class="metric metric-accent-green metric-span-two"><span>相對節省</span><strong id="data-saving">— %</strong></div>
+              </div>
+              <div id="data-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="data-feedback" class="feedback" aria-live="polite">預設情境應為 100.0 B/message、2640 B/day，模型節省約 28.57%。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-keepalive" data-module="keepalive" aria-labelledby="keepalive-title">
+          <div class="module-header"><div><span class="module-number">07</span><h3 id="keepalive-title">Keepalive、重連與 PSM</h3></div><button class="complete-button" type="button" data-complete="keepalive">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>會話與可達性</h4><span class="panel-tag">INPUTS</span></div>
+              <div class="field-grid two-col">
+                <div class="field"><label for="keepalive-seconds">Keepalive 間隔 <span>s</span></label><input id="keepalive-seconds" type="number" value="300" min="0.01" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="keepalive-session-hours">會話長度 <span>h</span></label><input id="keepalive-session-hours" type="number" value="24" min="0.01" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="keepalive-roundtrip-bytes">往返資料 <span>B</span></label><input id="keepalive-roundtrip-bytes" type="number" value="100" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="keepalive-reports">每日報告數 <span>count</span></label><input id="keepalive-reports" type="number" value="24" min="0.01" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="keepalive-reconnect-bytes">每次重連 <span>B</span></label><input id="keepalive-reconnect-bytes" type="number" value="5000" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="keepalive-reachability">可達性需求</label><select id="keepalive-reachability"><option value="frequent" selected>頻繁可達</option><option value="rare">很少可達</option></select></div>
+              </div>
+              <div class="formula-box"><span class="formula-label">比較邊界</span><code>bytes ≠ energy</code><small>PSM/eDRX 的判斷還要納入喚醒、覆蓋與延遲。</small></div>
+              <button class="reset-button" type="button" data-reset-module="keepalive">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>持續會話 vs 重連</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="metric-grid two-col">
+                <div class="metric metric-accent-blue"><span>每日喚醒次數</span><strong id="keepalive-wakes">—</strong></div>
+                <div class="metric metric-accent-blue"><span>Keepalive bytes</span><strong id="keepalive-bytes">— B</strong></div>
+                <div class="metric metric-accent-orange"><span>Reconnect bytes</span><strong id="reconnect-bytes">— B</strong></div>
+                <div class="metric metric-accent-green"><span>Bytes winner</span><strong id="keepalive-byte-winner">—</strong></div>
+                <div class="metric metric-accent-yellow metric-span-two"><span>策略判斷</span><strong id="keepalive-verdict">—</strong></div>
+              </div>
+              <div id="keepalive-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
+              <p id="keepalive-feedback" class="feedback" aria-live="polite">頻繁可達偏向持續會話；很少可達時要評估 PSM、eDRX 或批次上傳。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="module-section" id="module-supervisor" data-module="supervisor" aria-labelledby="supervisor-title">
+          <div class="module-header"><div><span class="module-number">08</span><h3 id="supervisor-title">Supervisor 與故障升級</h3></div><button class="complete-button" type="button" data-complete="supervisor">標記完成</button></div>
+          <div class="module-grid">
+            <div class="panel input-panel">
+              <div class="panel-heading"><h4>故障 gate</h4><span class="panel-tag">CHECKLIST</span></div>
+              <div class="field choice-field"><label for="supervisor-case">故障情境</label><select id="supervisor-case"><option value="no-response" selected>模組無回應</option><option value="deregister">掉註冊</option><option value="socket-drop">Socket 掉線</option><option value="buffer-overflow">Buffer overflow</option></select></div>
+              <div class="checklist">
+                <label class="check-row"><input id="supervisor-log" type="checkbox" data-supervisor-check checked><span><strong>保存 log / 最後命令</strong><small>保留診斷證據與 URC 時序</small></span></label>
+                <label class="check-row"><input id="supervisor-timeout" type="checkbox" data-supervisor-check checked><span><strong>Timeout</strong><small>每個命令與會話有上限</small></span></label>
+                <label class="check-row"><input id="supervisor-backoff" type="checkbox" data-supervisor-check checked><span><strong>Capped backoff</strong><small>重試不形成無限風暴</small></span></label>
+                <label class="check-row"><input id="supervisor-soft-reset" type="checkbox" data-supervisor-check><span><strong>Soft reset</strong><small>先嘗試可觀測的模組重置</small></span></label>
+                <label class="check-row"><input id="supervisor-hard-reset" type="checkbox" data-supervisor-check><span><strong>Hard reset / power cycle</strong><small>明確定義升級條件</small></span></label>
+                <label class="check-row"><input id="supervisor-flow-control" type="checkbox" data-supervisor-check><span><strong>Flow control</strong><small>RTS/CTS 或環形緩衝高水位</small></span></label>
+                <label class="check-row"><input id="supervisor-watchdog" type="checkbox" data-supervisor-check><span><strong>Watchdog</strong><small>在長時間無回應時復原</small></span></label>
+              </div>
+              <button class="reset-button" type="button" data-reset-module="supervisor">↺ 重設本模組</button>
+            </div>
+            <div class="panel result-panel">
+              <div class="panel-heading"><h4>升級路徑</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
+              <div class="diagnosis-list">
+                <div class="diagnosis-row"><span>第一步</span><strong id="supervisor-first">—</strong></div>
+                <div class="diagnosis-row"><span>第二觀察</span><strong id="supervisor-second">—</strong></div>
+                <div class="diagnosis-row"><span>完成數</span><strong id="supervisor-count">— / 7</strong></div>
+                <div class="diagnosis-row"><span>阻擋原因</span><strong id="supervisor-blocker">—</strong></div>
+              </div>
+              <div id="supervisor-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待檢查</span></div>
+              <p id="supervisor-feedback" class="feedback" aria-live="polite">依故障情境確認必要項目；缺一即阻擋，不用總完成數抵銷關鍵缺口。</p>
+            </div>
+          </div>
+        </section>
+
+        <footer class="workspace-footer"><span>來源：韌體：連線模組整合、E5 IoT 與邊緣運算、計算機網路</span><span>教學模型，不取代模組 manual、電信商條件、封包擷取與實機功耗量測。</span></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

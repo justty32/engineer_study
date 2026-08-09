@@ -20,6 +20,9 @@ on:
       - "專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS/index.html"
       - "專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS/styles.css"
       - "專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS/app.js"
+      - "專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路/index.html"
+      - "專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路/styles.css"
+      - "專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路/app.js"
   workflow_dispatch:
 
 permissions:
@@ -81,6 +84,16 @@ jobs:
             cp "$firmware_site/index.html" _site/iot-firmware-rtos/index.html
             cp "$firmware_site/styles.css" _site/iot-firmware-rtos/styles.css
             cp "$firmware_site/app.js" _site/iot-firmware-rtos/app.js
+          fi
+
+          connectivity_site='專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路'
+          if [ -f "$connectivity_site/index.html" ] && \
+            [ -f "$connectivity_site/styles.css" ] && \
+            [ -f "$connectivity_site/app.js" ]; then
+            mkdir -p _site/iot-connectivity
+            cp "$connectivity_site/index.html" _site/iot-connectivity/index.html
+            cp "$connectivity_site/styles.css" _site/iot-connectivity/styles.css
+            cp "$connectivity_site/app.js" _site/iot-connectivity/app.js
           fi
 
       - name: Upload Pages artifact
