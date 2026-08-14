@@ -1,8 +1,8 @@
-# principles-first — 原理優先互動教學網站
+# principles-first — 硬體原理優先子工作流
 
-← [互動網站工作流](README.md)｜[品質關卡](QUALITY-GATES.md)｜[共用寫作規範](../common/writing.md)
+← [零基礎課程母工作流](FOUNDATIONS-FIRST.md)｜[互動網站工作流](README.md)｜[品質關卡](QUALITY-GATES.md)｜[共用寫作規範](../common/writing.md)
 
-當讀者尚未建立必要模型時，先教會再操作；不讓倒數、進度與題目假裝成學習。這是 `interactive-study-site` 的教學剖面，不另複製一套建置與發布流程。
+本檔是 [foundations-first](FOUNDATIONS-FIRST.md) 的硬體／物理子工作流。母工作流負責零基礎入口、繁中／英文術語、名詞與概念、拆頁及清除對話後可延續；本檔只增加電源、參考點、回路、電流／電荷／能量、物理公式、極端案例與儀器量測。先完整套用母工作流，再使用本檔，不另複製建置與發布流程。
 
 ```text
 Done when: 每個必要概念已從物理因果講清楚，首次術語可原地讀懂，
