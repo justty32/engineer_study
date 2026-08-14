@@ -1,5 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 封包與分層</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head>
-<body data-page="envelope"><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-封包與分層.html" aria-current="page">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<body data-page="envelope">
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-封包與分層.html" aria-current="page">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">00・零基礎起點</p><h1>封包與分層：一段資料為何要穿好幾層外套？</h1><p class="lead">因為「送到隔壁設備、送過多個網路、交給正確程式、讓程式理解意圖」是不同範圍的問題。每層只承諾一種服務，並把控制資訊包在資料周圍。</p>
 <p class="prereq"><strong>這章假設已懂：</strong>位元組是資料長度單位；程式可讀寫一段位元組。除此之外不要求網路知識。</p>
 <section class="workspace"><h2>自由實驗：看見封裝成本</h2><p>下列固定長度只供建立模型：傳輸與網路標頭各 20 位元組，鏈路標頭加尾碼共 18 位元組。真實長度會因協定版本、選項與鏈路而變。</p>

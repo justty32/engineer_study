@@ -1,5 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 乙太網路與位址解析</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head>
-<body data-page="arp"><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-封包與分層.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<body data-page="arp">
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-封包與分層.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">01・本地鏈路</p><h1>乙太網路與位址解析：下一個訊框交給誰？</h1><p class="lead">乙太網路（Ethernet）用訊框承載本地鏈路資料；介質存取控制位址（Media Access Control address, MAC address）辨認鏈路介面。若只知道下一站的網際網路協定位址，就先用位址解析協定（Address Resolution Protocol, ARP）詢問其硬體位址。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="00-封包與分層.html">封裝、鏈路層與網路層處理不同範圍</a>。</p>
 <section class="workspace"><h2>自由實驗：要解析誰的硬體位址？</h2><label for="arp-destination">目的地位置</label><select id="arp-destination"><option value="local">與我在同一個本地網路</option><option value="remote">位於遠端網路</option></select><label><input id="arp-cache" type="checkbox"> 對應關係已在位址解析快取</label><div id="arp-output" class="output" aria-live="polite"></div></section>

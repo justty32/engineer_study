@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="從零理解機器人規劃的輸入、輸出與責任邊界"><title>00 零基礎｜機器人路徑與運動規劃</title><link rel="stylesheet" href="styles.css"></head>
-<body><nav class="topbar"><a href="index.html">首頁</a><a aria-current="page" href="00-從移動問題到規劃問題.html">零基礎</a><a href="03-PRM-RRT與RRT-star.html">取樣規劃</a><a href="06-C++架構與驗證證據.html">C++／證據</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a aria-current="page" href="00-從移動問題到規劃問題.html">零基礎</a><a href="03-PRM-RRT與RRT-star.html">取樣規劃</a><a href="06-C++架構與驗證證據.html">C++／證據</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">00 · 最小世界觀</p><h1>從「把手臂移過去」到可以計算的規劃問題</h1>
 <p class="lead">白話問題：人只要說「繞過箱子拿杯子」，電腦為什麼不能直接動？一句話答案：電腦必須先把「現在在哪裡、哪裡能走、想去哪裡、怎樣算比較好」全部變成可計算資料，規劃器才能提出候選走法。</p>
 <div class="prereq"><strong>最小前置：</strong>只需知道陣列能裝數字。若知道七軸手臂有七個關節角更好；不熟可回<a href="../../機器人運動學/互動課程/00-機械手臂自由度與座標.html">自由度與座標</a>。本章不要求搜尋演算法。</div>

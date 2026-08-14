@@ -179,3 +179,17 @@ code { color: var(--ink); font-family: ui-monospace, SFMono-Regular, Consolas, m
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+.main-site-link {
+  display: block;
+  width: fit-content;
+  max-width: calc(100% - 32px);
+  margin: .75rem auto .25rem;
+  padding: .5rem .8rem;
+  border: 1px solid currentColor;
+  border-radius: .45rem;
+  color: inherit;
+  background: transparent;
+  font: 700 .85rem/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-decoration: none;
+}
+.main-site-link:hover { text-decoration: underline; }
