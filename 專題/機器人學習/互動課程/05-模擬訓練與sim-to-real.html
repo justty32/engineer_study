@@ -1,1 +1,55 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人學習與訓練零基礎互動課程"><title>05 sim-to-real｜機器人學習與訓練</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-從控制程式到可學習策略.html">零基礎</a><a href="03-MDP回報價值與策略.html">強化學習</a><a href="06-安全評估與C++部署.html">部署</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">05 · SIMULATION TO REALITY</p><h1>模擬訓練與模擬轉真實</h1><p class="lead">模擬提供便宜、可重設且可取得完整狀態的訓練環境，但真實接觸、摩擦、延遲、相機、物件與控制器都可能與模擬不同，形成 reality gap。</p><div class="prereq"><strong>前置：</strong><a href="04-策略改善探索與穩定性.html">策略更新與探索成本</a>。</div><div class="grid"><article class="card"><h3>系統辨識</h3><p>用實測輸入輸出估質量、摩擦、延遲等模型參數，使模擬接近特定機器。</p></article><article class="card"><h3>領域隨機化</h3><p>在訓練中隨機化動力學、視覺與延遲，迫使策略在一族環境上工作。</p></article></div><section class="workspace"><h2>自由實驗：訓練支撐範圍</h2><div class="controls"><label>參數隨機化 ± 範圍<input id="sim-range" type="range" min="0" max="1" step="0.01" value="0.3"></label><label>真實相對偏差<input id="sim-real" type="range" min="-1.5" max="1.5" step="0.01" value="0.2"></label></div><div id="sim-output" class="output" aria-live="polite"></div></section><p>sim-to-real 證據至少要把偏差按感知、動力學、接觸、延遲與任務分布拆開；只報一個實機成功率無法定位落差。</p><div class="pager"><a href="04-策略改善探索與穩定性.html">← 上一頁</a><a href="06-安全評估與C++部署.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>05 模擬轉真實｜機器人學習</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="00-從控制程式到可學習策略.html">零基礎</a>
+<a href="00A-機器學習數學先修.html">數學先修</a>
+<a href="03-MDP回報價值與策略.html">強化學習</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">05 · 從模擬訓練轉移到真實機器</p>
+<h1>在模擬器學會，為什麼真機還是失敗？</h1>
+<p class="lead">一句話答案：模擬器只依人寫下的模型演化；真實世界的摩擦、接觸、感測雜訊、延遲和物件差異不可能完全相同，策略可能利用了模擬器才有的規律。</p>
+<div class="prereq">
+<strong>最小前置：</strong>
+<a href="04-策略改善探索與穩定性.html">探索、策略更新與評估</a>。</div>
+<h2>模擬器提供什麼，又藏掉什麼</h2>
+<p>模擬訓練的優點是可快速重設、平行跑很多環境、取得物體真實姿態，且失敗不會摔壞真機。但模擬中的接觸通常用近似數值模型求解；摩擦係數、關節背隙、纜線拉力、相機曝光、網路延遲與控制器細節可能錯。模擬—真實落差（reality gap）就是這些差異對策略輸入與結果造成的總影響。</p>
+<p>具體例子：模擬把控制延遲設為固定 10 ms，真機卻在 8 到 35 ms 間抖動。策略若學會在接觸前最後一刻高速煞停，模擬中成功，真機延遲稍長便碰撞。只比較平均位置誤差可能看不出尾端延遲，因此要按感知、動力學、接觸、延遲與任務分布分項量測。</p>
+<h2>系統辨識與領域隨機化</h2>
+<p>系統辨識（system identification）用真機輸入輸出紀錄估質量、摩擦、馬達響應與延遲等參數，使模擬接近這台機器。例如施加已知小幅速度命令，量測關節響應，再調模型使曲線接近。它受量測雜訊與模型形式限制；參數吻合也不代表所有接觸情況吻合。</p>
+<p>領域隨機化（domain randomization）則在訓練時讓質量、摩擦、光線、材質、相機位姿與延遲在範圍內變動，迫使策略不要依賴單一模擬世界。例如摩擦係數在 0.4 到 0.8 取樣，而非固定 0.6。若真實值 0.7，至少位於訓練支撐範圍；若真實值 1.1，策略正在外插。範圍不是越寬越好：過寬會混入不合理世界、稀釋有限資料，使策略學不到精細技能。</p>
+<h2>讀完再操作：支撐範圍</h2>
+<section class="workspace">
+<div class="controls">
+<label>參數隨機化 ± 範圍<input id="sim-range" type="range" min="0" max="1" step="0.01" value="0.3">
+</label>
+<label>真實相對偏差<input id="sim-real" type="range" min="-1.5" max="1.5" step="0.01" value="0.2">
+</label>
+</div>
+<div id="sim-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>從模擬到真機的證據階梯</h2>
+<p>先在未參與訓練的模擬參數與場景測試，再做硬體在迴路（hardware-in-the-loop）或影子模式，接著在低速、小工作區、軟物件與安全監督下試驗，最後才逐步擴大。每階段記錄相同的輸入分布、延遲、策略輸出、安全層修正、接觸力、成功與失敗原因，才能定位落差。</p>
+<p>假設模擬成功率 95%，低速真機只有 60%。先用相同觀測重播比策略輸出：若輸出已不同，問題偏向相機與前處理；若輸出相同但真機軌跡不同，優先查延遲、控制器與動力學；若只在接觸後分歧，優先查摩擦、剛性與力感測。這種分層證據比盲目擴大隨機化範圍更能定位原因。</p>
+<p>每次只改一類落差並重測，否則成功改善也無法知道原因。</p>
+<div class="warning">
+<strong>常見誤解與邊界：</strong>逼真的畫面不代表動力學準確；領域隨機化不是現實的無限替身；真機成功十次不是可靠的尾端風險估計。模擬證據可淘汰明顯壞策略，不能單獨授權實機安全。</div>
+<div class="pager">
+<a href="04-策略改善探索與穩定性.html">← 上一頁</a>
+<a href="06-安全評估與C++部署.html">下一頁 →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

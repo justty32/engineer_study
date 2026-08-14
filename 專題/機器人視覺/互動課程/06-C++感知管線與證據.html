@@ -1,8 +1,18 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人視覺零基礎互動課程"><title>06 C++ 與證據｜機器人視覺</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-光像素與座標系.html">零基礎</a><a href="03-特徵匹配與姿態估測.html">姿態估測</a><a aria-current="page" href="06-C++感知管線與證據.html">C++／證據</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">06 · C++ PERCEPTION CONTRACT</p><h1>C++ 感知管線與證據</h1><p class="lead">成熟介面不只傳 `Pose`；還要傳時間戳、來源座標、品質、不確定度與模型版本，否則下游無法判斷數值何時可信。</p><div class="prereq"><strong>前置：</strong><a href="05-視覺伺服與延遲.html">感知與控制的閉迴路</a>。</div><pre><code>struct PoseEstimate {
-  Transform object_T_camera;
-  Timestamp capture_time;
-  FrameId source_frame;
-  Covariance6 covariance;
-  QualityMetrics quality;
-  ModelVersion model;
-};</code></pre><section class="workspace"><h2>自由實驗：輸出契約</h2><div class="controls"><label>擷取時間戳<select id="ev-time"><option value="yes">有</option><option value="no">沒有</option></select></label><label>來源／目標座標系<select id="ev-frame"><option value="yes">有</option><option value="no">沒有</option></select></label><label>品質或不確定度<select id="ev-unc"><option value="yes">有</option><option value="no">沒有</option></select></label></div><div id="ev-output" class="output" aria-live="polite"></div></section><h2>驗證證據</h2><ul><li>內參：每張與各影像區域的重投影殘差，不只總平均。</li><li>手眼：未參與求解的姿態與已知基準點。</li><li>姿態：位置／角度誤差分布、失敗率與退化分類。</li><li>系統：曝光到控制命令的延遲與抖動分布。</li></ul><div class="pager"><a href="05-視覺伺服與延遲.html">← 上一頁</a><a href="名詞與概念字典.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="C++ 感知輸出契約、證據與失敗處理"><title>06 C++ 感知管線與證據｜機器人視覺</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-光像素與座標系.html">零基礎</a><a href="00A-影像資料先修.html">影像資料</a><a href="03-特徵匹配與姿態估測.html">姿態估測</a><a aria-current="page" href="06-C++感知管線與證據.html">C++／證據</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">06 · C++ 感知介面與驗證證據</p><h1>為什麼只回傳一個 Pose 很危險？</h1><p class="lead">一句話答案：六個看似合理的數字，若沒有座標系、擷取時間、有效狀態、品質與來源，就無法知道它描述哪裡、哪一刻、是否可信。成熟介面傳遞的是「估測加證據契約」，而不是裸矩陣。</p><div class="prereq"><strong>最小前置：</strong><a href="05-視覺伺服與延遲.html">感知—控制閉迴路</a>；熟悉 C++ 型別、所有權與錯誤處理。這章利用你的軟體背景把前面物理與幾何落到介面。</div>
+<h2>輸入契約先於演算法</h2><p>影像輸入至少要說清楚寬、高、像素型別、色彩／深度編碼、列步距、擷取時間、相機識別、標定版本與緩衝區生命週期。若一個 stage 把 BGR 當 RGB，程式仍能跑；若把接收時間當擷取時間，靜止測試仍可能通過；若非同步工作保留已釋放的 buffer，錯誤甚至只在負載高時出現。用強型別與不可變 metadata 讓錯誤更早暴露。</p>
+<h2>輸出要回答五個問題</h2><p>一筆估測必須回答：估的是什麼；來源與目標座標系是哪兩個；對應哪個擷取時間；有效或拒用的理由；數值不確定性與品質證據為何。協方差（Covariance）可描述局部誤差尺度與方向關聯，但它不是「可信度百分比」，也不會自動涵蓋標定錯誤、模型選錯與對稱多解。</p>
+<pre><code>struct PoseEstimate {
+  RigidTransform T_target_source; // 名稱明示方向
+  FrameId target_frame, source_frame;
+  CaptureTime captured_at;
+  Matrix6d covariance;
+  QualityMetrics quality;         // 內點數、殘差、覆蓋等
+  CalibrationVersion calibration;
+  EstimateStatus status;          // 有效、退化、過期、無對應……
+};</code></pre>
+<h2>可手算的小例子</h2><p>相機在 12:00:00.000 擷取影像，管線 70 ms 後輸出物體位置；物體相對速度 0.5 m/s。若下游誤把輸出時間當擷取時間，對齊姿態時就可能有 <code>0.5×0.070=0.035 m</code>，即 35 mm 的系統性時空錯配。把演算法位置雜訊從 2 mm 改善到 1 mm，完全救不了這個 metadata 錯誤。</p>
+<section class="workspace"><h2>自由實驗：最小輸出契約</h2><p>逐項拿掉時間、座標或不確定度，觀察下游失去的是哪一種判斷能力。全部選「有」也只代表介面足以開始驗證，不代表估測已正確。</p><div class="controls"><label>擷取時間戳<select id="ev-time"><option value="yes">有</option><option value="no">沒有</option></select></label><label>來源／目標座標系<select id="ev-frame"><option value="yes">有</option><option value="no">沒有</option></select></label><label>品質或不確定度<select id="ev-unc"><option value="yes">有</option><option value="no">沒有</option></select></label></div><div id="ev-output" class="output" aria-live="polite"></div></section>
+<h2>管線的觀測點與可重播性</h2><p>在擷取、前處理、特徵、匹配、幾何估測、座標轉換及輸出各 stage 記錄結構化證據。保存能重播的原始輸入、參數與版本，使相同資料能離線重現。線上指標看延遲分位數、拒用率、飽和像素、有效深度比例、內點空間覆蓋與殘差；不要只記平均 FPS 與「success=true」。日誌也要有容量與隱私策略，避免無限制保存影像。</p>
+<h2>驗證要分層</h2><ul><li>資料層：用已知小陣列驗證通道、步距、型別與生命週期。</li><li>幾何層：用合成點交叉驗算投影、反投影與變換方向。</li><li>標定層：看保留資料的每區域殘差，不以訓練資料自證。</li><li>估測層：按距離、角度、材質、遮擋與退化類型統計位置／方向誤差和失敗率。</li><li>系統層：量曝光到命令與致動的延遲分布，注入過期、缺幀、錯標定及低品質資料，確認拒用路徑。</li></ul>
+<h2>常見誤解與邊界</h2><p>例外不是所有即時管線的唯一錯誤機制；關鍵是失敗必須顯式且不可被當成有效零值。單元測試通過不代表相機、機器人與時鐘整合正確；模擬資料也很難涵蓋反光、模糊與硬體時間抖動。反過來，只有實機端到端測試又難以定位根因。分層測試、可重播輸入與線上證據需要同時存在。本章給的是契約骨架，不是功能安全認證方案；真正接近人或設備的系統仍需獨立安全控制與風險分析。</p>
+<p class="note"><strong>完成證據：</strong>任取一筆錯誤抓取，你應能沿時間戳、影像 metadata、標定版本、匹配與殘差、變換鏈及控制拒用狀態重建因果。若只能看到最後 Pose，就還沒有可診斷的感知系統。</p><div class="pager"><a href="05-視覺伺服與延遲.html">← 上一頁</a><a href="名詞與概念字典.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>

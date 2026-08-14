@@ -1,1 +1,55 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人學習與訓練零基礎互動課程"><title>04 策略改善｜機器人學習與訓練</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-從控制程式到可學習策略.html">零基礎</a><a href="03-MDP回報價值與策略.html">強化學習</a><a href="06-安全評估與C++部署.html">部署</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">04 · POLICY IMPROVEMENT</p><h1>策略改善、探索與穩定性</h1><p class="lead">策略梯度直接調整策略參數以提高期望回報；actor–critic 讓 actor 選動作、critic 估價值。演算法名稱不會消除資料相關、估測偏差與超參數敏感性。</p><div class="prereq"><strong>前置：</strong><a href="03-MDP回報價值與策略.html">回報、V、Q 與策略</a>。</div><table><tr><th>分類</th><th>資料關係</th><th>工程影響</th></tr><tr><td>同策略（on-policy）</td><td>主要用目前策略資料</td><td>概念直接但樣本成本高</td></tr><tr><td>異策略（off-policy）</td><td>可重用其他策略資料</td><td>效率較高，但分布修正與穩定性更複雜</td></tr></table><section class="workspace"><h2>自由實驗：探索有實體成本</h2><div class="controls"><label>探索率<input id="exp-rate" type="range" min="0" max="1" step="0.01" value="0.2"></label><label>探索中危險動作比例<input id="exp-unsafe" type="range" min="0" max="0.5" step="0.01" value="0.05"></label><label>episode 數<input id="exp-episodes" type="range" min="1" max="1000" step="1" value="100"></label></div><div id="exp-output" class="output" aria-live="polite"></div></section><p>實機探索前應有動作裁切、安全控制器、碰撞監測、工作區限制與緊急停止。能在模擬探索，不代表可直接在實機複製。</p><div class="pager"><a href="03-MDP回報價值與策略.html">← 上一頁</a><a href="05-模擬訓練與sim-to-real.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 策略改善｜機器人學習</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="00-從控制程式到可學習策略.html">零基礎</a>
+<a href="00A-機器學習數學先修.html">數學先修</a>
+<a href="03-MDP回報價值與策略.html">強化學習</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">04 · 改善策略並控制探索風險</p>
+<h1>策略怎麼改善？探索為什麼危險？</h1>
+<p class="lead">白話問題：若沒有每一步的正確答案，參數如何知道往哪調？一句話答案：演算法用採樣到的回報或價值估計，判斷哪些動作比原先預期更好，再提高選到它們的傾向；但估計有雜訊，探索在真機還有物理成本。</p>
+<div class="prereq">
+<strong>最小前置：</strong>
+<a href="03-MDP回報價值與策略.html">回報、價值與策略</a>；梯度可回<a href="00A-機器學習數學先修.html">數學先修</a>。</div>
+<h2>角色拆分：選動作的人與評論結果的人</h2>
+<p>策略梯度（policy gradient）直接調整策略參數，使高回報動作日後更可能出現。行動者—評論者（actor–critic）把工作拆成兩個函式：行動者（actor）依觀測選動作；評論者（critic）估計狀態或動作價值，提供比「整回合總分」更細的改善訊號。評論者不是安全審查員，也不是人類評論；它只是從資料估未來回報的模型。</p>
+<p>具體例子：在同一夾取狀態，策略嘗試向右 1 cm，最後成功並得到高於預期的回報。優勢（advantage）可白話理解成「這個動作比此處平常表現好多少」。若優勢為正，更新增加類似狀態下選向右的傾向；為負則降低。單次成功可能只是隨機，通常要靠多筆樣本估平均。</p>
+<h2>探索與利用</h2>
+<p>利用（exploitation）選目前看來最好的動作；探索（exploration）刻意保留嘗試其他動作的機會，以免永遠困在早期的次佳選擇。在模擬中，失敗可重設；在真機中，一個隨機力矩可能撞人、損壞減速機或把物件推出工作區。因此探索率不是純演算法旋鈕，而是風險暴露量。</p>
+<p>假設做 100 回合，每回合把 20% 決策視為探索，而探索動作中 5% 落入粗略危險集合。簡化指標 <code>0.2×0.05×100=1</code> 提醒你可能面對實體危險事件。它不是事故機率，因為每回合有多步且事件相關；真實安全分析要以速度、力、工作區和停止距離為界。</p>
+<h2>同策略與異策略資料</h2>
+<p>同策略（on-policy）方法主要用目前策略剛產生的資料更新，資料與目前行為較一致，但舊資料很快失效，樣本成本高。異策略（off-policy）方法可重用其他策略或較舊資料，常用經驗回放（replay buffer）保存轉移，效率較高；代價是資料分布與目前策略不同，價值估計及修正更複雜。這兩詞描述資料和目標策略的關係，不代表線上或離線執行。</p>
+<h2>讀完再操作：風險暴露指標</h2>
+<section class="workspace">
+<div class="controls">
+<label>探索率<input id="exp-rate" type="range" min="0" max="1" step="0.01" value="0.2">
+</label>
+<label>探索中危險動作比例<input id="exp-unsafe" type="range" min="0" max="0.5" step="0.01" value="0.05">
+</label>
+<label>回合數<input id="exp-episodes" type="range" min="1" max="1000" step="1" value="100">
+</label>
+</div>
+<div id="exp-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>穩定性證據與邊界</h2>
+<p>至少以多個隨機種子重跑，記錄回報、成功率、價值預測誤差、梯度大小、動作飽和率和安全介入。曲線突然上升可能是獎勵漏洞，平均變好也可能掩蓋最差回合。常見誤解是把「訓練收斂」當成控制系統穩定；前者通常只指指標不再明顯變化，後者需要狀態在擾動下維持有界，並非同一證明。實機探索前應有獨立動作限制、碰撞監測、緊急停止與低能量測試區。</p>
+<div class="pager">
+<a href="03-MDP回報價值與策略.html">← 上一頁</a>
+<a href="05-模擬訓練與sim-to-real.html">下一頁 →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

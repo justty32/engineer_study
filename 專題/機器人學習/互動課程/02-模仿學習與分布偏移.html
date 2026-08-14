@@ -1,1 +1,54 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人學習與訓練零基礎互動課程"><title>02 模仿學習｜機器人學習與訓練</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-從控制程式到可學習策略.html">零基礎</a><a href="03-MDP回報價值與策略.html">強化學習</a><a href="06-安全評估與C++部署.html">部署</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">02 · IMITATION LEARNING</p><h1>模仿學習與分布偏移</h1><p class="lead">行為複製（Behavioral Cloning, BC）把專家觀測—動作配對當監督學習。但部署時策略自己的小錯會把機器人帶到專家資料沒涵蓋的狀態，形成協變量偏移（covariate shift）。</p><div class="prereq"><strong>前置：</strong><a href="01-資料觀測動作與切分.html">觀測、動作與 episode</a>。</div><section class="workspace"><h2>自由實驗：長序列誤差累積</h2><div class="controls"><label>單步錯誤率 e<input id="bc-error" type="range" min="0" max="0.2" step="0.001" value="0.02"></label><label>任務步數 T<input id="bc-horizon" type="range" min="1" max="500" step="1" value="100"></label></div><div id="bc-output" class="output" aria-live="polite"></div></section><h2>資料集聚合</h2><p>資料集聚合（Dataset Aggregation, DAgger）讓目前策略進入它自己會造訪的狀態，再請專家標示該狀態應採取的動作，把新資料聚合回訓練集。它針對分布偏移，但專家查詢成本與實機安全仍需另外處理。</p><details><summary>為何離線 accuracy 高仍可能摔機？</summary><p>離線資料多來自專家軌跡，幾乎沒有偏離後的恢復狀態；而控制錯誤會影響下一個輸入，使獨立同分布假設破裂。</p></details><div class="pager"><a href="01-資料觀測動作與切分.html">← 上一頁</a><a href="03-MDP回報價值與策略.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>02 模仿學習｜機器人學習</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="00-從控制程式到可學習策略.html">零基礎</a>
+<a href="00A-機器學習數學先修.html">數學先修</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">02 · 從專家示範學習</p>
+<h1>看專家示範，為什麼仍會越走越歪？</h1>
+<p class="lead">一句話答案：模仿學習能從「專家看到什麼、做了什麼」學映射，但模型第一次犯的小錯會改變下一刻看到的畫面，之後便可能走入訓練資料從未出現的情況。</p>
+<div class="prereq">
+<strong>最小前置：</strong>
+<a href="01-資料觀測動作與切分.html">觀測、動作、回合與標籤</a>；損失不熟可回<a href="00A-機器學習數學先修.html">數學先修</a>。</div>
+<h2>行為複製其實是什麼</h2>
+<p>行為複製（Behavioral Cloning, BC）把專家示範拆成許多「觀測 → 專家動作」配對，像一般監督學習一樣調參數。例如人用遙控器示範 500 次夾杯；某張影像與關節狀態對應末端速度 <code>(0.03, -0.01, 0.00) m/s</code>。模型輸出與專家速度的平方差可作損失。資料經過多次更新後，模型在相似觀測下模仿專家。</p>
+<p>因果鏈是：專家控制產生安全軌跡 → 記錄觀測與動作 → 用動作誤差調參數 → 模型在離線資料上更像專家 → 部署後由模型自己的動作決定下一個觀測。最後一步使它不同於圖片分類：這次輸出會改變下次輸入。</p>
+<h2>分布偏移如何累積</h2>
+<p>協變量偏移（covariate shift）在此指部署時觀測分布與專家資料不同。專家通常把夾爪保持在杯子中央，因此資料幾乎沒有「已偏左 3 cm 時如何恢復」。模型一次小誤差偏左，下一張影像便是陌生狀態；陌生狀態上的誤差可能更大，再把機器帶得更遠。這不是單純把每步準確率相乘，而是錯誤改變了後續資料來源。</p>
+<p>用簡化數字建立直覺：若每步獨立錯誤率 2%，100 步至少錯一次的機率約為 <code>1-(1-0.02)^100=86.7%</code>。真機錯誤通常不獨立，偏離後更易再錯，所以此式不是安全保證，只是提醒長序列會放大單步問題。</p>
+<h2>如何補救，而不是只收更多成功示範</h2>
+<p>資料集聚合（Dataset Aggregation, DAgger）讓目前策略實際走到它會造訪的狀態，再由專家回答「在這裡應做什麼」，把答案加入資料集重訓。如此可收集偏離後的恢復動作。實機執行仍可能危險，因此可在模擬、低速、受限工作區或安全控制器保護下查詢專家。另一種做法是在示範時刻意加入小擾動並示範恢復，但擾動範圍必須受控。</p>
+<h2>讀完再操作：誤差累積</h2>
+<section class="workspace">
+<div class="controls">
+<label>單步錯誤率 e<input id="bc-error" type="range" min="0" max="0.2" step="0.001" value="0.02">
+</label>
+<label>任務步數 T<input id="bc-horizon" type="range" min="1" max="500" step="1" value="100">
+</label>
+</div>
+<div id="bc-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>證據、常見誤解與邊界</h2>
+<p>離線證據要按場景報動作誤差，實機則報成功率、偏離後恢復率、碰撞、人工接管與安全層介入。離線誤差低只證明像資料裡的專家，不證明閉迴路穩定。DAgger 不是一個神奇模型名稱，而是一種反覆收集目前策略所遇狀態的流程；它增加專家成本，也不能涵蓋所有未知情況。專家本身若不一致或帶有危險習慣，模型也可能忠實學會。</p>
+<p>比較模型時要讓它們從相同初始條件閉迴路執行，而不是只在同一份靜態影像比動作誤差；真正差異常出現在第一次偏離後的恢復能力。</p>
+<p>也要保留失敗影片與完整時間序列，不能只挑成功展示。</p>
+<div class="pager">
+<a href="01-資料觀測動作與切分.html">← 上一頁</a>
+<a href="03-MDP回報價值與策略.html">下一頁 →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

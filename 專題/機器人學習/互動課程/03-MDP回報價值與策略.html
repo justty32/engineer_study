@@ -1,1 +1,53 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人學習與訓練零基礎互動課程"><title>03 強化學習基礎｜機器人學習與訓練</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-從控制程式到可學習策略.html">零基礎</a><a aria-current="page" href="03-MDP回報價值與策略.html">強化學習</a><a href="06-安全評估與C++部署.html">部署</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">03 · REINFORCEMENT LEARNING</p><h1>馬可夫決策過程、回報、價值與策略</h1><p class="lead">馬可夫決策過程（Markov Decision Process, MDP）用狀態、動作、轉移、獎勵與折扣描述循序決策。強化學習不直接得到正確動作 label，而由互動回報改善策略。</p><div class="prereq"><strong>前置：</strong><a href="02-模仿學習與分布偏移.html">策略造訪的資料分布</a>。</div><table><tr><th>名詞</th><th>白話</th></tr><tr><td>獎勵 r</td><td>單一步驟的設計訊號</td></tr><tr><td>回報 G</td><td>從現在起的折扣獎勵總和</td></tr><tr><td>狀態價值 V</td><td>在狀態下遵循策略的期望回報</td></tr><tr><td>動作價值 Q</td><td>在狀態先做某動作後的期望回報</td></tr></table><section class="workspace"><h2>自由實驗：折扣回報</h2><div class="controls"><label>γ<input id="ret-gamma" type="range" min="0" max="1" step="0.01" value="0.9"></label><label>獎勵序列（逗號分隔）<input id="ret-seq" value="-0.1,-0.1,-0.1,1"></label></div><div id="ret-output" class="output" aria-live="polite"></div></section><div class="warning"><strong>獎勵塑形風險：</strong>策略會最佳化你寫下的訊號，不是你心裡的意圖。成功獎勵、距離獎勵與動作懲罰可能產生停滯、抖動或鑽漏洞。</div><div class="pager"><a href="02-模仿學習與分布偏移.html">← 上一頁</a><a href="04-策略改善探索與穩定性.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 強化學習基礎｜機器人學習</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="00-從控制程式到可學習策略.html">零基礎</a>
+<a href="00A-機器學習數學先修.html">數學先修</a>
+<a aria-current="page" href="03-MDP回報價值與策略.html">強化學習</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">03 · 從互動結果學習決策</p>
+<h1>沒有正確答案時，如何靠結果學決策？</h1>
+<p class="lead">強化學習（Reinforcement Learning, RL）不是每一步都有專家答案；系統採取動作、看到環境改變與獎勵，再嘗試讓長期累積結果變好。</p>
+<div class="prereq">
+<strong>最小前置：</strong>
+<a href="00A-機器學習數學先修.html">機率與期望值</a>、<a href="02-模仿學習與分布偏移.html">策略會改變下一個觀測</a>。</div>
+<h2>先把循序決策的五個零件說清楚</h2>
+<p>馬可夫決策過程（Markov Decision Process, MDP）是一個描述循序決策的數學框架。狀態 <code>s</code> 描述目前情況；動作 <code>a</code> 是可選決定；轉移描述做完後可能到哪個新狀態；獎勵 <code>r</code> 是這一步收到的設計訊號；策略決定在狀態下如何選動作。「馬可夫」表示目前狀態若描述得足夠，預測下一步不必再知道更早歷史。相機單張影像看不出速度時，單張影像通常不是足夠狀態，可以加入多張歷史或估測速度。</p>
+<p>夾取例子：狀態包含夾爪與物體相對姿態、速度與接觸；動作是末端速度；每步移動成本 −0.01，碰撞 −10，成功 +20。執行動作後，物理環境產生新狀態。策略不是直接被告知「剛才速度應是 0.04」，而是從許多結果估哪些選擇較可能帶來較高長期結果。</p>
+<h2>獎勵、回報與價值不是同一件事</h2>
+<p>獎勵是單步數字。回報（return）是從現在往後的獎勵總和，常寫成 <code>G=r₀+γr₁+γ²r₂+...</code>；折扣因子（discount factor）<code>γ</code> 介於 0 與 1，使較遠獎勵權重較小。若獎勵序列是 −0.1、−0.1、1，<code>γ=0.9</code>，回報為 <code>-0.1-0.09+0.81=0.62</code>。狀態價值（state value, V）是從某狀態遵循策略後的期望回報；動作價值（action value, Q）則指定先做某動作再遵循策略的期望回報。</p>
+<p>「期望」表示把環境與策略的隨機結果按機率加權平均，不是單次保證。某動作平均回報高，仍可能有低機率造成重大損害；安全約束不能被平均值取代。</p>
+<h2>獎勵是規格，不是宇宙真理</h2>
+<p>策略會最佳化寫下的訊號。若只按靠近物體給分，機器可能停在旁邊刷分；若每步動作懲罰太大，它可能完全不動；若成功判斷器有漏洞，它可能觸發感測器而未真正完成任務。這叫獎勵投機（reward hacking）。所以要把真正任務指標、安全限制與訓練獎勵分開，並檢查策略是否用意料外方式得分。</p>
+<h2>讀完再操作：折扣回報</h2>
+<section class="workspace">
+<div class="controls">
+<label>折扣因子 γ<input id="ret-gamma" type="range" min="0" max="1" step="0.01" value="0.9">
+</label>
+<label>獎勵序列（逗號分隔）<input id="ret-seq" value="-0.1,-0.1,-0.1,1">
+</label>
+</div>
+<div id="ret-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>證據與邊界</h2>
+<p>訓練要記錄每回合回報、實際成功、碰撞、回合長度和各獎勵分項，而不是只看總分。評估要固定場景集並重複多次，報平均與最差情況。MDP 是模型框架，不代表真實感測完全滿足馬可夫性；高回報不等於安全，不同獎勵尺度下的分數也不能直接比較。強化學習適合缺少逐步答案但可取得互動結果的問題，資料昂貴且危險的實機未必是首選。</p>
+<div class="pager">
+<a href="02-模仿學習與分布偏移.html">← 上一頁</a>
+<a href="04-策略改善探索與穩定性.html">下一頁 →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

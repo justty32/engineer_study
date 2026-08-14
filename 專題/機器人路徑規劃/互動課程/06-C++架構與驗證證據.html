@@ -1,13 +1,29 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人路徑與運動規劃零基礎互動課程"><title>06 C++ 與證據｜機器人路徑與運動規劃</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-從移動問題到規劃問題.html">零基礎</a><a href="03-PRM-RRT與RRT-star.html">取樣規劃</a><a aria-current="page" href="06-C++架構與驗證證據.html">C++／證據</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">06 · C++ CONTRACTS AND EVIDENCE</p><h1>C++ 架構與驗證證據</h1><p class="lead">規劃系統最難除錯的不是 template，而是模型、座標、時間戳與失敗原因被壓成一個 bool。讓型別和 log 保存推理鏈。</p><div class="prereq"><strong>前置：</strong><a href="05-七軸冗餘與線上重規劃.html">完整規劃管線</a>。</div><pre><code>struct PlanRequest {
-  RobotState start;
-  GoalConstraint goal;
-  WorldSnapshot world;
-  Limits limits;
-  PlanningBudget budget;
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人規劃 C++ 架構、失敗分類與驗證證據"><title>06 C++ 與證據｜機器人路徑規劃</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-從移動問題到規劃問題.html">零基礎</a><a href="00A-搜尋與圖論先修.html">搜尋先修</a><a href="03-PRM-RRT與RRT-star.html">取樣規劃</a><a aria-current="page" href="06-C++架構與驗證證據.html">C++／證據</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<p class="eyebrow">06 · C++ 契約與證據</p><h1>讓型別保存規劃語意，讓紀錄保存因果</h1><p class="lead">白話問題：規劃失敗時，為何一個 <code>false</code> 不夠？一句話答案：失敗可能來自輸入過期、起點碰撞、無可行路、逾時或軌跡限制；若介面抹掉分類，就無法安全回應、重現或比較。</p>
+<div class="prereq"><strong>最小前置：</strong><a href="05-七軸冗餘與線上重規劃.html">完整規劃管線</a>。本章假設熟悉 C++ struct、enum 與 RAII，不假設用過任何機器人框架。</div>
+<h2>先切清責任，而不是先選函式庫</h2><p>世界模型負責「此刻相信哪些幾何」；狀態有效性檢查器回答單一 q 是否合法；局部規劃器回答兩狀態之間能否連；搜尋器組合候選；時間化器加入時間；執行監督器驗證版本與剩餘軌跡。每層輸入輸出都應帶單位、座標框架、時間戳與模型版本。</p>
+<pre><code>struct PlanRequest {
+  JointState start;       // 角度單位與時間戳不可省略
+  GoalConstraint goal;    // 目標區域，不一定只是一個點
+  ModelVersion model;
+  PlanningBudget budget;  // 時間、樣本或迭代上限
 };
+
+enum class Failure {
+  InvalidStart, InvalidGoal, NoPathFound,
+  BudgetExceeded, StaleWorld, TimeParameterizationFailed
+};
+
 struct PlanResult {
-  PlanStatus status;
-  GeometricPath path;
-  TimedTrajectory trajectory;
-  VerificationEvidence evidence;
-};</code></pre><h2>分層測試</h2><table><tr><th>層</th><th>輸入</th><th>證據</th></tr><tr><td>狀態有效性</td><td>已知碰撞／非碰撞組態</td><td>碰撞對、距離、模型版本</td></tr><tr><td>局部連接</td><td>穿過薄障礙的邊</td><td>連續檢查或最大步距</td></tr><tr><td>規劃器</td><td>固定 seed 的小場景</td><td>狀態、成本、終止原因</td></tr><tr><td>時間化</td><td>速度／加速度邊界</td><td>逐點限制最大值</td></tr><tr><td>執行</td><td>感知更新與延遲</td><td>軌跡版本、停止／重規劃事件</td></tr></table><div class="warning"><strong>不能只記成功率：</strong>同一場景的模型版本、亂數種子、時間預算、最小間隙、成本與失敗分類缺一，就無法重現或比較。</div><div class="pager"><a href="05-七軸冗餘與線上重規劃.html">← 上一頁</a><a href="名詞與概念字典.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+  std::optional&lt;Trajectory&gt; trajectory;
+  Failure failure;
+  Evidence evidence;
+};</code></pre>
+<p><code>NoPathFound</code> 不能宣稱數學上無解，通常只表示指定演算法在預算內沒找到；<code>BudgetExceeded</code> 更直接保留這項認知邊界。成功結果也要攜帶它對哪個模型版本有效，避免環境更新後仍執行舊軌跡。</p>
+<h2>可手算例：成功率如何騙人</h2><p>規劃器甲在 100 次中成功 95 次，成功時平均 0.2 秒，但五次逾時皆為 10 秒；乙成功 92 次，每次都在 0.4 秒內終止。只看成功率會選甲，只看成功案例平均時間也會選甲；若控制迴路必須 0.5 秒內回應，甲的尾端延遲可能不可接受。報告至少要分開成功率、各失敗類型、時間中位數與高百分位數。</p>
+<h2>分層驗證：哪一層錯就在哪一層留下證據</h2><table><tr><th>層</th><th>固定輸入</th><th>可驗證證據</th></tr><tr><td>狀態有效性</td><td>已知碰撞與安全組態</td><td>碰撞物件對、距離、模型版本</td></tr><tr><td>局部連接</td><td>端點安全但穿過薄障礙的邊</td><td>取樣步距或連續檢查結果</td></tr><tr><td>規劃器</td><td>固定亂數種子的小場景</td><td>節點數、成本、終止原因</td></tr><tr><td>時間化</td><td>已知速度與加速度邊界</td><td>逐軸最大值及違規時間點</td></tr><tr><td>執行</td><td>帶時間戳的環境更新</td><td>軌跡版本、停止與切換事件</td></tr></table>
+<h2>具體的可重現測試</h2><p>建立兩關節小場景：起點 [0,0]、目標 [1,1]、中間放一條薄障礙。先驗證兩端皆合法，再確認只檢端點的假局部連接會通過，而連續檢查會拒絕。接著固定 seed=42 和 1000 樣本預算，保存輸出路徑與碰撞查詢數。這個測試不能證明所有場景正確，卻能固定重現一類常見缺陷。</p>
+<h2>紀錄設計與適用邊界</h2><p><strong>紀錄（log）</strong>不是把每個浮點數無限制輸出，而是保存日後回答「當時依據什麼做決定」的最小事件。事件應有單調時鐘、請求識別碼、模型與軌跡版本、參數雜湊、亂數種子、成本、間隙、限制最大值與結構化失敗原因；敏感場域還需考慮資料保存與存取權限。</p>
+<p>常見誤解包括：固定 seed 就等於完整可重現（平行排程、浮點與函式庫版本仍會影響）；單元測試全過就代表實機安全（感測與執行層尚未覆蓋）；用例外代表正常「找不到路」（預算內無解通常是可預期結果）。本章介面是教學骨架，不是即插即用的即時或安全認證架構。</p>
+<div class="warning"><strong>交付邊界：</strong>路徑通過軟體驗證，只證明它符合所記錄模型和限制。實機前仍需硬體限制、急停、保護區、低速試運行與獨立風險評估。</div>
+<div class="pager"><a href="05-七軸冗餘與線上重規劃.html">← 上一頁</a><a href="名詞與概念字典.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>

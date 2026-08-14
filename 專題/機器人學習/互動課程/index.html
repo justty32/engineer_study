@@ -1,1 +1,91 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人學習與訓練零基礎互動課程"><title>課程首頁｜機器人學習與訓練</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a aria-current="page" href="index.html">首頁</a><a href="00-從控制程式到可學習策略.html">零基礎</a><a href="03-MDP回報價值與策略.html">強化學習</a><a href="06-安全評估與C++部署.html">部署</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">FOUNDATIONS-FIRST · ROBOT LEARNING</p><h1>機器人學習與訓練</h1><p class="lead">「訓練」不是把資料丟進模型後等待成功率。你必須先定義觀測、動作、任務分布、損失或獎勵、資料取得方式與安全邊界，再用獨立證據判斷策略是否真的改善。</p><div class="prereq"><strong>先修：</strong>知道機器人有狀態、控制迴路與軌跡；可從<a href="../../機器人運動學/互動課程/index.html">七軸運動學</a>與<a href="../../機器人路徑規劃/互動課程/00-從移動問題到規劃問題.html">規劃零基礎</a>銜接。機器學習不假設已會。</div><div class="flow"><span>定義任務與資料</span><span>選學習訊號</span><span>訓練策略</span><span>離線／模擬評估</span><span>受限實機驗證</span></div><section class="chapter-list"><a class="chapter-card" href="00-從控制程式到可學習策略.html"><span class="number">00</span><h2>從控制到學習</h2><p>分清控制器、規劃器、估測器與策略。</p></a><a class="chapter-card" href="01-資料觀測動作與切分.html"><span class="number">01</span><h2>資料與切分</h2><p>觀測、動作、label、episode 與洩漏。</p></a><a class="chapter-card" href="02-模仿學習與分布偏移.html"><span class="number">02</span><h2>模仿學習</h2><p>行為複製、協變量偏移（covariate shift）與資料集聚合（DAgger）。</p></a><a class="chapter-card" href="03-MDP回報價值與策略.html"><span class="number">03</span><h2>強化學習基礎</h2><p>馬可夫決策過程（MDP）、回報、價值與策略。</p></a><a class="chapter-card" href="04-策略改善探索與穩定性.html"><span class="number">04</span><h2>策略改善</h2><p>同策略（on-policy）、異策略（off-policy）、探索與穩定性。</p></a><a class="chapter-card" href="05-模擬訓練與sim-to-real.html"><span class="number">05</span><h2>模擬轉真實</h2><p>系統辨識、領域隨機化（domain randomization）與外插。</p></a><a class="chapter-card" href="06-安全評估與C++部署.html"><span class="number">06</span><h2>安全部署</h2><p>基線、影子模式、安全層與 C++ 推論。</p></a><a class="chapter-card" href="名詞與概念字典.html"><span class="number">A–Z</span><h2>字典</h2><p>中英名詞、機制與邊界。</p></a></section><div class="pager"><a href="名詞與概念字典.html">← 上一頁</a><a href="00-從控制程式到可學習策略.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="機器人學習與訓練零基礎互動課程">
+<title>課程首頁｜機器人學習與訓練</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="topbar">
+<a aria-current="page" href="index.html">首頁</a>
+<a href="00-從控制程式到可學習策略.html">零基礎</a>
+<a href="00A-機器學習數學先修.html">數學先修</a>
+<a href="03-MDP回報價值與策略.html">強化學習</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">零基礎主線 · 機器人學習與訓練</p>
+<h1>機器人學習與訓練</h1>
+<p class="lead">這一版不假設你已懂機器學習。你會先弄清「到底改了什麼數字」，再走資料、模仿、強化學習、模擬轉真實與安全部署。每章都先教完整因果，再讓你操作；字典是卡住時回查，不是入學考。</p>
+<div class="prereq">
+<strong>讀者基線：</strong>你可以是資深 C++ 工程師，但在機器人學習、機率與微積分上從零開始。唯一假設是懂函式、型別與狀態機。若連機械臂的關節和姿態也陌生，可先讀<a href="../../機器人運動學/互動課程/index.html">七軸運動學</a>。</div>
+<h2>建議順序</h2>
+<div class="flow">
+<span>控制與學習世界觀</span>
+<span>數學最小先修</span>
+<span>資料契約</span>
+<span>模仿學習</span>
+<span>強化學習</span>
+<span>模擬轉真實</span>
+<span>安全部署</span>
+</div>
+<section class="chapter-list">
+<a class="chapter-card" href="00-從控制程式到可學習策略.html">
+<span class="number">00</span>
+<h2>學習到底是什麼</h2>
+<p>從控制程式、策略、參數與證據建立世界觀。</p>
+</a>
+<a class="chapter-card" href="00A-機器學習數學先修.html">
+<span class="number">00A</span>
+<h2>數學先修</h2>
+<p>機率、函數、參數、損失、梯度與最佳化，從四則運算講起。</p>
+</a>
+<a class="chapter-card" href="01-資料觀測動作與切分.html">
+<span class="number">01</span>
+<h2>資料契約</h2>
+<p>時間、單位、觀測、動作、回合與資料洩漏。</p>
+</a>
+<a class="chapter-card" href="02-模仿學習與分布偏移.html">
+<span class="number">02</span>
+<h2>模仿學習</h2>
+<p>為什麼離線很準，閉迴路卻越走越歪。</p>
+</a>
+<a class="chapter-card" href="03-MDP回報價值與策略.html">
+<span class="number">03</span>
+<h2>強化學習基礎</h2>
+<p>從單步獎勵走到長期回報與價值。</p>
+</a>
+<a class="chapter-card" href="04-策略改善探索與穩定性.html">
+<span class="number">04</span>
+<h2>策略改善</h2>
+<p>行動者、評論者、探索成本與穩定性證據。</p>
+</a>
+<a class="chapter-card" href="05-模擬訓練與sim-to-real.html">
+<span class="number">05</span>
+<h2>模擬轉真實</h2>
+<p>落差、系統辨識、隨機化和實機證據階梯。</p>
+</a>
+<a class="chapter-card" href="06-安全評估與C++部署.html">
+<span class="number">06</span>
+<h2>安全部署</h2>
+<p>從模型提議到 C++ 控制命令之間的完整系統。</p>
+</a>
+<a class="chapter-card" href="名詞與概念字典.html">
+<span class="number">A–Z</span>
+<h2>長版字典</h2>
+<p>每條都有白話、位置、機制、例子與易混邊界。</p>
+</a>
+</section>
+<div class="note">
+<strong>學習方式：</strong>不用先考，也不用先背字典。依序閱讀；互動只是改參數觀察因果，不計分、不解鎖內容。</div>
+<div class="pager">
+<a href="名詞與概念字典.html">← 字典</a>
+<a href="00-從控制程式到可學習策略.html">開始學習 →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

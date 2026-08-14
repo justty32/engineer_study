@@ -1,1 +1,42 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人學習與訓練零基礎互動課程"><title>00 零基礎｜機器人學習與訓練</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a aria-current="page" href="00-從控制程式到可學習策略.html">零基礎</a><a href="03-MDP回報價值與策略.html">強化學習</a><a href="06-安全評估與C++部署.html">部署</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">00 · MINIMUM LEARNING LOOP</p><h1>從控制程式到可學習策略</h1><p class="lead">策略（policy）是從觀測到動作分布或動作的映射。它可以是手寫規則、最佳化器或神經網路；「可學習」只表示參數由資料或互動更新。</p><div class="prereq"><strong>這章假設：</strong>會讀函式與狀態機，不假設懂微積分或機率模型。</div><table><tr><th>元件</th><th>角色</th><th>不要混淆</th></tr><tr><td>估測器</td><td>由感測器推斷狀態</td><td>不決定任務目標</td></tr><tr><td>規劃器</td><td>產生路徑／軌跡</td><td>不一定從資料學習</td></tr><tr><td>控制器</td><td>追蹤目標並抑制擾動</td><td>不是全域決策</td></tr><tr><td>策略</td><td>由觀測選動作</td><td>不天然安全或可解釋</td></tr></table><h2>訓練迴路</h2><div class="flow"><span>任務分布</span><span>收集資料／互動</span><span>計算學習訊號</span><span>更新參數</span><span>獨立評估</span></div><div class="warning"><strong>核心邊界：</strong>訓練損失下降只證明在該資料與目標函式上更合適；不證明真實任務成功，更不證明碰撞安全。</div><div class="pager"><a href="index.html">← 上一頁</a><a href="01-資料觀測動作與切分.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="從零理解機器人學習">
+<title>00 從控制程式到學習｜機器人學習</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a aria-current="page" href="00-從控制程式到可學習策略.html">零基礎</a>
+<a href="00A-機器學習數學先修.html">數學先修</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">00 · 先建立世界觀</p>
+<h1>機器人為什麼需要「學」？</h1>
+<p class="lead">白話問題：既然你會寫 C++、控制器與狀態機，為什麼不把所有規則寫完？一句話答案：規則能精確描述已知情況，但相機像素、柔軟物體、接觸與人的示範很難逐條列完；學習是用許多例子調整一個有參數的函式，不是讓機器突然有意識。</p>
+<div class="prereq">
+<strong>最小前置：</strong>只假設你知道函式接收輸入並回傳輸出。這章不假設機率、微積分、神經網路或控制理論；遇到參數與最佳化可先讀<a href="00A-機器學習數學先修.html">數學先修</a>。</div>
+<h2>先把整台機器人的角色拆開</h2>
+<p>感測器先產生讀值，例如相機影像、七個關節角與夾爪力。估測器（estimator）把帶雜訊的讀值整理成較有用的狀態猜測；規劃器（planner）決定要走的路徑或軌跡；控制器（controller）每隔幾毫秒比較目標與實際值，算出馬達命令。策略（policy）則是一條「看到某種資訊時，選哪個動作」的規則。策略可以是手寫的 <code>if</code>，也可以是由資料調出的函式。因此「策略」不等於「神經網路」，「學習」也不等於取代整個控制堆疊。</p>
+<p>具體例子：夾取杯子時，相機提供像素，視覺模組估杯子姿態，規劃器生成避障軌跡，控制器追蹤各關節角。學習策略也許只負責根據影像微調末端位置。若它輸出每秒 2 公尺的修正，安全層仍要裁成允許速度；不能因為輸出來自「模型」就略過工程契約。</p>
+<h2>「訓練」究竟改了什麼</h2>
+<p>先選一個有參數的函式。參數可想成 C++ 物件裡成千上萬個浮點欄位。輸入一筆觀測，函式產生動作；再用已知答案或任務結果計算它差多少，形成學習訊號；最佳化程序依此小幅改參數。重複許多筆資料後，同類輸入通常會得到較合適的輸出。因果鏈是：任務與資料定義 → 函式作預測 → 比較預測與目標 → 得到數字誤差 → 更新參數 → 在未參與更新的資料上評估。</p>
+<p>例如專家在相同觀測下給出夾爪速度 0.10 m/s，模型給 0.06 m/s，差 0.04 m/s。這一筆會促使參數朝「輸出更接近 0.10」的方向移動。但一筆資料不告訴我們杯子是否真的夾穩，也不證明遇到透明杯仍有效；那要靠獨立場景與實機結果驗證。</p>
+<h2>你應該看到哪些證據</h2>
+<p>訓練時可看每批資料的損失是否下降、參數是否爆成非數值、訓練與驗證曲線是否分離。部署時要看任務成功率、碰撞、超速、安全層介入、延遲與人工接管。損失下降只證明「對寫下的數學目標更合適」；成功率提升才比較接近任務證據；碰撞為零也只有在測過的範圍成立。</p>
+<p>把它對照熟悉的 C++：訓練像產生設定資料，推論像載入唯讀設定後呼叫函式；測試則不能只驗回傳型別，還要驗整個閉迴路在未見場景的行為。</p>
+<div class="warning">
+<strong>常見誤解與邊界：</strong>模型不是知識資料庫；更多資料若標錯或來自單一場景仍可能更差；學習策略不天然比手寫控制安全；模擬成功不等於真機成功。課程只建立工程理解，不提供任何實機安全保證。</div>
+<div class="pager">
+<a href="index.html">← 上一頁</a>
+<a href="00A-機器學習數學先修.html">下一頁：數學先修 →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

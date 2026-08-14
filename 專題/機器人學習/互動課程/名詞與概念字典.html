@@ -1,1 +1,422 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人學習與訓練零基礎互動課程"><title>字典｜機器人學習與訓練</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-從控制程式到可學習策略.html">零基礎</a><a href="03-MDP回報價值與策略.html">強化學習</a><a href="06-安全評估與C++部署.html">部署</a><a aria-current="page" href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">A–Z · SEARCHABLE GLOSSARY</p><h1>名詞與概念字典</h1><p class="lead">搜尋繁中、英文或縮寫；字典用來回查，不要求背誦。</p><div class="dictionary-tools"><label for="term-search">搜尋</label><input id="term-search" type="search" placeholder="例如：策略、DAgger、回報"><p id="term-count" aria-live="polite"></p></div><section class="term-list"><article class="term-card"><h2>觀測</h2><p><strong>Observation</strong></p><p>策略實際收到的感測與歷史，不一定等於完整狀態。</p></article><article class="term-card"><h2>狀態</h2><p><strong>State</strong></p><p>足以描述決策所需環境情況的變數。</p></article><article class="term-card"><h2>動作</h2><p><strong>Action</strong></p><p>策略可選的命令，需明確單位、範圍與頻率。</p></article><article class="term-card"><h2>策略</h2><p><strong>Policy</strong></p><p>由觀測或狀態映射到動作分布／動作。</p></article><article class="term-card"><h2>episode</h2><p><strong>Episode</strong></p><p>從起始到終止的一次互動序列。</p></article><article class="term-card"><h2>label</h2><p><strong>Label</strong></p><p>監督學習希望模型預測的目標。</p></article><article class="term-card"><h2>資料洩漏</h2><p><strong>Data Leakage</strong></p><p>評估資訊直接或間接進入訓練。</p></article><article class="term-card"><h2>分布偏移</h2><p><strong>Distribution Shift</strong></p><p>部署輸入分布不同於訓練資料。</p></article><article class="term-card"><h2>行為複製</h2><p><strong>Behavioral Cloning, BC</strong></p><p>用專家觀測—動作對做監督學習。</p></article><article class="term-card"><h2>模仿學習</h2><p><strong>Imitation Learning, IL</strong></p><p>由示範或專家回饋學習行為。</p></article><article class="term-card"><h2>DAgger</h2><p><strong>Dataset Aggregation</strong></p><p>由目前策略造訪狀態並請專家補標資料。</p></article><article class="term-card"><h2>強化學習</h2><p><strong>Reinforcement Learning, RL</strong></p><p>由互動獎勵改善循序決策策略。</p></article><article class="term-card"><h2>MDP</h2><p><strong>Markov Decision Process</strong></p><p>狀態、動作、轉移、獎勵與折扣的決策模型。</p></article><article class="term-card"><h2>獎勵</h2><p><strong>Reward</strong></p><p>單步的訓練訊號，不等於完整任務價值。</p></article><article class="term-card"><h2>回報</h2><p><strong>Return</strong></p><p>從某時刻起的累積折扣獎勵。</p></article><article class="term-card"><h2>折扣因子</h2><p><strong>Discount Factor, γ</strong></p><p>控制未來獎勵權重的 0–1 參數。</p></article><article class="term-card"><h2>狀態價值</h2><p><strong>State Value, V</strong></p><p>在狀態遵循策略的期望回報。</p></article><article class="term-card"><h2>動作價值</h2><p><strong>Action Value, Q</strong></p><p>先做特定動作後的期望回報。</p></article><article class="term-card"><h2>actor–critic</h2><p><strong>Actor–Critic</strong></p><p>由策略元件選動作、價值元件估評分。</p></article><article class="term-card"><h2>同策略</h2><p><strong>On-policy</strong></p><p>主要用目前策略產生的資料更新。</p></article><article class="term-card"><h2>異策略</h2><p><strong>Off-policy</strong></p><p>可用其他行為策略產生的資料更新目標策略。</p></article><article class="term-card"><h2>探索</h2><p><strong>Exploration</strong></p><p>嘗試不確定動作以取得資訊，實機有成本。</p></article><article class="term-card"><h2>replay buffer</h2><p><strong>Experience Replay Buffer</strong></p><p>儲存轉移供重複抽樣，不等於獨立資料。</p></article><article class="term-card"><h2>領域隨機化</h2><p><strong>Domain Randomization</strong></p><p>訓練時改變模擬參數以增加覆蓋。</p></article><article class="term-card"><h2>系統辨識</h2><p><strong>System Identification</strong></p><p>由實測輸入輸出估模型參數。</p></article><article class="term-card"><h2>sim-to-real</h2><p><strong>Simulation-to-Real Transfer</strong></p><p>把模擬訓練結果轉移到真實系統。</p></article><article class="term-card"><h2>影子模式</h2><p><strong>Shadow Mode</strong></p><p>策略產生輸出但不接管致動，用於比對。</p></article><article class="term-card"><h2>安全過濾器</h2><p><strong>Safety Filter</strong></p><p>在策略與控制器間限制或拒絕危險動作。</p></article><article class="term-card"><h2>分布外</h2><p><strong>Out-of-Distribution, OOD</strong></p><p>輸入落在訓練分布支撐之外或附近不足區。</p></article></section><div class="pager"><a href="06-安全評估與C++部署.html">← 上一頁</a><a href="index.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>長版字典｜機器人學習</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="00-從控制程式到可學習策略.html">零基礎</a>
+<a href="00A-機器學習數學先修.html">數學先修</a>
+<a href="06-安全評估與C++部署.html">部署</a>
+<a aria-current="page" href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">A–Z · 可搜尋長版字典</p>
+<h1>不用背：在卡住時回來查</h1>
+<p class="lead">每條都回答它是什麼、在系統哪裡、靠什麼生效、具體長什麼樣，以及最容易和什麼混淆。搜尋繁中、英文全名或縮寫即可。</p>
+<div class="dictionary-tools">
+<label for="term-search">搜尋字典</label>
+<input id="term-search" type="search" placeholder="例如：梯度、策略、DAgger">
+<p id="term-count" aria-live="polite">
+</p>
+</div>
+<section class="term-list">
+<article class="term-card">
+<h2>函數（Function）</h2>
+<p>
+<strong>白話：</strong>把輸入依固定規則變成輸出的機器。</p>
+<p>
+<strong>位置／角色：</strong>模型和策略本質都是函數，位於資料輸入與預測之間。</p>
+<p>
+<strong>如何生效：</strong>執行加法、乘法與非線性等運算；參數決定目前映射形狀。</p>
+<p>
+<strong>具體例子：</strong>
+<code>y=3x</code> 在關節誤差 0.2 時輸出 0.6。</p>
+<p>
+<strong>不要混淆：</strong>函數是映射規則；訓練是尋找其參數的程序。</p>
+</article>
+<article class="term-card">
+<h2>參數（Parameter）</h2>
+<p>
+<strong>白話：</strong>模型內會被訓練調整的數字。</p>
+<p>
+<strong>位置／角色：</strong>儲存在模型檔，推論時固定，重新訓練才更新。</p>
+<p>
+<strong>如何生效：</strong>參與函數運算，改變輸入對輸出的影響。</p>
+<p>
+<strong>具體例子：</strong>
+<code>y=wx+b</code> 的 <code>w</code>、<code>b</code>。</p>
+<p>
+<strong>不要混淆：</strong>學習率等由工程師設定的是超參數，不是模型參數。</p>
+</article>
+<article class="term-card">
+<h2>損失函數（Loss Function）</h2>
+<p>
+<strong>白話：</strong>把預測有多不合目標寫成一個數。</p>
+<p>
+<strong>位置／角色：</strong>只在訓練與評估計算，向最佳化器提供改善方向。</p>
+<p>
+<strong>如何生效：</strong>比較預測和標籤，對小批次取平均後反向計算梯度。</p>
+<p>
+<strong>具體例子：</strong>預測 0.6、答案 1.0，平方誤差為 0.16。</p>
+<p>
+<strong>不要混淆：</strong>損失低不等於任務成功，更不等於安全。</p>
+</article>
+<article class="term-card">
+<h2>梯度（Gradient）</h2>
+<p>
+<strong>白話：</strong>每個參數改一點時，損失會怎麼變的敏感度表。</p>
+<p>
+<strong>位置／角色：</strong>位於訓練更新步驟，連接損失與參數。</p>
+<p>
+<strong>如何生效：</strong>由微分鏈式法則計算，最佳化器通常往負梯度移動。</p>
+<p>
+<strong>具體例子：</strong>梯度 +4、學習率 0.01，參數更新量是 −0.04。</p>
+<p>
+<strong>不要混淆：</strong>它不是機械臂在空間中的移動方向。</p>
+</article>
+<article class="term-card">
+<h2>觀測（Observation）</h2>
+<p>
+<strong>白話：</strong>策略做決定當下真正看得到的資料。</p>
+<p>
+<strong>位置／角色：</strong>由感測與前處理管線產生，是策略的輸入。</p>
+<p>
+<strong>如何生效：</strong>影像、關節角、力與歷史窗依契約組成張量或結構。</p>
+<p>
+<strong>具體例子：</strong>最近三張影像加七軸角度與速度。</p>
+<p>
+<strong>不要混淆：</strong>觀測不一定是完整狀態，不能含未來資料。</p>
+</article>
+<article class="term-card">
+<h2>狀態（State）</h2>
+<p>
+<strong>白話：</strong>足以描述目前情況並預測後續的資訊。</p>
+<p>
+<strong>位置／角色：</strong>環境或估測器使用；模擬器常知道完整狀態。</p>
+<p>
+<strong>如何生效：</strong>搭配動作經環境轉移成下一狀態。</p>
+<p>
+<strong>具體例子：</strong>物體姿態、速度、接觸和機械臂關節狀態。</p>
+<p>
+<strong>不要混淆：</strong>真機策略可能只能由觀測猜狀態。</p>
+</article>
+<article class="term-card">
+<h2>動作（Action）</h2>
+<p>
+<strong>白話：</strong>策略可以選的一個命令。</p>
+<p>
+<strong>位置／角色：</strong>位於策略輸出與安全層輸入之間。</p>
+<p>
+<strong>如何生效：</strong>經後處理、安全裁切與控制器，最後影響致動器。</p>
+<p>
+<strong>具體例子：</strong>七個關節的目標速度，單位 rad/s。</p>
+<p>
+<strong>不要混淆：</strong>模型提議動作不是已通過安全檢查的馬達命令。</p>
+</article>
+<article class="term-card">
+<h2>策略（Policy）</h2>
+<p>
+<strong>白話：</strong>看到某種情況時要選什麼動作的規則。</p>
+<p>
+<strong>位置／角色：</strong>決策層接收觀測，輸出動作或動作機率。</p>
+<p>
+<strong>如何生效：</strong>可由手寫規則或帶參數函數實作，訓練只改後者參數。</p>
+<p>
+<strong>具體例子：</strong>杯子偏右時輸出向右的末端速度。</p>
+<p>
+<strong>不要混淆：</strong>策略不等於控制器，也不一定是神經網路。</p>
+</article>
+<article class="term-card">
+<h2>回合（Episode）</h2>
+<p>
+<strong>白話：</strong>一次從開始到結束的完整嘗試。</p>
+<p>
+<strong>位置／角色：</strong>資料、訓練與評估的序列邊界。</p>
+<p>
+<strong>如何生效：</strong>由重設開始，在成功、失敗或逾時條件終止。</p>
+<p>
+<strong>具體例子：</strong>機械臂從初始姿勢出發，夾起杯子或 20 秒逾時。</p>
+<p>
+<strong>不要混淆：</strong>一個回合包含很多時間步，不是單張影格。</p>
+</article>
+<article class="term-card">
+<h2>資料洩漏（Data Leakage）</h2>
+<p>
+<strong>白話：</strong>考試答案或近似答案偷跑進練習。</p>
+<p>
+<strong>位置／角色：</strong>發生在收集、切分、正規化或選模型的資料管線。</p>
+<p>
+<strong>如何生效：</strong>測試場景資訊影響參數或超參數，使成績虛高。</p>
+<p>
+<strong>具體例子：</strong>同一回合相鄰影格被隨機分到訓練與測試。</p>
+<p>
+<strong>不要混淆：</strong>過度配合可在無洩漏時發生；兩者原因不同。</p>
+</article>
+<article class="term-card">
+<h2>模仿學習（Imitation Learning, IL）</h2>
+<p>
+<strong>白話：</strong>從專家示範或回饋學行為。</p>
+<p>
+<strong>位置／角色：</strong>用於難以手寫規則、但能取得示範的決策問題。</p>
+<p>
+<strong>如何生效：</strong>收集專家造訪的觀測與動作，訓練策略重現選擇。</p>
+<p>
+<strong>具體例子：</strong>由人遙控 500 次夾取，學影像到速度命令。</p>
+<p>
+<strong>不要混淆：</strong>它是方法家族；行為複製只是其中最直接一種。</p>
+</article>
+<article class="term-card">
+<h2>行為複製（Behavioral Cloning, BC）</h2>
+<p>
+<strong>白話：</strong>把專家動作當標籤做監督學習。</p>
+<p>
+<strong>位置／角色：</strong>位於示範資料與可部署策略之間。</p>
+<p>
+<strong>如何生效：</strong>最小化模型動作與專家動作的差距。</p>
+<p>
+<strong>具體例子：</strong>模型速度 0.06、專家 0.10 m/s，誤差 0.04。</p>
+<p>
+<strong>不要混淆：</strong>離線模仿準確不保證閉迴路長序列成功。</p>
+</article>
+<article class="term-card">
+<h2>協變量偏移（Covariate Shift）</h2>
+<p>
+<strong>白話：</strong>部署時看到的情況和訓練時不同。</p>
+<p>
+<strong>位置／角色：</strong>常出現在策略自己的錯誤改變後續觀測時。</p>
+<p>
+<strong>如何生效：</strong>小偏差帶策略進入專家未示範的狀態，錯誤繼續放大。</p>
+<p>
+<strong>具體例子：</strong>夾爪偏左 3 cm，資料中卻只有置中狀態。</p>
+<p>
+<strong>不要混淆：</strong>泛稱分布偏移更廣，也可包含目標關係改變。</p>
+</article>
+<article class="term-card">
+<h2>資料集聚合（Dataset Aggregation, DAgger）</h2>
+<p>
+<strong>白話：</strong>讓目前策略走出去，再請專家教它如何補救。</p>
+<p>
+<strong>位置／角色：</strong>是反覆收集、標註和重訓的模仿學習流程。</p>
+<p>
+<strong>如何生效：</strong>聚合策略實際造訪狀態的專家答案，縮小偏移。</p>
+<p>
+<strong>具體例子：</strong>模型偏左時由專家標示向右恢復命令。</p>
+<p>
+<strong>不要混淆：</strong>它不是模型架構，也不自動解決實機查詢安全。</p>
+</article>
+<article class="term-card">
+<h2>強化學習（Reinforcement Learning, RL）</h2>
+<p>
+<strong>白話：</strong>沒有逐步答案時，從互動結果改善決策。</p>
+<p>
+<strong>位置／角色：</strong>用在動作會影響未來、可取得獎勵的問題。</p>
+<p>
+<strong>如何生效：</strong>策略互動取得轉移與獎勵，再估價值或策略梯度。</p>
+<p>
+<strong>具體例子：</strong>夾取成功 +20、碰撞 −10，經多回合調整。</p>
+<p>
+<strong>不要混淆：</strong>它不等於隨機試錯，也不要求一定用深度網路。</p>
+</article>
+<article class="term-card">
+<h2>馬可夫決策過程（Markov Decision Process, MDP）</h2>
+<p>
+<strong>白話：</strong>描述狀態、動作、結果和分數如何隨時間串起來的框架。</p>
+<p>
+<strong>位置／角色：</strong>是強化學習問題的數學模型，不是演算法。</p>
+<p>
+<strong>如何生效：</strong>用狀態、動作、轉移、獎勵與折扣定義決策。</p>
+<p>
+<strong>具體例子：</strong>相對姿態是狀態，速度是動作，物理決定下一狀態。</p>
+<p>
+<strong>不要混淆：</strong>真實觀測未必足以滿足馬可夫假設。</p>
+</article>
+<article class="term-card">
+<h2>獎勵（Reward）</h2>
+<p>
+<strong>白話：</strong>每一步告訴學習程序結果偏好的一個數。</p>
+<p>
+<strong>位置／角色：</strong>由環境或任務程式產生，是訓練訊號。</p>
+<p>
+<strong>如何生效：</strong>累積成回報，影響策略提高或降低動作傾向。</p>
+<p>
+<strong>具體例子：</strong>成功 +20、碰撞 −10、每步耗時 −0.01。</p>
+<p>
+<strong>不要混淆：</strong>獎勵是代理規格，不是人心中的完整任務價值。</p>
+</article>
+<article class="term-card">
+<h2>回報（Return）</h2>
+<p>
+<strong>白話：</strong>從現在起能拿到的折扣獎勵總和。</p>
+<p>
+<strong>位置／角色：</strong>用來評價一段未來，連接單步獎勵與長期決策。</p>
+<p>
+<strong>如何生效：</strong>把越遠獎勵乘上越高次方的折扣因子後相加。</p>
+<p>
+<strong>具體例子：</strong>−0.1、−0.1、1 在折扣 0.9 時為 0.62。</p>
+<p>
+<strong>不要混淆：</strong>回報是一次樣本結果；價值是回報的期望。</p>
+</article>
+<article class="term-card">
+<h2>折扣因子（Discount Factor, γ）</h2>
+<p>
+<strong>白話：</strong>控制未來獎勵在現在要算多重的數。</p>
+<p>
+<strong>位置／角色：</strong>位於回報公式，通常介於 0 與 1。</p>
+<p>
+<strong>如何生效：</strong>每往後一步再乘一次 γ，遠期權重逐步降低。</p>
+<p>
+<strong>具體例子：</strong>γ=0.9 時兩步後的 1 分只按 0.81 計。</p>
+<p>
+<strong>不要混淆：</strong>它不是成功機率，也不是控制迴路增益。</p>
+</article>
+<article class="term-card">
+<h2>價值函數（Value Function, V/Q）</h2>
+<p>
+<strong>白話：</strong>估計從某情況出發，未來平均能拿多少回報。</p>
+<p>
+<strong>位置／角色：</strong>評論者或價值式演算法用它評估狀態與動作。</p>
+<p>
+<strong>如何生效：</strong>由採樣結果學習期望回報，再引導策略改善。</p>
+<p>
+<strong>具體例子：</strong>Q(目前狀態, 向右) = 8，表示估計長期回報 8。</p>
+<p>
+<strong>不要混淆：</strong>V 只給狀態；Q 同時指定第一個動作。</p>
+</article>
+<article class="term-card">
+<h2>行動者—評論者（Actor–Critic）</h2>
+<p>
+<strong>白話：</strong>一個負責做，一個負責估做得好不好。</p>
+<p>
+<strong>位置／角色：</strong>行動者是策略，評論者是價值估計元件。</p>
+<p>
+<strong>如何生效：</strong>評論者提供優勢訊號，行動者據此更新動作傾向。</p>
+<p>
+<strong>具體例子：</strong>向右結果比預期好，便增加類似狀態下向右機率。</p>
+<p>
+<strong>不要混淆：</strong>評論者不是獨立安全層，也不是人類裁判。</p>
+</article>
+<article class="term-card">
+<h2>探索（Exploration）</h2>
+<p>
+<strong>白話：</strong>刻意嘗試還不確定的選擇以取得資訊。</p>
+<p>
+<strong>位置／角色：</strong>位於資料收集策略，和利用已知好動作形成取捨。</p>
+<p>
+<strong>如何生效：</strong>加入隨機性、動作雜訊或鼓勵新狀態的獎勵。</p>
+<p>
+<strong>具體例子：</strong>有 10% 機會不選目前最高價值動作。</p>
+<p>
+<strong>不要混淆：</strong>探索不是無界亂動；真機必須受安全限制。</p>
+</article>
+<article class="term-card">
+<h2>同策略／異策略（On-policy / Off-policy）</h2>
+<p>
+<strong>白話：</strong>更新目標是否主要使用同一個目前策略產生的資料。</p>
+<p>
+<strong>位置／角色：</strong>描述資料來源與被改善策略的關係。</p>
+<p>
+<strong>如何生效：</strong>同策略偏重新資料；異策略可重用舊資料但需處理分布差。</p>
+<p>
+<strong>具體例子：</strong>經驗回放保存昨天策略資料供今天策略學習。</p>
+<p>
+<strong>不要混淆：</strong>它不是線上部署與離線部署的同義詞。</p>
+</article>
+<article class="term-card">
+<h2>領域隨機化（Domain Randomization）</h2>
+<p>
+<strong>白話：</strong>在模擬中故意改變世界，避免策略只會單一版本。</p>
+<p>
+<strong>位置／角色：</strong>位於模擬環境生成與模擬轉真實訓練管線。</p>
+<p>
+<strong>如何生效：</strong>每回合取樣質量、摩擦、光線、相機與延遲。</p>
+<p>
+<strong>具體例子：</strong>摩擦係數在 0.4 到 0.8 間變動。</p>
+<p>
+<strong>不要混淆：</strong>範圍越寬不一定越好，也不能涵蓋未知現實。</p>
+</article>
+<article class="term-card">
+<h2>系統辨識（System Identification）</h2>
+<p>
+<strong>白話：</strong>用真機量測反推模擬模型的數字。</p>
+<p>
+<strong>位置／角色：</strong>位於真實紀錄與物理模型校準之間。</p>
+<p>
+<strong>如何生效：</strong>比較已知輸入下的實測響應與模擬響應，調整參數。</p>
+<p>
+<strong>具體例子：</strong>由關節速度階躍響應估延遲與摩擦。</p>
+<p>
+<strong>不要混淆：</strong>辨識出的近似模型不是完整真實世界。</p>
+</article>
+<article class="term-card">
+<h2>模擬轉真實（Simulation-to-Real Transfer, sim-to-real）</h2>
+<p>
+<strong>白話：</strong>把模擬中學到的能力搬到真機。</p>
+<p>
+<strong>位置／角色：</strong>涵蓋建模、隨機化、測試與分階段實機驗證。</p>
+<p>
+<strong>如何生效：</strong>降低或涵蓋感知、動力學、接觸與延遲落差。</p>
+<p>
+<strong>具體例子：</strong>先隨機化延遲，再以低速影子模式比對真機輸出。</p>
+<p>
+<strong>不要混淆：</strong>它不是單一演算法，也不代表零落差。</p>
+</article>
+<article class="term-card">
+<h2>分布外（Out-of-Distribution, OOD）</h2>
+<p>
+<strong>白話：</strong>模型遇到訓練資料沒有好好涵蓋的輸入。</p>
+<p>
+<strong>位置／角色：</strong>出現在部署監測與失敗測試。</p>
+<p>
+<strong>如何生效：</strong>新物件、光線或感測故障讓輸入離開已知支撐。</p>
+<p>
+<strong>具體例子：</strong>只用不透明杯訓練，部署時遇到透明玻璃杯。</p>
+<p>
+<strong>不要混淆：</strong>偵測器報正常也不保證策略一定正確。</p>
+</article>
+<article class="term-card">
+<h2>影子模式（Shadow Mode）</h2>
+<p>
+<strong>白話：</strong>讓模型旁觀並提建議，但不准控制真機。</p>
+<p>
+<strong>位置／角色：</strong>位於離線測試與真正接管之間的部署階段。</p>
+<p>
+<strong>如何生效：</strong>模型讀即時觀測，紀錄提議並與現行命令比較。</p>
+<p>
+<strong>具體例子：</strong>連續一週記錄模型速度，但致動仍由舊控制器負責。</p>
+<p>
+<strong>不要混淆：</strong>它能降低致動風險，卻測不到模型閉迴路後的新分布。</p>
+</article>
+<article class="term-card">
+<h2>安全過濾器（Safety Filter）</h2>
+<p>
+<strong>白話：</strong>在模型提議與控制器之間拒絕或修改危險動作。</p>
+<p>
+<strong>位置／角色：</strong>是獨立於學習模型的部署防線。</p>
+<p>
+<strong>如何生效：</strong>檢查有限值、逾時、速度、力矩、工作區與碰撞限制。</p>
+<p>
+<strong>具體例子：</strong>把模型要求的 1.6 rad/s 裁成允許的 0.3 rad/s。</p>
+<p>
+<strong>不要混淆：</strong>它不是絕對安全保證；自身模型與感測也可能錯。</p>
+</article>
+<article class="term-card"><h2>最佳化器（Optimizer）</h2><p><strong>白話：</strong>依梯度決定每個參數這次要走多遠的更新規則。</p><p><strong>位置／角色：</strong>只在訓練迴路中作用，不參與部署推論。</p><p><strong>如何生效：</strong>讀取梯度、學習率與歷史統計，產生參數更新量。</p><p><strong>具體例子：</strong>梯度下降把參數減去學習率乘梯度。</p><p><strong>不要混淆：</strong>它最佳化寫下的損失，不理解真正任務意圖。</p></article>
+<article class="term-card"><h2>學習率（Learning Rate）</h2><p><strong>白話：</strong>控制每次參數更新步幅的旋鈕。</p><p><strong>位置／角色：</strong>是訓練超參數，由工程師或排程設定。</p><p><strong>如何生效：</strong>縮放梯度；太大可能震盪，太小可能進展緩慢。</p><p><strong>具體例子：</strong>梯度 4 配學習率 0.01，基本更新量為 0.04。</p><p><strong>不要混淆：</strong>它不是控制器增益，也不是模型自動學出的權重。</p></article>
+<article class="term-card"><h2>驗證集（Validation Set）</h2><p><strong>白話：</strong>訓練過程中用來挑設定、但不直接更新參數的資料。</p><p><strong>位置／角色：</strong>介於訓練集與最終測試集之間。</p><p><strong>如何生效：</strong>比較模型版本、停止時機與超參數，防止只看訓練表現。</p><p><strong>具體例子：</strong>用未參與梯度更新的二十個場景挑學習率。</p><p><strong>不要混淆：</strong>反覆依驗證結果調整後，它不能再充當最終測試證據。</p></article>
+<article class="term-card"><h2>經驗回放（Experience Replay Buffer）</h2><p><strong>白話：</strong>保存過去互動片段，之後重複抽出學習的容器。</p><p><strong>位置／角色：</strong>常位於異策略強化學習的收集與更新之間。</p><p><strong>如何生效：</strong>儲存狀態、動作、獎勵與下一狀態，隨機抽小批次。</p><p><strong>具體例子：</strong>保留最近一百萬筆轉移供多次梯度更新。</p><p><strong>不要混淆：</strong>隨機抽樣不能讓時間相關資料真正變成獨立樣本。</p></article>
+<article class="term-card"><h2>過度配合（Overfitting）</h2><p><strong>白話：</strong>模型太會記訓練細節，遇到新場景反而不行。</p><p><strong>位置／角色：</strong>由訓練與驗證表現差距觀察，是泛化問題。</p><p><strong>如何生效：</strong>模型容量、重複資料或訓練過久使參數利用偶然特徵。</p><p><strong>具體例子：</strong>記住桌面刮痕來定位杯子，換桌便失敗。</p><p><strong>不要混淆：</strong>它不等於資料洩漏；無洩漏資料也會過度配合。</p></article>
+<article class="term-card"><h2>推論（Inference）</h2><p><strong>白話：</strong>載入已訓練參數，對新輸入實際算出預測。</p><p><strong>位置／角色：</strong>位於部署執行期，是模型線上做數值映射的步驟。</p><p><strong>如何生效：</strong>前處理後的觀測通過固定函數，產生提議動作。</p><p><strong>具體例子：</strong>C++ 每 5 ms 把觀測張量送入模型並取得七軸速度。</p><p><strong>不要混淆：</strong>推論不更新參數，也不包含安全過濾與底層控制。</p></article>
+</section>
+<div class="pager">
+<a href="06-安全評估與C++部署.html">← 上一頁</a>
+<a href="index.html">回課程首頁 →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>
