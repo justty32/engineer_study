@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>名詞與概念字典｜微控制器與韌體核心</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./glossary.css"><script src="./course.js" defer></script></head><body><a class="skip-link" href="#main">跳到內容</a><header class="topbar"><div><p class="eyebrow">GLOSSARY · PLAIN LANGUAGE</p><h1>微控制器名詞與概念字典</h1><p>不是考試定義：每個詞都說它做什麼、存在於哪裡，以及不要和什麼混淆。</p></div><a class="back" href="./00-從零理解微控制器.html">← 零基礎起點</a></header><nav class="course-nav" aria-label="課程章節"><a href="./index.html">課程地圖</a><a href="./00-從零理解微控制器.html">零基礎起點</a><a class="active" href="./名詞與概念字典.html">名詞字典</a><a href="./01-mcu開機與記憶體.html">開機與記憶體</a><a href="./02-暫存器與周邊.html">暫存器與周邊</a><a href="./03-中斷與DMA.html">中斷與 DMA</a><a href="./04-Timer-ADC-PWM.html">Timer／ADC／PWM</a><a href="./05-韌體架構.html">韌體架構</a><a href="./06-除錯與可靠度.html">除錯與可靠度</a></nav>
+<main id="main" class="content"><section class="hero"><h2>先搜尋，不需要從頭背</h2><label for="glossary-search">輸入中文或英文，例如「時脈」「register」「中斷」</label><input id="glossary-search" class="search-box" type="search" placeholder="搜尋名詞或概念"><p id="glossary-count" class="plain">顯示全部詞條。</p></section>
+<section class="chapter"><span class="no">A</span><h2>晶片與執行</h2><div class="definition-list">
+<article data-definition><h3>微控制器（MCU, Microcontroller）</h3><p><b>白話：</b>把 CPU、Flash、RAM、GPIO、timer、ADC 與通訊周邊放進同一顆晶片的小電腦。</p><p><b>不要混淆：</b>MPU 通常要外接 DRAM 並跑完整 OS；MCU 常跑 bare-metal 或 RTOS。</p></article>
+<article data-definition><h3>CPU／Core（處理器核心）</h3><p><b>白話：</b>負責取指令、解碼、運算與 load/store 的部分。</p><p><b>不要混淆：</b>CPU 不是整顆 MCU；GPIO、ADC、DMA 是核心旁邊的周邊硬體。</p></article>
+<article data-definition><h3>Clock（時脈）</h3><p><b>白話：</b>週期性高低切換的同步節拍，告訴數位電路何時更新狀態。</p><p><b>不要混淆：</b>clock frequency 不等於 C++ statement 每秒執行數，也不等於 timer 最終頻率。</p></article>
+<article data-definition><h3>Instruction／Machine code（指令／機器碼）</h3><p><b>白話：</b>CPU 能直接辨認的 bit pattern，例如載入、相加、儲存、跳轉。</p><p><b>不要混淆：</b>一行 C++ 可能變成零條、一條或多條機器指令，取決於最佳化與目標架構。</p></article>
+<article data-definition><h3>ISA（Instruction Set Architecture，指令集架構）</h3><p><b>白話：</b>CPU 對軟體承諾的指令、register、例外與基本執行規則；ARM Cortex-M、RISC-V 都有自己的 ISA。</p><p><b>不要混淆：</b>ISA 是介面規格，不是特定一顆晶片的全部周邊。</p></article>
+<article data-definition><h3>Firmware（韌體）</h3><p><b>白話：</b>編譯後燒進裝置 Flash，直接管理硬體啟動、周邊、時序與產品功能的軟體。</p><p><b>不要混淆：</b>它仍是軟體；「韌」不是介於軟硬體之間的特殊物質。</p></article></div></section>
+<section class="chapter"><span class="no">B</span><h2>記憶體與編譯</h2><div class="definition-list">
+<article data-definition><h3>Address（位址）</h3><p><b>白話：</b>CPU 用來指定「要存取哪個位置」的數字。</p><p><b>不要混淆：</b>位址不是內容；同一數值資料可以被放在不同位址。</p></article>
+<article data-definition><h3>Bus（匯流排）</h3><p><b>白話：</b>搬運位址、資料與讀寫控制的共享連接系統。</p><p><b>不要混淆：</b>片內 memory bus 與板外 I²C bus 都叫 bus，但電氣、時序與用途完全不同。</p></article>
+<article data-definition><h3>Flash</h3><p><b>白話：</b>斷電仍保存的非揮發記憶體，常放程式與常數。</p><p><b>不要混淆：</b>它不是無限次寫入的硬碟；需要先擦除，寫入慢且有磨耗。</p></article>
+<article data-definition><h3>SRAM／RAM</h3><p><b>白話：</b>程式執行時放變數、buffer、stack 的工作記憶體，斷電消失。</p><p><b>不要混淆：</b>MCU 的 RAM 通常很小；成功編譯不代表最壞 stack 一定放得下。</p></article>
+<article data-definition><h3>Stack／Heap（堆疊／動態配置區）</h3><p><b>白話：</b>stack 自動保存呼叫 frame、區域變數與中斷現場；heap 供 allocator 動態分配。</p><p><b>不要混淆：</b>兩者都用 RAM，但生命週期、失敗模式與上限分析不同。</p></article>
+<article data-definition><h3>Linker（連結器）</h3><p><b>白話：</b>把 object files 與 library 的符號、區段和位址組成最終 firmware image。</p><p><b>不要混淆：</b>compiler 決定單個翻譯單元如何變成機器碼；linker 決定它們最後放哪裡。</p></article>
+<article data-definition><h3>Vector table（向量表）</h3><p><b>白話：</b>一張入口位址表，reset 與各種 exception／interrupt 用它找到 handler。</p><p><b>不要混淆：</b>它不是 C++ `std::vector`，也不是數學向量。</p></article></div></section>
+<section class="chapter"><span class="no">C</span><h2>周邊與腳位</h2><div class="definition-list">
+<article data-definition><h3>Peripheral（周邊）</h3><p><b>白話：</b>CPU 旁邊負責特定工作的硬體狀態機，例如 GPIO、UART、timer、ADC。</p><p><b>不要混淆：</b>它不一定在晶片外；MCU 的 peripheral 多半就在晶片內。</p></article>
+<article data-definition><h3>Register（暫存器）</h3><p><b>白話：</b>少量、固定寬度的狀態格。CPU register 給核心運算；peripheral register 給軟體控制硬體。</p><p><b>不要混淆：</b>register 不是普通變數；周邊 register 讀寫可能有硬體副作用。</p></article>
+<article data-definition><h3>MMIO（Memory-Mapped I/O）</h3><p><b>白話：</b>把周邊 register 分配進 CPU 位址空間，讓 load/store 指令也能操作硬體。</p><p><b>不要混淆：</b>位址看起來像 pointer，不代表目標是 RAM。</p></article>
+<article data-definition><h3>GPIO</h3><p><b>白話：</b>可設定成輸入、輸出、類比或交給其他周邊的通用腳位。</p><p><b>不要混淆：</b>GPIO HIGH 是真實電壓與有限驅動電流，不是抽象 bool。</p></article>
+<article data-definition><h3>Pin mux／Alternate function（腳位多工／替代功能）</h3><p><b>白話：</b>晶片內部選擇器，決定同一支實體 pin 此刻接 GPIO、UART、SPI、timer 還是 ADC。</p><p><b>不要混淆：</b>開了 UART clock 不代表 TX 已接到外部 pin；還要設定 pin mux。</p></article>
+<article data-definition><h3>Timer／Counter（計時器／計數器）</h3><p><b>白話：</b>跟著時脈或外部脈衝自動加數的硬體，能在指定數值產生事件。</p><p><b>不要混淆：</b>它不是 `sleep()`；CPU 可同時做別的事。</p></article>
+<article data-definition><h3>ADC</h3><p><b>白話：</b>把輸入電壓相對 Vref 的位置量化成整數 code。</p><p><b>不要混淆：</b>更多 bit 不會自動消除雜訊、參考誤差與前端問題。</p></article>
+<article data-definition><h3>PWM</h3><p><b>白話：</b>固定週期、調整高電位時間比例的數位方波。</p><p><b>不要混淆：</b>PWM pin 不是直接輸出連續類比電壓；負載或濾波器看到平均效果。</p></article></div></section>
+<section class="chapter"><span class="no">D</span><h2>事件、並行與時間</h2><div class="definition-list">
+<article data-definition><h3>Polling（輪詢）</h3><p><b>白話：</b>CPU 反覆讀硬體狀態，主動問「好了沒」。</p><p><b>不要混淆：</b>輪詢不一定錯；短、低速、啟動階段可能最簡單可靠。</p></article>
+<article data-definition><h3>Interrupt／ISR（中斷／中斷服務常式）</h3><p><b>白話：</b>硬體事件要求 CPU 暫停目前流程，跳到指定 handler 處理。</p><p><b>不要混淆：</b>它不是另一顆 CPU，也不是一般 thread；ISR 仍佔用同一核心。</p></article>
+<article data-definition><h3>DMA</h3><p><b>白話：</b>專門在周邊與記憶體間搬資料的硬體單元。</p><p><b>不要混淆：</b>DMA 不理解資料意義，也不免除 buffer ownership、cache 與完成事件管理。</p></article>
+<article data-definition><h3>Latency／Jitter（延遲／抖動）</h3><p><b>白話：</b>latency 是事件到反應隔多久；jitter 是這段時間每次變動多少。</p><p><b>不要混淆：</b>平均很快不代表最壞 latency 符合 deadline。</p></article>
+<article data-definition><h3>Real-time（即時）</h3><p><b>白話：</b>結果不只要正確，也要在明確時間限制內完成。</p><p><b>不要混淆：</b>即時不是單純 CPU 很快；可預測的慢系統也可能是即時系統。</p></article>
+<article data-definition><h3>Atomic（原子操作）</h3><p><b>白話：</b>其他執行流看不到「做到一半」的不可分割操作。</p><p><b>不要混淆：</b>`volatile` 只影響 compiler 存取，不自動提供 atomicity。</p></article></div></section>
+<section class="chapter"><span class="no">E</span><h2>啟動、除錯與可靠度</h2><div class="definition-list">
+<article data-definition><h3>Reset</h3><p><b>白話：</b>把 CPU 與一組硬體狀態帶回規格定義的起始條件，再從 reset vector 開始。</p><p><b>不要混淆：</b>reset 不一定切斷電源；power cycle 才是實際斷電重上。</p></article>
+<article data-definition><h3>Bootloader</h3><p><b>白話：</b>正式應用前先執行的小程式，負責選 image、驗證、更新與恢復。</p><p><b>不要混淆：</b>startup code 建立 C runtime；bootloader 是可選的獨立 firmware 階段。</p></article>
+<article data-definition><h3>SWD／JTAG</h3><p><b>白話：</b>外部 debugger 與晶片核心溝通的硬體除錯介面，可燒錄、停機、單步與讀記憶體。</p><p><b>不要混淆：</b>debugger 看到 register 值，不代表外部腳的類比波形一定正常。</p></article>
+<article data-definition><h3>HardFault</h3><p><b>白話：</b>Cortex-M 無法正常繼續某些錯誤時進入的 fault handler。</p><p><b>不要混淆：</b>它不是單一原因；非法位址、bus error、stack 問題等都可能匯入。</p></article>
+<article data-definition><h3>Watchdog（看門狗）</h3><p><b>白話：</b>若軟體未在期限內證明健康，就強制 reset 的獨立 timer。</p><p><b>不要混淆：</b>它是恢復機制，不是 bug 修復；仍需保存 reset cause 與故障證據。</p></article>
+<article data-definition><h3>Brown-out reset</h3><p><b>白話：</b>電源掉到不可靠區域時先重置核心，避免在電壓不足時亂執行。</p><p><b>不要混淆：</b>它不能替代足夠的電源容量、走線與去耦。</p></article></div></section>
+<section class="chapter"><span class="no">CONCEPT</span><h2>八組最容易混淆的概念</h2><div class="concept-pairs"><article><b>CPU register ≠ peripheral register</b><span>一個在核心運算資料；一個是硬體周邊的控制／狀態入口。</span></article><article><b>Clock ≠ timer</b><span>clock 是節拍來源；timer 是利用節拍自動計數的周邊。</span></article><article><b>Reset ≠ power cycle</b><span>reset 回起始狀態但可能仍供電；power cycle 真正切斷再恢復電源。</span></article><article><b>Interrupt ≠ parallel execution</b><span>單核心 ISR 只是插入同一條控制流，不是同時多做一件事。</span></article><article><b>volatile ≠ atomic</b><span>前者限制 compiler 最佳化；後者保證操作不可被觀察到半成品。</span></article><article><b>Fast ≠ real-time</b><span>快是平均效能；即時要求最壞情況仍趕上 deadline。</span></article><article><b>PWM ≠ DAC</b><span>PWM 是高低方波；DAC 直接產生連續電壓階級。</span></article><article><b>RS-485 ≠ Modbus</b><span>RS-485 規定實體電氣；Modbus 規定封包與資料意義。</span></article></div></section>
+<footer><span>字典的用途是隨時回查，不是背完才准進下一章。</span><a href="./01-mcu開機與記憶體.html">進入開機與記憶體 →</a></footer></main></body></html>

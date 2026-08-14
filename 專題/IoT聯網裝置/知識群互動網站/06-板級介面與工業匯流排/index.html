@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>30 分鐘搞懂 I²C、SPI、RS-485 與 Modbus</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到學習內容</a>
+  <header class="topbar">
+    <div><p class="eyebrow">IOT HARDWARE CRASH COURSE</p><h1>30 分鐘搞懂板級通訊</h1><p>I²C · SPI · RS-485 · Modbus RTU｜給很會 C／C++、但硬體不熟的你</p></div>
+    <div class="timer-card"><span>建議節奏</span><strong id="time-label">30:00</strong><button id="timer-toggle" type="button">開始倒數</button></div>
+  </header>
+
+  <div class="app-layout">
+    <nav class="route" aria-label="30 分鐘學習路徑">
+      <div class="route-head"><span>你的路徑</span><strong id="progress-text">0 / 6</strong></div>
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><i id="progress-fill"></i></div>
+      <button class="route-step active" data-step="basics" type="button"><b>01</b><span>硬體詞翻譯<small>3 分鐘</small></span><em>○</em></button>
+      <button class="route-step" data-step="i2c" type="button"><b>02</b><span>I²C：兩條共用線<small>6 分鐘</small></span><em>○</em></button>
+      <button class="route-step" data-step="spi" type="button"><b>03</b><span>SPI：快，但要對時<small>6 分鐘</small></span><em>○</em></button>
+      <button class="route-step" data-step="rs485" type="button"><b>04</b><span>RS-485：長線抗干擾<small>7 分鐘</small></span><em>○</em></button>
+      <button class="route-step" data-step="modbus" type="button"><b>05</b><span>Modbus：封包說什麼<small>5 分鐘</small></span><em>○</em></button>
+      <button class="route-step" data-step="debug" type="button"><b>06</b><span>現場除錯<small>3 分鐘</small></span><em>○</em></button>
+      <button class="reset-all" id="reset-all" type="button">重設進度</button>
+    </nav>
+
+    <main id="main" class="workspace">
+      <div class="promise"><strong>30 分鐘後，你要會的不是背名詞：</strong><span>你能分辨「接線／電氣」「時序／交易」「封包／資料」哪一層出了錯，並決定下一個該量什麼。</span><a class="deep-link" href="./hardware-principles.html">硬體原理不熟？先開無考試補課 →</a><a class="deep-link" href="../07-微控制器與韌體核心/index.html">接著學 MCU 與韌體核心 →</a></div>
+
+      <section class="lesson active" data-panel="basics" aria-labelledby="basics-title">
+        <div class="lesson-head"><span>0–3 分</span><div><h2 id="basics-title" tabindex="-1">先把硬體話翻成人話</h2><p>腳位不是單純的 <code>bool</code>。它真的在推動電壓，也可能只是「放手」。點名詞看翻譯。</p></div></div>
+        <div class="two-panel">
+          <article class="card"><h3>一塊板上的三層</h3><div class="stack">
+            <button type="button" data-term="physical"><b>接線／電氣</b><span>線有沒有接對？電壓能不能被正確看成 0 或 1？</span></button>
+            <button type="button" data-term="transaction"><b>時序／交易</b><span>誰先說、何時取樣、對方有沒有回應？</span></button>
+            <button type="button" data-term="protocol"><b>封包／資料</b><span>這串位元組代表讀哪個設備、哪個暫存器？</span></button>
+          </div><div class="guided-note"><b>先看一條完整路徑，不用作答</b><p><code>Modbus 命令</code> → UART 送出位元組 → RS-485 收發器把它變成 A/B 兩線的電壓差 → 遠端收發器還原位元組 → 遠端程式解讀 Modbus。</p><p>每一層都可能壞，而且上一層無法修好下一層的接線。</p></div></article>
+          <aside class="card glossary" aria-live="polite"><span class="tag">名詞翻譯器</span><h3 id="term-title">先點左邊任何一層</h3><p id="term-plain">這裡會用白話解釋它「在做什麼」。</p><div><b>實機上你會看到：</b><p id="term-effect">不需要先背縮寫。</p></div></aside>
+        </div>
+        <div class="term-strip" aria-label="常見硬體名詞">
+          <button data-term="pushpull" type="button">推挽</button><button data-term="opendrain" type="button">開漏</button><button data-term="pullup" type="button">上拉</button><button data-term="differential" type="button">差動</button><button data-term="termination" type="button">終端電阻</button><button data-term="ground" type="button">共地／參考地</button>
+        </div>
+        <div class="principle-grid">
+          <article class="card principle-card">
+            <span class="tag">原理實驗 A</span><h3>上拉電阻到底在做什麼？</h3>
+            <div class="circuit-text" aria-label="上拉電阻電流路徑"><b>3.3 V</b><i>→</i><span>上拉電阻</span><i>→</i><strong>訊號線</strong><i>→</i><span>開漏電晶體</span><i>→</i><b>GND</b></div>
+            <p>開漏輸出可以想成一顆「只會接地的開關」。開關打開時，它把訊號線接到地，線就是 0；開關放開時，電晶體與地斷開，上拉電阻才把線帶往 3.3 V。</p>
+            <label>上拉電阻 <output id="pull-r-out">4.7 kΩ</output><input id="pull-r" type="range" min="1" max="20" step="0.1" value="4.7"></label>
+            <div class="switch-row"><button class="primary" data-pull-state="release" type="button">裝置放手：要送 1</button><button data-pull-state="low" type="button">裝置接地：要送 0</button></div>
+            <div class="physical-readout"><div><small>訊號線</small><strong id="pull-voltage">約 3.3 V（1）</strong></div><div><small>穩態電流</small><strong id="pull-current">約 0 mA</strong></div></div>
+            <p id="pull-explain" class="explain-box">放手後沒有通往地的完整路徑；電阻把線路的小電容充到 3.3 V。充完後幾乎沒有直流電流。</p>
+            <details open><summary>為什麼不直接用一條導線接 3.3 V？</summary><p>如果裝置同時把線接地，3.3 V 會被導線直接短路到地，電流可能很大。電阻用 <code>I = V/R</code> 限制電流；4.7 kΩ 時約為 0.70 mA。代價是電阻和線路電容形成 RC，回到 1 需要時間。</p></details>
+          </article>
+          <article class="card principle-card">
+            <span class="tag">原理實驗 B</span><h3>終端電阻為什麼能消除反射？</h3>
+            <p>長線不是「瞬間到處同電壓」的理想導線。訊號邊緣是一個沿線前進的電磁波；對這個波而言，電纜暫時表現成一個固定的阻抗，叫做<strong>特性阻抗</strong> <code>Z₀</code>。</p>
+            <div class="line-model"><b>發射器</b><i class="incident">入射波 →</i><span>120 Ω 電纜</span><i id="reflection-arrow">← 反射波</i><b id="load-label">負載 120 Ω</b></div>
+            <label>線尾負載電阻 <output id="term-r-out">120 Ω</output><input id="term-r" type="range" min="20" max="240" step="10" value="120"></label>
+            <div class="physical-readout"><div><small>反射係數 Γ</small><strong id="reflection-value">0.00</strong></div><div><small>反射振幅</small><strong id="reflection-percent">0%</strong></div></div>
+            <p id="term-explain" class="explain-box">負載剛好也是 120 Ω，線尾和電纜對波來說沒有突然變化，不需要產生反向波來修正電壓與電流。能量進入電阻並轉成熱。</p>
+            <details open><summary>它不是「把雜訊吃掉」</summary><p>反射來自阻抗突然改變。反射係數為 <code>Γ = (R<sub>L</sub> − Z₀) / (R<sub>L</sub> + Z₀)</code>。當負載等於線的特性阻抗，Γ = 0；開路接近 +1，短路接近 −1。RS-485 可能從任一端發話，所以常在實體總線兩端終端。</p></details>
+          </article>
+        </div>
+      </section>
+
+      <section class="lesson" data-panel="i2c" aria-labelledby="i2c-title">
+        <div class="lesson-head"><span>3–9 分</span><div><h2 id="i2c-title" tabindex="-1">I²C：大家共用兩條線，沒人說話時靠電阻回到 1</h2><p>SDA 傳資料、SCL 打節拍。兩條線都是開漏，所以一定要有上拉。</p></div></div>
+        <div class="bus-map"><b>MCU</b><i>SDA + SCL</i><b>溫度感測器 0x48</b><i>同兩條線</i><b>RTC 0x68</b></div>
+        <div class="concept-steps"><div><b>① 裝置送 0</b><span>開漏電晶體導通，把線接地。</span></div><div><b>② 裝置要送 1</b><span>電晶體關閉、放開線路。</span></div><div><b>③ 電阻開始工作</b><span>上拉電阻替線路電容充電，電壓逐漸升高。</span></div><div><b>④ 接收器取樣</b><span>若升得不夠快，接收器仍可能把它看成 0。</span></div></div>
+        <div class="two-panel"><article class="card"><h3>動手看 RC 如何改變上升速度</h3><p class="plain-note">這不是考題。任意拖曳：電阻越大或線路電容越大，電壓爬回 1 越慢。</p>
+          <label>上拉電阻 <output id="i2c-r-out">4.7 kΩ</output><input id="i2c-r" type="range" min="1" max="20" step="0.1" value="4.7"></label>
+          <label>線路與裝置的總電容 <output id="i2c-c-out">100 pF</output><input id="i2c-c" type="range" min="20" max="500" step="10" value="100"></label>
+          <label for="i2c-speed">時脈速度</label><select id="i2c-speed"><option value="100">100 kHz（較寬鬆）</option><option value="400" selected>400 kHz（較快）</option></select>
+          <button class="primary" id="i2c-check" type="button">更新這組物理模型</button></article>
+          <article class="card result"><span class="tag">量測預測</span><strong id="i2c-rise">— ns</strong><p id="i2c-result">先調參數，再做判斷。</p><div class="signal"><span>0</span><i id="i2c-slope"></i><span>1</span></div><details><summary>公式在算什麼？</summary><p><code>上升時間 ≈ 0.8473 × 上拉電阻 × 匯流排電容</code>。這是教學估算；最後仍以示波器與元件資料表為準。</p></details></article></div>
+        <div class="diagnose"><b>看到 NACK（對方沒點頭）時先查：</b><button data-i2c-fault="address" type="button">位址寫成 0x90</button><button data-i2c-fault="power" type="button">感測器沒上電</button><button data-i2c-fault="stuck" type="button">SDA 一直是 0</button><p id="i2c-fault-text">點一個現象看排查順序。</p></div>
+      </section>
+
+      <section class="lesson" data-panel="spi" aria-labelledby="spi-title">
+        <div class="lesson-head"><span>9–15 分</span><div><h2 id="spi-title" tabindex="-1">SPI：線比較多，但封包很薄、速度快</h2><p>主控用 CS 點名裝置，用 SCLK 打拍子；MOSI 往外送，MISO 往回收。</p></div></div>
+        <div class="wire-cards"><div><b>SCLK</b><span>主控發出的節拍</span></div><div><b>MOSI</b><span>主控 → 裝置</span></div><div><b>MISO</b><span>裝置 → 主控</span></div><div><b>CS</b><span>拉低才是「現在跟你說」</span></div></div>
+        <div class="two-panel"><article class="card"><h3>自由切換四種取樣約定</h3><p>這四個都不是「比較好」或「比較壞」；只是主控與裝置必須採用同一約定。點選後看它代表什麼。</p><div class="mode-grid"><button data-spi-mode="0" type="button">Mode 0<br><small>閒置低／第一緣讀</small></button><button data-spi-mode="1" type="button">Mode 1<br><small>閒置低／第二緣讀</small></button><button data-spi-mode="2" type="button">Mode 2<br><small>閒置高／第一緣讀</small></button><button data-spi-mode="3" type="button">Mode 3<br><small>閒置高／第二緣讀</small></button></div></article>
+          <article class="card result"><span class="tag">時序解說</span><h3 id="spi-verdict">先選一個 Mode 觀察</h3><p id="spi-explain">CPOL 只是在說時脈沒動時是高還低；CPHA 是在說第一個還是第二個邊緣取樣。真正答案永遠來自那顆裝置的資料表。</p><div class="bits"><i>1</i><i>0</i><i>1</i><i>1</i><i>0</i><i>0</i><i>1</i><i>0</i></div></article></div>
+        <div class="choice"><b>看兩個典型設計，不用猜：</b><button data-choice="i2c" type="button">八顆慢速感測器、MCU 腳位很少</button><button data-choice="spi" type="button">高速 Flash、資料量大</button><p id="choice-result">點情境，看工程師為什麼這樣選。</p></div>
+      </section>
+
+      <section class="lesson" data-panel="rs485" aria-labelledby="rs485-title">
+        <div class="lesson-head"><span>15–22 分</span><div><h2 id="rs485-title" tabindex="-1">RS-485：把 UART 的 0／1 變成兩條線的電壓差</h2><p>RS-485 只管「訊號怎麼沿長線可靠地跑」，不規定封包內容。Modbus 才管內容。</p></div></div>
+        <div class="layer-line"><b>MCU UART</b><span>位元組</span><b>RS-485 收發器</b><span>A/B 雙絞線</span><b>遠端設備</b></div>
+        <div class="concept-steps"><div><b>① 線型主幹</b><span>每個分岔都是阻抗變化；長星狀支線會製造多個反射點。</span></div><div><b>② 兩端終端</b><span>只處理主幹兩個物理盡頭的反射，不是每台設備都裝。</span></div><div><b>③ 閒置偏壓</b><span>所有發射器放手時，替 A/B 設定確定的預設差動狀態。</span></div><div><b>④ DE 開關</b><span>像共用麥克風：送完才放手，但也不能擋住對方回答。</span></div></div>
+        <div class="two-panel"><article class="card"><h3>把現場總線接好</h3>
+          <label for="rs-topology">接線形狀</label><select id="rs-topology"><option value="line">一條主幹依序串過去</option><option value="star">從中央分成很多長支線</option></select>
+          <fieldset><legend>終端電阻放在哪裡？</legend><label><input id="rs-term-a" type="checkbox" checked> 線的第一端</label><label><input id="rs-term-mid" type="checkbox"> 中間每台設備</label><label><input id="rs-term-b" type="checkbox" checked> 線的最後一端</label></fieldset>
+          <label><input id="rs-bias" type="checkbox" checked> 有閒置偏壓：沒人傳送時，線仍停在確定狀態</label>
+          <label for="rs-de">DE 關閉時機</label><select id="rs-de"><option value="complete">最後一個停止位元真的送完</option><option value="buffer">軟體 buffer 剛清空</option><option value="late">送完很久後才放開</option></select>
+          <button class="primary" id="rs-check" type="button">模擬這組接法會發生什麼</button></article>
+          <article class="card result"><span class="tag">現場預測</span><h3 id="rs-verdict">等待檢查</h3><ul id="rs-findings"><li>一條線型主幹，終端只在物理兩端。</li><li>偏壓不是終端：它負責讓「沒人說話」時不要亂判 0／1。</li><li>DE 像麥克風開關：太早關會切掉尾巴，太晚關會擋住別人回答。</li></ul></article></div>
+        <details><summary>為什麼叫「差動」？</summary><p>接收器主要看 A、B 兩條線的電壓差，不是只看其中一條對地的電壓。外界雜訊若同時把兩條線都抬高，兩者的差仍可能差不多，所以比單端訊號更耐長線干擾。</p></details>
+      </section>
+
+      <section class="lesson" data-panel="modbus" aria-labelledby="modbus-title">
+        <div class="lesson-head"><span>22–27 分</span><div><h2 id="modbus-title" tabindex="-1">Modbus RTU：在 RS-485 線上傳「讀哪裡、讀多少」</h2><p>一包資料就是：設備地址 → 要做的事 → 參數 → CRC 檢查碼。</p></div></div>
+        <div class="two-panel"><article class="card"><h3>組一個「讀保持暫存器」請求</h3>
+          <label>設備地址<input id="mb-address" type="number" min="1" max="247" value="1"></label>
+          <label>文件上的暫存器編號<input id="mb-register" type="number" min="40001" max="49999" value="40001"></label>
+          <label>讀幾個 16 位元暫存器<input id="mb-count" type="number" min="1" max="125" value="2"></label>
+          <label>UART 鮑率<select id="mb-baud"><option>9600</option><option selected>19200</option><option>38400</option><option>115200</option></select></label>
+          <button class="primary" id="mb-build" type="button">組封包</button></article>
+          <article class="card result"><span class="tag">RTU 訊框</span><div class="frame" id="mb-frame"><span>地址</span><span>功能</span><span>起點</span><span>數量</span><span>CRC</span></div><p id="mb-meaning">40001 是文件給人看的編號；真正放進封包的起點通常是 0。這個差一格是最常見的坑。</p><div class="metric-row"><div><small>3.5 字元靜默</small><strong id="mb-gap">— ms</strong></div><div><small>CRC-16</small><strong id="mb-crc">—</strong></div></div></article></div>
+        <div class="diagnose"><b>回應怎麼看：</b><button data-mb-error="timeout" type="button">完全沒回應</button><button data-mb-error="crc" type="button">CRC 常錯</button><button data-mb-error="exception" type="button">功能碼最高位變 1</button><p id="mb-error-text">先選症狀，不要一看到 timeout 就怪協定。</p></div>
+      </section>
+
+      <section class="lesson" data-panel="debug" aria-labelledby="debug-title">
+        <div class="lesson-head"><span>27–30 分</span><div><h2 id="debug-title" tabindex="-1">現場除錯：看完整示範，再自己沿用</h2><p>同一份韌體在桌上正常，接上 50 公尺線後 Modbus 偶爾 timeout／CRC 錯。依序點開工程師會怎麼查。</p></div></div>
+        <div class="debug-grid"><button data-debug="physical" type="button"><b>第 1 層：供電、接線、A/B 波形</b><span>先確認真實世界送出了可辨識訊號</span></button><button data-debug="bytes" type="button"><b>第 2 層：UART 與位元組</b><span>確認鮑率、格式、DE 與收發資料</span></button><button data-debug="frame" type="button"><b>第 3 層：Modbus 封包</b><span>再看站號、地址、功能碼、CRC</span></button><button data-debug="firmware" type="button"><b>第 4 層：韌體狀態</b><span>最後查 timeout、buffer 與 parser</span></button></div>
+        <article class="card debug-result"><span class="tag">逐層取得證據</span><h3 id="debug-verdict">從第 1 層開始點</h3><p id="debug-explain">每一層的目的，是先證明底下那一層正常。底層沒證據時，修改上層軟體只是換一種猜法。</p></article>
+        <div class="takeaway"><h3>帶走這張心智速查</h3><div><p><b>I²C</b>：板內、省線、多裝置。先查上拉、位址、ACK、卡線。</p><p><b>SPI</b>：板內、高速。先查 CS、Mode、位元順序、資料表時序。</p><p><b>RS-485</b>：板外長線的電氣層。先查 A/B、線型拓樸、兩端終端、偏壓、DE。</p><p><b>Modbus RTU</b>：封包語言。先查站號、功能碼、地址差一格、CRC、timeout。</p></div></div>
+        <details><summary>韌體只要再接上這 60 秒</summary><p>中斷或 DMA 收位元組 → 環形緩衝區 → 非阻塞 parser → queue／task。不要在 ISR 裡解析整包或等待回應；RS-485 的 DE 要在硬體真的送完最後一位後才關。</p></details>
+      </section>
+
+      <div id="live-summary" class="sr-only" aria-live="polite"></div>
+      <div class="lesson-actions"><button id="prev-step" type="button">← 上一關</button><span id="step-position">1 / 6</span><button id="next-step" class="primary" type="button">下一關 →</button></div>
+      <footer><span>教學模型；實作以元件資料表、目標板波形與設備 Modbus register map 為準。</span><span><a href="./README.md">來源與範圍</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

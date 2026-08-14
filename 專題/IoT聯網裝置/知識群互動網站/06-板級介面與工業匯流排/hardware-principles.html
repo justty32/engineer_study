@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>硬體原理補課｜從電流到終端電阻</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./principles.js" defer></script>
+</head>
+<body class="principles-page">
+  <a class="skip-link" href="#principles-main">跳到補課內容</a>
+  <header class="topbar principles-topbar">
+    <div><p class="eyebrow">NO QUIZ · HARDWARE FROM FIRST PRINCIPLES</p><h1>硬體原理補課：從電流到終端電阻</h1><p>不計時、不考試。每個名詞都先回答：物理上發生什麼？</p></div>
+    <a class="back-link" href="./index.html">← 回 30 分鐘主線</a>
+  </header>
+  <nav class="page-switcher" aria-label="硬體介面補課"><a class="active" href="./hardware-principles.html">原理總覽</a><a href="./gpio-principles.html">GPIO</a><a href="./i2c-principles.html">I²C</a><a href="./spi-principles.html">SPI</a><a href="./rs485-principles.html">RS-485</a><a href="./schematic-reading.html">讀電路圖</a><a href="./circuit-design.html">做電路設計</a></nav>
+  <div class="principles-layout">
+    <nav class="principles-nav" aria-label="硬體原理章節">
+      <a href="#electricity">1. 電壓、電流、電阻</a>
+      <a href="#capacitance">2. 電容與 RC</a>
+      <a href="#outputs">3. 推挽與開漏</a>
+      <a href="#pullup">4. 上拉完整原理</a>
+      <a href="#differential">5. 差動與共模</a>
+      <a href="#transmission">6. 傳輸線與反射</a>
+      <a href="#termination">7. 終端為何有效</a>
+      <a href="#bias">8. 偏壓不是終端</a>
+      <a href="#measure">9. 實機怎麼量</a>
+    </nav>
+    <main id="principles-main" class="principles-content">
+      <div class="teaching-contract"><b>閱讀方式</b><p>不用記公式。先拖動控制項，看因果；再讀「一句話模型」。公式只負責把直覺變成可估算的數字。</p></div>
+
+      <section id="electricity" class="theory-section">
+        <span class="chapter-no">01</span><h2>電壓不是一顆東西，電流也不會憑空消失</h2>
+        <div class="theory-grid"><article><h3>三個最小概念</h3><dl class="plain-dl"><div><dt>電壓 V</dt><dd>兩點之間「推動電荷的能力差」。說某點是 3.3 V，隱含它相對某個參考點高 3.3 V。</dd></div><div><dt>電流 I</dt><dd>每秒穿過截面的電荷量。必須有完整回路，電流才有地方繞回電源。</dd></div><div><dt>電阻 R</dt><dd>限制電流的程度。相同電壓下，電阻越大，電流越小。</dd></div></dl><div class="one-line"><b>一句話模型：</b>電壓負責推，閉合回路讓電流能走，電阻決定走多少。</div></article>
+          <article class="card lab-card"><span class="tag">自由實驗</span><h3>歐姆定律不是考題，是限流估算器</h3><label>電壓 <output id="ohm-v-out">3.3 V</output><input id="ohm-v" type="range" min="1" max="12" step="0.1" value="3.3"></label><label>電阻 <output id="ohm-r-out">4.7 kΩ</output><input id="ohm-r" type="range" min="0.1" max="20" step="0.1" value="4.7"></label><div class="physical-readout"><div><small>電流 I = V/R</small><strong id="ohm-i">0.70 mA</strong></div><div><small>電阻發熱 P = VI</small><strong id="ohm-p">2.32 mW</strong></div></div><p id="ohm-explain" class="explain-box">4.7 kΩ 把 3.3 V 對地路徑限制在約 0.70 mA。</p></article></div>
+      </section>
+
+      <section id="capacitance" class="theory-section">
+        <span class="chapter-no">02</span><h2>每一條真實導線都有一點電容，所以電壓不能瞬間跳完</h2>
+        <div class="theory-grid"><article><h3>把電容想成電荷的小儲槽</h3><p>兩塊導體只要靠近，中間隔著絕緣物，就能儲存相反電荷。PCB 走線、IC 腳位與電纜都因此帶有寄生電容。要改變線上的電壓，驅動器必須先搬入或搬走電荷。</p><p>電阻限制搬運速度，電容決定要搬多少。兩者合起來形成 <strong>RC 時間常數</strong>：</p><div class="formula-teach"><code>τ = R × C</code><span>經過 1τ，電壓完成約 63%；約 5τ 後才接近完成。</span></div><div class="one-line"><b>一句話模型：</b>大電阻像窄管，大電容像大水箱；窄管替大水箱充電一定慢。</div></article>
+          <article class="card lab-card"><span class="tag">自由實驗</span><h3>拖動 R、C，看上升時間</h3><label>電阻 <output id="rc-r-out">4.7 kΩ</output><input id="rc-r" type="range" min="1" max="20" step="0.1" value="4.7"></label><label>總電容 <output id="rc-c-out">100 pF</output><input id="rc-c" type="range" min="20" max="500" step="10" value="100"></label><div class="charge-track"><i id="charge-curve"></i></div><div class="physical-readout"><div><small>時間常數 τ</small><strong id="rc-tau">470 ns</strong></div><div><small>I²C 30→70% 上升</small><strong id="rc-rise">398 ns</strong></div></div><p id="rc-explain" class="explain-box">這就是上拉不能只問「有沒有」，還要問「多大」的原因。</p></article></div>
+      </section>
+
+      <section id="outputs" class="theory-section">
+        <span class="chapter-no">03</span><h2>GPIO 輸出其實是用電晶體控制「接電源」或「接地」</h2>
+        <div class="compare-cards"><article><h3>推挽輸出</h3><div class="mini-circuit"><b>VDD</b><span>上方開關</span><strong>腳位</strong><span>下方開關</span><b>GND</b></div><p>送 1：上方開、下方關，主動接向電源。送 0：上方關、下方開，主動接地。它能快速充放線路電容。</p><p class="caution">兩個推挽輸出不能隨便共接：一個推高、另一個拉低時，會形成很大的衝突電流。</p></article><article><h3>開漏輸出</h3><div class="mini-circuit"><b>沒有上方開關</b><span>—</span><strong>腳位</strong><span>下方開關</span><b>GND</b></div><p>只剩「接地」能力。送 0 時導通；想送 1 時只能放手。它需要外部上拉，卻換來多顆裝置安全共線的能力。</p><p class="one-line">任何一顆拉低，整條線就是 0；全部放手，線才回到 1。這叫 wired-AND。</p></article></div>
+      </section>
+
+      <section id="pullup" class="theory-section">
+        <span class="chapter-no">04</span><h2>上拉的完整因果：它同時負責「預設狀態、限流、充電」</h2>
+        <div class="cause-chain"><div><b>全部裝置放手</b><span>通往 GND 的開關全關</span></div><i>→</i><div><b>上拉替電容充電</b><span>電流暫時流入線路電容</span></div><i>→</i><div><b>線到達 VDD</b><span>穩態壓差趨近 0，電流也趨近 0</span></div></div>
+        <div class="cause-chain"><div><b>任一裝置導通</b><span>線被接向 GND</span></div><i>→</i><div><b>形成完整路徑</b><span>VDD → R → 電晶體 → GND</span></div><i>→</i><div><b>線成為 0</b><span>電流被 R 限制為約 V/R</span></div></div>
+        <div class="why-box"><h3>選阻值是在做取捨</h3><p><b>R 太大：</b>低電位省電，但替電容充電慢，高速時可能來不及成為 1。</p><p><b>R 太小：</b>充電快，但有人拉低時電流較大；裝置也必須有能力把線壓到規定的低電位。</p><p><b>所以：</b>阻值不是背 4.7 kΩ。它由 VDD、總電容、速度、允許低電位與裝置 sink current 一起決定。</p></div>
+      </section>
+
+      <section id="differential" class="theory-section">
+        <span class="chapter-no">05</span><h2>差動接收器看兩條線的差，不代表它完全不需要地</h2>
+        <div class="theory-grid"><article><h3>單端與差動</h3><p><b>單端：</b>判斷一條訊號線相對 GND 的電壓。地被干擾，讀值也一起受影響。</p><p><b>差動：</b>判斷 A 與 B 的差 <code>V<sub>AB</sub> = V<sub>A</sub> − V<sub>B</sub></code>。若外界雜訊同時讓 A、B 都升高 1 V，兩者的差可能幾乎不變。</p><div class="one-line"><b>一句話模型：</b>共同沾上的雜訊叫共模；兩線之差才是差模資料。</div></article><article><h3>為什麼仍要管參考地？</h3><p>真實收發器的 A、B 腳可承受電壓範圍有限。兩台設備的地若差太多，即使 A−B 正確，兩支腳相對本機地仍可能超出規格。</p><p>因此長線系統常需要參考導體、保護元件；地電位差很大或安全要求高時使用隔離式 RS-485。</p></article></div>
+      </section>
+
+      <section id="transmission" class="theory-section">
+        <span class="chapter-no">06</span><h2>線夠長、邊緣夠快時，導線必須當成「波的通道」</h2>
+        <p>低速直流直覺是假設整條線同時改變。但電磁影響傳播需要時間。發射器剛切換時，遠端還不知道；訊號邊緣沿線前進，沿途的電場與磁場攜帶能量。</p>
+        <div class="definition-block"><h3>特性阻抗 Z₀ 不是拿萬用表量到的直流電阻</h3><p>它是「正在前進的波，其電壓與電流之比」，由線的單位長度電感與電容決定：<code>Z₀ = √(L′/C′)</code>。常見 RS-485 雙絞線約 120 Ω，但應看電纜規格。</p></div>
+        <div class="cause-chain"><div><b>發射器切換</b><span>建立一個前進波</span></div><i>→</i><div><b>沿線傳播</b><span>此時看到的是 Z₀</span></div><i>→</i><div><b>抵達負載</b><span>負載若不同，就要產生反射修正</span></div></div>
+      </section>
+
+      <section id="termination" class="theory-section">
+        <span class="chapter-no">07</span><h2>終端電阻有效，因為它讓波到線尾時「看不到邊界」</h2>
+        <div class="theory-grid"><article><h3>為什麼會反射？</h3><p>前進波帶著固定的電壓／電流比例。抵達線尾後，負載要求另一種比例，線尾必須疊加一個反向傳播的波，才能同時滿足負載的電壓與電流。這個反向波就是反射。</p><div class="formula-teach"><code>Γ = (R<sub>L</sub> − Z₀)/(R<sub>L</sub> + Z₀)</code><span>Γ 是反射波振幅相對入射波的比例。</span></div><ul><li><b>開路：</b>R<sub>L</sub> → ∞，Γ → +1，同相全反射。</li><li><b>短路：</b>R<sub>L</sub> = 0，Γ = −1，反相全反射。</li><li><b>匹配：</b>R<sub>L</sub> = Z₀，Γ = 0，沒有反射。</li></ul></article>
+          <article class="card lab-card"><span class="tag">自由實驗</span><h3>改變負載，看反射</h3><label>電纜特性阻抗 <output>120 Ω</output></label><label>線尾負載 <output id="deep-term-out">120 Ω</output><input id="deep-term" type="range" min="0" max="500" step="10" value="120"></label><div class="wave-bars"><div><span>入射波</span><i style="width:100%"></i></div><div><span>反射波</span><i id="deep-reflect-bar" style="width:0%"></i></div></div><div class="physical-readout"><div><small>Γ</small><strong id="deep-gamma">0.00</strong></div><div><small>反射幅度</small><strong id="deep-reflect">0%</strong></div></div><p id="deep-term-text" class="explain-box">匹配：能量持續流進 120 Ω 電阻並轉成熱，線尾不需要送回修正波。</p></article></div>
+        <div class="why-box"><h3>為什麼 RS-485 常放兩顆終端？</h3><p>半雙工多點總線可能由任一端或中間節點發送。波沿兩個方向跑，主幹的兩個物理盡頭都可能成為反射點，因此各放一個與電纜匹配的終端。終端不是每台都放；放太多會並聯成太低的負載，收發器推不動。</p></div>
+      </section>
+
+      <section id="bias" class="theory-section">
+        <span class="chapter-no">08</span><h2>偏壓與終端是兩份完全不同的工作</h2>
+        <div class="compare-cards"><article><h3>終端 termination</h3><p>處理訊號正在切換時的波反射。數值要配合電纜特性阻抗，位置在總線物理兩端。</p></article><article><h3>閒置偏壓 failsafe bias</h3><p>處理所有發射器都關閉時，A/B 沒人驅動的狀態。偏壓電阻建立一個小而確定的差動電壓，避免接收器把雜訊誤認成資料。</p></article></div>
+        <p class="caution">它們都使用電阻，所以容易混淆；但一個在解決波的邊界條件，一個在設定「沒人說話」時的預設邏輯狀態。</p>
+      </section>
+
+      <section id="measure" class="theory-section">
+        <span class="chapter-no">09</span><h2>真正理解硬體的最後一步，是知道用什麼工具看它</h2>
+        <div class="tool-table"><div><b>萬用表</b><span>看穩態電壓、電阻、是否短路；看不到高速邊緣與反射。</span></div><div><b>示波器</b><span>看真實電壓隨時間的形狀：上升時間、過衝、反射、雜訊與差動幅度。</span></div><div><b>邏輯分析儀</b><span>把高低電位解碼成 I²C／SPI／UART 位元組；方便，但可能把難看的類比波形簡化成漂亮的 0／1。</span></div><div><b>資料表</b><span>告訴你輸入門檻、最大 sink current、時序、電容與終端條件；量測結果必須和它比。</span></div></div>
+        <div class="final-model"><b>遇到問題時：</b><span>先量供電與線上的類比波形 → 再解碼位元組 → 最後才查協定與程式。</span></div>
+      </section>
+
+      <footer><span>本頁是概念模型；實作仍以元件資料表、NXP I²C 規格、TI RS-485 指南與實測為準。</span><a href="./index.html">回主線</a></footer>
+    </main>
+  </div>
+</body>
+</html>

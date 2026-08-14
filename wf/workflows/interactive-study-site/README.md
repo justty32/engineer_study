@@ -1,8 +1,10 @@
 # interactive-study-site — 知識轉互動學習網站
 
-← [WORKFLOWS](../../WORKFLOWS.md)｜[INDEX](../../INDEX.md)｜[agent 編組](AGENT-TEAM.md)｜[品質關卡](QUALITY-GATES.md)｜[GitHub Pages](GITHUB-PAGES.md)
+← [WORKFLOWS](../../WORKFLOWS.md)｜[INDEX](../../INDEX.md)｜[原理優先剖面](PRINCIPLES-FIRST.md)｜[agent 編組](AGENT-TEAM.md)｜[品質關卡](QUALITY-GATES.md)｜[GitHub Pages](GITHUB-PAGES.md)
 
 把既有筆記的一個明確知識面向，轉成可操作、會即時回饋、可循序完成的互動學習網站。網站不是把 Markdown 換皮，也不是行銷頁；第一個畫面就要是可用的學習工作台。
+
+若讀者尚未建立必要模型、看不懂術語，或回饋「先考後教」，先改走 [principles-first 原理優先剖面](PRINCIPLES-FIRST.md)：基礎物理 → 術語翻譯 → 因果鏈 → 無評分自由實驗 → 實際應用 → 儀器量測，最後才診斷。
 
 ## 完成定義
 

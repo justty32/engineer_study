@@ -10,6 +10,8 @@
 
 ## 待使用者項
 
+- 開啟本機 [微控制器與韌體核心課程](../專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心/index.html)，以桌面與手機確認九頁導覽、零基礎 bit／clock 實驗、字典搜尋、startup／memory、register、interrupt／DMA、timer／ADC、狀態機與 fault 互動沒有重疊或水平溢位；目前環境無法取得實際瀏覽器渲染證據。
+- 開啟本機 [30 分鐘板級介面與工業匯流排網站](../專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/index.html)、[硬體原理補課](../專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/hardware-principles.html)，以及 GPIO／I²C／SPI／RS-485／讀電路圖／做電路設計六個獨立頁，以桌面與手機確認導覽、自由實驗、按鈕與文字沒有重疊或水平溢位；目前環境無法取得實際瀏覽器渲染證據。
 - 以手機實際開啟 [IoT 聯網裝置互動站](https://justty32.github.io/engineer_study/iot-device/)，確認模組導覽、數字輸入、韌體狀態機、重設與進度保存可操作，且沒有頁面水平溢位或文字重疊。
 - 以手機實際開啟 [電力系統互動站](https://justty32.github.io/engineer_study/power-systems/)，確認模組導覽、功角／頻率切換、數字輸入、N-1 狀態、重設與進度保存可操作，且沒有頁面水平溢位或文字重疊。
 - 以手機實際開啟 [IoT 板級電源與 PCB 互動站](https://justty32.github.io/engineer_study/iot-power-pcb/)，確認頂部模組導覽、數字輸入、檢查表、重設與進度保存可操作，且沒有頁面水平溢位或文字重疊。

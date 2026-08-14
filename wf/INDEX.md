@@ -25,6 +25,7 @@
 | [WORKFLOWS.md](WORKFLOWS.md) | 依使用者意圖派發工作流。 |
 | [PROJECT-GUIDE.md](PROJECT-GUIDE.md) | 本筆記庫的完整硬性要求與內容模型。 |
 | [DEV-GUIDE.md](DEV-GUIDE.md) | 只在拆檔、分類或重整結構時使用的被動參考。 |
+| [UPSTREAM.md](UPSTREAM.md) | 通用工作流模板的上游來源、非侵入式導入與人工同步政策。 |
 | `workflows/` | 各知識工作、定期工作與共通規範的入口。 |
 | `.claude/commands/` | 可選的工作流指令規格。 |
 | `inbox/` | Agent 間非同步信件收件匣；使用方式見 [workflows/inbox/](workflows/inbox/README.md)。 |

@@ -7,6 +7,8 @@
 ## 互動學習網站
 
 - [開啟 IoT 聯網裝置互動工作台（GitHub Pages）](https://justty32.github.io/engineer_study/iot-device/)
+- [30 分鐘板級介面與工業匯流排：I²C、SPI、RS-485、Modbus RTU](知識群互動網站/06-板級介面與工業匯流排/index.html)
+- [微控制器與韌體核心：給資深 C／C++ 工程師的原理課](知識群互動網站/07-微控制器與韌體核心/index.html)
 - [網站內容來源、模型邊界與本機啟動方式](互動網站/README.md)
 - [驗收紀錄](互動網站/驗收紀錄.md)
 

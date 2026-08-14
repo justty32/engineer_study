@@ -17,6 +17,7 @@
 | 學習主題並建立可延續筆記 | **learn** | [workflows/learn.md](workflows/learn.md) |
 | 整理資訊、檔案或筆記結構 | **organize** | [workflows/organize.md](workflows/organize.md) |
 | 將一個知識面向做成可操作、可回饋的互動網站 | **interactive-study-site** | [workflows/interactive-study-site/](workflows/interactive-study-site/README.md) |
+| 將陌生硬體／科學概念做成先教原理、無考試壓力的互動網站 | **principles-first** | [workflows/interactive-study-site/PRINCIPLES-FIRST.md](workflows/interactive-study-site/PRINCIPLES-FIRST.md) |
 
 記錄或查詢跨工作流踩坑時，使用 [common/gotchas](workflows/common/gotchas.md)。都不符合時，先看 [INDEX.md](INDEX.md) 定位內容。
 
