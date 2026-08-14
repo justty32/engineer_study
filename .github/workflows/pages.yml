@@ -46,6 +46,15 @@ on:
       - "專題/機器人運動學/互動課程/*.html"
       - "專題/機器人運動學/互動課程/*.css"
       - "專題/機器人運動學/互動課程/*.js"
+      - "專題/機器人路徑規劃/互動課程/*.html"
+      - "專題/機器人路徑規劃/互動課程/*.css"
+      - "專題/機器人路徑規劃/互動課程/*.js"
+      - "專題/機器人視覺/互動課程/*.html"
+      - "專題/機器人視覺/互動課程/*.css"
+      - "專題/機器人視覺/互動課程/*.js"
+      - "專題/機器人學習/互動課程/*.html"
+      - "專題/機器人學習/互動課程/*.css"
+      - "專題/機器人學習/互動課程/*.js"
   workflow_dispatch:
 
 permissions:
@@ -153,6 +162,9 @@ jobs:
           copy_course '專題/逆向工程/互動課程' reverse-engineering
           copy_course '專題/計算機組織/互動課程' computer-organization
           copy_course '專題/機器人運動學/互動課程' robot-arm-kinematics
+          copy_course '專題/機器人路徑規劃/互動課程' robot-motion-planning
+          copy_course '專題/機器人視覺/互動課程' robot-vision
+          copy_course '專題/機器人學習/互動課程' robot-learning
 
           python3 <<'PY'
           from pathlib import Path
@@ -173,6 +185,16 @@ jobs:
               },
               "computer-organization": {
                   "../../逆向工程/互動課程/": "../reverse-engineering/",
+              },
+              "robot-motion-planning": {
+                  "../../機器人運動學/互動課程/": "../robot-arm-kinematics/",
+              },
+              "robot-vision": {
+                  "../../機器人運動學/互動課程/": "../robot-arm-kinematics/",
+              },
+              "robot-learning": {
+                  "../../機器人運動學/互動課程/": "../robot-arm-kinematics/",
+                  "../../機器人路徑規劃/互動課程/": "../robot-motion-planning/",
               },
           }
 

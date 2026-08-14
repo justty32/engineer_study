@@ -1,0 +1,8 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人視覺零基礎互動課程"><title>06 C++ 與證據｜機器人視覺</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-光像素與座標系.html">零基礎</a><a href="03-特徵匹配與姿態估測.html">姿態估測</a><a aria-current="page" href="06-C++感知管線與證據.html">C++／證據</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">06 · C++ PERCEPTION CONTRACT</p><h1>C++ 感知管線與證據</h1><p class="lead">成熟介面不只傳 `Pose`；還要傳時間戳、來源座標、品質、不確定度與模型版本，否則下游無法判斷數值何時可信。</p><div class="prereq"><strong>前置：</strong><a href="05-視覺伺服與延遲.html">感知與控制的閉迴路</a>。</div><pre><code>struct PoseEstimate {
+  Transform object_T_camera;
+  Timestamp capture_time;
+  FrameId source_frame;
+  Covariance6 covariance;
+  QualityMetrics quality;
+  ModelVersion model;
+};</code></pre><section class="workspace"><h2>自由實驗：輸出契約</h2><div class="controls"><label>擷取時間戳<select id="ev-time"><option value="yes">有</option><option value="no">沒有</option></select></label><label>來源／目標座標系<select id="ev-frame"><option value="yes">有</option><option value="no">沒有</option></select></label><label>品質或不確定度<select id="ev-unc"><option value="yes">有</option><option value="no">沒有</option></select></label></div><div id="ev-output" class="output" aria-live="polite"></div></section><h2>驗證證據</h2><ul><li>內參：每張與各影像區域的重投影殘差，不只總平均。</li><li>手眼：未參與求解的姿態與已知基準點。</li><li>姿態：位置／角度誤差分布、失敗率與退化分類。</li><li>系統：曝光到控制命令的延遲與抖動分布。</li></ul><div class="pager"><a href="05-視覺伺服與延遲.html">← 上一頁</a><a href="名詞與概念字典.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>

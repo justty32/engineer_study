@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人學習與訓練零基礎互動課程"><title>06 安全部署｜機器人學習與訓練</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-從控制程式到可學習策略.html">零基礎</a><a href="03-MDP回報價值與策略.html">強化學習</a><a aria-current="page" href="06-安全評估與C++部署.html">部署</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">06 · SAFE DEPLOYMENT</p><h1>安全評估與 C++ 部署</h1><p class="lead">模型檔不是可部署系統。部署還包含 observation 前處理、時間窗、推論執行期、動作後處理、安全限制、監測、回退與版本追溯。</p><div class="prereq"><strong>前置：</strong><a href="05-模擬訓練與sim-to-real.html">分布差距與實機驗證</a>。</div><pre><code>struct PolicyInput {
+  ObservationWindow observation;
+  Timestamp now;
+  CalibrationVersion calibration;
+};
+struct PolicyOutput {
+  Action proposal;
+  Confidence quality;
+  PolicyVersion version;
+};
+// proposal 必須先通過獨立 safety_filter，再交控制器。</code></pre><section class="workspace"><h2>自由實驗：部署閘門</h2><div class="controls"><label>非學習基線<select id="gate-baseline"><option value="yes">有</option><option value="no">沒有</option></select></label><label>分布外／失敗測試<select id="gate-ood"><option value="yes">有</option><option value="no">沒有</option></select></label><label>獨立安全層與停止<select id="gate-stop"><option value="yes">有</option><option value="no">沒有</option></select></label><label>影子模式資料<select id="gate-shadow"><option value="no">尚未</option><option value="yes">已有</option></select></label></div><div id="gate-output" class="output" aria-live="polite"></div></section><h2>至少記錄</h2><p>資料集、程式、模型與校正版本；輸入品質與延遲；原始 proposal、被 safety filter 修改後的命令；episode 終止原因；人工接管、近失事件與分布外指標。</p><div class="pager"><a href="05-模擬訓練與sim-to-real.html">← 上一頁</a><a href="名詞與概念字典.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>

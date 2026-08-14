@@ -1,0 +1,13 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人路徑與運動規劃零基礎互動課程"><title>06 C++ 與證據｜機器人路徑與運動規劃</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-從移動問題到規劃問題.html">零基礎</a><a href="03-PRM-RRT與RRT-star.html">取樣規劃</a><a aria-current="page" href="06-C++架構與驗證證據.html">C++／證據</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">06 · C++ CONTRACTS AND EVIDENCE</p><h1>C++ 架構與驗證證據</h1><p class="lead">規劃系統最難除錯的不是 template，而是模型、座標、時間戳與失敗原因被壓成一個 bool。讓型別和 log 保存推理鏈。</p><div class="prereq"><strong>前置：</strong><a href="05-七軸冗餘與線上重規劃.html">完整規劃管線</a>。</div><pre><code>struct PlanRequest {
+  RobotState start;
+  GoalConstraint goal;
+  WorldSnapshot world;
+  Limits limits;
+  PlanningBudget budget;
+};
+struct PlanResult {
+  PlanStatus status;
+  GeometricPath path;
+  TimedTrajectory trajectory;
+  VerificationEvidence evidence;
+};</code></pre><h2>分層測試</h2><table><tr><th>層</th><th>輸入</th><th>證據</th></tr><tr><td>狀態有效性</td><td>已知碰撞／非碰撞組態</td><td>碰撞對、距離、模型版本</td></tr><tr><td>局部連接</td><td>穿過薄障礙的邊</td><td>連續檢查或最大步距</td></tr><tr><td>規劃器</td><td>固定 seed 的小場景</td><td>狀態、成本、終止原因</td></tr><tr><td>時間化</td><td>速度／加速度邊界</td><td>逐點限制最大值</td></tr><tr><td>執行</td><td>感知更新與延遲</td><td>軌跡版本、停止／重規劃事件</td></tr></table><div class="warning"><strong>不能只記成功率：</strong>同一場景的模型版本、亂數種子、時間預算、最小間隙、成本與失敗分類缺一，就無法重現或比較。</div><div class="pager"><a href="05-七軸冗餘與線上重規劃.html">← 上一頁</a><a href="名詞與概念字典.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
