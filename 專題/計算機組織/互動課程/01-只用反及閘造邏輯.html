@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>01｜只用反及閘造邏輯</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-page="nand-logic">
+  <nav class="topbar" aria-label="課程導覽"><a href="index.html">課程首頁</a><a href="00-電晶體到反及閘.html">00 電晶體到反及閘</a><a href="01-只用反及閘造邏輯.html" aria-current="page">01 只用反及閘</a><a href="名詞與概念字典.html">字典</a></nav>
+  <main>
+    <p class="eyebrow">一種閘，生成完整布林世界</p>
+    <h1>為什麼只用反及閘就夠？</h1>
+    <p class="lead">一句話答案：反及閘（NOT AND, NAND gate）具有功能完備性；只要把它的輸入與輸出重新接線，就能造出反相、且、或、互斥或、多工與解多工，因而能表達任何有限的布林函數。</p>
+    <aside class="prereq"><strong>這章假設已懂：</strong><a href="00-電晶體到反及閘.html">電晶體如何形成 NAND</a>，以及 0／1 是電路對電壓範圍的解讀。</aside>
+
+    <h2>先從三個基本閘開始</h2>
+    <table>
+      <thead><tr><th>要造的函數</th><th>只用 NAND 的接法</th><th>為什麼成立</th></tr></thead>
+      <tbody>
+        <tr><td>反相 NOT(A)</td><td>NAND(A,A)</td><td>兩個輸入綁在一起；只有 A=1 時輸出 0。</td></tr>
+        <tr><td>且 AND(A,B)</td><td>NAND(NAND(A,B), NAND(A,B))</td><td>先反及，再把結果反相一次。</td></tr>
+        <tr><td>或 OR(A,B)</td><td>NAND(NAND(A,A), NAND(B,B))</td><td>依德摩根定律，NOT(NOT A AND NOT B)=A OR B。</td></tr>
+      </tbody>
+    </table>
+    <p class="note"><strong>模型邊界：</strong>「功能完備」只保證能表達函數，不保證閘數最少、延遲最低、功耗最佳或容易布線。真實晶片會使用多種標準元件與經最佳化的電路。</p>
+
+    <h2>互斥或：輸入不同才輸出 1</h2>
+    <p>互斥或（Exclusive OR, XOR）可以用四個 NAND 組成。令 <code>T=NAND(A,B)</code>，再令 <code>U=NAND(A,T)</code>、<code>V=NAND(B,T)</code>，最後 <code>Y=NAND(U,V)</code>。</p>
+    <table>
+      <thead><tr><th>A</th><th>B</th><th>T</th><th>U</th><th>V</th><th>Y</th></tr></thead>
+      <tbody><tr><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td></tr></tbody>
+    </table>
+
+    <h2>多工器：用選擇位元決定資料去向</h2>
+    <p>二選一多工器（Multiplexer, MUX）接收資料 A、B 與選擇位元 S：S=0 時輸出 A，S=1 時輸出 B。用布林式寫成 <code>Y=(A AND NOT S) OR (B AND S)</code>；每個 NOT、AND、OR 都能替換成上一節的 NAND 網路。</p>
+    <table><thead><tr><th>S</th><th>Y</th><th>意義</th></tr></thead><tbody><tr><td>0</td><td>A</td><td>選 A 這條資料路徑</td></tr><tr><td>1</td><td>B</td><td>選 B 這條資料路徑</td></tr></tbody></table>
+    <p>解多工器（Demultiplexer, DEMUX）反過來把一個輸入送到兩個輸出之一：<code>Y0=IN AND NOT S</code>、<code>Y1=IN AND S</code>。沒有被選到的輸出為 0。這是「選路」，不是複製一份有能量的類比訊號。</p>
+
+    <section class="workspace" aria-labelledby="manual-title">
+      <h2 id="manual-title">手算互動：像除錯暫存值一樣追中間節點</h2>
+      <p>令 A=1、B=0。依序算 <code>T</code>、<code>U</code>、<code>V</code>、<code>Y</code>，不要直接背 XOR 表。</p>
+      <details><summary>展開一層</summary><p><code>T=NAND(1,0)=1</code>。先保留 T，不急著猜結果。</p></details>
+      <details><summary>展開完整追蹤</summary><p><code>U=NAND(1,1)=0</code>；<code>V=NAND(0,1)=1</code>；<code>Y=NAND(0,1)=1</code>。輸入不同，所以 XOR 輸出 1。</p></details>
+      <details><summary>邊界：很多閘串起來會怎樣？</summary><p>布林代數看來每層立即更新，真實電路卻有傳播延遲。輸入同時改變時，不同路徑可能先後抵達，短暫產生毛刺；若下游在錯誤時刻取樣，毛刺就可能成為真正的狀態錯誤。</p></details>
+    </section>
+
+    <h2>從函數到硬體的兩層證據</h2>
+    <p>布林層先用真值表核對所有輸入組合；電路層再用模擬器或邏輯分析儀觀察中間節點、延遲與毛刺。兩者回答不同問題：真值表驗證穩定後的函數，時序量測驗證「何時」可相信輸出。</p>
+
+    <nav class="pager" aria-label="章節翻頁"><a href="00-電晶體到反及閘.html">← 上一章：電晶體到反及閘</a><a href="02-組合邏輯與算術.html">下一章：組合邏輯與算術 →</a></nav>
+  </main>
+</body>
+</html>

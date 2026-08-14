@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>x86-64 組合語言｜計算機組織、編譯與連結</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="topbar" aria-label="課程導覽">
+    <a href="index.html">課程首頁</a>
+    <a href="04-處理器資料路徑與指令週期.html">通用指令模型</a>
+    <a href="05-x86-64組合語言.html" aria-current="page">x86-64</a>
+    <a href="06-AArch64組合語言.html">AArch64</a>
+    <a href="07-RISC-V組合語言.html">RISC-V</a>
+    <a href="名詞與概念字典.html">字典</a>
+  </nav>
+
+  <main>
+    <p class="eyebrow">指令集實例 1／3</p>
+    <h1>x86-64：先追資料，再讀密集語法</h1>
+    <p class="lead">x86-64 是 x86 指令集的 64 位元擴充。它保留長期相容性，因此指令長度、暫存器別名與定址方式較多；閱讀時不要從背指令開始，而要逐步記錄「來源值、目的位置、旗標與下一個指令位址」。</p>
+
+    <section class="prereq">
+      <strong>這章假設已懂：</strong>位元組、暫存器、記憶體位址、程式計數器，以及指令集架構（Instruction Set Architecture, ISA）與組合語言的差別。若還不穩，先回到<a href="04-處理器資料路徑與指令週期.html">通用指令模型</a>。本頁使用 Intel 語法，也就是多數雙運算元指令寫成「目的、來源」。
+    </section>
+
+    <h2>最小可執行心智模型</h2>
+    <div class="flow" aria-label="x86-64 指令執行因果鏈">
+      <span>讀取暫存器、立即值或記憶體運算元</span>
+      <span>執行搬移、算術或比較</span>
+      <span>寫回目的位置，必要時更新狀態旗標</span>
+      <span>順序前進，或由分支、呼叫、返回改寫控制流</span>
+    </div>
+    <p>x86-64 的一條指令可有不同長度，也可在算術指令中直接使用一個記憶體運算元。這是程式設計師看見的 ISA 規則；處理器內部可以把複雜指令拆成較小操作，不能從組合語言行數直接推斷微架構成本。</p>
+
+    <h2>暫存器：同一儲存格有不同寬度名稱</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>一般用途暫存器</h3>
+        <p><code>RAX</code>、<code>RBX</code>、<code>RCX</code> 到 <code>R15</code> 可保存整數、位址或暫存結果。<code>RSP</code> 慣例上是堆疊指標；<code>RIP</code> 是指令指標。</p>
+      </article>
+      <article class="card">
+        <h3>寬度別名</h3>
+        <p><code>RAX</code> 是 64 位元，<code>EAX</code> 是低 32 位元，<code>AX</code> 與 <code>AL</code> 再取更低部分。寫入 <code>EAX</code> 會把 <code>RAX</code> 高 32 位元清零；寫入 <code>AX</code> 或 <code>AL</code> 不會。</p>
+      </article>
+      <article class="card">
+        <h3>狀態旗標</h3>
+        <p><code>RFLAGS</code> 保存零、符號、進位與溢位等狀態。<code>cmp a, b</code> 計算概念上的 <code>a - b</code> 並更新旗標，但不保存差值。</p>
+      </article>
+      <article class="card">
+        <h3>參數不是 ISA 固有規則</h3>
+        <p>某個參數位於 <code>RDI</code>、<code>RCX</code> 或堆疊，是應用程式二進位介面（Application Binary Interface, ABI）與呼叫慣例的選擇，會隨作業系統與工具鏈改變。</p>
+      </article>
+    </div>
+
+    <h2>六類動作</h2>
+    <div class="grid">
+      <article class="card"><h3>資料搬移</h3><p><code>mov eax, 7</code> 寫入立即值；<code>mov eax, [rdi]</code> 從記憶體載入；<code>mov [rdi], eax</code> 儲存。方括號表示取用該位址的內容，不是位址數字本身。</p></article>
+      <article class="card"><h3>算術</h3><p><code>add eax, ecx</code>、<code>sub</code>、<code>imul</code> 會更新目的運算元；多數算術也更新旗標。<code>lea rax, [rdi+8]</code> 只計算位址算式，不讀取該記憶體。</p></article>
+      <article class="card"><h3>比較與分支</h3><p><code>cmp eax, 0</code> 後，<code>je</code> 看零旗標，<code>jl</code> 依有號語意判斷小於，<code>jb</code> 依無號語意判斷小於。同一批位元可有兩種比較解讀。</p></article>
+      <article class="card"><h3>呼叫與返回</h3><p><code>call target</code> 把返回位址壓入堆疊，再跳到目標；<code>ret</code> 從堆疊取回位址。被呼叫端還可能調整 <code>RSP</code>、保存暫存器與配置區域變數。</p></article>
+      <article class="card"><h3>記憶體定址</h3><p><code>[base + index*scale + displacement]</code> 可組合基底、索引、比例 1／2／4／8 與常數位移，例如 <code>[rdi+rcx*4+8]</code>。有效位址算出後才進行載入或儲存。</p></article>
+      <article class="card"><h3>控制流狀態</h3><p>一般指令使 <code>RIP</code> 前進到下一條；跳躍、呼叫、返回與例外會改用其他位址。反組譯中的標籤只是工具替位址取的名字。</p></article>
+    </div>
+
+    <h2>從 C++ 對照，但不要逐行硬配</h2>
+    <div class="workspace">
+      <pre><code>int pick(const int* p, std::size_t i) {
+    int x = p[i];
+    return x &gt; 0 ? x + 1 : 0;
+}</code></pre>
+      <pre><code>; 示意 Intel 語法；暫存器分配與參數位置只是假設
+mov  eax, [rdi + rsi*4] ; x = p[i]
+test eax, eax           ; x 與 0 的關係寫入旗標
+jle  .not_positive      ; 有號 x &lt;= 0 時跳躍
+add  eax, 1
+ret
+.not_positive:
+xor  eax, eax           ; 常見的清零寫法
+ret</code></pre>
+      <p class="note">編譯器可使用條件搬移、合併返回區塊、內聯函式或證明某分支不可能發生。組合語言應與語意和資料流對照，不保證與原始碼一行對一行。</p>
+    </div>
+
+    <h2>手工追蹤 1：旗標如何決定分支</h2>
+    <div class="workspace">
+      <p>初始：<code>EAX = 3</code>。依序執行：</p>
+      <pre><code>add  eax, 4
+cmp  eax, 7
+jne  .miss
+imul eax, eax, 2</code></pre>
+      <p>先在紙上記錄每步的 <code>EAX</code>、零旗標與是否跳躍，再展開結果。</p>
+      <details>
+        <summary>展開追蹤結果</summary>
+        <ol>
+          <li><code>add</code> 後 <code>EAX = 7</code>。</li>
+          <li><code>cmp eax, 7</code> 的概念差值為 0，因此零旗標設為 1，<code>EAX</code> 仍是 7。</li>
+          <li><code>jne</code> 表示「不相等才跳」，條件不成立，所以落到下一條。</li>
+          <li><code>imul</code> 後 <code>EAX = 14</code>。</li>
+        </ol>
+      </details>
+    </div>
+
+    <h2>手工追蹤 2：位址計算與小端序載入</h2>
+    <div class="workspace">
+      <p>初始：<code>RDI = 0x1000</code>、<code>RCX = 2</code>；位址 <code>0x1008</code> 起的四個位元組依序為 <code>78 56 34 12</code>。執行：</p>
+      <pre><code>mov eax, [rdi + rcx*4]
+add eax, 1</code></pre>
+      <p>先分開算「有效位址」與「該位址載入的值」。</p>
+      <details>
+        <summary>展開追蹤結果</summary>
+        <ol>
+          <li>有效位址是 <code>0x1000 + 2*4 = 0x1008</code>。</li>
+          <li>x86-64 採小端序，多位元組值的最低有效位元組放在最低位址，因此載入 <code>EAX = 0x12345678</code>。</li>
+          <li><code>add</code> 後得到 <code>0x12345679</code>；寫入 <code>EAX</code> 同時把 <code>RAX</code> 高 32 位元清零。</li>
+        </ol>
+      </details>
+    </div>
+
+    <h2>證據與邊界</h2>
+    <p>可驗證的證據包括：目的檔或可執行檔中的機器位元組、反組譯結果、符號與重定位、除錯器中的暫存器與旗標、程序記憶體映射，以及單步後的記憶體內容。反組譯器選擇 Intel 或另一種常見語法會改變表面寫法，並不改變機器指令。</p>
+    <p class="warning">本頁不是完整 x86-64 規格，也未涵蓋浮點、向量、特權指令、並行記憶體模型或所有編碼。範例的參數暫存器只是示意；分析真實程式前必須確認平台 ABI、編譯器選項與語法模式。</p>
+
+    <h2>常見誤解</h2>
+    <ul>
+      <li><strong><code>mov</code> 不一定真的「搬動」硬體中的資料。</strong>它定義架構狀態的結果；微架構可以重新命名暫存器或消除某些搬移。</li>
+      <li><strong><code>lea</code> 不等於載入。</strong>它計算方括號內的位址算式，名稱中的「有效位址」容易誤導。</li>
+      <li><strong><code>cmp</code> 不保存差值。</strong>後續條件跳躍讀取的是旗標，而且有號與無號條件不同。</li>
+      <li><strong><code>RAX</code> 不是永遠的返回值。</strong>這是常見 ABI 的慣例，不是每個執行環境與所有型別都相同。</li>
+      <li><strong>指令較複雜不等於每次都較慢。</strong>效能還受資料相依、快取、分支預測與具體微架構影響。</li>
+    </ul>
+
+    <nav class="pager" aria-label="章節翻頁">
+      <a href="04-處理器資料路徑與指令週期.html">← 通用指令模型</a>
+      <a href="06-AArch64組合語言.html">下一章：AArch64 →</a>
+    </nav>
+  </main>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>03｜時序邏輯與記憶</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-page="sequential-memory">
+  <nav class="topbar" aria-label="課程導覽"><a href="index.html">課程首頁</a><a href="02-組合邏輯與算術.html">02 組合邏輯與算術</a><a href="03-時序邏輯與記憶.html" aria-current="page">03 時序邏輯與記憶</a><a href="名詞與概念字典.html">字典</a></nav>
+  <main>
+    <p class="eyebrow">從回授得到狀態</p>
+    <h1>電路如何記住上一刻？</h1>
+    <p class="lead">一句話答案：把輸出回授到輸入，電路就能維持某個穩定狀態；再用閘控與時脈限制何時可以更新，便能造出鎖存器、正反器、暫存器與可定址記憶體。</p>
+    <aside class="prereq"><strong>這章假設已懂：</strong><a href="02-組合邏輯與算術.html">組合邏輯</a>只由目前輸入決定，而且真實閘具有傳播延遲。</aside>
+
+    <h2>回授讓「過去」進入方程</h2>
+    <p>時序邏輯的輸出取決於目前輸入與先前狀態，可寫成 <code>下一狀態=f(目前狀態, 目前輸入)</code>。關鍵不是神祕的「儲存材質」，而是交叉耦合的閘互相維持：一邊為 1 迫使另一邊為 0，另一邊又回頭支持原狀態。</p>
+
+    <h2>設定／重設鎖存器：最小的一位元記憶</h2>
+    <p>用兩個反及閘（NOT AND, NAND gate）交叉回授可形成低有效的設定／重設鎖存器（Set-Reset Latch, SR Latch）。慣例用 Q 表示保存的輸出；輸入名稱加上橫線或「低有效」表示輸入為 0 時才發出命令。</p>
+    <table><thead><tr><th>低有效設定</th><th>低有效重設</th><th>下一個 Q</th><th>意義</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>保留原 Q</td><td>沒有命令，回授維持狀態</td></tr><tr><td>0</td><td>1</td><td>1</td><td>設定</td></tr><tr><td>1</td><td>0</td><td>0</td><td>重設</td></tr><tr><td>0</td><td>0</td><td>不允許</td><td>兩輸出被迫相同，解除時結果可能不確定</td></tr></tbody></table>
+    <p class="warning">不允許狀態不是可拿來表示第三種資料的值。解除命令的微小時間差可能決定最後狀態，甚至暫時進入亞穩態；布林真值表本身看不到這種連續電壓與時間現象。</p>
+
+    <h2>從鎖存器到邊緣觸發正反器</h2>
+    <p>資料鎖存器（Data Latch, D Latch）加入資料輸入 D 與啟用訊號：啟用時輸出跟隨 D，關閉後保留最後狀態。資料正反器（Data Flip-Flop, D Flip-Flop）則設計成只在指定時脈邊緣取樣 D，讓大量狀態元件在可預期的時刻一起前進。</p>
+    <div class="flow" aria-label="同步狀態更新"><span>組合邏輯依舊狀態計算</span><span>D 在邊緣前穩定</span><span>有效時脈邊緣取樣</span><span>Q 成為新狀態</span><span>下一輪重新計算</span></div>
+    <table><thead><tr><th>時間限制</th><th>白話</th><th>違反時可能發生</th></tr></thead><tbody><tr><td>建立時間（Setup Time）</td><td>D 必須在邊緣前提早穩定一小段時間</td><td>取到舊值、新值或進入亞穩態</td></tr><tr><td>保持時間（Hold Time）</td><td>D 必須在邊緣後繼續穩定一小段時間</td><td>新狀態不可靠</td></tr><tr><td>時脈到輸出延遲</td><td>邊緣發生後，Q 不會瞬間完成更新</td><td>下游太早取樣會看見舊值或轉換</td></tr></tbody></table>
+
+    <section class="workspace" aria-labelledby="clock-title">
+      <h2 id="clock-title">手算互動：追蹤四個時脈邊緣</h2>
+      <p>一個 D 正反器初始 Q=0。四個有效邊緣到來前，D 依序穩定為 1、1、0、1。先寫下每次邊緣後的 Q。</p>
+      <details><summary>展開狀態序列</summary><p>每個有效邊緣取樣當時的 D，所以 Q 依序是 1、1、0、1。第二個邊緣仍然寫入 1；「沒有變化」不代表沒有取樣。</p></details>
+      <details><summary>加入啟用訊號</summary><p>若暫存器啟用值依序是 1、0、1、0，常見做法等價於「啟用時讓 D=新資料，停用時讓 D=舊 Q」。因此 Q 依序為 1、1、0、0。</p></details>
+      <details><summary>邊界：D 恰在邊緣附近改變</summary><p>教學模型無法可靠決定結果；實體正反器可能亞穩一段時間。同步設計藉由時序分析、同步器與保守的取樣邊界降低風險，但不能把物理不確定性從宇宙中刪除。</p></details>
+    </section>
+
+    <h2>一位元擴成暫存器與記憶體</h2>
+    <p>把多個 D 正反器並排，共用時脈與寫入啟用，就得到可同時保存多個位元的暫存器（Register）。再加入位址解碼器選擇要寫哪一列，並用多工器選擇要讀哪一列，便得到教學用的隨機存取記憶體（Random-Access Memory, RAM）模型。</p>
+    <div class="flow" aria-label="可定址記憶體因果鏈"><span>位址送入解碼器</span><span>只有目標列取得寫入啟用</span><span>時脈邊緣保存輸入資料</span><span>讀取多工器依位址選出一列</span><span>輸出該列目前狀態</span></div>
+    <p>「隨機存取」表示可直接用位址選任一位置，存取時間不必像磁帶般隨位置線性增加；不是說內容隨機。靜態隨機存取記憶體（Static Random-Access Memory, SRAM）常用交叉耦合元件保存位元，動態隨機存取記憶體（Dynamic Random-Access Memory, DRAM）則以電容電荷保存並需要週期更新。</p>
+    <aside class="warning"><strong>模型邊界：</strong>教材可以把 RAM 描述成「暫存器陣列 + 解碼器 + 多工器」，方便理解功能。大型實體記憶體會用高密度記憶單元、感測放大器、分層字線／位線、更新與錯誤處理，絕不是把通用正反器逐顆照抄。</aside>
+
+    <h2>實機證據</h2>
+    <p>邏輯分析儀可比對時脈、啟用、位址、資料與 Q 的數位時序；示波器可檢查邊緣斜率、時脈偏斜、建立／保持裕量與亞穩態後的延遲。硬體描述語言模擬可驗證功能與時序約束，但模型精度取決於元件與延遲資料是否足夠。</p>
+
+    <nav class="pager" aria-label="章節翻頁"><a href="02-組合邏輯與算術.html">← 上一章：組合邏輯與算術</a><a href="04-處理器資料路徑與指令週期.html">下一章：處理器與指令週期 →</a></nav>
+  </main>
+</body>
+</html>

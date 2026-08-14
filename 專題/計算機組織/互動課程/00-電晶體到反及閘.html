@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>00｜電晶體到反及閘</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-page="transistor-nand">
+  <nav class="topbar" aria-label="課程導覽">
+    <a href="index.html">課程首頁</a>
+    <a href="00-電晶體到反及閘.html" aria-current="page">00 電晶體到反及閘</a>
+    <a href="01-只用反及閘造邏輯.html">01 只用反及閘</a>
+    <a href="名詞與概念字典.html">字典</a>
+  </nav>
+  <main>
+    <p class="eyebrow">從物理元件跨到布林模型</p>
+    <h1>電晶體怎麼變成反及閘？</h1>
+    <p class="lead">一句話答案：互補式金屬氧化物半導體電路用兩類電晶體組成上拉與下拉網路，先造出反及閘（NOT AND, NAND gate）；輸入電壓決定哪條路徑導通，輸出節點因此被拉向電源或接地，再被解讀成 1 或 0。</p>
+
+    <aside class="prereq"><strong>這章假設已懂：</strong>只要知道電壓是兩點之間的電位差即可。這裡從零建立電晶體、邏輯準位與閘的關係。</aside>
+
+    <h2>模型邊界：先把真實電路與布林抽象分開</h2>
+    <div class="grid">
+      <section class="card">
+        <h3>本章使用的模型</h3>
+        <p>金屬氧化物半導體場效電晶體（Metal-Oxide-Semiconductor Field-Effect Transistor, MOSFET）先近似成「閘極電壓控制的開關」。n 型元件在控制輸入為高時傾向導通；p 型元件在控制輸入為低時傾向導通。</p>
+      </section>
+      <section class="card">
+        <h3>模型刻意省略什麼</h3>
+        <p>真實元件不是理想開關：有臨界電壓、導通電阻、寄生電容、漏電、切換延遲、短暫直通電流與製程差異。邏輯 0／1 也各是一段允許電壓範圍，不是宇宙固定的 0 V 與某個固定電壓。</p>
+      </section>
+    </div>
+
+    <h2>第一步：反相器把電壓變成邏輯</h2>
+    <p>互補式金屬氧化物半導體（Complementary Metal-Oxide-Semiconductor, CMOS）反相器同時使用 p 型與 n 型電晶體。輸出節點位於上拉與下拉之間：</p>
+    <div class="flow" aria-label="反相器因果鏈">
+      <span>輸入為低：p 型導通，n 型關閉</span>
+      <span>輸出節點經上拉連到電源</span>
+      <span>接收器判成邏輯 1</span>
+    </div>
+    <div class="flow" aria-label="反相器另一條因果鏈">
+      <span>輸入為高：p 型關閉，n 型導通</span>
+      <span>輸出節點經下拉連到接地</span>
+      <span>接收器判成邏輯 0</span>
+    </div>
+    <table>
+      <thead><tr><th>輸入 A</th><th>反相輸出 NOT A</th><th>穩定後主要導通路徑</th></tr></thead>
+      <tbody><tr><td>0</td><td>1</td><td>電源 → p 型元件 → 輸出</td></tr><tr><td>1</td><td>0</td><td>輸出 → n 型元件 → 接地</td></tr></tbody>
+    </table>
+    <p class="note">穩定在 0 或 1 時，理想 CMOS 沒有電源到接地的持續直流路徑；真實 CMOS 的主要耗能包含切換、漏電與切換瞬間的短暫直通。切換時是在替輸出與連線的等效電容充電或放電。</p>
+
+    <h2>第二步：兩個輸入造出反及閘</h2>
+    <p>NAND 的規則是：只有 A 與 B 都是 1，輸出才是 0。CMOS 兩輸入反及閘把兩顆 n 型元件串聯成下拉網路，把兩顆 p 型元件並聯成上拉網路。</p>
+    <table>
+      <thead><tr><th>A</th><th>B</th><th>下拉串聯路徑</th><th>上拉並聯路徑</th><th>Y = NAND(A,B)</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>0</td><td>中斷</td><td>至少一條導通</td><td>1</td></tr>
+        <tr><td>0</td><td>1</td><td>中斷</td><td>至少一條導通</td><td>1</td></tr>
+        <tr><td>1</td><td>0</td><td>中斷</td><td>至少一條導通</td><td>1</td></tr>
+        <tr><td>1</td><td>1</td><td>完整導通</td><td>全部中斷</td><td>0</td></tr>
+      </tbody>
+    </table>
+
+    <section class="workspace" aria-labelledby="trace-title">
+      <h2 id="trace-title">手算互動：先追路徑，再看輸出</h2>
+      <p>情境：A=0、B=1。先在心中回答：串聯的下拉路徑完整嗎？並聯上拉是否還有路？</p>
+      <details><summary>展開逐步追蹤</summary><ol><li>A 對應的 n 型元件關閉，因此下拉串聯路徑中斷。</li><li>A 對應的 p 型元件導通，因此上拉並聯至少有一條路。</li><li>輸出節點被拉向電源，接收器判成 1。</li><li>這與 NAND(0,1)=1 相符。</li></ol></details>
+      <details><summary>極端案例：輸入停在門檻附近</summary><p>p 型與 n 型元件可能同時部分導通，輸出未必是可靠的 0 或 1，且可能出現較大直通電流。數位抽象只在輸入落入規格允許的低、高範圍且留足穩定時間後成立。</p></details>
+    </section>
+
+    <h2>怎麼在實機看見這條因果鏈</h2>
+    <p>用示波器可量輸入與輸出的電壓隨時間變化，看到反相、有限上升／下降時間與傳播延遲；用電源量測可看到切換頻率提高時動態功耗上升。邏輯分析儀通常只顯示判定後的 0／1，無法代替類比波形檢查。</p>
+    <aside class="warning"><strong>不要混淆：</strong>「NAND 的布林函數」是邏輯規格；「四顆 MOSFET 的 CMOS 實作」是一種電路實現。不同電路家族也能實作相同函數。</aside>
+
+    <nav class="pager" aria-label="章節翻頁"><a href="index.html">← 課程首頁</a><a href="01-只用反及閘造邏輯.html">下一章：只用反及閘造邏輯 →</a></nav>
+  </main>
+</body>
+</html>

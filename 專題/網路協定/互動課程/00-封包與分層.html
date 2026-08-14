@@ -1,0 +1,13 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 封包與分層</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head>
+<body data-page="envelope"><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-封包與分層.html" aria-current="page">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<p class="eyebrow">00・零基礎起點</p><h1>封包與分層：一段資料為何要穿好幾層外套？</h1><p class="lead">因為「送到隔壁設備、送過多個網路、交給正確程式、讓程式理解意圖」是不同範圍的問題。每層只承諾一種服務，並把控制資訊包在資料周圍。</p>
+<p class="prereq"><strong>這章假設已懂：</strong>位元組是資料長度單位；程式可讀寫一段位元組。除此之外不要求網路知識。</p>
+<section class="workspace"><h2>自由實驗：看見封裝成本</h2><p>下列固定長度只供建立模型：傳輸與網路標頭各 20 位元組，鏈路標頭加尾碼共 18 位元組。真實長度會因協定版本、選項與鏈路而變。</p>
+<label for="payload">應用資料長度：<output id="payload-value">100 位元組</output></label><input id="payload" type="range" min="0" max="1500" value="100">
+<label><input id="layer-transport" type="checkbox" checked> 加上傳輸層控制資訊</label><label><input id="layer-network" type="checkbox" checked> 加上網路層控制資訊</label><label><input id="layer-link" type="checkbox" checked> 加上鏈路層控制資訊</label>
+<div id="envelope-output" class="output" aria-live="polite"></div><button id="reset-envelope" type="button">重設示意值</button></section>
+<h2>四個角色，四個問題</h2><div class="grid"><article class="card"><h3>應用層</h3><p>兩端程式約定訊息語意，例如「讀取某資源」。它關心內容，不選每一台路由器。</p></article><article class="card"><h3>傳輸層</h3><p>用埠辨認同一台主機上的程式端點，並選擇是否提供可靠、有序的端對端資料服務。</p></article><article class="card"><h3>網路層</h3><p>以跨網可辨認的位址選下一跳，讓封包穿過多個路由器接近目的地。</p></article><article class="card"><h3>鏈路層</h3><p>只負責目前這一段本地媒介，把訊框交給同一鏈路上的下一個介面。</p></article></div>
+<h2>名詞先翻譯</h2><p><strong>協定（protocol）</strong>是參與者共同遵守的訊息格式、順序與錯誤處理規則。<strong>封包（packet）</strong>泛指網路傳送的一塊資料；本課在需要精確時，會把鏈路層資料稱為訊框、網路層資料稱為封包、傳輸層資料稱為區段或資料包。<strong>封裝（encapsulation）</strong>是下一層把上一層資料當負載，再加上自己的標頭或尾碼。</p>
+<h2>因果鏈與證據</h2><div class="flow"><span>應用交出位元組</span><span>每層加控制欄位</span><span>鏈路送到下一站</span><span>接收端逐層拆除</span><span>目的應用拿到內容</span></div><p>送端產生的是資料流改變；中間路由器通常只檢查網路層及所在鏈路所需欄位；收端再逐層解封裝。證據可出現在封包擷取、作業系統的連線狀態與應用程式紀錄。封包擷取看到線上欄位，但看不到程式內部為何選擇某個業務動作。</p>
+<h2>不要混淆</h2><ul><li>「分層」不是每層都由不同實體機器執行；同一台主機的作業系統與程式會共同處理多層。</li><li>「可靠」不是所有層的共同保證；某一層偵測到錯誤，不代表端對端一定恢復。</li><li>一次應用寫入不一定對應一個線上封包；分段、合併與重傳都可能改變邊界。</li></ul>
+<nav class="pager" aria-label="章節導覽"><a href="index.html">← 上一頁：課程地圖</a><a href="01-乙太網路與位址解析.html">下一頁：乙太網路與位址解析 →</a></nav></main></body></html>

@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>網路協定細講</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head>
+<body data-page="index"><nav class="topbar" aria-label="主要導覽"><a href="index.html" aria-current="page">課程地圖</a><a href="00-封包與分層.html">零基礎起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<p class="eyebrow">foundations-first・離線互動課程</p><h1>網路協定細講</h1>
+<p class="lead">從一個 C++ 程式要把位元組送到另一台電腦開始，逐層看見「誰和誰說話、每層加了什麼、在哪裡作決定、失敗時留下什麼證據」。不先考、不計分，也不假設你已懂網路。</p>
+<section class="workspace"><h2>現在就從世界觀開始</h2><p class="answer"><strong>核心答案：</strong>網路不是一條把資料直接送到應用程式的魔法管線，而是多個範圍不同的協定合作：本地鏈路交給下一站、網路層跨網轉送、傳輸層辨認程式並提供端對端服務、應用層表達請求。</p><div class="flow" aria-label="課程主線"><span>資料</span><span>本地鏈路</span><span>跨網路由</span><span>程式端點</span><span>應用訊息</span><span>證據</span></div><p><a href="00-封包與分層.html">開始：封包與分層世界觀 →</a></p></section>
+<h2>讀者基線</h2><div class="grid"><article class="card"><h3>可以沿用的強項</h3><p>函式邊界、抽象介面、狀態機、緩衝區、位元組序列與除錯思維。課程會用這些軟體直覺縮短說明。</p></article><article class="card"><h3>不會偷偷假設</h3><p>不假設你會子網、路由、名稱解析、握手、憑證或封包分析；任何縮寫第一次出現都會展開。</p></article><article class="card"><h3>怎麼使用</h3><p>照編號走主線，隨時開字典回查。互動控制一改就看結果，不需要提交答案。</p></article></div>
+<h2>八站主線</h2><ol class="toc">
+<li><a href="00-封包與分層.html">00 封包與分層</a>：先知道端點、鏈路、封裝與觀察位置。</li>
+<li><a href="01-乙太網路與位址解析.html">01 乙太網路與位址解析</a>：在同一個本地網路找到下一站。</li>
+<li><a href="02-網際網路協定與路由.html">02 網際網路協定與路由</a>：跨越許多網路逐跳轉送。</li>
+<li><a href="03-傳輸控制與使用者資料包.html">03 傳輸控制與使用者資料包</a>：把資料交給正確程式，選擇所需保證。</li>
+<li><a href="04-網域名稱系統.html">04 網域名稱系統</a>：把人類名稱解析成可路由位址。</li>
+<li><a href="05-超文字傳輸協定.html">05 超文字傳輸協定</a>：用請求與回應表達資源操作。</li>
+<li><a href="06-傳輸層安全性協定.html">06 傳輸層安全性協定</a>：驗證伺服器並保護通道。</li>
+<li><a href="07-跨層追蹤.html">07 跨層追蹤</a>：從網址到回應，依證據定位故障。</li></ol>
+<h2>讀完能做什麼</h2><p>你能用自己的話重建一次請求的跨層因果，辨認「名稱、位址、硬體位址、埠」各自回答的問題；能比較兩種傳輸服務；能解釋名稱快取、網頁狀態碼與憑證驗證；並知道在封包、作業系統狀態與服務紀錄中先找哪一份證據。</p>
+<nav class="pager" aria-label="章節導覽"><span>這是課程首頁</span><a href="00-封包與分層.html">下一頁：封包與分層 →</a></nav></main></body></html>

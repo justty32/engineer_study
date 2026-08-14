@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RISC-V 組合語言｜計算機組織、編譯與連結</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="topbar" aria-label="課程導覽">
+    <a href="index.html">課程首頁</a>
+    <a href="04-處理器資料路徑與指令週期.html">通用指令模型</a>
+    <a href="05-x86-64組合語言.html">x86-64</a>
+    <a href="06-AArch64組合語言.html">AArch64</a>
+    <a href="07-RISC-V組合語言.html" aria-current="page">RISC-V</a>
+    <a href="名詞與概念字典.html">字典</a>
+  </nav>
+
+  <main>
+    <p class="eyebrow">指令集實例 3／3</p>
+    <h1>RISC-V：用小而可組合的規則讀程式</h1>
+    <p class="lead">RISC-V 是開放、模組化的指令集架構。基本整數指令集只給出核心能力，乘除、原子、浮點、壓縮與向量等能力由擴充加入。閱讀任何 RISC-V 二進位檔前，要先問位元寬度與啟用哪些擴充。</p>
+
+    <section class="prereq">
+      <strong>這章假設已懂：</strong>暫存器、載入／儲存、比較分支、呼叫、立即值與<a href="04-處理器資料路徑與指令週期.html">通用指令模型</a>。範例以 RISC-V 64 位元基本整數指令集（RV64I）為主；它只是一個明確教學邊界，不代表所有 RISC-V 系統。
+    </section>
+
+    <h2>最小可執行心智模型</h2>
+    <div class="flow" aria-label="RISC-V 指令執行因果鏈">
+      <span>用 <code>load</code> 類指令把記憶體值放進暫存器</span>
+      <span>用三運算元指令產生新暫存器值</span>
+      <span>分支直接比較兩個暫存器，不依賴全域旗標</span>
+      <span>用 <code>store</code> 寫回，或以跳躍並連結實作呼叫</span>
+    </div>
+    <p>RISC-V 定義 ISA，不指定某顆晶片必須有幾級管線、是否亂序、快取多大或效能如何。同一份合法機器碼可由極小的微控制器核心或高效能處理器執行。</p>
+
+    <h2>暫存器：硬體編號與 ABI 名稱並存</h2>
+    <div class="grid">
+      <article class="card"><h3>整數暫存器</h3><p><code>x0</code> 到 <code>x31</code> 是整數暫存器。<code>x0</code> 永遠讀出 0，寫入被忽略；它讓清零、比較與無條件跳躍可重用既有指令形式。</p></article>
+      <article class="card"><h3>人類可讀別名</h3><p>ABI 另把 <code>x1</code> 稱為 <code>ra</code>（返回位址）、<code>x2</code> 稱為 <code>sp</code>（堆疊指標），並分成參數 <code>a0</code> 起、暫存 <code>t0</code> 起與需保存 <code>s0</code> 起等角色。</p></article>
+      <article class="card"><h3>沒有整數條件旗標</h3><p>基本整數指令不維護像 x86-64 或 AArch64 那樣供後續分支共用的零／進位旗標。<code>beq a0, a1, label</code> 在分支指令本身比較兩個暫存器。</p></article>
+      <article class="card"><h3>程式計數器不是 x 暫存器</h3><p>程式計數器保存目前控制流位置，但不能像一般 <code>x</code> 暫存器任意讀寫。<code>auipc</code>、<code>jal</code> 與 <code>jalr</code> 提供相對位址與跳躍能力。</p></article>
+    </div>
+
+    <h2>六類動作</h2>
+    <div class="grid">
+      <article class="card"><h3>資料搬移</h3><p><code>li a0, 7</code> 與 <code>mv a0, a1</code> 是虛擬指令，組譯器會展成一條或多條真實指令。記憶體資料用 <code>lb</code>、<code>lw</code>、<code>ld</code> 等載入，寬度與符號擴展必須分清。</p></article>
+      <article class="card"><h3>算術</h3><p><code>add a0, a1, a2</code> 表示 <code>a0 = a1 + a2</code>；<code>addi</code> 的第三個運算元是編碼範圍內的立即值。乘法 <code>mul</code> 屬於整數乘除擴充，不是基本 I 指令集必備。</p></article>
+      <article class="card"><h3>比較與分支</h3><p><code>beq</code>、<code>bne</code> 比較相等；<code>blt</code> 與 <code>bge</code> 依有號值比較，帶 <code>u</code> 的形式依無號值比較。<code>slt</code> 則把比較結果 0 或 1 寫入暫存器。</p></article>
+      <article class="card"><h3>呼叫與返回</h3><p><code>jal ra, target</code> 把下一條位址寫進 <code>ra</code> 並跳躍；<code>jalr</code> 從暫存器形成目標。<code>call</code> 與 <code>ret</code> 通常是組譯器提供的虛擬指令。</p></article>
+      <article class="card"><h3>記憶體定址</h3><p><code>lw a0, 12(sp)</code> 的格式是「立即位移（基底）」。基本載入／儲存沒有 x86-64 的比例索引；陣列索引通常先用移位和加法算出位址。</p></article>
+      <article class="card"><h3>程序邊界</h3><p>常見 ABI 以 <code>a0</code> 起傳整數參數與回傳結果，並規定哪些暫存器由呼叫者或被呼叫者保存。嵌入式與作業系統環境仍可能採不同 ABI 或擴充組合。</p></article>
+    </div>
+
+    <h2>從 C++ 對照：索引位址拆成明確步驟</h2>
+    <div class="workspace">
+      <pre><code>int load_at(const int* p, std::size_t i) {
+    return p[i];
+}</code></pre>
+      <pre><code># 示意：a0=p，a1=i，int 為 4 位元組
+slli t0, a1, 2   # t0 = i * 4
+add  t0, a0, t0  # t0 = p + i*4
+lw   a0, 0(t0)   # 載入有號 32 位元並擴展
+ret</code></pre>
+      <p class="note"><code>slli</code> 左移兩位在這個無溢位位址計算中相當於乘 4。若編譯器掌握更佳資料流，可能改用其他合法序列；虛擬指令與連結期鬆弛也可能讓最終反組譯不同。</p>
+    </div>
+
+    <h2>手工追蹤 1：分支自己做比較</h2>
+    <div class="workspace">
+      <p>初始：<code>a0 = 7</code>、<code>a1 = 7</code>、<code>t0 = 99</code>。執行：</p>
+      <pre><code>bne  a0, a1, .miss
+addi t0, x0, 1
+beq  t0, x0, .zero
+addi a0, a0, 3</code></pre>
+      <p>每一步只記錄被改寫的暫存器與程式控制流，不需要維護隱藏旗標。</p>
+      <details>
+        <summary>展開追蹤結果</summary>
+        <ol>
+          <li><code>a0</code> 等於 <code>a1</code>，所以 <code>bne</code> 不跳。</li>
+          <li><code>addi t0, x0, 1</code> 利用 <code>x0</code> 的固定零值，使 <code>t0 = 1</code>。</li>
+          <li><code>t0</code> 不等於 <code>x0</code>，所以 <code>beq</code> 不跳。</li>
+          <li>最後 <code>a0 = 10</code>。過程沒有一個供所有指令共用的整數零旗標。</li>
+        </ol>
+      </details>
+    </div>
+
+    <h2>手工追蹤 2：呼叫會覆寫返回位址</h2>
+    <div class="workspace">
+      <p>初始：呼叫者的下一條位址是 <code>0x1004</code>。函式 <code>outer</code> 內又呼叫 <code>inner</code>，該次呼叫的下一條位址是 <code>0x2008</code>。</p>
+      <pre><code># 呼叫者
+jal ra, outer
+# outer 內
+jal ra, inner
+ret</code></pre>
+      <details>
+        <summary>展開追蹤結果</summary>
+        <ol>
+          <li>第一次 <code>jal</code> 使 <code>ra = 0x1004</code>，控制流進入 <code>outer</code>。</li>
+          <li>第二次 <code>jal</code> 使 <code>ra = 0x2008</code>，原返回位址被覆寫。</li>
+          <li><code>inner</code> 可藉 <code>ret</code> 回到 <code>0x2008</code>；但若 <code>outer</code> 未先保存並還原 <code>ra</code>，自己的 <code>ret</code> 也只會回到 <code>0x2008</code>。</li>
+          <li>因此會再呼叫其他函式的非葉函式通常依 ABI 把 <code>ra</code> 保存到堆疊。</li>
+        </ol>
+      </details>
+    </div>
+
+    <h2>證據與邊界</h2>
+    <p>可查證的證據包括：二進位檔宣告的目標架構與擴充、反組譯器顯示的真實或虛擬指令、程式計數器 <code>pc</code>、返回位址 <code>ra</code>、堆疊指標 <code>sp</code> 與參數／返回值暫存器 <code>a0</code>、堆疊上保存的暫存器、重定位，以及載入／儲存前後的位址與資料。若要重現機器碼，須固定組譯器選項，因為虛擬指令可能有多種展開方式。</p>
+    <p class="warning">本頁只建立 RV64I 的閱讀骨架，未教授特權架構、控制與狀態暫存器、原子、浮點、向量、壓縮指令或弱記憶體排序。看到 <code>mul</code>、原子操作或較短指令編碼時，先確認所需擴充。</p>
+
+    <h2>常見誤解</h2>
+    <ul>
+      <li><strong>RISC-V 不是一顆處理器。</strong>它是 ISA 家族；晶片實作、效能、周邊與特權環境可完全不同。</li>
+      <li><strong>所有 RISC-V 二進位檔不一定相容。</strong>位元寬度、擴充集合與 ABI 必須匹配。</li>
+      <li><strong><code>li</code>、<code>mv</code>、<code>call</code> 與 <code>ret</code> 不一定各自對應一種機器指令。</strong>它們多半是虛擬指令。</li>
+      <li><strong>沒有旗標不等於不能比較。</strong>分支直接比較來源暫存器，或由 <code>slt</code> 類指令保存布林結果。</li>
+      <li><strong>指令較少不代表程式一定較慢或較快。</strong>效能必須看編譯結果、工作負載與具體微架構。</li>
+    </ul>
+
+    <nav class="pager" aria-label="章節翻頁">
+      <a href="06-AArch64組合語言.html">← AArch64</a>
+      <a href="08-記憶體階層與虛擬記憶體.html">下一章：記憶體階層 →</a>
+    </nav>
+  </main>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>02｜組合邏輯與算術</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-page="combinational-arithmetic">
+  <nav class="topbar" aria-label="課程導覽"><a href="index.html">課程首頁</a><a href="01-只用反及閘造邏輯.html">01 只用反及閘</a><a href="02-組合邏輯與算術.html" aria-current="page">02 組合邏輯與算術</a><a href="名詞與概念字典.html">字典</a></nav>
+  <main>
+    <p class="eyebrow">從真值表到資料路徑</p>
+    <h1>邏輯閘如何做加法？</h1>
+    <p class="lead">一句話答案：組合邏輯的輸出只由此刻輸入決定；把每一位的「和」與「進位」寫成布林函數，再串接多個一位元加法器，就得到多位元加法。</p>
+    <aside class="prereq"><strong>這章假設已懂：</strong><a href="01-只用反及閘造邏輯.html">反相、且、或、互斥或、多工器與解多工器</a>都可由反及閘（NOT AND, NAND gate）建成。</aside>
+
+    <h2>組合邏輯沒有記憶</h2>
+    <p>理想模型寫成 <code>輸出=f(目前輸入)</code>。相同輸入在穩定後必有相同輸出，過去發生什麼不重要。真實電路仍需等待最長路徑的傳播延遲；「沒有記憶」不等於「沒有時間」。</p>
+
+    <h2>半加器：先加兩個一位元</h2>
+    <p>半加器（Half Adder）輸入 A、B，輸出和位 S 與進位 C。和位使用互斥或（Exclusive OR, XOR），進位使用且（AND）：<code>S=A XOR B</code>，<code>C=A AND B</code>。</p>
+    <table><thead><tr><th>A</th><th>B</th><th>S：這一位的和</th><th>C：送到高一位的進位</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>1</td><td>0</td><td>1</td></tr></tbody></table>
+
+    <h2>全加器：把低一位進位也算進來</h2>
+    <p>全加器（Full Adder）多一個輸入進位（carry in, <code>Cin</code>）：<code>S=A XOR B XOR Cin</code>；輸出進位（carry out, <code>Cout</code>）為 <code>(A AND B) OR (Cin AND (A XOR B))</code>，其中 OR 表示「或」。第一項表示 A、B 自己產生進位，第二項表示其中恰一個為 1，且低位又帶來進位。</p>
+    <div class="flow" aria-label="全加器組合鏈"><span>A、B 先進入半加器</span><span>暫時和再加 Cin</span><span>兩次可能的進位做 OR</span><span>得到 S 與 Cout</span></div>
+    <p>把每一位的 <code>Cout</code> 接到下一位的 <code>Cin</code>，就是漣波進位加法器（Ripple-Carry Adder）。它容易理解，但高位必須等待低位進位逐級傳來；更快的真實設計會預先計算進位條件。</p>
+
+    <section class="workspace" aria-labelledby="add-title">
+      <h2 id="add-title">手算互動：逐位追蹤 0111 + 0011</h2>
+      <p>從最右邊的最低有效位開始。每一步只記本位 S 與下一位 Cin。</p>
+      <details><summary>展開第 0、1 位</summary><p>第 0 位：1+1+0 → S=0、進位=1。第 1 位：1+1+1 → S=1、進位=1。</p></details>
+      <details><summary>展開第 2、3 位與結果</summary><p>第 2 位：1+0+1 → S=0、進位=1。第 3 位：0+0+1 → S=1、進位=0。因此四位元結果是 <code>1010</code>。</p></details>
+      <details><summary>同一串位元為何有兩種解讀？</summary><p>若當作無號整數，7+3=10，結果正確。若當作四位元二補數有號整數，可表示範圍是 −8 到 7；兩個正數相加卻得到最高位為 1 的負值外觀，因此發生有號溢位。最終進位與有號溢位不是同一旗標。</p></details>
+    </section>
+
+    <h2>算術邏輯單元：算很多候選，再選一個</h2>
+    <p>算術邏輯單元（Arithmetic Logic Unit, ALU）可同時計算加法、AND、OR、XOR、比較等候選結果，再由控制位元驅動多工器選出需要的輸出。它也可產生「結果是否為零」「最高位」「是否進位」「是否有號溢位」等狀態訊號。</p>
+    <table><thead><tr><th>控制碼（示意）</th><th>選到的功能</th><th>用途</th></tr></thead><tbody><tr><td>00</td><td>A AND B</td><td>遮罩位元</td></tr><tr><td>01</td><td>A OR B</td><td>合併旗標</td></tr><tr><td>10</td><td>A + B</td><td>算術或形成位址</td></tr><tr><td>11</td><td>A XOR B</td><td>比較差異或切換位元</td></tr></tbody></table>
+    <aside class="warning"><strong>模型邊界：</strong>這裡像 Nand2Tetris 類逐層造機器的方法，以理想閘說明功能依賴。商用處理器的 ALU 會有專用加速路徑、管線、旁路與電氣最佳化，不是把教材中的 NAND 網路原樣展開。</aside>
+
+    <h2>如何驗證</h2>
+    <p>小型電路可窮舉真值表；多位元加法器可用參考程式產生測試向量，再比較輸出與旗標。實體電路還要量測臨界路徑：邏輯分析儀看數位狀態，示波器看進位傳播與短暫毛刺。</p>
+
+    <nav class="pager" aria-label="章節翻頁"><a href="01-只用反及閘造邏輯.html">← 上一章：只用反及閘</a><a href="03-時序邏輯與記憶.html">下一章：時序邏輯與記憶 →</a></nav>
+  </main>
+</body>
+</html>

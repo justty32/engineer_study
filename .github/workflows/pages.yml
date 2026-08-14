@@ -29,6 +29,23 @@ on:
       - "專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期/index.html"
       - "專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期/styles.css"
       - "專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期/app.js"
+      - "專題/網路安全/互動課程/*.html"
+      - "專題/網路安全/互動課程/*.css"
+      - "專題/網路安全/互動課程/*.js"
+      - "專題/網路安全/攻擊手法細講/*.html"
+      - "專題/網路安全/攻擊手法細講/*.js"
+      - "專題/網路協定/互動課程/*.html"
+      - "專題/網路協定/互動課程/*.css"
+      - "專題/網路協定/互動課程/*.js"
+      - "專題/逆向工程/互動課程/*.html"
+      - "專題/逆向工程/互動課程/*.css"
+      - "專題/逆向工程/互動課程/*.js"
+      - "專題/計算機組織/互動課程/*.html"
+      - "專題/計算機組織/互動課程/*.css"
+      - "專題/計算機組織/互動課程/*.js"
+      - "專題/機器人運動學/互動課程/*.html"
+      - "專題/機器人運動學/互動課程/*.css"
+      - "專題/機器人運動學/互動課程/*.js"
   workflow_dispatch:
 
 permissions:
@@ -121,6 +138,52 @@ jobs:
             cp "$security_site/styles.css" _site/iot-security-production/styles.css
             cp "$security_site/app.js" _site/iot-security-production/app.js
           fi
+
+          copy_course() {
+            source_dir="$1"
+            public_dir="$2"
+            mkdir -p "_site/$public_dir"
+            find "$source_dir" -maxdepth 1 -type f \( -name '*.html' -o -name '*.css' -o -name '*.js' \) \
+              -exec cp '{}' "_site/$public_dir/" \;
+          }
+
+          copy_course '專題/網路安全/互動課程' network-security
+          copy_course '專題/網路安全/攻擊手法細講' attack-techniques
+          copy_course '專題/網路協定/互動課程' network-protocols
+          copy_course '專題/逆向工程/互動課程' reverse-engineering
+          copy_course '專題/計算機組織/互動課程' computer-organization
+          copy_course '專題/機器人運動學/互動課程' robot-arm-kinematics
+
+          python3 <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              "network-security": {
+                  "../攻擊手法細講/": "../attack-techniques/",
+                  "../../逆向工程/互動課程/": "../reverse-engineering/",
+                  "href=\"PROJECT-BRIEF.md\"": "href=\"https://github.com/justty32/engineer_study/blob/main/專題/網路安全/互動課程/PROJECT-BRIEF.md\"",
+              },
+              "attack-techniques": {
+                  "../互動課程/": "../network-security/",
+                  "../../網路協定/互動課程/": "../network-protocols/",
+                  "../../逆向工程/互動課程/": "../reverse-engineering/",
+              },
+              "reverse-engineering": {
+                  "../../計算機組織/互動課程/": "../computer-organization/",
+              },
+              "computer-organization": {
+                  "../../逆向工程/互動課程/": "../reverse-engineering/",
+              },
+          }
+
+          site = Path("_site")
+          for public_dir, rules in replacements.items():
+              for page in (site / public_dir).glob("*.html"):
+                  text = page.read_text(encoding="utf-8")
+                  for old, new in rules.items():
+                      text = text.replace(old, new)
+                  page.write_text(text, encoding="utf-8")
+          PY
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

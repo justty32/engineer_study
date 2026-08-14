@@ -1,0 +1,37 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>七軸運動學名詞字典</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a href="index.html">首頁</a><a href="00-機械手臂自由度與座標.html">零基礎</a><a href="05-七軸正運動學.html">七軸模型</a><a aria-current="page" href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">隨查隨用</p><h1>名詞與概念字典</h1><div class="dictionary-tools"><label for="term-search">搜尋繁中、英文或縮寫</label><input id="term-search" type="search" placeholder="例如：零空間、Jacobian、DLS"><p id="term-count" aria-live="polite"></p></div><section class="term-list">
+<article class="term-card"><h2>機械手臂</h2><p>Manipulator。由連桿、關節與末端工具形成的可控運動鏈；本課只談串聯型。</p></article>
+<article class="term-card"><h2>旋轉關節</h2><p>Revolute joint, R。允許繞一條軸旋轉的一自由度關節；7R 表示七個旋轉關節串聯。</p></article>
+<article class="term-card"><h2>連桿</h2><p>Link。連接關節的剛體；運動學先假設它不彎曲。</p></article>
+<article class="term-card"><h2>末端執行器</h2><p>End effector。手臂末端的夾爪或工具；其工作座標系不一定在最後關節中心。</p></article>
+<article class="term-card"><h2>自由度</h2><p>Degree of Freedom, DOF。描述構型所需的獨立變數數；不要與任務約束數混淆。</p></article>
+<article class="term-card"><h2>關節空間</h2><p>Joint space。以所有關節變數 q 描述構型的空間；七軸手臂通常是七維。</p></article>
+<article class="term-card"><h2>任務空間</h2><p>Task space。控制目標所在空間；完整剛體末端位姿局部為六維，但任務也可只約束位置或部分方向。</p></article>
+<article class="term-card"><h2>位置與姿態</h2><p>Position and orientation。位置是原點在哪，姿態是軸朝哪；兩者合稱位姿（pose）。</p></article>
+<article class="term-card"><h2>座標系</h2><p>Coordinate frame。由原點與基底軸構成；同一幾何物件在不同框架有不同數字。</p></article>
+<article class="term-card"><h2>旋轉矩陣</h2><p>Rotation matrix。SO(3) 中保持長度、夾角與手性的 3×3 矩陣。</p></article>
+<article class="term-card"><h2>特殊正交群</h2><p>Special Orthogonal Group, SO(3)。所有三維合法旋轉矩陣的集合與合成結構。</p></article>
+<article class="term-card"><h2>歐拉角</h2><p>Euler angles。依指定軸順序用三個角表示姿態；有順序相依與萬向節鎖。</p></article>
+<article class="term-card"><h2>軸角</h2><p>Axis-angle。用旋轉軸與角度描述姿態差；零角與 π 附近要處理表示歧義。</p></article>
+<article class="term-card"><h2>四元數</h2><p>Quaternion。常用單位四元數表示旋轉；q 與 −q 代表同一姿態。</p></article>
+<article class="term-card"><h2>齊次變換</h2><p>Homogeneous transformation。以 4×4 矩陣合併旋轉與平移，屬於 SE(3)。</p></article>
+<article class="term-card"><h2>特殊歐幾里得群</h2><p>Special Euclidean Group, SE(3)。三維剛體旋轉與平移變換的集合與合成結構。</p></article>
+<article class="term-card"><h2>正運動學</h2><p>Forward Kinematics, FK。已知 q，計算各連桿與末端位姿；固定模型下輸出唯一。</p></article>
+<article class="term-card"><h2>逆運動學</h2><p>Inverse Kinematics, IK。已知目標位姿，反求 q；可能多解、無解或形成連續解族。</p></article>
+<article class="term-card"><h2>Denavit–Hartenberg 參數</h2><p>DH parameters。以 θ、d、a、α 描述相鄰連桿框架；標準與修改型慣例不同。</p></article>
+<article class="term-card"><h2>指數積</h2><p>Product of Exponentials, POE。用旋量、零位姿與矩陣指數描述串聯手臂 FK。</p></article>
+<article class="term-card"><h2>扭量</h2><p>Twist。合併剛體線速度與角速度的六維瞬時運動；表示框架與排列順序必須明定。</p></article>
+<article class="term-card"><h2>雅可比矩陣</h2><p>Jacobian matrix, J。把關節速度映到末端扭量；七軸完整位姿任務通常是 6×7。</p></article>
+<article class="term-card"><h2>矩陣秩</h2><p>Matrix rank。獨立輸出方向的數量；J 列秩小於任務維度時失去任務方向。</p></article>
+<article class="term-card"><h2>奇異值分解</h2><p>Singular Value Decomposition, SVD。把矩陣分解成輸入／輸出主方向與伸縮量，用於判斷弱方向與偽逆。</p></article>
+<article class="term-card"><h2>奇異點</h2><p>Singularity。雅可比矩陣秩下降的構型；不等同歐拉角表示奇異或關節極限。</p></article>
+<article class="term-card"><h2>偽逆</h2><p>Moore–Penrose pseudoinverse。非方陣或降秩矩陣的廣義逆；依問題給最小平方／最小範數解。</p></article>
+<article class="term-card"><h2>冗餘</h2><p>Redundancy。關節自由度多於當前任務所需獨立約束；七軸完整六維位姿一般冗餘一維。</p></article>
+<article class="term-card"><h2>零空間</h2><p>Null space。所有滿足 Jq̇=0 的關節速度方向；可改內部姿態而不改一階末端扭量。</p></article>
+<article class="term-card"><h2>自運動</h2><p>Self-motion。末端位姿保持不變時，手臂沿冗餘解族改變構型的運動。</p></article>
+<article class="term-card"><h2>零空間投影</h2><p>Null-space projection。以 N=I−J⁺J 把次要方向投到不干擾主任務的一階方向；阻尼時可能有洩漏。</p></article>
+<article class="term-card"><h2>可操作度</h2><p>Manipulability。描述目前姿勢在不同任務方向產生速度的局部能力；受單位與尺度影響。</p></article>
+<article class="term-card"><h2>阻尼最小平方</h2><p>Damped Least Squares, DLS。在反解中加入 λ²I，限制近奇異時的數值放大，但引入偏差。</p></article>
+<article class="term-card"><h2>關節極限</h2><p>Joint limit。每個關節允許角度範圍；不是奇異點，但會讓部分 IK 分支不能使用。</p></article>
+<article class="term-card"><h2>工作空間</h2><p>Workspace。末端可達位置或位姿集合；可達位置與能以任意姿態到達的靈巧區域不同。</p></article>
+<article class="term-card"><h2>有限差分</h2><p>Finite difference。用小擾動近似導數；常用來獨立驗證解析雅可比矩陣。</p></article>
+</section><div class="pager"><a href="10-C++實作與驗證.html">← 10 C++</a><a href="index.html">回首頁 →</a></div></main><script src="app.js"></script></body></html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AArch64 組合語言｜計算機組織、編譯與連結</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="topbar" aria-label="課程導覽">
+    <a href="index.html">課程首頁</a>
+    <a href="04-處理器資料路徑與指令週期.html">通用指令模型</a>
+    <a href="05-x86-64組合語言.html">x86-64</a>
+    <a href="06-AArch64組合語言.html" aria-current="page">AArch64</a>
+    <a href="07-RISC-V組合語言.html">RISC-V</a>
+    <a href="名詞與概念字典.html">字典</a>
+  </nav>
+
+  <main>
+    <p class="eyebrow">指令集實例 2／3</p>
+    <h1>AArch64：載入／儲存與明確的三運算元</h1>
+    <p class="lead">AArch64 是 Arm 架構的 64 位元執行狀態，使用 A64 指令集。多數算術只操作暫存器，記憶體必須先用載入指令讀入、再用儲存指令寫回；這讓「位址形成」與「資料運算」在文字上較容易分開追蹤。</p>
+
+    <section class="prereq">
+      <strong>這章假設已懂：</strong>位址、暫存器、旗標、分支、呼叫與返回，以及<a href="04-處理器資料路徑與指令週期.html">通用指令模型</a>。本頁使用常見的 Arm 組合語法，三運算元通常寫成「目的、來源一、來源二」。
+    </section>
+
+    <h2>最小可執行心智模型</h2>
+    <div class="flow" aria-label="AArch64 指令執行因果鏈">
+      <span><code>ldr</code> 把記憶體資料載入暫存器</span>
+      <span>算術與比較在暫存器之間進行</span>
+      <span><code>str</code> 才把結果儲存回記憶體</span>
+      <span>分支、連結暫存器與返回改變控制流</span>
+    </div>
+    <p>「載入／儲存型」是程式設計模型，不代表實體處理器一次只做一件事。真實核心仍可有管線、多發射、亂序執行與快取；只要最終可觀察結果符合 ISA 即可。</p>
+
+    <h2>暫存器與特殊角色</h2>
+    <div class="grid">
+      <article class="card"><h3>64 與 32 位元視圖</h3><p><code>X0</code> 到 <code>X30</code> 是 64 位元一般用途暫存器；<code>W0</code> 到 <code>W30</code> 是同一批暫存器的低 32 位元視圖。寫入 <code>Wn</code> 會把對應 <code>Xn</code> 的高 32 位元清零。</p></article>
+      <article class="card"><h3>堆疊與返回</h3><p><code>SP</code> 是堆疊指標。<code>X30</code> 通常稱為連結暫存器，<code>bl target</code> 把返回位址放入其中；非葉函式若還要呼叫別人，通常先保存自己的返回位址。</p></article>
+      <article class="card"><h3>零暫存器</h3><p>依指令語境，編號 31 可表示零暫存器 <code>XZR</code>／<code>WZR</code> 或 <code>SP</code>。讀零暫存器永遠得到 0，寫入結果被丟棄；不能只看編碼編號忽略指令語境。</p></article>
+      <article class="card"><h3>條件旗標</h3><p>負、零、進位、溢位四個條件旗標常合稱 <code>NZCV</code>。會更新旗標的包括帶 <code>S</code> 後綴的算術／邏輯指令與比較類指令；普通 <code>add</code> 不更新旗標。</p></article>
+    </div>
+
+    <h2>六類動作</h2>
+    <div class="grid">
+      <article class="card"><h3>資料搬移</h3><p><code>mov w0, #7</code> 是方便閱讀的別名，組譯器會選擇可表達它的真實編碼。<code>ldr w0, [x1]</code> 載入 32 位元；<code>str w0, [x1]</code> 儲存 32 位元。</p></article>
+      <article class="card"><h3>算術</h3><p><code>add x0, x1, x2</code> 表示 <code>x0 = x1 + x2</code>，來源不被覆寫。<code>sub</code>、<code>mul</code> 類似；某些指令可把移位合併進來源運算元。</p></article>
+      <article class="card"><h3>比較與分支</h3><p><code>cmp w0, #0</code> 是更新旗標而不保留差值的別名；<code>b.eq</code>、<code>b.lt</code> 等讀旗標。<code>cbz w0, label</code> 可直接測試暫存器是否為零並分支。</p></article>
+      <article class="card"><h3>呼叫與返回</h3><p><code>bl target</code> 跳到目標並把下一條位址寫入 <code>X30</code>；<code>ret</code> 預設跳到 <code>X30</code>。這與 x86-64 的 <code>call</code> 直接把返回位址壓入堆疊不同。</p></article>
+      <article class="card"><h3>記憶體定址</h3><p><code>[x0, #16]</code> 使用基底加立即位移；<code>[x0, x1, lsl #2]</code> 使用索引左移兩位，相當於乘 4。前置與後置索引還可在存取時更新基底暫存器。</p></article>
+      <article class="card"><h3>程序參數</h3><p>常見 64 位元 Arm 平台把前幾個整數參數放在 <code>X0</code> 起的一組暫存器，結果也常由 <code>X0</code> 返回；精確規則仍由平台 ABI 決定，不是所有值都如此。</p></article>
+    </div>
+
+    <h2>從 C++ 對照：載入、計算、儲存分開看</h2>
+    <div class="workspace">
+      <pre><code>void bump(int* p, std::size_t i) {
+    p[i] += 3;
+}</code></pre>
+      <pre><code>// 示意：X0=p，X1=i
+ldr w2, [x0, x1, lsl #2] // 從 p + i*4 載入
+add w2, w2, #3
+str w2, [x0, x1, lsl #2] // 儲存回同一位址
+ret</code></pre>
+      <p class="note">即使 C++ 只有一個複合指定運算，AArch64 的資料依賴仍是「記憶體 → 暫存器 → 算術 → 記憶體」。若別的執行緒可同時存取，這幾條普通指令並不自動提供 C++ 原子操作語意。</p>
+    </div>
+
+    <h2>手工追蹤 1：普通加法不會自動改旗標</h2>
+    <div class="workspace">
+      <p>初始：<code>W0 = 5</code>、零旗標為 1。執行：</p>
+      <pre><code>add  w0, w0, #1
+b.eq .equal
+subs w1, w0, #6
+b.eq .six</code></pre>
+      <p>追蹤 <code>W0</code>、<code>W1</code>、零旗標與兩個分支。</p>
+      <details>
+        <summary>展開追蹤結果</summary>
+        <ol>
+          <li><code>add</code> 使 <code>W0 = 6</code>，但沒有 <code>S</code> 後綴，所以零旗標仍是原來的 1。</li>
+          <li>第一個 <code>b.eq</code> 會依舊旗標跳躍；若真的跳走，後兩條就不會執行。這是刻意展示「旗標來源」的重要性。</li>
+          <li>若忽略第一個跳躍、單獨分析後兩條，<code>subs</code> 得到 <code>W1 = 0</code> 並把零旗標設為 1，因此 <code>b.eq .six</code> 成立。</li>
+        </ol>
+      </details>
+    </div>
+
+    <h2>手工追蹤 2：連結暫存器為何要保存</h2>
+    <div class="workspace">
+      <p>假設 <code>outer</code> 由位址 <code>0x4000</code> 的呼叫者以 <code>bl outer</code> 呼叫，返回點為 <code>0x4004</code>。<code>outer</code> 又執行 <code>bl inner</code>，其返回點為 <code>0x5008</code>。</p>
+      <details>
+        <summary>展開追蹤結果</summary>
+        <ol>
+          <li>進入 <code>outer</code> 時，<code>X30 = 0x4004</code>。</li>
+          <li>若 <code>outer</code> 未保存 <code>X30</code>，執行 <code>bl inner</code> 後，<code>X30</code> 被覆寫為 <code>0x5008</code>。</li>
+          <li><code>inner</code> 的 <code>ret</code> 可回到 <code>0x5008</code>；但 <code>outer</code> 接著直接 <code>ret</code> 仍會跳到 <code>0x5008</code>，無法回到原呼叫者。</li>
+          <li>因此非葉函式通常在堆疊或受規範保護的位置保存原本的 <code>X30</code>，返回前再還原。</li>
+        </ol>
+      </details>
+    </div>
+
+    <h2>證據與邊界</h2>
+    <p>可觀察證據包括：固定寬度指令的機器位元、反組譯中的 <code>X</code>／<code>W</code> 寬度、除錯器中的程式計數器（Program Counter, <code>PC</code>）、<code>SP</code>、<code>X30</code> 與條件旗標、堆疊內保存的返回位址，以及載入／儲存前後的記憶體內容。函式序言並非固定模板；最佳化、葉函式與安全機制會改變它。</p>
+    <p class="warning">AArch64 不等於所有 Arm。32 位元 Arm、Thumb 與 AArch64 的暫存器、編碼和呼叫形式不同。本頁也未涵蓋浮點／向量、系統暫存器、特權層、記憶體一致性與指標驗證等擴充。</p>
+
+    <h2>常見誤解</h2>
+    <ul>
+      <li><strong><code>W0</code> 與 <code>X0</code> 不是兩個獨立暫存器。</strong>它們是同一架構暫存器的不同寬度視圖。</li>
+      <li><strong>每個算術指令不一定更新旗標。</strong>要檢查是否有 <code>S</code> 形式，或是否為 <code>cmp</code> 等別名。</li>
+      <li><strong><code>ret</code> 不會自動從堆疊彈出返回位址。</strong>它通常跳到 <code>X30</code>；堆疊保存與還原是函式產生的額外指令。</li>
+      <li><strong><code>ldr</code> 的目的寬度會影響值。</strong>有號或無號擴展、32 或 64 位元載入不能只看位址。</li>
+      <li><strong>固定指令寬度不代表固定執行時間。</strong>快取、分支與資料相依仍會造成顯著差異。</li>
+    </ul>
+
+    <nav class="pager" aria-label="章節翻頁">
+      <a href="05-x86-64組合語言.html">← x86-64</a>
+      <a href="07-RISC-V組合語言.html">下一章：RISC-V →</a>
+    </nav>
+  </main>
+</body>
+</html>
