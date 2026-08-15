@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>08 視覺里程計、SLAM 與閉環校正｜機器人視覺</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="03-特徵匹配與姿態估測.html">姿態估測</a>
+<a href="07-機率估測協方差與感測融合.html">機率融合</a>
+<a aria-current="page" href="08-視覺里程計SLAM與閉環校正.html">VO／SLAM</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">08 · 把逐幀相對運動接成長程地圖</p>
+<h1>視覺里程計、SLAM 與閉環校正</h1>
+<p class="lead">白話問題：既然相鄰影像能估相機怎麼動，為何走一圈不能自然回到原點？一句話答案：每一步都有小偏差，位姿連乘會把它累積成漂移；同時定位與地圖建立利用重複地點與全域約束重新分配誤差。</p>
+<div class="prereq"><strong>最小前置：</strong>先讀<a href="03-特徵匹配與姿態估測.html">特徵、對應與姿態估測</a>、<a href="04-深度點雲與物體幾何.html">深度</a>、<a href="07-機率估測協方差與感測融合.html">機率估測</a>。需要位姿連乘細節時回<a href="../../機器人運動學/互動課程/04-齊次變換與座標鏈.html">齊次變換</a>。</div>
+
+<h2>視覺里程計只承諾局部連續運動</h2>
+<p>視覺里程計（Visual Odometry, VO）從連續影像估計相對位姿 <code>Tₖ,ₖ₊₁</code>，再連乘成相對起點的軌跡。前端（front end）負責偵測／追蹤、資料關聯、幾何估測與外點排除；後端（back end）在一段時間窗內共同最佳化位姿與地標，讓多個量測約束一致。單目系統若沒有已知尺度、IMU、輪速或其他基準，平移尺度本身不可觀察；雙目或深度相機可提供尺度，但仍有標定、同步與匹配誤差。</p>
+<p>每一步只有 0.2% 比例偏差看似很小，走 100 m 就可能累積約 0.2 m 系統偏差；方向誤差更會讓後續位移在錯誤方向累積。真實漂移不是固定百分比相加，而與路徑、特徵幾何、偏差及最佳化耦合。互動只分成系統漂移與隨機步進兩個直覺量，避免把示意公式誤當完整 VO 誤差模型。</p>
+
+<h2>SLAM 同時估軌跡與持久地圖</h2>
+<p>同時定位與地圖建立（Simultaneous Localization and Mapping, SLAM）把機器人位姿與環境地標都當未知量。相鄰幀提供里程計邊，重看同一地點時產生閉環（loop closure）邊；後端可形成姿態圖（pose graph）或含地標的因子圖，尋找讓所有約束殘差總體合理的解。閉環不是直接把最後位置設成起點，而是把不一致沿整段軌跡分配，且應尊重每條約束的不確定度。</p>
+<p>閉環偵測有兩個不同問題：地點辨識先提出「可能來過」，幾何驗證再確認影像對應是否支持一致相對位姿。外觀相似的走廊、重複貨架或季節光線改變會造成假閉環或漏閉環。假閉環可能把整張圖拉壞，所以高分相似度不能取代幾何內點、視角覆蓋、時間與語意檢查。</p>
+
+<h2>讀完再操作：漂移與閉環能修多少</h2>
+<section class="workspace">
+<div class="controls">
+<label for="slam-distance">累積行進距離（m）<input id="slam-distance" type="range" min="1" max="500" step="1" value="100"></label>
+<label for="slam-bias">系統比例漂移（% 路程）<input id="slam-bias" type="range" min="0" max="3" step="0.1" value="0.5"></label>
+<label for="slam-step-noise">隨機步進尺度（mm/√m）<input id="slam-step-noise" type="range" min="0" max="30" step="1" value="8"></label>
+<label for="slam-loop">閉環校正比例（%）<input id="slam-loop" type="range" min="0" max="100" step="5" value="80"></label>
+</div>
+<div id="slam-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>追蹤、重定位與地圖一致性是不同狀態</h2>
+<p>追蹤（tracking）使用前一幀附近的先驗維持局部位姿；重定位（relocalization）在追蹤丟失後，嘗試把目前影像對到既有地圖；建圖則更新持久結構。系統應顯式輸出狀態，例如初始化、追蹤良好、退化、丟失、重定位候選、重定位確認與地圖更新中。用最後一個有效 Pose 冒充目前估測會讓下游控制把過期資料當真。</p>
+<p>退化可來自低紋理、純旋轉、動態物體佔多數、狹小視差、重複圖樣、曝光突變或相機遮擋。多感測融合能補互補資訊，但不會讓所有問題消失：IMU 偏差、相機—IMU 外參與時間同步若錯，融合可能比單感測更自信地偏離。地圖也要有座標基準、版本與生命週期；回環最佳化後舊位姿可能整體改變，下游若快取舊地圖座標就會不一致。</p>
+
+<h2>證據、評估與模型邊界</h2>
+<ul>
+<li>保存影像／IMU 時間戳、校正版本、追蹤狀態、內點空間分布、相對位姿、協方差、關鍵幀與圖最佳化前後殘差。</li>
+<li>除絕對軌跡誤差外，也量固定時間／距離區間的相對位姿誤差；前者看全域一致，後者看局部里程計品質。</li>
+<li>閉環候選要保留相似度、幾何驗證、接受／拒絕原因及其對全圖的改變，並測試重複場景與錯誤閉環注入。</li>
+</ul>
+<p>互動把系統偏差近似成距離乘比例，將隨機項近似成平方根成長，再用單一比例表示閉環修正。真實 SLAM 誤差位於 SE(3)，相關性、圖拓樸與觀測幾何都會影響結果；100% 校正也不代表回到真值，只表示在這個示意模型中消除目前估計漂移。真機導航仍需獨立碰撞感知與安全停止，不能把「定位成功」當成環境安全。</p>
+<div class="pager"><a href="07-機率估測協方差與感測融合.html">← 07 機率融合</a><a href="名詞與概念字典.html">字典 →</a></div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,2 +1,132 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>七軸機械手臂運動學</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a aria-current="page" href="index.html">首頁</a><a href="00-機械手臂自由度與座標.html">零基礎</a><a href="05-七軸正運動學.html">七軸模型</a><a href="09-七軸數值逆運動學.html">逆運動學</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">零基礎主線 · 七旋轉關節串聯手臂</p><h1>七軸機械手臂運動學</h1><p class="lead">從「一個點到底用哪個座標系表示」開始，最後親手操作七個關節、`6×7` 雅可比矩陣、零空間與數值逆運動學。你會 C++，所以程式結構會說得精簡；幾何與線性代數不跳步。</p><div class="prereq"><strong>不先考。</strong>所有互動都是自由實驗，立即解釋數值為何改變。課程模型是虛構七旋轉關節手臂，不代表任何廠牌尺寸、關節順序或限制。</div><h2>為何七軸值得單獨學？</h2><div class="flow"><span>7 個關節變數</span><span>末端 6 維位姿任務</span><span>一般多出 1 維冗餘</span><span>末端近似不動仍能改肘姿</span><span>用零空間兼顧次要目標</span></div><section class="chapter-list"><a class="chapter-card" href="00-機械手臂自由度與座標.html"><span class="number">00</span><h2>手臂、自由度與座標</h2><p>連桿、關節、7R、位置、姿態與座標標籤。</p></a><a class="chapter-card" href="00A-角度弧度三角函數與單位.html"><span class="number">00A</span><h2>角度、弧度與三角函數</h2><p>從單位圓、sin／cos、度與弧度開始，不假設記得高中數學。</p></a><a class="chapter-card" href="01-向量矩陣與二維旋轉.html"><span class="number">01</span><h2>向量、矩陣與旋轉</h2><p>分量不是幾何物件本身，主動旋轉也不是被動換座標。</p></a><a class="chapter-card" href="02-二連桿正逆運動學.html"><span class="number">02</span><h2>先征服二連桿</h2><p>用可手算模型理解正解、多解、無解與工作空間。</p></a><a class="chapter-card" href="03-三維旋轉與姿態.html"><span class="number">03</span><h2>三維姿態</h2><p>旋轉矩陣、旋轉順序、歐拉角、軸角與四元數。</p></a><a class="chapter-card" href="04-齊次變換與座標鏈.html"><span class="number">04</span><h2>齊次變換</h2><p>把旋轉與平移合成可連乘的座標鏈。</p></a><a class="chapter-card" href="05-七軸正運動學.html"><span class="number">05</span><h2>七軸正運動學</h2><p>七個局部關節如何共同決定工具位姿。</p></a><a class="chapter-card" href="06-雅可比與速度運動學.html"><span class="number">06</span><h2>6×7 雅可比矩陣</h2><p>每一欄是一個關節對末端瞬時速度的貢獻。</p></a><a class="chapter-card" href="07-冗餘零空間與肘部姿態.html"><span class="number">07</span><h2>冗餘與零空間</h2><p>末端任務之外，利用多出來的自由度改變肘部。</p></a><a class="chapter-card" href="08-奇異點可操作度與關節極限.html"><span class="number">08</span><h2>奇異點與限制</h2><p>秩、弱方向、可操作度、阻尼與關節極限。</p></a><a class="chapter-card" href="09-七軸數值逆運動學.html"><span class="number">09</span><h2>數值逆運動學</h2><p>以阻尼最小平方反覆縮小位置與姿態誤差。</p></a><a class="chapter-card" href="10-C++實作與驗證.html"><span class="number">10</span><h2>C++ 實作與證據</h2><p>讓座標系、角度單位、矩陣語意與測試成為契約。</p></a><a class="chapter-card" href="名詞與概念字典.html"><span class="number">A–Z</span><h2>可搜尋字典</h2><p>中英名詞、縮寫、所在層級與易混邊界。</p></a></section><section class="workspace"><h2>零基礎要怎麼走這門課？</h2><p>不要先背矩陣公式。每一章只帶走一個可說出口的問題：第 00 章先能指認「哪一個東西相對哪一個座標系」；第 01–04 章學會把同一個幾何事實換成數字並串接；第 05–09 章才讓七個關節進入計算。</p><ol><li><strong>第一次：</strong>只讀白話、因果鏈與數值例子，拖動控制值看結果怎麼變。</li><li><strong>第二次：</strong>拿紙筆追一個二連桿或一個座標變換，確認每個數字的單位與座標系。</li><li><strong>第三次：</strong>才看雅可比、零空間與數值逆運動學，並回到 C++ 契約。</li></ol><p>看到陌生字不要猜。先開<a href="名詞與概念字典.html">字典</a>，每個條目會說白話、它位於計算鏈哪裡、怎麼生效、具體例子與不要混淆的概念。</p></section><div class="note"><strong>你不需要先會線性代數。</strong>本課只在需要時引入一個數學工具，並立刻指出它在手臂上代表什麼。若某章的公式讀不下去，先檢查三件事：每個量的單位、每個向量屬於哪個座標系、運算前後誰相對誰。這三個標籤比背公式重要。每章的互動也不是測驗；請故意把值拖到 0、極大值與邊界，觀察模型何時改變或失效。</div><div class="pager"><a href="名詞與概念字典.html">← 字典</a><a href="00-機械手臂自由度與座標.html">開始 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>七軸機械手臂運動學</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a aria-current="page" href="index.html">首頁</a>
+<a href="00-機械手臂自由度與座標.html">零基礎</a>
+<a href="05-七軸正運動學.html">七軸模型</a>
+<a href="09-七軸數值逆運動學.html">逆運動學</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">零基礎主線 · 七旋轉關節串聯手臂</p>
+<h1>七軸機械手臂運動學</h1>
+<p class="lead">從「一個點到底用哪個座標系表示」開始，最後親手操作七個關節、`6×7` 雅可比矩陣、零空間與數值逆運動學。你會 C++，所以程式結構會說得精簡；幾何與線性代數不跳步。</p>
+<div class="prereq">
+<strong>不先考。</strong>所有互動都是自由實驗，立即解釋數值為何改變。課程模型是虛構七旋轉關節手臂，不代表任何廠牌尺寸、關節順序或限制。</div>
+<h2>為何七軸值得單獨學？</h2>
+<div class="flow">
+<span>7 個關節變數</span>
+<span>末端 6 維位姿任務</span>
+<span>一般多出 1 維冗餘</span>
+<span>末端近似不動仍能改肘姿</span>
+<span>用零空間兼顧次要目標</span>
+</div>
+<section class="chapter-list">
+<a class="chapter-card" href="00-機械手臂自由度與座標.html">
+<span class="number">00</span>
+<h2>手臂、自由度與座標</h2>
+<p>連桿、關節、7R、位置、姿態與座標標籤。</p>
+</a>
+<a class="chapter-card" href="00A-角度弧度三角函數與單位.html">
+<span class="number">00A</span>
+<h2>角度、弧度與三角函數</h2>
+<p>從單位圓、sin／cos、度與弧度開始，不假設記得高中數學。</p>
+</a>
+<a class="chapter-card" href="01-向量矩陣與二維旋轉.html">
+<span class="number">01</span>
+<h2>向量、矩陣與旋轉</h2>
+<p>分量不是幾何物件本身，主動旋轉也不是被動換座標。</p>
+</a>
+<a class="chapter-card" href="02-二連桿正逆運動學.html">
+<span class="number">02</span>
+<h2>先征服二連桿</h2>
+<p>用可手算模型理解正解、多解、無解與工作空間。</p>
+</a>
+<a class="chapter-card" href="03-三維旋轉與姿態.html">
+<span class="number">03</span>
+<h2>三維姿態</h2>
+<p>旋轉矩陣、旋轉順序、歐拉角、軸角與四元數。</p>
+</a>
+<a class="chapter-card" href="04-齊次變換與座標鏈.html">
+<span class="number">04</span>
+<h2>齊次變換</h2>
+<p>把旋轉與平移合成可連乘的座標鏈。</p>
+</a>
+<a class="chapter-card" href="05-七軸正運動學.html">
+<span class="number">05</span>
+<h2>七軸正運動學</h2>
+<p>七個局部關節如何共同決定工具位姿。</p>
+</a>
+<a class="chapter-card" href="06-雅可比與速度運動學.html">
+<span class="number">06</span>
+<h2>6×7 雅可比矩陣</h2>
+<p>每一欄是一個關節對末端瞬時速度的貢獻。</p>
+</a>
+<a class="chapter-card" href="07-冗餘零空間與肘部姿態.html">
+<span class="number">07</span>
+<h2>冗餘與零空間</h2>
+<p>末端任務之外，利用多出來的自由度改變肘部。</p>
+</a>
+<a class="chapter-card" href="08-奇異點可操作度與關節極限.html">
+<span class="number">08</span>
+<h2>奇異點與限制</h2>
+<p>秩、弱方向、可操作度、阻尼與關節極限。</p>
+</a>
+<a class="chapter-card" href="09-七軸數值逆運動學.html">
+<span class="number">09</span>
+<h2>數值逆運動學</h2>
+<p>以阻尼最小平方反覆縮小位置與姿態誤差。</p>
+</a>
+<a class="chapter-card" href="10-C++實作與驗證.html">
+<span class="number">10</span>
+<h2>C++ 實作與證據</h2>
+<p>讓座標系、角度單位、矩陣語意與測試成為契約。</p>
+</a>
+<a class="chapter-card" href="11-SE3李群扭量與指數映射.html">
+<span class="number">11</span>
+<h2>SE(3) 與扭量</h2>
+<p>用李群、指數映射、螺旋軸與 Adjoint 統一有限位姿和瞬時速度。</p>
+</a>
+<a class="chapter-card" href="12-運動學校正敏感度與可辨識性.html">
+<span class="number">12</span>
+<h2>校正與可辨識性</h2>
+<p>從參數敏感度、系統偏差與資料覆蓋判斷模型為何對不上真機。</p>
+</a>
+<a class="chapter-card" href="名詞與概念字典.html">
+<span class="number">A–Z</span>
+<h2>可搜尋字典</h2>
+<p>中英名詞、縮寫、所在層級與易混邊界。</p>
+</a>
+</section>
+<section class="workspace">
+<h2>零基礎要怎麼走這門課？</h2>
+<p>不要先背矩陣公式。每一章只帶走一個可說出口的問題：第 00 章先能指認「哪一個東西相對哪一個座標系」；第 01–04 章學會把同一個幾何事實換成數字並串接；第 05–10 章才讓七個關節進入計算與程式證據；第 11–12 章再進入 SE(3) 結構與真機校正。</p>
+<ol>
+<li>
+<strong>第一次：</strong>只讀白話、因果鏈與數值例子，拖動控制值看結果怎麼變。</li>
+<li>
+<strong>第二次：</strong>拿紙筆追一個二連桿或一個座標變換，確認每個數字的單位與座標系。</li>
+<li>
+<strong>第三次：</strong>才看雅可比、零空間與數值逆運動學，並回到 C++ 契約。</li>
+</ol>
+<p>看到陌生字不要猜。先開<a href="名詞與概念字典.html">字典</a>，每個條目會說白話、它位於計算鏈哪裡、怎麼生效、具體例子與不要混淆的概念。</p>
+</section>
+<div class="note">
+<strong>你不需要先會線性代數。</strong>本課只在需要時引入一個數學工具，並立刻指出它在手臂上代表什麼。若某章的公式讀不下去，先檢查三件事：每個量的單位、每個向量屬於哪個座標系、運算前後誰相對誰。這三個標籤比背公式重要。每章的互動也不是測驗；請故意把值拖到 0、極大值與邊界，觀察模型何時改變或失效。</div>
+<div class="pager">
+<a href="名詞與概念字典.html">← 字典</a>
+<a href="00-機械手臂自由度與座標.html">開始 →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

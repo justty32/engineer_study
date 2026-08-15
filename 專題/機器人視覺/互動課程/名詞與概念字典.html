@@ -1,28 +1,414 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人視覺可搜尋白話字典"><title>字典｜機器人視覺</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="00-光像素與座標系.html">零基礎</a><a href="00A-影像資料先修.html">影像資料</a><a href="03-特徵匹配與姿態估測.html">姿態估測</a><a aria-current="page" href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">隨查隨用 · 可搜尋深度字典</p><h1>名詞與概念字典</h1><p class="lead">不必先背。遇到名詞時搜尋回查；每條都說它做什麼、位於資料流哪裡、靠什麼機制生效、具體數字例，以及最容易混淆的邊界。</p><div class="dictionary-tools"><label for="term-search">搜尋繁中、英文或縮寫</label><input id="term-search" type="search" placeholder="例如：內參、PnP、點雲"><p id="term-count" aria-live="polite"></p></div><section class="term-list">
-<article class="term-card"><h2>像素（Pixel）</h2><p><strong>白話：</strong>影像陣列中一個取樣位置及其數值，不是場景裡的小方塊。</p><p><strong>位置／角色：</strong>位於相機輸出的二維資料層；演算法以列、欄和通道存取。</p><p><strong>如何生效：</strong>感光區域在曝光期間累積光，經電路與量化成為有限數值。</p><p><strong>具體例子：</strong>640×480 灰階影像有 307,200 個取樣位置；<code>I(20,10)=180</code> 表示該列欄的量化值為 180。</p><p><strong>不要混淆：</strong>像素索引沒有公尺深度；也不等於顯示器上的實體發光點。</p></article>
-<article class="term-card"><h2>曝光時間（Exposure Time）</h2><p><strong>白話：</strong>相機讓每格感光單元累積光多久。</p><p><strong>位置／角色：</strong>位於影像形成的最前端，早於增益與視覺演算法。</p><p><strong>如何生效：</strong>時間越長通常收集越多訊號，但也把這段時間內的運動疊在同一張影像。</p><p><strong>具體例子：</strong>5 ms 改成 10 ms，在未飽和的靜止場景中訊號可粗估加倍；若物體移動 4 px，則可能留下約 4 px 拖影。</p><p><strong>不要混淆：</strong>曝光加長是收集更多光；增益只是放大讀出的訊號與雜訊。</p></article>
-<article class="term-card"><h2>量化（Quantization）</h2><p><strong>白話：</strong>把連續的電壓範圍切成有限個數字階級。</p><p><strong>位置／角色：</strong>位於感測器讀出和數位影像形成之間。</p><p><strong>如何生效：</strong>類比數位轉換器把輸入映射到最接近的整數碼。</p><p><strong>具體例子：</strong>8 位元有 256 級，通常是 0 至 255；12 位元有 4096 級。</p><p><strong>不要混淆：</strong>量化位元數描述亮度階級，不是影像寬高的空間解析度。</p></article>
-<article class="term-card"><h2>雜訊（Noise）與模糊（Blur）</h2><p><strong>白話：</strong>雜訊是重複量測時數字亂跳；模糊是鄰近位置的訊號被混在一起。</p><p><strong>位置／角色：</strong>兩者都污染影像，但前者主要是隨機不確定性，後者主要是空間細節損失。</p><p><strong>如何生效：</strong>讀出電路、光子統計會產生雜訊；失焦、運動或濾波會擴散邊緣。</p><p><strong>具體例子：</strong>靜止暗區同一像素連拍為 18、25、21 是波動；銳利階梯 20→220 變成 20、60、120、180、220 是模糊。</p><p><strong>不要混淆：</strong>平滑濾波可降部分雜訊，卻會增加模糊，不能免費恢復細節。</p></article>
-<article class="term-card"><h2>針孔相機模型（Pinhole Camera Model）</h2><p><strong>白話：</strong>假設所有成像光線穿過一個中心，用相似三角形描述三維點如何落到二維。</p><p><strong>位置／角色：</strong>是幾何層從相機座標到理想像素的基本模型。</p><p><strong>如何生效：</strong>以 <code>u=f_xX/Z+c_x</code>、<code>v=f_yY/Z+c_y</code> 把位置除以深度。</p><p><strong>具體例子：</strong><code>f=600</code>、<code>X=0.2</code>、<code>Z=1</code> 時，水平位置離主點 120 px；Z 加倍後只離 60 px。</p><p><strong>不要混淆：</strong>它是理想投影，不處理遮擋，也不等於真實鏡頭的全部光學行為。</p></article>
-<article class="term-card"><h2>相機內參（Camera Intrinsics）</h2><p><strong>白話：</strong>描述相機內部如何把入射方向換成像素位置的一組參數。</p><p><strong>位置／角色：</strong>位於相機座標到像素的投影步驟，典型包含 <code>f_x,f_y,c_x,c_y</code>。</p><p><strong>如何生效：</strong>像素焦距縮放規一化座標，主點平移影像原點。</p><p><strong>具體例子：</strong>把 <code>X/Z=0.1</code> 乘 <code>f_x=600 px</code> 再加 <code>c_x=320</code>，得到 <code>u=380</code>。</p><p><strong>不要混淆：</strong>內參不描述相機在房間或機器人上的位置；那是外參。</p></article>
-<article class="term-card"><h2>相機外參（Camera Extrinsics）</h2><p><strong>白話：</strong>把一個座標系中的三維點轉到相機座標的旋轉和平移。</p><p><strong>位置／角色：</strong>位於世界／機器人幾何與相機投影之間。</p><p><strong>如何生效：</strong>先以旋轉改變基底方向，再以平移改變原點位置；方向必須明示。</p><p><strong>具體例子：</strong>世界點先乘 <code>R_camera_world</code> 再加 <code>t_camera_world</code>，才得到可投入投影公式的相機座標。</p><p><strong>不要混淆：</strong>外參不是畸變參數；矩陣可逆也不代表使用方向可以省略。</p></article>
-<article class="term-card"><h2>鏡頭畸變（Lens Distortion）</h2><p><strong>白話：</strong>真實鏡頭讓光線落點偏離理想針孔位置的系統性效果。</p><p><strong>位置／角色：</strong>位於真實光學與理想投影模型之間，常在影像邊緣更明顯。</p><p><strong>如何生效：</strong>徑向模型依離主點半徑修正，切向模型描述不同方向的偏移。</p><p><strong>具體例子：</strong>標定板直線在中央近直、靠邊向外彎，殘差向量也隨半徑規律變大。</p><p><strong>不要混淆：</strong>去畸變不會修正相機安裝姿態或手眼變換。</p></article>
-<article class="term-card"><h2>重投影誤差（Reprojection Error）</h2><p><strong>白話：</strong>模型預測的像素與實際偵測像素之間相差多少。</p><p><strong>位置／角色：</strong>用於標定、PnP 與幾何驗證，是殘差而不是完整精度保證。</p><p><strong>如何生效：</strong>把三維點依候選參數投影，計算二維距離，求解器再縮小整體代價。</p><p><strong>具體例子：</strong>預測 (440,300)、觀測 (443,304)，歐氏殘差為 <code>sqrt(3²+4²)=5 px</code>。</p><p><strong>不要混淆：</strong>低訓練資料平均殘差不證明標定板尺寸、時間同步或機器人位置正確。</p></article>
-<article class="term-card"><h2>手眼標定（Hand–Eye Calibration）</h2><p><strong>白話：</strong>求相機和機器人末端或基座之間固定的座標變換。</p><p><strong>位置／角色：</strong>把視覺估測接入機器人座標鏈；相機與機器人各提供多次相對運動。</p><p><strong>如何生效：</strong>利用多姿態下兩套相對運動應由同一固定變換連接的限制，常表示為 <code>AX=XB</code>。</p><p><strong>具體例子：</strong>眼在手上時，末端到相機的 X 應在機器人換姿態後保持固定。</p><p><strong>不要混淆：</strong>它不是估相機焦距的相機標定；眼在手外的未知變換與方程方向也不同。</p></article>
-<article class="term-card"><h2>特徵（Feature）與描述子（Descriptor）</h2><p><strong>白話：</strong>特徵是可重複定位的局部位置；描述子是方便比較其附近外觀的編碼。</p><p><strong>位置／角色：</strong>位於原始像素與幾何對應之間，用來產生候選匹配。</p><p><strong>如何生效：</strong>偵測器找角落等結構，描述器把局部梯度或亮暗比較轉成向量／位元串。</p><p><strong>具體例子：</strong>螺絲孔邊緣交會處被找到，周圍樣式編成 256 位元描述子，和模型描述子比較距離。</p><p><strong>不要混淆：</strong>描述相似只是候選，不保證兩者代表同一物理點。</p></article>
-<article class="term-card"><h2>對應（Correspondence）</h2><p><strong>白話：</strong>宣稱兩筆量測或一筆量測與模型點代表同一個物理位置。</p><p><strong>位置／角色：</strong>是多視角幾何、PnP、雙目與配準的關鍵輸入。</p><p><strong>如何生效：</strong>先靠外觀提出候選，再用幾何、時間與唯一性限制篩選。</p><p><strong>具體例子：</strong>左影像像素 (350,220) 與右影像 (320,220) 被認為是同一桌角，視差為 30 px。</p><p><strong>不要混淆：</strong>相同顏色或最近位置不必然是對應；重複紋理可製造結構化錯配。</p></article>
-<article class="term-card"><h2>透視 n 點（Perspective-n-Point, PnP）</h2><p><strong>白話：</strong>由多組已知三維點和它們的二維像素，反求相機或物體位姿。</p><p><strong>位置／角色：</strong>位於對應建立後、機器人使用位姿前的幾何估測層。</p><p><strong>如何生效：</strong>調整旋轉和平移，使三維模型點投影後貼近觀測像素。</p><p><strong>具體例子：</strong>已知工件四角三維座標及影像角點，求工件相對相機的六自由度位姿。</p><p><strong>不要混淆：</strong>n 表示若干點，不是「神經網路」；函式成功也不排除對稱多解或退化。</p></article>
-<article class="term-card"><h2>隨機抽樣一致性（Random Sample Consensus, RANSAC）</h2><p><strong>白話：</strong>反覆用少量資料猜模型，再看哪個猜法得到最多相容量測。</p><p><strong>位置／角色：</strong>是對付候選對應中離群值的穩健估測框架。</p><p><strong>如何生效：</strong>抽最小集、擬合、以殘差閾值分內外點，保留較佳一致集合。</p><p><strong>具體例子：</strong>內點率 0.6、樣本數 4 時，單次全抽中內點機率為 <code>0.6⁴≈13%</code>。</p><p><strong>不要混淆：</strong>它不會證明模型真實；錯閾值、退化與重複紋理仍可產生高分假解。</p></article>
-<article class="term-card"><h2>內點（Inlier）與離群值（Outlier）</h2><p><strong>白話：</strong>內點是在指定模型和閾值下足夠吻合的量測；離群值是不吻合者。</p><p><strong>位置／角色：</strong>它們是相對於當前模型的分類，不是資料永恆的身分。</p><p><strong>如何生效：</strong>例如重投影殘差小於 3 px 就暫列內點，再用其重估模型。</p><p><strong>具體例子：</strong>殘差 1.2 px 在 3 px 閾值下是內點，在 1 px 閾值下則不是。</p><p><strong>不要混淆：</strong>內點不等於真實正確點；錯誤模型也可能擁有一致的錯配集合。</p></article>
-<article class="term-card"><h2>退化（Degeneracy）</h2><p><strong>白話：</strong>資料排列沒有提供足夠的獨立幾何資訊，讓某些解無法唯一或穩定決定。</p><p><strong>位置／角色：</strong>會出現在 PnP、配準、雙目與手眼標定等求解問題。</p><p><strong>如何生效：</strong>點全在一條線、運動軸太相似或視差太小時，不同參數可產生近似觀測。</p><p><strong>具體例子：</strong>所有特徵集中在畫面一小角，微小像素雜訊可能放大成很大的姿態旋轉差。</p><p><strong>不要混淆：</strong>退化不是單純「資料太少」；大量但幾何重複的資料也可退化。</p></article>
-<article class="term-card"><h2>視差（Disparity）與基線（Baseline）</h2><p><strong>白話：</strong>視差是同一點在左右影像的位置差；基線是兩相機中心的實體間距。</p><p><strong>位置／角色：</strong>兩者與像素焦距共同把雙目對應轉成深度。</p><p><strong>如何生效：</strong>校直雙目下使用 <code>Z=fb/d</code>；視差越小表示通常越遠。</p><p><strong>具體例子：</strong><code>f=600 px</code>、<code>b=0.1 m</code>、<code>d=30 px</code> 得深度 2 m。</p><p><strong>不要混淆：</strong>基線單位是公尺，視差單位是像素；沒有可靠對應就沒有可靠視差。</p></article>
-<article class="term-card"><h2>點雲（Point Cloud）</h2><p><strong>白話：</strong>一群帶三維座標的量測點，可能另帶顏色、法向量或信心值。</p><p><strong>位置／角色：</strong>位於深度反投影後，供分割、配準、碰撞與抓取幾何使用。</p><p><strong>如何生效：</strong>像素與深度經內參反投影成 X、Y、Z，再依外參轉到需要的座標系。</p><p><strong>具體例子：</strong>深度影像中十萬個有效像素可產生十萬個相機座標點，但遮擋背面仍沒有資料。</p><p><strong>不要混淆：</strong>點雲不是三角網格、完整表面，也不是已辨識的物體清單。</p></article>
-<article class="term-card"><h2>影像式視覺伺服（Image-Based Visual Servoing, IBVS）</h2><p><strong>白話：</strong>直接讓目前影像特徵向目標影像特徵移動的閉迴路控制。</p><p><strong>位置／角色：</strong>位於感知與運動命令之間，誤差主要定義在影像平面。</p><p><strong>如何生效：</strong>以影像雅可比近似相機速度如何改變特徵，再算降低誤差的命令。</p><p><strong>具體例子：</strong>讓四個角點逐幀移向預設像素位置，同時限制速度與保持在視野內。</p><p><strong>不要混淆：</strong>IBVS 不是完全免標定，也不自動保證三維路徑無碰撞。</p></article>
-<article class="term-card"><h2>位置式視覺伺服（Position-Based Visual Servoing, PBVS）</h2><p><strong>白話：</strong>先把影像估成三維位姿，再讓目前位姿靠近目標位姿。</p><p><strong>位置／角色：</strong>控制誤差位於三維笛卡兒空間，依賴姿態估測與座標鏈。</p><p><strong>如何生效：</strong>由位置、旋轉誤差產生相機或末端速度，再用新影像回授。</p><p><strong>具體例子：</strong>估工件相對夾爪為前方 80 mm、偏右 10 mm，命令逐步縮小這個六自由度差。</p><p><strong>不要混淆：</strong>PBVS 不是開迴路一次到位；位姿估錯與延遲仍會進入回授。</p></article>
-<article class="term-card"><h2>協方差（Covariance）</h2><p><strong>白話：</strong>用矩陣描述局部估測誤差有多大，以及不同方向是否一起變動。</p><p><strong>位置／角色：</strong>跟隨估測輸出，供融合、門檻與控制權重參考。</p><p><strong>如何生效：</strong>對角線表示各分量變異，非對角線表示分量間的線性關聯。</p><p><strong>具體例子：</strong>x 方向標準差 2 mm 對應變異 <code>0.002²=4×10⁻⁶ m²</code>。</p><p><strong>不要混淆：</strong>協方差不是信心百分比，也通常不涵蓋模型選錯、偏差與多峰解。</p></article>
-<article class="term-card"><h2>時間同步（Time Synchronization）與延遲（Latency）</h2><p><strong>白話：</strong>同步讓不同資料使用同一時間基準；延遲是事件發生到結果可用的時間差。</p><p><strong>位置／角色：</strong>橫跨相機、運算、機器人狀態與控制器，是系統層契約。</p><p><strong>如何生效：</strong>硬體／軟體時鐘對齊，資料帶擷取時間戳，下游插值到相同時刻並量各 stage 時間。</p><p><strong>具體例子：</strong>速度 0.4 m/s、延遲 80 ms，舊資料空間落差量級為 32 mm。</p><p><strong>不要混淆：</strong>30 fps 不代表延遲 33 ms；演算法完成時間也不是曝光時間。</p></article>
-<article class="term-card"><h2>空間取樣（Spatial Sampling）</h2><p><strong>白話：</strong>決定在影像平面哪些位置留下量測，也就是列與欄有多密。</p><p><strong>位置／角色：</strong>位於光學影像轉成離散陣列的過程；它限制最細可分辨的空間變化。</p><p><strong>如何生效：</strong>感光單元以有限間距排列，縮放或降採樣又會從既有格點選取或合成較少格點。</p><p><strong>具體例子：</strong>640×480 降為 320×240 後，每個方向取樣數減半，總像素數變成四分之一，窄至一格的線可能消失。</p><p><strong>不要混淆：</strong>空間取樣數不是量化位元數；前者管「在哪裡量」，後者管「數值切幾級」。</p></article>
-<article class="term-card"><h2>飽和（Saturation）</h2><p><strong>白話：</strong>真實輸入超過感測或數字格式上限，很多不同亮度都被截成同一最大值。</p><p><strong>位置／角色：</strong>可能發生在感光單元、讀出電路或數位處理，會銷毀亮區差異。</p><p><strong>如何生效：</strong>累積電荷或數值到達容量上限後不能再增加，輸出形成截頂。</p><p><strong>具體例子：</strong>8 位元影像中原應對應 270、400 的兩個亮度都輸出 255，之後把影像乘 0.5 只得到相同的 127.5。</p><p><strong>不要混淆：</strong>飽和不是單純「影像很亮」；未截頂的亮影像仍保有相對差異。</p></article>
-<article class="term-card"><h2>列步距（Row Stride）</h2><p><strong>白話：</strong>記憶體中從一列起點走到下一列起點要跨過的位元組數。</p><p><strong>位置／角色：</strong>屬於影像緩衝區的布局 metadata，C++ 逐列存取與零拷貝介面必須遵守。</p><p><strong>如何生效：</strong>每列資料後可能有為對齊而加的填充位元組，因此步距可能大於寬乘通道乘元素大小。</p><p><strong>具體例子：</strong>寬 641 的三通道 8 位元影像，實際像素需 1923 bytes；若每列對齊到 16 bytes，步距可能是 1936 bytes。</p><p><strong>不要混淆：</strong>步距不是影像寬度；把兩者當同值會從第二列開始逐列錯位。</p></article>
-</section><div class="pager"><a href="06-C++感知管線與證據.html">← 上一頁</a><a href="index.html">下一頁：首頁 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="機器人視覺可搜尋白話字典">
+<title>字典｜機器人視覺</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="00-光像素與座標系.html">零基礎</a>
+<a href="00A-影像資料先修.html">影像資料</a>
+<a href="03-特徵匹配與姿態估測.html">姿態估測</a>
+<a aria-current="page" href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">隨查隨用 · 可搜尋深度字典</p>
+<h1>名詞與概念字典</h1>
+<p class="lead">不必先背。遇到名詞時搜尋回查；每條都說它做什麼、位於資料流哪裡、靠什麼機制生效、具體數字例，以及最容易混淆的邊界。</p>
+<div class="dictionary-tools">
+<label for="term-search">搜尋繁中、英文或縮寫</label>
+<input id="term-search" type="search" placeholder="例如：內參、PnP、點雲">
+<p id="term-count" aria-live="polite">
+</p>
+</div>
+<section class="term-list">
+<article class="term-card">
+<h2>像素（Pixel）</h2>
+<p>
+<strong>白話：</strong>影像陣列中一個取樣位置及其數值，不是場景裡的小方塊。</p>
+<p>
+<strong>位置／角色：</strong>位於相機輸出的二維資料層；演算法以列、欄和通道存取。</p>
+<p>
+<strong>如何生效：</strong>感光區域在曝光期間累積光，經電路與量化成為有限數值。</p>
+<p>
+<strong>具體例子：</strong>640×480 灰階影像有 307,200 個取樣位置；<code>I(20,10)=180</code> 表示該列欄的量化值為 180。</p>
+<p>
+<strong>不要混淆：</strong>像素索引沒有公尺深度；也不等於顯示器上的實體發光點。</p>
+</article>
+<article class="term-card">
+<h2>曝光時間（Exposure Time）</h2>
+<p>
+<strong>白話：</strong>相機讓每格感光單元累積光多久。</p>
+<p>
+<strong>位置／角色：</strong>位於影像形成的最前端，早於增益與視覺演算法。</p>
+<p>
+<strong>如何生效：</strong>時間越長通常收集越多訊號，但也把這段時間內的運動疊在同一張影像。</p>
+<p>
+<strong>具體例子：</strong>5 ms 改成 10 ms，在未飽和的靜止場景中訊號可粗估加倍；若物體移動 4 px，則可能留下約 4 px 拖影。</p>
+<p>
+<strong>不要混淆：</strong>曝光加長是收集更多光；增益只是放大讀出的訊號與雜訊。</p>
+</article>
+<article class="term-card">
+<h2>量化（Quantization）</h2>
+<p>
+<strong>白話：</strong>把連續的電壓範圍切成有限個數字階級。</p>
+<p>
+<strong>位置／角色：</strong>位於感測器讀出和數位影像形成之間。</p>
+<p>
+<strong>如何生效：</strong>類比數位轉換器把輸入映射到最接近的整數碼。</p>
+<p>
+<strong>具體例子：</strong>8 位元有 256 級，通常是 0 至 255；12 位元有 4096 級。</p>
+<p>
+<strong>不要混淆：</strong>量化位元數描述亮度階級，不是影像寬高的空間解析度。</p>
+</article>
+<article class="term-card">
+<h2>雜訊（Noise）與模糊（Blur）</h2>
+<p>
+<strong>白話：</strong>雜訊是重複量測時數字亂跳；模糊是鄰近位置的訊號被混在一起。</p>
+<p>
+<strong>位置／角色：</strong>兩者都污染影像，但前者主要是隨機不確定性，後者主要是空間細節損失。</p>
+<p>
+<strong>如何生效：</strong>讀出電路、光子統計會產生雜訊；失焦、運動或濾波會擴散邊緣。</p>
+<p>
+<strong>具體例子：</strong>靜止暗區同一像素連拍為 18、25、21 是波動；銳利階梯 20→220 變成 20、60、120、180、220 是模糊。</p>
+<p>
+<strong>不要混淆：</strong>平滑濾波可降部分雜訊，卻會增加模糊，不能免費恢復細節。</p>
+</article>
+<article class="term-card">
+<h2>針孔相機模型（Pinhole Camera Model）</h2>
+<p>
+<strong>白話：</strong>假設所有成像光線穿過一個中心，用相似三角形描述三維點如何落到二維。</p>
+<p>
+<strong>位置／角色：</strong>是幾何層從相機座標到理想像素的基本模型。</p>
+<p>
+<strong>如何生效：</strong>以 <code>u=f_xX/Z+c_x</code>、<code>v=f_yY/Z+c_y</code> 把位置除以深度。</p>
+<p>
+<strong>具體例子：</strong>
+<code>f=600</code>、<code>X=0.2</code>、<code>Z=1</code> 時，水平位置離主點 120 px；Z 加倍後只離 60 px。</p>
+<p>
+<strong>不要混淆：</strong>它是理想投影，不處理遮擋，也不等於真實鏡頭的全部光學行為。</p>
+</article>
+<article class="term-card">
+<h2>相機內參（Camera Intrinsics）</h2>
+<p>
+<strong>白話：</strong>描述相機內部如何把入射方向換成像素位置的一組參數。</p>
+<p>
+<strong>位置／角色：</strong>位於相機座標到像素的投影步驟，典型包含 <code>f_x,f_y,c_x,c_y</code>。</p>
+<p>
+<strong>如何生效：</strong>像素焦距縮放規一化座標，主點平移影像原點。</p>
+<p>
+<strong>具體例子：</strong>把 <code>X/Z=0.1</code> 乘 <code>f_x=600 px</code> 再加 <code>c_x=320</code>，得到 <code>u=380</code>。</p>
+<p>
+<strong>不要混淆：</strong>內參不描述相機在房間或機器人上的位置；那是外參。</p>
+</article>
+<article class="term-card">
+<h2>相機外參（Camera Extrinsics）</h2>
+<p>
+<strong>白話：</strong>把一個座標系中的三維點轉到相機座標的旋轉和平移。</p>
+<p>
+<strong>位置／角色：</strong>位於世界／機器人幾何與相機投影之間。</p>
+<p>
+<strong>如何生效：</strong>先以旋轉改變基底方向，再以平移改變原點位置；方向必須明示。</p>
+<p>
+<strong>具體例子：</strong>世界點先乘 <code>R_camera_world</code> 再加 <code>t_camera_world</code>，才得到可投入投影公式的相機座標。</p>
+<p>
+<strong>不要混淆：</strong>外參不是畸變參數；矩陣可逆也不代表使用方向可以省略。</p>
+</article>
+<article class="term-card">
+<h2>鏡頭畸變（Lens Distortion）</h2>
+<p>
+<strong>白話：</strong>真實鏡頭讓光線落點偏離理想針孔位置的系統性效果。</p>
+<p>
+<strong>位置／角色：</strong>位於真實光學與理想投影模型之間，常在影像邊緣更明顯。</p>
+<p>
+<strong>如何生效：</strong>徑向模型依離主點半徑修正，切向模型描述不同方向的偏移。</p>
+<p>
+<strong>具體例子：</strong>標定板直線在中央近直、靠邊向外彎，殘差向量也隨半徑規律變大。</p>
+<p>
+<strong>不要混淆：</strong>去畸變不會修正相機安裝姿態或手眼變換。</p>
+</article>
+<article class="term-card">
+<h2>重投影誤差（Reprojection Error）</h2>
+<p>
+<strong>白話：</strong>模型預測的像素與實際偵測像素之間相差多少。</p>
+<p>
+<strong>位置／角色：</strong>用於標定、PnP 與幾何驗證，是殘差而不是完整精度保證。</p>
+<p>
+<strong>如何生效：</strong>把三維點依候選參數投影，計算二維距離，求解器再縮小整體代價。</p>
+<p>
+<strong>具體例子：</strong>預測 (440,300)、觀測 (443,304)，歐氏殘差為 <code>sqrt(3²+4²)=5 px</code>。</p>
+<p>
+<strong>不要混淆：</strong>低訓練資料平均殘差不證明標定板尺寸、時間同步或機器人位置正確。</p>
+</article>
+<article class="term-card">
+<h2>手眼標定（Hand–Eye Calibration）</h2>
+<p>
+<strong>白話：</strong>求相機和機器人末端或基座之間固定的座標變換。</p>
+<p>
+<strong>位置／角色：</strong>把視覺估測接入機器人座標鏈；相機與機器人各提供多次相對運動。</p>
+<p>
+<strong>如何生效：</strong>利用多姿態下兩套相對運動應由同一固定變換連接的限制，常表示為 <code>AX=XB</code>。</p>
+<p>
+<strong>具體例子：</strong>眼在手上時，末端到相機的 X 應在機器人換姿態後保持固定。</p>
+<p>
+<strong>不要混淆：</strong>它不是估相機焦距的相機標定；眼在手外的未知變換與方程方向也不同。</p>
+</article>
+<article class="term-card">
+<h2>特徵（Feature）與描述子（Descriptor）</h2>
+<p>
+<strong>白話：</strong>特徵是可重複定位的局部位置；描述子是方便比較其附近外觀的編碼。</p>
+<p>
+<strong>位置／角色：</strong>位於原始像素與幾何對應之間，用來產生候選匹配。</p>
+<p>
+<strong>如何生效：</strong>偵測器找角落等結構，描述器把局部梯度或亮暗比較轉成向量／位元串。</p>
+<p>
+<strong>具體例子：</strong>螺絲孔邊緣交會處被找到，周圍樣式編成 256 位元描述子，和模型描述子比較距離。</p>
+<p>
+<strong>不要混淆：</strong>描述相似只是候選，不保證兩者代表同一物理點。</p>
+</article>
+<article class="term-card">
+<h2>對應（Correspondence）</h2>
+<p>
+<strong>白話：</strong>宣稱兩筆量測或一筆量測與模型點代表同一個物理位置。</p>
+<p>
+<strong>位置／角色：</strong>是多視角幾何、PnP、雙目與配準的關鍵輸入。</p>
+<p>
+<strong>如何生效：</strong>先靠外觀提出候選，再用幾何、時間與唯一性限制篩選。</p>
+<p>
+<strong>具體例子：</strong>左影像像素 (350,220) 與右影像 (320,220) 被認為是同一桌角，視差為 30 px。</p>
+<p>
+<strong>不要混淆：</strong>相同顏色或最近位置不必然是對應；重複紋理可製造結構化錯配。</p>
+</article>
+<article class="term-card">
+<h2>透視 n 點（Perspective-n-Point, PnP）</h2>
+<p>
+<strong>白話：</strong>由多組已知三維點和它們的二維像素，反求相機或物體位姿。</p>
+<p>
+<strong>位置／角色：</strong>位於對應建立後、機器人使用位姿前的幾何估測層。</p>
+<p>
+<strong>如何生效：</strong>調整旋轉和平移，使三維模型點投影後貼近觀測像素。</p>
+<p>
+<strong>具體例子：</strong>已知工件四角三維座標及影像角點，求工件相對相機的六自由度位姿。</p>
+<p>
+<strong>不要混淆：</strong>n 表示若干點，不是「神經網路」；函式成功也不排除對稱多解或退化。</p>
+</article>
+<article class="term-card">
+<h2>隨機抽樣一致性（Random Sample Consensus, RANSAC）</h2>
+<p>
+<strong>白話：</strong>反覆用少量資料猜模型，再看哪個猜法得到最多相容量測。</p>
+<p>
+<strong>位置／角色：</strong>是對付候選對應中離群值的穩健估測框架。</p>
+<p>
+<strong>如何生效：</strong>抽最小集、擬合、以殘差閾值分內外點，保留較佳一致集合。</p>
+<p>
+<strong>具體例子：</strong>內點率 0.6、樣本數 4 時，單次全抽中內點機率為 <code>0.6⁴≈13%</code>。</p>
+<p>
+<strong>不要混淆：</strong>它不會證明模型真實；錯閾值、退化與重複紋理仍可產生高分假解。</p>
+</article>
+<article class="term-card">
+<h2>內點（Inlier）與離群值（Outlier）</h2>
+<p>
+<strong>白話：</strong>內點是在指定模型和閾值下足夠吻合的量測；離群值是不吻合者。</p>
+<p>
+<strong>位置／角色：</strong>它們是相對於當前模型的分類，不是資料永恆的身分。</p>
+<p>
+<strong>如何生效：</strong>例如重投影殘差小於 3 px 就暫列內點，再用其重估模型。</p>
+<p>
+<strong>具體例子：</strong>殘差 1.2 px 在 3 px 閾值下是內點，在 1 px 閾值下則不是。</p>
+<p>
+<strong>不要混淆：</strong>內點不等於真實正確點；錯誤模型也可能擁有一致的錯配集合。</p>
+</article>
+<article class="term-card">
+<h2>退化（Degeneracy）</h2>
+<p>
+<strong>白話：</strong>資料排列沒有提供足夠的獨立幾何資訊，讓某些解無法唯一或穩定決定。</p>
+<p>
+<strong>位置／角色：</strong>會出現在 PnP、配準、雙目與手眼標定等求解問題。</p>
+<p>
+<strong>如何生效：</strong>點全在一條線、運動軸太相似或視差太小時，不同參數可產生近似觀測。</p>
+<p>
+<strong>具體例子：</strong>所有特徵集中在畫面一小角，微小像素雜訊可能放大成很大的姿態旋轉差。</p>
+<p>
+<strong>不要混淆：</strong>退化不是單純「資料太少」；大量但幾何重複的資料也可退化。</p>
+</article>
+<article class="term-card">
+<h2>視差（Disparity）與基線（Baseline）</h2>
+<p>
+<strong>白話：</strong>視差是同一點在左右影像的位置差；基線是兩相機中心的實體間距。</p>
+<p>
+<strong>位置／角色：</strong>兩者與像素焦距共同把雙目對應轉成深度。</p>
+<p>
+<strong>如何生效：</strong>校直雙目下使用 <code>Z=fb/d</code>；視差越小表示通常越遠。</p>
+<p>
+<strong>具體例子：</strong>
+<code>f=600 px</code>、<code>b=0.1 m</code>、<code>d=30 px</code> 得深度 2 m。</p>
+<p>
+<strong>不要混淆：</strong>基線單位是公尺，視差單位是像素；沒有可靠對應就沒有可靠視差。</p>
+</article>
+<article class="term-card">
+<h2>點雲（Point Cloud）</h2>
+<p>
+<strong>白話：</strong>一群帶三維座標的量測點，可能另帶顏色、法向量或信心值。</p>
+<p>
+<strong>位置／角色：</strong>位於深度反投影後，供分割、配準、碰撞與抓取幾何使用。</p>
+<p>
+<strong>如何生效：</strong>像素與深度經內參反投影成 X、Y、Z，再依外參轉到需要的座標系。</p>
+<p>
+<strong>具體例子：</strong>深度影像中十萬個有效像素可產生十萬個相機座標點，但遮擋背面仍沒有資料。</p>
+<p>
+<strong>不要混淆：</strong>點雲不是三角網格、完整表面，也不是已辨識的物體清單。</p>
+</article>
+<article class="term-card">
+<h2>影像式視覺伺服（Image-Based Visual Servoing, IBVS）</h2>
+<p>
+<strong>白話：</strong>直接讓目前影像特徵向目標影像特徵移動的閉迴路控制。</p>
+<p>
+<strong>位置／角色：</strong>位於感知與運動命令之間，誤差主要定義在影像平面。</p>
+<p>
+<strong>如何生效：</strong>以影像雅可比近似相機速度如何改變特徵，再算降低誤差的命令。</p>
+<p>
+<strong>具體例子：</strong>讓四個角點逐幀移向預設像素位置，同時限制速度與保持在視野內。</p>
+<p>
+<strong>不要混淆：</strong>IBVS 不是完全免標定，也不自動保證三維路徑無碰撞。</p>
+</article>
+<article class="term-card">
+<h2>位置式視覺伺服（Position-Based Visual Servoing, PBVS）</h2>
+<p>
+<strong>白話：</strong>先把影像估成三維位姿，再讓目前位姿靠近目標位姿。</p>
+<p>
+<strong>位置／角色：</strong>控制誤差位於三維笛卡兒空間，依賴姿態估測與座標鏈。</p>
+<p>
+<strong>如何生效：</strong>由位置、旋轉誤差產生相機或末端速度，再用新影像回授。</p>
+<p>
+<strong>具體例子：</strong>估工件相對夾爪為前方 80 mm、偏右 10 mm，命令逐步縮小這個六自由度差。</p>
+<p>
+<strong>不要混淆：</strong>PBVS 不是開迴路一次到位；位姿估錯與延遲仍會進入回授。</p>
+</article>
+<article class="term-card">
+<h2>協方差（Covariance）</h2>
+<p>
+<strong>白話：</strong>用矩陣描述局部估測誤差有多大，以及不同方向是否一起變動。</p>
+<p>
+<strong>位置／角色：</strong>跟隨估測輸出，供融合、門檻與控制權重參考。</p>
+<p>
+<strong>如何生效：</strong>對角線表示各分量變異，非對角線表示分量間的線性關聯。</p>
+<p>
+<strong>具體例子：</strong>x 方向標準差 2 mm 對應變異 <code>0.002²=4×10⁻⁶ m²</code>。</p>
+<p>
+<strong>不要混淆：</strong>協方差不是信心百分比，也通常不涵蓋模型選錯、偏差與多峰解。</p>
+</article>
+<article class="term-card">
+<h2>時間同步（Time Synchronization）與延遲（Latency）</h2>
+<p>
+<strong>白話：</strong>同步讓不同資料使用同一時間基準；延遲是事件發生到結果可用的時間差。</p>
+<p>
+<strong>位置／角色：</strong>橫跨相機、運算、機器人狀態與控制器，是系統層契約。</p>
+<p>
+<strong>如何生效：</strong>硬體／軟體時鐘對齊，資料帶擷取時間戳，下游插值到相同時刻並量各 stage 時間。</p>
+<p>
+<strong>具體例子：</strong>速度 0.4 m/s、延遲 80 ms，舊資料空間落差量級為 32 mm。</p>
+<p>
+<strong>不要混淆：</strong>30 fps 不代表延遲 33 ms；演算法完成時間也不是曝光時間。</p>
+</article>
+<article class="term-card">
+<h2>空間取樣（Spatial Sampling）</h2>
+<p>
+<strong>白話：</strong>決定在影像平面哪些位置留下量測，也就是列與欄有多密。</p>
+<p>
+<strong>位置／角色：</strong>位於光學影像轉成離散陣列的過程；它限制最細可分辨的空間變化。</p>
+<p>
+<strong>如何生效：</strong>感光單元以有限間距排列，縮放或降採樣又會從既有格點選取或合成較少格點。</p>
+<p>
+<strong>具體例子：</strong>640×480 降為 320×240 後，每個方向取樣數減半，總像素數變成四分之一，窄至一格的線可能消失。</p>
+<p>
+<strong>不要混淆：</strong>空間取樣數不是量化位元數；前者管「在哪裡量」，後者管「數值切幾級」。</p>
+</article>
+<article class="term-card">
+<h2>飽和（Saturation）</h2>
+<p>
+<strong>白話：</strong>真實輸入超過感測或數字格式上限，很多不同亮度都被截成同一最大值。</p>
+<p>
+<strong>位置／角色：</strong>可能發生在感光單元、讀出電路或數位處理，會銷毀亮區差異。</p>
+<p>
+<strong>如何生效：</strong>累積電荷或數值到達容量上限後不能再增加，輸出形成截頂。</p>
+<p>
+<strong>具體例子：</strong>8 位元影像中原應對應 270、400 的兩個亮度都輸出 255，之後把影像乘 0.5 只得到相同的 127.5。</p>
+<p>
+<strong>不要混淆：</strong>飽和不是單純「影像很亮」；未截頂的亮影像仍保有相對差異。</p>
+</article>
+<article class="term-card">
+<h2>列步距（Row Stride）</h2>
+<p>
+<strong>白話：</strong>記憶體中從一列起點走到下一列起點要跨過的位元組數。</p>
+<p>
+<strong>位置／角色：</strong>屬於影像緩衝區的布局 metadata，C++ 逐列存取與零拷貝介面必須遵守。</p>
+<p>
+<strong>如何生效：</strong>每列資料後可能有為對齊而加的填充位元組，因此步距可能大於寬乘通道乘元素大小。</p>
+<p>
+<strong>具體例子：</strong>寬 641 的三通道 8 位元影像，實際像素需 1923 bytes；若每列對齊到 16 bytes，步距可能是 1936 bytes。</p>
+<p>
+<strong>不要混淆：</strong>步距不是影像寬度；把兩者當同值會從第二列開始逐列錯位。</p>
+</article>
+<article class="term-card">
+<h2>狀態估測（State Estimation）</h2>
+<p><strong>白話：</strong>把不完整、帶雜訊的感測與動態模型組合，推斷無法直接知道的系統狀態。</p>
+<p><strong>位置／角色：</strong>位於感測前端與規劃／控制之間。</p>
+<p><strong>如何生效：</strong>先預測狀態，再用新量測與不確定度更新。</p>
+<p><strong>具體例子：</strong>以相機位置、編碼器與運動模型共同估工具位姿。</p>
+<p><strong>不要混淆：</strong>不是把兩個數直接平均；時間、座標、偏差與模型都必須相容。</p>
+</article>
+<article class="term-card">
+<h2>Kalman 增益（Kalman Gain）</h2>
+<p><strong>白話：</strong>在指定線性高斯模型下，決定這次量測要把先驗拉動多少的矩陣權重。</p>
+<p><strong>位置／角色：</strong>位於 Kalman 濾波器更新步驟。</p>
+<p><strong>如何生效：</strong>由先驗協方差、量測模型與量測噪聲計算，不是任意信任分數。</p>
+<p><strong>具體例子：</strong>一維 K=0.8 時，後驗移動先驗—量測差的 80%。</p>
+<p><strong>不要混淆：</strong>K 大不代表量測必然正確；資料關聯錯誤與偏差不在簡化公式內。</p>
+</article>
+<article class="term-card">
+<h2>創新（Innovation）</h2>
+<p><strong>白話：</strong>新量測減掉模型依先驗預測應看到的量測。</p>
+<p><strong>位置／角色：</strong>是更新、門控與濾波一致性診斷的核心殘差。</p>
+<p><strong>如何生效：</strong>依其預期協方差正規化，判斷差異是否符合模型噪聲。</p>
+<p><strong>具體例子：</strong>預測距離 1.0 m、實測 1.3 m，創新為 0.3 m。</p>
+<p><strong>不要混淆：</strong>它不是後驗真值誤差；沒有真值時只能說量測與預測不一致。</p>
+</article>
+<article class="term-card">
+<h2>視覺里程計（Visual Odometry, VO）</h2>
+<p><strong>白話：</strong>由連續影像估相鄰時刻的相對運動，再連成局部軌跡。</p>
+<p><strong>位置／角色：</strong>位於視覺前端與局部定位，常提供 SLAM 的相鄰位姿約束。</p>
+<p><strong>如何生效：</strong>追蹤對應、估相對位姿、排除外點並局部最佳化。</p>
+<p><strong>具體例子：</strong>每幀估相機前進 20 mm、轉 0.2°，累積成一段路徑。</p>
+<p><strong>不要混淆：</strong>VO 不一定建立持久地圖，也沒有閉環就無法消除長程漂移。</p>
+</article>
+<article class="term-card">
+<h2>同時定位與地圖建立（Simultaneous Localization and Mapping, SLAM）</h2>
+<p><strong>白話：</strong>在不知道完整地圖時，同時估機器人走過哪裡與環境結構。</p>
+<p><strong>位置／角色：</strong>位於長程定位與持久空間模型層。</p>
+<p><strong>如何生效：</strong>把里程計、地標觀測與閉環組成圖，聯合調整位姿與地圖。</p>
+<p><strong>具體例子：</strong>走廊繞一圈重見起點後，將累積的 0.5 m 不一致分配回整段軌跡。</p>
+<p><strong>不要混淆：</strong>定位成功不代表障礙已完整感知，更不等於安全導航。</p>
+</article>
+<article class="term-card">
+<h2>閉環（Loop Closure）</h2>
+<p><strong>白話：</strong>辨認目前位置曾經到過，新增跨越長時間的全域約束。</p>
+<p><strong>位置／角色：</strong>位於 SLAM 地點辨識、幾何驗證與後端圖最佳化。</p>
+<p><strong>如何生效：</strong>候選通過幾何驗證後連接兩個關鍵幀，讓後端重新分配漂移。</p>
+<p><strong>具體例子：</strong>第 500 幀被確認與第 20 幀同一地點，圖中新增一條相對位姿邊。</p>
+<p><strong>不要混淆：</strong>外觀相似不是閉環證據；假閉環可能扭曲整張地圖。</p>
+</article>
+</section>
+<div class="pager">
+<a href="08-視覺里程計SLAM與閉環校正.html">← 08 VO／SLAM</a>
+<a href="index.html">下一頁：首頁 →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

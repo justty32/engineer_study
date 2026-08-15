@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>12 運動學校正、敏感度與可辨識性｜七軸運動學</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="09-七軸數值逆運動學.html">逆運動學</a>
+<a href="11-SE3李群扭量與指數映射.html">SE(3)</a>
+<a aria-current="page" href="12-運動學校正敏感度與可辨識性.html">校正</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">12 · 公式正確，參數仍可能不是真機</p>
+<h1>運動學校正、敏感度與可辨識性</h1>
+<p class="lead">白話問題：正運動學公式與程式測試都正確，為何末端仍固定偏掉？一句話答案：模型使用的連桿長度、關節零點、軸線與工具變換只是名目值；運動學校正用外部量測辨識這些系統性偏差。</p>
+<div class="prereq"><strong>最小前置：</strong>理解<a href="05-七軸正運動學.html">正運動學</a>與<a href="06-雅可比與速度運動學.html">導數／敏感度</a>。本章談幾何參數，不等於相機標定、動力學辨識或控制器調參。</div>
+<h2>先區分狀態、參數與量測</h2>
+<p>關節狀態 <code>q</code> 會隨時間改變；運動學參數 <code>θ</code> 則描述連桿長度、關節軸方向、編碼器零點、基座與工具安裝。外部量測 <code>y</code> 可能來自雷射追蹤器、動作捕捉、量測臂、校正板或接觸治具。模型預測為 <code>ŷ=f(q,θ)</code>，殘差 <code>r=y−ŷ</code>。校正不是直接把末端誤差硬加回命令，而是跨許多姿態找一組參數修正 <code>Δθ</code>，使保留資料的殘差也縮小。</p>
+<p>對小參數偏差可線性化：<code>r≈Jθ Δθ+ε</code>。這裡的參數雅可比 <code>Jθ=∂f/∂θ</code> 與關節速度雅可比 <code>∂f/∂q</code> 角色不同；前者問「模型參數錯一點，預測如何變」，後者問「關節動一點，末端速度如何變」。兩者都叫 Jacobian，但輸入欄位與物理單位不同。</p>
+<h2>隨機噪聲與系統偏差的行為不同</h2>
+<p>若量測只有零平均隨機噪聲，重複 <code>N</code> 次平均後，平均值標準不確定度理想上約按 <code>1/√N</code> 下降。但連桿實際長 0.2 mm、編碼器零點偏 0.3° 或工具座安裝偏轉，都是系統偏差；重複一萬次只會更確定地量到同一個錯。資料量不能取代模型檢查、參數可追溯性與外部基準。</p>
+<p>一段 0.6 m 連桿若零點偏 <code>δ=0.5°≈0.00873 rad</code>，垂直於連桿方向的末端偏差量級約 <code>Lδ≈5.2 mm</code>。這個小角近似只在角度很小時成立；互動使用精確三角函數同時計算連桿長度與零點誤差。</p>
+<h2>讀完再操作：偏差會不會被平均掉？</h2>
+<section class="workspace">
+<div class="controls">
+<label for="kcal-link">連桿長度偏差（mm）<input id="kcal-link" type="range" min="-3" max="3" step="0.1" value="0.5"></label>
+<label for="kcal-zero">關節零點偏差（deg）<input id="kcal-zero" type="range" min="-2" max="2" step="0.1" value="0.5"></label>
+<label for="kcal-samples">重複量測次數 N<input id="kcal-samples" type="range" min="1" max="400" step="1" value="25"></label>
+</div>
+<div id="kcal-output" class="output" aria-live="polite"></div>
+</section>
+<h2>可辨識性比最佳化器名稱更重要</h2>
+<p>可辨識性（identifiability）問的是：目前資料能不能把不同參數的效果分開。若所有樣本都在相近姿態，連桿長度誤差與工具平移可能產生幾乎相同的殘差，<code>Jθ</code> 的欄會接近線性相依；最佳化器即使回報很小訓練殘差，參數也可能任意互相補償。要改善，應讓資料覆蓋不同關節角、工作空間區域與工具方向，並固定沒有外部尺度或基準就無法辨識的自由度。</p>
+<p>七軸手臂的冗餘可提供更多校正姿態，但「樣本更多」不等於「資訊更多」。重複同一路徑只降低某些隨機噪聲；要看參數雅可比的秩、奇異值或條件，並把訓練姿態與驗證姿態分開。也要避免同時自由調整所有基座、工具、連桿與感測器參數而不設基準，否則整套模型可一起平移或旋轉而殘差不變，形成規範自由度（gauge freedom）。</p>
+<h2>驗收證據與失敗分類</h2>
+<ul>
+<li>保存原始關節讀值、外部量測、時間戳、溫度、負載、校正模型版本與每個樣本殘差，不只保存最後參數。</li>
+<li>分別報告訓練與保留姿態的位置／姿態誤差分布；訓練誤差下降而保留誤差上升是過度配合訊號。</li>
+<li>檢查參數改變量是否符合機械公差；極大且互相抵消的修正通常代表不可辨識、座標鏈錯或量測偏差。</li>
+<li>校正前後都做 FK、逆變換、有限差分與獨立治具測試，避免用同一套假設自我證明。</li>
+</ul>
+<p>本章的單連桿示意沒有熱變形、柔性、背隙、負載撓曲與感測器時間錯位。真機剩餘誤差不一定能再用剛體運動學參數吸收；若誤差隨方向、速度、負載或溫度改變，應考慮機械遲滯、彈性、動力學與量測系統，而不是無限制增加幾何參數。</p>
+<div class="pager"><a href="11-SE3李群扭量與指數映射.html">← 11 SE(3)</a><a href="名詞與概念字典.html">字典 →</a></div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>08 動力可行規劃與煞停包絡｜機器人規劃</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="04-平滑與時間參數化.html">時間化</a>
+<a href="07-約束流形投影與任務空間限制.html">約束流形</a>
+<a aria-current="page" href="08-動力可行規劃與煞停包絡.html">動力可行性</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">08 · 幾何上有路，不代表來得及停</p>
+<h1>動力可行規劃與煞停包絡</h1>
+<p class="lead">白話問題：規劃器已找到無碰撞曲線，為何高速執行仍會撞？一句話答案：幾何路徑只描述位置；真實系統帶著速度、加速度、致動限制與延遲，遇到新障礙時不能瞬間停下或任意轉彎。</p>
+<div class="prereq"><strong>最小前置：</strong>先讀<a href="04-平滑與時間參數化.html">軌跡時間化</a>與<a href="05-七軸冗餘與線上重規劃.html">線上重規劃</a>。本章用一維煞停模型建立安全直覺，並不取代七軸剛體動力學、力矩限制或安全標準。</div>
+<h2>狀態必須包含「正在怎麼動」</h2>
+<p>幾何規劃常把狀態簡化成 <code>q</code>，邊則是兩組態之間的插值。動力可行規劃（kinodynamic planning）把狀態擴成 <code>x=[q,q̇]</code>，有時還含移動底盤姿態、角速度或其他內部狀態；輸入 <code>u</code> 是加速度、力、力矩或受限控制命令。規劃器不再任意連兩點，而是用系統動態 <code>ẋ=g(x,u)</code> 向前傳播一小段，只有實際控制能到達的後繼狀態才加入樹或圖。</p>
+<p>這改變了「距離近」的意義。兩台車位置相同但一台向東高速、一台靜止，它們不是等價狀態；前者不能立刻走向西。七軸手臂也一樣：相同 <code>q</code>、不同 <code>q̇</code> 的可達集合不同。只在找到路徑後裁切速度，可能發現某段曲率、方向切換或制動需求根本無法滿足。</p>
+<h2>煞停距離先給出最小安全尺度</h2>
+<p>一維、固定最大減速度 <code>a&gt;0</code>、忽略 jerk 與模型誤差時，從速度 <code>v</code> 煞停所需距離為 <code>d_brake=v²/(2a)</code>。若感測、判斷、通訊與致動總延遲為 <code>τ</code>，開始減速前又前進約 <code>d_delay=vτ</code>，所以最小停止包絡為 <code>d_stop=vτ+v²/(2a)</code>。速度加倍時，延遲項加倍而制動項變四倍；高速安全不能只靠固定距離門檻。</p>
+<p>例如 <code>v=1.0 m/s</code>、<code>a=2.0 m/s²</code>、<code>τ=0.1 s</code>，延遲距離是 0.10 m，制動距離 0.25 m，理想最小總和 0.35 m。若障礙間隙只有 0.30 m，即使新規劃在 50 ms 內完成，物理上仍缺少停止距離。真實系統還要加定位誤差、障礙移動、控制追蹤誤差與保守餘裕。</p>
+<h2>讀完再操作：速度如何改變安全包絡</h2>
+<section class="workspace">
+<div class="controls">
+<label for="dyn-speed">目前速度 v（m/s）<input id="dyn-speed" type="range" min="0" max="2.5" step="0.1" value="1"></label>
+<label for="dyn-decel">可保證減速度 a（m/s²）<input id="dyn-decel" type="range" min="0.2" max="5" step="0.1" value="2"></label>
+<label for="dyn-latency">反應延遲 τ（ms）<input id="dyn-latency" type="range" min="0" max="400" step="10" value="100"></label>
+<label for="dyn-clearance">目前障礙間隙（m）<input id="dyn-clearance" type="range" min="0.05" max="2" step="0.05" value="0.5"></label>
+</div>
+<div id="dyn-output" class="output" aria-live="polite"></div>
+</section>
+<h2>控制取樣、運動基元與可達集合</h2>
+<p>取樣式動力規劃通常從目前狀態抽控制 <code>u</code> 與持續時間，數值積分得到新狀態，沿傳播段檢查限制與碰撞。可預先設計運動基元（motion primitive），例如允許的加速、減速與轉向片段；也可直接抽控制。前者較容易符合底層控制器能力，後者較一般但探索效率與數值穩定性更難。積分步距太大可能跨過碰撞或限制；太小則成本升高，且模型誤差仍不會自動消失。</p>
+<p>可達集合（reachable set）描述從目前狀態在給定時間與控制限制內能到的所有狀態。線上重規劃不應只問「新路徑是否存在」，還要問在目前速度下是否能安全接上。若規劃時間超出安全包絡，就必須先執行獨立的減速或停止策略，而不是讓舊軌跡繼續跑到新方案完成。</p>
+<h2>工程證據與模型邊界</h2>
+<ul>
+<li>記錄狀態與控制單位、積分器、步距、動態模型版本、控制上下限、每段最大違規與碰撞檢查間隔。</li>
+<li>分離「幾何無路」「動態不可達」「預算耗盡」「模型傳播失敗」「安全包絡不足」等結果。</li>
+<li>以已知等加速度案例交叉驗證積分，再做時間反轉、不同步距與極端控制測試；通過後仍需真機低速量實際制動分布。</li>
+</ul>
+<p>互動中的 <code>a</code> 被當成任何時刻都能保證的固定減速度，未涵蓋負載、方向、關節耦合、摩擦、電池、熱限制、jerk 與接觸。真實七軸手臂應在關節／任務空間使用經驗證的安全停止模型與硬體保護。本章給的是規劃與監督架構的最低概念，不是安全距離認證計算。</p>
+<div class="pager"><a href="07-約束流形投影與任務空間限制.html">← 07 約束流形</a><a href="名詞與概念字典.html">字典 →</a></div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

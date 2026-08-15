@@ -6,7 +6,7 @@
 
 ## 概念依賴
 
-`狀態／路徑／軌跡 → 節點／邊／成本／離散化 → 組態空間與碰撞 → Dijkstra 與 A* → PRM／RRT／RRT* → 時間參數化 → 七軸冗餘與線上重規劃 → C++ 驗證`
+`狀態／路徑／軌跡 → 節點／邊／成本／離散化 → 組態空間與碰撞 → Dijkstra 與 A* → PRM／RRT／RRT* → 時間參數化 → 七軸冗餘與線上重規劃 → C++ 驗證 → 約束流形 → 動力可行規劃與煞停包絡`
 
 ## 教學與範圍
 
@@ -20,4 +20,4 @@
 ## 來源
 
 - 本地：[七軸機械手臂運動學](../../機器人運動學/互動課程/index.html)、[機電整合與機器人](../../../機械/05-動態系統與控制/15-機電整合與機器人.md)。
-- 外部一手參考：[Open Motion Planning Library](https://ompl.kavrakilab.org/)；用於取樣式規劃器的術語與保證邊界。
+- 外部一手參考：[Open Motion Planning Library](https://ompl.kavrakilab.org/)；其中 [Constrained Planning](https://ompl.kavrakilab.org/constrainedPlanning.html) 用於約束函數、流形與投影的假設邊界，OMPL control 文件用於狀態傳播與動力規劃術語。

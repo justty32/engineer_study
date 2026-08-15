@@ -405,15 +405,135 @@
 <p>
 <strong>不要混淆：</strong>它不是絕對安全保證；自身模型與感測也可能錯。</p>
 </article>
-<article class="term-card"><h2>最佳化器（Optimizer）</h2><p><strong>白話：</strong>依梯度決定每個參數這次要走多遠的更新規則。</p><p><strong>位置／角色：</strong>只在訓練迴路中作用，不參與部署推論。</p><p><strong>如何生效：</strong>讀取梯度、學習率與歷史統計，產生參數更新量。</p><p><strong>具體例子：</strong>梯度下降把參數減去學習率乘梯度。</p><p><strong>不要混淆：</strong>它最佳化寫下的損失，不理解真正任務意圖。</p></article>
-<article class="term-card"><h2>學習率（Learning Rate）</h2><p><strong>白話：</strong>控制每次參數更新步幅的旋鈕。</p><p><strong>位置／角色：</strong>是訓練超參數，由工程師或排程設定。</p><p><strong>如何生效：</strong>縮放梯度；太大可能震盪，太小可能進展緩慢。</p><p><strong>具體例子：</strong>梯度 4 配學習率 0.01，基本更新量為 0.04。</p><p><strong>不要混淆：</strong>它不是控制器增益，也不是模型自動學出的權重。</p></article>
-<article class="term-card"><h2>驗證集（Validation Set）</h2><p><strong>白話：</strong>訓練過程中用來挑設定、但不直接更新參數的資料。</p><p><strong>位置／角色：</strong>介於訓練集與最終測試集之間。</p><p><strong>如何生效：</strong>比較模型版本、停止時機與超參數，防止只看訓練表現。</p><p><strong>具體例子：</strong>用未參與梯度更新的二十個場景挑學習率。</p><p><strong>不要混淆：</strong>反覆依驗證結果調整後，它不能再充當最終測試證據。</p></article>
-<article class="term-card"><h2>經驗回放（Experience Replay Buffer）</h2><p><strong>白話：</strong>保存過去互動片段，之後重複抽出學習的容器。</p><p><strong>位置／角色：</strong>常位於異策略強化學習的收集與更新之間。</p><p><strong>如何生效：</strong>儲存狀態、動作、獎勵與下一狀態，隨機抽小批次。</p><p><strong>具體例子：</strong>保留最近一百萬筆轉移供多次梯度更新。</p><p><strong>不要混淆：</strong>隨機抽樣不能讓時間相關資料真正變成獨立樣本。</p></article>
-<article class="term-card"><h2>過度配合（Overfitting）</h2><p><strong>白話：</strong>模型太會記訓練細節，遇到新場景反而不行。</p><p><strong>位置／角色：</strong>由訓練與驗證表現差距觀察，是泛化問題。</p><p><strong>如何生效：</strong>模型容量、重複資料或訓練過久使參數利用偶然特徵。</p><p><strong>具體例子：</strong>記住桌面刮痕來定位杯子，換桌便失敗。</p><p><strong>不要混淆：</strong>它不等於資料洩漏；無洩漏資料也會過度配合。</p></article>
-<article class="term-card"><h2>推論（Inference）</h2><p><strong>白話：</strong>載入已訓練參數，對新輸入實際算出預測。</p><p><strong>位置／角色：</strong>位於部署執行期，是模型線上做數值映射的步驟。</p><p><strong>如何生效：</strong>前處理後的觀測通過固定函數，產生提議動作。</p><p><strong>具體例子：</strong>C++ 每 5 ms 把觀測張量送入模型並取得七軸速度。</p><p><strong>不要混淆：</strong>推論不更新參數，也不包含安全過濾與底層控制。</p></article>
+<article class="term-card">
+<h2>最佳化器（Optimizer）</h2>
+<p>
+<strong>白話：</strong>依梯度決定每個參數這次要走多遠的更新規則。</p>
+<p>
+<strong>位置／角色：</strong>只在訓練迴路中作用，不參與部署推論。</p>
+<p>
+<strong>如何生效：</strong>讀取梯度、學習率與歷史統計，產生參數更新量。</p>
+<p>
+<strong>具體例子：</strong>梯度下降把參數減去學習率乘梯度。</p>
+<p>
+<strong>不要混淆：</strong>它最佳化寫下的損失，不理解真正任務意圖。</p>
+</article>
+<article class="term-card">
+<h2>學習率（Learning Rate）</h2>
+<p>
+<strong>白話：</strong>控制每次參數更新步幅的旋鈕。</p>
+<p>
+<strong>位置／角色：</strong>是訓練超參數，由工程師或排程設定。</p>
+<p>
+<strong>如何生效：</strong>縮放梯度；太大可能震盪，太小可能進展緩慢。</p>
+<p>
+<strong>具體例子：</strong>梯度 4 配學習率 0.01，基本更新量為 0.04。</p>
+<p>
+<strong>不要混淆：</strong>它不是控制器增益，也不是模型自動學出的權重。</p>
+</article>
+<article class="term-card">
+<h2>驗證集（Validation Set）</h2>
+<p>
+<strong>白話：</strong>訓練過程中用來挑設定、但不直接更新參數的資料。</p>
+<p>
+<strong>位置／角色：</strong>介於訓練集與最終測試集之間。</p>
+<p>
+<strong>如何生效：</strong>比較模型版本、停止時機與超參數，防止只看訓練表現。</p>
+<p>
+<strong>具體例子：</strong>用未參與梯度更新的二十個場景挑學習率。</p>
+<p>
+<strong>不要混淆：</strong>反覆依驗證結果調整後，它不能再充當最終測試證據。</p>
+</article>
+<article class="term-card">
+<h2>經驗回放（Experience Replay Buffer）</h2>
+<p>
+<strong>白話：</strong>保存過去互動片段，之後重複抽出學習的容器。</p>
+<p>
+<strong>位置／角色：</strong>常位於異策略強化學習的收集與更新之間。</p>
+<p>
+<strong>如何生效：</strong>儲存狀態、動作、獎勵與下一狀態，隨機抽小批次。</p>
+<p>
+<strong>具體例子：</strong>保留最近一百萬筆轉移供多次梯度更新。</p>
+<p>
+<strong>不要混淆：</strong>隨機抽樣不能讓時間相關資料真正變成獨立樣本。</p>
+</article>
+<article class="term-card">
+<h2>過度配合（Overfitting）</h2>
+<p>
+<strong>白話：</strong>模型太會記訓練細節，遇到新場景反而不行。</p>
+<p>
+<strong>位置／角色：</strong>由訓練與驗證表現差距觀察，是泛化問題。</p>
+<p>
+<strong>如何生效：</strong>模型容量、重複資料或訓練過久使參數利用偶然特徵。</p>
+<p>
+<strong>具體例子：</strong>記住桌面刮痕來定位杯子，換桌便失敗。</p>
+<p>
+<strong>不要混淆：</strong>它不等於資料洩漏；無洩漏資料也會過度配合。</p>
+</article>
+<article class="term-card">
+<h2>推論（Inference）</h2>
+<p>
+<strong>白話：</strong>載入已訓練參數，對新輸入實際算出預測。</p>
+<p>
+<strong>位置／角色：</strong>位於部署執行期，是模型線上做數值映射的步驟。</p>
+<p>
+<strong>如何生效：</strong>前處理後的觀測通過固定函數，產生提議動作。</p>
+<p>
+<strong>具體例子：</strong>C++ 每 5 ms 把觀測張量送入模型並取得七軸速度。</p>
+<p>
+<strong>不要混淆：</strong>推論不更新參數，也不包含安全過濾與底層控制。</p>
+</article>
+<article class="term-card">
+<h2>離線強化學習（Offline Reinforcement Learning, Offline RL）</h2>
+<p><strong>白話：</strong>只用已收集且固定的互動資料訓練策略，訓練時不能向環境試新動作。</p>
+<p><strong>位置／角色：</strong>位於歷史資料、價值學習與安全部署之間。</p>
+<p><strong>如何生效：</strong>反覆使用資料轉移更新策略／價值，並限制分布外高估。</p>
+<p><strong>具體例子：</strong>用去年機械臂揀取 log 訓練新策略，但訓練過程不控制真機。</p>
+<p><strong>不要混淆：</strong>不是一般行為複製；它會用獎勵與下一狀態推論資料中未直接標記的長期價值。</p>
+</article>
+<article class="term-card">
+<h2>行為策略（Behavior Policy）</h2>
+<p><strong>白話：</strong>真正產生資料中動作的舊策略、人工操作或混合規則。</p>
+<p><strong>位置／角色：</strong>決定離線資料支撐與偏差，是 OPE 權重的基準。</p>
+<p><strong>如何生效：</strong>它在每個狀態選擇動作，因而決定哪些反事實有直接證據。</p>
+<p><strong>具體例子：</strong>七成資料來自規劃器、三成來自人工接管。</p>
+<p><strong>不要混淆：</strong>不是正在訓練的新目標策略；資料也可能來自多個未知版本。</p>
+</article>
+<article class="term-card">
+<h2>資料支撐（Data Support）</h2>
+<p><strong>白話：</strong>資料分布真正有涵蓋的狀態—動作組合。</p>
+<p><strong>位置／角色：</strong>界定離線方法較有證據的內插區與高風險外插區。</p>
+<p><strong>如何生效：</strong>由狀態條件下的資料密度、行為策略與多維關聯共同形成。</p>
+<p><strong>具體例子：</strong>手臂伸直時資料只含低速回縮，沒有高速向外動作。</p>
+<p><strong>不要混淆：</strong>各欄最小最大值不能代表高維聯合支撐。</p>
+</article>
+<article class="term-card">
+<h2>分布外動作（Out-of-Distribution Action, OOD Action）</h2>
+<p><strong>白話：</strong>新策略在目前狀態提出資料幾乎沒做過的動作。</p>
+<p><strong>位置／角色：</strong>是離線價值外插與過度估計的主要風險。</p>
+<p><strong>如何生效：</strong>模型缺少直接反事實，函數近似仍輸出數字，最佳化器可能挑中偶然高值。</p>
+<p><strong>具體例子：</strong>資料只到 0.8 rad/s，策略卻要求 1.5 rad/s。</p>
+<p><strong>不要混淆：</strong>OOD 不等於必然失敗；它表示證據不足，需拒用或額外驗證。</p>
+</article>
+<article class="term-card">
+<h2>模型式強化學習（Model-Based Reinforcement Learning）</h2>
+<p><strong>白話：</strong>使用已知或學得的環境動態，先預測候選未來再改善決策。</p>
+<p><strong>位置／角色：</strong>連接動態模型、規劃、策略與價值學習。</p>
+<p><strong>如何生效：</strong>以 <code>ŝ′=f̂(s,a)</code> 產生 rollout、比較成本或建立合成經驗。</p>
+<p><strong>具體例子：</strong>在模型內試一百組五步關節速度，選預測碰撞少且接近目標者。</p>
+<p><strong>不要混淆：</strong>模型會被規劃器利用其誤差；單步預測準不代表長程閉迴路準。</p>
+</article>
+<article class="term-card">
+<h2>模型預測控制（Model Predictive Control, MPC）</h2>
+<p><strong>白話：</strong>每次只規劃有限未來、執行第一小段，再用新量測重算。</p>
+<p><strong>位置／角色：</strong>位於線上模型式決策與底層控制之間。</p>
+<p><strong>如何生效：</strong>滾動地平線反覆最佳化候選控制，持續更新初始狀態與限制。</p>
+<p><strong>具體例子：</strong>每 50 ms 規劃未來 1 s，但只執行下一個 50 ms 命令。</p>
+<p><strong>不要混淆：</strong>MPC 不會自動修正錯模型，也不能取代獨立安全限制與逾時回退。</p>
+</article>
 </section>
 <div class="pager">
-<a href="06-安全評估與C++部署.html">← 上一頁</a>
+<a href="08-模型式學習世界模型與滾動規劃.html">← 08 模型式學習</a>
 <a href="index.html">回課程首頁 →</a>
 </div>
 </main>

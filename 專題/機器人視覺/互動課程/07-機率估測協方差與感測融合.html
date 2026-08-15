@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>07 機率估測、協方差與感測融合｜機器人視覺</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="03-特徵匹配與姿態估測.html">姿態估測</a>
+<a href="05-視覺伺服與延遲.html">視覺伺服</a>
+<a aria-current="page" href="07-機率估測協方差與感測融合.html">機率融合</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">07 · 感知輸出不只是一個最佳數字</p>
+<h1>機率估測、協方差與感測融合</h1>
+<p class="lead">白話問題：相機說物體在 1.2 m，編碼器與模型說在 1.0 m，應該相信誰？一句話答案：先問兩個估測的時間、座標、偏差與不確定度，再依明確模型更新；不能只取平均或挑看起來比較新的數字。</p>
+<div class="prereq"><strong>最小前置：</strong>理解<a href="02-相機標定與手眼標定.html">標定與座標鏈</a>、<a href="03-特徵匹配與姿態估測.html">姿態估測</a>和<a href="05-視覺伺服與延遲.html">時間延遲</a>。本章從一維高斯模型開始，不假設已學過機率課。</div>
+
+<h2>估測要同時攜帶中心與不確定度</h2>
+<p>狀態估測（state estimation）不是直接量到真實狀態，而是綜合動態模型與感測資料，推斷位置、速度、姿態或其他隱藏量。最簡單的一維高斯近似以平均值 <code>μ</code> 表示中心，以變異數 <code>P=σ²</code> 表示局部不確定度。標準差 <code>σ</code> 與狀態同單位，變異數則是平方單位；在多維問題中，協方差矩陣的對角線是各方向變異，非對角線描述線性關聯。</p>
+<p>協方差不是「正確率」。它通常只描述目前線性化與噪聲假設下的一個局部橢球，不能自動包含標定偏差、資料關聯錯誤、多峰假設、時間戳錯或模型類型選錯。若演算法輸出極小協方差但真值誤差很大，稱為不一致或過度自信；控制器若盲信這個數字可能比保守估測更危險。</p>
+
+<h2>預測—更新把兩個資訊來源接起來</h2>
+<p>濾波器先用運動模型從上一狀態做預測，得到先驗（prior）平均 <code>μ⁻</code> 與變異數 <code>P⁻</code>；過程噪聲使不確定度通常增加。新量測 <code>z</code> 到達後，以量測模型預測它應看見什麼，實測與預測的差稱為創新（innovation）或殘差。更新步驟依先驗與量測不確定度分配權重，再得到後驗（posterior）。</p>
+<p>在「直接量同一個一維位置」、兩者誤差獨立且近似高斯的特例，Kalman 增益為 <code>K=P⁻/(P⁻+R)</code>，後驗平均 <code>μ⁺=μ⁻+K(z−μ⁻)</code>，後驗變異數 <code>P⁺=(1−K)P⁻</code>。若量測標準差很小，R 小、K 接近 1，結果靠近量測；若量測很吵，K 小，結果靠近先驗。這不是人工設定「相機權重」，而是由兩邊的變異數決定。</p>
+
+<h2>讀完再操作：一維 Kalman 更新</h2>
+<section class="workspace">
+<div class="controls">
+<label for="fusion-prior">先驗位置 μ⁻（m）<input id="fusion-prior" type="number" min="-5" max="5" step="0.1" value="1"></label>
+<label for="fusion-prior-sd">先驗標準差 σ⁻（m）<input id="fusion-prior-sd" type="range" min="0.02" max="1" step="0.02" value="0.3"></label>
+<label for="fusion-measure">量測 z（m）<input id="fusion-measure" type="number" min="-5" max="5" step="0.1" value="1.4"></label>
+<label for="fusion-measure-sd">量測標準差 σz（m）<input id="fusion-measure-sd" type="range" min="0.02" max="1" step="0.02" value="0.1"></label>
+</div>
+<div id="fusion-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>資料關聯與門控先於數值融合</h2>
+<p>公式只在量測真的對應同一物體、同一時間與同一座標量時成立。資料關聯（data association）先回答「這個影像特徵、深度點或偵測框屬於哪一條軌跡」。可用創新與其預期變異形成統計門控：殘差遠大於模型允許時先拒用或保留多個假設，而不是讓單一錯配把狀態拉走。門檻太緊會拒絕合法快速運動，太鬆會吸收外點；必須用真實殘差分布與失敗案例驗證。</p>
+<p>相機與編碼器更新率不同時，要以擷取時間把狀態預測到同一時刻。把到達時間當擷取時間會把延遲當位置差；固定延遲可補償，抖動則需逐筆時間戳與緩衝。座標系也必須一致：相機框架的三維位置不能直接和基座框架位置融合，應先用有版本的外參轉換，並考慮外參本身的不確定度。</p>
+
+<h2>證據與模型邊界</h2>
+<ul>
+<li>記錄每次預測、量測、創新、創新協方差、Kalman 增益、門控結果與時間戳，不只保存後驗。</li>
+<li>用正規化創新、真值誤差相對協方差的覆蓋率與按場景切分的失敗率檢查一致性。</li>
+<li>注入漏幀、延遲、外點、錯資料關聯與外參版本不合，確認系統能拒用、降級或重置。</li>
+</ul>
+<p>互動只是一維線性高斯更新。真實姿態位於旋轉／剛體群上，視覺量測非線性且可能多峰；擴展 Kalman 濾波器（Extended Kalman Filter, EKF）、無跡濾波、粒子濾波與因子圖各有不同近似。知道演算法名稱不等於模型成立，真正重要的是狀態、過程、量測、噪聲、座標與時間契約能否由資料檢驗。</p>
+<div class="pager"><a href="06-C++感知管線與證據.html">← 06 C++／證據</a><a href="08-視覺里程計SLAM與閉環校正.html">08 視覺里程計與 SLAM →</a></div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

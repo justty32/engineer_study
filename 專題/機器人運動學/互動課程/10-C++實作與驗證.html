@@ -1,4 +1,112 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 C++ 實作與驗證</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="09-七軸數值逆運動學.html">09 IK</a><a aria-current="page" href="10-C++實作與驗證.html">10 C++</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">10 · 數學正確還要能被程式證明</p><h1>C++ 實作契約、測試與除錯證據</h1><p class="lead">真正難抓的錯通常不是矩陣乘法，而是「這個矩陣把哪個框架變到哪個框架、角度是度還是弧度、向量是點還是方向」沒有進入型別與測試。</p><section class="workspace"><h2>檢查 API 契約</h2><div class="controls"><label for="cpp-frame">座標系語意<select id="cpp-frame"><option value="raw">裸 Matrix4d／Vector3d</option><option value="typed">來源與目標框架進入型別</option></select></label><label for="cpp-unit">內部角度<select id="cpp-unit"><option value="degree">介面數字直接送 sin/cos</option><option value="rad">邊界轉換後內部全用弧度</option></select></label><label for="cpp-layout">矩陣契約<select id="cpp-layout"><option value="implicit">靠開發者記住左右乘與儲存順序</option><option value="explicit">文件與測試明定欄向量／變換方向</option></select></label></div><div id="cpp-output" class="output" aria-live="polite"></div></section><pre><code>struct JointState { std::array&lt;Radian, 7&gt; q; };
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>10 C++ 實作與驗證</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="09-七軸數值逆運動學.html">09 IK</a>
+<a aria-current="page" href="10-C++實作與驗證.html">10 C++</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">10 · 數學正確還要能被程式證明</p>
+<h1>C++ 實作契約、測試與除錯證據</h1>
+<p class="lead">真正難抓的錯通常不是矩陣乘法，而是「這個矩陣把哪個框架變到哪個框架、角度是度還是弧度、向量是點還是方向」沒有進入型別與測試。</p>
+<section class="workspace">
+<h2>檢查 API 契約</h2>
+<div class="controls">
+<label for="cpp-frame">座標系語意<select id="cpp-frame">
+<option value="raw">裸 Matrix4d／Vector3d</option>
+<option value="typed">來源與目標框架進入型別</option>
+</select>
+</label>
+<label for="cpp-unit">內部角度<select id="cpp-unit">
+<option value="degree">介面數字直接送 sin/cos</option>
+<option value="rad">邊界轉換後內部全用弧度</option>
+</select>
+</label>
+<label for="cpp-layout">矩陣契約<select id="cpp-layout">
+<option value="implicit">靠開發者記住左右乘與儲存順序</option>
+<option value="explicit">文件與測試明定欄向量／變換方向</option>
+</select>
+</label>
+</div>
+<div id="cpp-output" class="output" aria-live="polite">
+</div>
+</section>
+<pre>
+<code>struct JointState { std::array&lt;Radian, 7&gt; q; };
 template&lt;class From, class To&gt; struct Transform;
-Transform&lt;ToolFrame, BaseFrame&gt; forwardKinematics(const JointState&amp;);</code></pre><h2>最小測試組</h2><table><thead><tr><th>測試</th><th>能抓什麼</th></tr></thead><tbody><tr><td>零角與單一關節</td><td>零位、軸方向、固定連桿平移與乘法順序</td></tr><tr><td><code>T·T⁻¹≈I</code>、<code>RᵀR≈I</code></td><td>逆變換、旋轉漂移與矩陣區塊錯誤</td></tr><tr><td>雅可比有限差分</td><td>關節軸／原點、叉積順序、框架錯配</td></tr><tr><td>FK→IK→FK</td><td>IK 回傳解是否真正重建目標；不要要求 q 必須等於原 q</td></tr><tr><td>近奇異與極限案例</td><td>數值爆炸、停止條件、阻尼與夾限行為</td></tr></tbody></table><h2>每次迭代留下什麼證據</h2><p>記錄迭代編號、位置／姿態誤差、最小奇異值或條件指標、阻尼、<code>||Δq||</code>、最接近的關節極限及停止原因。只記「IK failed」無法區分不可達、數值錯誤、框架錯誤或種子不佳。</p><h2>先把幾何語意變成型別</h2><p>裸的 <code>Vector3d</code> 看不出是點、方向、角速度或哪個座標系。可用包裝型別或 template 標籤保存來源／目標 frame；角度輸入邊界接受度數時立即轉弧度，內部只保留一種單位。矩陣儲存的 row-major／column-major 與數學上左乘／右乘是不同問題，都要在介面文件寫清楚。</p><h2>最小測試金字塔</h2><ol><li><strong>代數：</strong>RᵀR≈I、det(R)≈1、T·T⁻¹≈I。</li><li><strong>模型：</strong>零位與單關節 90° 可手算案例。</li><li><strong>微分：</strong>雅可比每欄對有限差分，掃不同 ε。</li><li><strong>求解：</strong>可達、不可達、奇異附近、多初值與關節極限案例。</li><li><strong>系統：</strong>時間戳、座標轉換版本、控制週期與實機低速驗證。</li></ol><h2>log 要保存推理鏈</h2><p>每次 IK 至少記錄目標 frame、目標位姿、初始 q、每步位置／姿態誤差、最小奇異值、阻尼、Δq、極限裁切與終止原因。只有「success=true」無法分辨是精確收斂、容許值過鬆或迭代上限剛好停止。</p><details><summary>浮點相等怎麼判？</summary><p>用與量綱相符的絕對／相對容許值，例如位置公尺誤差與旋轉角誤差分開；不要對矩陣每格使用同一個魔法常數後就宣稱位姿正確。</p></details><div class="pager"><a href="09-七軸數值逆運動學.html">← 09 IK</a><a href="名詞與概念字典.html">字典 →</a></div></main><script src="app.js"></script></body></html>
+Transform&lt;ToolFrame, BaseFrame&gt; forwardKinematics(const JointState&amp;);</code>
+</pre>
+<h2>最小測試組</h2>
+<table>
+<thead>
+<tr>
+<th>測試</th>
+<th>能抓什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>零角與單一關節</td>
+<td>零位、軸方向、固定連桿平移與乘法順序</td>
+</tr>
+<tr>
+<td>
+<code>T·T⁻¹≈I</code>、<code>RᵀR≈I</code>
+</td>
+<td>逆變換、旋轉漂移與矩陣區塊錯誤</td>
+</tr>
+<tr>
+<td>雅可比有限差分</td>
+<td>關節軸／原點、叉積順序、框架錯配</td>
+</tr>
+<tr>
+<td>FK→IK→FK</td>
+<td>IK 回傳解是否真正重建目標；不要要求 q 必須等於原 q</td>
+</tr>
+<tr>
+<td>近奇異與極限案例</td>
+<td>數值爆炸、停止條件、阻尼與夾限行為</td>
+</tr>
+</tbody>
+</table>
+<h2>每次迭代留下什麼證據</h2>
+<p>記錄迭代編號、位置／姿態誤差、最小奇異值或條件指標、阻尼、<code>||Δq||</code>、最接近的關節極限及停止原因。只記「IK failed」無法區分不可達、數值錯誤、框架錯誤或種子不佳。</p>
+<h2>先把幾何語意變成型別</h2>
+<p>裸的 <code>Vector3d</code> 看不出是點、方向、角速度或哪個座標系。可用包裝型別或 template 標籤保存來源／目標 frame；角度輸入邊界接受度數時立即轉弧度，內部只保留一種單位。矩陣儲存的 row-major／column-major 與數學上左乘／右乘是不同問題，都要在介面文件寫清楚。</p>
+<h2>最小測試金字塔</h2>
+<ol>
+<li>
+<strong>代數：</strong>RᵀR≈I、det(R)≈1、T·T⁻¹≈I。</li>
+<li>
+<strong>模型：</strong>零位與單關節 90° 可手算案例。</li>
+<li>
+<strong>微分：</strong>雅可比每欄對有限差分，掃不同 ε。</li>
+<li>
+<strong>求解：</strong>可達、不可達、奇異附近、多初值與關節極限案例。</li>
+<li>
+<strong>系統：</strong>時間戳、座標轉換版本、控制週期與實機低速驗證。</li>
+</ol>
+<h2>log 要保存推理鏈</h2>
+<p>每次 IK 至少記錄目標 frame、目標位姿、初始 q、每步位置／姿態誤差、最小奇異值、阻尼、Δq、極限裁切與終止原因。只有「success=true」無法分辨是精確收斂、容許值過鬆或迭代上限剛好停止。</p>
+<details>
+<summary>浮點相等怎麼判？</summary>
+<p>用與量綱相符的絕對／相對容許值，例如位置公尺誤差與旋轉角誤差分開；不要對矩陣每格使用同一個魔法常數後就宣稱位姿正確。</p>
+</details>
+<div class="pager">
+<a href="09-七軸數值逆運動學.html">← 09 IK</a>
+<a href="11-SE3李群扭量與指數映射.html">11 SE(3) →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

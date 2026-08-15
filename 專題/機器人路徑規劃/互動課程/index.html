@@ -1,11 +1,99 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="機器人路徑與運動規劃零基礎互動課程"><title>課程首頁｜機器人路徑與運動規劃</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a aria-current="page" href="index.html">首頁</a><a href="00-從移動問題到規劃問題.html">零基礎</a><a href="00A-搜尋與圖論先修.html">搜尋先修</a><a href="03-PRM-RRT與RRT-star.html">取樣規劃</a><a href="06-C++架構與驗證證據.html">C++／證據</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">零基礎主線 · 機器人路徑與運動規劃</p><h1>機器人路徑與運動規劃</h1><p class="lead">逆運動學只回答「某個姿態能不能到」；規劃還要回答「整段怎麼走、會不會撞、限制能不能滿足、環境改變時怎麼辦」。本課不把圖論、搜尋或英文縮寫當成既有常識：先用數字例建立最小模型，再操作互動。</p><div class="prereq"><strong>建議起點：</strong><a href="00-從移動問題到規劃問題.html">00 零基礎</a>。圖論與搜尋另有完整先修頁，不假設已修過演算法；需要座標或逆運動學細節時再回<a href="../../機器人運動學/互動課程/index.html">七軸機械手臂運動學</a>。</div><div class="flow"><span>描述狀態</span><span>把空間變成圖</span><span>驗證碰撞</span><span>搜尋幾何路徑</span><span>時間化並監督執行</span></div><section class="chapter-list">
-<a class="chapter-card" href="00-從移動問題到規劃問題.html"><span class="number">00</span><h2>從移動到規劃</h2><p>狀態、路徑、軌跡、限制和成本到底各自做什麼。</p></a>
-<a class="chapter-card" href="00A-搜尋與圖論先修.html"><span class="number">00A</span><h2>搜尋與圖論先修</h2><p>從節點、邊、成本和連續空間離散化開始。</p></a>
-<a class="chapter-card" href="01-組態空間碰撞與間隙.html"><span class="number">01</span><h2>組態空間與碰撞</h2><p>如何讓完整手臂姿勢成為可驗證的一個點。</p></a>
-<a class="chapter-card" href="02-圖搜尋Dijkstra與A-star.html"><span class="number">02</span><h2>圖搜尋</h2><p>逐步算 Dijkstra 與 A* 如何選下一個節點。</p></a>
-<a class="chapter-card" href="03-PRM-RRT與RRT-star.html"><span class="number">03</span><h2>取樣規劃</h2><p>機率路線圖、快速探索隨機樹和狹窄通道。</p></a>
-<a class="chapter-card" href="04-平滑與時間參數化.html"><span class="number">04</span><h2>軌跡時間化</h2><p>找到幾何路徑後，為何仍不能直接送馬達。</p></a>
-<a class="chapter-card" href="05-七軸冗餘與線上重規劃.html"><span class="number">05</span><h2>七軸與重規劃</h2><p>同一末端目標的肘姿選擇，以及世界改變後怎麼辦。</p></a>
-<a class="chapter-card" href="06-C++架構與驗證證據.html"><span class="number">06</span><h2>C++ 與證據</h2><p>用型別、失敗分類和紀錄保存規劃推理鏈。</p></a>
-<a class="chapter-card" href="名詞與概念字典.html"><span class="number">A–Z</span><h2>深度字典</h2><p>每條都有白話、角色、機制、數字例與易混邊界。</p></a></section><div class="pager"><a href="名詞與概念字典.html">← 字典</a><a href="00-從移動問題到規劃問題.html">開始學習 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="機器人路徑與運動規劃零基礎互動課程">
+<title>課程首頁｜機器人路徑與運動規劃</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a aria-current="page" href="index.html">首頁</a>
+<a href="00-從移動問題到規劃問題.html">零基礎</a>
+<a href="00A-搜尋與圖論先修.html">搜尋先修</a>
+<a href="03-PRM-RRT與RRT-star.html">取樣規劃</a>
+<a href="06-C++架構與驗證證據.html">C++／證據</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">零基礎主線 · 機器人路徑與運動規劃</p>
+<h1>機器人路徑與運動規劃</h1>
+<p class="lead">逆運動學只回答「某個姿態能不能到」；規劃還要回答「整段怎麼走、會不會撞、限制能不能滿足、環境改變時怎麼辦」。本課不把圖論、搜尋或英文縮寫當成既有常識：先用數字例建立最小模型，再操作互動。</p>
+<div class="prereq">
+<strong>建議起點：</strong>
+<a href="00-從移動問題到規劃問題.html">00 零基礎</a>。圖論與搜尋另有完整先修頁，不假設已修過演算法；需要座標或逆運動學細節時再回<a href="../../機器人運動學/互動課程/index.html">七軸機械手臂運動學</a>。</div>
+<div class="flow">
+<span>描述狀態</span>
+<span>把空間變成圖</span>
+<span>驗證碰撞</span>
+<span>搜尋幾何路徑</span>
+<span>時間化並監督執行</span>
+</div>
+<section class="chapter-list">
+<a class="chapter-card" href="00-從移動問題到規劃問題.html">
+<span class="number">00</span>
+<h2>從移動到規劃</h2>
+<p>狀態、路徑、軌跡、限制和成本到底各自做什麼。</p>
+</a>
+<a class="chapter-card" href="00A-搜尋與圖論先修.html">
+<span class="number">00A</span>
+<h2>搜尋與圖論先修</h2>
+<p>從節點、邊、成本和連續空間離散化開始。</p>
+</a>
+<a class="chapter-card" href="01-組態空間碰撞與間隙.html">
+<span class="number">01</span>
+<h2>組態空間與碰撞</h2>
+<p>如何讓完整手臂姿勢成為可驗證的一個點。</p>
+</a>
+<a class="chapter-card" href="02-圖搜尋Dijkstra與A-star.html">
+<span class="number">02</span>
+<h2>圖搜尋</h2>
+<p>逐步算 Dijkstra 與 A* 如何選下一個節點。</p>
+</a>
+<a class="chapter-card" href="03-PRM-RRT與RRT-star.html">
+<span class="number">03</span>
+<h2>取樣規劃</h2>
+<p>機率路線圖、快速探索隨機樹和狹窄通道。</p>
+</a>
+<a class="chapter-card" href="04-平滑與時間參數化.html">
+<span class="number">04</span>
+<h2>軌跡時間化</h2>
+<p>找到幾何路徑後，為何仍不能直接送馬達。</p>
+</a>
+<a class="chapter-card" href="05-七軸冗餘與線上重規劃.html">
+<span class="number">05</span>
+<h2>七軸與重規劃</h2>
+<p>同一末端目標的肘姿選擇，以及世界改變後怎麼辦。</p>
+</a>
+<a class="chapter-card" href="06-C++架構與驗證證據.html">
+<span class="number">06</span>
+<h2>C++ 與證據</h2>
+<p>用型別、失敗分類和紀錄保存規劃推理鏈。</p>
+</a>
+<a class="chapter-card" href="07-約束流形投影與任務空間限制.html">
+<span class="number">07</span>
+<h2>約束流形與投影</h2>
+<p>讓整條路徑保持杯口水平、貼合曲面或滿足其他任務等式。</p>
+</a>
+<a class="chapter-card" href="08-動力可行規劃與煞停包絡.html">
+<span class="number">08</span>
+<h2>動力可行性</h2>
+<p>把速度、控制限制、延遲、可達集合與煞停距離放回規劃狀態。</p>
+</a>
+<a class="chapter-card" href="名詞與概念字典.html">
+<span class="number">A–Z</span>
+<h2>深度字典</h2>
+<p>每條都有白話、角色、機制、數字例與易混邊界。</p>
+</a>
+</section>
+<div class="pager">
+<a href="名詞與概念字典.html">← 字典</a>
+<a href="00-從移動問題到規劃問題.html">開始學習 →</a>
+</div>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

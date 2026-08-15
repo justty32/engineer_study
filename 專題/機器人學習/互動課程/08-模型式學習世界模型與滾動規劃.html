@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>08 模型式學習、世界模型與滾動規劃｜機器人學習</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="03-MDP回報價值與策略.html">強化學習</a>
+<a href="07-離線強化學習資料支撐與分布外動作.html">離線學習</a>
+<a aria-current="page" href="08-模型式學習世界模型與滾動規劃.html">模型式學習</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">08 · 先學會預測，再用預測比較未來</p>
+<h1>模型式學習、世界模型與滾動規劃</h1>
+<p class="lead">白話問題：策略一定要直接把觀測映射成動作嗎？一句話答案：不一定；模型式方法先學「狀態與動作會讓世界怎麼變」，再在模型裡試多條候選未來，但規劃越長越容易走到模型沒學準的地方。</p>
+<div class="prereq"><strong>最小前置：</strong>先理解<a href="03-MDP回報價值與策略.html">狀態、動作、回報與價值</a>、<a href="05-模擬訓練與sim-to-real.html">模型落差</a>、<a href="07-離線強化學習資料支撐與分布外動作.html">資料支撐</a>。本章的世界模型是預測工具，不是對真實世界的完整理解。</div>
+
+<h2>模型式與無模型方法差在哪裡</h2>
+<p>無模型（model-free）方法直接學策略 <code>π(a|s)</code> 或價值，不需要顯式預測下一狀態。模型式（model-based）方法使用已知或學得的動態模型 <code>ŝ′=f̂(s,a)</code>，有時也預測獎勵、終止、接觸或觀測。模型可拿來產生合成經驗、評估候選動作序列，或與真實資料交替更新。兩者不是互斥陣營：策略可由模型規劃產生資料，再蒸餾成快速網路；價值函數也可縮短規劃尾端。</p>
+<p>學得模型的優勢是重用資料：同一個轉移可幫助許多候選策略思考「如果」。代價是模型偏差（model bias）。單步均方誤差低不代表閉迴路準確，因為規劃器會主動選擇可獲得高回報的預測路線，也可能利用模型漏洞。訓練資料上的平均誤差會掩蓋接觸、飽和、邊界與 OOD 區域的局部大錯。</p>
+
+<h2>多步 rollout 會累積與放大誤差</h2>
+<p>滾動預測（rollout）把模型輸出當下一步輸入，反覆 H 步。若每步新誤差上界為 <code>ε</code>，而動態對既有狀態誤差最多放大 <code>L</code> 倍，粗略上界為 <code>εΣₖ₌₀ᴴ⁻¹Lᵏ</code>。當 <code>L=1</code> 時是 <code>Hε</code>；<code>L&gt;1</code> 時可能快速放大；<code>L&lt;1</code> 時則趨於有限值。這只是敏感度上界，不是隨機誤差的機率保證。</p>
+<p>例如單步誤差尺度 2 mm、H=20、L=1 時累積上界 40 mm；若 L=1.1，上界約 115 mm。這解釋為何較短預測地平線配合頻繁重規劃常較穩健：每執行一小段就取得真實新觀測，重新初始化模型，而不是一次相信很長的開迴路幻想。</p>
+
+<h2>讀完再操作：模型誤差如何隨地平線累積</h2>
+<section class="workspace">
+<div class="controls">
+<label for="model-error">每步新誤差 ε（mm）<input id="model-error" type="range" min="0" max="20" step="0.5" value="2"></label>
+<label for="model-lipschitz">誤差放大係數 L<input id="model-lipschitz" type="range" min="0.5" max="1.5" step="0.05" value="1.05"></label>
+<label for="model-horizon">預測地平線 H（步）<input id="model-horizon" type="range" min="1" max="60" step="1" value="20"></label>
+<label for="model-replan">每幾步取得真值並重規劃<input id="model-replan" type="range" min="1" max="30" step="1" value="5"></label>
+</div>
+<div id="model-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>MPC 與不確定度如何限制幻想</h2>
+<p>模型預測控制（Model Predictive Control, MPC）每次從目前估測狀態，在有限地平線內比較動作序列，只執行第一小段，再用新量測重規劃。這會降低長程模型誤差，並能每次套用當前限制，但計算必須在控制期限內完成。候選序列最佳化可用梯度、隨機射擊或其他方法；演算法名稱不是重點，重要的是終止時間、控制界、成本尺度與不可行處理都有契約。</p>
+<p>模型集成（ensemble）可用多個以不同資料或初始化訓練的模型，將預測分歧當成認知不確定度線索。規劃器可避開分歧大的區域、縮短地平線或交給安全策略。然而模型們可能共享資料偏差而一致地錯，分歧小不等於真實。接觸、摩擦、遮擋與離散模式改變尤其容易形成多峰未來，單一平均預測可能代表沒有任何一條真實軌跡。</p>
+
+<h2>訓練與驗證要看任務敏感區</h2>
+<ul>
+<li>除單步平均誤差，還要按地平線報 rollout 誤差、接觸事件、限制違規與校準過的不確定度覆蓋。</li>
+<li>比較真實與模型中的同一候選動作序列，保存狀態、動作、模型版本、預測分布與規劃器選擇原因。</li>
+<li>故意測資料邊界、飽和、延遲、外力與模型未見組合；規劃器是否往模型漏洞集中本身就是重要證據。</li>
+</ul>
+<p>互動的幾何級數是保守敏感度示意，假設每步都有相同新誤差上界與固定放大係數。真實模型的誤差有方向、相關性與狀態依賴；重新規劃也不會把未觀測狀態變成真值。本章不保證任何學得模型可直接控制真機，仍須沿<a href="06-安全評估與C++部署.html">安全部署階梯</a>進行獨立限制、影子模式、低速試驗與回退。</p>
+<div class="pager"><a href="07-離線強化學習資料支撐與分布外動作.html">← 07 離線學習</a><a href="名詞與概念字典.html">字典 →</a></div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

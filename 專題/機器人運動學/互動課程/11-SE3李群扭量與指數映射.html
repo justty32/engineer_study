@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>11 SE(3)、扭量與指數映射｜七軸運動學</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="05-七軸正運動學.html">七軸模型</a>
+<a href="09-七軸數值逆運動學.html">逆運動學</a>
+<a aria-current="page" href="11-SE3李群扭量與指數映射.html">SE(3)</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">11 · 從矩陣計算走到剛體運動的結構</p>
+<h1>SE(3)、扭量與指數映射</h1>
+<p class="lead">白話問題：齊次變換已能描述位姿，為什麼還需要李群、扭量和指數映射？一句話答案：位姿不是能任意相加的普通向量；李群保留合法旋轉與剛體運動的結構，扭量則描述它在某一瞬間如何改變。</p>
+<div class="prereq"><strong>最小前置：</strong>先理解<a href="04-齊次變換與座標鏈.html">齊次變換</a>、<a href="06-雅可比與速度運動學.html">雅可比與六維速度</a>。本章不要求抽象代數，只把每個符號接回可觀察的位姿與速度。</div>
+<h2>位姿集合不是一般向量空間</h2>
+<p>剛體位姿由旋轉矩陣 <code>R</code> 與平移 <code>p</code> 組成 <code>T=[R p; 0 1]</code>。所有合法三維剛體變換形成特殊歐氏群（Special Euclidean Group, SE(3)）。「群」在這裡只需記四件事：兩個合法變換相乘仍合法、有單位變換、每個變換有逆、連乘結合方式一致。直接把兩個旋轉矩陣逐格平均，結果通常不再滿足 <code>RᵀR=I</code> 與 <code>det(R)=1</code>；這就是不能把位姿當普通十二維數字向量處理的原因。</p>
+<p>SE(3) 的小寫版本 <code>se(3)</code> 是單位位姿附近的切空間，可用六個速度量描述：三個角速度與三個線速度。這六維物件稱為扭量（twist）。本課前面採 <code>[v;ω]</code>，先列線速度再列角速度；Modern Robotics 等教材常採 <code>[ω;v]</code>。兩種都可用，但矩陣區塊、叉積位置與 API 必須跟順序一起固定，不能只交換文件文字。</p>
+<h2>指數與對數是速度、位姿之間的橋</h2>
+<p>把固定扭量的矩陣表示記成 <code>[V]</code>，維持時間 <code>Δt</code> 後的相對位姿可寫成 <code>exp([V]Δt)</code>。矩陣指數不是把每格取自然指數；它把無窮級數依剛體結構組合，使結果仍落在 SE(3)。反方向的矩陣對數 <code>log(T)</code> 會找出能生成相對變換的局部運動。這使「從目前位姿走到目標位姿」可先轉成具座標意義的六維誤差，再交給雅可比反解。</p>
+<p>以平面車體為例，車體 x 軸速度為 <code>v</code>、角速度為 <code>ω</code>。若 <code>ω=0</code>，經過 <code>t</code> 秒就是直走 <code>x=vt</code>；若 <code>ω≠0</code>，它沿半徑 <code>v/ω</code> 的圓弧走，位移為 <code>x=(v/ω)sin(ωt)</code>、<code>y=(v/ω)(1−cos(ωt))</code>。把「同時平移與旋轉」分成先直走再原地轉，通常得到不同終點；指數映射處理的是同一段時間內同時發生的剛體運動。</p>
+<h2>讀完再操作：積分一段平面扭量</h2>
+<section class="workspace">
+<div class="controls">
+<label for="lie-v">車體前向速度 v（m/s）<input id="lie-v" type="range" min="0" max="1" step="0.05" value="0.6"></label>
+<label for="lie-w">角速度 ω（deg/s）<input id="lie-w" type="range" min="-120" max="120" step="5" value="45"></label>
+<label for="lie-dt">積分時間 Δt（s）<input id="lie-dt" type="range" min="0.1" max="3" step="0.1" value="1"></label>
+</div>
+<div id="lie-output" class="output" aria-live="polite"></div>
+</section>
+<h2>螺旋軸、POE 與 Adjoint 各做什麼</h2>
+<p>螺旋軸（screw axis）把一個關節的旋轉軸、軸線位置與可能的沿軸平移包成六維運動方向。旋轉關節是節距為零的螺旋；移動關節則沒有角速度。指數積形式（Product of Exponentials, POE）把每個關節在零位時的螺旋軸依序指數化，再乘上工具零位姿。它與 Denavit–Hartenberg 表都能建正運動學，重點是選一套一致的座標契約，不要把兩套參數慣例拼接。</p>
+<p>伴隨表示（adjoint representation）<code>Ad(T)</code> 是由 4×4 變換建立的 6×6 矩陣，用來把同一個扭量或螺旋軸改用另一座標系表示。它不是再做一次物理運動。空間雅可比（space Jacobian）把末端扭量表示在固定空間框架；本體雅可比（body Jacobian）把它表示在末端框架。兩者描述同一真實速度，可由 Adjoint 轉換；混用會讓數值看似合理但方向錯誤。</p>
+<h2>證據、誤解與適用邊界</h2>
+<ul>
+<li><strong>群結構證據：</strong>每次積分後檢查 <code>RᵀR≈I</code>、<code>det(R)≈1</code>、底列為 <code>[0 0 0 1]</code>。</li>
+<li><strong>往返證據：</strong>小運動可檢查 <code>exp(log(T))≈T</code>，但旋轉接近 π 時要處理對數分支。</li>
+<li><strong>框架證據：</strong>同一扭量分別以 space／body 表示，經正確 <code>Ad(T)</code> 轉換後應對應同一有限差分位姿。</li>
+</ul>
+<p>常見誤解是把 <code>se(3)</code> 的六維座標直接當成有限位姿相加，或認為矩陣對數永遠有唯一答案。指數座標是局部且有分支的表示；大角度插值、接近 π 的旋轉與數值噪聲都需要明確策略。本章只建立運動學結構，不處理質量、力矩、接觸或控制穩定性。</p>
+<div class="pager"><a href="10-C++實作與驗證.html">← 10 C++</a><a href="12-運動學校正敏感度與可辨識性.html">12 校正與敏感度 →</a></div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>07 約束流形、投影與任務空間限制｜機器人規劃</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="03-PRM-RRT與RRT-star.html">取樣規劃</a>
+<a href="05-七軸冗餘與線上重規劃.html">七軸</a>
+<a aria-current="page" href="07-約束流形投影與任務空間限制.html">約束流形</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">07 · 可行組態可能只是一張薄薄的曲面</p>
+<h1>約束流形、投影與任務空間限制</h1>
+<p class="lead">白話問題：只要每個採樣都不碰撞，為何端著一杯水的手臂仍可能規劃失敗？一句話答案：碰撞自由只排除了禁區；「杯口保持水平、工具貼住曲面」還要求整條路徑停留在更低維的約束集合。</p>
+<div class="prereq"><strong>最小前置：</strong>先理解<a href="01-組態空間碰撞與間隙.html">組態空間</a>、<a href="03-PRM-RRT與RRT-star.html">取樣規劃</a>與<a href="../../機器人運動學/互動課程/06-雅可比與速度運動學.html">雅可比</a>。本章只討論連續、可微的等式約束；接觸切換與摩擦另有更複雜模型。</div>
+<h2>從「點有效」到「位於約束流形」</h2>
+<p>令關節組態為 <code>q∈Q</code>，任務約束寫成 <code>f(q)=0</code>。若要讓杯子的工具 z 軸保持鉛直，<code>f</code> 可輸出兩個傾斜誤差；若筆尖必須貼在平面上，<code>f</code> 可輸出法向距離。所有滿足方程的組態形成約束流形（constraint manifold）。七軸空間原本有七維；一個彼此獨立的等式通常把局部可動維度減一，但實際維度取決於約束雅可比的秩。</p>
+<p>碰撞檢查回答 <code>q∈Q_free?</code>，約束檢查回答 <code>||f(q)||≤ε?</code>。兩者都要成立。起點與終點符合約束也不夠；中間插值可能離開流形，或穿過障礙。規劃器必須在取樣、延伸、插值、捷徑與時間化後重新檢查整條邊，不能只在輸出最後補一個姿態修正。</p>
+<h2>投影是在局部把樣本拉回可行集合</h2>
+<p>對目前樣本 <code>q</code> 線性化 <code>f(q+Δq)≈f(q)+J_f(q)Δq</code>。最小範數修正可寫成 <code>Δq=−J_f⁺f(q)</code>，再反覆更新直到殘差小於容許值或確認失敗。這與數值逆運動學相似，但目標不是某個唯一末端位姿，而是任何滿足約束的組態。阻尼、步長與迭代上限可改善數值行為，卻不能保證跨越不連通區或修好錯誤約束。</p>
+<p>一個最小例子：平面二關節手臂端杯時，若簡化的杯面角度為 <code>q₁+q₂</code>，保持水平的約束就是 <code>f(q)=q₁+q₂=0</code>。起始殘差 30° 時，若每步只修正目前殘差的 60%，下一步剩 12°，再下一步剩 4.8°。這是收斂示意；真實高維投影的 Jacobian 會隨姿態改變，也可能在奇異處失秩。</p>
+<h2>讀完再操作：局部投影殘差</h2>
+<section class="workspace">
+<div class="controls">
+<label for="constraint-residual">初始約束殘差（deg）<input id="constraint-residual" type="range" min="-90" max="90" step="1" value="30"></label>
+<label for="constraint-gain">每步修正比例 α<input id="constraint-gain" type="range" min="0.1" max="1.4" step="0.1" value="0.6"></label>
+<label for="constraint-steps">投影迭代次數<input id="constraint-steps" type="range" min="1" max="12" step="1" value="4"></label>
+</div>
+<div id="constraint-output" class="output" aria-live="polite"></div>
+</section>
+<h2>投影、參數化與容許帶的取捨</h2>
+<p>投影式方法可把一般取樣器接到約束問題，但每次投影都可能失敗，且投影後的點仍要驗證關節極限與碰撞。另一條路是使用局部圖表（atlas／tangent bundle）在流形切空間取樣，再回投真實曲面；優點是較能沿薄集合探索，代價是要管理圖表、曲率與切換。若任務容許小誤差，也可把 <code>||f(q)||≤ε</code> 視為有限厚度帶，但 ε 應由任務容差與量測不確定度決定，不是為了讓規劃器容易成功而任意放寬。</p>
+<p>不等式限制如 <code>z_tool≥0.2 m</code>、間隙大於 30 mm、關節速度不超限，與等式流形不同。工程系統常把硬限制交給有效性檢查，把偏好寫成成本。例如「杯子必須不灑」若真的是硬安全需求，就不能只以傾斜角成本鼓勵；最佳化器可能為了縮短路徑而接受違反。</p>
+<h2>可觀察證據與失敗分類</h2>
+<ul>
+<li>逐路點與邊內插記錄最大 <code>||f(q)||</code>、投影迭代數、失敗原因及約束 Jacobian 的最小奇異值。</li>
+<li>將「投影未收斂」「流形不連通」「碰撞」「關節極限」「起終點本身不滿足」分開，不能都叫找不到路。</li>
+<li>規劃後重新以更密步距驗證約束與碰撞，避免規劃器和驗證器共享同一個粗離散化盲點。</li>
+</ul>
+<p>OMPL 的 constrained planning 框架假設約束函數具有適當連續性與可微性；工具接觸的建立／解除、摩擦錐、碰撞衝擊或離散模式切換不能直接用單一平滑 <code>f(q)=0</code> 完整表示。本章模型用來建立約束規劃語意，不構成真實接觸任務的可執行保證。</p>
+<div class="pager"><a href="06-C++架構與驗證證據.html">← 06 C++／證據</a><a href="08-動力可行規劃與煞停包絡.html">08 動力可行性 →</a></div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
