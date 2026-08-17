@@ -94,7 +94,12 @@ function setupHttp() {
   const draw = () => {
     const method = byId("http-method").value; const path = byId("http-path").value || "/"; const status = byId("http-status").value;
     const meanings = {"200":"伺服器成功回傳表示法","301":"資源有新的永久位置，客戶端可依 Location 標頭改送請求","404":"伺服器收到請求，但找不到此資源","500":"伺服器處理時發生內部錯誤"};
-    byId("http-output").innerHTML = `<strong>這是應用層訊息，不是連線本身。</strong><pre>${method} ${path} HTTP/1.1\nHost: example.test\n\n\nHTTP/1.1 ${status}\nContent-Type: text/plain\n\n示意內容</pre>${meanings[status]}。${method === "HEAD" ? "HEAD 要求只回傳與 GET 類似的標頭，不傳回應本文。" : method === "POST" ? "POST 把資料交給目標資源處理；重送是否安全取決於應用語意。" : "GET 讀取資源表示法，原則上不應用來改變伺服器狀態。"}`;
+    const output = byId("http-output");
+    const title = document.createElement("strong");
+    const message = document.createElement("pre");
+    title.textContent = "這是應用層訊息，不是連線本身。";
+    message.textContent = `${method} ${path} HTTP/1.1\nHost: example.test\n\n\nHTTP/1.1 ${status}\nContent-Type: text/plain\n\n示意內容`;
+    output.replaceChildren(title, message, document.createTextNode(`${meanings[status]}。${method === "HEAD" ? "HEAD 要求只回傳與 GET 類似的標頭，不傳回應本文。" : method === "POST" ? "POST 把資料交給目標資源處理；重送是否安全取決於應用語意。" : "GET 讀取資源表示法，原則上不應用來改變伺服器狀態。"}`));
   };
   ["http-method","http-path","http-status"].forEach(id => listen(id, "input", draw)); draw();
 }
