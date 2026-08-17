@@ -2,6 +2,8 @@
 
 給熟悉 C／C++、但缺乏微控制器硬體心智模型的讀者。全課無計時、無計分，從 reset、記憶體、MMIO 與硬體事件開始，再接到韌體架構與現場除錯。
 
+線上版本：[GitHub Pages／微控制器與韌體核心](https://justty32.github.io/engineer_study/iot-mcu-firmware/)
+
 - [課程地圖](index.html)
 - [00 從零理解微控制器](00-從零理解微控制器.html)
 - [名詞與概念字典](名詞與概念字典.html)

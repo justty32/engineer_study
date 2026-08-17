@@ -2,6 +2,8 @@
 
 這是一個給熟悉 C／C++、但硬體基礎不穩的讀者使用的互動網站。主線用同一塊 IoT 控制板串起 I²C 感測器、SPI Flash，以及以 RS-485／Modbus RTU 連接的現場設備。
 
+線上版本：[GitHub Pages／板級介面與工業匯流排](https://justty32.github.io/engineer_study/iot-hardware-bus/)
+
 - [硬體原理補課](hardware-principles.html)：不計時、不考試；先從回路、電荷與行波理解「為什麼」。
 - [GPIO 原理與實例](gpio-principles.html)：LED、按鈕、浮接、限流、去彈跳與外部 MOSFET。
 - [I²C 原理與實例](i2c-principles.html)：開漏共線、上拉、交易步驟、位址與 RC 上升時間。

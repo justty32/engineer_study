@@ -29,6 +29,12 @@ on:
       - "專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期/index.html"
       - "專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期/styles.css"
       - "專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期/app.js"
+      - "專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/*.html"
+      - "專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/*.css"
+      - "專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/*.js"
+      - "專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心/*.html"
+      - "專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心/*.css"
+      - "專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心/*.js"
       - "專題/網路安全/互動課程/*.html"
       - "專題/網路安全/互動課程/*.css"
       - "專題/網路安全/互動課程/*.js"
@@ -157,6 +163,8 @@ jobs:
           }
 
           copy_course '專題/網路安全/互動課程' network-security
+          copy_course '專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排' iot-hardware-bus
+          copy_course '專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心' iot-mcu-firmware
           copy_course '專題/網路安全/攻擊手法細講' attack-techniques
           copy_course '專題/網路協定/互動課程' network-protocols
           copy_course '專題/逆向工程/互動課程' reverse-engineering
@@ -170,6 +178,13 @@ jobs:
           from pathlib import Path
 
           replacements = {
+              "iot-hardware-bus": {
+                  "../07-微控制器與韌體核心/": "../iot-mcu-firmware/",
+                  "href=\"./README.md\"": "href=\"https://github.com/justty32/engineer_study/blob/main/專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/README.md\"",
+              },
+              "iot-mcu-firmware": {
+                  "../06-板級介面與工業匯流排/": "../iot-hardware-bus/",
+              },
               "network-security": {
                   "../攻擊手法細講/": "../attack-techniques/",
                   "../../逆向工程/互動課程/": "../reverse-engineering/",
