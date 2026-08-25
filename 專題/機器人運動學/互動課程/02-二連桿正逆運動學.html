@@ -1,2 +1,96 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 二連桿正逆運動學</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="01-向量矩陣與二維旋轉.html">01 旋轉</a><a aria-current="page" href="02-二連桿正逆運動學.html">02 2R</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">02 · 用小模型看清正解與反解</p><h1>二連桿正逆運動學</h1><p>正運動學（Forward Kinematics, FK）把關節角映到末端位姿；逆運動學（Inverse Kinematics, IK）從目標反求關節角。2R 手臂已會出現七軸同樣面對的多解、不可達與奇異姿勢。</p><pre><code>x=L₁cos(q₁)+L₂cos(q₁+q₂)　 y=L₁sin(q₁)+L₂sin(q₁+q₂)</code></pre><section class="workspace"><h2>指定目標，查看解析逆解</h2><div class="controls"><label for="ik2-x">目標 x（m）<input id="ik2-x" type="range" min="-1.2" max="1.2" step=".02" value=".6"></label><label for="ik2-y">目標 y（m）<input id="ik2-y" type="range" min="-1.2" max="1.2" step=".02" value=".4"></label></div><div id="ik2-output" class="output" aria-live="polite"></div></section><h2>工作空間不是一顆實心球</h2><p>本例兩段長 0.6 m 與 0.4 m，末端距基座必須介於 0.2 m 與 1.0 m。環內通常有肘上／肘下兩解；邊界兩解合併且雅可比矩陣失秩。</p><div class="note"><strong>七軸銜接：</strong>2R 用解析式列出兩個分支；通用七軸通常改用數值 IK，且同一末端位姿可能形成連續解族。</div><h2>用二連桿看懂兩種問題方向</h2><p>已知 q₁、q₂ 求末端位置稱為<strong>正運動學</strong>：輸入唯一時輸出通常唯一。已知目標 (x,y) 反求 q₁、q₂ 稱為<strong>逆運動學</strong>：可能有兩解、一解或無解。二連桿很小，卻已包含七軸求解會遇到的多解、不可達與分支選擇。</p><h2>正運動學逐步算</h2><p>設第一、第二連桿長度為 l₁=0.6 m、l₂=0.4 m，q₁=0°、q₂=90°。第一端點是 [0.6,0]；第二連桿的絕對方向是 q₁+q₂=90°，貢獻 [0,0.4]，所以末端為 [0.6,0.4] m。q₂ 是相對第一連桿的角度，不是相對世界 x 軸。</p><h2>工作空間先做便宜檢查</h2><p>目標到基座距離 r 必須落在 |l₁−l₂|≤r≤l₁+l₂，也就是 0.2–1.0 m。超出時，任何數值迭代都不會把幾何無解變成有解。落在範圍內通常有「肘上」與「肘下」兩個分支；靠近完全伸直或折疊時兩解合併且速度能力變差。</p><details><summary>逆解選哪一個？</summary><p>不能只看末端誤差。還要比較與目前關節角的距離、碰撞、關節極限、奇異點與後續路徑連續性；這些條件會在規劃課繼續使用。</p></details><h2>拿一個目標完整判斷</h2><p>目標 [0.6,0.4] m 距離約 0.721 m，落在 0.2–1.0 m，因此可能可達。接著由餘弦定理求 q₂ 的 cos 值；只要 cos 落在 [−1,1] 才有實角度。反餘弦給正角與負角兩個分支，再各自求 q₁。最後一定把兩組角度代回正運動學，確認誤差，而不是相信反三角函數輸出。</p><p>真實手臂還會因連桿厚度、碰撞與角度限制縮小工作空間；幾何距離檢查通過只代表「理想細線連桿可能有解」。</p><div class="note"><strong>章末能說明：</strong>正運動學為何通常單值、逆運動學為何多解；q₂ 為何是相對角；距離初篩能證明什麼、不能證明什麼；為何每個逆解都要代回 FK 並再檢查極限與碰撞。</div><div class="pager"><a href="01-向量矩陣與二維旋轉.html">← 01 旋轉</a><a href="03-三維旋轉與姿態.html">03 三維姿態 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>02 二連桿正逆運動學</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="01-向量矩陣與二維旋轉.html">01 旋轉</a>
+<a aria-current="page" href="02-二連桿正逆運動學.html">02 2R</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">02 · 用小模型看清正解與反解</p>
+<h1>二連桿正逆運動學</h1>
+<p>正運動學（Forward Kinematics, FK）把關節角映到末端位姿；逆運動學（Inverse Kinematics, IK）從目標反求關節角。2R 手臂已會出現七軸同樣面對的多解、不可達與奇異姿勢。</p>
+<pre>
+<code>x=L<sub>1</sub>cos(q<sub>1</sub>)+L<sub>2</sub>cos(q<sub>1</sub>+q<sub>2</sub>)　 y=L<sub>1</sub>sin(q<sub>1</sub>)+L<sub>2</sub>sin(q<sub>1</sub>+q<sub>2</sub>)</code>
+</pre>
+<p>式中 L<sub>1</sub>、L<sub>2</sub> 是連桿長度（m），q<sub>1</sub>、q<sub>2</sub> 是旋轉角（計算三角函數時用 rad），x、y 是末端在基座座標中的位置（m）。假設連桿剛性、關節無間隙、運動只在平面，且工具點就在第二連桿末端。</p>
+<p><strong>怎麼玩：</strong>先把目標設在 [0.6,0.4] m，觀察兩組解；再拖到 [1.0,0] m 看兩解合併；最後超出半徑 1.0 m。操作依序改變目標 → 距離檢查改變 → 解析式的 cos(q<sub>2</sub>) 可能落入或超出 [−1,1] → 輸出顯示兩解、邊界解或不可達。</p>
+<section class="workspace">
+<h2>指定目標，查看解析逆解</h2>
+<div class="controls">
+<label for="ik2-x">目標 x（m）<input id="ik2-x" type="range" min="-1.2" max="1.2" step=".02" value=".6">
+</label>
+<label for="ik2-y">目標 y（m）<input id="ik2-y" type="range" min="-1.2" max="1.2" step=".02" value=".4">
+</label>
+</div>
+<div id="ik2-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>工作空間不是一顆實心球</h2>
+<p>本例兩段長 0.6 m 與 0.4 m，末端距基座必須介於 0.2 m 與 1.0 m。環內通常有肘上／肘下兩解；邊界兩解合併且雅可比矩陣失秩。</p>
+<div class="note">
+<strong>七軸銜接：</strong>2R 用解析式列出兩個分支；通用七軸通常改用數值 IK，且同一末端位姿可能形成連續解族。</div>
+<h2>用二連桿看懂兩種問題方向</h2>
+<p>已知 q₁、q₂ 求末端位置稱為<strong>正運動學</strong>：輸入唯一時輸出通常唯一。已知目標 (x,y) 反求 q₁、q₂ 稱為<strong>逆運動學</strong>：可能有兩解、一解或無解。二連桿很小，卻已包含七軸求解會遇到的多解、不可達與分支選擇。</p>
+<h2>正運動學逐步算</h2>
+<p>設第一、第二連桿長度為 l₁=0.6 m、l₂=0.4 m，q₁=0°、q₂=90°。第一端點是 [0.6,0]；第二連桿的絕對方向是 q₁+q₂=90°，貢獻 [0,0.4]，所以末端為 [0.6,0.4] m。q₂ 是相對第一連桿的角度，不是相對世界 x 軸。</p>
+<h2>工作空間先做便宜檢查</h2>
+<p>目標到基座距離 r 必須落在 |l₁−l₂|≤r≤l₁+l₂，也就是 0.2–1.0 m。超出時，任何數值迭代都不會把幾何無解變成有解。落在範圍內通常有「肘上」與「肘下」兩個分支；靠近完全伸直或折疊時兩解合併且速度能力變差。</p>
+<details>
+<summary>逆解選哪一個？</summary>
+<p>不能只看末端誤差。還要比較與目前關節角的距離、碰撞、關節極限、奇異點與後續路徑連續性；這些條件會在規劃課繼續使用。</p>
+</details>
+<h2>拿一個目標完整判斷</h2>
+<p>目標 [0.6,0.4] m 的 r<sup>2</sup>=0.6<sup>2</sup>+0.4<sup>2</sup>=0.52 m<sup>2</sup>，所以 r≈0.721 m，落在 0.2–1.0 m。由餘弦定理，cos(q<sub>2</sub>)=(r<sup>2</sup>−L<sub>1</sub><sup>2</sup>−L<sub>2</sub><sup>2</sup>)/(2L<sub>1</sub>L<sub>2</sub>)=(0.52−0.36−0.16)/(2×0.6×0.4)=0，因此 q<sub>2</sub>=±90°。</p>
+<p>肘上分支取 q<sub>2</sub>=90° 時，q<sub>1</sub>=atan2(0.4,0.6)−atan2(0.4,0.6)=0°；代回 FK 得 [0.6,0.4] m。另一分支取 q<sub>2</sub>=−90° 時可得 q<sub>1</sub>≈67.4°，代回也到同一點。這顯示 IK 多解不是數值演算法失敗，而是幾何本來就多對一。</p>
+<p>真實手臂還會因連桿厚度、碰撞與角度限制縮小工作空間；幾何距離檢查通過只代表「理想細線連桿可能有解」。</p>
+<h2>可觀察證據與易混邊界</h2>
+<p>解析解最直接的軟體證據是把每組 q 代回 FK，記錄位置殘差 ||p<sub>target</sub>−p<sub>FK</sub>||（m）。小殘差證明公式彼此一致，不能證明真機無碰撞或幾何參數正確；實機還需關節編碼器、外部位姿量測與碰撞模型。</p>
+<ul>
+<li><strong>不可達與未收斂：</strong>不可達是沒有合法解；未收斂只是某次數值法沒找到。</li>
+<li><strong>工作空間與靈巧工作空間：</strong>某位置可達，不代表工具能以任意姿態到達。</li>
+<li><strong>解析分支與冗餘解族：</strong>2R 常是離散兩解；七軸完整位姿一般可有連續自運動。</li>
+<li><strong>幾何奇異與表示奇異：</strong>二連桿伸直是機構速度能力退化，不是因選了哪種角度格式。</li>
+</ul>
+<div class="note">
+<strong>章末能說明：</strong>正運動學為何通常單值、逆運動學為何多解；q₂ 為何是相對角；距離初篩能證明什麼、不能證明什麼；為何每個逆解都要代回 FK 並再檢查極限與碰撞。</div>
+<h2>多解在路徑上會變成連續性問題</h2><p>單點的肘上與肘下都可能正確；連續焊接時卻不能每點只挑當下殘差最小者。若中途換分支，工具位置或許連續，肘腕卻可能大幅翻轉。常見準則是最小化與上一組 q 的加權距離，再檢查極限與碰撞。</p><p>例如上一姿態 [5°,80°]，新目標兩解為 [7°,78°] 與 [65°,−78°]。前者只改 [2°,−2°]，通常較連續；若它即將碰撞，仍要提前規劃平滑換支，而不是最後一點突然跳。</p><h2>容許值也要有單位</h2><p>代回 FK 殘差 2×10<sup>−10</sup> m 多半是浮點量級；真機需求 0.1 mm 則是 1×10<sup>−4</sup> m。公式殘差小不等於真機準，因連桿公差與零位尚未驗證。</p><p><strong>能教別人的檢核：</strong>說明外圈不可達、內圈不可達、邊界奇異、肘上／肘下多解各會留下什麼不同證據。</p>
+<details><summary>工作空間邊界與靈巧度怎麼一起看？</summary><p>目標在 [0.99,0] m 雖仍落在外圈內，手臂已接近伸直。它能到達這個位置，不表示能在附近任意微移，也不表示連桿有空間繞障礙。工程上可先用距離環快速排除無解，再用雅可比、極限與碰撞逐層縮小可執行集合。</p><p>因此「可達」最好附條件：使用哪組連桿參數、是否要求姿態、是否含角度上下限、是否含自碰與環境。少了條件的工作空間數字只能當粗略幾何界線。</p></details>
+<div class="pager">
+<a href="01-向量矩陣與二維旋轉.html">← 01 旋轉</a>
+<a href="03-三維旋轉與姿態.html">03 三維姿態 →</a>
+</div>
+<section class="card">
+<h2>為什麼 IK 不能只寫成「把 FK 倒過來」？</h2>
+<p>FK 像一個函式：給定一組 q，沿同一條座標鏈一定算出一個末端位置。IK 面對的是反向查詢，而原函式可能把多個 q 映到同一點。若控制器忽略這件事，手臂可能在相鄰路徑點突然由肘上解跳到肘下解，末端位置雖連續，關節卻大幅翻轉。</p>
+<p>解析 IK 的核心是先由三角形求 q<sub>2</sub>，再求 q<sub>1</sub>。需要複習距離與圓的相交，可看<a href="../../機器人數學基礎/互動課程/02-座標與距離.html">機器人數學基礎第 2 章：座標與距離</a>；「由等式反求未知數」的完整鋪陳見<a href="../../機器人數學基礎/互動課程/10-解方程式與逆.html">第 10 章：解方程式與逆</a>。</p>
+</section>
+<h2>第二組數字：內圈為何也不可達？</h2>
+<p>仍取 L<sub>1</sub>=0.6 m、L<sub>2</sub>=0.4 m。目標 [0.1,0] m 到基座距離 r=0.1 m，小於 |0.6−0.4|=0.2 m。即使把兩段完全反折，長段仍比短段多出 0.2 m，所以末端無法靠基座更近。工作空間因此是半徑 0.2–1.0 m 的圓環，而不是整個圓盤。</p>
+<p>代入餘弦式也會看到同一證據：cos(q<sub>2</sub>)=(0.1<sup>2</sup>−0.6<sup>2</sup>−0.4<sup>2</sup>)/(2×0.6×0.4)=−0.51/0.48≈−1.0625。真實角度的 cos 必須在 [−1,1]，所以這不是「計算機精度差」，而是幾何無解。程式只在超出約 10<sup>−12</sup> 這類浮點容許範圍時才可判無解；不能把 −1.0625 強行夾成 −1 後宣稱成功。</p>
+<h2>邊界解怎麼合併？</h2>
+<p>目標 [1,0] m 時 r=1 m，cos(q<sub>2</sub>)=(1−0.36−0.16)/0.48=1，所以 q<sub>2</sub>=0°，兩段完全伸直，q<sub>1</sub>=0°。原本的 ±q<sub>2</sub> 分支在此合成同一解。若目標再向外增加 1 mm，就立刻無解；而在邊界內側，徑向微小移動會要求很大的關節變化，這是後面奇異點的預告。</p>
+<h2>從輸出判斷是哪一類失敗</h2>
+<ul>
+<li><strong>距離超界：</strong>先判為幾何不可達，不必啟動迭代器。</li>
+<li><strong>有兩組角度且代回殘差小：</strong>兩者都是幾何解，再由極限、碰撞與連續性選擇。</li>
+<li><strong>解析式說可達但真機碰撞：</strong>是模型缺少實體厚度或環境，不是 IK 公式突然失效。</li>
+<li><strong>代回殘差大：</strong>優先查 degree／radian、atan2 參數順序、分支符號與 q<sub>2</sub> 相對角定義。</li>
+</ul>
+<details>
+<summary>為什麼要用 atan2，而不只用 arctan(y/x)？</summary>
+<p>arctan(y/x) 會失去 x、y 各自的符號，也在 x=0 時除以零。atan2(y,x) 同時看兩個分量，能區分 [1,1] 與 [−1,−1] 位於相反方向。例如 atan2(1,1)=45°，atan2(−1,−1)=−135°；兩者的 y/x 都等於 1。它仍有 ±180° 的分支切線，沿路徑使用時要做角度連續化。</p>
+</details>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

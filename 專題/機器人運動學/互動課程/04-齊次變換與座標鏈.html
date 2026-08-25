@@ -1,2 +1,107 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 齊次變換與座標鏈</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="03-三維旋轉與姿態.html">03 姿態</a><a aria-current="page" href="04-齊次變換與座標鏈.html">04 變換</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">04 · 把旋轉和平移放進同一條鏈</p><h1>齊次變換與座標鏈</h1><p>齊次變換矩陣（Homogeneous Transformation Matrix）是特殊歐幾里得群（Special Euclidean Group, SE(3)）的矩陣表示：<code>T=[[R,p],[0,1]]</code>，逆矩陣為 <code>T⁻¹=[[Rᵀ,−Rᵀp],[0,1]]</code>。</p><p><code>⁰T₁</code> 的欄向量描述座標系 1 的軸如何用座標系 0 表示，最右欄是座標系 1 原點在 0 中的位置。完整上下標比變數名 <code>T</code> 更重要。</p><section class="workspace"><h2>連乘兩個局部變換</h2><div class="controls"><label for="tf-parent">父框架旋轉<input id="tf-parent" type="range" min="-180" max="180" value="30"></label><label for="tf-child">子框架旋轉<input id="tf-child" type="range" min="-180" max="180" value="45"></label></div><div id="tf-output" class="output" aria-live="polite"></div></section><div class="grid"><article class="card"><h3>乘法交換</h3><p><code>AB</code> 與 <code>BA</code> 描述不同幾何鏈。</p></article><article class="card"><h3>方向顛倒</h3><p><code>⁰T₁</code> 與 <code>¹T₀</code> 互為完整逆矩陣。</p></article><article class="card"><h3>點與方向混用</h3><p>齊次點末維為 1，受平移；自由方向末維為 0。</p></article><article class="card"><h3>單位混用</h3><p>平移必須統一公尺或毫米，矩陣乘法不會抓錯。</p></article></div><h2>為什麼要把旋轉和平移放進 4×4？</h2><p>三維點從 B 座標轉成 A 座標時，要先用旋轉 R 把分量方向對齊，再加上 B 原點在 A 中的位置 t：pᴬ=Rᴬ_B pᴮ+tᴬ_B。這不是單純 3×3 線性運算。加入一個固定為 1 的齊次分量後，可寫成 4×4 矩陣 T，讓旋轉與平移一起連乘。</p><h2>記號逐字讀</h2><p><code>ᴬT_B</code> 讀成「把 B 座標表示的點轉成 A 座標表示」。若已知工具到腕、腕到肘、肘到基座，就沿著能消去中間座標標籤的順序相乘：<code>ᴮT_T = ᴮT_E · ᴱT_W · ᵂT_T</code>。右邊最靠近點的變換先作用。</p><h2>一個旋轉加平移例子</h2><p>B 原點在 A 中位於 [1,0,0] m，B 又相對 A 逆時針旋轉 90°。B 中的點 [1,0,0] 先旋轉成 A 中的 [0,1,0]，再加原點位移，得到 [1,1,0]。若先加再旋轉會得到 [0,2,0]，這顯示順序不是排版細節。</p><details><summary>向量和點為何不同？</summary><p>方向向量沒有原點位置，齊次末項是 0，因此平移不作用；幾何點末項是 1，會加上平移。C++ 若都用裸 <code>Vector3</code>，很容易把兩者混用。</p></details><h2>反向變換不用重新猜</h2><p>若 ᴬT_B 的旋轉是 R、平移是 t，反向 ᴮT_A 的旋轉是 Rᵀ，平移是 −Rᵀt。負號不代表只把 t 三格變負；必須先把平移向量轉回 B 的方向。用 T·T⁻¹≈I 是最基本的單元測試。</p><p>座標鏈除錯時，把每個中間 T 的 frame 名稱印出來，檢查相鄰標籤能否消去。若寫出 ᴬT_B·ᶜT_D，中間 B 與 C 對不上，即使兩者剛好都是 4×4 也沒有幾何意義。</p><div class="note"><strong>章末能說明：</strong><code>ᴬT_B</code> 的輸入輸出、為何點受平移而方向不受、右邊變換先作用、反向平移為何不是只換負號，以及如何用 frame 標籤與 T·T⁻¹ 抓錯。</div><div class="pager"><a href="03-三維旋轉與姿態.html">← 03 姿態</a><a href="05-七軸正運動學.html">05 七軸 FK →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 齊次變換與座標鏈</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="03-三維旋轉與姿態.html">03 姿態</a>
+<a aria-current="page" href="04-齊次變換與座標鏈.html">04 變換</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">04 · 把旋轉和平移放進同一條鏈</p>
+<h1>齊次變換與座標鏈</h1>
+<p>齊次變換矩陣（Homogeneous Transformation Matrix）是特殊歐幾里得群（Special Euclidean Group, SE(3)）的矩陣表示：<code>T=[[R,p],[0,1]]</code>，逆矩陣為 <code>T⁻¹=[[Rᵀ,−Rᵀp],[0,1]]</code>。</p>
+<p>
+<code>⁰T₁</code> 的欄向量描述座標系 1 的軸如何用座標系 0 表示，最右欄是座標系 1 原點在 0 中的位置。完整上下標比變數名 <code>T</code> 更重要。</p>
+<p><strong>把 frame 名稱想成泛型型別：</strong><code><sup>A</sup>T<sub>B</sub></code> 接受 B 表示的點，輸出 A 表示的點。只有相鄰型別能接上的變換才能組合；4×4 尺寸相同只是記憶體形狀相容，並不保證幾何語意相容。</p>
+<p><strong>怎麼玩：</strong>先把父、子旋轉都設 0°，確認局部平移直接相加；再只轉父框架，觀察子框架的平移方向也被父旋轉帶走；最後交換兩角的數值比較。你看到的是兩個局部變換連乘後的總位姿，不是兩角單純相加的通則。</p>
+<section class="workspace">
+<h2>連乘兩個局部變換</h2>
+<div class="controls">
+<label for="tf-parent">父框架旋轉<input id="tf-parent" type="range" min="-180" max="180" value="30">
+</label>
+<label for="tf-child">子框架旋轉<input id="tf-child" type="range" min="-180" max="180" value="45">
+</label>
+</div>
+<div id="tf-output" class="output" aria-live="polite">
+</div>
+</section>
+<div class="grid">
+<article class="card">
+<h3>乘法交換</h3>
+<p>
+<code>AB</code> 與 <code>BA</code> 描述不同幾何鏈。</p>
+</article>
+<article class="card">
+<h3>方向顛倒</h3>
+<p>
+<code>⁰T₁</code> 與 <code>¹T₀</code> 互為完整逆矩陣。</p>
+</article>
+<article class="card">
+<h3>點與方向混用</h3>
+<p>齊次點末維為 1，受平移；自由方向末維為 0。</p>
+</article>
+<article class="card">
+<h3>單位混用</h3>
+<p>平移必須統一公尺或毫米，矩陣乘法不會抓錯。</p>
+</article>
+</div>
+<h2>為什麼要把旋轉和平移放進 4×4？</h2>
+<p>三維點從 B 座標轉成 A 座標時，要先用旋轉 R 把分量方向對齊，再加上 B 原點在 A 中的位置 t：p<sup>A</sup>=R<sup>A</sup><sub>B</sub>p<sup>B</sup>+t<sup>A</sup><sub>B</sub>。R 無單位，p 與 t 都必須使用相同長度單位，所以結果仍為長度。加入固定為 1 的齊次分量後，可寫成 4×4 矩陣 T，讓旋轉與平移一起連乘。</p>
+<h2>記號逐字讀</h2>
+<p>
+<code>ᴬT_B</code> 讀成「把 B 座標表示的點轉成 A 座標表示」。若已知工具到腕、腕到肘、肘到基座，就沿著能消去中間座標標籤的順序相乘：<code>ᴮT_T = ᴮT_E · ᴱT_W · ᵂT_T</code>。右邊最靠近點的變換先作用。</p>
+<h2>一個旋轉加平移例子</h2>
+<p>B 原點在 A 中位於 [1,0,0] m，B 又相對 A 繞 z 軸逆時針旋轉 90°。B 中的點 p<sup>B</sup>=[1,0,0] m 先旋轉成 A 中的 [0,1,0] m，再加原點位移，得到 p<sup>A</sup>=[1,1,0] m。若先加再旋轉會得到 [0,2,0] m，這顯示順序不是排版細節。</p>
+<details>
+<summary>向量和點為何不同？</summary>
+<p>方向向量沒有原點位置，齊次末項是 0，因此平移不作用；幾何點末項是 1，會加上平移。C++ 若都用裸 <code>Vector3</code>，很容易把兩者混用。</p>
+</details>
+<h2>反向變換不用重新猜</h2>
+<p>若 ᴬT_B 的旋轉是 R、平移是 t，反向 ᴮT_A 的旋轉是 Rᵀ，平移是 −Rᵀt。負號不代表只把 t 三格變負；必須先把平移向量轉回 B 的方向。用 T·T⁻¹≈I 是最基本的單元測試。</p>
+<p>座標鏈除錯時，把每個中間 T 的 frame 名稱印出來，檢查相鄰標籤能否消去。若寫出 <sup>A</sup>T<sub>B</sub>·<sup>C</sup>T<sub>D</sub>，中間 B 與 C 對不上，即使兩者剛好都是 4×4 也沒有幾何意義。</p>
+<h2>從資料流找到錯在哪一節</h2>
+<p>讀取關節角 → 為每一節建立局部 T → 依 frame 鏈連乘 → 轉換工具點 → 輸出基座中的位姿。除錯時應保存每個中間 frame 的原點、三根軸與時間戳。T·T<sup>−1</sup>≈I 能證明代數求逆自洽，卻不能證明相機外參、工具偏移或關節零位填對；那些需要獨立治具或外部量測。</p>
+<ul>
+<li><strong>點與方向：</strong>點的齊次末項為 1，受平移；自由方向末項為 0，不受平移。</li>
+<li><strong>位姿與座標轉換：</strong>同一矩陣可依慣例描述 frame 位姿或點的表示轉換，必須在 API 說清楚方向。</li>
+<li><strong>反向與負平移：</strong>反向平移是 −R<sup>T</sup>t，不是只把原三格加負號。</li>
+<li><strong>單位：</strong>mm 與 m 混用仍會產生合法 4×4 數字，卻會造成千倍位置錯誤。</li>
+</ul>
+<div class="note">
+<strong>章末能說明：</strong>
+<code>ᴬT_B</code> 的輸入輸出、為何點受平移而方向不受、右邊變換先作用、反向平移為何不是只換負號，以及如何用 frame 標籤與 T·T⁻¹ 抓錯。</div>
+<h2>像型別接合一樣讀 frame</h2><p><sup>A</sup>T<sub>B</sub><sup>B</sup>T<sub>C</sub> 的 B 接上，結果是 <sup>A</sup>T<sub>C</sub>；若中間標籤不同，即使都是 4×4 也不能組成原本的幾何鏈。這是實用的型別檢查直覺，真正運算仍依已定義矩陣方向。</p><p>例如要把工具 T 的點轉到相機 C，要組出 <sup>C</sup>T<sub>B</sub><sup>B</sup>T<sub>W</sub><sup>W</sup>T<sub>T</sub>。若只有 <sup>B</sup>T<sub>C</sub>，須先求完整逆。</p><h2>時間也是契約</h2><p>動態 frame 要在同一時間組合。工具以 0.8 m/s 移動，兩筆資料錯開 25 ms，位置可能差約 0.8×0.025=0.02 m。矩陣都合法，錯在不是同一時刻。</p><p><strong>能教別人的檢核：</strong>解釋 −R<sup>T</sup>t 是先移回原點再反轉方向，並用一個點做正反向往返。</p>
+<details><summary>為何齊次點最後一格固定為 1？</summary><p>將 [x,y,z] 寫成 [x,y,z,1] 後，T 的最右平移欄會乘上 1 而加入結果；方向寫成 [d<sub>x</sub>,d<sub>y</sub>,d<sub>z</sub>,0]，平移欄乘 0 因而消失。最後一格是把仿射的「加平移」嵌入一次矩陣乘法的記帳技巧，不是第四個物理空間座標。</p><p>例如 T 只有平移 [2,3,4]，點 [1,0,0,1] 變 [3,3,4,1]；方向 [1,0,0,0] 仍為 [1,0,0,0]。若法向或速度被無故加上 2、3、4，通常是末項型別用錯。</p></details>
+<div class="pager">
+<a href="03-三維旋轉與姿態.html">← 03 姿態</a>
+<a href="05-七軸正運動學.html">05 七軸 FK →</a>
+</div>
+<section class="card">
+<h2>沒有齊次變換時，錯誤會藏在哪裡？</h2>
+<p>若旋轉和平移分散在不同函式，開發者很容易在某一節先加平移、下一節卻先旋轉，或忘記子框架的平移方向會被父框架帶動。4×4 表示的重點是讓「旋轉後再加原點位移」成為一個可組合物件；它不會自動修正 frame 命名、單位或乘法方向。</p>
+<p>把多節變換視為函式合成很有幫助，但精確限制是每個 T 都表示一個剛體座標轉換，不是任意 4×4。右下角必須是 1、底列前三格是 0、左上 R 必須是合法旋轉。合成變換的詳細先修可看<a href="../../機器人數學基礎/互動課程/08-合成變換.html">機器人數學基礎第 8 章：合成變換</a>。</p>
+</section>
+<h2>把兩節鏈完整算一次</h2>
+<p>設 A 到 B：B 原點在 A 中為 [1,0] m，且 B 相對 A 轉 90°。B 到 C：C 原點在 B 中為 [1,0] m，無額外旋轉。第二個 [1,0] 必須先被 A 到 B 的旋轉轉成 [0,1]，再加 B 原點 [1,0]，所以 C 原點在 A 中是 [1,1] m，C 姿態仍為 90°。</p>
+<p>若錯把兩個局部平移直接相加，會得到 [2,0] m。若交換兩個 T，則先沿 A 的 x 走 1 m，再套另一個不同語意的旋轉，結果也不再代表原本的 A→B→C 鏈。這說明「相鄰 frame 標籤能消去」不是記號潔癖，而是決定哪個向量要先被哪個旋轉處理。</p>
+<h2>逆變換用數字驗證</h2>
+<p>沿用 B 相對 A 轉 90°、位於 [1,0] m 的例子。R<sup>T</sup> 是轉 −90°，而反向平移為 −R<sup>T</sup>t。先算 R<sup>T</sup>[1,0]=[0,−1]，再取負號得 [0,1] m。也就是 A 原點在 B 座標中位於 [0,1] m，不是直覺猜的 [−1,0] m。</p>
+<p>拿 B 中點 [1,0] m 正向轉到 A 得 [1,1] m，再用反向式：先減 A 中的 B 原點得 [0,1]，再轉 −90° 得 [1,0]，確實回到原值。這個點的往返加上 T·T<sup>−1</sup>≈I，是比只看矩陣外觀更直接的測試。</p>
+<details>
+<summary>點、方向與法向量真的都用同一方式嗎？</summary>
+<p>點受旋轉和平移；自由方向只受旋轉。表面法向量在純旋轉下也用 R，但若一般圖學管線含非等比例縮放，法向量要用逆轉置，不能照搬方向向量規則。本課的 SE(3) 只含剛體旋轉和平移，不含縮放與剪切，因此這個差異暫時不出現。</p>
+<p>互動時可先將父、子角都設 0°取得純平移基準，再只轉父角。若子原點的位移方向沒有跟著父框架旋轉，代表實作把局部平移誤當世界平移。輸出可證明頁面模型的鏈順序，不能證明真機各節固定外參。</p>
+</details>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

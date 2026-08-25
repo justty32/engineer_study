@@ -1,2 +1,124 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 七軸數值逆運動學</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="08-奇異點可操作度與關節極限.html">08 奇異</a><a aria-current="page" href="09-七軸數值逆運動學.html">09 IK</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">09 · 反覆縮小局部誤差</p><h1>七軸阻尼最小平方逆運動學</h1><p>阻尼最小平方（Damped Least Squares, DLS）一步更新為 <code>Δq=Jᵀ(JJᵀ+λ²I)⁻¹e</code>。誤差 e 含位置與姿態；λ 越大越穩但越慢、偏差也越大。每走一步都要重新做 FK、誤差與 J。</p><section class="workspace"><h2>讓七軸手臂追位置與偏航姿態</h2><div class="controls"><label for="ik-x">目標 x（m）<input id="ik-x" type="range" min="-.3" max=".75" step=".01" value=".55"></label><label for="ik-y">目標 y（m）<input id="ik-y" type="range" min="-.5" max=".5" step=".01" value=".15"></label><label for="ik-z">目標 z（m）<input id="ik-z" type="range" min="-.2" max=".8" step=".01" value=".28"></label><label for="ik-yaw">目標偏航<input id="ik-yaw" type="range" min="-180" max="180" value="20"></label><label for="ik-lambda">阻尼 λ<input id="ik-lambda" type="range" min=".01" max=".4" step=".01" value=".08"></label></div><button id="ik-step" type="button">走一步</button> <button id="ik-run" type="button">最多走 40 步</button> <button id="ik-reset" type="button">重設</button><div id="ik-output" class="output" aria-live="polite"></div></section><h2>停止不等於成功</h2><div class="grid"><article class="card"><h3>收斂</h3><p>位置與姿態誤差都低於各自容許值，關節也在限制內。</p></article><article class="card"><h3>停滯</h3><p>步長很小但誤差仍大，可能在局部極小、近奇異或權重衝突。</p></article><article class="card"><h3>不可達</h3><p>目標超出工作空間或姿態與位置無法同時滿足；增加迭代次數沒有用。</p></article><article class="card"><h3>換初始值</h3><p>數值 IK 依賴種子；不同初始 q 可收斂到不同冗餘姿態或分支。</p></article></div><div class="warning"><strong>本互動仍是教學解算器：</strong>只用簡化姿態誤差、固定權重、硬式示意關節夾限，沒有碰撞與全域收斂保證。</div><h2>數值逆運動學是一個反覆縮小誤差的迴圈</h2><ol><li>由目前 q 做正運動學，得到工具位姿。</li><li>計算目標與目前的位置誤差、姿態誤差；兩者單位不同，要定義權重。</li><li>計算目前 J，以阻尼最小平方求小步 Δq。</li><li>限制每步大小並套關節範圍，更新 q。</li><li>重新計算誤差，直到通過容許值或達到終止條件。</li></ol><h2>為何不能直接「反矩陣」？</h2><p>J 是 6×7，不是方陣；而且可能接近奇異。阻尼最小平方常寫成 Δq=Jᵀ(JJᵀ+λ²I)⁻¹e。λ 避免弱方向被無限放大，但解只是局部線性近似，所以要小步迭代。</p><h2>失敗不是只有「沒收斂」</h2><table><tr><th>現象</th><th>可能原因</th><th>證據</th></tr><tr><td>位置降、姿態不降</td><td>權重失衡或姿態誤差寫錯</td><td>分開畫兩種誤差</td></tr><tr><td>關節來回跳</td><td>步長太大、IK 分支或極限裁切</td><td>逐步 q、Δq 與裁切事件</td></tr><tr><td>停在非零誤差</td><td>不可達、局部極小或阻尼太大</td><td>工作空間、最小奇異值、不同初值</td></tr></table><p>同一目標要用多個初始姿態測試，因為數值法通常只能找到附近的一個解，不保證全域最好。</p><h2>姿態誤差不能逐格相減就算完</h2><p>旋轉矩陣九格相減不直接等於「要轉多少」。常見做法由目前旋轉與目標旋轉的相對旋轉，取出一個三維小角度誤差；誤差方向與使用左誤差／右誤差、在哪個 frame 表示有關，必須和雅可比一致。</p><p>位置誤差以公尺、姿態誤差以 rad 表示。權重 1 並不代表兩者同等重要；應依任務容許值做尺度化，例如 1 mm 與 0.5° 各自對應一個標準化誤差單位。</p><div class="note"><strong>章末能說明：</strong>每次迭代從 FK 到誤差、J、Δq 再回 FK 的閉環；非方陣為何不能普通求逆；位置／姿態權重如何定義；不可達、局部極小、奇異、步長與阻尼過大的證據有何不同。</div><div class="pager"><a href="08-奇異點可操作度與關節極限.html">← 08 奇異</a><a href="10-C++實作與驗證.html">10 C++ 實作 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>09 七軸數值逆運動學</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="08-奇異點可操作度與關節極限.html">08 奇異</a>
+<a aria-current="page" href="09-七軸數值逆運動學.html">09 IK</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">09 · 反覆縮小局部誤差</p>
+<h1>七軸阻尼最小平方逆運動學</h1>
+<p>阻尼最小平方（Damped Least Squares, DLS）一步更新為 <code>Δq=Jᵀ(JJᵀ+λ²I)⁻¹e</code>。誤差 e 含位置與姿態；λ 越大越穩但越慢、偏差也越大。每走一步都要重新做 FK、誤差與 J。</p>
+<p><strong>把它看成 request–reconcile 迴圈：</strong>目標位姿是 desired state，FK 算出的目前位姿是 observed state，誤差經 J 與阻尼轉成小幅關節更新。一次更新不是答案；每一步都要重新觀察再修正。</p>
+<p><strong>怎麼玩：</strong>先按「走一步」，記下位置誤差、姿態誤差與步長，再連走 40 步。接著固定目標，只把 λ 從 0.01 拉到 0.4 比較：小 λ 通常積極但近奇異易放大，大 λ 較保守但可能收斂慢或停在較大殘差。最後換一個極端目標觀察停止原因。</p>
+<section class="workspace">
+<h2>讓七軸手臂追位置與偏航姿態</h2>
+<div class="controls">
+<label for="ik-x">目標 x（m）<input id="ik-x" type="range" min="-.3" max=".75" step=".01" value=".55">
+</label>
+<label for="ik-y">目標 y（m）<input id="ik-y" type="range" min="-.5" max=".5" step=".01" value=".15">
+</label>
+<label for="ik-z">目標 z（m）<input id="ik-z" type="range" min="-.2" max=".8" step=".01" value=".28">
+</label>
+<label for="ik-yaw">目標偏航<input id="ik-yaw" type="range" min="-180" max="180" value="20">
+</label>
+<label for="ik-lambda">阻尼 λ<input id="ik-lambda" type="range" min=".01" max=".4" step=".01" value=".08">
+</label>
+</div>
+<button id="ik-step" type="button">走一步</button> <button id="ik-run" type="button">最多走 40 步</button> <button id="ik-reset" type="button">重設</button>
+<div id="ik-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>停止不等於成功</h2>
+<div class="grid">
+<article class="card">
+<h3>收斂</h3>
+<p>位置與姿態誤差都低於各自容許值，關節也在限制內。</p>
+</article>
+<article class="card">
+<h3>停滯</h3>
+<p>步長很小但誤差仍大，可能在局部極小、近奇異或權重衝突。</p>
+</article>
+<article class="card">
+<h3>不可達</h3>
+<p>目標超出工作空間或姿態與位置無法同時滿足；增加迭代次數沒有用。</p>
+</article>
+<article class="card">
+<h3>換初始值</h3>
+<p>數值 IK 依賴種子；不同初始 q 可收斂到不同冗餘姿態或分支。</p>
+</article>
+</div>
+<div class="warning">
+<strong>本互動仍是教學解算器：</strong>只用簡化姿態誤差、固定權重、硬式示意關節夾限，沒有碰撞與全域收斂保證。</div>
+<h2>數值逆運動學是一個反覆縮小誤差的迴圈</h2>
+<ol>
+<li>由目前 q 做正運動學，得到工具位姿。</li>
+<li>計算目標與目前的位置誤差、姿態誤差；兩者單位不同，要定義權重。</li>
+<li>計算目前 J，以阻尼最小平方求小步 Δq。</li>
+<li>限制每步大小並套關節範圍，更新 q。</li>
+<li>重新計算誤差，直到通過容許值或達到終止條件。</li>
+</ol>
+<h2>用單一弱方向看懂阻尼數字</h2>
+<p>在單一奇異方向上，DLS 的反解增益可看成 g=σ/(σ<sup>2</sup>+λ<sup>2</sup>)。若 σ=0.02、λ=0，普通偽逆增益是 1/σ=50；若 λ=0.10，g=0.02/(0.0004+0.01)≈1.92。關節更新不再暴增，但該末端誤差也只會被部分修正。σ 與 λ 的數值意義依 J 的尺度與任務權重而定，不能跨模型照抄。</p>
+<h2>為何不能直接「反矩陣」？</h2>
+<p>J 是 6×7，不是方陣；而且可能接近奇異。阻尼最小平方常寫成 Δq=Jᵀ(JJᵀ+λ²I)⁻¹e。λ 避免弱方向被無限放大，但解只是局部線性近似，所以要小步迭代。</p>
+<h2>失敗不是只有「沒收斂」</h2>
+<table>
+<tr>
+<th>現象</th>
+<th>可能原因</th>
+<th>證據</th>
+</tr>
+<tr>
+<td>位置降、姿態不降</td>
+<td>權重失衡或姿態誤差寫錯</td>
+<td>分開畫兩種誤差</td>
+</tr>
+<tr>
+<td>關節來回跳</td>
+<td>步長太大、IK 分支或極限裁切</td>
+<td>逐步 q、Δq 與裁切事件</td>
+</tr>
+<tr>
+<td>停在非零誤差</td>
+<td>不可達、局部極小或阻尼太大</td>
+<td>工作空間、最小奇異值、不同初值</td>
+</tr>
+</table>
+<p>同一目標要用多個初始姿態測試，因為數值法通常只能找到附近的一個解，不保證全域最好。</p>
+<h2>姿態誤差不能逐格相減就算完</h2>
+<p>旋轉矩陣九格相減不直接等於「要轉多少」。常見做法由目前旋轉與目標旋轉的相對旋轉，取出一個三維小角度誤差；誤差方向與使用左誤差／右誤差、在哪個 frame 表示有關，必須和雅可比一致。</p>
+<p>位置誤差以公尺、姿態誤差以 rad 表示。權重 1 並不代表兩者同等重要；應依任務容許值做尺度化。例如位置誤差 2 mm、容許值 1 mm，標準化值是 2；姿態誤差 0.25°、容許值 0.5°，標準化值是 0.5。此時位置應優先縮小，而不是直接拿 0.002 與約 0.00436 rad 比大小。</p>
+<h2>如何判讀一次求解紀錄</h2>
+<p>每步保存目標與目前 frame、||e<sub>p</sub>||（m）、||e<sub>R</sub>||（rad）、最小奇異值、λ、||Δq||（rad）、裁切事件與停止原因。誤差單調下降可支持局部收斂；FK→IK→FK 的小殘差可證明解重建目標。這仍不能證明路徑無碰撞、真機能跟上或目標全域可達。</p>
+<ul>
+<li><strong>迭代上限與成功：</strong>跑完 40 步只是停止條件，成功還需通過明定容許值。</li>
+<li><strong>夾限與約束最佳化：</strong>算完再硬夾 q 會改變解的方向，不等於在求解中真正納入限制。</li>
+<li><strong>不同初值與錯誤：</strong>收斂到不同冗餘姿態可能都是正確解，不必要求 q 相同。</li>
+<li><strong>位置收斂與位姿收斂：</strong>位置很準但方向錯，完整工具任務仍未完成。</li>
+</ul>
+<div class="note">
+<strong>章末能說明：</strong>每次迭代從 FK 到誤差、J、Δq 再回 FK 的閉環；非方陣為何不能普通求逆；位置／姿態權重如何定義；不可達、局部極小、奇異、步長與阻尼過大的證據有何不同。</div>
+<h2>步長限制與阻尼不是同一旋鈕</h2><p>阻尼改變弱方向的反解增益；步長限制則在求得 Δq 後限制一次最多走多少。即使姿態遠離奇異，小 λ 算出的方向仍可能因目標遠而步幅過大；反之，極小步長也不能修復 λ=0 在奇異方向的巨大數值敏感性。</p><p>例如解得 ||Δq||=0.8 rad，而上限 0.1 rad，可整體縮放為原來 1/8，保留方向；逐關節各自夾限會扭曲方向更多。兩者都改變理想更新，下一步必須重算誤差，不能假設原線性預測仍成立。</p><h2>不同初值是診斷工具</h2><p>同一可達目標從三個合理種子都收斂到不同 q、FK 殘差都小，通常反映冗餘多解；所有種子都停在相似非零殘差，才增加不可達或權重衝突的嫌疑。某一種子失敗不能單獨證明目標無解。</p><p><strong>能教別人的檢核：</strong>逐項敘述一次迭代的資料流，並用位置通過、姿態失敗的數字例解釋為何「停止」不等於「成功」。</p>
+<div class="pager">
+<a href="08-奇異點可操作度與關節極限.html">← 08 奇異</a>
+<a href="10-C++實作與驗證.html">10 C++ 實作 →</a>
+</div>
+<section class="card"><h2>沒有迭代紀錄，失敗只剩一句「IK 不行」</h2><p>數值 IK 每一步都只相信目前附近的線性近似。若目標遠、J 近奇異、權重失衡或一步走太大，更新方向可能讓某一種誤差下降、另一種上升。只看最後 success 布林值，無法判斷是幾何無解、初值落錯分支、阻尼太強，還是程式的 frame 寫反。</p><p>DLS 本質上是在解帶有穩定化項的方程式。需要從「為何非方陣沒有普通反矩陣」開始，可讀<a href="../../機器人數學基礎/互動課程/10-解方程式與逆.html">機器人數學基礎第 10 章：解方程式與逆</a>；局部更新直覺見<a href="../../機器人數學基礎/互動課程/11-變化率導數與梯度.html">第 11 章：變化率、導數與梯度</a>。</p></section>
+<h2>用一維玩具迴圈看懂每一步</h2><p>假設簡化 FK 是 x=sin q，目前 q=0°、目標 x=0.5。此時誤差 e=0.5−0=0.5，導數 J=cos0°=1。若不阻尼且步長倍率為 1，Δq=e/J=0.5 rad≈28.65°。更新後 x=sin0.5≈0.479，誤差降為約 0.021。</p><p>第二步 J=cos0.5≈0.878，Δq≈0.021/0.878≈0.024 rad，q≈0.524 rad≈30°，x≈0.5。這示範「線性預測、走一步、重新計算」；若一開始把 0.5 m 誤當成角度直接設 q=0.5，碰巧接近答案不代表方法可推廣到七軸。</p>
+<h2>成功條件要用兩把尺</h2><p>設位置容許值 1 mm、姿態容許值 0.5°。某次停止時位置誤差 0.0008 m=0.8 mm，位置通過；姿態誤差 0.012 rad≈0.688°，姿態失敗。若只把六維誤差混成一個 norm，權重可能讓位置小數值掩蓋姿態超標，或反過來。</p><p>再假設 ||Δq|| 已小於 10<sup>−6</sup> rad，但位置仍差 3 cm。這叫停滯，不叫收斂。停止原因應是列舉值，例如 converged、max_iterations、stalled、joint_limit、invalid_number，而不是把所有情況都回傳 false。</p>
+<details><summary>如何用互動比較 λ，而不被初始狀態干擾？</summary><ol><li>固定同一目標與同一初始 q，記錄每一步兩種誤差。</li><li>重設後用 λ=0.01 跑固定 40 步，保存最大 ||Δq|| 與最終殘差。</li><li>再次重設，用 λ=0.20 重跑；不可接著前一次終點比較。</li><li>比較的是收斂速度、更新峰值與殘差，不是只看哪個先顯示停止。</li></ol><p>這能說明本模型中阻尼的效果，不能直接替真機選 λ；控制週期、速度上限、J 尺度與量測延遲都會改變安全範圍。</p></details>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

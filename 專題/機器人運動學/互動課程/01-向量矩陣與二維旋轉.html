@@ -1,2 +1,98 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 向量、矩陣與二維旋轉</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="00-機械手臂自由度與座標.html">00 座標</a><a aria-current="page" href="01-向量矩陣與二維旋轉.html">01 旋轉</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">01 · 矩陣是可組合的幾何動作</p><h1>向量、矩陣與二維旋轉</h1><div class="prereq"><strong>前置：</strong>知道向量分量依賴座標系。二維主動旋轉矩陣為 <code>R(θ)=[[cosθ,−sinθ],[sinθ,cosθ]]</code>。</div><p>旋轉矩陣保持長度與夾角，滿足 <code>RᵀR=I</code> 與 <code>det(R)=1</code>，所以逆旋轉是轉置 <code>R⁻¹=Rᵀ</code>。它的欄向量是旋轉後的基底方向。</p><section class="workspace"><h2>改變兩個關節角</h2><div class="controls"><label for="arm-q1">q₁<input id="arm-q1" type="range" min="-180" max="180" value="30"></label><label for="arm-q2">q₂<input id="arm-q2" type="range" min="-180" max="180" value="45"></label></div><div id="arm-output" class="output" aria-live="polite"></div></section><h2>矩陣乘法的順序</h2><p>若使用欄向量，<code>R₁R₂p</code> 是右側 <code>R₂</code> 先作用。若每個旋轉繞移動中的局部軸，與繞固定世界軸的乘法順序不同。程式必須固定：向量放左或右、主動或被動、軸固定或隨動。</p><details><summary>手算：q₁=0°、q₂=90° 時末端在哪？</summary><p>第一段長 0.6 m 沿 x；第二段絕對方向為 90°，長 0.4 m 沿 y，所以末端為 (0.6, 0.4) m。</p></details><h2>先分清數字、向量與矩陣</h2><p><strong>純量</strong>是一個帶單位的數，例如角度 30°；<strong>向量</strong>是一個幾何量在指定座標軸上的分量，例如基座座標中的位置 [0.4,0.2,0.5] m；<strong>矩陣</strong>可表示線性映射，告訴你輸入向量的每個方向如何組成輸出。向量的三個分量改變，不一定代表空間中的箭頭改變，也可能只是換了座標系。</p><h2>二維旋轉數值例子</h2><p>向量 p=[1,0] 逆時針主動旋轉 90°。因 cos90°=0、sin90°=1，旋轉矩陣 R=[[0,-1],[1,0]]；矩陣乘向量得到 Rp=[0,1]。第一列用來算新的 x，第二列用來算新的 y。若是「向量不動、座標軸逆時針轉 90°」的被動換座標，則用 R 的轉置，結果符號方向相反。</p><h2>為何矩陣相乘順序不能交換？</h2><p>ABp 表示先做 B，再做 A，因為最靠近 p 的運算先發生。先旋轉再平移與先平移再旋轉通常到不同位置；三維旋轉軸也會被前一個旋轉帶走。因此不能把矩陣乘法當普通數字乘法任意換序。</p><details><summary>正交旋轉矩陣有什麼方便之處？</summary><p>它的欄向量互相垂直且長度為 1，所以 RᵀR=I；反向旋轉不需一般矩陣求逆，只要轉置 Rᵀ。這也是檢查旋轉矩陣是否被數值誤差破壞的證據。</p></details><h2>用維度先攔住不合法運算</h2><p>2×2 矩陣只能乘 2 維向量；3×3 旋轉矩陣乘 3 維向量。矩陣 A 為 m×n、B 為 n×p 時才能組成 AB，結果是 m×p。中間的 n 表示 A 接受的輸入維度必須等於 B 產生的輸出維度。</p><p>還要做量綱檢查：純旋轉矩陣無單位，乘公尺向量後仍是公尺；雅可比的線速度列會含公尺，乘 rad/s 後成 m/s。若程式結果單位對不上，代數即使能編譯也有語意錯誤。</p><div class="note"><strong>章末能說明：</strong>向量分量一定隸屬某個座標系；主動旋轉改變幾何箭頭，被動換座標只改數字；ABp 的 B 先作用；旋轉矩陣轉置代表反向旋轉。若其中一句說不清楚，回到 00A 用 0°、90° 手算。</div><div class="pager"><a href="00A-角度弧度三角函數與單位.html">← 00A 數學起點</a><a href="02-二連桿正逆運動學.html">02 二連桿 FK／IK →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>01 向量、矩陣與二維旋轉</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="00-機械手臂自由度與座標.html">00 座標</a>
+<a aria-current="page" href="01-向量矩陣與二維旋轉.html">01 旋轉</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">01 · 矩陣是可組合的幾何動作</p>
+<h1>向量、矩陣與二維旋轉</h1>
+<div class="prereq">
+<strong>前置：</strong>知道向量分量依賴座標系。二維主動旋轉矩陣為 <code>R(θ)=[[cosθ,−sinθ],[sinθ,cosθ]]</code>。</div>
+<p>旋轉矩陣保持長度與夾角，滿足 <code>RᵀR=I</code> 與 <code>det(R)=1</code>，所以逆旋轉是轉置 <code>R⁻¹=Rᵀ</code>。它的欄向量是旋轉後的基底方向。</p>
+<p><strong>軟體直覺：</strong>矩陣像帶有明確輸入／輸出型別的純函式。可以組合，但只有維度、座標系與方向契約都吻合才有幾何意義；「都是 double 陣列」不等於可以互乘。</p>
+<p><strong>怎麼玩：</strong>先設 q<sub>1</sub>=0°、q<sub>2</sub>=0°，確認兩段都沿 x；再只把 q<sub>2</sub> 改成 90°，最後只改 q<sub>1</sub>。第一段方向由 q<sub>1</sub> 決定，第二段的世界方向由 q<sub>1</sub>+q<sub>2</sub> 決定，因此改 q<sub>1</sub> 會帶動整條後段。</p>
+<section class="workspace">
+<h2>改變兩個關節角</h2>
+<div class="controls">
+<label for="arm-q1">q₁<input id="arm-q1" type="range" min="-180" max="180" value="30">
+</label>
+<label for="arm-q2">q₂<input id="arm-q2" type="range" min="-180" max="180" value="45">
+</label>
+</div>
+<div id="arm-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>矩陣乘法的順序</h2>
+<p>若使用欄向量，<code>R₁R₂p</code> 是右側 <code>R₂</code> 先作用。若每個旋轉繞移動中的局部軸，與繞固定世界軸的乘法順序不同。程式必須固定：向量放左或右、主動或被動、軸固定或隨動。</p>
+<details>
+<summary>手算：q₁=0°、q₂=90° 時末端在哪？</summary>
+<p>第一段長 0.6 m 沿 x；第二段絕對方向為 90°，長 0.4 m 沿 y，所以末端為 (0.6, 0.4) m。</p>
+</details>
+<h2>先分清數字、向量與矩陣</h2>
+<p>
+<strong>純量</strong>是一個帶單位的數，例如角度 30°；<strong>向量</strong>是一個幾何量在指定座標軸上的分量，例如基座座標中的位置 [0.4,0.2,0.5] m；<strong>矩陣</strong>可表示線性映射，告訴你輸入向量的每個方向如何組成輸出。向量的三個分量改變，不一定代表空間中的箭頭改變，也可能只是換了座標系。</p>
+<h2>二維旋轉數值例子</h2>
+<p>向量 p=[1,0] 逆時針主動旋轉 90°。因 cos90°=0、sin90°=1，旋轉矩陣 R=[[0,−1],[1,0]]；矩陣乘向量得到 Rp=[0,1]。第一列用來算新的 x，第二列用來算新的 y。量綱上 R 無單位、p 為 m，所以 Rp 仍為 m。若是「向量不動、座標軸逆時針轉 90°」的被動換座標，則用 R 的轉置，結果為 [0,−1]。</p>
+<p>再算一個非直角例子：p=[2,0] m、θ=30°，cosθ≈0.866、sinθ=0.5，因此 Rp≈[1.732,1.000] m。旋轉前後長度都為 2 m；若長度改變，矩陣就不是純旋轉或計算有錯。</p>
+<h2>為何矩陣相乘順序不能交換？</h2>
+<p>ABp 表示先做 B，再做 A，因為最靠近 p 的運算先發生。先旋轉再平移與先平移再旋轉通常到不同位置；三維旋轉軸也會被前一個旋轉帶走。因此不能把矩陣乘法當普通數字乘法任意換序。</p>
+<details>
+<summary>正交旋轉矩陣有什麼方便之處？</summary>
+<p>它的欄向量互相垂直且長度為 1，所以 RᵀR=I；反向旋轉不需一般矩陣求逆，只要轉置 Rᵀ。這也是檢查旋轉矩陣是否被數值誤差破壞的證據。</p>
+</details>
+<h2>用維度先攔住不合法運算</h2>
+<p>2×2 矩陣只能乘 2 維向量；3×3 旋轉矩陣乘 3 維向量。矩陣 A 為 m×n、B 為 n×p 時才能組成 AB，結果是 m×p。中間的 n 表示 A 接受的輸入維度必須等於 B 產生的輸出維度。</p>
+<p>還要做量綱檢查：純旋轉矩陣無單位，乘公尺向量後仍是公尺；雅可比的線速度列對旋轉關節可視為 m，乘 rad/s 後成 m/s（rad 在量綱分析中無因次，但工程標示仍應保留）。若程式結果單位對不上，代數即使能編譯也有語意錯誤。</p>
+<h2>從操作到證據</h2>
+<p>滑桿改 q → 每節的絕對方向改變 → 連桿端點依 cos／sin 更新 → 螢幕輸出末端座標。輸出只能證明這個教學模型按既定公式運算；要驗證實作，應另外檢查 R<sup>T</sup>R≈I、det(R)≈1、端點距離等於連桿長，並用手算案例交叉比對。</p>
+<ul>
+<li><strong>主動旋轉：</strong>座標軸固定，幾何向量真的轉動。</li>
+<li><strong>被動換座標：</strong>幾何向量不動，改用另一組軸描述。</li>
+<li><strong>矩陣儲存順序：</strong>row-major／column-major 是記憶體配置，不等於數學上使用欄向量或列向量。</li>
+<li><strong>交換律：</strong>二維同原點旋轉彼此可交換是特殊情況；含平移或三維不同軸時通常不可交換。</li>
+</ul>
+<div class="note">
+<strong>章末能說明：</strong>向量分量一定隸屬某個座標系；主動旋轉改變幾何箭頭，被動換座標只改數字；ABp 的 B 先作用；旋轉矩陣轉置代表反向旋轉。若其中一句說不清楚，回到 00A 用 0°、90° 手算。</div>
+<h2>用欄向量直接看矩陣</h2><p>R(30°) 第一欄 [0.866,0.5] 是 x 基底旋轉後方向；第二欄 [−0.5,0.866] 是 y 基底結果。任意 p=[a,b] 都是 a[1,0]+b[0,1]，所以 Rp 就是 a 乘第一欄再加 b 乘第二欄。矩陣乘法只是把已知基底結果依輸入分量組合。</p><p>例如 p=[3,−2]，Rp=3[0.866,0.5]−2[−0.5,0.866]≈[3.598,−0.232]。逐列算法與逐欄組合法應相同，可互相驗證。</p><h2>尺寸正確仍可能語意錯</h2><p>R<sup>A</sup><sub>B</sub> 可乘 p<sup>B</sup>，輸出 p<sup>A</sup>；直接乘 p<sup>C</sup> 雖仍是 3×3 乘 3×1，卻無物理意義。維度檢查只擋形狀錯，frame 標籤才擋語意錯。</p><p><strong>能教別人的檢核：</strong>分清矩陣的欄、記憶體 column-major、使用欄向量慣例；三者名稱相似但不是同一層次。</p>
+<details><summary>旋轉為何保持兩向量的夾角？</summary><p>夾角由內積決定。旋轉後兩向量 Ra、Rb 的內積為 (Ra)<sup>T</sup>(Rb)=a<sup>T</sup>R<sup>T</sup>Rb=a<sup>T</sup>b，因為 R<sup>T</sup>R=I。長度也同理保持，所以 cosθ=(a·b)/(|a||b|) 不變。這是旋轉矩陣「剛性」的精確證明。</p><p>數值測試可取 a=[1,2]、b=[2,−1]，原內積為 0，代表垂直；任意旋轉後內積仍應接近 0。若只測單一向量長度，仍可能漏掉某些扭曲角度的錯誤矩陣。</p></details>
+<div class="pager">
+<a href="00A-角度弧度三角函數與單位.html">← 00A 數學起點</a>
+<a href="02-二連桿正逆運動學.html">02 二連桿 FK／IK →</a>
+</div>
+<section class="card">
+<h2>矩陣不存在時，組合動作就只能靠猜</h2>
+<p>若每次旋轉都手寫一套 x、y 公式，兩個關節還能勉強維護；到七個關節時，公式會重複展開成大量 sin、cos，任何負號或順序錯誤都很難定位。矩陣的價值不是把算術變神祕，而是把「一個輸入如何轉成一個輸出」封裝成可連接的運算。</p>
+<p>精確地說，m×n 矩陣代表從 n 個輸入分量到 m 個輸出分量的線性映射。每一列告訴你某個輸出如何由輸入加權相加；每一欄則是某個輸入基底經映射後的結果。想從零建立這個讀法，可看<a href="../../機器人數學基礎/互動課程/04-矩陣乘向量.html">機器人數學基礎第 4 章：矩陣乘向量</a>，純旋轉的推導見<a href="../../機器人數學基礎/互動課程/05-二維旋轉矩陣.html">第 5 章：二維旋轉矩陣</a>。</p>
+</section>
+<h2>把 30° 旋轉逐格乘完</h2>
+<p>取 p=[2,1] m、θ=30°，R 約為 [[0.866,−0.5],[0.5,0.866]]。新的 x=0.866×2+(−0.5)×1=1.232 m；新的 y=0.5×2+0.866×1=1.866 m，所以 Rp≈[1.232,1.866] m。原長度 √(2<sup>2</sup>+1<sup>2</sup>)=√5≈2.236 m；新長度 √(1.232<sup>2</sup>+1.866<sup>2</sup>)≈2.236 m。</p>
+<p>現在反轉回去。R<sup>T</sup> 約為 [[0.866,0.5],[−0.5,0.866]]。第一分量約 0.866×1.232+0.5×1.866≈2；第二分量約 −0.5×1.232+0.866×1.866≈1。這組往返計算把「轉置是逆」變成可以拿筆核對的證據。</p>
+<h2>兩連桿為何要用 q<sub>1</sub>+q<sub>2</sub>？</h2>
+<p>q<sub>2</sub> 是第二連桿相對第一連桿的角度。若 q<sub>1</sub>=30°、q<sub>2</sub>=60°，第一段的世界方向是 30°，第二段世界方向是 30°+60°=90°。取長度 0.6 m 與 0.4 m，第一段貢獻 [0.6cos30°,0.6sin30°]≈[0.520,0.300] m；第二段貢獻 [0,0.4] m；末端約 [0.520,0.700] m。</p>
+<p>若錯把 q<sub>2</sub> 當世界角度，會把第二段算成 [0.2,0.346] m，末端變成約 [0.720,0.646] m。兩者都看似合理，只有明確的相對角契約、手算案例與連桿方向輸出能分辨。</p>
+<details>
+<summary>互動實驗的四步驗證法</summary>
+<ol>
+<li>q<sub>1</sub>=q<sub>2</sub>=0°：末端應在 [1,0] m，證明長度與零位。</li>
+<li>只設 q<sub>2</sub>=90°：應到 [0.6,0.4] m，證明 q<sub>2</sub> 是相對角。</li>
+<li>只設 q<sub>1</sub>=90°：整支手臂應一起轉到 [0,1] m，證明上游關節帶動下游。</li>
+<li>比較 [30°,60°] 與 [60°,30°]：末端通常不同，證明關節角色不能只因數字相同而交換。</li>
+</ol>
+<p>這些結果可證明頁面內的教學公式互相一致；它們沒有測到馬達回授、連桿公差或工具安裝。</p>
+</details>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

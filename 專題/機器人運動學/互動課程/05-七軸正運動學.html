@@ -1,2 +1,116 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 七軸正運動學</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="04-齊次變換與座標鏈.html">04 變換</a><a aria-current="page" href="05-七軸正運動學.html">05 七軸 FK</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">05 · 七個局部動作合成一個工具位姿</p><h1>七軸正運動學</h1><div class="prereq"><strong>教學模型：</strong>基座高 0.20 m，主要連桿長 0.32、0.28、0.12 m；局部旋轉軸依序為 Z–Y–X–Y–X–Y–X。這不是任何商用手臂的幾何。</div><section class="workspace"><h2>操作七個關節</h2><div class="controls"><label for="q1">q₁ 基座偏航<input id="q1" type="range" min="-170" max="170" value="0"></label><label for="q2">q₂ 肩部俯仰<input id="q2" type="range" min="-120" max="120" value="20"></label><label for="q3">q₃ 肩部滾轉<input id="q3" type="range" min="-170" max="170" value="0"></label><label for="q4">q₄ 肘部俯仰<input id="q4" type="range" min="-140" max="140" value="45"></label><label for="q5">q₅ 前臂滾轉<input id="q5" type="range" min="-170" max="170" value="0"></label><label for="q6">q₆ 腕部俯仰<input id="q6" type="range" min="-120" max="120" value="-30"></label><label for="q7">q₇ 腕部滾轉<input id="q7" type="range" min="-175" max="175" value="0"></label></div><button id="q-reset" type="button">重設七軸</button><div id="seven-output" class="output" aria-live="polite"></div></section><h2>三種建模方式不要混用慣例</h2><table><thead><tr><th>方法</th><th>角色</th><th>主要陷阱</th></tr></thead><tbody><tr><td>直接變換鏈</td><td>逐關節寫局部旋轉與固定平移；本頁採用</td><td>不標框架時乘法方向易顛倒</td></tr><tr><td>Denavit–Hartenberg（DH）參數</td><td>用 θ、d、a、α 描述相鄰框架</td><td>標準 DH 與修改型 DH 順序不同</td></tr><tr><td>指數積（Product of Exponentials, POE）</td><td>用旋量與指數映射描述整鏈</td><td>空間／本體表示、零位姿與左右乘須一致</td></tr></tbody></table><p>正運動學對固定關節向量有唯一輸出。驗證至少測零角、單一關節轉動、連桿長度總和與旋轉矩陣正交性。</p><h2>七軸模型實際由什麼組成？</h2><p>每個關節至少需要：轉軸方向、相對上一節的位置、角度零點與正方向；每個連桿需要固定幾何。正運動學就是從基座開始，交替套用「本關節依 qᵢ 旋轉」與「沿連桿固定變換」，一路乘到工具。只寫七個角度而沒有軸與固定變換，模型並不完整。</p><h2>逐關節追蹤，不要一口吞矩陣</h2><ol><li>令目前變換為基座到第一關節的固定安裝變換。</li><li>用 q₁ 更新第一旋轉，得到第一關節之後的座標系。</li><li>乘上第一連桿到第二關節的固定變換。</li><li>對 q₂…q₇ 重複；最後再乘工具中心點偏移。</li></ol><p>每一步都能輸出原點與三根軸。當末端錯誤時，從第一個偏離預期的關節開始找，而不是只看最後一個 4×4。</p><h2>零位是最便宜的證據</h2><p>把所有 q 設為 0，末端應落在模型文件可手算的位置，各座標軸也應符合關節安裝方向。再單獨只轉一個關節 90°，觀察後續所有原點是否繞正確軸運動。這兩組測試能抓出軸順序、度／弧度、左右乘與固定偏移錯誤。</p><h2>DH 與 POE 是建模方式，不是兩種物理手臂</h2><p>Denavit–Hartenberg（DH）方法用一套座標放置規則和四個參數描述相鄰連桿；指數積（Product of Exponentials, POE）方法以零位工具變換和各關節扭轉軸描述運動。兩者若建模一致，應預測同一物理位姿。不要混用某廠的 DH 參數、另一套軸方向與自己的工具偏移。</p><p>模型比對應選多組隨機 q，將位置與姿態誤差分開；只在 q=0 相同可能是錯誤剛好抵消。</p><div class="note"><strong>章末能說明：</strong>七個 q 只是可變部分，完整模型還有軸、固定連桿變換、基座與工具偏移；FK 為何沿鏈逐步累積；如何用零位、單關節與多組隨機姿態交叉驗證。</div><div class="pager"><a href="04-齊次變換與座標鏈.html">← 04 變換</a><a href="06-雅可比與速度運動學.html">06 雅可比 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>05 七軸正運動學</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="04-齊次變換與座標鏈.html">04 變換</a>
+<a aria-current="page" href="05-七軸正運動學.html">05 七軸 FK</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">05 · 七個局部動作合成一個工具位姿</p>
+<h1>七軸正運動學</h1>
+<div class="prereq">
+<strong>教學模型：</strong>基座高 0.20 m，主要連桿長 0.32、0.28、0.12 m；局部旋轉軸依序為 Z–Y–X–Y–X–Y–X。這不是任何商用手臂的幾何。</div>
+<p><strong>白話定位：</strong>正運動學像走訪一棵只有單一路徑的場景圖。每個節點保存相對父節點的局部變換；從根節點一路組合到工具，就得到工具相對基座的全域位姿。</p>
+<p><strong>怎麼玩：</strong>先按重設，記下零位工具位置與三根軸；接著每次只動一個 q<sub>i</sub>。若動 q<sub>4</sub>，第 1–3 節不該改變，第 4 節之後的原點與軸才會被帶動。最後同時改多軸，觀察局部效果如何非交換地累積。</p>
+<section class="workspace">
+<h2>操作七個關節</h2>
+<div class="controls">
+<label for="q1">q₁ 基座偏航<input id="q1" type="range" min="-170" max="170" value="0">
+</label>
+<label for="q2">q₂ 肩部俯仰<input id="q2" type="range" min="-120" max="120" value="20">
+</label>
+<label for="q3">q₃ 肩部滾轉<input id="q3" type="range" min="-170" max="170" value="0">
+</label>
+<label for="q4">q₄ 肘部俯仰<input id="q4" type="range" min="-140" max="140" value="45">
+</label>
+<label for="q5">q₅ 前臂滾轉<input id="q5" type="range" min="-170" max="170" value="0">
+</label>
+<label for="q6">q₆ 腕部俯仰<input id="q6" type="range" min="-120" max="120" value="-30">
+</label>
+<label for="q7">q₇ 腕部滾轉<input id="q7" type="range" min="-175" max="175" value="0">
+</label>
+</div>
+<button id="q-reset" type="button">重設七軸</button>
+<div id="seven-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>三種建模方式不要混用慣例</h2>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>角色</th>
+<th>主要陷阱</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>直接變換鏈</td>
+<td>逐關節寫局部旋轉與固定平移；本頁採用</td>
+<td>不標框架時乘法方向易顛倒</td>
+</tr>
+<tr>
+<td>Denavit–Hartenberg（DH）參數</td>
+<td>用 θ、d、a、α 描述相鄰框架</td>
+<td>標準 DH 與修改型 DH 順序不同</td>
+</tr>
+<tr>
+<td>指數積（Product of Exponentials, POE）</td>
+<td>用旋量與指數映射描述整鏈</td>
+<td>空間／本體表示、零位姿與左右乘須一致</td>
+</tr>
+</tbody>
+</table>
+<p>正運動學對固定關節向量有唯一輸出。驗證至少測零角、單一關節轉動、連桿長度總和與旋轉矩陣正交性。「唯一」只指同一模型與同一 q 的輸出，不表示不同 q 不能到同一位姿。</p>
+<h2>七軸模型實際由什麼組成？</h2>
+<p>每個關節至少需要：轉軸方向、相對上一節的位置、角度零點與正方向；每個連桿需要固定幾何。正運動學就是從基座開始，交替套用「本關節依 qᵢ 旋轉」與「沿連桿固定變換」，一路乘到工具。只寫七個角度而沒有軸與固定變換，模型並不完整。</p>
+<h2>逐關節追蹤，不要一口吞矩陣</h2>
+<ol>
+<li>令目前變換為基座到第一關節的固定安裝變換。</li>
+<li>用 q₁ 更新第一旋轉，得到第一關節之後的座標系。</li>
+<li>乘上第一連桿到第二關節的固定變換。</li>
+<li>對 q₂…q₇ 重複；最後再乘工具中心點偏移。</li>
+</ol>
+<p>每一步都能輸出原點與三根軸。當末端錯誤時，從第一個偏離預期的關節開始找，而不是只看最後一個 4×4。</p>
+<h2>用簡化尺寸做上限與量綱檢查</h2>
+<p>本頁主要平移尺寸為基座高 0.20 m，加上 0.32、0.28、0.12 m 三段。忽略旋轉配置時，工具原點離肩部的直線距離不可能超過 0.32+0.28+0.12=0.72 m；這是三角不等式給的粗上限，不是每個方向都能達到的工作空間保證。每個局部旋轉矩陣無單位，平移欄以 m 表示，七段 4×4 相乘後平移仍以 m 表示。</p>
+<p>若某次輸出位置達 720 m，最可能是 mm／m 混用；若距離超過所有連桿長度總和，則局部平移被重複套用、工具偏移重複加入或矩陣區塊有錯。這類物理界線比只檢查「沒有 NaN」更有用。</p>
+<h2>零位是最便宜的證據</h2>
+<p>把所有 q 設為 0，末端應落在模型文件可手算的位置，各座標軸也應符合關節安裝方向。再單獨只轉一個關節 90°，觀察後續所有原點是否繞正確軸運動。這兩組測試能抓出軸順序、度／弧度、左右乘與固定偏移錯誤。</p>
+<h2>DH 與 POE 是建模方式，不是兩種物理手臂</h2>
+<p>Denavit–Hartenberg（DH）方法用一套座標放置規則和四個參數描述相鄰連桿；指數積（Product of Exponentials, POE）方法以零位工具變換和各關節扭轉軸描述運動。兩者若建模一致，應預測同一物理位姿。不要混用某廠的 DH 參數、另一套軸方向與自己的工具偏移。</p>
+<p>模型比對應選多組隨機 q，將位置誤差（m）與姿態誤差（rad）分開；只在 q=0 相同可能是錯誤剛好抵消。</p>
+<h2>從命令到外部量測的證據鏈</h2>
+<p>關節命令 → 編碼器回報 q → FK 逐節更新 → 軟體輸出工具 T → 外部追蹤器量得真實工具位姿。零位與單關節測試能抓軟體軸向、乘法與單位錯；外部量測才能暴露錯誤零點、連桿公差、工具安裝與機械撓曲。畫面輸出只是模型預測，不能單獨驗證真機。</p>
+<ul>
+<li><strong>模型與實體：</strong>本頁 Z–Y–X–Y–X–Y–X 軸序是教學假設，不可直接套到商用手臂。</li>
+<li><strong>關節角與固定偏移：</strong>q 是可變量；基座、連桿與工具變換也是 FK 必要輸入。</li>
+<li><strong>標準 DH 與修改型 DH：</strong>參數名稱相似，但單步變換順序不同。</li>
+<li><strong>FK 正確與路徑安全：</strong>FK 只算位姿，不檢查沿途碰撞、速度、力矩或煞車距離。</li>
+</ul>
+<div class="note">
+<strong>章末能說明：</strong>七個 q 只是可變部分，完整模型還有軸、固定連桿變換、基座與工具偏移；FK 為何沿鏈逐步累積；如何用零位、單關節與多組隨機姿態交叉驗證。</div>
+<h2>工具偏移為何不能漏</h2><p>腕原點正確不代表夾爪尖端正確。工具沿腕部局部 x 前伸 0.12 m，腕轉 90° 後，偏移在基座中也會轉。腕原點 [0.4,0.2,0.5] m、局部 x 指向基座 +y 時，TCP 是 [0.4,0.32,0.5] m，不是 [0.52,0.2,0.5] m。</p><h2>隨機測試要帶不變量</h2><p>產生多組合法 q，逐組檢查 R 正交、相鄰關節固定距離、工具距離粗上限與獨立實作結果。兩份程式若共用同一錯誤函式，就不算獨立證據；最好用直接鏈對照已核對的 DH 或 POE，再以手算零位作錨點。</p><p><strong>能教別人的檢核：</strong>從 q<sub>4</sub> 改變開始，說出哪些上游 frame 不動、哪些下游 frame 會動，以及編碼器、FK log、外部追蹤器各證明哪一層。</p>
+<details><summary>關節零點偏移會留下什麼圖樣？</summary><p>若 q<sub>2</sub> 編碼器零點固定偏 +1°，後段所有 frame 都會像真正多轉 1°，且誤差隨姿態呈系統性方向變化。連桿長度錯則主要沿該連桿方向改變後段原點距離。多姿態外部量測能利用這些不同圖樣分辨參數；單一姿態常只能看到總末端偏差。</p><p>軟體除錯先確認命令 q 與模型 q 是否已套 offset、套了幾次。最常見的錯不是完全沒套，而是在驅動層和 FK 層各加一次，零位測試因此比隨機姿態更容易看出固定倍數偏移。</p></details>
+<div class="pager">
+<a href="04-齊次變換與座標鏈.html">← 04 變換</a>
+<a href="06-雅可比與速度運動學.html">06 雅可比 →</a>
+</div>
+<section class="card"><h2>七軸真正增加的是除錯距離</h2><p>二連桿算錯時，末端前只有兩個嫌疑點；七軸的某一個軸向、零位或固定偏移寫錯，後面所有 frame 都會一起錯。若只印最終工具 T，就像只看長管線最後一筆錯誤輸出，無法知道污染從哪一節開始。解法是保留每一節的局部 T 與累積 T，逐節比較。</p><p>完整座標鏈的數學先修見<a href="../../機器人數學基礎/互動課程/09-三維旋轉與座標鏈.html">機器人數學基礎第 9 章：三維旋轉與座標鏈</a>。本頁假設連桿剛性、關節是理想旋轉副，沒有背隙、撓曲與溫度伸長；因此 FK 是名目幾何預測，不是真機真值。</p></section>
+<h2>用前三節做一個可手算的縮小鏈</h2><p>先把 q<sub>1</sub>=90°，其餘角度 0°，並只想像一段沿局部 x 的 0.32 m 連桿。基座 z 軸旋轉會把局部 x 轉到基座 y，所以平移貢獻應由 [0.32,0,0] m 變成 [0,0.32,0] m。若輸出仍沿基座 x，表示固定平移被放在旋轉之前，或把局部量當成世界量。</p><p>再設 q<sub>1</sub>=0°、q<sub>2</sub>=90°。依本頁教學軸序，第二關節繞局部 y 旋轉，後續局部 x 方向會轉向 −z 或 +z，符號取決於頁面採用的右手慣例。先用互動讀出本模型的符號，再檢查後續原點是否都遵循同一方向；不要只憑「肩部抬起應該是正」猜數學正號。</p>
+<h2>三層證據不要互相冒充</h2><ul><li><strong>代數層：</strong>每個 R 正交、每個 T 底列正確、連乘無 NaN。只能證明矩陣形狀合法。</li><li><strong>模型層：</strong>零位、單軸 90°、隨機 q 與另一套獨立 FK 實作一致。能抓慣例與程式錯。</li><li><strong>實體層：</strong>編碼器 q 與外部量測工具位姿對得上，才能支持軸線、零點、尺寸與工具偏移接近真機。</li></ul>
+<details><summary>怎麼做「一次只動一軸」的系統化表格？</summary><p>每次把所有 q 歸零，只把 q<sub>i</sub> 設為 +10°。記錄第 i 節以前各原點應完全不變；第 i 節以後各點到該軸的垂直距離應近似不變；工具旋轉矩陣仍應正交。再用 −10° 重做，檢查趨勢是否反向。這組測試能定位第一個錯誤 frame，但不能檢查多軸連乘的所有順序，因此仍要加入至少數十組隨機姿態交叉比對。</p></details>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>

@@ -1,2 +1,78 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 雅可比與速度運動學</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="05-七軸正運動學.html">05 FK</a><a aria-current="page" href="06-雅可比與速度運動學.html">06 雅可比</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">06 · 位姿映射的局部線性化</p><h1>6×7 雅可比矩陣與速度運動學</h1><div class="prereq"><strong>前置：</strong>七軸 FK 與各關節世界座標軸。末端扭量（Twist）把 3 維線速度與 3 維角速度合成六維瞬時運動。</div><pre><code>V = J(q) q̇　　V∈R⁶，J∈R^(6×7)，q̇∈R⁷</code></pre><p>雅可比矩陣（Jacobian matrix）的第 i 欄回答：「只有第 i 關節以 1 rad/s 旋轉時，末端瞬時線速度與角速度是多少？」對旋轉關節，角速度欄是世界座標中的關節軸 <code>zᵢ</code>，線速度欄是 <code>zᵢ×(pₑ−pᵢ)</code>。</p><section class="workspace"><h2>逐欄查看七個關節</h2><label for="jac-joint">關節欄</label><input id="jac-joint" type="range" min="0" max="6" value="3"><div id="jac-output" class="output" aria-live="polite"></div></section><h2>怎麼知道雅可比寫對？</h2><p>對每個關節加很小的 <code>ε</code>，以有限差分比較 <code>(p(q+εeᵢ)−p(q))/ε</code> 與雅可比線速度欄。這能抓出軸方向、框架、叉積順序與關節原點錯誤；但 ε 太大有截斷誤差，太小有浮點消去誤差。</p><details><summary>為何 J 不是「另一個 FK」？</summary><p>FK 給有限姿勢的非線性映射；J 只在目前 q 附近給一階瞬時關係。走大步時必須重新計算 J。</p></details><h2>雅可比從「微小改變」來</h2><p>正運動學是非線性函式 x=f(q)。在目前姿態附近，把每個關節只改一點點，末端變化可近似為 Δx≈J(q)Δq；除以很短時間就是末端速度 v≈J q̇。J 的第 i 欄回答：「只有第 i 關節以 1 rad/s 運動時，末端瞬間會得到什麼線速度與角速度？」</p><h2>旋轉關節的一欄怎麼組</h2><p>令世界中的關節軸為 zᵢ、關節原點為 pᵢ、末端原點為 pₑ。角速度貢獻就是 zᵢ；線速度來自繞軸掃動，為 zᵢ×(pₑ−pᵢ)。因此每欄上三格是線速度，下三格是角速度。七欄排在一起就得到 6×7。</p><h2>有限差分交叉驗證</h2><p>選很小 ε，例如 10⁻⁶ rad，只增加 qᵢ，計算 [p(q+εeᵢ)−p(q)]/ε，應接近 J 的第 i 欄線速度。ε 太大會混入非線性；太小會被浮點消去誤差污染。用數個 ε 觀察誤差先下降後上升，比只測一個值可靠。</p><details><summary>雅可比是固定矩陣嗎？</summary><p>不是。關節軸與原點在世界中的方向會隨前面關節改變，所以 J(q) 依目前 q 重新計算。把某一姿態的 J 重用到遠處會得到錯誤速度。</p></details><h2>速度的參考點與座標系也要標明</h2><p>同一剛體上不同點的線速度不同；工具原點的速度與工具尖端速度會差一個角速度外積偏移。雅可比輸出的六維速度也可表示在基座或工具座標，兩者數字不同。文件若只寫 <code>twist</code> 而未寫參考點與 frame，就不能安全組合。</p><p>角速度不是歐拉角三個分量的逐項導數；兩者關係依歐拉角順序與目前姿態改變。控制器應先選清楚真正需要的角速度表示。</p><div class="note"><strong>章末能說明：</strong>J 第 i 欄的物理實驗、旋轉關節線速度為何使用外積、6×7 的列與欄各代表什麼、J 為何依 q 改變，以及有限差分 ε 太大或太小各會造成什麼誤差。</div><div class="pager"><a href="05-七軸正運動學.html">← 05 FK</a><a href="07-冗餘零空間與肘部姿態.html">07 零空間 →</a></div></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>06 雅可比與速度運動學</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="05-七軸正運動學.html">05 FK</a>
+<a aria-current="page" href="06-雅可比與速度運動學.html">06 雅可比</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">06 · 位姿映射的局部線性化</p>
+<h1>6×7 雅可比矩陣與速度運動學</h1>
+<div class="prereq">
+<strong>前置：</strong>七軸 FK 與各關節世界座標軸。末端扭量（Twist）把 3 維線速度與 3 維角速度合成六維瞬時運動。</div>
+<pre>
+<code>V = J(q) q̇　　V∈R<sup>6</sup>，J∈R<sup>6×7</sup>，q̇∈R<sup>7</sup></code>
+</pre>
+<p>雅可比矩陣（Jacobian matrix）的第 i 欄回答：「只有第 i 關節以 1 rad/s 旋轉時，末端瞬時線速度與角速度是多少？」對旋轉關節，角速度欄是世界座標中的關節軸 <code>zᵢ</code>，線速度欄是 <code>zᵢ×(pₑ−pᵢ)</code>。</p>
+<p><strong>怎麼玩：</strong>逐一選第 1–7 欄，把它想成只開啟一個關節速度、其餘設為 0。輸出的軸方向決定角速度；軸到工具的槓桿臂決定線速度。靠近工具且穿過工具點的旋轉軸，線速度貢獻可能很小，但角速度貢獻仍存在。</p>
+<section class="workspace">
+<h2>逐欄查看七個關節</h2>
+<label for="jac-joint">關節欄</label>
+<input id="jac-joint" type="range" min="0" max="6" value="3">
+<div id="jac-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>怎麼知道雅可比寫對？</h2>
+<p>對每個關節加很小的 <code>ε</code>，以有限差分比較 <code>(p(q+εeᵢ)−p(q))/ε</code> 與雅可比線速度欄。這能抓出軸方向、框架、叉積順序與關節原點錯誤；但 ε 太大有截斷誤差，太小有浮點消去誤差。</p>
+<details>
+<summary>為何 J 不是「另一個 FK」？</summary>
+<p>FK 給有限姿勢的非線性映射；J 只在目前 q 附近給一階瞬時關係。走大步時必須重新計算 J。</p>
+</details>
+<h2>雅可比從「微小改變」來</h2>
+<p>正運動學是非線性函式 x=f(q)。在目前姿態附近，把每個關節只改一點點，末端變化可近似為 Δx≈J(q)Δq；除以很短時間就是末端速度 v≈J q̇。J 的第 i 欄回答：「只有第 i 關節以 1 rad/s 運動時，末端瞬間會得到什麼線速度與角速度？」</p>
+<h2>旋轉關節的一欄怎麼組</h2>
+<p>令世界中的關節軸為 zᵢ、關節原點為 pᵢ、末端原點為 pₑ。角速度貢獻就是 zᵢ；線速度來自繞軸掃動，為 zᵢ×(pₑ−pᵢ)。因此每欄上三格是線速度，下三格是角速度。七欄排在一起就得到 6×7。</p>
+<h2>有限差分交叉驗證</h2>
+<p>選很小 ε，例如 10<sup>−6</sup> rad，只增加 q<sub>i</sub>，計算 [p(q+εe<sub>i</sub>)−p(q)]/ε，應接近 J 的第 i 欄線速度。若位置差為 [0,6×10<sup>−7</sup>,0] m，除以 10<sup>−6</sup> rad 得約 [0,0.6,0] m/rad；再乘 q̇<sub>i</sub>=2 rad/s，預測線速度 [0,1.2,0] m/s。</p>
+<p>ε 太大會混入曲率等高階非線性；太小會被浮點消去誤差污染。用 10<sup>−3</sup>、10<sup>−4</sup>…10<sup>−8</sup> rad 掃描，理想上誤差先下降後上升；只測一個 ε 可能讓兩種誤差剛好互相遮掩。</p>
+<details>
+<summary>雅可比是固定矩陣嗎？</summary>
+<p>不是。關節軸與原點在世界中的方向會隨前面關節改變，所以 J(q) 依目前 q 重新計算。把某一姿態的 J 重用到遠處會得到錯誤速度。</p>
+</details>
+<h2>速度的參考點與座標系也要標明</h2>
+<p>同一剛體上不同點的線速度不同；工具原點的速度與工具尖端速度會差一個角速度外積偏移。雅可比輸出的六維速度也可表示在基座或工具座標，兩者數字不同。文件若只寫 <code>twist</code> 而未寫參考點與 frame，就不能安全組合。</p>
+<p>角速度不是歐拉角三個分量的逐項導數；兩者關係依歐拉角順序與目前姿態改變。控制器應先選清楚真正需要的角速度表示。</p>
+<h2>輸出能證明什麼？</h2>
+<p>互動逐欄輸出能建立「軸＋槓桿臂 → 末端瞬時速度」的直覺。解析 J 與有限差分一致，可證明 FK 與導數實作在測試姿態附近互相符合；它不能證明長時間積分正確，也不能驗證真機速度。真機需要同步的關節速度、工具位姿時間序列與時間戳，並考慮濾波延遲和量測雜訊。</p>
+<ul>
+<li><strong>有限位移與瞬時速度：</strong>Δx≈JΔq 只在足夠小的鄰域成立，大步後要重算 J。</li>
+<li><strong>幾何雅可比與解析雅可比：</strong>前者常輸出角速度；後者可能輸出特定姿態參數導數，兩者不一定相同。</li>
+<li><strong>工具原點與工具尖端：</strong>角速度相同，但兩點的線速度一般不同。</li>
+<li><strong>基座 frame 與工具 frame：</strong>描述同一物理速度，六個數字仍會不同。</li>
+</ul>
+<div class="note">
+<strong>章末能說明：</strong>J 第 i 欄的物理實驗、旋轉關節線速度為何使用外積、6×7 的列與欄各代表什麼、J 為何依 q 改變，以及有限差分 ε 太大或太小各會造成什麼誤差。</div>
+<h2>七欄如何一起合成速度</h2><p>Jq̇ 是把第 i 欄乘 q̇<sub>i</sub> 後相加。若兩欄線速度 c<sub>1</sub>=[0,0.6]、c<sub>2</sub>=[−0.2,0.4] m/rad，q̇=[2,−1] rad/s，末端速度為 2c<sub>1</sub>−c<sub>2</sub>=[0.2,0.8] m/s。關節貢獻會互相加總或抵消，不能只看單欄大小。</p><p>反問題是給 V 找 q̇；6×7 通常多解，需偽逆與零空間。J 失秩時，某些 V 沒有精確解。這自然引出後兩章。</p><h2>量測速度要看時間</h2><p>真機位置差分會放大雜訊；Δt 太大又平均掉變化。關節速度、外部位姿與 J(q) 必須對時。不合時可能是模型、濾波延遲或同步，不應立刻只改 J。</p><p><strong>能教別人的檢核：</strong>解釋 J 欄的每 rad 含義、乘 rad/s 後為何成速度，以及參考點移到工具尖端後哪部分改變。</p>
+<details><summary>工具點平移後，雅可比怎麼改？</summary><p>同一剛體角速度 ω 下，新點相對舊點偏移 r，線速度關係為 v<sub>new</sub>=v<sub>old</sub>+ω×r。假設腕原點 v=[0.1,0,0] m/s、ω=[0,0,2] rad/s，工具尖端偏移 r=[0.3,0,0] m，則 ω×r=[0,0.6,0] m/s，新線速度為 [0.1,0.6,0] m/s。</p><p>因此「雅可比正確」一定要附參考點。把腕雅可比拿去控制 30 cm 外的尖端，角速度列看來一致，線速度卻少一項。可用剛體上兩個標記點的外部速度差驗證這個關係。</p></details>
+<div class="pager">
+<a href="05-七軸正運動學.html">← 05 FK</a>
+<a href="07-冗餘零空間與肘部姿態.html">07 零空間 →</a>
+</div>
+<section class="card"><h2>沒有雅可比，控制器只會盲目試角度</h2><p>使用者要求工具向右 1 cm，關節卻是七個角度；沒有局部變化關係，就不知道該讓哪些馬達往哪邊轉。雅可比把這個痛點改寫成「目前姿態附近，每個關節的一點變化會把工具推向哪裡」。它像局部的微小改變放大器，但只在目前 q 附近有效。</p><p>若「變化率」仍抽象，先讀<a href="../../機器人數學基礎/互動課程/11-變化率導數與梯度.html">機器人數學基礎第 11 章：變化率、導數與梯度</a>；外積為何給出切向方向見<a href="../../機器人數學基礎/互動課程/07-外積.html">第 7 章：外積</a>。</p></section>
+<h2>用圓周運動重建一欄</h2><p>設關節軸 z=[0,0,1]，關節原點 p<sub>i</sub>=[0,0,0] m，工具 p<sub>e</sub>=[0.3,0.4,0] m。槓桿臂 r=[0.3,0.4,0] m，z×r=[−0.4,0.3,0] m。這就是該欄在線速度部分的值；角速度部分為 [0,0,1]。若關節以 2 rad/s 轉，工具線速度為 [−0.8,0.6,0] m/s，速率 √(0.8<sup>2</sup>+0.6<sup>2</sup>)=1 m/s，等於半徑 0.5 m 乘角速度 2 rad/s。</p><p>把工具點改成 [0,0,0.2] m，剛好落在同一 z 軸線上，z×r=0，所以此關節不造成工具原點線速度；但角速度仍為 [0,0,2] rad/s。這能防止「線速度欄為零，所以關節完全沒作用」的誤解。</p>
+<h2>有限差分要看一段趨勢</h2><p>假設解析欄預測 [−0.4,0.3,0] m/rad。用 ε=0.01 rad 得差分 [−0.403,0.298,0]，誤差約幾千分之一；改 ε=10<sup>−4</sup> 得 [−0.40003,0.29998,0]，更接近；再小到 10<sup>−12</sup> 時可能因兩個幾乎相同浮點位置相減而變差。正確圖形通常是誤差先下降、到谷底後上升。</p>
+<details><summary>互動輸出應逐欄問哪四句？</summary><ol><li>這一欄對應哪個關節，軸用哪個 frame 表示？</li><li>軸到工具點的槓桿臂是多少，單位是否為 m？</li><li>線速度方向是否同時垂直於軸與槓桿臂？</li><li>把該欄乘實際 q̇ 後，單位是否成為 m/s 與 rad/s？</li></ol><p>欄與有限差分一致只證明 FK 和 J 共享一致的局部幾何；若兩者複製了同一個錯 frame，仍可能一起錯，所以還要手算與外部量測。</p></details>
+</main>
+<script src="app.js">
+</script>
+</body>
+</html>
