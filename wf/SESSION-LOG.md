@@ -22,4 +22,4 @@
 
 ## 不屬任何工作流的進度
 
-- （無）
+- **互動課程「加厚講解」進行中**（走 [enrich-existing 子工作流](workflows/interactive-study-site/ENRICH-EXISTING.md)）：已完成並發布 — 網路協定（1x）、機器人四門課（運動學／路徑規劃／視覺／學習皆 3x 深化並連回新課）、新建「機器人數學基礎」互動課（部署 slug `robot-math`，已上主站入口第 15）。**尚未加厚的群（open）**：網路安全、攻擊手法細講、計算機組織、逆向工程、IoT 知識群互動網站（01–07）。續作時對每群套 ENRICH-EXISTING 共用指令稿 → 逐群驗收（app.js 未動／id 齊／無 LaTeX／無外部資產）→ 單獨 commit+push。
