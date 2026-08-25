@@ -93,8 +93,29 @@ struct PlanResult {
 <p>
 <strong>紀錄（log）</strong>不是把每個浮點數無限制輸出，而是保存日後回答「當時依據什麼做決定」的最小事件。事件應有單調時鐘、請求識別碼、模型與軌跡版本、參數雜湊、亂數種子、成本、間隙、限制最大值與結構化失敗原因；敏感場域還需考慮資料保存與存取權限。</p>
 <p>常見誤解包括：固定 seed 就等於完整可重現（平行排程、浮點與函式庫版本仍會影響）；單元測試全過就代表實機安全（感測與執行層尚未覆蓋）；用例外代表正常「找不到路」（預算內無解通常是可預期結果）。本章介面是教學骨架，不是即插即用的即時或安全認證架構。</p>
+<section class="section"><h2>痛點：一個 bool 會把不同補救方式壓成同一件事</h2><p>若 API 只回傳 <code>true</code> 或 <code>false</code>，上層看到 false 時不知道該換目標、增加預算、更新世界，還是立即停止。這像 HTTP 服務只回「失敗」而沒有狀態碼：程式可以編譯，系統卻無法採取正確復原策略。精確而言，失敗型別是跨模組契約的一部分，每個值應有明確觸發條件、可重試性與安全反應。</p><p>例：<code>InvalidStart</code> 表示輸入起點本身違規，增加取樣數不會修好；<code>BudgetExceeded</code> 表示尚未完成，增加預算或換規劃器可能有用；<code>StaleWorld</code> 表示結果依據過期，應先取得新版快照。三者都叫 false 會讓呼叫端做出錯誤重試。</p>
+<h2>把資料單位放進型別或邊界檢查</h2><p><code>double angle</code> 無法告訴讀者是 degree 還是 rad。若 90° 被當成 90 rad，等於約 5157°，錯誤可能直到碰撞模組才爆發。較安全的介面可使用 <code>Radians</code>、<code>Seconds</code> 等封裝型別，或至少在欄位名、建構函式與序列化格式固定單位並驗證範圍。</p><p>座標框架也一樣：<code>Vec3</code> 只保存三個數，不能阻止把 camera frame 的點當成 world frame。可在型別或 metadata 保存 frame ID 與 timestamp。這不是追求形式漂亮，而是讓本來只能靠人記住的前提，變成程式能拒絕的輸入。</p>
+<div class="grid"><article class="card"><h3>Request 是承諾</h3><p>起點、目標、世界版本、參數與預算應在受理後固定。若呼叫端能在背景修改同一容器，重現時便不知道規劃器實際看過哪些值。</p></article><article class="card"><h3>Result 是帶證據的聯集</h3><p>成功時必須有軌跡與驗證摘要；失敗時必須有原因，不能同時出現「failure=InvalidStart 但 trajectory 有值」的矛盾狀態。可用變體型別表達互斥。</p></article><article class="card"><h3>Evidence 不是任意字串</h3><p>結構化欄位才能穩定查詢、聚合與比較版本。人類訊息可附加，但不應是唯一資料來源。</p></article></div>
+<h2>快照如何避免一半新、一半舊</h2><p>假設世界有障礙陣列與機器人工具模型。感知執行緒先更新障礙，再過 2 ms 更新時間戳；規劃執行緒若直接讀共享可變物件，可能讀到新障礙配舊時間戳。不可變快照讓兩者作為同一版本一次發布，讀者只持有完整 v41 或完整 v42。</p><p>版本檢查仍不等於即時安全。若 v41 在開始時最新，規劃 100 ms 期間 v42 到達，完成時就需決定：用 v42 快速重驗候選、直接重規劃，或先停止。這個策略要寫入契約，不應由某個 callback 臨時猜測。</p>
+<h2>一筆請求從輸入到提交的實例</h2><pre><code>request_id=842  event=RequestAccepted
+world=41 trajectory_base=107 seed=23 budget_ms=200
+
+request_id=842  event=CandidateFound
+world=41 first_solution_ms=63 samples=418 cost=3.72
+
+request_id=842  event=ValidationFinished
+world=41 clearance_min_m=0.031 vmax_ratio=0.88 valid=true
+
+request_id=842  event=CommitRejected
+candidate_world=41 current_world=42 reason=StaleWorld</code></pre><p>這串紀錄顯示候選對版本 41 通過驗證，卻沒有被提交，因交付時世界已是 42。不能把它統計成「規劃器失敗找路」，也不能把 CandidateFound 當成實際執行。若重驗後提交，應產生新的驗證事件與唯一軌跡版本。</p>
+<h2>平均數不夠：再算一次百分位與截止失敗</h2><p>十次延遲為 18、19、20、20、21、22、23、24、25、180 ms。平均=(18+19+20+20+21+22+23+24+25+180)÷10=37.2 ms，中位數是第 5、6 個平均=(21+22)÷2=21.5 ms。平均被一次 180 ms 拉高，但中位數又會隱藏最壞長尾。</p><p>若截止為 50 ms，只有 180 ms 那次逾期，deadline miss rate=1÷10=10%。樣本僅十次，不能據此宣稱真實逾期率精確等於 10%；它至少直接回答這批測試是否滿足截止。統計不熟時可參考<a href="../../機器人數學基礎/互動課程/12-機率一點點.html">機器人數學基礎第 12 章：機率一點點</a>。</p>
+<h2>測試金字塔對應不同主張</h2><ul><li><strong>單元測試：</strong>固定 q 與模型，驗證距離、插值、成本與錯誤分類。快且能精準定位，但覆蓋不到模組整合。</li><li><strong>性質測試：</strong>例如任何相同端點的插值在 u=0、1 應還原端點；成本若定義非負就不應產生負值。它能探索多組輸入，但性質寫錯仍會誤導。</li><li><strong>整合測試：</strong>固定小場景、seed 與預算，串起建圖、搜尋、時間化和驗證，檢查事件鏈。</li><li><strong>回放測試：</strong>用錄下的感知與請求重播事故。可重現軟體決策，但錄製資料缺少的物理量無法事後補出。</li><li><strong>實機低速測試：</strong>比較命令、編碼器、外部量測和保護停機。最接近物理世界，風險也最高，需在前面各層通過後進行。</li></ul>
+<h2>兩個容易漏掉的併發錯誤</h2><ol><li><strong>晚到結果覆蓋：</strong>請求 A 先開始但較慢，請求 B 後開始並先提交版本 108；A 晚到後若無 compare-and-swap，可能把舊想法提交成 109。提交條件應要求 base trajectory 與 world version 仍符合。</li><li><strong>取消只改旗標：</strong>上層取消請求後，背景工作仍持續大量碰撞查詢，壓縮新請求的計算預算。規劃器應在安全檢查點觀察 cancellation token，並用明確終止原因記錄。</li></ol><p>profiler 可顯示 CPU 花在哪，trace 可顯示事件先後；資料競爭檢查器可找部分未同步存取。三種工具回答不同問題，任何一種全綠都不能替代其他層證據。</p>
+<h2>紀錄能證明什麼、不能證明什麼</h2><ul><li>相同 request ID 與版本鏈能證明軟體把哪些輸入連到哪些決策。</li><li>參數雜湊與 build ID 能辨別兩次執行是否真用同一設定與程式。</li><li>最小間隙欄位能證明碰撞模組回報的數值，不能證明幾何模型尺寸正確。</li><li>編碼器 log 能證明關節感測值，不能單獨證明外部障礙的真實位置。</li><li>「未記錄錯誤」不等於沒有錯誤；要先證明錯誤路徑本身會產生完整事件。</li></ul></section>
+<section class="section"><h2>從錯誤分類直接導出復原策略</h2><ul><li><code>InvalidStart</code>：停止搜尋，回查量測、模型與當前碰撞；增加預算無效。</li><li><code>InvalidGoal</code>：回報哪個目標條件不可能或碰撞；只能由任務層合法調整。</li><li><code>BudgetExceeded</code>：保留探索量與最佳候選，決定加預算、換方法或安全停止。</li><li><code>StaleWorld</code>：不提交；用新版本重驗或重規劃。</li><li><code>TimeParameterizationFailed</code>：幾何候選仍可供診斷，但不能冒充軌跡交付。</li></ul><h2>一個看似成功卻應拒絕的結果</h2><p>result 含 trajectory、failure=None、clearance=0.04 m，但缺 model_version 與時間化限制版本。它可能在數值上漂亮，契約上卻無法判斷對哪個世界有效，也無法重現驗證。安全介面應讓「有軌跡但無必要證據」成為不可構造狀態，或在提交閘門明確拒絕。</p><h2>教回去</h2><p>型別防止無效組合，快照防止一半新一半舊，版本檢查防止算對錯世界，trace 保存決策因果。單元測試、整合 trace、profiler、資料競爭檢查與實機量測回答不同問題；全綠的軟體測試仍不能證明感測幾何與真實世界一致。</p></section>
 <div class="warning">
 <strong>交付邊界：</strong>路徑通過軟體驗證，只證明它符合所記錄模型和限制。實機前仍需硬體限制、急停、保護區、低速試運行與獨立風險評估。</div>
+<section class="section"><h2>第二組介面演練：不可能狀態不該交給呼叫端猜</h2><p>舊介面若允許 <code>trajectory=null</code>、<code>failure=None</code>，呼叫端就得猜這是尚未規劃、成功但資料漏了，還是程式 bug。較清楚的結果可分成 <code>Success{trajectory,evidence}</code> 與 <code>Failure{reason,evidence}</code> 兩個互斥分支：成功一定有軌跡，失敗一定有原因。</p><p>預算若以裸整數 500 傳入，有人當毫秒、有人當微秒，結果差一千倍。封裝成 <code>Milliseconds{500}</code> 或標準 duration，序列化仍保存單位，可讓錯誤更早出現。型別不能保證 500 符合任務需求，但能防語意混用。</p><h2>從事故反推必要欄位</h2><p>調查錯路至少要回答：當時起點、世界版本、目標與限制版本、演算法與 seed、候選時間、驗證極值、提交者與控制器是否接受。時間要分牆鐘與單調時鐘：前者便於跨機器對齊但可能跳動，後者適合算延遲；跨程序還要記同步誤差。</p><h2>審查清單</h2><ul><li>public 欄位是否寫明單位、frame、時間與版本？</li><li>失敗是否能導出復原策略，取消、逾時、無路是否分開？</li><li>未驗證或過期候選是否可能被提交？</li><li>request ID 能否一路連到實際 commit，而非停在 CandidateFound？</li></ul></section>
 <div class="pager">
 <a href="05-七軸冗餘與線上重規劃.html">← 上一頁</a>
 <a href="07-約束流形投影與任務空間限制.html">下一頁：約束流形 →</a>
