@@ -4,10 +4,12 @@
 <div class="prereq"><strong>最小前置：</strong>先讀<a href="00A-搜尋與圖論先修.html">節點、邊、成本與離散化</a>，並理解<a href="01-組態空間碰撞與間隙.html">有效節點和有效邊</a>。</div>
 <h2>Dijkstra：只相信已經付出的成本</h2><p>對每個節點保存從起點走來的最佳已知成本 <code>g</code>。起點的 g=0，其餘先視為無限大。每次從優先佇列取出 g 最小的節點，嘗試用它改善鄰居；這個動作稱為<strong>鬆弛（relaxation）</strong>。在邊成本非負的條件下，一個節點以最小 g 確定取出後，就不會有晚到但更便宜的路線推翻它。</p>
 <h2>A*：加入尚未支付的估計</h2><p><strong>啟發式函數（heuristic function）</strong> <code>h(n)</code> 估計節點 n 到目標還要付多少；A* 以 <code>f(n)=g(n)+h(n)</code> 排序。g 是已知帳單，h 是未來估價，f 是預估總帳單。若 h 永不高估真正最低剩餘成本，稱為<strong>可採納（admissible）</strong>；搭配適當條件，A* 仍能找最低成本解。</p>
+<p>量綱是最容易被程式型別漏掉的條件：若 g 以秒計，h 也必須估秒，f 才是秒。幾何直線距離 L（m）可用已知速度上限 v<sub>max</sub>（m/s）轉成時間下界 h=L/v<sub>max</sub>（s）。例如 L=3 m、v<sub>max</sub>=1.5 m/s，h=3÷1.5=2 s。若直接把 3 m 加到已花 4 s，優先佇列仍會排序，卻是在比較沒有定義的數字。</p>
 <h2>可手算例：展開順序為何不同</h2><p>起點 S 有兩個鄰居 A 與 B：g(A)=2、g(B)=4。估計到目標分別 h(A)=8、h(B)=3。因此 f(A)=10、f(B)=7。Dijkstra 只看 g，先展開 A；A* 看 f，先展開 B，因為雖然走到 B 已多付 2，估計後段少付 5。若 B 到目標實際成本為 3，A 的為 9，A* 的引導確實省下不必要探索。</p>
 <p>若錯把 h(B) 寫成 30，A* 可能長期迴避 B 並先回傳較差路線。令 h=0 時 f=g，A* 就退化成 Dijkstra。若把 h 乘權重 w&gt;1，搜尋通常更像直奔目標，但已改變最佳性條件，這稱為<strong>加權 A*（Weighted A*）</strong>。</p>
 <h2>互動前先建立預測</h2><p>下方「h 權重」不是障礙數，也不是答案好壞的直接刻度：0 表示沒有目標引導，1 表示標準比例，大於 1 表示更貪心。障礙密度指標只是教學模型，用來說明直線估計在繞路多時資訊較弱；它不執行真實 A*，也不能給出節點數保證。</p>
 <section class="workspace"><h2>自由實驗：啟發式權重</h2><div class="controls"><label>h 權重<input id="astar-weight" type="range" min="0" max="3" step="0.1" value="1"></label><label>障礙密度指標<input id="astar-blocked" type="range" min="0" max="8" step="1" value="3"></label></div><div id="astar-output" class="output" aria-live="polite"></div></section>
+<h3>三組值得比較的操作</h3><ol><li>把權重設為 0：狀態變成只依 g 排序，結果應呈現 Dijkstra 式行為。</li><li>把權重設為 1：代表 f=g+h 的標準比例，但只有 h 符合可採納等條件時才保留相應最佳性論述。</li><li>把權重調到 2 或 3，再增加障礙指標：會更偏向目標，但直線估價在繞路場景的資訊可能較差。</li></ol><p>頁面輸出是規則解說，不是真實展開 trace。真正證據要比較同一張圖上的節點展開序列、最終成本和執行時間；節點較少能支持「這次搜尋較省」，不能單獨支持「解仍最佳」。</p>
 <h2>證據與除錯</h2><p>不要只記最後路線。應保存每次取出的節點、g/h/f、前驅、被拒絕的邊、優先佇列峰值與終止理由。若結果不是預期最低成本，先查是否有負邊、h 是否高估、距離單位是否一致、狀態是否被錯誤合併，以及浮點比較是否讓舊佇列項目重複生效。</p>
 <h2>常見誤解與邊界</h2><ul><li>A* 不是「永遠比 Dijkstra 快」；不良 h 可能毫無幫助，計算 h 本身也有成本。</li><li>最短路徑只對定義的成本最短，不等於最安全或最平滑。</li><li>圖搜尋的完備性只對已建出的有限圖成立；若離散化漏掉通道，搜尋再正確也找不到。</li><li>本章假設靜態圖與非負成本；動態環境需要更新圖或增量搜尋方法。</li></ul>
 <div class="pager"><a href="01-組態空間碰撞與間隙.html">← 上一頁</a><a href="03-PRM-RRT與RRT-star.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>

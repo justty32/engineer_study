@@ -3,9 +3,13 @@
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-封包與分層.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">01・本地鏈路</p><h1>乙太網路與位址解析：下一個訊框交給誰？</h1><p class="lead">乙太網路（Ethernet）用訊框承載本地鏈路資料；介質存取控制位址（Media Access Control address, MAC address）辨認鏈路介面。若只知道下一站的網際網路協定位址，就先用位址解析協定（Address Resolution Protocol, ARP）詢問其硬體位址。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="00-封包與分層.html">封裝、鏈路層與網路層處理不同範圍</a>。</p>
+<section class="card"><h2>先用「最後一哩」理解</h2><p>IP 路由先決定下一站是目的主機還是閘道；乙太網路接著處理眼前這一段鏈路，像程式已選好下一個物件，現在還要取得能實際投遞的介面識別。真實機制是作業系統用路由結果選出下一跳 IPv4 位址，再由 ARP 取得該下一跳的 MAC 位址；ARP 不會替你探索整條遠端路徑。</p></section>
+<section class="card"><h2>實驗怎麼玩</h2><p>先選「同一個本地網路」且取消快取：你應看到主機詢問目的端本身。接著改選遠端：被詢問者會變成本地閘道。最後勾選快取，觀察廣播步驟被省略。快取命中只表示目前已有一筆對應，不保證它永遠正確或不會逾時。</p></section>
 <section class="workspace"><h2>自由實驗：要解析誰的硬體位址？</h2><label for="arp-destination">目的地位置</label><select id="arp-destination"><option value="local">與我在同一個本地網路</option><option value="remote">位於遠端網路</option></select><label><input id="arp-cache" type="checkbox"> 對應關係已在位址解析快取</label><div id="arp-output" class="output" aria-live="polite"></div></section>
+<h2>一組具體封包事件</h2><p>假設主機是 <code>192.168.1.10/24</code>，閘道是 <code>192.168.1.1</code>。送往 <code>192.168.1.20</code> 時，前 24 位元相同，下一跳就是 <code>192.168.1.20</code>，ARP 廣播問「誰持有 192.168.1.20？」；送往 <code>203.0.113.9</code> 時，路由判定為遠端，ARP 問的改成 <code>192.168.1.1</code>。兩種情況的 IP 目的位址仍是原本目的端，改變的是外層乙太網路訊框的目的 MAC 位址。</p><p>這裡假設路由表已把 <code>192.168.1.0/24</code> 視為直連網路，且沒有代理 ARP、虛擬區域網路或其他特殊設定。它是理解下一跳的最小模型，不是所有企業網路的完整規則。</p>
 <h2>交換器如何轉送</h2><p>交換器（switch）讀取進入訊框的來源硬體位址，學到「這個位址在這個埠後面」。若已知目的位址，就只從對應埠送出；未知時才向其他埠泛送。狀態改變是交換表新增或刷新對應，證據是交換表、埠計數器與訊框擷取。</p>
 <h2>位址解析的真實因果</h2><div class="flow"><span>作業系統選定下一跳的網際網路協定位址</span><span>查位址解析快取</span><span>缺少時送本地廣播詢問</span><span>目標單播回覆</span><span>寫入快取並送資料訊框</span></div><p>遠端目的地也不會解析「遠端主機」的硬體位址；送端只需知道本地預設閘道的硬體位址。路由器每轉送一段都會換上符合新鏈路的訊框位址，但網路層的最終來源與目的位址通常維持原本端點。</p>
 <h2>失敗與證據</h2><div class="grid"><article class="card"><h3>沒有回覆</h3><p>可能是目標離線、區域網路設定錯、廣播未到達或重複位址。證據：反覆的位址解析詢問，卻沒有回覆。</p></article><article class="card"><h3>錯誤對應</h3><p>快取把網際網路協定位址指到錯誤硬體位址時，訊框會送錯介面。證據：快取條目與實際介面不一致。</p></article><article class="card"><h3>交換迴圈</h3><p>第二層迴圈可能讓廣播被無限複製；實務以生成樹等機制避免。單純看到大量廣播不能單獨證明根因。</p></article></div>
+<p>主機的鄰居／ARP 快取能證明作業系統目前相信哪個對應；封包擷取能證明詢問與回覆是否經過該介面；交換器的 MAC 位址表能證明它把來源位址學在哪個埠。三份證據各自只涵蓋一個觀察點：有 ARP 回覆仍不能證明後續遠端路由或應用服務正常。</p>
 <h2>不要混淆</h2><p>硬體位址回答「目前鏈路的下一個介面是誰」；網際網路協定位址回答「跨網的最終端點與前綴在哪裡」。交換器主要依硬體位址轉送訊框，路由器主要依網路前綴選下一跳，兩者不是只差名稱。</p>
 <nav class="pager" aria-label="章節導覽"><a href="00-封包與分層.html">← 上一頁：封包與分層</a><a href="02-網際網路協定與路由.html">下一頁：網際網路協定與路由 →</a></nav></main></body></html>

@@ -1,6 +1,6 @@
 # interactive-study-site — 知識轉互動學習網站
 
-← [WORKFLOWS](../../WORKFLOWS.md)｜[INDEX](../../INDEX.md)｜[零基礎課程](FOUNDATIONS-FIRST.md)｜[硬體原理子工作流](PRINCIPLES-FIRST.md)｜[agent 編組](AGENT-TEAM.md)｜[品質關卡](QUALITY-GATES.md)｜[GitHub Pages](GITHUB-PAGES.md)
+← [WORKFLOWS](../../WORKFLOWS.md)｜[INDEX](../../INDEX.md)｜[零基礎課程](FOUNDATIONS-FIRST.md)｜[硬體原理子工作流](PRINCIPLES-FIRST.md)｜[codex 批次加厚講解](ENRICH-EXISTING.md)｜[agent 編組](AGENT-TEAM.md)｜[品質關卡](QUALITY-GATES.md)｜[GitHub Pages](GITHUB-PAGES.md)
 
 把既有筆記的一個明確知識面向，轉成可操作、會即時回饋、可循序完成的互動學習網站。網站不是把 Markdown 換皮，也不是行銷頁；第一個畫面就要是可用的學習工作台。
 

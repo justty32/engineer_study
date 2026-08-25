@@ -77,7 +77,8 @@
 ## URL 與相對路徑
 
 - 網站不得假設部署於 domain root；案例內部資產使用相對路徑，例如 `./styles.css`、`./app.js`。
-- 總入口使用相對連結；IoT 路徑包含 `./iot-device/`、`./iot-power-pcb/`、`./iot-firmware-rtos/`、`./iot-connectivity/`、`./iot-rf-antenna/`、`./iot-security-production/`、`./iot-hardware-bus/` 與 `./iot-mcu-firmware/`。
+- 總入口使用相對連結；IoT 路徑包含 `./iot-device/`、`./iot-power-pcb/`、`./iot-firmware-rtos/`、`./iot-connectivity/`、`./iot-rf-antenna/`、`./iot-security-production/`、`./iot-hardware-bus/` 與 `./iot-mcu-firmware/`；機器人叢集為 `./robot-math/`（數學先修）、`./robot-arm-kinematics/`、`./robot-motion-planning/`、`./robot-vision/`、`./robot-learning/`。
+- **新增課程的部署步驟**（在 `.github/workflows/pages.yml`）：① `on.push.paths` 加該課來源 `*.html/*.css/*.js`；② 組站步驟加 `copy_course '<來源目錄>' '<slug>'`；③ 若該課有 `../../<其他課>/互動課程/` 形式的跨課相對連結，在 Python `replacements` 對應 slug 下加改寫規則（來源相對路徑 → 部署 `../<slug>/`）。例：機器人四門課連到先修課的 `../../機器人數學基礎/互動課程/` 改寫成 `../robot-math/`。
 - 原始筆記的 repo 連結若要公開，使用 GitHub blob URL；若只作開發來源，則不顯示成 Pages 內的失效相對連結。
 
 ## 部署驗證

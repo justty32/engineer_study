@@ -19,6 +19,7 @@
 | 將一個知識面向做成可操作、可回饋的互動網站 | **interactive-study-site** | [workflows/interactive-study-site/](workflows/interactive-study-site/README.md) |
 | 將陌生技術主題做成繁中為主、名詞有英文對照、可拆頁且能從零開始的互動課程 | **foundations-first** | [workflows/interactive-study-site/FOUNDATIONS-FIRST.md](workflows/interactive-study-site/FOUNDATIONS-FIRST.md) |
 | 在零基礎課程上增加硬體／物理的回路、能量、公式與儀器量測 | **principles-first（硬體子工作流）** | [workflows/interactive-study-site/PRINCIPLES-FIRST.md](workflows/interactive-study-site/PRINCIPLES-FIRST.md) |
+| 既有互動課程只是文字太精簡、要用 codex 批次加厚講解（不動互動與版面） | **enrich-existing（codex 子工作流）** | [workflows/interactive-study-site/ENRICH-EXISTING.md](workflows/interactive-study-site/ENRICH-EXISTING.md) |
 
 記錄或查詢跨工作流踩坑時，使用 [common/gotchas](workflows/common/gotchas.md)。都不符合時，先看 [INDEX.md](INDEX.md) 定位內容。
 

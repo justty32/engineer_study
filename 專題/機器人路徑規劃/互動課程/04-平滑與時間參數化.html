@@ -6,8 +6,10 @@
 <h2>平滑先改幾何，而且每次都要重驗</h2><p>取樣規劃常產生鋸齒路線。<strong>捷徑化（shortcutting）</strong>隨機挑路徑上兩點，若它們可直接安全相連，就刪掉中間繞路。<strong>平滑（smoothing）</strong>則調整點以減少曲率或成本。任何改動都可能讓路徑靠近或穿過障礙，因此須重新做碰撞與限制檢查；「看起來圓滑」不是證據。</p>
 <h2>速度、加速度與 jerk</h2><p>速度 <code>dq/dt</code> 是每秒關節角變多少，加速度 <code>d²q/dt²</code> 是速度每秒變多少。<strong>加加速度（jerk）</strong> <code>d³q/dt³</code> 是加速度每秒變多少；它太大時會造成衝擊、振動或追蹤困難。英文 jerk 常被直接使用，但它不是「抖動現象」本身，而是一個有單位 rad/s³ 的變化率。</p>
 <h2>可手算例：時間下界不是完整時間</h2><p>某關節需移動 |Δq|=1.2 rad，速度上限 1 rad/s。即使不管起停，至少要 <code>Tᵥ=|Δq|/v=1.2 s</code>。若它必須從靜止開始、加速度上限 2 rad/s²，速度不可能瞬間到 1；光看速度得到的 1.2 秒只是下界。七軸同時移動時，每軸各算下界，整段至少需最慢那軸的時間，例如 0.8、1.2、0.6 秒的三軸至少需 1.2 秒。</p>
+<p>速度下界 T<sub>v</sub>=|Δq|/v<sub>max</sub>：分子單位 rad，分母 rad/s，相除得到 s。若只受加速度限制、從靜止加速一半再對稱減速，三角速度剖面的位移滿足 |Δq|=a<sub>max</sub>T<sup>2</sup>/4，所以 T<sub>a</sub>=2√(|Δq|/a<sub>max</sub>)。代入 1.2 rad 與 2 rad/s<sup>2</sup>，T<sub>a</sub>=2√0.6≈1.55 s；比速度下界 1.2 s 更嚴格。這仍假設單軸、對稱、起終速度為零且可瞬間改變加速度。</p>
 <h2>互動前先預測</h2><p>增大角度變化會拉長下界；提高速度或加速度上限會縮短估計，但不代表馬達、力矩、負載與熱允許。輸出用速度下界和簡化的加速判讀建立直覺，不是工業軌跡產生器。</p>
 <section class="workspace"><h2>自由實驗：單關節時間下界</h2><div class="controls"><label>角度變化 |Δq|（rad）<input id="time-dq" type="range" min="0.05" max="3" step="0.05" value="1.2"></label><label>最大速度（rad/s）<input id="time-v" type="range" min="0.1" max="3" step="0.1" value="1"></label><label>最大加速度（rad/s²）<input id="time-a" type="range" min="0.1" max="5" step="0.1" value="2"></label></div><div id="time-output" class="output" aria-live="polite"></div></section>
+<h3>怎麼玩、怎麼驗證</h3><p>先保持 |Δq|=1.2 rad，把 v<sub>max</sub> 減半，速度下界應加倍；再保持速度不變，把 a<sub>max</sub> 增為四倍，加速度型時間尺度應約減半，因時間與 1/√a<sub>max</sub> 成正比。畫面能證明 JavaScript 使用的簡化關係；匯出的軌跡才應以逐點差分或分析導數查最大速度、加速度與 jerk，實機編碼器 log 則能檢查控制器實際追蹤，兩者證明的層級不同。</p>
 <h2>證據、誤解與邊界</h2><p>驗證軌跡要逐段記錄最大速度、加速度、jerk、最小間隙、時間戳是否單調，以及控制週期取樣後是否仍滿足限制。常見誤解是「時間拉長就一定安全」：慢速可降低某些動態負擔，卻不能修復碰撞幾何或錯誤模型。另一誤解是每個路徑點都合法便足夠；點與點之間以及時間插值仍要驗證。</p>
 <p>本章用運動學限制建立最低理解。真實執行還受關節力矩、耦合動力學、摩擦、驅動器頻寬與負載變化影響；涉及高速或接觸時必須使用更完整動力模型與實機安全層。</p>
 <div class="pager"><a href="03-PRM-RRT與RRT-star.html">← 上一頁</a><a href="05-七軸冗餘與線上重規劃.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
