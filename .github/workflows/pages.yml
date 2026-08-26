@@ -226,7 +226,6 @@ jobs:
               },
               "robot-learning": {
                   "../../機器人運動學/互動課程/": "../robot-arm-kinematics/",
-                  "../../機器人路徑規劃/互動課程/": "../robot-motion-planning/",
                   "../../機器人數學基礎/互動課程/": "../robot-math/",
               },
           }

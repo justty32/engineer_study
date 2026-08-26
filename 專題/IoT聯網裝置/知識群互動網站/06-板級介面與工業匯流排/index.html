@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="./styles.css">
   <script src="./app.js" defer></script>
 </head>
-<body>
+<body><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
   <a class="skip-link" href="#main">跳到學習內容</a>
   <header class="topbar">
     <div><p class="eyebrow">IOT HARDWARE CRASH COURSE</p><h1>30 分鐘搞懂板級通訊</h1><p>I²C · SPI · RS-485 · Modbus RTU｜給很會 C／C++、但硬體不熟的你</p></div>
@@ -29,6 +29,19 @@
 
     <main id="main" class="workspace">
       <div class="promise"><strong>30 分鐘後，你要會的不是背名詞：</strong><span>你能分辨「接線／電氣」「時序／交易」「封包／資料」哪一層出了錯，並決定下一個該量什麼。</span><a class="deep-link" href="./hardware-principles.html">硬體原理不熟？先開無考試補課 →</a><a class="deep-link" href="../07-微控制器與韌體核心/index.html">接著學 MCU 與韌體核心 →</a></div>
+
+      <section aria-label="硬體原理課程地圖">
+        <h2>硬體原理課程地圖</h2>
+        <div class="principle-grid">
+          <a class="card" href="./hardware-principles.html"><h3>硬體原理補課：從電流到終端電阻</h3><p>不計時、不考試。每個名詞都先回答：物理上發生什麼？</p></a>
+          <a class="card" href="./schematic-reading.html"><h3>怎麼看懂電路圖</h3><p>不要背符號堆：把原理圖還原成電源、回路、節點與訊號責任。</p></a>
+          <a class="card" href="./circuit-design.html"><h3>怎麼做一版可上電的 IoT 電路</h3><p>設計不是憑空發明：需求 → 方塊 → 參考電路 → 計算 → 檢查 → 量測。</p></a>
+          <a class="card" href="./gpio-principles.html"><h3>GPIO 原理與實例</h3><p>一支腳不是 bool：它是可設定的電晶體、接收器與實體電流路徑。</p></a>
+          <a class="card" href="./i2c-principles.html"><h3>I²C 原理與實例</h3><p>兩條共用線如何靠開漏、上拉、時脈與 ACK 完成一筆交易。</p></a>
+          <a class="card" href="./spi-principles.html"><h3>SPI 原理與實例</h3><p>每打一個 clock，主控與裝置同時交換一個 bit；真正規則由裝置資料表決定。</p></a>
+          <a class="card" href="./rs485-principles.html"><h3>RS-485 原理與實例</h3><p>UART 位元如何經收發器變成 A/B 差動訊號，沿長線到達多個設備。</p></a>
+        </div>
+      </section>
 
       <section class="lesson active" data-panel="basics" aria-labelledby="basics-title">
         <div class="lesson-head"><span>0–3 分</span><div><h2 id="basics-title" tabindex="-1">先把硬體話翻成人話</h2><p>腳位不是單純的 <code>bool</code>。它真的在推動電壓，也可能只是「放手」。點名詞看翻譯。</p></div></div>

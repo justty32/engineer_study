@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 權限與擁有者｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">03・把拒絕存取拆成三組三個位元</p><h1>權限與擁有者：rwx 的意思取決於物件類型</h1><p class="lead">看到 <code>Permission denied</code> 時，不要先加 <code>sudo</code>。先看你以誰的身分、對哪個檔案或目錄、需要哪一種操作；核心會依擁有者、群組與其他人三段 rwx 做判定。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="02-檔案與目錄操作.html">02 檔案、目錄與命令參數</a>。</p>
 <h2>白話直覺，再收回精確定義</h2><p>三段權限像給屋主、同一團隊與訪客的三組鑰匙。精確地說，<code>rwxr-xr-x</code> 依序是擁有者 u、群組 g、其他人 o；每段的 r、w、x 是獨立權限位元。數字表示把 r=4、w=2、x=1 相加，所以 7 是 rwx、5 是 r-x。</p>
 <h2>具體例子：755 與 644</h2><pre><code>$ chmod 755 deploy.sh

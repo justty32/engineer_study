@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 環境變數與 shell｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">08・看懂程式啟動前的字串處理</p><h1>環境變數與 shell：命令執行前，文字已先被展開</h1><p class="lead">你輸入的命令列不一定原封不動交給程式。shell 會處理變數、引號、萬用字元與重導向，再尋找並啟動命令；環境變數則是父行程可傳給子行程的一組名稱和值。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="06-管道與重導向.html">06 shell 會先建立資料流連接</a>，並看過 <a href="02-檔案與目錄操作.html">02 glob 展開</a>。</p>
 <h2>痛點：同一個腳本在另一台機器找不到命令</h2><p>環境變數像行程啟動時隨身帶的設定便條；精確地說，它們是名稱到字串的映射，由行程環境傳給新程式。<code>PATH</code> 是以冒號分隔的目錄清單，shell 依序搜尋沒有斜線的命令名稱。找到哪一個，取決於 PATH 的順序與目前環境。</p>
 <h2>具體例子：展開與命令搜尋</h2><pre><code>$ echo "$HOME/projects 由 $USER 擁有"

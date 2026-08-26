@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 檔案系統與路徑｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">01・先知道自己站在哪裡</p><h1>檔案系統與路徑：名稱要從某個起點逐層解析</h1><p class="lead">「找不到檔案」常不是檔案不存在，而是你從錯的目前工作目錄解讀相對路徑。Linux 以單一根目錄 <code>/</code> 組成樹狀命名空間，路徑就是沿著目錄逐層尋找名稱。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="00-什麼是Linux.html">00 核心、殼層與使用者程式</a>的分工。</p>
 <h2>白話直覺，再收回精確定義</h2><p>相對路徑像「從我現在的位置往隔壁走」，絕對路徑像寫完整地址。精確地說，目前工作目錄（current working directory, cwd）是每個行程持有的路徑解析起點；以 <code>/</code> 開頭的絕對路徑忽略 cwd，其他路徑則從 cwd 開始。<code>.</code> 是本目錄，<code>..</code> 是父目錄。</p>
 <h2>具體例子：從 /home/alice 找到 bob 的檔案</h2><pre><code>$ pwd

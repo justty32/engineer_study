@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 檔案與目錄操作｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">02・先看清目標，再做改動</p><h1>檔案與目錄操作：指令作用在 shell 解析後的實際名稱</h1><p class="lead">新手最危險的誤會，是把 <code>*.txt</code> 當成命令自己理解的條件。多數情況下，是 shell 先把萬用字元展開成一串現有檔名，命令才收到參數。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="01-檔案系統與路徑.html">01 絕對路徑、相對路徑與 cwd</a>。</p>
 <h2>痛點：同一個短指令可能碰到很多檔案</h2><p><code>rm *.txt</code> 看似只傳入一個樣式，實際可能等同 <code>rm report.txt a.txt</code>。萬用字元（glob）像先由櫃員列出符合條件的檔案；精確地說，shell 依目前目錄內容展開樣式，產生零個或多個字串參數，再啟動 <code>rm</code>。沒有符合項目時，各 shell 與設定的處理可能不同。</p>
 <h2>基本操作與可預覽做法</h2><pre><code>$ pwd

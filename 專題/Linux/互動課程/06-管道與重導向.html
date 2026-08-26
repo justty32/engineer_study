@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 管道與重導向｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">06・把螢幕文字看成三條資料通道</p><h1>管道與重導向：改接資料流，不是複製畫面</h1><p class="lead">每個命令預設有標準輸入 stdin、標準輸出 stdout 與標準錯誤 stderr。重導向把其中一條接到檔案；管道則把前一個行程的 stdout 接到下一個行程的 stdin。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="05-行程與訊號.html">05 命令啟動後會成為行程</a>。</p>
 <h2>痛點：明明用了 &gt;，錯誤還是出現在螢幕</h2><p>把三條通道想成三條水管只是起點；精確地說，它們是行程啟動時通常編號為 0、1、2 的檔案描述子。<code>&gt;</code> 預設只改接 fd 1，所以 fd 2 仍連到終端。shell 在啟動程式前建立或複製這些連接。</p>
 <h2>具體例子：成功輸出與錯誤分流</h2><pre><code>$ ls /home/alice /missing &gt; files.txt 2&gt; errors.txt

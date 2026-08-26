@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 什麼是 Linux｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a aria-current="page" href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a aria-current="page" href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">00・先分清畫面背後的四層</p><h1>什麼是 Linux：核心不是整套桌面，也不是黑色視窗</h1><p class="lead">你在終端輸入 <code>ls</code>，不是直接「對 Linux 說話」。終端承載文字介面，殼層解讀命令，使用者程式執行工作，最後由 Linux 核心管理硬體與受保護資源。</p><p class="prereq"><strong>這章假設已懂：</strong>程式會接收輸入並產生輸出；不假設用過命令列。</p>
 <h2>痛點：大家都把 Linux 指向不同東西</h2><p>有人說 Linux 是核心，有人把 Ubuntu 桌面叫 Linux，也有人指著終端視窗說「這就是 Linux」。像把引擎、方向盤、車上用品與整台車混叫成車，日常溝通勉強可行，除錯時卻會找錯層。精確地說，Linux 是核心（kernel）；可安裝使用的完整系統通常是發行版（distribution）。</p>
 <h2>一次命令實際穿過哪些層</h2><pre><code>alice@host:~$ ls /home/alice

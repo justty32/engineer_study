@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GPIO 原理與實例｜硬體介面補課</title><link rel="stylesheet" href="./styles.css"><script src="./gpio.js" defer></script></head>
-<body class="principles-page"><a class="skip-link" href="#gpio-main">跳到內容</a>
+<body class="principles-page"><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><a class="skip-link" href="#gpio-main">跳到內容</a>
 <header class="topbar principles-topbar"><div><p class="eyebrow">GPIO · NO QUIZ</p><h1>GPIO 原理與實例</h1><p>一支腳不是 bool：它是可設定的電晶體、接收器與實體電流路徑。</p></div><a class="back-link" href="./hardware-principles.html">← 原理總覽</a></header>
 <nav class="page-switcher" aria-label="硬體介面補課"><a class="active" href="./gpio-principles.html">GPIO</a><a href="./i2c-principles.html">I²C</a><a href="./spi-principles.html">SPI</a><a href="./rs485-principles.html">RS-485</a><a href="./schematic-reading.html">讀電路圖</a><a href="./circuit-design.html">做電路設計</a><a href="./index.html">30 分鐘主線</a></nav>
 <main id="gpio-main" class="single-principle">
@@ -19,7 +19,7 @@
   <section class="theory-section"><span class="chapter-no">04</span><h2>實例三：GPIO 不能直接推馬達、繼電器或大燈</h2><div class="cause-chain"><div><b>GPIO</b><span>只提供控制電壓與少量電流</span></div><i>→</i><div><b>MOSFET／驅動器</b><span>像受控的大電流開關</span></div><i>→</i><div><b>外部電源與負載</b><span>真正提供馬達／燈的功率</span></div></div><div class="why-box"><h3>感性負載還要處理反向電壓</h3><p>馬達、繼電器線圈儲存磁場能量。突然關閉時，電流不肯瞬間消失，會產生高電壓；常加 flyback diode、TVS 或專用驅動器提供能量釋放路徑。</p></div></section>
 
   <section class="theory-section"><span class="chapter-no">05</span><h2>從 C 程式回到硬體</h2><div class="code-bridge"><code>GPIOA-&gt;MODER = OUTPUT;<br>GPIOA-&gt;OTYPER = PUSH_PULL;<br>GPIOA-&gt;BSRR = PIN5_SET;</code><div><p><b>MODER：</b>切換內部多工器，選輸入／輸出／周邊／類比。</p><p><b>OTYPER：</b>選上下兩顆電晶體都用（推挽），或只保留下拉（開漏）。</p><p><b>BSRR：</b>用硬體 set/reset 路徑原子改一支腳，避免 read-modify-write 被中斷打斷。</p></div></div><div class="final-model"><b>設定 GPIO 前固定問：</b><span>電壓相容嗎？電流從哪裡來、回哪裡？預設狀態是什麼？重置期間會怎樣？外部負載需要驅動器嗎？</span></div></section>
-  <footer><span>典型電流、邏輯門檻、5 V tolerance 與 reset 預設值必須查目標 MCU 資料表。</span><a href="./i2c-principles.html">下一頁：I²C →</a></footer>
+  <footer><span>典型電流、邏輯門檻、5 V tolerance 與 reset 預設值必須查目標 MCU 資料表。</span><a href="./circuit-design.html">← 做電路設計</a><a href="./i2c-principles.html">下一頁：I²C →</a></footer>
   <section class="theory-section" aria-label="GPIO 深讀與量測">
     <span class="chapter-no">深讀</span><h2>GPIO 是有狀態、有門檻、有電流限制的實體端口</h2>
     <div class="theory-grid"><article><h3>輸入不是精確量電壓</h3><p>數位輸入只把 pin 電壓分成 LOW、HIGH 與不保證區。門檻 V<sub>IL</sub>、V<sub>IH</sub> 要查 datasheet，且會隨供電與製程改變。內部 pull-up 常為數十 kΩ 且容差大，適合設定預設狀態，不適合作精密偏壓。例：3.3 V 經 40 kΩ pull-up，按鍵按下的直流電流約 3.3/40000 = 82.5 µA。</p></article><article><h3>輸出 HIGH 不是理想電源</h3><p>推挽輸出（push-pull）主動拉高或拉低；開漏輸出（open-drain）只主動拉低，HIGH 由外部上拉形成。GPIO 有單 pin 與整個 port／晶片總電流限制。把 LED 直接接 pin 若沒有電阻，電流不是由程式中的 HIGH 限制，而由晶片內阻與元件 I–V 曲線決定，可能損壞。</p></article></div>

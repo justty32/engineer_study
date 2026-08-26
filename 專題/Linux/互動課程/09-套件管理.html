@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 套件管理｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">09・讓系統知道軟體從哪來、依賴誰</p><h1>套件管理：安裝不只是把一個執行檔複製進來</h1><p class="lead">Linux 發行版通常用套件管理器記錄檔案、版本、相依套件與來源簽章。apt 常見於 Debian／Ubuntu，dnf 常見於 Fedora／RHEL 系列；兩者概念相近，命令與政策不完全相同。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="00-什麼是Linux.html">00 發行版包含使用者工具與套件管理器</a>，並知道 <a href="04-使用者群組與存取.html">04 sudo 受政策控制</a>。</p>
 <h2>痛點：update 跑完了，程式怎麼還沒升級</h2><p>把套件管理器想成有庫存目錄的倉管員；精確地說，它從設定的軟體庫取得中繼資料，解析相依與衝突，驗證套件，執行安裝或移除交易並更新本機資料庫。<code>apt update</code> 只刷新「有哪些版本可用」的清單，<code>apt upgrade</code> 才升級已安裝套件。</p>
 <h2>具體例子：安裝 nginx 前先看清交易</h2><pre><code>$ apt search nginx

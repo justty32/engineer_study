@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 文字處理與 grep｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">07・先縮小資料，再閱讀上下文</p><h1>文字處理與 grep：逐行保留符合樣式的證據</h1><p class="lead">日誌有上萬行時，從頭閱讀很容易漏掉關鍵。<code>grep</code> 從檔案或 stdin 逐行比對樣式，把符合的整行寫到 stdout，因此能與管道、重導向組成可重複的篩選流程。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="06-管道與重導向.html">06 stdin、stdout、stderr 與管道</a>。</p>
 <h2>痛點：搜尋 ERROR 卻撈到不該要的行</h2><p>搜尋像用螢光筆標記文字；精確地說，grep 依樣式語言逐行判定是否匹配。單純 <code>ERROR</code> 可出現在行中任何位置，<code>^ERROR</code> 才要求從行首開始。大小寫預設不同，使用 <code>-i</code> 才會把 <code>error</code> 也視為符合。</p>
 <h2>具體例子：只留下行首 ERROR</h2><pre><code>$ grep '^ERROR' app.log
