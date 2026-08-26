@@ -1,0 +1,18 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>作業系統（零基礎互動課）</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a aria-current="page" href="index.html">課程地圖</a><a href="00-為什麼需要作業系統.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav>
+<main><p class="eyebrow">從一份硬體如何安全服務許多程式開始</p><h1>作業系統（零基礎互動課）</h1><p class="lead">你會寫程式，但程式如何取得 CPU、記憶體、檔案與裝置？這門課沿著一條可觀察的路徑，從行程一路走到死結；每章都能改數字，立即看見機制與代價。</p>
+<h2>概念依賴</h2><div class="flow"><span>OS 服務</span><span>行程與排程</span><span>執行緒與同步</span><span>記憶體</span><span>儲存與 I/O</span><span>核心邊界與死結</span></div><p class="note">建議依序閱讀。互動實驗沒有分數；先用預設值重建正文算例，再改成極小或極大的值觀察邊界。</p>
+<section class="chapter-list" aria-label="章節清單">
+<a class="chapter-card" href="00-為什麼需要作業系統.html"><h2><span class="number">00</span> 為什麼需要作業系統</h2><p>看懂抽象、多工共享、保護與隔離在替程式解決什麼。</p></a>
+<a class="chapter-card" href="01-行程是什麼.html"><h2><span class="number">01</span> 行程是什麼</h2><p>分清靜態程式與執行中的行程，認識位址空間與狀態。</p></a>
+<a class="chapter-card" href="02-行程排程.html"><h2><span class="number">02</span> 行程排程</h2><p>比較 FCFS 與 RR 的等待、公平性及切換代價。</p></a>
+<a class="chapter-card" href="03-執行緒與並行.html"><h2><span class="number">03</span> 執行緒與並行</h2><p>看懂共享記憶體、真正平行與 Amdahl 上限。</p></a>
+<a class="chapter-card" href="04-同步與競態.html"><h2><span class="number">04</span> 同步與競態</h2><p>追蹤讀改寫如何遺失更新，以及鎖、原子操作與號誌的角色。</p></a>
+<a class="chapter-card" href="05-記憶體與位址空間.html"><h2><span class="number">05</span> 記憶體與位址空間</h2><p>把虛擬位址拆成頁號與頁內偏移。</p></a>
+<a class="chapter-card" href="06-虛擬記憶體與分頁置換.html"><h2><span class="number">06</span> 虛擬記憶體與分頁置換</h2><p>模擬 page fault，以及 FIFO、LRU 如何選犧牲頁。</p></a>
+<a class="chapter-card" href="07-檔案系統.html"><h2><span class="number">07</span> 檔案系統</h2><p>從名稱、inode 到資料區塊，理解檔案如何落在磁碟。</p></a>
+<a class="chapter-card" href="08-輸入輸出與中斷.html"><h2><span class="number">08</span> 輸入輸出與中斷</h2><p>比較輪詢、中斷、DMA 與緩衝的時間成本。</p></a>
+<a class="chapter-card" href="09-系統呼叫與核心邊界.html"><h2><span class="number">09</span> 系統呼叫與核心邊界</h2><p>理解 user mode 為何要透過 syscall 請核心做事。</p></a>
+<a class="chapter-card" href="10-死結.html"><h2><span class="number">10</span> 死結</h2><p>用四個必要條件判斷風險並找到破解手段。</p></a>
+<a class="chapter-card" href="名詞與概念字典.html"><h2><span class="number">查</span> 名詞與概念字典</h2><p>搜尋本課所有中英文名詞、機制、邊界與證據。</p></a>
+</section><nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 字典</a><a href="00-為什麼需要作業系統.html">開始：為什麼需要作業系統 →</a></nav></main><footer class="site-footer"><span>作業系統零基礎互動課</span><a href="名詞與概念字典.html">查字典</a></footer></body></html>
