@@ -1,0 +1,14 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 套件管理｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<p class="eyebrow">09・讓系統知道軟體從哪來、依賴誰</p><h1>套件管理：安裝不只是把一個執行檔複製進來</h1><p class="lead">Linux 發行版通常用套件管理器記錄檔案、版本、相依套件與來源簽章。apt 常見於 Debian／Ubuntu，dnf 常見於 Fedora／RHEL 系列；兩者概念相近，命令與政策不完全相同。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="00-什麼是Linux.html">00 發行版包含使用者工具與套件管理器</a>，並知道 <a href="04-使用者群組與存取.html">04 sudo 受政策控制</a>。</p>
+<h2>痛點：update 跑完了，程式怎麼還沒升級</h2><p>把套件管理器想成有庫存目錄的倉管員；精確地說，它從設定的軟體庫取得中繼資料，解析相依與衝突，驗證套件，執行安裝或移除交易並更新本機資料庫。<code>apt update</code> 只刷新「有哪些版本可用」的清單，<code>apt upgrade</code> 才升級已安裝套件。</p>
+<h2>具體例子：安裝 nginx 前先看清交易</h2><pre><code>$ apt search nginx
+$ sudo apt update
+$ sudo apt install nginx
+The following NEW packages will be installed:
+  nginx nginx-common
+Do you want to continue? [Y/n]</code></pre><p>輸出會列出新增、升級、移除項目與下載量。Fedora 對應可用 <code>dnf search nginx</code>、<code>sudo dnf install nginx</code>；名稱與可用版本要以該發行版的套件庫為準。</p>
+<h2>為什麼／不要混淆</h2><ul><li><strong>搜尋通常不需 sudo：</strong>它只讀取套件中繼資料；改動系統安裝狀態才通常需要提權。</li><li><strong>remove 未必刪設定：</strong>apt 的 <code>remove</code> 可能保留系統設定，<code>purge</code> 才連套件設定一併處理；使用者家目錄資料通常仍不在此範圍。</li><li><strong>套件名稱不是服務狀態：</strong>安裝成功不代表服務已啟動、可連線或設定正確，仍需看 systemd 狀態與日誌。</li><li><strong>不要混用來源：</strong>隨意執行網路上的 root 腳本會繞過發行版的來源、簽章與檔案追蹤。</li></ul>
+<h2>可觀察證據</h2><p><code>apt policy nginx</code> 或 <code>dnf info nginx</code> 查看候選版本與來源；<code>dpkg -L nginx</code> 或 <code>rpm -ql nginx</code> 列出套件安裝的檔案；服務再用 <code>systemctl status nginx</code> 與 <code>journalctl -u nginx</code> 驗證。</p>
+<section class="workspace"><h2>動手玩：把目的翻成套件命令</h2><p><strong>示範什麼：</strong>apt 與 dnf 對應的五種操作。<strong>怎麼玩：</strong>切換搜尋、更新清單、安裝、升級與移除，並改套件名稱。<strong>看什麼：</strong>哪些操作使用套件名稱、哪些作用於整體中繼資料或已裝套件。</p><div class="controls"><label class="label">想做的套件操作 <select id="pkg-pick"><option value="install" selected>安裝</option><option value="remove">移除</option><option value="update">更新套件清單</option><option value="upgrade">升級已裝套件</option><option value="search">搜尋</option></select></label><label class="label">套件名稱或搜尋詞 <input type="text" id="pkg-name" value="nginx"></label></div><div class="output" id="pkg-output" aria-live="polite"></div></section>
+<nav class="pager" aria-label="章節導覽"><a href="08-環境變數與shell.html">← 上一頁：環境變數與 shell</a><a href="index.html">下一頁：回課程地圖 →</a></nav></main><footer class="site-footer"><span>09 套件管理</span><a href="名詞與概念字典.html">查字典</a></footer></body></html>

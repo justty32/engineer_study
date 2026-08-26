@@ -52,6 +52,9 @@ on:
       - "專題/作業系統/互動課程/*.html"
       - "專題/作業系統/互動課程/*.css"
       - "專題/作業系統/互動課程/*.js"
+      - "專題/Linux/互動課程/*.html"
+      - "專題/Linux/互動課程/*.css"
+      - "專題/Linux/互動課程/*.js"
       - "專題/機器人運動學/互動課程/*.html"
       - "專題/機器人運動學/互動課程/*.css"
       - "專題/機器人運動學/互動課程/*.js"
@@ -176,6 +179,7 @@ jobs:
           copy_course '專題/逆向工程/互動課程' reverse-engineering
           copy_course '專題/計算機組織/互動課程' computer-organization
           copy_course '專題/作業系統/互動課程' operating-systems
+          copy_course '專題/Linux/互動課程' linux
           copy_course '專題/機器人運動學/互動課程' robot-arm-kinematics
           copy_course '專題/機器人路徑規劃/互動課程' robot-motion-planning
           copy_course '專題/機器人視覺/互動課程' robot-vision

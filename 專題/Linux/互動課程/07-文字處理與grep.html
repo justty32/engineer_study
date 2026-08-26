@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 文字處理與 grep｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<p class="eyebrow">07・先縮小資料，再閱讀上下文</p><h1>文字處理與 grep：逐行保留符合樣式的證據</h1><p class="lead">日誌有上萬行時，從頭閱讀很容易漏掉關鍵。<code>grep</code> 從檔案或 stdin 逐行比對樣式，把符合的整行寫到 stdout，因此能與管道、重導向組成可重複的篩選流程。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="06-管道與重導向.html">06 stdin、stdout、stderr 與管道</a>。</p>
+<h2>痛點：搜尋 ERROR 卻撈到不該要的行</h2><p>搜尋像用螢光筆標記文字；精確地說，grep 依樣式語言逐行判定是否匹配。單純 <code>ERROR</code> 可出現在行中任何位置，<code>^ERROR</code> 才要求從行首開始。大小寫預設不同，使用 <code>-i</code> 才會把 <code>error</code> 也視為符合。</p>
+<h2>具體例子：只留下行首 ERROR</h2><pre><code>$ grep '^ERROR' app.log
+ERROR disk full
+ERROR retry failed</code></pre><p>若輸入同時有 <code>INFO ERROR counter=0</code>，它包含 ERROR 卻不在行首，因此不會命中。這能避免把「訊息內提到錯誤」誤當成「這一筆日誌的層級是錯誤」。</p>
+<h2>正規表達式先學最少一組</h2><ul><li><strong><code>^</code> 與 <code>$</code>：</strong>固定行首與行尾。</li><li><strong><code>.</code> 與 <code>*</code>：</strong>前者比對任一單一字元；後者重複前一個元素零次以上。</li><li><strong><code>[0-9]</code>：</strong>比對一個數字。grep 的基本與擴充語法不完全相同；要用常見擴充寫法時通常加 <code>-E</code>。</li></ul>
+<h2>為什麼／不要混淆</h2><p>正規表達式不是 shell glob：glob 的 <code>*.log</code> 由 shell 選檔名，正規表達式由 grep 在每一行內容中匹配。也不要把「沒有輸出」直接解讀成程式故障；grep 找不到匹配時通常以結束狀態 1 表示，語法或 I/O 錯誤才常是 2。</p>
+<h2>可觀察證據</h2><p><code>grep -n '^ERROR' app.log</code> 顯示命中行號；緊接著執行 <code>echo $?</code> 可看結束狀態；<code>grep -c</code> 計數、<code>grep -C 2</code> 顯示前後文。篩選結果只是檢視，不等於完整日誌。</p>
+<section class="workspace"><h2>動手玩：篩選一小段日誌</h2><p><strong>示範什麼：</strong>正規表達式逐行匹配與大小寫選項。<strong>怎麼玩：</strong>先用 <code>^ERROR</code>，再改成 <code>error</code> 並勾選忽略大小寫。<strong>看什麼：</strong>命中行數與完整原文，尤其注意行首錨點造成的差異。</p><div class="controls"><label class="label">grep 樣式 <input type="text" id="grep-pat" value="^ERROR"></label><label class="label">範例日誌，每行一筆 <textarea id="grep-text" rows="6">INFO service started
+ERROR disk full
+WARN retry scheduled
+error client disconnected
+ERROR retry failed</textarea></label><label class="label"><input type="checkbox" id="grep-ic"> 忽略大小寫</label></div><div class="output" id="grep-output" aria-live="polite"></div></section>
+<nav class="pager" aria-label="章節導覽"><a href="06-管道與重導向.html">← 上一頁：管道與重導向</a><a href="08-環境變數與shell.html">下一頁：環境變數與 shell →</a></nav></main><footer class="site-footer"><span>07 文字處理與 grep</span><a href="名詞與概念字典.html">查字典</a></footer></body></html>

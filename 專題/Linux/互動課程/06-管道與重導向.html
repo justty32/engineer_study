@@ -1,0 +1,15 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 管道與重導向｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<p class="eyebrow">06・把螢幕文字看成三條資料通道</p><h1>管道與重導向：改接資料流，不是複製畫面</h1><p class="lead">每個命令預設有標準輸入 stdin、標準輸出 stdout 與標準錯誤 stderr。重導向把其中一條接到檔案；管道則把前一個行程的 stdout 接到下一個行程的 stdin。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="05-行程與訊號.html">05 命令啟動後會成為行程</a>。</p>
+<h2>痛點：明明用了 &gt;，錯誤還是出現在螢幕</h2><p>把三條通道想成三條水管只是起點；精確地說，它們是行程啟動時通常編號為 0、1、2 的檔案描述子。<code>&gt;</code> 預設只改接 fd 1，所以 fd 2 仍連到終端。shell 在啟動程式前建立或複製這些連接。</p>
+<h2>具體例子：成功輸出與錯誤分流</h2><pre><code>$ ls /home/alice /missing &gt; files.txt 2&gt; errors.txt
+$ cat files.txt
+/home/alice:
+notes.txt  projects
+$ cat errors.txt
+ls: cannot access '/missing': No such file or directory</code></pre><p><code>&gt;</code> 會先截斷並覆寫檔案；<code>&gt;&gt;</code> 從尾端附加。<code>cmd &gt; all.log 2&gt;&amp;1</code> 先把 stdout 接到檔案，再複製那個連接給 stderr；順序反過來可能得到不同結果。</p>
+<h2>管道不是暫存檔捷徑</h2><p><code>printf 'a\nb\n' | grep b</code> 會讓兩個行程大致同時執行，核心在管道緩衝區傳遞位元組。管道只接 stdout；前一個命令的 stderr 仍會到終端，除非另外重導向。下游提早結束時，上游還可能收到 SIGPIPE。</p>
+<h2>為什麼／不要混淆</h2><ul><li><strong>畫面不是單一輸出：</strong>stdout 與 stderr 都可能顯示在同一終端，但仍是可分開改接的通道。</li><li><strong><code>2&gt;&amp;1</code> 不是「檔名」：</strong>它表示讓 fd 2 指向 fd 1 當下的位置。</li><li><strong>管道傳的是位元組流：</strong>行與欄位的意義由兩端程式約定，不由管道自動理解。</li></ul>
+<h2>可觀察證據</h2><p>用 <code>cmd &gt;out 2&gt;err</code> 後分別執行 <code>wc -c out err</code>，可驗證資料去哪裡；<code>ls -l /proc/目前PID/fd</code> 能看到檔案描述子連到終端、管道或檔案。</p>
+<section class="workspace"><h2>動手玩：追蹤六種接線</h2><p><strong>示範什麼：</strong>覆寫、附加、錯誤、合併、管道與輸入重導向。<strong>怎麼玩：</strong>逐項切換。<strong>看什麼：</strong>哪個 fd 被改接、資料目的地，以及重導向順序是否重要。</p><div class="controls"><label class="label">資料流接法 <select id="redir-pick"><option value="out" selected>stdout 覆寫到檔案</option><option value="app">stdout 附加到檔案</option><option value="err">stderr 到檔案</option><option value="both">stdout 與 stderr 合併</option><option value="pipe">stdout 接到下一個命令</option><option value="in">檔案接到 stdin</option></select></label></div><div class="output" id="redir-output" aria-live="polite"></div></section>
+<nav class="pager" aria-label="章節導覽"><a href="05-行程與訊號.html">← 上一頁：行程與訊號</a><a href="07-文字處理與grep.html">下一頁：文字處理與 grep →</a></nav></main><footer class="site-footer"><span>06 管道與重導向</span><a href="名詞與概念字典.html">查字典</a></footer></body></html>

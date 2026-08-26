@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 檔案與目錄操作｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<p class="eyebrow">02・先看清目標，再做改動</p><h1>檔案與目錄操作：指令作用在 shell 解析後的實際名稱</h1><p class="lead">新手最危險的誤會，是把 <code>*.txt</code> 當成命令自己理解的條件。多數情況下，是 shell 先把萬用字元展開成一串現有檔名，命令才收到參數。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="01-檔案系統與路徑.html">01 絕對路徑、相對路徑與 cwd</a>。</p>
+<h2>痛點：同一個短指令可能碰到很多檔案</h2><p><code>rm *.txt</code> 看似只傳入一個樣式，實際可能等同 <code>rm report.txt a.txt</code>。萬用字元（glob）像先由櫃員列出符合條件的檔案；精確地說，shell 依目前目錄內容展開樣式，產生零個或多個字串參數，再啟動 <code>rm</code>。沒有符合項目時，各 shell 與設定的處理可能不同。</p>
+<h2>基本操作與可預覽做法</h2><pre><code>$ pwd
+/home/alice
+$ ls -ld -- *.txt
+-rw-r--r-- 1 alice staff 120 Aug 26 09:00 a.txt
+-rw-r--r-- 1 alice staff 842 Aug 26 09:01 report.txt
+$ cp -- report.txt report.bak
+$ mv -- report.bak archive/
+$ rm -i -- a.txt</code></pre><p><code>cp</code> 複製、<code>mv</code> 搬移或改名、<code>mkdir</code> 建目錄、<code>rm</code> 移除。先用 <code>pwd</code> 與 <code>ls</code> 看清目標；<code>--</code> 告訴常見工具後面都是路徑，可避免以連字號開頭的檔名被當成選項。</p>
+<h2>為什麼／不要混淆</h2><ul><li><strong><code>*</code> 不會跨過斜線：</strong><code>*.txt</code> 只比對這一層名稱，不會遞迴子目錄。</li><li><strong>glob 不是正規表達式：</strong>glob 的 <code>*</code> 代表任意長度；正規表達式的 <code>*</code> 是重複前一個元素。</li><li><strong>移除不是資源回收筒：</strong>命令列 <code>rm</code> 通常直接解除名稱連結，沒有通用復原保證；遞迴與管理員權限尤其要慢。</li></ul>
+<h2>可觀察證據</h2><p><code>printf '&lt;%s&gt;\n' *.txt</code> 可把 shell 展開後的每個參數逐行印出；<code>ls -li</code> 顯示名稱、inode 與中繼資料；操作前後執行 <code>stat 路徑</code> 可比較大小、權限與時間。</p>
+<section class="workspace"><h2>動手玩：預覽 glob 會選到哪些名稱</h2><p><strong>示範什麼：</strong>shell 展開萬用字元的結果。<strong>怎麼玩：</strong>把 <code>*.txt</code> 改成 <code>a.?xt</code> 或 <code>[rn]*</code>。<strong>看什麼：</strong>命中與未命中清單；這就是命令真正可能收到的檔名集合。</p><div class="controls"><label class="label">glob 樣式 <input type="text" id="glob-pat" value="*.txt"></label><label class="label">目前目錄中的檔名，以空白分隔 <input type="text" id="glob-files" value="report.txt notes.md a.txt image.png"></label></div><div class="output" id="glob-output" aria-live="polite"></div></section>
+<nav class="pager" aria-label="章節導覽"><a href="01-檔案系統與路徑.html">← 上一頁：檔案系統與路徑</a><a href="03-權限與擁有者.html">下一頁：權限與擁有者 →</a></nav></main><footer class="site-footer"><span>02 檔案與目錄操作</span><a href="名詞與概念字典.html">查字典</a></footer></body></html>

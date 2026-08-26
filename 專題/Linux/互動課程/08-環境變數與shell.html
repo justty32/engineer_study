@@ -1,0 +1,15 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 環境變數與 shell｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<p class="eyebrow">08・看懂程式啟動前的字串處理</p><h1>環境變數與 shell：命令執行前，文字已先被展開</h1><p class="lead">你輸入的命令列不一定原封不動交給程式。shell 會處理變數、引號、萬用字元與重導向，再尋找並啟動命令；環境變數則是父行程可傳給子行程的一組名稱和值。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="06-管道與重導向.html">06 shell 會先建立資料流連接</a>，並看過 <a href="02-檔案與目錄操作.html">02 glob 展開</a>。</p>
+<h2>痛點：同一個腳本在另一台機器找不到命令</h2><p>環境變數像行程啟動時隨身帶的設定便條；精確地說，它們是名稱到字串的映射，由行程環境傳給新程式。<code>PATH</code> 是以冒號分隔的目錄清單，shell 依序搜尋沒有斜線的命令名稱。找到哪一個，取決於 PATH 的順序與目前環境。</p>
+<h2>具體例子：展開與命令搜尋</h2><pre><code>$ echo "$HOME/projects 由 $USER 擁有"
+/home/alice/projects 由 alice 擁有
+$ command -v grep
+/usr/bin/grep
+$ printf '%s\n' "$PATH"
+/usr/local/bin:/usr/bin:/bin</code></pre><p>雙引號內仍展開變數，但保留展開結果為一個參數；單引號會保留字面字元。未加引號的變數結果還可能經過欄位分割與 glob，這是路徑含空白時常見的錯誤來源。</p>
+<h2>shell 變數與環境變數的邊界</h2><p><code>name=alice</code> 建立目前 shell 的變數；<code>export name</code> 才讓之後啟動的子行程收到它。子行程不能反向直接改父 shell 的環境，所以執行設定腳本與用 <code>source</code> 載入腳本效果不同。</p>
+<h2>為什麼／不要混淆</h2><ul><li><strong>HOME 不等於 cwd：</strong>HOME 通常指家目錄，<code>pwd</code> 顯示的 cwd 可在任何位置。</li><li><strong>PATH 不是檔案內容：</strong>它只列搜尋目錄；執行權限、檔案格式與直譯器仍須有效。</li><li><strong>變數沒有自動型別：</strong>環境值本質上是字串；程式如何解讀數字或布林值由程式決定。</li></ul>
+<h2>可觀察證據</h2><p><code>env</code> 或 <code>printenv</code> 列出行程環境；<code>printf '%s\n' "$HOME" "$USER"</code> 看特定值；<code>command -v 名稱</code> 能反映 shell 對別名、內建與 PATH 命令的解析。</p>
+<section class="workspace"><h2>動手玩：觀察環境變數展開</h2><p><strong>示範什麼：</strong>shell 在程式啟動前替換 HOME 與 USER。<strong>怎麼玩：</strong>改兩個值，或把樣板寫成 <code>$HOME/bin</code>。<strong>看什麼：</strong>程式最後收到的完整字串；本工具只模擬這兩個變數，不模擬引號與欄位分割。</p><div class="controls"><label class="label">HOME 的值 <input type="text" id="env-home" value="/home/alice"></label><label class="label">USER 的值 <input type="text" id="env-user" value="alice"></label><label class="label">要展開的樣板 <input type="text" id="env-tmpl" value="$HOME/projects 由 $USER 擁有"></label></div><div class="output" id="env-output" aria-live="polite"></div></section>
+<nav class="pager" aria-label="章節導覽"><a href="07-文字處理與grep.html">← 上一頁：文字處理與 grep</a><a href="09-套件管理.html">下一頁：套件管理 →</a></nav></main><footer class="site-footer"><span>08 環境變數與 shell</span><a href="名詞與概念字典.html">查字典</a></footer></body></html>

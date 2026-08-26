@@ -1,0 +1,15 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 行程與訊號｜Linux 實務</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-什麼是Linux.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<p class="eyebrow">05・先辨認狀態，再決定是否干預</p><h1>行程與訊號：程式正在跑，不代表它一直占用 CPU</h1><p class="lead">一份可執行檔是靜態內容；載入後的行程（process）才有 PID、記憶體、開啟檔案與執行狀態。多數行程常在等 I/O，看到 S 不代表故障，看到 Z 也不是還在運算。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="04-使用者群組與存取.html">04 使用者身分與基本存取判定</a>。</p>
+<h2>痛點：程式沒回應，就直接 kill -9</h2><p>行程狀態像候診燈號，只提示目前在做什麼；精確地說，它是核心排程與等待狀態的摘要。訊號（signal）則是送給行程的非同步通知。應先看狀態與應用日誌，再從可處理的 SIGTERM 開始；SIGKILL 是核心強制終止，程式沒有清理機會。</p>
+<h2>具體例子：從 ps 找到 PID 與狀態</h2><pre><code>$ ps -o pid,ppid,stat,cmd -p 4242
+  PID  PPID STAT CMD
+ 4242  4100 S+   python worker.py
+$ kill -TERM 4242
+$ ps -p 4242
+  PID TTY          TIME CMD</code></pre><p><code>S+</code> 的 S 表示可中斷睡眠，<code>+</code> 表示位於前景行程群組。送 SIGTERM 後輸出只剩表頭，表示 PID 4242 已不在該次行程清單；但真實程式可能攔截訊號做清理，因此不保證立刻消失。</p>
+<h2>行程狀態不要只看字面</h2><ul><li><strong>R：</strong>正在 CPU 上執行或已可執行、正在等 CPU；不是永遠占滿核心。</li><li><strong>S 與 D：</strong>S 等事件且可被訊號喚醒；D 通常在等待不可中斷的核心 I/O，長時間停留才值得查。</li><li><strong>Z 與 T：</strong>Z 已結束但父行程尚未回收結束狀態；T 是被停止，可由 SIGCONT 恢復。</li></ul>
+<h2>可觀察證據</h2><p><code>ps -o pid,ppid,stat,cmd</code> 查看 PID、父 PID 與 STAT；<code>top</code> 動態觀察 CPU 和狀態；<code>kill -l</code> 列出訊號名稱。若服務由 systemd 管理，還要看 <code>systemctl status 服務</code> 與 <code>journalctl -u 服務</code>，不要繞過管理器只殺子行程。</p>
+<section class="workspace"><h2>動手玩：解讀 ps 的狀態碼</h2><p><strong>示範什麼：</strong>R、S、D、Z、T 各代表哪種核心狀態。<strong>怎麼玩：</strong>逐項切換。<strong>看什麼：</strong>哪些狀態仍會回到執行、哪些需要父行程或外部事件處理。</p><div class="controls"><label class="label">STAT 主狀態 <select id="ps-pick"><option value="R">R 執行中／可執行</option><option value="S" selected>S 可中斷睡眠</option><option value="D">D 不可中斷睡眠</option><option value="Z">Z 殭屍</option><option value="T">T 停止</option></select></label></div><div class="output" id="ps-output" aria-live="polite"></div></section>
+<section class="workspace"><h2>動手玩：選擇行程訊號</h2><p><strong>示範什麼：</strong>常用訊號的意圖與能否攔截。<strong>怎麼玩：</strong>比較 SIGTERM、SIGKILL 與 SIGSTOP。<strong>看什麼：</strong>何者允許清理、何者強制生效，以及輸出給出的兩種 kill 寫法。</p><div class="controls"><label class="label">要送出的訊號 <select id="sig-pick"><option value="SIGINT">SIGINT</option><option value="SIGTERM" selected>SIGTERM</option><option value="SIGKILL">SIGKILL</option><option value="SIGHUP">SIGHUP</option><option value="SIGSTOP">SIGSTOP</option><option value="SIGCONT">SIGCONT</option></select></label></div><div class="output" id="sig-output" aria-live="polite"></div></section>
+<nav class="pager" aria-label="章節導覽"><a href="04-使用者群組與存取.html">← 上一頁：使用者、群組與存取</a><a href="06-管道與重導向.html">下一頁：管道與重導向 →</a></nav></main><footer class="site-footer"><span>05 行程與訊號</span><a href="名詞與概念字典.html">查字典</a></footer></body></html>
