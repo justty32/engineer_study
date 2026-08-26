@@ -55,10 +55,23 @@
           <p class="heading-note">大學核心｜8 個模組｜離線模型</p>
         </div>
 
+        <div class="panel">
+          <div class="panel-heading"><h3>先把這頁當成電網的「除錯控制台」</h3><span class="panel-tag">START HERE</span></div>
+          <p>電力系統不是把幾台發電機接上插座而已，而是一個必須每一瞬間維持供需平衡、設備不超限、故障可隔離的同步網路。若用軟體系統比喻：母線像共享狀態節點、輸電線像有容量與延遲限制的連線、保護電驛像就地執行的故障處理器；但電能不能像一般資料封包任意排隊，頻率與電壓會立即反映失衡，這就是比喻的邊界。</p>
+          <p>建議依 01→08 操作。每次先記下預設結果，再只改一個輸入，說出「操作 → 電流、相角或頻率等狀態改變 → 線損、過載或成本結果 → 哪個欄位提供證據」。畫面數字只能證明這個簡化模型內的因果；真實系統仍需以監控與資料擷取系統（Supervisory Control and Data Acquisition, SCADA）、相量量測單元（Phasor Measurement Unit, PMU）、故障錄波器與離線研究互相核對。</p>
+          <div class="assumption-note"><b>模型閱讀原則</b> p.u. 是標么值（per-unit）；Bus 是母線；箭頭是本模型採用的正方向。所有結果都是教學估算，不可直接當作設備額定、電驛整定或調度命令。</div>
+        </div>
+
         <section class="module-section is-current" data-module="transmission" aria-labelledby="transmission-title">
           <div class="module-header">
             <div><span class="module-number">01</span><h3 id="transmission-title">高壓輸電｜固定功率下的線損取捨</h3></div>
             <button class="complete-button" type="button" data-complete="transmission">標記完成</button>
+          </div>
+          <div class="panel">
+            <div class="panel-heading"><h4>它在解決什麼問題？</h4><span class="panel-tag">CONCEPT</span></div>
+            <p>遠距送電像把固定吞吐量送過一條會發熱的通道：同樣送出 100 MW，提高電壓就能降低電流，導線上的焦耳熱因電流平方而更快下降。真實機制是三相實功率 P = √3 × V × I × PF；其中 P 為 MW、V 為線電壓 kV、I 為線電流 A、PF 為功率因數（Power Factor，無量綱）。因此 I = P × 1000 ÷ (√3 × V × PF)。</p>
+            <p>預設值中，69 kV、100 MW、PF = 1 時，I ≈ 100 × 1000 ÷ (1.732 × 69) = 836.7 A。每相電阻 R = 2 Ω 時，三相線損 P<sub>loss</sub> = 3 × I<sup>2</sup> × R ≈ 4.201 MW。升到 345 kV 是電壓增為 5 倍，電流成為 167.3 A，線損成為 0.168 MW，也就是約 1/25。</p>
+            <div class="assumption-note"><b>假設與範圍</b> 三相平衡、穩態、線路只含固定電阻，而且輸送端實功與 PF 固定；未計入線路電抗、充電電容、無功潮流、電壓降、電暈、絕緣距離、變壓器損失與設備成本。</div>
           </div>
           <div class="module-grid">
             <div class="panel input-panel">
@@ -88,10 +101,28 @@
               <p id="transmission-feedback" class="feedback" aria-live="polite">電壓提高 5 倍，同功率下電流降為 1/5；I²R 線損降為 1/25。模型不含電暈、無功、穩定與設備成本。</p>
             </div>
           </div>
+          <div class="panel">
+            <div class="panel-heading"><h4>怎麼玩、看什麼證據</h4><span class="panel-tag">LAB GUIDE</span></div>
+            <p>先保持 100 MW、PF = 1 與 R = 2 Ω，只把高壓線電壓由 345 改為 690 kV。操作使電流再減半，結果應是高壓線損約降為原來 1/4；證據在「345 kV 電流」與「高壓線損」欄位（欄名固定，但數值會依輸入更新）。再把 PF 降到 0.8：為傳送相同實功，電流會變成原來的 1/0.8 = 1.25 倍，線損約變成 1.25<sup>2</sup> = 1.5625 倍。</p>
+            <p>現場可用電流互感器與電表量到電流、以兩端功率表或 SCADA 遙測估算損失，熱影像可找局部過熱；但單一電流讀值不能證明損耗全發生在線路，也不能排除儀表誤差、諧波與無功的影響。</p>
+            <div class="subheading">常見誤解／不要混淆</div>
+            <ul>
+              <li><b>升壓不會憑空增加功率：</b>理想變壓器大致以電壓升高、電流降低來交換，輸入輸出功率近似相等。</li>
+              <li><b>線損下降不等於總成本一定下降：</b>更高電壓也需要更高絕緣、淨空、開關設備與變電設施成本。</li>
+              <li><b>PF 低不是「實功變少」：</b>在本實驗固定 P 時，PF 低代表為同一份實功承擔更大的電流與視在功率。</li>
+            </ul>
+          </div>
         </section>
 
         <section class="module-section" data-module="perunit" aria-labelledby="perunit-title">
           <div class="module-header"><div><span class="module-number">02</span><h3 id="perunit-title">標么制｜把不同電壓區放到共同基準</h3></div><button class="complete-button" type="button" data-complete="perunit">標記完成</button></div>
+          <div class="panel">
+            <div class="panel-heading"><h4>把不同尺度正規化，但基準是資料的一部分</h4><span class="panel-tag">CONCEPT</span></div>
+            <p>標么制（Per-Unit System, p.u.）很像把不同服務的延遲都除以各自的服務等級目標，先變成「相對於正常值多少倍」再比較。實際量 X 與基準量 X<sub>base</sub> 的關係是 X<sub>pu</sub> = X ÷ X<sub>base</sub>。但 p.u. 數字沒有攜帶完整意義：沒有同時知道基準功率與基準電壓，就不能還原實際安培或歐姆。</p>
+            <p>以三相系統的線電壓與總三相功率為基準時，I<sub>base</sub> = S<sub>base</sub> × 1000 ÷ (√3 × V<sub>base</sub>)，Z<sub>base</sub> = V<sub>base</sub><sup>2</sup> ÷ S<sub>base</sub>。預設 S<sub>base</sub> = 100 MVA、V<sub>base</sub> = 161 kV，所以 I<sub>base</sub> ≈ 100000 ÷ (1.732 × 161) = 358.6 A，Z<sub>base</sub> = 161<sup>2</sup> ÷ 100 = 259.21 Ω。154 kV 因而是 154 ÷ 161 = 0.9565 p.u.；12 Ω 則是 12 ÷ 259.21 = 0.0463 p.u.</p>
+            <p>阻抗換基準用 Z<sub>pu,new</sub> = Z<sub>pu,old</sub> × (S<sub>base,new</sub> ÷ S<sub>base,old</sub>) × (V<sub>base,old</sub> ÷ V<sub>base,new</sub>)<sup>2</sup>。預設電壓基準相同、功率基準由 50 變 100 MVA，因此 0.1 × (100 ÷ 50) × 1<sup>2</sup> = 0.2 p.u.</p>
+            <div class="assumption-note"><b>適用前提</b> 基準電壓要沿變壓器額定匝比一致傳遞，功率基準則全網共用；若任意挑選各區電壓基準，變壓器匝比不會自動從等效網路消失。</div>
+          </div>
           <div class="module-grid">
             <div class="panel input-panel"><div class="panel-heading"><h4>系統與元件基準</h4><span class="panel-tag">INPUT</span></div>
               <div class="field-grid two-col">
@@ -116,10 +147,27 @@
               <p id="perunit-feedback" class="feedback" aria-live="polite">標么值是實際量除以基準量；當電壓基準依變壓器匝比選取時，不同電壓區可用同一張等效網路分析。</p>
             </div>
           </div>
+          <div class="panel">
+            <div class="panel-heading"><h4>實驗與判讀</h4><span class="panel-tag">LAB GUIDE</span></div>
+            <p>先把實際電壓改成 161 kV，「電壓標么值」應成為 1.0000；這證明它等於所選基準，不代表它符合任何法規允許範圍。再只把基準功率由 100 改為 200 MVA：基準電流加倍、基準阻抗減半，同一個 12 Ω 的標么阻抗會加倍。這是座標尺度改變，不是元件物理阻抗真的改變。</p>
+            <p>工程資料中，銘牌或測試報告提供百分比阻抗及其額定基準，潮流／短路軟體的 case 檔保存系統基準；兩者一起才能稽核換算。畫面只能驗證代數換算一致，不能證明銘牌值、變壓器接線組別或飽和模型正確。</p>
+            <div class="subheading">常見誤解／不要混淆</div>
+            <ul>
+              <li><b>0.1 p.u. 不等於 0.1 Ω：</b>前者是比例，後者是有單位的實際阻抗。</li>
+              <li><b>換基準不等於折算到變壓器另一側：</b>兩者可能一起出現，但前者是改參考尺度，後者是依匝比轉換實際電壓、電流或阻抗。</li>
+              <li><b>p.u. 接近 1 不保證安全：</b>仍須與該設備的連續、短時與絕緣限制比較。</li>
+            </ul>
+          </div>
         </section>
 
         <section class="module-section" data-module="threephase" aria-labelledby="threephase-title">
           <div class="module-header"><div><span class="module-number">03</span><h3 id="threephase-title">三相與功因｜用無功補償釋放線路容量</h3></div><button class="complete-button" type="button" data-complete="threephase">標記完成</button></div>
+          <div class="panel">
+            <div class="panel-heading"><h4>線路搬運的不只是真正做功的那一部分</h4><span class="panel-tag">CONCEPT</span></div>
+            <p>交流負載像要求配送車同時搬「真正交付的貨」與「來回周轉的容器」：實功率（Real Power）P，以 kW 計，最後轉成機械功或熱；無功功率（Reactive Power）Q，以 kvar 計，在電感與電源間往返以建立磁場；視在功率（Apparent Power）S，以 kVA 計，是設備與導線實際要承擔的總量。比喻的限制是無功不是無用廢物，而是馬達、變壓器與電壓控制所必需。</p>
+            <p>平衡三相下，P = √3 × V × I × PF，PF = cos φ，且 Q = P × tan(cos<sup>−1</sup> PF)。預設 P = 1000 kW、V = 11.4 kV、PF = 0.75，故 I ≈ 1000 ÷ (1.732 × 11.4 × 0.75) = 67.53 A，Q ≈ 881.92 kvar。目標 PF = 0.95 時 Q ≈ 328.68 kvar，所以並聯電容需就地供應 Q<sub>c</sub> ≈ 881.92 − 328.68 = 553.23 kvar；電流降至 53.31 A。</p>
+            <div class="assumption-note"><b>假設與範圍</b> 正弦穩態、三相平衡、負載實功固定，補償器只提供容性無功；未納入諧波、電容級距、投切暫態、電壓變動與過補償。</div>
+          </div>
           <div class="module-grid">
             <div class="panel input-panel"><div class="panel-heading"><h4>負載與補償目標</h4><span class="panel-tag">INPUT</span></div>
               <div class="field-grid two-col"><div class="field"><label for="pf-voltage">線電壓 <span>kV</span></label><input id="pf-voltage" type="number" value="11.4" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="pf-real-power">實功 <span>kW</span></label><input id="pf-real-power" type="number" value="1000" min="0" step="100" inputmode="decimal"></div><div class="field"><label for="pf-initial">初始功率因數 <span>PF</span></label><input id="pf-initial" type="number" value="0.75" min="0" max="1" step="0.01" inputmode="decimal"></div><div class="field"><label for="pf-target">目標功率因數 <span>PF</span></label><input id="pf-target" type="number" value="0.95" min="0" max="1" step="0.01" inputmode="decimal"></div></div>
@@ -131,44 +179,145 @@
               <p id="threephase-feedback" class="feedback" aria-live="polite">電容提供 kvar，降低線電流與視在功率；負載真正消耗的 kW 不會因補償而降低。</p>
             </div>
           </div>
+          <div class="panel">
+            <div class="panel-heading"><h4>從操作追到可觀察證據</h4><span class="panel-tag">LAB GUIDE</span></div>
+            <p>只把目標 PF 從 0.95 拉到 1.00：所需電容 kvar 會增加、線電流降到理論最小值約 50.65 A。因線損與 I<sup>2</sup> 成正比，預設補償後的相對線損是 (53.31 ÷ 67.53)<sup>2</sup> ≈ 0.6233，故下降 37.67%。操作 → 上游供應的 Q 減少 → 同 P 下 I 減少 → 導線損失與設備 kVA 占用下降；畫面的兩條電流棒、電容補償與線損下降就是模型證據。</p>
+            <p>現場功率品質分析儀可同時量 P、Q、S、PF 與諧波，SCADA 也可能有 MW／Mvar 遙測；鉤表只有電流，無法單獨證明 PF 改善由電容造成，更無法判斷是否發生諧振。比較補償前後必須控制負載與電壓條件。</p>
+            <div class="subheading">常見誤解／不要混淆</div>
+            <ul>
+              <li><b>功因改善不等於用電 kWh 等比例下降：</b>固定實功負載仍消耗相近能量，主要下降的是上游電流與 I<sup>2</sup>R 損失。</li>
+              <li><b>kvar 不等於 kW：</b>兩者量綱都是功率，但物理角色不同，不能直接相加；S<sup>2</sup> = P<sup>2</sup> + Q<sup>2</sup>。</li>
+              <li><b>補到 1.00 未必最佳：</b>負載會變動，固定電容可能在輕載時造成領先功因或過電壓。</li>
+            </ul>
+          </div>
         </section>
 
         <section class="module-section" data-module="flow" aria-labelledby="flow-title">
           <div class="module-header"><div><span class="module-number">04</span><h3 id="flow-title">DC 潮流與 N-1｜從相角差找出壅塞</h3></div><button class="complete-button" type="button" data-complete="flow">標記完成</button></div>
+          <div class="panel">
+            <div class="panel-heading"><h4>功率會依網路物理分流，不會照管理者指定的路徑走</h4><span class="panel-tag">CONCEPT</span></div>
+            <p>潮流（Power Flow）是在已知發電、負載與網路參數下，求各母線電壓與各線路功率。可把 DC 潮流想成只保留「節點注入、連線電抗、相角差」的快速靜態分析器；它名稱中的 DC 是數學近似，不代表實際電網變成直流。線路 i→j 的實功近似為 P<sub>ij</sub> ≈ (θ<sub>i</sub> − θ<sub>j</sub>) ÷ x<sub>ij</sub>，在共同 MVA 基準上算得 p.u. 後再換成 MW；θ 用弧度、x 用 p.u.。</p>
+            <p>每個母線還要滿足注入功率 = 流出潮流總和。預設 Bus 2 發 40 MW、Bus 3 用 100 MW，所以平衡母線（Slack Bus）Bus 1 補 60 MW。求解後 θ<sub>1</sub> = 0、θ<sub>2</sub> ≈ 0.1348°、θ<sub>3</sub> ≈ −8.7629°，功率由較高相角側流向較低相角側；三條線依各自 x 分擔，而不是只走阻抗最低的一條。</p>
+            <p>N-1 安全準則（N-1 Security Criterion）問的是：任一單一可信元件退出後，系統是否仍無不可接受的過載或其他違限。它像故障注入測試，但真實電網檢查的不只 HTTP 是否回應，還包括熱限額、電壓、頻率、暫態穩定與保護動作。</p>
+            <div class="assumption-note"><b>DC 潮流假設</b> 電壓幅值固定約 1 p.u.、相角差不大、線路電阻遠小於電抗，忽略無功與網損。角差很大、低 X/R 配電網或電壓問題明顯時，應改用交流潮流（AC Power Flow）。</div>
+          </div>
           <div class="module-grid module-grid-wide">
             <div class="panel input-panel"><div class="panel-heading"><h4>三母線注入與事故</h4><span class="panel-tag">INPUT</span></div><div class="field-grid two-col"><div class="field"><label for="flow-generation">Bus 2 發電 <span>MW</span></label><input id="flow-generation" type="number" value="40" step="10" inputmode="decimal"></div><div class="field"><label for="flow-load">Bus 3 負載 <span>MW</span></label><input id="flow-load" type="number" value="100" min="0" step="10" inputmode="decimal"></div><div class="field field-span"><label for="contingency">單線跳脫</label><select id="contingency"><option value="none">無跳脫</option><option value="line-12">跳脫 1–2</option><option value="line-13">跳脫 1–3</option><option value="line-23">跳脫 2–3</option></select></div></div><div class="assumption-note"><b>固定拓樸</b> Bus 1 為 slack、θ₁ = 0；基準 100 MVA。x₁₂=0.20 / 80 MW，x₁₃=0.25 / 80 MW，x₂₃=0.40 / 70 MW。</div><button class="reset-button" type="button" data-reset-module="flow">↺ 重設本案例</button></div>
             <div class="panel result-panel"><div class="panel-heading"><h4>母線與線路狀態</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="metric-grid three-col"><div class="metric"><span>Slack 補平衡</span><strong id="slack-power">60.0 MW</strong></div><div class="metric"><span>Bus 2 相角</span><strong id="angle-bus-2">0.1348°</strong></div><div class="metric"><span>Bus 3 相角</span><strong id="angle-bus-3">−8.7629°</strong></div></div><div class="line-list" aria-label="三母線線路潮流"><div class="line-row line-row-head"><span>線路</span><span>潮流 / 方向</span><span>利用率</span><span>狀態</span></div><div class="line-row"><span class="line-name">1–2</span><strong id="flow-12">−1.18 MW ←</strong><span class="utilization"><i style="width:2%"></i><em>1.5%</em></span><span class="state state-ok">● 正常</span></div><div class="line-row"><span class="line-name">1–3</span><strong id="flow-13">61.18 MW →</strong><span class="utilization"><i style="width:76%"></i><em>76.5%</em></span><span class="state state-ok">● 正常</span></div><div class="line-row"><span class="line-name">2–3</span><strong id="flow-23">38.82 MW →</strong><span class="utilization"><i style="width:55%"></i><em>55.5%</em></span><span class="state state-ok">● 正常</span></div></div><div id="flow-status" class="status-box status-ok"><span class="status-symbol">✓</span><span>基準情境：三條線路均未過載</span></div><p id="flow-feedback" class="feedback" aria-live="polite">DC 潮流忽略電阻、損失、無功與電壓幅值變化；slack 自動補平衡。</p></div>
+          </div>
+          <div class="panel">
+            <div class="panel-heading"><h4>先看基準，再逐項跳脫</h4><span class="panel-tag">LAB GUIDE</span></div>
+            <p>記下三條線的基準潮流與利用率，再依序選「跳脫 1–2、1–3、2–3」。操作 → 網路導納矩陣改變 → 母線相角重新求解 → 原潮流轉移到剩餘線路 → 利用率可能超過 100%。紅色狀態可證明這組輸入與此 DC 模型下有熱限額違反，卻不能證明真實事故一定失穩或停電。</p>
+            <p>現場 SCADA 可看到斷路器狀態、MW 遙測與警報，PMU 能更密集地量測同步相角；能量管理系統（Energy Management System, EMS）的狀態估測與事故分析則把多個量測整合。單一線路 MW 讀值不能證明全網模型正確；拓樸錯誤、量測壞資料或限額版本過期都會讓結論失真。</p>
+            <div class="subheading">常見誤解／不要混淆</div>
+            <ul>
+              <li><b>Slack 不是免費且無限大的電源：</b>它只是數學上吸收未指定功率差與模型網損的參考母線。</li>
+              <li><b>N-1 通過不等於絕對可靠：</b>它只涵蓋指定的單一事故集合；共同原因、多重事故與極端天候另需評估。</li>
+              <li><b>利用率低不代表相角或電壓一定安全：</b>本工具只以 MW 限額標示過載，沒有計算交流電壓與無功限制。</li>
+            </ul>
           </div>
         </section>
 
         <section class="module-section" data-module="fault" aria-labelledby="fault-title">
           <div class="module-header"><div><span class="module-number">05</span><h3 id="fault-title">故障序網｜依故障型態連接三個序網</h3></div><button class="complete-button" type="button" data-complete="fault">標記完成</button></div>
+          <div class="panel">
+            <div class="panel-heading"><h4>把不平衡三相故障拆成三個比較容易算的頻道</h4><span class="panel-tag">CONCEPT</span></div>
+            <p>對稱分量法（Symmetrical Components）把任意三相相量分解為正序、負序、零序三組平衡分量，像用三個互相獨立的基底表示同一筆向量；最後仍要把三序結果合成回 a、b、c 相。正序（Positive Sequence）順著正常相序旋轉，包含發電機的正常電壓源；負序（Negative Sequence）反向旋轉，常造成旋轉機額外發熱；零序（Zero Sequence）三相同相位，必須有中性點或大地回流路徑。</p>
+            <p>理想金屬故障下：三相故障只接正序網，I<sub>f</sub> = V<sub>f</sub> ÷ Z<sub>1</sub>；單相接地故障（Single Line-to-Ground Fault, SLG）三序串聯，I<sub>f</sub> = 3V<sub>f</sub> ÷ (Z<sub>1</sub> + Z<sub>2</sub> + Z<sub>0</sub>)；線間故障（Line-to-Line Fault, LL）使用正、負序，I<sub>f</sub> = √3V<sub>f</sub> ÷ (Z<sub>1</sub> + Z<sub>2</sub>)。預設三相故障為 1 ÷ 0.2 = 5 p.u.；基準電流是 100 ÷ (√3 × 161) = 0.3586 kA，所以實際值約 1.793 kA。</p>
+            <div class="assumption-note"><b>假設與範圍</b> 故障前電壓已知、阻抗為純量 p.u.、故障阻抗為零，未處理雙線接地、變壓器接線造成的零序阻斷、直流偏移、次暫態到穩態衰減與電弧。</div>
+          </div>
           <div class="module-grid">
             <div class="panel input-panel"><div class="panel-heading"><h4>故障點參數</h4><span class="panel-tag">INPUT</span></div><div class="field-grid two-col"><div class="field field-span"><label for="fault-type">故障型態</label><select id="fault-type"><option value="three-phase">三相故障</option><option value="slg">單相接地 SLG</option><option value="line-line">線間故障 LL</option></select></div><div class="field"><label for="fault-voltage">故障電壓 <span>p.u.</span></label><input id="fault-voltage" type="number" value="1" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="z-positive">正序阻抗 Z₁ <span>p.u.</span></label><input id="z-positive" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="z-negative">負序阻抗 Z₂ <span>p.u.</span></label><input id="z-negative" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="z-zero">零序阻抗 Z₀ <span>p.u.</span></label><input id="z-zero" type="number" value="0.5" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="fault-base-power">基準功率 <span>MVA</span></label><input id="fault-base-power" type="number" value="100" min="0" step="10" inputmode="decimal"></div><div class="field"><label for="fault-base-voltage">基準電壓 <span>kV</span></label><input id="fault-base-voltage" type="number" value="161" min="0" step="1" inputmode="decimal"></div></div><button class="reset-button" type="button" data-reset-module="fault">↺ 重設本案例</button></div>
             <div class="panel result-panel"><div class="panel-heading"><h4>序網連接診斷</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="sequence-list"><div class="sequence-row"><span class="sequence-name">正序 1</span><span id="sequence-positive" class="sequence-state sequence-used">使用</span><span class="sequence-path">故障電壓源 → Z₁</span></div><div class="sequence-row"><span class="sequence-name">負序 2</span><span id="sequence-negative" class="sequence-state sequence-unused">不使用</span><span class="sequence-path">依型態串接</span></div><div class="sequence-row"><span class="sequence-name">零序 0</span><span id="sequence-zero" class="sequence-state sequence-unused">不使用</span><span class="sequence-path">依接地回路決定</span></div></div><div class="metric-grid three-col"><div class="metric metric-wide"><span>故障電流</span><strong id="fault-current-pu">5.000 p.u.</strong></div><div class="metric"><span>基準電流</span><strong>0.3586 kA</strong></div><div class="metric"><span>實際故障電流</span><strong id="fault-current-ka">1.793 kA</strong></div></div><p id="fault-feedback" class="feedback" aria-live="polite">三相故障對稱，只使用正序網；故障電流為 Vᶠ / Z₁。阻抗為理想序網等效，不含故障阻抗與暫態衰減。</p></div>
+          </div>
+          <div class="panel">
+            <div class="panel-heading"><h4>用故障型態檢查「哪條回路存在」</h4><span class="panel-tag">LAB GUIDE</span></div>
+            <p>保持預設阻抗，依序切換三相、SLG、LL。SLG 時三個序網都顯示使用，電流為 3 ÷ (0.2 + 0.2 + 0.5) = 3.333 p.u.；把 Z<sub>0</sub> 提高到 2.0 p.u.，SLG 電流會降到 1.25 p.u.，但三相故障不變。操作 → 接地回路阻抗增加 → 零序電流受限 → SLG 總故障電流下降；序網狀態與故障電流就是證據。</p>
+            <p>現場故障錄波器可保存三相電壓電流波形，電驛事件報告可提供拾取元件、時間標記與估測故障型態；由相量計算出的 I<sub>0</sub>、I<sub>1</sub>、I<sub>2</sub> 可核對序分量。但錄到大電流只證明量測點的響應，不能單獨定位故障，也不能證明模型中的序阻抗正確。</p>
+            <div class="subheading">常見誤解／不要混淆</div>
+            <ul>
+              <li><b>零序不是「頻率為零」：</b>它仍是系統頻率，只是三相相位彼此相同。</li>
+              <li><b>故障電流最大者不必然最常見：</b>三相故障常是最大對稱電流的設計案例，單相接地在許多系統卻更常發生。</li>
+              <li><b>接地不保證 Z<sub>0</sub> 很小：</b>中性點接法、變壓器繞組與接地阻抗共同決定零序路徑。</li>
+            </ul>
           </div>
         </section>
 
         <section class="module-section" data-module="protection" aria-labelledby="protection-title">
           <div class="module-header"><div><span class="module-number">06</span><h3 id="protection-title">保護協調｜讓主保護先動、後備保護接手</h3></div><button class="complete-button" type="button" data-complete="protection">標記完成</button></div>
+          <div class="panel">
+            <div class="panel-heading"><h4>故障時不是「全部一起跳」才安全</h4><span class="panel-tag">CONCEPT</span></div>
+            <p>保護系統的目標是在故障造成更大損害前，只切除最小必要區域。主保護（Primary Protection）負責自己區內故障；若電驛、跳脫線圈、斷路器或通訊失敗，較上游的後備保護（Backup Protection）再延時切除更大範圍。這像逾時與備援，但真實電力故障在等待期間仍持續注入熱與機械應力，所以延遲不能任意加長。</p>
+            <p>拾取電流（Pickup Current）是電驛開始判定動作的門檻，不等於斷路器瞬間已打開。反時限過電流元件 51 的特性是電流倍數越大、動作越快；本頁刻意使用教學式 t = TMS ÷ (I ÷ I<sub>pickup</sub> − 1)，t 以秒計，時間倍率設定 TMS（Time Multiplier Setting）為教學參數。預設主保護 t = 0.15 ÷ (1200 ÷ 200 − 1) = 0.030 s；後備 t = 0.9 ÷ (1200 ÷ 300 − 1) = 0.300 s，裕度 0.270 s，大於目標 0.200 s。</p>
+            <div class="assumption-note"><b>模型邊界</b> 此曲線不是 IEC 60255 或 IEEE 標準曲線，也未加入電驛超越量、CT 飽和、通訊延遲、斷路器開斷時間、故障電流隨位置改變與瞬時元件 50；不能拿本頁數字直接整定現場電驛。</div>
+          </div>
           <div class="module-grid">
             <div class="panel input-panel"><div class="panel-heading"><h4>電驛整定教學值</h4><span class="panel-tag">INPUT</span></div><div class="field-grid two-col"><div class="field field-span"><label for="relay-fault-current">故障電流 <span>A</span></label><input id="relay-fault-current" type="number" value="1200" min="0" step="100" inputmode="decimal"></div><div class="field"><label for="relay-main-pickup">主保護拾取 <span>A</span></label><input id="relay-main-pickup" type="number" value="200" min="0" step="50" inputmode="decimal"></div><div class="field"><label for="relay-main-tms">主保護 TMS</label><input id="relay-main-tms" type="number" value="0.15" min="0" step="0.05" inputmode="decimal"></div><div class="field"><label for="relay-backup-pickup">後備拾取 <span>A</span></label><input id="relay-backup-pickup" type="number" value="300" min="0" step="50" inputmode="decimal"></div><div class="field"><label for="relay-backup-tms">後備 TMS</label><input id="relay-backup-tms" type="number" value="0.9" min="0" step="0.05" inputmode="decimal"></div><div class="field"><label for="relay-margin-target">目標時間裕度 <span>s</span></label><input id="relay-margin-target" type="number" value="0.2" min="0" step="0.05" inputmode="decimal"></div></div><button class="reset-button" type="button" data-reset-module="protection">↺ 重設本案例</button></div>
             <div class="panel result-panel"><div class="panel-heading"><h4>時間階梯</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="relay-ladder"><div class="relay-ladder-row"><span>主保護 51</span><span class="time-track"><i class="time-main" style="width:10%"></i></span><strong id="relay-main-time">0.030 s</strong></div><div class="relay-ladder-row"><span>後備保護</span><span class="time-track"><i class="time-backup" style="width:54%"></i></span><strong id="relay-backup-time">0.300 s</strong></div></div><div class="metric-grid three-col"><div class="metric metric-wide"><span>時間裕度</span><strong id="relay-margin">0.270 s</strong></div></div><div id="relay-status" class="status-box status-ok"><span class="status-symbol">✓</span><span>協調通過｜後備晚於主保護</span></div><p id="relay-feedback" class="feedback" aria-live="polite">這是無量綱反時限教學曲線，不是 IEC/IEEE 實際曲線。選擇性要求故障區域的主保護先動，上游後備保留時間裕度。</p></div>
+          </div>
+          <div class="panel">
+            <div class="panel-heading"><h4>故意讓協調失敗一次</h4><span class="panel-tag">LAB GUIDE</span></div>
+            <p>先把後備 TMS 從 0.9 降到 0.3：後備時間變為 0.100 s，裕度只剩 0.070 s，狀態應不通過。操作 → 後備曲線整體提早 → 它與主保護的時間距離縮小 → 主、後備可能近乎同時跳脫 → 停電範圍擴大。再把故障電流降到某個 pickup 以下，畫面會顯示未拾取；這提醒你「不誤動」與「故障時一定動」必須同時滿足。</p>
+            <p>真實驗證會比較時間－電流曲線（Time-Current Characteristic, TCC），做二次注入測試確認電驛輸入到接點輸出的時間，再以斷路器計時或事件順序紀錄（Sequence of Events, SOE）核對完整清除時間。電驛事件 log 能證明它何時判定與送出 trip，不能單獨證明斷路器真的滅弧，也不能涵蓋所有故障位置的選擇性。</p>
+            <div class="subheading">常見誤解／不要混淆</div>
+            <ul>
+              <li><b>pickup 不等於額定電流：</b>它是保護判定門檻，需避開最大負載與湧入電流，且仍要對最小故障電流有靈敏度。</li>
+              <li><b>電驛動作時間不等於故障清除時間：</b>還要加輸出、跳脫線圈與斷路器開斷時間。</li>
+              <li><b>後備越慢不一定越好：</b>裕度增加的同時，設備承受故障能量與系統失穩風險也上升。</li>
+            </ul>
           </div>
         </section>
 
         <section class="module-section" data-module="stability" aria-labelledby="stability-title">
           <div class="module-header"><div><span class="module-number">07</span><h3 id="stability-title">穩定與頻率｜比較動態能量與調頻反應</h3></div><button class="complete-button" type="button" data-complete="stability">標記完成</button></div>
+          <div class="panel">
+            <div class="panel-heading"><h4>靜態潮流可行，不代表受擾動後回得來</h4><span class="panel-tag">CONCEPT</span></div>
+            <p>穩定度研究問的是系統受故障、機組跳脫或負載突變後，狀態會回到可接受運轉點，還是持續偏離。功角穩定（Rotor Angle Stability）關心同步機轉子能否保持同步；頻率穩定（Frequency Stability）關心全系統實功供需失衡。兩者相關卻不是同一指標：局部機組可能失步而平均頻率看似尚可，頻率下降也不必然表示某一台機立刻失步。</p>
+            <p>單機無窮匯流排（Single Machine Infinite Bus, SMIB）中，電氣輸出近似 P<sub>e</sub> = P<sub>max</sub> sin δ。預設故障前 P<sub>m</sub> = 0.8、P<sub>max</sub> = 1.2 p.u.，初始平衡角 δ<sub>0</sub> = sin<sup>−1</sup>(0.8 ÷ 1.2) ≈ 41.81°。故障使 P<sub>max</sub> 降到 0.2，於是 P<sub>m</sub> &gt; P<sub>e</sub>，轉子加速、δ 增加；清除後比較等面積準則（Equal-Area Criterion）的加速面積 A<sub>acc</sub> 與可用最大減速面積 A<sub>dec,max</sub>。</p>
+            <div class="assumption-note"><b>兩個時間尺度</b> 故障後最初數百毫秒主要看慣性與功角；數秒內一次調頻由調速器下垂接手；更慢的自動發電控制（Automatic Generation Control, AGC）才把頻率與區域交換功率拉回目標。本頁頻率模式沒有模擬後兩者的完整動態。</div>
+          </div>
           <div class="segmented-control" role="group" aria-label="穩定度模型切換"><button type="button" class="segment-button is-selected" data-stability-mode="angle" aria-pressed="true">功角／等面積</button><button type="button" class="segment-button" data-stability-mode="frequency" aria-pressed="false">頻率／droop</button></div>
           <div class="stability-panel" data-stability-panel="angle"><div class="module-grid"><div class="panel input-panel"><div class="panel-heading"><h4>單機無窮匯流排</h4><span class="panel-tag">ANGLE</span></div><div class="field-grid two-col"><div class="field"><label for="stability-pm">機械輸入 Pₘ <span>p.u.</span></label><input id="stability-pm" type="number" value="0.8" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="stability-pre-max">故障前 Pmax <span>p.u.</span></label><input id="stability-pre-max" type="number" value="1.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="stability-fault-max">故障中 Pmax <span>p.u.</span></label><input id="stability-fault-max" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="stability-post-max">清除後 Pmax <span>p.u.</span></label><input id="stability-post-max" type="number" value="1.0" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="stability-h">慣性常數 H <span>s</span></label><input id="stability-h" type="number" value="5" min="0" step="0.5" inputmode="decimal"></div><div class="field"><label for="clearing-time">故障清除時間 <span>s</span></label><input id="clearing-time" type="number" value="0.1" min="0" step="0.01" inputmode="decimal"></div></div><div class="assumption-note"><b>假設</b> 60 Hz、固定 dt = 0.0005 s；用擺動方程式估算第一擺，不代表完整多機暫態模擬。</div><button class="reset-button" type="button" data-reset-module="stability">↺ 重設本案例</button></div><div class="panel result-panel"><div class="panel-heading"><h4>等面積判定</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="metric-grid three-col"><div class="metric"><span>初始角 δ₀</span><strong id="initial-angle">41.81°</strong></div><div class="metric"><span>清除角 δc</span><strong id="clearing-angle">49.01°</strong></div><div class="metric"><span>加速面積 Aacc</span><strong id="accelerating-area">0.0827</strong></div><div class="metric metric-wide"><span>最大減速面積 Adec,max</span><strong id="decelerating-area">0.1688</strong></div></div><div id="stability-status" class="status-box status-ok"><span class="status-symbol">✓</span><span>暫態穩定｜減速面積足以吸收加速面積</span></div><p id="stability-feedback" class="feedback" aria-live="polite">快速清除故障可降低轉子角累積的加速能量；需同時比較清除角、加速面積與減速面積。</p></div></div></div>
           <div class="stability-panel is-hidden" data-stability-panel="frequency"><div class="module-grid"><div class="panel input-panel"><div class="panel-heading"><h4>頻率事件</h4><span class="panel-tag">FREQUENCY</span></div><div class="field-grid two-col"><div class="field"><label for="frequency-nominal">額定頻率 <span>Hz</span></label><input id="frequency-nominal" type="number" value="60" min="0" step="1" inputmode="decimal"></div><div class="field"><label for="frequency-h">慣性常數 H <span>s</span></label><input id="frequency-h" type="number" value="5" min="0" step="0.5" inputmode="decimal"></div><div class="field"><label for="frequency-step">功率失衡 ΔP <span>p.u.</span></label><input id="frequency-step" type="number" value="0.1" step="0.01" inputmode="decimal"></div><div class="field"><label for="frequency-droop">下垂係數 R</label><input id="frequency-droop" type="number" value="0.05" min="0" step="0.01" inputmode="decimal"></div><div class="field"><label for="frequency-damping">負載阻尼 D</label><input id="frequency-damping" type="number" value="1" min="0" step="0.1" inputmode="decimal"></div></div><div class="assumption-note"><b>模型邊界</b> 只估算慣性與 aggregate droop；不含 governor 時間常數、AGC、限幅與負載卸除。</div></div><div class="panel result-panel"><div class="panel-heading"><h4>頻率反應</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="metric-grid three-col"><div class="metric"><span>初始 RoCoF</span><strong id="frequency-rocof">−0.600 Hz/s</strong></div><div class="metric metric-wide"><span>一次調頻後頻率</span><strong id="frequency-steady">59.714 Hz</strong></div></div><p id="frequency-feedback" class="feedback" aria-live="polite">慣性先限制頻率變化率；droop 與負載阻尼共同決定教學模型的穩態頻率偏移。</p></div></div></div>
+          <div class="panel">
+            <div class="panel-heading"><h4>兩個模式各做一次敏感度實驗</h4><span class="panel-tag">LAB GUIDE</span></div>
+            <p><b>功角模式：</b>把清除時間由 0.10 s 逐步增加。操作 → 故障中加速時間變長 → 清除角與 A<sub>acc</sub> 增加 → 可用 A<sub>dec,max</sub> 被吃掉 → 狀態可能由穩定轉為不穩定。預設顯示 A<sub>acc</sub> ≈ 0.0827、A<sub>dec,max</sub> ≈ 0.1688 p.u.·rad；這是第一擺能量裕度，不是阻尼後完整波形。把 H 增大會讓同一清除時間內角度累積較慢，但不代表系統對所有振盪模式都更穩。</p>
+            <p><b>頻率模式：</b>初始頻率變化率（Rate of Change of Frequency, RoCoF）為 df/dt = −f<sub>0</sub>ΔP ÷ (2H)。預設是 −60 × 0.1 ÷ (2 × 5) = −0.600 Hz/s。一次調頻後 Δf<sub>pu</sub> = −ΔP ÷ (D + 1/R) = −0.1 ÷ 21 ≈ −0.004762，因此 f ≈ 60 × (1 − 0.004762) = 59.714 Hz。把 H 加倍只會讓初始 RoCoF 絕對值減半；在這個靜態 droop 式中，最後頻率不變。</p>
+            <p>PMU 與數位故障錄波器可觀察相角、頻率與 RoCoF，機組控制器 log 可看調速器指令；這些時間序列能核對事件先後與響應，卻不能只靠單一測點證明全網同步。模擬的「穩定」也不保證真實模型參數、保護或限幅正確。</p>
+            <div class="subheading">常見誤解／不要混淆</div>
+            <ul>
+              <li><b>慣性不是備轉容量：</b>慣性立即釋放／吸收旋轉動能，備轉則是可在規定時間內增加的持續出力。</li>
+              <li><b>一次調頻不把頻率完全恢復額定：</b>droop 刻意保留穩態偏差以分攤功率；二次控制才消除偏差。</li>
+              <li><b>清除時間不只等於電驛時間：</b>還包含偵測、通訊、跳脫線圈與斷路器實際開斷。</li>
+            </ul>
+          </div>
         </section>
 
         <section class="module-section" data-module="dispatch" aria-labelledby="dispatch-title">
           <div class="module-header"><div><span class="module-number">08</span><h3 id="dispatch-title">經濟調度｜在供需、成本與備轉間平衡</h3></div><button class="complete-button" type="button" data-complete="dispatch">標記完成</button></div>
+          <div class="panel">
+            <div class="panel-heading"><h4>選最便宜的機組全開，通常不是最優解</h4><span class="panel-tag">CONCEPT</span></div>
+            <p>經濟調度（Economic Dispatch, ED）在已決定哪些機組在線的前提下，分配各機組實功，使總成本最低且供需相等。它像把工作分給不同邊際成本的 worker，但發電機有最小／最大出力，系統還必須保留事故後可迅速增加出力的備轉容量（Operating Reserve）。電能供需又需即時平衡，不能把未完成工作留在一般 queue 裡。</p>
+            <p>本頁機組成本採 C<sub>i</sub>(P<sub>i</sub>) = a<sub>i</sub>P<sub>i</sub><sup>2</sup> + b<sub>i</sub>P<sub>i</sub>，忽略固定成本；增量成本是 dC<sub>i</sub>/dP<sub>i</sub> = 2a<sub>i</sub>P<sub>i</sub> + b<sub>i</sub>。若兩機都未碰上下限、又忽略網損，最優條件為兩者增量成本同為 λ。預設淨傳統負載 P<sub>net</sub> = 190 − 30 − 10 = 150 MW；解出 G1 = 66.67 MW、G2 = 83.33 MW，兩者增量成本都約 11.333 教學成本單位/MW。</p>
+            <p>代回成本式：G1 約 0.01 × 66.67<sup>2</sup> + 10 × 66.67 = 711.11，G2 約 0.02 × 83.33<sup>2</sup> + 8 × 83.33 = 805.56，總計 1516.67 教學單位/小時。向上餘裕 = (120 − 66.67) + (100 − 83.33) = 70 MW，大於 20 MW 備轉要求。</p>
+            <div class="assumption-note"><b>假設與範圍</b> 單一時段、兩機已開機、成本曲線凸、無網損與輸電限制，再生能源與儲能出力視為已給定；未含啟停成本、最小開停機時間、爬坡率、儲能能量狀態、排放與不確定性。</div>
+          </div>
           <div class="module-grid">
             <div class="panel input-panel"><div class="panel-heading"><h4>系統需求與機組成本</h4><span class="panel-tag">INPUT</span></div><div class="subheading">系統條件</div><div class="field-grid two-col"><div class="field"><label for="dispatch-load">系統負載 <span>MW</span></label><input id="dispatch-load" type="number" value="190" min="0" step="10" inputmode="decimal"></div><div class="field"><label for="dispatch-renewable">再生能源 <span>MW</span></label><input id="dispatch-renewable" type="number" value="30" step="10" inputmode="decimal"></div><div class="field"><label for="dispatch-storage">儲能出力 <span>MW</span></label><input id="dispatch-storage" type="number" value="10" step="10" inputmode="decimal"><small>正值放電，負值充電</small></div><div class="field"><label for="dispatch-reserve">備轉要求 <span>MW</span></label><input id="dispatch-reserve" type="number" value="20" min="0" step="10" inputmode="decimal"></div></div><div class="subheading">G1 成本與限制</div><div class="field-grid four-col"><div class="field"><label for="g1-a">a</label><input id="g1-a" type="number" value="0.01" min="0" step="0.01" inputmode="decimal"></div><div class="field"><label for="g1-b">b</label><input id="g1-b" type="number" value="10" step="1" inputmode="decimal"></div><div class="field"><label for="g1-min">Pmin <span>MW</span></label><input id="g1-min" type="number" value="20" min="0" step="10" inputmode="decimal"></div><div class="field"><label for="g1-max">Pmax <span>MW</span></label><input id="g1-max" type="number" value="120" min="0" step="10" inputmode="decimal"></div></div><div class="subheading">G2 成本與限制</div><div class="field-grid four-col"><div class="field"><label for="g2-a">a</label><input id="g2-a" type="number" value="0.02" min="0" step="0.01" inputmode="decimal"></div><div class="field"><label for="g2-b">b</label><input id="g2-b" type="number" value="8" step="1" inputmode="decimal"></div><div class="field"><label for="g2-min">Pmin <span>MW</span></label><input id="g2-min" type="number" value="10" min="0" step="10" inputmode="decimal"></div><div class="field"><label for="g2-max">Pmax <span>MW</span></label><input id="g2-max" type="number" value="100" min="0" step="10" inputmode="decimal"></div></div><button class="reset-button" type="button" data-reset-module="dispatch">↺ 重設本案例</button></div>
             <div class="panel result-panel"><div class="panel-heading"><h4>調度結果</h4><span class="panel-tag panel-tag-live">LIVE</span></div><div class="metric-grid three-col"><div class="metric"><span>淨傳統負載</span><strong id="net-load">150 MW</strong></div><div class="metric"><span>G1 出力</span><strong id="g1-output">66.67 MW</strong></div><div class="metric"><span>G2 出力</span><strong id="g2-output">83.33 MW</strong></div><div class="metric"><span>邊際成本 λ</span><strong id="dispatch-lambda">11.333</strong></div><div class="metric"><span>總成本</span><strong id="dispatch-cost">1516.67 / h</strong></div><div class="metric"><span>向上餘裕</span><strong id="reserve-headroom">70 MW</strong></div></div><div id="dispatch-status" class="status-box status-ok"><span class="status-symbol">✓</span><span>備轉要求滿足｜無損兩機教學調度</span></div><p id="dispatch-feedback" class="feedback" aria-live="polite">無損且未碰上下限時，最優條件是兩機增量成本相等。這不是含網損 ED、UC 或真實市場出清。</p><div class="decision-strip"><span class="decision-label">現代電網觀察</span><span>IBR 可能降低慣性與短路容量</span><span>儲能可提供調頻與備轉</span><span>需再檢查 N-1 與壅塞</span></div></div>
+          </div>
+          <div class="panel">
+            <div class="panel-heading"><h4>把成本最優解推到限制邊界</h4><span class="panel-tag">LAB GUIDE</span></div>
+            <p>先增加系統負載，觀察兩機如何依邊際成本分攤；當某機碰到 P<sub>max</sub>，它不再滿足「自由機組增量成本相等」，剩餘負載只能由另一機承擔。再增加備轉要求：出力不變但狀態可能轉為不滿足，因為 headroom 不夠。操作 → 淨負載或要求改變 → active-set 最佳化重新選擇自由／卡限機組 → 成本、λ、餘裕與狀態更新，這些欄位共同構成模型證據。</p>
+            <p>將儲能出力改成 −10 MW 代表充電，淨傳統負載由 150 增到 170 MW，而不是減少。再生能源增加通常降低當期淨負載與燃料成本，但本頁不計棄電、預測誤差、輔助服務與跨時段機會成本，所以不能據此判斷整日最佳排程。</p>
+            <p>真實調度可從 EMS 的狀態估測、機組遙測、調度指令與安全限制經濟調度（Security-Constrained Economic Dispatch, SCED）結果核對；市場系統另保存報價與出清紀錄。這些 log 能說明「模型收到什麼、算出什麼、下了什麼指令」，但單靠指令不能證明機組已跟隨，也不能證明 N-1、燃料或排放限制完整建模。</p>
+            <div class="subheading">常見誤解／不要混淆</div>
+            <ul>
+              <li><b>ED 不等於機組組合（Unit Commitment, UC）：</b>ED 分配已在線機組；UC 還決定何時啟停並處理跨時段限制。</li>
+              <li><b>餘裕不等於可交付備轉：</b>容量存在還不夠，機組須能在要求時間內爬升，網路也要能把功率送到需要處。</li>
+              <li><b>λ 不等於所有真實電價：</b>有壅塞與網損時，各節點的邊際電價可能不同，還可能有其他市場費用。</li>
+              <li><b>逆變器型資源（Inverter-Based Resource, IBR）不是一律沒有頻率支援：</b>其慣性、短路電流與控制能力取決於拓樸、控制模式、限流與可用能量。</li>
+            </ul>
           </div>
         </section>
 
