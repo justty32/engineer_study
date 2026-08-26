@@ -1,2 +1,103 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 可執行檔與載入</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">課程地圖</a><a href="00-合法授權與執行世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">03・檔案成為行程</p><h1>可執行檔、區段、符號、重定位與載入</h1><p class="lead">可執行檔不是純指令陣列：格式標頭描述架構、入口與區段；區段把程式碼、唯讀資料、可寫資料等分開；載入器映射到虛擬記憶體、解析相依項、套用重定位，才移交入口執行。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="02-呼叫慣例與堆疊.html">編譯後模組需共同遵守 ABI</a>。</p><section class="workspace"><h2>自由實驗：相對位移如何成為虛擬位址</h2><label for="load-base">載入基底</label><select id="load-base"><option value="4194304">0x400000</option><option value="5368709120">0x140000000</option><option value="6442450944">0x180000000</option></select><label for="load-offset">區段內相對位移</label><input id="load-offset" type="range" min="0" max="65535" value="4660"><div id="loader-output" class="output" aria-live="polite"></div></section><h2>核心名詞</h2><div class="grid"><article class="card"><h3>區段</h3><p>檔案格式定義的一組內容與權限描述；載入後可能對應一個或多個記憶體區域。</p></article><article class="card"><h3>符號</h3><p>名稱與位址／實體的對應；發布版本常移除部分名稱，但程式仍可執行。</p></article><article class="card"><h3>重定位</h3><p>記錄哪些位置依賴最終位址，供連結器或載入器在位置確定後修正。</p></article><article class="card"><h3>匯入與匯出</h3><p>模組聲明需要或提供的外部符號；只表示能力依賴，不證明某路徑一定執行。</p></article></div><h2>兩種常見格式</h2><p>可攜式可執行檔格式（Portable Executable, PE）常見於 Windows；可執行與可連結格式（Executable and Linkable Format, ELF）常見於 Linux 與其他類 Unix 系統。兩者名詞與表格不同，但都需回答架構、映射、入口、相依項、符號與重定位。不要把一種格式的區段名稱硬套到另一種。</p><h2>證據與邊界</h2><p>檔案位移回答「位元組在檔案哪裡」，相對虛擬位址回答「相對映像基底在哪裡」，虛擬位址回答「載入後行程看見哪裡」。位址空間配置隨機化（Address Space Layout Randomization, ASLR）會改變實際基底，卻不改變區段內相對關係。</p><nav class="pager"><a href="02-呼叫慣例與堆疊.html">← 呼叫慣例</a><a href="04-靜態分析.html">下一頁：靜態分析 →</a></nav></main></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 可執行檔與載入</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">課程地圖</a>
+<a href="00-合法授權與執行世界觀.html">00 起點</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">03・檔案成為行程</p>
+<h1>可執行檔、區段、符號、重定位與載入</h1>
+<p class="lead">可執行檔不是純指令陣列：格式標頭描述架構、入口與區段；區段把程式碼、唯讀資料、可寫資料等分開；載入器映射到虛擬記憶體、解析相依項、套用重定位，才移交入口執行。</p>
+<p class="prereq">
+<strong>這章假設已懂：</strong>
+<a href="02-呼叫慣例與堆疊.html">編譯後模組需共同遵守 ABI</a>。</p>
+<section class="workspace">
+<h2>自由實驗：相對位移如何成為虛擬位址</h2>
+<label for="load-base">載入基底</label>
+<select id="load-base">
+<option value="4194304">0x400000</option>
+<option value="5368709120">0x140000000</option>
+<option value="6442450944">0x180000000</option>
+</select>
+<label for="load-offset">區段內相對位移</label>
+<input id="load-offset" type="range" min="0" max="65535" value="4660">
+<div id="loader-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>核心名詞</h2>
+<div class="grid">
+<article class="card">
+<h3>區段</h3>
+<p>檔案格式定義的一組內容與權限描述；載入後可能對應一個或多個記憶體區域。</p>
+</article>
+<article class="card">
+<h3>符號</h3>
+<p>名稱與位址／實體的對應；發布版本常移除部分名稱，但程式仍可執行。</p>
+</article>
+<article class="card">
+<h3>重定位</h3>
+<p>記錄哪些位置依賴最終位址，供連結器或載入器在位置確定後修正。</p>
+</article>
+<article class="card">
+<h3>匯入與匯出</h3>
+<p>模組聲明需要或提供的外部符號；只表示能力依賴，不證明某路徑一定執行。</p>
+</article>
+</div>
+<h2>兩種常見格式</h2>
+<p>可攜式可執行檔格式（Portable Executable, PE）常見於 Windows；可執行與可連結格式（Executable and Linkable Format, ELF）常見於 Linux 與其他類 Unix 系統。兩者名詞與表格不同，但都需回答架構、映射、入口、相依項、符號與重定位。不要把一種格式的區段名稱硬套到另一種。</p>
+<h2>證據與邊界</h2>
+<p>檔案位移回答「位元組在檔案哪裡」，相對虛擬位址回答「相對映像基底在哪裡」，虛擬位址回答「載入後行程看見哪裡」。位址空間配置隨機化（Address Space Layout Randomization, ASLR）會改變實際基底，卻不改變區段內相對關係。</p>
+<h2>痛點：工具顯示三種位址，抄錯一種就找不到資料</h2>
+<p>十六進位檢視器說字串在檔案位移 0x600，反組譯器說它的相對虛擬位址是 0x2010，除錯器卻顯示 0x7FF620002010。這三個數字可能同時正確，因為它們回答不同座標系的問題。若直接把 0x600 當中斷點，除錯器很可能停不到；若把某次執行的完整虛擬位址寫死，下次又可能因 ASLR 改變。</p>
+<p>可以把可執行檔想成搬家清單：檔案位移是物品在貨車哪一格，相對虛擬位址是它進屋後相對門牌基準的位置，載入基底則是這次分配到的門牌。精確限制是：格式的檔案對齊與記憶體對齊可能不同，有些記憶體區域沒有對應檔案位元組，單靠「基底 + 檔案位移」通常不成立，必須查所在區段的映射資料。</p>
+<h2>兩組位址換算，逐項對齊</h2>
+<p>
+<strong>例一，直接使用互動模型：</strong>選載入基底 0x140000000，把相對位移拉到十進位 4660，也就是 0x1234。映射後位址為 0x140000000 + 0x1234 → 0x140001234。若下次基底改為 0x180000000，相同內容的位置成為 0x180001234；兩次完整位址不同，相對位移 0x1234 相同。</p>
+<p>
+<strong>例二，加入區段映射：</strong>假設某區段在檔案從 0x400 開始，在記憶體的相對虛擬位址從 0x1000 開始。檔案位移 0x650 位於區段內 0x650 − 0x400 = 0x250；因此其相對虛擬位址是 0x1000 + 0x250 = 0x1250。若本次基底為 0x400000，完整虛擬位址就是 0x401250。這個算式只在該位移確實位於該區段的檔案範圍內時成立。</p>
+<h2>載入器到底做了哪些事</h2>
+<ol>
+<li>讀格式標頭，確認架構、位元寬度、入口描述與區段表是否可接受。</li>
+<li>在行程虛擬位址空間保留範圍，依區段描述映射檔案內容，並建立讀、寫、執行等頁面權限。</li>
+<li>載入或找到相依模組，將匯入名稱或序號解析成實際目標；缺少相依項可能在入口執行前就失敗。</li>
+<li>若映像未放在偏好的基底，依重定位項修正真正依賴絕對位置的欄位。位置獨立程式碼多用相對參照，可減少修正，但不代表完全沒有載入處理。</li>
+<li>建立初始執行環境後把控制交給入口。入口常先經執行期啟動碼，再到你熟悉的 main 類函式，所以格式入口不等於業務邏輯起點。</li>
+</ol>
+<h2>不要混淆</h2>
+<ul>
+<li>
+<strong>區段名稱與權限：</strong>名稱只是慣例，真正要看格式欄位與載入後頁面權限；名為 data 的內容不必然可寫。</li>
+<li>
+<strong>磁碟大小與記憶體大小：</strong>未初始化資料可在檔案幾乎不占空間，載入後卻需要清零的一大片記憶體。</li>
+<li>
+<strong>符號與機器碼：</strong>符號表移除會失去人類名稱，不會讓對應指令消失；分析者仍可用呼叫關係與資料用途命名。</li>
+<li>
+<strong>匯入與已呼叫：</strong>匯入只證明宣告依賴；延遲解析、間接包裝與未走到的路徑都會改變觀察。</li>
+<li>
+<strong>重定位與 ASLR：</strong>重定位提供修正機制，ASLR 是選擇不同基底的安全策略；兩者相關但不是同一件事。</li>
+</ul>
+<h2>可觀察證據</h2>
+<ul>
+<li>格式檢視器能列出區段的檔案位移、相對虛擬位址、大小與旗標，足以驗算例二；它不能證明作業系統本次確實使用哪個基底。</li>
+<li>除錯器或行程記憶體映射能顯示模組基底、區域範圍與頁面權限；它是某一時刻的執行狀態，不代表磁碟原檔未被替換。</li>
+<li>匯入／匯出檢視能證明表格宣告；在實際呼叫點停下或取得事件追蹤，才支持本次解析與使用。</li>
+<li>比較磁碟位元組與載入後記憶體可找到重定位或解壓後差異；差異也可能來自寫時複製、初始化或除錯器本身，需逐項排除。</li>
+</ul>
+<nav class="pager">
+<a href="02-呼叫慣例與堆疊.html">← 呼叫慣例</a>
+<a href="04-靜態分析.html">下一頁：靜態分析 →</a>
+</nav>
+</main>
+</body>
+</html>

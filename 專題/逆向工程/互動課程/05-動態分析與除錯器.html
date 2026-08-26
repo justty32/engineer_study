@@ -1,2 +1,92 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 動態分析與除錯器</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">課程地圖</a><a href="00-合法授權與執行世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">05・受控執行</p><h1>動態分析與除錯器：怎麼證明一條路真的走過？</h1><p class="lead">動態分析（dynamic analysis）在隔離環境觀察實際執行。除錯器（debugger）能暫停行程、讀寫暫存器與記憶體、設中斷點並單步；它看到的是某次輸入與環境下的路徑，不是所有可能行為。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="04-靜態分析.html">先以靜態證據建立假說</a>，並遵守<a href="00-合法授權與執行世界觀.html">隔離與授權邊界</a>。</p><section class="workspace"><h2>自由實驗：中斷點改變觀察位置</h2><label for="debug-pc">示意執行步驟</label><input id="debug-pc" type="range" min="0" max="4" value="0"><label><input id="debug-break" type="checkbox" checked> 在長度檢查後設中斷點</label><div id="debug-output" class="output" aria-live="polite"></div></section><h2>中斷點與單步</h2><p>軟體中斷點常暫時改寫目標指令為陷阱，再於命中時恢復；硬體中斷點使用處理器除錯資源監看執行或資料存取。步入會進入被呼叫函式，步過在呼叫返回後停下，步出則跑到目前函式回傳。名稱是使用者介面概念，底層實作與限制依平台而異。</p><h2>觀察鏈</h2><div class="flow"><span>由靜態位址設停點</span><span>以已知輸入執行</span><span>記錄暫停前狀態</span><span>單步一個狀態改變</span><span>比較暫存器／記憶體／外部事件</span><span>更新假說</span></div><h2>陷阱與證據</h2><ul><li>除錯器會改變時序與記憶體，觀察本身可能影響結果。</li><li>一次未觀察到不代表功能不存在；輸入、時間、權限或環境可能未滿足。</li><li>崩潰位置可能只是最終失效點；根因可能更早寫壞記憶體。</li><li>保存輸入、環境快照、事件時間、停點位址與狀態差異，才能重現。</li></ul><nav class="pager"><a href="04-靜態分析.html">← 靜態分析</a><a href="06-控制流資料流與去混淆.html">下一頁：控制流與資料流 →</a></nav></main></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>05 動態分析與除錯器</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">課程地圖</a>
+<a href="00-合法授權與執行世界觀.html">00 起點</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">05・受控執行</p>
+<h1>動態分析與除錯器：怎麼證明一條路真的走過？</h1>
+<p class="lead">動態分析（dynamic analysis）在隔離環境觀察實際執行。除錯器（debugger）能暫停行程、讀寫暫存器與記憶體、設中斷點並單步；它看到的是某次輸入與環境下的路徑，不是所有可能行為。</p>
+<p class="prereq">
+<strong>這章假設已懂：</strong>
+<a href="04-靜態分析.html">先以靜態證據建立假說</a>，並遵守<a href="00-合法授權與執行世界觀.html">隔離與授權邊界</a>。</p>
+<section class="workspace">
+<h2>自由實驗：中斷點改變觀察位置</h2>
+<label for="debug-pc">示意執行步驟</label>
+<input id="debug-pc" type="range" min="0" max="4" value="0">
+<label>
+<input id="debug-break" type="checkbox" checked> 在長度檢查後設中斷點</label>
+<div id="debug-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>中斷點與單步</h2>
+<p>軟體中斷點常暫時改寫目標指令為陷阱，再於命中時恢復；硬體中斷點使用處理器除錯資源監看執行或資料存取。步入會進入被呼叫函式，步過在呼叫返回後停下，步出則跑到目前函式回傳。名稱是使用者介面概念，底層實作與限制依平台而異。</p>
+<h2>觀察鏈</h2>
+<div class="flow">
+<span>由靜態位址設停點</span>
+<span>以已知輸入執行</span>
+<span>記錄暫停前狀態</span>
+<span>單步一個狀態改變</span>
+<span>比較暫存器／記憶體／外部事件</span>
+<span>更新假說</span>
+</div>
+<h2>陷阱與證據</h2>
+<ul>
+<li>除錯器會改變時序與記憶體，觀察本身可能影響結果。</li>
+<li>一次未觀察到不代表功能不存在；輸入、時間、權限或環境可能未滿足。</li>
+<li>崩潰位置可能只是最終失效點；根因可能更早寫壞記憶體。</li>
+<li>保存輸入、環境快照、事件時間、停點位址與狀態差異，才能重現。</li>
+</ul>
+<h2>痛點：程式跑過，不代表你知道是哪一步造成結果</h2>
+<p>只按下執行後看到檔案出現，最多能建立時間上的關聯；你還不知道哪條執行緒、哪個呼叫、哪份輸入造成它。反過來，逐條單步所有指令會慢到失去方向。動態分析的核心是先用靜態假說選擇觀察點，再比較觀察點前後的最小狀態差異，把「輸入 → 判斷 → 動作 → 外部事件」串起來。</p>
+<p>除錯器可想成能暫停世界的錄影逐格鍵，但真實世界沒有完全凍結：其他行程、核心與遠端系統仍可能前進，多執行緒也可能因暫停而改變排程。它提供的是受干預的一次執行樣本，不是無觀察者效應的全知紀錄。</p>
+<h2>用長度檢查做一次完整觀察</h2>
+<ol>
+<li>準備兩組已知輸入：A 長度 4，內容 41 42 43 44；B 長度 8，內容前四位元組相同。保存輸入雜湊，讓差異只剩長度。</li>
+<li>靜態分析找到疑似比較位置 0x401050，以及接受路徑 0x401070、拒絕路徑 0x401090。這些位址是待驗假說，不先寫成事實。</li>
+<li>在 0x401050 前暫停，記錄程式計數器、參數暫存器、指向的記憶體與旗標。單步比較後再記一次：輸入 A 若使零旗標為 1，條件跳躍可能去接受路徑。</li>
+<li>用輸入 B 重做。若比較運算元從 4 改為 8、旗標改變且走到拒絕路徑，就支持分支依賴長度。還要確認中間沒有其他指令覆寫旗標。</li>
+<li>若接受路徑後產生檔案事件，把事件時間、路徑與行程識別碼對回這次執行。這支持此路徑與外部效果的關聯，仍不表示所有接受輸入都會產生同一結果。</li>
+</ol>
+<h2>中斷點為何可能騙你</h2>
+<p>軟體中斷點若把目標位元組暫時換成陷阱，記憶體檢查機制可能看見改動；多執行緒也可能在指令恢復與重新插入期間造成複雜時序。硬體中斷點不必改寫該指令，但數量、監看的位址範圍與對齊受處理器限制。記憶體存取中斷點很適合回答「誰改了 0x2000 的值」，卻可能因高頻存取而不停觸發。選擇依問題而定，沒有一種停點能完整觀察所有行為。</p>
+<h2>不要混淆</h2>
+<ul>
+<li>
+<strong>步入、步過與真的只跑一條：</strong>來源級步過可能執行許多機器指令；指令級單步才接近一次一條，但例外與執行緒切換仍會介入。</li>
+<li>
+<strong>中斷點位址與原始檔行：</strong>最佳化後一行可分散於多處，某些行沒有獨立指令；以反組譯位址記錄最穩定。</li>
+<li>
+<strong>崩潰點與根因：</strong>在 0x500020 讀到壞指標，只證明此處失效；指標可能早在 0x401300 被覆寫。</li>
+<li>
+<strong>沒有事件與事件不存在：</strong>工具可能未監看正確來源、緩衝尚未寫出、權限不足或事件被取樣。</li>
+<li>
+<strong>沙箱結果與真實環境：</strong>沙箱能降低風險並提高可重現性，不能保證涵蓋生產環境的設定、使用者、時間與外部服務。</li>
+</ul>
+<h2>工具能證明什麼</h2>
+<ul>
+<li>暫存器與記憶體視窗能證明暫停瞬間的值；顯示型別是工具解讀，需以存取寬度驗證。</li>
+<li>呼叫堆疊能協助定位目前未返回的呼叫鏈；堆疊損壞、缺少展開資訊或尾呼叫會造成漏失。</li>
+<li>系統呼叫或事件追蹤能把行程與檔案、登錄、網路等核心事件連起來；通常看不到高階業務意圖。</li>
+<li>完整記憶體快照保存某時刻的大量狀態，適合事後交叉比對；它不包含快照前後的完整時間順序，且可能含敏感資料，必須依授權處理。</li>
+</ul>
+<p class="note">實務筆記最少記錄：樣本與輸入雜湊、執行環境快照、模組基底、停點的相對位移、每次暫停的時間與執行緒、前後狀態差異。記相對位移可避免 ASLR 讓下次位址看似完全不同。</p>
+<nav class="pager">
+<a href="04-靜態分析.html">← 靜態分析</a>
+<a href="06-控制流資料流與去混淆.html">下一頁：控制流與資料流 →</a>
+</nav>
+</main>
+</body>
+</html>

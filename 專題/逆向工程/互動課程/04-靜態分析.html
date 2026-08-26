@@ -1,2 +1,94 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 靜態分析</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">課程地圖</a><a href="00-合法授權與執行世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">04・不執行樣本</p><h1>靜態分析：如何從檔案建立可驗證假說？</h1><p class="lead">靜態分析（static analysis）在不執行樣本的情況下，從雜湊、格式、區段、字串、匯入、反組譯、反編譯與交叉參照建立行為假說。它降低執行風險，但不能證明某條路徑實際發生。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="03-可執行檔與載入.html">檔案結構、符號與載入位址</a>。</p><section class="workspace"><h2>自由實驗：證據如何逐步變強</h2><label><input id="ev-string" type="checkbox"> 看見網域名稱字串</label><label><input id="ev-import" type="checkbox"> 看見網路函式匯入</label><label><input id="ev-xref" type="checkbox"> 字串有程式碼交叉參照</label><label><input id="ev-flow" type="checkbox"> 可達控制流把資料送入呼叫</label><div id="static-output" class="output" aria-live="polite"></div></section><h2>安全且可重現的順序</h2><div class="flow"><span>唯讀保存原檔</span><span>計算密碼雜湊</span><span>識別格式與架構</span><span>盤點區段／字串／匯入</span><span>找入口與交叉參照</span><span>記錄假說與反例</span></div><p>反編譯器（decompiler）把低階控制與資料推回類 C 表示，但變數名、型別、迴圈與類別常是推論。相同機器碼可能有多種合理高階表達；應回到指令與資料使用驗證關鍵結論。</p><h2>取捨與失敗</h2><p>符號完整、未最佳化的程式較易讀；剝除符號、最佳化、壓縮或混淆會增加不確定性。高熵區段可能是壓縮、加密資料或隨機表，不足以單獨判定惡意。遇到未知資料先保留「資料／程式碼邊界可能錯」的反例。</p><h2>證據寫法</h2><p>分開寫：觀察到的位址與位元組、工具如何解讀、分析者推論、支持／反對證據、下一個驗證步驟。截圖不是唯一紀錄；保留可搜尋的位址、函式、交叉參照與註記。</p><nav class="pager"><a href="03-可執行檔與載入.html">← 可執行檔與載入</a><a href="05-動態分析與除錯器.html">下一頁：動態分析 →</a></nav></main></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 靜態分析</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">課程地圖</a>
+<a href="00-合法授權與執行世界觀.html">00 起點</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">04・不執行樣本</p>
+<h1>靜態分析：如何從檔案建立可驗證假說？</h1>
+<p class="lead">靜態分析（static analysis）在不執行樣本的情況下，從雜湊、格式、區段、字串、匯入、反組譯、反編譯與交叉參照建立行為假說。它降低執行風險，但不能證明某條路徑實際發生。</p>
+<p class="prereq">
+<strong>這章假設已懂：</strong>
+<a href="03-可執行檔與載入.html">檔案結構、符號與載入位址</a>。</p>
+<section class="workspace">
+<h2>自由實驗：證據如何逐步變強</h2>
+<label>
+<input id="ev-string" type="checkbox"> 看見網域名稱字串</label>
+<label>
+<input id="ev-import" type="checkbox"> 看見網路函式匯入</label>
+<label>
+<input id="ev-xref" type="checkbox"> 字串有程式碼交叉參照</label>
+<label>
+<input id="ev-flow" type="checkbox"> 可達控制流把資料送入呼叫</label>
+<div id="static-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>安全且可重現的順序</h2>
+<div class="flow">
+<span>唯讀保存原檔</span>
+<span>計算密碼雜湊</span>
+<span>識別格式與架構</span>
+<span>盤點區段／字串／匯入</span>
+<span>找入口與交叉參照</span>
+<span>記錄假說與反例</span>
+</div>
+<p>反編譯器（decompiler）把低階控制與資料推回類 C 表示，但變數名、型別、迴圈與類別常是推論。相同機器碼可能有多種合理高階表達；應回到指令與資料使用驗證關鍵結論。</p>
+<h2>取捨與失敗</h2>
+<p>符號完整、未最佳化的程式較易讀；剝除符號、最佳化、壓縮或混淆會增加不確定性。高熵區段可能是壓縮、加密資料或隨機表，不足以單獨判定惡意。遇到未知資料先保留「資料／程式碼邊界可能錯」的反例。</p>
+<h2>證據寫法</h2>
+<p>分開寫：觀察到的位址與位元組、工具如何解讀、分析者推論、支持／反對證據、下一個驗證步驟。截圖不是唯一紀錄；保留可搜尋的位址、函式、交叉參照與註記。</p>
+<h2>痛點：搜尋到一個字串，離「程式做了什麼」還很遠</h2>
+<p>靜態工具很容易在幾秒內吐出上千個字串、函式與匯入。真正困難不是沒有線索，而是不知道哪些線索互相連得起來。只看見 payment、delete 或某個網域就下結論，等於在大型程式碼庫搜尋函式名後，不讀呼叫端便宣稱它一定執行。靜態分析的任務是把大量存在性線索縮成少數可被反駁的行為假說。</p>
+<p>可以把它想成 code review：先找入口與資料邊界，再沿呼叫與使用關係閱讀；精確差別是你通常沒有可靠變數名、型別、巨集與版本紀錄，反編譯畫面也是工具重建的表示。因此關鍵判斷要能退回位址、位元組與指令，而不是依賴畫面看起來像 C。</p>
+<h2>帶一條「可能連線」假說走完</h2>
+<ol>
+<li>在檔案位移 0x3000 找到文字 api.example.test。記錄編碼、完整字串與位移；目前結論只到「檔案包含這段資料」。</li>
+<li>匯入表出現名稱解析與網路連線相關函式。這增加程式具備網路能力的可能性，但函式也可能屬於未使用的函式庫程式碼。</li>
+<li>交叉參照顯示位址 0x401080 的程式碼取得該字串位址。檢查參照是真的資料載入，而不是把字串附近數值誤認成位址。</li>
+<li>向後追 0x401080 的呼叫者，確認入口可達；向前追資料，看到該指標經組裝後流入名稱解析呼叫。此時可寫成「存在一條可達路徑，可能以此名稱進行解析」。</li>
+<li>找反例：是否有環境判斷使路徑永遠不成立？該字串是否只是備援或測試值？呼叫是否其實在記錄文字？把這些條件寫入下一章的動態驗證計畫。</li>
+</ol>
+<p>第二組例子：看到建立檔案匯入與字串 C:\Temp\report.bin，仍不能直接說程式會寫檔。若交叉參照顯示路徑字串進入建立呼叫，寫入緩衝區又由某輸入解碼而來，假說才逐步變成「可達路徑可能建立並寫入此檔案」。檔案系統事件可以驗證某次執行是否真的發生。</p>
+<h2>工具產物要怎麼讀</h2>
+<ul>
+<li>
+<strong>字串清單：</strong>證明可解碼的位元組序列存在；不能證明用途、可達性或執行時間。短字串尤其容易偶然出現。</li>
+<li>
+<strong>匯入表：</strong>證明格式聲明的外部依賴；看不到執行期解析或純系統呼叫，也不證明呼叫發生。</li>
+<li>
+<strong>交叉參照：</strong>支持某位址被程式碼或資料引用；自動分析可能漏掉計算出的位址，也可能把資料誤判為指標。</li>
+<li>
+<strong>反編譯：</strong>適合快速看條件、迴圈與資料關係；變數名、型別、符號正負與結構邊界均需查指令寬度和實際存取。</li>
+<li>
+<strong>熵或打包提示：</strong>能指出位元組分布不像一般程式碼或文字；不能單獨區分壓縮資源、加密設定、媒體資料與惡意內容。</li>
+</ul>
+<details>
+<summary>想更深入：把分析筆記寫成可驗證句子</summary>
+<p>不良寫法：「這個函式會把密碼傳出去。」較好的寫法：「在相對虛擬位址 0x1080 的可達路徑，來源為參數 1 的位元組經長度檢查後，被傳給網路傳送包裝函式；尚未確認參數內容、目的端點與此路徑在真實設定下是否執行。」後者把觀察、推論與缺口分開，也直接告訴動態分析要在哪裡停、記錄哪些值。</p>
+</details>
+<h2>不要混淆與可觀察邊界</h2>
+<ul>
+<li>「工具辨認為函式」不等於開發者寫過獨立函式；內聯、尾呼叫與共用結尾會改變邊界。</li>
+<li>「控制流可達」不等於條件在現實輸入下可滿足；但「本次沒走到」也不能推翻可達性。</li>
+<li>兩套反編譯器產生相似程式碼是有用佐證，不是兩份獨立執行證據，因為它們讀的是同一機器碼。</li>
+<li>密碼雜湊能固定樣本版本；不能說明樣本名稱、來源或行為。每次分析都應先核對雜湊，避免對錯檔案。</li>
+</ul>
+<nav class="pager">
+<a href="03-可執行檔與載入.html">← 可執行檔與載入</a>
+<a href="05-動態分析與除錯器.html">下一頁：動態分析 →</a>
+</nav>
+</main>
+</body>
+</html>

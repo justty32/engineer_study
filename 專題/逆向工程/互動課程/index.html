@@ -1,6 +1,108 @@
 <!doctype html>
 <html lang="zh-Hant">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>逆向工程互動課程</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>逆向工程互動課程</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
 <body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html" aria-current="page">課程地圖</a><a href="00-合法授權與執行世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">foundations-first・安全防禦取向</p><h1>逆向工程：從二進位到可驗證行為</h1><p class="lead">你已會寫 C++；本課聚焦靜態／動態證據，以及如何在合法授權下把推論寫得可驗證。</p><p class="prereq"><strong>必要前置：</strong>請先完成<a href="../../計算機組織/互動課程/index.html">從電晶體到 C++ 執行</a>，建立處理器、三套真實指令集、應用程式二進位介面、編譯、連結與載入模型。</p><section class="workspace"><h2>現在從分析契約開始</h2><p class="answer"><strong>一句話：</strong>逆向工程不是猜原始碼，而是從可觀察產物建立最小假說，再用獨立證據排除替代解釋。</p><div class="flow"><span>授權樣本</span><span>保存原始證據</span><span>讀檔案結構</span><span>重建控制與資料</span><span>受控執行驗證</span><span>報告信心與限制</span></div><p><a href="00-合法授權與執行世界觀.html">開始：合法授權與執行世界觀 →</a></p></section><h2>八站主線</h2><ol><li><a href="00-合法授權與執行世界觀.html">合法授權與程式執行世界觀</a></li><li><a href="01-位元組位址暫存器與組合語言.html">位元組、位址、暫存器與指令語意複習</a></li><li><a href="02-呼叫慣例與堆疊.html">呼叫慣例與堆疊</a></li><li><a href="03-可執行檔與載入.html">可執行檔、區段、符號、重定位與載入</a></li><li><a href="04-靜態分析.html">靜態分析</a></li><li><a href="05-動態分析與除錯器.html">動態分析與除錯器</a></li><li><a href="06-控制流資料流與去混淆.html">控制流、資料流與去混淆</a></li><li><a href="07-惡意程式防禦分析與證據.html">惡意程式防禦分析與證據</a></li></ol><h2>學完的判斷標準</h2><p>能區分檔案位移、虛擬位址與實際內容；能從呼叫慣例重建參數／回傳；能解釋靜態分析的假說為何需要動態驗證；能用控制流與資料流回答「哪個輸入造成哪個結果」；能在防禦事件中保存證據而不擴大風險。</p><p class="warning"><strong>安全邊界：</strong>只處理自有、授權或無害教學樣本。本課不提供破解授權、規避偵測、持久化或武器化操作。</p><nav class="pager"><span>課程首頁</span><a href="00-合法授權與執行世界觀.html">下一頁：00 起點 →</a></nav></main></body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html" aria-current="page">課程地圖</a>
+<a href="00-合法授權與執行世界觀.html">00 起點</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">foundations-first・安全防禦取向</p>
+<h1>逆向工程：從二進位到可驗證行為</h1>
+<p class="lead">你已會寫 C++；本課聚焦靜態／動態證據，以及如何在合法授權下把推論寫得可驗證。</p>
+<p class="prereq">
+<strong>必要前置：</strong>請先完成<a href="../../計算機組織/互動課程/index.html">從電晶體到 C++ 執行</a>，建立處理器、三套真實指令集、應用程式二進位介面、編譯、連結與載入模型。</p>
+<section class="workspace">
+<h2>現在從分析契約開始</h2>
+<p class="answer">
+<strong>一句話：</strong>逆向工程不是猜原始碼，而是從可觀察產物建立最小假說，再用獨立證據排除替代解釋。</p>
+<div class="flow">
+<span>授權樣本</span>
+<span>保存原始證據</span>
+<span>讀檔案結構</span>
+<span>重建控制與資料</span>
+<span>受控執行驗證</span>
+<span>報告信心與限制</span>
+</div>
+<p>
+<a href="00-合法授權與執行世界觀.html">開始：合法授權與執行世界觀 →</a>
+</p>
+</section>
+<h2>八站主線</h2>
+<ol>
+<li>
+<a href="00-合法授權與執行世界觀.html">合法授權與程式執行世界觀</a>
+</li>
+<li>
+<a href="01-位元組位址暫存器與組合語言.html">位元組、位址、暫存器與指令語意複習</a>
+</li>
+<li>
+<a href="02-呼叫慣例與堆疊.html">呼叫慣例與堆疊</a>
+</li>
+<li>
+<a href="03-可執行檔與載入.html">可執行檔、區段、符號、重定位與載入</a>
+</li>
+<li>
+<a href="04-靜態分析.html">靜態分析</a>
+</li>
+<li>
+<a href="05-動態分析與除錯器.html">動態分析與除錯器</a>
+</li>
+<li>
+<a href="06-控制流資料流與去混淆.html">控制流、資料流與去混淆</a>
+</li>
+<li>
+<a href="07-惡意程式防禦分析與證據.html">惡意程式防禦分析與證據</a>
+</li>
+</ol>
+<h2>學完的判斷標準</h2>
+<p>能區分檔案位移、虛擬位址與實際內容；能從呼叫慣例重建參數／回傳；能解釋靜態分析的假說為何需要動態驗證；能用控制流與資料流回答「哪個輸入造成哪個結果」；能在防禦事件中保存證據而不擴大風險。</p>
+<h2>你會怎麼一路學會</h2>
+<p>這門課不要求先背指令表，也不把工具按鈕當知識。00 先建立授權與證據邊界；01～03 把你會的 C++ 函式、記憶體與編譯結果逐層拆回位元組、暫存器、ABI 與載入映像；04～06 練習從靜態線索形成假說，再用受控執行、控制流與資料流驗證；07 把所有層次放進防禦事件時間線。若某個底層步驟仍陌生，可回姊妹課「計算機組織（從電晶體到 C++）」補處理器、指令集、編譯與連結模型。</p>
+<h2>先記住一個跨章問題模板</h2>
+<div class="grid">
+<article class="card">
+<h3>資產與授權</h3>
+<p>分析的是哪個精確檔案或行程？誰允許、允許哪些動作、資料可交給誰？不知道就先停，不用技術可行性替代權利。</p>
+</article>
+<article class="card">
+<h3>位置與狀態</h3>
+<p>觀察位於檔案位移、相對虛擬位址還是本次虛擬位址？當時的程式計數器、暫存器、記憶體與執行緒是什麼？</p>
+</article>
+<article class="card">
+<h3>因果鏈</h3>
+<p>哪份輸入在哪裡被讀取、轉換、比較，控制流走哪條邊，最後造成哪個回傳值或外部事件？</p>
+</article>
+<article class="card">
+<h3>證據邊界</h3>
+<p>工具直接量到什麼？哪些是解碼或推論？有什麼替代解釋？下一份獨立證據能排除哪一個反例？</p>
+</article>
+</div>
+<h2>一個貫穿全課的小例子</h2>
+<p>假設授權教學檔案在位移 0x3000 含 api.example.test。01 章提醒你這只是位元組的某種文字解讀；03 章把它換算成載入後位址；04 章沿交叉參照找到可達的名稱解析呼叫；05 章以兩組已知輸入在呼叫前暫停，記錄參數與分支；06 章向後切片確認端點值來自該字串而非另一設定；07 章再用行程與網路事件證明某次執行確實嘗試解析。到最後仍只能依證據描述行為，不能從一個網域字串推斷作者意圖。</p>
+<h2>如何使用互動與字典</h2>
+<ul>
+<li>每章先讀痛點，再操作工作區；改一個控制值後，先自己預測輸出，再看畫面解釋。</li>
+<li>把互動中的數字抄在紙上逐步驗算。互動是明示假設的教學模型，不是特定 x86-64、AArch64、Windows 或 Linux 規格。</li>
+<li>遇到術語就查字典的「位置／功能／機制／邊界／證據」，不用先背完整張表。</li>
+<li>每章最後都問工具能證明什麼、不能證明什麼；能說出限制，才算真正理解觀察。</li>
+</ul>
+<details><summary>如果第一章就看不懂，怎麼補而不迷路？</summary><p>卡在 0x1234、位元組序或暫存器，就先回計算機組織姊妹課複習「記憶體是一排有編號的位元組」與「指令讓機器狀態轉移」，再回 01 逐步按六條教學指令。卡在參數與堆疊，不必先背特定平台所有暫存器；先能用 02 的假設模型說出「呼叫端準備 → 保存回程位置 → 被呼叫端工作 → 回傳」即可。卡在 PE、ELF 或工具畫面，先抓共同問題：哪些位元組映射到哪個位址、權限是什麼、入口與相依項在哪。平台專屬欄位之後再查官方規格。</p><p>判斷自己是否真的懂，可以不看正文回答三句：這個概念若不存在會卡在哪裡；給一組具體位址或值，狀態如何一步步改變；哪個工具能看到結果、又不能證明什麼。答不出哪一句，就回該章相對應的小節，而不是重背整頁術語。</p></details>
+<p class="warning">
+<strong>安全邊界：</strong>只處理自有、授權或無害教學樣本。本課不提供破解授權、規避偵測、持久化或武器化操作。</p>
+<nav class="pager">
+<span>課程首頁</span>
+<a href="00-合法授權與執行世界觀.html">下一頁：00 起點 →</a>
+</nav>
+</main>
+</body>
 </html>

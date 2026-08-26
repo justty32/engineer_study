@@ -1,2 +1,110 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 合法授權與執行世界觀</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">課程地圖</a><a href="00-合法授權與執行世界觀.html" aria-current="page">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">00・零基礎與安全入口</p><h1>合法授權與執行世界觀</h1><p class="lead">硬碟上的檔案只是位元組；作業系統驗證格式、映射區段、連結相依項並建立行程後，處理器才依指令改變暫存器與記憶體。逆向分析是在這些層次收集證據，而不是把反組譯文字當原始碼。</p><p class="prereq"><strong>這章假設已懂：</strong>程式可讀寫記憶體。其餘從零開始。</p><section class="workspace"><h2>自由實驗：先決定能不能分析</h2><label for="sample-source">樣本來源</label><select id="sample-source"><option value="owned">自己擁有與開發</option><option value="training">明示可分析的教學樣本</option><option value="authorized">第三方但有書面授權</option><option value="unknown">來源或權利不明</option></select><label for="analysis-purpose">目的</label><select id="analysis-purpose"><option value="compat">互通性、除錯或安全驗證</option><option value="incident">防禦性事件調查</option><option value="bypass">繞過授權或存取控制</option></select><label><input id="isolated" type="checkbox" checked> 動態觀察使用隔離、可回復的環境</label><div id="scope-output" class="output" aria-live="polite"></div></section><h2>五個層次</h2><div class="grid"><article class="card"><h3>檔案</h3><p>位元組、格式標頭、區段、符號、簽章與雜湊；尚未執行。</p></article><article class="card"><h3>載入映像</h3><p>載入器把檔案內容映射到虛擬位址，修正位置並解析相依項。</p></article><article class="card"><h3>行程</h3><p>程式碼、資料、堆積、執行緒、控制代碼與權限共同形成執行個體。</p></article><article class="card"><h3>處理器狀態</h3><p>指令依程式計數器前進，改變暫存器、記憶體與旗標。</p></article><article class="card"><h3>外部效果</h3><p>檔案、登錄、行程、系統呼叫、網路與事件紀錄提供跨層證據。</p></article></div><h2>事實、推論、假說</h2><p>「檔案中有某字串」是事實；「可能支援某協定」是推論；「執行時一定連線」需要動態或其他獨立證據。每份分析都應保存樣本雜湊、時間、環境、工具版本、觀察與信心水準。</p><p class="warning">這不是法律意見。授權範圍不明就停止並詢問權利人或組織法務／資安負責人。</p><nav class="pager"><a href="index.html">← 課程地圖</a><a href="01-位元組位址暫存器與組合語言.html">下一頁：機器狀態 →</a></nav></main></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>00 合法授權與執行世界觀</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">課程地圖</a>
+<a href="00-合法授權與執行世界觀.html" aria-current="page">00 起點</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">00・零基礎與安全入口</p>
+<h1>合法授權與執行世界觀</h1>
+<p class="lead">硬碟上的檔案只是位元組；作業系統驗證格式、映射區段、連結相依項並建立行程後，處理器才依指令改變暫存器與記憶體。逆向分析是在這些層次收集證據，而不是把反組譯文字當原始碼。</p>
+<p class="prereq">
+<strong>這章假設已懂：</strong>程式可讀寫記憶體。其餘從零開始。</p>
+<section class="workspace">
+<h2>自由實驗：先決定能不能分析</h2>
+<label for="sample-source">樣本來源</label>
+<select id="sample-source">
+<option value="owned">自己擁有與開發</option>
+<option value="training">明示可分析的教學樣本</option>
+<option value="authorized">第三方但有書面授權</option>
+<option value="unknown">來源或權利不明</option>
+</select>
+<label for="analysis-purpose">目的</label>
+<select id="analysis-purpose">
+<option value="compat">互通性、除錯或安全驗證</option>
+<option value="incident">防禦性事件調查</option>
+<option value="bypass">繞過授權或存取控制</option>
+</select>
+<label>
+<input id="isolated" type="checkbox" checked> 動態觀察使用隔離、可回復的環境</label>
+<div id="scope-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>五個層次</h2>
+<div class="grid">
+<article class="card">
+<h3>檔案</h3>
+<p>位元組、格式標頭、區段、符號、簽章與雜湊；尚未執行。</p>
+</article>
+<article class="card">
+<h3>載入映像</h3>
+<p>載入器把檔案內容映射到虛擬位址，修正位置並解析相依項。</p>
+</article>
+<article class="card">
+<h3>行程</h3>
+<p>程式碼、資料、堆積、執行緒、控制代碼與權限共同形成執行個體。</p>
+</article>
+<article class="card">
+<h3>處理器狀態</h3>
+<p>指令依程式計數器前進，改變暫存器、記憶體與旗標。</p>
+</article>
+<article class="card">
+<h3>外部效果</h3>
+<p>檔案、登錄、行程、系統呼叫、網路與事件紀錄提供跨層證據。</p>
+</article>
+</div>
+<h2>事實、推論、假說</h2>
+<p>「檔案中有某字串」是事實；「可能支援某協定」是推論；「執行時一定連線」需要動態或其他獨立證據。每份分析都應保存樣本雜湊、時間、環境、工具版本、觀察與信心水準。</p>
+<h2>先解決真正的痛點：看得到，不等於可以碰</h2>
+<p>工程師最容易從「技術上能讀」直接跳到「所以我能分析」。但檔案位於你的電腦，只能證明你持有一份位元組；它不能自動證明你擁有著作權、營業秘密處理權、個資處理依據，或繞過存取控制的授權。若沒有這個起點，後續做得越深入，法律、合約與營運風險反而越大。正確做法是先把樣本、目的、允許動作、期限、資料範圍與成果分享對象寫成分析契約，再決定能否讀檔、反組譯或執行。</p>
+<p>可以把授權想成函式的型別與前置條件：呼叫本身在語法上可行，不代表輸入符合契約。比喻只到這裡；真實授權由法律、合約、組織政策與權利人的明確同意共同決定，不能由技術工具推導。上方實驗若顯示「可進入分析規劃」，也只表示本課的初步分流條件較合理，不是法律判決。</p>
+<h2>從檔案一路走到外部效果</h2>
+<ol>
+<li>
+<strong>磁碟檔案：</strong>假設位移 0x120 處有四個位元組 4D 5A 90 00。此時只能說這四個值存在；格式解析器可能把前兩個辨認成某種標頭線索，但它們尚未被處理器執行。</li>
+<li>
+<strong>載入映像：</strong>作業系統依格式描述，把某段檔案內容映射到行程的虛擬位址，例如 0x140001000。檔案位移 0x120 與虛擬位址 0x140001000 是兩套座標，不能直接畫等號。</li>
+<li>
+<strong>行程與執行緒：</strong>載入映像加上位址空間、權限、開啟資源與至少一條執行緒，才形成可運作的執行個體。同一檔案同時啟動兩次，會有兩個行程與兩份可變狀態。</li>
+<li>
+<strong>機器狀態：</strong>若程式計數器指向 0x140001000，處理器取用那裡的指令位元組，解碼後更新暫存器、旗標或記憶體。只有落在可執行路徑上的資料，才可能在這次執行成為指令。</li>
+<li>
+<strong>外部效果：</strong>程式透過系統呼叫請核心建立檔案、送出網路資料或啟動另一行程。外部效果通常是最容易與系統事件、封包或稽核紀錄交叉驗證的一層。</li>
+</ol>
+<details>
+<summary>想更深入：同一觀察如何分成事實、推論與假說</summary>
+<p>例一：在檔案位移 0x2A40 找到文字 api.example.test，這是可重現的<strong>事實</strong>。它可能是伺服器名稱、測試資料、說明文字，甚至永遠不會使用的殘留，因此「程式可能具備連線線索」只是<strong>推論</strong>。只有在受控執行中看見該字串流入名稱解析或連線呼叫，並由行程事件與網路紀錄對上時間，才支持「這次執行嘗試連線」；仍不能僅憑此證明遠端內容或主觀意圖。</p>
+<p>例二：檔案匯入建立檔案的系統函式，能證明模組宣告了相依能力；不能證明該函式必然被呼叫。反過來，匯入表沒有某函式也不保證沒有相同行為，因為函式可能在執行期解析，或經其他模組間接完成。</p>
+</details>
+<h2>可觀察證據：每個工具只回答一部分</h2>
+<ul>
+<li>
+<strong>十六進位檢視器：</strong>能證明指定檔案位移的位元組與標頭內容；不能證明載入位址或執行路徑。</li>
+<li>
+<strong>格式解析器：</strong>能依格式規則列出架構、區段、入口與相依項；不能保證檔案未損壞，也不能證明入口之後的行為。</li>
+<li>
+<strong>除錯器：</strong>能在某次執行暫停並讀到當下暫存器與記憶體；不能涵蓋沒有觸發的輸入、權限、時間或執行緒交錯。</li>
+<li>
+<strong>系統事件與封包擷取：</strong>能留下外部動作的時間、端點或資料量；加密流量通常不能直接顯示內容，紀錄缺失也不等於事件不存在。</li>
+</ul>
+<p class="note">
+<strong>每次都留下最小紀錄：</strong>樣本雜湊、取得來源、授權依據、分析副本、工具版本、時區、觀察位置與替代解釋。這些資料讓另一位分析者能重做你的步驟，也讓你之後分得清「當時看到」與「後來猜到」。</p>
+<p class="warning">這不是法律意見。授權範圍不明就停止並詢問權利人或組織法務／資安負責人。</p>
+<nav class="pager">
+<a href="index.html">← 課程地圖</a>
+<a href="01-位元組位址暫存器與組合語言.html">下一頁：機器狀態 →</a>
+</nav>
+</main>
+</body>
+</html>

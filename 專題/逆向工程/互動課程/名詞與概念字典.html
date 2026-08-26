@@ -1,27 +1,378 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>逆向工程名詞與概念字典</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">課程地圖</a><a href="00-合法授權與執行世界觀.html">00 起點</a><a href="名詞與概念字典.html" aria-current="page">字典</a></nav><main><p class="eyebrow">隨時回查，不用先背</p><h1>名詞與概念字典</h1><p class="lead">每條分開說白話功能、位置／機制與易混邊界。要理解完整因果，沿條目中的章節連回主線。</p><section class="workspace"><label for="term-search">搜尋繁中、英文、縮寫或白話動作</label><input id="term-search" type="search" placeholder="例如：ABI、位址、暫停、證據"><p id="term-count" aria-live="polite"></p></section><div class="grid">
-<article class="term-card" data-search="逆向工程 reverse engineering 產物 行為"><h2>逆向工程（reverse engineering）</h2><p><strong>白話：</strong>由既有產物與觀察重建設計或行為。</p><p><strong>位置／機制：</strong>結合檔案、指令、執行與外部證據。</p><p><strong>不要混淆：</strong>不是自動還原唯一原始碼，也不等於破解。</p></article>
-<article class="term-card" data-search="密碼雜湊 cryptographic hash 樣本 同一性"><h2>密碼雜湊（cryptographic hash）</h2><p><strong>白話：</strong>把檔案映成固定長摘要，供完整性與同一性比對。</p><p><strong>位置／機制：</strong>證據保全與分流；位元組變化通常導致摘要改變。</p><p><strong>不要混淆：</strong>命中只辨認內容，不直接解釋行為。</p></article>
-<article class="term-card" data-search="反組譯器 disassembler 機器碼 指令"><h2>反組譯器（disassembler）</h2><p><strong>白話：</strong>把機器指令位元組翻成助記符與運算元。</p><p><strong>位置／機制：</strong>依架構、模式與起始邊界解碼。</p><p><strong>不要混淆：</strong>錯誤邊界也可能產生看似合理指令。</p></article>
-<article class="term-card" data-search="反編譯器 decompiler 類 C 高階"><h2>反編譯器（decompiler）</h2><p><strong>白話：</strong>把低階控制與資料推論成較易讀的高階表示。</p><p><strong>位置／機制：</strong>從指令、控制流、資料流與型別線索重建。</p><p><strong>不要混淆：</strong>名稱、型別與結構多為推論，不是原始碼事實。</p></article>
-<article class="term-card" data-search="暫存器 register 處理器 狀態"><h2>暫存器（register）</h2><p><strong>白話：</strong>處理器直接操作的小型高速狀態位置。</p><p><strong>位置／機制：</strong>保存運算元、位址、堆疊位置、程式位置與旗標。</p><p><strong>不要混淆：</strong>不是 C++ 變數的一對一永久位置。</p></article>
-<article class="term-card" data-search="程式計數器 program counter PC 下一條 指令"><h2>程式計數器（Program Counter, PC）</h2><p><strong>白話：</strong>指出下一條將取用指令的位置。</p><p><strong>位置／機制：</strong>順序執行時前進，分支／呼叫／回傳時改寫。</p><p><strong>不要混淆：</strong>縮寫 PC 在其他語境也可能指個人電腦。</p></article>
-<article class="term-card" data-search="虛擬位址 virtual address 行程 記憶體"><h2>虛擬位址（virtual address）</h2><p><strong>白話：</strong>行程用來指向其位址空間的數字。</p><p><strong>位置／機制：</strong>由作業系統與硬體映射到實體記憶體或其他 backing。</p><p><strong>不要混淆：</strong>不是檔案位移，也不一定跨次執行固定。</p></article>
-<article class="term-card" data-search="應用程式二進位介面 Application Binary Interface ABI 模組"><h2>應用程式二進位介面（Application Binary Interface, ABI）</h2><p><strong>白話：</strong>讓編譯後模組可互相呼叫與共享資料的規則。</p><p><strong>位置／機制：</strong>規定呼叫、資料布局、符號、對齊與系統介面。</p><p><strong>不要混淆：</strong>應用程式介面規範原始碼層；ABI 規範二進位層。</p></article>
-<article class="term-card" data-search="呼叫慣例 calling convention 參數 回傳"><h2>呼叫慣例（calling convention）</h2><p><strong>白話：</strong>規定函式參數、回傳值與保存責任放在哪裡。</p><p><strong>位置／機制：</strong>ABI 的一部分；使用暫存器、堆疊與對齊規則。</p><p><strong>不要混淆：</strong>不同平台與編譯選項可能不同。</p></article>
-<article class="term-card" data-search="堆疊 stack 呼叫框架 回程 區域"><h2>堆疊（stack）</h2><p><strong>白話：</strong>常用後進先出方式管理呼叫相關資料。</p><p><strong>位置／機制：</strong>保存回程位置、部分參數、區域資料與暫存器。</p><p><strong>不要混淆：</strong>不是所有變數都在堆疊，也不是 C++ 容器。</p></article>
-<article class="term-card" data-search="載入器 loader 映射 相依 重定位"><h2>載入器（loader）</h2><p><strong>白話：</strong>把可執行檔準備成可開始執行的記憶體映像。</p><p><strong>位置／機制：</strong>映射區段、解析相依、套用重定位並移交入口。</p><p><strong>不要混淆：</strong>編譯器產生物件；連結器組合；載入器在執行前準備。</p></article>
-<article class="term-card" data-search="區段 section segment 程式碼 資料 權限"><h2>區段（section／segment）</h2><p><strong>白話：</strong>依用途與權限分組的檔案或映像內容。</p><p><strong>位置／機制：</strong>格式描述程式碼、資料、重定位等範圍及映射。</p><p><strong>不要混淆：</strong>不同格式對 section 與 segment 的精確分工不同。</p></article>
-<article class="term-card" data-search="符號 symbol 名稱 位址 函式"><h2>符號（symbol）</h2><p><strong>白話：</strong>把名稱連到函式、資料或位址。</p><p><strong>位置／機制：</strong>供連結、載入、除錯或分析使用。</p><p><strong>不要混淆：</strong>符號被剝除不代表程式碼被刪除。</p></article>
-<article class="term-card" data-search="重定位 relocation 基底 修正 位址"><h2>重定位（relocation）</h2><p><strong>白話：</strong>位置確定後修正依賴位址的參照。</p><p><strong>位置／機制：</strong>重定位表指出修正位置、種類與目標。</p><p><strong>不要混淆：</strong>不是把整個檔案任意搬動後自然生效。</p></article>
-<article class="term-card" data-search="位址空間配置隨機化 Address Space Layout Randomization ASLR 基底"><h2>位址空間配置隨機化（Address Space Layout Randomization, ASLR）</h2><p><strong>白話：</strong>每次執行改變映像與區域基底，提高位址不可預測性。</p><p><strong>位置／機制：</strong>作業系統載入策略配合可重定位映像。</p><p><strong>不要混淆：</strong>不會加密程式，也不消除相對位移。</p></article>
-<article class="term-card" data-search="靜態分析 static analysis 不執行"><h2>靜態分析（static analysis）</h2><p><strong>白話：</strong>不執行樣本，直接讀其檔案與程式表示。</p><p><strong>位置／機制：</strong>雜湊、格式、字串、匯入、反組譯與資料流。</p><p><strong>不要混淆：</strong>可達或存在不表示本次真的執行。</p></article>
-<article class="term-card" data-search="動態分析 dynamic analysis 執行 觀察"><h2>動態分析（dynamic analysis）</h2><p><strong>白話：</strong>在受控環境執行並記錄實際狀態與外部效果。</p><p><strong>位置／機制：</strong>除錯、事件追蹤、沙箱與系統觀察。</p><p><strong>不要混淆：</strong>一次路徑不能涵蓋所有輸入與時間條件。</p></article>
-<article class="term-card" data-search="除錯器 debugger 暫停 單步 中斷點"><h2>除錯器（debugger）</h2><p><strong>白話：</strong>控制行程暫停／繼續並檢查機器狀態的工具。</p><p><strong>位置／機制：</strong>使用中斷點、單步、暫存器與記憶體讀寫。</p><p><strong>不要混淆：</strong>觀察可能改變時序或被觀察行為。</p></article>
-<article class="term-card" data-search="中斷點 breakpoint 停止 指令 資料"><h2>中斷點（breakpoint）</h2><p><strong>白話：</strong>滿足位置或事件條件時讓行程暫停。</p><p><strong>位置／機制：</strong>可由陷阱指令或硬體除錯資源實作。</p><p><strong>不要混淆：</strong>設下中斷點不表示該位置一定可達。</p></article>
-<article class="term-card" data-search="控制流圖 Control Flow Graph CFG 基本區塊"><h2>控制流圖（Control Flow Graph, CFG）</h2><p><strong>白話：</strong>用節點與邊表示基本區塊間可能轉移。</p><p><strong>位置／機制：</strong>由順序、條件、跳躍、呼叫與例外建立。</p><p><strong>不要混淆：</strong>圖是可能路徑，不是一次真實時間線。</p></article>
-<article class="term-card" data-search="定義使用鏈 definition-use chain def-use 資料流"><h2>定義使用鏈（definition-use chain）</h2><p><strong>白話：</strong>連接一個值被寫入與被讀取的位置。</p><p><strong>位置／機制：</strong>資料流分析用它做向前／向後切片。</p><p><strong>不要混淆：</strong>指標別名與跨執行緒會讓鏈具有不確定性。</p></article>
-<article class="term-card" data-search="混淆 obfuscation 語意 難讀"><h2>混淆（obfuscation）</h2><p><strong>白話：</strong>保留主要效果但刻意增加理解成本的轉換。</p><p><strong>位置／機制：</strong>可改寫控制流、資料表示、名稱或程式布局。</p><p><strong>不要混淆：</strong>難讀不等於惡意；去混淆也不授權繞過保護。</p></article>
-<article class="term-card" data-search="指標性入侵跡象 Indicator of Compromise IOC 搜尋 事件"><h2>指標性入侵跡象（Indicator of Compromise, IOC）</h2><p><strong>白話：</strong>可用來搜尋可能受影響系統的可觀察特徵。</p><p><strong>位置／機制：</strong>雜湊、路徑、名稱、位址或行為條件。</p><p><strong>不要混淆：</strong>單一命中不是惡意定罪，需時間與行為證據。</p></article>
-<article class="term-card" data-search="保管鏈 chain of custody 證據 交接"><h2>證據保管鏈（chain of custody）</h2><p><strong>白話：</strong>記錄證據從取得到保存、分析與交接的完整歷程。</p><p><strong>位置／機制：</strong>包含人員、時間、動作、媒體、雜湊與存取控制。</p><p><strong>不要混淆：</strong>只有檔案副本而無來源紀錄，證據力較弱。</p></article>
-</div><h2>回主線</h2><p><a href="01-位元組位址暫存器與組合語言.html">機器狀態</a>、<a href="02-呼叫慣例與堆疊.html">函式邊界</a>、<a href="03-可執行檔與載入.html">載入</a>、<a href="04-靜態分析.html">靜態假說</a>、<a href="05-動態分析與除錯器.html">動態驗證</a>、<a href="06-控制流資料流與去混淆.html">控制／資料流</a>、<a href="07-惡意程式防禦分析與證據.html">防禦證據</a>。</p><nav class="pager"><a href="07-惡意程式防禦分析與證據.html">← 防禦分析</a><a href="index.html">回課程地圖 →</a></nav></main></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>逆向工程名詞與概念字典</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">課程地圖</a>
+<a href="00-合法授權與執行世界觀.html">00 起點</a>
+<a href="名詞與概念字典.html" aria-current="page">字典</a>
+</nav>
+<main>
+<p class="eyebrow">隨時回查，不用先背</p>
+<h1>名詞與概念字典</h1>
+<p class="lead">每條分開說白話功能、位置／機制與易混邊界。要理解完整因果，沿條目中的章節連回主線。</p>
+<section class="workspace">
+<label for="term-search">搜尋繁中、英文、縮寫或白話動作</label>
+<input id="term-search" type="search" placeholder="例如：ABI、位址、暫停、證據">
+<p id="term-count" aria-live="polite">
+</p>
+</section>
+<section>
+<h2>字典不是背誦表：每個詞要能回答六個問題</h2>
+<p>看到陌生術語時，先不要問「它的標準句定義是什麼」，而要依序問：它位在哪一層、替誰解決什麼問題、讀入什麼狀態或資料、用什麼機制改變狀態、產生什麼結果、最後能在哪個工具留下證據。能沿這六問說一遍，才是真的懂；只認得英文縮寫，遇到除錯畫面仍會卡住。</p>
+<div class="grid">
+<article class="card">
+<h3>位置與角色</h3>
+<p>先判斷它屬於磁碟檔案、載入映像、行程虛擬記憶體、處理器狀態，還是外部系統事件。相同數字在不同層可能是檔案位移、位址或純資料。</p>
+</article>
+<article class="card">
+<h3>輸入與機制</h3>
+<p>找它讀什麼：位元組、暫存器、表格、參數或事件；再找它依哪條規則解碼、映射、轉移或比對。這一步把名詞接回可執行動作。</p>
+</article>
+<article class="card">
+<h3>結果與證據</h3>
+<p>寫出狀態改變，例如程式計數器由 0x401000 → 0x401020，或檔案位移 0x650 映射成虛擬位址 0x401250；最後指出反組譯器、除錯器或事件紀錄能驗證哪一段。</p>
+</article>
+<article class="card">
+<h3>邊界與反例</h3>
+<p>每個工具都有盲點：字串存在不代表使用、路徑可達不代表本次執行、一次未觀察到也不代表能力不存在。把替代解釋寫出來，避免把推論冒充事實。</p>
+</article>
+</div>
+<details>
+<summary>想更深入：用一個例子串起多個名詞</summary>
+<p>檔案位移 0x3000 有文字 api.example.test；密碼雜湊先固定你分析的是哪一版檔案。載入器依區段表把它映射到相對虛擬位址 0x5000，若本次基底為 0x140000000，除錯器看見的虛擬位址就是 0x140005000。反組譯器在某函式找到對該位址的交叉參照，反編譯器把附近資料流推成類 C 表示；控制流圖顯示有路可到名稱解析呼叫，定義使用鏈則顯示字串指標流進參數。最後在隔離環境設中斷點，若某次輸入真的命中並產生對應網路事件，才支持這次執行嘗試解析該名稱。每個名詞都只解釋因果鏈的一段，沒有單一工具能取代整條證據鏈。</p>
+</details>
+</section>
+<div class="grid">
+<article class="term-card" data-search="逆向工程 reverse engineering 產物 行為">
+<h2>逆向工程（reverse engineering）</h2>
+<p>
+<strong>白話：</strong>由既有產物與觀察重建設計或行為。</p>
+<p>
+<strong>位置／機制：</strong>結合檔案、指令、執行與外部證據。</p>
+<p>
+<strong>不要混淆：</strong>不是自動還原唯一原始碼，也不等於破解。</p>
+<p>
+<strong>具體例：</strong>從檔案位移 0x3000 的字串，沿交叉參照與參數流追到名稱解析呼叫，再用事件紀錄驗證某次執行。</p>
+<p>
+<strong>可觀察證據：</strong>分析註記應能回到位元組、位址與時間；漂亮的反編譯畫面本身不能證明原始設計或作者意圖。</p>
+</article>
+<article class="term-card" data-search="密碼雜湊 cryptographic hash 樣本 同一性">
+<h2>密碼雜湊（cryptographic hash）</h2>
+<p>
+<strong>白話：</strong>把檔案映成固定長摘要，供完整性與同一性比對。</p>
+<p>
+<strong>位置／機制：</strong>證據保全與分流；位元組變化通常導致摘要改變。</p>
+<p>
+<strong>不要混淆：</strong>命中只辨認內容，不直接解釋行為。</p>
+<p>
+<strong>具體例：</strong>原檔與分析副本的 SHA-256 摘要相同，支持兩者位元組一致；檔案改動一個位元後摘要通常完全不同。</p>
+<p>
+<strong>可觀察證據：</strong>雜湊工具能重算摘要，不能證明檔案何時、由誰取得或執行，也不能取代保管鏈。</p>
+</article>
+<article class="term-card" data-search="反組譯器 disassembler 機器碼 指令">
+<h2>反組譯器（disassembler）</h2>
+<p>
+<strong>白話：</strong>把機器指令位元組翻成助記符與運算元。</p>
+<p>
+<strong>位置／機制：</strong>依架構、模式與起始邊界解碼。</p>
+<p>
+<strong>不要混淆：</strong>錯誤邊界也可能產生看似合理指令。</p>
+<p>
+<strong>具體例：</strong>工具從 0x401000 解出 MOV，若真正指令其實從 0x401001 開始，後續助記符可能整串錯位。</p>
+<p>
+<strong>可觀察證據：</strong>輸出可列位址、原始位元組與助記符；區段權限、入口可達性與動態命中才能進一步支持它是程式碼。</p>
+</article>
+<article class="term-card" data-search="反編譯器 decompiler 類 C 高階">
+<h2>反編譯器（decompiler）</h2>
+<p>
+<strong>白話：</strong>把低階控制與資料推論成較易讀的高階表示。</p>
+<p>
+<strong>位置／機制：</strong>從指令、控制流、資料流與型別線索重建。</p>
+<p>
+<strong>不要混淆：</strong>名稱、型別與結構多為推論，不是原始碼事實。</p>
+<p>
+<strong>具體例：</strong>機器碼只做「讀 4 位元組後比較 7」，工具可能命名為 value 或 length；兩個名稱都不是檔案內的事實。</p>
+<p>
+<strong>可觀察證據：</strong>可用反組譯的讀取寬度、呼叫慣例與多個使用點檢查推論；不能還原註解、巨集或唯一來源寫法。</p>
+</article>
+<article class="term-card" data-search="暫存器 register 處理器 狀態">
+<h2>暫存器（register）</h2>
+<p>
+<strong>白話：</strong>處理器直接操作的小型高速狀態位置。</p>
+<p>
+<strong>位置／機制：</strong>保存運算元、位址、堆疊位置、程式位置與旗標。</p>
+<p>
+<strong>不要混淆：</strong>不是 C++ 變數的一對一永久位置。</p>
+<p>
+<strong>具體例：</strong>R0 先保存 3，執行 R0 ← R0 + 4 後成為 7；稍後同一 R0 可被重用成位址 0x2000。</p>
+<p>
+<strong>可觀察證據：</strong>除錯器能顯示暫停瞬間的位元值；將它解讀成有號數、指標或浮點數仍需指令與存取證據。</p>
+</article>
+<article class="term-card" data-search="程式計數器 program counter PC 下一條 指令">
+<h2>程式計數器（Program Counter, PC）</h2>
+<p>
+<strong>白話：</strong>指出下一條將取用指令的位置。</p>
+<p>
+<strong>位置／機制：</strong>順序執行時前進，分支／呼叫／回傳時改寫。</p>
+<p>
+<strong>不要混淆：</strong>縮寫 PC 在其他語境也可能指個人電腦。</p>
+<p>
+<strong>具體例：</strong>順序執行後 PC 由 0x401000 前進到下一條；條件跳躍成立時可能直接改成 0x401020。</p>
+<p>
+<strong>可觀察證據：</strong>除錯器的指令指標欄能顯示當下位置；它不能單獨說明上一條如何到達，也不是來源碼行號。</p>
+</article>
+<article class="term-card" data-search="虛擬位址 virtual address 行程 記憶體">
+<h2>虛擬位址（virtual address）</h2>
+<p>
+<strong>白話：</strong>行程用來指向其位址空間的數字。</p>
+<p>
+<strong>位置／機制：</strong>由作業系統與硬體映射到實體記憶體或其他 backing。</p>
+<p>
+<strong>不要混淆：</strong>不是檔案位移，也不一定跨次執行固定。</p>
+<p>
+<strong>具體例：</strong>模組基底 0x140000000 加相對位移 0x1234，得到本次位址 0x140001234；ASLR 可讓下次基底不同。</p>
+<p>
+<strong>可觀察證據：</strong>行程記憶體映射與除錯器能證明某時刻的範圍及權限；不能由完整位址直接反推檔案位移。</p>
+</article>
+<article class="term-card" data-search="應用程式二進位介面 Application Binary Interface ABI 模組">
+<h2>應用程式二進位介面（Application Binary Interface, ABI）</h2>
+<p>
+<strong>白話：</strong>讓編譯後模組可互相呼叫與共享資料的規則。</p>
+<p>
+<strong>位置／機制：</strong>規定呼叫、資料布局、符號、對齊與系統介面。</p>
+<p>
+<strong>不要混淆：</strong>應用程式介面規範原始碼層；ABI 規範二進位層。</p>
+<p>
+<strong>具體例：</strong>ABI 決定 32 位元整數大小、結構對齊、參數暫存器、回傳位置與符號命名，雙方不一致就可能讀錯資料。</p>
+<p>
+<strong>可觀察證據：</strong>呼叫點、資料布局、符號與平台文件可互證；一次正常呼叫不能證明所有型別與例外規則都相容。</p>
+</article>
+<article class="term-card" data-search="呼叫慣例 calling convention 參數 回傳">
+<h2>呼叫慣例（calling convention）</h2>
+<p>
+<strong>白話：</strong>規定函式參數、回傳值與保存責任放在哪裡。</p>
+<p>
+<strong>位置／機制：</strong>ABI 的一部分；使用暫存器、堆疊與對齊規則。</p>
+<p>
+<strong>不要混淆：</strong>不同平台與編譯選項可能不同。</p>
+<p>
+<strong>具體例：</strong>教學模型把前四個整數放暫存器，其餘放堆疊，回傳值放指定暫存器；這不是所有平台的保證。</p>
+<p>
+<strong>可觀察證據：</strong>在呼叫前、入口與回傳前比較暫存器和堆疊，可重建這個函式的實際用法；單一呼叫點可能漏掉可選參數。</p>
+</article>
+<article class="term-card" data-search="堆疊 stack 呼叫框架 回程 區域">
+<h2>堆疊（stack）</h2>
+<p>
+<strong>白話：</strong>常用後進先出方式管理呼叫相關資料。</p>
+<p>
+<strong>位置／機制：</strong>保存回程位置、部分參數、區域資料與暫存器。</p>
+<p>
+<strong>不要混淆：</strong>不是所有變數都在堆疊，也不是 C++ 容器。</p>
+<p>
+<strong>具體例：</strong>單一框架若占 80 位元組，三層尚未返回的同型呼叫在簡化模型約占 240 位元組，回傳時依相反順序收回。</p>
+<p>
+<strong>可觀察證據：</strong>堆疊指標、記憶體檢視與展開資訊能顯示目前呼叫鏈；不能保存所有已返回呼叫的完整歷史。</p>
+</article>
+<article class="term-card" data-search="載入器 loader 映射 相依 重定位">
+<h2>載入器（loader）</h2>
+<p>
+<strong>白話：</strong>把可執行檔準備成可開始執行的記憶體映像。</p>
+<p>
+<strong>位置／機制：</strong>映射區段、解析相依、套用重定位並移交入口。</p>
+<p>
+<strong>不要混淆：</strong>編譯器產生物件；連結器組合；載入器在執行前準備。</p>
+<p>
+<strong>具體例：</strong>載入器選基底 0x400000，把相對位移 0x1250 對到虛擬位址 0x401250，解析相依後才移交入口。</p>
+<p>
+<strong>可觀察證據：</strong>模組清單與記憶體映射可顯示實際基底；格式檢視器只能描述檔案要求，不能證明這次載入成功。</p>
+</article>
+<article class="term-card" data-search="區段 section segment 程式碼 資料 權限">
+<h2>區段（section／segment）</h2>
+<p>
+<strong>白話：</strong>依用途與權限分組的檔案或映像內容。</p>
+<p>
+<strong>位置／機制：</strong>格式描述程式碼、資料、重定位等範圍及映射。</p>
+<p>
+<strong>不要混淆：</strong>不同格式對 section 與 segment 的精確分工不同。</p>
+<p>
+<strong>具體例：</strong>某範圍在檔案從 0x400 開始、映射時從相對位址 0x1000 開始，兩邊對齊與大小可能不同。</p>
+<p>
+<strong>可觀察證據：</strong>格式表能列範圍、大小與旗標，行程映射能列實際頁面權限；區段名稱本身不保證內容或權限。</p>
+</article>
+<article class="term-card" data-search="符號 symbol 名稱 位址 函式">
+<h2>符號（symbol）</h2>
+<p>
+<strong>白話：</strong>把名稱連到函式、資料或位址。</p>
+<p>
+<strong>位置／機制：</strong>供連結、載入、除錯或分析使用。</p>
+<p>
+<strong>不要混淆：</strong>符號被剝除不代表程式碼被刪除。</p>
+<p>
+<strong>具體例：</strong>名稱 parse_header 可對到 0x401200；發布版移除名稱後，0x401200 的指令仍可能完整存在並被呼叫。</p>
+<p>
+<strong>可觀察證據：</strong>符號工具能證明表中名稱對應；分析者自訂名稱只是註記，不能當成原開發者命名。</p>
+</article>
+<article class="term-card" data-search="重定位 relocation 基底 修正 位址">
+<h2>重定位（relocation）</h2>
+<p>
+<strong>白話：</strong>位置確定後修正依賴位址的參照。</p>
+<p>
+<strong>位置／機制：</strong>重定位表指出修正位置、種類與目標。</p>
+<p>
+<strong>不要混淆：</strong>不是把整個檔案任意搬動後自然生效。</p>
+<p>
+<strong>具體例：</strong>偏好基底與實際基底相差 0x100000 時，載入器只依表格修正指定欄位，不是把每個數字都加上差值。</p>
+<p>
+<strong>可觀察證據：</strong>重定位表與載入前後位元組差異能支持修正位置；記憶體差異也可能來自初始化或寫時複製。</p>
+</article>
+<article class="term-card" data-search="位址空間配置隨機化 Address Space Layout Randomization ASLR 基底">
+<h2>位址空間配置隨機化（Address Space Layout Randomization, ASLR）</h2>
+<p>
+<strong>白話：</strong>每次執行改變映像與區域基底，提高位址不可預測性。</p>
+<p>
+<strong>位置／機制：</strong>作業系統載入策略配合可重定位映像。</p>
+<p>
+<strong>不要混淆：</strong>不會加密程式，也不消除相對位移。</p>
+<p>
+<strong>具體例：</strong>兩次基底分別為 0x140000000 與 0x180000000，同一函式仍可用「模組基底 + 0x1234」定位。</p>
+<p>
+<strong>可觀察證據：</strong>多次啟動後比較模組清單可看見基底改變；單次基底固定不能證明系統未啟用 ASLR。</p>
+</article>
+<article class="term-card" data-search="靜態分析 static analysis 不執行">
+<h2>靜態分析（static analysis）</h2>
+<p>
+<strong>白話：</strong>不執行樣本，直接讀其檔案與程式表示。</p>
+<p>
+<strong>位置／機制：</strong>雜湊、格式、字串、匯入、反組譯與資料流。</p>
+<p>
+<strong>不要混淆：</strong>可達或存在不表示本次真的執行。</p>
+<p>
+<strong>具體例：</strong>字串、網路匯入、交叉參照與可達資料流共同支持「可能連線」假說，仍需動態事件驗證。</p>
+<p>
+<strong>可觀察證據：</strong>輸出可重現位址、位元組、交叉參照與圖；無法直接觀察執行時間、真實輸入與環境條件。</p>
+</article>
+<article class="term-card" data-search="動態分析 dynamic analysis 執行 觀察">
+<h2>動態分析（dynamic analysis）</h2>
+<p>
+<strong>白話：</strong>在受控環境執行並記錄實際狀態與外部效果。</p>
+<p>
+<strong>位置／機制：</strong>除錯、事件追蹤、沙箱與系統觀察。</p>
+<p>
+<strong>不要混淆：</strong>一次路徑不能涵蓋所有輸入與時間條件。</p>
+<p>
+<strong>具體例：</strong>用長度 4 與 8 的兩組輸入比較旗標、分支與檔案事件，可測試「長度決定接受」的假說。</p>
+<p>
+<strong>可觀察證據：</strong>事件與狀態能證明該次路徑；觀察工具會改變時序，沒出現的行為也可能只是沒有觸發。</p>
+</article>
+<article class="term-card" data-search="除錯器 debugger 暫停 單步 中斷點">
+<h2>除錯器（debugger）</h2>
+<p>
+<strong>白話：</strong>控制行程暫停／繼續並檢查機器狀態的工具。</p>
+<p>
+<strong>位置／機制：</strong>使用中斷點、單步、暫存器與記憶體讀寫。</p>
+<p>
+<strong>不要混淆：</strong>觀察可能改變時序或被觀察行為。</p>
+<p>
+<strong>具體例：</strong>在 0x401050 比較前後暫停，記錄參數、旗標與下一個 PC，便能驗證分支依賴哪個值。</p>
+<p>
+<strong>可觀察證據：</strong>除錯器直接讀當下機器狀態；它通常不能還原原始變數名，也不能證明未執行路徑。</p>
+</article>
+<article class="term-card" data-search="中斷點 breakpoint 停止 指令 資料">
+<h2>中斷點（breakpoint）</h2>
+<p>
+<strong>白話：</strong>滿足位置或事件條件時讓行程暫停。</p>
+<p>
+<strong>位置／機制：</strong>可由陷阱指令或硬體除錯資源實作。</p>
+<p>
+<strong>不要混淆：</strong>設下中斷點不表示該位置一定可達。</p>
+<p>
+<strong>具體例：</strong>軟體中斷點可暫時把 0x401050 的指令換成陷阱；硬體中斷點則使用有限的處理器除錯資源。</p>
+<p>
+<strong>可觀察證據：</strong>命中能證明某執行緒到達條件位置；未命中可能是輸入、基底、執行緒或位址設定錯誤。</p>
+</article>
+<article class="term-card" data-search="控制流圖 Control Flow Graph CFG 基本區塊">
+<h2>控制流圖（Control Flow Graph, CFG）</h2>
+<p>
+<strong>白話：</strong>用節點與邊表示基本區塊間可能轉移。</p>
+<p>
+<strong>位置／機制：</strong>由順序、條件、跳躍、呼叫與例外建立。</p>
+<p>
+<strong>不要混淆：</strong>圖是可能路徑，不是一次真實時間線。</p>
+<p>
+<strong>具體例：</strong>B0 的比較可分到 B1 或 B2，再於 B3 匯合；一組輸入只會實際走其中一條分支。</p>
+<p>
+<strong>可觀察證據：</strong>靜態圖顯示工具辨認的可能邊，動態追蹤顯示本次走過的邊；間接跳躍與例外可能讓兩者都不完整。</p>
+</article>
+<article class="term-card" data-search="定義使用鏈 definition-use chain def-use 資料流">
+<h2>定義使用鏈（definition-use chain）</h2>
+<p>
+<strong>白話：</strong>連接一個值被寫入與被讀取的位置。</p>
+<p>
+<strong>位置／機制：</strong>資料流分析用它做向前／向後切片。</p>
+<p>
+<strong>不要混淆：</strong>指標別名與跨執行緒會讓鏈具有不確定性。</p>
+<p>
+<strong>具體例：</strong>輸入 n → 正規化 → 比較 → 旗標 → 回傳 r 是向前鏈；從檔案寫入參數倒追來源則是向後切片。</p>
+<p>
+<strong>可觀察證據：</strong>資料流工具能追明確的寫入與讀取；記憶體別名、外部呼叫副作用和競態需要額外證據。</p>
+</article>
+<article class="term-card" data-search="混淆 obfuscation 語意 難讀">
+<h2>混淆（obfuscation）</h2>
+<p>
+<strong>白話：</strong>保留主要效果但刻意增加理解成本的轉換。</p>
+<p>
+<strong>位置／機制：</strong>可改寫控制流、資料表示、名稱或程式布局。</p>
+<p>
+<strong>不要混淆：</strong>難讀不等於惡意；去混淆也不授權繞過保護。</p>
+<p>
+<strong>具體例：</strong>多個自然分支被改成「狀態值 → 分派器 → 下一狀態」，可能是控制流平坦化，也可能只是一般狀態機。</p>
+<p>
+<strong>可觀察證據：</strong>狀態定義使用鏈與多組輸入的實際轉移能支持模型；圖很亂、區段高熵都不能單獨證明刻意混淆。</p>
+</article>
+<article class="term-card" data-search="指標性入侵跡象 Indicator of Compromise IOC 搜尋 事件">
+<h2>指標性入侵跡象（Indicator of Compromise, IOC）</h2>
+<p>
+<strong>白話：</strong>可用來搜尋可能受影響系統的可觀察特徵。</p>
+<p>
+<strong>位置／機制：</strong>雜湊、路徑、名稱、位址或行為條件。</p>
+<p>
+<strong>不要混淆：</strong>單一命中不是惡意定罪，需時間與行為證據。</p>
+<p>
+<strong>具體例：</strong>完整雜湊命中可精準找同版檔案；共享網域命中較寬鬆，需再限定行程、方向與時間鄰近。</p>
+<p>
+<strong>可觀察證據：</strong>搜尋結果證明條件相符，不證明主觀意圖；規則覆蓋、基線與誤判率都要寫入判讀。</p>
+</article>
+<article class="term-card" data-search="保管鏈 chain of custody 證據 交接">
+<h2>證據保管鏈（chain of custody）</h2>
+<p>
+<strong>白話：</strong>記錄證據從取得到保存、分析與交接的完整歷程。</p>
+<p>
+<strong>位置／機制：</strong>包含人員、時間、動作、媒體、雜湊與存取控制。</p>
+<p>
+<strong>不要混淆：</strong>只有檔案副本而無來源紀錄，證據力較弱。</p>
+<p>
+<strong>具體例：</strong>記錄 10:20 由人員 A 取得媒體、計算摘要 H、建立唯讀原件與分析副本，11:00 交給人員 B。</p>
+<p>
+<strong>可觀察證據：</strong>簽章紀錄、存取日誌、雜湊與交接表共同支持完整性；雜湊相同仍不能補回遺失的來源與處理歷程。</p>
+</article>
+</div>
+<h2>回主線</h2>
+<section><h2>把條目組成四條實務因果鏈</h2><p>真實分析不會一次只出現一個名詞。下面把字典條目接成可操作的問題鏈；每一鏈都刻意寫出輸入、狀態變化、結果、證據與不能下的結論。你應該能遮住粗體詞，仍用自己的話講出箭頭兩端發生什麼。</p><h3>鏈一：磁碟位元組如何成為正在執行的指令</h3><p><strong>輸入：</strong>格式解析器在檔案中辨認可執行區段與入口。<strong>機制：</strong>載入器把區段映射到虛擬位址，依重定位表修正需要調整的參照；ASLR 可能使本次基底不同。處理器的 PC 指向入口後，反組譯器所描述的指令位元組才可能被取用。<strong>結果：</strong>指令更新暫存器、旗標與記憶體，分支再改變 PC。<strong>證據：</strong>格式表證明檔案宣告，行程映射證明實際基底，除錯器單步證明某次狀態轉換。<strong>不能證明：</strong>入口可執行不表示每個區段或函式都走過。</p><p>數值例：區段檔案起點 0x400、相對虛擬位址起點 0x1000；目標檔案位移 0x650 位於區段內 0x250，因此相對虛擬位址是 0x1250。本次基底 0x400000 時，除錯器位置為 0x401250。若 PC 從 0x401250 跳到 0x401280，你能說這次控制轉移發生；不能只看兩個位址猜原始碼是哪個 if。</p><h3>鏈二：沒有函式簽章時如何重建參數</h3><p><strong>輸入：</strong>反組譯器顯示呼叫前數個暫存器被寫值，堆疊也配置空間。<strong>機制：</strong>依候選 ABI 與呼叫慣例，追呼叫端準備、被呼叫端讀取、保存責任與回傳位置。定義使用鏈連起參數值與後續比較或記憶體存取。<strong>結果：</strong>得到「參數 1 像指標、參數 2 像長度、回傳像布林值」的可驗假說。<strong>證據：</strong>用長度 4 與 8 兩組輸入在入口及回傳前暫停，核對暫存器、指向內容與回傳值。<strong>不能證明：</strong>一次執行不能恢復 const、模板型別、原變數名或全部合法輸入。</p><p>若呼叫前參數值是 0x2000 與 4，記憶體 0x2000 起是 41 42 43 44，被呼叫端又恰好讀四個位元組，就支持「指標 + 長度」解讀。若它其實只把 0x2000 當整數比較，指標假說就失去支持。用途由指令如何使用值決定，不由數字長得像位址決定。</p><h3>鏈三：靜態線索如何升級成動態行為證據</h3><p><strong>輸入：</strong>靜態分析找到網域字串與網路匯入。<strong>機制：</strong>交叉參照把字串接到使用位置，控制流圖檢查入口是否有可能到達，定義使用鏈檢查字串指標是否真的流入呼叫參數。<strong>結果：</strong>形成「存在可達的名稱解析路徑」假說。<strong>證據：</strong>在授權、隔離環境以已知輸入執行，中斷點命中時記錄參數，並以行程識別碼和時間對上網路事件。<strong>不能證明：</strong>字串、匯入、可達路徑或一次事件都不能單獨推斷作者意圖，也不能概括所有執行。</p><p>如果中斷點沒有命中，先檢查模組基底是否因 ASLR 改變、位址是否用相對位移換算、輸入是否滿足路徑、停點是否設在正確執行緒。這些都排除後，結論仍應是「本次條件下未觀察到」，而不是「該功能不存在」。</p><h3>鏈四：事件告警如何變成可交接的防禦結論</h3><p><strong>輸入：</strong>IOC 規則命中一份檔案雜湊。<strong>機制：</strong>先依證據保管鏈保存原件、摘要、來源與交接；再串父子行程、檔案、名稱解析、連線與記憶體時間線。若需動態分析，只在事件程序允許的隔離副本進行。<strong>結果：</strong>產出受影響端點範圍、已知行為、替代解釋與下一個採證步驟。<strong>證據：</strong>雜湊證明內容同一性，端點事件證明行程關係，封包或網路事件證明觀察點上的通訊。<strong>不能證明：</strong>任何單一命中都不是惡意定罪，紀錄缺失也不是未執行證明。</p><p>一份可交接紀錄至少含：絕對時間與時區、事件來源、行程識別碼、檔案路徑與雜湊、模組相對位移、工具版本、觀察／推論分欄、信心水準及反例。另一位分析者不必相信你的直覺，只要能沿這些定位重新取得同一證據。</p><details><summary>自我檢查：能否不用術語解釋給同學聽？</summary><ol><li>為什麼檔案位移 0x650 不能直接拿去除錯器設停點？請用區段起點、相對虛擬位址與基底算一遍。</li><li>為什麼反編譯器顯示 int，不足以證明原始 C++ 型別就是 int？請指出讀取寬度、呼叫用法與多次輸入各能補哪份證據。</li><li>為什麼網域字串、匯入表、交叉參照、動態命中是逐步增強而非互相等價？每一項各排除哪種替代解釋？</li><li>為什麼「沒有在 log 看見」不是「沒有發生」？請列出感測範圍、保留期、時鐘、權限與工具失效至少兩種限制。</li></ol></details></section>
+<p>
+<a href="01-位元組位址暫存器與組合語言.html">機器狀態</a>、<a href="02-呼叫慣例與堆疊.html">函式邊界</a>、<a href="03-可執行檔與載入.html">載入</a>、<a href="04-靜態分析.html">靜態假說</a>、<a href="05-動態分析與除錯器.html">動態驗證</a>、<a href="06-控制流資料流與去混淆.html">控制／資料流</a>、<a href="07-惡意程式防禦分析與證據.html">防禦證據</a>。</p>
+<nav class="pager">
+<a href="07-惡意程式防禦分析與證據.html">← 防禦分析</a>
+<a href="index.html">回課程地圖 →</a>
+</nav>
+</main>
+</body>
+</html>

@@ -1,2 +1,90 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 呼叫慣例與堆疊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">課程地圖</a><a href="00-合法授權與執行世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">02・函式邊界</p><h1>呼叫慣例與堆疊：沒有型別簽章時怎麼認出函式？</h1><p class="lead">應用程式二進位介面（Application Binary Interface, ABI）規定編譯後模組如何合作；呼叫慣例是其中關於參數、回傳、暫存器保存、堆疊對齊與清理責任的部分。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="01-位元組位址暫存器與組合語言.html">暫存器、記憶體、呼叫與回傳只改變機器狀態</a>。</p><section class="workspace"><h2>自由實驗：堆疊用量從哪裡來？</h2><label for="stack-args">整數參數數量</label><input id="stack-args" type="range" min="0" max="12" value="6"><label for="stack-locals">區域資料位元組</label><input id="stack-locals" type="range" min="0" max="256" step="8" value="48"><label for="stack-depth">巢狀呼叫深度</label><input id="stack-depth" type="range" min="1" max="20" value="3"><div id="stack-output" class="output" aria-live="polite"></div></section><h2>一次呼叫的因果</h2><div class="flow"><span>呼叫端配置參數</span><span>呼叫保存回程位置</span><span>被呼叫端保存必要暫存器</span><span>配置區域空間</span><span>計算回傳值</span><span>恢復狀態並回程</span></div><p>堆疊指標指向目前堆疊位置；框架指標若存在，可提供較穩定的本函式基準。最佳化可能內聯函式、重用暫存器、移除框架指標或尾呼叫，因此「典型前言／結尾」不是函式邊界的唯一證明。</p><h2>C++ 特有但不神祕</h2><p>成員函式的物件指標、名稱修飾、虛擬函式表、例外展開與建構／解構都要透過平台 ABI 落成位元組與呼叫序列。逆向時先重建資料使用與間接呼叫，再推回類別模型；不要因看到一張函式指標表就直接斷定是某個類別。</p><h2>證據</h2><p>呼叫點的參數準備、被呼叫端的保存／恢復、所有回傳路徑、堆疊展開資訊與符號可互相佐證。除錯器的呼叫堆疊若遇到損壞或缺少展開資訊，也可能不完整。</p><nav class="pager"><a href="01-位元組位址暫存器與組合語言.html">← 機器狀態</a><a href="03-可執行檔與載入.html">下一頁：可執行檔與載入 →</a></nav></main></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>02 呼叫慣例與堆疊</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">課程地圖</a>
+<a href="00-合法授權與執行世界觀.html">00 起點</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">02・函式邊界</p>
+<h1>呼叫慣例與堆疊：沒有型別簽章時怎麼認出函式？</h1>
+<p class="lead">應用程式二進位介面（Application Binary Interface, ABI）規定編譯後模組如何合作；呼叫慣例是其中關於參數、回傳、暫存器保存、堆疊對齊與清理責任的部分。</p>
+<p class="prereq">
+<strong>這章假設已懂：</strong>
+<a href="01-位元組位址暫存器與組合語言.html">暫存器、記憶體、呼叫與回傳只改變機器狀態</a>。</p>
+<section class="workspace">
+<h2>自由實驗：堆疊用量從哪裡來？</h2>
+<label for="stack-args">整數參數數量</label>
+<input id="stack-args" type="range" min="0" max="12" value="6">
+<label for="stack-locals">區域資料位元組</label>
+<input id="stack-locals" type="range" min="0" max="256" step="8" value="48">
+<label for="stack-depth">巢狀呼叫深度</label>
+<input id="stack-depth" type="range" min="1" max="20" value="3">
+<div id="stack-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>一次呼叫的因果</h2>
+<div class="flow">
+<span>呼叫端配置參數</span>
+<span>呼叫保存回程位置</span>
+<span>被呼叫端保存必要暫存器</span>
+<span>配置區域空間</span>
+<span>計算回傳值</span>
+<span>恢復狀態並回程</span>
+</div>
+<p>堆疊指標指向目前堆疊位置；框架指標若存在，可提供較穩定的本函式基準。最佳化可能內聯函式、重用暫存器、移除框架指標或尾呼叫，因此「典型前言／結尾」不是函式邊界的唯一證明。</p>
+<h2>C++ 特有但不神祕</h2>
+<p>成員函式的物件指標、名稱修飾、虛擬函式表、例外展開與建構／解構都要透過平台 ABI 落成位元組與呼叫序列。逆向時先重建資料使用與間接呼叫，再推回類別模型；不要因看到一張函式指標表就直接斷定是某個類別。</p>
+<h2>證據</h2>
+<p>呼叫點的參數準備、被呼叫端的保存／恢復、所有回傳路徑、堆疊展開資訊與符號可互相佐證。除錯器的呼叫堆疊若遇到損壞或缺少展開資訊，也可能不完整。</p>
+<h2>痛點：雙方若沒有共同規則，函式根本接不起來</h2>
+<p>想像你只知道某段程式會跳到位址 0x401200，卻不知道第一個參數放哪、回傳值去哪、哪些暫存器呼叫後仍有效。呼叫端可能把長度放在暫存器 A，被呼叫端卻從堆疊讀；即使兩邊的演算法都正確，結果仍會像 API 型別完全不合一樣失敗。呼叫慣例就是編譯後模組的共同合約，讓不同來源檔、編譯器產物與函式庫能合作。</p>
+<p>堆疊可先想成每次函式呼叫暫借的一層工作桌，回傳時把這層收掉；精確地說，它是行程虛擬記憶體中的一塊區域，由堆疊指標與 ABI 規則管理。它常呈現後進先出，但沒有硬體保證每個區域變數都在這裡，最佳化也可能完全不建立傳統框架。</p>
+<h2>帶一個具體呼叫走一遍</h2>
+<p>以下只採用上方互動的<strong>教學假設</strong>：前四個整數參數走暫存器，額外參數每個占 8 位元組，固定保存資訊 16 位元組，框架最後向上對齊到 16 位元組。它不是任何平台的完整 ABI。</p>
+<ol>
+<li>呼叫 sum6(10, 20, 30, 40, 50, 60) 前，呼叫端把前四個值放入指定參數暫存器，把 50、60 配到約定的堆疊位置。</li>
+<li>呼叫指令保存回程位置並把控制轉到函式入口。若入口是 0x401200，回程位置可能是呼叫後的 0x400F35；兩者是不同用途的位址。</li>
+<li>被呼叫端若需保留某些暫存器，就先保存舊值，再配置 48 位元組區域資料。模型計算 16 + 2×8 + 48 = 80 位元組，80 已是 16 的倍數，所以對齊後仍為 80。</li>
+<li>若巢狀深度為 3，簡化估計是 80×3 = 240 位元組。真實使用量還可能包含呼叫端預留區、暫存值、例外或作業系統資料，因此互動數字只能解釋趨勢。</li>
+<li>函式把結果放入 ABI 指定的回傳暫存器，恢復應保存的狀態，收回框架並跳回 0x400F35。若保存或堆疊平衡出錯，通常在回傳或後續程式才顯現。</li>
+</ol>
+<h2>從機器狀態推回函式角色</h2>
+<p>假設呼叫前某參數暫存器是 0x2000，記憶體 0x2000 起是 05 00 00 00；另一參數暫存器是 3。被呼叫端先從 0x2000 讀 32 位元值 5，再與 3 相加並把 8 放到回傳暫存器。這組證據支持第一參數「像是指向 32 位元整數的指標」、第二參數「像是整數」、回傳「像是整數」，但仍不能單靠一次執行斷言 C++ 精確型別、const、名稱或所有合法範圍。</p>
+<h2>容易混淆的地方</h2>
+<ul>
+<li>
+<strong>ABI 與 API：</strong>API 描述來源碼如何呼叫；ABI 描述編譯後的布局、符號與呼叫。相同 API 在不同平台可有不同 ABI。</li>
+<li>
+<strong>堆疊與堆積：</strong>堆疊常服務呼叫生命週期；堆積由配置器管理動態物件。兩者都位於虛擬記憶體，不能只憑位址高低永久判斷。</li>
+<li>
+<strong>呼叫框架與函式：</strong>內聯後可能有函式語意卻沒有獨立呼叫；尾呼叫可能直接跳走；一個框架也可能因最佳化難以辨認。</li>
+<li>
+<strong>呼叫端保存與被呼叫端保存：</strong>前者表示呼叫者需要就自己保留，後者表示被呼叫者若改動就必須恢復。名稱描述責任，不描述哪個暫存器比較重要。</li>
+<li>
+<strong>呼叫堆疊與完整歷史：</strong>目前堆疊只描述尚未返回的鏈，不包含已返回呼叫的完整時間線。</li>
+</ul>
+<h2>可觀察證據與限制</h2>
+<ul>
+<li>在反組譯的呼叫點看參數暫存器寫入、堆疊配置與 CALL 類轉移；這支持某種呼叫慣例，單一呼叫點未必顯示所有參數。</li>
+<li>在函式入口與每條回傳路徑比較堆疊指標，能檢查框架是否平衡；最佳化、動態配置與例外路徑會讓簡單樣板失準。</li>
+<li>除錯器可在呼叫前、入口、回傳前各停一次，直接記錄參數位置與回傳值；一次輸入不能證明完整型別。</li>
+<li>符號與展開資訊能改善函式邊界與呼叫堆疊，但可能被剝除、過期或與實際二進位不匹配，仍需用指令驗證。</li>
+</ul>
+<nav class="pager">
+<a href="01-位元組位址暫存器與組合語言.html">← 機器狀態</a>
+<a href="03-可執行檔與載入.html">下一頁：可執行檔與載入 →</a>
+</nav>
+</main>
+</body>
+</html>

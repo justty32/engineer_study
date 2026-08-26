@@ -1,2 +1,131 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 惡意程式防禦分析與證據</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">課程地圖</a><a href="00-合法授權與執行世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">07・隔離、時間線與通報</p><h1>惡意程式防禦分析與證據</h1><p class="lead">防禦分析的目標是安全分流、界定影響、找出可監測指標、保存證據並支援修復。先隔離風險與保存原始資料，再把檔案、行程、系統與網路事件串成時間線；不在生產環境試跑未知樣本。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="00-合法授權與執行世界觀.html">授權／隔離</a>、<a href="04-靜態分析.html">靜態假說</a>、<a href="05-動態分析與除錯器.html">動態證據限制</a>與<a href="06-控制流資料流與去混淆.html">因果切片</a>。</p><section class="workspace"><h2>無壓力診斷：從觀察現象選下一份證據</h2><label for="malware-signal">最先收到的現象</label><select id="malware-signal"><option value="hash">檔案雜湊被情資命中</option><option value="process">陌生父子行程關係</option><option value="network">異常外連</option><option value="file">大量檔案變更</option></select><div id="malware-output" class="output" aria-live="polite"></div></section><h2>安全工作流</h2><div class="flow"><span>依事件程序隔離</span><span>保存原始證據與保管鏈</span><span>建立樣本雜湊與基線</span><span>靜態分流</span><span>必要時在沙箱受控觀察</span><span>交叉比對時間線</span><span>通報、修復、監測</span></div><p>指標性入侵跡象（Indicator of Compromise, IOC）是可能與事件相關的雜湊、路徑、名稱、位址或行為特徵。它適合搜尋與關聯，但會碰撞、老化或被合法服務共用。戰術、技術與程序（Tactics, Techniques, and Procedures, TTPs）描述較高層行為模式，通常比單一字串耐久，但也需證據支持。</p><h2>證據矩陣</h2><table><thead><tr><th>來源</th><th>能支持</th><th>不能單獨證明</th></tr></thead><tbody><tr><td>檔案與雜湊</td><td>樣本同一性、簽章、格式與靜態內容</td><td>何時由誰執行</td></tr><tr><td>行程與執行緒</td><td>父子關係、命令列、載入模組、時間</td><td>每個位元組的業務意圖</td></tr><tr><td>檔案／系統事件</td><td>建立、修改、權限與設定變更</td><td>未記錄事件不存在</td></tr><tr><td>網路事件</td><td>名稱、位址、方向、時序與資料量</td><td>加密內容或端點必然惡意</td></tr><tr><td>記憶體快照</td><td>當時載入內容、執行狀態與解碼後資料</td><td>快照前後所有歷史</td></tr></tbody></table><h2>報告格式</h2><p>逐項記錄：觀察、時間與時區、來源、完整性雜湊、工具與版本、推論、信心水準、替代解釋、影響範圍、已採控制及下一步。安全團隊需要可重現證據，不需要誇大的「確定惡意」。</p><p class="warning"><strong>明確禁止：</strong>不反擊、不部署樣本、不建立持久化、不竊取憑證、不規避偵測、不修改授權檢查、不公開敏感樣本或個資。</p><nav class="pager"><a href="06-控制流資料流與去混淆.html">← 控制流與資料流</a><a href="名詞與概念字典.html">下一頁：字典 →</a></nav></main></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>07 惡意程式防禦分析與證據</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">課程地圖</a>
+<a href="00-合法授權與執行世界觀.html">00 起點</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">07・隔離、時間線與通報</p>
+<h1>惡意程式防禦分析與證據</h1>
+<p class="lead">防禦分析的目標是安全分流、界定影響、找出可監測指標、保存證據並支援修復。先隔離風險與保存原始資料，再把檔案、行程、系統與網路事件串成時間線；不在生產環境試跑未知樣本。</p>
+<p class="prereq">
+<strong>這章假設已懂：</strong>
+<a href="00-合法授權與執行世界觀.html">授權／隔離</a>、<a href="04-靜態分析.html">靜態假說</a>、<a href="05-動態分析與除錯器.html">動態證據限制</a>與<a href="06-控制流資料流與去混淆.html">因果切片</a>。</p>
+<section class="workspace">
+<h2>無壓力診斷：從觀察現象選下一份證據</h2>
+<label for="malware-signal">最先收到的現象</label>
+<select id="malware-signal">
+<option value="hash">檔案雜湊被情資命中</option>
+<option value="process">陌生父子行程關係</option>
+<option value="network">異常外連</option>
+<option value="file">大量檔案變更</option>
+</select>
+<div id="malware-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>安全工作流</h2>
+<div class="flow">
+<span>依事件程序隔離</span>
+<span>保存原始證據與保管鏈</span>
+<span>建立樣本雜湊與基線</span>
+<span>靜態分流</span>
+<span>必要時在沙箱受控觀察</span>
+<span>交叉比對時間線</span>
+<span>通報、修復、監測</span>
+</div>
+<p>指標性入侵跡象（Indicator of Compromise, IOC）是可能與事件相關的雜湊、路徑、名稱、位址或行為特徵。它適合搜尋與關聯，但會碰撞、老化或被合法服務共用。戰術、技術與程序（Tactics, Techniques, and Procedures, TTPs）描述較高層行為模式，通常比單一字串耐久，但也需證據支持。</p>
+<h2>證據矩陣</h2>
+<table>
+<thead>
+<tr>
+<th>來源</th>
+<th>能支持</th>
+<th>不能單獨證明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>檔案與雜湊</td>
+<td>樣本同一性、簽章、格式與靜態內容</td>
+<td>何時由誰執行</td>
+</tr>
+<tr>
+<td>行程與執行緒</td>
+<td>父子關係、命令列、載入模組、時間</td>
+<td>每個位元組的業務意圖</td>
+</tr>
+<tr>
+<td>檔案／系統事件</td>
+<td>建立、修改、權限與設定變更</td>
+<td>未記錄事件不存在</td>
+</tr>
+<tr>
+<td>網路事件</td>
+<td>名稱、位址、方向、時序與資料量</td>
+<td>加密內容或端點必然惡意</td>
+</tr>
+<tr>
+<td>記憶體快照</td>
+<td>當時載入內容、執行狀態與解碼後資料</td>
+<td>快照前後所有歷史</td>
+</tr>
+</tbody>
+</table>
+<h2>報告格式</h2>
+<p>逐項記錄：觀察、時間與時區、來源、完整性雜湊、工具與版本、推論、信心水準、替代解釋、影響範圍、已採控制及下一步。安全團隊需要可重現證據，不需要誇大的「確定惡意」。</p>
+<h2>痛點：太快執行樣本，可能同時破壞證據與擴大事件</h2>
+<p>收到未知檔案時，工程師常想「跑一下就知道」。但在生產端開啟，可能新增外連、改寫檔案、觸發刪除或讓原始時間戳被污染；直接關機也可能失去只存在記憶體的狀態。第一個決策不是選反組譯器，而是依組織事件程序控制風險、保存證據並找有權限的人。隔離與保全的先後順序要依事件嚴重度、系統角色及既定程序決定，沒有適用所有現場的單一按鈕。</p>
+<p>時間線可以想成把不同監視器的紀錄對時：每份來源只看到一角，交集才逐漸指出因果。精確限制是各系統時鐘可能漂移、事件可能延遲寫入、識別碼可能重用，且「先後發生」不自動等於「前者造成後者」。報告必須保留時區、來源與時間不確定度。</p>
+<h2>從陌生父子行程建立時間線</h2>
+<ol>
+<li>端點事件在 2026-08-26 10:15:02 +08:00 記錄文件閱讀器行程 P 啟動陌生子行程 C，並保存兩者識別碼、執行檔路徑、命令列與使用者。父子關係是事實，但合法外掛也可能建立子行程。</li>
+<li>10:15:03，檔案事件顯示 C 從暫存目錄讀取 sample.bin。計算該檔案的密碼雜湊並對原始證據副本；雜湊一致支持是同一位元組內容，不代表檔名可信。</li>
+<li>10:15:05，名稱解析與連線事件顯示 C 查詢 api.example.test 並連到某位址。把行程識別碼、時間與端點對上，才比「網路上看見同一位址」更強；共享服務仍可能造成良性碰撞。</li>
+<li>10:15:07，另一事件顯示 C 建立 report.bin。若受控分析又在相同輸入下重現相同順序，可提高信心；仍要保留工具覆蓋不足、時鐘偏差與環境差異。</li>
+<li>據此先形成可操作結論：搜尋相同雜湊、父子關係、路徑與時間鄰近行為，界定受影響端點。是否定性為惡意，交由完整證據、組織程序與授權角色判斷。</li>
+</ol>
+<h2>另一組例子：只有雜湊命中時怎麼辦</h2>
+<p>若情資只說雜湊 H 可疑，你能先證明本地檔案是否與 H 相同，再查該檔案的取得時間、簽章、是否曾被建立或執行、由哪個行程碰觸。若端點沒有執行紀錄，合理表述是「目前未在可用紀錄中找到執行證據」，不是「確定未執行」。紀錄保留期、感測器離線與名稱變更都可能造成看不見。雜湊非常精確地識別內容版本，卻也很脆弱：只改一個位元組就會得到不同摘要，因此要搭配行為條件。</p>
+<h2>IOC、TTP 與證據不要混在一起</h2>
+<ul>
+<li>
+<strong>IOC 是搜尋線索：</strong>例如完整檔案雜湊、特定路徑與端點。它適合快速盤點，但共享基礎設施與合法同名檔會造成誤判。</li>
+<li>
+<strong>TTP 是行為模式：</strong>例如由某類父行程建立命令直譯器後修改啟動設定。它比單一雜湊概括，卻需要更精確的事件關聯條件。</li>
+<li>
+<strong>證據是有來源的觀察：</strong>原始事件、封包、磁碟映像或記憶體快照；IOC 與 TTP 是分析者由證據抽出的搜尋與描述方式。</li>
+<li>
+<strong>偵測不是定罪：</strong>規則命中表示條件相符，後續仍需基線、上下文、替代解釋與人工判斷。</li>
+</ul>
+<h2>工具能證明與不能證明的界線</h2>
+<ul>
+<li>端點偵測與回應紀錄可串父子行程、命令列、檔案與部分網路事件；感測器未涵蓋的核心或早期事件可能缺失。</li>
+<li>封包擷取能確認某觀察點經過的端點、方向、時序與封包大小；看不到其他網段，對加密內容通常只能描述中繼資料。</li>
+<li>磁碟映像與檔案系統中繼資料能保存落地內容與部分時間；時間可受複製、掛載與檔案系統語意影響。</li>
+<li>記憶體分析能看見當下行程、模組、連線與解碼後資料的可能痕跡；快照不是完整歷史，解析結果也依作業系統版本與工具支援。</li>
+<li>沙箱報告能提供受控環境中的行為時間線；樣本可能需要特定輸入、權限、日期或外部服務，因此未觀察到不能證明沒有能力。</li>
+</ul>
+<details>
+<summary>想更深入：一段可交接的結論長什麼樣</summary>
+<p>「在時區 +08:00 的端點事件中，行程 C 於 10:15:05 對 api.example.test 進行名稱解析；C 的父行程、路徑與樣本雜湊已記錄。相近時間的檔案事件顯示 C 建立 report.bin。此組證據支持兩個行為在同一行程時間線相鄰，但現有紀錄未揭露加密連線內容，也尚未排除合法外掛。建議依雜湊與父子行程條件搜尋其他端點，並由事件負責人決定隔離與取得記憶體證據的優先序。」這種寫法能讓接手者知道已知、未知與下一步。</p>
+</details>
+<p class="warning">
+<strong>明確禁止：</strong>不反擊、不部署樣本、不建立持久化、不竊取憑證、不規避偵測、不修改授權檢查、不公開敏感樣本或個資。</p>
+<nav class="pager">
+<a href="06-控制流資料流與去混淆.html">← 控制流與資料流</a>
+<a href="名詞與概念字典.html">下一頁：字典 →</a>
+</nav>
+</main>
+</body>
+</html>

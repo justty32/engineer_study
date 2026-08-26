@@ -1,2 +1,92 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 位元組、位址、暫存器與組合語言</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">課程地圖</a><a href="00-合法授權與執行世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main><p class="eyebrow">01・最小機器模型</p><h1>位元組、位址、暫存器與最小組合語言</h1><p class="lead">處理器不看 C++ 變數名，而是從記憶體位址取指令，用暫存器保存當前操作數與地址，依指令語意更新狀態。組合語言是機器指令的人類可讀表示，不是高階原始碼。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="00-合法授權與執行世界觀.html">檔案、行程與處理器狀態不同</a>。</p><section class="workspace"><h2>自由實驗：逐步看狀態改變</h2><p>這是虛構教學指令集；`MOV` 表示搬值、`ADD` 加法、`CMP` 比較、`JZ` 在零旗標成立時跳躍。</p><button id="machine-next" type="button">執行下一步</button><button id="machine-reset" type="button">重設</button><div id="machine-output" class="output" aria-live="polite"></div></section><h2>位元組如何有意義</h2><p>同一串位元組可能被解讀成無號整數、有號整數、浮點數、文字或指令；意義由使用它的指令、型別推論與周邊證據決定。位元組序（endianness）決定多位元組值先放低位還是高位；不能只看十六進位排列就猜數值。</p><h2>最小指令類別</h2><div class="grid"><article class="card"><h3>資料搬移</h3><p>暫存器、記憶體與立即值之間移動；常同時暴露資料寬度。</p></article><article class="card"><h3>算術與邏輯</h3><p>加減、位元運算、移位；可能更新零、進位、符號等旗標。</p></article><article class="card"><h3>比較與分支</h3><p>比較先設定旗標，條件跳躍再依旗標改變程式計數器。</p></article><article class="card"><h3>呼叫與回傳</h3><p>保存回程位置並轉移控制；參數與保存責任由呼叫慣例補足。</p></article></div><h2>證據與反例</h2><p>反組譯器（disassembler）把位元組解碼成指令；若起始位址、模式或程式碼／資料邊界錯誤，仍會產生看似合理的錯誤指令。先用檔案區段、控制流可達性與交叉參照驗證。</p><nav class="pager"><a href="00-合法授權與執行世界觀.html">← 00 起點</a><a href="02-呼叫慣例與堆疊.html">下一頁：呼叫慣例與堆疊 →</a></nav></main></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>01 位元組、位址、暫存器與組合語言</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar">
+<a href="index.html">課程地圖</a>
+<a href="00-合法授權與執行世界觀.html">00 起點</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav>
+<main>
+<p class="eyebrow">01・最小機器模型</p>
+<h1>位元組、位址、暫存器與最小組合語言</h1>
+<p class="lead">處理器不看 C++ 變數名，而是從記憶體位址取指令，用暫存器保存當前操作數與地址，依指令語意更新狀態。組合語言是機器指令的人類可讀表示，不是高階原始碼。</p>
+<p class="prereq">
+<strong>這章假設已懂：</strong>
+<a href="00-合法授權與執行世界觀.html">檔案、行程與處理器狀態不同</a>。</p>
+<section class="workspace">
+<h2>自由實驗：逐步看狀態改變</h2>
+<p>這是虛構教學指令集；`MOV` 表示搬值、`ADD` 加法、`CMP` 比較、`JZ` 在零旗標成立時跳躍。</p>
+<button id="machine-next" type="button">執行下一步</button>
+<button id="machine-reset" type="button">重設</button>
+<div id="machine-output" class="output" aria-live="polite">
+</div>
+</section>
+<h2>位元組如何有意義</h2>
+<p>同一串位元組可能被解讀成無號整數、有號整數、浮點數、文字或指令；意義由使用它的指令、型別推論與周邊證據決定。位元組序（endianness）決定多位元組值先放低位還是高位；不能只看十六進位排列就猜數值。</p>
+<h2>最小指令類別</h2>
+<div class="grid">
+<article class="card">
+<h3>資料搬移</h3>
+<p>暫存器、記憶體與立即值之間移動；常同時暴露資料寬度。</p>
+</article>
+<article class="card">
+<h3>算術與邏輯</h3>
+<p>加減、位元運算、移位；可能更新零、進位、符號等旗標。</p>
+</article>
+<article class="card">
+<h3>比較與分支</h3>
+<p>比較先設定旗標，條件跳躍再依旗標改變程式計數器。</p>
+</article>
+<article class="card">
+<h3>呼叫與回傳</h3>
+<p>保存回程位置並轉移控制；參數與保存責任由呼叫慣例補足。</p>
+</article>
+</div>
+<h2>證據與反例</h2>
+<p>反組譯器（disassembler）把位元組解碼成指令；若起始位址、模式或程式碼／資料邊界錯誤，仍會產生看似合理的錯誤指令。先用檔案區段、控制流可達性與交叉參照驗證。</p>
+<h2>痛點：失去變數名後，剩下的是狀態轉換</h2>
+<p>原始碼會告訴你 length 是長度、valid 是布林值；機器碼通常只留下「從某位址讀 4 位元組、把結果加到某暫存器、依旗標跳躍」。若仍用一行組合語言對一行 C++ 的方式閱讀，最佳化、暫存器重用與指令合併很快就會讓模型崩潰。穩定的問法是：這條指令讀了哪些狀態、寫了哪些狀態、下一個程式位置如何決定？</p>
+<p>暫存器可先想成處理器桌面上的少量便利貼，記憶體則像編號倉位；但真實暫存器有固定寬度、特殊用途與架構規則，而且一個高階變數可能先在暫存器、後被寫回記憶體，也可能被最佳化到完全不存在。比喻協助你追值，不能拿來推論變數生命週期。</p>
+<h2>一組位元組，逐步決定數值</h2>
+<p>假設記憶體從位址 0x1000 起依序是 78 56 34 12。每格是一個 8 位元的位元組，所以位址 0x1000、0x1001、0x1002、0x1003 各相差 1。若指令要求以「小端序、32 位元無號整數」讀取，最低位的 78 放在最低位址，結果是 0x12345678；若只讀 16 位元，結果是 0x5678；若把同四個位元組當四個字元或浮點數，意義又不同。位元組本身沒有型別，讀取寬度、位元組序與使用指令共同給它意義。</p>
+<p>再看上方虛構程式：程式位置 0 令 R0 ← 3；位置 1 令 R1 ← 4；位置 2 令 R0 ← R0 + R1，所以 R0 成為 7；位置 3 比較 R0 與 7，不保存減法結果，只把零旗標設成 1；位置 4 的 JZ 看到零旗標為 1，便把下一條位址改成 6，位置 5 的 R0 ← 0 因而沒有執行。請重設後逐步按，每次只寫下「舊值 → 指令 → 新值」，你就能用紙筆重建同樣結果。</p>
+<h2>不要混淆</h2>
+<ul>
+<li>
+<strong>位址與內容：</strong>0x1000 是位置編號；該位置存的 0x78 才是內容。暫存器值 0x1000 可能是指標，也可能只是整數，要看它是否被拿來存取記憶體。</li>
+<li>
+<strong>助記符與編碼：</strong>MOV 是給人看的名稱，真實機器碼是位元組；不同架構甚至同架構的不同運算元形式，編碼長度都可能不同。</li>
+<li>
+<strong>CMP 與分支：</strong>比較通常只更新旗標，條件跳躍才讀旗標。兩者中間若有其他會改旗標的指令，就不能沿用舊比較結果。</li>
+<li>
+<strong>有號與無號：</strong>同一位元樣式 0xFF，以 8 位元無號解讀是 255，以二補數有號解讀是 −1；分支指令選擇也要符合預期解讀。</li>
+<li>
+<strong>程式計數器與來源行：</strong>程式計數器指向機器指令位置，不是來源檔行號；一行原始碼可對應零條、多條或散落的指令。</li>
+</ul>
+<details>
+<summary>想更深入：用 0xF0 與 0x0F 看位元運算</summary>
+<p>0xF0 的二進位是 11110000，0x0F 是 00001111。AND 的每一位都必須同為 1，所以結果是 00000000，也就是 0x00；OR 只要一方為 1，結果是 11111111，也就是 0xFF；XOR 在兩邊不同時為 1，所以這組也得到 0xFF。左移 1 位可視為在固定寬度內乘 2，但移出最高位的資訊會遺失；右移是否補 0 或複製符號位則依邏輯移位、算術移位與資料寬度而定。</p>
+</details>
+<h2>你能在哪裡看見證據</h2>
+<ul>
+<li>記憶體檢視能顯示 0x1000 起的原始位元組，但顯示成整數或文字只是檢視器的格式選擇。</li>
+<li>反組譯輸出能顯示位址、指令位元組、助記符與運算元；它證明某種解碼成立，不能單獨證明該位址可達。</li>
+<li>除錯器單步前後比較 R0、R1、旗標與程式計數器，能驗證這一次的狀態轉換；它不能告訴你原始變數名，也不能覆蓋未執行分支。</li>
+<li>交叉參照與控制流圖可支持「此位置被呼叫或跳入」；間接跳躍、例外與錯誤識別的資料仍可能造成缺邊。</li>
+</ul>
+<nav class="pager">
+<a href="00-合法授權與執行世界觀.html">← 00 起點</a>
+<a href="02-呼叫慣例與堆疊.html">下一頁：呼叫慣例與堆疊 →</a>
+</nav>
+</main>
+</body>
+</html>
