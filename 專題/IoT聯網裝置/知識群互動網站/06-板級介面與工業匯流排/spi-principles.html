@@ -14,4 +14,10 @@
 
   <section class="theory-section"><span class="chapter-no">05</span><h2>把 SPI Flash 讀取拆成可追的狀態機</h2><div class="phase-strip"><i class="active">CS↓</i><i>READ opcode</i><i>Address</i><i>Dummy</i><i>Payload</i><i>CS↑</i></div><div class="tool-table"><div><b>完全沒 clock</b><span>查周邊時脈、pin mux、SPI enable 與 driver 是否啟動 transaction。</span></div><div><b>MOSI 正確、MISO 0xFF</b><span>查 CS、供電、MISO 方向、命令與 dummy；也可能裝置忙碌。</span></div><div><b>資料固定錯位</b><span>查 Mode、bit order、word width 與 CS setup／hold。</span></div><div><b>低速好、高速壞</b><span>查邊緣、走線、負載、串聯阻尼、資料表時序與示波器波形。</span></div></div></section>
   <footer><a href="./i2c-principles.html">← I²C</a><a href="./rs485-principles.html">下一頁：RS-485 →</a></footer>
+  <section class="theory-section" aria-label="SPI 深讀與量測">
+    <span class="chapter-no">深讀</span><h2>SPI 沒有自描述封包；每一筆交易都由資料表定義</h2>
+    <p>序列周邊介面（Serial Peripheral Interface, SPI）通常由 controller 產生 SCLK、以 CS 選裝置，MOSI 與 MISO 分向傳輸。時脈極性（Clock Polarity, CPOL）決定閒置電位；時脈相位（Clock Phase, CPHA）決定在哪個邊緣取樣。Mode 相同只是必要條件，還要一致的 bit order、word length、CS setup／hold 與裝置命令格式。</p>
+    <div class="theory-grid"><article><h3>時間預算例</h3><p>讀 256 B，另有 4 B command／address，共 260 B = 2080 bit。SCLK = 20 MHz 時，純 clock 時間為 2080/20×10<sup>6</sup> = 104 µs。若每筆交易還有 5 µs CS 間隔，總計至少 109 µs；未含軟體設定與 DMA 完成延遲。</p></article><article><h3>為何波形看起來有資料仍可能全錯</h3><p>若 controller 在裝置改變資料的同一邊緣取樣，setup／hold margin 可能接近零，解碼器仍可能以自己的門檻顯示一串穩定但錯位的 byte。MISO 若多個裝置未在 CS deassert 後 high-Z，還會發生 bus contention。</p></article></div>
+    <p><b>證據邊界：</b>邏輯分析儀核對 command、Mode 與 byte；示波器同時看 SCLK、資料與 CS 可量 setup／hold、振鈴與電壓。成功讀一次 device ID 不能證明最高頻率、溫度與所有板批都有裕度。</p>
+  </section>
 </main></body></html>

@@ -20,4 +20,10 @@
     <div class="final-model"><b>讀圖完成的標準：</b><span>你能用一句話說出每個功能區的責任，並對關鍵網路回答：誰推它、電位相對誰、電流怎麼回去、上電時是什麼狀態、故障時拿什麼量。</span></div>
   </section>
   <footer><span>來源：本庫《硬體-PCB設計實務》《硬體-電源與電池》；元件 pin 規則仍以目標 datasheet 與 reference design 為準。</span><a href="./circuit-design.html">下一頁：做電路設計 →</a></footer>
+  <section class="theory-section" aria-label="原理圖閱讀深讀">
+    <span class="chapter-no">深讀</span><h2>讀原理圖的順序：先找能量，再找狀態，最後找資料</h2>
+    <p>原理圖是網路表與設計意圖的視圖，不是元件在 PCB 上的實際距離。先沿接頭、保護、穩壓器與各電源 rail 追能量；再找 RESET、BOOT、enable 與 pull-up/down 決定上電狀態；最後追 GPIO、I²C、SPI、UART 與外部收發器。這個順序可避免看到通訊線就立刻怪 firmware。</p>
+    <div class="theory-grid"><article><h3>用網名而非版面位置連線</h3><p>同名 net label 在電氣上相連，即使畫在不同頁；線條交叉若沒有 junction dot 通常不相連，但規則依 EDA 設定。global label、power symbol 與 hidden power pin 可能跨頁連線。閱讀時建立「來源 → 保護／轉換 → 負載 → 回流」表，比沿紙面猜方向可靠。</p></article><article><h3>額定值要用最壞條件核對</h3><p>例：12 V nominal 的輸入若容許 +20%，穩態上界已是 14.4 V；再加插拔突波，選 16 V 電容可能毫無裕度。這不是要隨意放大料號，而是把 normal、absolute maximum 與 transient 分開，依環境規格選擇。</p></article></div>
+    <p><b>工具邊界：</b>ERC 能抓未驅動、輸出互打與未連接，不能知道 reset 預設是否符合產品情境；BOM 能證明選了什麼料，不能證明 PCB footprint 與實物完全吻合；最後要用 layout、3D／封裝檢查與首件量測交叉驗證。</p>
+  </section>
 </main></body></html>

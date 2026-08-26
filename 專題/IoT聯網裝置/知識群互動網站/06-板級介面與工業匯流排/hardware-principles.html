@@ -85,6 +85,12 @@
       </section>
 
       <footer><span>本頁是概念模型；實作仍以元件資料表、NXP I²C 規格、TI RS-485 指南與實測為準。</span><a href="./index.html">回主線</a></footer>
+      <section class="theory-section" aria-label="硬體原理深讀">
+        <span class="chapter-no">深讀</span><h2>從電位差回到完整電流迴路</h2>
+        <div class="theory-grid"><article><h3>電壓不是流量</h3><p>電壓（voltage）是兩點間每單位電荷的能量差；電流（current）是每秒通過的電荷量。GPIO 輸出 3.3 V 只是指定電位差，實際電流由輸出阻抗與負載共同決定。例：3.3 V 經 1 kΩ 電阻接地，理想電流 I = V/R = 3.3/1000 = 3.3 mA，電阻功率 P = V × I ≈ 10.9 mW。假設 GPIO 能維持 3.3 V、電阻近似線性；超過 pin 額定電流時這個假設會失效。</p></article><article><h3>所有訊號都有回程</h3><p>單端訊號的電流由訊號線去、參考地回；差動訊號主要在成對導線形成迴路。缺少低阻抗回程時，訊號會透過寄生電容、保護元件或其他纜線找路，造成 ground bounce、輻射或破壞。這就是為什麼只畫「資料箭頭」會漏掉真正故障路徑。</p></article></div>
+        <div class="cause-chain"><div><b>操作</b><span>負載切換或邊緣變快</span></div><i>→</i><div><b>狀態</b><span>瞬間電流與回流分布改變</span></div><i>→</i><div><b>結果</b><span>壓降、振鈴或串擾</span></div><i>→</i><div><b>證據</b><span>在負載腳量電壓與電流迴路</span></div></div>
+        <p class="caution">萬用電表能確認 DC 電位與導通，不能排除微秒脈衝；示波器能看時間波形，但探棒接地線過長會自己形成迴路並誇大振鈴。</p>
+      </section>
     </main>
   </div>
 </body>

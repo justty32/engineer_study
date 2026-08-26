@@ -44,6 +44,20 @@
           <p class="heading-note">調整條件觀察因果關係，再用完成按鈕記錄學習進度。</p>
         </div>
 
+        <section class="panel result-panel" aria-label="八個連線模組的操作前導讀">
+          <div class="panel-heading"><h3>連線不是一個布林值，而是一串可失敗的狀態</h3><span class="panel-tag">READ FIRST</span></div>
+          <p>把「已連線」拆成 host 能和模組交談、模組完成網路註冊、取得 IP、建立傳輸層連線、完成 TLS／應用會話。每一層都要有自己的 timeout、重試上限與觀測證據；否則上層只會得到含糊的 offline。</p>
+          <details open><summary>01 Bearer：先選物理承載，再談協定</summary><p>承載網路（bearer）解決的是「位元怎麼跨過場域」：Wi-Fi 適合已有基地台與較高資料量；蜂巢式連線提供廣域覆蓋但有註冊、資費與模組功耗；低功耗廣域網路（Low-Power Wide-Area Network, LPWAN）用低資料率換距離與電池壽命。選型器只做距離、資料量、供電、部署與下行需求的初篩，不能證明特定位置有覆蓋。真正證據是現場 RSSI／RSRP／SNR、附網成功率、延遲分布與電流剖面。</p></details>
+          <details><summary>02 Host link：平均吞吐夠，burst 仍可能塞爆 buffer</summary><p>UART 每個資料 byte 通常還含 start、stop，可能另有 parity。若採 8N1，一個 byte 需 10 bit，115200 baud 的理想上限約 115200/10 = 11520 B/s，約 11.25 KiB/s。若模組在 20 ms 內吐出 1 KiB，瞬間需求約 50 KiB/s，即使長期平均只有 2 KiB/s，沒有硬體流量控制（hardware flow control）或足夠 buffer 仍會溢位。</p><p>邏輯分析儀能證明 UART 線上的 byte 與 RTS/CTS 時序；韌體的 overrun counter 能證明接收器漏資料。只看應用層平均流量不能排除 burst。</p></details>
+          <details><summary>03 AT／URC：同一條文字流上有同步回覆，也有非同步事件</summary><p>AT command 的回覆屬於目前交易；非請求結果碼（Unsolicited Result Code, URC）可能隨時插入，像同一 socket 混入 server-push。可靠 parser 先以行界線與 token 分類，再把 command response 交給等待者、URC 派到事件處理器。不要用「送命令後讀到 OK 為止」的單一阻塞函式，因為 URC 可能被誤吞。</p><p>打開 timestamped raw UART log 可重播解析順序；它能證明 MCU 收到哪些字元，不能證明空中網路真的完成資料傳遞。</p></details>
+          <details><summary>04 指數退避：讓大量裝置不要同時重試</summary><p>有上限的指數退避 d<sub>n</sub> = min(cap, base × 2<sup>n</sup>)。若 base = 1 s、cap = 30 s，n = 0…5 的等待為 1、2、4、8、16、30 s，累積 61 s。再加入隨機抖動（jitter），可避免斷網後數千台裝置在同一秒重連。這個模型假設 n 的起點與重置條件已定義；成功一次是否清零必須寫進狀態機。</p><p>操作 retry 與 cap，觀察單次等待和累積離線時間。後端連線速率圖能看到 herd 是否被攤平，但不能證明單機耗電可接受，還要量每次註冊的電荷。</p></details>
+          <details><summary>05 Session 重建：由下往上建立，由上往下判斷是否仍有效</summary><p>網路註冊成功不等於舊 TCP socket 仍活著；IP 還在也不等於 TLS session 或 MQTT subscription 仍有效。可靠 supervisor 依序取得 bearer → IP → transport → security → application，並為每層保存 generation 或狀態。底層重建時，上層物件全部視為過期，避免拿舊 handle 假裝在線。</p><p>封包擷取可證明 SYN、TLS handshake 與應用封包是否出現在觀測點；NAT 或行動網核心另一側的狀態未必可見，因此沒有封包只能定位到觀測邊界，不能直接斷言遠端原因。</p></details>
+          <details><summary>06 資料預算：payload 只是帳單與能量的一部分</summary><p>簡化 wire bytes = payload × ratio + overhead。例：每天 1440 筆、每筆 payload 48 B，序列化倍率 1.25、每筆額外 32 B，日用量約 1440 × (48 × 1.25 + 32) = 132480 B，約 129.4 KiB；尚未含 TCP/IP/TLS header、握手、重傳與營運商計量單位。批次上傳可攤薄每筆 overhead，卻增加 RAM、資料延遲與斷電遺失範圍。</p><p>裝置 byte counter 與伺服器 ingress log 應能對帳；兩者差異可提示重傳或計量邊界，但不能只靠其中一端精確分辨空中層重傳。</p></details>
+          <details><summary>07 Keepalive、重連與 PSM：少傳 byte 不必然省電</summary><p>Keepalive 太密會反覆喚醒 radio；太疏可能讓 NAT／網路狀態過期，下一筆資料付出完整重連成本。省電模式（Power Saving Mode, PSM）讓蜂巢模組長時間不可達；延伸不連續接收（extended Discontinuous Reception, eDRX）則週期性醒來聽下行。兩者都是延遲、可達性與能量的交易。</p><p>同時記錄 modem 狀態、封包時間戳與電流波形，才能把「操作 → radio 醒來 → 傳輸 → 電荷增加」串起來。封包較少不能單獨證明能量較低。</p></details>
+          <details><summary>08 Supervisor：局部復原優先，升級要有次數與證據</summary><p>Supervisor 是連線狀態的單一擁有者。典型升級鏈是重送應用交易 → 重建 socket → 重新啟用 bearer → 重置模組 → 最後才重置整機；每一步都有 timeout、重試上限與冷卻時間。無上限重試會同時耗電、塞 log、壓垮後端並掩蓋永久設定錯誤。</p><p>保留 reset cause、最後成功層級、錯誤碼與每階段耗時，可判斷故障集中在哪層。單一「網路錯誤」計數器只能證明失敗次數，不能提供根因。</p></details>
+          <p class="feedback"><b>不要混淆：</b>訊號強 ≠ 可用吞吐；附網成功 ≠ 應用在線；keepalive ≠ 自動恢復；封包 byte 數 ≠ 能量；timeout ≠ 一定是遠端沒回。</p>
+        </section>
+
         <section class="module-section is-current" id="module-bearer-choice" data-module="bearer-choice" aria-labelledby="bearer-choice-title">
           <div class="module-header"><div><span class="module-number">01</span><h3 id="bearer-choice-title">Bearer 選型與連線取捨</h3></div><button class="complete-button" type="button" data-complete="bearer-choice">標記完成</button></div>
           <div class="module-grid">

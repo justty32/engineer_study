@@ -52,6 +52,20 @@
           <p class="heading-note">調整參數後觀察因果關係，再用完成按鈕記錄學習進度。</p>
         </div>
 
+        <section class="panel result-panel" aria-label="八個模組的操作前導讀">
+          <div class="panel-heading"><h3>操作前先建立一條完整因果鏈</h3><span class="panel-tag">READ FIRST</span></div>
+          <p>板級硬體不像函式呼叫，錯誤常會跨區傳播：負載突然取電，電源路徑的阻抗先造成壓降，晶片可能重置，最後才在韌體 log 裡表現成「網路斷線」。因此每個計算都要接回實物量測；計算用來預測，示波器、電流探棒、熱像與設計檔才是核對預測的證據。</p>
+          <details open><summary>01 電源樹（Power Tree）：平均值管熱，峰值管會不會重置</summary><p>把電源樹想成有容量限制的服務依賴圖：每個電源軌（rail）有電壓、連續電流、瞬間電流與上電順序。設計電流 I<sub>design</sub> = I<sub>load</sub> × (1 + m)，其中 I 以 A 或 mA 表示、m 是無單位裕度。例：Radio 峰值 2.0 A、裕度 30%，需要 2.0 × 1.30 = 2.6 A 的峰值能力；這不表示它會連續耗 2.6 A。</p><p><b>怎麼玩與看證據：</b>先只提高 Radio 峰值，觀察峰值功率是否上升而平均功率變化較小。實板以示波器同時量 rail 電壓與模組 enable／發射訊號，能證明壓陷與發射在時間上相關；只看電源供應器面板的慢速平均電流，不能排除微秒級壓陷。</p></details>
+          <details><summary>02 穩壓器：LDO 的簡單，通常用熱來付款</summary><p>低壓差線性穩壓器（Low-Dropout Regulator, LDO）近似損耗 P<sub>loss</sub> = (V<sub>in</sub> − V<sub>out</sub>) × I；接面溫升近似 ΔT = P<sub>loss</sub> × θ<sub>JA</sub>。以 5 V 降到 3.3 V、0.2 A、θ<sub>JA</sub> = 50 °C/W 為例，損耗為 0.34 W、理想化溫升約 17 °C。假設環境 25 °C，接面約 42 °C。此模型假設穩態、熱阻與實際 PCB 條件相符，不能取代封裝散熱曲線。切換式降壓轉換器（buck converter）效率高，但會引入切換漣波與高 di/dt 迴路。</p><p><b>不要混淆：</b>dropout 是維持調節所需的最小壓差，不是 LDO 的固定輸出誤差；效率高也不等於雜訊低。熱電偶或熱像可看到溫升，示波器頻譜可看到漣波，但熱像不能證明瞬態穩定度。</p></details>
+          <details><summary>03 電池：壽命由時間加權平均決定，睡眠漏電可能反客為主</summary><p>平均電流 I<sub>avg</sub> = Σ(I<sub>state</sub> × t<sub>state</sub>/T) + I<sub>hidden</sub>。例：睡眠 0.01 mA 占 99%、運作 30 mA 占 0.9%、發射 200 mA 占 0.1%，三者貢獻約 0.0099 + 0.27 + 0.20 = 0.4799 mA；再加 Iq 0.005 mA 與漏電 0.002 mA，約 0.487 mA。若 2000 mAh 電池只取 80%，理想壽命約 1600/0.487 ≈ 3285 h，約 137 日。</p><p>這只是假設容量可線性使用的初估。低溫、老化、電池內阻、截止電壓與發射脈衝都會縮短壽命。電流分析儀可積分每個狀態的電荷；只量一次睡眠電流不能證明整個 duty cycle 正確。</p></details>
+          <details><summary>04 去耦（Decoupling）：電容是在穩壓器趕到之前就近供電</summary><p>教學式 ΔV ≈ ΔI × ESR + ΔI × Δt/C，把瞬間壓降拆成等效串聯電阻（Equivalent Series Resistance, ESR）項與放電項。例：ΔI = 0.5 A、ESR = 0.05 Ω、Δt = 0.2 ms、C = 470 µF，兩項分別為 0.025 V 與約 0.213 V，總壓降約 0.238 V。這是假設電流矩形且忽略等效串聯電感（ESL）、穩壓器控制迴路和走線阻抗的下限模型。</p><p>拖曳 ESR、容量與脈衝時間時，分辨哪一項在主導。示波器探棒要用短地彈簧跨在負載旁量；長鱷魚地線本身會拾取尖峰，看到的振鈴未必全是板上訊號。</p></details>
+          <details><summary>05 原理圖與 BOM：ERC 找規則錯，不懂產品意圖</summary><p>電氣規則檢查（Electrical Rules Check, ERC）像型別檢查器：能抓未連接、輸出互打等形式問題，但不知道 RESET 是否會在慢上電時誤觸發，也不知道料件是否買得到。操作 gate 時，取消一項就把它翻成失敗鏈，例如「未核封裝 → 焊墊錯位 → 無法焊接 → AOI 或首件裝配發現」。BOM、封裝庫版本、原理圖 PDF 與 ERC 報告共同提供可追溯證據；單獨一份無錯誤 ERC 報告不能證明板子可製造。</p></details>
+          <details><summary>06 疊層與回流：訊號永遠沿完整迴路傳能量</summary><p>高速訊號的回流電流傾向走在鄰近參考平面、緊貼訊號路徑下方，因為那裡迴路電感最低。跨越地平面裂縫會迫使回流繞路，使迴路面積變大，進而增加輻射、串擾與參考電位擾動。這裡的「高速」主要由邊緣上升時間決定，不只看 clock 頻率。近場探棒能定位哪段走線輻射較強；它不能直接等同正式遠場法規結果。</p></details>
+          <details><summary>07 RF 與天線：50 Ω 是傳輸條件，不是萬用電阻值</summary><p>射頻（Radio Frequency, RF）饋線的幾何、介質與參考平面共同形成特性阻抗。天線淨空區（keep-out）、外殼、電池與人手都會改變近場分布和共振。π 匹配網路預留焊墊只是調諧入口，不代表未量測就已匹配。向量網路分析儀（Vector Network Analyzer, VNA）量到 S<sub>11</sub> 可證明測試平面上的反射；它不能單獨證明整機輻射效率、接收靈敏度或各方向覆蓋。</p></details>
+          <details><summary>08 Release 與 bring-up：第一次上電要把未知數一次只放進一個</summary><p>Bring-up 的安全順序是目視與短路檢查 → 限流供電 → 逐軌量電壓與啟動順序 → 確認 reset／clock → 連接除錯器 → 才執行完整韌體。若一上電就燒正式韌體、接所有外設，故障變數會同時增加。電源供應器的限流事件、各 rail 波形、reset cause、料號與板號應一起寫進紀錄。『能開機一次』只能證明該樣板在該條件成功，不能證明溫度、容差與量產分布都有裕度。</p></details>
+          <p class="feedback"><b>總結不要混淆：</b>平均功耗 ≠ 峰值供電；電容量 ≠ 所有頻率下的低阻抗；ERC／DRC 通過 ≠ 電氣功能正確；VNA 匹配良好 ≠ 無線鏈路一定良好。</p>
+        </section>
+
         <section class="module-section is-current" id="module-power-tree" data-module="power-tree" aria-labelledby="power-tree-title">
           <div class="module-header">
             <div><span class="module-number">01</span><h3 id="power-tree-title">電源樹與負載裕度</h3></div>

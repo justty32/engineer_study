@@ -14,4 +14,10 @@
 
   <section class="theory-section"><span class="chapter-no">06</span><h2>現場例子：桌上正常，接 50 公尺後偶發 CRC error</h2><div class="tool-table"><div><b>第一步：看供電與接線</b><span>A/B 極性、參考地、線材、星狀支線、終端位置、屏蔽接法。</span></div><div><b>第二步：示波器看 A−B</b><span>差動幅度、反射、過衝、交越多次、共模是否超出收發器範圍。</span></div><div><b>第三步：看 DE 與 UART</b><span>最後 stop bit 是否完整、遠端回應是否與本端 driver 重疊。</span></div><div><b>第四步：才解 Modbus</b><span>站號、鮑率、parity、silent interval、CRC、exception code。</span></div></div><div class="final-model"><b>長線守則：</b><span>不要把 retry 當修復；先證明物理波形與 bytes 正確，再修改 parser。</span></div></section>
   <footer><a href="./spi-principles.html">← SPI</a><a href="./index.html">回 30 分鐘主線 →</a></footer>
+  <section class="theory-section" aria-label="RS485 深讀與量測">
+    <span class="chapter-no">深讀</span><h2>RS-485 定義電氣，總線秩序要由上層協定負責</h2>
+    <p>RS-485 收發器把 UART 單端位元轉成 A、B 之間的差動電壓。接收器主要看差值，因此兩線一起受到的共模雜訊可被部分抵消；但收發器仍有允許共模範圍，差動不代表可以完全不考慮參考地、隔離與突波路徑。半雙工總線一次只能有一個 driver 啟用，Modbus RTU 等上層協定負責誰何時說話。</p>
+    <div class="theory-grid"><article><h3>終端的負載代價</h3><p>120 Ω cable 兩端各放 120 Ω 終端，從驅動器看近似 60 Ω 差動負載。若差動電壓 2 V，理想負載電流約 2/60 = 33 mA。終端把到達線尾的能量吸收成熱以減少反射；它不是每個 node 都要裝的「抗雜訊電阻」。</p></article><article><h3>DE 時序例</h3><p>9600 baud、8N1 每字元約 1.042 ms。8-byte frame 從第一 start bit 到最後 stop bit 約 8.33 ms。軟體 TX buffer 清空可能發生在最後一 byte 剛寫入 shift register 時；此刻關 DE 會切掉最後字元。應看 transmission complete 旗標或硬體自動方向控制。</p></article></div>
+    <p><b>證據：</b>在收發器兩側同時量 UART TX、DE 與 A−B，可把「軟體送出 → driver 啟用 → 差動波到達 → driver 釋放」串起來。只看 A 或 B 對本地地的單端波形，不能完整代表差動接收結果。</p>
+  </section>
 </main></body></html>

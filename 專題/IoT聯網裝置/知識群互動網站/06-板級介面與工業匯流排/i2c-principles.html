@@ -16,4 +16,10 @@
 
   <section class="theory-section"><span class="chapter-no">05</span><h2>NACK、clock stretching 與卡線分別在說什麼？</h2><div class="tool-table"><div><b>NACK</b><span>第 9 個 clock 沒人拉低 SDA。可能是位址錯、裝置沒上電、尚未準備好，或控制器用 NACK 表示讀取結束。</span></div><div><b>Clock stretching</b><span>目標裝置暫時拉低 SCL，要求控制器等一下。控制器與驅動必須真的支援它。</span></div><div><b>SDA stuck low</b><span>某裝置重置在半筆交易中，仍認為自己應送下一位。先確認誰拉低，再依資料表送 recovery clocks、STOP 或重置。</span></div><div><b>Address collision</b><span>兩顆固定同位址的裝置會同時回答；用不同 address pin、mux 或獨立 bus 解決。</span></div></div><div class="final-model"><b>用邏輯分析儀前先用示波器：</b><span>解碼器能告訴你地址與 ACK；示波器才能證明高電位有沒有升夠快、是否過衝、誰一直拉低。</span></div></section>
   <footer><a href="./gpio-principles.html">← GPIO</a><a href="./spi-principles.html">下一頁：SPI →</a></footer>
+  <section class="theory-section" aria-label="I2C 深讀與量測">
+    <span class="chapter-no">深讀</span><h2>I²C 的核心是「任何人只能拉低，沒人可以硬推高」</h2>
+    <p>積體電路間匯流排（Inter-Integrated Circuit, I²C）的 SDA 與 SCL 使用開漏輸出。wired-AND 的結果是：只要任一裝置拉低，整條線就是 LOW；所有裝置放手後，上拉電阻才替總電容充電回 HIGH。這使 ACK、clock stretching 與多主機仲裁成為可能，也使 rise time 成為速度限制。</p>
+    <div class="theory-grid"><article><h3>數字算例</h3><p>t<sub>r</sub> ≈ 0.8473RC。R = 4.7 kΩ、C = 200 pF 時，t<sub>r</sub> ≈ 0.8473 × 4700 × 200×10<sup>−12</sup> ≈ 796 ns。若把 R 降到 2.2 kΩ，約 373 ns；但 LOW 時電流由 3.3/4700 ≈ 0.70 mA 增至 3.3/2200 ≈ 1.50 mA。電阻太小會增加 sink 電流，太大會讓上升太慢。</p></article><article><h3>從 NACK 往下查</h3><p>發出 START → 送 7-bit address 加 R/W → 第九個 clock 釋放 SDA → 被選裝置拉低表示 ACK。NACK 可能是位址錯、裝置未上電、仍在忙、電壓域不相容或波形未跨過 HIGH 門檻；它不是單一「硬體壞了」訊號。</p></article></div>
+    <p><b>可觀察證據：</b>邏輯分析儀能解碼 START、address、ACK 與 byte；示波器在最遠裝置 pin 量 SDA/SCL 能證明 rise time、過衝與門檻裕度。解碼器顯示 ACK 不代表類比裕度充足，也不能排除偶發 clock stretching timeout。</p>
+  </section>
 </main></body></html>

@@ -18,4 +18,10 @@
 
   <section class="theory-section"><span class="chapter-no">06</span><h2>第一版設計的實際交付物</h2><div class="tool-table"><div><b>需求表</b><span>電壓、電流、環境、介面、尺寸、成本、測試與法規。</span></div><div><b>方塊圖與電源樹</b><span>每區責任、輸入輸出、最大與峰值電流。</span></div><div><b>原理圖 + BOM</b><span>料號、封裝、容差、額定值、可替代料。</span></div><div><b>設計計算</b><span>功耗、熱、上拉、終端、濾波、電池與裕度。</span></div><div><b>驗證計畫</b><span>首次上電順序、測試點、預期波形與故障注入。</span></div><div><b>PCB 與製造輸出</b><span>DRC、Gerber、鑽孔、Pick&Place、疊層與組裝註記。</span></div></div><div class="final-model"><b>最重要的工作習慣：</b><span>每顆元件都寫得出「它防哪個失敗或滿足哪條規格」；若說不出，就不是還沒背熟，而是設計責任尚未釐清。</span></div></section>
   <footer><span>教學估算不取代 datasheet、reference design、熱分析與實測；特別是電源補償、保護能量及 RF layout。</span><a href="./gpio-principles.html">回到介面實例 →</a></footer>
+  <section class="theory-section" aria-label="電路設計深讀">
+    <span class="chapter-no">深讀</span><h2>把每個元件值寫成可驗證的假設</h2>
+    <div class="theory-grid"><article><h3>電源先做最壞預算</h3><p>12 V 降到 3.3 V、平均 120 mA，若直接用 LDO，P<sub>loss</sub> = (12 − 3.3) × 0.12 ≈ 1.04 W；這還沒算 180 mA 額外脈衝。若理想電容獨自供應 ΔI = 0.18 A、Δt = 200 µs 且容許 ΔV = 0.2 V，C ≥ ΔIΔt/ΔV = 180 µF。前者指出熱風險，後者只是 bulk 下限，不能取代 buck transient response 與 MLCC DC-bias 降額。</p></article><article><h3>保護元件的放置也是電路</h3><p>TVS 若離接頭很遠，突波電流會先沿長走線穿過板內再被箝位；原理圖連線相同，物理效果卻不同。保險／eFuse、反接、TVS 與回流應在入口形成短而明確的能量路徑，並核對正常工作電壓、箝位電壓、脈衝能力與後級 absolute maximum。</p></article></div>
+    <div class="cause-chain"><div><b>需求</b><span>範圍、峰值、環境</span></div><i>→</i><div><b>假設</b><span>公式、容差、失效模式</span></div><i>→</i><div><b>設計</b><span>元件與 layout 責任</span></div><i>→</i><div><b>驗證</b><span>預期波形與 pass/fail</span></div></div>
+    <p class="caution"><b>不要混淆：</b>reference design ≠ 可無條件複製；額定電流 ≠ 瞬態響應保證；原理圖正確 ≠ PCB 回流正確；示波器看到 3.3 V 平均值 ≠ 沒有短暫 brownout。</p>
+  </section>
 </main></body></html>

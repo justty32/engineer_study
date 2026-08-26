@@ -31,6 +31,19 @@
     </section>
   </header>
   <main>
+    <section class="note" aria-label="八個射頻模組的操作前導讀">
+      <h2>先抓住 RF 問題的共同主線</h2>
+      <p>射頻（Radio Frequency, RF）不是「頻率很高的普通導線」：當幾何尺寸相對波長不可忽略，電壓與電流會隨位置改變，能量以電磁波形式傳播。互動計算是建立量級直覺的簡化模型；正式設計仍需依 PCB 疊層、材料、外殼與測試標準量測。</p>
+      <details open><summary>1 波長、電氣長度與遠場</summary><p>自由空間波長 λ<sub>0</sub> = c/f，c ≈ 3×10<sup>8</sup> m/s。2.4 GHz 時 λ<sub>0</sub> ≈ 0.125 m = 125 mm。導波波長近似 λ<sub>g</sub> = λ<sub>0</sub>/√ε<sub>eff</sub>；若有效介電常數 ε<sub>eff</sub> = 4，λ<sub>g</sub> ≈ 62.5 mm，50 mm 走線約為 0.8 λ、相位約 288°。這裡假設均勻、無損的等效傳輸線，真實 microstrip 的 ε<sub>eff</sub> 需由疊層求得。</p><p>最大尺寸 D 的常用遠場界 r ≈ 2D<sup>2</sup>/λ；D = 80 mm、λ = 125 mm 時約 102 mm。遠場公式不適合拿來解釋貼近天線的手、外殼或匹配元件。近場探棒可找局部能量，暗室遠場量測才可驗證方向圖與總輻射特性。</p></details>
+      <details><summary>2 鏈路預算：dB 是乘除關係的記帳法</summary><p>接收功率 P<sub>r</sub> = P<sub>t</sub> + G<sub>t</sub> + G<sub>r</sub> − L<sub>path</sub> − L<sub>extra</sub>，各項以 dBm、dBi、dB 記帳。自由空間路徑損耗（Free-Space Path Loss, FSPL）在 f 用 MHz、d 用 km 時為 32.44 + 20 log<sub>10</sub>(f) + 20 log<sub>10</sub>(d)。2.4 GHz、0.1 km 約 80.0 dB；10 dBm 發射、兩端各 2 dBi、額外損耗 2 dB，接收約 −68 dBm。若靈敏度 −95 dBm，名義餘裕約 27 dB。</p><p>這是假設自由空間與天線增益方向正確的模型，不含牆面、人體、多路徑與干擾。封包錯誤率和 RSSI 的現場分布能驗證可用性；單次成功封包不能證明 10 dB 設計餘裕。</p></details>
+      <details><summary>3 阻抗失配：反射是邊界條件造成，不是資料錯誤本身</summary><p>反射係數 Γ = (Z<sub>L</sub> − Z<sub>0</sub>)/(Z<sub>L</sub> + Z<sub>0</sub>)。純電阻 75 Ω 接 50 Ω 線時 Γ = 25/125 = 0.2，反射功率比例 |Γ|<sup>2</sup> = 4%，電壓駐波比（Voltage Standing Wave Ratio, VSWR）= (1 + |Γ|)/(1 − |Γ|) = 1.5。回波損耗越大通常表示反射越小；不要把「回波損耗數字大」誤讀成更糟。</p><p>向量網路分析儀（Vector Network Analyzer, VNA）量 S<sub>11</sub> 能證明校正參考面上的反射；若線纜與治具未去嵌入，不能直接斷言天線本體就是該阻抗。</p></details>
+      <details><summary>4 RF layout：連續參考面讓去程與回程靠在一起</summary><p>受控阻抗、短饋線、無 stub、連續地平面與連接器 launch 是同一件事的不同面向：維持沿途電磁邊界一致。地過孔圍籬提供局部回流連接，但不是「過孔越多越 RF」。π match 是預留串並聯元件的位置，量產值應在實際 PCB、外殼與天線狀態下調整。</p><p>逐項取消 gate 可把設計缺口映射成可觀察結果。TDR 能定位阻抗不連續的位置，VNA 能量反射；兩者都不能單獨證明輻射法規通過。</p></details>
+      <details><summary>5 天線選型：外形只是起點，整合環境決定最後表現</summary><p>PCB 天線成本低但需要板邊淨空與穩定板框；晶片天線節省平面面積，仍依賴地平面與匹配；外接天線較容易離開金屬外殼，卻增加接頭、線纜、機構與認證邊界。預認證模組只在核准的天線、功率與整合條件內降低工作量，不等於整機免測。</p><p>選型器是在需求不完整時排序風險，不是產生合規結論。總輻射功率、總全向靈敏度與方向圖能比較整機天線；S<sub>11</sub> 好看不能保證效率高。</p></details>
+      <details><summary>6 介質負載與失諧：靠近天線的物體會成為電磁結構的一部分</summary><p>在幾何不變的粗略模型下，共振頻率 f ∝ 1/√ε<sub>eff</sub>。原本 2400 MHz、ε 從 2.5 變 3.2，新頻率約 2400 × √(2.5/3.2) ≈ 2121 MHz，向下偏約 279 MHz。這個數例只顯示趨勢；真實手、電池與塑膠外殼並非均勻覆蓋，還會同時改變損耗與電流分布。</p><p>在裸板、裝殼、手握等狀態重複量 S<sub>11</sub>，可觀察共振位移；要知道通訊是否真的變差，仍需 OTA 或至少固定場景的 RSSI／PER 比較。</p></details>
+      <details><summary>7 Edge rate 與 EMI：決定高頻內容的是邊緣，不只是切換頻率</summary><p>數位邊緣常用膝點頻率 f<sub>knee</sub> ≈ 0.5/t<sub>r</sub> 做量級估算。上升時間 t<sub>r</sub> = 2 ns 時，f<sub>knee</sub> ≈ 250 MHz；即使訊號只每秒切換數百萬次，快速邊緣仍含高頻能量。若走線相對此頻率的導波波長夠長，就要當傳輸線處理。此式不是精確頻譜截止點，只是提醒不能用 clock 頻率判斷所有 EMI 風險。</p><p>示波器能量 rise time、近場探棒能找輻射熱點、頻譜接收機能看頻率與準峰值；近場幅度不能直接換算法規場強。</p></details>
+      <details><summary>8 法規 gate：模組證書有適用邊界，整機責任仍存在</summary><p>電磁相容性（Electromagnetic Compatibility, EMC）同時包含不過度干擾別人與能承受環境擾動。更換天線、外殼、輸出功率、使用距離或市場，都可能超出原模組核准條件。近身產品還可能需要射頻暴露評估，例如比吸收率（Specific Absorption Rate, SAR），實際依市場與產品條件判定。</p><p>預掃描可提早找失敗頻點與姿態，正式實驗室報告才是對指定標準與配置的合規證據；通過一個市場也不能自動外推到另一市場。</p></details>
+      <p><b>不要混淆：</b>近場 ≠ 遠場；dBm 是功率絕對值、dB 是比值；匹配良好 ≠ 天線效率高；EMI 是發出的干擾，EMS／immunity 是承受干擾的能力；預認證模組 ≠ 整機免測。</p>
+    </section>
     <section id="wave-region" data-module="wave-region"><h2>1. 波長、電氣長度與遠場</h2><form><fieldset><legend>輸入</legend>
       <label for="wave-frequency-mhz">頻率 (MHz)</label><input id="wave-frequency-mhz" type="number" value="2400" min="0" step="any">
       <label for="wave-epsilon-eff">有效介電常數</label><input id="wave-epsilon-eff" type="number" value="4" min="0" step="any">

@@ -40,6 +40,19 @@
     </section>
 
     <div class="module-list">
+      <section class="note" aria-label="八個安全與量產模組的操作前導讀">
+        <h2>安全不是一個功能，而是一條從晶片到退役的證據鏈</h2>
+        <p>把每台裝置想成後端系統的一個長期帳號：它會在不可信的工廠被寫入身分、在外部網路上更新、可能失竊，最後還要退役。真正的安全控制必須能回答「誰被允許做什麼、失敗後如何恢復、證據保存在哪裡」，而不只是勾選有加密。</p>
+        <details open><summary>01 威脅模型（Threat Model）：先保護會造成最大損害的路徑</summary><p>攻擊面是可被接觸或輸入的邊界，例如網路服務、除錯埠、更新檔與供應鏈；風險還取決於影響、可擴散規模與可恢復性。遠端接管整個機群通常比必須拆機才能改一台設定更優先，但若單台裝置直接控制危險致動器，安全影響可能反轉排序。</p><p>操作選單時觀察向量、影響與 fleet 規模如何改變第一控制。這是 triage，不是完整風險量化；滲透測試能證明某路徑在測試條件下可利用，不能證明沒有其他路徑。</p></details>
+        <details><summary>02 每裝置身分：序號用來索引，私鑰用來證明</summary><p>唯一序號或 MAC 可標識裝置，卻通常可讀、可複製；密碼學身分要讓裝置用私鑰完成 challenge，而私鑰最好不可匯出。憑證信任鏈（certificate trust chain）把裝置公鑰連到製造者或營運者的信任根；雙向認證（mutual authentication）讓裝置也驗證伺服器。</p><p>輪替處理金鑰將過期，撤銷處理已失竊或洩漏。TLS log 與後端憑證紀錄能證明某次認證使用哪個身分；它不能證明私鑰從未由不安全產線備份出去。</p></details>
+        <details><summary>03 安全啟動（Secure Boot）：每一階段只執行被授權的下一階段</summary><p>不可變信任根先驗證 bootloader，bootloader 再驗證 application image，形成 chain of trust。雜湊只能偵測內容改變；數位簽章還把內容綁到授權簽署者。Anti-rollback 以不可倒退的版本計數拒絕舊但簽章仍有效的漏洞版本；fail closed 表示驗證失敗時不進入未驗證程式。</p><p>故意改一個 image byte，預期裝置拒絕啟動並留下可辨識錯誤，再走簽章 recovery。UART boot log 或硬體狀態腳能證明拒絕路徑；只有「黑畫面」不能區分驗證失敗、供電失敗或 CPU 根本沒啟動。</p></details>
+        <details><summary>04 A/B OTA：空間預算與傳輸預算是兩個 gate</summary><p>空中更新（Over-the-Air update, OTA）的雙槽模型可寫成 C<sub>required</sub> = C<sub>boot</sub> + N<sub>slot</sub> × C<sub>image</sub> + C<sub>scratch</sub> + C<sub>config</sub>。預設值為 128 + 2 × 700 + 128 + 64 = 1720 KiB；2048 KiB Flash 留 328 KiB。若交付倍率 1.2、速率 16 KiB/s，傳輸量 840 KiB、理想時間 52.5 s。</p><p>此例假設 slot 等大、速率固定，未含檔案系統 erase block、metadata、重傳、TLS 與安裝時間。下載 log 能證明 byte 到達；不能證明新 image 能啟動，因此還需要首次啟動健康確認。</p></details>
+        <details><summary>05 更新復原：先寫非作用槽，驗證後才原子切換</summary><p>安全更新流程是驗證真實性與完整性 → 寫入 inactive slot → 完成後再次驗證 → 原子更新 boot metadata → 試開機 → 健康確認 → 永久承認；任一步失敗都保留已知可開機版本。原子切換不是「寫得很快」，而是斷電後只會看見舊狀態或新狀態，不會接受半個狀態。</p><p>在 erase、寫入、metadata 切換與首次啟動分別斷電，重上電後檢查選槽與 rollback reason。一次正常 OTA 只能證明 happy path，不能證明 power-loss safety。</p></details>
+        <details><summary>06 產線佈建（Provisioning）：把信任寫入的站點本身也要被信任</summary><p>產線 station 先向後端證明自己獲授權，再為單台裝置建立唯一身分、把憑證綁定到序號，並以 readback 或線上 challenge 驗證私鑰真的在目標裝置中。失敗品要 quarantine，避免重跑腳本時重複發證或把半成品流入下一站。</p><p>稽核軌跡至少記 station、操作者或工作單、裝置序號、憑證指紋、時間與結果。資料庫有紀錄只能證明系統宣稱做過；獨立 challenge 才能證明裝置當下持有相應私鑰。</p></details>
+        <details><summary>07 EVT 到 MP：階段名稱代表要消除的未知數不同</summary><p>工程驗證測試（Engineering Validation Test, EVT）確認架構與可 bring-up；設計驗證測試（Design Validation Test, DVT）確認規格、環境與法規；生產驗證測試（Production Validation Test, PVT）確認治具、節拍與良率；大量生產（Mass Production, MP）要求穩定製程與變更控制。階段不是只看做了幾片，而是證據成熟度。</p><p>測試點、ICT／FCT、RF／EMC 預掃、佈建、追溯與 change control 要隨階段累積。單台 golden sample 通過不能證明製程能力；應看批次分布、失敗模式與重測率。</p></details>
+        <details><summary>08 機群生命週期：裝置離線後，控制面仍要能撤銷它</summary><p>遭入侵要隔離、撤銷憑證、停止授權服務並保存鑑識資料；憑證過期要在仍可認證時輪替；遺失裝置應使其雲端權限失效；退役則同時清除本地敏感資料、解除帳戶綁定並保留必要稽核紀錄。只在裝置端刪除金鑰不夠，因為遺失裝置可能永遠不再連線。</p><p>後端拒絕已撤銷憑證的連線，是控制有效的直接證據；設備管理頁顯示「已退役」若未實際阻擋認證，只是資料庫標籤。</p></details>
+        <p class="warning"><b>不要混淆：</b>識別碼 ≠ 密碼學身分；雜湊 ≠ 簽章；secure boot ≠ 磁碟加密；可回滾 ≠ 允許任意降版；預認證模組 ≠ 整機安全或法規完成。</p>
+      </section>
       <section id="threat-model" class="module" data-module="threat-model" aria-labelledby="threat-model-title">
         <header><p class="module-number">01</p><h2 id="threat-model-title">威脅面初篩</h2><p>先以攻擊面、影響與規模判斷控制優先順序。</p></header>
         <div class="module-grid">

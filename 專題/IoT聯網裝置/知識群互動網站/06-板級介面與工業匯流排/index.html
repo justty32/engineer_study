@@ -121,6 +121,13 @@
         <details><summary>韌體只要再接上這 60 秒</summary><p>中斷或 DMA 收位元組 → 環形緩衝區 → 非阻塞 parser → queue／task。不要在 ISR 裡解析整包或等待回應；RS-485 的 DE 要在硬體真的送完最後一位後才關。</p></details>
       </section>
 
+      <section class="card" aria-label="課後深讀與量測指南">
+        <span class="tag">課後深讀</span><h2>把六關串成同一條除錯路徑</h2>
+        <p>板級通訊可以像網路 stack 一樣分層，但底層不是抽象 API：GPIO 的門檻、線路電容、回流路徑和收發器共模範圍會直接決定上層能否看到正確 byte。遇到 timeout 時按「電氣 → 時序 → framing → protocol → 韌體狀態」往上查，每層都先取得可否證的證據。</p>
+        <div class="theory-grid"><article><h3>I²C 的數字例</h3><p>上升時間近似 t<sub>r</sub> ≈ 0.8473RC。R = 4.7 kΩ、C = 100 pF 時，t<sub>r</sub> ≈ 398 ns；400 kHz fast-mode 的容許上升時間常比 100 kHz 嚴，因此相同板子升速後可能才開始 NACK。此模型忽略輸入門檻分布與非線性電容，最後要在最遠裝置腳位用示波器量。</p></article><article><h3>RS-485／Modbus 的時間例</h3><p>19200 baud、8N1 時一字元約 10/19200 s ≈ 0.521 ms，3.5 字元靜默約 1.82 ms。buffer 空只表示資料已交給 UART；必須等 shift register 送完最後 stop bit 才可關 DE。邏輯分析儀能核對 byte 與 gap，示波器才能看 A/B 差動振幅、反射和共模。</p></article></div>
+        <div class="tool-table"><div><b>萬用電表</b><span>證明靜態供電、短路與偏壓；不能看 ns 級邊緣。</span></div><div><b>示波器</b><span>證明電壓、rise time、振鈴與 DE 時機；不自動懂暫存器語意。</span></div><div><b>邏輯分析儀</b><span>解碼時序與 byte；門檻化後可能看不到類比裕度。</span></div><div><b>韌體 log</b><span>證明程式走過的狀態與錯誤碼；不能證明 pin 上真的出現預期波形。</span></div></div>
+        <p class="caution"><b>常見混淆：</b>開漏 ≠ 弱輸出；pull-up ≠ termination；RS-485 ≠ Modbus；CRC 正確 ≠ 資料語意正確；共地 ≠ 把遠端保護地隨意短接。</p>
+      </section>
       <div id="live-summary" class="sr-only" aria-live="polite"></div>
       <div class="lesson-actions"><button id="prev-step" type="button">← 上一關</button><span id="step-position">1 / 6</span><button id="next-step" class="primary" type="button">下一關 →</button></div>
       <footer><span>教學模型；實作以元件資料表、目標板波形與設備 Modbus register map 為準。</span><span><a href="./README.md">來源與範圍</a></span></footer>
