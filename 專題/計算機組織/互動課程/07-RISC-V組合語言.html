@@ -104,6 +104,14 @@ ret</code></pre>
       </details>
     </div>
 
+    <h2>先看痛點：看見一行虛擬指令，不代表機器裡只有一條</h2>
+    <p>RISC-V 刻意讓基本編碼規則小而可組合，但人類常用的 <code>li</code>、<code>call</code> 與 <code>ret</code> 可能只是組譯器介面。若用原始組合檔的行數推算位址，或假設所有處理器都有乘法與壓縮指令，連結後的控制流就會對不上。分析二進位時，以最終反組譯、啟用擴充與重定位結果為準；來源組合檔只代表工具鏈尚未完成決策前的意圖。</p>
+    <h2>具體追蹤 3：<code>lw</code> 與 <code>lwu</code> 的差別</h2>
+    <div class="workspace"><p>在 RV64 中，假設位址 <code>0x5000</code> 起四個位元組組成 <code>0x80000001</code>：</p><ul><li><code>lw a0, 0(t0)</code> 把 32 位元載入後做有號擴展，所以 a0=<code>0xFFFFFFFF80000001</code>。</li><li><code>lwu a0, 0(t0)</code> 做零擴展，所以 a0=<code>0x0000000080000001</code>。</li><li>兩者低 32 位元相同，高 32 位元不同；後續 64 位元比較或位址計算會因此產生不同結果。</li></ul></div>
+    <h2>具體追蹤 4：陣列索引要自己形成位址</h2>
+    <p>令 a0=<code>0x6000</code> 指向 64 位元陣列，a1=3。<code>slli t0, a1, 3</code> 得 t0=24，因每個元素 8 位元組；<code>add t0, a0, t0</code> 得 <code>0x6018</code>；<code>ld a0, 0(t0)</code> 才讀資料。移位只是乘上元素寬度，並未讀記憶體；若元素改成 4 位元組，位移量也應改成 2。</p>
+    <details><summary>想更深入：如何看出虛擬指令展開？</summary><p>讓組譯器產生目的檔後，以顯示機器位元組與重定位的反組譯工具查看。小立即值的 <code>li</code> 可能只需一條 <code>addi</code>，較大常數可能組合高低部分；遠距 <code>call</code> 也可能需要兩條指令並由連結器鬆弛成較短形式。這份輸出能證明該工具鏈與選項下的成品，不能推出所有組譯器版本永遠做相同選擇。</p></details>
+
     <h2>證據與邊界</h2>
     <p>可查證的證據包括：二進位檔宣告的目標架構與擴充、反組譯器顯示的真實或虛擬指令、程式計數器 <code>pc</code>、返回位址 <code>ra</code>、堆疊指標 <code>sp</code> 與參數／返回值暫存器 <code>a0</code>、堆疊上保存的暫存器、重定位，以及載入／儲存前後的位址與資料。若要重現機器碼，須固定組譯器選項，因為虛擬指令可能有多種展開方式。</p>
     <p class="warning">本頁只建立 RV64I 的閱讀骨架，未教授特權架構、控制與狀態暫存器、原子、浮點、向量、壓縮指令或弱記憶體排序。看到 <code>mul</code>、原子操作或較短指令編碼時，先確認所需擴充。</p>
@@ -117,18 +125,7 @@ ret</code></pre>
       <li><strong>指令較少不代表程式一定較慢或較快。</strong>效能必須看編譯結果、工作負載與具體微架構。</li>
     </ul>
 
-    <section data-enrichment-pass="2026-08"><h2>蝡?潛雿虜?閬?璇?隞?/h2><p>?箸?誘甈?摰寧????喳潭?????<code>0x12345678</code> ??<code>li</code> ?航撅?蝯?擃???雿?憭??祕?誘嚗??游?賜? <code>auipc</code> ?撠?雿耦??霅舀??桅＊蝷箄??祆?隞支噶?潮霈嚗?蝯陌?賊?銋?賢???撖血??????? machine bytes ???祕?楊蝣潸? relocation??/p>
-<h2>RV64 ??32 雿? word ??</h2><div class="card"><p>?? <code>a0=0x000000007FFFFFFF</code>??code>addiw a0,a0,1</code> ??雿?32 雿???敺 <code>0x80000000</code>嚗?蝚西??游???XLEN嚗?? <code>0xFFFFFFFF80000000</code>???銝??64 雿? <code>addi</code> 敺 <code>0x0000000080000000</code>?閮泵撠曄垢??w ?航???隤?嚗??芣憿舐內憸冽??/p></div>
-<h2>????啣??洵鈭?餈質馱</h2><p>隞?<code>a0=0x3000</code> ?? 8 雿?蝯?蝝??<code>a1=3</code>??code>slli t0,a1,3</code> 敺?24嚗 <code>0x18</code>嚗?code>add t0,a0,t0</code> 敺?<code>0x3018</code>嚗敺迨??<code>ld a0,0(t0)</code>嚗???? 8 bytes 靘像?唬???摨??乓??load/store 瘝?瘥?蝝Ｗ?嚗?隞乩??敶Ｘ??典?蝯陌銝剝虜?湔?憿胯?/p>
-<details><summary>?????頛?/summary><p><code>a0=0xFFFFFFFFFFFFFFFF</code>??code>a1=1</code>??code>blt a0,a1,label</code> ??a0 ????嚗?頝喉?<code>bltu a0,a1,label</code> ???嗆?憭?64 雿??∟??潘?銝歲?ISC-V 瘝??典??湔??嚗圾霈?勗??舀?隞斗頨急捱摰?/p></details>
-<h2>敺極?瑞??唳????/h2><p>瑼?撅祆扯?撱箇蔭?賊??舀??箏恐蝔梢?閬? ISA嚗BI嚗?蝯陌?賡＊蝷箸?血?曉?蝮柴??斗????誘嚗??????箇?函?賢?銝哨?銝霅??游?撘??閬??芋?砍?舐移蝣箄蕭頩斗瑽???銝?芸?隞?”?祕擃敹? cache?恣蝺?????璈??詨??撖虫???嚗??亥府?詨??辣??/p></section><section data-depth-two="2026-08"><h2>建立 RISC-V use/def 表</h2><p><code>lw a0,12(sp)</code> 讀 sp 與四個 memory bytes，符號擴展後寫 a0；<code>add a0,a0,a1</code> 讀 a0、a1 並寫 a0；<code>beq a0,x0,label</code> 讀兩個 register 並可能寫 pc，沒有隱含旗標。資料流直白不等於表面每行都是真實指令，pseudo-instruction 仍要展開。</p>
-<h2>範例一：陣列總和三輪</h2><div class="workspace"><p>令 a0=p=0x3000、a1=n=3，t0 為和、t1 為索引。每輪 <code>bgeu t1,a1</code> 檢查無號邊界，<code>slli t2,t1,2</code> 與 <code>add t2,a0,t2</code> 形成位址，<code>lw t3,0(t2)</code> 後 <code>addw t0,t0,t3</code>。元素 2、5、9 使位址依序 0x3000、0x3004、0x3008，t0 依序 2、7、16；t1=3 時跳出。</p><p><code>addw</code> 把低 32 位結果符號擴展至 64 位，總和越過 0x7FFFFFFF 時尤其要注意；若要 64 位總和應選另一資料路徑。</p></div>
-<h2>範例二：標準 frame 追蹤</h2><p>假設 SP=0x9000。<code>addi sp,sp,-16</code> 得 0x8FF0；<code>sd ra,8(sp)</code> 把返回位址存到 0x8FF8；<code>sd s0,0(sp)</code> 保存舊 s0。返回前反向 load，再加回 16。若是 leaf 且不用 s register，最佳化器可完全省掉 frame。</p>
-<h2>範例三：auipc 與 relocation 配對</h2><p><code>auipc t0,high20</code> 把目前 PC 加上高位立即值左移 12，接著 addi 或 load 使用低 12 位。assembler/linker 以成對 relocation 填出 symbol 距離。兩條中間若被錯搬或只抄一條，地址便不成立；反組譯標籤是工具依 symbol／relocation 加的解釋。</p>
-<details><summary>範例四：jal、jalr 與 ret</summary><p><code>jal ra,target</code> 保存返回點並跳到 PC-relative 目標；<code>jalr ra,offset(t0)</code> 由 register 形成目標並依規格清最低位。<code>ret</code> 多為 <code>jalr x0,0(ra)</code> 的 alias：寫 x0 等於不保存新返回點。</p></details>
-<details><summary>範例五：lw 與 lwu</summary><p>0x4000 的四 bytes 都是 FF。RV64 <code>lw a0,0(t0)</code> 得 <code>0xFFFFFFFFFFFFFFFF</code>，因 32-bit −1 符號擴展；<code>lwu</code> 得 <code>0x00000000FFFFFFFF</code>。相同 bytes，opcode 決定高 32 位。</p></details>
-<h2>擴充與 ABI 檢查順序</h2><ol><li>確認 RV32／RV64。</li><li>確認 extensions：mul 需要 M、compressed encoding 需要 C、atomic 需要 A。</li><li>確認 ABI 的參數、浮點與 alignment，不用 ISA 名稱代替。</li><li>區分 pseudo-instruction、relaxation 前序列與 linked bytes。</li><li>用 pc、ra、sp、a、s、t register 類別追蹤責任。</li></ol>
-<p class="note">ISA simulator 可證明模型下的架構結果，不能代表某顆實體 core 的 pipeline、cache、MMU 與時間。RISC-V 開放的是規格，不是所有機器相同。</p></section><nav class="pager" aria-label="章節翻頁">
+    <nav class="pager" aria-label="章節翻頁">
       <a href="06-AArch64組合語言.html">← AArch64</a>
       <a href="08-記憶體階層與虛擬記憶體.html">下一章：記憶體階層 →</a>
     </nav>
