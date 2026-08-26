@@ -131,7 +131,18 @@ add eax, 1</code></pre>
       <li><strong>指令較複雜不等於每次都較慢。</strong>效能還受資料相依、快取、分支預測與具體微架構影響。</li>
     </ul>
 
-    <nav class="pager" aria-label="章節翻頁">
+    <section data-enrichment-pass="2026-08"><h2>?粥銝甈∪??游撘?敺??詨??</h2><p>??x86-64 System V ??摮詨?閮哨?<code>int f(int a,int b)</code> ??a? 雿 EDI?SI嚗?貊?? EAX??賢??芸? <code>a+b</code>嚗?賢??<code>lea eax,[rdi+rsi]</code> ??<code>ret</code>嚗??冽??蝯勗????嗚摰?閬?怠鈭箔蒂靽?銝剝??潘???賣?撠?RSP??摮?callee-saved ?怠??剁?ABI 閬??航痊隞鳴?銝?箏?摨?璅⊥??/p>
+<div class="card"><p>?身?澆??<code>RSP=0x7FF0</code>嚗?code>call 0x401000</code> ??銝???<code>0x400085</code>?all ?蝙 RSP 皜?8 ??<code>0x7FE8</code>嚗? 8 雿?蝯????撖怠閰脰?嚗?隞?RIP=0x401000?et ??霈??0x400085嚗SP ??8 ? 0x7FF0?銝剝? push/pop 銝像銵∴?ret ???航炊雿?蝯?啣???/p></div>
+<h2>?典??怠??典神?亦?撖虫?</h2><p>?? <code>RAX=0x1122334455667788</code>?銵?<code>mov eax,0xAABBCCDD</code> 敺?RAX ??<code>0x00000000AABBCCDD</code>嚗銵?<code>mov ax,0xEEFF</code> ??? 16 雿?敺 <code>0x00000000AABBEEFF</code>????EAX 撖怠?????勗皜?雿?閮鞈?瘚?/p>
+<details><summary>??????舐???榆?潦???璅圾霈</summary><p>32 雿? <code>0xFFFFFFFF</code> ?航圾霈?箸????? ???4294967295?? 1 ?瑁? cmp 敺?<code>jl</code> 靘?SF ??OF ?斗?? ??&lt;1嚗?蝡?<code>jb</code> 靘?CF ?斗?∟? 4294967295&lt;1嚗?????蝯陌?亦撩?嚗??臬閮泵?祈澈?舫?閬?????/p></details>
+<h2>憒?撖阡??詨?</h2><p>??霅舀??箏? Intel 隤?銝血??＊蝷?machine bytes嚗?脫迫???炊?嗥??閮泵敺?閮?憪楊蝣潦?臬??call ??瑼Ｘ RSP??蝡?8 雿?蝯? RIP嚗atchpoint ?航??璇?store ?嫣???嚗??＊??????賭??臬?86 ?誘頛???瘀???函蝚?CPU 銝?閮?刻??箸?皜祈岫??/p></section><section data-depth-two="2026-08"><h2>先做一張 x86-64 狀態表，而不是逐字翻譯</h2><p>每讀一條指令，至少記「讀了什麼、寫了什麼、旗標是否變、RIP 去哪」。例如 <code>mov ecx,[rbx+4]</code> 讀 RBX、讀四個 memory bytes、寫 RCX 的低 32 位並清高 32 位，不改算術旗標；一般情況 RIP 前進到下一條。這種 use/def 表比把 mov 翻成「搬移」可靠，也能直接支援資料流與控制流分析。</p>
+<h2>範例一：陣列迴圈完整追三輪</h2><div class="workspace"><p><code>xor eax,eax</code>；<code>xor ecx,ecx</code>；迴圈依序做 <code>cmp ecx,esi</code>、<code>jae .done</code>、<code>add eax,[rdi+rcx*4]</code>、<code>inc ecx</code>、<code>jmp</code>。令 <code>RDI=0x1000</code>、<code>ESI=3</code>，三個 32 位元元素為 2、5、9。第一次比較無號 0 與 3，jae 不跳；地址 0x1000，EAX=2，ECX=1。第二次地址 0x1004，EAX=7，ECX=2。第三次地址 0x1008，EAX=16，ECX=3；下一次 jae 成立，返回 16。</p><p>為什麼用 jae 而非 jge？若 n 是無號長度，負數解讀不適用。這段也沒有檢查 p 是否有效；反組譯只能證明存在 memory read，不能證明地址安全。</p></div>
+<h2>範例二：stack local 的 byte-level 追蹤</h2><p>假設序言後 <code>RSP=0x7FC0</code>，<code>mov dword ptr [rsp+12],0x12345678</code> 把四個 bytes 依小端序寫到 0x7FCC～0x7FCF：<code>78 56 34 12</code>。之後 <code>movzx eax,byte ptr [rsp+13]</code> 只讀 0x7FCD 的 <code>56</code> 並零擴展，EAX=0x56。memory view 顯示地址順序，register view 顯示組合後整數，兩者並不矛盾。</p>
+<h2>範例三：lea 的三種資料流</h2><ul><li><code>lea rax,[rdi+8]</code> 可形成指標 p+8 bytes，不讀 p 指向內容。</li><li><code>lea eax,[rdi+rdi*2]</code> 可算 3×EDI；目的 EAX 使結果截為 32 位並清 RAX 高位。</li><li><code>lea rax,[rip+symbol]</code> 常形成位置相對地址，配合 PIC 與 relocation。</li></ul><p>因此看到 lea 不能一律命名為 address 或乘法；要看結果後續被解參考，還是繼續做純整數運算。</p>
+<details><summary>範例四：callee-saved 與對齊</summary><p>System V AMD64 下 RBX 通常由被呼叫端保存。函式若用 RBX 跨越另一個 call，需先保存、返回前還原。RSP 在 call 邊界還有對齊規則；push 返回位址會改變模 16 的餘數，序言配置量要連同保存項一起算。Windows x64 又有 shadow space，不能照抄同一 frame。</p></details>
+<details><summary>範例五：條件搬移沒有形成 branch edge</summary><p><code>cmp eax,edx</code> 後 <code>cmovl eax,edx</code> 在有號 eax&lt;edx 時寫 EAX，否則保留原值。它依旗標選資料，通常不形成架構控制流分支。若來源是 memory，fault 與 speculative behavior 仍須依 ISA 和微架構分層討論。</p></details>
+<h2>從反組譯到證明的工作順序</h2><ol><li>確認檔案架構、位元模式與 Intel／AT&amp;T 語法。</li><li>顯示 machine bytes 以核對可變長指令邊界；錯一個 byte，後面可能全變成合法垃圾。</li><li>建立 basic block 與分支邊，逐條標 use、def、寬度與 signedness 線索。</li><li>用 ABI 暫時命名入口參數，再由 debugger 快照驗證。</li><li>單步只證明某次路徑；效能要另做不受單步嚴重擾動的量測。</li></ol>
+<p class="warning">Decompiler 是依資料流重建的高階表示，不是原始碼備份；flags 視窗只是停點快照；沒有 symbol 也可能只是 strip。</p></section><nav class="pager" aria-label="章節翻頁">
       <a href="04-處理器資料路徑與指令週期.html">← 通用指令模型</a>
       <a href="06-AArch64組合語言.html">下一章：AArch64 →</a>
     </nav>

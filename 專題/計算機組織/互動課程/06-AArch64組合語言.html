@@ -111,7 +111,18 @@ b.eq .six</code></pre>
       <li><strong>固定指令寬度不代表固定執行時間。</strong>快取、分支與資料相依仍會造成顯著差異。</li>
     </ul>
 
-    <nav class="pager" aria-label="章節翻頁">
+    <section data-enrichment-pass="2026-08"><h2>雿??湔璅∪??郊??</h2><p>?? <code>X0=0x1000</code>??code>ldr w1,[x0,#8]</code> 敺?0x1008 霈 4 雿?蝯?X0 靽? 0x1000嚗?code>ldr w1,[x0,#8]!</code> ?臬?蝵桃揣撘??誘 X0=0x1008 ??嚗?code>ldr w1,[x0],#8</code> ?臬?蝵桃揣撘??? 0x1000 霈嚗?隞?X0=0x1008????蝯???賭????箏??臬?湔銋???銝?芰??唳?祈?撠梁?????偏蝡舐??喳潦?/p>
+<h2>頛撖砍漲?撅?/h2><div class="card"><p>雿? 0x2000 ?洵銝??byte ??<code>0xFF</code>??code>ldrb w0,[x1]</code> ??游?嚗0 敺?<code>0x00000000000000FF</code>嚗?code>ldrsb x0,[x1]</code> ??8 雿??? ?? ?游???64 雿?嚗0 敺?<code>0xFFFFFFFFFFFFFFFF</code>???園? byte 瘝?嚗???誘憒?閫??銝行撅?/p></div>
+<details><summary>銝??皞??撘???/summary><p><code>stp x29,x30,[sp,#-16]!</code> ?臬???SP 皜?16嚗?摮?獢???????嚗?code>mov x29,sp</code> 撱箇?獢?箸????? <code>ldp x29,x30,[sp],#16</code> ??銝血??嗥征????<code>ret</code>?撣貉???撘瑕璅⊥嚗??賢???雿喳??AC ??unwind ?瘙?霈???/p></details>
+<h2>??靘?閬?璅?</h2><p><code>adds x0,x1,x2</code> ??<code>add x0,x1,x2</code> 蝞?蝯??詨?嚗??芣????NZCV??code>cmp x0,x1</code> ?航??箸?皜?蝯?撖怠??嗆摮??<code>subs</code> ?亙?????霅舀??冽???隞嗅??臬?銝??餈?甈∠Ⅱ撖行?唳?璅??批瘚?蝬??誘??銝???撠望銝???隡潛?銵??抵?蝚艾?/p>
+<h2>?航?撖???/h2><p>?日?典??<code>bl</code> ??憿舐內 PC ??X30嚗蒂隞亥??園?閬??詨? SP 靽??嚗?蝯陌?航儘隤?嚗?蝝Ｗ????亙祝摨艾′擃?watchpoint ?賣??孵?雿?摮?嚗??賢?閮港??? C++ 霈??虫?摮?摰?32 雿??誘蝺函Ⅳ霈???閬?嚗?鞈?銝剔?雿?隞?質◤隤文?蝯陌??瘜?隞扎?/p></section><section data-depth-two="2026-08"><h2>建立 AArch64 use/def 表</h2><p><code>ldr w3,[x0,x1,lsl #2]</code> 讀 X0、X1 與四個 memory bytes，寫 X3 並清高 32 位，不更新 NZCV。<code>adds x4,x4,x5</code> 讀 X4、X5，寫 X4 與 NZCV。<code>b.eq label</code> 讀 Z flag，寫 PC。把隱含狀態列出，可避免把普通 add 誤當旗標來源。</p>
+<h2>範例一：陣列總和三輪</h2><div class="workspace"><p>假設 X0=p、X1=n，X2 保存總和、X3 為索引。迴圈以 <code>cmp x3,x1</code> 與 <code>b.hs</code> 做無號邊界，<code>ldr w4,[x0,x3,lsl #2]</code> 載入，接著累加。令 p=0x2000、n=3，元素為 2、5、9。三輪 load 位址依序 0x2000、0x2004、0x2008，W2 依序 2、7、16；X3=3 時 b.hs 成立，<code>mov w0,w2</code> 返回 16 並清 X0 高位。</p></div>
+<h2>範例二：pair 指令與 frame bytes</h2><p>假設 SP 原為 <code>0x8000</code>，<code>stp x29,x30,[sp,#-16]!</code> 先更新 SP=0x7FF0，再把兩個 64 位元值放在連續 16 bytes。小端序表示每個 X register 各自最低有效 byte 放低地址，不是將 X29、X30 bytes 交錯。<code>ldp ...,[sp],#16</code> 先讀回，再使 SP=0x8000。</p>
+<h2>範例三：頁相對地址形成</h2><p>位置無關程式常以 <code>adrp x0,symbol</code> 取得 PC-relative 頁基底，再以 <code>add x0,x0,:lo12:symbol</code> 加頁內位移。若符號地址為 0x12345678，概念上先形成 0x12345000，再加 0x678。實際編碼、relocation 與 relaxation 要查工具輸出，不能把示意拆法當固定 machine sequence。</p>
+<details><summary>範例四：條件選擇</summary><p><code>cmp w0,w1</code> 後 <code>csel w0,w0,w1,gt</code> 在有號 w0&gt;w1 時保留 w0，否則選 w1。兩個候選 register 值已存在，csel 選資料；<code>b.gt</code> 則選下一個 PC。編譯器取捨還要看 branch predictability 與 dependency。</p></details>
+<details><summary>範例五：函式指標與 blr</summary><p>直接 <code>bl label</code> 用相對目標；間接呼叫把函式地址放入 register 再 <code>blr x16</code>，同時改 X30。除錯器中 X16 的值與 maps 可支持目標判定，但 PLT 跳板、PAC 等機制可能增加中間層。</p></details>
+<h2>證據工作流</h2><ol><li>從 object header 確認 AArch64，不帶入 32-bit Arm／Thumb 規則。</li><li>反組譯同時看 opcode、X/W、load/store suffix、地址更新符號與 alias。</li><li>用 ABI 辨認 X0～X7、X30、SP 的入口角色，再用資料流驗證。</li><li>單步看 PC 加 4 或改赴目標，函式前後核對 SP 與保存區。</li><li>效能另查具體 core events；ISA trace 不直接給 cache 或亂序細節。</li></ol>
+<p class="warning">固定 4-byte instruction 不代表每條一週期；看到 X29 不保證它是 frame pointer；ret 的實際目標與控制流保護仍要檢查。</p></section><nav class="pager" aria-label="章節翻頁">
       <a href="05-x86-64組合語言.html">← x86-64</a>
       <a href="07-RISC-V組合語言.html">下一章：RISC-V →</a>
     </nav>
