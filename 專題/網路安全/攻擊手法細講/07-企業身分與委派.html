@@ -2,14 +2,38 @@
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <header class="site-header"><p class="eyebrow">07 / 目錄、票證、服務身分</p><h1>企業身分是一張信任圖</h1><p class="lede">企業目錄不只保存帳號；群組、服務、機器、委派、存取控制項與驗證協定共同形成可傳遞的權力。攻擊者常重放既有驗證材料或沿錯誤委派擴張，不必知道明文密碼。</p></header>
 <nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a href="index.html">地圖</a><a href="06-聯合身分與權杖.html">06 聯合身分</a><a aria-current="page" href="07-企業身分與委派.html">07 企業身分</a><a href="08-原生程式利用概念.html">08 原生程式</a><a href="進階名詞字典.html">進階字典</a></div></nav>
-<main class="page-shell"><p class="assumes"><strong>最小前置：</strong>Kerberos 是以票證與金鑰分配中心完成網路驗證的協定；Windows 挑戰回應驗證協定（New Technology LAN Manager, NTLM）使用密碼衍生驗證材料。兩者的驗證材料都可能在錯誤條件下被重放或轉送。</p>
-<section class="workspace"><div class="controls"><h2>切換企業身分攻擊情境</h2><div class="control"><label for="attack-scenario">信任圖上的缺口</label><select id="attack-scenario">
+<main class="page-shell">
+
+<p class="assumes"><strong>最小前置：</strong>Kerberos 是以票證與金鑰分配中心完成網路驗證的協定；Windows 挑戰回應驗證協定（New Technology LAN Manager, NTLM）使用密碼衍生驗證材料。兩者的驗證材料都可能在錯誤條件下被重放或轉送。</p>
+
+
+<section class="section"><p class="eyebrow">先建立直覺</p><h2>目錄是權限圖，票證是沿圖移動的證明</h2><p>企業目錄像把帳號、群組、機器與服務放進圖資料庫：群組成員、物件寫入權、委派與登入權都是邊。攻擊者不一定要取得最高管理員密碼；只要能修改一條高價值邊，或重用某張仍有效的票證，就可能讓正常驗證機制替他建立新工作階段。</p><p>Kerberos 票證與 NTLM 驗證材料不是明文密碼，但都可能具有可用價值。防守重點是材料能交給誰、能用多久、是否綁定通道，以及產生與使用事件是否出現在合理主機。</p></section>
+
+<section class="workspace">
+
+<div class="controls"><h2>切換企業身分攻擊情境</h2><div class="control"><label for="attack-scenario">信任圖上的缺口</label><select id="attack-scenario">
 <option data-pre="攻擊者取得可用的密碼雜湊衍生驗證材料，服務仍接受該挑戰回應協定" data-mechanism="直接使用驗證材料完成協定，不需要還原明文密碼" data-change="目標服務建立攻擊者控制的已驗證工作階段" data-impact="以原帳號權限存取可達服務" data-control="抗重放協定、停用舊驗證、憑證保護、管理帳號分層與網路限制" data-evidence="驗證協定種類、來源主機、帳號、服務、憑證存取遙測與後續行為" data-limit="此處不描述材料擷取或實際重放方法；重點是服務為何接受可重用材料">雜湊重放（Pass-the-Hash）</option>
 <option data-pre="攻擊者取得仍有效的 Kerberos 服務票證或票證授予票證" data-mechanism="把票證提交給接受它的服務，或用票證授予能力取得後續服務票證" data-change="服務建立與票證主體相符的工作階段" data-impact="身分冒用、橫向移動，範圍取決於票證類型與期限" data-control="保護票證快取、短生命週期、敏感帳號禁止委派、主機隔離與異常票證偵測" data-evidence="票證簽發／使用、加密類型、來源主機、服務主體、生命週期與帳號正常活動" data-limit="票證使用是正常機制；異常需由來源、服務與時間共同判斷">票證重放（Pass-the-Ticket）</option>
 <option data-pre="某服務被允許代表使用者向過多下游服務委派，且該服務主機失陷" data-mechanism="攻擊者借用服務保存或取得的使用者委派能力" data-change="初始服務身分轉換成多個使用者對下游服務的身分" data-impact="高價值帳號沿委派路徑被冒用" data-control="限制性委派、禁止敏感帳號委派、每服務身分、保護服務主機與盤點委派圖" data-evidence="委派設定、服務票證、來源服務、使用者、下游服務與同一時間的主機失陷證據" data-limit="委派本身可能是業務需要；風險來自範圍與服務主機可信度">過度 Kerberos 委派</option>
 <option data-pre="攻擊者能讓受害者向自己驗證，並把挑戰回應轉送到另一接受相同機制的服務" data-mechanism="在兩條連線間即時代理驗證，而不是破解秘密" data-change="第二個服務把轉送的驗證當成受害者直接登入" data-impact="在受害者權限下執行第二服務允許的動作" data-control="通道綁定、訊息簽章、服務身分、停用不必要協定與限制高權限驗證路徑" data-evidence="兩端同步驗證時間、來源不一致、協定保護缺失、第二服務動作與第一端誘發事件" data-limit="驗證轉送不同於雜湊重放；材料可能只在即時互動中有效">驗證轉送（Authentication Relay）</option>
 <option data-pre="低權限主體可修改群組、物件擁有者、金鑰憑證、服務主體或存取控制項" data-mechanism="利用目錄物件的寫入權間接取得更高權力" data-change="信任圖的邊被修改，後續驗證或授權承認新的控制關係" data-impact="持續權限提升、身分冒用或難察覺的管理權" data-control="目錄權限最小化、變更審核、保護高價值物件、基線與不可變稽核" data-evidence="誰在何時修改哪個物件／屬性、舊值與新值、後續票證和群組使用" data-limit="合法委派管理也會改目錄；必須與變更單與責任人對照">目錄存取控制濫用</option>
 <option data-pre="服務帳號具有長效秘密、廣泛權限或可互動登入，多台主機共享" data-mechanism="任一使用點外洩後，攻擊者在其他系統重用同一服務身分" data-change="一台主機的失陷擴散成跨服務的可信身分" data-impact="橫向移動、資料存取與長期潛伏" data-control="受管服務身分、短效憑證、禁止互動登入、每工作負載唯一身分與輪替" data-evidence="服務帳號登入主機分布、憑證生命週期、非預期互動登入與權限使用" data-limit="共享身分使歸因困難；修正要先盤點所有相依服務避免中斷">服務帳號秘密重用</option>
-</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div></section>
-<section class="section"><h2>把企業目錄當圖，而不是帳號表</h2><p>節點是使用者、群組、機器、服務與目錄物件；邊是成員資格、管理權、委派、登入能力與可達性。真正的爆炸半徑取決於攻擊者能沿哪些邊改變狀態，而不是帳號名稱看起來多重要。</p></section>
+</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div>
+
+</section>
+
+
+
+
+<section class="section"><h2>如何從圖找真正的擴張路徑</h2><p>從已知受控主體出發，逐邊標註需要的前置與產生的新能力：群組成員資格給資源權限；物件寫入權可能改變憑證或擁有者；委派讓服務代表使用者。只有可達且條件成立的邊，才屬於有效攻擊路徑。</p><div class="grid"><div class="card"><h3>票證生命週期例子</h3><p>假設服務票證在 09:00 簽發、有效 8 小時，理論到 17:00 前可被服務接受。若 11:00 停用帳號，但服務未即時查撤銷狀態，既有票證是否仍可用取決於實作與政策；因此處置不能只改密碼，還要處理票證、工作階段與金鑰。</p></div><div class="card"><h3>證據拼接</h3><p>目錄變更記錄說明哪條邊被改；網域控制站票證事件說明簽發；成員主機登入與程序事件說明使用結果。任一來源單獨都不能重建完整路徑，且時鐘偏差與事件轉送延遲需校正。</p></div></div><ul><li><strong>重放與轉送：</strong>重放使用已取得材料；轉送在兩端之間即時代理驗證互動。</li><li><strong>票證授予票證與服務票證：</strong>前者可再取得服務票證；後者通常只對特定服務有效，爆炸半徑不同。</li><li><strong>帳號重要與路徑重要：</strong>普通帳號若能寫高價值目錄物件，實際能力可能高於名稱顯示。</li></ul></section>
+
+<section class="section">
+
+<h2>把企業目錄當圖，而不是帳號表</h2><p>節點是使用者、群組、機器、服務與目錄物件；邊是成員資格、管理權、委派、登入能力與可達性。真正的爆炸半徑取決於攻擊者能沿哪些邊改變狀態，而不是帳號名稱看起來多重要。</p>
+
+</section>
+
+
+
+
 <div class="pager"><a href="06-聯合身分與權杖.html">← 上一章</a><a href="08-原生程式利用概念.html">下一章：原生程式利用概念 →</a></div></main><footer class="site-footer"><span>07 企業身分與委派</span><a href="進階名詞字典.html">查進階字典</a></footer></body></html>

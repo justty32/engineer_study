@@ -2,14 +2,38 @@
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <header class="site-header"><p class="eyebrow">12 / 建置、部署、指揮控制、資料流</p><h1>真正的事件是一條跨階段鏈</h1><p class="lede">進階攻擊不會停在漏洞利用。攻擊者可能沿開發與建置信任進入，也可能在第一個立足點後借用合法工具、建立外部控制通道、集結資料並嘗試外傳。防守要在每次狀態轉換留下可關聯證據。</p></header>
 <nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a href="index.html">地圖</a><a href="11-網路基礎設施.html">11 網路</a><a aria-current="page" href="12-供應鏈與失陷後活動.html">12 供應鏈</a><a href="進階名詞字典.html">進階字典</a></div></nav>
-<main class="page-shell"><p class="assumes"><strong>安全邊界：</strong>本章描述防守者要辨識的機制與證據，不提供植入、持久化、規避、指揮控制或外傳的實作方式。</p>
-<section class="workspace"><div class="controls"><h2>切換完整失陷鏈上的階段</h2><div class="control"><label for="attack-scenario">信任被借用的位置</label><select id="attack-scenario">
+<main class="page-shell">
+
+<p class="assumes"><strong>安全邊界：</strong>本章描述防守者要辨識的機制與證據，不提供植入、持久化、規避、指揮控制或外傳的實作方式。</p>
+
+
+<section class="section"><p class="eyebrow">先建立直覺</p><h2>事件不是惡意檔案清單，而是一連串能力轉移</h2><p>供應鏈攻擊把信任放大器放在建置或發布之前，使一個上游變更隨正常交付到達許多下游；失陷後活動則把單一主機能力逐步轉成遠端控制、更多資料權限與跨邊界傳輸。兩者都要追問每一步「誰得到什麼新能力」。</p><p>合法工具、雲端服務或正常協定可以承載惡意意圖，僅以檔名、簽章或目的網域分類會漏判。判斷必須結合主體、父子程序、核准工作、資料量、目的地與前後狀態。</p></section>
+
+<section class="workspace">
+
+<div class="controls"><h2>切換完整失陷鏈上的階段</h2><div class="control"><label for="attack-scenario">信任被借用的位置</label><select id="attack-scenario">
 <option data-pre="套件管理器同时搜尋公有與內部來源，名稱、版本或來源優先序未固定" data-mechanism="攻擊者在較高優先來源發布同名或更高版本套件，建置自動選到錯誤來源" data-change="相依圖中的可信內部元件被外部成品替換" data-impact="惡意程式碼進入建置、測試或發布成品" data-control="固定來源與版本、私有命名空間、鎖定檔、成品雜湊、來源政策與隔離建置" data-evidence="解析來源、套件版本、下載網址、鎖定檔差異、建置時間與成品材料清單" data-limit="相依混淆不同於名稱拼錯；核心是解析器的來源與優先規則">相依套件混淆</option>
 <option data-pre="開發者依名稱搜尋或手動加入套件，名稱與可信專案非常相似" data-mechanism="利用人類辨識錯誤讓錯誤套件被主動安裝" data-change="開發或建置環境開始執行非預期供應者的程式" data-impact="憑證、原始碼、建置成品或開發者環境失陷" data-control="允許清單、發布者驗證、套件材料審查、依賴代理與安全預覽" data-evidence="加入相依提交、套件名稱／發布者、安裝生命週期事件、網路與檔案變更" data-limit="名稱相似不自動等於惡意；仍需分析發布者、內容與行為">套件名稱仿冒</option>
 <option data-pre="建置執行者、工作流程或快取有寫入權，審查與生產簽章未隔離" data-mechanism="竄改建置腳本、工具鏈、快取或環境，在不改主原始碼的情況下改變成品" data-change="原始碼審查結果與實際發布位元組不再一致" data-impact="大量使用者取得被植入且可能帶合法簽章的成品" data-control="可重現建置、短效建置身分、隔離簽章、來源證明、雙人核准與乾淨重建" data-evidence="工作流程版本、執行者身分、工具鏈／快取雜湊、成品差異、簽章與來源證明" data-limit="來源程式碼乾淨不能排除建置鏈失陷；需比較獨立重建成品">建置流程植入</option>
 <option data-pre="攻擊者已有主機立足點，系統內建管理工具與腳本環境具有高能力且受信任" data-mechanism="借用正常管理介面完成探索、程序啟動、設定變更或遠端管理" data-change="惡意意圖包在合法工具與簽章程序內執行" data-impact="降低以檔名／簽章為主的偵測效果並擴大控制" data-control="行為允許清單、管理工具範圍、命令與父子程序遙測、分層管理帳號與應用控制" data-evidence="父子程序、命令列摘要、呼叫使用者、遠端端點、腳本記錄與設定變更" data-limit="合法內建工具濫用不是工具本身惡意；告警必須結合身分、時間與工作內容">合法內建工具濫用</option>
 <option data-pre="受控程序能對外建立看似正常的網路會話，出口政策與應用語意監測不足" data-mechanism="以外部服務交換任務、狀態或少量控制資料，維持攻擊者對內部程序的遠端影響" data-change="孤立的主機失陷變成可由外部持續控制的工作階段" data-impact="後續探索、資料存取與多階段活動得以協調" data-control="出口目的與服務身分、代理強制、名稱／流量基線、端點程序關聯、隔離與撤銷" data-evidence="指揮控制（Command and Control, C2）相關程序、目的名稱、週期、資料量、工作階段與端點行為" data-limit="固定週期與雲端目的也可能是合法遙測；需證明與受控程序及後續行為相連">外部指揮控制通道</option>
 <option data-pre="受控主體能讀取多個資料來源，並可在本機或雲端建立暫存集合" data-mechanism="先搜尋、壓縮、重新編碼或集中資料，再由允許通道移出" data-change="分散資料變成攻擊者可一次傳輸的集結物，接著跨越資料邊界" data-impact="敏感資料外洩、合規與營運風險" data-control="最小資料權限、查詢／匯出限制、資料分類、出口控制、異常量與目的偵測、快速撤銷" data-evidence="資料查詢、讀取量、暫存檔、程序、目的通道、傳輸量與身分時間線" data-limit="備份、報表與資料科學也會大量讀取；需對照核准目的、目的地與生命週期">資料集結與外傳</option>
-</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div></section>
-<section class="section"><h2>把整起事件寫成狀態機</h2><ol class="causal"><li>初始進入：哪個供應鏈、身分、應用或主機邊界先失守。</li><li>執行與擴張：哪個程序與安全主體取得什麼新能力。</li><li>持續外部影響：哪些網路工作階段讓攻擊者能繼續指揮。</li><li>資料影響：哪些資料被搜尋、集結、修改、加密或跨界。</li><li>回應與復原：撤銷哪些信任、重建哪些成品，以及如何證明環境已乾淨。</li></ol></section>
+</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div>
+
+</section>
+
+
+
+
+<section class="section"><h2>互動實驗：每一階段都要找狀態轉換</h2><p>切換手法後，不要只背名稱。問四件事：哪個信任先被借用、哪個主體取得新能力、哪個系統狀態因此改變、哪個獨立資料源能驗證。若只有「看到可疑工具」，卻沒有後續狀態或資料影響，結論應停在待查假說。</p><div class="grid"><div class="card"><h3>供應鏈完整性例子</h3><p>若原始碼提交雜湊為 S、乾淨環境建置成品雜湊為 H<sub>1</sub>、發布成品為 H<sub>2</sub>，可重現建置假設下應有 H<sub>1</sub> = H<sub>2</sub>。若不相等，只能證明位元組或建置條件不同；還要比較工具鏈、時間戳、相依與環境，不能直接歸因為惡意植入。</p></div><div class="card"><h3>資料影響的證據</h3><p>查詢稽核證明哪些資料被讀；檔案與程序遙測證明是否集結；出口流量證明向何處傳了多少位元組。加密流量大小不能證明內容；必須以資料分類、程序身分、目的端控制權與雲端分享記錄補強。</p></div></div><ul><li><strong>相依混淆與名稱仿冒：</strong>前者利用解析優先規則；後者利用人類選錯相似名稱。</li><li><strong>SBOM 與來源證明：</strong>SBOM 列出成分；來源證明描述如何建置。兩者都不是成品安全的保證書。</li><li><strong>C2 與合法遙測：</strong>週期性、小流量、雲端目的都可能正常；要看程序、身分、核准用途與後續動作。</li><li><strong>集結與外傳：</strong>集結發生在邊界內的整理；外傳是資料跨出授權邊界，可能先後發生也可能沒有集結。</li></ul></section>
+
+<section class="section">
+
+<h2>把整起事件寫成狀態機</h2><ol class="causal"><li>初始進入：哪個供應鏈、身分、應用或主機邊界先失守。</li><li>執行與擴張：哪個程序與安全主體取得什麼新能力。</li><li>持續外部影響：哪些網路工作階段讓攻擊者能繼續指揮。</li><li>資料影響：哪些資料被搜尋、集結、修改、加密或跨界。</li><li>回應與復原：撤銷哪些信任、重建哪些成品，以及如何證明環境已乾淨。</li></ol>
+
+</section>
+
+
+
+
 <div class="pager"><a href="11-網路基礎設施.html">← 上一章</a><a href="進階名詞字典.html">完成主線：進階字典 →</a></div></main><footer class="site-footer"><span>12 供應鏈與失陷後活動</span><a href="../互動課程/07-封包與日誌證據.html">回主課：證據整合</a></footer></body></html>

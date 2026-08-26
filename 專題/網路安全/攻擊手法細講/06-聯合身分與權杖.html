@@ -2,14 +2,38 @@
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <header class="site-header"><p class="eyebrow">06 / 授權伺服器、識別提供者、依賴方</p><h1>權杖有效，不代表適用於這裡</h1><p class="lede">聯合身分把驗證交給識別提供者，再用有簽章的權杖或授權碼把結果交給應用。進階攻擊聚焦於簽發者、受眾、重新導向、工作階段與授權意圖是否被正確綁在一起。</p></header>
 <nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a href="index.html">地圖</a><a href="05-瀏覽器與Web邊界.html">05 Web</a><a aria-current="page" href="06-聯合身分與權杖.html">06 聯合身分</a><a href="07-企業身分與委派.html">07 企業身分</a><a href="進階名詞字典.html">進階字典</a></div></nav>
-<main class="page-shell"><p class="assumes"><strong>最小前置：</strong>開放授權第二版（OAuth 2.0）主要委派「可做什麼」；開放識別連線（OpenID Connect, OIDC）在其上加入「登入者是誰」。JSON 網頁權杖（JSON Web Token, JWT）是一種權杖格式，不等於完整登入協定。</p>
-<section class="workspace"><div class="controls"><h2>切換權杖與聯合流程情境</h2><div class="control"><label for="attack-scenario">信任綁定缺口</label><select id="attack-scenario">
+<main class="page-shell">
+
+<p class="assumes"><strong>最小前置：</strong>開放授權第二版（OAuth 2.0）主要委派「可做什麼」；開放識別連線（OpenID Connect, OIDC）在其上加入「登入者是誰」。JSON 網頁權杖（JSON Web Token, JWT）是一種權杖格式，不等於完整登入協定。</p>
+
+
+<section class="section"><p class="eyebrow">先建立直覺</p><h2>權杖是有上下文的型別，不是萬用布林值</h2><p>把 JWT 想成帶簽章的結構化物件：簽章只保證內容由某把金鑰保護，接收端仍要做型別檢查。簽發者（issuer）像命名空間、受眾（audience）像目標介面、範圍（scope）像能力集合，任何一項綁錯都可能把「在 A 有效」誤當成「在 B 可用」。</p><p>比喻的限制是權杖會過期、可撤銷，且授權碼與權杖扮演不同角色。瀏覽器重新導向只是運送流程的一環；真正安全性來自原請求、客戶端、回呼位址與兌換者之間的密碼學及狀態綁定。</p></section>
+
+<section class="workspace">
+
+<div class="controls"><h2>切換權杖與聯合流程情境</h2><div class="control"><label for="attack-scenario">信任綁定缺口</label><select id="attack-scenario">
 <option data-pre="應用允許過寬或可被間接操控的重新導向位址" data-mechanism="授權伺服器把授權結果送到攻擊者可讀的位置" data-change="原本應交給合法客戶端的授權碼或權杖跨越到另一控制域" data-impact="受害者授權被攻擊者客戶端兌換或使用" data-control="精確登記重新導向位址、授權碼交換綁定、短效單次碼與流程狀態驗證" data-evidence="授權請求、登記值、實際重新導向、授權碼兌換客戶端與來源裝置" data-limit="重新導向本身是正常流程；問題是結果是否綁定原客戶端與原請求">重新導向位址操控</option>
 <option data-pre="資源伺服器只驗證簽章，未驗證簽發者、受眾、權杖類型或用途" data-mechanism="把對另一服務有效的權杖提交到錯誤服務" data-change="一個信任域產生的授權語意被另一信任域錯誤接受" data-impact="跨服務身分冒用或權限擴張" data-control="固定簽發者與受眾、明確權杖類型、最小範圍、每服務驗證政策" data-evidence="權杖宣告、簽發金鑰、受眾、資源端驗證分支與存取結果" data-limit="簽章正確只證明某金鑰簽過；不證明這個接收者應接受">權杖替換與受眾混淆</option>
 <option data-pre="客戶端無法證明兌換授權碼者就是原本發起流程的同一實體" data-mechanism="攻擊者攔截短效授權碼並搶先兌換" data-change="授權碼的一次性價值被錯誤客戶端換成權杖" data-impact="工作階段或委派權限遭接管" data-control="具密碼學證明的授權碼交換、短效單次使用、傳輸保護與狀態綁定" data-evidence="授權碼簽發／兌換時間、客戶端識別、證明驗證、來源裝置與重複兌換" data-limit="不得在日誌記錄完整授權碼；用雜湊或關聯識別碼追蹤">授權碼攔截</option>
 <option data-pre="使用者可在另一裝置輸入短碼核准登入，介面未充分顯示請求裝置與用途" data-mechanism="攻擊者誘導受害者替攻擊者的裝置流程完成核准" data-change="攻擊者裝置取得受害者身分或授權" data-impact="帳號冒用且密碼可能完全未外洩" data-control="清楚顯示裝置與交易、禁止要求代輸短碼、風險偵測、撤銷與使用者教育" data-evidence="裝置碼建立端、使用者核准端、裝置資訊、位置、核准後工作階段" data-limit="合法電視與命令列登入也使用此流程；需關聯發起與核准情境">裝置授權碼釣魚</option>
 <option data-pre="租戶允許使用者自行同意第三方應用取得資料範圍" data-mechanism="惡意應用用看似合理功能誘導使用者授予長期介面權限" data-change="第三方應用取得可持續使用的委派權杖" data-impact="郵件、檔案、聯絡人或組織資料被持續讀取" data-control="限制高風險同意、管理員審查、發布者驗證、最小範圍、定期盤點與撤銷" data-evidence="應用登記、同意者、要求範圍、權杖使用、資料介面呼叫與發布者" data-limit="使用者主動同意不等於風險已被理解或組織已授權">同意釣魚</option>
 <option data-pre="依賴方動態取得簽章金鑰或聯合中繼資料，來源與快取更新缺少固定信任" data-mechanism="讓驗證者使用攻擊者控制或錯誤租戶的金鑰集合" data-change="原本不可信的權杖取得驗證成功狀態" data-impact="任意身分或角色宣告被接受" data-control="固定簽發者、中繼資料來源、金鑰識別規則、輪替驗證與失敗關閉" data-evidence="中繼資料網址、金鑰集合版本、簽發者、金鑰識別碼、快取更新與驗證結果" data-limit="合法金鑰輪替會造成變更；需驗證更新仍在原信任根下">簽發者與金鑰混淆</option>
-</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div></section>
-<section class="section"><h2>驗證權杖的最小閉包</h2><ol class="causal"><li>驗證密碼學簽章與允許的演算法。</li><li>固定並驗證簽發者、受眾、權杖類型、時間與流程關聯值。</li><li>將範圍與資源端的實際動作重新授權，不把權杖宣告直接當資料庫權限。</li><li>記錄權杖識別與決策，但不記錄可重放的完整秘密。</li></ol></section>
+</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div>
+
+</section>
+
+
+
+
+<section class="section"><h2>把聯合登入還原成狀態機</h2><p>客戶端建立請求狀態 → 瀏覽器前往授權伺服器 → 使用者完成驗證與同意 → 短效授權碼回到精確登記的位址 → 原客戶端提出 PKCE 證明並兌換 → 資源伺服器重新驗證權杖與動作。任何一步失去「這是同一流程」的關聯，便可能發生替換或攔截。</p><div class="grid"><div class="card"><h3>時間條件的具體例子</h3><p>假設權杖簽發時間 iat = 10:00、到期時間 exp = 10:15，驗證端允許時鐘偏差 δ = 60 秒。簡化接受窗約為 09:59 至 10:16；在 10:17 收到就應拒絕。時間格式與單位由協定定義，且「時間有效」仍不代表簽發者、受眾與用途正確。</p></div><div class="card"><h3>安全記錄</h3><p>記錄簽發者、受眾、客戶端、權杖識別碼的摘要、驗證結果與拒絕原因；不要記錄完整授權碼、存取權杖或更新權杖。稽核能證明哪個服務做了接受決策，不能直接證明瀏覽器前的人是帳號本人。</p></div></div><ul><li><strong>OAuth 2.0 與 OIDC：</strong>前者描述委派授權；後者加入登入身分。把存取權杖當識別權杖會混淆受眾與用途。</li><li><strong>JWT 與工作階段：</strong>JWT 是格式；工作階段是接收端承認的安全狀態，未必使用 JWT。</li><li><strong>簽章與加密：</strong>簽章保護來源與完整性，通常不隱藏宣告；敏感資訊不應因「有簽章」就直接放入權杖。</li></ul></section>
+
+<section class="section">
+
+<h2>驗證權杖的最小閉包</h2><ol class="causal"><li>驗證密碼學簽章與允許的演算法。</li><li>固定並驗證簽發者、受眾、權杖類型、時間與流程關聯值。</li><li>將範圍與資源端的實際動作重新授權，不把權杖宣告直接當資料庫權限。</li><li>記錄權杖識別與決策，但不記錄可重放的完整秘密。</li></ol>
+
+</section>
+
+
+
+
 <div class="pager"><a href="05-瀏覽器與Web邊界.html">← 上一章</a><a href="07-企業身分與委派.html">下一章：企業身分與委派 →</a></div></main><footer class="site-footer"><span>06 聯合身分與權杖</span><a href="進階名詞字典.html">查進階字典</a></footer></body></html>

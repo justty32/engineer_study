@@ -2,14 +2,38 @@
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <header class="site-header"><p class="eyebrow">08 / 記憶體錯誤、控制流、平台緩解</p><h1>從錯誤到利用，中間還有一條條件鏈</h1><p class="lede">崩潰不是遠端程式執行的同義詞。攻擊者需要控制輸入、影響關鍵資料或控制流、處理位址不確定性、跨過不可執行記憶體與控制流保護，最後還受程序權限與隔離限制。</p></header>
 <nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a href="index.html">地圖</a><a href="07-企業身分與委派.html">07 企業身分</a><a aria-current="page" href="08-原生程式利用概念.html">08 原生程式</a><a href="09-密碼協定與側通道.html">09 密碼協定</a><a href="進階名詞字典.html">進階字典</a></div></nav>
-<main class="page-shell"><p class="assumes"><strong>先修：</strong><a href="../../逆向工程/互動課程/index.html">逆向工程零基礎課程</a>的位址、暫存器、呼叫慣例、控制流與載入模型。本頁只解釋緩解與證據，不教構造利用鏈。</p>
-<section class="workspace"><div class="controls"><h2>切換原生程式攻擊條件</h2><div class="control"><label for="attack-scenario">漏洞與緩解的交互作用</label><select id="attack-scenario">
+<main class="page-shell">
+
+<p class="assumes"><strong>先修：</strong><a href="../../逆向工程/互動課程/index.html">逆向工程零基礎課程</a>的位址、暫存器、呼叫慣例、控制流與載入模型。本頁只解釋緩解與證據，不教構造利用鏈。</p>
+
+
+<section class="section"><p class="eyebrow">先建立直覺</p><h2>漏洞是一個錯誤狀態，利用是一條可重複的轉換路徑</h2><p>程式崩潰像型別系統在執行期破功：你知道某個不變量被破壞，卻還不知道攻擊者能否選擇被覆寫的值、位址與時機。從越界寫入到控制執行，還要跨過配置不確定性、不可執行頁、控制流保護、沙箱與程序權限。</p><p>所以評估時要逐條列條件，而不是用「可崩潰」直接推論「可遠端執行」。同一漏洞在不同編譯選項、處理器架構、配置器與程序權限下，影響可能完全不同。</p></section>
+
+<section class="workspace">
+
+<div class="controls"><h2>切換原生程式攻擊條件</h2><div class="control"><label for="attack-scenario">漏洞與緩解的交互作用</label><select id="attack-scenario">
 <option data-pre="長度或索引檢查錯誤，攻擊者可控制寫入內容與相對位置" data-mechanism="寫入超出物件邊界，破壞鄰近資料、指標或控制資訊" data-change="程序記憶體中的資料結構或控制流目標偏離原設計" data-impact="崩潰、資料竄改、資訊洩漏或在條件充分時控制執行" data-control="安全容器、邊界檢查、模糊測試、消毒器、隔離、不可執行記憶體與控制流保護" data-evidence="崩潰轉儲、錯誤位址、受損物件、輸入長度、呼叫堆疊與平台緩解狀態" data-limit="可控崩潰仍不等於可控執行；必須逐一證明利用條件">越界寫入</option>
 <option data-pre="物件釋放後仍有別名可被使用，攻擊者能影響同一區域的重新配置" data-mechanism="舊指標把新物件內容當成原型別或原物件使用" data-change="物件身分、型別假設與生命週期失去一致性" data-impact="錯誤方法呼叫、資料破壞、資訊洩漏或控制流偏離" data-control="擁有權模型、生命週期分析、隔離配置器、延遲重用、記憶體標記與測試" data-evidence="配置／釋放時間線、位址重用、物件型別、執行緒、崩潰位置與堆積遙測" data-limit="競爭與配置器行為讓重現不穩定；需保存完整時間線">釋放後使用（Use-After-Free）</option>
 <option data-pre="程式把攻擊者可控字串當格式描述，而非單純資料" data-mechanism="格式解譯器依控制符讀取額外參數或寫入狀態" data-change="原本的輸出操作變成非預期記憶體讀寫" data-impact="資訊洩漏、崩潰或記憶體狀態改變" data-control="固定格式字串、型別安全格式介面、編譯器警告與低權限執行" data-evidence="呼叫點、格式參數來源、實際參數數量、輸出差異與崩潰轉儲" data-limit="本課不列控制符或利用方式；核心是資料是否進入格式控制位置">格式字串錯誤</option>
 <option data-pre="攻擊者能改變控制流，但資料頁面不可執行或程式碼注入受阻" data-mechanism="重用既有程式中的短指令序列，以既有回傳或間接轉移串接效果" data-change="控制流沿非原始設計的既有程式片段移動" data-impact="在程序既有權限內組合非預期行為" data-control="控制流完整性、影子堆疊、位址隨機化、最小程式碼面與沙箱" data-evidence="異常回傳鏈、堆疊不一致、間接分支目標、控制流保護例外與模組位址" data-limit="回傳導向程式設計（Return-Oriented Programming, ROP）是概念；此處不建立程式片段鏈">程式片段重用／回傳導向程式設計</option>
 <option data-pre="位址空間配置隨機化使模組、堆積或堆疊位置不固定，但另一弱點洩漏指標或位址" data-mechanism="先取得執行期位址，再把相對偏移換算成可用目標" data-change="原本不可預測的記憶體布局部分變成已知" data-impact="降低其他記憶體破壞緩解的有效性" data-control="修正資訊洩漏、減少指標暴露、強化隨機化、隔離秘密與控制流保護" data-evidence="回應中的位址樣式、崩潰／記憶體讀取、模組基底、跨請求穩定性" data-limit="位址空間配置隨機化（Address Space Layout Randomization, ASLR）不是單獨保證；洩漏也需證明能到達攻擊者">資訊洩漏削弱位址隨機化</option>
 <option data-pre="程式的型別標籤、物件布局或間接呼叫目標可被不可信狀態影響" data-mechanism="以錯誤型別解讀物件，使欄位與函式指標語意錯位" data-change="同一位元組被當成不同資料結構，導致錯誤存取或呼叫" data-impact="資料破壞、資訊洩漏、崩潰或控制流偏離" data-control="型別安全、封裝標籤、驗證轉型、控制流完整性與物件生命週期測試" data-evidence="物件配置點、型別標籤、虛擬呼叫目標、控制流保護與崩潰轉儲" data-limit="優化與多型會產生複雜間接呼叫；複雜不等於型別混淆">型別混淆</option>
-</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>真實機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div></section>
-<section class="section"><h2>緩解不是互相替代</h2><div class="grid"><div class="card"><h3>不可執行記憶體</h3><p>資料執行防護（Data Execution Prevention, DEP）或不可執行頁面阻止把資料頁直接當指令，但不阻止重用既有可執行程式碼。</p></div><div class="card"><h3>控制流完整性</h3><p>控制流完整性（Control-Flow Integrity, CFI）限制間接轉移可到達的目標集合；精度、平台涵蓋與相容性決定實際保證。</p></div><div class="card"><h3>隔離與最小權限</h3><p>即使程序控制流失守，沙箱、權限、系統呼叫限制與服務分離仍能縮小可改變的系統狀態。</p></div></div></section>
+</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>真實機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div>
+
+</section>
+
+
+
+
+<section class="section"><h2>把「可利用」拆成可驗證條件</h2><ol class="causal"><li>輸入可從攻擊者所在邊界到達錯誤操作。</li><li>錯誤可重現，且攻擊者能控制內容、相對位置或生命週期。</li><li>資訊洩漏或其他條件足以處理位址不確定性。</li><li>控制流與頁面權限緩解沒有阻止所需轉移。</li><li>最後取得的仍只是該程序在沙箱內的權限。</li></ol><div class="grid"><div class="card"><h3>位址算例只說明關係</h3><p>若模組執行期基底 B = 0x10000000，已知某函式相對偏移 Δ = 0x2500，則位址 A = B + Δ = 0x10002500。這只示範基底與偏移的算術；真實 ASLR 的熵、洩漏可達性、架構與每次執行布局都會限制推論，本課不建立利用鏈。</p></div><div class="card"><h3>工具能證明什麼</h3><p>崩潰轉儲可保存暫存器、堆疊與模組；AddressSanitizer 類工具可定位越界或釋放後使用；控制流保護事件可顯示轉移被阻擋。它們不能單獨證明遠端攻擊者能穩定到達同一狀態。</p></div></div><p class="warning"><strong>不要混淆：</strong>DEP 管頁面是否可執行；ASLR 增加位址不確定性；CFI 限制間接轉移目標；沙箱限制成功控制程序後可碰的外部資源。它們互補，不互相替代，也都不修正原始記憶體錯誤。</p></section>
+
+<section class="section">
+
+<h2>緩解不是互相替代</h2><div class="grid"><div class="card"><h3>不可執行記憶體</h3><p>資料執行防護（Data Execution Prevention, DEP）或不可執行頁面阻止把資料頁直接當指令，但不阻止重用既有可執行程式碼。</p></div><div class="card"><h3>控制流完整性</h3><p>控制流完整性（Control-Flow Integrity, CFI）限制間接轉移可到達的目標集合；精度、平台涵蓋與相容性決定實際保證。</p></div><div class="card"><h3>隔離與最小權限</h3><p>即使程序控制流失守，沙箱、權限、系統呼叫限制與服務分離仍能縮小可改變的系統狀態。</p></div></div>
+
+</section>
+
+
+
+
 <div class="pager"><a href="07-企業身分與委派.html">← 上一章</a><a href="09-密碼協定與側通道.html">下一章：密碼協定與側通道 →</a></div></main><footer class="site-footer"><span>08 原生程式利用概念</span><a href="進階名詞字典.html">查進階字典</a></footer></body></html>

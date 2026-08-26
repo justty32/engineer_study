@@ -2,14 +2,38 @@
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <header class="site-header"><p class="eyebrow">10 / 工作負載身分、隔離、控制面</p><h1>雲端邊界不是一條防火牆</h1><p class="lede">雲端資源由介面與控制平面建立；工作負載以短期身分呼叫其他服務；容器共享核心但隔離名稱空間與資源。攻擊者會找能把資料平面輸入轉成控制平面權限的跨層路徑。</p></header>
 <nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a href="index.html">地圖</a><a href="09-密碼協定與側通道.html">09 密碼</a><a aria-current="page" href="10-雲端容器與控制平面.html">10 雲端</a><a href="11-網路基礎設施.html">11 網路</a><a href="進階名詞字典.html">進階字典</a></div></nav>
-<main class="page-shell"><p class="assumes"><strong>最小前置：</strong>身分與存取管理（Identity and Access Management, IAM）決定哪個主體能對哪些雲端資源執行哪些動作；控制平面改設定，資料平面承載實際工作與資料。</p>
-<section class="workspace"><div class="controls"><h2>切換雲端與容器情境</h2><div class="control"><label for="attack-scenario">跨層缺口</label><select id="attack-scenario">
+<main class="page-shell">
+
+<p class="assumes"><strong>最小前置：</strong>身分與存取管理（Identity and Access Management, IAM）決定哪個主體能對哪些雲端資源執行哪些動作；控制平面改設定，資料平面承載實際工作與資料。</p>
+
+
+<section class="section"><p class="eyebrow">先建立直覺</p><h2>在雲端，權限是可組合的 API 能力</h2><p>傳統主機常問「誰能登入」；雲端更常問「哪個主體能呼叫哪個控制平面動作，作用在哪些資源」。一個看似低風險的建立或委派權，可能經由新角色、工作負載或掛載轉成讀取秘密與修改整個環境的能力。</p><p>容器則共享主機核心，主要靠名稱空間（namespace）、控制群組（control group, cgroup）、能力與系統呼叫政策隔離。它不是較輕的虛擬機器；隔離邊界是否成立，取決於核心、執行環境與實際設定。</p></section>
+
+<section class="workspace">
+
+<div class="controls"><h2>切換雲端與容器情境</h2><div class="control"><label for="attack-scenario">跨層缺口</label><select id="attack-scenario">
 <option data-pre="工作負載能連到本機中繼資料服務，應用又存在伺服器端請求偽造" data-mechanism="攻擊者借應用的網路位置讀取工作負載短期憑證或執行環境資訊" data-change="不可信外部輸入取得原本只給工作負載的雲端身分材料" data-impact="以工作負載角色呼叫雲端介面，範圍取決於其權限" data-control="中繼資料工作階段保護、網路阻擋、目的允許清單、最小角色與短效憑證" data-evidence="應用取址、目的特殊位址、中繼資料請求、憑證簽發、後續雲端介面呼叫" data-limit="不同雲端中繼資料機制不同；不要把某家位址或版本規則硬套到所有平台">中繼資料服務憑證外洩</option>
 <option data-pre="某服務被授權替呼叫者操作資源，但未把呼叫者、目標資源與允許關係綁定" data-mechanism="攻擊者誘使高權限服務替自己操作原本無權存取的第三方資源" data-change="高權限服務的身分被借用來跨越原授權邊界" data-impact="跨帳戶資料讀寫、金鑰使用或資源變更" data-control="驗證外部識別值、資源所有權、每租戶隔離、最小服務權限與明確委派" data-evidence="原呼叫者、代理服務身分、目標資源擁有者、外部識別值與雲端稽核鏈" data-limit="混淆代理人（confused deputy）問題不是服務被破解，而是它忠實執行了錯誤委派">混淆代理人</option>
 <option data-pre="角色允許萬用資源、過多動作、跨環境信任或不受限的建立角色／委派" data-mechanism="攻擊者由一個看似低風險權限組合出高影響操作" data-change="有效權限超過角色名稱或單條政策表面含義" data-impact="權限提升、持久資源控制、資料存取或關閉安全記錄" data-control="權限邊界、拒絕規則、最小資源、組合路徑分析、使用量基線與變更審查" data-evidence="所有附加／內嵌政策、信任政策、條件、實際介面呼叫與政策模擬" data-limit="單看一條允許規則會漏掉組合；也要考慮明確拒絕與資源政策">雲端權限組合提升</option>
 <option data-pre="容器可存取高權限核心介面、主機路徑、裝置、管理通訊端或弱點核心" data-mechanism="由容器內程序跨過名稱空間／能力邊界，取得主機或其他工作負載控制" data-change="原本受限的容器安全主體變成主機層或鄰近工作負載可影響主體" data-impact="跨容器資料、節點控制、秘密存取與叢集擴張" data-control="非特權容器、移除能力、唯讀檔案系統、系統呼叫過濾、強制政策、修補核心與節點隔離" data-evidence="容器設定、能力、掛載、系統呼叫、核心事件、節點程序與控制平面稽核" data-limit="容器不是虛擬機器；隔離保證取決於核心與執行環境設定">容器逃逸</option>
 <option data-pre="工作負載可讀取同名空間或節點上的秘密，或秘密以環境變數／映像／日誌暴露" data-mechanism="攻擊者由一個受控工作負載取得其他服務憑證與介面權杖" data-change="一個服務失陷轉換成多個服務身分" data-impact="橫向移動、資料存取與控制平面操作" data-control="每工作負載身分、秘密最小掛載、短效輪替、封存加密、禁止寫入映像與日誌" data-evidence="秘密讀取稽核、掛載清單、工作負載身分、權杖受眾與後續服務呼叫" data-limit="秘密存在於程序記憶體可能是必要的；重點是哪些主體能讀、多久有效、能做什麼">工作負載秘密擴散</option>
 <option data-pre="叢集角色型存取控制或管理介面讓一般主體建立高權限工作負載、綁定角色或修改驗證設定" data-mechanism="把建立資源的權限轉換為掛載秘密、使用節點或變更整個叢集政策" data-change="命名空間層權限沿控制平面物件升成叢集層權限" data-impact="全叢集工作負載、秘密、網路與政策遭控制" data-control="拆分建立／綁定／代理權限、准入政策、敏感資源保護、管理面隔離與稽核" data-evidence="角色型存取控制（Role-Based Access Control, RBAC）規則、物件建立、角色綁定、准入結果與介面稽核" data-limit="資源建立權的間接能力常比動詞名稱更大；需分析可建立物件的效果">控制平面權限提升</option>
-</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div></section>
-<section class="section"><h2>雲端事件要串三條時間線</h2><ol class="causal"><li>應用／工作負載內發生了什麼輸入與程序行為。</li><li>哪個工作負載身分取得、輪替並使用短期憑證。</li><li>控制平面以該身分對哪些資源做了什麼，政策為何允許。</li></ol></section>
+</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div>
+
+</section>
+
+
+
+
+<section class="section"><h2>互動實驗：沿資料面追到控制面</h2><p>選一個情境後，依序標出外部輸入、工作負載程序、工作負載身分、IAM 決策與控制平面資源。雲端事件常不是單一控制失效，而是 SSRF、過大角色與可建立高權限資源等能力串接。</p><div class="grid"><div class="card"><h3>有效權限是集合運算</h3><p>簡化模型可寫成有效允許 E = (身分政策允許 ∪ 資源政策允許) − 明確拒絕，再與權限邊界及組織限制取交集。例：身分允許 {讀、寫}，邊界只允許 {讀}，則 E = {讀}。此模型省略各雲端的條件、優先序與服務特例，僅用來提醒不能只看一條政策。</p></div><div class="card"><h3>三條證據時間線</h3><p>應用追蹤證明輸入觸發取址；憑證服務記錄證明哪個工作負載取得短期身分；控制平面稽核證明該身分執行何種動作。容器程序記錄能顯示節點內行為，卻不能替代控制平面的授權決策記錄。</p></div></div><ul><li><strong>控制平面與資料平面：</strong>前者建立與設定資源；後者承載工作與資料，兩邊日誌來源不同。</li><li><strong>容器逃逸與權限提升：</strong>逃逸跨過執行隔離；控制平面權限提升可完全不碰核心弱點。</li><li><strong>短效與低權限：</strong>短效憑證縮短重用時間，不會自動縮小其可執行動作。</li></ul></section>
+
+<section class="section">
+
+<h2>雲端事件要串三條時間線</h2><ol class="causal"><li>應用／工作負載內發生了什麼輸入與程序行為。</li><li>哪個工作負載身分取得、輪替並使用短期憑證。</li><li>控制平面以該身分對哪些資源做了什麼，政策為何允許。</li></ol>
+
+</section>
+
+
+
+
 <div class="pager"><a href="09-密碼協定與側通道.html">← 上一章</a><a href="11-網路基礎設施.html">下一章：網路基礎設施 →</a></div></main><footer class="site-footer"><span>10 雲端、容器與控制平面</span><a href="進階名詞字典.html">查進階字典</a></footer></body></html>

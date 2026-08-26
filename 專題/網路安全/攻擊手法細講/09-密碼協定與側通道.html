@@ -2,14 +2,38 @@
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <header class="site-header"><p class="eyebrow">09 / 金鑰、亂數值、錯誤、時間</p><h1>安全演算法也會被放進不安全的協定</h1><p class="lede">密碼學失敗常發生在演算法周圍：重用必須唯一的值、把不同錯誤洩漏給攻擊者、未驗證協商、信任錯誤簽發者，或讓執行時間透露秘密相關分支。</p></header>
 <nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a href="index.html">地圖</a><a href="08-原生程式利用概念.html">08 原生程式</a><a aria-current="page" href="09-密碼協定與側通道.html">09 密碼協定</a><a href="10-雲端容器與控制平面.html">10 雲端</a><a href="進階名詞字典.html">進階字典</a></div></nav>
-<main class="page-shell"><p class="assumes"><strong>先修：</strong><a href="../互動課程/03-密碼學最小前置.html">雜湊、對稱式已驗證加密、訊息鑑別碼、數位簽章與傳輸層安全性協定</a>。本頁不提供解密或偽造操作。</p>
-<section class="workspace"><div class="controls"><h2>切換密碼系統失敗模式</h2><div class="control"><label for="attack-scenario">協定缺口</label><select id="attack-scenario">
+<main class="page-shell">
+
+<p class="assumes"><strong>先修：</strong><a href="../互動課程/03-密碼學最小前置.html">雜湊、對稱式已驗證加密、訊息鑑別碼、數位簽章與傳輸層安全性協定</a>。本頁不提供解密或偽造操作。</p>
+
+
+<section class="section"><p class="eyebrow">先建立直覺</p><h2>密碼原語像安全函式，協定才是呼叫它的程式</h2><p>即使加密函式本身沒有已知弱點，呼叫端仍可能重用不得重複的 nonce、接受錯誤對象的金鑰、先解譯再驗證，或用不同錯誤與時間把內部狀態透露出去。安全性因此是「原語 + 參數 + 狀態機 + 實作環境」的整體性質。</p><p>側通道不是破解數學公式，而是觀察實作留下的額外輸出。時間、快取、功耗與錯誤長度都可能成為訊號；是否真能復原秘密，仍取決於訊號強度、樣本數、攻擊者量測位置與雜訊模型。</p></section>
+
+<section class="workspace">
+
+<div class="controls"><h2>切換密碼系統失敗模式</h2><div class="control"><label for="attack-scenario">協定缺口</label><select id="attack-scenario">
 <option data-pre="同一金鑰下，已驗證加密模式要求唯一的隨機數／計數值，但實作發生重複" data-mechanism="兩份密文共享原本應唯一的金鑰流或驗證關係，洩漏明文關聯並可能破壞完整性" data-change="不同訊息間出現可被比較或推導的密碼學關聯" data-impact="內容洩漏、訊息偽造或整批資料失去可信度" data-control="集中計數器、隨機品質、金鑰輪替前上限、重啟持久化與函式庫安全介面" data-evidence="金鑰識別碼、亂數值／計數值、重啟時間、密文前綴與加密錯誤；不可記錄金鑰" data-limit="亂數值（nonce，number used once）可能公開；安全需求是同一金鑰下符合模式規定的唯一性或不可預測性">亂數值重用</option>
 <option data-pre="解密端對填補、訊息鑑別或解析失敗回傳可區分的錯誤或時間" data-mechanism="攻擊者反覆修改密文，從回應差異取得關於解密結果的一位資訊" data-change="原本只應有成功／失敗的黑箱變成可查詢秘密性質的預言機" data-impact="逐步洩漏明文結構或製造可被接受的內容" data-control="先驗證再處理、統一外部錯誤、固定時間路徑、已驗證加密與限制重試" data-evidence="大量相似密文、細微錯誤碼／長度／延遲差異、解密失敗率與來源分布" data-limit="預言機（oracle）是可從輸入查詢秘密相關資訊的介面；本課不描述查詢策略">填補／錯誤預言機</option>
 <option data-pre="秘密相關比較、查表、分支或快取存取造成可量測時間差，攻擊者能取得足夠樣本" data-mechanism="統計多次執行時間或微架構效果，推斷秘密相關狀態" data-change="原本不在功能輸出的內部狀態經側通道變成可觀測訊號" data-impact="金鑰、權杖或敏感資料部分洩漏" data-control="常數時間原語、避免秘密索引、隔離共享資源、雜訊不是唯一防線、使用審核函式庫" data-evidence="輸入與延遲分布、硬體／核心配置、快取計數器、版本與統計顯著性" data-limit="延遲差異常受網路與排程干擾；相關不等於秘密已可復原">時間與微架構側通道</option>
 <option data-pre="端點仍支援舊版本或較弱套件，協商結果未被完整性保護" data-mechanism="攻擊者干擾能力宣告或握手，使雙方選擇較弱保護" data-change="實際建立的通道安全性低於雙方原本共同可用能力" data-impact="增加解密、竄改、重放或身分冒用可能性" data-control="移除舊版本、設定最低強度、驗證協商逐字記錄、降級哨兵與失敗關閉" data-evidence="客戶端能力、伺服器選擇、握手逐字記錄、重試序列與版本分布" data-limit="相容性回退可能是正常設定；仍應由政策明確接受或拒絕">協定降級</option>
 <option data-pre="憑證授權者、名稱驗證或簽發程序錯誤，產生不應被信任的有效憑證" data-mechanism="攻擊者持有可通過一般憑證鏈驗證、但不應代表目標名稱的私鑰與憑證" data-change="客戶端把冒牌端點判定成可信目標" data-impact="中間人、內容竄改或憑證收集" data-control="嚴格名稱驗證、憑證透明度監測、授權者限制、撤銷、短效憑證與多重觀測" data-evidence="憑證鏈、簽發時間、名稱範圍、透明度日誌、撤銷狀態與端點金鑰" data-limit="憑證鏈技術有效與簽發正當是兩個問題；歸因需要簽發與控制證據">憑證錯誤簽發</option>
 <option data-pre="產生金鑰、挑戰或權杖的隨機來源可預測、熵不足或錯誤重播" data-mechanism="攻擊者縮小可能值空間或重建產生器狀態" data-change="應不可預測的秘密或挑戰變成可猜測" data-impact="金鑰、工作階段、重設連結或驗證挑戰遭預測" data-control="作業系統密碼學隨機來源、啟動熵、健康檢查、禁止自製產生器與安全失敗" data-evidence="重複值、啟動序列、裝置映像、產生器狀態來源與版本；避免收集秘密本身" data-limit="看起來隨機不是安全證明；測試也不能單獨證明不可預測性">弱亂數來源</option>
-</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div></section>
-<section class="section"><h2>密碼系統的四層驗收</h2><ol class="causal"><li>原語與參數是否適合安全目標。</li><li>金鑰、亂數值、計數器與輪替生命週期是否正確。</li><li>協定是否驗證角色、上下文、順序、新鮮度與協商。</li><li>實作的錯誤、時間、記憶體與日誌是否洩漏額外訊號。</li></ol></section>
+</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div>
+
+</section>
+
+
+
+
+<section class="section"><h2>從需求倒推每個狀態值</h2><p>先寫安全目標：機密性、完整性、端點身分與新鮮度各由哪個機制提供。接著逐一追蹤金鑰識別、nonce、序號、握手內容與錯誤路徑。若某值跨重啟會回到初始值，就要問同一金鑰是否也仍在使用。</p><div class="grid"><div class="card"><h3>nonce 空間的數字直覺</h3><p>假設隨機 nonce 有 b = 32 位元，共 N = 2<sup>32</sup> ≈ 4.29 × 10<sup>9</sup> 種。隨機抽取約 k = 77,000 次時，生日碰撞機率已接近 50%，因 k ≈ 1.177 × √N。這是假設均勻、獨立抽樣的近似；不代表所有模式可用 32 位元，也不代表碰撞後影響相同。實際長度與上限必須依所用加密模式規格。</p></div><div class="card"><h3>量測與推論限制</h3><p>時間測試需固定版本、硬體、核心配置與輸入，收集分布而非單次數值。平均差異可能來自排程、快取暖機或網路；統計顯著也不等於已能復原秘密。封包與應用日誌應記錄演算法、金鑰識別和錯誤類別，不記金鑰或明文。</p></div></div><ul><li><strong>唯一與不可預測：</strong>有些 nonce 只需同一金鑰下唯一，有些挑戰還需不可預測；需求不能互換。</li><li><strong>雜湊、MAC 與簽章：</strong>雜湊沒有秘密；訊息鑑別碼（Message Authentication Code, MAC）共享秘密；簽章使用非對稱金鑰並支援公開驗證。</li><li><strong>統一錯誤與安全：</strong>統一外部錯誤能減少預言機，但內部仍要保留足夠診斷且避免秘密進日誌。</li></ul></section>
+
+<section class="section">
+
+<h2>密碼系統的四層驗收</h2><ol class="causal"><li>原語與參數是否適合安全目標。</li><li>金鑰、亂數值、計數器與輪替生命週期是否正確。</li><li>協定是否驗證角色、上下文、順序、新鮮度與協商。</li><li>實作的錯誤、時間、記憶體與日誌是否洩漏額外訊號。</li></ol>
+
+</section>
+
+
+
+
 <div class="pager"><a href="08-原生程式利用概念.html">← 上一章</a><a href="10-雲端容器與控制平面.html">下一章：雲端、容器與控制平面 →</a></div></main><footer class="site-footer"><span>09 密碼協定與側通道</span><a href="進階名詞字典.html">查進階字典</a></footer></body></html>

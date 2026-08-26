@@ -1,4 +1,36 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 輸入、解譯器與記憶體｜攻擊手法細講</title><link rel="stylesheet" href="../互動課程/styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><header class="site-header"><p class="eyebrow">02 / 輸入、解譯器、記憶體</p><h1>資料跨過邊界後，可能被當成控制</h1><p class="lede">注入是語意邊界失守；記憶體破壞是空間、生命週期或控制流邊界失守。兩者最後都讓程序做出設計外的動作。</p></header><nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a href="index.html">地圖</a><a href="01-身分與工作階段.html">01 身分</a><a aria-current="page" href="02-輸入解譯器與記憶體.html">02 輸入與記憶體</a><a href="03-網路與通訊路徑.html">03 網路路徑</a><a href="04-權限可用性與供應鏈.html">04 權限與供應鏈</a><a href="../互動課程/名詞與概念字典.html">共同字典</a></div></nav><main class="page-shell"><p class="assumes"><strong>先修：</strong>程序權限、輸入資料流與完整性；本章不提供利用字串或繞過技巧。</p>
-<section class="workspace"><div class="controls"><h2>切換程式邊界</h2><div class="control"><label for="attack-scenario">手法</label><select id="attack-scenario"><option data-pre="應用把不受信任資料串接進查詢或命令" data-mechanism="下游解譯器無法區分資料與控制語法" data-change="查詢條件或命令語意偏離程式原意" data-impact="越權讀寫、程序執行或資料破壞" data-control="參數化介面、固定語法樹、低權限帳號與輸入邊界" data-evidence="請求欄位、應用錯誤、查詢樣板、資料列變化與子程序" data-limit="關鍵字出現在輸入不等於成功注入">命令與查詢注入</option><option data-pre="使用者輸入參與檔案路徑組合，正規化與根目錄限制不足" data-mechanism="特殊路徑成分讓解析後位置離開預期目錄" data-change="程序讀寫原本不在公開範圍的檔案" data-impact="設定、秘密或系統檔案外洩／修改" data-control="使用物件識別碼、正規化後驗證根目錄、檔案權限與隔離" data-evidence="原始與正規化路徑、開檔結果、程序身分與檔案稽核" data-limit="回應失敗可能是權限阻擋，不代表沒有嘗試">路徑穿越</option><option data-pre="系統接受不可信來源的複雜序列化物件" data-mechanism="還原過程觸發建構、型別解析或意外方法" data-change="資料載入變成非預期控制流或物件狀態" data-impact="遠端執行、權限內資料改變或阻斷服務" data-control="簡單資料格式、允許清單型別、驗證簽章、隔離與更新函式庫" data-evidence="內容型別、型別名稱、反序列化例外、程序／網路子事件" data-limit="反序列化錯誤不自動等於可利用">不安全反序列化</option><option data-pre="原生程式對長度、生命週期、整數或並行狀態處理錯誤" data-mechanism="越界、釋放後使用或競爭破壞資料與控制結構" data-change="程序崩潰、資料洩漏或控制流偏離" data-impact="依程序權限造成可用性、機密性或完整性影響" data-control="安全抽象、邊界檢查、編譯器強化、模糊測試、隔離與最小權限" data-evidence="崩潰轉儲、錯誤位址、呼叫堆疊、輸入樣本與程序行為" data-limit="崩潰可重現不等於已證明可控制執行">記憶體破壞</option></select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div></section>
-<section class="section"><h2>對資深 C++ 工程師最重要的連接</h2><div class="grid"><div class="card"><h3>控制資料分離</h3><p>型別安全不會自動保護跨語言與跨程序邊界。當字串進入殼層、查詢引擎、樣板或路徑解析器時，要使用能保留資料語意的介面。</p></div><div class="card"><h3>可利用性不是只有崩潰</h3><p>同一錯誤能否被攻擊者控制，取決於輸入可達性、記憶體配置、平台緩解、程序權限與穩定性。先修錯，再用證據評估暴露範圍。</p></div></div></section><div class="pager"><a href="01-身分與工作階段.html">← 上一章</a><a href="03-網路與通訊路徑.html">下一章 →</a></div></main><footer class="site-footer"><span>02 輸入、解譯器與記憶體</span><a href="../互動課程/index.html">回主課</a></footer></body></html>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><header class="site-header"><p class="eyebrow">02 / 輸入、解譯器、記憶體</p><h1>資料跨過邊界後，可能被當成控制</h1><p class="lede">注入是語意邊界失守；記憶體破壞是空間、生命週期或控制流邊界失守。兩者最後都讓程序做出設計外的動作。</p></header><nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a href="index.html">地圖</a><a href="01-身分與工作階段.html">01 身分</a><a aria-current="page" href="02-輸入解譯器與記憶體.html">02 輸入與記憶體</a><a href="03-網路與通訊路徑.html">03 網路路徑</a><a href="04-權限可用性與供應鏈.html">04 權限與供應鏈</a><a href="../互動課程/名詞與概念字典.html">共同字典</a></div></nav><main class="page-shell">
+
+<p class="assumes"><strong>先修：</strong>程序權限、輸入資料流與完整性；本章不提供利用字串或繞過技巧。</p>
+
+
+<section class="section">
+<p class="eyebrow">先建立直覺</p><h2>同一串位元組，資料與指令的差別由接收者決定</h2><p>字串在上游只是值，送進 SQL 引擎、命令殼層、樣板引擎或路徑解析器後，卻進入另一套語法。若介面只靠拼接，接收端就無法知道哪些字元原本應是資料。</p><p>記憶體錯誤則是程式對「哪個位址屬於哪個物件、物件活多久、多少位元可表示長度」的模型與執行失去一致。兩類問題共同點是信任邊界錯置，修法卻不同。</p><div class="grid"><div class="card"><h3>語意邊界</h3><p>參數化查詢不是把危險字元換掉，而是經由介面把語法樹與資料值分開傳遞。輸出編碼必須依 HTML、屬性、網址或指令碼等位置選擇，沒有全域通用的「安全編碼」。</p></div><div class="card"><h3>空間與生命週期邊界</h3><p>索引、長度、所有權和並行順序都可能破壞物件不變量。型別安全語言能移除一大類錯誤，但外部函式介面、不安全區塊與原生相依仍需檢查。</p></div></div>
+</section>
+
+
+
+<section class="workspace">
+
+<div class="controls"><h2>切換程式邊界</h2><div class="control"><label for="attack-scenario">手法</label><select id="attack-scenario"><option data-pre="應用把不受信任資料串接進查詢或命令" data-mechanism="下游解譯器無法區分資料與控制語法" data-change="查詢條件或命令語意偏離程式原意" data-impact="越權讀寫、程序執行或資料破壞" data-control="參數化介面、固定語法樹、低權限帳號與輸入邊界" data-evidence="請求欄位、應用錯誤、查詢樣板、資料列變化與子程序" data-limit="關鍵字出現在輸入不等於成功注入">命令與查詢注入</option><option data-pre="使用者輸入參與檔案路徑組合，正規化與根目錄限制不足" data-mechanism="特殊路徑成分讓解析後位置離開預期目錄" data-change="程序讀寫原本不在公開範圍的檔案" data-impact="設定、秘密或系統檔案外洩／修改" data-control="使用物件識別碼、正規化後驗證根目錄、檔案權限與隔離" data-evidence="原始與正規化路徑、開檔結果、程序身分與檔案稽核" data-limit="回應失敗可能是權限阻擋，不代表沒有嘗試">路徑穿越</option><option data-pre="系統接受不可信來源的複雜序列化物件" data-mechanism="還原過程觸發建構、型別解析或意外方法" data-change="資料載入變成非預期控制流或物件狀態" data-impact="遠端執行、權限內資料改變或阻斷服務" data-control="簡單資料格式、允許清單型別、驗證簽章、隔離與更新函式庫" data-evidence="內容型別、型別名稱、反序列化例外、程序／網路子事件" data-limit="反序列化錯誤不自動等於可利用">不安全反序列化</option><option data-pre="原生程式對長度、生命週期、整數或並行狀態處理錯誤" data-mechanism="越界、釋放後使用或競爭破壞資料與控制結構" data-change="程序崩潰、資料洩漏或控制流偏離" data-impact="依程序權限造成可用性、機密性或完整性影響" data-control="安全抽象、邊界檢查、編譯器強化、模糊測試、隔離與最小權限" data-evidence="崩潰轉儲、錯誤位址、呼叫堆疊、輸入樣本與程序行為" data-limit="崩潰可重現不等於已證明可控制執行">記憶體破壞</option></select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div>
+
+</section>
+
+
+
+
+<section class="section">
+<h2>從輸入追到證據，不只看錯誤訊息</h2><p>請求欄位進入應用 → 應用形成下游呼叫或記憶體操作 → 資料列、檔案、子程序或控制流改變 → 回應與系統遙測留下結果。測試時用關聯識別碼把入口請求、查詢樣板、檔案稽核與程序事件串起來。</p><div class="grid"><div class="card"><h3>一個量化例子</h3><p>假設緩衝區容量 C = 64 位元組，輸入長度 L = 80 位元組，且未檢查邊界，超出量 Δ = L − C = 16 位元組。這只證明 16 位元組可能落在物件外；鄰近配置、可控內容、平台緩解與程序權限仍決定結果。單位均為位元組，並假設介面沒有自動截斷。</p></div><div class="card"><h3>工具的證明力</h3><p>消毒器與崩潰轉儲可定位錯誤讀寫及呼叫堆疊；模糊測試可證明某輸入能觸發異常，不能單獨證明可穩定控制執行。資料庫稽核可證明資料變更，卻未必指出是哪段程式碼造成。</p></div></div><ul><li><strong>驗證與編碼：</strong>前者判斷值是否符合業務規則；後者讓值在特定輸出語境維持資料語意。</li><li><strong>正規化與授權：</strong>正規化得到一致路徑，仍要檢查允許根目錄與主體權限。</li><li><strong>崩潰與利用：</strong>崩潰是可用性證據；遠端程式執行還需可達性、可控性與緩解條件。</li></ul>
+</section>
+
+
+
+<section class="section">
+
+<h2>對資深 C++ 工程師最重要的連接</h2><div class="grid"><div class="card"><h3>控制資料分離</h3><p>型別安全不會自動保護跨語言與跨程序邊界。當字串進入殼層、查詢引擎、樣板或路徑解析器時，要使用能保留資料語意的介面。</p></div><div class="card"><h3>可利用性不是只有崩潰</h3><p>同一錯誤能否被攻擊者控制，取決於輸入可達性、記憶體配置、平台緩解、程序權限與穩定性。先修錯，再用證據評估暴露範圍。</p></div></div>
+
+</section>
+
+
+
+<div class="pager"><a href="01-身分與工作階段.html">← 上一章</a><a href="03-網路與通訊路徑.html">下一章 →</a></div></main><footer class="site-footer"><span>02 輸入、解譯器與記憶體</span><a href="../互動課程/index.html">回主課</a></footer></body></html>

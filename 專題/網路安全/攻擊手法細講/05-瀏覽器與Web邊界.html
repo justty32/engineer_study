@@ -2,14 +2,38 @@
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <header class="site-header"><p class="eyebrow">05 / 瀏覽器、代理、後端取址</p><h1>同一個網址，經過多個解析器</h1><p class="lede">瀏覽器管理來源、憑證與文件；反向代理切分請求；應用框架解析參數；後端客戶端再依網址取資料。進階 Web 攻擊常利用兩個元件對「來源、邊界、長度或目的地」的理解不一致。</p></header>
 <nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a href="index.html">地圖</a><a aria-current="page" href="05-瀏覽器與Web邊界.html">05 Web</a><a href="06-聯合身分與權杖.html">06 聯合身分</a><a href="進階名詞字典.html">進階字典</a></div></nav>
-<main class="page-shell"><p class="assumes"><strong>先修：</strong><a href="02-輸入解譯器與記憶體.html">輸入與解譯器邊界</a>、超文字傳輸協定（Hypertext Transfer Protocol, HTTP）請求／回應，以及瀏覽器會自動攜帶某些網站憑證的觀念。</p>
-<section class="workspace"><div class="controls"><h2>切換進階 Web 情境</h2><div class="control"><label for="attack-scenario">被濫用的邊界</label><select id="attack-scenario">
+<main class="page-shell">
+
+<p class="assumes"><strong>先修：</strong><a href="02-輸入解譯器與記憶體.html">輸入與解譯器邊界</a>、超文字傳輸協定（Hypertext Transfer Protocol, HTTP）請求／回應，以及瀏覽器會自動攜帶某些網站憑證的觀念。</p>
+
+
+<section class="section"><p class="eyebrow">先建立直覺</p><h2>Web 攻擊常像兩個編譯器讀出不同語法樹</h2><p>一個請求會先後經過瀏覽器、邊緣服務、反向代理、框架與後端客戶端。每一層都可能重新解析主機、路徑、長度、來源或快取條件；只要兩層對同一輸入的解釋不同，前一層的安全判斷就可能無法約束後一層。</p><p>這不是說所有差異都能利用。必須同時證明不可信輸入可達差異點、差異會改變安全相關狀態，而且結果跨到另一使用者、網路區域或權限域。</p></section>
+
+<section class="workspace">
+
+<div class="controls"><h2>切換進階 Web 情境</h2><div class="control"><label for="attack-scenario">被濫用的邊界</label><select id="attack-scenario">
 <option data-pre="不受信任內容進入網頁文件，輸出位置缺少對應編碼或隔離" data-mechanism="瀏覽器把資料解讀成可執行指令碼，而不是普通文字" data-change="攻擊者控制的程式在受害網站來源下執行，取得該來源可用能力" data-impact="讀取頁面資料、代替使用者操作、竄改畫面或竊取可讀權杖" data-control="依輸出位置編碼、內容安全政策、避免危險文件介面、隔離不可信內容" data-evidence="原始輸入、回應內容、瀏覽器文件物件模型變化、內容安全政策告警與工作階段後續動作" data-limit="輸入中含標記不等於已執行；必須證明到達可執行輸出位置">跨網站指令碼（Cross-Site Scripting, XSS）</option>
 <option data-pre="瀏覽器對目標網站仍有有效憑證，伺服器只憑自動附帶憑證授權狀態變更" data-mechanism="惡意網站誘使瀏覽器向另一來源送出合法格式的請求" data-change="目標伺服器在受害者身分下接受未由受害者意圖發起的動作" data-impact="設定、交易或帳號狀態遭修改" data-control="跨網站請求偽造權杖、SameSite 瀏覽器小型狀態資料屬性、重新驗證與來源檢查" data-evidence="請求來源標頭、工作階段、缺少或錯誤防偽權杖、操作頁面與使用者行為時間線" data-limit="來源標頭可能因隱私政策缺失；控制需多層且不能只靠單一標頭">跨網站請求偽造（Cross-Site Request Forgery, CSRF）</option>
 <option data-pre="伺服器提供依使用者網址取回資源的功能，目的位址與重新導向限制不足" data-mechanism="攻擊者讓受信任伺服器代替自己連向內部、控制平面或特殊位址" data-change="後端網路身分與可達性被借用，回應或副作用跨過原信任邊界" data-impact="內部服務探測、雲端憑證外洩、資料讀取或非預期管理動作" data-control="目的允許清單、解析後位址檢查、阻擋特殊網段、重新導向再驗證、專用出口代理" data-evidence="應用輸入、名稱解析結果、後端連線目的、重新導向鏈、雲端稽核與回應大小" data-limit="只驗證網址字串不足；名稱可解析成不同位址且重新導向會改變目的地">伺服器端請求偽造（Server-Side Request Forgery, SSRF）</option>
 <option data-pre="前端代理與後端伺服器對 HTTP 訊息長度或邊界採用不同規則" data-mechanism="同一位元組流被兩個解析器切成不同請求，後續內容落入另一使用者請求前方" data-change="共用連線上的請求對應關係失去同步" data-impact="繞過前端控制、污染回應、錯配使用者請求或快取" data-control="統一解析、拒絕模糊長度、前後端協定正規化、隔離後端連線與差異測試" data-evidence="代理與後端請求識別碼錯位、長度標頭、連線重用、異常狀態碼與後續請求受影響" data-limit="不提供構造歧義訊息的方法；診斷重點是元件解析差異與連線時間線">HTTP 請求不同步／走私</option>
 <option data-pre="共用快取的鍵未涵蓋所有會影響回應的輸入，後端又把該輸入反映到回應" data-mechanism="攻擊者先產生帶有惡意差異的可快取回應，其他使用者命中同一快取鍵" data-change="共享快取把攻擊者影響的表示法交給不同使用者" data-impact="內容竄改、指令碼注入、重新導向或安全標頭錯置" data-control="明確快取鍵、忽略不可信轉送標頭、不可快取敏感回應、正規化與快取觀測" data-evidence="快取命中年齡、變異標頭、快取鍵、第一個填入者、邊緣與來源站回應差異" data-limit="內容傳遞網路節點不同會造成自然差異；需證明同一快取物件被跨使用者重用">Web 快取污染</option>
 <option data-pre="動態語言把不可信鍵合併進共用物件原型或設定物件" data-mechanism="特殊屬性改變其他物件繼承到的預設值" data-change="原本彼此獨立的物件出現攻擊者控制的共享屬性" data-impact="授權判斷、樣板、命令選項或後續程式邏輯遭改變" data-control="拒絕危險鍵、使用無原型字典、固定結構驗證、避免遞迴合併不可信物件" data-evidence="輸入鍵、合併函式、物件自有／繼承屬性差異與受影響程式路徑" data-limit="僅存在特殊鍵不代表可達敏感使用點；要追蹤定義使用鏈">物件原型污染（Prototype Pollution）</option>
-</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>真實機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div></section>
-<section class="section"><h2>進階診斷不是找關鍵字</h2><ol class="causal"><li>畫出瀏覽器、邊緣快取、反向代理、應用框架與後端客戶端。</li><li>逐一寫出每個元件如何解析來源、主機、長度、路徑、重新導向與快取鍵。</li><li>找兩個元件解釋不一致的位置，才形成可驗證假說。</li><li>以關聯識別碼與原始位元組證明狀態變化，不把單一錯誤回應當成利用成功。</li></ol></section>
+</select></div></div><div class="output"><div id="attack-detail" class="result-box" aria-live="polite"><h2 data-title></h2><div class="result-grid"><div><strong>前置</strong><span data-field="pre"></span></div><div><strong>真實機制</strong><span data-field="mechanism"></span></div><div><strong>狀態改變</strong><span data-field="change"></span></div><div><strong>影響</strong><span data-field="impact"></span></div><div><strong>控制</strong><span data-field="control"></span></div><div><strong>證據</strong><span data-field="evidence"></span></div><div><strong>推論限制</strong><span data-field="limit"></span></div></div></div></div>
+
+</section>
+
+
+
+
+<section class="section"><h2>互動實驗：找出哪兩層失去一致</h2><p>每次切換後，先指定「輸入由誰控制」，再找「第一個安全判斷」與「最後一個真正執行動作的元件」。例如 SSRF 的證據鏈是使用者網址 → 應用解析 → DNS 結果 → 重新導向 → 後端連線目的；只看原始網址不足以證明最終目的安全。</p><div class="grid"><div class="card"><h3>快取的數字例子</h3><p>假設快取鍵只含主機與路徑 K = (host, path)，回應其實也受語言標頭 L 影響。使用者甲與乙的 K 相同而 L 不同，快取仍把兩者映射到同一物件。若存活時間 TTL = 300 秒，受影響表示法最多可被重用約 5 分鐘；實際命中數還取決於流量與節點，不能由 TTL 單獨推出。</p></div><div class="card"><h3>瀏覽器工具的邊界</h3><p>開發者工具可看到目前瀏覽器送出的請求、文件物件模型與政策告警，但看不到反向代理如何切分原始連線。代理原始日誌與封包擷取可補上邊界；應用追蹤則說明哪段程式消費了值。</p></div></div><ul><li><strong>XSS 與 CSRF：</strong>XSS 在目標來源執行程式；CSRF 借瀏覽器自動憑證送動作，攻擊者不一定能讀回應。</li><li><strong>SSRF 與開放重新導向：</strong>前者借後端可達性；後者改變導覽目的。重新導向也可能成為 SSRF 鏈的一段。</li><li><strong>快取污染與請求不同步：</strong>前者錯在快取鍵；後者錯在訊息邊界。兩者都可能跨使用者，但證據不同。</li></ul></section>
+
+<section class="section">
+
+<h2>進階診斷不是找關鍵字</h2><ol class="causal"><li>畫出瀏覽器、邊緣快取、反向代理、應用框架與後端客戶端。</li><li>逐一寫出每個元件如何解析來源、主機、長度、路徑、重新導向與快取鍵。</li><li>找兩個元件解釋不一致的位置，才形成可驗證假說。</li><li>以關聯識別碼與原始位元組證明狀態變化，不把單一錯誤回應當成利用成功。</li></ol>
+
+</section>
+
+
+
+
 <div class="pager"><a href="04-權限可用性與供應鏈.html">← 上一章</a><a href="06-聯合身分與權杖.html">下一章：聯合身分與權杖 →</a></div></main><footer class="site-footer"><span>05 瀏覽器與 Web 邊界</span><a href="進階名詞字典.html">查進階字典</a></footer></body></html>
