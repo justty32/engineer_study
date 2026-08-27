@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 機率與隨機變數｜工程數學先修</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-工程數學地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">12・把不確定性寫成可以運算的模型</p>
+<h1>機率與隨機變數：從可能性走到分布、平均與散布</h1>
+<p class="lead">工程量測不會每次完全相同，通訊接收值也會受雜訊擾動。機率不是替未知事件猜答案，而是用一致規則描述結果有哪些、各有多可能，以及重複觀察後會呈現什麼結構。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="11-PDE與向量分析.html">11 PDE與向量分析</a>、有限和、積分與函式。</p>
+
+<h2>痛點：不確定不等於無法分析</h2>
+<p>同一支電阻量十次會得到略不同的值，同一個位元經過無線通道也可能因熱雜訊而被判成另一個位元。如果只記一次量測，無法分辨偏差是元件本身、儀器解析度或偶然波動；如果只看平均，又會遺失波動大小與極端結果的風險。工程需要的不是一句「大概會這樣」，而是能計算事件、機率（probability）、典型值、散布尺度與誤碼率的共同語言。</p>
+<p>第一步是列出所有可能結果形成<strong>樣本空間（sample space）</strong> Ω，<strong>事件（event）</strong> A 是其中一群結果。機率滿足 P(A) ≥ 0、P(Ω) = 1，以及互斥事件可相加。這三條公設讓不同模型仍遵守同一套帳務規則。已知 B 發生後重算 A 的可能性，得到<strong>條件機率（conditional probability）</strong> P(A|B) = P(A∩B)/P(B)；若知道 B 對 A 沒提供資訊，便有 P(A∩B) = P(A)P(B)，稱兩事件<strong>獨立（independence）</strong>。</p>
+
+<h2>白話直覺：分布是結果的權重地圖</h2>
+<p>可先把分布想成一張地圖：每個可能結果旁都標了一份權重，權重越大，長期出現得越頻繁。比喻到此為止；精確地說，<strong>隨機變數（random variable）</strong>是把樣本空間中的結果映到實數的函式。離散結果用<strong>機率質量函數（Probability Mass Function, PMF）</strong>列出 P(X = x)；連續結果用<strong>機率密度函數（Probability Density Function, PDF）</strong> f<sub>X</sub>(x)，區間機率才是 P(a &lt; X &lt; b) = ∫<sub>a</sub><sup>b</sup> f<sub>X</sub>(x) dx，單點密度不是單點機率。</p>
+<p><strong>累積分布函數（Cumulative Distribution Function, CDF）</strong> F<sub>X</sub>(x) = P(X ≤ x) 把左側所有機率累加起來，因此一定不遞減並從 0 走向 1。<strong>期望值（expectation）</strong> E[X] 是按機率加權的長期平均；<strong>變異數（variance）</strong> Var(X) 衡量結果離平均有多分散，<strong>標準差（standard deviation）</strong> σ = √Var(X) 則回到與 X 相同的單位。線性變換後 E[aX+b] = aE[X]+b，而 Var(aX+b) = a²Var(X)：平移改平均但不改散布，縮放 a 倍會把平方距離放大 a² 倍。</p>
+<p><strong>貝氏定理（Bayes' theorem）</strong> P(A|B) = P(B|A)P(A)/P(B) 則把「已知原因看結果」翻回「看到結果推原因」。通訊中看到接收值 y 後推測傳送符號 x，可寫成 P(x|y) ∝ P(y|x)P(x)；前者是後驗、右側兩項分別是似然與先驗。選最大後驗者就是最大後驗（Maximum A Posteriori, MAP）檢測，這比單憑 y 的大小多納入符號原本出現的機率。</p>
+<p class="note">來源：04-機率與統計 §1–§7、§10。</p>
+
+<h2>推導：平均與平方距離如何變成可算的風險</h2>
+<p><strong>（a）變異數的捷徑。</strong>令 μ = E[X]。由定義 Var(X) = E[(X−μ)²]，先展開平方：</p>
+<p><code>E[(X−μ)²] = E[X² − 2μX + μ²] = E[X²] − 2μE[X] + μ²</code></p>
+<p>因為 E[X] = μ，所以中間兩項合成 −2μ² + μ² = −μ²，得到 Var(X) = E[X²] − E[X]²。這不是另一個新定義，而是原定義經線性期望展開後的等價計算法；實作時只要累加一階與二階動差即可。</p>
+<p><strong>（b）公正骰子的完整計算。</strong>六個點數各有 1/6 機率，因此 E[X] = (1+2+3+4+5+6)/6 = 21/6 = 3.5。二階動差 E[X²] = (1+4+9+16+25+36)/6 = 91/6 = 15.166667。代入剛才的捷徑：</p>
+<p><code>Var(X) = 15.166667 − 3.5² = 15.166667 − 12.25 = 2.916667 = 35/12</code></p>
+<p>標準差為 √(35/12) = 1.707825。注意期望值 3.5 並不是骰子單次能擲出的點數；它描述大量重複試驗的平均位置，而不是下一次的預言。</p>
+<p><strong>（c）BPSK 誤碼率的來歷。</strong>二元相移鍵控（Binary Phase Shift Keying, BPSK）通道寫成 y = x + n，其中 n 服從平均 0、變異數 σ² 的常態分布，x 等機率取 +A 或 −A。兩個符號對稱，因此最佳門檻在 0：y ≥ 0 判 +A，y &lt; 0 判 −A。若送 +A，只有 n &lt; −A 才跨過門檻；由常態對稱性，這個左尾機率等於右尾 Q(A/σ)。因此 P<sub>e</sub> = Q(A/σ)，其中 Q(x) = 1 − Φ(x)。取 A = 1、σ = 0.5，A/σ = 2，Φ(2) = 0.977250，所以 P<sub>e</sub> = 1 − 0.977250 = 0.022750。訊號幅度相對雜訊標準差越大，越不容易跨錯門檻。</p>
+<p>常見離散模型各回答不同問題：伯努利分布描述一次成功或未成功；二項分布描述 n 次獨立伯努利試驗的成功總數；幾何分布描述等到第一次成功前的試驗數；卜瓦松分布描述固定時間內的到達次數。連續模型中，均勻分布讓區間內密度相同；指數分布描述無記憶的等待時間；常態分布由 μ 決定中心、σ 決定尺度；瑞利與萊斯分布常用來描述無線衰落振幅。</p>
+
+<h2>數值實例：同一查詢點看 PMF、PDF 與 CDF</h2>
+<p>自由實驗預設選公正骰子，查詢點 k = 3。E[X] = <strong>3.5</strong>，Var(X) = 35/12 = <strong>2.916667</strong>，σ = <strong>1.707825</strong>；單點機率 P(X = 3) = 1/6 = <strong>0.166667</strong>，而累積到 3 的 F(3) = P(X ≤ 3) = 3/6 = <strong>0.5</strong>。PMF 問「恰好是 3」，CDF 問「不超過 3」，兩者不可互換。</p>
+<p>把選單切到二項分布，保留 n = 10、p = 0.5 並查 k = 5：E[X] = np = 5，Var(X) = np(1−p) = 2.5，σ = 1.581139。恰有 5 次成功的機率為 P(X=5) = 252/1024 = <strong>0.246094</strong>，累積值 F(5) = <strong>0.623047</strong>。組合數 252 是從 10 次中挑出 5 個成功位置的方法數，每一排列在 p = 0.5 時都有 1/1024 的機率。</p>
+<p>若選卜瓦松且 λ = 3，E[X] = Var(X) = 3，在 k = 2 時 P(X=2) = e<sup>−3</sup>⋅9/2 = <strong>0.224042</strong>。選指數分布且 λ = 3，在 x = 1 時 E[X] = 1/3、Var(X) = 1/9，f(1) = 3e<sup>−3</sup> = <strong>0.149361</strong>，F(1) = 1 − e<sup>−3</sup> = <strong>0.950213</strong>。選常態且 μ = 0、σ = 1，在 x = 1 時 f(1) = <strong>0.241971</strong>、Φ(1) = <strong>0.841345</strong>；CDF 由數值近似計算，不應把密度 0.241971 誤認成小於 1 的機率。</p>
+
+<section class="workspace"><h2>自由實驗：比較六種機率分布</h2>
+<p>選一種分布，再調整它使用的參數與查詢點。觀察平均、變異數、單點質量或密度、累積機率如何一起改變，並留意離散查詢會取整而連續查詢保留 x。</p>
+<div class="controls">
+<label for="dist-pick">分布<select id="dist-pick"><option value="die">公正骰子</option><option value="bernoulli">伯努利</option><option value="binomial">二項</option><option value="poisson">卜瓦松</option><option value="exponential">指數</option><option value="normal">常態</option></select></label>
+<label for="dist-p">成功機率 p（伯努利／二項）<input id="dist-p" type="range" min="0" max="1" step="0.01" value="0.5"></label>
+<label for="dist-n">試驗次數 n（二項）<input id="dist-n" type="range" min="1" max="50" step="1" value="10"></label>
+<label for="dist-lambda">λ（卜瓦松次數率／指數率）<input id="dist-lambda" type="range" min="0.1" max="10" step="0.1" value="3"></label>
+<label for="dist-mu">μ（常態平均）<input id="dist-mu" type="range" min="-5" max="5" step="0.1" value="0"></label>
+<label for="dist-sigma">σ（常態標準差）<input id="dist-sigma" type="range" min="0.1" max="5" step="0.1" value="1"></label>
+<label for="dist-k">查詢點 k（離散取整）或 x（連續）<input id="dist-k" type="range" min="-5" max="20" step="0.5" value="3"></label>
+</div>
+<div id="dist-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>為什麼／不要混淆</h2>
+<ul>
+<li>互斥與獨立不是同一件事。互斥事件不能同時發生；若兩個非零機率事件互斥，知道其中一個發生會排除另一個，因此反而不獨立。</li>
+<li>PDF 的高度不是機率；連續變數的機率來自面積。密度可以大於 1，只要全域積分仍等於 1。</li>
+<li>期望值不是最常見值，也不必是可出現的值。公正骰子的期望值是 3.5，但單次結果不會出現 3.5。</li>
+<li>變異數與標準差不同。變異數使用平方單位，標準差才與原變數同單位；比較量測尺度時通常看標準差。</li>
+<li>不相關只排除線性關聯，不保證獨立。獨立一定推出共變異數為 0；反方向一般不成立，聯合高斯是重要例外。</li>
+<li>大數法則談樣本平均收斂到母體平均；中央極限定理談適當標準化後的樣本和或平均之分布趨近高斯。兩者解答不同問題。</li>
+<li>常態模型不是說世界上所有資料都服從常態。它常由許多小而近似獨立的擾動相加而出現，尾端與相依性仍要由資料檢查。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p>把骰子或程式中的固定序列重複分批平均，樣本數增加時，平均會在 3.5 附近越來越穩，這是大數法則的可觀察結果。把每批的總和畫成直方統計，即使原始結果只有 1 到 6，批次和的輪廓也會逐漸接近鐘形，這對應中央極限定理（Central Limit Theorem, CLT）。本課禁止隨機生成，仍可用可重現的既定資料序列做相同檢查。</p>
+<p>在通訊接收器裡，固定傳送 +A 後記錄大量 y，樣本平均應接近 +A，散布尺度接近 σ；把門檻另一側的樣本數除以總數，應接近 Q(A/σ)。在量測軟體裡，直方統計近似 PDF，累積計數近似 CDF；改變門檻時，累積比例只會上升不會下降。封包到達計數常拿卜瓦松模型比較，元件等待失效時間則可檢查指數模型的無記憶性。</p>
+
+<h2>連到哪門課</h2>
+<p>本章直接服務通訊系統的符元誤碼率與衰落模型、訊號處理的雜訊分析、可靠度工程的壽命模型、量測學的不確定度，以及機器學習的機率模型。下一章會把「已知分布算結果」反過來，學習如何從有限資料估計未知參數與判斷假設。若想看更精簡、偏機器人感測的版本，可前往<a href="../../../專題/機器人數學基礎/互動課程/12-機率一點點.html">機器人數學基礎：機率一點點</a>。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="11-PDE與向量分析.html">← 上一頁：PDE與向量分析</a><a href="13-統計推論與隨機過程.html">下一頁：統計推論與隨機過程 →</a></nav>
+</main>
+<footer class="site-footer"><span>12 機率與隨機變數</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

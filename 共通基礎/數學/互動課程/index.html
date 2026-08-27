@@ -1,0 +1,48 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>工程數學先修（零基礎互動課）</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html" aria-current="page">課程地圖</a><a href="00-工程數學地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">課程地圖・從極限一路蓋到隨機過程</p>
+<h1>工程數學先修（零基礎互動課）</h1>
+<p class="lead">這門課是給電機系出身、數理基礎不穩、但軟體能力很強的自學者用的大學課綱版工程數學。它不從「背公式」開始，而是從「這個東西不存在的話，工程上會卡在哪裡」開始，一路蓋到能自己判斷一個系統穩不穩、一段近似準不準。服務的下游課程是電路學、信號與系統、控制系統、通訊系統與電磁學。</p>
+
+<h2>整條路長什麼樣</h2>
+<div class="flow"><span>極限與導數</span><span>積分與級數</span><span>向量與矩陣</span><span>特徵值</span><span>ODE 與拉氏</span><span>複變與傅立葉</span><span>PDE 與場</span><span>機率與統計</span></div>
+<p>左邊四塊是「工具本身」：先學會看瞬間變化、再學會看累積、再學會把一組數當一個物件搬動、再學會找出搬動時方向不變的那些軸。右邊四塊是「工具組合起來解的問題」：時間域的系統演化（ODE 與拉氏）、頻率域的訊號分解（複變與傅立葉）、空間中的場（PDE 與向量分析），以及所有量測與通道裡躲不掉的隨機性（機率與統計）。前後有嚴格依賴，建議照號碼走。</p>
+<p class="note">每章只有一個自由實驗，改控制就立即看到數值與造成該數值的原因；本課沒有計分、沒有進度條、沒有解鎖。練習題集中在「自我檢核」頁，答錯只會給你解釋與該回去看的章節，不會擋路。</p>
+
+<h2>十四章＋兩個工具頁</h2>
+<section class="chapter-list">
+<a class="chapter-card" href="00-工程數學地圖.html"><h2><span class="number">00</span> 工程數學地圖</h2><p>先看每種數學各自替哪一門電機課回答哪一種問題，再決定學習順序。</p></a>
+<a class="chapter-card" href="01-極限與導數.html"><h2><span class="number">01</span> 極限與導數</h2><p>輸入動一點，輸出變多少：親手看極限怎麼逼近，以及數值微分為什麼會先變準再變爛。</p></a>
+<a class="chapter-card" href="02-積分.html"><h2><span class="number">02</span> 積分</h2><p>把曲線下面積切成一堆小矩形加起來，比較四種求和法則的收斂速度。</p></a>
+<a class="chapter-card" href="03-級數與泰勒.html"><h2><span class="number">03</span> 級數與泰勒</h2><p>用多項式逼近任意函式，並看清截斷階數、離展開點距離與收斂半徑的關係。</p></a>
+<a class="chapter-card" href="04-向量與矩陣.html"><h2><span class="number">04</span> 向量與矩陣</h2><p>把一組數變成一個可運算的物件，把矩陣看成一張搬動規則表。</p></a>
+<a class="chapter-card" href="05-線性方程組與逆.html"><h2><span class="number">05</span> 線性方程組與逆</h2><p>用秩判斷唯一解、無限多解或無解，看懂 det = 0、秩不足、奇異在講同一件事。</p></a>
+<a class="chapter-card" href="06-特徵值與分解.html"><h2><span class="number">06</span> 特徵值與分解</h2><p>找出矩陣作用後方向不變的那些方向，並理解控制系統為何看特徵值就知道穩不穩。</p></a>
+<a class="chapter-card" href="07-常微分方程.html"><h2><span class="number">07</span> 常微分方程</h2><p>未知數是函式的方程式：一階 RC 的時間常數，二階系統的阻尼型態。</p></a>
+<a class="chapter-card" href="08-拉氏轉換.html"><h2><span class="number">08</span> 拉氏轉換</h2><p>把微分方程變成代數方程，用極點位置直接讀出衰減速度與振盪頻率。</p></a>
+<a class="chapter-card" href="09-複變入門.html"><h2><span class="number">09</span> 複變入門</h2><p>複數乘法就是旋轉加伸縮；相量與阻抗為什麼可以把微分變成乘一個數。</p></a>
+<a class="chapter-card" href="10-傅立葉分析.html"><h2><span class="number">10</span> 傅立葉分析</h2><p>把訊號拆成弦波的疊加，看懂頻譜、頻寬與取樣不足造成的摺疊。</p></a>
+<a class="chapter-card" href="11-PDE與向量分析.html"><h2><span class="number">11</span> PDE與向量分析</h2><p>梯度、散度、旋度三大算子，以及場如何隨時間與空間演化。</p></a>
+<a class="chapter-card" href="12-機率與隨機變數.html"><h2><span class="number">12</span> 機率與隨機變數</h2><p>把不確定性寫成可計算的量：分布、期望值、變異數與大數法則。</p></a>
+<a class="chapter-card" href="13-統計推論與隨機過程.html"><h2><span class="number">13</span> 統計推論與隨機過程</h2><p>用資料反推模型：標準誤、信賴區間、假設檢定，以及雜訊的功率頻譜。</p></a>
+<a class="chapter-card" href="名詞與概念字典.html"><h2><span class="number">查</span> 名詞與概念字典</h2><p>中英名詞對照＋白話解釋：收斂域、秩、奇異、阻尼比、相量、卷積、摺疊都在這裡。</p></a>
+<a class="chapter-card" href="自我檢核.html"><h2><span class="number">檢</span> 自我檢核</h2><p>每章 2 到 3 題，即時對錯與解釋，不計分、可無限重做、答錯不擋路。</p></a>
+</section>
+
+<h2>和「機器人數學基礎」那門課的差別</h2>
+<p>本站另有一門 <a href="../../../專題/機器人數學基礎/互動課程/index.html">機器人數學基礎</a>，兩門課不是同一件事重講兩次。機器人數學基礎是<strong>應用取向的先修</strong>：只假設你還記得三角函數，內容集中在三角、座標、向量、矩陣、旋轉、變換、解方程與導數／梯度，深度停在「會用來算機器人問題」，目的是替運動學、路徑規劃、視覺、學習四門機器人課備料。本課是<strong>系統性的大學課綱版</strong>：假設你會讀程式，從極限與函式重新蓋起，一路到 ODE、拉氏、複變、傅立葉、PDE 與統計推論，深度要求到「說得出推導、判斷得出適用範圍」。重疊的章節（導數、向量與矩陣、解方程、機率）會互相連結，本課也補上機器人課完全沒教的特徵值與分解；反過來說，齊次座標、旋轉表示法的比較、外積的機器人慣例與雅可比，本課不談，要看那些請去機器人數學基礎。</p>
+
+<h2>來源</h2>
+<ul>
+<li>01-微積分.md</li>
+<li>02-線性代數.md</li>
+<li>03-工程數學-上.md、03-工程數學-中.md、03-工程數學-下.md</li>
+<li>04-機率與統計.md</li>
+</ul>
+
+<nav class="pager" aria-label="章節導覽"><a href="自我檢核.html">← 自我檢核</a><a href="00-工程數學地圖.html">開始：工程數學地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>工程數學先修（零基礎互動課）</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

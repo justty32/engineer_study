@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 常微分方程｜工程數學先修</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-工程數學地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・用方程描述系統如何隨時間演化</p>
+<h1>常微分方程：從 RC 充電讀懂自然響應與數值穩定</h1>
+<p class="lead">工程系統的未知量往往不是一個數，而是整段隨時間變化的波形。這章從一階 RC 電路建立時間常數，再走到二階阻尼、狀態空間與 Euler 前向法，讓方程、物理響應和程式近似接在一起。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-極限與導數.html">01 極限與導數</a>、<a href="06-特徵值與分解.html">06 特徵值與分解</a>。</p>
+
+<h2>痛點：未知的是整條曲線，不是代回去就能得到的數</h2>
+<p>代數方程 2x + 1 = 5 的未知數是 x；常微分方程（ordinary differential equation, ODE）的未知數卻是函式 y(t)，方程同時限制它的值、斜率與更高階導數。只知道某一刻的斜率不等於知道整條曲線，還必須給初始值，才能從起點沿著方程指定的方向往前走。電容電壓、馬達轉速、機械位移與控制器狀態都屬於這類問題。</p>
+<p>ODE 的最高導數決定<strong>階數（order）</strong>；未知函式及其導數只以一次方出現且不彼此相乘時稱<strong>線性（linear）</strong>；係數不隨時間變叫常係數。右側為零的<strong>齊次（homogeneous）</strong>方程描述系統離開平衡後自己留下的自然響應，右側非零則有外力造成的強迫響應。這些分類不是名詞遊戲，而是在告訴我們可用哪種解法、需要幾個初始條件，以及響應能否疊加。</p>
+<p>階數也對應系統必須記住多少初始資訊。一階 RC 只需一個初始電壓；二階 RLC 通常需要電容電壓與電感電流，或等價的輸出初值與一階導數。這些初值代表儲能元件當下保存的能量狀態，不能只靠外加輸入推回。若漏掉初值，求到的不是唯一時間波形，而是一族都滿足微分式的候選解。</p>
+
+<h2>白話直覺：時間常數像每秒吃掉固定比例的距離</h2>
+<p>可先把 RC 充電想成每隔一段時間就補掉「距離目標還差多少」的一部分：差距大時改變快，快到目標時改變慢。比喻到此為止；精確地說，RC dv/dt + v = v<sub>s</sub>，也就是 dv/dt = (v<sub>s</sub> − v)/τ，且 τ = RC。導數正比於目前誤差，因此誤差不是每秒減固定伏特，而是按固定比例指數衰減。</p>
+<p>一階線性標準型是 dy/dt + p(t)y = q(t)。乘上<strong>積分因子（integrating factor）</strong> μ(t) = e<sup>∫p dt</sup> 後，左側合成 d(μy)/dt，積分便能求 y。二階常係數式 ay″ + by′ + cy = f(t) 則先看特徵方程 aλ² + bλ + c = 0：兩相異實根給過阻尼，重根給臨界阻尼，共軛複根給欠阻尼。標準式 y″ + 2ζω<sub>n</sub>y′ + ω<sub>n</sub>²y = ω<sub>n</sub>²u(t) 中，自然頻率 ω<sub>n</sub> 描述無阻尼時想振多快，阻尼比 ζ 決定振盪是否出現及包絡衰減程度。</p>
+<p>完整解是齊次解加特解：前者承載初始能量，後者追隨輸入。把高階方程改寫成<strong>狀態空間（state space）</strong> ẋ = Ax + Bu、y = Cx + Du，可得 x(t) = e<sup>At</sup>x(0) + ∫<sub>0</sub><sup>t</sup> e<sup>A(t−τ)</sup>Bu(τ) dτ。第一項是自然響應，第二項是輸入累積的強迫響應；矩陣 A 的特徵值實部決定自然響應衰減或放大，正好接回第 06 章。</p>
+<p>這也解釋線性系統為何能使用疊加：若輸入拆成兩段，積分項可拆成兩個積分，輸出就是兩份響應相加。不過元件飽和、摩擦死區或電晶體非線性會破壞這個性質；此時線性 ODE 常只是工作點附近的小訊號近似，不能把局部模型外推到任意振幅。</p>
+<p class="note">來源：03-工程數學-上 第 1 章 §1.1–§1.5。</p>
+
+<h2>推導：從 RC 分離變數到 Euler 的誤差倍率</h2>
+<p><strong>（a）解析解。</strong>由 RC dv/dt + v = v<sub>s</sub> 且 τ = RC，移項得 dv/dt = (v<sub>s</sub> − v)/τ。把 v 與 t 分到兩側：</p>
+<p><code>dv/(v<sub>s</sub> − v) = dt/τ</code></p>
+<p>兩邊積分，左側因分母對 v 的導數為 −1，所以得到 −ln|v<sub>s</sub> − v| = t/τ + C。指數化後可把常數合併為 K，寫成 v<sub>s</sub> − v = K e<sup>−t/τ</sup>。代入 v(0) = v<sub>0</sub> 得 K = v<sub>s</sub> − v<sub>0</sub>，再整理便是：</p>
+<p><code>v(t) = v<sub>s</sub> + (v<sub>0</sub> − v<sub>s</sub>)e<sup>−t/τ</sup></code></p>
+<p><strong>（b）Euler 前向法。</strong>若程式只保存離散時刻 v<sub>k</sub>，就在 t<sub>k</sub> 用前向差商近似導數：dv/dt ≈ (v<sub>k+1</sub> − v<sub>k</sub>)/Δt。代回 dv/dt = (v<sub>s</sub> − v)/τ，得到 (v<sub>k+1</sub> − v<sub>k</sub>)/Δt = (v<sub>s</sub> − v<sub>k</sub>)/τ。兩邊乘 Δt 並移項：</p>
+<p><code>v<sub>k+1</sub> = v<sub>k</sub> + (Δt/τ)(v<sub>s</sub> − v<sub>k</sub>)</code></p>
+<p>這不是另一套神祕公式，而是第 01 章「導數就是極限差商」在有限步長下的直接應用。每一步用當下斜率畫一小段切線；曲率使這段直線與真正曲線產生局部誤差，累積後形成全域一階誤差。</p>
+<p><strong>（c）數值穩定性。</strong>把穩態 v<sub>s</sub> 從遞迴兩側扣掉，可得 v<sub>k+1</sub> − v<sub>s</sub> = (1 − Δt/τ)(v<sub>k</sub> − v<sub>s</sub>)。所以每一步的誤差都乘 q = 1 − Δt/τ。當 Δt/τ &lt; 1，q 在 0 與 1 之間，誤差同號且單調縮小；當 1 &lt; Δt/τ &lt; 2，q 在 −1 與 0 之間，誤差交替換邊但幅度縮小；當 Δt/τ &gt; 2，|q| &gt; 1，誤差越乘越大而發散。邊界 Δt/τ = 2 時 |q| = 1，誤差不消失。這是演算法自己的穩定性，不能反過來宣稱真實 RC 電路會振盪或爆掉。</p>
+
+<h2>數值實例：同一秒，解析曲線與離散切線走出不同位置</h2>
+<p>取 τ = 1 s、v<sub>0</sub> = 0 V、v<sub>s</sub> = 5 V，解析解為 v(t) = 5(1 − e<sup>−t</sup>)。在 t = 1 s，也就是一個時間常數時，e<sup>−1</sup> = 0.367879，所以 v = 5⋅0.632121 = <strong>3.160603 V</strong>，完成總變化的 <strong>63.2 %</strong>。到 t = 5τ 時仍非數學上的 100 %，但已達 99.3 %，工程上常視為接近穩態。</p>
+<p>改用 Δt = 0.1 s 走 10 步，誤差倍率是 (1 − 0.1)<sup>10</sup> = 0.9<sup>10</sup> = 0.348678，得到 v = 5(1 − 0.348678) = <strong>3.256608 V</strong>，比真值高 0.096005 V。步長減為 0.05 s 時全域誤差約減半，顯示 Euler 前向法是一階方法。另取 ζ = 0.5、ω<sub>n</sub> = 2 rad/s，根為 λ = −ζω<sub>n</sub> ± ω<sub>n</sub>√(ζ²−1) = −1 ± j1.732051；負實部造成衰減，非零虛部造成振盪，因此是欠阻尼。</p>
+
+<section class="workspace"><h2>自由實驗：比較 RC 解析解與 Euler 步進</h2>
+<p>這裡示範同一個穩定 RC 方程如何因步長不同而得到準確、假振盪或發散的數值解。調整時間常數、初值、外加電壓、觀察時刻與步長，觀察解析值、Euler 誤差及 Δt/τ 的判讀。</p>
+<div class="controls">
+<label for="ode-tau">時間常數 τ（s）<input id="ode-tau" type="range" min="0.1" max="5" step="0.1" value="1"></label>
+<label for="ode-v0">初值 v0（V）<input id="ode-v0" type="range" min="-5" max="5" step="0.5" value="0"></label>
+<label for="ode-vs">外加電壓 vs（V）<input id="ode-vs" type="range" min="-5" max="5" step="0.5" value="5"></label>
+<label for="ode-t">觀察時刻 t（s）<input id="ode-t" type="range" min="0" max="20" step="0.1" value="1"></label>
+<label for="ode-dt">Euler 步長 Δt（s）<input id="ode-dt" type="range" min="0.01" max="1" step="0.01" value="0.1"></label>
+</div>
+<div id="odestep-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>為什麼／不要混淆</h2>
+<ul>
+<li>τ 是完成總變化 63.2 % 所需的時間，不是到達 100 % 的時間；指數曲線只會漸近穩態。</li>
+<li>數值不穩定不等於物理不穩定。穩定 RC 電路也會被過大的 Euler 步長算出假振盪與發散。</li>
+<li>齊次解是系統由初始能量產生的自然響應；特解是外部輸入維持的強迫響應，兩者相加才是完整解。</li>
+<li>ζ = 1 的「最快」有條件：它是在不產生超調的解之中最快，不代表所有性能指標下的絕對最快。</li>
+<li>ω<sub>n</sub> 是無阻尼自然頻率；欠阻尼實際振盪頻率還受 ζ 影響，不能把兩者直接當同一個量。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p>在麵包板接 RC 串聯電路並輸入步階，示波器上從初值走完 63.2 % 所需的時間就是 τ；改變 R 或 C，曲線時間尺度會按乘積 RC 改變。RLC 或控制迴路的步階響應若出現超調與振鈴，可由峰值、週期和包絡估計 ζ 與 ω<sub>n</sub>。在程式模擬裡固定物理參數只放大 Δt，若曲線開始左右跳過穩態甚至增幅，便是數值方法造成的可重現證據。</p>
+<p>還可做步長收斂檢查：以同一觀察時刻分別使用 Δt、Δt/2 與 Δt/4，若 Euler 誤差大致依序減半，就符合一階方法的預測。若減小步長後結果不收斂，問題可能來自程式索引、單位、停止時刻取整或方程本身，而不是用一句「電路有雜訊」就能帶過。</p>
+
+<h2>連到哪門課</h2>
+<p>ODE 直接服務電路學的 RC、RL、RLC 暫態，控制系統的狀態空間與穩定性，信號與系統的線性時不變模型，以及馬達與機械系統動態。下一章會把導數轉成 s 的乘法，使含初值的微分方程變成代數方程；第 11 章則把單一時間變數擴展成同時依賴時間與空間的偏微分方程。</p>
+<p>學到這裡，應能沿著一條完整因果鏈閱讀模型：先由元件定律與守恆關係寫出 ODE，再由初值決定自然響應的權重，由輸入決定特解，最後檢查特徵根與數值步長。面對模擬結果異常時，也應先分層判斷：若解析解本身成長，是模型的動態不穩定；若解析解衰減而離散值爆掉，是演算法步長問題；若兩者都合理但量測不同，才回頭檢查元件容差、未建模效應與量測條件。這套分層診斷比只會代公式更接近後續控制與電路課的實際用法。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="06-特徵值與分解.html">← 上一頁：特徵值與分解</a><a href="08-拉氏轉換.html">下一頁：拉氏轉換 →</a></nav>
+</main>
+<footer class="site-footer"><span>07 常微分方程</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

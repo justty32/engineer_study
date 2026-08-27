@@ -1,0 +1,67 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 傅立葉分析｜工程數學先修</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-工程數學地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・把波形拆成一組可量測的頻率成分</p>
+<h1>傅立葉分析：看弦波如何疊成方波，以及跳變為何難逼近</h1>
+<p class="lead">同一段訊號可在時間域看波形，也可在頻率域看它由哪些弦波組成。這章從方波係數親手積分，辨認收斂速度、吉布斯現象、取樣摺疊與 FFT 的工程位置。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-級數與泰勒.html">03 級數與泰勒</a>、<a href="09-複變入門.html">09 複變入門</a>。</p>
+
+<h2>痛點：時間波形看得見形狀，卻看不出頻寬與濾波後果</h2>
+<p>示波器上的方波看似只有高、低兩個電位，但送進頻寬有限的放大器後邊緣會變圓；通訊脈衝越短，佔用頻寬越寬；取樣不足時甚至會看到不存在的低頻。只在時間軸上看，這些現象像是彼此無關的故障。若把訊號拆成頻率成分，它們就成為「哪些成分存在、系統保留哪些、取樣把哪些成分折回來」的同一個問題。</p>
+<p>依訊號型態有四種工具：連續週期訊號用<strong>傅立葉級數（Fourier series, FS）</strong>並得到離散頻率；連續非週期訊號用<strong>傅立葉轉換（Fourier transform, FT）</strong>並得到連續頻率；離散非週期序列用離散時間傅立葉轉換（Discrete-Time Fourier Transform, DTFT）；有限長離散資料用離散傅立葉轉換（Discrete Fourier Transform, DFT），實作常用快速傅立葉轉換（Fast Fourier Transform, FFT）。選錯工具會誤解頻率軸是否離散、是否週期。</p>
+<p>頻譜不是另一份無關資料，而是同一訊號換一組座標。時間域適合定位事件何時發生，頻率域適合判斷能量落在哪些頻帶；轉換可逆時，兩邊保存同等資訊。工程上選擇哪一域工作，取決於系統關係在哪一邊較簡單：微分和卷積在頻域變乘法，短暫故障與延遲則常在時間域更直觀。</p>
+
+<h2>白話直覺：弦波是訊號的頻率積木</h2>
+<p>可以先把波形想成由許多不同音高、振幅與相位的純音疊成。比喻到此為止；精確地說，週期 T 的訊號用 x(t) = Σ<sub>n=−∞</sub><sup>∞</sup> c<sub>n</sub>e<sup>jnω0t</sup> 表示，ω0 = 2π/T 是基頻，係數 c<sub>n</sub> = (1/T)∫<sub>0</sub><sup>T</sup> x(t)e<sup>−jnω0t</sup> dt 是把訊號投影到第 n 個複指數基底的結果。</p>
+<p>非週期訊號改用 X(ω) = ∫<sub>−∞</sub><sup>∞</sup> x(t)e<sup>−jωt</sup> dt，反轉換為 x(t) = (1/(2π))∫<sub>−∞</sub><sup>∞</sup> X(ω)e<sup>jωt</sup> dω。七個核心性質把工程操作翻譯到頻域：線性保持線性；時移造成相位因子 X(ω)e<sup>−jωt0</sup>；頻移搬動頻譜；時間縮放反向改變頻寬；微分變 jωX(ω)；時間卷積變頻率相乘；時間相乘變頻率卷積再除 2π。濾波器以卷積作用，因此頻域只需把輸入頻譜乘系統頻率響應。</p>
+<p><strong>巴塞瓦定理（Parseval's theorem）</strong>表達時間域與頻率域的能量一致。δ(t) ⇔ 1 說明理想脈衝包含所有頻率；常數 ⇔ 2πδ(ω) 表示直流只在零頻；矩形脈衝 ⇔ sinc，高斯 ⇔ 高斯。時頻不確定性 Δt⋅Δω ≥ 1/2 則說明訊號在時間越集中，就不可能同時在頻率也任意集中。</p>
+<p><strong>取樣定理（sampling theorem）</strong>指出頻寬 W 的訊號需以 f<sub>s</sub> ≥ 2W 取樣，才存在理想重建的可能。這個界線假設訊號確實限頻，且取樣時刻理想；實際 ADC 還需留轉換帶與抗摺疊濾波器餘量。DFT 則以 X[k] = Σ<sub>n=0</sub><sup>N−1</sup> x[n]e<sup>−j2πkn/N</sup> 計算有限資料，直接算法需約 N² 次運算，FFT 利用對稱與分治降到約 N log N。</p>
+<p class="note">來源：03-工程數學-中 第 4 章 §4.1–§4.9。</p>
+
+<h2>推導：方波為何只留下奇次正弦</h2>
+<p>取週期 T = 1、幅度 ±1 的方波：0 &lt; t &lt; 0.5 時 x(t) = 1，0.5 &lt; t &lt; 1 時 x(t) = −1。選擇等價的奇對稱週期延拓後，平均值與所有餘弦係數為 0，只需算正弦係數。第 k 次係數為：</p>
+<p><code>b<sub>k</sub> = 2∫<sub>0</sub><sup>1</sup> x(t)sin(2πkt)dt</code></p>
+<p>在跳變點拆積分：</p>
+<p><code>b<sub>k</sub> = 2[∫<sub>0</sub><sup>0.5</sup> sin(2πkt)dt − ∫<sub>0.5</sub><sup>1</sup> sin(2πkt)dt]</code></p>
+<p>因 ∫ sin(2πkt)dt = −cos(2πkt)/(2πk)，第一段為 (1 − cos(kπ))/(2πk)，第二段在前方已有負號，貢獻同樣為 (1 − cos(kπ))/(2πk)。乘外面的 2，得到 b<sub>k</sub> = 2(1 − cos(kπ))/(πk)。當 k 為偶數，cos(kπ) = 1，所以 b<sub>k</sub> = 0；當 k 為奇數，cos(kπ) = −1，所以 b<sub>k</sub> = 4/(πk)。因此：</p>
+<p><code>x(t) = (4/π) Σ<sub>k 為奇數</sub> sin(2πkt)/k</code></p>
+<p>偶次諧波消失可由半週對稱 x(t+0.5) = −x(t) 理解：偶次弦波跨半週不換號，正負兩半的投影互相抵消。係數只按 1/k 下降，代表跳變需要很多高頻才能描出陡邊。</p>
+<p>在不連續點，左右極限不同，傅立葉部分和收斂到兩者平均；本例在跳變點收斂到 0。跳變附近會出現約跳幅 9 % 的超越，增加項數只讓超越區域變窄，峰值比例不消失，這叫<strong>吉布斯現象（Gibbs phenomenon）</strong>。它不是計算錯誤，而是用有限個連續弦波逼近不連續函式的結構性結果。</p>
+
+<h2>數值實例：在正半週中央看交錯逼近</h2>
+<p>觀察方波 t/T = 0.25，目標值為 1。此時 sin(2πk⋅0.25) 對奇數 k 交替為 1、−1。只保留 N = 1 時，部分和 (4/π)(1) = <strong>1.273240</strong>，有號誤差 +0.273240。保留到 N = 3 時，(4/π)(1 − 1/3) = <strong>0.848826</strong>，誤差 −0.151174。</p>
+<p>繼續到 N = 5，(4/π)(1 − 1/3 + 1/5) = <strong>1.103474</strong>；到 N = 7，加入 −1/7 後為 <strong>0.921583</strong>。部分和上下交錯靠近 1，誤差大致按 1/N 縮小，遠慢於係數按 1/k² 衰減的連續三角波。下方預設 N = 1、t/T = 0.25，會重現第一個數值。</p>
+
+<section class="workspace"><h2>自由實驗：疊加諧波逼近三種週期波</h2>
+<p>這裡示範方波、鋸齒波與三角波的部分和及收斂速度。選波形、調整最高諧波 N 與 t/T，觀察誤差、實際非零項和跳變附近的吉布斯警語。</p>
+<div class="controls">
+<label for="fs-wave">波形<select id="fs-wave"><option value="square">方波</option><option value="saw">鋸齒波</option><option value="tri">三角波</option></select></label>
+<label for="fs-n">保留到第 N 項諧波<input id="fs-n" type="range" min="1" max="99" step="1" value="1"></label>
+<label for="fs-t">歸一化時間 t/T<input id="fs-t" type="range" min="0" max="1" step="0.005" value="0.25"></label>
+</div>
+<div id="fourier-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>為什麼／不要混淆</h2>
+<ul>
+<li>傅立葉級數處理週期訊號並產生離散譜線；傅立葉轉換處理非週期訊號並產生連續頻譜。</li>
+<li>DFT 的時間與頻率索引都離散，且隱含輸入區段週期延拓；端點接不起來時會產生頻譜洩漏。</li>
+<li>摺疊（aliasing）由取樣率不足造成，高頻折成低頻後無法靠事後數位濾波唯一還原；取樣前須限制頻寬。</li>
+<li>振幅頻譜與相位頻譜同樣重要。保留振幅卻丟掉相位，時域形狀通常會完全改變。</li>
+<li>吉布斯超越不會因增加項數而按高度消失，只會向跳變點擠窄；不能把它誤認成單純浮點誤差。</li>
+<li>FFT 是高效率計算 DFT 的演算法，不是另一種數學轉換；輸入與輸出定義仍是 DFT。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p>把方波接到頻譜分析儀，可看到基頻 1f 與 3f、5f 等奇次譜線，幅度約按 1/k 下降；示波器的 FFT 功能也能比較邊緣變慢前後高頻成分的減少。ADC 取樣率低於訊號最高頻率兩倍時，畫面會出現頻率較低但原訊號不存在的假波。程式對同一筆資料做 DFT，時移只改相位而不改振幅，也可直接驗證轉換性質。</p>
+<p>可再比較方波與三角波：兩者都有半週對稱而缺少偶次諧波，但三角波連續、係數約按 1/k² 下降，所以高次譜線更快沉入儀器雜訊底。這項差異同時出現在頻譜斜率與部分和誤差，提供彼此獨立的觀察證據，也說明波形越平滑通常頻譜衰減越快。</p>
+
+<h2>連到哪門課</h2>
+<p>傅立葉分析直接服務信號與系統、數位訊號處理、通訊系統、濾波器、音訊、影像與頻譜估計；取樣定理是 ADC 與數位通訊的入口。下一章的 PDE 會用傅立葉級數配合邊界條件疊加空間模態，說明這套工具為何最早就從熱與弦振動問題長出來。</p>
+<p>一個可靠的頻譜分析流程會先辨認訊號是否週期、連續與有限長，再選 FS、FT、DTFT 或 DFT；接著確認取樣率、觀察長度與窗函數造成的限制，最後才解讀譜峰。譜峰的位置指出頻率，複係數的模與角分別保留振幅和相位，頻率解析度則受觀察時間約束。若量到意外低頻，應比較不同取樣率以排除摺疊；若能量散到鄰近槽，應先檢查截取區段能否首尾相接。這些診斷把數學性質轉成儀器與程式上可執行的檢查，也能避免把窗函數副瓣誤判成系統真正產生的新頻率。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="09-複變入門.html">← 上一頁：複變入門</a><a href="11-PDE與向量分析.html">下一頁：PDE與向量分析 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 傅立葉分析</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

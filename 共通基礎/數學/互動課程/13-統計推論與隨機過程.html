@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 統計推論與隨機過程｜工程數學先修</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-工程數學地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">13・從有限資料推回未知世界</p>
+<h1>統計推論與隨機過程：估計真值，也描述雜訊如何隨時間走</h1>
+<p class="lead">機率從模型推結果，統計則從有限資料反推模型。當資料還按時間排列時，只看單點分布不夠，還要描述前後樣本的關係與能量落在哪些頻率。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="12-機率與隨機變數.html">12 機率與隨機變數</a>、<a href="10-傅立葉分析.html">10 傅立葉分析</a>。</p>
+
+<h2>痛點：一個平均值沒有說明它有多可信</h2>
+<p>量到 25 筆資料，平均為 5，不代表母體真實平均恰好就是 5。若單次量測標準差很大，樣本平均仍可能偏離真值；若樣本彼此相關，增加筆數也未必像獨立樣本那樣有效。工程決策必須同時交代估計值、抽樣不確定度與採用的模型假設，否則「平均是 5」無法支撐元件是否合格、接收器是否偵測到訊號等判斷。</p>
+<p>另一個痛點是時間結構。兩段雜訊可能有相同平均與變異數，一段卻快速抖動，另一段緩慢漂移；它們對濾波器與控制迴路的影響完全不同。這要求我們把單一<strong>隨機變數（random variable）</strong>擴展成<strong>隨機過程（stochastic process）</strong> {X(t)}，不只問某時刻的分布，也問相隔 τ 的樣本彼此多像，以及功率分布在哪些頻率。</p>
+
+<h2>白話直覺：區間是會晃動的網，過程是一整疊可能波形</h2>
+<p>可先把<strong>信賴區間（confidence interval）</strong>想成用資料撒出的一張網：每次重抽樣本，網的位置都會變，但製作方法的覆蓋率可以校準。精確地說，95 % 信賴是指在相同條件下重複抽樣並依同一程序造區間，長期約有 95 % 的區間覆蓋固定的母體參數；資料已經觀察後，不能把它改述成「真值有 95 % 機率落在這個已算出的區間」。</p>
+<p>參數估測有不同準則。<strong>最大似然估測（Maximum Likelihood Estimation, MLE）</strong>選使已觀察資料最可能出現的參數；<strong>最大後驗估測（Maximum A Posteriori, MAP）</strong>再乘上先驗，選後驗最大的參數；<strong>最小均方誤差（Minimum Mean Square Error, MMSE）</strong>選使 E[(θ̂−θ)²] 最小的估計。三者問法不同，不應只因名稱都含「估測」便視為同一答案。</p>
+<p>隨機過程可想成一整疊可能波形，每次實驗抽出其中一條。精確地說，若統計性質不隨時間平移而改變，稱為<strong>平穩（stationary）</strong>；若一條足夠長的時間軌跡所算出的平均等於跨許多可能軌跡的集合平均，稱為<strong>遍歷（ergodic）</strong>。平穩不自動保證遍歷，遍歷性才讓我們能用一筆長時間紀錄代表整體。</p>
+<p class="note">來源：04-機率與統計 §8–§10。</p>
+
+<h2>推導：樣本數、區間半寬與雙尾檢定如何接起來</h2>
+<p><strong>（a）標準誤的來歷。</strong>令 X<sub>1</sub>, …, X<sub>n</sub> 為獨立同分布樣本，每個變異數都是 σ²，樣本平均 x̄ = (X<sub>1</sub>+⋯+X<sub>n</sub>)/n。獨立使總和的變異數可以相加，因此：</p>
+<p><code>Var(x̄) = Var((X<sub>1</sub>+⋯+X<sub>n</sub>)/n) = (1/n²)⋅n⋅σ² = σ²/n</code></p>
+<p>開根號便得到<strong>標準誤（standard error, SE）</strong> SE = σ/√n。它描述樣本平均在重複抽樣間的波動，不是原始資料本身的標準差。因為 n 躲在平方根內，若要把區間半寬減半，必須讓 √n 加倍，也就是把 n 變成原本的 <strong>4 倍</strong>；資料量與精度並非線性兌換。</p>
+<p><strong>（b）信賴區間的意義。</strong>中央極限定理讓 n 足夠大時的 x̄ 近似常態。若母體 σ 已知，標準化量 (x̄−μ)/(σ/√n) 約服從標準常態。把中央 1−α 的面積用臨界值 z<sub>α/2</sub>夾住，再解回 μ，得到 x̄ ± z<sub>α/2</sub>⋅σ/√n。常用值是 90 % 對 1.645、95 % 對 1.960、99 % 對 2.576；提高信賴水準會用更大的 z，因此在相同資料下區間更寬。</p>
+<p>這個推導的隨機量是 x̄，因此區間端點隨樣本改變；μ 在頻率學派解讀中是固定未知常數。95 % 是造區間程序的長期覆蓋率，不是把固定 μ 當作抽籤結果。若 σ 未知且樣本小，通常要改用樣本標準差與 t 分布；本章互動明確假設母體 σ 已知，所以使用 z 值。</p>
+<p><strong>（c）雙尾檢定與區間的等價。</strong>考慮<strong>假設檢定（hypothesis testing）</strong>中的虛無假設 H<sub>0</sub>: μ = μ<sub>0</sub>。雙尾檢定在 |x̄−μ<sub>0</sub>|/SE &gt; z<sub>α/2</sub> 時拒絕 H<sub>0</sub>。兩邊同乘 SE 得 |x̄−μ<sub>0</sub>| &gt; z<sub>α/2</sub>SE，等價於 μ<sub>0</sub> 不在 [x̄−zSE, x̄+zSE] 中。於是同一顯著水準下，雙尾檢定拒絕的那些 μ<sub>0</sub>，正是相對應信賴區間沒有涵蓋的值。</p>
+<p>假設檢定不是證明 H<sub>0</sub> 真或假，而是在控制風險下作決策。把沒有訊號時誤判成有訊號稱假警（false alarm），把有訊號時漏掉稱漏報（miss）。奈曼—皮爾遜準則在限制假警率的前提下最大化偵測率；通訊接收器在「送 0」與「送 1」間選擇，本質就是這類檢定。</p>
+
+<h2>數值實例：用同一組資料同時造區間與做檢定</h2>
+<p>自由實驗預設 x̄ = 5、已知母體 σ = 2、n = 25、信賴水準 95 %。標準誤 SE = 2/√25 = 2/5 = <strong>0.400000</strong>；臨界值 z = 1.960，所以半寬 = 1.960 × 0.4 = <strong>0.784000</strong>。信賴區間為 [5−0.784, 5+0.784] = [<strong>4.216000</strong>, <strong>5.784000</strong>]。這些數字同時顯示樣本平均的位置與因有限樣本造成的不確定度。</p>
+<p>再檢定 H<sub>0</sub>: μ = 4。檢定統計量 z = (5−4)/0.4 = <strong>2.500000</strong>，其絕對值大於 1.960；同時 μ<sub>0</sub> = 4 也落在信賴區間下界 4.216000 之外，因此在 5 % 雙尾顯著水準下拒絕 H<sub>0</sub>。這是「資料與 μ = 4 不相容到超過門檻」，不是宣告任何替代值已被證明。</p>
+<p>若其他設定不變而把 n 從 25 加到 100，SE = 2/√100 = 0.2，半寬 = 1.960 × 0.2 = 0.392，正好是 0.784 的一半；樣本數從 25 變 100，正是原本的 <strong>4 倍</strong>。若改成 99 % 信賴水準，z 從 1.960 增至 2.576，區間會變寬；若 σ 變大，SE 與半寬也按比例變大。</p>
+
+<section class="workspace"><h2>自由實驗：信賴區間與雙尾檢定</h2>
+<p>這裡示範已知母體標準差時的平均數推論。調整平均、σ、樣本數、信賴水準與 μ<sub>0</sub>，觀察標準誤、區間端點、z 統計量與是否拒絕 H<sub>0</sub>如何同步改變。</p>
+<div class="controls">
+<label for="ci-mean">樣本平均 x̄<input id="ci-mean" type="range" min="-10" max="10" step="0.1" value="5"></label>
+<label for="ci-sigma">母體標準差 σ（已知）<input id="ci-sigma" type="range" min="0.1" max="10" step="0.1" value="2"></label>
+<label for="ci-n">樣本數 n<input id="ci-n" type="range" min="1" max="500" step="1" value="25"></label>
+<label for="ci-level">信賴水準<select id="ci-level"><option value="0.90">90 %</option><option value="0.95" selected>95 %</option><option value="0.99">99 %</option></select></label>
+<label for="ci-mu0">虛無假設的 μ0<input id="ci-mu0" type="range" min="-10" max="10" step="0.1" value="4"></label>
+</div>
+<div id="ci-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>為什麼／不要混淆</h2>
+<ul>
+<li>資料的標準差 σ 描述單筆觀測的散布；標準誤 σ/√n 描述樣本平均的抽樣波動。增加 n 會縮小後者，不會讓原始資料突然變得集中。</li>
+<li>95 % 信賴不是「這個固定真值有 95 % 機率在已得到的區間內」。它是相同程序長期重複時的覆蓋率。</li>
+<li>沒有拒絕 H<sub>0</sub>不等於證明 H<sub>0</sub>為真。資料可能不足以區分，也可能檢定力太低；結論必須連同樣本數與門檻解讀。</li>
+<li>統計顯著不等於工程效果很大。樣本很多時，很小的差異也可能跨過檢定門檻；仍要看差異量與實務容許值。</li>
+<li>平穩與遍歷不是同義詞。平穩談統計量是否隨時間漂移，遍歷談一條長軌跡的時間平均能否代表集合平均。</li>
+<li>白雜訊不是每個時間點都等於零，也不是時間波形看起來一定白色。它的理想定義是<strong>功率譜密度（Power Spectral Density, PSD）</strong>對頻率為常數，等價的自相關在非零延遲為零。</li>
+<li>相關不等於因果。自相關描述同一過程在不同延遲的線性相似程度，不能單獨證明某時刻造成另一時刻。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p>固定量測流程，重複抽取多組 n = 25 的樣本並各自造 95 % 區間，長期約 95 % 的區間會涵蓋真實平均；單一區間是否涵蓋則只有是或否。若把樣本數由 25 增到 100，軟體輸出的標準誤會從 0.400000 降到 0.200000，區間半寬從 0.784000 降到 0.392000，直接驗證 1/√n 的縮減律。</p>
+<p>對時間序列計算<strong>自相關函數（autocorrelation function）</strong> R<sub>X</sub>(τ) = E[X(t)X(t+τ)]，可以看到不同延遲的相似程度。其傅立葉轉換是 S<sub>X</sub>(ω)，這就是 Wiener–Khinchin 定理與第 10 章的連接。理想白雜訊的 S<sub>X</sub>(ω) 為<strong>常數</strong>，R<sub>X</sub>(τ) 則集中成 τ = 0 的脈衝 δ(τ)：不同時刻不相關，但每一頻帶都有相同功率密度。實際儀器頻寬有限，因此量到的是有限頻帶內近似平坦，而非無限頻寬的理想模型。</p>
+<p>在通訊接收器可掃描判決門檻並記錄假警率與漏報率：門檻移動通常讓兩者此消彼長。頻譜分析儀上，白雜訊底在使用頻帶內近似平坦；若出現窄峰，表示週期干擾，若低頻隆起則可能是漂移或有色雜訊。這些都是模型能被量測直接反駁或支持的證據。</p>
+
+<h2>連到哪門課</h2>
+<p>本章直接服務通訊系統的偵測與估測、數位訊號處理的隨機訊號與 Wiener 濾波、控制系統的 Kalman 濾波、量測學的區間與檢定，以及機器學習的參數估計與泛化判讀。功率譜密度由自相關的傅立葉轉換而來，因此應回接<a href="10-傅立葉分析.html">第 10 章傅立葉分析</a>；機率模型的基本語言則回接<a href="12-機率與隨機變數.html">第 12 章機率與隨機變數</a>。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="12-機率與隨機變數.html">← 上一頁：機率與隨機變數</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>13 統計推論與隨機過程</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

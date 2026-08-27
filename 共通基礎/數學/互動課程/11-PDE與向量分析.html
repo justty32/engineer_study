@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 PDE與向量分析｜工程數學先修</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-工程數學地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">11・用局部差分讀懂場的源、旋轉與傳播</p>
+<h1>PDE與向量分析：把 ∇ 算子與三種場方程變成可計算的模型</h1>
+<p class="lead">電位、溫度與電磁場在每個空間位置都有值，還可能隨時間改變。這章把梯度、散度與旋度落到中央差分，再由熱、波動與拉普拉斯方程辨認擴散、傳播和穩態三種物理行為。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-極限與導數.html">01 極限與導數</a>、<a href="10-傅立葉分析.html">10 傅立葉分析</a>。</p>
+
+<h2>痛點：單一時間曲線不夠描述整片空間</h2>
+<p>RC 電壓只依賴 t，用 ODE 就能描述；但導體上的溫度 u(x,y,z,t)、天線周圍的電場 E(x,y,z,t) 同時依賴多個空間座標與時間。只問「下一秒多少」不夠，還要知道鄰近位置的差異如何推動擴散或波動，以及場在某點是向外流、繞圈還是沿某方向上升。</p>
+<p>每點只有一個數的 φ(r) 稱<strong>純量場（scalar field）</strong>，如溫度與電位；每點是一個向量的 F(r) 稱<strong>向量場（vector field）</strong>，如電場、磁場與流速。對多個自變數取偏導的方程叫<strong>偏微分方程（partial differential equation, PDE）</strong>。要唯一決定物理解，通常不能只給 PDE，還要說明邊界條件與初始條件。</p>
+<p>邊界與初始資料不是數學裝飾，而是外界如何約束系統的描述。同一條熱方程，邊界固定溫度、完全絕熱或與環境對流會得到不同穩態；同一條弦方程，不同初始撥弦形狀會激發不同模態。方程規定內部局部規則，條件則從所有可能解中選出符合實驗配置的那一個。</p>
+
+<h2>白話直覺：梯度找坡、散度找源、旋度找轉</h2>
+<p>可先把梯度想成山坡最陡的上坡箭頭，把散度想成一小塊區域漏出多少流量，把旋度想成放入小葉輪後是否轉動。比喻到此為止；精確地說，梯度 ∇φ = (∂φ/∂x, ∂φ/∂y, ∂φ/∂z) 把純量場變成向量，散度 ∇⋅F = ∂F<sub>x</sub>/∂x + ∂F<sub>y</sub>/∂y + ∂F<sub>z</sub>/∂z 把向量場變成純量，旋度 ∇ × F 把向量場變成描述局部旋轉軸與強度的向量。二維平面只需看其 z 分量。</p>
+<p>電位與電場滿足 E = −∇V；高斯定律微分形式 ∇⋅E = ρ/ε<sub>0</sub> 把電荷密度連到電場的源；安培—馬克士威定律 ∇ × B = μ<sub>0</sub>J + μ<sub>0</sub>ε<sub>0</sub>∂E/∂t 把磁場旋度連到電流與變動電場。<strong>拉普拉斯算子（Laplacian）</strong> ∇²φ = ∇⋅(∇φ) 衡量某點相對周圍平均的彎曲程度。</p>
+<p>兩個恆等式 ∇ × (∇φ) = 0 與 ∇⋅(∇ × F) = 0 分別說明梯度場局部無旋、旋度場無散。線積分 ∫<sub>C</sub> F⋅dℓ 沿路徑累積切向分量，面積分 ∫<sub>S</sub> F⋅dA 計算通量，體積分 ∫<sub>V</sub> ρ dV 累加區域內的密度。二維格林定理把平面邊界積分連到區域內的偏導；三維高斯散度定理 ∮<sub>S</sub> F⋅dA = ∫<sub>V</sub> (∇⋅F)dV，把內部源總量連到封閉面通量；史托克斯定理 ∮<sub>C</sub> F⋅dℓ = ∫<sub>S</sub> (∇ × F)⋅dA，把邊界環流連到面上旋度。</p>
+<p>馬克士威四條微分式可並列為 ∇⋅E = ρ/ε<sub>0</sub>、∇⋅B = 0、∇ × E = −∂B/∂t、∇ × B = μ<sub>0</sub>J + μ<sub>0</sub>ε<sub>0</sub>∂E/∂t。前兩式約束電場與磁場的源，後兩式描述變動電場與磁場如何互相產生；高斯與史托克斯定理正是它們在積分形式與微分形式之間的橋。</p>
+<p class="note">來源：03-工程數學-下 第 5 章、第 6 章。</p>
+
+<h2>推導：把算子離散化，再從波動方程分離出模態</h2>
+<p><strong>（a）中央差分算子。</strong>第 01 章的中央差商在 x 方向給：</p>
+<p><code>∂F<sub>x</sub>/∂x ≈ (F<sub>x</sub>(x+h,y) − F<sub>x</sub>(x−h,y))/(2h)</code></p>
+<p>二維散度把 x、y 方向的淨變化相加：</p>
+<p><code>∇⋅F ≈ (F<sub>x</sub>(x+h,y) − F<sub>x</sub>(x−h,y))/(2h) + (F<sub>y</sub>(x,y+h) − F<sub>y</sub>(x,y−h))/(2h)</code></p>
+<p>二維旋度的 z 分量是 ∂F<sub>y</sub>/∂x − ∂F<sub>x</sub>/∂y，因此用兩組中央差商相減。這些式子只取點左右或上下的值，便能把抽象的 ∇ 變成程式可執行的有限次加減乘除。</p>
+<p><strong>（b）驗證梯度場無旋。</strong>令 φ = x² + y²，先求 ∇φ = (2x,2y)。二維旋度 z 分量為 ∂(2y)/∂x − ∂(2x)/∂y = 0 − 0 = 0，所以 ∇ × (∇φ) = 0。這說明由單值電位的梯度建立的場局部不會繞圈；反過來要由無旋推得全域位勢存在，還須區域單連通。</p>
+<p><strong>（c）弦振動的分離變數。</strong>一維波動方程是 ∂²u/∂t² = c²∂²u/∂x²，兩端固定 u(0,t) = u(L,t) = 0。假設 u(x,t) = X(x)T(t)，代入得 X T″ = c²X″T。除以 c²XT：</p>
+<p><code>X″/X = T″/(c²T) = −k²</code></p>
+<p>左側只依 x，右側只依 t；要對所有 x、t 相等，只能共同等於常數。空間式 X″ + k²X = 0 的一般解由 sin(kx)、cos(kx) 組成。X(0) = 0 消去 cos 項，X(L) = 0 要求 sin(kL) = 0，所以 kL = nπ，X<sub>n</sub> = sin(nπx/L)。時間角頻率為 nπc/L，除以 2π 得 f<sub>n</sub> = nc/(2L)。各模態可線性疊加，係數由初始形狀用傅立葉級數決定。</p>
+<p>三大經典 PDE 呈現三種行為：熱或擴散方程 ∂u/∂t = α∇²u 把尖銳差異攤平；波動方程 ∂²u/∂t² = c²∇²u 傳播擾動，真空電磁波速 c = 1/√(μ<sub>0</sub>ε<sub>0</sub>)；拉普拉斯方程 ∇²u = 0 描述無源穩態。二階式 Au<sub>xx</sub> + Bu<sub>xy</sub> + Cu<sub>yy</sub> 的 B² − 4AC 小於、等於、大於 0 時，分別為橢圓型、拋物型、雙曲型。常見解法包括分離變數、積分變換、格林函數 u = G * f、有限差分與有限元素；邊界則可指定值的 Dirichlet、指定法向導數的 Neumann，或兩者線性組合的 Robin 條件。</p>
+
+<h2>數值實例：同一點分辨向外流與繞圈</h2>
+<p>取 F = (x,y)，在 (1,1) 且 h = 0.01，F 值為 (1,1)。散度的兩項分別是 (1.01 − 0.99)/0.02 = 1，所以 ∇⋅F = 1 + 1 = <strong>2</strong>，與解析值 2 相同、誤差 0。旋度兩個交叉變化皆為 0，因此 z 分量為 <strong>0</strong>。同點的 φ = x² + y² 數值梯度為 ((1.01² − 0.99²)/0.02，同) = (2,2)，也等於解析梯度 (2x,2y)。</p>
+<p>對照 F = (−y,x)，散度為 0、旋度為 <strong>2</strong>，表示純旋轉而無淨源；F = (xy,y) 在 (1,1) 的散度 y + 1 = <strong>2</strong>、旋度 −x = <strong>−1</strong>，表示同時有源與順時針旋轉。弦振動另取 L = 0.65 m、c = 200 m/s，f<sub>1</sub> = 200/(2⋅0.65) = <strong>153.85 Hz</strong>，f<sub>2</sub> = 307.69 Hz；固定兩端使泛音成為基頻整數倍。</p>
+
+<section class="workspace"><h2>自由實驗：用中央差分量場的散度與旋度</h2>
+<p>這裡示範四個向量場在指定點的源與旋轉性，並同時計算 φ = x² + y² 的梯度。選場、調整座標與步長，觀察數值值、解析值、誤差及物理判讀。</p>
+<div class="controls">
+<label for="fld-pick">向量場<select id="fld-pick"><option value="radial">F = (x, y)</option><option value="rot">F = (−y, x)</option><option value="shear">F = (y, 0)</option><option value="quad">F = (xy, y)</option></select></label>
+<label for="fld-x">觀察點 x<input id="fld-x" type="range" min="-3" max="3" step="0.25" value="1"></label>
+<label for="fld-y">觀察點 y<input id="fld-y" type="range" min="-3" max="3" step="0.25" value="1"></label>
+<label for="fld-h">中央差分步長 h<input id="fld-h" type="range" min="0.001" max="0.5" step="0.001" value="0.01"></label>
+</div>
+<div id="fieldops-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>為什麼／不要混淆</h2>
+<ul>
+<li>散度是純量，回答一點附近的淨流出；旋度在三維是向量，二維畫面只顯示垂直平面的 z 分量。</li>
+<li>∇²φ 是純量場到純量場的算子；向量拉普拉斯需逐分量或用向量恆等式定義，不能不加說明混用。</li>
+<li>無旋是局部條件。要保證全域存在單值位勢，區域還要沒有繞不開的洞，也就是具適當的單連通性。</li>
+<li>三類 PDE 需要的資料不同：雙曲型傳播問題重視初始位移與速度，橢圓型穩態問題主要由邊界值決定。</li>
+<li>Dirichlet 指定場值，Neumann 指定法向導數，Robin 混合兩者；它們代表不同物理邊界，不能任意交換。</li>
+<li>中央差分通常有 h² 等級截斷誤差；本實驗選的場三階導數為 0 才會剛好精確，不可推廣成所有場都零誤差。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p>高斯定律可由封閉面的電通量推回內含電荷；沿閉合路徑量磁場並積分，可對照安培定律中的包圍電流。有限元素模擬器在網格節點輸出電位與場向量，數值梯度、散度與旋度就是從鄰近自由度重建。吉他弦或傳輸線量到 153.85 Hz、307.69 Hz 這類整數倍共振，則是固定邊界把連續波動限制成離散空間模態的直接證據。</p>
+<p>差分結果還應做網格收斂檢查：逐步減小 h，比較數值算子是否靠近解析值或穩定極限。h 太大會有截斷誤差，過度縮小則可能放大浮點相消；有限元素也需細化網格並觀察關注量是否收斂。單張漂亮場圖不能證明答案正確，守恆量、邊界條件與網格獨立性才是可檢驗證據。</p>
+
+<h2>連到哪門課</h2>
+<p>向量分析與 PDE 直接服務電磁學、傳輸線、天線、微波工程、熱傳、流體與有限元素模擬。馬克士威方程式以散度和旋度寫局部定律，再透過高斯與史托克斯定理連回量測可見的通量與環流；傅立葉模態則把 PDE 拆成一族 ODE。下一章轉向機率，處理量測與通道中無法用單一確定場值描述的不確定性。</p>
+<p>閱讀場模擬時可以依序問四件事：未知量是純量還是向量，方程描述穩態、擴散還是傳播，邊界與初始條件對應哪個實體配置，輸出是否符合局部算子與整體守恆。局部差分能指出某點的源與旋轉，積分定理則把許多局部資訊合成封閉面或路徑上的可量測總量。若局部結果與整體通量矛盾，通常代表離散、邊界方向、單位或後處理有錯。這種由局部到整體的雙向檢查，是電磁與有限元素課最重要的數學習慣之一。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="10-傅立葉分析.html">← 上一頁：傅立葉分析</a><a href="12-機率與隨機變數.html">下一頁：機率與隨機變數 →</a></nav>
+</main>
+<footer class="site-footer"><span>11 PDE與向量分析</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

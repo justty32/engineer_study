@@ -70,6 +70,9 @@ on:
       - "專題/機器人數學基礎/互動課程/*.html"
       - "專題/機器人數學基礎/互動課程/*.css"
       - "專題/機器人數學基礎/互動課程/*.js"
+      - "共通基礎/數學/互動課程/*.html"
+      - "共通基礎/數學/互動課程/*.css"
+      - "共通基礎/數學/互動課程/*.js"
   workflow_dispatch:
 
 permissions:
@@ -185,6 +188,7 @@ jobs:
           copy_course '專題/機器人視覺/互動課程' robot-vision
           copy_course '專題/機器人學習/互動課程' robot-learning
           copy_course '專題/機器人數學基礎/互動課程' robot-math
+          copy_course '共通基礎/數學/互動課程' engineering-math
 
           python3 <<'PY'
           from pathlib import Path
@@ -227,6 +231,9 @@ jobs:
               "robot-learning": {
                   "../../機器人運動學/互動課程/": "../robot-arm-kinematics/",
                   "../../機器人數學基礎/互動課程/": "../robot-math/",
+              },
+              "engineering-math": {
+                  "../../../專題/機器人數學基礎/互動課程/": "../robot-math/",
               },
           }
 

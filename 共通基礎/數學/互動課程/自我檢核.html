@@ -1,0 +1,94 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜工程數學先修</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-工程數學地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">自我檢核・不計分，可隨時回章節重看</p>
+<h1>自我檢核</h1>
+<p class="lead">每題選一個選項或填一個數字，再按「對答案」取得原因與回看章節。作答狀態僅供自己掌握，不影響瀏覽，也可隨時全部清除後重做。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 工程數學地圖</h2>
+<p>先回看<a href="00-工程數學地圖.html">第 00 章工程數學地圖</a>，確認工具與電機問題的對應。</p>
+<section class="card"><p><strong>q00-1｜</strong>電容電流 i = C dv/dt 用到哪一類工具？</p><label for="q00-1">你的答案<select id="q00-1"><option value="">請選擇</option><option value="a">微分</option><option value="b">積分</option><option value="c">機率</option><option value="d">矩陣分解</option></select></label><button type="button" id="q00-1-check">對答案</button><div id="q00-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-2｜</strong>MIMO 通道 y = Hx + n 最直接對應本課哪章？</p><label for="q00-2">你的答案<select id="q00-2"><option value="">請選擇</option><option value="a">01 極限與導數</option><option value="b">04 向量與矩陣</option><option value="c">10 傅立葉分析</option><option value="d">07 ODE</option></select></label><button type="button" id="q00-2-check">對答案</button><div id="q00-2-output" class="output" aria-live="polite"></div></section>
+
+<h2>01 極限與導數</h2>
+<p>計算前可回看<a href="01-極限與導數.html">第 01 章極限與導數</a>的差商實例。</p>
+<section class="card"><p><strong>q01-1｜</strong>f(x) = x²、x<sub>0</sub> = 1、h = 0.1 時，前向差商是多少？</p><label for="q01-1">你的答案（無單位）<input id="q01-1" type="number" step="any"></label><button type="button" id="q01-1-check">對答案</button><div id="q01-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-2｜</strong>同一函數 f(x) = x² 的解析導數 f′(1) 是多少？</p><label for="q01-2">你的答案（無單位）<input id="q01-2" type="number" step="any"></label><button type="button" id="q01-2-check">對答案</button><div id="q01-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-3｜</strong>h 從 0.1 縮到 0.01，前向差商的截斷誤差大約如何變化？</p><label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">不變</option><option value="b">變 1/10</option><option value="c">變 1/100</option><option value="d">變 10 倍</option></select></label><button type="button" id="q01-3-check">對答案</button><div id="q01-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>02 積分</h2>
+<p>需要回想累積與求和法時，請看<a href="02-積分.html">第 02 章積分</a>。</p>
+<section class="card"><p><strong>q02-1｜</strong>∫<sub>0</sub><sup>1</sup> x² dx 是多少？</p><label for="q02-1">你的答案（無單位）<input id="q02-1" type="number" step="any"></label><button type="button" id="q02-1-check">對答案</button><div id="q02-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-2｜</strong>f(x) = x² 在 [0,1]，分成 n = 4 等份時的左端點黎曼和是多少？</p><label for="q02-2">你的答案（無單位）<input id="q02-2" type="number" step="any"></label><button type="button" id="q02-2-check">對答案</button><div id="q02-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-3｜</strong>中點法把 n 加倍，誤差大約如何變化？</p><label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">減半</option><option value="b">變 1/4</option><option value="c">不變</option><option value="d">變 4 倍</option></select></label><button type="button" id="q02-3-check">對答案</button><div id="q02-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>03 級數與泰勒</h2>
+<p>需要回想多項式近似與複指數時，請看<a href="03-級數與泰勒.html">第 03 章級數與泰勒</a>。</p>
+<section class="card"><p><strong>q03-1｜</strong>e<sup>x</sup> 的泰勒展開保留到 x³，在 x = 1 的部分和是多少？</p><label for="q03-1">你的答案（無單位）<input id="q03-1" type="number" step="any"></label><button type="button" id="q03-1-check">對答案</button><div id="q03-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-2｜</strong>歐拉公式 e<sup>jθ</sup> 等於哪一項？</p><label for="q03-2">你的答案<select id="q03-2"><option value="">請選擇</option><option value="a">cos θ − j sin θ</option><option value="b">cos θ + j sin θ</option><option value="c">sin θ + j cos θ</option><option value="d">1 + jθ</option></select></label><button type="button" id="q03-2-check">對答案</button><div id="q03-2-output" class="output" aria-live="polite"></div></section>
+
+<h2>04 向量與矩陣</h2>
+<p>矩陣作用與串接順序可回看<a href="04-向量與矩陣.html">第 04 章向量與矩陣</a>。</p>
+<section class="card"><p><strong>q04-1｜</strong>A = [[2,1],[0,3]]、x = (1,2)，Ax 的第 2 個分量是多少？</p><label for="q04-1">你的答案（無單位）<input id="q04-1" type="number" step="any"></label><button type="button" id="q04-1-check">對答案</button><div id="q04-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-2｜</strong>(AB)x 的作用意義是哪一項？</p><label for="q04-2">你的答案<select id="q04-2"><option value="">請選擇</option><option value="a">先做 A 再做 B</option><option value="b">先做 B 再做 A</option><option value="c">順序可交換</option><option value="d">與順序無關</option></select></label><button type="button" id="q04-2-check">對答案</button><div id="q04-2-output" class="output" aria-live="polite"></div></section>
+
+<h2>05 線性方程組與逆</h2>
+<p>解的型態與行列式請回看<a href="05-線性方程組與逆.html">第 05 章線性方程組與逆</a>。</p>
+<section class="card"><p><strong>q05-1｜</strong>聯立 2x + y = 5、x − y = 1，x 是多少？</p><label for="q05-1">你的答案（無單位）<input id="q05-1" type="number" step="any"></label><button type="button" id="q05-1-check">對答案</button><div id="q05-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-2｜</strong>A = [[2,1],[1,−1]] 的行列式是多少？</p><label for="q05-2">你的答案（無單位）<input id="q05-2" type="number" step="any"></label><button type="button" id="q05-2-check">對答案</button><div id="q05-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-3｜</strong>rank(A) = 1 且 rank([A|b]) = 2 表示哪一種解況？</p><label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">唯一解</option><option value="b">無限多解</option><option value="c">無解</option><option value="d">一定有解</option></select></label><button type="button" id="q05-3-check">對答案</button><div id="q05-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>06 特徵值與分解</h2>
+<p>方向不變的模態與穩定條件請看<a href="06-特徵值與分解.html">第 06 章特徵值與分解</a>。</p>
+<section class="card"><p><strong>q06-1｜</strong>A = [[2,1],[1,2]] 的較大特徵值是多少？</p><label for="q06-1">你的答案（無單位）<input id="q06-1" type="number" step="any"></label><button type="button" id="q06-1-check">對答案</button><div id="q06-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-2｜</strong>v = (1,1) 對 A = [[2,1],[1,2]] 而言是哪一種情況？</p><label for="q06-2">你的答案<select id="q06-2"><option value="">請選擇</option><option value="a">不是特徵向量</option><option value="b">是，λ = 1</option><option value="c">是，λ = 3</option><option value="d">是，λ = 2</option></select></label><button type="button" id="q06-2-check">對答案</button><div id="q06-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-3｜</strong>ẋ = Ax 漸近穩定的條件是哪一項？</p><label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">特徵值實部全為正</option><option value="b">特徵值實部全為負</option><option value="c">det(A) = 0</option><option value="d">特徵值全為實數</option></select></label><button type="button" id="q06-3-check">對答案</button><div id="q06-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>07 常微分方程</h2>
+<p>一階與二階系統的數值錨點請回看<a href="07-常微分方程.html">第 07 章常微分方程</a>。</p>
+<section class="card"><p><strong>q07-1｜</strong>τ = 1 s、v<sub>0</sub> = 0、v<sub>s</sub> = 5 V，t = 1 s 時的 v 是多少？</p><label for="q07-1">你的答案（V）<input id="q07-1" type="number" step="any"></label><button type="button" id="q07-1-check">對答案</button><div id="q07-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-2｜</strong>一階系統在 t = τ 時走完全程的百分比約是多少？</p><label for="q07-2">你的答案（%）<input id="q07-2" type="number" step="any"></label><button type="button" id="q07-2-check">對答案</button><div id="q07-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-3｜</strong>ζ = 0.5 的二階系統屬於哪一型？</p><label for="q07-3">你的答案<select id="q07-3"><option value="">請選擇</option><option value="a">過阻尼</option><option value="b">臨界阻尼</option><option value="c">欠阻尼</option><option value="d">無阻尼</option></select></label><button type="button" id="q07-3-check">對答案</button><div id="q07-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>08 拉氏轉換</h2>
+<p>微分轉換與極點位置請回看<a href="08-拉氏轉換.html">第 08 章拉氏轉換</a>。</p>
+<section class="card"><p><strong>q08-1｜</strong>拉氏轉換把時間域微分變成哪一種運算？</p><label for="q08-1">你的答案<select id="q08-1"><option value="">請選擇</option><option value="a">除以 s</option><option value="b">乘以 s 再減初值</option><option value="c">乘以 jω</option><option value="d">卷積</option></select></label><button type="button" id="q08-1-check">對答案</button><div id="q08-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-2｜</strong>極點 s = −1 ± j2 的時間常數 1/|σ| 是多少？</p><label for="q08-2">你的答案（s）<input id="q08-2" type="number" step="any"></label><button type="button" id="q08-2-check">對答案</button><div id="q08-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-3｜</strong>極點落在右半 s 平面代表什麼？</p><label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">穩定</option><option value="b">邊界穩定</option><option value="c">發散</option><option value="d">無法判斷</option></select></label><button type="button" id="q08-3-check">對答案</button><div id="q08-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>09 複變入門</h2>
+<p>複數乘法與交流阻抗請回看<a href="09-複變入門.html">第 09 章複變入門</a>。</p>
+<section class="card"><p><strong>q09-1｜</strong>(1 + j) ⋅ j 等於哪一項？</p><label for="q09-1">你的答案<select id="q09-1"><option value="">請選擇</option><option value="a">1 + j</option><option value="b">−1 + j</option><option value="c">1 − j</option><option value="d">−1 − j</option></select></label><button type="button" id="q09-1-check">對答案</button><div id="q09-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-2｜</strong>|1 + j| 是多少？</p><label for="q09-2">你的答案（無單位）<input id="q09-2" type="number" step="any"></label><button type="button" id="q09-2-check">對答案</button><div id="q09-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-3｜</strong>電感的阻抗 Z<sub>L</sub> 是哪一項？</p><label for="q09-3">你的答案<select id="q09-3"><option value="">請選擇</option><option value="a">R</option><option value="b">jωL</option><option value="c">1/(jωC)</option><option value="d">−jωL</option></select></label><button type="button" id="q09-3-check">對答案</button><div id="q09-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>10 傅立葉分析</h2>
+<p>頻譜、卷積與取樣率請回看<a href="10-傅立葉分析.html">第 10 章傅立葉分析</a>。</p>
+<section class="card"><p><strong>q10-1｜</strong>方波只保留基波時，t/T = 0.25 的值 4/π 約是多少？</p><label for="q10-1">你的答案（無單位）<input id="q10-1" type="number" step="any"></label><button type="button" id="q10-1-check">對答案</button><div id="q10-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-2｜</strong>時間域卷積對應頻率域的哪一種運算？</p><label for="q10-2">你的答案<select id="q10-2"><option value="">請選擇</option><option value="a">卷積</option><option value="b">相加</option><option value="c">相乘</option><option value="d">相減</option></select></label><button type="button" id="q10-2-check">對答案</button><div id="q10-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-3｜</strong>頻寬 20 kHz 訊號的 Nyquist 最低取樣率是多少？</p><label for="q10-3">你的答案（kHz）<input id="q10-3" type="number" step="any"></label><button type="button" id="q10-3-check">對答案</button><div id="q10-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>11 PDE與向量分析</h2>
+<p>場的局部算子請回看<a href="11-PDE與向量分析.html">第 11 章 PDE與向量分析</a>。</p>
+<section class="card"><p><strong>q11-1｜</strong>F = (x, y) 的散度 ∇⋅F 是多少？</p><label for="q11-1">你的答案（無單位）<input id="q11-1" type="number" step="any"></label><button type="button" id="q11-1-check">對答案</button><div id="q11-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-2｜</strong>F = (−y, x) 的旋度 z 分量是多少？</p><label for="q11-2">你的答案（無單位）<input id="q11-2" type="number" step="any"></label><button type="button" id="q11-2-check">對答案</button><div id="q11-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-3｜</strong>∇ × (∇φ) 等於哪一項？</p><label for="q11-3">你的答案<select id="q11-3"><option value="">請選擇</option><option value="a">∇²φ</option><option value="b">0</option><option value="c">∇φ</option><option value="d">1</option></select></label><button type="button" id="q11-3-check">對答案</button><div id="q11-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>12 機率與隨機變數</h2>
+<p>以下數字直接對應<a href="12-機率與隨機變數.html">第 12 章機率與隨機變數</a>的骰子與二項實例。</p>
+<section class="card"><p><strong>q12-1｜</strong>公正六面骰子的期望值是多少？</p><label for="q12-1">你的答案（無單位）<input id="q12-1" type="number" step="any"></label><button type="button" id="q12-1-check">對答案</button><div id="q12-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q12-2｜</strong>二項分布 n = 10、p = 0.5 時，P(X = 5) 是多少？</p><label for="q12-2">你的答案（無單位）<input id="q12-2" type="number" step="any"></label><button type="button" id="q12-2-check">對答案</button><div id="q12-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q12-3｜</strong>中央極限定理說的是哪一項？</p><label for="q12-3">你的答案<select id="q12-3"><option value="">請選擇</option><option value="a">樣本平均收斂到母體平均</option><option value="b">獨立同分布樣本和的分布趨近高斯</option><option value="c">變異數會趨近 0</option><option value="d">所有分布都是高斯</option></select></label><button type="button" id="q12-3-check">對答案</button><div id="q12-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>13 統計推論與隨機過程</h2>
+<p>區間與雜訊頻譜的數字請回看<a href="13-統計推論與隨機過程.html">第 13 章統計推論與隨機過程</a>。</p>
+<section class="card"><p><strong>q13-1｜</strong>x̄ = 5、σ = 2、n = 25、95 % 信賴區間的下界是多少？</p><label for="q13-1">你的答案（無單位）<input id="q13-1" type="number" step="any"></label><button type="button" id="q13-1-check">對答案</button><div id="q13-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q13-2｜</strong>其他條件不變，要把信賴區間半寬減半，n 要變成原本的幾倍？</p><label for="q13-2">你的答案（倍）<input id="q13-2" type="number" step="any"></label><button type="button" id="q13-2-check">對答案</button><div id="q13-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q13-3｜</strong>理想白雜訊的功率譜密度是哪一種形態？</p><label for="q13-3">你的答案<select id="q13-3"><option value="">請選擇</option><option value="a">隨頻率遞減</option><option value="b">為常數</option><option value="c">只有 0 頻率</option><option value="d">是脈衝</option></select></label><button type="button" id="q13-3-check">對答案</button><div id="q13-3-output" class="output" aria-live="polite"></div></section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

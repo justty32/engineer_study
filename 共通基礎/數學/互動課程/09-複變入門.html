@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 複變入門｜工程數學先修</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-工程數學地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・把乘法看成旋轉加伸縮</p>
+<h1>複變入門：用複數代數處理幅值、相位與交流電路</h1>
+<p class="lead">複數不是為了容納「算不出的平方根」而已；它把平面旋轉與伸縮壓進一次乘法。當弦波寫成複指數，微分、相位移與交流阻抗便能在同一套代數中處理。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-拉氏轉換.html">08 拉氏轉換</a>、三角函數與平面座標。</p>
+
+<h2>痛點：弦波的振幅與相位若分開算，微分與串接很快失控</h2>
+<p>交流電壓 V cos(ωt + φ) 同時帶有振幅、頻率和相位。多個元件串接後，直接展開 sin、cos 加法公式會產生大量交叉項；每微分一次又要換函式並乘 ω。若只用實數，旋轉看起來像兩條互相耦合的式子，很難像一般增益那樣直接相乘。</p>
+<p>複數 z = x + jy 的直角形式把平面點記成一個數，電機慣用 j 代表 √(−1)，避免與電流 i 混淆。它的極形式是 z = r e<sup>jθ</sup>，其中 r = |z| = √(x²+y²)，θ = arg z = atan2(y,x)。<strong>歐拉公式（Euler's formula）</strong> e<sup>jθ</sup> = cos θ + j sin θ 把代數乘法與平面旋轉接起來。</p>
+<p>直角形式適合相加，因為實部與虛部分別相加即可；極形式適合相乘與相除，因為模長相乘除、幅角相加減。工程計算常在兩種形式間切換，而不是選一種永遠使用。atan2 同時看 x、y 的正負，能判斷象限；只算一般的反正切 y/x 會在 x = 0 失效，也會把相差 180° 的方向混在一起。</p>
+
+<h2>白話直覺：每個複數都是一個「轉幾度、放大幾倍」的指令</h2>
+<p>可以先把非零複數想成旋鈕：模長 r 決定放大倍率，幅角 θ 決定逆時針旋轉角度。比喻到此為止；精確地說，乘法遵守 |zw| = |z||w| 與 arg(zw) = arg z + arg w，而幅角只在相差 2π 的意義下相同。程式常用主值範圍 (−180°, 180°] 顯示結果。</p>
+<p>由歐拉公式可得 cos θ = (e<sup>jθ</sup> + e<sup>−jθ</sup>)/2，以及 sin θ = (e<sup>jθ</sup> − e<sup>−jθ</sup>)/(2j)。更關鍵的是 d/dt e<sup>jωt</sup> = jωe<sup>jωt</sup>：微分不再把 cos 換成 sin，而是讓同一複指數乘上 jω。把 v(t) = V cos(ωt + φ) 的共同時間因子暫時省略，只保留 <strong>相量（phasor）</strong> V = V e<sup>jφ</sup>，就能用複數代數算單一頻率的正弦穩態。</p>
+<p>因此電阻、電感、電容的阻抗分別是 Z<sub>R</sub> = R、Z<sub>L</sub> = jωL、Z<sub>C</sub> = 1/(jωC)。相量版歐姆定律 V = ZI 同時處理幅值比與相位差。但相量固定在單一 ω，不能描述開關瞬間或多頻率暫態；那些問題要回到時間域或拉氏域。</p>
+<p>電容關係 i = C dv/dt 同樣給 I = jωC V，所以 Z<sub>C</sub> = V/I = 1/(jωC) = −j/(ωC)。它的負九十度幅角表示電容電壓落後電流；頻率越高，阻抗模長越小。電感與電容的相位方向、頻率趨勢正好相反，這可由微分作用與變數位於分子或分母直接推得，不必孤立背誦。</p>
+<p class="note">來源：03-工程數學-中 第 3 章 §3.1–§3.6。</p>
+
+<h2>推導：同一次乘法的極形式與直角形式必須會合</h2>
+<p><strong>（a）旋轉與伸縮。</strong>令 z = r<sub>1</sub>e<sup>jθ1</sup>、w = r<sub>2</sub>e<sup>jθ2</sup>。指數相乘時指數相加：</p>
+<p><code>(r<sub>1</sub>e<sup>jθ1</sup>)(r<sub>2</sub>e<sup>jθ2</sup>) = r<sub>1</sub>r<sub>2</sub>e<sup>j(θ1+θ2)</sup></code></p>
+<p>結果模長是 r<sub>1</sub>r<sub>2</sub>，幅角是 θ<sub>1</sub> + θ<sub>2</sub>，所以 w 的效果確實是把 z 的長度乘 |w| 並把方向加上 arg w。再改用 z = x<sub>1</sub> + jy<sub>1</sub>、w = x<sub>2</sub> + jy<sub>2</sub> 展開。利用 j² = −1：</p>
+<p><code>(x<sub>1</sub>+jy<sub>1</sub>)(x<sub>2</sub>+jy<sub>2</sub>) = (x<sub>1</sub>x<sub>2</sub> − y<sub>1</sub>y<sub>2</sub>) + j(x<sub>1</sub>y<sub>2</sub> + y<sub>1</sub>x<sub>2</sub>)</code></p>
+<p>兩式只是同一乘積的不同座標描述，所以數值必須完全一致。極形式容易看幾何效果；直角形式適合直接由實部、虛部運算。</p>
+<p><strong>（b）從微分推出電感阻抗。</strong>以複指數代表電流 i(t) 的正弦穩態核心 I e<sup>jωt</sup>。電感關係 v = L di/dt 變成 v = L(jωI e<sup>jωt</sup>)。兩側都有相同 e<sup>jωt</sup>，取相量後得到 V = jωL I，因此 Z<sub>L</sub> = V/I = jωL。乘 j 表示電壓比電流超前 90°，乘 ωL 表示幅值比隨頻率增大。</p>
+<p>複變不只處理相量。若 f(z) = u(x,y) + jv(x,y) 在鄰域內複可微，稱為<strong>解析（analytic）</strong>，並須滿足<strong>柯西—黎曼方程（Cauchy–Riemann equations）</strong> ∂u/∂x = ∂v/∂y、∂u/∂y = −∂v/∂x。解析比沿實軸可微強得多。若閉曲線內解析，柯西積分定理給 ∮<sub>C</sub> f(z) dz = 0；柯西積分公式則寫成 f(z<sub>0</sub>) = (1/(2πj))∮<sub>C</sub> f(z)/(z−z<sub>0</sub>) dz，表示內部一點的值受邊界值決定。有孤立極點時，<strong>留數定理（residue theorem）</strong>給 ∮<sub>C</sub> f(z) dz = 2πj Σ Res(f,z<sub>k</sub>)，可用於反拉氏與反傅立葉。解析映射在導數非零處保角，史密斯圖就是工程上常見的保角映射應用。</p>
+<p>解析性的嚴格要求帶來強大結果：函數內部值受邊界約束，封閉路徑積分可由少數奇點資訊決定。這也說明留數不是憑空加上的技巧，而是把每個極點附近最關鍵的係數彙總，再取代整條複雜路徑積分。對工程學習者而言，先抓住「奇點決定反轉換中的自然模式」，再逐步學圍道選擇，比只背公式更能與上一章的極點觀念接軌。</p>
+
+<h2>數值實例：乘以純 j 就是轉九十度</h2>
+<p>取 z = 1 + j，w = 0 + j。z 的模 |z| = √2 = <strong>1.414214</strong>，幅角為 <strong>45°</strong>；w 的模為 1，幅角為 <strong>90°</strong>。直角形式展開：</p>
+<p><code>(1+j)(0+j) = 1⋅0 − 1⋅1 + j(1⋅1 + 1⋅0) = −1 + j</code></p>
+<p>極形式則預測 |zw| = 1.414214⋅1 = 1.414214，arg(zw) = 45° + 90° = <strong>135°</strong>。−1 + j 的模確為 √2，幅角也確為 135°，兩種算法會合。因 |w| = 1，長度不變；因 arg w = 90°，方向逆時針轉 90°。這就是「乘以 j」的精確幾何意義。</p>
+
+<section class="workspace"><h2>自由實驗：把複數乘法拆成旋轉與伸縮</h2>
+<p>這裡示範直角展開與極形式其實給同一個乘積。調整 z、w 的實部與虛部，觀察模長相乘、幅角相加以及純 j 或單位圓乘數的特殊判讀。</p>
+<div class="controls">
+<label for="cz-re">z 的實部<input id="cz-re" type="range" min="-3" max="3" step="0.25" value="1"></label>
+<label for="cz-im">z 的虛部<input id="cz-im" type="range" min="-3" max="3" step="0.25" value="1"></label>
+<label for="cw-re">w 的實部<input id="cw-re" type="range" min="-3" max="3" step="0.25" value="0"></label>
+<label for="cw-im">w 的虛部<input id="cw-im" type="range" min="-3" max="3" step="0.25" value="1"></label>
+</div>
+<div id="cmul-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>為什麼／不要混淆</h2>
+<ul>
+<li>j 是 √(−1) 的數學記號，不是電流；電機改用 j 正是為了避開電流符號 i。</li>
+<li>幅角具有 2π 多值性。135°、495° 描述同一方向，程式顯示主值不代表其他表示錯誤。</li>
+<li>複解析要求從平面任意方向逼近都得到同一導數，比實變函數可微強得多，不能只檢查一條方向。</li>
+<li>相量只適用於線性系統的單一頻率正弦穩態；開關暫態、變頻訊號與非線性產生的新頻率不能只靠一個相量。</li>
+<li>複數乘法會旋轉並伸縮；只有乘數模長等於 1 時才是純旋轉，不能把所有複數乘法都當作保長。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p>向量電壓表與網路分析儀直接輸出幅值與相位，正是複數極形式的量測版本。傳輸線在史密斯圖上沿等駐波比圓轉動，可讀成反射係數相位變化；電感電壓在正弦穩態下超前電流 90°，可用雙通道示波器驗證。程式中的複數陣列與快速傅立葉轉換則把每個頻率槽保存為實部加虛部，讓振幅和相位都不丟失。</p>
+<p>還可用兩條獨立計算路徑做自我檢查：先用直角公式求乘積，再把兩個輸入的模長相乘、幅角相加後轉回直角。若答案不同，常見原因是角度與弧度混用、象限判斷錯誤，或把 j² 寫成正一。這種交叉驗證在相量網路與通訊星座計算中特別實用。</p>
+
+<h2>連到哪門課</h2>
+<p>複數與相量直接服務電路學交流分析、信號與系統、通訊調變、控制頻率響應、傳輸線與微波工程；解析函數和留數再通往反轉換與場論。若要把同一個平面旋轉改用實數矩陣理解，可對照<a href="../../../專題/機器人數學基礎/互動課程/05-二維旋轉矩陣.html">機器人數學基礎：二維旋轉矩陣</a>。下一章會把複指數當成頻率積木，疊出一般訊號。</p>
+<p>因此複數在電機裡扮演的不是額外維度，而是把兩個互相耦合的實數分量包成一個可組合物件。交流電路把同頻率訊號的實、虛部包在相量，通訊把同相與正交分量包成星座點，控制把衰減率與振盪率包成複極點。每次使用前都要問清楚兩個軸的物理意義以及共同假設；同一個 j 在相量、拉氏平面與複分析中遵守相同代數，但被包裝的量與允許的推論並不完全相同。能在幾何、代數和量測三種表示間往返，才算真正掌握這章。計算後也應把結果轉回幅值、相位或波形，確認它能被實際儀器觀察。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="08-拉氏轉換.html">← 上一頁：拉氏轉換</a><a href="10-傅立葉分析.html">下一頁：傅立葉分析 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 複變入門</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>
