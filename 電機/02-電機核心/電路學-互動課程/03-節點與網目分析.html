@@ -1,0 +1,75 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 節點與網目分析｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・把連接關係翻成一組可重複求解的方程</p>
+<h1>節點與網目分析：不靠眼力也能解線性電路</h1>
+<p class="lead">不能串並聯化簡時，不需要發明新定律，只要有系統地替每個未知量寫 KCL 或 KVL。這章用兩節點例子建立電導矩陣，逐步解出電壓並代回驗算，也說明何時改選網目電流比較省事。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-KCL與KVL.html">02 KCL 與 KVL</a>，以及<a href="../../../共通基礎/數學/互動課程/05-線性方程組與逆.html">工程數學 05 的 2×2 線性方程組</a>。</p>
+
+<h2>痛點：電路不能化簡時，第一條方程到底從哪裡寫</h2>
+<p>串並聯題能靠局部規則縮短，但多一條跨接電阻或多一個源，肉眼化簡很快就無路可走。此時最常見的困難不是不會解聯立方程，而是不知道未知數該選電壓還是電流、每個係數正負號怎麼來。若每題都重新憑直覺推式，不但容易漏支路，也難以交給程式。需要的是一套從節點清單與元件連接直接產生矩陣的固定程序。</p>
+<p><strong>節點分析法（nodal analysis）</strong>先選參考地，未知數取其他節點對地電壓，對每個未知節點寫 KCL。純電阻與電流源網路可整理成 G<strong>v</strong> = <strong>i</strong><sub>s</sub>，G 是電導矩陣，單位 S。<strong>網孔分析法（mesh analysis）</strong>只適用平面電路，以每個最小網孔的環流作未知數，對各網孔寫 KVL，形成 R<strong>i</strong> = <strong>v</strong><sub>s</sub>。電流源多、節點少時偏好節點法；電壓源多、網孔少時偏好網孔法。這是減少未知數的實務準則，不是物理定律的高低之分。</p>
+
+<h2>白話直覺：矩陣就是每個節點的收支規則表</h2>
+<p>可以把 G 矩陣暫時想成連接清單編譯出的係數表：對角線記錄一個節點有多少條電流能流出去，非對角線記錄它和其他節點的耦合。比喻到此為止；精確規則是對角元等於接到該節點的所有電導總和，非對角元等於兩節點間電導的負值，右側則是注入該節點的獨立電流源代數和。</p>
+<p>本章拓樸為節點 1 → R<sub>1</sub> → 地；節點 1 → R<sub>2</sub> → 節點 2；節點 2 → R<sub>3</sub> → 地；電流源 I<sub>s1</sub> 注入節點 1、I<sub>s2</sub> 注入節點 2。地先定為 0 V，兩個電流源提供電荷流入；R<sub>1</sub>、R<sub>3</sub> 各自通往地，R<sub>2</sub> 讓兩節點交換電流，因此所有注入電流都有閉合返回路徑。</p>
+<p>電流進入節點後不會在理想穩態節點囤積，必須經連接電阻全部流出。若節點 1 電壓上升，它經 R<sub>1</sub> 到地以及經 R<sub>2</sub> 到節點 2 的流出傾向都改變；節點 2 也同樣回應。兩個電壓彼此耦合，直到每個節點各自滿足 KCL。R<sub>2</sub> 很大時兩節點交換微弱，近似各算各的；R<sub>2</sub> 很小時它們被強力拉近等電位。結果不是由某顆元件單獨決定，而是整張連接表共同決定。</p>
+<p>網目法改從能量角度組表：每個網孔自有電阻放對角線，相鄰網孔共享的電阻以負值放非對角線，右側放該網孔的電壓源代數和。兩法最後都是解線性方程組；節點法輸出對地電壓較直接，網目法輸出網孔環流，真正的共享支路電流往往是兩個網孔電流之差。</p>
+<p>對軟體背景的讀者，這一步就像把元件清單編譯成稀疏矩陣：每加入一顆接地電阻，只增加某個對角元；每加入一顆跨節點電阻，同時增加兩個對角元並加入兩個相等的負非對角元。局部元件只修改少數格子，整體求解器卻一次得到所有節點狀態，這正是方法能擴充到大型網路的原因。</p>
+<p>選地也會改變各節點電壓的數字，卻不會改變任何支路兩端的電壓差與電流。若把參考點換到節點 1，原本 v<sub>1</sub>、v<sub>2</sub> 都會整體平移，但 v<sub>2</sub> − v<sub>1</sub> 保持不變。這提醒我們矩陣中的未知數依賴座標選擇，實際元件端口行為則不依賴任意的零點。</p>
+<p class="note">來源：06-電路學-上 §2.3–§2.4。</p>
+
+<h2>推導：從兩條 KCL 長出 G 矩陣</h2>
+<p><strong>（a）節點 1。</strong>令 G<sub>1</sub> = 1/R<sub>1</sub>、G<sub>2</sub> = 1/R<sub>2</sub>、G<sub>3</sub> = 1/R<sub>3</sub>。節點 1 經 R<sub>1</sub> 流到地的電流為 v<sub>1</sub>/R<sub>1</sub>，經 R<sub>2</sub> 流向節點 2 為 (v<sub>1</sub> − v<sub>2</sub>)/R<sub>2</sub>。令流出等於注入 I<sub>s1</sub>：</p>
+<p><code>v<sub>1</sub>/R<sub>1</sub> + (v<sub>1</sub> − v<sub>2</sub>)/R<sub>2</sub> = I<sub>s1</sub></code></p>
+<p>展開並收集未知數，得到 (G<sub>1</sub> + G<sub>2</sub>)v<sub>1</sub> − G<sub>2</sub>v<sub>2</sub> = I<sub>s1</sub>。v 的單位 V，G 的單位 S，所以 Gv 的單位 A，與電流源一致。</p>
+<p><strong>（b）節點 2。</strong>經 R<sub>3</sub> 到地為 v<sub>2</sub>/R<sub>3</sub>，經 R<sub>2</sub> 流向節點 1 為 (v<sub>2</sub> − v<sub>1</sub>)/R<sub>2</sub>。整理得到 −G<sub>2</sub>v<sub>1</sub> + (G<sub>2</sub> + G<sub>3</sub>)v<sub>2</sub> = I<sub>s2</sub>。因此矩陣第一列是 G<sub>1</sub> + G<sub>2</sub>、−G<sub>2</sub>；第二列是 −G<sub>2</sub>、G<sub>2</sub> + G<sub>3</sub>。非對角負號不是背誦結果，而是支路電流中的另一端電壓被相減。</p>
+<p><strong>（c）解 2×2 方程。</strong>把矩陣元素記為 a、b、c、d，方程是 av<sub>1</sub> + bv<sub>2</sub> = I<sub>s1</sub>、cv<sub>1</sub> + dv<sub>2</sub> = I<sub>s2</sub>。行列式 det = ad − bc。以克拉瑪法則得到 v<sub>1</sub> = (I<sub>s1</sub>d − bI<sub>s2</sub>) / det，v<sub>2</sub> = (aI<sub>s2</sub> − cI<sub>s1</sub>) / det。若採 mS 與 mA，mA/mS 直接得到 V；不可一邊用 S、一邊忘記把 mA 換成 A。</p>
+<p><strong>（d）唯一解與假設。</strong>此網路 det = (G<sub>1</sub> + G<sub>2</sub>)(G<sub>2</sub> + G<sub>3</sub>) − G<sub>2</sub>² = G<sub>1</sub>G<sub>2</sub> + G<sub>1</sub>G<sub>3</sub> + G<sub>2</sub>G<sub>3</sub>。只要三個有限正電阻使 G &gt; 0，det 必為正，矩陣可逆。更一般的被動接地電阻網路具有對稱、正定的 G，因而節點電壓唯一。簡化假設是線性電阻、理想電流源、直流穩態，且每個注入節點都有導電路徑回到參考地；若把理想電流源注入完全開路的浮接節點，穩態模型便無法給出有限電壓。</p>
+
+<h2>數值實例：用 mS 與 mA 直接算出伏特</h2>
+<p>R<sub>1</sub> = 1 kΩ、R<sub>2</sub> = 2 kΩ、R<sub>3</sub> = 3 kΩ、I<sub>s1</sub> = 10 mA、I<sub>s2</sub> = 5 mA。用 mS 與 mA 當單位，算出來直接是 V（因為 mA/mS = V）。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>G<sub>1</sub>, G<sub>2</sub>, G<sub>3</sub></td><td>1/1, 1/2, 1/3（kΩ → mS）</td><td><strong>1.000000, 0.500000, 0.333333 mS</strong></td></tr>
+<tr><td>G 矩陣</td><td><code>[[G1+G2, −G2], [−G2, G2+G3]]</code></td><td><strong>[[1.500000, −0.500000], [−0.500000, 0.833333]]</strong>（mS）</td></tr>
+<tr><td>行列式</td><td>1.5 × 0.833333 − (−0.5)² = 1.25 − 0.25</td><td><strong>1.000000 (mS)²</strong>（＝1.000000 × 10<sup>−6</sup> S²）</td></tr>
+<tr><td>v<sub>1</sub></td><td>(10 × 0.833333 + 0.5 × 5)/1.0 = (8.333333 + 2.5)/1.0</td><td><strong>10.833333 V</strong></td></tr>
+<tr><td>v<sub>2</sub></td><td>(1.5 × 5 + 0.5 × 10)/1.0 = (7.5 + 5)/1.0</td><td><strong>12.500000 V</strong></td></tr>
+<tr><td>代回式 1</td><td>1.5 × 10.833333 − 0.5 × 12.5 = 16.25 − 6.25</td><td><strong>10.000000 mA</strong>（＝I<sub>s1</sub>，正確）</td></tr>
+<tr><td>代回式 2</td><td>−0.5 × 10.833333 + 0.833333 × 12.5 = −5.416667 + 10.416667</td><td><strong>5.000000 mA</strong>（＝I<sub>s2</sub>，正確）</td></tr>
+<tr><td>R<sub>2</sub> 上的電流</td><td>(12.5 − 10.833333)/2</td><td><strong>0.833333 mA</strong>（由節點 2 流向節點 1）</td></tr>
+</tbody></table>
+
+<section class="workspace"><h2>自由實驗：組合並求解二節點矩陣</h2>
+<p>節點 1 經 R<sub>1</sub> 接地，節點 2 經 R<sub>3</sub> 接地，R<sub>2</sub> 連接兩節點；I<sub>s1</sub>、I<sub>s2</sub> 分別注入兩節點，回流皆經電阻到地。調整五個參數，觀察 G 矩陣、行列式、節點電壓、跨接電流與代回殘差。</p>
+<div class="controls">
+<label for="nod-r1">R<sub>1</sub>（Ω，節點 1 到地）<input id="nod-r1" type="range" min="100" max="10000" step="100" value="1000"></label>
+<label for="nod-r2">R<sub>2</sub>（Ω，節點 1 到節點 2）<input id="nod-r2" type="range" min="100" max="10000" step="100" value="2000"></label>
+<label for="nod-r3">R<sub>3</sub>（Ω，節點 2 到地）<input id="nod-r3" type="range" min="100" max="10000" step="100" value="3000"></label>
+<label for="nod-is1">注入節點 1 的電流源 I<sub>s1</sub>（mA）<input id="nod-is1" type="range" min="0" max="20" step="0.5" value="10"></label>
+<label for="nod-is2">注入節點 2 的電流源 I<sub>s2</sub>（mA）<input id="nod-is2" type="range" min="0" max="20" step="0.5" value="5"></label>
+</div>
+<div id="nodal2-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>節點分析的未知數是節點對地電壓，網目分析的未知數是網孔電流；支路電流可由兩者再算，不能把不同種類未知數隨意塞進同一矩陣規則。</li>
+<li>G 矩陣非對角元是兩節點間電導的負值；對角元則是該節點所有相連電導的正總和，兩種位置的意義不是同義詞。</li>
+<li>節點電壓一定相對共同參考地，支路電壓是兩端節點電壓相減；v<sub>1</sub> 與 v<sub>1</sub> − v<sub>2</sub> 不能互換。</li>
+<li>網孔是平面圖中的最小封閉區域，回路則可包住多個網孔；每個網孔都是回路，但不是每個回路都必須選作獨立未知數。</li>
+<li>超節點處理跨在兩個未知節點間的理想電壓源，超網孔處理共享支路上的理想電流源；它們是補充列式技巧，不是新的守恆律。</li>
+<li>殘差接近零只證明數值解符合你列出的方程；若拓樸抄錯，錯方程也能被精確解出，因此仍須核對節點清單。</li>
+</ul>
+
+<h2>可觀察證據：先量節點，再用跨接支路核對方向</h2>
+<p>把電路搭好後，以三用電表直流電壓檔的黑棒固定在同一參考地，紅棒依序量節點 1 與節點 2，就能取得 v<sub>1</sub>、v<sub>2</sub>。這能證明求得的節點電壓在電表精度及其輸入阻抗造成的負載誤差內是否符合實物；不能證明原先列式一定正確，因為拓樸抄錯與參數抄錯可能剛好互相抵消，也不能由兩個讀值證明矩陣對所有輸入都正確。</p>
+<p>電流勾表若對小電流解析度足夠，或將電流表串入 R<sub>2</sub>，可量跨接支路的大小與方向；也可直接量 R<sub>2</sub> 兩端電壓，再除以已知阻值。當 v<sub>2</sub> &gt; v<sub>1</sub> 時，能驗證電流由節點 2 流向節點 1；兩者相等時，能驗證在解析度內近似無跨接電流。這不能證明 R<sub>2</sub> 完全沒有寄生效應，也不能取代把解代回兩條方程的殘差檢查。量測、拓樸核對與代回驗算是三種互補證據。</p>
+
+<h2>連到哪門課</h2>
+<p>SPICE 類電路模擬器的核心正是讀取元件與節點清單、自動蓋出矩陣，再交給線性代數求解器；遇到電壓源與動態元件時會擴充成修正節點分析。完整的矩陣、行列式與線性方程求解可回到<a href="../../../共通基礎/數學/互動課程/05-線性方程組與逆.html">工程數學先修 05</a>。電子學用相同方法解小訊號電路，電力系統把規模擴到大型網路，控制與數值方法則關心矩陣條件與求解穩定性。下一章加入多個源與相依源，但仍只是在這套線性框架內組合響應。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-KCL與KVL.html">← 上一頁：KCL 與 KVL</a><a href="04-疊加原理與相依源.html">下一頁：疊加原理與相依源 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 節點與網目分析</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

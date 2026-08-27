@@ -1,0 +1,71 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 動量與碰撞｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・用碰撞前後狀態追蹤運動的重新分配</p>
+<h1>動量與碰撞：不必看清瞬間內力也能算出碰後速度</h1>
+<p class="lead">碰撞歷時很短，力又會急遽變化，逐時刻套牛頓定律通常很難。把兩物體圈成系統，動量守恆便能略過難量的碰撞細節；再加入恢復係數，就能同時決定兩個碰後速度與動能損失。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-牛頓運動定律.html">02 牛頓運動定律</a>的力與第三定律、<a href="03-功與能量.html">03 功與能量</a>的動能。</p>
+
+<h2>痛點：碰撞力看不清，逐步積分也來不及</h2>
+<p>兩台滑車接觸的幾毫秒內，接觸面先壓縮再回彈，作用力可能遠大於平常推力，而且形狀隨時間改變。若只知道碰前速度與質量，卻不知道完整的力—時間曲線，直接求加速度便卡住。更常見的誤判，是把「碰撞前後總動能可能變少」誤認成所有守恆律都失效，或只憑兩物體有沒有彈開來命名碰撞。</p>
+<p>真正需要先決定的是系統邊界與時間尺度。碰撞期間兩物體互施的力屬於內力，依第三定律成對抵消；地面摩擦與重力的外衝量若相較碰撞衝量很小，系統總動量便近似不變。這是條件式結論，不是宣稱任何碰撞在任何時間尺度都守恆。</p>
+<p>這種方法像程式設計中的封裝：不必知道物件內每次接觸形變，只要介面交代碰前狀態、系統收到的外衝量與碰撞後狀態。不過封裝不能掩蓋輸入條件。若兩物體同向且前車更快，它們正在分離，代數式仍會吐出數字，卻不是將來會實際發生的碰撞；若兩者初速相同，相對速度為零，也沒有接近與分離的過程。</p>
+
+<h2>白話直覺：把運動看成可在物體間轉交的有方向帳目</h2>
+<p>可以把動量想成一筆帶正負方向的運動帳目：碰撞只在兩物體間轉帳，沒有外界存入或提走時，合計不變。比喻到此為止；精確的<strong>動量（momentum）</strong>是 <strong>p</strong> = m<strong>v</strong>，粗體代表有方向的向量。p 的 SI 單位是 kg·m/s，m 的單位是 kg，v 的單位是 m/s。速度反向時，一維動量以負號表示。</p>
+<p><strong>衝量（impulse）</strong>定義為 <strong>J</strong> = ∫ <strong>F</strong> dt = Δ<strong>p</strong>。J 的 SI 單位是 N·s，F 的單位是 N，t 的單位是 s，而 N·s 等同 kg·m/s。安全氣囊不是消除動量改變，而是把相同 Δp 分攤到較長時間，使平均力變小。</p>
+<p><strong>恢復係數（coefficient of restitution）</strong>以接近與分離的相對速度比較：e = −(v<sub>1</sub>′ − v<sub>2</sub>′) / (v<sub>1</sub> − v<sub>2</sub>)。e 無單位，撇號表示碰後；e = 1 是彈性碰撞，e = 0 是完全非彈性碰撞，介於兩者之間則有部分動能轉成熱、聲音與形變。質心速度 v<sub>cm</sub> = (m<sub>1</sub>v<sub>1</sub> + m<sub>2</sub>v<sub>2</sub>) / (m<sub>1</sub> + m<sub>2</sub>)，單位 m/s，在外衝量可忽略時不因內部碰撞而改變。</p>
+<p class="note">來源：01-普通物理-上 第 4 章；恢復係數用作統一描述碰撞型態的標準參數。</p>
+
+<h2>推導：由牛頓第二定律走到兩元一次聯立</h2>
+<p><strong>第一步，累積力的效果。</strong>一般形式 <strong>F</strong> = d<strong>p</strong>/dt 兩邊乘 dt，再由碰撞開始積到結束，得到 ∫ <strong>F</strong> dt = ∫ d<strong>p</strong> = <strong>p</strong><sub>後</sub> − <strong>p</strong><sub>前</sub>。左側就是衝量 J，單位 N·s；右側是動量變化，單位 kg·m/s。這與功把力對位移積分相似，但積分變數與結果物理量不同。</p>
+<p><strong>第二步，建立兩條獨立方程。</strong>一維碰撞的動量守恆為 m<sub>1</sub>v<sub>1</sub> + m<sub>2</sub>v<sub>2</sub> = m<sub>1</sub>v<sub>1</sub>′ + m<sub>2</sub>v<sub>2</sub>′，各項單位皆為 kg·m/s。恢復係數改寫為 v<sub>2</sub>′ − v<sub>1</sub>′ = e(v<sub>1</sub> − v<sub>2</sub>)，各速度單位皆為 m/s。前者限制總運動，後者限制相對運動，正好足以解兩個未知速度。</p>
+<p>由第二式得 v<sub>2</sub>′ = v<sub>1</sub>′ + e(v<sub>1</sub> − v<sub>2</sub>)，代入動量式並整理：</p>
+<p><code>v<sub>1</sub>′ = (m<sub>1</sub>v<sub>1</sub> + m<sub>2</sub>v<sub>2</sub> + m<sub>2</sub>e(v<sub>2</sub> − v<sub>1</sub>)) / (m<sub>1</sub> + m<sub>2</sub>)</code></p>
+<p>同理消去 v<sub>1</sub>′ 可得：</p>
+<p><code>v<sub>2</sub>′ = (m<sub>1</sub>v<sub>1</sub> + m<sub>2</sub>v<sub>2</sub> + m<sub>1</sub>e(v<sub>1</sub> − v<sub>2</sub>)) / (m<sub>1</sub> + m<sub>2</sub>)</code></p>
+<p>兩式中質量單位 kg、速度單位 m/s，因此分子是 kg·m/s，除以總質量後仍是 m/s。令約化質量 μ = m<sub>1</sub>m<sub>2</sub> / (m<sub>1</sub> + m<sub>2</sub>)，μ 的單位是 kg；把兩個碰後速度代入動能差並化簡，得到損失量 ΔK = (1/2)μ(1 − e²)(v<sub>1</sub> − v<sub>2</sub>)²。ΔK 的單位是 J。e = 1 時括號為零；e = 0 時相對運動完全消失，兩物體同速。</p>
+<p>最後，v<sub>cm</sub> = p<sub>總</sub>/M。總動量 p<sub>總</sub>守恆且總質量 M 不變，所以碰撞只重新分配相對於質心的運動，不會讓質心速度跳變。</p>
+<p>這也提供很實用的錯誤檢查。先把參考系移到質心，碰前兩物體動量必等大反向；碰後也必等大反向。再回到實驗室參考系，只要把 v<sub>cm</sub>加回每個相對速度即可。若計算結果使質心前後不同，通常是速度正負號、質量配對或公式括號寫錯，而不是碰撞突然違反守恆。</p>
+
+<h2>數值實例：兩物體迎面相向的彈性碰撞</h2>
+<p>採用實驗預設值 m<sub>1</sub> = 2 kg、v<sub>1</sub> = 3 m/s、m<sub>2</sub> = 3 kg、v<sub>2</sub> = −1 m/s、e = 1。碰前總動量 p = 2 ⋅ 3 + 3 ⋅ (−1) = <strong>3.000000 kg·m/s</strong>，總質量是 5 kg，所以 v<sub>cm</sub> = <strong>0.600000 m/s</strong>。</p>
+<p>代入聯立解，v<sub>1</sub>′ = (3 + 3 ⋅ 1 ⋅ (−1 − 3))/5 = <strong>−1.800000 m/s</strong>，v<sub>2</sub>′ = (3 + 2 ⋅ 1 ⋅ (3 + 1))/5 = <strong>2.200000 m/s</strong>。碰後動量是 2(−1.8) + 3(2.2) = <strong>3.000000 kg·m/s</strong>，與碰前相同。</p>
+<p>碰前動能為 (1/2)(2)(3²) + (1/2)(3)(−1)² = <strong>10.500000 J</strong>；碰後為 (1/2)(2)(−1.8)² + (1/2)(3)(2.2)² = 3.240000 + 7.260000 = <strong>10.500000 J</strong>。若只把 e 改為 0，兩者共同速度為 3/5 = <strong>0.600000 m/s</strong>，碰後動能 0.900000 J，損失 <strong>9.600000 J</strong>。以 μ = 1.2 kg 代入損失式，也得 (1/2)(1.2)(1 − 0)(4²) = 9.600000 J；若 e = 0.5，損失則是 <strong>7.200000 J</strong>。</p>
+<p>數字還透露方向資訊：第一物體由正向改成負向，表示它反彈；第二物體由負向改成正向，也反向離開。總動量仍是正值，所以質心持續向正向移動。這三句必須同時成立，不能只看到動能相等就宣稱答案合理。若 e 調低，兩者碰後相對速度縮小，質心速度卻保持 0.600000 m/s，損失只來自相對運動部分。</p>
+<p>恢復係數是材料、形狀與撞擊速度共同造成的有效參數，不一定是一件物體永遠固定的常數。高速度撞擊可能進入塑性變形區，使同一對材料的 e 改變；旋轉、偏心或二維斜撞還會把能量送入轉動方向。本章公式限定一維正碰，使用時應先確認速度都沿同一直線。</p>
+
+<section class="workspace"><h2>自由實驗：一維碰撞計算器</h2>
+<p>調整兩物體的質量、碰前速度與恢復係數。觀察動量是否守恆、動能損失是否吻合，以及質心是否保持同速。</p>
+<div class="controls">
+<label for="col-m1">質量 m1（kg）<input id="col-m1" type="range" min="0.5" max="10" step="0.5" value="2"></label>
+<label for="col-v1">碰前速度 v1（m/s）<input id="col-v1" type="range" min="-10" max="10" step="0.5" value="3"></label>
+<label for="col-m2">質量 m2（kg）<input id="col-m2" type="range" min="0.5" max="10" step="0.5" value="3"></label>
+<label for="col-v2">碰前速度 v2（m/s）<input id="col-v2" type="range" min="-10" max="10" step="0.5" value="-1"></label>
+<label for="col-e">恢復係數 e（1＝彈性，0＝完全非彈性）<input id="col-e" type="range" min="0" max="1" step="0.05" value="1"></label>
+</div>
+<div id="collide-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>動量是向量且與 v 成正比；動能是純量且與 v² 成正比。動量守恆不自動保證動能守恆。</li>
+<li>「非彈性」的精確意思是平移動能有損失，不是物體完全不回彈；只有 e = 0 才是完全非彈性。</li>
+<li>衝量不是力。相同動量變化若作用時間加倍，平均力可減半。</li>
+<li>系統動量守恆需要淨外衝量可忽略；把地面也納入或縮短觀察時間，結論才可能成立。</li>
+<li>質心速度不變不表示個別速度不變；碰撞正是在質心不動的限制下重分配相對速度。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>在氣墊軌道（air track）上放兩台滑車，以電子秤量 m<sub>1</sub>、m<sub>2</sub>，用兩組光電閘量碰前與碰後速度；由分離相對速度除以接近相對速度求 e，並以力感測器另錄接觸力對時間的曲線與面積。</p>
+<p><strong>能證明什麼：</strong>這些量能檢查 m<sub>1</sub>v<sub>1</sub> + m<sub>2</sub>v<sub>2</sub> 在實驗誤差內前後一致，也能驗證力—時間面積等於各滑車的動量改變，並比較鋼材、橡膠與黏土的 e 及動能損失差異。</p>
+<p><strong>不能證明什麼：</strong>只量前後狀態不能證明碰撞每一瞬間的內力分布，也不能把損失動能唯一歸因於熱、聲音或永久形變。有限摩擦與軌道傾斜仍會帶來外衝量，因此一次吻合也不能證明環境完全無外力。</p>
+
+<h2>連到哪門課</h2>
+<p>動量與衝量會進入電機機械的轉子受力、機器人的接觸控制、MEMS 撞擊與封裝可靠度；質心與碰撞模型也服務控制系統的狀態估測。本章只建立物理守恆與量測判準，不展開控制器或機構設計。衝量所用的積分工具可回到<a href="../../數學/互動課程/02-積分.html">工程數學先修 02 積分</a>複習；下一章把同一套守恆觀念搬到旋轉。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="03-功與能量.html">← 上一頁：功與能量</a><a href="05-轉動與角動量.html">下一頁：轉動與角動量 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 動量與碰撞</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

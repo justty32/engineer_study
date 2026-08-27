@@ -1,0 +1,75 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>14 幾何光學與波動光學｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">14・射線負責成像，波負責條紋與極限</p>
+<h1>幾何光學與波動光學：先選對尺度，再選對光的模型</h1>
+<p class="lead">透鏡與光纖常可把光當成射線追蹤，但狹縫、解析力與偏振必須回到電磁波。本章把兩套模型接在一起：用折射與薄透鏡算方向和像，再用相位差算干涉條紋，並說清楚各自何時失效。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="12-波動與駐波.html">12 波動與駐波</a>、<a href="13-反射折射與都卜勒.html">13 反射折射與都卜勒</a>，以及<a href="11-馬克士威與電磁波.html">11 馬克士威與電磁波</a>的橫波概念。</p>
+
+<h2>痛點：光有時走直線，有時卻繞過邊緣</h2>
+<p>用光線畫鏡片成像很成功，容易讓人以為光永遠沿無限細的直線前進；但把孔徑縮到接近波長，光會向陰影區散開，兩條路徑還能互相增強或抵消。反過來，若任何鏡片問題都從完整電磁場開始算，又會把簡單的方向關係埋在不必要的數學裡。</p>
+<p>真正要學的是模型選擇。幾何光學是波動光學在波長遠小於元件尺度時的近似，不是另一種互相排斥的真理。折射、全反射、透鏡與雙狹縫也不是四張公式卡：它們都受界面相位連續、光程差與邊界條件控制。符號約定若沒有先固定，像距與放大率的正負還會讓同一題出現相反解讀。</p>
+<p>量測上也要區分「沒有折射光」與「儀器沒看到」。全反射是理想平滑界面的邊界解；粗糙表面、吸收介質或把另一材料貼近界面，都可能讓能量以散射或漸逝場耦合離開。課內公式建立第一層門檻判讀，不保證任何光纖彎折與接頭都零損耗。</p>
+
+<h2>白話直覺：大尺度追方向，小尺度追相位</h2>
+<p>可把幾何光學想成只記錄光束中心的路線，波動光學則連每條路徑累積多少相位都記下來。比喻到此為止；<strong>折射率（refractive index）</strong>定義為 n = c/v，無單位，其中真空光速 c 與介質相速度 v 的單位都是 m/s。n 較大表示相速度較慢，不表示光的頻率在界面改變。</p>
+<p><strong>司乃耳定律（Snell's law）</strong>為 n<sub>1</sub> sin θ<sub>1</sub> = n<sub>2</sub> sin θ<sub>2</sub>，角度由法線量起且無單位。從 n<sub>1</sub> &gt; n<sub>2</sub> 的光密介質射向光疏介質時，若入射角超過臨界角 θ<sub>c</sub> = arcsin(n<sub>2</sub>/n<sub>1</sub>)，會發生<strong>全反射（total internal reflection）</strong>。這是光纖以纖芯、包層折射率差限制光路的基礎，但真實光纖仍有彎曲與材料損耗。</p>
+<p>薄透鏡使用 1/f = 1/s<sub>o</sub> + 1/s<sub>i</sub>，橫向放大率 M = −s<sub>i</sub>/s<sub>o</sub>。焦距 f、物距 s<sub>o</sub>、像距 s<sub>i</sub> 的 SI 單位都是 m，M 無單位。本頁 widget 以 cm 輸入但比例不變。約定 f &gt; 0 是凸透鏡、f &lt; 0 是凹透鏡；s<sub>i</sub> &gt; 0 是另一側的實像，s<sub>i</sub> &lt; 0 是同側虛像；M &lt; 0 倒立，M &gt; 0 正立。</p>
+<p><strong>繞射（diffraction）</strong>與干涉都來自波的疊加。楊氏雙狹縫的相鄰亮紋間距 Δy = λD/d，其中波長 λ、屏幕距離 D、縫距 d 與 Δy 的 SI 單位都是 m。<strong>偏振（polarization）</strong>描述橫波電場的振動方向；<strong>相干（coherence）</strong>表示相位關係在觀察期間穩定。相干光才會留下穩定條紋，單色卻不保證兩束光一定相干。</p>
+<p class="note">來源：01-普通物理-下 第 2 章 §2.1–§2.3；放大率與像距符號採本課規格的標準約定。</p>
+
+<h2>推導：界面相位連續，路徑差決定亮暗</h2>
+<p><strong>第一步，折射。</strong>光跨過靜止界面時頻率 f 不變，但速度從 v<sub>1</sub> 改成 v<sub>2</sub>，所以 λ<sub>1</sub> = v<sub>1</sub>/f、λ<sub>2</sub> = v<sub>2</sub>/f。沿界面的相位必須處處連續，使波向量的平行分量相等：k<sub>1</sub> sin θ<sub>1</sub> = k<sub>2</sub> sin θ<sub>2</sub>。用 k = 2π/λ 與 λ = c/(nf) 代入，消去共同的 2πf/c，便得 n<sub>1</sub> sin θ<sub>1</sub> = n<sub>2</sub> sin θ<sub>2</sub>。</p>
+<p><strong>第二步，臨界角。</strong>折射角最大為 90°，令 sin θ<sub>2</sub> = 1，司乃耳定律給 sin θ<sub>c</sub> = n<sub>2</sub>/n<sub>1</sub>。只有 n<sub>1</sub> &gt; n<sub>2</sub> 時右側小於 1，臨界角才存在；若方向反過來，就不可能靠增加角度得到全反射。</p>
+<p><strong>第三步，雙狹縫。</strong>兩縫相距 d，遠方角度 θ 處兩條路徑的光程差近似 δ = d sin θ。建設性干涉要求 δ = mλ，其中 m 是整數。屏幕距離 D 遠大於條紋位置 y 時，小角度近似 sin θ ≈ tan θ = y/D，代入得 y<sub>m</sub> = mλD/d，相鄰 m 相差 1，因此 Δy = λD/d。δ、d、λ、y、D 皆以 m 表示，角度為無單位。</p>
+<p>這個推導也給出比例檢查：λ 或 D 加倍，Δy 加倍；d 加倍，Δy 減半。若角度不小、屏幕太近或狹縫本身不夠窄，小角近似與忽略單縫包絡的模型會失準。孔徑 D<sub>a</sub> 的解析角極限量級 θ<sub>min</sub> ≈ λ/D<sub>a</sub>，單位 rad；口徑不可能在固定波長下提供無限解析力。</p>
+<p><strong>第四步，讀透鏡符號。</strong>由 1/s<sub>i</sub> = 1/f − 1/s<sub>o</sub> 解得 s<sub>i</sub> = 1/(1/f − 1/s<sub>o</sub>)，再以 M = −s<sub>i</sub>/s<sub>o</sub> 判斷方向與大小。當 s<sub>o</sub> = f，分母為零，出射光平行而像在無窮遠；這是物理邊界，不應顯示成程式錯誤值。</p>
+<p>對凸透鏡而言，s<sub>o</sub> &gt; 2f 產生倒立縮小實像，s<sub>o</sub> = 2f 產生等大倒立實像，f &lt; s<sub>o</sub> &lt; 2f 產生倒立放大實像，s<sub>o</sub> &lt; f 則產生正立放大虛像。凹透鏡 f &lt; 0 時，在本頁實物約定下總是得到正立縮小虛像。這些分類不是另背五條規則，而是 s<sub>i</sub> 與 M 的符號、絕對值共同翻譯。</p>
+
+<h2>數值實例：同一組預設值走過三種模型</h2>
+<p>透鏡模式取 f = 10 cm、s<sub>o</sub> = 30 cm。1/s<sub>i</sub> = 1/10 − 1/30 = 1/15，所以 s<sub>i</sub> = <strong>15.000000 cm</strong>；M = −15/30 = <strong>−0.500000</strong>，即倒立、縮小、可投到光屏的實像。若 s<sub>o</sub> = 20 cm，像距 20 cm 且 M = −1；若 s<sub>o</sub> = 5 cm，像距 −10 cm、M = +2，成為正立放大虛像。</p>
+<p>折射模式取 n<sub>1</sub> = 1.50、n<sub>2</sub> = 1.00、θ<sub>1</sub> = 30°。sin θ<sub>2</sub> = 1.5⋅0.5 = 0.750000，θ<sub>2</sub> = <strong>48.590378°</strong>；臨界角 θ<sub>c</sub> = arcsin(1/1.5) = <strong>41.810315°</strong>。因 30° 尚未超過臨界角，所以仍有折射光；調到 45° 則全反射。</p>
+<p>雙狹縫模式取 λ = 500 nm、d = 100 µm、D = 1.00 m。換成 SI 後 Δy = (500×10<sup>−9</sup>)(1)/(100×10<sup>−6</sup>) = <strong>0.005000 m = 5.000000 mm</strong>；第一亮紋小角度 θ<sub>1</sub> = λ/d = 0.005000 rad = 0.286479°。三組數字都與 widget 預設一致。</p>
+<p>若把 d 加倍為 200 µm，Δy 會精確減半為 2.500000 mm；若只把 D 加倍為 2.00 m，Δy 則加倍為 10.000000 mm。另以 λ = 500 nm、口徑 0.10 m 估算，θ<sub>min</sub> ≈ 5.000000 × 10<sup>−6</sup> rad，說明放大影像不能突破孔徑已失去的角度細節。</p>
+
+<section class="workspace"><h2>自由實驗：透鏡、折射與雙狹縫</h2>
+<p>選擇模型後調整控制量，觀察像的正倒與虛實、是否全反射，或條紋間距如何依比例改變。所有控制保留，方便比較三套模型的變數。</p>
+<div class="controls">
+<label for="op-mode">觀察模式<select id="op-mode"><option value="lens">薄透鏡成像</option><option value="snell">折射與全反射</option><option value="slit">雙狹縫干涉</option></select></label>
+<label for="op-f">焦距 f（cm，負值＝凹透鏡）<input id="op-f" type="range" min="-50" max="50" step="1" value="10"></label>
+<label for="op-so">物距 so（cm）<input id="op-so" type="range" min="1" max="100" step="1" value="30"></label>
+<label for="op-n1">介質 1 折射率 n1<input id="op-n1" type="range" min="1" max="2.5" step="0.01" value="1.5"></label>
+<label for="op-n2">介質 2 折射率 n2<input id="op-n2" type="range" min="1" max="2.5" step="0.01" value="1"></label>
+<label for="op-theta">入射角 θ1（度）<input id="op-theta" type="range" min="0" max="89" step="1" value="30"></label>
+<label for="op-lambda">波長 λ（nm）<input id="op-lambda" type="range" min="380" max="780" step="5" value="500"></label>
+<label for="op-d">狹縫間距 d（µm）<input id="op-d" type="range" min="1" max="500" step="1" value="100"></label>
+<label for="op-bigd">屏幕距離 D（m）<input id="op-bigd" type="range" min="0.1" max="5" step="0.1" value="1"></label>
+</div>
+<div id="optics-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>折射率 n 是速度比且無單位，本身不是速度，也不是光強度。</li>
+<li>全反射只可能從光密到光疏；從光疏到光密沒有臨界角。</li>
+<li>Δy 式中的 d 是兩縫中心距，縫寬控制的是單縫繞射包絡。</li>
+<li>幾何光學是波長遠小於元件尺度的近似，不是與波動光學互斥的理論。</li>
+<li>繞射與干涉都源於疊加，只是對有限波源或連續孔徑的慣用名稱不同。</li>
+<li>偏振是橫波電場方向；空氣中的縱向聲波沒有這種偏振。</li>
+<li>單色只表示頻譜窄，相干還要求兩束光的相位關係穩定。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>用光具座、凸透鏡與光屏量物距及像距；用半圓玻璃磚、雷射筆與量角器量入射角、折射角和折射光消失的臨界角；用雷射照雙狹縫片，以尺量牆上的多個條紋總距離再除以間隔數。</p>
+<p><strong>能證明什麼：</strong>多組 1/s<sub>o</sub> 與 1/s<sub>i</sub> 可支持薄透鏡關係，角度資料可支持司乃耳定律與全反射門檻；條紋間距隨 D、λ、d 的比例變化，能支持光的相干疊加並反推出雷射波長。</p>
+<p><strong>不能證明什麼：</strong>雙狹縫條紋本身不能證明光子逐顆通過哪一縫，那需要單光子實驗與更嚴格的偵測。薄透鏡量測也不能證明任何鏡片都沒有厚度或像差；大孔徑、厚透鏡與寬頻光會偏離這個近似。</p>
+<p>條紋清晰也只能支持兩路光在量測時間內具有足夠相干性，不能證明光源在所有時間尺度上完全單色；任何波長反推都要納入縫距、屏距與尺讀值的不確定度。</p>
+
+<h2>連到哪門課</h2>
+<p>全反射與相干直接服務光纖通訊、光電工程和同調接收；繞射與解析力也銜接天線、雷達與成像系統。孔徑如何形成頻域圖樣，見<a href="../../數學/互動課程/10-傅立葉分析.html">工程數學先修 10 傅立葉分析</a>；光纖模態、像差修正與光學系統設計留給後續專業課。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="13-反射折射與都卜勒.html">← 上一頁：反射折射與都卜勒</a><a href="15-量子與半導體.html">下一頁：量子與半導體 →</a></nav>
+</main>
+<footer class="site-footer"><span>14 幾何光學與波動光學</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

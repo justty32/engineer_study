@@ -1,0 +1,82 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 疊加原理與相依源｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・把多個來源拆開算，再看清不能拆的量</p>
+<h1>疊加原理與相依源：線性讓多源問題可以分工處理</h1>
+<p class="lead">同一個節點同時被電壓源與電流源推動時，不必硬把所有作用一次看完。只要電路是線性的，就能逐一保留獨立源、求出電壓或電流響應，再做帶正負號的代數相加；但相依源不能關掉，功率也不能照樣相加。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-KCL與KVL.html">02 KCL 與 KVL</a>、<a href="03-節點與網目分析.html">03 節點與網目分析</a>，以及線性的可加性與齊次性。</p>
+
+<h2>痛點：兩個源同時推同一個節點，到底誰造成多少？</h2>
+<p>節點法當然能一次解出答案，但它只告訴你總結果，不一定讓你看見每個來源各自貢獻多少。更麻煩的是，初學者常把「關掉其他源」理解成把元件刪除，或看到電壓可以相加，就順手把功率也相加。這些錯誤會在含有受控放大作用的電路中放大：一旦把相依源也歸零，原電路的內部關係已經被改壞，所得結果不再代表任何有效分量。</p>
+<p><strong>線性（linearity）</strong>同時包含齊次性與可加性。齊次性是輸入乘上一個常數 k，響應也乘 k；可加性是輸入一與輸入二同時存在的響應，等於兩個單獨響應的代數和。<strong>疊加原理（superposition）</strong>正是把這個數學性質拿來拆電路。它適用的是支路電壓與電流，不是所有從它們再算出的量。</p>
+
+<h2>白話直覺：先讓每個獨立源單獨發言</h2>
+<p>可以暫時把多源分析想成錄音混音：先聽每一軌，再把振幅相加；比喻到此為止，真實電路中所有來源始終同時作用，並沒有輪流通電。精確作法是保留一個獨立源，其他獨立源把「源值設為零」後換成其理想內阻：獨立電壓源為 0 V，所以成為短路；獨立電流源為 0 A，所以成為開路。</p>
+<p>因果鏈從電源與地開始。V<sub>s</sub> 的負端接參考地，正端經 R<sub>1</sub> 到節點 A；I<sub>s</sub> 向 A 注入電流；A 再經 R<sub>2</sub> 回到地。保留 V<sub>s</sub> 時，電流沿 V<sub>s</sub> 正端、R<sub>1</sub>、A、R<sub>2</sub> 與地形成閉合回路，A 由分壓決定。保留 I<sub>s</sub> 時，電荷由電流源注入 A，再分別經 R<sub>1</sub> 與 R<sub>2</sub> 流向地，兩條回路都閉合，A 的電位由並聯電阻承接的電流決定。兩個 A 電壓相加就是同時接上兩源的結果。</p>
+<p><strong>相依源（dependent source）</strong>是由電路內某個電壓或電流控制的源，不是外加的獨立輸入。電壓控制電壓源（voltage-controlled voltage source, VCVS）、電流控制電壓源（current-controlled voltage source, CCVS）、電壓控制電流源（voltage-controlled current source, VCCS）與電流控制電流源（current-controlled current source, CCCS）都必須保留。它們表達的是內部輸入與輸出的線性關係，也是電晶體小訊號模型與運算放大器模型的骨架。</p>
+<p>做代數相加時還要保留方向。若某個來源把 A 拉向負電位，它的 V<sub>A</sub> 分項就是負值，不可先取大小再相加。電流也要先約定流入或流出為正；同一條參考方向必須用到底。這和程式中替變數保留正負號相同：分項可以互相抵消，總響應甚至可能為零，但零總響應不代表每個來源都沒在供能。兩個來源仍可能各自送出或吸收功率，只是它們對該觀察量的線性貢獻剛好抵銷。</p>
+<p class="note">來源：06-電路學-上 §1.2、§2.6。</p>
+
+<h2>推導：分別求兩個響應，再用節點方程驗算</h2>
+<p><strong>（a）固定拓樸與方向。</strong>V<sub>s</sub> 正端 → R<sub>1</sub> → 節點 A；電流源 I<sub>s</sub> 注入節點 A；節點 A → R<sub>2</sub> → 地；V<sub>s</sub> 負端 → 地。V<sub>A</sub> 是 A 對地電壓，單位 V；V<sub>s</sub> 是獨立電壓源，單位 V；I<sub>s</sub> 是注入 A 的獨立電流，單位 A；R<sub>1</sub>、R<sub>2</sub> 是線性定值電阻，單位 Ω。假設導線與來源皆理想、元件不隨溫度改變，並採集總電路近似。</p>
+<p><strong>（b）V<sub>s</sub> 單獨作用。</strong>令 I<sub>s</sub> = 0 A，理想電流源支路成為開路。R<sub>1</sub> 與 R<sub>2</sub> 串聯，流過兩者的電流為 V<sub>s</sub>/(R<sub>1</sub> + R<sub>2</sub>)，所以：</p>
+<p><code>V<sub>A,V</sub> = V<sub>s</sub> ⋅ R<sub>2</sub> / (R<sub>1</sub> + R<sub>2</sub>)</code></p>
+<p><strong>（c）I<sub>s</sub> 單獨作用。</strong>令 V<sub>s</sub> = 0 V，理想電壓源成為短路，於是 R<sub>1</sub> 與 R<sub>2</sub> 都從 A 接到地。符號 ‖ 讀作「並聯」，不是絕對值也不是範數。等效電阻為 R<sub>1</sub>‖R<sub>2</sub> = R<sub>1</sub>R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>)，因此：</p>
+<p><code>V<sub>A,I</sub> = I<sub>s</sub> ⋅ (R<sub>1</sub>‖R<sub>2</sub>)</code></p>
+<p><strong>（d）相加並直接驗算。</strong>線性保證 V<sub>A</sub> = V<sub>A,V</sub> + V<sub>A,I</sub>。若不拆源，直接在 A 寫流出電阻的電流等於注入電流：</p>
+<p><code>(V<sub>A</sub> − V<sub>s</sub>)/R<sub>1</sub> + V<sub>A</sub>/R<sub>2</sub> = I<sub>s</sub></code></p>
+<p>移項後得到 V<sub>A</sub>(1/R<sub>1</sub> + 1/R<sub>2</sub>) = V<sub>s</sub>/R<sub>1</sub> + I<sub>s</sub>。展開前述兩個分項會得到完全相同的式子，這就是疊加不是近似技巧，而是線性方程的另一種解法。</p>
+<p><strong>（e）功率不能疊加。</strong>R<sub>2</sub> 的功率 P 單位 W，且 P = V<sub>A</sub>²/R<sub>2</sub>。代入兩個響應：</p>
+<p><code>P = (V<sub>A,V</sub> + V<sub>A,I</sub>)²/R<sub>2</sub> = V<sub>A,V</sub>²/R<sub>2</sub> + V<sub>A,I</sub>²/R<sub>2</sub> + 2V<sub>A,V</sub>V<sub>A,I</sub>/R<sub>2</sub></code></p>
+<p>最後的交叉項通常不為零，所以兩個單源功率相加不等於總功率。只有某一分項為零，或兩分項恰好使交叉項為零時才碰巧相等；那是特例，不是新規則。</p>
+
+<h2>數值實例：主電路的兩個分項與功率差額</h2>
+<p>V<sub>s</sub> = 12 V、R<sub>1</sub> = 1 kΩ、I<sub>s</sub> = 5 mA、R<sub>2</sub> = 2 kΩ。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>V<sub>s</sub> 單獨作用（I<sub>s</sub> 開路）</td><td>12 × 2000/3000</td><td><strong>8.000000 V</strong></td></tr>
+<tr><td>I<sub>s</sub> 單獨作用（V<sub>s</sub> 短路）</td><td>0.005 × 666.666667</td><td><strong>3.333333 V</strong></td></tr>
+<tr><td>疊加總和</td><td>8.000000 + 3.333333</td><td><strong>11.333333 V</strong></td></tr>
+<tr><td>節點法直接解</td><td>(12/1000 + 0.005)/(1/1000 + 1/2000)</td><td><strong>11.333333 V</strong>（相符）</td></tr>
+<tr><td>R<sub>2</sub> 總功率</td><td>11.333333²/2000</td><td><strong>64.222200 mW</strong></td></tr>
+<tr><td>V<sub>s</sub> 單獨時 R<sub>2</sub> 功率</td><td>8²/2000</td><td><strong>32.000000 mW</strong></td></tr>
+<tr><td>I<sub>s</sub> 單獨時 R<sub>2</sub> 功率</td><td>3.333333²/2000</td><td><strong>5.555600 mW</strong></td></tr>
+<tr><td>兩者相加</td><td>32.000000 + 5.555600</td><td><strong>37.555600 mW</strong>（<strong>不等於</strong> 64.222200）</td></tr>
+<tr><td>交叉項</td><td>2 × 8 × 3.333333/2000</td><td><strong>26.666700 mW</strong>（37.555600 + 26.666700 = 64.222300，四捨五入後與 64.222200 差 1e−4 mW，屬顯示位數捨入）</td></tr>
+</tbody></table>
+<p>上表的 mW 值取到小數第 4 位（<code>toFixed(4)</code>）。交叉項相加後與總功率在第 4 位可能差 1e−4 mW，是顯示捨入不是算錯；widget 的判準要用未捨入的浮點值比較（容差 1e−9 W）。</p>
+
+<section class="workspace"><h2>自由實驗：拆開兩個源並比較功率</h2>
+<p>V<sub>s</sub> 正端經 R<sub>1</sub> 到節點 A，I<sub>s</sub> 向 A 注入電流，A 經 R<sub>2</sub> 回到地，V<sub>s</sub> 負端接地。調整四個量，觀察兩個分項電壓如何相加，以及功率為何還多一個交叉項。</p>
+<div class="controls">
+<label for="sup-vs">電壓源 V<sub>s</sub>（V）<input id="sup-vs" type="range" min="1" max="24" step="1" value="12"></label>
+<label for="sup-r1">R<sub>1</sub>（Ω，源到節點 A）<input id="sup-r1" type="range" min="100" max="10000" step="100" value="1000"></label>
+<label for="sup-is">電流源 I<sub>s</sub>（mA，注入節點 A）<input id="sup-is" type="range" min="0" max="20" step="0.5" value="5"></label>
+<label for="sup-r2">R<sub>2</sub>（Ω，A 到地）<input id="sup-r2" type="range" min="100" max="10000" step="100" value="2000"></label>
+</div>
+<div id="superpose-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>電壓與電流是線性電路的響應，可以做帶方向的疊加；功率含平方與交叉項，不是同一類量。</li>
+<li>歸零獨立電壓源的結果是短路，歸零獨立電流源的結果是開路；邊界來自理想內阻，不是把兩種源都拆掉。</li>
+<li>相依源表達電路內部的控制關係，不能歸零；獨立源才是疊加時逐一保留的外部輸入。</li>
+<li>疊加只保證線性範圍內成立；二極體或進入飽和的電晶體具有非線性，不能把其大訊號響應照搬相加。</li>
+<li>疊加是分析技巧，不是來源輪流工作的物理過程；真實電荷與能量流由所有同時接上的來源共同決定。</li>
+<li>齊次性是縮放一個輸入，可加性是合併不同輸入；兩者共同成立才叫線性，不能只驗其中一項就下結論。</li>
+</ul>
+
+<h2>可觀察證據：用電表分三次量節點電壓</h2>
+<p>可用高輸入阻抗三用電表量 A 對地電壓。先把電流源支路開路，量得 V<sub>A,V</sub>；再恢復電流源並把電壓源以低阻短路替代，量得 V<sub>A,I</sub>；最後接回兩個源，量總 V<sub>A</sub>。三次量測中，接線前都要先斷電，且不能把真實電源輸出端在通電時直接短路。</p>
+<p><strong>能證明什麼：</strong>若前兩次讀值的代數和與第三次在儀器誤差內一致，就能證明這個電路在當下電壓、電流與溫度範圍內呈線性，也能驗證源歸零後的拓樸判斷。<strong>不能證明什麼：</strong>這不能證明元件在更高電壓或更大電流時仍線性，也不能證明功率可疊加。要驗證功率，必須同時量 R<sub>2</sub> 兩端電壓與流過它的電流再相乘，不能把兩個單源功率表讀值直接相加。</p>
+<p>量測誤差也要用同一種相加方式評估。三次讀值各有電表解析度、來源內阻與接線接觸電阻造成的不確定度，不能要求末位數完全相等；應先估計容許差，再看殘差是否明顯超出。若殘差會隨來源幅度系統性變大，可能是電阻自熱、電流源順從電壓不足或來源進入限流，而不是疊加定理本身失效。這些現象正好指出理想線性模型的適用邊界。</p>
+
+<h2>連到哪門課</h2>
+<p>電子學用 VCCS 等相依源表示電晶體的小訊號增益，運算放大器也可先以 VCVS 建模；這章只教模型如何參與線性方程，不處理工作點、飽和與元件物理。信號與系統則把疊加提升為線性系統的共同語言，卷積可視為把輸入拆成許多微小成分後累加響應。控制系統的小訊號模型、交流分析與雜訊分析也會重用相同觀念。</p>
+<p>若要補齊齊次性、可加性及矩陣表示，可回到工程數學先修的<a href="../../../共通基礎/數學/互動課程/04-向量與矩陣.html">向量與矩陣</a>。下一章會把線性端口行為濃縮成戴維寧等效，讓「多源先拆開」進一步變成「複雜內部只留下兩個參數」。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="03-節點與網目分析.html">← 上一頁：節點與網目分析</a><a href="05-戴維寧與最大功率.html">下一頁：戴維寧與最大功率 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 疊加原理與相依源</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

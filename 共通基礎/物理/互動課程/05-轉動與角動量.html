@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 轉動與角動量｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・把平移力學逐項搬到旋轉世界</p>
+<h1>轉動與角動量：質量放在哪裡會決定物體多難轉</h1>
+<p class="lead">同樣質量的圓環與圓盤，推動旋轉的難易並不相同，因為質量離轉軸的距離不同。轉動慣量、力矩與角動量把這個幾何因素納入力學，並解釋溜冰者收手為何變快。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-牛頓運動定律.html">02 牛頓運動定律</a>、<a href="04-動量與碰撞.html">04 動量與碰撞</a>，以及角度與弧度。</p>
+
+<h2>痛點：同一個力，為什麼推門位置不同效果差很多</h2>
+<p>若只寫 F = ma，門把與鉸鏈附近受到相同大小的力似乎應有相同效果，實際上門把處更容易讓門轉動。另一個困惑是，溜冰者把手臂收近身體，沒有外力矩卻突然轉快；若只想到「能量守恆」，反而會問增加的轉動動能從哪裡來。平移公式少了力臂、轉軸與質量分布，無法直接回答。</p>
+<p>旋轉問題必須先指定轉軸。同一根細桿繞中心或繞端點，質量不變，轉動慣量卻相差四倍。軸的位置不是附帶資訊，而是物理模型的一部分；忽略它，就像只說速度大小卻不說方向。</p>
+<p>還要分清剛體整體轉動與物體質心平移。滾動的輪子同時具有質心動能與繞質心轉動動能，不能任選其中一項代表全部能量。本章的自由實驗固定轉軸，只聚焦繞軸旋轉；這項簡化讓 τ = Iα 可直接使用，但遇到軸移動、物體變形或質量流入流出時，模型必須擴充。</p>
+
+<h2>白話直覺：離軸越遠的質量，越像更長的槓桿拖住轉動</h2>
+<p>可先把每一小塊質量想成要沿圓弧加速；離軸越遠，同一角加速度需要越大的切向加速度，所以更難帶動。比喻到此為止；精確的<strong>轉動慣量（moment of inertia）</strong>是 I = ∫ r² dm。I 的 SI 單位是 kg·m²，r 的單位是 m，dm 的單位是 kg。距離被平方加權，因此外圈少量質量也可能顯著增加 I。</p>
+<p><strong>力矩（torque）</strong>的向量定義是 <strong>τ</strong> = <strong>r</strong> × <strong>F</strong>，粗體表示有方向；大小 τ = rF sin φ。τ 的單位是 N·m，r 的單位 m，F 的單位 N，φ 是無單位角度。只有垂直於力臂的力分量促成旋轉。雖然 N·m 與 J 量綱相同，力矩源於外積而功源於內積，兩者不能互換。</p>
+<p>固定軸且 I 不變時，平移與轉動可逐項對照：m 對 I、F 對 τ、x 對 θ、v 對 ω、a 對 α、p = mv 對 L = Iω、F = ma 對 τ = Iα、(1/2)mv² 對 (1/2)Iω²。角速度 ω 的單位 rad/s，角加速度 α 的單位 rad/s²，角動量 L 的單位 kg·m²/s，轉動動能 K 的單位 J。</p>
+<p>對照表是建模工具，不是說左右物理量完全相同。平移質量只與物質總量有關，I 卻同時依賴質量、形狀與轉軸；力直接改變線動量，力矩則改變角動量。當外力通過轉軸時，力可以很大但力臂為零，對該軸的力矩仍為零。這正是選軸能把問題簡化的理由。</p>
+<p class="note">來源：01-普通物理-上 第 5 章；常見形狀的轉動慣量係數採標準剛體結果。</p>
+
+<h2>推導：從一個質點累加成整個剛體</h2>
+<p><strong>第一步，找出 I 的來歷。</strong>質點距軸 r，以角加速度 α 轉動時，切向加速度 a<sub>切</sub> = rα，單位 m/s²。牛頓第二定律給 F<sub>切</sub> = mrα；兩邊乘 r 得 rF<sub>切</sub> = mr²α。左側是力矩 τ，單位 N·m。把剛體每一小塊質量的 mr² 相加，便得 τ = (∫ r² dm)α = Iα，而不是憑空指定 I。</p>
+<p><strong>第二步，算薄圓環。</strong>所有質量都在同一半徑 R，所以 R²可提出積分：I = ∫ R² dm = R²∫ dm = MR²。M 的單位 kg、R 的單位 m，因此 I 是 kg·m²。</p>
+<p><strong>第三步，算實心圓盤。</strong>令均勻圓盤面密度 σ = M/(πR²)，單位 kg/m²。取半徑 r、寬 dr 的薄圓環，面積 2πr dr，因此 dm = σ ⋅ 2πr dr。代入：</p>
+<p><code>I = ∫<sub>0</sub><sup>R</sup> r² ⋅ σ2πr dr = 2πσ ∫<sub>0</sub><sup>R</sup> r³ dr = 2πσ ⋅ R⁴/4 = (1/2)MR²</code></p>
+<p>積分結果仍為 kg·m²。標準係數因此為：薄圓環 I = MR²；實心圓盤 I = (1/2)MR²；實心球 I = (2/5)MR²；細桿繞中心 I = (1/12)ML²；細桿繞端點 I = (1/3)ML²，其中 L 是桿長，單位 m。</p>
+<p><strong>第四步，收手並守恆。</strong>外力矩可忽略時，I<sub>1</sub>ω<sub>1</sub> = I<sub>2</sub>ω<sub>2</sub>。若所有徑向尺寸縮成 k 倍，I<sub>2</sub> = k²I<sub>1</sub>，故 ω<sub>2</sub> = ω<sub>1</sub>/k²。轉動動能 K<sub>2</sub> = (1/2)I<sub>2</sub>ω<sub>2</sub>² = K<sub>1</sub>/k²，單位 J。k 小於 1 時動能增加，能量來自肌肉克服離心趨勢收手所做的功；角動量守恆並不要求動能守恆。</p>
+<p>守恆判斷同樣要先圈系統。在收手的短時間內，人體與轉盤合成系統受到的軸承摩擦力矩很小，L 可視為不變；若觀察數十秒，摩擦累積的角衝量就不能忽略。角衝量 ∫ τ dt = ΔL，左側單位 N·m·s，與右側 kg·m²/s 等價。這是前章衝量—動量定理在旋轉版本的完整對應。</p>
+
+<h2>數值實例：實心圓盤收縮到半徑的一半</h2>
+<p>採用實驗預設：實心圓盤 M = 2 kg、R = 0.5 m、ω = 10 rad/s、τ = 1 N·m、k = 0.5。I = (1/2)(2)(0.5²) = <strong>0.250000 kg·m²</strong>；L = Iω = <strong>2.500000 kg·m²/s</strong>；K = (1/2)Iω² = <strong>12.500000 J</strong>；α = τ/I = <strong>4.000000 rad/s²</strong>，若條件一秒不變，ω 增加 4 rad/s。</p>
+<p>收縮後 R′ = 0.25 m，I′ = (1/2)(2)(0.25²) = <strong>0.062500 kg·m²</strong>，也就是 k²I。角動量守恆給 ω′ = 2.5/0.0625 = <strong>40.000000 rad/s</strong>，等於 ω/k²。新動能 K′ = (1/2)(0.0625)(40²) = <strong>50.000000 J</strong>，增加 <strong>37.500000 J</strong>，這是收縮者做的功。</p>
+<p>若保持 M = 2 kg 與尺寸 0.5 m，只把形狀切換成細桿繞中心，I = (1/12)(2)(0.5²) = <strong>0.041667 kg·m²</strong>。切換形狀只改係數，不應暗中改質量或尺寸；薄圓環在同參數下的 I 則恰為圓盤的兩倍。</p>
+<p>結果還能用比例快速驗算：k = 0.5 使 I 乘 0.25，為保持 L 不變，ω 必須乘 4；K = L²/(2I)，所以 I 除以 4 時 K 乘 4。這種比例檢查不依賴小數運算，比只重按一次計算機更容易抓出把 k 誤當 k²、或遺漏動能中 ω² 的錯誤。</p>
+<p>形狀係數背後真正重要的是質量分布。圓環的質量全在外緣，所以同 M、R 下 I 最大；圓盤有質量分布在較近軸處，係數降為二分之一。若物體不均勻，就不能只套外形名稱，必須以實際密度建立 dm 再積分。工程上的飛輪會刻意把質量放遠以儲存更多轉動能，馬達轉子則常在響應速度與儲能之間取捨。</p>
+<p>因此量到總質量與外徑仍不足以唯一決定 I；內部配重、孔洞與軸心偏移都會影響結果，必須以圖面、積分或實測辨認。</p>
+
+<section class="workspace"><h2>自由實驗：形狀、力矩與收手</h2>
+<p>選擇剛體形狀並調整質量、尺寸、角速度、外加力矩與收縮倍率。比較角動量守恆前後的轉速與動能。</p>
+<div class="controls">
+<label for="rot-shape">剛體形狀<select id="rot-shape"><option value="hoop">薄圓環（MR²）</option><option value="disk" selected>實心圓盤（½MR²）</option><option value="sphere">實心球（⅖MR²）</option><option value="rodc">細桿繞中心（1/12·ML²）</option><option value="rode">細桿繞端點（⅓ML²）</option></select></label>
+<label for="rot-mass">質量 M（kg）<input id="rot-mass" type="range" min="0.5" max="20" step="0.5" value="2"></label>
+<label for="rot-size">半徑 R 或長度 L（m）<input id="rot-size" type="range" min="0.1" max="2" step="0.05" value="0.5"></label>
+<label for="rot-omega">角速度 ω（rad/s）<input id="rot-omega" type="range" min="0" max="20" step="0.5" value="10"></label>
+<label for="rot-torque">外加力矩 τ（N·m）<input id="rot-torque" type="range" min="0" max="20" step="0.5" value="1"></label>
+<label for="rot-shrink">收手後的尺寸倍率 k<input id="rot-shrink" type="range" min="0.2" max="1" step="0.05" value="0.5"></label>
+</div>
+<div id="rotation-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>轉動慣量不是質量；I 的單位是 kg·m²，而且同一物體換轉軸後 I 也會改變。</li>
+<li>力矩不是力。力矩要同時考慮力臂、力的大小與夾角，單位 N·m 也不是 N。</li>
+<li>N·m 作為力矩與 J 作為功雖量綱相同，前者來自叉積、後者來自內積，物理角色不同。</li>
+<li>角動量守恆不表示轉動動能守恆；收手增加的動能來自人體或致動器做功。</li>
+<li>τ = Iα 僅適用於固定轉軸且 I 不變的情境；若質量分布正在改變，須回到角動量變化率。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>讓受試者坐在低摩擦轉盤並手持啞鈴，以光電閘或手機高速攝影量收手前後的角速度與半徑比；另一組實驗以掛砝碼經滑輪對飛輪施加已知力矩，用旋轉編碼器量角加速度。</p>
+<p><strong>能證明什麼：</strong>角速度跳變與尺寸倍率符合 ω′/ω = 1/k²，可支持 Iω 在短暫收手期間近似守恆；已知 τ 與量得 α 的比值可反推 I，並驗證圓環、圓盤與不同轉軸的慣量係數確有差異。</p>
+<p><strong>不能證明什麼：</strong>轉速資料不能證明軸承完全無摩擦，也無法單獨分辨角動量變化來自外力矩或質量分布估計錯誤。只量角速度還不能直接證明增加的動能全由手臂做功，必須另量徑向力與位移。</p>
+
+<h2>連到哪門課</h2>
+<p>轉動力學直接服務電機機械的馬達轉矩與轉子慣量、控制系統的致動器模型、機器人關節，以及陀螺儀與 MEMS 感測。向量外積的幾何工具可回到<a href="../../數學/互動課程/04-向量與矩陣.html">工程數學先修 04 向量與矩陣</a>；本章停在物理量與守恆，不展開馬達等效電路或控制器設計。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="04-動量與碰撞.html">← 上一頁：動量與碰撞</a><a href="06-簡諧運動與共振.html">下一頁：簡諧運動與共振 →</a></nav>
+</main>
+<footer class="site-footer"><span>05 轉動與角動量</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

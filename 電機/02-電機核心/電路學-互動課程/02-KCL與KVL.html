@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 KCL 與 KVL｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">02・用兩個殘差檢查電荷與能量的帳</p>
+<h1>KCL 與 KVL：守恆律如何決定每個節點與回路</h1>
+<p class="lead">克希荷夫兩條定律不是解題儀式，而是電荷不會憑空消失、繞一圈位能必須回到原值的數學寫法。學會先定方向、列代數和、再算殘差，你就能分辨負答案和錯答案。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-電阻與歐姆定律.html">01 電阻與歐姆定律</a>，以及「回路」與「節點」兩個字。</p>
+
+<h2>痛點：方向這麼多，我到底要先猜對哪一條</h2>
+<p>一看到分岔，初學者常停在「這條電流到底往左還是往右」，彷彿方向猜錯整題就作廢；繞回路時又怕正負號改來改去。其實分析前只需一致地假設方向，方程會用負值回報實際方向相反。真正會讓答案失效的，是同一個電流在不同式子用了不同定義，或沒有把節點與封閉回路辨認清楚。更可靠的習慣不是相信計算過程，而是把解代回守恆式，看殘差是否接近零。</p>
+<p><strong>節點（node）</strong>是被理想導線連在一起、視為同電位的一整塊；<strong>支路（branch）</strong>是兩節點之間的一個元件路徑；<strong>回路（loop）</strong>是從某節點出發、不重複經過節點並回到原點的封閉路徑。這三個詞描述的是連接關係，不是畫面位置；同一節點可以在紙面上畫得很長，線條交叉若沒有電氣連接也不會形成節點。</p>
+
+<h2>白話直覺：節點查流量，回路查每庫侖能量</h2>
+<p>可以把 KCL 暫時想成節點的收支表，把 KVL 想成電荷走完一圈的能量收據。比喻到此為止；精確說法是<strong>克希荷夫電流定律（Kirchhoff's Current Law, KCL）</strong>要求節點電流代數和為零，源於電荷守恆；<strong>克希荷夫電壓定律（Kirchhoff's Voltage Law, KVL）</strong>要求封閉回路電壓代數和為零，源於能量守恆。</p>
+<p>本章拓樸為 V<sub>s</sub> 正端 → R<sub>1</sub> → 節點 A；節點 A → R<sub>2</sub> → 地；節點 A → R<sub>3</sub> → 地；V<sub>s</sub> 負端 → 地。先以負端為 0 V，電源讓正端為 V<sub>s</sub>。三條電阻路徑都導通，從正端經 R<sub>1</sub> 到 A 後可分走 R<sub>2</sub> 或 R<sub>3</sub>，兩條都能回地再回電源，所以回路閉合。</p>
+<p>電荷由約定的正電流方向經 R<sub>1</sub> 流入 A，不會在理想節點永久囤積，因此每秒流入的庫侖數必等於兩支路每秒流出的總和。這項平衡會自動調整 A 的節點電壓：A 太高時，流過 R<sub>2</sub>、R<sub>3</sub> 的電流增大；A 太低時，R<sub>1</sub> 的流入增大。穩態值就是流入等於流出的唯一交點。沿任一閉合路徑，電源每庫侖增加的能量又恰被電阻壓降取走，所以回到地時電位回到原值。</p>
+<p>兩條定律有低頻集總模型的邊界。理想節點不囤電荷才可直接寫流入等於流出；高頻走線對地的寄生電容會暫存電荷，此時若沒有把電容電流列入，就像 KCL 失效。回路沒有被時變磁通穿過才可把所有端電壓相加為零；若探棒地線圍成大圈並截取變化磁通，法拉第感應項 −dΦ/dt 會加入回路。守恆律沒有消失，是簡化模型漏列了儲能或感應效應。</p>
+<p>列式前可做一次文字巡線：先列全部節點，再為每條支路指定首尾節點與正方向，最後才選回路行走方向。每個支路電流在所有方程中沿用同一名稱，每跨一個元件就依行走方向判定升壓或降壓。這個程序看似比心算慢，卻能讓方程與實際接線逐項對照，也讓殘差指出是哪一本帳不平，而不是只得到一句模糊的「答案不對」。</p>
+<p>殘差必須連同單位與尺度判讀。電流殘差 0.001 mA 對數安培系統可能微不足道，對微安培感測器卻可能很大；電壓殘差也要和源電壓及儀器解析度相比。理想代數計算可要求接近浮點誤差，實際量測則不該硬要求完全為零。驗算的目的，是把模型、數值方法與量測不確定度分開，而不是把所有不為零的末位數都當成物理違規。</p>
+<p class="note">來源：06-電路學-上 §1.3。</p>
+
+<h2>推導：先求節點電壓，再用兩條律反向驗算</h2>
+<p><strong>（a）化簡下游。</strong>R<sub>2</sub> 與 R<sub>3</sub> 連在相同的 A、地兩節點，因此 R<sub>p</sub> = R<sub>2</sub>‖R<sub>3</sub> = R<sub>2</sub>R<sub>3</sub> / (R<sub>2</sub> + R<sub>3</sub>)。‖ 讀作「並聯」，不是絕對值也不是範數。R<sub>p</sub> 再與 R<sub>1</sub> 串聯，分壓得到 V<sub>A</sub> = V<sub>s</sub> ⋅ R<sub>p</sub> / (R<sub>1</sub> + R<sub>p</sub>)。V<sub>A</sub>、V<sub>s</sub> 單位 V，電阻單位 Ω；假設電源、導線與三顆電阻皆理想且為直流穩態。</p>
+<p><strong>（b）KCL 驗算。</strong>先固定 I<sub>1</sub> 由電源經 R<sub>1</sub> 流入 A，I<sub>2</sub>、I<sub>3</sub> 由 A 流向地。歐姆定律給 I<sub>1</sub> = (V<sub>s</sub> − V<sub>A</sub>) / R<sub>1</sub>、I<sub>2</sub> = V<sub>A</sub>/R<sub>2</sub>、I<sub>3</sub> = V<sub>A</sub>/R<sub>3</sub>。以流入為正，節點殘差 r<sub>I</sub> = I<sub>1</sub> − I<sub>2</sub> − I<sub>3</sub>，正確解應為 0 A。若某電流算成負值，只表示實際方向與假設相反，代數式仍然成立。</p>
+<p><strong>（c）KVL 驗算。</strong>沿地 → V<sub>s</sub> → R<sub>1</sub> → A → R<sub>2</sub> → 地行走。跨電源由負到正是 +V<sub>s</sub>，沿 I<sub>1</sub> 穿過 R<sub>1</sub> 是 −I<sub>1</sub>R<sub>1</sub>，從 A 回地是 −V<sub>A</sub>。因此 r<sub>V</sub> = V<sub>s</sub> − I<sub>1</sub>R<sub>1</sub> − V<sub>A</sub> = 0 V。改走 R<sub>3</sub> 的回路也應得到同一結論。行走方向可以反轉，但所有項必須一起反號。</p>
+<p><strong>（d）功率是交叉驗證。</strong>電源送出 P<sub>s</sub> = V<sub>s</sub>I<sub>1</sub>；三顆電阻吸收 P<sub>R</sub> = I<sub>1</sub>²R<sub>1</sub> + V<sub>A</sub>²/R<sub>2</sub> + V<sub>A</sub>²/R<sub>3</sub>。兩者差應為 0 W。功率守恆不是第三條獨立的電路定律，而是把支路的 KVL 與節點的 KCL 乘上相應電流後整合出的結果，因此很適合抓出量代錯的錯誤。</p>
+
+<h2>數值實例：同時把三本帳對到零</h2>
+<p>V<sub>s</sub> = 12 V、R<sub>1</sub> = 1 kΩ、R<sub>2</sub> = 2 kΩ、R<sub>3</sub> = 3 kΩ。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>R<sub>2</sub>‖R<sub>3</sub></td><td>(2000 × 3000)/5000</td><td><strong>1200.000000 Ω</strong></td></tr>
+<tr><td>節點電壓 V<sub>A</sub></td><td>12 × 1200/(1000 + 1200)</td><td><strong>6.545455 V</strong></td></tr>
+<tr><td>I<sub>1</sub>（流入 A）</td><td>(12 − 6.545455)/1000</td><td><strong>5.454545 mA</strong></td></tr>
+<tr><td>I<sub>2</sub>（流出，經 R<sub>2</sub>）</td><td>6.545455/2000</td><td><strong>3.272727 mA</strong></td></tr>
+<tr><td>I<sub>3</sub>（流出，經 R<sub>3</sub>）</td><td>6.545455/3000</td><td><strong>2.181818 mA</strong></td></tr>
+<tr><td>KCL 殘差</td><td>5.454545 − 3.272727 − 2.181818</td><td><strong>0.000000 mA</strong></td></tr>
+<tr><td>KVL 殘差</td><td>12 − 5.454545 − 6.545455</td><td><strong>0.000000 V</strong></td></tr>
+</tbody></table>
+<p>功率交叉驗算：源送出 12 × 0.005454545 = <strong>0.065455 W</strong>；R<sub>1</sub> 耗 <strong>0.029752 W</strong>、R<sub>2</sub> 耗 <strong>0.021421 W</strong>、R<sub>3</sub> 耗 <strong>0.014281 W</strong>，三者相加 <strong>0.065455 W</strong>，相符。</p>
+
+<section class="workspace"><h2>自由實驗：用殘差驗算分岔回路</h2>
+<p>V<sub>s</sub> 正端經 R<sub>1</sub> 到節點 A；A 分別經 R<sub>2</sub>、R<sub>3</sub> 到地；V<sub>s</sub> 負端接地。調整電源與三顆電阻，看節點電壓如何自行落在流入等於流出的值，並核對 KCL、KVL 與功率殘差。</p>
+<div class="controls">
+<label for="kir-vs">電源電壓 V<sub>s</sub>（V）<input id="kir-vs" type="range" min="1" max="24" step="1" value="12"></label>
+<label for="kir-r1">R<sub>1</sub>（Ω，源到節點 A）<input id="kir-r1" type="range" min="100" max="10000" step="100" value="1000"></label>
+<label for="kir-r2">R<sub>2</sub>（Ω，A 到地）<input id="kir-r2" type="range" min="100" max="10000" step="100" value="2000"></label>
+<label for="kir-r3">R<sub>3</sub>（Ω，A 到地）<input id="kir-r3" type="range" min="100" max="10000" step="100" value="3000"></label>
+</div>
+<div id="kirchhoff-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>KCL 對應電荷守恆，KVL 對應能量守恆；兩者檢查的物理帳不同，不是把同一句定律換成電流版與電壓版。</li>
+<li>KCL 寫在節點，KVL 寫在封閉回路；支路只是承載元件與電流的路徑，不能把三種對象互當同義詞。</li>
+<li>約定電流方向是正電荷方向，電子在金屬中反向漂移；分析符號與微觀載子方向的適用層次不同。</li>
+<li>假設方向得到負電流，表示實際方向相反；殘差不為零才表示這組數值未滿足方程，負號本身不是錯誤。</li>
+<li>串並聯化簡是特殊拓樸下的 KCL、KVL 推論；橋式電路不能直接化簡，不表示守恆律失效，而是必須聯立更多方程。</li>
+<li>理想低頻 KVL 不含時變磁通的感應項；量測線圈起來收到雜訊，是模型邊界被跨越，不是能量不守恆。</li>
+</ul>
+
+<h2>可觀察證據：量每一條支路，也量完整一圈</h2>
+<p>要檢查 KCL，可用直流電流勾表分別量節點三條支路，或依序把三用電表串入支路；保留方向極性後，I<sub>1</sub> − I<sub>2</sub> − I<sub>3</sub> 應在儀器誤差內接近零。這能證明該直流工作點的流入與流出讀值自洽，不能證明所有頻率下理想節點都不儲存電荷，也不能直接證明電荷守恆本身，只能反覆沒有推翻它。</p>
+<p>要檢查 KVL，可用三用電表沿同一圈量電源升壓、R<sub>1</sub> 壓降與 A 對地電壓，再按行走方向做代數和。這能證明所選回路在量測精度內的端電壓相容，不能證明探棒接法沒有擾動電路。若改用示波器，地夾與探棒線圍成的面積會截取變化磁通；在開關電源旁量到原本預期 0 V 的尖峰，只能說明量測回路包含感應電壓，不能草率宣告 KVL 被推翻。縮短地彈簧並重測，才有能力區分電路現象與探測器造成的證據。</p>
+
+<h2>連到哪門課</h2>
+<p>節點分析、網目分析、疊加、戴維寧等效都只是把 KCL 與 KVL 系統化。電子學用它們列電晶體小訊號模型，電力工程用它們做網路方程，控制硬體用殘差找接線或感測故障；電磁學則說明這兩條式子如何由馬克士威方程式在低頻、集總條件下得到。下一章會把多個守恆式排成矩陣，建立任何線性電阻網路都能重複執行的算法。</p>
+<nav class="pager" aria-label="章節導覽"><a href="01-電阻與歐姆定律.html">← 上一頁：電阻與歐姆定律</a><a href="03-節點與網目分析.html">下一頁：節點與網目分析 →</a></nav>
+</main>
+<footer class="site-footer"><span>02 KCL 與 KVL</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

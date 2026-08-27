@@ -1,0 +1,85 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 一階暫態 RC 與 RL｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・用初值、終值與時間常數讀懂切換</p>
+<h1>一階暫態 RC 與 RL：開關之後的狀態如何靠近穩態</h1>
+<p class="lead">開關切換不會讓儲能元件的狀態瞬移，而會沿著指數曲線消除初值與終值的差距。只要找對初值、終值與時間常數，就能預測任一時刻的電容電壓或電感電流，並知道儀器是否來得及看見。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-戴維寧與最大功率.html">05 戴維寧與最大功率</a>的 R<sub>th</sub>、<a href="06-電容與電感.html">06 電容與電感</a>的連續性，以及一階常微分方程與 e 的指數衰減。</p>
+
+<h2>痛點：為什麼一個 τ 只走 63.2 %，又該從哪裡算 R？</h2>
+<p>看到 RC 常把 τ = RC 直接套進去，卻忘了 R 應是從電容兩端看出去的戴維寧電阻；電路一複雜，隨手挑一顆電阻就會算錯。另一個理解債是把時間常數當成「完成時間」，因此期待 t = τ 時已到穩態。事實上指數曲線理論上永遠保留一點差距，τ 只是把剩餘差距縮成原來的 e<sup>−1</sup>，也就是走完 63.2 %。</p>
+<p><strong>一階電路（first-order circuit）</strong>只有一個獨立儲能狀態，動態由一階常微分方程描述。若兩顆電容被理想導線強迫擁有同一電壓，它們可能仍只構成一個獨立狀態；所以「一階」看的是獨立狀態數，不只是數零件。這章先處理線性、時不變、切換後來源固定的集總電路。</p>
+
+<h2>白話直覺：每過一個 τ，就按相同比例削掉剩餘差距</h2>
+<p>可以暫想成每隔固定時間就把「還沒走完的部分」削成原來的 36.8 %；比喻到此為止，真實變化是連續的 e<sup>−t/τ</sup>，不是每個 τ 才跳一次，也不是每次增加固定伏特數。</p>
+<p>RC 充電的因果鏈從 V<sub>s</sub> 與地開始：V<sub>s</sub> 正端經 R 到節點 A，A 經 C 回地。開關閉合後回路成立，來源移動電荷到電容極板；一開始 v<sub>C</sub> 小，電阻兩端壓差大，電流最大。電荷累積使 A 的電壓升高，R 的壓差與電流隨之下降，充電速度愈來愈慢；最後 dv<sub>C</sub>/dt 接近 0，電容電流接近 0，A 靠近終值 V<sub>s</sub>。</p>
+<p>RL 則由來源、R 與 L 串成閉合回路。開關接通時電感電流不能跳，線圈先承受大部分來源電壓；磁場建立後 di/dt 下降，線圈電壓下降，電流靠近 V<sub>s</sub>/R。若切換成放電路徑，儲存的磁能維持原方向電流，再經電阻耗散。RC 的 R 愈大，搬運電荷愈慢；RL 的 R 愈大，磁能耗散愈快，因此兩者的 τ 對 R 恰好相反。</p>
+<p>解題時可把切換前後分成兩張靜態拓樸清單。先在 t = 0<sup>−</sup> 的長時間穩態中以電容開路、電感短路求狀態；再用連續性把它搬到 t = 0<sup>+</sup>。接著只看切換後拓樸求終值，最後從儲能元件兩端向外看、歸零獨立源以求 R<sub>th</sub>。這個順序能避免把切換前的電阻誤帶進切換後時間常數，也避免用終值取代真正初值。</p>
+<p class="note">來源：06-電路學-下 §5.1–§5.2。</p>
+
+<h2>推導：從 KCL 分離變數，得到通用指數形式</h2>
+<p><strong>（a）建立 RC 方程。</strong>拓樸為 V<sub>s</sub> → R → 節點 A；節點 A → C → 地；V<sub>s</sub> 負端 → 地。v<sub>C</sub> 是 A 對地電壓，單位 V；V<sub>s</sub> 是切換後固定來源，單位 V；R 是線性電阻，單位 Ω；C 是理想電容，單位 F；t 是切換後時間，單位 s。對 A 寫流出電流和為零：</p>
+<p><code>(v<sub>C</sub> − V<sub>s</sub>)/R + C ⋅ dv<sub>C</sub>/dt = 0</code></p>
+<p>乘上 R 並移項，得到 RC ⋅ dv<sub>C</sub>/dt + v<sub>C</sub> = V<sub>s</sub>。假設切換後拓樸、R、C、V<sub>s</sub> 皆不隨時間改變，且忽略電容漏電、來源內阻與寄生元件。</p>
+<p><strong>（b）用分離變數求解。</strong>把含 v<sub>C</sub> 與 t 的部分分開：</p>
+<p><code>dv<sub>C</sub>/(V<sub>s</sub> − v<sub>C</sub>) = dt/(RC)</code></p>
+<p>兩側積分得 −ln|V<sub>s</sub> − v<sub>C</sub>| = t/(RC) + K，其中 K 是積分常數。指數化後可寫成 V<sub>s</sub> − v<sub>C</sub> = A e<sup>−t/(RC)</sup>。代入 v<sub>C</sub>(0) = V<sub>0</sub>，得 A = V<sub>s</sub> − V<sub>0</sub>，所以：</p>
+<p><code>v<sub>C</sub>(t) = V<sub>s</sub> + (V<sub>0</sub> − V<sub>s</sub>)e<sup>−t/(RC)</sup></code></p>
+<p>一般化後是 x(t) = x(∞) + [x(0<sup>+</sup>) − x(∞)]e<sup>−t/τ</sup>。x 是唯一狀態量：RC 為 V，RL 為 A。初值由連續性取得，終值由直流穩態求得，τ 由儲能元件兩端看出去的 R<sub>th</sub> 決定。</p>
+<p><strong>（c）時間常數與量綱。</strong>RC 電路 τ = R<sub>th</sub>C。Ω × F = (V/A) × (C/V) = C/A = C/(C/s) = s。RL 電路 τ = L/R<sub>th</sub>；H/Ω = (V⋅s/A)/(V/A) = s。兩式都確實是時間，但 R 的位置不同。</p>
+<p><strong>（d）63.2 % 的來源。</strong>令 t = τ，剩餘差距比例為 e<sup>−1</sup> = 0.367879，所以走完比例為 1 − 0.367879 = 0.632121。t = 3τ 時走完 0.950213；t = 5τ 時走完 0.993262。這些比例只取決於 t/τ，不取決於 τ 是 1 s、0.1 s 或 1 µs。</p>
+<p><strong>（e）RC 電流。</strong>由 i(t) = (V<sub>s</sub> − v<sub>C</sub>)/R，代入解得 i(t) = (V<sub>s</sub> − V<sub>0</sub>)/R ⋅ e<sup>−t/τ</sup>。它沒有常數項，因為穩態電容開路、電流為 0。自然響應是含 e<sup>−t/τ</sup> 的衰減部分，強迫響應是來源決定的終值；兩者從 t = 0 同時存在，不是先後兩階段。</p>
+<p>若初值高於終值，係數 x(0<sup>+</sup>) − x(∞) 為正，狀態由高往低衰減；若初值低於終值，係數為負，狀態由低往高接近。無論方向如何，e<sup>−t/τ</sup> 都只負責把差距縮小，所以 63.2 % 指的是走完「初值到終值的差」，不是終值本身的 63.2 %。若初值恰等於終值，差距項為零，整條曲線就是水平線，沒有暫態。</p>
+
+<h2>數值實例：同一指數比例落在不同實際時間</h2>
+<p>R = 10 kΩ、C = 10 µF、V<sub>0</sub> = 0 V、V<sub>s</sub> = 5 V → <strong>τ = RC = 10<sup>4</sup> × 10<sup>−5</sup> = 0.100000 s</strong>。</p>
+<table><thead><tr><th>t</th><th>v<sub>C</sub>(t)（V）</th><th>走完比例（%）</th><th>i(t)（mA）</th></tr></thead><tbody>
+<tr><td>0.5τ = 0.050000 s</td><td><strong>1.967347</strong></td><td>39.3469</td><td>0.303265</td></tr>
+<tr><td><strong>1τ = 0.100000 s</strong></td><td><strong>3.160603</strong></td><td><strong>63.2121</strong></td><td><strong>0.183940</strong></td></tr>
+<tr><td>2τ = 0.200000 s</td><td><strong>4.323324</strong></td><td>86.4665</td><td>0.067668</td></tr>
+<tr><td>3τ = 0.300000 s</td><td><strong>4.751065</strong></td><td>95.0213</td><td>0.024894</td></tr>
+<tr><td>5τ = 0.500000 s</td><td><strong>4.966310</strong></td><td>99.3262</td><td>0.003369</td></tr>
+</tbody></table>
+<p><strong>和工程數學課對得上</strong>：工程數學先修第 07 章用 τ = 1 s、v<sub>s</sub> = 5 V 得到 t = τ 時 3.160603 V。本課的 τ 是 0.1 s，但<strong>百分比一模一樣</strong>——因為 e<sup>−t/τ</sup> 只認 t/τ 這個比值，不認絕對時間。</p>
+<p>RL 對照：L = 10 mH、R = 10 kΩ → τ = L/R = 10<sup>−6</sup> s = <strong>1.000000 µs</strong>；同樣的 R 換成 100 Ω → τ = <strong>100.000000 µs</strong>。<strong>注意 RL 的 τ 和 R 成反比，RC 的 τ 和 R 成正比</strong>，這是最容易記反的一組。</p>
+
+<section class="workspace"><h2>自由實驗：用 τ 的倍數觀察充電與電流建立</h2>
+<p>RC 模式中，V<sub>s</sub> 經 R 到節點 A，A 經 C 回地；RL 模式中，V<sub>s</sub>、R、L 串聯後回地。切換模式並以幾個 τ 選擇時刻，觀察實際時間、狀態量與剩餘差距。</p>
+<div class="controls">
+<label for="rc-type">電路類型<select id="rc-type"><option value="rc">RC（電容充放電，τ = RC）</option><option value="rl">RL（電感電流建立，τ = L/R）</option></select></label>
+<label for="rc-r">R（Ω）<input id="rc-r" type="range" min="100" max="20000" step="100" value="10000"></label>
+<label for="rc-c">C（µF，只在 RC 模式使用）<input id="rc-c" type="range" min="1" max="100" step="1" value="10"></label>
+<label for="rc-l">L（mH，只在 RL 模式使用）<input id="rc-l" type="range" min="1" max="200" step="1" value="10"></label>
+<label for="rc-v0">初值（RC：v<sub>C</sub>(0<sup>+</sup>)，V；RL：i<sub>L</sub>(0<sup>+</sup>)，mA）<input id="rc-v0" type="range" min="-5" max="5" step="0.5" value="0"></label>
+<label for="rc-vs">終值（RC：V<sub>s</sub>，V；RL：V<sub>s</sub>/R 換算成 mA）<input id="rc-vs" type="range" min="-5" max="5" step="0.5" value="5"></label>
+<label for="rc-k">觀察時刻 t（單位＝幾個 τ）<input id="rc-k" type="range" min="0" max="6" step="0.1" value="1"></label>
+</div>
+<div id="rctau-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>τ 是走完初值到終值差距的 63.2 % 所需時間，不是到達 100 % 的截止時間。</li>
+<li>RC 的 τ 與 R 成正比，RL 的 τ 與 R 成反比；兩者雖共享指數形式，R 對能量交換速度的作用不同。</li>
+<li>R<sub>th</sub> 必須從儲能元件兩端看出去並將獨立源歸零，不是電路裡任選一顆標成 R 的元件。</li>
+<li>切換瞬間連續的是電容電壓與電感電流；電容電流、電感電壓以及電阻壓降都可能跳變。</li>
+<li>自然響應與強迫響應是同一個解在所有時刻的兩個部分，不是先自然、後強迫的兩段流程。</li>
+<li>一階指的是一個獨立狀態；零件數多不必然高階，而未建模的寄生儲能可能讓實物不再是一階。</li>
+</ul>
+
+<h2>可觀察證據：用示波器量 63.2 % 與上升時間</h2>
+<p>用函數產生器輸出方波到 RC 串聯電路，示波器一個通道量輸入、另一個通道量電容電壓。用游標找出從初值走到總差距 63.2 % 的時刻，該時間就是 τ；也可量 10 % 到 90 % 的上升時間 t<sub>r</sub>，再以 t<sub>r</sub> = 2.197τ 反推。量 RL 電流時需用電流探棒，或串一顆已知小電阻量壓降換算電流。</p>
+<p><strong>能證明什麼：</strong>量測可證明實際 τ、初值連續性以及波形在主要區段接近單一指數，也能比較更換 R、C 或 L 後 τ 的正反比。<strong>不能證明什麼：</strong>只知道 τ 不能分別求出 R 與 C，因為 RC 只給乘積；漂亮的單一曲線也不能保證所有時間尺度都只有一階。若尾端出現第二種斜率，可能有漏電或寄生元件。探棒約 10 pF 到 100 pF 的輸入電容還會改變高阻節點的 τ，儀器不是完全透明的觀察者。</p>
+<p>儀器頻寬也是邊界。若 τ 只有數十奈秒，探棒、接地線與取樣率可能把真正邊緣濾鈍；三用電表則只會顯示緩慢變動或平均結果，無法重建指數形狀。量測前應先估 τ，再選擇至少快上數倍的示波器與探棒，並把函數產生器的輸出阻抗納入 R<sub>th</sub>。</p>
+<p>驗證指數形狀時，不要只核對一個 63.2 % 時刻。可把每個時刻的剩餘差距除以初始差距，再檢查相隔相同時間的比值是否近似固定；單一指數才會有這種性質。若早期與晚期得到不同衰減比例，常代表來源內阻、漏電、探棒負載或第二個儲能元件不可忽略。多點證據比「剛好通過一個游標位置」更能支持一階模型。</p>
+
+<h2>連到哪門課</h2>
+<p>GPIO 上升時間、按鍵去彈跳、ADC 取樣保持、繼電器續流、電源軟啟動與感測器低通，都用一階暫態做第一輪估算。第 08 章再加入第二個獨立儲能狀態，解會多出兩個自然模式並可能振鈴；控制系統則把相同指數模式稱為極點造成的響應。</p>
+<p>分離變數、指數解與一階常微分方程的數學細節見工程數學先修的<a href="../../../共通基礎/數學/互動課程/07-常微分方程.html">常微分方程</a>。本章關心的是初值從物理連續性而來、終值從直流穩態而來，以及 R<sub>th</sub> 如何由真實拓樸決定；這三件事才是把通解正確放回電路的關鍵。</p>
+<p>在軟體模擬中，也可用很小的時間步長將 dv/dt 近似成相鄰樣本差除以步長，逐步更新狀態；但步長太大會造成數值誤差甚至假振盪。解析解提供基準，可用來檢查模擬器或韌體中的離散近似，而離散結果不能反過來取代元件連續性與能量來源的物理解釋。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="06-電容與電感.html">← 上一頁：電容與電感</a><a href="08-二階RLC暫態.html">下一頁：二階 RLC 暫態 →</a></nav>
+</main>
+<footer class="site-footer"><span>07 一階暫態 RC 與 RL</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

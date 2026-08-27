@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 熱學與流體｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・從巨觀能量走到熱機、流體與電阻雜訊</p>
+<h1>熱學與流體：能量守恆之外，方向性與漲落也不能省略</h1>
+<p class="lead">熱不是物體「含有的某種液體」，而是跨邊界傳遞的能量；溫度則描述熱平衡與微觀運動尺度。熱力學第二定律限制熱機效率，分子熱運動還會在沒有外加訊號時形成可量測的電阻雜訊。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-功與能量.html">03 功與能量</a>的功、能量與守恆。</p>
+
+<h2>痛點：能量明明守恆，為什麼廢熱不能全部變回有用功</h2>
+<p>一杯熱水會自行冷卻，卻不會自動從室溫吸熱而變燙；摩擦產生的熱也不會完整聚回物體的整齊運動。第一定律只要求能量帳目平衡，沒有指定自然過程的方向，因此單靠能量守恆無法解釋熱機上限。另一方面，若把溫度、熱量與內能都叫「熱」，公式中的狀態量與過程量就會混在一起。</p>
+<p>流體也有相似問題：窄管中速度增加時，壓力、動能密度與重力位能密度彼此交換。只背「流速快壓力低」會忽略高度、黏滯與外加幫浦；白努利式只適用於穩定、不可壓縮且沿同一流線的理想化情境。</p>
+<p>熱學特別要求把系統邊界寫清楚。加熱金屬時，電熱器輸出的電能不會全進入樣品，容器與空氣也吸熱；熱機的輸入熱量、輸出功與廢熱則必須在同一循環結算。若只比較溫度起終值而忽略漏熱，算出的比熱會把實驗裝置的效應錯算成材料性質。</p>
+
+<h2>白話直覺：溫度定尺度，熱量記跨界能量，熵限制可逆方向</h2>
+<p>可以把溫度看成大量粒子無規則運動的能量尺度，把熱量看成因溫差穿越系統邊界的能量。比喻到此為止；溫度 T 是狀態量，SI 單位 K，熱量 Q 是過程量，單位 J。加熱公式 Q = mcΔT 中，m 的單位 kg，比熱 c 的單位 J/(kg·K)，ΔT 的單位 K。</p>
+<p>熱力學第一定律採「系統吸熱為正、系統對外做功為正」的約定：ΔU = Q − W。ΔU、Q、W 的單位都是 J。第二定律指出孤立系統的熵不減；可逆微小過程 dS = δQ<sub>可逆</sub>/T，S 的單位 J/K。把熵只稱為亂度容易誤導，精確內容是可逆熱量除以絕對溫度，以及不可逆過程對可用能的限制。第三定律則使絕對零度不可由有限程序到達。</p>
+<p>理想氣體（ideal gas）滿足 PV = nRT。P 的單位 Pa，V 的單位 m³，n 的單位 mol，T 的單位 K，氣體常數 R = 8.314462618 J/(mol·K)，所以兩側同為 J。攝氏溫度轉成絕對溫度必須加 273.15，效率與雜訊公式都不可直接代攝氏數值。</p>
+<p>流體靜壓 p = p<sub>0</sub> + ρgh，p 與 p<sub>0</sub>單位 Pa，密度 ρ 單位 kg/m³，g 單位 m/s²，深度 h 單位 m。不可壓縮流的連續方程 A<sub>1</sub>v<sub>1</sub> = A<sub>2</sub>v<sub>2</sub>，兩側單位 m³/s。白努利方程 p + (1/2)ρv² + ρgh = 常數，各項單位都是 Pa，也就是每單位體積的能量。</p>
+<p>熱平衡不表示微觀粒子停止運動，而是巨觀平均量不再有淨變化。正因電子仍受熱擾動，電阻即使沒有外接電源也會有隨機電壓。其長時間平均接近零，均方根卻非零；因此示波器上的瞬時正負跳動與頻譜儀量到的功率密度，是同一個隨機過程的不同摘要。</p>
+<p class="note">來源：01-普通物理-上 第 7、8 章；熱雜訊的標準結果補充自物理課與電機雜訊的銜接。</p>
+
+<h2>推導：循環熱機、流體能量與熱雜訊量級</h2>
+<p><strong>第一步，熱機效率。</strong>熱機完成一個循環後回到原狀態，所以 ΔU = 0。第一定律給淨功 W = Q<sub>H</sub> − Q<sub>C</sub>，其中 Q<sub>H</sub>是由高溫源吸收的熱量、Q<sub>C</sub>是排往低溫源的熱量，三者單位皆為 J。效率 η = W/Q<sub>H</sub> = 1 − Q<sub>C</sub>/Q<sub>H</sub>，無單位。</p>
+<p><strong>第二步，加入第二定律。</strong>可逆循環的總熵變為零，因此 Q<sub>H</sub>/T<sub>H</sub> = Q<sub>C</sub>/T<sub>C</sub>，兩側單位 J/K。代回效率式得到卡諾效率 η<sub>Carnot</sub> = 1 − T<sub>C</sub>/T<sub>H</sub>。η 無單位，T<sub>H</sub>與 T<sub>C</sub>必須用 K。上限只由兩個熱庫溫度決定；要 η = 1 必須 T<sub>C</sub> = 0 K，而第三定律排除有限程序達成此條件。</p>
+<p><strong>第三步，白努利方程。</strong>一小段體積 ΔV 的流體由入口移到出口，壓力所做淨功是 (p<sub>1</sub> − p<sub>2</sub>)ΔV。動能變化為 (1/2)ρΔV(v<sub>2</sub>² − v<sub>1</sub>²)，重力位能變化為 ρΔVg(h<sub>2</sub> − h<sub>1</sub>)。令壓力功等於兩種能量增加，再除以 ΔV 並移項，就得 p + (1/2)ρv² + ρgh = 常數，單位 Pa。</p>
+<p><strong>第四步，熱雜訊。</strong>能量均分定理使平衡中的自由度具有約 (1/2)k<sub>B</sub>T 的平均能量；波茲曼常數 k<sub>B</sub> = 1.380649 × 10<sup>−23</sup> J/K。在頻寬 B 內，匹配負載可取得的雜訊功率 P<sub>n</sub> = k<sub>B</sub>TB，單位 W。電阻 R 的開路雜訊電壓均方根是 v<sub>rms</sub> = √(4k<sub>B</sub>TRB)，單位 V；R 單位 Ω，B 單位 Hz。平方根關係表示 R 或 B 增為四倍時，電壓雜訊只增為兩倍。</p>
+<p>這裡的頻寬不是儀器畫面上的裝飾，而是納入多少獨立頻率成分。理想白雜訊的每赫茲功率相同，積分較寬頻帶會收集更多功率，所以 P<sub>n</sub>與 B 成正比、v<sub>rms</sub>與 √B 成正比。若沒有同時報告溫度、電阻與頻寬，單一雜訊電壓值無法跨實驗比較。</p>
+
+<h2>數值實例：同一組預設值看三種熱學輸出</h2>
+<p>加熱模式取 m = 0.50 kg、c = 900 J/(kg·K)、ΔT = 50 K，Q = 0.5 ⋅ 900 ⋅ 50 = <strong>22500.000000 J</strong>。卡諾模式取 T<sub>H</sub> = 600 K、T<sub>C</sub> = 300 K，η = 1 − 300/600 = <strong>0.500000</strong>，即 <strong>50.000000 %</strong>。若把前述 22500 J 當輸入熱量，最多輸出功 <strong>11250.000000 J</strong>，也必須排出 <strong>11250.000000 J</strong>。</p>
+<p>1 mol 理想氣體在 300 K、標準大氣壓 p<sub>0</sub> = 101325 Pa 下，V = nRT/P = 8.314462618 ⋅ 300 / 101325 = <strong>0.024617 m³</strong>，也就是 <strong>24.617210 L</strong>。</p>
+<p>雜訊模式的對數滑桿預設 log10 R = 3、log10 B = 4，所以 R = 1000 Ω、B = 10000 Hz，溫度沿用 T<sub>C</sub> = 300 K。4k<sub>B</sub>TRB = 1.6567788 × 10<sup>−13</sup> V²，v<sub>rms</sub> = <strong>4.070355 × 10<sup>−7</sup> V</strong>，即約 407.036 nV；頻譜密度是 <strong>4.070355 nV/√Hz</strong>。P<sub>n</sub> = <strong>4.141947 × 10<sup>−17</sup> W</strong>，換算為 <strong>−133.827955 dBm</strong>。</p>
+<p>流體例採水密度 ρ = 1000 kg/m³、g = 9.8 m/s²。水深 10 m 的絕對壓力為 101325 + 1000 ⋅ 9.8 ⋅ 10 = <strong>199325 Pa</strong>，即 1.967185 atm。水平水管截面由 4 cm²縮到 1 cm²，若 v<sub>1</sub> = 1 m/s，連續方程給 v<sub>2</sub> = <strong>4 m/s</strong>；忽略損耗時壓差為 (1/2)(1000)(16 − 1) = <strong>7500 Pa</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：加熱、卡諾效率與電阻熱雜訊</h2>
+<p>先選模式，再調整所有既有控制。觀察熱量比例、熱機上限，或電阻與頻寬如何以平方根改變雜訊。</p>
+<div class="controls">
+<label for="th-mode">模式<select id="th-mode"><option value="heat">加熱升溫（Q = mcΔT）</option><option value="carnot" selected>卡諾熱機效率</option><option value="noise">電阻熱雜訊</option></select></label>
+<label for="th-mass">質量 m（kg）<input id="th-mass" type="range" min="0.01" max="5" step="0.01" value="0.5"></label>
+<label for="th-c">比熱 c（J/(kg·K)）<input id="th-c" type="range" min="100" max="4200" step="10" value="900"></label>
+<label for="th-dt">溫升 ΔT（K）<input id="th-dt" type="range" min="1" max="200" step="1" value="50"></label>
+<label for="th-thot">高溫源 TH（K）<input id="th-thot" type="range" min="300" max="1200" step="10" value="600"></label>
+<label for="th-tcold">低溫源 TC（K）<input id="th-tcold" type="range" min="100" max="400" step="10" value="300"></label>
+<label for="th-logr">電阻 log10 R（R 單位 Ω）<input id="th-logr" type="range" min="0" max="7" step="0.1" value="3"></label>
+<label for="th-logb">頻寬 log10 B（B 單位 Hz）<input id="th-logb" type="range" min="0" max="9" step="0.1" value="4"></label>
+</div>
+<div id="thermal-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>溫度 T 是狀態量、單位 K；熱量 Q 是跨邊界的過程量、單位 J，兩者不是同一種「熱」。</li>
+<li>熱容的單位 J/K，比熱的單位 J/(kg·K)；兩者相差物體質量。</li>
+<li>熵不只是口語的亂度；精確關係涉及可逆熱量除以絕對溫度與不可逆過程的方向。</li>
+<li>卡諾效率是任何熱機不能超過的上限，不是實際機器必能達到的效率。</li>
+<li>熱雜訊電壓必須連同頻寬與電阻一起報告；k<sub>B</sub>TB 是送進匹配負載的可用功率。</li>
+<li>白努利式忽略黏滯耗散；真實長管中的壓降不能只用理想流線能量守恆解釋。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>用保溫量熱器、電熱器功率計與溫度計量輸入能量和升溫；用壓力計與流量計量管路壓差與流速；用低雜訊放大器及頻譜儀量電阻的雜訊功率譜密度，並改變頻寬或把電阻降溫後重測。</p>
+<p><strong>能證明什麼：</strong>量熱資料能估材料比熱並檢查 Q 與 m、c、ΔT 成正比；管路資料能在低黏滯近似下核對連續方程與白努利能量交換；雜訊頻譜能驗證功率隨絕對溫度及頻寬成正比、電壓密度隨 √R 改變。</p>
+<p><strong>不能證明什麼：</strong>任何有限熱機實測都只能落在卡諾上限以下，不能單靠「沒有超過」證明第二定律；頻譜儀量到的總雜訊也不能自動分離熱雜訊、散粒雜訊與低頻雜訊。紅外線測溫還受放射率影響，表面讀值不等於晶片內部完整溫度場。</p>
+
+<h2>連到哪門課</h2>
+<p>熱學直接服務電子學的元件溫漂與載子熱激發、通訊系統的 k<sub>B</sub>TB 雜訊底、積體電路與電力電子的散熱；流體則連到冷卻、微流道與 MEMS。本章停在物理量、上限與量測，不展開雜訊指數、鏈路預算或散熱器選型。能量累積所需的積分工具可回到<a href="../../數學/互動課程/02-積分.html">工程數學先修 02 積分</a>。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="06-簡諧運動與共振.html">← 上一頁：簡諧運動與共振</a><a href="08-靜電學.html">下一頁：靜電學 →</a></nav>
+</main>
+<footer class="site-footer"><span>07 熱學與流體</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

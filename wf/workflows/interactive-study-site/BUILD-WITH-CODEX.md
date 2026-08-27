@@ -21,15 +21,15 @@
 2. **建置指揮官**（opus agent）啟動：
    - codex 分包建 HTML（一波最多 2 job，`codex exec --sandbox workspace-write --cd <repo根> - < prompt檔`，prompt 用「指路」不內嵌；大檔生成有長靜默屬正常，勿設短超時）。
    - 同時親手寫 `app.js`（唯一依據 BUILD-SPEC；確定性、無 `Math.random`/`Date`、末端掛勾加 `typeof document!=="undefined"` 守衛），`node --check` ＋假 DOM 驅動驗算規格數值組。
-   - `styles.css` 直接 `cp` 既有課的（位元組相同可驗）。
+   - `styles.css` 從**正本** `專題/機器人運動學/互動課程/styles.css` 直接 `cp`（位元組相同可驗），不要隨手挑一門既有課來抄。課建好後把新課登記進 `tools/sync-styles.py` 的 `FAMILY` 清單，再跑 `python wf/workflows/interactive-study-site/tools/sync-styles.py --check` 確認通過。家族歸屬與例外（深色模式家族、IoT 家族不受正本管轄）見 [SHARED-ASSETS-EVAL](SHARED-ASSETS-EVAL.md)。
    - 每包收件即驗：檔案齊全與行數、id 契約逐一比對、LaTeX 分隔符 0、外部資源 0（僅允許回主站連結）、UTF-8 無 BOM 且 U+FFFD／U+0080–009F／U+E000–F8FF＝0、pager 相連、相對連結存在。缺陷→focused codex 修正 pass；編碼壞損→`git checkout` 還原重跑。
-3. **獨立驗收員**（opus agent，未參與建置，唯一寫入 `驗收紀錄.md`）：不信任 builder 自報全部重驗，外加——內容正確性抽章（對照來源筆記親手重算數值）、widget 邊界抽測（NaN 不得洩漏）、**字元級錯字掃描**（簡體字、形近錯字如「收斂→收旂」；codex 生成會出這類錯，機械掃描抓不到，要 grep 高頻術語）、**拆檔量測**（固定項：各檔行數與位元組，超標列報告由 Lead 決定，參考線 HTML 1000 行、app.js 2000 行、spec 類 md 1200 行）、有 Playwright 就跑桌面 `1440×900` ＋手機 `390×844` 全頁載入。**注意規格本身也要抽驗：builder 照抄規格，規格的算術錯會原樣進產品。**
-4. **Lead 收尾**：裁決驗收上報、純字串修正自己 sed（快且零下放成本）、掛站接線（`pages.yml` 三處＋主站入口＋來源 README，可回派指揮官）、SESSION-LOG／WAIT_USER、詢問使用者 commit。
+3. **獨立驗收員**（opus agent，未參與建置，唯一寫入 `驗收紀錄.md`）：不信任 builder 自報全部重驗，外加——內容正確性抽章（對照來源筆記親手重算數值）、widget 邊界抽測（NaN 不得洩漏）、**字元級錯字掃描**（簡體字、形近錯字如「收斂→收旂」；codex 生成會出這類錯，機械掃描抓不到，要 grep 高頻術語）、**拆檔量測**（固定項：各檔行數與位元組，超標列報告由 Lead 決定，參考線 HTML 1000 行、app.js 2000 行、spec 類 md 1200 行）、**`styles.css` 正本閘門**（固定項：`python wf/workflows/interactive-study-site/tools/sync-styles.py --check` 必須 exit 0；漂移表示有人改了下游複本而沒回寫正本，須先釐清哪一邊才是對的，不得逕自 `--sync` 蓋掉）、有 Playwright 就跑桌面 `1440×900` ＋手機 `390×844` 全頁載入。**注意規格本身也要抽驗：builder 照抄規格，規格的算術錯會原樣進產品。**
+4. **Lead 收尾**：裁決驗收上報、純字串修正自己 sed（快且零下放成本）、掛站接線（`pages.yml` **課程表加一行** `<來源目錄>|<slug>`；只有當該課含 `../../<其他課>/` 形式的跨課相對連結時才需另加 `replacements` 規則。`on.push.paths` 已改成萬用路徑，通常不必動——見 [SHARED-ASSETS-EVAL](SHARED-ASSETS-EVAL.md) 的觸發面說明。另加主站入口＋來源 README，可回派指揮官）、SESSION-LOG／WAIT_USER、詢問使用者 commit。
 
 ## 試點踩過的雷（量產前必讀）
 
-- **codex 寫檔是 LF**；Git Bash 的 `sed -i` 會把 CRLF 剝成 LF。工作區慣例 CRLF：收尾用 python 位元組級 `\r\n` 正規化課程目錄，別靠 sed／universal newline。**例外：從既有課 `cp` 來、且驗收靠「位元組相同」比對的檔（如 styles.css）不得轉**，轉了反而違規。
+- **codex 寫檔是 LF**；Git Bash 的 `sed -i` 會把 CRLF 剝成 LF。工作區慣例 CRLF：收尾用 python 位元組級 `\r\n` 正規化課程目錄，別靠 sed／universal newline。**例外：從正本 `cp` 來、且驗收靠「位元組相同」比對的檔（如 styles.css）不得轉**，轉了反而違規——`sync-styles.py` 也是刻意以二進位模式讀寫，不做換行正規化。
 - 規格數值要獨立驗算：試點中 BUILD-SPEC 兩處算術筆誤被 builder 忠實照抄進正文，靠驗收員親手重算才抓到。
 - codex 內容層錯字（收旂×35、簡體字）全部逃過 id／編碼／LaTeX 機械掃描——字元級錯字掃描是必要關卡。
-- 各包字數門檻要一開始就統一，否則前後包厚薄不均，得追加加厚 pass（加厚後要位元組級比對 widget 區塊未被動到）。
+- 各包字數門檻要一開始就統一，否則前後包厚薄不均，得追加加厚 pass（加厚後要位元組級比對 widget 區塊未被動到）。**字數計法（Lead 2026-08-27 裁決）＝漢字＋全形標點**；spec 與驗收都用同一計法，短少 2% 以內不構成回派。
 - 其餘（`-m` 限制、PowerShell 寫檔亂碼、watchdog 門檻、pipe exit code 不可信）見 [ENRICH-EXISTING](ENRICH-EXISTING.md)。

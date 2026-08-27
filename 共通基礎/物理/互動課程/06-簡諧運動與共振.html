@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 簡諧運動與共振｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・用同一條二階方程理解彈簧與 RLC</p>
+<h1>簡諧運動與共振：頻率對上不夠，阻尼才決定放大多少</h1>
+<p class="lead">彈簧、建築、揚聲器與 RLC 電路看似不同，卻共享質量或電感儲能、彈性或電容回復、阻尼或電阻耗能的結構。讀懂這條二階方程，就能由係數預測振盪、衰減、相位與共振。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-牛頓運動定律.html">02 牛頓運動定律</a>的彈簧力、<a href="03-功與能量.html">03 功與能量</a>。</p>
+
+<h2>痛點：看到振盪不等於知道自然頻率，更不等於理解共振</h2>
+<p>把砝碼掛上彈簧後拉開，它會來回運動；加入摩擦後振幅逐漸縮小；再週期性推動時，有些頻率幾乎推不動，有些卻產生大振幅。只說「頻率一樣所以共振」還不夠，因為阻尼會改變峰值高度、峰值位置與相位，無阻尼的理論極限甚至不再有有限穩態振幅。</p>
+<p>工程上的麻煩是，同一個系統可能既有自由響應又有受迫穩態。自由響應由初始條件與特徵根決定，會衰減或持續；穩態由外力頻率決定，在暫態消失後留下。若把兩者混成一個「振動」，就無法由量測反推阻尼，也無法判斷啟動振鈴何時結束。</p>
+<p>自然頻率也不是物體獨有且永遠不變的標籤，而是由當下邊界條件與參數共同決定。替彈簧加掛質量會降低自然頻率，改變固定方式或材料剛性也會改變 k。真實結構還可能有多個振動模態；單自由度模型只描述其中一個主導模態，適合建立第一層判讀，不代表所有頻率響應都只有一座峰。</p>
+
+<h2>白話直覺：儲能來回交換，損耗每圈抽走一部分</h2>
+<p>可把質量的動能與彈簧的位能想成兩個帳戶：運動到平衡點時動能最多，到端點時彈性位能最多；阻尼則每圈扣掉一部分。比喻到此為止；精確的<strong>簡諧運動（Simple Harmonic Motion, SHM）</strong>滿足 m(d²x/dt²) + kx = 0。m 的單位 kg，x 的單位 m，t 的單位 s，彈簧常數 k 的單位 N/m，兩項單位皆為 N。</p>
+<p>自然角頻率 ω<sub>0</sub> = √(k/m)，單位 rad/s；週期 T = 2π/ω<sub>0</sub>，單位 s；頻率 f<sub>0</sub> = ω<sub>0</sub>/(2π)，單位 Hz。加入阻尼係數 c 後，方程是 m(d²x/dt²) + c(dx/dt) + kx = 0，c 的單位 N·s/m，使 c(dx/dt) 仍為 N。</p>
+<p><strong>阻尼比（damping ratio）</strong>ζ = c/(2√(km))，無單位；臨界阻尼 c<sub>c</sub> = 2√(km)，單位 N·s/m。ζ 小於 1 是欠阻尼，會振盪衰減；等於 1 是臨界阻尼，在不振盪的解中最快回到平衡；大於 1 是過阻尼，兩個衰減模式都不振盪。欠阻尼角頻率 ω<sub>d</sub> = ω<sub>0</sub>√(1 − ζ²)，單位 rad/s。</p>
+<p>外力 F<sub>0</sub> cos(ωt) 加入後，穩態振幅 X = F<sub>0</sub>/√((k − mω²)² + (cω)²)。F<sub>0</sub> 的單位 N，分母單位 N/m，所以 X 的單位 m。<strong>共振（resonance）</strong>是驅動與系統儲能交換形成顯著放大；品質因數 Q = 1/(2ζ)，無單位，低阻尼時表示峰值高且窄。</p>
+<p>相位補上振幅沒有說完的資訊。低頻時彈簧有時間跟上外力，位移大致同相；自然頻率處位移落後約 90°；高頻時質量慣性主導，位移趨近反相。於是掃頻同時量振幅與相位，比只找最大讀值更能辨認模型參數，也能避開峰值受量測解析度影響的誤差。</p>
+<p class="note">來源：01-普通物理-上 第 6 章。</p>
+
+<h2>推導：特徵根分型，再由正弦係數求穩態振幅</h2>
+<p><strong>第一步，解自由響應。</strong>試設 x = Ae<sup>λt</sup>，其中 A 的單位 m、λ 的單位 1/s。代入齊次方程後，每一項都有共同因子 Ae<sup>λt</sup>，除去它得到 mλ² + cλ + k = 0。二次公式給：</p>
+<p><code>λ = (−c ± √(c² − 4km)) / (2m) = −ζω<sub>0</sub> ± ω<sub>0</sub>√(ζ² − 1)</code></p>
+<p>λ 單位 1/s。判別式 c² − 4km 的正、零、負分別產生兩實根、重根、共軛複根，也就是過阻尼、臨界阻尼、欠阻尼三型。無阻尼 c = 0 時 λ = ±jω<sub>0</sub>，取實部得到 x(t) = A cos(ω<sub>0</sub>t + φ)，其中相位 φ 無單位。</p>
+<p><strong>第二步，檢查能量。</strong>無阻尼時 K = (1/2)m(dx/dt)²，U = (1/2)kx²，兩者單位皆為 J。把 x = A cos(ω<sub>0</sub>t + φ) 與 dx/dt = −Aω<sub>0</sub> sin(ω<sub>0</sub>t + φ) 代入，再用 mω<sub>0</sub>² = k，得到 K + U = (1/2)kA²，與時間無關。阻尼力做負功後，這個總和才逐圈下降。</p>
+<p><strong>第三步，求受迫穩態。</strong>設 x = X cos(ωt − φ)，代入 m(d²x/dt²) + c(dx/dt) + kx = F<sub>0</sub> cos(ωt)。整理同相與正交分量，位移同相係數為 (k − mω²)X，正交係數為 cωX；兩者平方相加等於 F<sub>0</sub>²，因此：</p>
+<p><code>X = F<sub>0</sub> / √((k − mω²)² + (cω)²)，tan φ = cω/(k − mω²)</code></p>
+<p>φ 是無單位角度。在 ω = ω<sub>0</sub> 時，k − mω<sub>0</sub>² = 0，只剩 X = F<sub>0</sub>/(cω<sub>0</sub>)。除以靜態位移 x<sub>靜</sub> = F<sub>0</sub>/k，放大率為 k/(cω<sub>0</sub>) = 1/(2ζ) = Q。驅動力加倍會讓兩種位移都加倍，放大率不變；阻尼才控制這個比值。</p>
+<p><strong>第四步，翻譯成電路。</strong>串聯 RLC 的電荷方程 L(d²q/dt²) + R(dq/dt) + q/C = v(t)。逐項對照 m↔L、c↔R、k↔1/C、x↔q、dx/dt↔i、F↔v，就得 ω<sub>0</sub> = 1/√(LC)，單位 rad/s。這是方程結構相同，不是說機械質量與電感具有相同物理單位。</p>
+<p>極端條件能檢查公式。當 ω = 0，慣性項與阻尼項都消失，X = F<sub>0</sub>/k，放大率為 1；當 ω 遠大於 ω<sub>0</sub>，分母主要是 mω²，質量跟不上快速驅動，振幅約按 1/ω²下降。若 c = 0 且 ω = ω<sub>0</sub>，分母為零，所謂無限振幅是線性模型在持續輸入下能量無限累積的警告，不是任何真實裝置可達的數值。</p>
+
+<h2>數值實例：預設值正好驅動在自然頻率</h2>
+<p>取 m = 1 kg、k = 100 N/m、c = 2 N·s/m、ω = 10 rad/s、F<sub>0</sub> = 1 N。ω<sub>0</sub> = √(100/1) = <strong>10.000000 rad/s</strong>；f<sub>0</sub> = 10/(2π) = <strong>1.591549 Hz</strong>；T = 2π/10 = <strong>0.628319 s</strong>。</p>
+<p>c<sub>c</sub> = 2√(100 ⋅ 1) = <strong>20.000000 N·s/m</strong>，ζ = 2/20 = <strong>0.100000</strong>，故為欠阻尼。ω<sub>d</sub> = 10√(1 − 0.1²) = <strong>9.949874 rad/s</strong>。因驅動恰在 ω<sub>0</sub>，分母只剩 cω = 20 N/m，X = 1/20 = <strong>0.050000 m</strong>；靜態位移是 1/100 = <strong>0.010000 m</strong>，放大率與 Q 都是 <strong>5.000000</strong>，相位落後 <strong>90.000000°</strong>。</p>
+<p>電路對照為 L = 1 H、R = 2 Ω、C = 1/k = <strong>0.010000 F</strong>。1/√(LC) = 1/√(1 ⋅ 0.01) = <strong>10.000000 rad/s</strong>，與機械自然角頻率相同。</p>
+<p>若把驅動角頻率降到 0，公式回到 0.010000 m 的靜態位移；若提高到 30 rad/s，慣性項使分母顯著增加，振幅快速下降。這兩端與共振點形成完整趨勢，可用來檢查程式是否只在預設值算對，卻在邊界誤把角頻率或阻尼單位代錯。</p>
+<p>預設的 ζ = 0.1 也說明「欠阻尼」不是故障名稱，而是響應型態。它會振鈴，卻可能比不振盪的過阻尼系統更快進入小誤差範圍。能否接受超越平衡點，取決於機械間隙、電壓上限與控制目標；物理模型提供時間尺度與峰值，工程規格才決定哪一型最合適。</p>
+
+<section class="workspace"><h2>自由實驗：阻尼與共振放大</h2>
+<p>調整質量、彈簧、阻尼、驅動頻率與驅動力。比較阻尼型態、穩態振幅、相位、品質因數與等效 RLC。</p>
+<div class="controls">
+<label for="shm-m">質量 m（kg）<input id="shm-m" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+<label for="shm-k">彈簧常數 k（N/m）<input id="shm-k" type="range" min="1" max="200" step="1" value="100"></label>
+<label for="shm-c">阻尼係數 c（N·s/m）<input id="shm-c" type="range" min="0" max="40" step="0.5" value="2"></label>
+<label for="shm-drive">驅動角頻率 ω（rad/s）<input id="shm-drive" type="range" min="0" max="30" step="0.1" value="10"></label>
+<label for="shm-f0">驅動力振幅 F0（N）<input id="shm-f0" type="range" min="0" max="20" step="0.5" value="1"></label>
+</div>
+<div id="shm-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>角頻率 ω 的單位 rad/s，頻率 f 的單位 Hz，兩者相差 2π，不能把數值直接互換。</li>
+<li>ω<sub>0</sub>、ω<sub>d</sub>與振幅峰值所在頻率不是同一量；只有阻尼很小時才彼此接近。</li>
+<li>臨界阻尼是「不振盪的解中最快回到平衡」，不代表在所有允許振盪的設計中時間最短。</li>
+<li>共振放大率由 ζ 決定；F<sub>0</sub>只按比例放大靜態位移與受迫振幅，不改變兩者比值。</li>
+<li>阻尼比 ζ 無單位，阻尼係數 c 的單位是 N·s/m；兩者數值與用途不同。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>在彈簧掛已知砝碼，以碼表量十個週期取平均；用手機加速度計記錄自由振盪相鄰峰值；再以訊號產生器掃動致動器，量各驅動頻率的位移。電路端可用示波器與訊號產生器掃描串聯 RLC 的電壓振幅與相位。</p>
+<p><strong>能證明什麼：</strong>改變質量後 T 與 √m 成正比，可支持 ω<sub>0</sub> = √(k/m)；峰值的指數包絡可反推 ζ，掃頻曲線則能驗證低阻尼帶來較高、較窄的共振峰，並核對機械系統與等效 RLC 共享自然頻率。</p>
+<p><strong>不能證明什麼：</strong>單一掃頻曲線不能證明阻尼一定線性，也不能單獨分辨空氣阻力、接觸摩擦與材料內耗。量到有限峰值更不能否定無阻尼模型的發散極限，因真實系統總有損耗、非線性與量測範圍限制。</p>
+
+<h2>連到哪門課</h2>
+<p>這章直接銜接電路學的二階暫態與 RLC、信號與系統的頻率響應、控制系統的阻尼與穩定時間，以及通訊濾波器的品質因數。本章只建立物理同形與量測直覺，完整二階方程解法見<a href="../../數學/互動課程/07-常微分方程.html">工程數學先修 07 常微分方程</a>；元件選型與濾波器設計留給後續電機課。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="05-轉動與角動量.html">← 上一頁：轉動與角動量</a><a href="07-熱學與流體.html">下一頁：熱學與流體 →</a></nav>
+</main>
+<footer class="site-footer"><span>06 簡諧運動與共振</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

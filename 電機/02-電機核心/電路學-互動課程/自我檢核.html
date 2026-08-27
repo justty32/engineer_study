@@ -1,0 +1,104 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">自由練習・用數字與判讀句檢查模型</p>
+<h1>自我檢核</h1>
+<p class="lead">每章三題。選一個選項或填入數字，再按「對答案」查看原因與回看章節；任何題目都可以跳過。</p>
+<p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>，可以無限重做。答錯只會告訴你為什麼，並附上該回去看的章節。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 電路世界觀</h2>
+<p>回去看：<a href="00-電路世界觀.html">00 電路世界觀</a></p>
+<section class="card"><p><strong>q00-1｜</strong>電流的定義是哪一項？</p><label for="q00-1">你的答案<select id="q00-1"><option value="">請選擇</option><option value="a">每秒通過截面的電荷量</option><option value="b">電壓除以時間</option><option value="c">每秒消耗的能量</option><option value="d">電路裡的總電荷</option></select></label><button type="button" id="q00-1-check">對答案</button><div id="q00-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-2｜</strong>20 mA 電流持續流 60 s，累積通過的電荷是多少？</p><label for="q00-2">你的答案（C）<input id="q00-2" type="number" step="any"></label><button type="button" id="q00-2-check">對答案</button><div id="q00-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-3｜</strong>f = 100 MHz、電路尺寸 d = 0.1 m 時，集總假設如何判斷？</p><label for="q00-3">你的答案<select id="q00-3"><option value="">請選擇</option><option value="a">成立，d/λ ≈ 0.033 遠小於 1</option><option value="b">失效，要用傳輸線</option><option value="c">與頻率無關</option><option value="d">只要電壓夠低就成立</option></select></label><button type="button" id="q00-3-check">對答案</button><div id="q00-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>01 電阻與歐姆定律</h2>
+<p>回去看：<a href="01-電阻與歐姆定律.html">01 電阻與歐姆定律</a></p>
+<section class="card"><p><strong>q01-1｜</strong>12 V 電源串聯 1 kΩ 與 2 kΩ，電流是多少？</p><label for="q01-1">你的答案（mA）<input id="q01-1" type="number" step="any"></label><button type="button" id="q01-1-check">對答案</button><div id="q01-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-2｜</strong>同一串聯電路中，2 kΩ 電阻上的電壓是多少？</p><label for="q01-2">你的答案（V）<input id="q01-2" type="number" step="any"></label><button type="button" id="q01-2-check">對答案</button><div id="q01-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-3｜</strong>1 kΩ 與 2 kΩ 並聯的等效電阻是多少？</p><label for="q01-3">你的答案（Ω）<input id="q01-3" type="number" step="any"></label><button type="button" id="q01-3-check">對答案</button><div id="q01-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>02 KCL 與 KVL</h2>
+<p>回去看：<a href="02-KCL與KVL.html">02 KCL 與 KVL</a></p>
+<section class="card"><p><strong>q02-1｜</strong>KCL 的物理根據是哪一項？</p><label for="q02-1">你的答案<select id="q02-1"><option value="">請選擇</option><option value="a">能量守恆</option><option value="b">電荷守恆</option><option value="c">動量守恆</option><option value="d">歐姆定律</option></select></label><button type="button" id="q02-1-check">對答案</button><div id="q02-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-2｜</strong>節點流入 5.454545 mA，一支流出 3.272727 mA，另一支流出多少？</p><label for="q02-2">你的答案（mA）<input id="q02-2" type="number" step="any"></label><button type="button" id="q02-2-check">對答案</button><div id="q02-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-3｜</strong>KVL 在什麼情況要小心？</p><label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">回路面積大又有變化磁通時</option><option value="b">電阻太大時</option><option value="c">只有直流時</option><option value="d">元件並聯時</option></select></label><button type="button" id="q02-3-check">對答案</button><div id="q02-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>03 節點與網目分析</h2>
+<p>回去看：<a href="03-節點與網目分析.html">03 節點與網目分析</a></p>
+<section class="card"><p><strong>q03-1｜</strong>主電路節點方程解出的 v<sub>1</sub> 是多少？</p><label for="q03-1">你的答案（V）<input id="q03-1" type="number" step="any"></label><button type="button" id="q03-1-check">對答案</button><div id="q03-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-2｜</strong>同一節點方程解出的 v<sub>2</sub> 是多少？</p><label for="q03-2">你的答案（V）<input id="q03-2" type="number" step="any"></label><button type="button" id="q03-2-check">對答案</button><div id="q03-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-3｜</strong>節點分析的未知數是什麼？</p><label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">支路電流</option><option value="b">節點電壓</option><option value="c">網孔電流</option><option value="d">元件功率</option></select></label><button type="button" id="q03-3-check">對答案</button><div id="q03-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>04 疊加原理與相依源</h2>
+<p>回去看：<a href="04-疊加原理與相依源.html">04 疊加原理與相依源</a></p>
+<section class="card"><p><strong>q04-1｜</strong>V<sub>s</sub> 單獨作用、I<sub>s</sub> 開路時，V<sub>A</sub> 是多少？</p><label for="q04-1">你的答案（V）<input id="q04-1" type="number" step="any"></label><button type="button" id="q04-1-check">對答案</button><div id="q04-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-2｜</strong>兩個源同時作用時，V<sub>A</sub> 是多少？</p><label for="q04-2">你的答案（V）<input id="q04-2" type="number" step="any"></label><button type="button" id="q04-2-check">對答案</button><div id="q04-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-3｜</strong>疊加原理不能直接疊加哪一個量？</p><label for="q04-3">你的答案<select id="q04-3"><option value="">請選擇</option><option value="a">電壓</option><option value="b">電流</option><option value="c">功率</option><option value="d">電荷</option></select></label><button type="button" id="q04-3-check">對答案</button><div id="q04-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>05 戴維寧與最大功率</h2>
+<p>回去看：<a href="05-戴維寧與最大功率.html">05 戴維寧與最大功率</a></p>
+<section class="card"><p><strong>q05-1｜</strong>主電路的戴維寧電壓 V<sub>th</sub> 是多少？</p><label for="q05-1">你的答案（V）<input id="q05-1" type="number" step="any"></label><button type="button" id="q05-1-check">對答案</button><div id="q05-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-2｜</strong>主電路的戴維寧電阻 R<sub>th</sub> 是多少？</p><label for="q05-2">你的答案（Ω）<input id="q05-2" type="number" step="any"></label><button type="button" id="q05-2-check">對答案</button><div id="q05-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-3｜</strong>R<sub>L</sub> = R<sub>th</sub> 時，負載拿到的功率是多少？</p><label for="q05-3">你的答案（mW）<input id="q05-3" type="number" step="any"></label><button type="button" id="q05-3-check">對答案</button><div id="q05-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>06 電容與電感</h2>
+<p>回去看：<a href="06-電容與電感.html">06 電容與電感</a></p>
+<section class="card"><p><strong>q06-1｜</strong>C = 100 µF、dv/dt = 1000 V/s 時，電流是多少？</p><label for="q06-1">你的答案（A）<input id="q06-1" type="number" step="any"></label><button type="button" id="q06-1-check">對答案</button><div id="q06-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-2｜</strong>C = 100 µF 充到 10 V 時，儲能是多少？</p><label for="q06-2">你的答案（mJ）<input id="q06-2" type="number" step="any"></label><button type="button" id="q06-2-check">對答案</button><div id="q06-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-3｜</strong>開關切換瞬間不能跳變的是哪一組？</p><label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">電容電流與電感電壓</option><option value="b">電容電壓與電感電流</option><option value="c">只有電阻電壓</option><option value="d">全部都不能跳</option></select></label><button type="button" id="q06-3-check">對答案</button><div id="q06-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>07 一階暫態 RC 與 RL</h2>
+<p>回去看：<a href="07-一階暫態RC與RL.html">07 一階暫態 RC 與 RL</a></p>
+<section class="card"><p><strong>q07-1｜</strong>R = 10 kΩ、C = 10 µF 的時間常數是多少？</p><label for="q07-1">你的答案（s）<input id="q07-1" type="number" step="any"></label><button type="button" id="q07-1-check">對答案</button><div id="q07-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-2｜</strong>一階響應在 t = τ 時走完全程的百分比是多少？</p><label for="q07-2">你的答案（%）<input id="q07-2" type="number" step="any"></label><button type="button" id="q07-2-check">對答案</button><div id="q07-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-3｜</strong>V<sub>0</sub> = 0、V<sub>s</sub> = 5 V，t = τ 時的電容電壓是多少？</p><label for="q07-3">你的答案（V）<input id="q07-3" type="number" step="any"></label><button type="button" id="q07-3-check">對答案</button><div id="q07-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>08 二階 RLC 暫態</h2>
+<p>回去看：<a href="08-二階RLC暫態.html">08 二階 RLC 暫態</a></p>
+<section class="card"><p><strong>q08-1｜</strong>L = 10 mH、C = 1 µF 的無阻尼自然角頻率是多少？</p><label for="q08-1">你的答案（rad/s）<input id="q08-1" type="number" step="any"></label><button type="button" id="q08-1-check">對答案</button><div id="q08-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-2｜</strong>同一組 L、C 的臨界阻尼電阻 2√(L/C) 是多少？</p><label for="q08-2">你的答案（Ω）<input id="q08-2" type="number" step="any"></label><button type="button" id="q08-2-check">對答案</button><div id="q08-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-3｜</strong>R = 100 Ω 使 ζ = 0.5，屬於哪一型？</p><label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">過阻尼</option><option value="b">臨界阻尼</option><option value="c">欠阻尼</option><option value="d">無阻尼</option></select></label><button type="button" id="q08-3-check">對答案</button><div id="q08-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>09 弦波與相量</h2>
+<p>回去看：<a href="09-弦波與相量.html">09 弦波與相量</a></p>
+<section class="card"><p><strong>q09-1｜</strong>相量 10∠30° 的實部是多少？</p><label for="q09-1">你的答案（無單位）<input id="q09-1" type="number" step="any"></label><button type="button" id="q09-1-check">對答案</button><div id="q09-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-2｜</strong>10∠30° + 6∠−45° 的大小是多少？</p><label for="q09-2">你的答案（無單位）<input id="q09-2" type="number" step="any"></label><button type="button" id="q09-2-check">對答案</button><div id="q09-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-3｜</strong>兩個相量可以相加的前提是什麼？</p><label for="q09-3">你的答案<select id="q09-3"><option value="">請選擇</option><option value="a">頻率相同</option><option value="b">振幅相同</option><option value="c">相位相同</option><option value="d">都是電壓</option></select></label><button type="button" id="q09-3-check">對答案</button><div id="q09-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>10 阻抗與交流穩態</h2>
+<p>回去看：<a href="10-阻抗與交流穩態.html">10 阻抗與交流穩態</a></p>
+<section class="card"><p><strong>q10-1｜</strong>f = 1 kHz、L = 10 mH 的感抗 X<sub>L</sub> 是多少？</p><label for="q10-1">你的答案（Ω）<input id="q10-1" type="number" step="any"></label><button type="button" id="q10-1-check">對答案</button><div id="q10-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-2｜</strong>f = 1 kHz、C = 1 µF 的容抗 X<sub>C</sub> 是多少？</p><label for="q10-2">你的答案（Ω）<input id="q10-2" type="number" step="any"></label><button type="button" id="q10-2-check">對答案</button><div id="q10-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-3｜</strong>總電抗 X &lt; 0 代表什麼？</p><label for="q10-3">你的答案<select id="q10-3"><option value="">請選擇</option><option value="a">感性，電流落後</option><option value="b">容性，電流超前</option><option value="c">純阻，同相</option><option value="d">電路發散</option></select></label><button type="button" id="q10-3-check">對答案</button><div id="q10-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>11 交流功率與功因</h2>
+<p>回去看：<a href="11-交流功率與功因.html">11 交流功率與功因</a></p>
+<section class="card"><p><strong>q11-1｜</strong>220 V、Z = 10 + j7.5 Ω 的實功 P 是多少？</p><label for="q11-1">你的答案（W）<input id="q11-1" type="number" step="any"></label><button type="button" id="q11-1-check">對答案</button><div id="q11-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-2｜</strong>同一負載的無效功率 Q 是多少？</p><label for="q11-2">你的答案（var）<input id="q11-2" type="number" step="any"></label><button type="button" id="q11-2-check">對答案</button><div id="q11-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-3｜</strong>並聯電容做功因校正，變小的是哪一項？</p><label for="q11-3">你的答案<select id="q11-3"><option value="">請選擇</option><option value="a">實功 P</option><option value="b">視在功率 S 與線電流</option><option value="c">負載電壓</option><option value="d">電費度數</option></select></label><button type="button" id="q11-3-check">對答案</button><div id="q11-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>12 一階濾波器與頻率響應</h2>
+<p>回去看：<a href="12-一階濾波器與頻率響應.html">12 一階濾波器與頻率響應</a></p>
+<section class="card"><p><strong>q12-1｜</strong>R = 1 kΩ、C = 0.1 µF 的截止頻率是多少？</p><label for="q12-1">你的答案（Hz）<input id="q12-1" type="number" step="any"></label><button type="button" id="q12-1-check">對答案</button><div id="q12-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q12-2｜</strong>一階低通在 f = f<sub>c</sub> 時的增益是多少？</p><label for="q12-2">你的答案（dB）<input id="q12-2" type="number" step="any"></label><button type="button" id="q12-2-check">對答案</button><div id="q12-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q12-3｜</strong>一階低通在 f = 10f<sub>c</sub> 的增益約為多少？</p><label for="q12-3">你的答案<select id="q12-3"><option value="">請選擇</option><option value="a">−20 dB</option><option value="b">−40 dB</option><option value="c">0 dB</option><option value="d">+20 dB</option></select></label><button type="button" id="q12-3-check">對答案</button><div id="q12-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>13 RLC 共振與品質因數</h2>
+<p>回去看：<a href="13-RLC共振與品質因數.html">13 RLC 共振與品質因數</a></p>
+<section class="card"><p><strong>q13-1｜</strong>L = 10 mH、C = 1 µF、R = 10 Ω 的品質因數 Q 是多少？</p><label for="q13-1">你的答案（無單位）<input id="q13-1" type="number" step="any"></label><button type="button" id="q13-1-check">對答案</button><div id="q13-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q13-2｜</strong>同一組 RLC 的頻寬 B 是多少？</p><label for="q13-2">你的答案（Hz）<input id="q13-2" type="number" step="any"></label><button type="button" id="q13-2-check">對答案</button><div id="q13-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q13-3｜</strong>串聯 RLC 共振時的阻抗是哪一項？</p><label for="q13-3">你的答案<select id="q13-3"><option value="">請選擇</option><option value="a">最大</option><option value="b">最小且等於 R</option><option value="c">為零</option><option value="d">是純虛數</option></select></label><button type="button" id="q13-3-check">對答案</button><div id="q13-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>14 變壓器與三相</h2>
+<p>回去看：<a href="14-變壓器與三相.html">14 變壓器與三相</a></p>
+<section class="card"><p><strong>q14-1｜</strong>一次側 1000 匝、二次側 100 匝，V<sub>1</sub> = 220 V 時，二次側電壓是多少？</p><label for="q14-1">你的答案（V）<input id="q14-1" type="number" step="any"></label><button type="button" id="q14-1-check">對答案</button><div id="q14-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q14-2｜</strong>二次側 8 Ω 經 1000:100 匝比反射到一次側，阻抗是多少？</p><label for="q14-2">你的答案（Ω）<input id="q14-2" type="number" step="any"></label><button type="button" id="q14-2-check">對答案</button><div id="q14-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q14-3｜</strong>Y 接、線電壓 220 V 時，相電壓是多少？</p><label for="q14-3">你的答案（V）<input id="q14-3" type="number" step="any"></label><button type="button" id="q14-3-check">對答案</button><div id="q14-3-output" class="output" aria-live="polite"></div></section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

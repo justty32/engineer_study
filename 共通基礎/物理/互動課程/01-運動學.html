@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 運動學｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">01・先描述怎麼動，暫時不問原因</p>
+<h1>運動學：從位置的變化預測拋體軌跡</h1>
+<p class="lead">運動學只整理物體在什麼時刻位於哪裡、移動多快、速度如何改變。先把描述語言練準，下一章才有能力把加速度追溯到力。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-物理地圖.html">00 物理地圖</a>，以及會讀 v = v<sub>0</sub> + at 這類變數關係；式中 v、v<sub>0</sub> 是速度，單位 m/s，a 是加速度，單位 m/s²，t 是時間，單位 s。</p>
+
+<h2>痛點：看見物體在動，卻混用速度與加速度</h2>
+<p>日常語言常把「很快」「正在加速」「往前衝」混成同一件事。物體可以速度很大卻完全沒有加速度，例如直線上維持固定速度；也可以速率不變但有加速度，例如等速繞圓時方向持續轉彎。若不先分清位置、速度與加速度，受力分析會把「現在動得快」誤認為「現在一定受很大的向前力」。</p>
+<p>另一個常見障礙是把拋體想成先水平飛、之後才開始掉。實際上從離手瞬間起，水平方向與垂直方向同時演化；忽略空氣阻力時，水平沒有加速度，垂直則一直有向下的重力加速度。兩個方向共享同一個時間，卻不會互相借用速度。這個分量觀點也是電場、磁場與波的向量分析入口。</p>
+<p>圖上的曲線也不能只靠外形猜物理意義。位置—時間圖的高度代表位置，斜率才代表速度；速度—時間圖的高度代表速度，斜率才代表加速度，而曲線下方面積則對應位移。若縱軸換了，完全相同的斜線可能代表不同物理量。閱讀任何軌跡資料前，都應先核對橫軸、縱軸、單位與正方向，再問某一點或某一段真正表示什麼。</p>
+<p>本章的模型把物體視為質點，採近地表固定重力加速度 g = 9.8 m/s²；g 是向下加速度的大小，單位 m/s²。它不包含空氣阻力、風、地球曲率與自轉。只要飛行距離與速度不大，這個模型可先抓住主要行為；要做彈道工程則必須補回被忽略的作用。</p>
+
+<h2>白話直覺：位置是紀錄，速度是斜率，加速度是斜率的斜率</h2>
+<p>可先把位置紀錄想成程式每隔一小段時間留下的座標快照，速度是相鄰快照的位移除以時間，加速度再比較速度如何改變。比喻到此為止；精確說法是位置 <strong>r</strong>(t) 為向量、單位 m，速度 <strong>v</strong> = d<strong>r</strong>/dt 為位置對時間的導數、單位 m/s，加速度 <strong>a</strong> = d<strong>v</strong>/dt 為速度對時間的導數、單位 m/s²。粗體表示向量，具有大小與方向。</p>
+<p>速率是速度向量的大小，沒有方向，單位仍是 m/s。汽車以固定 10 m/s 繞圓時，速率固定，但速度方向每一刻都不同，所以加速度不為零。等速圓周運動的向心加速度 a<sub>c</sub> = v²/r = ω²r；a<sub>c</sub> 單位 m/s²，v 是切向速率、單位 m/s，r 是半徑、單位 m，ω 是角速度、單位 rad/s。方向永遠指向圓心。</p>
+<p>角速度與線速度由 v = ωr 相連；v 單位 m/s，ω 單位 rad/s，r 單位 m，弧度視為無量綱。角加速度 α 描述角速度每秒改變多少，單位 rad/s²。它們讓旋轉問題沿用直線運動的結構，但不能把角度數值直接當成距離。</p>
+<p>座標原點與正方向可以自由選，但選定後就要一致。向上取正時，落下物體的速度可能是負值；負號只表示方向，不表示速率小於零。改成向下取正會同時改寫相關分量的符號，最後可觀察的落地時間與距離不應改變。這種「表示法可換、預測不變」的習慣，日後讀電位零點與相位基準同樣重要。</p>
+
+<h2>推導：由固定加速度一路積分到拋體射程</h2>
+<p><strong>（a）等加速度。</strong>一維且 a 為常數時，由 a = dv/dt，兩側乘 dt 並從初始時刻積到 t，得到 v − v<sub>0</sub> = at，因此 v = v<sub>0</sub> + at。a 單位 m/s²，v 與 v<sub>0</sub> 單位 m/s，t 單位 s；右側 at 的單位確為 m/s。</p>
+<p>再用 v = dx/dt，把 v<sub>0</sub> + at 對時間積分：x − x<sub>0</sub> = ∫<sub>0</sub><sup>t</sup>(v<sub>0</sub> + aτ)dτ = v<sub>0</sub>t + (1/2)at²，所以 x = x<sub>0</sub> + v<sub>0</sub>t + (1/2)at²。x、x<sub>0</sub> 單位 m，τ 與 t 單位 s，其餘符號單位同前；三項都是 m。</p>
+<p>若不想保留時間，由 t = (v − v<sub>0</sub>)/a 代回位移式並整理，可得 v² = v<sub>0</sub>² + 2a(x − x<sub>0</sub>)。v、v<sub>0</sub> 單位 m/s，a 單位 m/s²，x、x<sub>0</sub> 單位 m；兩側單位都是 m²/s²。第三式不是額外定律，只是前兩式消去 t 的結果。</p>
+<p><strong>（b）拋體分量。</strong>以發射點水平位置為零，取向上為正，忽略空氣阻力，便有 a<sub>x</sub> = 0 與 a<sub>y</sub> = −g。a<sub>x</sub>、a<sub>y</sub>、g 單位皆為 m/s²。初速 v<sub>0</sub> 分成 v<sub>0x</sub> = v<sub>0</sub> cos θ 與 v<sub>0y</sub> = v<sub>0</sub> sin θ；三個速度單位皆為 m/s，θ 是無量綱角度。</p>
+<p>分別套用位移式，得到 x(t) = v<sub>0</sub> cos θ ⋅ t，以及 y(t) = h<sub>0</sub> + v<sub>0</sub> sin θ ⋅ t − (1/2)gt²。x、y、h<sub>0</sub> 單位 m，v<sub>0</sub> 單位 m/s，t 單位 s，g 單位 m/s²，故每項都是 m。兩式使用相同 t，這正是水平與垂直同時進行的意思。</p>
+<p>垂直速度 v<sub>y</sub> = dy/dt = v<sub>0</sub> sin θ − gt；v<sub>y</sub> 單位 m/s。令 v<sub>y</sub> = 0，得到最高點時刻 t<sub>peak</sub> = v<sub>0</sub> sin θ / g；t<sub>peak</sub> 單位 s。當 h<sub>0</sub> = 0 時，令 y(T) = 0 並排除 T = 0 的發射瞬間，得到 T = 2v<sub>0</sub> sin θ / g；T 單位 s。代入水平式得到 R = v<sub>0</sub>² sin(2θ) / g；R 單位 m。由 sin(2θ) 的最大值為一可知 45° 射程最大，30° 與 60° 射程相同。</p>
+<p><strong>（c）向心加速度。</strong>等速圓周運動在短時間 Δt 內轉過角度 Δθ ≈ ωΔt，速度向量也轉過同角度，故速度改變大小 Δv ≈ vΔθ。兩側除以 Δt 並取極限，得到 a<sub>c</sub> = lim(Δt→0) Δv/Δt = vω = v²/r。a<sub>c</sub> 單位 m/s²，v 單位 m/s，ω 單位 rad/s，r 單位 m；方向由向量差指向圓心。</p>
+
+<h2>數值實例：初速二十公尺每秒、四十五度拋射</h2>
+<p>採自由實驗預設值 v<sub>0</sub> = 20 m/s、θ = 45°、h<sub>0</sub> = 0 m、t = 1 s，並用 g = 9.8 m/s²。初速分量 v<sub>0x</sub> = v<sub>0y</sub> = 20 ⋅ cos 45° = 14.142136 m/s；v<sub>0x</sub>、v<sub>0y</sub> 是速度分量，單位 m/s。</p>
+<p>飛行時間 T = 2 ⋅ 14.142136 / 9.8 = 2.886150 s，射程 R = 400 ⋅ sin 90° / 9.8 = 40.816327 m，最高點 H = 14.142136² / (2 ⋅ 9.8) = 10.204082 m，發生於 t<sub>peak</sub> = 1.443075 s。T、t<sub>peak</sub> 單位 s，R、H 單位 m。</p>
+<p>在 t = 1 s 時，x = 14.142136 m，y = 14.142136 − 4.9 = 9.242136 m，v<sub>y</sub> = 14.142136 − 9.8 = 4.342136 m/s，速率為 √(200 + 18.854142) = 14.793720 m/s。x、y 單位 m，v<sub>y</sub> 與速率單位 m/s。每單位質量機械能 v²/2 + g ⋅ y = 109.427071 + 90.572929 = 200.000000 m²/s²，等於初始 v<sub>0</sub>²/2 = 200.000000 m²/s²；這是第 03 章會正式說明的交叉檢查。</p>
+<p class="note">來源：01-普通物理-上 第 1 章。</p>
+
+<section class="workspace"><h2>自由實驗：調整拋體並讀取完整狀態</h2>
+<p>調整初速、仰角、發射高度與觀察時刻。輸出會重算飛行時間、射程、最高點、當下座標與速度，並說明邊界情形。</p>
+<div class="controls">
+<label for="pj-v0">初速 v0（m/s）<input id="pj-v0" type="range" min="1" max="50" step="0.5" value="20"></label>
+<label for="pj-angle">仰角 θ（度）<input id="pj-angle" type="range" min="0" max="90" step="1" value="45"></label>
+<label for="pj-h0">發射高度 h0（m）<input id="pj-h0" type="range" min="0" max="50" step="0.5" value="0"></label>
+<label for="pj-t">觀察時刻 t（s）<input id="pj-t" type="range" min="0" max="10" step="0.05" value="1"></label>
+</div>
+<div id="projectile-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>速度是向量，速率是速度的大小。兩者單位都為 m/s，但只有速度包含方向。</li>
+<li>加速度不等於變快。等速圓周運動的速率固定，速度方向改變，所以仍有向心加速度。</li>
+<li>水平與垂直互不干擾，不代表先水平飛再垂直掉；兩個分量從發射瞬間起共享同一時間。</li>
+<li>向心加速度不是一種新力。下一章會由重力、張力或正向力的合力找出指向圓心的原因。</li>
+<li>四十五度最大射程只適用於同高起落且無空氣阻力；有高度差或阻力時，最佳角度會改變。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>用每秒至少 120 格的手機高速攝影拍攝拋球，在畫面中放已知長度的標尺，逐格記錄水平位置 x、垂直位置 y 與時間 t；也可用光電閘（photogate）量自由落體通過兩點的時間差。x、y 單位 m，t 單位 s。</p>
+<p><strong>能證明什麼：</strong>資料能檢查水平位置對時間近似直線、垂直位置對時間近似二次曲線，並從垂直曲線二次項量出 g 約為 9.8 m/s²；g 是重力加速度大小，單位 m/s²。也可比較 30° 與 60° 在同高起落、小阻力條件下是否近似同射程。</p>
+<p><strong>不能證明什麼：</strong>單一拋球實驗不能證明所有物體在真空中有相同重力加速度，因為材質與形狀造成的阻力沒有被隔離；也不能證明空氣阻力不存在，只能在相機解析度與速度範圍內說它小到尚未形成可辨識偏差。</p>
+
+<h2>連到哪門課</h2>
+<p>運動學服務控制系統、機器人、電機機械與慣性感測：編碼器給位置，加速度計給加速度，狀態估測再把它們連成隨時間演化的模型。速度是位置的導數，導數本身如何由極限定義與數值判讀，可回到<a href="../../數學/互動課程/01-極限與導數.html">工程數學先修 01 極限與導數</a>。下一章加入力，開始回答加速度為什麼出現。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="00-物理地圖.html">← 上一頁：物理地圖</a><a href="02-牛頓運動定律.html">下一頁：牛頓運動定律 →</a></nav>
+</main>
+<footer class="site-footer"><span>01 運動學</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

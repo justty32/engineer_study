@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 馬克士威與電磁波｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">11・讓光速從電與磁的常數中浮現</p>
+<h1>馬克士威與電磁波：變動電場和磁場如何彼此接力</h1>
+<p class="lead">靜電與靜磁各自看似完整，遇到正在充電的電容器卻給出矛盾答案。馬克士威補上位移電流後，四條場方程不只彼此一致，還預測出能在真空傳播、速度恰為光速的波。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-靜電學.html">08 靜電學</a>、<a href="09-電流與電路基礎.html">09 電流與電路基礎</a>，以及<a href="10-磁場與電磁感應.html">10 磁場與電磁感應</a>四條定律的來歷。</p>
+
+<h2>痛點：同一條安培迴路不該因選曲面不同而得到兩個答案</h2>
+<p>對正在充電的平行板電容器，在導線外畫一條閉合迴路。若選穿過導線的曲面，曲面有傳導電流 I；若選繞進兩極板之間、沒有切過導線的曲面，傳導電流卻是零。邊界明明是同一條迴路，舊安培定律卻會預測兩個磁場，表示時變情況少了一項。</p>
+<p>這個缺口不是把空隙偷偷當導線，而是極板間的電場正隨電荷累積而改變。馬克士威加入位移電流，使電荷守恆與場方程一致；隨後「變動磁場生電場」和「變動電場生磁場」形成閉合回饋，不再需要附近有電荷或導線才可繼續向前傳播。</p>
+
+<h2>白話直覺：兩種場互相接力，但不是憑空複製能量</h2>
+<p>可以把電場與磁場想成互相接棒：時間變動的磁場捲出電場，時間變動的電場捲出磁場。比喻到此為止；精確內容由馬克士威方程組（Maxwell's equations）給出，能量仍由發射源提供，並以場的形式向外運送，不是每一步自行增加。</p>
+<p>四條微分式為 ∇ ⋅ <strong>E</strong> = ρ/ε<sub>0</sub>、∇ ⋅ <strong>B</strong> = 0、∇ × <strong>E</strong> = −∂<strong>B</strong>/∂t、∇ × <strong>B</strong> = μ<sub>0</sub><strong>J</strong> + μ<sub>0</sub>ε<sub>0</sub>∂<strong>E</strong>/∂t。E 是電場向量、單位 V/m；B 是磁通密度向量、單位 T；粗體代表向量。ρ 是電荷體密度、單位 C/m³，J 是電流密度向量、單位 A/m²，t 單位 s。</p>
+<p>第一式說電荷是電場的源；第二式說未觀察到磁單極；第三式是法拉第感應；第四式說傳導電流與變動電場都能捲出磁場。ε<sub>0</sub> = 8.8541878128 × 10<sup>−12</sup> F/m，μ<sub>0</sub> = 1.25663706212 × 10<sup>−6</sup> T·m/A。散度 ∇ ⋅ 描述局部淨流出，旋度 ∇ × 描述局部環繞，不是普通乘法。</p>
+<p>電磁波（electromagnetic wave, EM wave）是橫波，<strong>E</strong> ⊥ <strong>B</strong> ⊥ 傳播方向。振幅關係 E<sub>0</sub>/B<sub>0</sub> = v；E<sub>0</sub> 單位 V/m，B<sub>0</sub> 單位 T，v 單位 m/s。介質折射率 n = √(ε<sub>r</sub>μ<sub>r</sub>)，n、ε<sub>r</sub>、μ<sub>r</sub> 均無單位，波速 v = c/n；c 與 v 單位 m/s。</p>
+<p>波阻抗 η = √(μ/ε)，單位 Ω；真空值 η<sub>0</sub> = 376.730314 Ω。它是 E 與 H 的比值，不是有電流穿過真空的電阻。坡印廷向量（Poynting vector）<strong>S</strong> = (1/μ<sub>0</sub>)<strong>E</strong> × <strong>B</strong>，S 單位 W/m²；正弦波平均值 S<sub>avg</sub> = E<sub>0</sub>²/(2η)，S<sub>avg</sub> 單位 W/m²。</p>
+<p>頻率由發射源每秒振盪次數決定，波進入另一介質時邊界兩側必須保持同一時間節奏，所以 f 不變；改變的是 v 與 λ，並維持 v = fλ。f 單位 Hz，v 單位 m/s，λ 單位 m。這是先判斷再計算的好方法：若把介電常數提高後仍算出相同波長，通常是誤把真空 c 直接代入而漏掉折射率。</p>
+<p>頻譜名稱只是在連續頻率軸上劃出的實用區間。無線電、微波、紅外、可見光、紫外、X 射線與伽馬射線都由相同場方程描述，差別主要在頻率、波長以及與物質交換能量的尺度。邊界慣例可因領域而略有不同，本課使用自由實驗內固定的分界，讓每個輸入頻率都有可重現的判讀。</p>
+<p>平均能流中的二分之一來自正弦平方在一個週期的平均，而不是能量憑空少掉一半。瞬時 S 會隨相位起伏，接收器若跨許多週期積分，讀到的才接近 S<sub>avg</sub>。若電場振幅加倍，平方關係使平均能流變四倍；這是振幅與功率不可混用的重要提醒。</p>
+<p class="note">來源：01-普通物理-中 第 5 章 §5.1–§5.3。</p>
+
+<h2>推導：補上位移電流，再從旋度導出波速</h2>
+<p><strong>（a）消除電容器曲面的矛盾。</strong>舊式 ∮ <strong>B</strong> ⋅ d<strong>ℓ</strong> = μ<sub>0</sub>I 對穿過導線的曲面右邊是 μ<sub>0</sub>I，對極板間曲面卻是零。左側單位 T·m，μ<sub>0</sub> 單位 T·m/A，I 單位 A。極板間電通量 Φ<sub>E</sub> = EA，而 E = Q/(ε<sub>0</sub>A)，所以 ε<sub>0</sub>dΦ<sub>E</sub>/dt = dQ/dt = I。Φ<sub>E</sub> 單位 V·m，Q 單位 C，t 單位 s。</p>
+<p>把等效的位移電流 I<sub>d</sub> = ε<sub>0</sub>dΦ<sub>E</sub>/dt 加入，兩個曲面都給相同結果。I<sub>d</sub> 單位 A，ε<sub>0</sub> 單位 F/m，Φ<sub>E</sub> 單位 V·m，t 單位 s。這不是極板間真的有自由電荷穿越，而是變動電場在磁場方程中扮演與電流相同的源。</p>
+<p><strong>（b）導出波動方程。</strong>在無源真空令 ρ = 0、<strong>J</strong> = 0。對 ∇ × <strong>E</strong> = −∂<strong>B</strong>/∂t 再取旋度，得到 ∇ × (∇ × <strong>E</strong>) = −∂(∇ × <strong>B</strong>)/∂t。代入第四式後右邊成為 −μ<sub>0</sub>ε<sub>0</sub>∂²<strong>E</strong>/∂t²。E 單位 V/m，t 單位 s，μ<sub>0</sub>ε<sub>0</sub> 單位 s²/m²。</p>
+<p>向量恆等式給 ∇ × (∇ × <strong>E</strong>) = ∇(∇ ⋅ <strong>E</strong>) − ∇²<strong>E</strong>。無源時 ∇ ⋅ <strong>E</strong> = 0，因此移項得到 ∇²<strong>E</strong> = μ<sub>0</sub>ε<sub>0</sub>∂²<strong>E</strong>/∂t²。兩側單位皆為 V/m³。與標準一維波動方程 ∂²y/∂t² = v²∂²y/∂x² 比較，y 可代表任一場分量，x 單位 m，t 單位 s，v 單位 m/s，便得 v = 1/√(μ<sub>0</sub>ε<sub>0</sub>)。</p>
+<p><strong>（c）把靜態常數變成光速。</strong>μ<sub>0</sub>ε<sub>0</sub> = (1.25663706212 × 10<sup>−6</sup>)(8.8541878128 × 10<sup>−12</sup>) = 1.112650056 × 10<sup>−17</sup> s²/m²。開根號再取倒數，c = 2.99792458 × 10<sup>8</sup> m/s。這兩個常數原本由電與磁的實驗取得，代入場方程卻得到光速，於是光被辨認為電磁波。</p>
+<p><strong>（d）波阻抗。</strong>平面波有 E<sub>0</sub>/B<sub>0</sub> = v，而 H = B/μ；H 單位 A/m，μ 單位 T·m/A。相除得 E/H = μv。再代 v = 1/√(με)，得到 η = E/H = √(μ/ε)。η 單位 Ω。真空中 η<sub>0</sub> = μ<sub>0</sub>c = 376.730314 Ω，數值與常數表相符。</p>
+
+<h2>數值實例：一吉赫茲在真空中的尺度與能流</h2>
+<p>採自由實驗預設值 log<sub>10</sub>f = 9，因此 f = 1 × 10<sup>9</sup> Hz = 1 GHz；ε<sub>r</sub> = 1、μ<sub>r</sub> = 1、E<sub>0</sub> = 1 V/m。折射率 n = √1 = 1，波速 v = 299792458 m/s。f 單位 Hz，v 單位 m/s，n 無單位。</p>
+<p>波長 λ = v/f = 0.299792 m，四分之一波長 λ/4 = 0.074948 m。λ 單位 m。這約為 30 cm 與 7.5 cm，說明吉赫茲尺度的天線尺寸為何落在公分等級；真實天線長度仍受結構與介質影響，本章不做設計。</p>
+<p>波阻抗 η = 376.730314 Ω。磁場振幅 B<sub>0</sub> = E<sub>0</sub>/v = 3.335641 × 10<sup>−9</sup> T；平均能流 S<sub>avg</sub> = 1²/(2 ⋅ 376.730314) = 1.327209 × 10<sup>−3</sup> W/m²。E<sub>0</sub> 單位 V/m，B<sub>0</sub> 單位 T，S<sub>avg</sub> 單位 W/m²，且 E<sub>0</sub>/B<sub>0</sub> 回算為 v。</p>
+<p>單顆光子能量 E<sub>光子</sub> = hf = (6.62607015 × 10<sup>−34</sup>)(1 × 10<sup>9</sup>) = 6.62607015 × 10<sup>−25</sup> J = 4.135668 × 10<sup>−6</sup> eV。h 單位 J·s，f 單位 Hz，能量單位 J 或 eV。1 GHz 判為無線電，因本課把微波分界放在 3 GHz。</p>
+<p>若只把 ε<sub>r</sub> 改為 4，μ<sub>r</sub> 保持 1，則 n = 2、v = 1.498962 × 10<sup>8</sup> m/s、λ = 0.149896 m、η = 188.365157 Ω。頻率由發射源固定而不變，所以介質讓速度減半時，波長也減半。</p>
+
+<section class="workspace"><h2>自由實驗：從頻率與介質讀出電磁波</h2>
+<p>調整頻率、相對介電常數、相對磁導率與電場振幅。輸出會重算波速、波長、阻抗、能流、光子能量與頻段，並核對 E<sub>0</sub>/B<sub>0</sub>。</p>
+<div class="controls">
+<label for="em-logf">頻率 log10 f（f 單位 Hz）<input id="em-logf" type="range" min="3" max="20" step="0.1" value="9"></label>
+<label for="em-er">相對介電常數 εr<input id="em-er" type="range" min="1" max="12" step="0.1" value="1"></label>
+<label for="em-mur">相對磁導率 μr<input id="em-mur" type="range" min="1" max="100" step="1" value="1"></label>
+<label for="em-e0">電場振幅 E0（V/m）<input id="em-e0" type="range" min="0.1" max="100" step="0.1" value="1"></label>
+</div>
+<div id="emwave-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li><strong>E</strong> 與 <strong>D</strong>、<strong>B</strong> 與 <strong>H</strong> 是兩對不同場量；本章正文主要使用 E 與 B，不把符號互換。</li>
+<li>波阻抗 η 單位 Ω，卻不是導線電阻；它描述電磁波中 E 與 H 的振幅比例。</li>
+<li>c 是真空光速；介質中相速度可較小，「真空光速不變」不表示每種材料裡都有同一 v。</li>
+<li>位移電流能產生磁場，但不代表自由電荷真的穿越電容器的絕緣間隙。</li>
+<li>坡印廷向量是能流密度、單位 W/m²；乘上接收面積並處理方向後才得到功率 W。</li>
+<li>電磁波不需要物質介質；無線電、微波、光與 X 射線是同類場波，只是頻率區間不同。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>用已知頻率的微波源與金屬反射板形成駐波，以探頭量相鄰節點距離 λ/2，再由 c = fλ 求波速；c 單位 m/s，f 單位 Hz，λ 單位 m。也可用向量網路分析儀（Vector Network Analyzer, VNA）量傳輸線的相位與波長縮短率，或以校正功率計量天線附近的功率密度 W/m²。</p>
+<p><strong>能證明什麼：</strong>在指定介質與頻帶內，量得的 f 與 λ 能檢查 v = fλ，並顯示介質使波長縮短而源頻率保持不變。VNA 的相位資料可反推有效 ε<sub>r</sub>，功率計則可檢查能量確實由發射端向空間傳送。</p>
+<p><strong>不能證明什麼：</strong>桌上實驗不能單獨證明四條馬克士威方程在所有尺度都成立，它只能檢驗其中一組預測。儀器也不能直接看見「位移電流」這個抽象項，只能量到它所預測的磁場與傳播結果；近場量到的 E、H 比值亦不一定等於遠場波阻抗。</p>
+
+<h2>連到哪門課</h2>
+<p>這章是電磁學、傳輸線、天線與通訊系統的物理入口：後續會處理邊界條件、導波結構、反射與輻射，本課只停在場方程、波速、阻抗與能流。散度、旋度、向量恆等式與波動偏微分方程的數學工具，可回到<a href="../../數學/互動課程/11-PDE與向量分析.html">工程數學先修 11 PDE 與向量分析</a>。下一章暫時抽離電磁細節，整理所有波共有的波長、頻率、疊加與駐波。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="10-磁場與電磁感應.html">← 上一頁：磁場與電磁感應</a><a href="12-波動與駐波.html">下一頁：波動與駐波 →</a></nav>
+</main>
+<footer class="site-footer"><span>11 馬克士威與電磁波</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

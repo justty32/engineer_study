@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 功與能量｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・追蹤轉換總帳，不必逐秒解運動</p>
+<h1>功與能量：用高度差直接讀出速率與損耗</h1>
+<p class="lead">力學可以逐時追蹤加速度，也可以改看能量總帳。只要辨認哪些力會做功、哪些能量被儲存、哪些轉成熱，就能跨過複雜路徑直接比較起點與終點。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-牛頓運動定律.html">02 牛頓運動定律</a>中的力，以及<a href="01-運動學.html">01 運動學</a>中的速度。</p>
+
+<h2>痛點：知道每一刻的力，仍不想把整條路解完</h2>
+<p>滑車沿彎曲軌道下降時，正向力方向一路改變，逐段列牛頓第二定律很費力；但若軌道無摩擦，底端速率只由起終高度差決定。能量方法把沿途細節壓縮成起點、終點與非保守損耗，像總帳一樣檢查「進來多少、儲存多少、轉走多少」。這不是另一套與力學競爭的定律，而是牛頓第二定律沿位移積分後的結果。</p>
+<p>日常語言也容易混淆功、能量與功率。用力撐住牆會累，但牆沒有位移，力對牆做的機械功為零；高功率設備代表每秒轉移能量快，不代表它已經轉移的總能量一定較多。摩擦使機械能降低，也不等於能量消失，而是有序運動轉成難以回收的內能與熱。</p>
+<p>本章採質點、近地表固定 g、可用單一損耗量概括摩擦的模型。它不追蹤軌道形變、聲音、空氣擾動與每一處溫升，而把它們合併為 E<sub>loss</sub>；E<sub>loss</sub> 是能量損耗、單位 J。這項簡化能做總帳，卻不能告訴你熱實際分布在哪個零件。</p>
+<p>能量法也不會自動告訴你運動方向。相同動能可對應向左或向右的速度，因為速率平方把方向資訊消掉；若問題要知道物體何時轉向、沿哪條分支移動，仍需結合幾何約束、初始方向或受力判斷。能量是有效的狀態摘要，不是完整軌跡的替代品。</p>
+
+<h2>白話直覺：能量是跨形式保存的總帳，功率是記帳速度</h2>
+<p>可把動能、重力位能與彈簧位能想成同一筆資源放在不同帳戶，摩擦則把可見的機械帳轉進內能帳。比喻到此為止；精確定義是功 W = ∫ <strong>F</strong> ⋅ d<strong>r</strong>，其中 W 單位 J，F 是力向量、單位 N，r 是位置向量、單位 m，粗體表示向量，內積只取沿位移方向的力分量。</p>
+<p>動能 K = (1/2)mv²；K 單位 J，m 是質量、單位 kg，v 是速率、單位 m/s。功—動能定理 W<sub>總</sub> = ΔK；W<sub>總</sub> 與 ΔK 單位均為 J。它說所有力做的總功等於動能改變，不要求那些力都是保守力。</p>
+<p>保守力（conservative force）可對應位能（potential energy）。近地表重力位能 U = mgh；U 單位 J，m 單位 kg，g 單位 m/s²，h 是相對選定零點的高度、單位 m。彈簧位能 U = (1/2)kx²；U 單位 J，k 是彈簧常數、單位 N/m，x 是形變、單位 m。靜電位能 U = qV；U 單位 J，q 是電荷、單位 C，V 是電位、單位 V。</p>
+<p>只有保守力作用時，機械能 K + U 為常數；K、U 單位 J。位能零點可以任選，因為可觀察運動只由位能差決定。功率 P = dW/dt = <strong>F</strong> ⋅ <strong>v</strong>；P 單位 W，W 是功、單位 J，t 單位 s，F 單位 N，v 是速度向量、單位 m/s。功率描述能量轉移率，不是能量存量。</p>
+<p>電機中的 P = VI；P 單位 W，V 是電位差、單位 V，I 是電流、單位 A。電容儲能 (1/2)CV² 與電感儲能 (1/2)LI² 都以 J 計；C 是電容、單位 F，L 是電感、單位 H。它們分別與彈簧位能、質量動能同形，讓機械振動直覺可移植到 RLC 暫態。</p>
+<p>保守力還有一個實用判準：只要起點與終點固定，它做的功就與路徑無關；沿封閉路徑回到原點時，淨功為零。摩擦則依實際走過的路程累積，繞遠路通常損耗更多。於是「路徑無關」不是所有能量計算的通行證，而是保守力與位能能夠成立的特殊結構。</p>
+
+<h2>推導：把牛頓第二定律沿位移積分</h2>
+<p><strong>（a）功—動能定理。</strong>一維情況從 W = ∫ F dx 開始；W 單位 J，F 單位 N，x 單位 m。代入 F = ma，其中 m 單位 kg、a 單位 m/s²，再用 a = dv/dt 與 dx = vdt；v 單位 m/s，t 單位 s。於是 W = ∫ m(dv/dt)dx = ∫ mv dv = (1/2)mv² − (1/2)mv<sub>0</sub>²。兩端單位都是 J，v<sub>0</sub> 是初速、單位 m/s。中間的 dt 被 dx = vdt 消去，說明這是把力對距離積分。</p>
+<p><strong>（b）重力位能。</strong>向上為正時，重力為 −mg，物體由 h<sub>1</sub> 到 h<sub>2</sub> 的重力功 W<sub>g</sub> = ∫<sub>h1</sub><sup>h2</sup>(−mg)dh = −mg(h<sub>2</sub> − h<sub>1</sub>)。W<sub>g</sub> 單位 J，m 單位 kg，g 單位 m/s²，h<sub>1</sub>、h<sub>2</sub> 單位 m。定義 W<sub>g</sub> = −ΔU，便得到 U = mgh 加任意常數；U 單位 J。只有差值進入運動，所以零點不影響預測。</p>
+<p><strong>（c）由高度差求速率。</strong>物體從 h<sub>0</sub> 靜止滑到 h，無摩擦時有 (1/2)mv² + mgh = mgh<sub>0</sub>。每項單位 J；m 單位 kg，v 單位 m/s，g 單位 m/s²，h 與 h<sub>0</sub> 單位 m。移項得 (1/2)mv² = mg(h<sub>0</sub> − h)，消去 m 後得到 v = √(2g(h<sub>0</sub> − h))。v 單位 m/s。速率與質量、路徑形狀無關，但前提是起始靜止、固定重力且無損耗。</p>
+<p><strong>（d）把摩擦列入總帳。</strong>若非保守作用帶走 E<sub>loss</sub>，則 (1/2)mv² = mg(h<sub>0</sub> − h) − E<sub>loss</sub>。等式每項單位 J，E<sub>loss</sub> 單位 J，其餘符號單位同前。等價地寫成 K + U + E<sub>loss</sub> = E<sub>0</sub>；K、U、E<sub>loss</sub>、初始能量 E<sub>0</sub> 單位皆為 J。若右側可用動能為負，代表指定高度不可達，不是速率變成非實數的物理現象。</p>
+
+<h2>數值實例：兩公斤物體從五公尺滑到一公尺</h2>
+<p>採自由實驗預設值 m = 2 kg、h<sub>0</sub> = 5 m、v<sub>0</sub> = 0 m/s、h = 1 m、E<sub>loss</sub> = 0 J、t = 1 s，並用 g = 9.8 m/s²。初始機械能 E<sub>0</sub> = (1/2)(2)(0)² + 2 ⋅ 9.8 ⋅ 5 = 98.000000 J；E<sub>0</sub> 與損耗單位 J，t 單位 s，其餘符號單位如前。</p>
+<p>現在的位能 U = 2 ⋅ 9.8 ⋅ 1 = 19.600000 J，動能 K = 98 − 19.6 = 78.400000 J，速率 v = √(2 ⋅ 78.4 / 2) = √78.4 = 8.854377 m/s。U、K 單位 J，v 單位 m/s。直接用 v = √(2 ⋅ 9.8 ⋅ 4) 也得到 8.854377 m/s；式中 9.8 單位 m/s²，高度差 4 單位 m。</p>
+<p>重力對物體做功 2 ⋅ 9.8 ⋅ 4 = 78.400000 J，在 t = 1 s 內的平均功率為 78.400000 W；功單位 J，時間單位 s，平均功率單位 W。最高可達高度 h<sub>max</sub> = E<sub>0</sub>/(mg) = 98/19.6 = 5.000000 m；h<sub>max</sub> 單位 m。若把損耗改成 40 J，則 K = 98 − 19.6 − 40 = 38.400000 J，v = √38.4 = 6.196773 m/s；這組 40 J 是對照情境，不是自由實驗預設值。</p>
+<p class="note">來源：01-普通物理-上 第 3 章。</p>
+
+<section class="workspace"><h2>自由實驗：能量總帳與可達高度</h2>
+<p>調整質量、初始狀態、現在高度、摩擦損耗與時間。輸出會核對能量總帳、判斷高度是否可達，並顯示速率、最高點與平均功率。</p>
+<div class="controls">
+<label for="en-mass">質量 m（kg）<input id="en-mass" type="range" min="0.5" max="20" step="0.5" value="2"></label>
+<label for="en-h0">起始高度 h0（m）<input id="en-h0" type="range" min="0" max="20" step="0.5" value="5"></label>
+<label for="en-v0">起始速率 v0（m/s）<input id="en-v0" type="range" min="0" max="20" step="0.5" value="0"></label>
+<label for="en-h">現在高度 h（m）<input id="en-h" type="range" min="0" max="20" step="0.5" value="1"></label>
+<label for="en-loss">摩擦損耗 Eloss（J）<input id="en-loss" type="range" min="0" max="500" step="5" value="0"></label>
+<label for="en-t">這段花的時間 t（s）<input id="en-t" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+</div>
+<div id="energy-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>功不是力：功的單位是 J，力的單位是 N；有力但沒有沿力方向的位移，機械功可以為零。</li>
+<li>功率不是能量：功率單位 W，能量單位 J；高功率只表示相同時間內轉移得更快。</li>
+<li>正向力與等速圓周運動的向心合力可不做功，原因是它們與瞬時位移垂直，不是因為力很小。</li>
+<li>位能屬於選定的交互作用系統，不是物體單獨攜帶的物質；重力位能應理解為地球與物體系統的性質。</li>
+<li>總能量守恆與機械能守恆不同。摩擦使機械能轉成內能與熱，沒有把總能量抹掉。</li>
+<li>位能零點可任選，只有位能差影響運動；比較不同題目數值前要先確認零點是否相同。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>用光電閘量滑車通過斜軌底端的速率 v、單位 m/s，用直尺量高度差 Δh、單位 m，與 √(2gΔh) 比對；式中 g 單位 m/s²。也可用測力計量等速拉力 F、單位 N，配合位移 d、單位 m，算 W = Fd；W 單位 J。電動機則可用瓦特計，或用萬用表量 V 與 I 後相乘，得到輸入功率，單位 W。</p>
+<p><strong>能證明什麼：</strong>換不同質量的低摩擦滑車，可檢查相同高度差下底端速率是否近似相同；比較初始位能與末端動能，可量出未進入可見機械能的差額。同步量輸入電功率與舉升重物的輸出功率，還能在指定負載與時間內估計轉換效率。</p>
+<p><strong>不能證明什麼：</strong>單一滑軌實驗不能證明能量守恆在宇宙所有系統永遠成立，也不能只靠一筆差額判定損耗究竟來自接觸摩擦、空氣阻力、聲音或材料形變。把差額統稱內能是總帳描述，若要定位故障還需要溫度、振動與聲音等額外量測。</p>
+
+<h2>連到哪門課</h2>
+<p>能量觀點直接服務電路學、電子學、電機機械與電力電子：電容與電感如何儲能、馬達如何把電功率轉成機械功率、損耗如何變成熱，都共用同一套總帳。功是力沿路徑的積分，積分的定義與運算可回到<a href="../../數學/互動課程/02-積分.html">工程數學先修 02 積分</a>。下一章會把力改為對時間積分，得到適合碰撞問題的衝量與動量。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="02-牛頓運動定律.html">← 上一頁：牛頓運動定律</a><a href="04-動量與碰撞.html">下一頁：動量與碰撞 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 功與能量</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

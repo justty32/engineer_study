@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 靜電學｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・從電荷間的力走向空間中的場</p>
+<h1>靜電學：把力、電場（electric field）與電位（electric potential）接成同一套描述</h1>
+<p class="lead">兩個電荷會互相推拉，但逐對計算不是最後的語言。本章先把作用寫成空間中的電場，再用電位壓縮方向資訊，最後看電容（capacitance）如何把電荷與能量儲存在幾何結構裡。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-功與能量.html">03 功與能量</a>中的位能，以及<a href="01-運動學.html">01 運動學</a>中的向量分量。</p>
+
+<h2>痛點：同一個「電」其實混著三種量</h2>
+<p>國中經驗會說同號相斥、異號相吸，卻常把電力、電場、電位都叫成「電的強弱」。問題一旦放入第三顆電荷，這種說法立刻不夠：力屬於某一對電荷，電場屬於空間位置，電位則是每庫倫電荷可取得的位能。若三者沒有分開，正負號、方向與平方反比很容易混成一團。</p>
+<p>本章把電荷視為沒有尺寸的點電荷，介質均勻且靜止。這個模型適合距離遠大於帶電物體尺寸的情形；觀察點若壓在點電荷上，公式會發散，表示模型失效，不表示真實世界真的出現無窮大讀值。電荷以庫倫為單位，基本電荷 e = 1.602176634 × 10<sup>−19</sup> C；e 的單位為 C。</p>
+
+<h2>白話直覺：電位像地形，電場像當地坡向</h2>
+<p>可以先把電位想成地形高度，把正試驗電荷想成會往下坡移動的小球。比喻到此為止；精確定義是電位 V 為單位電荷的位能，單位 V，電場 <strong>E</strong> 為單位正試驗電荷所受的力，單位 V/m，也等於 N/C。粗體代表向量，有大小與方向；電位是純量，只有數值。</p>
+<p>庫倫定律（Coulomb's law）為 F = k<sub>e</sub>|q<sub>1</sub>q<sub>2</sub>|/r²。F 是力、單位 N，q<sub>1</sub>、q<sub>2</sub> 是電荷、單位 C，r 是距離、單位 m，而 k<sub>e</sub> = 1/(4πε<sub>0</sub>) = 8.9875517874 × 10<sup>9</sup> N·m²/C²。式子給大小，方向另由同號相斥、異號相吸判定。</p>
+<p>多個來源的電場遵守疊加原理（superposition principle）：<strong>E</strong> = Σ<strong>E</strong><sub>i</sub>。E 與每個 E<sub>i</sub> 的單位都是 V/m。寫成程式就是走訪每顆電荷，先算它在觀察點的向量，再把各分量累加。電位則直接做純量加法 V = Σk<sub>e</sub>q<sub>i</sub>/r<sub>i</sub>；V 單位 V，q<sub>i</sub> 單位 C，r<sub>i</sub> 單位 m。</p>
+<p>高斯定律（Gauss's law）把局部的場與包住的電荷接起來：∮<sub>S</sub> <strong>E</strong> ⋅ d<strong>A</strong> = Q<sub>內</sub>/ε<sub>0</sub>。兩側單位皆為 V·m；A 是面積、單位 m²，Q<sub>內</sub> 單位 C，ε<sub>0</sub> = 8.8541878128 × 10<sup>−12</sup> F/m。它永遠成立，但只有球、柱或平面對稱足以把 E 提出積分時，才是快速計算工具。</p>
+<p>電場與電位的精確關係是 V<sub>B</sub> − V<sub>A</sub> = −∫<sub>A</sub><sup>B</sup> <strong>E</strong> ⋅ d<strong>ℓ</strong>，以及 <strong>E</strong> = −∇V。V 單位 V，E 單位 V/m，ℓ 是路徑長度、單位 m；負號表示電場指向電位下降最快的方向。</p>
+<p>判讀多電荷問題時，可先分兩層。第一層只看每顆來源的正負與觀察點所在區域，畫出各場分量的正負；第二層才代入距離平方算大小。這個順序能避免把負電荷的負號與座標方向重複計算。電位沒有方向，仍要保留來源電荷的正負；因此一處可能電位互相抵消而電場不抵消，也可能電場抵消而電位仍不為零。</p>
+<p>電通量（electric flux）也不是「閉合面內有多少電場」。它量的是電場穿出與穿入面元素的帶方向總和；均勻電場穿過一個封閉盒時，一面流入、另一面流出，淨通量可為零，雖然盒內處處有場。這正說明高斯定律限制的是源與淨通量，而不是保證面上每一點的場都相同；只有足夠對稱時，才能從總量反推出局部大小。</p>
+<p class="note">來源：01-普通物理-中 第 1 章 §1.1–§1.6。</p>
+
+<h2>推導：從兩顆電荷的力建立場、電位與電容</h2>
+<p><strong>（a）由力定義電場。</strong>來源電荷 Q 對試驗電荷 q 的力大小是 F = k<sub>e</sub>|Qq|/r²。F 單位 N，Q、q 單位 C，r 單位 m。兩側除以 q，得到 E = F/q = k<sub>e</sub>Q/r²；E 單位 N/C。試驗電荷消失後，結果只依賴來源與位置，於是場把「兩顆電荷之間的力」改寫成「空間的一個性質」。這一步使場能在第 11 章脫離電荷而傳播。</p>
+<p><strong>（b）用高斯定律再算一次。</strong>以點電荷 q 為球心取半徑 r 的球面。對稱性保證 E 在整個球面大小相同，且與面元素垂直，所以內積積分化為 E ⋅ 4πr² = q/ε<sub>0</sub>。E 單位 V/m，r 單位 m，q 單位 C，ε<sub>0</sub> 單位 F/m。整理得 E = q/(4πε<sub>0</sub>r²) = k<sub>e</sub>q/r²，與庫倫定律完全一致。</p>
+<p><strong>（c）從場積出電位。</strong>令無窮遠電位為零，點電荷的徑向場為 E = k<sub>e</sub>q/r²。代入 V(r) − V(∞) = −∫<sub>∞</sub><sup>r</sup> E dr，積分 r<sup>−2</sup> 得 V = k<sub>e</sub>q/r。V 單位 V，E 單位 V/m，r 單位 m，q 單位 C。反向微分 E<sub>r</sub> = −dV/dr = k<sub>e</sub>q/r²，回到原場，符號也顯示正電荷的場向外。</p>
+<p><strong>（d）平行板電容。</strong>兩板面積 A、間距 d，忽略邊緣效應。板間 E = σ/ε<sub>0</sub> = Q/(ε<sub>0</sub>A)，而 V = Ed = Qd/(ε<sub>0</sub>A)。E 單位 V/m，σ 單位 C/m²，Q 單位 C，A 單位 m²，d 單位 m，V 單位 V。由電容定義 C = Q/V 得 C = ε<sub>0</sub>A/d；C 單位 F。插入相對介電常數（relative permittivity） ε<sub>r</sub> 的材料後，C = ε<sub>r</sub>C<sub>0</sub>，ε<sub>r</sub> 無單位。</p>
+<p><strong>（e）儲能。</strong>充電途中瞬時電位為 q/C，搬入微量電荷 dq 所做功為 dU = (q/C)dq。由零積到 Q，U = ∫<sub>0</sub><sup>Q</sup>(q/C)dq = Q²/(2C) = (1/2)CV²。U 單位 J，q、Q 單位 C，C 單位 F，V 單位 V。係數一半來自電壓由零線性升到末值，不是任意補上的常數。</p>
+
+<h2>數值實例：兩顆異號電荷的中點</h2>
+<p>採自由實驗預設值：q<sub>1</sub> = +5 nC 位於 x = 0，q<sub>2</sub> = −3 nC 位於 x = d = 0.30 m，觀察點 x = 0.15 m，ε<sub>r</sub> = 1。作用力 F = 8.9875517874 × 10<sup>9</sup> ⋅ |(5 × 10<sup>−9</sup>)(−3 × 10<sup>−9</sup>)| / 0.30² = 1.497925 × 10<sup>−6</sup> N，因電荷異號而吸引。q 的單位 C，d 單位 m，F 單位 N。</p>
+<p>中點到兩電荷皆為 0.15 m。第一顆造成 E<sub>1</sub> = 1997.233731 V/m，方向為 +x；第二顆造成 E<sub>2</sub> = 1198.340238 V/m，也指向 +x，合成 E<sub>x</sub> = 3195.573969 V/m。兩個向量同向所以相加。電位不看方向：V = 299.585060 − 179.751036 = 119.834024 V。E 的單位 V/m，V 的單位 V。</p>
+<p>零場點不在兩者之間。令大小相消，5/x² = 3/(x − 0.30)²，整理為 2x² − 3x + 0.45 = 0，符合區域的解為 x = (3 + √5.4)/4 = 1.330948 m。x 單位 m。它落在絕對值較小的負電荷外側，因為那裡必須更靠近較弱電荷，兩邊的場才可能等大反向。</p>
+<p>另取 A = 0.01 m²、d = 0.001 m 的真空平行板，C = ε<sub>0</sub>A/d = 8.8541878 × 10<sup>−11</sup> F = 88.541878 pF。加到 12 V 時，U = (1/2)CV² = 6.375015 × 10<sup>−9</sup> J。A 單位 m²，d 單位 m，C 單位 F，V 單位 V，U 單位 J。</p>
+
+<section class="workspace"><h2>自由實驗：兩點電荷的力、場與電位</h2>
+<p>調整兩顆電荷、間距、觀察點與介質。輸出會比較力的吸斥、兩個電場分量、合成方向、電位與零場點，觀察向量和純量如何不同。</p>
+<div class="controls">
+<label for="es-q1">電荷 q1（nC，放在 x = 0）<input id="es-q1" type="range" min="-10" max="10" step="0.5" value="5"></label>
+<label for="es-q2">電荷 q2（nC，放在 x = d）<input id="es-q2" type="range" min="-10" max="10" step="0.5" value="-3"></label>
+<label for="es-d">兩電荷間距 d（m）<input id="es-d" type="range" min="0.05" max="2" step="0.05" value="0.3"></label>
+<label for="es-x">觀察點座標 x（m）<input id="es-x" type="range" min="-2" max="4" step="0.05" value="0.15"></label>
+<label for="es-er">相對介電常數 εr<input id="es-er" type="range" min="1" max="10" step="0.1" value="1"></label>
+</div>
+<div id="coulomb-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>電場 <strong>E</strong> 是向量、單位 V/m；電位 V 是純量、單位 V，兩者由 <strong>E</strong> = −∇V 相連，卻不是同一個量。</li>
+<li>電位能（electric potential energy） U 與電位 V 差一個電荷量，U = qV；U 單位 J，q 單位 C，V 單位 V。</li>
+<li>高斯定律右邊只算閉合面內的電荷，但面上的電場是內外所有電荷共同疊加的結果。</li>
+<li>電容 C 由幾何與材料決定，不等於已儲存的電荷 Q；同一電容可以有不同 Q 與 V。</li>
+<li>介電質（dielectric）通常使指定自由電荷下的場變小、電容變大，不代表材料憑空增加自由電荷。</li>
+<li>電場為零的位置不一定電位為零；電位為零的位置也不一定電場為零。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>可用扭秤量兩金屬球的庫倫力，力的單位 N；用靜電計或高阻抗電壓表量導體間電位差，單位 V；用 LCR 表量平行板電容，單位 F，再改變板間距、重疊面積與插入材料。范德格拉夫起電機可提供穩定高電位，但量測時仍要控制濕度與漏電。</p>
+<p><strong>能證明什麼：</strong>在點電荷近似與可控距離內，扭秤資料能檢查力隨電荷乘積增大、隨距離平方下降；LCR 表資料能檢查 C 與 A 成正比、與 d 成反比，並由插入材料前後的比值量出 ε<sub>r</sub>。這些量測也能驗證電位差與單位電荷位能變化相連。</p>
+<p><strong>不能證明什麼：</strong>桌上實驗不能把平方反比外推到原子尺度或任意遙遠距離，也不能直接證明畫在紙上的電場線是真實物件。靜電計只量電位差，無法單靠一次讀值重建完整電場；兩金屬球有有限尺寸，距離太近時也不能當點電荷。</p>
+
+<h2>連到哪門課</h2>
+<p>靜電學服務後續電磁學的邊界值問題、電子學中的電容與電場效應，以及積體電路裡的寄生電容觀念；本章只建立物理量，不展開元件設計。散度 ∇ ⋅ 與梯度 ∇ 的定義、座標表示及偏微分工具，可回到<a href="../../數學/互動課程/11-PDE與向量分析.html">工程數學先修 11 PDE 與向量分析</a>。下一章讓電荷開始持續移動，從場與電位差進入電流、電阻與功率。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="07-熱學與流體.html">← 上一頁：熱學與流體</a><a href="09-電流與電路基礎.html">下一頁：電流與電路基礎 →</a></nav>
+</main>
+<footer class="site-footer"><span>08 靜電學</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

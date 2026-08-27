@@ -1,0 +1,85 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>14 變壓器與三相｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">14・用共同磁通換電壓，再用三個相位穩定送能量</p>
+<h1>變壓器與三相：從線圈耦合走到工業供電</h1>
+<p class="lead">變壓器不靠導線直接相連，而靠兩組線圈共享隨時間改變的磁通，把電壓、電流與阻抗依匝比轉換。三相系統再以三個相差 120° 的電源持續送出平穩功率，形成輸配電與馬達的共同語言。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="10-阻抗與交流穩態.html">10 阻抗</a>、<a href="11-交流功率與功因.html">11 交流功率</a>、<a href="06-電容與電感.html">06 電感</a>。</p>
+
+<h2>痛點：兩邊沒有導通，功率怎麼跨過去，三條線又為何多出 √3？</h2>
+<p>看到變壓器一次側與二次側彼此絕緣，很容易把它誤想成無線「複製」電壓；其實一次側電流建立隨時間改變的磁通，磁通穿過二次側線圈後依法拉第定律感應電壓，負載接上才形成二次側閉合回路並取走能量。匝數只決定轉換比例，不會創造功率。</p>
+<p>三相的 √3 也不是額外背誦規則。線電壓是兩個相差 120° 的相電壓之差，必須用相量相減；Y 接與 Δ 接因為線端接在不同位置，√3 分別出現在電壓或電流。若把線量與相量混用，計算會差 √3，功率甚至差三倍。</p>
+
+<h2>白話直覺：共同磁通是匯率，三相差值決定線端讀值</h2>
+<p>可把理想變壓器暫時想成只更換電壓與電流單位的匯兌站；比喻到此為止，真正機制是一次側交流電壓驅動激磁磁通，兩組匝數 N<sub>1</sub>、N<sub>2</sub>包圍同一個 Φ，磁通變化率在各匝感應電壓。一次側電源以其回線為參考，電源 → 一次線圈 → 回線形成閉合回路；二次線圈 → 負載 Z<sub>L</sub> → 二次回線形成另一個閉合回路，兩回路電氣隔離但以磁場交換能量。</p>
+<p>負載接上後，二次側電流建立反向磁效應，一次側因此再吸取相應電流，使理想條件下輸入功率等於輸出功率。升高電壓必伴隨降低電流；同樣功率若以較高電壓輸送，線路 I²R 損失會下降。若輸入是穩定直流，穩態 dΦ/dt = 0，二次側就沒有感應電壓；變壓器只對變動磁通有效。</p>
+<p>三相源提供三個等幅、彼此相差 120° 的弦波。Y 接時每相負載由線端接到共同中性點，線電流就是相電流，而兩線間電壓是兩個相電壓之差；Δ 接時每相負載直接跨在線與線之間，相電壓就是線電壓，而線電流是相鄰兩支相電流之差。平衡時三相瞬時功率互補成常數，使馬達轉矩比單相供電平順。</p>
+<p>平衡是推導 √3 與簡潔功率式的重要前提：三相源等幅、相差正確，且三相負載相同。若某一相阻抗不同，各線電流不再等幅，Y 接中性點在沒有中性線時還可能漂移；此時要回到逐相相量與 KCL 計算，不能只套一條平衡公式。中性線提供不平衡電流的回路，但它不是理想平衡功率傳輸必須承載的第四相。</p>
+<p class="note">來源：06-電路學-下 第 10 章、06-電路學-上 §4.6。</p>
+
+<h2>推導：匝比來自法拉第定律，√3 來自 120° 相量相減</h2>
+<p><strong>（a）匝比。</strong>同一束磁通 Φ 穿過兩個線圈，依感應電壓關係 v<sub>1</sub> = N<sub>1</sub>dΦ/dt、v<sub>2</sub> = N<sub>2</sub>dΦ/dt。兩式相除，公共的 dΦ/dt 消去，得到 <code>v<sub>2</sub>/v<sub>1</sub> = N<sub>2</sub>/N<sub>1</sub></code>。這完全來自法拉第定律，不是另外加上的變壓器規則。</p>
+<p><strong>（b）電流比。</strong>理想變壓器不儲存淨能量也不耗能，所以 v<sub>1</sub>i<sub>1</sub> = v<sub>2</sub>i<sub>2</sub>。代入電壓比，得到 <code>i<sub>2</sub>/i<sub>1</sub> = N<sub>1</sub>/N<sub>2</sub></code>。電壓升幾倍，電流就降幾倍。</p>
+<p><strong>（c）阻抗轉換。</strong>令 n = N<sub>1</sub>/N<sub>2</sub>。一次側看入阻抗：</p>
+<p><code>Z<sub>ref</sub> = v<sub>1</sub>/i<sub>1</sub> = nv<sub>2</sub> / (i<sub>2</sub>/n) = n²(v<sub>2</sub>/i<sub>2</sub>) = n²Z<sub>2</sub></code></p>
+<p>阻抗按匝比平方轉換，原因是電壓比乘 n，而電流比除以 n。上述推導假設<strong>理想變壓器（ideal transformer）</strong>：耦合係數 k = 1、繞線電阻與鐵損為 0、激磁電流可忽略。真實互感滿足 k = M/√(L<sub>1</sub>L<sub>2</sub>)，且 0 ≤ k ≤ 1。</p>
+<p>當 k &lt; 1，並非所有一次側磁通都鏈結二次側，未共享部分可等效為漏感；繞線電阻造成負載電流相關的壓降與銅損，交變磁芯則有磁滯與渦流損失。於是實際一次功率會大於二次功率，空載也需要激磁電流。理想模型仍有用，因它先隔離匝比造成的主要比例，再把偏差留給等效電路修正。</p>
+<p><strong>（d）Y 接的 √3。</strong>以粗體表示相量，<strong>V</strong><sub>ab</sub> = <strong>V</strong><sub>a</sub> − <strong>V</strong><sub>b</sub>。兩個相電壓等幅且夾角 120°，相減大小為 2V<sub>p</sub>sin(60°) = √3V<sub>p</sub>，故 V<sub>L</sub> = √3V<sub>p</sub>。Δ 接用同樣相減關係處理支路電流，得到 I<sub>L</sub> = √3I<sub>p</sub>。</p>
+<p>接線位置可防止口訣互換。Y 接的一條線只串著一相支路，所以線電流與相電流相同；但線電壓跨兩個線端，必須相減兩個相電壓，故根號三落在電壓。Δ 接的一相支路本來就跨兩條線，所以相電壓與線電壓相同；但一條線端同時銜接兩支路，依 KCL 取兩個支路電流之差，故根號三落在電流。相減還會帶來相位位移，只有問大小時才可只寫根號三。</p>
+<p><strong>（e）三相功率。</strong>每相實功是 V<sub>p</sub>I<sub>p</sub>cos θ，平衡三相總和 P = 3V<sub>p</sub>I<sub>p</sub>cos θ。Y 接代入 V<sub>p</sub> = V<sub>L</sub>/√3、I<sub>p</sub> = I<sub>L</sub>，得到 P = √3 ⋅ V<sub>L</sub> ⋅ I<sub>L</sub> ⋅ cos θ；Δ 接代入 V<sub>p</sub> = V<sub>L</sub>、I<sub>p</sub> = I<sub>L</sub>/√3，也得到同一式。V、I 使用有效值，θ 是負載阻抗角。</p>
+<p>同一批相阻抗直接從 Y 切到 Δ 時，每相承受的電壓提高根號三倍，所以每相功率提高三倍，總功率也提高三倍。Y–Δ 啟動正是先用較低相電壓限制馬達起動電流與轉矩，再於轉速建立後切換；它不是一般性的省電模式，也不適用於銘牌接法與線電壓不匹配的馬達。</p>
+
+<h2>數值實例：先驗證匝比，再比較 Y 與 Δ</h2>
+<p><strong>數值實例（變壓器）</strong>：N<sub>1</sub>:N<sub>2</sub> = 1000:100（匝比 n = 10）、V<sub>1</sub> = 220 V、負載 Z<sub>L</sub> = 8 Ω。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>二次側電壓</td><td>220/10</td><td><strong>22.000000 V</strong></td></tr>
+<tr><td>二次側電流</td><td>22/8</td><td><strong>2.750000 A</strong></td></tr>
+<tr><td>一次側電流</td><td>2.75/10</td><td><strong>0.275000 A</strong></td></tr>
+<tr><td>反射到一次側的阻抗</td><td>8 × 10²</td><td><strong>800.000000 Ω</strong>（＝220/0.275，相符）</td></tr>
+<tr><td>二次側功率</td><td>22 × 2.75</td><td><strong>60.500000 W</strong></td></tr>
+<tr><td>一次側功率</td><td>220 × 0.275</td><td><strong>60.500000 W</strong>（相同，理想變壓器不耗能）</td></tr>
+</tbody></table>
+<p>耦合：若 L<sub>1</sub> = 10 mH、L<sub>2</sub> = 0.1 mH（感值比 = 匝比平方 = 100，符合 L ∝ N²），則 √(L<sub>1</sub>L<sub>2</sub>) = <strong>1.000000 mH</strong>；k = 0.98 時 M = <strong>0.980000 mH</strong>。k &lt; 1 的那部分就是漏感，它是真實變壓器有壓降與頻寬限制的原因。</p>
+<p><strong>數值實例（三相）</strong>：線電壓 V<sub>L</sub> = 220 V、每相負載 8 Ω（純阻，cos θ = 1）。</p>
+<table><thead><tr><th>接法</th><th>相電壓 V<sub>p</sub></th><th>相電流 I<sub>p</sub></th><th>線電流 I<sub>L</sub></th><th>總功率 P</th></tr></thead><tbody>
+<tr><td><strong>Y 接</strong></td><td>220/√3 = <strong>127.017059 V</strong></td><td>127.017059/8 = <strong>15.877132 A</strong></td><td><strong>15.877132 A</strong>（＝I<sub>p</sub>）</td><td>√3 × 220 × 15.877132 = <strong>6050.000000 W</strong></td></tr>
+<tr><td><strong>Δ 接</strong></td><td><strong>220.000000 V</strong>（＝V<sub>L</sub>）</td><td>220/8 = <strong>27.500000 A</strong></td><td>√3 × 27.5 = <strong>47.631397 A</strong></td><td>√3 × 220 × 47.631397 = <strong>18150.000000 W</strong></td></tr>
+</tbody></table>
+<p>同一組負載、同一個線電壓，Δ 接拿到的功率剛好是 Y 接的 3 倍（18150/6050 = 3），因為每相分到的電壓是 √3 倍，功率是它的平方。這就是為什麼馬達可以用「Y–Δ 啟動」：先用 Y 接降低啟動電流，轉起來再切到 Δ 接出全功率。</p>
+
+<section class="workspace"><h2>自由實驗：切換匝比與三相接法</h2>
+<p>變壓器模式中，一次側電源與線圈成一個閉合回路，二次線圈與負載成另一個回路，兩者以共同磁通耦合。三相模式則把三個等幅、相差 120° 的相源接成 Y 或 Δ，觀察線量、相量與總功率的差別。</p>
+<div class="controls">
+<label for="tr-mode">觀察模式<select id="tr-mode"><option value="xfmr">理想變壓器（匝比與阻抗轉換）</option><option value="wye">三相 Y 接（星型）</option><option value="delta">三相 Δ 接（三角）</option></select></label>
+<label for="tr-n1">一次側匝數 N<sub>1</sub>（只在變壓器模式使用）<input id="tr-n1" type="range" min="100" max="2000" step="10" value="1000"></label>
+<label for="tr-n2">二次側匝數 N<sub>2</sub>（只在變壓器模式使用）<input id="tr-n2" type="range" min="10" max="1000" step="10" value="100"></label>
+<label for="tr-v1">電壓（變壓器模式＝一次側 V<sub>1</sub>；三相模式＝線電壓 V<sub>L</sub>，單位 V 有效值）<input id="tr-v1" type="range" min="10" max="600" step="10" value="220"></label>
+<label for="tr-zl">負載電阻（變壓器模式＝二次側負載；三相模式＝每相負載，單位 Ω）<input id="tr-zl" type="range" min="1" max="100" step="1" value="8"></label>
+</div>
+<div id="transformer-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>變壓器不能在穩態下變換直流，因 dΦ/dt = 0；短暫切換現象不等於可持續直流傳輸。</li>
+<li>電壓依匝比一次方轉換，阻抗依匝比平方轉換；漏掉平方會得到錯誤的一次側負載。</li>
+<li>k = 1 是理想全耦合；真實元件另有漏感、繞線電阻、磁滯、渦流與激磁電流。</li>
+<li>Y 接的 √3 出現在電壓，Δ 接的 √3 出現在電流；線量與相量不能混成同一個數。</li>
+<li>平衡三相瞬時總功率為常數，不表示每一相的瞬時功率不脈動。</li>
+<li>平衡基波下中性線電流為零；負載不平衡或含諧波時仍可能有中性線電流。</li>
+<li>Y–Δ 啟動比較的是同一線電壓與同一相阻抗下的接法；若設備額定線圈電壓不同，三倍功率關係不能脫離條件套用。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>在安全低電壓交流源上，用三用電表量變壓器一次、二次側空載有效值電壓，比值應接近匝比；以電阻檔量繞線可檢查直流電阻與斷線。帶上已知負載後再量 V<sub>2</sub>，通常會小於 V<sub>1</sub>/n，差額反映繞線壓降與漏感。這些量測<strong>能證明</strong>空載匝比是否合理、繞線是否導通、帶載電壓調整情形；卻<strong>不能證明</strong>耦合係數 k、漏感或鐵損各是多少，後者需要短路試驗、空載電流與功率量測。</p>
+<p>三相系統可用鉤表分別量三條線電流；接近相等支持負載平衡的判斷，兩瓦特表法可取得三相總實功。這些讀值<strong>能證明</strong>指定操作點的線電流平衡與總功率，卻<strong>不能證明</strong>所有時刻都平衡，也不能單靠電流相等排除電壓不平衡或諧波。<strong>警告：市電三相是危險電壓，本段僅為知識性說明；實際接線與量測必須由合格人員使用額定量測設備、個人防護與正確隔離程序執行，學習者不可自行操作帶電配電盤。</strong></p>
+<p><strong>更具體的安全邊界：</strong>量測前由合格人員依工作許可確認電壓類別、表筆與電表額定值，先斷電、上鎖掛牌、驗證測試器，再驗證確已無電；需要帶電診斷時，不得由學習者執行。鉤表只夾單一導線，夾住整條多芯電纜會讓各相磁場互相抵消。這能取得該線電流，不能取得相電壓、相序或絕緣狀態；相序與線間電壓須由具相應額定等級的專用儀器依程序量測。</p>
+
+<h2>連到哪門課</h2>
+<p>電機機械用變壓器模型理解感應馬達，電力系統用升降壓與 Y–Δ 配電控制電流與線損，通訊以射頻變壓器與巴倫做阻抗及平衡轉換，電源設計以耦合電感實作隔離式轉換器。磁通與法拉第定律留待電磁學深入；120° 複數相位可回看<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學 09 複變入門</a>。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="13-RLC共振與品質因數.html">← 上一頁：RLC 共振與品質因數</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>14 變壓器與三相</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

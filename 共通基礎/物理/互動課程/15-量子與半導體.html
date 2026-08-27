@@ -1,0 +1,69 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>15 量子與半導體｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">15・從一份光子能量走到材料吸收邊</p>
+<h1>量子與半導體：能量離散，光與電子都帶有波粒雙重性</h1>
+<p class="lead">經典波可以把能量連續分配，卻解釋不了光電效應的門檻與原子離散光譜。這章從 E = hf 建立能量量子，算光子、電子物質波與材料能隙，最後看見半導體為何能吸收某些光而放過另一些光。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="14-幾何光學與波動光學.html">14 幾何光學與波動光學</a>的光波、<a href="03-功與能量.html">03 功與能量</a>，以及<a href="07-熱學與流體.html">07 熱學與流體</a>的溫度與熱。</p>
+
+<h2>痛點：增加亮度，為何仍打不出電子</h2>
+<p>若光只是連續分布的經典波，把燈照得更強，電子理應慢慢累積足夠能量後離開金屬。然而實驗顯示，頻率低於門檻時無論光多強都沒有光電子；頻率一旦超過門檻，電子幾乎立刻出現，而且最大動能隨頻率而不是強度增加。這迫使我們改變「能量可以任意切小份」的假設。</p>
+<p>另一個理解障礙是把量子當成神祕微粒規則。其實第 12 章已看過邊界條件只允許某些駐波；被侷限的電子同樣只有特定波形與能量能滿足邊界。固體中大量原子的允許能量展寬成能帶，能帶之間留下能隙。半導體不是電阻恰好居中，而是能隙小到熱、光與摻雜能有效改變可移動載子數。</p>
+<p>量子模型並沒有抹除經典物理。當每秒參與的光子與電子極多、我們只量平均功率與平均電流時，離散事件的相對起伏很小，經典波與電路模型仍十分有效；只有門檻、單粒子事件或微小尺度把離散性放大時，量子描述才不可省略。</p>
+
+<h2>白話直覺：光以整份交易，電子也以波形通過空間</h2>
+<p>可把光子想成固定面額的能量包：同一頻率的每份面額相同，亮度只改變每秒送來幾份。比喻到此為止；<strong>光子（photon）</strong>能量 E = hf = hc/λ。E 的 SI 單位 J，頻率 f 是 Hz，波長 λ 是 m，普朗克常數 h = 6.62607015 × 10<sup>−34</sup> J·s，真空光速 c = 299792458 m/s。</p>
+<p><strong>光電效應（photoelectric effect）</strong>的能量帳是 K<sub>max</sub> = hf − W。最大動能 K<sub>max</sub> 與<strong>功函數（work function）</strong>W 的 SI 單位是 J，實務常用 eV；1 eV = 1.602176634 × 10<sup>−19</sup> J。若 hf &lt; W，沒有非負動能可分配，增加光強只能增加不足能量的光子數。截止電壓 V<sub>stop</sub> = K<sub>max</sub>/e，單位 V。</p>
+<p><strong>波粒二象性（wave-particle duality）</strong>也適用於物質。德布羅意關係 λ<sub>dB</sub> = h/p，其中動量 p 的單位 kg·m/s，λ<sub>dB</sub> 單位 m。<strong>海森堡不確定性原理（Heisenberg uncertainty principle）</strong>為 Δx⋅Δp ≥ ħ/2；Δx 單位 m、Δp 單位 kg·m/s、ħ = h/(2π) 單位 J·s。這不是儀器粗糙造成，而是局域波包需要一段動量分布的性質。</p>
+<p>固體的<strong>能帶（energy band）</strong>是大量相鄰原子允許能階形成的密集範圍；<strong>能隙（band gap）</strong>E<sub>g</sub> 是沒有允許態的能量區間。導體有部分填滿能帶或能帶重疊；半導體能隙較小，可由熱或摻雜控制載子；絕緣體能隙較大。本章只教物理分類，n 型、p 型與 PN 接面的元件模型留給電子學。</p>
+<p>雷射（Light Amplification by Stimulated Emission of Radiation, LASER）利用受激輻射產生高度相干的光；光二極體把光子吸收轉為載子。熱雜訊來自熱擾動，散粒雜訊來自電荷離散到達，1/f 雜訊在低頻較顯著；本章只辨認起源，不展開通訊鏈路的雜訊預算。</p>
+<p class="note">來源：01-普通物理-下 第 3 章 §3.1–§3.6。</p>
+
+<h2>推導：把波長換成能量，再把電壓換成物質波</h2>
+<p><strong>第一步，建立實用換算。</strong>由 E = hf 與 c = fλ，消去 f 得 E = hc/λ。將 h、c 與 1 eV 的焦耳值代入，並把 λ 以 nm 表示，可得 hc = 1239.841984 eV·nm，所以 E(eV) = 1239.841984/λ(nm)。E 與 λ 的乘積固定；波長減半，單顆光子能量正好加倍。</p>
+<p><strong>第二步，光電能量守恆。</strong>一顆光子把 hf 給一個電子，電子先付出 W 脫離材料，餘額成為 K<sub>max</sub>，所以 K<sub>max</sub> = hf − W。把 K<sub>max</sub> 對 f 作圖，斜率為 h，縱軸截距為 −W。令 K<sub>max</sub> = 0 得截止頻率 f<sub>0</sub> = W/h；再用 c = fλ，截止波長 λ<sub>max</sub> = hc/W。W 以 eV 時，λ<sub>max</sub> 以 nm 可直接使用 1239.841984/W。</p>
+<p><strong>第三步，加速電子的物質波。</strong>電子跨越電位差 V，取得動能 eV。在非相對論近似下 eV = p²/(2m<sub>e</sub>)，所以 p = √(2m<sub>e</sub>eV)，再代入 λ = h/p，得到 λ = h/√(2m<sub>e</sub>eV)。代入電子質量 m<sub>e</sub> = 9.1093837015 × 10<sup>−31</sup> kg 與基本電荷 e，可寫成 λ(nm) ≈ 1.226426/√V。V 加四倍，波長減半。此式在高電壓下會因相對論效應失準。</p>
+<p><strong>第四步，能隙成為吸收邊。</strong>半導體只有在光子能量 hf ≥ E<sub>g</sub> 時，才可能把電子跨越能隙激發成可移動載子。門檻波長 λ<sub>g</sub> = hc/E<sub>g</sub>；波長比 λ<sub>g</sub> 更長時能量較低，理想模型判為穿透。實物仍可能因雜質、自由載子或晶格振動而吸收，因此吸收邊不是所有樣品都無限銳利。</p>
+<p>第 12 章兩端固定要求 sin(kL) = 0，只留下離散 k；侷限電子的波函數也必須滿足邊界與正規化，只留下離散波形與能量。這個類比指出量子化的數學來源，但不表示電子就是一條經典繩子。</p>
+
+<h2>數值實例：四百奈米光、百伏電子與矽能隙</h2>
+<p>取 widget 預設 λ = 400 nm。光子能量 E = 1239.841984/400 = <strong>3.099605 eV</strong>；乘上 1.602176634 × 10<sup>−19</sup> J/eV，得到 <strong>4.966115 × 10<sup>−19</sup> J</strong>。功函數 W = 2.30 eV 時，K<sub>max</sub> = 3.099605 − 2.30 = <strong>0.799605 eV</strong>，截止電壓為 0.799605 V；截止波長 λ<sub>max</sub> = 1239.841984/2.30 = <strong>539.061732 nm</strong>。</p>
+<p>若光功率是 1 mW，每秒光子數為 10<sup>−3</sup> J/s 除以單顆能量，約 <strong>2.013647 × 10<sup>15</sup> 顆/s</strong>。這說明日常光束含有大量光子，平均行為容易看似連續，但不改變單顆光子的能量門檻。</p>
+<p>電子加速電壓 V = 100 V 時，λ<sub>dB</sub> = 1.226426/√100 = <strong>0.122643 nm</strong>，與矽晶格常數 0.543 nm 同量級，所以晶體能使電子產生繞射。矽的 E<sub>g</sub> = 1.12 eV，吸收邊 λ<sub>g</sub> = 1239.841984/1.12 = <strong>1107.001771 nm</strong>。可見光能被矽吸收，但 1310 nm 與 1550 nm 光纖波段能量較低，理想矽偵測器不適用，工程上常改用能隙較小的材料。</p>
+
+<section class="workspace"><h2>自由實驗：光子、物質波與能隙</h2>
+<p>選擇光電效應、電子物質波或半導體吸收邊。調整波長、功函數、加速電壓與能隙，查看門檻判讀與反比、開根號關係。</p>
+<div class="controls">
+<label for="qm-mode">觀察模式<select id="qm-mode"><option value="photo">光電效應</option><option value="matter">電子的物質波</option><option value="gap">半導體能隙與吸收邊</option></select></label>
+<label for="qm-lambda">光波長 λ（nm）<input id="qm-lambda" type="range" min="100" max="1600" step="5" value="400"></label>
+<label for="qm-work">功函數 W（eV）<input id="qm-work" type="range" min="1" max="6" step="0.05" value="2.3"></label>
+<label for="qm-volt">電子加速電壓 V（V）<input id="qm-volt" type="range" min="1" max="1000" step="1" value="100"></label>
+<label for="qm-eg">半導體能隙 Eg（eV）<input id="qm-eg" type="range" min="0.1" max="6" step="0.01" value="1.12"></label>
+</div>
+<div id="photon-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>光子能量由頻率決定；光強主要改變光子數量，不提高每顆光子的能量。</li>
+<li>E = hf 中 h 是固定常數，f 才是光的頻率變數。</li>
+<li>德布羅意波長是物質狀態的波長，不是粒子另外發出的光。</li>
+<li>不確定性不是量測技術太差，而是局域波包本身需要動量分布。</li>
+<li>eV 是能量單位，V 是電位差單位；兩者相差一個基本電荷的換算。</li>
+<li>半導體分類來自能帶填充與能隙，不是單看室溫電阻落在中間。</li>
+<li>電子加速的 1.226426/√V 是非相對論近似，高電壓時不能無限沿用。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>用不同頻率的單色光照光電管，調反向電壓直到光電流降為零，量截止電壓對頻率的直線；用電子繞射管與薄石墨靶，在不同加速電壓下量繞射環半徑；用單色儀與光電二極體量矽片透射率隨波長的吸收邊。</p>
+<p><strong>能證明什麼：</strong>截止電壓隨頻率線性增加、低於門檻無光電子，可支持 E = hf 與功函數門檻；繞射環隨 V 增加而縮小，可支持 λ<sub>dB</sub> ∝ 1/√V；透射率在接近 1107 nm 改變，可支持矽具有約 1.12 eV 的能隙。</p>
+<p><strong>不能證明什麼：</strong>任何單一實驗都不能單獨證明完整量子力學或指定電子通過的確切路徑。吸收邊也不能直接證明材料一定是純矽，因溫度、厚度、摻雜與缺陷都會改變曲線；截止電壓量測則不能由一次資料分辨接觸電位與儀器偏移。</p>
+
+<h2>連到哪門課</h2>
+<p>能帶與吸收邊直接銜接電子學、半導體元件、光電工程與光纖通訊；光子統計和三類雜訊銜接通訊系統與偵測理論。機率波的機率密度、期望值與雜訊分布工具見<a href="../../數學/互動課程/12-機率與隨機變數.html">工程數學先修 12 機率與隨機變數</a>；PN 接面、二極體、電晶體與偵測器設計留給後續電子學。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="14-幾何光學與波動光學.html">← 上一頁：幾何光學與波動光學</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>15 量子與半導體</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

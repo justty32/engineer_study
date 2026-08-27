@@ -1,0 +1,86 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 戴維寧與最大功率｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・從兩個端點濃縮整個線性電路</p>
+<h1>戴維寧與最大功率：先看來源有多硬，再選負載</h1>
+<p class="lead">負載不必知道上游有幾顆電阻、幾個來源；從指定的兩個端點看進去，任何線性電路都能用一個等效電壓源與一個串聯電阻描述。這個觀點不只縮短計算，也直接揭露最大功率與最高效率為何不是同一個設計目標。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-節點與網目分析.html">03 節點與網目分析</a>、<a href="04-疊加原理與相依源.html">04 疊加原理與相依源</a>。</p>
+
+<h2>痛點：負載一直換，難道每次都要重解整個電路？</h2>
+<p>感測器、天線、喇叭或電源負載接在同一組端點時，上游內部不會因為換負載就值得重畫一次方程。真正需要的是一個端口模型：負載開路時能看到多少電壓，以及負載取電流後端電壓會下垂多少。初學者常把等效內阻當成原電路某一顆真實電阻，或把「功率最大」誤讀為「能源使用最有效率」，因此即使會套公式，也可能做出完全相反的工程選擇。</p>
+<p><strong>戴維寧等效（Thévenin equivalent）</strong>以 V<sub>th</sub> 串聯 R<sub>th</sub> 表示端口；<strong>諾頓等效（Norton equivalent）</strong>以 I<sub>N</sub> 並聯同一個 R<sub>th</sub> 表示。兩者不是兩套不同電路，而是同一條端口電壓電流關係的兩種寫法，並由 I<sub>N</sub> = V<sub>th</sub>/R<sub>th</sub> 互換。</p>
+
+<h2>白話直覺：端口只需要一個空載高度與一個下垂程度</h2>
+<p>可以把等效模型暫想成替複雜來源做一張兩欄名片：空載電壓與內部阻力；比喻到此為止，V<sub>th</sub> 是真正在指定端點量到的開路電壓，R<sub>th</sub> 則是端口電流改變時電壓下垂的比例，不是憑印象寫出的「來源品質」。</p>
+<p>因果鏈從 V<sub>s</sub> 與地開始：V<sub>s</sub> 正端經 R<sub>1</sub> 到端點 A，A 經 R<sub>2</sub> 回地，負載 R<sub>L</sub> 也接在 A 與地之間。R<sub>L</sub> 接上後回路閉合，能量由 V<sub>s</sub> 經上游電阻送往負載；負載取得的電流愈大，R<sub>th</sub> 上的壓降愈大，A 的端電壓便下降。開路時沒有負載電流，A 保持 V<sub>th</sub>；短路時 A 被拉到地，電流達 I<sub>N</sub>。這兩個極端夾出完整的線性端口行為。</p>
+<p>求 R<sub>th</sub> 時，只有獨立源要歸零。若內部有相依源，控制關係仍須存在，不能只看電阻串並聯；應在端口加一個已知測試電壓或測試電流，用 R<sub>th</sub> = v<sub>test</sub>/i<sub>test</sub> 求得。這個方法也說明 R<sub>th</sub> 的定義是「由端口看入的增量比值」。</p>
+<p>端口等價的核心是：不論外面接哪一顆線性負載，原電路與等效電路都給出相同的端電壓與端電流。等價不要求內部支路相同，也不要求總耗能分布相同。若改看另一對端點，V<sub>th</sub> 與 R<sub>th</sub> 通常也會改變，所以每次分析都必須先明確標出端口與參考極性，不能把一組參數當成整台裝置唯一不變的身分。</p>
+<p class="note">來源：06-電路學-上 §2.5、§2.7。</p>
+
+<h2>推導：由開路、源歸零到最大功率條件</h2>
+<p><strong>（a）端口拓樸。</strong>V<sub>s</sub> 正端 → R<sub>1</sub> → 端點 A；端點 A → R<sub>2</sub> → 地；V<sub>s</sub> 負端 → 地；負載 R<sub>L</sub> 接在 A 與地之間。V<sub>s</sub>、V<sub>th</sub> 單位 V，I<sub>N</sub>、I<sub>L</sub> 單位 A，R<sub>1</sub>、R<sub>2</sub>、R<sub>th</sub>、R<sub>L</sub> 單位 Ω。假設所有元件線性、時不變、來源與導線理想，先限於直流電阻電路。</p>
+<p><strong>（b）求 V<sub>th</sub>。</strong>把 R<sub>L</sub> 拿掉，端口沒有外流電流，只剩 R<sub>1</sub>、R<sub>2</sub> 分壓：</p>
+<p><code>V<sub>th</sub> = V<sub>s</sub>R<sub>2</sub> / (R<sub>1</sub> + R<sub>2</sub>)</code></p>
+<p><strong>（c）求 R<sub>th</sub>。</strong>把獨立電壓源 V<sub>s</sub> 歸零成短路，從 A 看向地，R<sub>1</sub> 與 R<sub>2</sub> 都接地，因此 R<sub>th</sub> = R<sub>1</sub>‖R<sub>2</sub>。符號 ‖ 讀作「並聯」，不是絕對值也不是範數；兩個電阻時：</p>
+<p><code>R<sub>th</sub> = R<sub>1</sub>R<sub>2</sub> / (R<sub>1</sub> + R<sub>2</sub>)</code></p>
+<p><strong>（d）求 I<sub>N</sub> 並驗算。</strong>把 A 對地短路，R<sub>2</sub> 兩端為 0 V，短路電流只由 V<sub>s</sub> 經 R<sub>1</sub> 提供，所以 I<sub>N</sub> = V<sub>s</sub>/R<sub>1</sub>。把上兩式相除，可得 V<sub>th</sub>/R<sub>th</sub> = V<sub>s</sub>/R<sub>1</sub>，正好等於 I<sub>N</sub>。</p>
+<p><strong>（e）完整推導最大功率。</strong>等效電路接上 R<sub>L</sub> 後，I<sub>L</sub> = V<sub>th</sub>/(R<sub>th</sub> + R<sub>L</sub>)。負載功率 P<sub>L</sub> 單位 W：</p>
+<p><code>P<sub>L</sub> = I<sub>L</sub>²R<sub>L</sub> = V<sub>th</sub>²R<sub>L</sub> / (R<sub>th</sub> + R<sub>L</sub>)²</code></p>
+<p>對 R<sub>L</sub> 微分。除以始終為正的分母後，決定零點的分子是 V<sub>th</sub>²[(R<sub>th</sub> + R<sub>L</sub>)² − R<sub>L</sub> ⋅ 2(R<sub>th</sub> + R<sub>L</sub>)]。提出公因式後成為 V<sub>th</sub>²(R<sub>th</sub> + R<sub>L</sub>)(R<sub>th</sub> − R<sub>L</sub>)。令 dP<sub>L</sub>/dR<sub>L</sub> = 0，在正電阻範圍唯一可行解是 R<sub>L</sub> = R<sub>th</sub>；兩側功率都較小，所以此點是最大值。代回得：</p>
+<p><code>P<sub>max</sub> = V<sub>th</sub>² / (4R<sub>th</sub>)</code></p>
+<p><strong>（f）效率。</strong>來源送進串聯回路的總功率由 R<sub>th</sub> 與 R<sub>L</sub> 分擔，所以 η = P<sub>L</sub>/P<sub>總</sub> = R<sub>L</sub>/(R<sub>th</sub> + R<sub>L</sub>)。匹配時 η = 1/2 = 50 %；η 隨 R<sub>L</sub> 單調增加，但 P<sub>L</sub> 過了匹配點反而下降，這就是兩個目標衝突的數學根源。</p>
+<p>也可從兩個極端檢查式子。R<sub>L</sub> → 0 時近似短路，負載電壓趨近 0，因此即使電流很大，P<sub>L</sub> 仍趨近 0，大多數功率耗在 R<sub>th</sub>。R<sub>L</sub> → ∞ 時近似開路，電流趨近 0，負載功率同樣趨近 0；效率公式形式上趨近 100 %，只是分子與分母都趨近零，沒有實用輸出。功率曲線在兩端都為零，中間才必有最大值，這和微分所得的匹配點互相驗證。</p>
+
+<h2>數值實例：同一來源下比較匹配、重載與輕載</h2>
+<p>V<sub>s</sub> = 12 V、R<sub>1</sub> = 1 kΩ、R<sub>2</sub> = 2 kΩ。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>V<sub>th</sub>（開路電壓）</td><td>12 × 2000/3000</td><td><strong>8.000000 V</strong></td></tr>
+<tr><td>R<sub>th</sub>（源歸零後看入）</td><td>1000‖2000</td><td><strong>666.666667 Ω</strong></td></tr>
+<tr><td>I<sub>N</sub>（短路電流）</td><td>12/1000</td><td><strong>12.000000 mA</strong>（＝8/666.666667，相符）</td></tr>
+<tr><td>P<sub>max</sub></td><td>8²/(4 × 666.666667)</td><td><strong>24.000000 mW</strong></td></tr>
+</tbody></table>
+<p>負載掃描（k = R<sub>L</sub>/R<sub>th</sub>）：</p>
+<table><thead><tr><th>k</th><th>R<sub>L</sub>（Ω）</th><th>I<sub>L</sub>（mA）</th><th>V<sub>L</sub>（V）</th><th>P<sub>L</sub>（mW）</th><th>效率 η（%）</th></tr></thead><tbody>
+<tr><td>0.3</td><td>200.000000</td><td>9.230769</td><td>1.846154</td><td>17.041420</td><td>23.077</td></tr>
+<tr><td><strong>1.0</strong></td><td><strong>666.666667</strong></td><td><strong>6.000000</strong></td><td><strong>4.000000</strong></td><td><strong>24.000000</strong></td><td><strong>50.000</strong></td></tr>
+<tr><td>3.0</td><td>2000.000000</td><td>3.000000</td><td>6.000000</td><td>18.000000</td><td>75.000</td></tr>
+</tbody></table>
+<p><strong>讀這張表</strong>：k = 3 時效率是 k = 1 的 1.5 倍，但拿到的功率反而少了 25 %。這就是「匹配」與「省電」永遠打架的具體數字。</p>
+
+<section class="workspace"><h2>自由實驗：掃描負載倍率</h2>
+<p>V<sub>s</sub> 正端經 R<sub>1</sub> 到端點 A，A 經 R<sub>2</sub> 回地，V<sub>s</sub> 負端接地；負載 R<sub>L</sub> 接在 A 與地之間。調整來源與負載倍率，觀察端口等效、負載功率和效率如何一起改變。</p>
+<div class="controls">
+<label for="thv-vs">電源電壓 V<sub>s</sub>（V）<input id="thv-vs" type="range" min="1" max="24" step="1" value="12"></label>
+<label for="thv-r1">R<sub>1</sub>（Ω，源到端點 A）<input id="thv-r1" type="range" min="100" max="10000" step="100" value="1000"></label>
+<label for="thv-r2">R<sub>2</sub>（Ω，A 到地）<input id="thv-r2" type="range" min="100" max="10000" step="100" value="2000"></label>
+<label for="thv-k">負載倍率 k（R<sub>L</sub> = k × R<sub>th</sub>）<input id="thv-k" type="range" min="0.1" max="5" step="0.1" value="1"></label>
+</div>
+<div id="thevenin-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>R<sub>th</sub> 是由指定端口看到的等效內阻，不保證原電路內真的存在一顆同值電阻。</li>
+<li>獨立源歸零後可化簡電阻；相依源不能歸零，含相依源時應加測試源求端口的 v/i。</li>
+<li>戴維寧與原電路只在端口電壓電流關係上等價，不能用等效電路推回內部每顆元件的功率。</li>
+<li>最大功率傳遞不等於最高效率；匹配點效率只有 50 %，而接近開路時效率趨近 100 %、功率卻趨近 0 W。</li>
+<li>直流純電阻匹配是 R<sub>L</sub> = R<sub>th</sub>；交流最大功率要做共軛匹配 Z<sub>L</sub> = Z<sub>th</sub>*，不能把兩式混用。</li>
+<li>開路電壓可安全量測；短路電流是理想模型的定義工具，不代表真實電源允許直接短路。</li>
+</ul>
+
+<h2>可觀察證據：用兩次端電壓反推等效內阻</h2>
+<p>先拆下負載，用高輸入阻抗三用電表量 A 對地的開路電壓 V<sub>oc</sub>，它近似 V<sub>th</sub>；電表輸入阻抗必須遠大於 R<sub>th</sub>，否則電表本身已成為負載。再接一顆已知電阻 R，量負載端電壓 V，由 R<sub>th</sub> = R(V<sub>oc</sub>/V − 1) 反推。換幾個負載並記錄 V 與電流，可檢查端口關係是否為直線。</p>
+<p><strong>能證明什麼：</strong>這些量測能證明指定端口在量測範圍內具有某組 V<sub>th</sub> 與 R<sub>th</sub>，也能以負載功率掃描看見最大值落在 R<sub>L</sub> 接近 R<sub>th</sub>。<strong>不能證明什麼：</strong>它們不能辨識內部拓樸，因為無限多種內部電路可有同一組端口參數；也不能證明更大電流下仍線性。不要直接短路量 I<sub>N</sub>，真實電源可能限流、過熱或損壞。</p>
+<p>若電表輸入阻抗已知，也可把它視為第一個已知負載並校正讀值；若來源會限流或溫升，應從小電流開始逐步掃描，並比較端口直線是否彎曲。一旦 V 與 I 不再呈線性關係，單一常數 R<sub>th</sub> 只能描述局部工作範圍，不能外推到保護動作之後。</p>
+<p>選負載前還要先寫清楚任務。若目標是從高阻感測器讀出準確電壓，量測電路的輸入阻抗應遠大於 R<sub>th</sub>，避免負載效應；若目標是從微弱通訊源取得最多可用訊號功率，匹配才有意義；若目標是供電，則希望來源等效內阻遠小於負載，使壓降、發熱與能量損失都小。相同的戴維寧參數沒有唯一「最佳」負載，最佳值永遠附著在功率、效率、電壓準確度或雜訊等明確指標上。</p>
+
+<h2>連到哪門課</h2>
+<p>電子學會用戴維寧模型描述偏壓網路與放大器輸出阻抗；射頻、天線與通訊系統關心匹配，因為微弱訊號需要盡可能送入下一級；電力工程與電源供應器則通常追求高效率與低壓降，不會把一半功率燒在來源內阻。感測器介面也會用端口模型估算負載效應與量測誤差。</p>
+<p>最大功率條件的核心是對負載電阻做極值判斷，可回到工程數學先修的<a href="../../../共通基礎/數學/互動課程/01-極限與導數.html">極限與導數</a>。第 07 章還會從儲能元件兩端看出去求 R<sub>th</sub>，再把它放進 RC 或 RL 的時間常數；因此這章的「端口視角」也是暫態分析的必要工具。</p>
+<p>實務資料表常用負載調整率描述輸出電壓隨負載改變的程度，這可視為 R<sub>th</sub> 觀念在有限工作範圍內的延伸。不過穩壓器含回授、限流與保護狀態，端口關係未必是一條跨全範圍的直線；只能在指定工作點附近使用線性等效，不能把保護區也硬塞進同一模型。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="04-疊加原理與相依源.html">← 上一頁：疊加原理與相依源</a><a href="06-電容與電感.html">下一頁：電容與電感 →</a></nav>
+</main>
+<footer class="site-footer"><span>05 戴維寧與最大功率</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

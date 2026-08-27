@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 反射折射與都卜勒｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">13・界面把波分流，運動把頻率改寫</p>
+<h1>反射折射與都卜勒：追蹤波遇到界面與移動者之後的變化</h1>
+<p class="lead">波碰到不同介質不會無條件穿過，一部分能量可能折返；波源或觀察者移動時，接收到的週期也會改變。本章用阻抗、邊界條件與相對運動，串起傳輸線反射、都卜勒測速、聲強級和拍頻。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="12-波動與駐波.html">12 波動與駐波</a>的波長、頻率、波速與疊加。</p>
+
+<h2>痛點：訊號變小，不一定是被電阻吃掉</h2>
+<p>脈衝沿同軸線到達接頭後，源端可能再看到一個回來的脈衝。這不是憑空新增訊號，也不必然是雜訊；負載無法同時承接原來的振幅關係時，界面必須產生反射波來滿足邊界條件。若只用直流電阻直覺，會把能量折返誤認成耗散，也會不懂終端匹配為何能消除回波。</p>
+<p>救護車靠近時音調升高，離開時降低，看似只要相對速度即可。然而波源移動壓縮的是介質中的波長，觀察者移動改變的是波通過觀察者的速率，兩種機制並不對稱。再加上 dB 是對數尺度、Γ 是振幅比而非功率比，幾個外表相似的比例若混用，答案可能差平方或差一個對數係數。</p>
+<p>「折射」在廣義波動中也不只指光線轉彎；波進入另一介質後，頻率由連續的時間振動鎖定，波速改變便使波長改變。若斜著入射，界面各點還必須保持相位連續，傳播方向才隨之轉動。這章先聚焦阻抗造成的反射與運動造成的頻移，下一章再把方向折射完整算出來。</p>
+
+<h2>白話直覺：界面要把兩邊的條件接得起來</h2>
+<p>可把不匹配的界面想成不同寬度的通道，來波無法照原狀全部通過，於是回頭調整界面狀態。比喻到此為止；精確量是<strong>波阻抗（wave impedance）</strong>Z，它描述一對場量或波動量的比值。傳輸線常用電壓對電流，單位 Ω；理想波阻抗不等於耗能的電阻。</p>
+<p>電壓或場振幅的<strong>反射係數（reflection coefficient）</strong>Γ = (Z<sub>2</sub> − Z<sub>1</sub>)/(Z<sub>2</sub> + Z<sub>1</sub>)，無單位。反射功率比是 |Γ|²，透射功率比在無損模型中是 1 − |Γ|²。當 Z<sub>1</sub> = Z<sub>2</sub> 時 Γ = 0，稱<strong>阻抗匹配（impedance matching）</strong>；能量不再返回源端。</p>
+<p><strong>電壓駐波比（Voltage Standing Wave Ratio, VSWR）</strong> = (1 + |Γ|)/(1 − |Γ|)，無單位；回波損耗 RL = −20 log<sub>10</sub>|Γ|，單位 dB。完全匹配時 VSWR = 1，RL 趨向無限大，意思是回波相對來波小到零，而不是損耗真的無限大。</p>
+<p><strong>都卜勒效應（Doppler effect）</strong>的完整低速介質波公式為 f′ = f<sub>0</sub>(v + v<sub>觀</sub>)/(v − v<sub>源</sub>)。f′、f<sub>0</sub> 單位 Hz；波速 v、觀察者速度 v<sub>觀</sub>、波源速度 v<sub>源</sub> 單位 m/s，本課約定靠近為正。公式假設介質靜止且速度低於波速；波源達到音速時會形成震波，分母形式不再適用。</p>
+<p>聲強 I 的單位 W/m²，聲強級 L = 10 log<sub>10</sub>(I/I<sub>0</sub>)，單位 dB，基準 I<sub>0</sub> = 10<sup>−12</sup> W/m²。兩個接近頻率疊加時，振幅包絡以 |f<sub>1</sub> − f<sub>2</sub>| Hz 起伏，稱<strong>拍頻（beat frequency）</strong>；這是時域干涉，不是額外產生一個獨立聲源。</p>
+<p class="note">來源：01-普通物理-下 第 1 章 §1.4–§1.6；VSWR 與回波損耗採本課規格補充的標準工程量。</p>
+
+<h2>推導：用兩個邊界條件解反射，再追蹤波峰間距</h2>
+<p><strong>第一步，解界面。</strong>把入射振幅規一成 1，反射與透射振幅分別為 Γ、τ。界面上的位移或電壓連續給 1 + Γ = τ；對應的力或電流連續給 (1 − Γ)/Z<sub>1</sub> = τ/Z<sub>2</sub>。將第一式的 τ 代入第二式，交叉相乘得 Z<sub>2</sub>(1 − Γ) = Z<sub>1</sub>(1 + Γ)。整理 Γ 項便得 Γ = (Z<sub>2</sub> − Z<sub>1</sub>)/(Z<sub>2</sub> + Z<sub>1</sub>)。Z 的單位皆為 Ω，所以 Γ 無單位。</p>
+<p>無損情況下能量檢查為 |Γ|² + (1 − |Γ|²) = 1。若 Z<sub>2</sub> = 0，Γ = −1，振幅全反射且相位翻轉 180°；若 Z<sub>2</sub> 趨向無限大，Γ = +1，全反射但不翻相；若兩阻抗相等，Γ = 0。正負號描述相位，平方後才得到非負的功率比例。</p>
+<p><strong>第二步，推波源移動。</strong>波源週期為 T<sub>0</sub> = 1/f<sub>0</sub>。它發出相鄰兩個波峰的期間，第一個波峰前進 vT<sub>0</sub>，波源自己前進 v<sub>源</sub>T<sub>0</sub>，前方波長因此成為 λ′ = (v − v<sub>源</sub>)T<sub>0</sub> = (v − v<sub>源</sub>)/f<sub>0</sub>。靜止觀察者收到 f′ = v/λ′ = f<sub>0</sub>v/(v − v<sub>源</sub>)。</p>
+<p>若波源靜止、觀察者靠近，介質中的 λ 不變，但波峰通過觀察者的相對速率成為 v + v<sub>觀</sub>，故 f′ = f<sub>0</sub>(v + v<sub>觀</sub>)/v。合併兩種機制才得到完整式。這也說明同樣 30 m/s 的接近速度，放在分子或分母會得到不同結果。</p>
+<p><strong>第三步，理解 dB。</strong>強度比取十進對數後乘 10。I 增為十倍，L 增加 10 log<sub>10</sub>10 = 10 dB；增為兩倍則增加 10 log<sub>10</sub>2 = 3.010300 dB。若比較同阻抗下的電壓振幅，功率正比於電壓平方，才會出現 20 log<sub>10</sub> 的係數。</p>
+<p><strong>第四步，拍頻來自三角恆等式。</strong>等振幅的 cos(2πf<sub>1</sub>t) 與 cos(2πf<sub>2</sub>t) 相加，可化為 2 cos(π(f<sub>1</sub> − f<sub>2</sub>)t)cos(π(f<sub>1</sub> + f<sub>2</sub>)t)。快速因子接近平均頻率，慢速包絡的絕對振幅每秒重複 |f<sub>1</sub> − f<sub>2</sub>| 次。f 的單位是 Hz，t 是 s，三角函數內積為無單位。</p>
+
+<h2>數值實例：五十歐姆接七十五歐姆與移動聲源</h2>
+<p>取 widget 預設 Z<sub>1</sub> = 50 Ω、Z<sub>2</sub> = 75 Ω。Γ = (75 − 50)/(75 + 50) = 25/125 = <strong>0.200000</strong>，正號表示反射波同相；反射功率比為 0.2² = <strong>0.040000，即 4 %</strong>，透射為 96 %。VSWR = 1.2/0.8 = <strong>1.500000</strong>；RL = −20 log<sub>10</sub>(0.2) = <strong>13.979400 dB</strong>。兩個功率比例相加為 1.000000，能量帳閉合。</p>
+<p>再取 f<sub>0</sub> = 1000 Hz、v = 340 m/s、v<sub>源</sub> = 30 m/s、v<sub>觀</sub> = 0。f′ = 1000⋅340/(340 − 30) = <strong>1096.774194 Hz</strong>，頻移為 +96.774194 Hz。若改為波源靜止、觀察者以 30 m/s 靠近，f′ = 1000⋅370/340 = 1088.235294 Hz，證明兩種移動不可互換。聲強預設 log<sub>10</sub>I = −6，故 I = 10<sup>−6</sup> W/m²，L = 10 log<sub>10</sub>(10<sup>6</sup>) = <strong>60.000000 dB</strong>。</p>
+<p>阻抗若改成 Z<sub>2</sub> = 50 Ω，Γ 立刻成為 0、反射功率為 0、透射為 100 %、VSWR 為 1；這是元件必須特別處理的完全匹配邊界。聲強的 log<sub>10</sub>I 若由 −6 調成 −5，I 增為十倍，聲強級則由 60 dB 精確增加到 70 dB，驗證滑桿以指數改 I、輸出以線性步距改 dB。</p>
+
+<section class="workspace"><h2>自由實驗：界面、都卜勒與分貝</h2>
+<p>先選要觀察的現象，再調整相應參數。輸出會比較反射與透射能量、移動造成的頻移，或聲強跨越數量級後的 dB。</p>
+<div class="controls">
+<label for="if-mode">觀察模式<select id="if-mode"><option value="impedance">阻抗匹配與反射</option><option value="doppler">都卜勒頻移</option><option value="db">聲強級 dB</option></select></label>
+<label for="if-z1">介質 1 的波阻抗 Z1（Ω）<input id="if-z1" type="range" min="1" max="500" step="1" value="50"></label>
+<label for="if-z2">介質 2 的波阻抗 Z2（Ω）<input id="if-z2" type="range" min="1" max="500" step="1" value="75"></label>
+<label for="if-vsrc">波源速度 v源（m/s，靠近為正）<input id="if-vsrc" type="range" min="-100" max="100" step="1" value="30"></label>
+<label for="if-vobs">觀察者速度 v觀（m/s，靠近為正）<input id="if-vobs" type="range" min="-100" max="100" step="1" value="0"></label>
+<label for="if-f0">原始頻率 f0（Hz）<input id="if-f0" type="range" min="100" max="5000" step="10" value="1000"></label>
+<label for="if-vwave">波速 v（m/s）<input id="if-vwave" type="range" min="100" max="1500" step="10" value="340"></label>
+<label for="if-logi">聲強 log10 I（I 單位 W/m²）<input id="if-logi" type="range" min="-12" max="2" step="0.1" value="-6"></label>
+</div>
+<div id="interface-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>波阻抗描述行波量的比例，不等於把能量持續轉成熱的直流電阻。</li>
+<li>Γ 是帶正負相位資訊的振幅比；|Γ|² 才是反射功率比。</li>
+<li>VSWR = 1.5 對應的是 4 % 反射功率，不是 50 % 能量被反射。</li>
+<li>波源移動改變波長，觀察者移動改變相對波速，兩個公式不對稱。</li>
+<li>功率比使用 10 log<sub>10</sub>；同阻抗的電壓比使用 20 log<sub>10</sub>。</li>
+<li>拍頻是兩頻率差的包絡，不是兩頻率平均，也不是都卜勒頻移。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>用時域反射儀（Time Domain Reflectometer, TDR）或示波器加長同軸線，送出脈衝並量回波的時間、極性與振幅；用向量網路分析儀（Vector Network Analyzer, VNA）量 S11 與回波損耗。另可用雷達測速槍量移動物的都卜勒頻移，用聲級計量聲強級。</p>
+<p><strong>能證明什麼：</strong>回波正負可支持開路同相、短路反相，回波大小可支持 Γ 隨阻抗差增大；匹配時回波降到儀器底噪，支持能量不再返回源端。已知發射頻率與波速時，量得的頻移也能反推出徑向速度。</p>
+<p><strong>不能證明什麼：</strong>TDR 看到的是沿路所有不連續的總結果，單靠一個振幅不能分辨接頭、線材不均勻或終端是哪個原因，仍須利用回波延遲定位。聲級計量到的 dB 不能直接證明人的主觀響度，雷達頻移也只提供視線方向速度，不能證明完整三維運動。</p>
+<p>所有判讀還受儀器頻寬與校正限制。看不到回波只表示它低於當下底噪與解析度，不能證明 Γ 在數學上絕對等於零；測速值穩定也不能證明波速與介質在整段路徑中完全均勻。</p>
+
+<h2>連到哪門課</h2>
+<p>反射係數與 VSWR 直接銜接電磁學的傳輸線、天線量測與微波工程；都卜勒與 dB 服務雷達、行動通訊、超音波與信號處理。本章只建立物理比例與量測意義，匹配網路、Smith 圖、鏈路預算和接收器設計留給後續電磁學與通訊系統課。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="12-波動與駐波.html">← 上一頁：波動與駐波</a><a href="14-幾何光學與波動光學.html">下一頁：幾何光學與波動光學 →</a></nav>
+</main>
+<footer class="site-footer"><span>13 反射折射與都卜勒</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

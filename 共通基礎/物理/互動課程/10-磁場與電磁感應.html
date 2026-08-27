@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 磁場與電磁感應｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・用磁通變化核對發電機的能量帳</p>
+<h1>磁場與電磁感應：你推得越用力，送出的電越多</h1>
+<p class="lead">電流能造磁場，磁場能改變運動電荷的方向，而變化的磁通又能推動電流。本章用移動導體棒把這個循環接起來，並以機械功率等於電功率檢查冷次定律的負號。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-靜電學.html">08 靜電學</a>的電場、<a href="09-電流與電路基礎.html">09 電流與電路基礎</a>的電流，以及<a href="05-轉動與角動量.html">05 轉動與角動量</a>的力矩。</p>
+
+<h2>痛點：磁場存在，不等於它會自動發電</h2>
+<p>把一個線圈靜放在強磁鐵旁，示波器不會持續讀到感應電壓；真正關鍵是穿過迴路的磁通是否隨時間改變。另一方面，移動電荷在磁場中受力，力卻與速度垂直，所以磁場本身不對單顆電荷做功。發電機輸出的能量究竟從哪裡來，必須回到推動轉子的外力。</p>
+<p>本章採均勻磁場、剛性導體棒、固定迴路電阻且忽略摩擦與自感的模型。這足以呈現感應與能量守恆，但不能直接預測真實發電機的鐵損、銅損、渦電流分布或轉矩脈動。極端數值若要求十萬安培，也是在揭露模型與產生磁場方法的代價，不是設計建議。</p>
+
+<h2>白話直覺：磁通像穿過框面的總量，感應只對它的變化有反應</h2>
+<p>可以把磁通想成穿過線框的「磁場份量」；框面變大、磁場變強或角度改變，都會改變穿過量。比喻到此為止；精確定義為 Φ<sub>B</sub> = ∫ <strong>B</strong> ⋅ d<strong>A</strong>。Φ<sub>B</sub> 是磁通量、單位 Wb，B 是磁通密度向量、單位 T，A 是面積向量、單位 m²，粗體代表有方向的向量。</p>
+<p>勞侖茲力（Lorentz force）為 <strong>F</strong> = q(<strong>E</strong> + <strong>v</strong> × <strong>B</strong>)。F 單位 N，q 單位 C，E 單位 V/m，v 單位 m/s，B 單位 T。外積使磁力垂直速度；載流導線受力 d<strong>F</strong> = I d<strong>ℓ</strong> × <strong>B</strong>，F 單位 N，I 單位 A，ℓ 單位 m，B 單位 T。馬達轉矩從這個力與力臂而來。</p>
+<p>電流產生磁場。畢歐—沙伐定律（Biot–Savart law）寫成 d<strong>B</strong> = (μ<sub>0</sub>/(4π)) ⋅ (I d<strong>ℓ</strong> × r̂)/r²。B 單位 T，μ<sub>0</sub> = 1.25663706212 × 10<sup>−6</sup> T·m/A，I 單位 A，ℓ、r 單位 m，r̂ 無單位。對稱性高時可改用安培定律 ∮<sub>C</sub> <strong>B</strong> ⋅ d<strong>ℓ</strong> = μ<sub>0</sub>I<sub>穿過</sub>；兩側單位皆為 T·m。</p>
+<p>法拉第定律（Faraday's law）為 ε = −dΦ<sub>B</sub>/dt。ε 是感應電動勢、單位 V，Φ<sub>B</sub> 單位 Wb，t 單位 s。冷次定律（Lenz's law）就是負號的物理內容：感應電流造成的磁場反抗原磁通的變化。它不阻止一切運動，而是要求外界付出功才能維持變化。</p>
+<p>自然界尚未觀察到磁單極，因此 ∇ ⋅ <strong>B</strong> = 0；B 單位 T，而散度單位使左側為 T/m。磁力線因此形成閉合迴路。自感的元件關係可寫 v<sub>L</sub> = L(di/dt)；v<sub>L</sub> 單位 V，L 是自感、單位 H，i 單位 A，t 單位 s。RL 時間常數 τ = L/R；τ 單位 s，R 單位 Ω。</p>
+<p>方向判斷可以分成因果鏈：先決定外加磁通正在增加或減少，再由冷次定律找出感應磁場要反抗哪個變化，最後以右手定則決定迴路電流。不要一開始就背順時針或逆時針，因為同一個轉向會隨觀察面、磁場方向與運動方向改變。負號固定的是反抗變化的關係，不是畫面上的固定旋轉方向。</p>
+<p>自感也可理解為電流改變時的「電磁慣性」：電流增大會誘發反向電壓，電流減小也會試圖維持原流向。這個類比只描述抗拒變化；精確量仍是 L 與磁通鏈的比例，單位 H。線圈斷電時若沒有安全路徑，快速的 di/dt 可能產生很高電壓，能量來源則是先前儲存在磁場中的能量。</p>
+<p class="note">來源：01-普通物理-中 第 3 章與第 4 章。</p>
+
+<h2>推導：一根移動導體棒如何把機械功送進電阻</h2>
+<p><strong>（a）兩條路得到同一感應電動勢。</strong>長度 L 的導體棒以速度 v 垂直切過均勻磁場 B。棒內電荷受磁力 F = qvB；F 單位 N，q 單位 C，v 單位 m/s，B 單位 T。平衡後等效電場 E = F/q = vB，E 單位 V/m，因此棒端電位差 ε = EL = BLv；ε 單位 V，L 單位 m。</p>
+<p>改從磁通看，若磁場與迴路法線夾角 θ，Φ<sub>B</sub> = BA cos θ。Φ<sub>B</sub> 單位 Wb，B 單位 T，A 單位 m²，θ 無單位。棒每秒使面積增加 dA/dt = Lv，單位 m²/s，所以 |dΦ<sub>B</sub>/dt| = BLv cos θ，仍得 ε = BLv cos θ。微觀磁力與巨觀磁通兩條路一致。</p>
+<p><strong>（b）冷次負號的能量意義。</strong>迴路電阻 R 時，I = ε/R = BLv cos θ/R；I 單位 A，ε 單位 V，R 單位 Ω。感應電流所在的棒受安培力 F = (B cos θ)IL，方向反抗運動；F 單位 N。維持等速需要等大外力，因此機械功率 P<sub>機</sub> = Fv = B²L²v²cos²θ/R。P<sub>機</sub> 單位 W。</p>
+<p>電功率 P<sub>電</sub> = εI = (BLv cos θ)²/R，而焦耳熱 P<sub>熱</sub> = I²R；三者單位皆為 W，代入 I 後完全相等。若感應方向幫助原運動，棒會自行加速又持續放電，等於無中生有；負號正是能量守恆要求的方向。</p>
+<p><strong>（c）直導線磁場。</strong>在無限長直導線外取半徑 r 的圓形安培路徑。對稱性使 B 沿圓周切向且大小固定，因此 ∮ <strong>B</strong> ⋅ d<strong>ℓ</strong> = B ⋅ 2πr = μ<sub>0</sub>I。B 單位 T，r 單位 m，μ<sub>0</sub> 單位 T·m/A，I 單位 A。整理得 B = μ<sub>0</sub>I/(2πr)，也可反解 I = 2πrB/μ<sub>0</sub>。</p>
+<p><strong>（d）螺線管自感。</strong>長螺線管內 B = μ<sub>0</sub>NI/ℓ，B 單位 T，N 是匝數、無單位，I 單位 A，ℓ 單位 m。單匝磁通 Φ = BA = μ<sub>0</sub>NIA/ℓ，Φ 單位 Wb，A 單位 m²；總磁通鏈 NΦ。由 L = NΦ/I 得 L = μ<sub>0</sub>N²A/ℓ，L 單位 H。平方來自每一匝既參與造場，也各自鏈結磁通。</p>
+
+<h2>數值實例：零點三伏特如何對上零點零四五瓦特</h2>
+<p>採自由實驗預設值 B = 0.50 T、L = 0.20 m、v = 3.0 m/s、R = 2.0 Ω、θ = 0°，觀察距離 r = 0.05 m。感應電動勢 ε = 0.50 ⋅ 0.20 ⋅ 3.0 ⋅ cos 0° = 0.300000 V；電流 I = 0.300000/2.0 = 0.150000 A。B 單位 T，L、r 單位 m，v 單位 m/s，R 單位 Ω。</p>
+<p>安培阻力 F = 0.50 ⋅ 0.150000 ⋅ 0.20 = 0.015000 N。機械功率 P<sub>機</sub> = 0.015000 ⋅ 3.0 = 0.045000 W；電功率 P<sub>電</sub> = 0.300000 ⋅ 0.150000 = 0.045000 W；焦耳熱 I²R = 0.150000² ⋅ 2.0 = 0.045000 W。三條路一致，能量來源是維持棒等速的外力。</p>
+<p>若想靠單根長直導線在 0.05 m 處產生 0.50 T，I = 2π(0.05)(0.50)/(1.25663706212 × 10<sup>−6</sup>) = 124999.999932 A。I 單位 A。這個震撼數字說明實務會使用永久磁鐵、線圈與鐵芯集中磁通，而不以一根裸導線硬造強場。</p>
+<p>另取 N = 100、ℓ = 0.1 m、A = 1 × 10<sup>−4</sup> m² 的空心螺線管，L = 1.256637 × 10<sup>−5</sup> H = 12.566371 µH。配 R = 2 Ω 時 τ = L/R = 6.283185 × 10<sup>−6</sup> s = 6.283185 µs。N 無單位，ℓ 單位 m，A 單位 m²，L 單位 H，τ 單位 s。</p>
+
+<section class="workspace"><h2>自由實驗：移動導體棒發電</h2>
+<p>調整磁場、棒長、速度、迴路電阻、夾角與觀察距離。輸出會並排核對三種功率，並估算以單根直導線產生此磁場所需的電流。</p>
+<div class="controls">
+<label for="mg-b">磁通密度 B（T）<input id="mg-b" type="range" min="0.01" max="2" step="0.01" value="0.5"></label>
+<label for="mg-len">導體棒長度 L（m）<input id="mg-len" type="range" min="0.05" max="2" step="0.05" value="0.2"></label>
+<label for="mg-v">移動速度 v（m/s）<input id="mg-v" type="range" min="0" max="20" step="0.1" value="3"></label>
+<label for="mg-r">迴路電阻 R（Ω）<input id="mg-r" type="range" min="0.1" max="100" step="0.1" value="2"></label>
+<label for="mg-theta">磁場與迴路法線夾角 θ（度）<input id="mg-theta" type="range" min="0" max="90" step="1" value="0"></label>
+<label for="mg-dist">若靠長直導線產生此磁場，觀察距離 r（m）<input id="mg-dist" type="range" min="0.01" max="1" step="0.01" value="0.05"></label>
+</div>
+<div id="induction-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>磁通密度 <strong>B</strong> 單位 T，磁通量 Φ<sub>B</sub> 單位 Wb；後者還包含面積與方向。</li>
+<li>磁場對靜止電荷沒有磁力，對運動電荷的磁力也垂直速度；發電機做功的是外力，不是磁場。</li>
+<li>安培定律右邊只算穿過選定面的電流，但路徑上的 B 是所有電流共同造成的。</li>
+<li>自感 L 是描述磁通鏈與電流關係的物理量、單位 H；電感器是利用此性質製成的元件。</li>
+<li>冷次定律不是另一個不相干的方向口訣，而是法拉第定律負號所表達的能量守恆。</li>
+<li>有很大的靜態磁通不保證有感應電壓；只有 dΦ<sub>B</sub>/dt 不為零才會感應。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>用高斯計的霍爾效應探頭量 B，單位 T；把線圈接示波器，快速插入與拔出磁鐵，量電壓 ε 隨時間的脈衝。脈衝面積 ∫ε dt 的單位 V·s，也就是 Wb，可與磁通變化 ΔΦ<sub>B</sub> 比較。發電機端可同步量轉矩與轉速得到機械功率，再量 V 與 I 得電功率。</p>
+<p><strong>能證明什麼：</strong>改變磁鐵移動速度可檢查感應電壓峰值隨磁通變化率增加；插入與拔出得到相反極性，顯示冷次方向。機械輸入與電輸出在摩擦、銅損等效率折扣內相符，能支持能量守恆的量化預測。</p>
+<p><strong>不能證明什麼：</strong>有限精度的桌上量測不能證明自然界絕對沒有磁單極，只能繼續支持目前未觀察到它的結論。單看感應電壓也不能分辨磁通改變究竟來自 B、面積或夾角，必須另量幾何與運動；功率不相等時也不能只憑差額定位每一種損耗。</p>
+
+<h2>連到哪門課</h2>
+<p>本章服務電機機械中的馬達與發電機、電路學中的電感暫態，以及電磁學中的場與邊界問題；等效電路、轉矩—轉速曲線與機器設計留給後續課。旋度 ∇ × 的定義與座標計算可回到<a href="../../數學/互動課程/11-PDE與向量分析.html">工程數學先修 11 PDE 與向量分析</a>。下一章把變動電場也納入安培定律，讓電與磁能在真空中自行傳播。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="09-電流與電路基礎.html">← 上一頁：電流與電路基礎</a><a href="11-馬克士威與電磁波.html">下一頁：馬克士威與電磁波 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 磁場與電磁感應</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

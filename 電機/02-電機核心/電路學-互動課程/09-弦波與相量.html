@@ -1,0 +1,81 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 弦波與相量｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・把同頻弦波濃縮成一個複數</p>
+<h1>弦波與相量：省略共同時間因子，保留振幅與相位</h1>
+<p class="lead">相量不是把時間憑空刪掉，而是利用線性時不變電路的同頻性，把所有項目共有的旋轉因子約掉。學會這一步，交流電路便能以複數代數處理；但只要頻率不同，相量加法就失去成立條件。</p>
+<p class="prereq"><strong>這章假設已懂：</strong>三角函數，以及複數與歐拉公式；數學複習可見<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學 09 複變入門</a>。</p>
+
+<h2>痛點：時間明明還在走，為什麼一個複數就能代表整條弦波？</h2>
+<p>弦波 v(t) = V<sub>m</sub>cos(ωt + φ) 同時含振幅、頻率、相位與時間。直接把兩條波逐時刻相加當然可行，但每列一條 KCL 或 KVL 都攜帶 cos，微分電感電流、積分電容電壓又會改變相位，式子很快變長。相量法的關鍵不是新的物理定律，而是把已知且共同的頻率部分集中處理。</p>
+<p><strong>弦波（sinusoid）</strong>由峰值振幅 V<sub>m</sub>、角頻率 ω 與相位 φ 決定；ω 的單位 rad/s，且 ω = 2πf。<strong>相量（phasor）</strong>則是只編碼同頻弦波之振幅與相位的複數。它有明確適用邊界：電路必須線性、時不變，且正在討論單一頻率的穩態；切換暫態、飽和元件或不同頻率的疊加不能硬塞成一個相量。</p>
+
+<h2>白話直覺：大家共用同一個時鐘，就只記各自的大小與起跑角</h2>
+<p>可以暫把同頻弦波想成所有人跟著同一時鐘旋轉，只需替每個訊號記錄大小與起始角；比喻到此為止。精確表示是 V<sub>m</sub>cos(ωt + φ) = Re{V<sub>m</sub>e<sup>jφ</sup> ⋅ e<sup>jωt</sup>}。每一項共有 e<sup>jωt</sup>，相量 <strong>V</strong> = V<sub>m</sub>∠φ = V<sub>m</sub>e<sup>jφ</sup> 正是拿掉共同因子後留下的係數。粗體在本章代表相量。</p>
+<p>因果鏈仍從真實回路開始：弦波電壓源正端 → 線性 RLC 網路 → 負載節點；各支路再回到來源負端所接的地。回路閉合後，來源週期性搬運電荷與能量；R 消耗能量，L 與 C 暫存再歸還，使各節點電壓與支路電流相對來源產生不同振幅和相位。暫態消失後，線性時不變網路不會自行創造新頻率，所以每個量仍以同一 ω 反覆，結果只需記各自的複數係數。</p>
+<p>歐拉公式 e<sup>jθ</sup> = cos θ + j sin θ 把角度與複數乘法接起來。數學課常用 i 表示虛數單位，電機寫 j，因為 i 已留給電流。乘 e<sup>jφ</sup> 代表相位平移 φ，而取 Re{ } 才回到實際可量的電壓或電流。相量不是實體在複數平面旋轉；它是計算穩態弦波的編碼。</p>
+<p class="note">來源：06-電路學-上 §4.1。</p>
+
+<h2>推導：微分仍保留共同因子，所以時間項可以約掉</h2>
+<p><strong>（a）同頻性與省略條件。</strong>線性電路方程只對訊號做加減、乘固定係數、微分與積分。對 e<sup>jωt</sup> 微分得到 jωe<sup>jωt</sup>，積分得到 e<sup>jωt</sup>/(jω)；運算後仍是自己乘上一個與時間無關的複數。因此每個電壓、電流項都帶同一 e<sup>jωt</sup>，整條 KCL 或 KVL 可以約掉它，只解係數。這是相量法成立的理由；若兩項頻率不同，就沒有共同因子可約。</p>
+<p>更完整地說，先以複指數暫代表真實弦波，再利用線性把每一項共同的 e<sup>jωt</sup> 提到方程外；解出複數係數後，最後才取實部。能提出公因式的前提是所有來源與響應共享同一 ω，且電路參數不隨時間改變。若來源含多個頻率，應依疊加原理分頻率各解一次，最後在時間域相加；不同 ω 的係數不能塞進同一個相量算式。</p>
+<p><strong>（b）相量加法。</strong>把極式先拆成直角式：</p>
+<p><code><strong>V</strong><sub>1</sub> + <strong>V</strong><sub>2</sub> = (V<sub>1</sub>cos φ<sub>1</sub> + V<sub>2</sub>cos φ<sub>2</sub>) + j(V<sub>1</sub>sin φ<sub>1</sub> + V<sub>2</sub>sin φ<sub>2</sub>)</code></p>
+<p>令實部為 x、虛部為 y，和的大小是 √(x² + y²)，相位是 atan2(y, x)。V<sub>1</sub>、V<sub>2</sub> 的單位可為 V 或 A，φ 的單位是 rad 或 °；三角函數計算時必須統一角度單位。這裡假設兩個相量代表同一物理量、同一參考方向與同一頻率。</p>
+<p><strong>（c）大小為何不能直接加。</strong>只有 φ<sub>1</sub> = φ<sub>2</sub> 時，實部與虛部都沿同一方向，才有 |<strong>V</strong><sub>1</sub> + <strong>V</strong><sub>2</sub>| = |<strong>V</strong><sub>1</sub>| + |<strong>V</strong><sub>2</sub>|。一般情況遵守三角不等式 |<strong>V</strong><sub>1</sub> + <strong>V</strong><sub>2</sub>| ≤ |<strong>V</strong><sub>1</sub>| + |<strong>V</strong><sub>2</sub>|；若等幅反相，兩者甚至完全抵消。故相位不是裝飾，而是決定疊加結果的必要資料。</p>
+<p><strong>（d）有效值。</strong>有效值（root-mean-square, rms）定義為在電阻上產生相同平均功率的直流值。對 v = V<sub>m</sub>cos ωt：</p>
+<p><code>P<sub>平均</sub> = (1/T)∫<sub>0</sub><sup>T</sup> (V<sub>m</sub>cos ωt)²/R dt = V<sub>m</sub>²/(2R)</code></p>
+<p>令它等於 V<sub>rms</sub>²/R，得 V<sub>rms</sub> = V<sub>m</sub>/√2 = 0.707107V<sub>m</sub>。V<sub>m</sub> 單位 V，R 單位 Ω，P 單位 W，T 單位 s。此結果使用一週期內 cos² 平均為 1/2，故 1/√2 只適用弦波；有效值的積分定義本身才適用任意週期波形。</p>
+<p>相量大小也必須先聲明採峰值或有效值，兩種慣例都能解電壓與電流，但功率公式不可混搭。對非弦波，True RMS 電表若頻寬與波峰因數足夠，會先對實際取樣平方、平均再開根號；平均值響應表則依弦波比例校正，讀數可能看似穩定卻不等於真正發熱效果。儀表標示 True RMS 只能說明演算法類型，不能取消其頻寬、輸入範圍與取樣限制。</p>
+
+<h2>數值實例：先轉直角式，再做同頻相量加法</h2>
+<p><strong>V</strong><sub>1</sub> = 10∠30°、<strong>V</strong><sub>2</sub> = 6∠−45°（兩者同頻率）。</p>
+<table><thead><tr><th>步驟</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td><strong>V</strong><sub>1</sub> 直角式</td><td>10cos30°, 10sin30°</td><td><strong>8.660254 + j5.000000</strong></td></tr>
+<tr><td><strong>V</strong><sub>2</sub> 直角式</td><td>6cos(−45°), 6sin(−45°)</td><td><strong>4.242641 − j4.242641</strong></td></tr>
+<tr><td>相加</td><td>實部相加、虛部相加</td><td><strong>12.902895 + j0.757359</strong></td></tr>
+<tr><td>化回極式（大小）</td><td>√(12.902895² + 0.757359²)</td><td><strong>12.925103</strong></td></tr>
+<tr><td>化回極式（角度）</td><td>atan2(0.757359, 12.902895)</td><td><strong>3.359228°</strong></td></tr>
+<tr><td>大小直接相加（<strong>錯的</strong>）</td><td>10 + 6</td><td>16.000000（比 12.925103 大 23.8 %）</td></tr>
+</tbody></table>
+<p><strong>為什麼差這麼多</strong>：兩個相量夾角 75°，相加之後虛部幾乎抵消（+5 和 −4.242641），只剩 0.757359，所以合成相量幾乎落在實軸方向。</p>
+<p>有效值換算：若 V<sub>m</sub> = 10 V（峰值），V<sub>rms</sub> = 10/√2 = <strong>7.071068 V</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：兩個同頻相量相加</h2>
+<p>兩個同頻弦波電壓源以同一個地與同一正方向為參考，數值上把它們視為要疊加到同一節點的貢獻。調整峰值與相位，觀察直角式、極式與有效值。</p>
+<div class="controls">
+<label for="ph-m1"><strong>V</strong><sub>1</sub> 振幅（V，峰值）<input id="ph-m1" type="range" min="0" max="20" step="0.5" value="10"></label>
+<label for="ph-a1"><strong>V</strong><sub>1</sub> 相位（度）<input id="ph-a1" type="range" min="-180" max="180" step="5" value="30"></label>
+<label for="ph-m2"><strong>V</strong><sub>2</sub> 振幅（V，峰值）<input id="ph-m2" type="range" min="0" max="20" step="0.5" value="6"></label>
+<label for="ph-a2"><strong>V</strong><sub>2</sub> 相位（度）<input id="ph-a2" type="range" min="-180" max="180" step="5" value="-45"></label>
+</div>
+<div id="phasor-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>相量是複數編碼，不是空間中的幾何量；它代表振幅與相位，不代表幾何方向或作用力方向。</li>
+<li>相量表示時省掉了共同頻率，故不同頻率不能直接相加；要先回時間域或分頻率分別處理。</li>
+<li>峰值、峰對峰值與有效值邊界不同：10 V 峰值等於 20 V 峰對峰值，對弦波才等於 7.071068 V 有效值。</li>
+<li>V<sub>rms</sub> = V<sub>m</sub>/√2 只對弦波成立；方波為 V<sub>m</sub>，三角波為 V<sub>m</sub>/√3。</li>
+<li>相位零點可自行選定，絕對相位沒有獨立物理意義；同頻訊號之間的相位差才可量測。</li>
+<li>j 是 +√(−1) 的電機慣例，逆時針相位為正；它不是電流 i，也不是可任意交換正負號的記號。</li>
+<li>兩個相量正交時，合成大小是平方和開根號；這是夾角為直角的邊界，不可推廣成任意相位差。</li>
+</ul>
+
+<h2>可觀察證據：量時間差來驗證相位差</h2>
+<p>示波器雙通道可同時量兩條同頻弦波。先確認兩通道頻率相同，再用游標量相同斜率過零點的時間差 Δt 與週期 T，相位差為 360° × Δt/T；峰值由各自最大值相對零位讀取。若儀器具數學通道，還可直接顯示兩通道逐點相加後的波形，核對合成峰值。</p>
+<p><strong>能證明什麼：</strong>量測能證明兩訊號的頻率是否相同、峰值與相對相位，並驗證同相增強、反相抵消。<strong>不能證明什麼：</strong>它不能建立沒有參考訊號的絕對相位，也不能僅憑某一時刻的讀值證明兩者長時間保持同頻；頻率微差會使相位差持續漂移。</p>
+<p>三用電表交流檔通常顯示有效值，但便宜的平均值響應表會先整流平均再乘約 1.11，只對純弦波準；方波、削波或含諧波電源會產生系統性誤差。標示 True RMS 的表才依較一般的方法估有效值，但仍有頻寬與波峰因數限制。普通三用電表也不會告訴你相位，不能用兩個有效值讀數重建相量。</p>
+
+<h2>連到哪門課</h2>
+<p>第 10 章用相量定義阻抗，第 11 章用電壓與電流相量建立複數功率，濾波器、共振、變壓器與三相也都沿用同一語言。信號與系統把 e<sup>jωt</sup> 視為線性時不變系統的特徵函數；通訊的同相與正交（I/Q）調變則把實部與虛部用於兩個正交載波。</p>
+<p>複數乘法、歐拉公式與極式換算可回到<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複變入門</a>。電路學關心的額外條件是同頻穩態與參考方向：算式正確仍須確認峰值或有效值慣例一致、相位基準一致，否則同一複數會被誤解成不同的實際波形。</p>
+<p>把相量帶進實務資料表時，還要先讀清楚角度基準與振幅慣例。有些教材以峰值定義相量，有些電力教材直接用有效值；兩者的角度完全相同，大小卻差 √2。若一邊用峰值、一邊用有效值，KVL 的形式看來仍正確，最後的功率卻會差兩倍。最可靠的作法是在每個已知量旁明寫「峰值」或「有效值」，並選一個來源作 0° 參考。</p>
+<p>相量也能幫忙做合理性檢查：兩個同相項的和應等於大小相加，等幅反相應接近零，正交項則符合平方和。這三個邊界像軟體測試的固定案例；一般角度的答案若違反三角不等式，問題通常出在角度正負、度與弧度混用，或尚未轉成直角式就直接相加。先驗邊界比只相信計算機畫面更可靠。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="08-二階RLC暫態.html">← 上一頁：二階 RLC 暫態</a><a href="10-阻抗與交流穩態.html">下一頁：阻抗與交流穩態 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 弦波與相量</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

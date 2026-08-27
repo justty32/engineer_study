@@ -1,0 +1,86 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 阻抗與交流穩態｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・把微分元件變成複數比例</p>
+<h1>阻抗與交流穩態：用複數版歐姆定律重用全部電路方法</h1>
+<p class="lead">阻抗同時記錄電壓電流的大小比例與相位差，使電阻、電感、電容都能寫成 <strong>V</strong> = Z<strong>I</strong>。只要維持同頻弦波穩態，直流章節的 KCL、KVL、串並聯與等效方法便可原樣重用。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="09-弦波與相量.html">09 弦波與相量</a>、<a href="06-電容與電感.html">06 電容與電感</a>的微分關係，以及<a href="01-電阻與歐姆定律.html">01 歐姆定律</a>。</p>
+
+<h2>痛點：電容與電感沒有固定電阻，歐姆定律還能怎麼用？</h2>
+<p>電阻的 v = iR 是瞬時比例；電感的 v = L ⋅ di/dt 與電容的 i = C ⋅ dv/dt 卻含導數。若每遇到 L、C 就回時間域解微分方程，節點分析與戴維寧等工具似乎全得重學。交流穩態的突破是：同頻弦波微分後仍同頻，只改大小與相位，因此導數可由一個複數乘數 jω 取代。</p>
+<p><strong>阻抗（impedance）</strong>定義為同頻電壓相量與電流相量之比 Z = <strong>V</strong>/<strong>I</strong>，單位 Ω。Z 是複數，但不是相量，因為它不代表一條隨時間振盪的物理量。其直角式 Z = R + jX 中，實部 R 表示耗能部分，虛部 X 稱為<strong>電抗（reactance）</strong>；倒數 Y = 1/Z = G + jB 稱為<strong>導納（admittance）</strong>，單位 S。</p>
+
+<h2>白話直覺：一個複數同時記住擋多少與錯開多少</h2>
+<p>可暫把阻抗想成一張同時標示「縮放」與「旋轉」的操作卡；比喻到此為止。精確地說，|Z| 是電壓有效值與電流有效值之比，∠Z 是電壓相位減電流相位。乘 j 代表相位逆時針移 90°，但真正的能量行為仍要回到元件的電場、磁場與熱耗散。</p>
+<p>因果鏈從有效值弦波源與地開始：V<sub>s</sub> 正端 → R → L → C → V<sub>s</sub> 負端與地，形成閉合串聯回路。來源週期性推動電荷；R 把能量變熱，L 先把能量存入磁場再歸還，C 先把能量存入電場再歸還。三者要求的相位關係不同，故各元件電壓不宜只以帶正負號的實數相加。節點與支路仍遵守 KCL、KVL，複數只是在同頻穩態下替大小與相位記帳。</p>
+<p>電感的 X<sub>L</sub> = ωL 隨頻率增高，因電流變化更快，需要更大電壓；電容的電抗為 −1/(ωC)，頻率愈低時充放電所需的電荷移動跨越更長時間，對交流電流的阻擋愈大。串聯總電抗 X = X<sub>L</sub> − X<sub>C</sub>：X 正為感性，電流落後電壓；X 負為容性，電流超前電壓；X 為零則純阻且同相。</p>
+<p class="note">來源：06-電路學-上 §4.2–§4.3、§4.5。</p>
+
+<h2>推導：微分乘上 jω，三種元件得到三種阻抗</h2>
+<p><strong>（a）電感。</strong>時域關係 v = L ⋅ di/dt。令 i(t) = Re{<strong>I</strong>e<sup>jωt</sup>}，其中 <strong>I</strong> 是電流相量、單位 A，ω 單位 rad/s，L 單位 H。微分得到 di/dt = Re{jω<strong>I</strong>e<sup>jωt</sup>}，故 v(t) = Re{jωL<strong>I</strong>e<sup>jωt</sup>}。和 v(t) = Re{<strong>V</strong>e<sup>jωt</sup>} 比較：</p>
+<p><code><strong>V</strong> = jωL<strong>I</strong>，所以 Z<sub>L</sub> = jωL</code></p>
+<p>微分變成乘 jω，這就是相量域中把微分關係化成代數比例的原因。假設 L 為理想線性電感，不含繞線電阻、磁芯損耗、飽和與寄生電容。</p>
+<p><strong>（b）電容。</strong>由 i = C ⋅ dv/dt，以同樣方法得到 <strong>I</strong> = jωC<strong>V</strong>，所以 Z<sub>C</sub> = <strong>V</strong>/<strong>I</strong> = 1/(jωC)。分子分母同乘 −j，得 1/(jωC) = −j/(ωC)，因此電容電抗為負。C 單位 F，1/(ωC) 的單位確為 Ω；假設電容理想，不含漏電、等效串聯電阻與介質損耗。</p>
+<p><strong>（c）相位判讀。</strong>乘 j 等於相位增加 90°，所以電感電壓比電流超前 90°；除以 j 等於減少 90°，所以電容電壓比電流落後 90°。這是穩態峰值位置的相對關係，不表示結果早於原因發生。電機用 j 作虛數單位，因 i 保留給電流。</p>
+<p><strong>（d）串聯總阻抗。</strong>串聯元件共用電流，KVL 使相量電壓相加：</p>
+<p><code>Z = Z<sub>R</sub> + Z<sub>L</sub> + Z<sub>C</sub> = R + j(ωL − 1/(ωC))</code></p>
+<p>令虛部為零，ωL = 1/(ωC) → ω = 1/√(LC)。此時 L 與 C 的電壓相量互相抵消，端口只剩 R；這是第 13 章串聯共振的伏筆。</p>
+<p><strong>（e）由阻抗求電流。</strong>若 <strong>V</strong> = |V|∠φ<sub>V</sub>、Z = |Z|∠θ，則 <strong>I</strong> = <strong>V</strong>/Z，故 |<strong>I</strong>| = |<strong>V</strong>|/|Z|，∠<strong>I</strong> = φ<sub>V</sub> − θ。電壓與電流可一致採峰值或有效值，但不可混用；阻抗數值不因兩者選擇而變。</p>
+<p><strong>（f）為何阻抗必須是複數。</strong>若只用一個正實數表示端口，最多只能記住電壓與電流的大小比，無法同時保存超前或落後。L 與 C 的微分關係必然帶來四分之一週期的相移，而複數乘法恰好能把大小縮放與相位旋轉合成一次代數運算。阻抗的實部對應平均耗能，虛部對應每週期先儲存再歸還的能量；把虛部刪掉會破壞 KVL 的相位抵消，也無法分辨感性與容性。</p>
+<p>KCL、KVL、節點分析、網孔分析、疊加與戴維寧仍成立，因線性方程的結構未變，只有係數由實數換成複數。交流最大功率傳遞的負載條件為 Z<sub>L</sub> = Z<sub>th</sub>*：實部相等、虛部相反，使總電抗抵消；直接令兩個複數相等並不會得到最大實功。</p>
+
+<h2>數值實例：串聯 RLC 在 1 kHz 呈現容性</h2>
+<p>R = 50 Ω、L = 10 mH、C = 1 µF 串聯，f = 1000 Hz，V<sub>s</sub> = 10 V（有效值）。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>角頻率</td><td>ω = 2π × 1000</td><td><strong>6283.185307 rad/s</strong></td></tr>
+<tr><td>感抗</td><td>X<sub>L</sub> = ωL = 6283.185307 × 0.01</td><td><strong>62.831853 Ω</strong></td></tr>
+<tr><td>容抗</td><td>X<sub>C</sub> = 1/(ωC) = 1/(6283.185307 × 10<sup>−6</sup>)</td><td><strong>159.154943 Ω</strong></td></tr>
+<tr><td>總電抗</td><td>X = X<sub>L</sub> − X<sub>C</sub> = 62.831853 − 159.154943</td><td><strong>−96.323090 Ω</strong>（負 → <strong>容性</strong>）</td></tr>
+<tr><td>阻抗大小</td><td>|Z| = √(50² + 96.323090²)</td><td><strong>108.527129 Ω</strong></td></tr>
+<tr><td>阻抗相位</td><td>∠Z = atan2(−96.323090, 50)</td><td><strong>−62.566791°</strong></td></tr>
+<tr><td>電流大小</td><td>10/108.527129</td><td><strong>0.092143 A ＝ 92.143 mA</strong></td></tr>
+<tr><td>電流相位</td><td>0° − (−62.566791°)</td><td><strong>+62.566791°</strong>（電流<strong>超前</strong>電壓）</td></tr>
+</tbody></table>
+<p><strong>虛部歸零的頻率</strong>：ωL = 1/(ωC) → ω = 1/√(LC) = 10000 rad/s → f = <strong>1591.549431 Hz</strong>。目前的 1000 Hz 在它下面，所以容抗贏，電路呈容性。</p>
+
+<section class="workspace"><h2>自由實驗：掃描串聯 RLC 的交流阻抗</h2>
+<p>有效值弦波源正端依序經 R、L、C，再回到與負端相接的地，三元件共用同一支路電流。調整元件與頻率，觀察電抗競爭、阻抗相位及電流超前或落後。</p>
+<div class="controls">
+<label for="imp-r">R（Ω）<input id="imp-r" type="range" min="1" max="500" step="1" value="50"></label>
+<label for="imp-l">L（mH）<input id="imp-l" type="range" min="1" max="100" step="1" value="10"></label>
+<label for="imp-c">C（µF）<input id="imp-c" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+<label for="imp-f">頻率 f（Hz）<input id="imp-f" type="range" min="100" max="5000" step="10" value="1000"></label>
+<label for="imp-v">電源電壓（V，有效值）<input id="imp-v" type="range" min="1" max="50" step="1" value="10"></label>
+</div>
+<div id="impedance-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>阻抗 Z 是兩個相量的複數比值，不是相量本身；相量對應時域弦波，阻抗是元件或網路在指定頻率的比例。</li>
+<li>|Z| 是交流大小比例，不是直流電阻；LCR 表在 1 kHz 讀到的值與三用電表直流檔讀值邊界不同。</li>
+<li>電抗 X 不消耗平均能量，而是在來源與儲能元件間來回搬運；只有實部 R 將能量轉成熱。</li>
+<li>電流超前或落後描述穩態相位差，不表示電流在因果上先於外加電壓出現。</li>
+<li>感性與容性由總 X 的正負判定，不是只看電路中有沒有 L 或 C；兩者可互相抵消。</li>
+<li>交流最大功率需共軛匹配 Z<sub>L</sub> = Z<sub>th</sub>*，不是讓負載阻抗直接等於來源阻抗。</li>
+<li>耦合電容在穩態隔開直流偏壓，卻讓工作頻帶交流通過；若頻率太低或負載太小，容抗仍會造成可見衰減。</li>
+<li>扼流圈利用感抗隨頻率上升來抑制交流雜訊，但其繞線仍可傳直流；磁芯飽和或寄生電容出現後，不能再當理想電感。</li>
+</ul>
+
+<h2>可觀察證據：在指定頻率量到大小與相位</h2>
+<p>LCR 表可在設定的測試頻率下讀取 |Z|、相位，或串聯等效的 R 與 X。<strong>能證明什麼：</strong>它能支持該頻率、該小訊號振幅下的端口等效參數，並以掃頻確認 X 隨頻率由負轉正。<strong>不能證明什麼：</strong>單一頻點不能證明其他頻率仍有相同值，也不能唯一證明內部就是一顆 R 串一顆 L；許多拓樸可有同一端口阻抗，串聯與並聯等效參數也不同。</p>
+<p>另一方法是用示波器一通道量來源電壓，另一通道量串聯取樣電阻壓降以代表電流；過零時間差給相位，振幅比給 |Z|。這能直接看見超前與落後，但兩支被動探棒的接地夾通常共接保護地，若夾在不同浮動節點會把電路短路。需要差動探棒、隔離量測或安排共同接地點，且取樣電阻本身要納入總 R。</p>
+<p>真實 L、C 會隨頻率、溫度與訊號振幅改變，還包含寄生參數。低頻時電容漏電、高頻時電感寄生電容都可能使簡單模型失效。因此量到相位符合某頻點的公式，只能支持局部等效模型，不能證明元件在整個頻帶皆理想。</p>
+<p>具體判讀時，先讓兩通道共用同一觸發來源，量出來源與取樣電阻波形的有效值，再以取樣電阻壓降除以其已知阻值得到支路電流；接著由過零點的先後判定電流超前或落後。這組讀數能區分端口在該頻點偏感性、容性或近似純阻，卻不能只憑相位符號拆出各顆元件值，也不能證明直流偏壓下仍有相同小訊號阻抗。</p>
+
+<h2>連到哪門課</h2>
+<p>第 11 章以阻抗相位解釋功率因數；第 12、13 章掃描 Z 得到濾波與共振；第 14 章用阻抗轉換處理變壓器。電子學的小訊號模型、天線輸入阻抗、射頻匹配網路與電源輸出阻抗，也都以相同複數比例描述端口。</p>
+<p>相量與複數換算可回到<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複變入門</a>。離開線性、時不變、同頻穩態後，阻抗仍可作局部小訊號或頻域描述，但不能拿單一 Z 重建切換暫態、非線性失真或跨頻率混頻；那些問題要改用微分方程、傅立葉分析或電子元件模型。</p>
+<p>工程上報告阻抗時，至少要連同頻率、偏壓、訊號振幅與端口參考面一起寫。只寫「這顆電容是 1 µF」不足以保證在 5 kHz 仍像理想電容；只寫「輸入阻抗 50 Ω」也沒說它是純阻、哪個頻帶成立，或量測面是否包含連接線。阻抗是端口在特定條件下的行為摘要，不是拆開外殼後一定能找到的單一零件。</p>
+<p>用複數解完後可做三個邊界檢查：頻率趨近零時理想電容應接近開路、理想電感接近短路；頻率很高時角色互換；在 ωL = 1/(ωC) 時串聯虛部應消失。若數值不符，先查 µF 與 F、mH 與 H 的換算，再查相位符號。這些檢查不取代完整推導，卻能迅速抓出千倍或百萬倍的單位錯誤。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="09-弦波與相量.html">← 上一頁：弦波與相量</a><a href="11-交流功率與功因.html">下一頁：交流功率與功因 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 阻抗與交流穩態</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

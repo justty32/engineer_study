@@ -1,0 +1,81 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 電阻與歐姆定律｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">01・把電壓、電流與阻力接成可驗算的回路</p>
+<h1>電阻與歐姆定律：從一條直線走到串並聯與功率</h1>
+<p class="lead">歐姆定律不是只供代數移項的三角形，而是描述線性電阻兩端狀態的模型。掌握同電流、同電壓這兩個拓樸條件後，就能推得串並聯、分壓分流，並用功率守恆檢查答案。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-電路世界觀.html">00 電路世界觀</a>的電流、電壓、功率定義與參考地。</p>
+
+<h2>痛點：公式會移項，為什麼一換接法就算錯</h2>
+<p>很多人會背 v = iR，卻在串聯時拿總電壓除以單顆電阻，或在並聯時把兩顆電流誤認為相同。問題不在代數，而在沒有先辨認哪些端點真的由導線連成同一節點、電流有沒有別的岔路。另一個常見落差是算出漂亮的電壓與電流，卻沒發現電源送出的功率和電阻消耗的功率對不上。電路答案除了滿足單一元件公式，還必須同時滿足拓樸限制與能量帳。</p>
+<p><strong>電阻（resistor）</strong>的線性模型是 v = iR。v 是電阻兩端電壓，單位 V；i 是依被動符號規約流入正端的電流，單位 A；R 是阻值，單位 Ω = V/A。倒數 G = 1/R 稱為<strong>電導（conductance）</strong>，單位 S，表示同樣電壓下容許多少電流通過。這裡假設理想、線性、定值電阻，溫度不因耗散功率顯著上升，也忽略導線與接點電阻。</p>
+
+<h2>白話直覺：先看路徑，再決定誰共享哪個量</h2>
+<p>可以把電阻暫時想成電荷通過時把電能轉成熱的關卡；關卡越難通過，同一電壓差下的電流越小。比喻到此為止，精確關係仍是 v = iR，且它只描述元件端口的電壓、電流與參數，不表示電阻會把電流逐段吃掉。</p>
+<p>串聯拓樸是 V<sub>s</sub> 正端 → R<sub>1</sub> → R<sub>2</sub> → 地；V<sub>s</sub> 負端 → 地。電源與地先給出 12 V 的差，唯一導通路徑閉合，途中沒有岔路，所以同一批電荷依序通過兩顆電阻，兩者電流相同。每顆把一部分電能轉為熱，節點電壓沿路下降，兩段壓降相加必須回到電源提供的 12 V。電阻較大者在相同電流下有較大 v = iR，因此分到較大電壓。</p>
+<p>並聯拓樸則是 V<sub>s</sub> 正端同時接到 R<sub>1</sub> 與 R<sub>2</sub> 的上端，兩顆下端都接地。兩條路各自閉合，且端點成對接在相同節點，所以電壓相同；總電流在節點分岔，最後再合流。電阻較小的支路依 i = v/R 取得較大電流。多開一條導通路使電源必須提供更多總電流，所以從相同兩端看進去的等效電阻必然變小。</p>
+<p>不論接法，電源送出的能量都流向電阻並轉成熱。依被動符號規約，電阻 P &gt; 0 表示吸收功率，理想電壓源則送出相同總功率。把每顆電阻的 P 相加應等於 V<sub>s</sub>I<sub>總</sub>；若不等，通常是把總電壓誤套到串聯單顆電阻、把支路電流誤當總電流，或單位換算錯了一千倍。</p>
+<p>還可用極端值檢查直覺。串聯中若一顆阻值遠大於另一顆，總電流由大阻值限制，幾乎全部電壓落在大電阻；並聯中若一顆阻值遠小於另一顆，總電流主要走小電阻，等效值也靠近小電阻但一定更小。這不是把另一顆真的刪除，而是先判斷它對指定端口結果的影響量級；需要元件功率、誤差或故障分析時，仍應保留完整模型。</p>
+<p>等效化還有一個重要限制：它只保留端口看到的關係。例如把兩顆串聯電阻換成一顆總電阻，電源看到的總電流不變，但中間節點消失，便不能再詢問原本的分壓。工程上先確認要保留哪個觀察量，再決定能否化簡；若後級電路接到中間節點，它就新增一條支路，原來的純串聯條件也立刻改變。</p>
+<p class="note">來源：06-電路學-上 §1.1、§2.1–§2.2。</p>
+
+<h2>推導：串並聯規則其實來自守恆</h2>
+<p><strong>（a）串聯為什麼直接相加。</strong>兩顆電阻流過相同電流 i，回路電壓守恆給 v = v<sub>1</sub> + v<sub>2</sub>。分別套 v<sub>1</sub> = iR<sub>1</sub>、v<sub>2</sub> = iR<sub>2</sub>，得到 v = iR<sub>1</sub> + iR<sub>2</sub> = i(R<sub>1</sub> + R<sub>2</sub>)。若從外部兩端用 v = iR<sub>eq</sub> 描述同一端口，就必有 R<sub>eq</sub> = R<sub>1</sub> + R<sub>2</sub>。R 的單位都是 Ω；假設中間節點沒有第三條支路，才保證電流相同。</p>
+<p><strong>（b）並聯為什麼倒數相加。</strong>兩顆電阻跨相同電壓 v，節點電流守恆給 i = i<sub>1</sub> + i<sub>2</sub>。以 i = v/R 改寫，i = v/R<sub>1</sub> + v/R<sub>2</sub> = v(1/R<sub>1</sub> + 1/R<sub>2</sub>)。和 i = v/R<sub>eq</sub> 比較，得到 1/R<sub>eq</sub> = 1/R<sub>1</sub> + 1/R<sub>2</sub>。兩顆時整理為 R<sub>1</sub>‖R<sub>2</sub> = R<sub>1</sub>R<sub>2</sub> / (R<sub>1</sub> + R<sub>2</sub>)；‖ 讀作「並聯」，不是絕對值也不是範數。這也可寫成 G<sub>eq</sub> = G<sub>1</sub> + G<sub>2</sub>，電導的單位是 S。</p>
+<p><strong>（c）分壓與分流。</strong>串聯總電流 i = v<sub>總</sub> / (R<sub>1</sub> + R<sub>2</sub>)，代回 v<sub>2</sub> = iR<sub>2</sub>，得 v<sub>2</sub> = v<sub>總</sub> ⋅ R<sub>2</sub> / (R<sub>1</sub> + R<sub>2</sub>)。並聯則從 i<sub>k</sub> = vG<sub>k</sub> 與 i<sub>總</sub> = v(G<sub>1</sub> + G<sub>2</sub>) 相除，得 i<sub>k</sub> = i<sub>總</sub> ⋅ G<sub>k</sub> / (G<sub>1</sub> + G<sub>2</sub>)。前者只適用真正串聯，後者只適用真正並聯。</p>
+<p><strong>（d）三種功率式。</strong>從 P = vi 出發，把 v = iR 代入 v，得到 P = i(iR) = i²R；若改用 i = v/R 代入 i，得到 P = v(v/R) = v²/R。P 單位 W，v 單位 V，i 單位 A，R 單位 Ω。已知元件電流時用 i²R，已知元件端電壓時用 v²/R；「元件」兩字很重要，總量不能任意代入單顆公式。簡化假設是電阻只耗能、不儲能，且電源與導線理想。</p>
+
+<h2>數值實例：同兩顆電阻，接法決定全部結果</h2>
+<p>V<sub>s</sub> = 12 V、R<sub>1</sub> = 1 kΩ、R<sub>2</sub> = 2 kΩ（<strong>本課主電路</strong>，02、04、05 章都會再用）。</p>
+<p>串聯（V<sub>s</sub> → R<sub>1</sub> → R<sub>2</sub> → 地）：</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>等效電阻</td><td>1000 + 2000</td><td><strong>3000.000000 Ω</strong></td></tr>
+<tr><td>電流</td><td>12 / 3000</td><td><strong>0.004000000 A ＝ 4 mA</strong></td></tr>
+<tr><td>R<sub>1</sub> 電壓</td><td>0.004 × 1000</td><td><strong>4.000000 V</strong></td></tr>
+<tr><td>R<sub>2</sub> 電壓</td><td>0.004 × 2000</td><td><strong>8.000000 V</strong>（分壓比 2/3）</td></tr>
+<tr><td>R<sub>1</sub> 功率</td><td>0.004² × 1000</td><td><strong>0.016000 W ＝ 16 mW</strong></td></tr>
+<tr><td>R<sub>2</sub> 功率</td><td>0.004² × 2000</td><td><strong>0.032000 W ＝ 32 mW</strong></td></tr>
+<tr><td>源送出的功率</td><td>12 × 0.004</td><td><strong>0.048000 W ＝ 48 mW</strong>（＝16 + 32，守恆）</td></tr>
+</tbody></table>
+<p>並聯（V<sub>s</sub> 同時跨在 R<sub>1</sub> 與 R<sub>2</sub> 上）：</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>等效電阻</td><td>(1000 × 2000) / 3000</td><td><strong>666.666667 Ω</strong></td></tr>
+<tr><td>總電流</td><td>12 / 666.666667</td><td><strong>0.018000000 A ＝ 18 mA</strong></td></tr>
+<tr><td>R<sub>1</sub> 電流</td><td>12 / 1000</td><td><strong>0.012000000 A ＝ 12 mA</strong></td></tr>
+<tr><td>R<sub>2</sub> 電流</td><td>12 / 2000</td><td><strong>0.006000000 A ＝ 6 mA</strong>（12 + 6 = 18，守恆）</td></tr>
+<tr><td>總功率</td><td>12² / 666.666667</td><td><strong>0.216000 W ＝ 216 mW</strong></td></tr>
+</tbody></table>
+<p><strong>注意並聯等效電阻 666.666667 Ω 會在第 05 章原封不動變成 R<sub>th</sub>。</strong></p>
+
+<section class="workspace"><h2>自由實驗：切換串聯與並聯</h2>
+<p>串聯模式為 V<sub>s</sub> 正端 → R<sub>1</sub> → R<sub>2</sub> → 地；並聯模式為 V<sub>s</sub> 正端分接兩顆電阻，各自回到地；電源負端接地。切換接法並調整三個值，觀察等效電阻、分配比例與功率帳。</p>
+<div class="controls">
+<label for="ohm-mode">接法<select id="ohm-mode"><option value="series">串聯（同一個電流）</option><option value="parallel">並聯（同一個電壓）</option></select></label>
+<label for="ohm-vs">電源電壓 V<sub>s</sub>（V）<input id="ohm-vs" type="range" min="1" max="24" step="1" value="12"></label>
+<label for="ohm-r1">R<sub>1</sub>（Ω）<input id="ohm-r1" type="range" min="100" max="10000" step="100" value="1000"></label>
+<label for="ohm-r2">R<sub>2</sub>（Ω）<input id="ohm-r2" type="range" min="100" max="10000" step="100" value="2000"></label>
+</div>
+<div id="ohm-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>R 是元件參數，v 與 i 是端口狀態；在線性定溫假設下，改變外加電壓會改變電流，不等於改變阻值。</li>
+<li>串聯共享電流而分配電壓，並聯共享電壓而分配電流；這兩句的邊界由端點連接決定，不能因版面看起來排成一列就互換。</li>
+<li>等效電阻只保證指定兩端的 v 與 i 關係相同；它不保證內部每顆元件的電壓、電流或功率仍可由等效元件還原。</li>
+<li>P = vi、P = i²R、P = v²/R 算的是同一元件的同一功率；三式不是三種功率，所代的 v 與 i 必須屬於那顆元件。</li>
+<li>‖ 只表示兩元件並聯，不是絕對值或向量範數；兩顆電阻數值相同也不代表它們必然並聯，仍要看兩端是否接在同一對節點。</li>
+<li>理想電阻只耗能，真實電阻還有溫度係數、額定功率與寄生電容電感；超過額定值時，線性 R 不變的假設可能先失效。</li>
+</ul>
+
+<h2>可觀察證據：量阻值前先讓電路失去電源</h2>
+<p>三用電表的電阻檔會自行送出小測試電流，因此量電阻必須先斷電，並把待測元件至少拆掉一腳；否則其他支路與它並聯，讀值不是單顆 R。正確隔離後的讀值能證明該顆電阻在電表測試條件下的直流阻值；把串並聯組合斷電後從指定端口量測，能證明該端口的等效阻值。它不能證明電阻在大電流發熱後仍維持同值，也不能直接量出工作時功率。</p>
+<p>上電後用電壓檔跨接，可量 R<sub>1</sub> 與 R<sub>2</sub> 的端電壓。串聯例若分別讀到 4 V 與 8 V，且相加為 12 V，能在儀器精度內支持回路壓降帳；電流檔串入支路則可驗證串聯同流或並聯分流。再以同一元件的 v × i 計算功率，能檢查電源輸出與耗散總和。這些量測不能單獨證明普遍的能量守恆，只能證明這個工作點沒有在解析度內違反模型；電表內阻也會改變原電路，尤其量高阻分壓器時不可忽略。</p>
+
+<h2>連到哪門課</h2>
+<p>分壓器直接出現在感測器輸入、ADC 偏壓與 GPIO 上拉；等效電阻與功率額定值則決定板上電阻選值與封裝。這些都是 IoT 硬體與電子學的日常語言。把 v = iR 看成線性映射，以及把多個關係組成矩陣，可銜接<a href="../../../共通基礎/數學/互動課程/04-向量與矩陣.html">工程數學先修的向量與矩陣</a>。下一章不再只處理可一眼化簡的接法，而是把電荷與能量守恆正式寫成 KCL 與 KVL。</p>
+<nav class="pager" aria-label="章節導覽"><a href="00-電路世界觀.html">← 上一頁：電路世界觀</a><a href="02-KCL與KVL.html">下一頁：KCL 與 KVL →</a></nav>
+</main>
+<footer class="site-footer"><span>01 電阻與歐姆定律</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,78 +1,43 @@
 name: Deploy GitHub Pages
 
+# 觸發面說明（設計取捨見 wf/workflows/interactive-study-site/SHARED-ASSETS-EVAL.md）：
+# 這裡刻意使用較寬的萬用路徑，而不是逐課列舉三行。理由是新增課程的頻率遠高於
+# 其他維運動作，逐課列舉每次要改三處且容易漏。副作用是「尚未登記進課程表的
+# 課程目錄」被改動時也會觸發一次部署——該次部署的產出與前一次相同（組站步驟
+# 只認課程表），屬可接受的空跑。真正決定「什麼會被發布」的是下面的課程表，
+# 不是這裡的觸發條件。
+# 只列 html/css/js：規劃用 Markdown（PROJECT-BRIEF、BUILD-SPEC、驗收紀錄、
+# README）不發布，改動它們不應觸發部署。
 on:
   push:
     branches:
       - main
     paths:
       - ".github/workflows/pages.yml"
-      - "互動學習網站/index.html"
-      - "互動學習網站/styles.css"
-      - "專題/IoT聯網裝置/互動網站/index.html"
-      - "專題/IoT聯網裝置/互動網站/styles.css"
-      - "專題/IoT聯網裝置/互動網站/app.js"
-      - "電機/04-電力特化/P1-電力系統-互動網站/index.html"
-      - "電機/04-電力特化/P1-電力系統-互動網站/styles.css"
-      - "電機/04-電力特化/P1-電力系統-互動網站/app.js"
-      - "專題/IoT聯網裝置/知識群互動網站/01-板級電源與PCB/index.html"
-      - "專題/IoT聯網裝置/知識群互動網站/01-板級電源與PCB/styles.css"
-      - "專題/IoT聯網裝置/知識群互動網站/01-板級電源與PCB/app.js"
-      - "專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS/index.html"
-      - "專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS/styles.css"
-      - "專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS/app.js"
-      - "專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路/index.html"
-      - "專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路/styles.css"
-      - "專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路/app.js"
-      - "專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC/index.html"
-      - "專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC/styles.css"
-      - "專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC/app.js"
-      - "專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期/index.html"
-      - "專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期/styles.css"
-      - "專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期/app.js"
-      - "專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/*.html"
-      - "專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/*.css"
-      - "專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/*.js"
-      - "專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心/*.html"
-      - "專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心/*.css"
-      - "專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心/*.js"
-      - "專題/網路安全/互動課程/*.html"
-      - "專題/網路安全/互動課程/*.css"
-      - "專題/網路安全/互動課程/*.js"
+      - "互動學習網站/*.html"
+      - "互動學習網站/*.css"
+      - "互動學習網站/*.js"
+      - "共通基礎/*/互動課程/*.html"
+      - "共通基礎/*/互動課程/*.css"
+      - "共通基礎/*/互動課程/*.js"
+      - "專題/*/互動課程/*.html"
+      - "專題/*/互動課程/*.css"
+      - "專題/*/互動課程/*.js"
       - "專題/網路安全/攻擊手法細講/*.html"
+      - "專題/網路安全/攻擊手法細講/*.css"
       - "專題/網路安全/攻擊手法細講/*.js"
-      - "專題/網路協定/互動課程/*.html"
-      - "專題/網路協定/互動課程/*.css"
-      - "專題/網路協定/互動課程/*.js"
-      - "專題/逆向工程/互動課程/*.html"
-      - "專題/逆向工程/互動課程/*.css"
-      - "專題/逆向工程/互動課程/*.js"
-      - "專題/計算機組織/互動課程/*.html"
-      - "專題/計算機組織/互動課程/*.css"
-      - "專題/計算機組織/互動課程/*.js"
-      - "專題/作業系統/互動課程/*.html"
-      - "專題/作業系統/互動課程/*.css"
-      - "專題/作業系統/互動課程/*.js"
-      - "專題/Linux/互動課程/*.html"
-      - "專題/Linux/互動課程/*.css"
-      - "專題/Linux/互動課程/*.js"
-      - "專題/機器人運動學/互動課程/*.html"
-      - "專題/機器人運動學/互動課程/*.css"
-      - "專題/機器人運動學/互動課程/*.js"
-      - "專題/機器人路徑規劃/互動課程/*.html"
-      - "專題/機器人路徑規劃/互動課程/*.css"
-      - "專題/機器人路徑規劃/互動課程/*.js"
-      - "專題/機器人視覺/互動課程/*.html"
-      - "專題/機器人視覺/互動課程/*.css"
-      - "專題/機器人視覺/互動課程/*.js"
-      - "專題/機器人學習/互動課程/*.html"
-      - "專題/機器人學習/互動課程/*.css"
-      - "專題/機器人學習/互動課程/*.js"
-      - "專題/機器人數學基礎/互動課程/*.html"
-      - "專題/機器人數學基礎/互動課程/*.css"
-      - "專題/機器人數學基礎/互動課程/*.js"
-      - "共通基礎/數學/互動課程/*.html"
-      - "共通基礎/數學/互動課程/*.css"
-      - "共通基礎/數學/互動課程/*.js"
+      - "專題/IoT聯網裝置/互動網站/*.html"
+      - "專題/IoT聯網裝置/互動網站/*.css"
+      - "專題/IoT聯網裝置/互動網站/*.js"
+      - "專題/IoT聯網裝置/知識群互動網站/*/*.html"
+      - "專題/IoT聯網裝置/知識群互動網站/*/*.css"
+      - "專題/IoT聯網裝置/知識群互動網站/*/*.js"
+      - "電機/*/*互動網站/*.html"
+      - "電機/*/*互動網站/*.css"
+      - "電機/*/*互動網站/*.js"
+      - "電機/*/*互動課程/*.html"
+      - "電機/*/*互動課程/*.css"
+      - "電機/*/*互動課程/*.js"
   workflow_dispatch:
 
 permissions:
@@ -99,96 +64,61 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf _site
-          mkdir -p _site/iot-device
+          mkdir -p _site
+
+          # 主站落在站台根目錄，不屬課程表。
           cp '互動學習網站/index.html' _site/index.html
           cp '互動學習網站/styles.css' _site/styles.css
-          cp '專題/IoT聯網裝置/互動網站/index.html' _site/iot-device/index.html
-          cp '專題/IoT聯網裝置/互動網站/styles.css' _site/iot-device/styles.css
-          cp '專題/IoT聯網裝置/互動網站/app.js' _site/iot-device/app.js
 
-          power_site='電機/04-電力特化/P1-電力系統-互動網站'
-          if [ -f "$power_site/index.html" ] && \
-            [ -f "$power_site/styles.css" ] && \
-            [ -f "$power_site/app.js" ]; then
-            mkdir -p _site/power-systems
-            cp "$power_site/index.html" _site/power-systems/index.html
-            cp "$power_site/styles.css" _site/power-systems/styles.css
-            cp "$power_site/app.js" _site/power-systems/app.js
-          fi
-
-          pcb_site='專題/IoT聯網裝置/知識群互動網站/01-板級電源與PCB'
-          if [ -f "$pcb_site/index.html" ] && \
-            [ -f "$pcb_site/styles.css" ] && \
-            [ -f "$pcb_site/app.js" ]; then
-            mkdir -p _site/iot-power-pcb
-            cp "$pcb_site/index.html" _site/iot-power-pcb/index.html
-            cp "$pcb_site/styles.css" _site/iot-power-pcb/styles.css
-            cp "$pcb_site/app.js" _site/iot-power-pcb/app.js
-          fi
-
-          firmware_site='專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS'
-          if [ -f "$firmware_site/index.html" ] && \
-            [ -f "$firmware_site/styles.css" ] && \
-            [ -f "$firmware_site/app.js" ]; then
-            mkdir -p _site/iot-firmware-rtos
-            cp "$firmware_site/index.html" _site/iot-firmware-rtos/index.html
-            cp "$firmware_site/styles.css" _site/iot-firmware-rtos/styles.css
-            cp "$firmware_site/app.js" _site/iot-firmware-rtos/app.js
-          fi
-
-          connectivity_site='專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路'
-          if [ -f "$connectivity_site/index.html" ] && \
-            [ -f "$connectivity_site/styles.css" ] && \
-            [ -f "$connectivity_site/app.js" ]; then
-            mkdir -p _site/iot-connectivity
-            cp "$connectivity_site/index.html" _site/iot-connectivity/index.html
-            cp "$connectivity_site/styles.css" _site/iot-connectivity/styles.css
-            cp "$connectivity_site/app.js" _site/iot-connectivity/app.js
-          fi
-
-          rf_site='專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC'
-          if [ -f "$rf_site/index.html" ] && \
-            [ -f "$rf_site/styles.css" ] && \
-            [ -f "$rf_site/app.js" ]; then
-            mkdir -p _site/iot-rf-antenna
-            cp "$rf_site/index.html" _site/iot-rf-antenna/index.html
-            cp "$rf_site/styles.css" _site/iot-rf-antenna/styles.css
-            cp "$rf_site/app.js" _site/iot-rf-antenna/app.js
-          fi
-
-          security_site='專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期'
-          if [ -f "$security_site/index.html" ] && \
-            [ -f "$security_site/styles.css" ] && \
-            [ -f "$security_site/app.js" ]; then
-            mkdir -p _site/iot-security-production
-            cp "$security_site/index.html" _site/iot-security-production/index.html
-            cp "$security_site/styles.css" _site/iot-security-production/styles.css
-            cp "$security_site/app.js" _site/iot-security-production/app.js
-          fi
-
+          # 把來源目錄第一層的 html/css/js 複製到 _site/<slug>/。
+          # 規劃用 Markdown 不發布；子目錄不遞迴。
           copy_course() {
             source_dir="$1"
             public_dir="$2"
+            if [ ! -d "$source_dir" ]; then
+              echo "::error::課程表列出的來源目錄不存在：$source_dir" >&2
+              return 1
+            fi
             mkdir -p "_site/$public_dir"
             find "$source_dir" -maxdepth 1 -type f \( -name '*.html' -o -name '*.css' -o -name '*.js' \) \
               -exec cp '{}' "_site/$public_dir/" \;
           }
 
-          copy_course '專題/網路安全/互動課程' network-security
-          copy_course '專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排' iot-hardware-bus
-          copy_course '專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心' iot-mcu-firmware
-          copy_course '專題/網路安全/攻擊手法細講' attack-techniques
-          copy_course '專題/網路協定/互動課程' network-protocols
-          copy_course '專題/逆向工程/互動課程' reverse-engineering
-          copy_course '專題/計算機組織/互動課程' computer-organization
-          copy_course '專題/作業系統/互動課程' operating-systems
-          copy_course '專題/Linux/互動課程' linux
-          copy_course '專題/機器人運動學/互動課程' robot-arm-kinematics
-          copy_course '專題/機器人路徑規劃/互動課程' robot-motion-planning
-          copy_course '專題/機器人視覺/互動課程' robot-vision
-          copy_course '專題/機器人學習/互動課程' robot-learning
-          copy_course '專題/機器人數學基礎/互動課程' robot-math
-          copy_course '共通基礎/數學/互動課程' engineering-math
+          # 課程表
+          # 每行一門課：<來源目錄>|<部署 slug>
+          # 新增課程＝在此加一行。若該課含 ../../<其他課>/ 形式的跨課相對
+          # 連結，另需在下方 replacements 加對應 slug 的改寫規則。
+          # 建置中的課程交付後才登記；未登記者不會被發布。
+          while IFS='|' read -r source_dir public_dir; do
+            [ -n "$source_dir" ] || continue
+            case "$source_dir" in \#*) continue ;; esac
+            copy_course "$source_dir" "$public_dir"
+          done <<'COURSES'
+          專題/IoT聯網裝置/互動網站|iot-device
+          電機/04-電力特化/P1-電力系統-互動網站|power-systems
+          專題/IoT聯網裝置/知識群互動網站/01-板級電源與PCB|iot-power-pcb
+          專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS|iot-firmware-rtos
+          專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路|iot-connectivity
+          專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC|iot-rf-antenna
+          專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期|iot-security-production
+          專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排|iot-hardware-bus
+          專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心|iot-mcu-firmware
+          專題/網路安全/互動課程|network-security
+          專題/網路安全/攻擊手法細講|attack-techniques
+          專題/網路協定/互動課程|network-protocols
+          專題/逆向工程/互動課程|reverse-engineering
+          專題/計算機組織/互動課程|computer-organization
+          專題/作業系統/互動課程|operating-systems
+          專題/Linux/互動課程|linux
+          專題/機器人運動學/互動課程|robot-arm-kinematics
+          專題/機器人路徑規劃/互動課程|robot-motion-planning
+          專題/機器人視覺/互動課程|robot-vision
+          專題/機器人學習/互動課程|robot-learning
+          專題/機器人數學基礎/互動課程|robot-math
+          共通基礎/數學/互動課程|engineering-math
+          共通基礎/物理/互動課程|general-physics
+          電機/02-電機核心/電路學-互動課程|circuit-analysis
+          COURSES
 
           python3 <<'PY'
           from pathlib import Path
@@ -234,6 +164,13 @@ jobs:
               },
               "engineering-math": {
                   "../../../專題/機器人數學基礎/互動課程/": "../robot-math/",
+              },
+              "general-physics": {
+                  "../../數學/互動課程/": "../engineering-math/",
+              },
+              "circuit-analysis": {
+                  "../../../共通基礎/數學/互動課程/": "../engineering-math/",
+                  "../../../專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/": "../iot-hardware-bus/",
               },
           }
 

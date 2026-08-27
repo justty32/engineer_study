@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 電流與電路基礎｜普通物理</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-物理地圖.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・追蹤移動電荷與導線損耗</p>
+<h1>電流與電路基礎：看見長導線如何偷走電壓與功率</h1>
+<p class="lead">電壓使材料中的電荷產生有方向的淨移動，導線卻不是沒有代價的通道。本章從微觀電流密度推到歐姆定律，再用能量守恆檢查負載、導線與電源的每一筆功率。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-靜電學.html">08 靜電學</a>中的電位與電場。</p>
+
+<h2>痛點：電線畫成一條線，不代表它沒有物理代價</h2>
+<p>理想電路圖常把導線當成零電阻，於是電源的 12 V 看似完整落在負載上。真實導線有長度、截面積、材料與溫度，電荷移動時會把部分電能轉成熱。短粗銅線的影響很小，長而細的線、低電壓大電流系統或接點不良時，壓降與發熱可能成為主角。</p>
+<p>另一個痛點是日常措辭。電流會流過截面，電壓卻是兩點之間的差，不會「流過元件」；電子在金屬中的漂移方向與慣用電流方向相反，但這不會改變克希荷夫規則。若不先固定量與單位，很容易把電荷、電流、電位差與功率當成同一種東西。</p>
+
+<h2>白話直覺：電流是通過率，電阻是材料與形狀共同設下的阻礙</h2>
+<p>可把導線想成一段有摩擦的通道，長度增加等於路更長，截面增加等於並排通道更多。比喻到此為止；精確定義是電流 I = dQ/dt，I 單位 A，Q 是通過截面的電荷、單位 C，t 單位 s。1 A 就是每秒通過 1 C，不代表單一電子跑得很快。</p>
+<p>電流密度 <strong>J</strong> 描述每單位面積的電流與方向，單位 A/m²，粗體表示向量。均勻截面時 J = I/A；J 單位 A/m²，I 單位 A，A 是截面積、單位 m²。材料若在工作範圍內近似線性，微觀歐姆定律為 <strong>J</strong> = σ<strong>E</strong>。E 單位 V/m，σ 是電導率、單位 S/m。</p>
+<p>電阻率 ρ = 1/σ，是材料性質，單位 Ω·m；一根均勻導線的電阻 R = ρℓ/A，R 單位 Ω，ℓ 是長度、單位 m，A 單位 m²。銅、鋁、鐵與鎳鉻合金在 20 °C 的 ρ 依序為 1.68 × 10<sup>−8</sup>、2.65 × 10<sup>−8</sup>、9.71 × 10<sup>−8</sup>、1.10 × 10<sup>−6</sup> Ω·m。</p>
+<p>巨觀歐姆定律 V = IR；V 是電位差、單位 V，I 單位 A，R 單位 Ω。它是線性材料在指定溫度與工作範圍的近似，不是所有元件的普遍真理。電功率 P = VI = I²R = V²/R；P 單位 W，V 單位 V，I 單位 A，R 單位 Ω。使用後兩式前要先知道題目固定的是電流還是電壓。</p>
+<p>克希荷夫電流定律（Kirchhoff's Current Law, KCL）說節點流入電流等於流出電流，是電荷守恆；克希荷夫電壓定律（Kirchhoff's Voltage Law, KVL）說閉迴路電位升降總和為零，是能量守恆。電流單位 A，電壓單位 V。本章只用它們核對單一串聯迴路，節點法與網目法留給電路學。</p>
+<p>慣用電流方向定義成正電荷前進方向。金屬中的可移動載子多為帶負電的電子，所以電子漂移方向相反；儀表與電路方程仍依慣用方向標示。這不是兩套互相衝突的電流，而是同一電荷通量的符號約定。只要從頭到尾一致，KCL 的流入、流出與元件壓降就能共同核對。</p>
+<p>理想串聯模型還暗含穩態近似：導線各處不持續累積電荷，因此同一電流依序通過線阻與負載。剛接通的極短暫過程、很長傳輸線或高頻訊號會牽涉電容、電感與傳播延遲，不能只靠集中電阻處理。本章的線阻計算回答直流能量如何分配，不承諾涵蓋所有頻率下的導線行為。</p>
+<p class="note">來源：01-普通物理-中 第 2 章 §2.1–§2.4；材料電阻率採本課規格鎖定的 20 °C 數值。</p>
+
+<h2>推導：從材料內部的場走到整根導線的壓降</h2>
+<p><strong>（a）由微觀式推巨觀式。</strong>均勻導線內 E = V/ℓ，E 單位 V/m，V 單位 V，ℓ 單位 m；又有 J = I/A，J 單位 A/m²，I 單位 A，A 單位 m²。代入 J = σE 得 I/A = σV/ℓ。整理後 V = I ⋅ ℓ/(σA) = I ⋅ ρℓ/A。把括號辨認成 R，便得 V = IR 與 R = ρℓ/A。歐姆定律因此源自材料的線性響應；溫度改變或元件非線性時，固定 R 的描述會失準。</p>
+<p><strong>（b）量綱檢查。</strong>由 R = ρℓ/A 反推 [ρ] = [R][A]/[ℓ] = Ω·m²/m = Ω·m。R 單位 Ω，A 單位 m²，ℓ 單位 m，ρ 單位 Ω·m。這個檢查能抓出把 mm² 忘記換成 m²的百萬倍錯誤；1 mm² = 1 × 10<sup>−6</sup> m²。</p>
+<p><strong>（c）由位能變化推功率。</strong>一小段電荷 dQ 通過電位差 V 時，轉移能量 dW = VdQ。W 單位 J，V 單位 V，Q 單位 C。兩側除以 dt，P = dW/dt = V(dQ/dt) = VI；P 單位 W，t 單位 s，I 單位 A。再代 V = IR，得到 P = I²R；或代 I = V/R，得到 P = V²/R。三式是同一個能量率，不是三種互相獨立的定律。</p>
+<p><strong>（d）串聯分壓與效率。</strong>導線電阻 R<sub>線</sub> 與負載 R<sub>負載</sub> 串聯，兩者電流相同。KVL 給 V = I(R<sub>線</sub> + R<sub>負載</sub>)，所以 I = V/(R<sub>線</sub> + R<sub>負載</sub>)。I 單位 A，V 單位 V，兩個 R 單位 Ω。負載電壓 V<sub>負載</sub> = IR<sub>負載</sub> = V ⋅ R<sub>負載</sub>/(R<sub>線</sub> + R<sub>負載</sub>)；各 V 單位 V。</p>
+<p>負載功率除以總功率得到 η = I²R<sub>負載</sub>/(VI)。再用 V = I(R<sub>線</sub> + R<sub>負載</sub>) 消去 I，得到 η = R<sub>負載</sub>/(R<sub>線</sub> + R<sub>負載</sub>)。η 無單位。這顯示串聯電流相同時，功率依電阻比例分配；降低線阻才能把較多能量送到負載。</p>
+
+<h2>數值實例：十公尺銅線送十二伏特</h2>
+<p>採自由實驗預設值：銅線 ρ = 1.68 × 10<sup>−8</sup> Ω·m、ℓ = 10 m、A = 1 mm² = 1 × 10<sup>−6</sup> m²，電源 V = 12 V，負載 R<sub>負載</sub> = 10 Ω。線阻 R<sub>線</sub> = 1.68 × 10<sup>−8</sup> ⋅ 10/(1 × 10<sup>−6</sup>) = 0.168000 Ω。ρ 單位 Ω·m，ℓ 單位 m，A 單位 m²，R 單位 Ω。</p>
+<p>總電阻為 10.168000 Ω，電流 I = 12/10.168 = 1.180173 A。負載電壓 V<sub>負載</sub> = 1.180173 ⋅ 10 = 11.801731 V，導線壓降 V<sub>線</sub> = 1.180173 ⋅ 0.168 = 0.198269 V，兩者相加為 12.000000 V，符合 KVL。I 單位 A，所有電壓單位 V。</p>
+<p>總功率 P<sub>總</sub> = 12 ⋅ 1.180173 = 14.162077 W；負載功率 P<sub>負載</sub> = I² ⋅ 10 = 13.928085 W；導線功率 P<sub>線</sub> = I² ⋅ 0.168 = 0.233992 W。後兩者相加等於總功率，符合能量守恆。效率 η = 10/10.168 = 0.983478 = 98.347758 %；P 單位 W，η 無單位。</p>
+<p>若只把材料換成同尺寸鎳鉻合金，ρ 變成 1.10 × 10<sup>−6</sup> Ω·m，線阻成為 11.000000 Ω，效率降為 10/21 = 47.619048 %。鎳鉻合金適合把電能轉成熱，銅則適合減少傳輸損耗；差異不是名稱造成，而是電阻率相差 65.5 倍。</p>
+
+<section class="workspace"><h2>自由實驗：導線壓降與傳輸效率</h2>
+<p>選材料並調整長度、截面積、電壓與負載。輸出會核對電壓和功率守恆，並判斷導線是否比負載更耗電。</p>
+<div class="controls">
+<label for="oh-mat">導線材料<select id="oh-mat"><option value="cu">銅</option><option value="al">鋁</option><option value="fe">鐵</option><option value="nichrome">鎳鉻合金</option></select></label>
+<label for="oh-len">導線長度 ℓ（m）<input id="oh-len" type="range" min="0.1" max="100" step="0.1" value="10"></label>
+<label for="oh-area">導線截面積 A（mm²）<input id="oh-area" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+<label for="oh-v">電源電壓 V（V）<input id="oh-v" type="range" min="0.5" max="48" step="0.5" value="12"></label>
+<label for="oh-rload">負載電阻 Rload（Ω）<input id="oh-rload" type="range" min="0.1" max="100" step="0.1" value="10"></label>
+</div>
+<div id="ohmwire-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>電流 I 單位 A，電流密度 <strong>J</strong> 單位 A/m²；相同電流通過較小截面會有較大的 J。</li>
+<li>電壓是跨在兩點之間的電位差，不是某種流過元件的物質；流過截面的是電荷與電流。</li>
+<li>電阻率 ρ 是材料性質、單位 Ω·m；電阻 R 還依賴長度與截面積、單位 Ω。</li>
+<li>歐姆定律是線性材料近似，二極體與升溫燈絲的 V、I 關係不必是一條直線。</li>
+<li>KCL 與 KVL 分別來自電荷守恆與能量守恆，不是為了湊解題步驟而額外假設。</li>
+<li>固定 V 時 P = V²/R 隨 R 增大而下降；固定 I 時 P = I²R 隨 R 增大而上升，必須先說明控制條件。</li>
+</ul>
+
+<h2>可觀察證據</h2>
+<p><strong>用什麼儀器／實驗量：</strong>用四線式開爾文量測（Kelvin measurement）與萬用表量低阻值導線 R，避開表筆與接點電阻；量同一捲線的不同長度與不同線徑。通電後以電流勾表量 I、差動示波器探棒量導線壓降 V<sub>線</sub>，並可用溫度感測器觀察發熱。</p>
+<p><strong>能證明什麼：</strong>資料能在固定材料與溫度附近檢查 R 與 ℓ 成正比、與 A 成反比，並由斜率反推 ρ。同步量 V 與 I 可驗證 V<sub>負載</sub> + V<sub>線</sub> 等於電源電壓，且負載與導線的 VI 功率和接近輸入功率。</p>
+<p><strong>不能證明什麼：</strong>一般兩線量測不能把導線本體與接點電阻分開；室溫的一次量測不能證明 ρ 在任何溫度都固定。只看到導線升溫也不能單獨判定全部能量去向，因為仍可能有接點發熱、對流、輻射與儀器誤差。</p>
+
+<h2>連到哪門課</h2>
+<p>這一層物理直接服務電路學的元件與守恆觀念、電子學的非線性元件，以及電力電子與配線中的損耗判讀。本章停在 V = IR、功率、串聯與 KVL／KCL；節點法、網目法、戴維寧等效與交流相量留給電路學。下一章會看到同一股電流如何產生磁場，以及磁通改變如何把機械功轉為電功。</p>
+
+<nav class="pager" aria-label="章節導覽"><a href="08-靜電學.html">← 上一頁：靜電學</a><a href="10-磁場與電磁感應.html">下一頁：磁場與電磁感應 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 電流與電路基礎</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>
