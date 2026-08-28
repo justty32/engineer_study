@@ -46,7 +46,7 @@
 
 除了純文字筆記，部分主題另外改寫成**可操作的互動網頁課程**：把筆記內容重排成分章的零基礎主線，每章配一個可以自己調參數、即時看結果的自由實驗，並附名詞字典與自我檢核題。原始碼就放在各主題自己的目錄下（`互動課程/`、`互動網站/`），本地用瀏覽器直接開 `index.html` 即可。
 
-- **線上中央入口**：<https://justty32.github.io/engineer_study/>（GitHub Pages，目前 28 門）
+- **線上中央入口**：<https://justty32.github.io/engineer_study/>（GitHub Pages，目前 30 門）
 - **本地中央入口**：[`互動學習網站/index.html`](互動學習網站/index.html)——課程簡介與最新清單以此頁為準
 
 以下依所屬領域分組（每門：本地連結 · 線上 slug）：
@@ -93,6 +93,14 @@
 - [機器人路徑與運動規劃](專題/機器人路徑規劃/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/robot-motion-planning/)
 - [機器人視覺](專題/機器人視覺/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/robot-vision/)
 - [機器人學習與訓練](專題/機器人學習/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/robot-learning/)
+
+### 專題 — AI 理論
+
+- [AI 理論白話（閱讀型導讀）](專題/AI理論白話/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/ai-theory-primer/)
+
+### 專題 — 論文速覽
+
+- [論文速覽（paper_readings 主線的 30 分鐘手機閱讀 deck）](專題/論文速覽/互動網站/index.html) · [線上](https://justty32.github.io/engineer_study/paper-briefs/)
 
 ## 目錄結構
 

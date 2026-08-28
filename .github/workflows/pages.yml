@@ -38,6 +38,9 @@ on:
       - "電機/*/*互動課程/*.html"
       - "電機/*/*互動課程/*.css"
       - "電機/*/*互動課程/*.js"
+      - "專題/論文速覽/互動網站/*.html"
+      - "專題/論文速覽/互動網站/*.css"
+      - "專題/論文速覽/互動網站/*.js"
   workflow_dispatch:
 
 permissions:
@@ -115,6 +118,7 @@ jobs:
           專題/機器人視覺/互動課程|robot-vision
           專題/機器人學習/互動課程|robot-learning
           專題/機器人數學基礎/互動課程|robot-math
+          專題/AI理論白話/互動課程|ai-theory-primer
           共通基礎/數學/互動課程|engineering-math
           共通基礎/物理/互動課程|general-physics
           電機/02-電機核心/電路學-互動課程|circuit-analysis
@@ -122,6 +126,7 @@ jobs:
           電機/02-電機核心/電磁學-互動課程|electromagnetics
           電機/02-電機核心/信號與系統-互動課程|signals-systems
           電機/02-電機核心/邏輯設計-互動課程|logic-design
+          專題/論文速覽/互動網站|paper-briefs
           COURSES
 
           python3 <<'PY'
