@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 超純量、亂序與推測執行｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・機器加寬很容易，讓程式餵得飽才是難的那一半</p>
+<h1>超純量、亂序與推測執行：四個限制取最小值，只改非瓶頸那一項不會有任何改變</h1>
+<p class="lead">硬體可以同時發射多條指令、不按程式順序執行、甚至在分支定案前就先做。這章把發射寬度、指令視窗、平均停留拍數與程式平行度放上同一個天平，看清加寬為什麼常常沒用。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="04-管線冒險旁路與插泡.html">04 管線冒險、旁路與插泡</a>的資料相依，與<a href="05-分支預測與管線清空.html">05 分支預測與管線清空</a>的誤判代價。<strong>前置：</strong>一條指令從取指到寫回的完整流程屬機制層，見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織〈04 處理器資料路徑與指令週期〉</a>；本章只談加寬之後的取捨。</p>
+
+<h2>痛點：機器加寬了一倍，程式卻連一成都沒快</h2>
+<p>既然理想上一拍能完成一條，把執行單元複製四份、一拍發射四條，不就快四倍？實測不是。同一支程式在發射寬度 4 的機器上，每拍指令數（instructions per cycle, IPC）只有 2.500000；加到 8，數字動都不動；規格書上的 64 條視窗永遠填不滿。這章回答兩面：加寬為什麼常常沒用，真要花錢該加哪一項。</p>
+<p class="note">來源：11-計算機組織與微處理機 §4.4。</p>
+
+<h2>白話直覺：多開幾個收銀台，不代表隊伍裡真有那麼多人</h2>
+<p>可以暫時把發射寬度想成超市開了幾個收銀台；比喻到此為止，收回精確定義：<strong>超純量（superscalar）</strong>是一個核心裡有多套解碼與執行資源，每拍發射多條指令；<strong>指令視窗</strong>是硬體同時追蹤的在飛指令上限。</p>
+<p>依因果鏈走一次。<strong>工作量從哪來</strong>：IC 條指令有些獨立、有些要等前一條結果，能同時進行的程度就是<strong>指令級平行度（instruction-level parallelism, ILP）</strong>。<strong>這一招做了什麼決定</strong>：硬體把一批指令收進視窗，運算元先就緒的先執行，這是<strong>亂序執行（out-of-order execution）</strong>；結果先進<strong>重排序緩衝器（reorder buffer, ROB）</strong>，退休時按原順序寫回，外界看來仍是程式順序。<strong>省下多少、多花多少</strong>：每拍從 1 條推到 2.500000 條，代價是排程邏輯、重排序緩衝器與數倍的實體暫存器，面積與功耗漲得比效能快。<strong>邊界在哪</strong>：程式取不出獨立工作時，加大視窗或加寬發射都沒用。<strong>儀器量到什麼</strong>：計數器讀得出實測 IPC 與被推測做掉又丟棄的工作量。</p>
+
+<h2>推導：假相依、重新命名空間，與那條上限不等式</h2>
+<p><strong>（a）為什麼 WAR 與 WAW 是假的相依。</strong>RAW（read after write，先寫後讀）是真相依：後一條要用的值必須從前一條流過來。WAR（先讀後寫）與 WAW（先寫後寫）不必傳值，只是兩條指令<strong>剛好用了同一個暫存器名字</strong>。衝突出在名字，換名字就沒事——<strong>暫存器重新命名（register renaming）</strong>把架構暫存器映射到更多的實體暫存器，兩條寫到不同實體位置就能同時跑。RAW 換不掉，那是真的資料流。</p>
+<p><strong>（b）重新命名需要多少實體暫存器。</strong>每條在飛指令都可能佔一個實體暫存器，而架構暫存器的名字必須永遠有對應，故 重新命名空間 = 實體暫存器數 − 架構暫存器數，單位是「個」（本課假設每條在飛指令佔一個）。關鍵推論：<strong>這空間小於指令視窗時視窗填不滿，多買的等於白買</strong>，故 有效視窗 = min(指令視窗, 實體暫存器數 − 架構暫存器數)。</p>
+<p><strong>（c）視窗上限為什麼只是上限。</strong>把視窗看成排隊系統，在飛指令數 = 完成率 × 平均停留拍數，這是 Little's law 的形式；移項得 IPC ≤ 有效視窗 / 平均停留拍數。平均停留拍數是一條指令從進視窗到退休待幾拍，單位是拍，本課固定，真機上快取失誤會讓它暴增。這式子只說「機器最多裝得下這麼多」，不保證程式取得出這麼多。</p>
+<p><strong>（d）四項取最小值。</strong>本課的一階模型是 IPC = min(發射寬度, 可取平行度, 視窗上限)，CPI = 1 / IPC。另有兩條修正：沒有重新命名時，假相依把可取平行度壓到 min(ILP, 1.5)；沒有<strong>推測執行（speculative execution）</strong>時，每個分支都切斷視窗，壓到 min(ILP, 1.8)。<strong>這是一階教學模型，真實處理器不是這樣算的</strong>——真機有多種執行埠、非對稱發射限制與記憶體排序邏輯，本模型只為講清「取最小值」的結構。</p>
+<p><strong>（e）推測執行的安全直覺。</strong>它在分支確定前就往下做，猜錯就丟掉結果，<strong>功能上永遠正確</strong>，架構狀態不會被錯誤路徑污染。問題在別處：被丟掉的指令已把資料搬進快取這類微架構結構，而快取內容會影響之後存取的快慢——被丟棄的工作沒有改變答案，卻留下可被計時觀察的痕跡。</p>
+<p class="warning"><strong>安全與倫理：</strong>推測執行會在快取這類微架構結構上留下痕跡，痕跡可被計時觀察出來——這是 Spectre 與 Meltdown 這類問題的直覺，<strong>本課只講到這一層，不提供任何攻擊步驟、程式碼或量測方法</strong>。要修補的是處理器廠商、作業系統與瀏覽器；讀者只需把韌體與系統保持最新。</p>
+
+<h2>數值實例：發射寬度 4、視窗 64、平均停留 16 拍、可取 ILP 2.5</h2>
+<p>設定與下面互動元件預設值一致：發射寬度 4、指令視窗 64 條、平均停留 16 拍、可取 ILP 2.5、重新命名與推測執行都啟用、實體暫存器 128 個、架構暫存器 16 個。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>可取平行度</td><td>兩項都啟用，維持原值</td><td><strong>2.500000</strong></td></tr>
+<tr><td>重新命名空間</td><td>128 − 16</td><td><strong>112 個</strong></td></tr>
+<tr><td>有效視窗</td><td>min(64, 112)</td><td><strong>64</strong></td></tr>
+<tr><td>視窗上限</td><td>64 / 16</td><td><strong>4.000000</strong></td></tr>
+<tr><td>有效 IPC</td><td>min(4, 2.5, 4)</td><td><strong>2.500000</strong></td></tr>
+<tr><td>CPI</td><td>1 / 2.5</td><td><strong>0.400000</strong></td></tr>
+<tr><td>瓶頸</td><td>三項中最小是可取平行度</td><td><strong>程式本身的 ILP</strong></td></tr>
+</tbody></table>
+<p>量級對照：2.0 GHz、T<sub>c</sub> = 0.500000 ns 下，CPI 0.400000 就是平均每 0.200000 ns 完成一條；一次 L1 快取失誤要 50 拍、一次主記憶體存取要 200 拍，踩一次主記憶體，那條指令就獨自佔掉相當於 500 條指令的時間。</p>
+<p>邊界對照逐條看。關掉<strong>重新命名</strong>：可取平行度掉到 1.5，IPC <strong>1.500000</strong>、CPI <strong>0.666667</strong>，比原本<strong>少了 40.000000 %</strong>，這是假相依的價碼。關掉<strong>推測執行</strong>：IPC <strong>1.800000</strong>。兩個都關：<strong>1.500000</strong>。發射寬度 4 加到 8 而其他不動：IPC 仍是 <strong>2.500000</strong>，<strong>加寬完全沒有效果</strong>。</p>
+<p>再看三組。視窗 4、平均停留 64 拍：視窗上限只剩 <strong>0.062500</strong>，IPC <strong>0.062500</strong>、CPI <strong>16.000000</strong>，<strong>機器幾乎都在等</strong>，這是記憶體密集程式的量級。實體 40、架構 32：空間剩 8，有效視窗壓成 8、視窗上限 <strong>0.500000</strong>，IPC <strong>0.500000</strong>；<strong>買了 64 條的視窗只用得到 8 條</strong>，該加的是實體暫存器。實體 32、架構 32：空間 0，此時顯示「沒有任何重新命名空間，機器完全停住」，而不是無限大或無意義的值。</p>
+
+<section class="workspace"><h2>自由實驗：四個限制取最小值，找出真正的瓶頸</h2>
+<p>場景是一支固定的程式跑在一台規格可任意調整的超純量機器上。工作量是那支程式能取出的獨立工作，機器這一側可改發射寬度、指令視窗、實體與架構暫存器數，也可開關重新命名與推測執行。要看的是：三個候選限制各是多少、誰最小、以及把最小那一項改善之後 IPC 會變成多少。</p>
+<div class="controls">
+<label for="oo-width">發射寬度（每拍最多發射幾條）<input id="oo-width" type="range" min="1" max="8" step="1" value="4"></label>
+<label for="oo-window">指令視窗大小（條）<input id="oo-window" type="range" min="4" max="256" step="4" value="64"></label>
+<label for="oo-lat">每條指令平均停留拍數<input id="oo-lat" type="range" min="4" max="64" step="1" value="16"></label>
+<label for="oo-ilp">程式本身可取出的平行度 ILP<input id="oo-ilp" type="range" min="1" max="8" step="0.1" value="2.5"></label>
+<label for="oo-rename"><input id="oo-rename" type="checkbox" checked>啟用暫存器重新命名</label>
+<label for="oo-spec"><input id="oo-spec" type="checkbox" checked>啟用推測執行</label>
+<label for="oo-phys">實體暫存器數<input id="oo-phys" type="range" min="32" max="256" step="8" value="128"></label>
+<label for="oo-arch">架構暫存器數<input id="oo-arch" type="range" min="8" max="32" step="8" value="16"></label>
+</div>
+<div id="ooo-output" class="output" aria-live="polite">可取平行度 2.500000；重新命名空間 128 − 16 = 112 個；有效視窗 min(64, 112) = 64；視窗上限 64 / 16 = 4.000000；有效 IPC min(4, 2.5, 4) = 2.500000；CPI 0.400000。瓶頸是<strong>可取平行度</strong>。<strong>加寬發射或加大視窗都不會有效果，瓶頸在程式本身。</strong>若把 ILP 改善到 4.000000，IPC 會變成 4.000000，屆時發射寬度與視窗上限會同時成為新的瓶頸。四個限制取最小值，所以只改非瓶頸的那一項不會有任何改變。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>亂序執行不是「順序亂掉」。邊界在<strong>執行</strong>與<strong>退休</strong>之間：執行順序被重排，但<strong>退休順序仍嚴格是程式順序</strong>，重排序緩衝器為此存在。</li>
+<li>超純量與多核心是兩件事。邊界在「一個核心裡幾條管線」與「幾個核心」：作業系統看得到核心數，看不到發射寬度。</li>
+<li>重新命名幫不了 RAW 真相依。邊界在「有沒有值要傳過去」：WAR 與 WAW 只是名字撞在一起，換名字就消失；RAW 的值必須真的流過去，只能等或靠旁路縮短。</li>
+<li>推測執行在功能上永遠正確。邊界在<strong>架構狀態</strong>與<strong>微架構狀態</strong>之間：猜錯的結果會被丟掉，答案不會錯；但快取這類結構的內容已被改變，那可以被計時看出來。</li>
+<li>視窗上限不是實測 IPC。它只是容量給的天花板，程式取不出那麼多時，實際值遠低於它。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>在支援的機器上，<code>perf stat</code> 讀得出 <code>instructions</code> 與 <code>cycles</code>，相除就是實測 IPC；某些微架構還提供 <code>uops_issued</code> 與 <code>uops_retired</code>，兩者的差就是被推測做掉又丟棄的工作量。</p>
+<p><strong>能證明</strong>：這台機器跑這支程式達到多少 IPC、多少微操作浪費在錯誤路徑上、改寫後有沒有變好。<strong>不能證明</strong>：指令視窗多大、實體暫存器有幾個——只能靠微基準間接推估，且會被其他限制干擾而失真；也證明不了「IPC 低是因為 ILP 不足」，因為快取失誤同樣會壓低 IPC，要分辨得看第 08 章的失誤計數器。</p>
+
+<h2>連到哪門課</h2>
+<p>你手上的桌機、筆電與手機處理器全是超純量、亂序、帶推測執行的設計。相依與旁路見本課<a href="04-管線冒險旁路與插泡.html">04 管線冒險、旁路與插泡</a>；預測失敗會讓推測做的工白費，見<a href="05-分支預測與管線清空.html">05 分支預測與管線清空</a>；被推測搬進快取的資料為什麼留痕跡，見<a href="08-快取設計四維度.html">08 快取設計四維度</a>。下一章換方向：指令級平行度有天花板，資料級與執行緒級平行的天花板在哪。</p>
+<nav class="pager" aria-label="章節導覽"><a href="05-分支預測與管線清空.html">← 上一頁：分支預測與管線清空</a><a href="07-SIMD與平行加速上限.html">下一頁：SIMD 與平行加速上限 →</a></nav>
+</main>
+<footer class="site-footer"><span>06 超純量、亂序與推測執行</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

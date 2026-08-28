@@ -1,0 +1,85 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 分支預測與管線清空｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・猜得多準，與猜錯賠多少，是兩個獨立的數</p>
+<h1>分支預測與管線清空：資料冒險至少知道要等誰，分支是連下一條在哪都不知道</h1>
+<p class="lead">硬體面對分支只有一個辦法：先猜，猜錯就把管線裡的東西全部丟掉重來。這章把「猜得多準」與「猜錯賠多少」拆成兩個數，再合成對每指令拍數的貢獻。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-五階段管線與吞吐量.html">03 五階段管線與吞吐量</a>的五個階段與填充成本、<a href="04-管線冒險旁路與插泡.html">04 管線冒險、旁路與插泡</a>的插泡。<strong>前置：</strong>見〈04 處理器資料路徑與指令週期〉<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>——取指與程式計數器更新屬於那一頁，本章只算猜錯的代價。</p>
+
+<h2>痛點：把 if 拿掉之後程式突然快了三成</h2>
+<p>有人把過濾迴圈裡的資料先排序再跑，功能一樣、指令數還多了排序，總時間卻明顯下降。這在第 00 章的三因子公式裡看不出來——指令數變多、時脈沒動，變好的只能是每指令拍數。分支吃掉了什麼？</p>
+<p>反向的例子更值得警惕：同一支程式在級數較深的處理器上誤判率一樣，效能卻掉得更凶。答案是——代價是兩個數字的乘積，只看一個解釋不了現象。</p>
+
+<h2>白話直覺：硬體不能停下來等，只好先猜一個</h2>
+<p>控制冒險（control hazard）難在資訊的性質不同。資料冒險知道在等誰，可以插固定拍數的泡；分支連「下一條的位址是什麼」都不知道，而取指階段每拍都要餵一個位址進去。可以暫時想成沒有號誌的路口搶快：先往前開，錯了再倒回來；比喻到此為止，精確的說法是——硬體在取指階段依預測器的輸出繼續取指令進管線，等分支在執行階段算完再比對，猜錯就作廢。</p>
+<p>照因果鏈走一遍。工作量從哪來：一段有迴圈與條件判斷的程式，每五條指令約有一條是分支（本課固定用 20 %）。這一招做了什麼決定：與其停下來等，不如賭一個方向全速取指。省下多少：猜對時完全不用停。多花什麼：猜錯要做<strong>管線清空（pipeline flush）</strong>，把已進管線的錯誤路徑指令全部丟掉，五階段賠 3 拍，深管線賠 15 到 20 拍；預測器本身也要一張表、要在取指階段一拍內查完。邊界在哪：有些樣式是預測器的結構性盲區，猜中率可以低到 0 %。儀器量到什麼：計數器直接給分支數與誤判數。</p>
+<p>被丟掉的是<strong>已經算出但還沒寫回</strong>的中間結果，架構狀態沒被污染，所以清空在功能上永遠安全。</p>
+<p class="note">來源：11-計算機組織與微處理機 §4.3。</p>
+
+<h2>推導：準確率與懲罰各自從哪來</h2>
+<p><strong>（a）誤判懲罰為什麼等於「分支確定的那一級編號減一」。</strong>從取指那一拍開始，硬體每拍都依預測再放一條指令進管線。分支要到執行階段才算得出該不該跳，在這之間已放進去的指令就是猜錯時要丟掉的量。五階段裡取指是第 1 級、執行是第 3 級，中間進了 3 條，所以懲罰 3 拍。這也解釋了痛點的反向例子：20 級深管線的分支要到很後面才確定，懲罰 15 到 20 拍。假設清空不需要額外的復原拍數。</p>
+<p><strong>（b）2 位元為什麼比 1 位元好。</strong><strong>1 位元預測器</strong>只記住上一次的結果並照抄。一個跑 8 次的迴圈，最後一次「不跳」會造成<strong>兩次</strong>誤判：這次記著「跳」而猜錯，下次進迴圈記著「不跳」又猜錯。<strong>2 位元飽和計數器（2-bit saturating counter）</strong>有四個狀態——強不跳 00、弱不跳 01、弱跳 10、強跳 11，跳就加一、不跳就減一、不越界，<strong>預測只看最高位元</strong>。迴圈最後一次只讓狀態從 11 掉到 10，最高位元還是 1，仍然預測跳，只錯一次。這就是遲滯（hysteresis）。</p>
+<p><strong>（c）交替樣式為什麼讓兩者都全錯。</strong>樣式 <code>T N</code> 交替時，1 位元永遠猜上一次的結果，而上一次永遠跟這一次相反，於是每次都錯。2 位元從弱狀態出發會在 01 與 10 之間震盪，同樣全錯。這是<strong>已知盲區</strong>不是實作瑕疵；實務上靠更長的全域歷史（gshare、TAGE）解決，本課不展開。</p>
+<p><strong>（d）合成到每指令拍數。</strong>CPI ＝ CPI<sub>base</sub> ＋ 分支比例 × 誤判率 × 懲罰拍數。CPI<sub>base</sub> 是沒有分支問題時的每指令拍數（本章取 1）；分支比例與誤判率都無單位，後者是猜錯次數除以分支總數；懲罰的單位是拍。三個係數任一個變大都<strong>線性</strong>放大損失。本課是一階教學模型：假設每次誤判懲罰一樣、預測器容量無限、不同分支不互相干擾，真實機器三項都不成立。</p>
+
+<h2>數值實例：迴圈樣式重複 4 次的 32 個分支</h2>
+<p>本課鎖定五種分支結果樣式（<code>T</code> ＝ 跳、<code>N</code> ＝ 不跳）：<code>loop</code> 是 <code>T T T T T T T N</code>，重複 4 次共 32 個分支；<code>alt</code> 是 <code>T N</code>，共 8 個；<code>ttnn</code> 是 <code>T T N N</code>，共 16 個；<code>taken</code> 與 <code>nottaken</code> 各 4 個。</p>
+<p>預設設定：樣式 <code>loop</code>、重複 4 次（32 個分支）、2 位元飽和計數器、初始 <code>01</code>（弱不跳）、誤判懲罰 3 拍、分支佔比 20 %。</p>
+<table><thead><tr><th>預測器</th><th>初始</th><th>誤判次數</th><th>誤判率</th><th>準確率</th><th>對 CPI 的貢獻</th><th>總 CPI</th></tr></thead><tbody>
+<tr><td>2 位元飽和計數器（預設）</td><td><code>01</code></td><td><strong>5 / 32</strong></td><td><strong>15.625000 %</strong></td><td><strong>84.375000 %</strong></td><td>0.093750</td><td><strong>1.093750</strong></td></tr>
+<tr><td>2 位元飽和計數器</td><td><code>11</code></td><td><strong>4 / 32</strong></td><td><strong>12.500000 %</strong></td><td><strong>87.500000 %</strong></td><td>0.075000</td><td><strong>1.075000</strong></td></tr>
+<tr><td>1 位元</td><td>不跳</td><td><strong>8 / 32</strong></td><td><strong>25.000000 %</strong></td><td><strong>75.000000 %</strong></td><td>0.150000</td><td><strong>1.150000</strong></td></tr>
+<tr><td>靜態：永遠猜跳</td><td>—</td><td><strong>4 / 32</strong></td><td><strong>12.500000 %</strong></td><td><strong>87.500000 %</strong></td><td>0.075000</td><td><strong>1.075000</strong></td></tr>
+<tr><td>靜態：永遠猜不跳</td><td>—</td><td><strong>28 / 32</strong></td><td><strong>87.500000 %</strong></td><td><strong>12.500000 %</strong></td><td>0.525000</td><td><strong>1.525000</strong></td></tr>
+</tbody></table>
+<p><strong>逐輪說明（2 位元、初始 01）。</strong>第 1 輪誤判 2 次：第 1 個因為初始是弱不跳而猜錯，第 8 個因為狀態已飽和在 11 而猜錯。第 2 到第 4 輪各誤判 1 次，即每輪最後那個 <code>N</code>。這 1 次暖機成本就是「永遠猜跳」這種靜態預測（static prediction）在此勝出的原因。</p>
+<p><strong>量級對照。</strong>總 CPI 1.093750 代表每 100 條指令多花約 9 拍；在 2.0 GHz、一拍 0.500000 ns 的機器上，這 32 個分支的誤判成本是 15 拍、約 7.5 ns，跟第 04 章那 8 拍泡同一量級，都遠小於一次主記憶體存取的 200 拍。</p>
+<p><strong>邊界對照一：樣式改 <code>alt</code>。</strong>1 位元與初始 <code>01</code> 的 2 位元<strong>都是 100.000000 % 誤判</strong>，正是推導（c）的盲區；把初始改成 <code>11</code>，誤判率降到 50.000000 %。在盲區裡，初始狀態這種細節會主導結果。</p>
+<p><strong>邊界對照二：樣式改 <code>ttnn</code>。</strong>2 位元初始 <code>01</code> 的誤判率是 75.000000 %，<strong>比 1 位元的 50.000000 % 還差</strong>。遲滯讓計數器慢半拍跟上轉折，在兩兩成組的樣式上幫倒忙。</p>
+<p><strong>邊界對照三：懲罰改 20 拍。</strong><code>loop</code> 加 2 位元的總 CPI 從 1.093750 升到 1.625000。誤判率沒變，代價卻翻好幾倍，這是深管線的隱藏成本。分支佔比改 40 % 則總 CPI 是 1.187500。</p>
+
+<section class="workspace"><h2>自由實驗：猜得準不準，與猜錯賠多少</h2>
+<p>場景是一台五階段管線機器反覆執行同一個分支，它的實際結果照你選的樣式重複出現。硬體用你選的預測器逐筆猜，猜錯就清空管線並賠上懲罰拍數。六個控制分成兩組：前四個決定「猜得多準」，後兩個決定「猜錯有多痛」。請特別試試看讓誤判率完全不變、只調懲罰拍數時，總 CPI 怎麼動。</p>
+<div class="controls">
+<label for="br-pattern">分支結果樣式<select id="br-pattern"><option value="loop">迴圈 T T T T T T T N</option><option value="alt">交替 T N</option><option value="ttnn">T T N N</option><option value="taken">全部跳</option><option value="nottaken">全部不跳</option></select></label>
+<label for="br-predictor">預測器<select id="br-predictor"><option value="bit2">2 位元飽和計數器</option><option value="bit1">1 位元預測器</option><option value="static_t">靜態：永遠猜跳</option><option value="static_n">靜態：永遠猜不跳</option></select></label>
+<label for="br-init">初始狀態（只有兩種計數器型預測器用得到）<select id="br-init"><option value="00">強不跳 00</option><option value="01" selected>弱不跳 01</option><option value="10">弱跳 10</option><option value="11">強跳 11</option></select></label>
+<label for="br-rep">樣式重複次數<input id="br-rep" type="range" min="1" max="20" step="1" value="4"></label>
+<label for="br-penalty">誤判懲罰（拍）<input id="br-penalty" type="range" min="1" max="20" step="1" value="3"></label>
+<label for="br-freq">分支指令佔全部指令的比例（%）<input id="br-freq" type="range" min="5" max="40" step="1" value="20"></label>
+</div>
+<div id="branch-output" class="output" aria-live="polite">目前設定：樣式 loop、2 位元飽和計數器、初始 01、重複 4 次（32 個分支）、懲罰 3 拍、分支佔比 20 %。前 8 個分支的逐筆軌跡：
+<table><thead><tr><th>序號</th><th>實際</th><th>預測</th><th>對錯</th><th>更新後狀態</th></tr></thead><tbody>
+<tr><td>1</td><td>T</td><td>不跳</td><td><strong>錯</strong></td><td>10</td></tr>
+<tr><td>2</td><td>T</td><td>跳</td><td>對</td><td>11</td></tr>
+<tr><td>3</td><td>T</td><td>跳</td><td>對</td><td>11</td></tr>
+<tr><td>4</td><td>T</td><td>跳</td><td>對</td><td>11</td></tr>
+<tr><td>5</td><td>T</td><td>跳</td><td>對</td><td>11</td></tr>
+<tr><td>6</td><td>T</td><td>跳</td><td>對</td><td>11</td></tr>
+<tr><td>7</td><td>T</td><td>跳</td><td>對</td><td>11</td></tr>
+<tr><td>8</td><td>N</td><td>跳</td><td><strong>錯</strong></td><td>10</td></tr>
+</tbody></table>
+誤判 <strong>5</strong> 次 / 序列長度 <strong>32</strong>；誤判率 <strong>15.625000 %</strong>；準確率 <strong>84.375000 %</strong>；對 CPI 的貢獻 <strong>0.093750</strong>；總 CPI <strong>1.093750</strong>。<strong>判讀：錯的都在每一輪最後那個不跳，加上第一輪開頭的暖機那一次。</strong>為什麼：誤判率乘上懲罰拍數才是代價，兩個數字都要看。邊界提醒：把樣式改成交替 T N，誤判率會變成 100.000000 %，那是這種預測器猜的永遠跟實際相反的盲區；改用靜態的永遠猜跳，誤判率反而低於 2 位元，因為計數器要付暖機成本，而且靜態預測器不看歷史，初始狀態那一格不影響結果；把懲罰拉到 20 拍就是 20 級深管線的量級，此時 1 % 的誤判率就等於 0.2 拍的 CPI；樣式選全部跳又用永遠猜跳會誤判 0 次，那是靜態預測最好的情況；重複次數調到 1 時暖機成本全部裸露，統計意義很弱。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>分支預測不是「猜對就沒有成本」。預測器要一張表、要在取指階段一拍內查完並更新，那是面積與功耗，只是不出現在拍數上。</li>
+<li>誤判率低不代表影響小。代價是誤判率<strong>乘上</strong>懲罰拍數：懲罰 20 拍的深管線上，5 % 誤判率等於每個分支平均賠 1 拍。</li>
+<li>2 位元不是「比 1 位元多記一次歷史」。它記的是<strong>信心</strong>：兩個相鄰狀態可能給出同一個預測，差別只在下一次翻不翻。</li>
+<li>管線清空丟掉的是<strong>已算出但還沒寫回</strong>的結果，架構狀態沒被污染，功能上永遠安全。安全問題出在微架構留下的痕跡，見第 06 章。</li>
+<li>靜態預測不是「比較笨所以一定比較差」。在極規律的樣式上不看歷史反而省掉暖機成本，本章 <code>loop</code> 的例子裡它就贏了。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong><code>perf stat</code> 的 <code>branches</code> 與 <code>branch-misses</code> 直接給出這支程式有幾個分支、猜錯幾個，相除就是實測誤判率。把同一份工作量用兩種寫法各跑一次比較。</p>
+<p><strong>能證明什麼。</strong>能證明這支程式的分支行為好不好猜，也能證明改寫後誤判率確實變動——這是少數可以直接量到、幾乎不受取樣偏差影響的指標。</p>
+<p><strong>不能證明什麼。</strong>證明不了這顆處理器用哪一種預測器：廠商不公開實作。也證明不了「誤判都發生在這個 <code>if</code>」——計數器不分位置，要定位得用取樣剖析，而取樣在有推測執行的機器上有系統性偏差。</p>
+
+<h2>連到哪門課</h2>
+<p>把難猜的條件換成無分支的算術、或先把資料排成規律的順序，依據就是這一章；資料庫與搜尋引擎的熱路徑最佳化大量使用這套推理。管線清空丟掉哪幾級，對照本課<a href="03-五階段管線與吞吐量.html">第 03 章</a>的逐拍表就清楚。分支以外的推測與它留下的微架構痕跡，見本課<a href="06-超純量亂序與推測執行.html">第 06 章</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="04-管線冒險旁路與插泡.html">← 上一頁：管線冒險、旁路與插泡</a><a href="06-超純量亂序與推測執行.html">下一頁：超純量、亂序與推測執行 →</a></nav>
+</main>
+<footer class="site-footer"><span>05 分支預測與管線清空</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

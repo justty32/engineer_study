@@ -1,0 +1,84 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 處理器家族選型｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">13・把全課的取捨收成一張可以填的表</p>
+<h1>處理器家族選型：峰值只是入場券，決定勝負的是效率係數、功耗與總成本</h1>
+<p class="lead">最後一章不介紹任何一顆晶片。給定工作負載類型、運算需求、功耗預算、產量與延遲要求，六個家族各要幾顆、耗多少瓦、總共多少錢、誰勝出——重點是學會這張表怎麼填，因為表裡的數字會過期，填法不會。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="07-SIMD與平行加速上限.html">07 SIMD 與平行加速上限</a>的平行層級與加速上限、<a href="12-匯流排家族PCIe到CAN.html">12 匯流排家族</a>的介面取捨，以及姊妹課<a href="../邏輯設計-互動課程/13-可程式邏輯與HDL.html">邏輯設計 13 可程式邏輯與 HDL</a>裡「FPGA 用查找表模擬邏輯」這件事。</p>
+
+<h2>痛點：手冊寫 20000 Gops，我的程式只跑出幾百</h2>
+<p>兩個問題常常一起出現。「資料手冊上 GPU 峰值 20000 Gops/s，我的程式量出來只有幾百，是廠商騙人嗎？」「大家都說 NPU 最省電，為什麼我這個案子最後選了看起來最弱的 DSP？」</p>
+<p>第一個問題的答案是：峰值是廠商在最理想的核心迴圈上量的，換一種工作負載能取到的比例差很多——同一顆 GPU 跑分支密集的程式，可能只發揮個位數百分比。第二個問題的答案是：能效與總成本是兩個常常打架的指標，<strong>只要兩者都滿足需求，比的就是總成本</strong>。這一章把這兩件事變成可以算的式子。</p>
+
+<h2>白話直覺：六個家族，各自為某一種工作量而生</h2>
+<p>通用 CPU 為分支密集與單執行緒效能而生，軟體生態最好；微控制器（microcontroller, MCU）把 CPU、記憶體與 I/O 放在同一顆裡，低功耗、延遲確定；DSP（digital signal processor）為乘加累積（multiply-accumulate, MAC）最佳化；GPU 為大量執行緒的資料級平行而生，功耗高；NPU（neural processing unit）為神經網路推論的矩陣運算最佳化，能效最好；FPGA 是可重組邏輯，適合固定管線串流，開發成本高但做得到硬即時。</p>
+<p>比喻只用一次：這六個像六種車，載重、油耗、價錢各有偏重。比喻立刻收回——真正的差別不在「快慢」，而在<strong>它把電晶體花在哪裡</strong>：CPU 花在分支預測、亂序與快取，NPU 花在成排的低精度乘加陣列，FPGA 花在可寫入的查找表與繞線。</p>
+<p>因果鏈走一遍。<strong>工作量從哪來</strong>：每秒要做多少次運算，而且是哪一種運算。<strong>做了什麼決定</strong>：選一個家族，等於選了一組「這種運算我做得多好」的效率係數。<strong>花掉多少</strong>：達成需求要幾顆晶片、合計多少瓦、乘上產量共多少錢。<strong>邊界在哪</strong>：功耗預算與延遲要求會直接把某些家族劃掉，<strong>確定性延遲只有 MCU、DSP、FPGA 給得起</strong>，CPU、GPU、NPU 有作業系統排程與批次處理，最壞情況沒有上界。<strong>儀器量到什麼</strong>：牆鐘時間與功率計，兩個一除就是實測的每瓦運算量。</p>
+<p class="note">來源：11-計算機組織與微處理機 §8。</p>
+
+<h2>推導：四條式子與一條會翻轉結論的交叉線</h2>
+<p><strong>（a）為什麼要乘效率係數。</strong>峰值量的是最理想的迴圈，跨家族比峰值本來就不公平。所以先把它折現：<code>實際可達 = 峰值 × 效率係數</code>。峰值單位 Gops/s，效率係數無單位且介於 0 與 1 之間，<strong>本課把它固定成一組教學用的代表值</strong>，真實系統裡它對程式寫法極度敏感。</p>
+<p><strong>（b）顆數為什麼要向上取整。</strong>半顆晶片不存在：<code>顆數 = ⌈需求 / 實際可達⌉</code>。需求單位 Gops/s。接著 <code>總功耗 = 顆數 × 典型功耗</code>（單位 W）。取整這一步會製造跳階——需求多 1 %，顆數可能整個加一顆，功耗與成本跟著跳。</p>
+<p><strong>（c）NRE 為什麼會翻轉結論。</strong><code>總成本 = 單價 × 顆數 × 產量 + NRE</code>，單價與一次性工程費（non-recurring engineering, NRE）單位都是美元。FPGA 的 NRE 攤到產量上：產量小的時候它是主要成本，產量大的時候幾乎可以忽略。<strong>這條交叉線就是選型決策的核心</strong>，也是為什麼同一份規格在不同產量下會得到相反的答案。</p>
+<p><strong>（d）為什麼能效最好的不一定被選上。</strong>可行的定義是兩個條件同時成立：總功耗不超過預算，而且延遲要求容得下。<strong>在所有可行的家族裡，選總成本最低的那個</strong>。能效（Gops/W）只在「不可行」那一側說話——它決定你會不會被功耗預算刷掉；一旦大家都過關，它就不再是評分項。</p>
+
+<h2>數值實例：矩陣負載、10 Gops/s、5 W、產量一萬顆</h2>
+<p>先是本課鎖定的家族表。<strong>這些是教學用的代表值，不是任何真實產品規格</strong>。</p>
+<table><thead><tr><th>家族</th><th>峰值（Gops/s）</th><th>典型功耗（W）</th><th>能效（Gops/W）</th><th>單價（美元）</th><th>NRE（美元）</th><th>確定性延遲</th></tr></thead><tbody>
+<tr><td>通用 CPU</td><td>100</td><td>65</td><td>1.538462</td><td>300</td><td>0</td><td>否</td></tr>
+<tr><td>MCU</td><td>0.5</td><td>0.05</td><td>10.000000</td><td>3</td><td>0</td><td>是</td></tr>
+<tr><td>DSP</td><td>20</td><td>2</td><td>10.000000</td><td>15</td><td>0</td><td>是</td></tr>
+<tr><td>GPU</td><td>20000</td><td>300</td><td>66.666667</td><td>1500</td><td>0</td><td>否</td></tr>
+<tr><td>NPU</td><td>4000</td><td>5</td><td>800.000000</td><td>40</td><td>0</td><td>否</td></tr>
+<tr><td>FPGA</td><td>500</td><td>25</td><td>20.000000</td><td>200</td><td>50000</td><td>是</td></tr>
+</tbody></table>
+<p>效率係數（實際可達 ＝ 峰值 × 係數）：</p>
+<table><thead><tr><th>工作負載</th><th>CPU</th><th>MCU</th><th>DSP</th><th>GPU</th><th>NPU</th><th>FPGA</th></tr></thead><tbody>
+<tr><td>控制流密集</td><td>0.80</td><td>0.80</td><td>0.30</td><td>0.05</td><td>0.02</td><td>0.30</td></tr>
+<tr><td>MAC 密集（FIR 濾波）</td><td>0.30</td><td>0.20</td><td>0.90</td><td>0.50</td><td>0.40</td><td>0.80</td></tr>
+<tr><td>矩陣乘法／推論</td><td>0.25</td><td>0.10</td><td>0.40</td><td>0.85</td><td>0.95</td><td>0.60</td></tr>
+<tr><td>固定管線串流</td><td>0.20</td><td>0.10</td><td>0.50</td><td>0.40</td><td>0.30</td><td>0.95</td></tr>
+</tbody></table>
+<p>取互動元件的預設值：矩陣乘法／推論、需求 10 Gops/s、功耗預算 5 W、產量 10000 顆、可容忍延遲 100 µs。</p>
+<table><thead><tr><th>家族</th><th>實際可達（Gops/s）</th><th>顆數</th><th>總功耗（W）</th><th>總成本（美元）</th><th>能效（Gops/W）</th><th>可行</th></tr></thead><tbody>
+<tr><td>CPU</td><td>25.000</td><td>1</td><td>65.000000</td><td>3000000</td><td>0.384615</td><td><strong>否（超出預算 13.000000 倍）</strong></td></tr>
+<tr><td>MCU</td><td>0.050</td><td>200</td><td>10.000000</td><td>6000000</td><td>1.000000</td><td><strong>否（超出預算 2.000000 倍）</strong></td></tr>
+<tr><td>DSP</td><td>8.000</td><td><strong>2</strong></td><td><strong>4.000000</strong></td><td><strong>300000</strong></td><td>4.000000</td><td><strong>是</strong></td></tr>
+<tr><td>GPU</td><td>17000.000</td><td>1</td><td>300.000000</td><td>15000000</td><td>56.666667</td><td><strong>否</strong></td></tr>
+<tr><td>NPU</td><td>3800.000</td><td>1</td><td>5.000000</td><td>400000</td><td>760.000000</td><td><strong>是</strong></td></tr>
+<tr><td>FPGA</td><td>300.000</td><td>1</td><td>25.000000</td><td>2050000</td><td>12.000000</td><td><strong>否</strong></td></tr>
+</tbody></table>
+<p><strong>建議：DSP（2 顆、4.000000 W、300000 美元）。</strong>NPU 的能效贏 190 倍卻沒被選上，因為兩者都滿足需求時比的是總成本，而產量 10000 顆時 NPU 貴 100000 美元。量級對照放在一起才有感覺：MCU 的 0.05 W 與 GPU 的 300 W 差 6000 倍，NPU 的 800.000000 Gops/W 與 CPU 的 1.538462 Gops/W 差 520 倍，而本課一拍是 0.500000 ns。</p>
+<p>邊界對照：換成<strong>控制流密集</strong>、需求 1 Gops/s、預算 1 W、產量 10000，只有 <strong>MCU 可行（3 顆、0.150000 W、90000 美元）</strong>，連 CPU 都因為 65 W 出局——<strong>這就是嵌入式系統為什麼不用 CPU</strong>。換成<strong>固定管線串流</strong>、需求 100 Gops/s、預算 30 W、產量 2000，可行的有 DSP（10 顆、20.000000 W、300000 美元）、NPU（1 顆、5.000000 W、80000 美元）、FPGA（1 顆、25.000000 W、450000 美元），<strong>建議 NPU</strong>；產量改成 100000 顆時 FPGA 的 NRE 被攤薄，單價仍高，NPU 依然勝出。矩陣負載、需求 500 Gops/s、預算 300 W、產量 1000 → <strong>NPU 1 顆 40000 美元</strong>大勝 GPU 的 1500000 美元。</p>
+
+<section class="workspace"><h2>自由實驗：六個家族的顆數、功耗與總成本</h2>
+<p>場景是：你手上有一份規格，要決定用哪一種晶片。工作負載類型決定六個家族各自的效率係數，四支滑桿給運算需求、功耗預算、產量與可容忍延遲。要看的是三件事：每個家族要幾顆、總功耗有沒有超出預算、以及所有可行的家族裡誰的總成本最低。家族選單只決定顯示哪幾列，建議欄位一律以六個家族一起比較的結果為準。</p>
+<div class="controls">
+<label for="cp-family">要看的家族<select id="cp-family"><option value="all">六個家族全部列出</option><option value="cpu">通用 CPU</option><option value="mcu">MCU</option><option value="dsp">DSP</option><option value="gpu">GPU</option><option value="npu">NPU</option><option value="fpga">FPGA</option></select></label>
+<label for="cp-work">工作負載類型<select id="cp-work"><option value="matrix">矩陣乘法／推論</option><option value="control">控制流密集（分支多）</option><option value="mac">MAC 密集（FIR 濾波）</option><option value="stream">固定管線串流</option></select></label>
+<label for="cp-ops">每秒需要的運算量（Gops/s）<input id="cp-ops" type="range" min="0.1" max="1000" step="0.1" value="10"></label>
+<label for="cp-power">功耗預算（W）<input id="cp-power" type="range" min="0.05" max="300" step="0.05" value="5"></label>
+<label for="cp-volume">產量（顆）<input id="cp-volume" type="range" min="100" max="1000000" step="100" value="10000"></label>
+<label for="cp-latency">可容忍延遲（µs）<input id="cp-latency" type="range" min="0.1" max="10000" step="0.1" value="100"></label>
+</div>
+<div id="chippick-output" class="output" aria-live="polite">這個模式（矩陣乘法／推論）只換掉六個家族的效率係數，其餘四支滑桿照樣全部影響結果。需求 10 Gops/s、預算 5 W、產量 10000 顆、可容忍延遲 100 µs。CPU：實際可達 25.000 Gops/s、1 顆、65.000000 W、3000000 美元、0.384615 Gops/W，不可行（超出功耗預算 13.000000 倍）。MCU：0.050、200 顆、10.000000 W、6000000 美元、1.000000 Gops/W，不可行（超出 2.000000 倍）。DSP：8.000、2 顆、4.000000 W、300000 美元、4.000000 Gops/W，可行。GPU：17000.000、1 顆、300.000000 W、15000000 美元、56.666667 Gops/W，不可行。NPU：3800.000、1 顆、5.000000 W、400000 美元、760.000000 Gops/W，可行。FPGA：300.000、1 顆、25.000000 W、2050000 美元、12.000000 Gops/W，不可行。建議：DSP（兩者都滿足需求時比的是總成本，DSP 比 NPU 便宜 100000 美元）。NPU 的能效贏 190 倍卻沒被選上，因為總成本較高。峰值只是入場券，效率係數、功耗與產量才決定誰真的能用。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li><strong>Gops/s 的「ops」在不同家族不是同一種運算。</strong>NPU 算的是低精度整數乘加，CPU 算的是通用指令，<strong>跨家族比峰值本來就不公平</strong>，這正是要乘效率係數的原因。</li>
+<li><strong>能效好不等於總成本低。</strong>能效只決定會不會被功耗預算刷掉；都過關之後，比的是單價乘顆數乘產量再加 NRE。</li>
+<li><strong>FPGA 不是「比較慢的 ASIC」。</strong>它是用查找表模擬邏輯的另一種架構，換到的是「還能改」。</li>
+<li><strong>「確定性延遲」不是「延遲很低」。</strong>它指最壞情況有上界。CPU 的平均延遲可能更低，但它沒有上界，硬即時場合不能用。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>把同一個演算法分別在 CPU 與加速器上跑，用牆鐘時間與功率計（或平台的能耗計數器）量出實際的 Gops/W；資料手冊給的是峰值，<strong>實測值除以峰值就是你這個工作負載的效率係數</strong>——這個數字自己量比信任任何比較表可靠。<strong>能證明</strong>：這個演算法在這個平台上的實際吞吐與能效。<strong>不能證明</strong>：換一種實作會不會更好，效率係數對程式寫法極度敏感；也證明不了廠商的峰值是假的，那個數字通常是真的，只是量的是別的東西。</p>
+
+<h2>連到哪門課</h2>
+<p>可重組邏輯與查找表見<a href="../邏輯設計-互動課程/13-可程式邏輯與HDL.html">邏輯設計 13 可程式邏輯與 HDL</a>；MAC 密集負載的來源見<a href="../信號與系統-互動課程/15-數位濾波器與多速率.html">信號與系統 15 數位濾波器與多速率</a>；資料級平行的加速上限見<a href="07-SIMD與平行加速上限.html">本課第 07 章</a>；這些晶片怎麼接進系統見<a href="12-匯流排家族PCIe到CAN.html">本課第 12 章</a>。至於硬即時排程與 RTOS 怎麼保證最壞情況，本課只點名，留給未來的嵌入式系統課。這門課到此結束：下一頁的字典把名詞收成一張表，再下一頁是自我檢核。</p>
+<nav class="pager" aria-label="章節導覽"><a href="12-匯流排家族PCIe到CAN.html">← 上一頁：匯流排家族 PCIe 到 CAN</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>13 處理器家族選型</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

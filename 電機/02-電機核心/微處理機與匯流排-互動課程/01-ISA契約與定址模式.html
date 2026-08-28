@@ -1,0 +1,84 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 ISA 契約與定址模式｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">01・契約承諾做什麼，不承諾怎麼做</p>
+<h1>ISA 契約與定址模式：指令數少，不等於工作量少</h1>
+<p class="lead">同一件事——把 <code>陣列[i]</code> 讀進暫存器——RISC 要三條指令，CISC 一條就寫完。這章把兩邊的指令數、位元組數與微運算數同時攤開，看「指令數」這個指標何時騙人。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-微處理機世界觀與效能公式.html">00 微處理機世界觀與效能公式</a>的三因子。<strong>前置：</strong>見〈07 RISC-V組合語言〉與〈05 x86-64組合語言〉，指令逐條怎麼寫在<a href="../../../專題/計算機組織/互動課程/07-RISC-V組合語言.html">計算機組織的 RISC-V 那一頁</a>與<a href="../../../專題/計算機組織/互動課程/05-x86-64組合語言.html">x86-64 那一頁</a>，本章不教語法。</p>
+
+<h2>痛點：一條指令對三條指令，誰比較快</h2>
+<p>「同樣把陣列元素讀出來，x86 一條 <code>mov</code> 就做完，RISC-V 要三條。那 x86 不就快三倍？可是大家又說 RISC 比較快，到底哪個對？」</p>
+<p>兩邊都不對，因為「指令數」不是拍數。第 00 章的式子是 IC × CPI × T<sub>c</sub>：指令數少的那邊 IC 小，CPI 卻可能大得多；而現代 x86 核心會先把每條指令拆成一到多個微運算，真正排進管線的是微運算。這一章把同一件工作在兩種契約下的三個成本同時算出來，讓你看到它們會給出<strong>相反的結論</strong>。</p>
+
+<h2>白話直覺：契約規定結果，不規定手法</h2>
+<p>ISA 這份契約包含五件事：有哪些指令、有哪些暫存器、位址空間長什麼樣、例外與中斷怎麼發生、多執行緒之間的記憶體模型怎麼保證。可以暫時把它想成合約書，只寫交付什麼、不寫工廠怎麼排班；比喻到此為止。精確地說：契約只約束<strong>可觀察的狀態變化</strong>，實作可用任何手段達成，包括把一條指令拆成好幾個內部動作。</p>
+<p><strong>精簡指令集電腦（reduced instruction set computer, RISC）</strong>的三個特徵是：指令單純、長度固定、只有載入與儲存兩種指令碰記憶體。<strong>複雜指令集電腦（complex instruction set computer, CISC）</strong>則相反：指令多、長度不固定、算術指令的運算元可以直接寫記憶體位址。<strong>現代 x86 是兩件事同時成立</strong>——外面是 CISC 編碼，裡面把每條指令解碼成一到多個<strong>微運算（micro-operation, micro-op）</strong>，跑在類 RISC 的核心上。</p>
+<p>照因果鏈走一次。<strong>工作量從哪來：</strong>要算出 <code>基底 + 索引 × 元素大小 + 位移</code> 這個位址，再去記憶體讀一次。<strong>這一招做了什麼決定：</strong>把那個乘加做進專用的位址產生單元（address generation unit, AGU），寫成一條指令的一個定址模式。<strong>省下多少、多花多少：</strong>省下兩條算術指令與它們佔用的 ALU 拍數，代價是解碼器要認得更多編碼、AGU 要多一個移位器（縮放倍率只有 1、2、4、8）。<strong>邊界在哪：</strong>再往前推做記憶體間接就划不來，那要兩次資料記憶體存取而且第二次得等第一次。<strong>儀器量到什麼：</strong>反組譯器給你每條指令幾個位元組，效能計數器給你發出了幾個微運算。</p>
+<p>指令分四類：資料搬移、算術與邏輯、控制流、特權與系統。定址模式有六種：立即、暫存器、基址加位移、索引加縮放、記憶體間接、PC 相對。<strong>碼密度（code density）</strong>是同一件事要多少位元組，它影響指令快取壓力與取指頻寬，不直接影響拍數。</p>
+<p class="note">來源：11-計算機組織與微處理機 §3.1、§3.2、§3.3。</p>
+
+<h2>推導：四個設計決定各自買到什麼</h2>
+<p><strong>（a）固定長度為什麼讓管線變簡單。</strong>取指階段必須在解碼之前就知道「下一條在哪裡」。長度固定時答案是 <code>PC + 4</code>，一個加法器就解決，還能同時取好幾條。變長編碼必須先看第一個位元組才知道要再讀幾個，於是 x86 前端要多一級長度解碼，而且很難平行取多條——這一級不做事，卻要吃電晶體與清空深度。</p>
+<p><strong>（b）碼密度高為什麼不一定快。</strong>同一件事 CISC 用 4 個位元組、RISC 用 12 個，指令快取裝得下的程式碼多三倍。但那一條 CISC 指令進了核心仍被拆成同樣多的微運算，<strong>真正決定拍數的是微運算數，不是指令數</strong>：碼密度講體積，微運算數講時間。</p>
+<p><strong>（c）索引定址值不值得做成一條指令。</strong>有效位址的算式是</p>
+<p><code>EA ＝ 基底 ＋ 索引 × 縮放 ＋ 位移</code></p>
+<p>基底與索引是暫存器的值（單位：位元組位址），縮放倍率只能是 1、2、4、8（元素大小），位移是編碼在指令裡的常數。陣列走訪是最常見的樣式，把這個乘加搬進 AGU，ALU 就不必參與位址計算。</p>
+<p><strong>（d）記憶體間接為什麼現代 RISC 不做。</strong>它先讀一次記憶體拿到指標，再用那個值當位址讀第二次。<strong>兩次資料記憶體存取，而且第二次的位址相依於第一次的結果</strong>，中間沒有辦法重疊。五階段管線只有一個 MEM 階段，這種指令塞不進去，只能拆開或讓整條管線為它多加一級——代價由所有指令分攤。</p>
+
+<h2>數值實例：同一組運算元跑過六種定址模式</h2>
+<p>取基底 ＝ 1024、位移 ＝ 16、索引 ＝ 5、縮放倍率 ＝ 4，PC ＝ 16384（<code>0x4000</code>）。</p>
+<table><thead><tr><th>定址模式</th><th>有效位址算式與結果</th><th>資料記憶體存取</th></tr></thead><tbody>
+<tr><th>立即</th><td>運算元就在指令裡，無有效位址</td><td>0 次</td></tr>
+<tr><th>暫存器</th><td>運算元在暫存器裡，無有效位址</td><td>0 次</td></tr>
+<tr><th>基址加位移</th><td>1024 ＋ 16 ＝ <strong>1040（<code>0x410</code>）</strong></td><td>1 次</td></tr>
+<tr><th>索引加縮放</th><td>1024 ＋ 5 × 4 ＋ 16 ＝ <strong>1060（<code>0x424</code>）</strong></td><td>1 次</td></tr>
+<tr><th>記憶體間接</th><td>先讀 1040（<code>0x410</code>）拿到指標，再用它當位址</td><td><strong>2 次</strong></td></tr>
+<tr><th>PC 相對</th><td>16384 ＋ 16 ＝ <strong>16400（<code>0x4010</code>）</strong></td><td>0 次（用於跳躍）</td></tr>
+</tbody></table>
+<p>下表是本課鎖定的一階成本模型，數字是教學代表值，不是任何真實晶片的規格。</p>
+<table><thead><tr><th>模式</th><th>RISC 指令數</th><th>RISC 位元組</th><th>RISC micro-op</th><th>CISC 指令數</th><th>CISC 位元組</th><th>CISC micro-op</th></tr></thead><tbody>
+<tr><th>立即</th><td>1</td><td>4</td><td>1</td><td>1</td><td>6</td><td>1</td></tr>
+<tr><th>暫存器</th><td>1</td><td>4</td><td>1</td><td>1</td><td>2</td><td>1</td></tr>
+<tr><th>基址加位移</th><td>1</td><td>4</td><td>1</td><td>1</td><td>3</td><td>1</td></tr>
+<tr><th>索引加縮放</th><td>3</td><td>12</td><td>3</td><td>1</td><td>4</td><td>1</td></tr>
+<tr><th>記憶體間接</th><td>2</td><td>8</td><td>2</td><td>1</td><td>3</td><td>2</td></tr>
+<tr><th>PC 相對</th><td>2</td><td>8</td><td>2</td><td>1</td><td>5</td><td>1</td></tr>
+</tbody></table>
+<p>預設的索引加縮放這一列：RISC <strong>3 條、12 位元組、3 個 micro-op</strong>；CISC <strong>1 條、4 位元組、1 個 micro-op</strong>；碼密度比 ＝ 12 / 4 ＝ <strong>3.000000</strong>。</p>
+<p><strong>邊界對照。</strong>切到<strong>暫存器</strong>模式，RISC 4 位元組、CISC 2 位元組，碼密度比 <strong>2.000000</strong>，兩邊都是 1 個 micro-op——<strong>此時 CISC 只贏體積，不贏速度</strong>。切到<strong>記憶體間接</strong>，CISC 雖然只有 1 條指令，micro-op 卻是 2 個、資料記憶體存取 2 次；指令數 1 比 2，micro-op 卻是 2 比 2，<strong>指令數這個指標完全失真</strong>。再把位移改成 200（超出 <code>−128</code> 到 <code>127</code> 這個單位元組範圍），CISC 的位移欄位從 1 個位元組變成 4 個，基址加位移那一列從 3 個膨脹到 6 個，碼密度優勢立刻縮水。</p>
+
+<section class="workspace"><h2>自由實驗：兩種契約、六種定址模式的三個成本</h2>
+<p>場景是「把一個陣列元素讀進暫存器」。下面的選單決定用哪一種定址模式、要看哪一種指令集風格，四個滑桿與選單決定基底、位移、索引與元素大小。輸出會同時給你有效位址、資料記憶體存取次數，以及兩種風格各自的指令數、位元組數與 micro-op 數。重點不是哪一邊數字小，而是<strong>哪兩個指標互相矛盾</strong>。</p>
+<div class="controls">
+<label for="is-style">要比較的風格<select id="is-style"><option value="both">兩邊都看</option><option value="risc">只看 RISC（固定 32 位元）</option><option value="cisc">只看 CISC（變長 1–15 位元組）</option></select></label>
+<label for="is-mode">定址模式<select id="is-mode"><option value="imm">立即</option><option value="reg">暫存器</option><option value="disp">基址加位移</option><option value="indexed" selected>索引加縮放</option><option value="indirect">記憶體間接</option><option value="pcrel">PC 相對</option></select></label>
+<label for="is-base">基底暫存器的值<input id="is-base" type="range" min="0" max="4096" step="4" value="1024"></label>
+<label for="is-disp">位移量<input id="is-disp" type="range" min="-256" max="256" step="4" value="16"></label>
+<label for="is-index">索引暫存器的值<input id="is-index" type="range" min="0" max="64" step="1" value="5"></label>
+<label for="is-scale">縮放倍率<select id="is-scale"><option value="1">1（位元組陣列）</option><option value="2">2（16 位元陣列）</option><option value="4" selected>4（32 位元陣列）</option><option value="8">8（64 位元陣列）</option></select></label>
+</div>
+<div id="isa-output" class="output" aria-live="polite">目前是<strong>索引加縮放</strong>，兩邊都看；這個模式用到基底、位移、索引與縮放倍率四個控制，全部都會影響結果。有效位址 ＝ 1024 ＋ 5 × 4 ＋ 16 ＝ <strong>1060</strong>（<code>0x424</code>），資料記憶體存取 <strong>1 次</strong>。RISC：<strong>3 條指令、12 位元組、3 個 micro-op</strong>；CISC：<strong>1 條指令、4 位元組、1 個 micro-op</strong>；碼密度比 ＝ 12 / 4 ＝ <strong>3.000000</strong>。判讀：這是 CISC 贏最多的一列，指令數、位元組數、micro-op 數三個指標同時指向同一邊，所以此時「一條抵三條」這句話成立。為什麼：<strong>碼密度比講的是體積，micro-op 數講的才是拍數，兩個指標會給你相反的結論。</strong>邊界提醒：切到「暫存器」模式，兩邊的 micro-op 都是 1，CISC 只剩體積優勢；切到「記憶體間接」，CISC 的 1 條指令會展開成 2 個 micro-op 與 2 次資料記憶體存取；把位移拉到超過 127，CISC 這條指令要多花 3 個位元組。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>ISA 與微架構是兩件事。同一份 x86-64 契約，Intel 與 AMD 的管線深度、預測器、快取大小都不一樣，卻跑同一份執行檔。</li>
+<li>RISC 不是「指令比較少」，而是「每條指令做的事比較單純、長度固定、只有載入儲存碰記憶體」。RISC-V 把各種擴充加起來，指令一點都不少。</li>
+<li>碼密度高不等於執行快。它降低的是指令快取與取指頻寬的壓力，在嵌入式上很值錢，但不會讓 micro-op 變少。</li>
+<li>「x86 是 CISC」與「x86 內部是 RISC」不是互相反駁的兩句話，是外部契約與內部實作兩個層次的敘述，同時為真。</li>
+<li>定址模式不是「x86 才有的東西」。RISC 也有基址加位移與 PC 相對，差別只在它不提供索引加縮放與記憶體間接。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>反組譯器（<code>objdump -d</code>）會逐條列出指令的位元組長度與編碼；<code>perf stat</code> 在支援的機器上可同時讀 <code>instructions</code> 與 <code>uops_issued</code>，相除就是平均每條指令幾個 micro-op。</p>
+<p><strong>能證明什麼。</strong>能證明這段程式碼實際的指令數、總位元組數與 micro-op 數，也能證明同一支程式在兩種編譯選項下碼密度差多少。比值明顯大於 1 時，就證明了「一條指令不等於一個動作」。</p>
+<p><strong>不能證明什麼。</strong>證明不了某一條指令內部被拆成哪幾個 micro-op，那是廠商沒有完全公開的細節，計數器只給總數。也證明不了「換成 RISC 會比較快」：那要換機器、重新編譯、重新量，結果還會被快取與分支行為蓋過去。</p>
+
+<h2>連到哪門課</h2>
+<p>這一章立刻用得上的地方有兩個：讀反組譯結果時知道該看位元組數還是 micro-op 數；選嵌入式處理器時知道為什麼壓縮編碼會出現在記憶體很小的裝置上（第 13 章再回來）。從第 03 章起，注意力會從「一條指令長什麼樣」轉到「一條指令佔了幾拍」。</p>
+<p>指令逐條的語法與語意見<a href="../../../專題/計算機組織/互動課程/07-RISC-V組合語言.html">計算機組織的 RISC-V 組合語言</a>與<a href="../../../專題/計算機組織/互動課程/05-x86-64組合語言.html">x86-64 組合語言</a>；這些指令怎麼被解碼與執行見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">處理器資料路徑與指令週期</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="00-微處理機世界觀與效能公式.html">← 上一頁：微處理機世界觀與效能公式</a><a href="02-IEEE754與端序.html">下一頁：IEEE 754 與端序 →</a></nav>
+</main>
+<footer class="site-footer"><span>01 ISA 契約與定址模式</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

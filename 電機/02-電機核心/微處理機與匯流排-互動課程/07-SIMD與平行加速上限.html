@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 SIMD 與平行加速上限｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・只要有一段不能平行，天花板就已經在那裡等著</p>
+<h1>SIMD 與平行加速上限：可平行化比例 80 % 時，加速上限只有 5 倍</h1>
+<p class="lead">平行有三個層級：指令級、資料級、執行緒級。這章用 Amdahl 定律說明一件很多人算錯的事——天花板由那段動不了的程式決定，而且來得比直覺快得多；資料級平行則拿 SIMD 當具體案例，算出向量寬度真正換到多少加速。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="06-超純量亂序與推測執行.html">06 超純量、亂序與推測執行</a>的指令級平行度與那條取最小值的規則。<strong>前置：</strong>x86-64 指令逐條怎麼寫（含 SIMD 指令族）屬機制層，見〈05 x86-64 組合語言〉<a href="../../../專題/計算機組織/互動課程/05-x86-64組合語言.html">計算機組織的 x86-64 組合語言</a>；本章不重講指令語法，只算它們換到多少加速。</p>
+
+<h2>痛點：換成 8 核心之後，程式只快了兩倍多</h2>
+<p>把迴圈改成多執行緒、機器換成 8 核心、資料也用上向量指令，結果總時間只從 100 秒掉到 30 秒。老闆問「不是 8 核嗎」，你答不出來。更常見的版本是：向量寬度從 8 加倍成 16，理論上該再快一倍，實測只多了兩成。</p>
+<p>這兩件事其實是同一個現象的兩面：程式裡總有一段完全不能平行——讀檔、初始化、結果彙整、同步——那段不管你加多少核心都一樣長。這章要把那段的代價算成一個數字，並且說明為什麼它比大家以為的更早就開始主導一切。</p>
+<p class="note">來源：11-計算機組織與微處理機 §4.4、§7.2、§7.3。</p>
+
+<h2>白話直覺：三種平行，一條共同的天花板</h2>
+<p>可以暫時把程式想成一條有瓶頸的產線；比喻到此為止，收回精確定義：平行分三層，<strong>指令級平行度（instruction-level parallelism, ILP）</strong>是同一條指令流裡彼此獨立的指令（第 06 章）；<strong>資料級平行度（data-level parallelism, DLP）</strong>是同一個運算套用到很多筆資料，<strong>單指令多資料（single instruction multiple data, SIMD）</strong>與 GPU 屬於這一類；<strong>執行緒級平行度（thread-level parallelism, TLP）</strong>是多核心與<strong>同時多執行緒（simultaneous multithreading, SMT）</strong>。</p>
+<p>依因果鏈走一次。<strong>工作量從哪來</strong>：一段總時間為 1 的程式，其中比例 p 可以平行、剩下 1 − p 只能一條路走到底。<strong>這一招做了什麼決定</strong>：把那 p 分給更多執行單元同時做，時間縮成 p / s。<strong>省下多少、多花多少</strong>：p = 80 %、s = 8 時總加速 3.333333 倍，代價是多開的執行單元、資料搬進向量暫存器的成本、以及跨核心的同步；SIMD 這一側只多了一組較寬的暫存器與運算單元，功耗代價比多開核心便宜得多。<strong>邊界在哪</strong>：那段 1 − p 完全不受 s 影響，s 再大也只能逼近 1 / (1 − p)。<strong>儀器量到什麼</strong>：編譯器的向量化報告告訴你哪個迴圈被向量化，效能計數器告訴你指令數掉了多少、拍數只掉了多少。</p>
+
+<h2>推導：Amdahl 定律與尾數迴圈</h2>
+<p><strong>（a）Amdahl 定律怎麼來的。</strong>把改進前的總時間正規化成 1。不能平行的那段是 1 − p，它一點都不會變短；能平行的那段原本是 p，被 s 倍的資源攤開之後變成 p / s。改進後的總時間 = (1 − p) + p / s，加速比就是它的倒數：S = 1 / ((1 − p) + p / s)。符號的意思：p 是可平行化的<strong>時間比例</strong>（不是程式碼行數比例），無單位、介於 0 與 1；s 是那一段拿到的加速倍率，無單位；S 是整體加速比。假設是「平行化本身不花額外時間」，這一點稍後要修掉。</p>
+<p><strong>（b）為什麼上限是 1 / (1 − p)。</strong>令 s → ∞，則 p / s → 0，分母只剩 1 − p，於是 S<sub>max</sub> = 1 / (1 − p)。<strong>p = 80 % 時上限只有 5.000000 倍</strong>——這比大多數人的直覺低很多。要拿到 20 倍，p 必須到 95 %；要拿到 100 倍，p 必須到 99 %。換句話說，投資的重點常常不是加機器，而是把那段序列程式的比例壓下去。</p>
+<p><strong>（c）SIMD 的實際加速為什麼不是 W。</strong>向量寬度 W 是一個向量暫存器裝幾個元素。處理 N 筆資料要跑 ⌈N / W⌉ 次向量迴圈（⌈ ⌉ 是向上取整），因為最後一次即使只剩幾筆也得跑完整一次。所以 S<sub>simd</sub> = N / ⌈N / W⌉，通道使用效率 = S<sub>simd</sub> / W。剩下的那一批叫<strong>尾數迴圈（tail loop）</strong>，元素數 = N − (⌈N / W⌉ − 1) × W。只有當 N 是 W 的整數倍時，S<sub>simd</sub> 才剛好等於 W。</p>
+<p><strong>（d）為什麼固定開銷要放進分母。</strong>同步、把資料搬進向量暫存器、跨核心維持快取一致性所產生的流量（第 09 章），都是<strong>不管平行幾倍都要付</strong>的成本。把它寫成佔原始時間的比例 overhead，改進後總時間 = (1 − p) + p / s + overhead，於是 S = 1 / ((1 − p) + p / s + overhead)，上限也跟著降成 1 / ((1 − p) + overhead)。它跟 1 − p 一樣會壓住天花板。<strong>本課用的是一階教學模型</strong>：真實系統的開銷會隨執行緒數成長、快取行為也會改變 p 本身，這裡把它們都當成常數。</p>
+
+<h2>數值實例：p = 80 %、資料級平行、向量寬度 8、1000 筆資料</h2>
+<p>設定：可平行化比例 p = 80 %、平行層級選資料級（DLP）、向量寬度 8、資料元素 1000 筆、固定開銷 0 %。這組數字與下面互動元件的預設值完全一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>向量迴圈次數</td><td>⌈1000 / 8⌉</td><td><strong>125 次</strong></td></tr>
+<tr><td>SIMD 有效加速</td><td>1000 / 125</td><td><strong>8.000000 倍</strong></td></tr>
+<tr><td>通道使用效率</td><td>8.000000 / 8</td><td><strong>100.000000 %</strong></td></tr>
+<tr><td>尾數元素</td><td>1000 − 124 × 8</td><td><strong>8 筆（最後一次剛好滿）</strong></td></tr>
+<tr><td>Amdahl 總加速</td><td>1 / (0.2 + 0.8 / 8)</td><td><strong>3.333333 倍</strong></td></tr>
+<tr><td>加速上限（s → ∞）</td><td>1 / (1 − 0.8)</td><td><strong>5.000000 倍</strong></td></tr>
+</tbody></table>
+<p>量級對照：這台機器若是 2.0 GHz、T<sub>c</sub> = 0.500000 ns，1000 筆資料的向量迴圈跑 125 次，每次即使只花 1 拍也要 62.500000 ns；相對之下一次 L1 快取失誤 50 拍就是 25.000000 ns，所以資料一旦沒在快取裡，SIMD 省下來的那點時間馬上被吃掉。</p>
+<p>邊界對照要逐條看。向量寬度改 <strong>16</strong>：迴圈次數 <strong>63 次</strong>、有效加速 <strong>15.873016 倍</strong>（不是 16）、通道效率 <strong>99.206349 %</strong>、尾數 <strong>8 筆只用了一半通道</strong>；代入 Amdahl 之後總加速 <strong>3.993610 倍</strong>——<strong>向量寬度加倍，總加速只從 3.333333 升到 3.993610，因為那 20 % 動不了</strong>。資料量改 <strong>5 筆</strong>、寬度 16：迴圈 1 次、有效加速 <strong>5.000000 倍</strong>、通道效率只有 <strong>31.250000 %</strong>，<strong>資料太少時 SIMD 幾乎白做</strong>。</p>
+<p>固定開銷改 <strong>5 %</strong>：總加速從 3.333333 掉到 <strong>2.857143 倍</strong>——只是多付 5 % 的同步成本，就吃掉了將近一成五的加速。換到別的層級看得更清楚：p 改 <strong>95 %</strong>、s = 16 時總加速 <strong>9.142857 倍</strong>（上限 20.000000）；p 改 <strong>50 %</strong>、s = 64 時總加速只有 <strong>1.969231 倍</strong>，上限根本只有 2——<strong>拿 64 倍的資源去追一個 2 倍的天花板，是最典型的浪費。</strong></p>
+
+<section class="workspace"><h2>自由實驗：把 p、s、向量寬度與資料量同時擺上天平</h2>
+<p>場景是一支總時間正規化為 1 的程式跑在一台可以自由配置平行資源的機器上。工作量由資料元素個數 N 決定，機器這一側可以選平行層級、調向量寬度或那一段的加速倍率 s，還可以加上平行化的固定開銷。要看的是：向量迴圈跑幾次、通道用掉多少、總加速是多少，以及那個永遠追不到的上限在哪裡。</p>
+<div class="controls">
+<label for="am-p">可平行化的比例 p（%）<input id="am-p" type="range" min="0" max="100" step="1" value="80"></label>
+<label for="am-s">該段的加速倍率 s（指令級與執行緒級用）<input id="am-s" type="range" min="1" max="64" step="1" value="8"></label>
+<label for="am-level">平行層級<select id="am-level"><option value="dlp">資料級 DLP（SIMD、GPU）</option><option value="ilp">指令級 ILP（超純量、亂序）</option><option value="tlp">執行緒級 TLP（多核、SMT）</option></select></label>
+<label for="am-width">SIMD 向量寬度（元素）<input id="am-width" type="range" min="1" max="16" step="1" value="8"></label>
+<label for="am-n">要處理的資料元素個數 N<input id="am-n" type="range" min="1" max="1024" step="1" value="1000"></label>
+<label for="am-overhead">平行化的固定開銷（%）<input id="am-overhead" type="range" min="0" max="20" step="0.5" value="0"></label>
+</div>
+<div id="amdahl-output" class="output" aria-live="polite">這個層級用向量寬度與資料量算出的實際加速，上面的 s 滑桿不影響結果。向量迴圈次數 125 次；SIMD 有效加速 8.000000 倍；通道效率 100.000000 %；尾數元素 8 筆；總加速 3.333333 倍；加速上限 5.000000 倍。<strong>1000 是 8 的整數倍，所以通道全滿，SIMD 這一段拿到了滿分的 8 倍。</strong>即使如此總加速仍只有 3.333333 倍，離上限 5.000000 倍還有距離：不能平行的那一段完全不受 s 影響，所以它遲早會主導。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>SIMD 不是多執行緒。邊界在「幾條指令」：SIMD 是<strong>一條指令</strong>同時算多筆資料，仍在同一個核心的同一條管線裡；多執行緒是多條獨立的指令流。作業系統排程看得到後者，看不到前者。</li>
+<li>向量寬度加倍不等於加速加倍。邊界在 N 是不是 W 的整數倍：尾數迴圈會讓實際加速掉到 N / ⌈N / W⌉，而那段不能平行的程式還會再扣一次。</li>
+<li>Amdahl 定律講的是<strong>固定問題規模</strong>。邊界在「問題會不會跟著機器變大」：規模隨機器成長時要換 Gustafson 的觀點，本課只提這一句，不展開。</li>
+<li>「這台機器有 8 核」不代表程式能快 8 倍。邊界在 p：p 是時間比例而不是程式碼行數比例，一個只佔 5 行的初始化可能佔掉 30 % 的時間。</li>
+<li>固定開銷不是「小數點後的誤差」。它進的是分母，5 % 的開銷在 p = 80 % 時就砍掉將近一成五的加速。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>把同一個迴圈分別用純量與向量指令編譯，編譯器的向量化報告會直接告訴你哪一個迴圈被向量化、哪一個因為相依或指標別名而放棄；再用 <code>perf stat</code> 比較兩版的 <code>instructions</code> 與 <code>cycles</code>。指令數大幅下降而拍數只小幅下降，就是 Amdahl 在扣分。</p>
+<p><strong>能證明</strong>：這個迴圈有沒有被向量化、向量化之後省下多少指令、整體時間實際變快多少。<strong>不能證明</strong>：p 到底是多少——那要靠剖析工具估計，而且會隨輸入資料與問題規模改變；也證明不了「加不了速是因為 Amdahl」，因為記憶體頻寬飽和會產生一模一樣的症狀，要靠改變資料量觀察曲線形狀才分得出來。</p>
+
+<h2>連到哪門課</h2>
+<p>這一章的三個層級對應到三種真實硬體：向量指令集在你手上每一顆桌機處理器裡，GPU 把資料級平行推到極端，多核心與同時多執行緒則是伺服器的主力。指令級平行的限制見本課<a href="06-超純量亂序與推測執行.html">06 超純量、亂序與推測執行</a>；執行緒級平行那筆看不見的隱藏成本（快取一致性流量）見本課<a href="09-多核一致性MESI.html">09 多核一致性 MESI</a>；哪一種硬體適合哪一種平行度見本課<a href="13-處理器家族選型.html">13 處理器家族選型</a>。想看一個真正吃 SIMD 的負載長什麼樣，FIR 濾波器那種密集乘加見<a href="../信號與系統-互動課程/15-數位濾波器與多速率.html">信號與系統的數位濾波器與多速率</a>。下一章換一條線：就算平行度夠，資料拿不進來一樣白搭。</p>
+<nav class="pager" aria-label="章節導覽"><a href="06-超純量亂序與推測執行.html">← 上一頁：超純量、亂序與推測執行</a><a href="08-快取設計四維度.html">下一頁：快取設計四維度 →</a></nav>
+</main>
+<footer class="site-footer"><span>07 SIMD 與平行加速上限</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

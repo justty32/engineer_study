@@ -1,0 +1,85 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 管線冒險、旁路與插泡｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・「每拍完成一條」是理想值，這章算它掉多少</p>
+<h1>管線冒險、旁路與插泡：硬體不是壞掉才停下來，是算過之後選擇等</h1>
+<p class="lead">三種東西會打斷管線的節奏：資源不夠、資料還沒好、下一條在哪還不知道。這章把第二種量化到逐拍——同一段五條指令的程式，有旁路要插 1 拍泡、沒旁路要插 8 拍泡，每指令拍數從 2.000000 變成 3.400000。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-五階段管線與吞吐量.html">03 五階段管線與吞吐量</a>的五個階段與 (N ＋ k − 1) × T<sub>p</sub>。<strong>前置：</strong>見〈04 處理器資料路徑與指令週期〉<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>——資料路徑與各階段的位置屬於那一頁，本章只算停頓的拍數。</p>
+
+<h2>痛點：明明是直線程式，為什麼每指令拍數不是 1</h2>
+<p>第 03 章的結論很漂亮：穩態下每一拍完成一條指令。可是把一段最單純的加減法搬上真機器量，每指令拍數常常是 1.2 甚至更差，而程式裡連一個分支都沒有。那幾拍是被誰吃掉的？</p>
+<p>更難回答的是：兩段功能一樣、指令數也一樣的程式，一段快一段慢，差別只在「後面那條有沒有用到前面那條剛算出來的結果」。第 03 章的公式看不到，因為它假設所有指令都不停頓。</p>
+
+<h2>白話直覺：冒險是「這一拍不能照原計畫走」的統稱</h2>
+<p>冒險（hazard）不是錯誤，是排班衝突。可以暫時想成輸送帶上的三種卡關：搶同一支工具、上一位的零件還沒做完、不知道下一件是哪型；比喻到此為止，精確的說法是——結構冒險（structural hazard）指同一拍有兩級要用同一個硬體資源，資料冒險（data hazard）指要讀的暫存器還沒被前面那條寫進去，控制冒險（control hazard）指分支沒算完就不知道該取哪一條。第三種留給第 05 章。</p>
+<p>複習一行就好：IF（取指）、ID（解碼並讀暫存器）、EX（執行）、MEM（記憶體存取）、WB（寫回）。這五格各自做什麼是既有課的內容，本章只用到「結果在哪一格產生、下一條在哪一格要用」這兩件事。</p>
+<p>照因果鏈走一遍。工作量從哪來：一段有先寫後讀（read-after-write, RAW）相依的指令序列。這一招做了什麼決定：<strong>旁路（forwarding／bypassing）</strong>不等資料寫回暫存器，直接從執行或記憶體階段的輸出拉一條線接到後面那條的執行階段輸入。省下多少拍：本章的五條指令，沒有旁路 8 拍泡共 17 拍，有旁路只剩 1 拍泡共 10 拍。多花什麼：那幾條線是實體的多工器與繞線，佔面積、增加執行階段延遲，壓低時脈上限。邊界在哪：<strong>載入使用冒險（load-use hazard）</strong>躲不掉——載入的資料要到記憶體階段結束才拿得到，比下一條的執行階段需要的時間晚一拍，即使旁路做到滿也要插一拍。儀器量到什麼：把相依鏈拆開，每指令拍數會明顯下降。</p>
+<p>停頓與插泡（stall／bubble）是硬體的手段：把後面的指令凍住，塞一個什麼都不做的空拍。泡不是當機，是硬體選擇等——等比算錯便宜。</p>
+<p class="note">來源：11-計算機組織與微處理機 §4.3。</p>
+
+<h2>推導：泡數怎麼算出來的</h2>
+<p><strong>（a）沒有旁路時為什麼要插 3 − d 拍。</strong>設生產者是第 i 條、消費者是第 j 條，相依距離 d ＝ j − i。生產者第 i 拍取指，第 i ＋ 4 拍才在寫回把結果寫進暫存器；消費者第 j 拍取指，第 j ＋ 1 拍在解碼階段讀暫存器。要讀得到必須 j ＋ 1 ≥ i ＋ 4，即 d ≥ 3；距離只有 d 時缺的正好是 3 − d 拍。假設暫存器檔在同一拍內先寫後讀。</p>
+<p><strong>（b）有旁路時為什麼只剩載入使用那一拍。</strong>算術邏輯運算的結果在執行階段結束時就在輸出端上，直接接到下一拍的執行階段輸入，距離 1 就夠，所以算術相依全部不用插泡。但載入的資料要等記憶體階段結束才出現，只接得到<strong>再下一拍</strong>的執行階段輸入，比下一條的執行階段晚一拍，因此必須插 1 拍。式子是 stalls ＝ loadUse × max(0, 2 − d)，loadUse 是載入使用相依對數，本序列只有 1 對。</p>
+<p><strong>（c）為什麼是插泡而不是把指令重排。</strong>管線硬體只有兩種動作：往前推、或凍住，沒有「先做後面那條」的能力。重排是別人的工作——編譯器把一條無關的指令排進那一拍就填掉了；硬體自己重排就是第 06 章的亂序執行引擎，代價是大量追蹤邏輯。</p>
+<p><strong>（d）結構冒險為什麼在現代機器上少見。</strong>經典例子是只有一個記憶體埠：第 i 條走記憶體階段那一拍，第 i ＋ 3 條正好在取指，兩者都要碰記憶體。現代處理器把指令快取與資料快取分開，取指與資料存取各走一邊，撞車就消失了。本章保留這個選項，是要讓你看見它多出來的那一拍<strong>性質完全不同</strong>：不是資料等不到，是兩級搶資源。</p>
+
+<h2>數值實例：鎖定的五條指令序列</h2>
+<p>本課鎖定這一組序列：</p>
+<pre><code>1  lw   x2, 0(x1)      從記憶體讀一個字進 x2
+2  add  x3, x2, x4     用 x2
+3  sub  x5, x3, x6     用 x3
+4  and  x7, x5, x8     用 x5
+5  or   x9, x7, x2     用 x7</code></pre>
+<p>預設設定是 5 條指令、相依距離 1、啟用旁路、單一記憶體埠未勾選。逐拍表如下（數字是拍號）：</p>
+<table><thead><tr><th>指令</th><th>IF</th><th>ID</th><th>泡</th><th>EX</th><th>MEM</th><th>WB</th></tr></thead><tbody>
+<tr><td>1 <code>lw</code></td><td>1</td><td>2</td><td>—</td><td>3</td><td>4</td><td>5</td></tr>
+<tr><td>2 <code>add</code></td><td>2</td><td>3</td><td><strong>4</strong></td><td>5</td><td>6</td><td>7</td></tr>
+<tr><td>3 <code>sub</code></td><td>3</td><td>4–5</td><td>—</td><td>6</td><td>7</td><td>8</td></tr>
+<tr><td>4 <code>and</code></td><td>4–5</td><td>6</td><td>—</td><td>7</td><td>8</td><td>9</td></tr>
+<tr><td>5 <code>or</code></td><td>6</td><td>7</td><td>—</td><td>8</td><td>9</td><td>10</td></tr>
+</tbody></table>
+<p>第 3、第 4 條的解碼與取指各佔兩拍，不是它們有冒險，是被前面那一拍泡往後推的結果。旁路路徑有四條：指令 1 的記憶體階段接指令 2 的執行階段，指令 2、3、4 的執行階段各接下一條。只有第一條走記憶體階段的輸出，所以只有它要插泡。</p>
+<table><thead><tr><th>設定</th><th>泡數</th><th>總拍數</th><th>CPI</th><th>穩態 CPI</th></tr></thead><tbody>
+<tr><td>距離 1、有旁路（預設）</td><td><strong>1</strong></td><td><strong>10</strong></td><td><strong>2.000000</strong></td><td><strong>1.200000</strong></td></tr>
+<tr><td>距離 1、無旁路</td><td><strong>8</strong></td><td><strong>17</strong></td><td><strong>3.400000</strong></td><td><strong>2.600000</strong></td></tr>
+<tr><td>距離 2、有旁路</td><td><strong>0</strong></td><td><strong>9</strong></td><td><strong>1.800000</strong></td><td><strong>1.000000</strong></td></tr>
+<tr><td>距離 2、無旁路</td><td><strong>3</strong></td><td><strong>12</strong></td><td><strong>2.400000</strong></td><td><strong>1.600000</strong></td></tr>
+<tr><td>距離 3、有或無旁路</td><td><strong>0</strong></td><td><strong>9</strong></td><td><strong>1.800000</strong></td><td><strong>1.000000</strong></td></tr>
+<tr><td>距離 1、有旁路 ＋ 單一記憶體埠</td><td><strong>2</strong></td><td><strong>11</strong></td><td><strong>2.200000</strong></td><td><strong>1.400000</strong></td></tr>
+</tbody></table>
+<p>旁路帶來的加速（距離 1）＝ 17 / 10 ＝ <strong>1.700000 倍</strong>。CPI 是總拍數除以指令數，含第 03 章那 4 拍填充；穩態 CPI 是 1 ＋ 泡數 / 指令數。只有 5 條指令時填充佔大半，CPI 2.000000 很糟，穩態其實只有 1.200000。</p>
+<p><strong>量級對照。</strong>在 2.0 GHz、一拍 0.500000 ns 的機器上，這 8 拍泡是 4 ns；一次 L1 快取失誤賠 50 拍、主記憶體存取 200 拍。冒險的停頓是一拍一拍的量級，記憶體是幾十到幾百拍。</p>
+<p><strong>邊界對照一：指令數拉到 12、距離 1。</strong>無旁路 22 拍泡共 38 拍（CPI 3.166667），有旁路仍只有 1 拍泡共 17 拍（CPI 1.416667）。指令越多旁路越值錢：無旁路的泡數隨指令數線性成長。</p>
+<p><strong>邊界對照二：指令數 2、距離 3。</strong>此時湊不出任何一對相依，總拍數 6、CPI 3.000000。這個 CPI 高得嚇人，原因不是冒險，是只有 2 條指令卻要付 4 拍填充。</p>
+
+<section class="workspace"><h2>自由實驗：把泡數算到逐拍</h2>
+<p>場景是一台五階段管線機器跑上面那段序列：第一條是載入指令，後面每一條都可能用到前面某一條的結果。你可以改指令數、改相依距離、開關旁路、開關「只有一個記憶體埠」。要看的是三件事：泡插在第幾拍、泡數怎麼隨距離變化，以及 CPI 與穩態 CPI 為什麼是兩個不同的數。</p>
+<div class="controls">
+<label for="ph-n">指令數 N<input id="ph-n" type="range" min="2" max="12" step="1" value="5"></label>
+<label for="ph-dep">相依距離<select id="ph-dep"><option value="1">距離 1（每條都用前一條的結果）</option><option value="2">距離 2（隔一條）</option><option value="3">距離 3（隔兩條，沒有冒險）</option></select></label>
+<label for="ph-forward"><input id="ph-forward" type="checkbox" checked>啟用旁路（forwarding）</label>
+<label for="ph-struct"><input id="ph-struct" type="checkbox">只有一個記憶體埠（結構冒險）</label>
+</div>
+<div id="pipehaz-output" class="output" aria-live="polite">目前設定：5 條指令、相依距離 1、啟用旁路、記憶體埠不受限。逐拍：指令 1 取指第 1 拍、解碼第 2 拍、執行第 3 拍、記憶體第 4 拍、寫回第 5 拍；指令 2 取指第 2 拍、解碼第 3 拍、<strong>第 4 拍插泡</strong>、執行第 5 拍、記憶體第 6 拍、寫回第 7 拍；指令 3 取指第 3 拍、解碼第 4 到 5 拍、執行第 6 拍、記憶體第 7 拍、寫回第 8 拍；指令 4 取指第 4 到 5 拍、解碼第 6 拍、執行第 7 拍、記憶體第 8 拍、寫回第 9 拍；指令 5 取指第 6 拍、解碼第 7 拍、執行第 8 拍、記憶體第 9 拍、寫回第 10 拍。泡數 <strong>1</strong>；總拍數 <strong>10</strong>；CPI <strong>2.000000</strong>；穩態 CPI <strong>1.200000</strong>；旁路帶來的加速 <strong>1.700000 倍</strong>。<strong>判讀：有旁路還是有 1 拍泡，因為載入的資料要到 MEM 結束才拿得到。</strong>為什麼：泡不是硬體壞掉，是硬體選擇等，等比算錯便宜。邊界提醒：把距離調到 3，有沒有旁路都一樣，相依已經被自然拉開；勾選單一記憶體埠會再多一拍，那一拍不是資料等不到，是 IF 與 MEM 搶同一個記憶體埠；指令數 12 又不勾旁路會有 22 拍泡，超過一半的拍數在空轉；指令數調到 2 且距離 3 時不存在相依對，CPI 高是填充造成的，不是冒險。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>旁路不是「讓資料變快」。資料還是在同一拍產生的，旁路只是讓它<strong>改走一條比較短的線</strong>，跳過寫回再讀出的繞路。</li>
+<li>插泡不等於當機。那一拍只是不做事，架構狀態完全正確；泡是硬體在「等一拍」與「算錯」之間的選擇。</li>
+<li>先寫後讀是<strong>真相依</strong>，一定要等；先讀後寫與先寫後寫是假相依，換個實體暫存器名字就沒了，那是第 06 章的事。</li>
+<li>載入使用冒險是<strong>即使有完整旁路也躲不掉</strong>的那一種。它不是設計失誤，是階段順序的必然結果，只能靠編譯器填掉。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>寫兩份功能相同的迴圈：一份串成長相依鏈，一份拆成四條無關的鏈交錯執行。用 <code>perf stat</code> 讀 <code>cycles</code> 與 <code>instructions</code> 算每指令拍數；<code>stalled-cycles-frontend</code> 與 <code>stalled-cycles-backend</code> 可粗分停頓落在前端還是後端。</p>
+<p><strong>能證明什麼。</strong>兩份程式指令數幾乎一樣而拍數差很多，就證明停頓存在且跟相依鏈有關；拆開相依後數字下降，證明改寫有效。前後端分類還能指出瓶頸在哪一半。</p>
+<p><strong>不能證明什麼。</strong>證明不了某一拍泡是哪一條指令造成的——計數器只給總數，要定位得用取樣剖析，而取樣有偏差。也證明不了「這台機器有沒有旁路」：現代處理器都有，量到的差異全來自程式本身的相依結構。</p>
+
+<h2>連到哪門課</h2>
+<p>「把長相依鏈拆成幾條短鏈交錯」是寫高效能程式最有效的手法之一，根據就是這一章。各階段在資料路徑上的位置見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>；控制冒險見<a href="05-分支預測與管線清空.html">第 05 章</a>，靠硬體重排來填泡見<a href="06-超純量亂序與推測執行.html">第 06 章</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="03-五階段管線與吞吐量.html">← 上一頁：五階段管線與吞吐量</a><a href="05-分支預測與管線清空.html">下一頁：分支預測與管線清空 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 管線冒險、旁路與插泡</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

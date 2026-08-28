@@ -1,0 +1,96 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 快取設計四維度｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・同一段程式，換一個快取設計，命中率可以從 0 % 跳到 87.5 %</p>
+<h1>快取設計四維度：對映方式、替換策略、寫策略、區塊大小，四個旋鈕一起決定命中率</h1>
+<p class="lead">全課的互動核心。一組存取跑過四個設計維度：更相聯、更大的區塊都不一定更好；命中率不是快取的性質，是它與存取樣式的合成。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-微處理機世界觀與效能公式.html">00 微處理機世界觀與效能公式</a>的拍數。<strong>前置：</strong>快取與分頁機制見<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">計算機組織的記憶體階層與虛擬記憶體</a>；本章只做量化取捨。</p>
+
+<h2>痛點：兩支功能一模一樣的程式，快了 7 倍</h2>
+<p>兩支程式做同一件事、輸出相同，一支慢七倍；時間都耗在同一行陣列存取，兩邊寫法一樣，換大一倍的快取仍慢。</p>
+<p>問題不在程式碼，而在<strong>位址落在哪裡</strong>：快取切開位址決定資料放哪格，相距剛好的兩陣列會撞進同格——同一組存取可以全失誤，也可以 87.500000 % 命中。</p>
+<p class="note">來源：11-計算機組織與微處理機 §5.1、§5.2。</p>
+
+<h2>白話直覺：位址被切成三段，中間那段決定你住哪一間</h2>
+<p>暫時把快取想成有編號的旅館房間；比喻到此，收回精確定義：快取以<strong>區塊（cache line／block）</strong>為搬運單位整塊搬；同容量下分成若干<strong>組（set）</strong>、每組若干<strong>路（way）</strong>，組數 = 容量 / (區塊大小 × 路數)。<strong>直接對映（direct-mapped）</strong>每組 1 路，<strong>n 路組相聯（n-way set-associative）</strong>每組 n 路，<strong>全相聯（fully-associative）</strong>只有 1 組、路數 = 區塊數。</p>
+<p>依因果鏈走一次。<strong>工作量從哪來</strong>：程式產生一串位址，規律有兩種：<strong>時間區域性（temporal locality）</strong>是同一筆很快再用，<strong>空間區域性（spatial locality）</strong>是附近的很快會用。<strong>這一招做了什麼決定</strong>：用中間幾位挑組，組內比標籤判命中。<strong>省下多少、多花多少</strong>：命中 1 拍、失誤多付 50 拍；改成二路，平均存取時間 51.000000 降到 7.250000 拍，代價是每組多一套比較器與替換狀態。<strong>邊界在哪</strong>：相聯度只換被踢的是誰，循環走訪反而全敗。<strong>儀器量到什麼</strong>：計數器數得出失誤次數，分不出類。</p>
+
+<h2>推導：位址切分、失誤三分類、寫策略的流量</h2>
+<p><strong>（a）位址怎麼切，索引為什麼取中間。</strong>位元組位址由高到低切成三段：<strong>標籤（tag）／索引（index）／區塊內偏移（offset）</strong>。偏移位元數 = log<sub>2</sub>(區塊大小)，指出在區塊裡第幾格；索引位元數 = log<sub>2</sub>(組數)，指出哪一組；高位是標籤，確認那一路是不是要的區塊。等價算法：區塊編號 = ⌊位址 / 區塊大小⌋、組索引 = 區塊編號 mod 組數。</p>
+<p>索引取中間，因為低位已被偏移吃掉；若改取最高幾位，<strong>相鄰區塊會全落進同一組</strong>，順序掃描每步都撞在一起，空間區域性從優勢變災難。</p>
+<p><strong>（b）失誤三分類（3C）怎麼算。</strong><strong>強制失誤（compulsory）</strong> = 區塊第一次被碰到，等於不同區塊數，再大的快取也躲不掉。<strong>容量失誤（capacity）</strong> = 同容量<strong>全相聯</strong>失誤數 − 強制失誤數，即工作集塞不下。<strong>衝突失誤（conflict）</strong> = 實際失誤數 − 全相聯失誤數，是位址撞同一組的浪費，唯一能靠相聯度消掉。</p>
+<p><strong>（c）為什麼衝突失誤可能算出負值。</strong>三分類以全相聯配 LRU 為理想基準，但它在<strong>循環走訪超過容量</strong>時恰是最壞情形：每次都剛好踢掉下一個要用的，全不命中；直接對映映射固定反保住一部分，實際失誤比全相聯少，相減成負值。<strong>這是三分類法的已知破口，不是計算錯誤</strong>，本課顯示 0 並附說明。</p>
+<p><strong>（d）寫策略的流量取捨。</strong><strong>寫回（write-back）＋寫配置（write-allocate）</strong>：寫失誤先搬整塊再改，髒塊逐出時整塊寫回。<strong>寫穿（write-through）＋不配置（no-write-allocate）</strong>：每次寫直接送出，寫失誤不搬塊。前者把多次寫併成一次回寫，後者每次只送 4 個位元組、省下逐出的整塊搬移；哪個省看寫得密不密集。</p>
+<p>替換策略在直接對映下不存在（每組一路）。本課提供 <strong>LRU（最近最少使用）</strong>、<strong>FIFO（先進先出）</strong>、<strong>MRU（最近使用）</strong>；Random 因本站禁用亂數，只用文字說明。<strong>以上全是一階教學模型</strong>：真實快取有多層階層、預取器與近似 LRU，命中時間也與相聯度有關。</p>
+
+<h2>數值實例：兩個陣列相距 256 位元組，直接對映全部失誤</h2>
+<p>設定與互動元件預設值一致：序列 <code>conflict</code>（16 筆全是讀：0、256、4、260、8、264、12、268、16、272、20、276、24、280、28、284）、直接對映、LRU、寫回＋寫配置、區塊 32 位元組、容量 256 位元組、命中 1 拍、失誤懲罰 50 拍。容量用 2 的次方位元組（256 位元組 = 0.25 KiB；第 12 章匯流排速率才用 10 的次方 MB/s）。</p>
+<p>位址切開：組數 = 256 / (32 × 1) = 8，偏移 5 位元（32 = 2<sup>5</sup>）、索引 3 位元（8 = 2<sup>3</sup>）、其餘標籤。</p>
+<table><thead><tr><th>位址</th><th>二進位</th><th>標籤</th><th>索引</th><th>偏移</th><th>區塊編號</th><th>組</th></tr></thead><tbody>
+<tr><td>0</td><td>0 0000 0000</td><td>0</td><td>000</td><td>00000</td><td>0</td><td><strong>0</strong></td></tr>
+<tr><td>28</td><td>0 0001 1100</td><td>0</td><td>000</td><td>11100</td><td>0</td><td><strong>0</strong></td></tr>
+<tr><td>256</td><td>1 0000 0000</td><td>1</td><td>000</td><td>00000</td><td>8</td><td><strong>0</strong></td></tr>
+<tr><td>284</td><td>1 0001 1100</td><td>1</td><td>000</td><td>11100</td><td>8</td><td><strong>0</strong></td></tr>
+</tbody></table>
+<p>16 筆存取只碰兩個區塊（0 與 8），8 mod 8 = 0，<strong>兩塊搶同一組</strong>；序列兩邊交錯，每筆都踢掉上一筆搬進來的。</p>
+<table><thead><tr><th>設定（同一組 16 筆存取）</th><th>命中</th><th>失誤</th><th>命中率</th><th>AMAT</th></tr></thead><tbody>
+<tr><td>直接對映（預設）</td><td><strong>0</strong></td><td><strong>16</strong></td><td><strong>0.000000 %</strong></td><td><strong>51.000000 拍</strong></td></tr>
+<tr><td>二路組相聯</td><td><strong>14</strong></td><td><strong>2</strong></td><td><strong>87.500000 %</strong></td><td><strong>7.250000 拍</strong></td></tr>
+<tr><td>四路組相聯</td><td><strong>14</strong></td><td><strong>2</strong></td><td><strong>87.500000 %</strong></td><td><strong>7.250000 拍</strong></td></tr>
+<tr><td>全相聯（8 路）</td><td><strong>14</strong></td><td><strong>2</strong></td><td><strong>87.500000 %</strong></td><td><strong>7.250000 拍</strong></td></tr>
+</tbody></table>
+<p>AMAT = t<sub>hit</sub> + 失誤率 × t<sub>penalty</sub>。t<sub>hit</sub> 是命中一次的拍數（本課 1 拍），t<sub>penalty</sub> 是失誤<strong>多花</strong>的拍數（本課 50 拍，真實系統會因排隊而變動）。直接對映：1 + 1.000000 × 50 = 51.000000 拍；二路：1 + 0.125000 × 50 = 7.250000 拍。量級對照：51 拍在 2.0 GHz、T<sub>c</sub> = 0.500000 ns 下是 25.500000 ns，白丟 127 條 CPI 0.4 指令的時間。</p>
+<p>直接對映的三分類：<strong>強制 2</strong>、<strong>容量 0</strong>（全相聯也只失誤 2 次）、<strong>衝突 14</strong>。<strong>這 14 次全是二路組相聯就能消掉的浪費</strong>，容量不必加。</p>
+<p>邊界對照（架構師獨立模擬重算）：</p>
+<table><thead><tr><th>序列</th><th>對映</th><th>容量</th><th>區塊</th><th>替換</th><th>寫策略</th><th>命中 / 失誤</th><th>命中率</th></tr></thead><tbody>
+<tr><td><code>stride</code></td><td>直接</td><td>256</td><td>32</td><td>LRU</td><td>寫回</td><td>28 / 4</td><td><strong>87.500000 %</strong></td></tr>
+<tr><td><code>stride</code></td><td>直接</td><td>256</td><td><strong>16</strong></td><td>LRU</td><td>寫回</td><td>24 / 8</td><td><strong>75.000000 %</strong></td></tr>
+<tr><td><code>stride</code></td><td>直接</td><td>256</td><td><strong>64</strong></td><td>LRU</td><td>寫回</td><td>30 / 2</td><td><strong>93.750000 %</strong></td></tr>
+<tr><td><code>loop</code></td><td>直接</td><td>256</td><td>32</td><td>LRU</td><td>寫回</td><td>12 / 6</td><td><strong>66.666667 %</strong></td></tr>
+<tr><td><code>loop</code></td><td>直接</td><td><strong>128</strong></td><td>32</td><td>LRU</td><td>寫回</td><td>4 / 14</td><td><strong>22.222222 %</strong></td></tr>
+<tr><td><code>loop</code></td><td><strong>全相聯</strong></td><td>128</td><td>32</td><td><strong>LRU</strong></td><td>寫回</td><td>0 / 18</td><td><strong>0.000000 %</strong></td></tr>
+<tr><td><code>loop</code></td><td>全相聯</td><td>128</td><td>32</td><td><strong>FIFO</strong></td><td>寫回</td><td>0 / 18</td><td><strong>0.000000 %</strong></td></tr>
+<tr><td><code>loop</code></td><td>全相聯</td><td>128</td><td>32</td><td><strong>MRU</strong></td><td>寫回</td><td>8 / 10</td><td><strong>44.444444 %</strong></td></tr>
+<tr><td><code>mixed</code></td><td>直接</td><td>256</td><td>32</td><td>LRU</td><td><strong>寫回</strong></td><td>12 / 8</td><td><strong>60.000000 %</strong></td></tr>
+<tr><td><code>mixed</code></td><td>直接</td><td>256</td><td>32</td><td>LRU</td><td><strong>寫穿</strong></td><td>12 / 8</td><td><strong>60.000000 %</strong></td></tr>
+</tbody></table>
+<p>容量與區塊欄位是位元組；全相聯三列路數 = 128 / 32 = 4；寫回搭寫配置、寫穿搭不配置。</p>
+<p>三個結論。<strong>（1）有空間區域性時加大區塊免費賺命中率</strong>：<code>stride</code> 是步長 4 的順序掃描，行從 16 換到 64 位元組，命中率從 75.000000 % 升到 93.750000 %，容量沒加；但區塊越大、區塊數越少，沒區域性時更糟。</p>
+<p><strong>（2）同容量全相聯配 LRU 可能被直接對映打敗</strong>：<code>loop</code> 走訪 6 個區塊 3 遍，128 位元組只裝 4 塊；直接對映 22.222222 %，全相聯配 LRU 卻是 0.000000 %——每輪都剛好踢掉下一個要用的。衝突失誤算出 14 − 18 = −4，<strong>規格規定顯示 0，不是缺陷</strong>。</p>
+<p><strong>（3）MRU 在循環走訪上贏過 LRU</strong>：同一個 <code>loop</code>、128 位元組全相聯，MRU 拿 44.444444 %，因為它固定犧牲剛用過的。寫策略不影響命中率，<code>mixed</code> 兩列都是 60.000000 %，差別在流量：寫回＋寫配置讀 256 ＋ 寫回 256 = 512 位元組；寫穿＋不配置讀 192 ＋ 寫穿 40 = 232 位元組，<strong>不到一半</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：同一組存取序列，四個設計維度一起轉</h2>
+<p>場景是一顆單層快取接在主記憶體前面，四組固定的存取序列代表四種常見的程式行為：兩陣列交錯、順序掃描、循環走訪、讀寫混合。機器這一側可以改對映方式、替換策略、寫策略、區塊大小與容量，時間這一側可以改命中時間與失誤懲罰。要看的是命中率、失誤三分類、主記憶體流量與 AMAT 各差多少，以及換一組序列之後同一個設計會從最好變成最壞。</p>
+<div class="controls">
+<label for="ca-seq">存取序列<select id="ca-seq"><option value="conflict">兩陣列交錯（相距 256 位元組，16 筆讀）</option><option value="stride">順序掃描（步長 4，32 筆讀）</option><option value="loop">循環走訪 6 個區塊 3 遍（18 筆讀）</option><option value="mixed">讀寫混合（20 筆）</option></select></label>
+<label for="ca-mapping">對映方式<select id="ca-mapping"><option value="direct">直接對映</option><option value="set2">二路組相聯</option><option value="set4">四路組相聯</option><option value="full">全相聯</option></select></label>
+<label for="ca-replace">替換策略（直接對映用不到）<select id="ca-replace"><option value="lru">LRU 最近最少使用</option><option value="fifo">FIFO 先進先出</option><option value="mru">MRU 最近使用</option></select></label>
+<label for="ca-write">寫策略（只有讀寫混合序列看得出差別）<select id="ca-write"><option value="wb">寫回 ＋ 寫配置</option><option value="wt">寫穿 ＋ 不配置</option></select></label>
+<label for="ca-line">區塊大小<select id="ca-line"><option value="16">16 位元組</option><option value="32" selected>32 位元組</option><option value="64">64 位元組</option></select></label>
+<label for="ca-size">快取容量<select id="ca-size"><option value="128">128 位元組</option><option value="256" selected>256 位元組</option><option value="512">512 位元組</option><option value="1024">1024 位元組</option></select></label>
+<label for="ca-thit">命中時間 t_hit（拍）<input id="ca-thit" type="range" min="1" max="4" step="1" value="1"></label>
+<label for="ca-penalty">失誤懲罰 t_penalty（拍）<input id="ca-penalty" type="range" min="10" max="200" step="5" value="50"></label>
+</div>
+<div id="cache-output" class="output" aria-live="polite">這個序列全部是讀取，寫策略那一格不影響結果；直接對映每組只有一路，替換策略那一格也不影響結果。組數 8、每組 1 路。命中 0 次、失誤 16 次，命中率 <strong>0.000000 %</strong>。失誤三分類：強制 2、容量 0、<strong>衝突 14</strong>。主記憶體讀取 512 位元組、寫回 0 位元組。AMAT = 1 + 1.000000 × 50 = <strong>51.000000 拍</strong>。<strong>這 14 次失誤在同容量全相聯下不會發生，換成二路組相聯就能消掉。</strong>兩個區塊的組索引都是 0，交錯存取讓它們互相踢掉。命中率是設計與存取樣式的乘積，換一個序列同一個設計就可能從最好變最壞。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>命中率不是快取的性質。邊界在「換了序列會不會變」：換一組樣式，命中率可從 0 % 變成 93.75 %，它是<strong>快取與存取樣式一起</strong>的性質；規格書的命中率都附帶沒寫出的基準測試。</li>
+<li>「更相聯一定更好」是錯的。邊界在 <code>loop</code> 那組反例：全相聯配 LRU 拿 0.000000 %，直接對映拿 22.222222 %。相聯度只消衝突失誤，不保證挑對犧牲者。</li>
+<li>區塊變大不是免費的。邊界在有沒有空間區域性：有就賺命中率，沒有就區塊變少、搬運量變大，兩頭都輸。</li>
+<li>寫穿不等於「比較慢」。邊界在寫得密不密集：<code>mixed</code> 上寫穿 232 位元組不到寫回 512 的一半，因為寫回要為每個髒塊付整塊回寫。</li>
+<li>失誤三分類是<strong>分析工具</strong>不是物理量。邊界在極端情形：基準全相聯 LRU 在循環走訪上最壞，衝突失誤才算出負值。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><code>perf stat</code> 的 <code>cache-references</code>、<code>cache-misses</code> 與 <code>L1-dcache-load-misses</code> 這類細項可量出實際失誤率。把矩陣乘法的迴圈順序從 <code>i j k</code> 換成 <code>i k j</code>，失誤數明顯下降，這是最容易重現的對照。</p>
+<p><strong>能證明</strong>：這段程式在這台機器的失誤次數、改寫後有沒有降。<strong>不能證明</strong>：失誤屬於哪一類——計數器不分類，要靠模擬器；也證明不了「容量不夠」，因為對映衝突症狀相同，把陣列起始位址墊開（padding）再量，失誤數大降就是衝突。</p>
+
+<h2>連到哪門課</h2>
+<p>四個旋鈕就是規格表那幾行：L1 資料快取 32 KiB、8 路組相聯、64 位元組行。快取與虛擬記憶體機制見<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">計算機組織的記憶體階層與虛擬記憶體</a>；快取行怎麼在多核間轉手見<a href="09-多核一致性MESI.html">09 多核一致性 MESI</a>；位址轉譯的成本見<a href="10-TLB與頁缺失的代價.html">10 TLB 與頁缺失的代價</a>；第 06 章的推測痕跡靠的就是這幾十拍的落差。</p>
+<nav class="pager" aria-label="章節導覽"><a href="07-SIMD與平行加速上限.html">← 上一頁：SIMD 與平行加速上限</a><a href="09-多核一致性MESI.html">下一頁：多核一致性 MESI →</a></nav>
+</main>
+<footer class="site-footer"><span>08 快取設計四維度</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

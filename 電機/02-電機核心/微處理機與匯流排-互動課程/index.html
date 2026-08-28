@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>微處理機與匯流排（零基礎互動課）</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html" aria-current="page">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">從「執行時間 ＝ IC × CPI × T<sub>c</sub>」一路量到 CAN 匯流排</p>
+<h1>微處理機與匯流排（零基礎互動課）</h1>
+<p class="lead">這門課只問兩件事：一條指令怎麼被硬體加速，以及 CPU 怎麼跟外面的世界說話。每一章給你一個量化實驗——同一個工作量，換一種設計，看數字怎麼動。你不會在這裡背名詞，你會看到管線切深一級省下幾拍、換一種快取對映命中率跳多少、把資料交給 DMA 之後 CPU 被吃掉的百分比從多少變成多少。</p>
+<div class="flow"><span>效能三因子</span><span>ISA 契約</span><span>浮點與端序</span><span>五階段管線</span><span>冒險與旁路</span><span>分支預測</span><span>亂序與推測</span><span>SIMD 與上限</span><span>快取四維度</span><span>MESI</span><span>TLB 代價</span><span>輪詢中斷 DMA</span><span>匯流排家族</span><span>處理器選型</span></div>
+<p class="note">每章只有一個自由實驗，改一個控制就立即看到結果與原因，沒有計分、沒有進度條、沒有解鎖。練習題全部集中在自我檢核頁，答錯不擋路、可以無限重做。</p>
+<p class="warning">本課是既有課「計算機組織」的深化層：機制在那邊，取捨與量化在這邊。每一章開頭都會告訴你哪一頁是前置，讀不下去時請先回去把那一頁看完，本課不會把同一套機制再講一次。</p>
+<section class="chapter-list">
+<a class="chapter-card" href="00-微處理機世界觀與效能公式.html"><h2><span class="number">00</span> 微處理機世界觀與效能公式</h2><p>快是一條可以算的式子：指令數、每指令拍數、時脈週期三者相乘。</p></a>
+<a class="chapter-card" href="01-ISA契約與定址模式.html"><h2><span class="number">01</span> ISA 契約與定址模式</h2><p>指令集是契約，只承諾做什麼、不承諾怎麼做；指令數少不等於工作量少。</p></a>
+<a class="chapter-card" href="02-IEEE754與端序.html"><h2><span class="number">02</span> IEEE 754 與端序</h2><p>誤差有多大、來自哪一個欄位；同一個值在記憶體裡怎麼排。</p></a>
+<a class="chapter-card" href="03-五階段管線與吞吐量.html"><h2><span class="number">03</span> 五階段管線與吞吐量</h2><p>延遲沒有變短，變短的是兩條指令完成之間的間隔。</p></a>
+<a class="chapter-card" href="04-管線冒險旁路與插泡.html"><h2><span class="number">04</span> 管線冒險、旁路與插泡</h2><p>三種冒險讓理想的每拍一條落空，旁路把結果提早送回去。</p></a>
+<a class="chapter-card" href="05-分支預測與管線清空.html"><h2><span class="number">05</span> 分支預測與管線清空</h2><p>猜錯的代價是整條管線的內容作廢，猜對的方法是看歷史。</p></a>
+<a class="chapter-card" href="06-超純量亂序與推測執行.html"><h2><span class="number">06</span> 超純量、亂序與推測執行</h2><p>一拍發射好幾條之後，瓶頸換成程式本身能取出多少平行度。</p></a>
+<a class="chapter-card" href="07-SIMD與平行加速上限.html"><h2><span class="number">07</span> SIMD 與平行加速上限</h2><p>一條指令算八組資料；再怎麼加速，序列的那一段都不會消失。</p></a>
+<a class="chapter-card" href="08-快取設計四維度.html"><h2><span class="number">08</span> 快取設計四維度</h2><p>容量、區塊大小、相聯度、替換策略：換一種設計，命中率差多少。</p></a>
+<a class="chapter-card" href="09-多核一致性MESI.html"><h2><span class="number">09</span> 多核一致性 MESI</h2><p>兩顆核心寫同一條快取行，正確性有了，效能沒了。</p></a>
+<a class="chapter-card" href="10-TLB與頁缺失的代價.html"><h2><span class="number">10</span> TLB 與頁缺失的代價</h2><p>每一次存取其實查了兩次；沒有 TLB 的機器慢十七倍。</p></a>
+<a class="chapter-card" href="11-輪詢中斷與DMA.html"><h2><span class="number">11</span> 輪詢、中斷與 DMA</h2><p>同一個裝置事件，三種處理方式吃掉的 CPU 差好幾十倍。</p></a>
+<a class="chapter-card" href="12-匯流排家族PCIe到CAN.html"><h2><span class="number">12</span> 匯流排家族：PCIe 到 CAN</h2><p>傳同樣 64 KiB，六種介面的時間差六個數量級。</p></a>
+<a class="chapter-card" href="13-處理器家族選型.html"><h2><span class="number">13</span> 處理器家族選型</h2><p>把全課的取捨收攏成一張表：效能、功耗、單價與開發成本。</p></a>
+<a class="chapter-card" href="名詞與概念字典.html"><h2><span class="number">查</span> 名詞與概念字典</h2><p>60 張卡片，繁中與英文對照、白話、機制與邊界。</p></a>
+<a class="chapter-card" href="自我檢核.html"><h2><span class="number">檢</span> 自我檢核</h2><p>每章 3 題共 42 題，即時對錯與解釋，不計分、可重做。</p></a>
+</section>
+<h2>先修與去向</h2>
+<p>機制面的前置是<a href="../../../專題/計算機組織/互動課程/index.html">計算機組織互動課</a>：電晶體怎麼疊成資料路徑、一條指令怎麼被執行完、分頁與連結載入怎麼運作，全部在那邊，本課不重講。閘與時序那一側——建立時間怎麼卡住時脈上限、正反器為什麼要邊緣觸發——見<a href="../邏輯設計-互動課程/index.html">邏輯設計互動課</a>。元件與功耗，也就是「提高時脈為什麼會燙」，見<a href="../電子學-互動課程/index.html">電子學互動課</a>。至於本課第 07 與第 13 章拿來當工作負載的訊號處理運算量從哪裡來，見<a href="../信號與系統-互動課程/index.html">信號與系統互動課</a>。</p>
+<h2>來源</h2>
+<ul>
+<li>11-計算機組織與微處理機.md</li>
+<li>中英名詞對照表-2.md</li>
+</ul>
+<h2>用語說明</h2>
+<p>本課一律用台灣標準用語：快取、管線、匯流排、暫存器、記憶體、位元組、超純量、旁路、頁缺失、中斷、亂序執行。其他教材可能採用另一套譯法，本課正文完全不引述，只在字典頁對應卡片的「不要混淆」欄位各列出一次，方便你查別的資料時對得上。單位也統一：容量用 KiB／MiB（2 的次方，1 KiB ＝ 1024 位元組），速率用 MB/s／GB/s（10 的次方，1 MB ＝ 10<sup>6</sup> 位元組）；乘號一律用 ×，負號與減號一律用 −，時脈週期寫 T<sub>c</sub>、拍數一律寫「拍」。</p>
+<nav class="pager" aria-label="章節導覽"><a href="自我檢核.html">← 自我檢核</a><a href="00-微處理機世界觀與效能公式.html">開始：效能公式 →</a></nav>
+</main>
+<footer class="site-footer"><span>微處理機與匯流排（零基礎互動課）</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

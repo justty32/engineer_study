@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 微處理機世界觀與效能公式｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html" aria-current="page">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">00・「快」不是形容詞，是一條可以算的式子</p>
+<h1>微處理機世界觀與效能公式：執行時間 ＝ IC × CPI × T<sub>c</sub></h1>
+<p class="lead">這門課從頭到尾只動三個數字：程式送出幾條指令、每條指令平均佔用幾拍、一拍多長。這一章先把式子從單位推出來，再用它回答一個幾乎每個人都被騙過的問題——為什麼時脈調高兩成，程式沒有快兩成。</p>
+<p class="prereq"><strong>這章假設已懂：</strong>會寫程式、會四則運算，不需要任何電路背景。<strong>前置：</strong>見〈04 處理器資料路徑與指令週期〉，一條指令怎麼被取出、解碼、執行完，機制在<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織那一頁</a>，本章不重講。</p>
+
+<h2>痛點：超頻了 20 %，程式為什麼只快了不到 10 %</h2>
+<p>「我把時脈從 2.0 GHz 超到 2.4 GHz，整整 20 %，風扇也吵了一倍，結果程式只快了不到 10 %。是超頻沒有用，還是我量錯了？」</p>
+<p>兩者都不是。時脈只是決定執行時間的三個因子之一，而且是唯一以「除」的方式進入式子的那一個：加兩成，時間只乘上 1 / 1.2。更麻煩的是等記憶體的那段時間不會因為時脈變快而縮短，時脈一快，同一段等待反而佔掉更多拍。加速於是被稀釋兩次。</p>
+<p>要講清楚這件事得靠一條式子。這一章給的就是那條式子，以及一個貫穿全課的觀念：<strong>效能是三個數字相乘的結果，只動其中一個，就只拿得到那一個的份。</strong></p>
+
+<h2>白話直覺：三層樓的抽象階層，與一條量綱推出來的式子</h2>
+<p>先建立位置感。從你寫的程式往下數共八層：應用程式、作業系統與編譯器、指令集架構、微架構、暫存器轉移層、邏輯閘、電晶體、半導體物理。<strong>指令集架構（instruction set architecture, ISA）</strong>躺在第三與第四層之間，是軟體與硬體之間的<strong>契約</strong>：上面承諾只用契約列出的指令，下面承諾這些指令做出契約寫的結果。<strong>微架構（microarchitecture）</strong>是同一份契約的實作，可以慢十倍也可以快十倍。</p>
+<p>可以暫時把這份契約想成餐廳菜單：客人只看得到菜名，廚房怎麼做是廚房的事。比喻到此為止。精確的說法是：ISA 規定指令的可觀察語意（哪些暫存器會變、記憶體被寫成什麼、例外何時發生），不規定實作的時序、階段數與內部單元。正因為契約不管實作，硬體才可以把一條指令拆成好幾拍、好幾個單元，甚至先猜著做。</p>
+<p>接著照因果鏈走一次。<strong>工作量從哪來：</strong>編譯器把你的原始碼翻成一串指令，這串指令的條數就是 IC。<strong>這一層做了什麼決定：</strong>ISA 與編譯器決定 IC，微架構決定每條指令平均佔用幾拍也就是 CPI，製程與電路決定一拍多長也就是 T<sub>c</sub>。<strong>省下多少、多花多少：</strong>把 CPI 從 1.5 壓到 1.2 要多花電晶體做管線、旁路與預測器，換到 20 % 的時間；把 T<sub>c</sub> 縮短要提高電壓，功耗大致隨電壓平方成長，換到的卻只有 1 / 1.2。<strong>邊界在哪：</strong>程式在等記憶體時兩招都失效，因為那段等待以奈秒計價而不是以拍計價。<strong>儀器量到什麼：</strong>效能計數器能讀出跑了幾條指令、花了幾拍，兩者相除就是實測 CPI。</p>
+<p class="note">來源：11-計算機組織與微處理機 §1、§7.1。</p>
+
+<h2>推導：三個因子為什麼相乘，以及 20 % 的兩種算法</h2>
+<p><strong>（a）為什麼是相乘不是相加。</strong>把三個因子連同單位寫出來：<code>(指令數 / 程式) × (拍數 / 指令) × (秒數 / 拍)</code>。中間的「指令」與「拍」上下對消，剩下的就是 `秒數 / 程式`，也就是執行時間。所以</p>
+<p><code>執行時間 ＝ IC × CPI × T<sub>c</sub></code></p>
+<p>其中 IC 是指令數（單位：條）、CPI 是每指令拍數（單位：拍每條）、T<sub>c</sub> 是時脈週期（單位：秒），而 T<sub>c</sub> ＝ 1 / f，f 是時脈頻率。這是量綱推出來的，不是背下來的規則；也因為相乘，任一因子改成 k 倍，時間就是 k 倍。本課用的是一階教學模型，真實處理器的 CPI 會隨程式、資料與快取狀態變動，不是常數。</p>
+<p><strong>（b）同樣是 20 %，除以 1.2 和乘以 0.8 不是同一件事。</strong>把 CPI 減 20 %，等於時間乘上 0.8，加速比 ＝ 1 / 0.8 ＝ 1.250000。把時脈加 20 %，T<sub>c</sub> 變成原來的 1 / 1.2 ≈ 0.833333，加速比 ＝ 1.200000。差別的來源是：<strong>時間與時脈成反比，與 CPI 成正比</strong>，一個是分母上的 20 %，一個是分子上的 20 %。分母加兩成永遠比分子減兩成划算得少，這是算術，不是工程直覺。</p>
+<p><strong>（c）為什麼 MIPS 會騙人。</strong>每秒百萬指令的定義是</p>
+<p><code>MIPS ＝ f / (CPI × 10<sup>6</sup>)</code></p>
+<p>f 的單位是赫茲、CPI 無單位、10<sup>6</sup> 是換算成百萬。仔細看：<strong>式子裡完全沒有「這些指令做了多少事」這一項。</strong>同一支程式在 CISC 上可能只用 8 千萬條指令但 CPI 是 2.5，在 RISC 上用 1.2 億條但 CPI 是 1.0；後者 MIPS 高得多，執行時間卻不一定短。跨 ISA 比 MIPS 沒有意義，要比效能只能比同一支程式的執行時間。</p>
+
+<h2>數值實例：一億條指令的三種最佳化</h2>
+<p>取 IC ＝ 1 億條（100 × 10<sup>6</sup>）、CPI ＝ 1.5、時脈 2.0 GHz。這組數字是本課的錨定值。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><th>時脈週期</th><td>1 / 2.0 GHz</td><td><strong>0.500000 ns</strong></td></tr>
+<tr><th>執行時間</th><td>100 × 10<sup>6</sup> × 1.5 × 0.5 ns</td><td><strong>75.000000 ms</strong></td></tr>
+<tr><th>MIPS</th><td>2 × 10<sup>9</sup> / 1.5 / 10<sup>6</sup></td><td><strong>1333.333333</strong></td></tr>
+<tr><th>指令數減 20 %</th><td>80 × 10<sup>6</sup> × 1.5 × 0.5 ns</td><td><strong>60.000000 ms，加速 1.250000 倍</strong></td></tr>
+<tr><th>CPI 減 20 %</th><td>100 × 10<sup>6</sup> × 1.2 × 0.5 ns</td><td><strong>60.000000 ms，加速 1.250000 倍</strong></td></tr>
+<tr><th>時脈加 20 %</th><td>100 × 10<sup>6</sup> × 1.5 × 0.416667 ns</td><td><strong>62.500000 ms，加速 1.200000 倍</strong></td></tr>
+</tbody></table>
+<p><strong>邊界對照。</strong>三項<strong>同時</strong>各改 20 %，執行時間降到 <strong>40.000000 ms，加速 1.875000 倍</strong>——不是 1.25 ＋ 1.25 ＋ 1.2，而是三個係數相乘。反過來把 CPI 拉到 6.0（記憶體密集程式的常見量級），執行時間變成 <strong>300.000000 ms</strong>；此時時脈加 20 % 只省 50.000000 ms，CPI 壓回 1.5 卻省 225.000000 ms。<strong>這就是第 03 章到第 10 章存在的理由。</strong></p>
+<p><strong>量級對照。</strong>2.0 GHz 的一拍是 0.500000 ns。在這個尺度上：一級快取命中約 1 拍（半奈秒）、主記憶體一次存取約 200 拍（100 ns）、一次動到固態硬碟的頁缺失約 100000 拍（50 µs）。三者各差兩個數量級以上，記住這個階梯，後面談快取與虛擬記憶體時就不必再算一次。</p>
+
+<section class="workspace"><h2>自由實驗：三因子與四種最佳化</h2>
+<p>下面三個滑桿就是效能公式的三個因子：指令數、平均每指令拍數、時脈頻率。選單決定要拿哪一種最佳化來跟目前這台機器比較——減少指令數、壓低 CPI、提高時脈，或三項同時各改兩成。改完之後看執行時間怎麼動、加速比是多少，特別注意「時脈加 20 %」與「CPI 減 20 %」這兩列的加速比並不相同。</p>
+<div class="controls">
+<label for="pf-ic">指令數 IC（百萬條）<input id="pf-ic" type="range" min="1" max="500" step="1" value="100"></label>
+<label for="pf-cpi">平均每指令拍數 CPI<input id="pf-cpi" type="range" min="0.25" max="6" step="0.05" value="1.5"></label>
+<label for="pf-freq">時脈頻率（GHz）<input id="pf-freq" type="range" min="0.1" max="5" step="0.1" value="2"></label>
+<label for="pf-opt">要比較的最佳化<select id="pf-opt"><option value="none">不做最佳化</option><option value="ic">指令數減 20 %</option><option value="cpi">CPI 減 20 %</option><option value="clock">時脈加 20 %</option><option value="all">三項各改 20 %</option></select></label>
+</div>
+<div id="perfeq-output" class="output" aria-live="polite">目前設定：IC ＝ 100 百萬條、CPI ＝ 1.50、時脈 ＝ 2.0 GHz。T<sub>c</sub> ＝ <strong>0.500000 ns</strong>，執行時間 ＝ <strong>75.000000 ms</strong>，MIPS ＝ <strong>1333.333333</strong>。目前選的是「不做最佳化」，所以最佳化後時間仍是 <strong>75.000000 ms</strong>，加速比 <strong>1.000000</strong>。判讀：這台機器每秒發出十三億三千萬條指令，但那只說明它發指令的速率，沒有說明每條指令做了多少事，所以不能拿這個數字去跟另一種 ISA 的機器比。為什麼：<strong>三個因子相乘，所以只改一個永遠只拿到那一個的份。</strong>邊界提醒：把 CPI 拉到 4 以上，瓶頸幾乎一定在記憶體而不在時脈；把 IC 拉到 1，管線填充與快取冷啟動會主導，這條式子的平均值意義就變弱了。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>CPI 不是「一條指令要幾拍才走完」。那個叫延遲，在五階段管線裡是 5 拍。CPI 是<strong>平均每條指令佔用機器幾拍</strong>，理想管線下可以是 1，超純量機器上甚至小於 1。</li>
+<li>MIPS 高不等於跑得快。它只算指令發出的速率，不算每條指令做了多少事；換一份 ISA，同一件事需要的指令數就變了，比較的基準也就消失了。</li>
+<li>時脈提高不會讓記憶體變快。主記憶體一次存取約 100 ns 是物理現實：在 2 GHz 上是 200 拍，在 4 GHz 上變成 400 拍——拍數翻倍，時間一秒都沒省。</li>
+<li>ISA 與微架構是兩件事。同一份 x86-64 契約，可以做出一顆低功耗核心，也可以做出一顆伺服器核心，效能差十倍以上，契約卻一字未改。</li>
+<li>「效能」與「吞吐量」不是同義詞。這一章算的是單支程式的執行時間；一台機器可以在單程式很慢的情況下，靠核心數把整批工作的吞吐量做得很高。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>處理器內建效能計數器（performance monitoring unit, PMU），Linux 上用 <code>perf stat</code> 就能讀出 <code>instructions</code>（實際執行的指令數，即 IC）、<code>cycles</code>（總拍數）與 <code>task-clock</code>（佔用的處理器時間）。把 <code>cycles</code> 除以 <code>instructions</code> 就是實測 CPI。</p>
+<p><strong>能證明什麼。</strong>能證明這支程式的 IC 與 CPI 各是多少；也能證明你改了程式之後變的是哪一項——IC 掉了而 CPI 沒動，是編譯器或演算法的功勞；IC 沒動而 CPI 掉了，是快取或分支行為變好了。</p>
+<p><strong>不能證明什麼。</strong>證明不了 CPI 高是哪一種原因造成的，那要再看 <code>cache-misses</code>、<code>branch-misses</code> 這些細項，而且細項之間會互相掩蓋。也證明不了「這是這支程式的極限」：換一台微架構不同的機器，同一份 IC 會得到完全不同的 CPI。另外要誠實地提醒：在會做推測執行的機器上，<code>instructions</code> 本來就可能包含被丟棄的路徑，數字略為偏高。</p>
+
+<h2>連到哪門課</h2>
+<p>這三個因子就是全課的目錄：第 03 到第 07 章都在壓 CPI，第 08 到第 10 章在避免記憶體把拍數吃光，第 11 到第 13 章處理 CPU 以外的世界，第 01 與第 02 章先把契約與資料格式講清楚。實務上任何一次調校的第一步，都是先量出這三個數字再決定往哪裡使力。</p>
+<p>一條指令怎麼被取出、解碼、執行完，見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的資料路徑與指令週期</a>；T<sub>c</sub> 為什麼有下限，見<a href="../邏輯設計-互動課程/10-時脈與時序限制.html">邏輯設計的時脈與時序限制</a>；提高時脈的代價是功耗，見<a href="../電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學的 CMOS 反相器與數位功耗</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="index.html">← 課程地圖</a><a href="01-ISA契約與定址模式.html">下一頁：ISA 契約與定址模式 →</a></nav>
+</main>
+<footer class="site-footer"><span>00 微處理機世界觀與效能公式</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

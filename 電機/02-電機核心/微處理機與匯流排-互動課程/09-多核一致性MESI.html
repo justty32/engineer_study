@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 多核一致性 MESI｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・原始碼上看不出來的那筆帳單</p>
+<h1>多核一致性 MESI：把「兩個核心搶同一條快取行」換算成拍數</h1>
+<p class="lead">只要兩個核心持續碰到同一條快取行，硬體就得不停地把那一行拉來拉去，而程式碼裡看不到任何線索。這章用 MESI 四個狀態把這筆成本算成拍數，並把「真的在共享資料」與「只是剛好住在同一條行裡」分開。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-快取設計四維度.html">08 快取設計四維度</a>的快取行與狀態欄位。<strong>前置：</strong>見〈08 記憶體階層與虛擬記憶體〉<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">計算機組織：記憶體階層與虛擬記憶體</a>，快取的機制在那邊，這章只算一致性的代價。</p>
+
+<h2>痛點：我把單執行緒改成兩條執行緒，結果變慢了</h2>
+<p>「我把工作切成兩半，兩條執行緒各自加自己的計數器，兩個變數分開宣告、沒有共用、也沒有加鎖。照理說該接近兩倍，實際上比單執行緒還慢，而我從頭看到尾都找不出哪裡共享了東西。」</p>
+<p>找不出來是正常的，因為問題不在程式裡。兩個計數器在原始碼裡是獨立變數，但在記憶體裡可能只差 8 個位元組，而一致性協定處理的最小單位是一條 64 位元組的快取行。硬體看到的不是兩個變數，是同一條行。於是兩個核心每寫一次就得把對方那份作廢，一條行在兩顆核心之間來回搬運。這叫偽共享（false sharing），它不會讓答案算錯，只會讓程式慢上幾十倍。</p>
+
+<h2>白話直覺：一致性協定是一份「誰有權改」的登記制度</h2>
+<p>快取一致性（cache coherence）要保證的只有一句：所有核心對同一個位址看到的值必須一致。可以先把它想成圖書館的借閱登記——比喻到此為止，精確的說法是：每條快取行都帶一個狀態欄位，硬體用它決定「能不能直接讀、能不能直接寫、要不要先廣播」。MESI 就是四個狀態：M（Modified 已修改，只有我有、我改過，主記憶體那份是舊的）、E（Exclusive 獨占，只有我有、沒改）、S（Shared 共享，可能不只我有）、I（Invalid 無效）。</p>
+<p>照因果鏈走一次。工作量從哪來：每次載入與儲存都要先確認自己這份的狀態夠不夠用。這一招做了什麼決定：狀態不夠用時就在互連上發一筆交易——BusRd（讀）、BusRdX（讀並取得獨占）、BusUpgr（我已經是 S，只要把別人那份作廢）。省下多少、多花多少：狀態夠用時本地命中 1 拍；跟遠端快取拿一份 40 拍；主記憶體供應 200 拍；作廢廣播 10 拍。代價是每條行要多存狀態位元，互連上也多了必須被監聽的流量。邊界在哪：這套模型只管「同一個位址」。儀器量到什麼：效能計數器數得出有多少次存取來自遠端快取。</p>
+<p>量級對照：2.0 GHz 下一拍是 0.500000 ns，L1 命中 1 拍，遠端快取供應 40 拍，主記憶體供應 200 拍——一次「被搶走再拿回來」的來回等於四十次本地命中。這是一階教學模型，真實處理器的互連拓樸與多層快取會讓數字不同。</p>
+<p class="note">來源：11-計算機組織與微處理機 §5.4。</p>
+
+<h2>推導：E 為什麼要存在、偽共享的錢從哪裡流出去</h2>
+<p><strong>（a）為什麼不能只有 M、S、I 三個狀態。</strong>假設少了 E：核心第一次把一條行讀進來時只能標成 S。接下來要寫它，就得先發一次 BusUpgr 把可能存在的其他持有者作廢——但實際上沒有別人持有它，這 10 拍純屬浪費。而「讀進來、算一下、寫回去」正是最常見的樣式。E 的意義就是把「只有我有而且沒改」記下來，讓 <code>E → M</code> <strong>不發任何交易</strong>，成本只有本地 1 拍。</p>
+<p><strong>（b）為什麼持有 M 的核心必須供應資料。</strong>M 的定義就是「我改過、主記憶體那份是舊的」，所以別人來讀時主記憶體沒有資格回答。硬體讓持有 M 的核心監聽到 BusRd 之後把資料吐出來並回寫，兩邊一起降成 S。價錢是 40 拍，比主記憶體的 200 拍便宜，但比本地命中貴四十倍。</p>
+<p><strong>（c）偽共享的成本從哪裡來。</strong>協定的操作單位是快取行不是變數。硬體無從知道 P0 只寫了行內第 0 到第 3 個位元組、P1 只寫了第 8 到第 11 個；它只知道「這條行被改了」，於是把別人那整條行作廢。判準只有一條：位址距離小於一條快取行時兩者可能落在同一行。</p>
+<p><strong>（d）為什麼加一點填充（padding）就解決了。</strong>把兩個變數的距離拉到大於等於一條快取行，它們必然落在不同行。從此兩條行各自永遠是 M，一筆交易都不必發，每次存取回到 1 拍。代價是浪費一點記憶體，而且綁死了快取行長度——換一台快取行 128 位元組的機器，原本夠用的填充可能又不夠。</p>
+
+<h2>數值實例：兩核心交替寫同一條 64 位元組快取行</h2>
+<p>成本模型：主記憶體供應 200 拍、遠端快取供應 40 拍、失效廣播 BusUpgr 10 拍、本地命中 1 拍。場景是存取樣式 <code>pingpong</code>，P0 與 P1 交替寫，兩個變數距離 8 位元組，快取行 64 位元組，走完 8 步後穩態重複 20 輪。</p>
+<table><thead><tr><th>步</th><th>動作</th><th>匯流排交易</th><th>P0 狀態</th><th>P1 狀態</th><th>成本</th></tr></thead><tbody>
+<tr><td>1</td><td>P0 讀 X</td><td>BusRd（主記憶體供應）</td><td>I → E</td><td>I</td><td><strong>200 拍</strong></td></tr>
+<tr><td>2</td><td>P0 寫 X</td><td>無（E 可直接升級）</td><td>E → M</td><td>I</td><td><strong>1 拍</strong></td></tr>
+<tr><td>3</td><td>P1 讀 X</td><td>BusRd（P0 供應並回寫）</td><td>M → S</td><td>I → S</td><td><strong>40 拍</strong></td></tr>
+<tr><td>4</td><td>P1 寫 X</td><td>BusUpgr</td><td>S → I</td><td>S → M</td><td><strong>10 拍</strong></td></tr>
+<tr><td>5</td><td>P0 讀 X</td><td>BusRd（P1 供應並回寫）</td><td>I → S</td><td>M → S</td><td><strong>40 拍</strong></td></tr>
+<tr><td>6</td><td>P0 寫 X</td><td>BusUpgr</td><td>S → M</td><td>S → I</td><td><strong>10 拍</strong></td></tr>
+<tr><td>7</td><td>P1 讀 X</td><td>BusRd（P0 供應並回寫）</td><td>M → S</td><td>I → S</td><td><strong>40 拍</strong></td></tr>
+<tr><td>8</td><td>P1 寫 X</td><td>BusUpgr</td><td>S → I</td><td>S → M</td><td><strong>10 拍</strong></td></tr>
+</tbody></table>
+<p>八步合計 <strong>351 拍 / 8 次存取 ＝ 43.875000 拍/存取</strong>。第 1、2 步是冷啟動只付一次，第 5 到第 8 步才是一直重複的穩態：<strong>100 拍 / 4 次存取 ＝ 25.000000 拍/存取</strong>。若兩個變數不在同一條行，穩態每輪是 <strong>4 拍 / 4 次存取 ＝ 1.000000 拍/存取</strong>，<strong>差 25.000000 倍</strong>。</p>
+<p>把穩態重複 20 輪：偽共享 200 ＋ 20 × 100 ＝ <strong>2200 拍</strong>，各自私有 200 ＋ 20 × 4 ＝ <strong>280 拍</strong>，多花 <strong>1920 拍</strong>，比值 <strong>7.857143 倍</strong>。比值小於 25.000000，是因為冷啟動的 200 拍兩邊都得付；輪數越多越往 25.000000 靠。</p>
+<p>邊界對照。距離拉到 <strong>64 位元組</strong>（等於快取行）→ 落在不同行，穩態每輪回到 <strong>4 拍</strong>，這就是填充。<code>share</code>（都只讀不寫）＝ 200 ＋ 40 ＋ 6 × 1 ＝ <strong>246 拍 / 8 ＝ 30.750000 拍/存取</strong>，穩態每輪 <strong>4 拍</strong>——<strong>唯讀共享幾乎不要錢</strong>，因為 S 允許所有核心同時持有。<code>upgrade</code>（先共享，再由 P0 獨占寫）＝ <strong>303 拍 / 8 ＝ 37.875000 拍/存取</strong>。<code>private</code>（只有 P0 用）＝ 200 ＋ 7 × 1 ＝ <strong>207 拍 / 8 ＝ 25.875000 拍/存取</strong>，穩態每輪同樣 <strong>4 拍</strong>。貴的不是「多核心」，是「多核心同時寫同一條行」。</p>
+
+<section class="workspace"><h2>自由實驗：換一種存取樣式與資料佈局，看一致性的帳單怎麼變</h2>
+<p>場景是兩顆核心 P0 與 P1 共用一個一致性協定，工作量是對同一塊資料做 8 步存取，之後把第 5 到第 8 步那一輪重複若干次。你可以換存取樣式、換快取行大小、拉開兩個變數的距離，也可以直接改三種交易的價錢。要看的是：穩態每輪幾拍、整段總共幾拍、跟各自私有的情形差幾倍。</p>
+<div class="controls">
+<label for="me-seq">存取樣式<select id="me-seq"><option value="pingpong">兩核心交替寫同一行</option><option value="share">兩核心只讀同一行</option><option value="upgrade">先共享，再由 P0 獨占寫</option><option value="private">只有 P0 讀寫</option></select></label>
+<label for="me-step">走到第幾步<input id="me-step" type="range" min="0" max="8" step="1" value="8"></label>
+<label for="me-line">快取行大小<select id="me-line"><option value="32">32 位元組</option><option value="64" selected>64 位元組</option><option value="128">128 位元組</option></select></label>
+<label for="me-offset">兩個變數的位址距離（位元組）<input id="me-offset" type="range" min="0" max="256" step="4" value="8"></label>
+<label for="me-iter">穩態重複輪數<input id="me-iter" type="range" min="1" max="100" step="1" value="20"></label>
+<label for="me-remote">遠端快取供應（拍）<input id="me-remote" type="range" min="10" max="200" step="5" value="40"></label>
+<label for="me-mem">主記憶體供應（拍）<input id="me-mem" type="range" min="50" max="400" step="10" value="200"></label>
+<label for="me-upg">失效廣播 BusUpgr（拍）<input id="me-upg" type="range" min="1" max="50" step="1" value="10"></label>
+</div>
+<div id="mesi-output" class="output" aria-live="polite">這個模式只用到存取樣式、走到第幾步、快取行大小、位址距離、重複輪數與三個成本滑桿，其餘控制不影響結果。存取樣式 pingpong，走到第 8 步：狀態轉移依序是 P0 讀 X（BusRd，主記憶體供應，P0 I → E）200 拍、P0 寫 X（無交易，P0 E → M）1 拍、P1 讀 X（BusRd，P0 供應並回寫，P0 M → S、P1 I → S）40 拍、P1 寫 X（BusUpgr，P0 S → I、P1 S → M）10 拍、P0 讀 X 40 拍、P0 寫 X 10 拍、P1 讀 X 40 拍、P1 寫 X 10 拍。<strong>八步合計 351 拍，每次存取平均 43.875000 拍；穩態每輪 100 拍（25.000000 拍/存取）。</strong>位址距離 8 位元組小於快取行 64 位元組：<strong>這是偽共享——兩個核心寫的是不同變數，但硬體以整行為單位。</strong>20 輪總拍數 ＝ 200 ＋ 20 × 100 ＝ <strong>2200 拍</strong>，各自私有只要 280 拍，比值 <strong>7.857143 倍</strong>。為什麼：一致性的單位是快取行不是變數，所以問題出在資料佈局而不是演算法。邊界提醒：把距離拉到 64 位元組以上，兩個變數落在不同行，各自維持 M，穩態回到 4 拍；把距離調成 0 表示兩個核心寫的根本是同一個變數，那是真共享不是偽共享，要靠演算法解決而不是填充；重複輪數調到 1 時冷啟動的 200 拍佔絕大部分，比值會被稀釋。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>一致性（coherence）與記憶體一致性模型（memory consistency）是兩件事：前者管「同一個位址看到的值」，後者管「不同位址之間的讀寫順序與屏障」，本章只做前者。</li>
+<li>偽共享不是邏輯錯誤。結果完全正確、功能測試一定會過，它只是慢，只有效能量測抓得到。</li>
+<li>MESI 的 S 不保證「真的有別人持有」，只表示「可能有」，所以從 S 要寫時必須發一次 BusUpgr；E 存在的理由就是把「確定沒有別人」記下來。</li>
+<li>加鎖與偽共享是兩回事。就算完全沒有鎖、各寫各的變數，只要位址落在同一條行，硬體照樣互相作廢；換成無鎖演算法也治不好資料佈局。</li>
+<li>「共享」不等於「昂貴」。同時讀同一條行時都停在 S，不必發交易；貴的是寫。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>多核心處理器的效能計數器通常有一類事件是「這次存取的資料來自遠端快取」，把它跟總存取次數一起數，就看得出跨核心搬運的比例。更直接的做法是對照實驗：在兩條執行緒各自的計數器變數之間插入 64 位元組填充，其他一個字都不改，重跑一次量時間。</p>
+<p><strong>能證明什麼。</strong>加了填充之後這段程式快了幾倍、跨核心供應的次數有沒有跟著掉。兩個數字一起往同一方向動，偽共享的解釋才算扎實。</p>
+<p><strong>不能證明什麼。</strong>單看「加了填充變快」不能證明原因一定是偽共享——記憶體頻寬與配置器行為都可能被填充順手改變，所以要換不同長度重複驗證。也證明不了協定的實作細節：現代處理器多半跑 MESIF 或 MOESI 變形，本章用最經典的 MESI，量級對得上但狀態數不一定。</p>
+
+<h2>連到哪門課</h2>
+<p>執行緒池的統計計數器、佇列的頭尾指標都是偽共享的常客。快取行與區塊大小怎麼決定見本課<a href="08-快取設計四維度.html">第 08 章</a>；多顆核心的加速上限見本課<a href="07-SIMD與平行加速上限.html">第 07 章</a>；DMA 搬進記憶體的資料為什麼也要處理一致性見本課<a href="11-輪詢中斷與DMA.html">第 11 章</a>。機制面見<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">計算機組織：記憶體階層與虛擬記憶體</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="08-快取設計四維度.html">← 上一頁：快取設計四維度</a><a href="10-TLB與頁缺失的代價.html">下一頁：TLB 與頁缺失的代價 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 多核一致性 MESI</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

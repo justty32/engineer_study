@@ -1,0 +1,75 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 TLB 與頁缺失的代價｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・虛擬記憶體不是免費的，它只是把帳單藏得很深</p>
+<h1>TLB 與頁缺失的代價：把虛擬記憶體從「機制」換成「帳單」</h1>
+<p class="lead">每一次存取除了拿資料，還得先把虛擬位址翻譯成實體位址。這件事平常只花 1 拍，但翻譯結果沒被快取住要 100 拍，那一頁根本不在記憶體裡要十萬拍。這章把三個量級放進同一張帳單，看哪一項在什麼比率下開始主導。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-快取設計四維度.html">08 快取設計四維度</a>的失誤率與 AMAT。<strong>前置：</strong>見〈08 記憶體階層與虛擬記憶體〉<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">計算機組織：記憶體階層與虛擬記憶體</a>——分頁、頁表結構與位址轉譯的硬體流程都在那一頁，這章一律不重講，只算代價。</p>
+
+<h2>痛點：50 µs 聽起來很短，為什麼大家怕成這樣</h2>
+<p>「我看到一篇文章說一次頁缺失大約 50 µs。50 µs 不就是萬分之半秒嗎？我程式跑三秒，就算缺個幾百次也才十幾毫秒，有什麼好怕的？可是我把資料集調大一點之後，同一支程式從三秒變成四十秒，我完全對不上這筆帳。」</p>
+<p>對不上是因為時間單位在騙人。工程上比較成本只有一種安全的做法：全部換算成同一個單位。這章的單位是拍。50 µs 在 2.0 GHz 下是 <strong>100000 拍</strong>，而一次 L1 命中是 1 拍——一次頁缺失等於十萬次 L1 命中，也大約等於一萬條指令的機會成本。換算完再回頭看，才知道「幾百次」跟「幾十萬次」是完全不同的世界。</p>
+
+<h2>白話直覺：翻譯這件事本身也要被快取</h2>
+<p>轉譯後備緩衝區（translation lookaside buffer, TLB）是<strong>分頁表翻譯結果的快取</strong>。它不存資料，只存「這個虛擬頁號對應到哪個實體頁框」。可以先把它想成護照上的簽證頁——比喻到此為止，精確地說：TLB 是一個小而全相聯的表，命中就直接拿到實體位址，沒命中就得走一次分頁表走訪（page table walk），走完還發現那一頁不在實體記憶體裡，就是頁缺失（page fault），要由作業系統去儲存裝置把它載回來。</p>
+<p>照因果鏈走一次。工作量從哪來：每一次載入、儲存與取指都要先翻譯一次位址。這一招做了什麼決定：把最近用過的翻譯結果留在晶片上，用面積換掉重複的走訪。省下多少：命中時 1 拍，沒命中要 100 拍，也就是命中率每掉 1 個百分點，平均轉譯成本就多 1 拍。邊界或反例在哪：TLB 只有幾十到上千筆條目，工作集散布的頁數一旦超過涵蓋範圍，命中率會急速掉下來；而頁缺失是完全不同的量級，再多的 TLB 也救不了。儀器量到什麼：效能計數器數得到 TLB 失誤次數，作業系統數得到頁缺失次數。</p>
+<p>TLB 這麼小卻這麼有效，理由是它的槓桿比資料快取大得多：一筆條目服務整整一個 4 KiB 頁，也就是 4096 個位元組的所有存取；資料快取的一條行只服務 64 位元組。容量單位這裡用 2 的次方（1 KiB ＝ 1024 位元組），跟後面講儲存裝置速率用的 10 進位單位不是同一套。</p>
+<p class="note">來源：11-計算機組織與微處理機 §5.3。</p>
+
+<h2>推導：把三個量級合成一張帳單</h2>
+<p><strong>（a）為什麼一定要換算成拍。</strong>拍是這門課唯一的通用貨幣。<code>拍數 = 秒數 × 時脈</code>，所以 50 × 10<sup>−6</sup> s × 2 × 10<sup>9</sup> Hz ＝ 100000 拍。不換算就永遠沒有量級感，也就永遠不知道該先修哪一項。</p>
+<p><strong>（b）平均轉譯成本怎麼合成。</strong>三項是機率加權，不是直接相加：</p>
+<p><code>轉譯 = t<sub>tlb</sub> + (1 − TLB 命中率) × 走訪拍數 + 頁缺失率 × 頁缺失拍數</code></p>
+<p>符號說明：t<sub>tlb</sub> 是 TLB 命中時的查詢成本，單位拍，本課固定 1 拍且假設它與資料存取重疊不了；TLB 命中率是無單位的比例；走訪拍數是一次分頁表走訪要花的拍數，單位拍，本課固定 100 拍且假設走訪過程中頁表本身都在快取裡；頁缺失率是每次存取發生頁缺失的機率；頁缺失拍數由儲存裝置的服務時間換算而來。這是一階教學模型，真實處理器有多層 TLB、有硬體預取、走訪本身也可能失誤，數字會不一樣。</p>
+<p><strong>（c）為什麼百萬分之一的頁缺失率仍然要在意。</strong>因為懲罰是一萬倍等級。10<sup>−6</sup> × 100000 ＝ 0.1 拍，看起來微不足道，但它佔了整張帳單的 1.639344 %；率只要再高一百倍，這一項就從 0.1 拍變成 10 拍，直接超過其他所有項目的總和。<strong>低機率乘上巨大懲罰，結果不會小。</strong></p>
+<p><strong>（d）資料存取那一半也要算進來。</strong>翻譯完了才輪到真的去拿資料：<code>資料 = t<sub>hit</sub> + (1 − L1 命中率) × t<sub>penalty</sub></code>。兩半相加才是「每次存取合計」，這樣才看得出調 TLB 跟調快取哪一邊比較值得。</p>
+
+<h2>數值實例：一張把三個量級放在一起的帳單</h2>
+<p>設定：TLB 命中率 99 %、TLB 查詢 1 拍、分頁表走訪 100 拍、頁缺失率每百萬次存取 1 次、頁缺失由 NVMe SSD 服務（50 µs）、時脈 2.0 GHz、L1 資料快取命中率 95 %、L1 失誤懲罰 60 拍。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>頁缺失換算成拍</td><td>50 µs × 2 × 10<sup>9</sup></td><td><strong>100000 拍</strong></td></tr>
+<tr><td>TLB 查詢</td><td>固定</td><td><strong>1.000000 拍</strong></td></tr>
+<tr><td>TLB 失誤攤提</td><td>0.01 × 100</td><td><strong>1.000000 拍</strong></td></tr>
+<tr><td>頁缺失攤提</td><td>10<sup>−6</sup> × 100000</td><td><strong>0.100000 拍</strong></td></tr>
+<tr><td>平均轉譯成本</td><td>1 ＋ 1 ＋ 0.1</td><td><strong>2.100000 拍</strong></td></tr>
+<tr><td>資料存取成本</td><td>1 ＋ 0.05 × 60</td><td><strong>4.000000 拍</strong></td></tr>
+<tr><td>每次存取合計</td><td>2.1 ＋ 4.0</td><td><strong>6.100000 拍（＝ 3.050000 ns）</strong></td></tr>
+<tr><td>頁缺失佔比</td><td>0.1 / 6.1</td><td><strong>1.639344 %</strong></td></tr>
+</tbody></table>
+<p>邊界對照。假想<strong>完全沒有 TLB</strong>（每次存取都走一遍頁表）→ 100 ＋ 0.1 ＋ 4 ＝ <strong>104.100000 拍</strong>，是有 TLB 的 <strong>17.065574 倍</strong>——<strong>TLB 是虛擬記憶體能被接受的唯一原因</strong>。命中率降到 <strong>90 %</strong> → 轉譯從 2.1 跳到 11.1，合計 <strong>15.100000 拍</strong>。命中率 <strong>100 %</strong> → <strong>5.100000 拍</strong>。把頁缺失率拉到每百萬 <strong>100 次</strong>且改用<strong>機械硬碟</strong>（10 ms ＝ 20000000 拍）→ 頁缺失攤提 <strong>2000.000000 拍</strong>，合計 <strong>2006.000000 拍</strong>，是預設的 <strong>328.852459 倍</strong>：<strong>這時候微架構怎麼調都沒用，唯一的答案是不要缺頁。</strong></p>
+
+<section class="workspace"><h2>自由實驗：拉動命中率與頁缺失率，看瓶頸什麼時候換人</h2>
+<p>場景是一支不斷做記憶體存取的程式，每次存取都得先付一次位址翻譯，再付一次資料存取。你可以調 TLB 命中率、分頁表走訪成本、頁缺失率與服務裝置，也可以調時脈與 L1 那一側。要看的是三項攤提各佔多少、每次存取合計幾拍幾奈秒，以及瓶頸落在哪一項。</p>
+<div class="controls">
+<label for="tl-tlbhit">TLB 命中率（%）<input id="tl-tlbhit" type="range" min="90" max="100" step="0.1" value="99"></label>
+<label for="tl-tcost">TLB 命中時的查詢拍數<input id="tl-tcost" type="range" min="0" max="4" step="1" value="1"></label>
+<label for="tl-walk">頁表走訪拍數<input id="tl-walk" type="range" min="10" max="500" step="10" value="100"></label>
+<label for="tl-pfrate">頁缺失率（每百萬次存取）<input id="tl-pfrate" type="range" min="0" max="100" step="1" value="1"></label>
+<label for="tl-pfdev">頁缺失服務裝置<select id="tl-pfdev"><option value="ssd">NVMe SSD：50 µs</option><option value="hdd">機械硬碟：10 ms</option><option value="comp">壓縮記憶體：2 µs</option></select></label>
+<label for="tl-clock">時脈（GHz）<input id="tl-clock" type="range" min="0.5" max="5" step="0.1" value="2"></label>
+<label for="tl-l1hit">L1 資料快取命中率（%）<input id="tl-l1hit" type="range" min="80" max="100" step="0.1" value="95"></label>
+<label for="tl-l1pen">L1 失誤懲罰（拍）<input id="tl-l1pen" type="range" min="10" max="300" step="5" value="60"></label>
+</div>
+<div id="tlbcost-output" class="output" aria-live="polite">目前設定：TLB 命中率 99 %、查詢 1 拍、走訪 100 拍、頁缺失率每百萬 1 次、NVMe SSD、2.0 GHz、L1 命中率 95 %、失誤懲罰 60 拍。頁缺失換算 <strong>100000 拍</strong>。TLB 查詢 1.000000 拍、TLB 失誤攤提 1.000000 拍、頁缺失攤提 0.100000 拍 → <strong>平均轉譯成本 2.100000 拍</strong>；資料存取成本 <strong>4.000000 拍</strong>；<strong>每次存取合計 6.100000 拍 ＝ 3.050000 ns</strong>。佔比：轉譯 34.426230 %（其中頁缺失 1.639344 %）、資料 65.573770 %。<strong>目前的瓶頸是資料存取那一側，不是位址翻譯。</strong>為什麼：把時間換算成拍數才比得動——50 µs 在 2 GHz 下是十萬拍，所以只要頁缺失率再高兩個數量級，這一項就會反過來主導。邊界提醒：頁缺失率調到 0 是理想化假設，真實系統至少有冷啟動的強制缺頁；改用機械硬碟且頁缺失率拉到每百萬 50 次以上就已經是顛簸的量級，唯一的解法是縮小工作集或加記憶體；TLB 命中率拉到 100 % 時轉譯只剩查詢成本，那是最好的情況。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>TLB 不是資料快取。它快取的是<strong>位址翻譯</strong>不是資料，兩者可以一個中一個不中——翻譯命中但資料失誤、或翻譯失誤但資料還在 L1，都是常見情形。</li>
+<li>TLB 失誤與頁缺失是兩件事。前者只是翻譯不在 TLB，那一頁還好端端在記憶體裡，代價 100 拍；後者是那一頁根本不在記憶體，代價十萬拍，差三個數量級。</li>
+<li>頁缺失不是錯誤。它是虛擬記憶體正常運作的一部分——第一次碰到某一頁時本來就要缺一次，問題只在於率。</li>
+<li>大頁（huge page）不是免費午餐。它讓一筆條目涵蓋更大的範圍、明顯提高 TLB 涵蓋率，代價是記憶體配置變粗、內部碎片變多，換頁的單位也變大。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>效能計數器的 <code>dTLB-load-misses</code> 這一類事件給出 TLB 失誤次數；作業系統那一側的 <code>vmstat</code> 或行程的統計檔給出 major 與 minor 兩種頁缺失的計數。兩邊一起看，才能把「翻譯不在 TLB」與「頁不在記憶體」分開。</p>
+<p><strong>能證明什麼。</strong>能證明這支程式跑一趟到底發生了幾次 TLB 失誤、幾次頁缺失，也能證明改用大頁或改變資料佈局之後這兩個數字有沒有降下來。</p>
+<p><strong>不能證明什麼。</strong>證明不了某一次頁缺失實際花了多久——那要看儲存裝置當時的排隊深度與其他行程的干擾，同一台機器上的差異可以到十倍。也證明不了「慢是因為 TLB」：TLB 失誤與快取失誤常常同時發生而且互相關聯，計數器只給次數不給因果，要下結論仍然得做對照實驗。</p>
+
+<h2>連到哪門課</h2>
+<p>這一章的帳單直接決定資料庫、虛擬機與大型陣列運算要不要開大頁。分頁與頁表的機制見<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">計算機組織：記憶體階層與虛擬記憶體</a>；資料側的失誤率與 AMAT 怎麼算見本課<a href="08-快取設計四維度.html">第 08 章</a>；儲存裝置到底怎麼接上 CPU、那 50 µs 裡有多少是介面造成的，見本課<a href="12-匯流排家族PCIe到CAN.html">第 12 章</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="09-多核一致性MESI.html">← 上一頁：多核一致性 MESI</a><a href="11-輪詢中斷與DMA.html">下一頁：輪詢、中斷與 DMA →</a></nav>
+</main>
+<footer class="site-footer"><span>10 TLB 與頁缺失的代價</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

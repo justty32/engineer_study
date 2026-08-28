@@ -1,0 +1,308 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">檢・14 章各 3 題，共 42 題</p>
+<h1>自我檢核：把每一章的關鍵數字與判斷各檢查一次</h1>
+<p class="lead">每一題都取自該章正文出現過的數字或結論，沒有新的題型也沒有陷阱。填完按「對答案」，回饋會告訴你為什麼，並附上該回去看的章節。</p>
+<p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯只會告訴你為什麼，並附上該回去看的章節。可以無限重做。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 微處理機世界觀與效能公式</h2>
+<p>回去看：<a href="00-微處理機世界觀與效能公式.html">00 微處理機世界觀與效能公式</a></p>
+<section class="card">
+<p><strong>q00-1｜</strong>一台 2.0 GHz 的機器跑一個 IC = 100 × 10<sup>6</sup> 條指令、CPI = 1.5 的程式。執行時間是多少毫秒？</p>
+<label for="q00-1">你的答案（ms）<input id="q00-1" type="number" step="any"></label>
+<button type="button" id="q00-1-check">對答案</button>
+<div id="q00-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q00-2｜</strong>同一台機器、同一個程式，MIPS 是多少？</p>
+<label for="q00-2">你的答案（無單位）<input id="q00-2" type="number" step="any"></label>
+<button type="button" id="q00-2-check">對答案</button>
+<div id="q00-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q00-3｜</strong>把時脈加 20 % 與把 CPI 減 20 %，為什麼前者拿到的收益比較小？</p>
+<label for="q00-3">你的答案<select id="q00-3"><option value="">請選擇</option><option value="a">時間與時脈成反比，加 20 % 只等於乘 1/1.2，而減 20 % 等於乘 0.8</option><option value="b">因為時脈提高會發熱</option><option value="c">因為 CPI 比較重要</option><option value="d">因為時脈有物理上限</option></select></label>
+<button type="button" id="q00-3-check">對答案</button>
+<div id="q00-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>01 ISA 契約與定址模式</h2>
+<p>回去看：<a href="01-ISA契約與定址模式.html">01 ISA 契約與定址模式</a></p>
+<section class="card">
+<p><strong>q01-1｜</strong>縮放索引定址：基底 1024、位移 16、索引 5、縮放 4。有效位址是多少？</p>
+<label for="q01-1">你的答案（無單位）<input id="q01-1" type="number" step="any"></label>
+<button type="button" id="q01-1-check">對答案</button>
+<div id="q01-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q01-2｜</strong>同一件事 RISC 編出 12 位元組、CISC 編出 4 位元組。碼密度比（RISC 位元組 / CISC 位元組）是多少？</p>
+<label for="q01-2">你的答案（無單位）<input id="q01-2" type="number" step="any"></label>
+<button type="button" id="q01-2-check">對答案</button>
+<div id="q01-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q01-3｜</strong>現代 x86 處理器內部到底是 RISC 還是 CISC？</p>
+<label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">外面是 CISC 編碼、裡面解碼成類 RISC 的 micro-op，兩件事同時成立</option><option value="b">純 CISC</option><option value="c">純 RISC</option><option value="d">看作業系統</option></select></label>
+<button type="button" id="q01-3-check">對答案</button>
+<div id="q01-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>02 IEEE 754 與端序</h2>
+<p>回去看：<a href="02-IEEE754與端序.html">02 IEEE 754 與端序</a></p>
+<section class="card">
+<p><strong>q02-1｜</strong>12.375 存成 binary32，十六進位是哪一個？</p>
+<label for="q02-1">你的答案<select id="q02-1"><option value="">請選擇</option><option value="a">0x41460000</option><option value="b">0x41C60000</option><option value="c">0x40460000</option><option value="d">0x41465000</option></select></label>
+<button type="button" id="q02-1-check">對答案</button>
+<div id="q02-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q02-2｜</strong>同一個值的 binary32 指數欄位是 130。去掉偏移量之後，真正的指數是多少？</p>
+<label for="q02-2">你的答案（無單位）<input id="q02-2" type="number" step="any"></label>
+<button type="button" id="q02-2-check">對答案</button>
+<div id="q02-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q02-3｜</strong>把 0.1 存進 binary32 之後會怎樣？</p>
+<label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">變成 0.100000001490116…，因為 0.1 在二進位是無限循環</option><option value="b">精確等於 0.1</option><option value="c">變成 0</option><option value="d">變成 NaN</option></select></label>
+<button type="button" id="q02-3-check">對答案</button>
+<div id="q02-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>03 五階段管線與吞吐量</h2>
+<p>回去看：<a href="03-五階段管線與吞吐量.html">03 五階段管線與吞吐量</a></p>
+<section class="card">
+<p><strong>q03-1｜</strong>100 條指令、5 級管線、t<sub>comb</sub> = 10.0 ns、t<sub>latch</sub> = 0.2 ns。管線總時間是多少奈秒？</p>
+<label for="q03-1">你的答案（ns）<input id="q03-1" type="number" step="any"></label>
+<button type="button" id="q03-1-check">對答案</button>
+<div id="q03-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q03-2｜</strong>同一段程式，管線相對於單週期的加速比是多少？</p>
+<label for="q03-2">你的答案（無單位）<input id="q03-2" type="number" step="any"></label>
+<button type="button" id="q03-2-check">對答案</button>
+<div id="q03-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q03-3｜</strong>只跑 1 條指令時，為什麼管線反而比單週期慢？</p>
+<label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">管線沒有縮短單條指令的延遲，還多付了每級暫存器的負擔</option><option value="b">因為要清空管線</option><option value="c">因為分支預測失敗</option><option value="d">因為快取還沒熱</option></select></label>
+<button type="button" id="q03-3-check">對答案</button>
+<div id="q03-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>04 管線冒險、旁路與插泡</h2>
+<p>回去看：<a href="04-管線冒險旁路與插泡.html">04 管線冒險、旁路與插泡</a></p>
+<section class="card">
+<p><strong>q04-1｜</strong>5 條指令、相依距離都是 1、旁路全開。總拍數是多少？</p>
+<label for="q04-1">你的答案（拍）<input id="q04-1" type="number" step="any"></label>
+<button type="button" id="q04-1-check">對答案</button>
+<div id="q04-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q04-2｜</strong>同一段程式，完全沒有旁路時的總拍數是多少？</p>
+<label for="q04-2">你的答案（拍）<input id="q04-2" type="number" step="any"></label>
+<button type="button" id="q04-2-check">對答案</button>
+<div id="q04-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q04-3｜</strong>為什麼旁路全開之後，載入指令後面緊接的使用還是要插一拍泡？</p>
+<label for="q04-3">你的答案<select id="q04-3"><option value="">請選擇</option><option value="a">載入的資料要到 MEM 結束才拿得到，比下一條的 EX 需要的時間晚一拍</option><option value="b">因為暫存器檔案只有一個埠</option><option value="c">因為分支</option><option value="d">因為快取失誤</option></select></label>
+<button type="button" id="q04-3-check">對答案</button>
+<div id="q04-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>05 分支預測與管線清空</h2>
+<p>回去看：<a href="05-分支預測與管線清空.html">05 分支預測與管線清空</a></p>
+<section class="card">
+<p><strong>q05-1｜</strong>迴圈樣式重複 4 次，2 位元飽和計數器初始值是弱不跳 <code>01</code>。誤判幾次？</p>
+<label for="q05-1">你的答案（次）<input id="q05-1" type="number" step="any"></label>
+<button type="button" id="q05-1-check">對答案</button>
+<div id="q05-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q05-2｜</strong>同一段序列改用 1 位元預測器，誤判幾次？</p>
+<label for="q05-2">你的答案（次）<input id="q05-2" type="number" step="any"></label>
+<button type="button" id="q05-2-check">對答案</button>
+<div id="q05-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q05-3｜</strong>為什麼 T N 交替的樣式會讓 1 位元預測器全部猜錯？</p>
+<label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">它永遠猜上一次的結果，而每一次都跟上一次相反</option><option value="b">因為初始值設錯</option><option value="c">因為分支太多</option><option value="d">因為管線太深</option></select></label>
+<button type="button" id="q05-3-check">對答案</button>
+<div id="q05-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>06 超純量、亂序與推測執行</h2>
+<p>回去看：<a href="06-超純量亂序與推測執行.html">06 超純量、亂序與推測執行</a></p>
+<section class="card">
+<p><strong>q06-1｜</strong>發射寬度 4、視窗 64、平均停留 16 拍、程式可取 ILP 2.5。有效 IPC 是多少？</p>
+<label for="q06-1">你的答案（無單位）<input id="q06-1" type="number" step="any"></label>
+<button type="button" id="q06-1-check">對答案</button>
+<div id="q06-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q06-2｜</strong>同一台機器把暫存器重新命名關掉之後，有效 IPC 變成多少？</p>
+<label for="q06-2">你的答案（無單位）<input id="q06-2" type="number" step="any"></label>
+<button type="button" id="q06-2-check">對答案</button>
+<div id="q06-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q06-3｜</strong>暫存器重新命名解決的是哪一種相依？</p>
+<label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">WAR 與 WAW 這種只是重複用同一個名字的假相依</option><option value="b">RAW 真相依</option><option value="c">控制相依</option><option value="d">結構冒險</option></select></label>
+<button type="button" id="q06-3-check">對答案</button>
+<div id="q06-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>07 SIMD 與平行加速上限</h2>
+<p>回去看：<a href="07-SIMD與平行加速上限.html">07 SIMD 與平行加速上限</a></p>
+<section class="card">
+<p><strong>q07-1｜</strong>可平行化比例 p = 80 %、該段加速倍率 s = 8。Amdahl 加速比是多少？</p>
+<label for="q07-1">你的答案（倍）<input id="q07-1" type="number" step="any"></label>
+<button type="button" id="q07-1-check">對答案</button>
+<div id="q07-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q07-2｜</strong>同一段程式，把 s 開到多大都追不過的加速上限是多少？</p>
+<label for="q07-2">你的答案（倍）<input id="q07-2" type="number" step="any"></label>
+<button type="button" id="q07-2-check">對答案</button>
+<div id="q07-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q07-3｜</strong>1000 個元素、向量寬度 16。向量迴圈要跑幾次？</p>
+<label for="q07-3">你的答案（次）<input id="q07-3" type="number" step="any"></label>
+<button type="button" id="q07-3-check">對答案</button>
+<div id="q07-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>08 快取設計四維度</h2>
+<p>回去看：<a href="08-快取設計四維度.html">08 快取設計四維度</a></p>
+<section class="card">
+<p><strong>q08-1｜</strong>那個交錯存取序列跑在 256 位元組、32 位元組行的直接對映快取上，命中率是多少？單位是百分比，請直接填數字，不要填百分號。</p>
+<label for="q08-1">你的答案（%）<input id="q08-1" type="number" step="any"></label>
+<button type="button" id="q08-1-check">對答案</button>
+<div id="q08-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q08-2｜</strong>同一個序列改成二路組相聯，命中率是多少？單位是百分比，請直接填數字，不要填百分號。</p>
+<label for="q08-2">你的答案（%）<input id="q08-2" type="number" step="any"></label>
+<button type="button" id="q08-2-check">對答案</button>
+<div id="q08-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q08-3｜</strong>直接對映比同容量全相聯多出來的那 14 次失誤，屬於哪一類？</p>
+<label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">衝突失誤，因為同容量全相聯不會發生</option><option value="b">容量失誤</option><option value="c">強制失誤</option><option value="d">一致性失誤</option></select></label>
+<button type="button" id="q08-3-check">對答案</button>
+<div id="q08-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>09 多核一致性 MESI</h2>
+<p>回去看：<a href="09-多核一致性MESI.html">09 多核一致性 MESI</a></p>
+<section class="card">
+<p><strong>q09-1｜</strong>兩個核心交替寫同一條快取行，穩態下每一輪（4 次存取）總共要幾拍？</p>
+<label for="q09-1">你的答案（拍）<input id="q09-1" type="number" step="any"></label>
+<button type="button" id="q09-1-check">對答案</button>
+<div id="q09-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q09-2｜</strong>同樣 4 次存取，但兩個核心各寫各的快取行。每一輪要幾拍？</p>
+<label for="q09-2">你的答案（拍）<input id="q09-2" type="number" step="any"></label>
+<button type="button" id="q09-2-check">對答案</button>
+<div id="q09-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q09-3｜</strong>MESI 裡的 E（Exclusive 獨占）狀態存在的意義是什麼？</p>
+<label for="q09-3">你的答案<select id="q09-3"><option value="">請選擇</option><option value="a">讓「只有我有而且沒改」的情形不必發匯流排交易就能升級成 M</option><option value="b">表示資料是唯讀</option><option value="c">表示資料已失效</option><option value="d">表示資料在主記憶體</option></select></label>
+<button type="button" id="q09-3-check">對答案</button>
+<div id="q09-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>10 TLB 與頁缺失的代價</h2>
+<p>回去看：<a href="10-TLB與頁缺失的代價.html">10 TLB 與頁缺失的代價</a></p>
+<section class="card">
+<p><strong>q10-1｜</strong>TLB 命中率 99 %、命中查詢 1 拍、失誤走訪 100 拍、頁缺失率百萬分之一、SSD 一次 50 µs、時脈 2 GHz。平均每次轉譯要幾拍？</p>
+<label for="q10-1">你的答案（拍）<input id="q10-1" type="number" step="any"></label>
+<button type="button" id="q10-1-check">對答案</button>
+<div id="q10-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q10-2｜</strong>再加上資料存取本身的 4 拍，每一次存取合計要幾拍？</p>
+<label for="q10-2">你的答案（拍）<input id="q10-2" type="number" step="any"></label>
+<button type="button" id="q10-2-check">對答案</button>
+<div id="q10-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q10-3｜</strong>頁缺失率只有百萬分之一，為什麼還是要在意？</p>
+<label for="q10-3">你的答案<select id="q10-3"><option value="">請選擇</option><option value="a">一次頁缺失是十萬拍，攤下來仍佔總成本 1 % 以上，率再高一點就會主導</option><option value="b">因為它會讓 TLB 失效</option><option value="c">因為它是硬體錯誤</option><option value="d">因為它會清空快取</option></select></label>
+<button type="button" id="q10-3-check">對答案</button>
+<div id="q10-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>11 輪詢、中斷與 DMA</h2>
+<p>回去看：<a href="11-輪詢中斷與DMA.html">11 輪詢、中斷與 DMA</a></p>
+<section class="card">
+<p><strong>q11-1｜</strong>事件 1000 次/秒、每次 512 位元組、時脈 2 GHz。用 DMA 時的 CPU 佔用率是多少？單位是百分比，請直接填數字，不要填百分號。</p>
+<label for="q11-1">你的答案（%）<input id="q11-1" type="number" step="any"></label>
+<button type="button" id="q11-1-check">對答案</button>
+<div id="q11-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q11-2｜</strong>同樣的條件改用中斷方式，CPU 佔用率是多少？單位是百分比，請直接填數字，不要填百分號。</p>
+<label for="q11-2">你的答案（%）<input id="q11-2" type="number" step="any"></label>
+<button type="button" id="q11-2-check">對答案</button>
+<div id="q11-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q11-3｜</strong>事件率很低的時候，輪詢為什麼反而比中斷貴？</p>
+<label for="q11-3">你的答案<select id="q11-3"><option value="">請選擇</option><option value="a">輪詢的成本只看輪詢頻率不看事件率，大部分查詢都白查</option><option value="b">因為輪詢要進出核心</option><option value="c">因為中斷沒有成本</option><option value="d">因為輪詢會漏事件</option></select></label>
+<button type="button" id="q11-3-check">對答案</button>
+<div id="q11-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>12 匯流排家族：PCIe 到 CAN</h2>
+<p>回去看：<a href="12-匯流排家族PCIe到CAN.html">12 匯流排家族：PCIe 到 CAN</a></p>
+<section class="card">
+<p><strong>q12-1｜</strong>PCIe 4.0 ×4（128b/130b 編碼）傳 64 KiB 要多久？以微秒為單位。</p>
+<label for="q12-1">你的答案（µs）<input id="q12-1" type="number" step="any"></label>
+<button type="button" id="q12-1-check">對答案</button>
+<div id="q12-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q12-2｜</strong>同樣的 64 KiB 改用 UART 115200 的 8N1 設定傳，要多久？以秒為單位。</p>
+<label for="q12-2">你的答案（秒）<input id="q12-2" type="number" step="any"></label>
+<button type="button" id="q12-2-check">對答案</button>
+<div id="q12-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q12-3｜</strong>CAN 的 500 kbit/s，為什麼只換到大約 36 KB/s 的資料率？</p>
+<label for="q12-3">你的答案<select id="q12-3"><option value="">請選擇</option><option value="a">一個標準訊框要 111 個位元才送 64 位元資料，仲裁、CRC 與確認都吃頻寬</option><option value="b">因為線太長</option><option value="c">因為只有兩條線</option><option value="d">因為 CAN 是半雙工</option></select></label>
+<button type="button" id="q12-3-check">對答案</button>
+<div id="q12-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>13 處理器家族選型</h2>
+<p>回去看：<a href="13-處理器家族選型.html">13 處理器家族選型</a></p>
+<section class="card">
+<p><strong>q13-1｜</strong>矩陣負載需要 10 Gops/s，DSP 峰值 20 Gops/s、效率係數 0.40。需要幾顆？</p>
+<label for="q13-1">你的答案（顆）<input id="q13-1" type="number" step="any"></label>
+<button type="button" id="q13-1-check">對答案</button>
+<div id="q13-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q13-2｜</strong>每顆 DSP 是 2 W。上一題那些 DSP 的總功耗是多少瓦？</p>
+<label for="q13-2">你的答案（W）<input id="q13-2" type="number" step="any"></label>
+<button type="button" id="q13-2-check">對答案</button>
+<div id="q13-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q13-3｜</strong>能效贏很多的 NPU，為什麼沒有被選上？</p>
+<label for="q13-3">你的答案<select id="q13-3"><option value="">請選擇</option><option value="a">兩者都滿足需求時比的是總成本，NPU 單價高、產量 10000 顆時總價較貴</option><option value="b">因為 NPU 太耗電</option><option value="c">因為 NPU 算不夠快</option><option value="d">因為 NPU 延遲太高</option></select></label>
+<button type="button" id="q13-3-check">對答案</button>
+<div id="q13-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

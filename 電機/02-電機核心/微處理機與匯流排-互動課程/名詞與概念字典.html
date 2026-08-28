@@ -1,0 +1,528 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>名詞與概念字典｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html" aria-current="page">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">查・60 個名詞，四段式：白話、位置、機制、邊界</p>
+<h1>名詞與概念字典：把全課的名詞放在同一張桌上比較</h1>
+<p class="lead">每一張卡片都寫四件事：這個詞用白話說是什麼、它在本課哪一章與哪個真實裝置裡出現、它的機制與數字、以及最容易踩的邊界。搜尋框接受繁體中文、英文、縮寫與符號，輸入 <code>cache</code>、<code>amdahl</code>、<code>pcie</code> 都找得到。</p>
+<p class="note">來源：11-計算機組織與微處理機 §1–§9，以及 中英名詞對照表-2.md 的「計算機組織與微處理機」節（22 詞）；其餘 38 詞由各章正文補齊。</p>
+<div class="dictionary-tools">
+<label for="term-search">搜尋名詞或概念</label>
+<input id="term-search" type="search" placeholder="搜尋繁中、英文、符號或用途">
+<span id="term-count" aria-live="polite"></span>
+</div>
+
+<h2>第一組｜ISA 契約與數值表示（第 00–02 章，11 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="isa instruction set architecture 指令集架構 契約 相容 二進位相容 合約">
+<h2>指令集架構（instruction set architecture, ISA）</h2>
+<p><strong>白話：</strong>硬體開給軟體的一紙合約，寫明有哪些指令、有幾個暫存器、位址怎麼算、例外怎麼處理。編譯器只對這張合約負責，不必知道晶片裡面長什麼樣。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-ISA契約與定址模式.html">01 章</a>的主角，也是全課的分界線：合約以上是軟體，合約以下是實作。x86-64 與 RISC-V 是兩份不同的合約，逐指令的語法見<a href="../../../專題/計算機組織/互動課程/05-x86-64組合語言.html">計算機組織的 x86-64 組合語言</a>與<a href="../../../專題/計算機組織/互動課程/07-RISC-V組合語言.html">RISC-V 組合語言</a>。</p>
+<p><strong>機制：</strong>合約的內容包含指令編碼、暫存器數量與寬度、定址模式、記憶體模型、例外與中斷語意。同一份 ISA 可以有無數種實作，舊的二進位程式不必重編譯就能跑在新一代晶片上——這正是這張合約存在的理由。</p>
+<p><strong>不要混淆：</strong>ISA 只保證行為，不保證效能。兩顆同樣跑 x86-64 的晶片可以差十倍速度而完全相容；反過來換了 ISA 一定要重編譯，即使兩顆晶片一樣快。</p>
+</article>
+
+<article class="term-card" data-search="microarchitecture 微架構 實作 世代 管線深度 發射寬度">
+<h2>微架構（microarchitecture）</h2>
+<p><strong>白話：</strong>同一份合約底下的實作方式——幾級管線、幾個執行埠、快取多大、要不要亂序執行。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-微處理機世界觀與效能公式.html">00</a> 與第 <a href="06-超純量亂序與推測執行.html">06 章</a>。廠商每一代「新架構」換的都是這一層，ISA 通常好幾年不動；資料路徑的機制面見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>。</p>
+<p><strong>機制：</strong>微架構決定 CPI 與 T<sub>c</sub> 這兩個因子，ISA 只決定 IC。第 00 章那台機器的 IC 100 × 10<sup>6</sup>、CPI 1.5、T<sub>c</sub> 0.500000 ns 裡，後兩項全是微架構的成績單。</p>
+<p><strong>不要混淆：</strong>「架構」這個詞在文件裡兩種意思都有。「支援 AVX-512」講的是 ISA，「12 級管線、4 寬發射」講的是微架構；看到其中一句話推不出另一句。</p>
+</article>
+
+<article class="term-card" data-search="micro-operation micro-op 微運算 解碼 前端 uop">
+<h2>微運算（micro-operation, micro-op）</h2>
+<p><strong>白話：</strong>解碼器把一條外部指令拆成的內部小動作，是硬體真正拿去排程與執行的單位。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-ISA契約與定址模式.html">01</a> 與第 <a href="06-超純量亂序與推測執行.html">06 章</a>。現代 x86 的前端每拍把幾條 CISC 指令翻成一串 micro-op，丟進後面那個類 RISC 的亂序核心。</p>
+<p><strong>機制：</strong>一條「記憶體到記憶體的加法」可能拆成載入、加、儲存三個 micro-op；簡單的 RISC 指令通常一對一。所以外面看到的指令數與裡面實際做的動作數是兩回事。</p>
+<p><strong>不要混淆：</strong>指令數與 micro-op 數是兩個不同的計數器。CISC 的一條指令可能是 1 個也可能是 4 個 micro-op，只看指令數會得到相反的結論。</p>
+</article>
+
+<article class="term-card" data-search="risc cisc 精簡指令集 複雜指令集 reduced complex instruction set computer arm x86">
+<h2>RISC 與 CISC（reduced／complex instruction set computer）</h2>
+<p><strong>白話：</strong>兩種指令集設計哲學。RISC 指令少而規整、長度固定；CISC 指令多而複雜、長度可變，一條可以做很多事。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-ISA契約與定址模式.html">01 章</a>的碼密度實驗。RISC-V 與 Arm 屬前者，x86-64 屬後者。</p>
+<p><strong>機制：</strong>第 01 章同一件事 RISC 用 12 位元組、CISC 用 4 位元組，碼密度比 12 / 4 = 3.000000（<code>/</code> 讀作除以）。RISC 的 IC 較大，但規整的編碼讓 CPI 與 T<sub>c</sub> 比較容易壓低。</p>
+<p><strong>不要混淆：</strong>這不是勝負，是三因子的分配方式。現代 x86 外面是 CISC 編碼、裡面解碼成類 RISC 的 micro-op，說它「是 RISC」與「是 CISC」在不同層次上同時成立，兩句話不互相反駁。</p>
+</article>
+
+<article class="term-card" data-search="addressing mode 定址模式 立即 位移 索引 縮放 base index scale">
+<h2>定址模式（addressing mode）</h2>
+<p><strong>白話：</strong>指令用什麼方法算出「我要碰哪一個位址」的規則。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-ISA契約與定址模式.html">01 章</a>。陣列走訪、結構欄位存取與堆疊框都靠它，呼叫慣例那一側見<a href="../../../專題/計算機組織/互動課程/09-程序ABI呼叫與系統邊界.html">計算機組織的程序 ABI 呼叫與系統邊界</a>。</p>
+<p><strong>機制：</strong>常見的有立即、暫存器、位移、索引與縮放索引。第 01 章的縮放索引範例是基底 1024、索引 5、縮放 4、位移 16，一條指令就把「第 5 個 4 位元組元素」算出來。</p>
+<p><strong>不要混淆：</strong>模式多不等於快。每多一種模式解碼器就多一份負擔，RISC 只留少數幾種，用多一條加法指令換掉它——這又回到 IC 與 T<sub>c</sub> 的交換。</p>
+</article>
+
+<article class="term-card" data-search="effective address 有效位址 位址計算 0x424 虛擬位址">
+<h2>有效位址（effective address）</h2>
+<p><strong>白話：</strong>指令實際去存取的那個位址，是定址模式算完之後的結果。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-ISA契約與定址模式.html">01 章</a>。除錯器停在存取違規時，畫面上顯示的就是它。</p>
+<p><strong>機制：</strong>縮放索引的式子是 有效位址 = 基底 + 索引 × 縮放 + 位移（× 讀作乘以）。代入第 01 章的數字：1024 + 5 × 4 + 16 = 1060，十六進位 0x424。</p>
+<p><strong>不要混淆：</strong>有效位址是虛擬位址，還要經過第 <a href="10-TLB與頁缺失的代價.html">10 章</a>的轉譯才會變成實體位址。指令裡看到的數字幾乎都不是晶片接腳上跑的那一個。</p>
+</article>
+
+<article class="term-card" data-search="code density 碼密度 指令長度 快閃記憶體 嵌入式 程式大小">
+<h2>碼密度（code density）</h2>
+<p><strong>白話：</strong>同一件事寫成機器碼要佔幾個位元組。數字越小密度越高。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-ISA契約與定址模式.html">01 章</a>。嵌入式裝置的快閃記憶體只有幾十 KiB（KiB 是 2 的次方，1 KiB = 1024 位元組）時，這個指標直接決定程式放不放得下。</p>
+<p><strong>機制：</strong>第 01 章的例子是 RISC 12 位元組對 CISC 4 位元組，比值 3.000000。密度高的一方 IC 較小、指令快取的壓力也較小，這在小記憶體的機器上很值錢。</p>
+<p><strong>不要混淆：</strong>碼密度高不等於執行快。它影響的是 IC 與指令快取命中率，不影響 CPI 與 T<sub>c</sub>；三因子要一起看才有結論。</p>
+</article>
+
+<article class="term-card" data-search="ic cpi tc clock period 執行時間 三因子 instruction count cycles per instruction mips ipc">
+<h2>執行時間三因子：IC、CPI 與 T<sub>c</sub>（instruction count, cycles per instruction, clock period）</h2>
+<p><strong>白話：</strong>把「程式跑多久」拆成三個可以各自下手的乘數：做了幾條指令、每條平均佔幾拍、一拍多久。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-微處理機世界觀與效能公式.html">00 章</a>，全課的量尺。之後每一章的招數都只是在動這三項的其中一項。</p>
+<p><strong>機制：</strong>執行時間 = IC × CPI × T<sub>c</sub>。第 00 章：IC 100 × 10<sup>6</sup>（10<sup>6</sup> 讀作十的六次方）、CPI 1.5、2.0 GHz 即 T<sub>c</sub> 0.500000 ns，得 75.000000 ms；同一台機器的 MIPS = f / (CPI × 10<sup>6</sup>) = 1333.333333。</p>
+<p><strong>不要混淆：</strong>CPI 不是「一條指令要幾拍走完」（那是延遲），是<strong>平均每條指令佔用機器幾拍</strong>；超純量下它可以小於 1。MIPS 裡也沒有指令數這一項，拿它跨 ISA 比較會得到假的結論。</p>
+</article>
+
+<article class="term-card" data-search="ieee 754 浮點 floating point binary32 尾數 指數 偏移量 float double">
+<h2>IEEE 754 浮點格式（IEEE 754 floating-point format）</h2>
+<p><strong>白話：</strong>用符號、指數、尾數三段，把實數塞進固定位元數的標準寫法。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-IEEE754與端序.html">02 章</a>。所有語言的 float 與 double 都是它；二補數那一側的整數編碼見<a href="../邏輯設計-互動課程/02-二補數與有號數運算.html">邏輯設計的二補數與有號數運算</a>。</p>
+<p><strong>機制：</strong>binary32 是 1 + 8 + 23 位元，指數用偏移量 127。第 02 章的 12.375 = 1.100011<sub>2</sub> × 2<sup>3</sup>，指數欄位 3 + 127 = 130 = <code>1000 0010</code>，合起來是 0x41460000。</p>
+<p><strong>不要混淆：</strong>浮點數是離散的，間距隨值變大而變寬。0.1 存進 binary32 會變成 0.100000001490116…，那是格式一開始就存不下那個數，不是後續運算造成的誤差。</p>
+</article>
+
+<article class="term-card" data-search="subnormal nan infinity 非正規數 無限大 not a number 漸進下溢 特殊值">
+<h2>非正規數、NaN 與無限大（subnormal, NaN &amp; infinity）</h2>
+<p><strong>白話：</strong>浮點格式保留的三種特殊編碼，分別處理「小到快沒有」「沒有答案」與「大到超出範圍」。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-IEEE754與端序.html">02 章</a>。數值程式除以零、對負數開根號，或值一路滑到極小時就會遇到。</p>
+<p><strong>機制：</strong>指數欄位全 0 是零與非正規數（漸進下溢，binary32 最小到 2<sup>−149</sup>）；全 1 且尾數為 0 是 ±∞；全 1 且尾數非 0 是 NaN（not a number）。NaN 與任何值比較都是假，連跟自己比也是假。</p>
+<p><strong>不要混淆：</strong>非正規數不是錯誤，是刻意設計的緩降；但不少硬體處理它要多花幾十拍，所以高效能程式常直接開「非正規數當零」。NaN 也不等於無限大：一個是沒有答案，一個是超出範圍。</p>
+</article>
+
+<article class="term-card" data-search="endianness 端序 大端 小端 big endian little endian 位元組順序 網路位元組序">
+<h2>端序（endianness）</h2>
+<p><strong>白話：</strong>一個多位元組的值寫進記憶體時，哪一個位元組先放。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-IEEE754與端序.html">02 章</a>。跨機器傳結構、讀二進位檔、看網路封包時，第一個要問的就是這件事。</p>
+<p><strong>機制：</strong>0x41460000 這個 4 位元組的值，大端序在記憶體裡是 <code>41 46 00 00</code>，小端序是 <code>00 00 46 41</code>。x86-64 與多數 Arm 設定用小端序，網路位元組序是大端序。</p>
+<p><strong>不要混淆：</strong>端序是<strong>記憶體裡的位元組順序</strong>，不是位元順序。暫存器裡的值沒有端序問題。</p>
+</article>
+
+</div>
+
+<h2>第二組｜管線與冒險（第 03–05 章，11 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="pipeline 管線 五階段 if id ex mem wb 取指 解碼 執行 寫回">
+<h2>管線（pipeline）</h2>
+<p><strong>白話：</strong>把一條指令的處理切成幾段，讓不同指令同時佔用不同段，像洗衣店的洗、烘、摺三台機器同時開工。比喻到此為止：精確地說，管線是在每兩段之間插入一排暫存器，讓每一段各自成為一個時脈週期內的組合邏輯。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-五階段管線與吞吐量.html">03 章</a>起的主線。本課用 IF／ID／EX／MEM／WB（取指／解碼／執行／記憶體存取／寫回）五級模型；那排暫存器的時序限制見<a href="../邏輯設計-互動課程/10-時脈與時序限制.html">邏輯設計的時脈與時序限制</a>。</p>
+<p><strong>機制：</strong>k 級管線的時脈週期 T<sub>p</sub> = t<sub>comb</sub> / k + t<sub>latch</sub>。第 03 章 t<sub>comb</sub> 10.0 ns、t<sub>latch</sub> 0.2 ns、k = 5，得 T<sub>p</sub> 2.200000 ns；100 條指令要 (100 + 4) × 2.2 = 228.800000 ns。</p>
+<p><strong>不要混淆：</strong>本課一律寫「管線」；中國教材寫「流水線」，是同一個 pipeline。管線提高的是吞吐量不是單條指令的延遲——一條指令走完仍要 5 × 2.2 = 11.000000 ns，比單週期的 10.200000 ns 還久。</p>
+</article>
+
+<article class="term-card" data-search="throughput latency 吞吐量 延遲 加速比 每秒完成 單條延遲">
+<h2>吞吐量與延遲（throughput &amp; latency）</h2>
+<p><strong>白話：</strong>延遲是「一件事從頭到尾多久」，吞吐量是「每單位時間做完幾件」。兩者可以往相反方向動。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-五階段管線與吞吐量.html">03 章</a>，也是全課最常被混為一談的一對。</p>
+<p><strong>機制：</strong>第 03 章單週期 T<sub>1</sub> = 10.200000 ns 既是週期也是延遲；五級管線把週期壓到 2.200000 ns，吞吐量升高，單條指令的延遲卻變成 11.000000 ns。100 條指令的總時間從 1020.000000 ns 降到 228.800000 ns，加速比 4.458042 倍。</p>
+<p><strong>不要混淆：</strong>加速比追不上級數 5，因為 t<sub>latch</sub> 不會被切分。也不能拿「單條延遲變差」否定管線——管線要的本來就是吞吐量。</p>
+</article>
+
+<article class="term-card" data-search="pipeline fill drain 填充 排空 暖機 k-1 啟動成本">
+<h2>管線填充與排空（pipeline fill &amp; drain）</h2>
+<p><strong>白話：</strong>管線剛開始跑時前幾級是空的，快結束時後幾級也是空的，這兩段時間沒有滿載。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-五階段管線與吞吐量.html">03 章</a>總時間公式裡那個 k − 1。</p>
+<p><strong>機制：</strong>T<sub>total</sub> = (N + k − 1) × T<sub>p</sub>。第 03 章 N = 100、k = 5，多出的 4 拍就是填充。N 越大這 4 拍越可以忽略；N = 1 時管線完全划不來。</p>
+<p><strong>不要混淆：</strong>填充成本與分支清空不是同一件事：填充是每次啟動一定要付，清空是猜錯才付。兩者都表現成「幾拍沒有產出」，但成因與對策完全不同。</p>
+</article>
+
+<article class="term-card" data-search="structural hazard 結構冒險 資源衝突 記憶體埠 雙埠 硬體不足">
+<h2>結構冒險（structural hazard）</h2>
+<p><strong>白話：</strong>兩條指令在同一拍要用同一份硬體，而硬體只有一份，只好有人等。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-管線冒險旁路與插泡.html">04 章</a>三種冒險的第一種。</p>
+<p><strong>機制：</strong>典型例子是單一記憶體埠同時被 IF 與 MEM 要走。解法是加硬體：指令快取與資料快取分開、暫存器檔案做成兩讀一寫。</p>
+<p><strong>不要混淆：</strong>結構冒險是資源不足，資料冒險是值還沒好，控制冒險是不知道下一條在哪。三者裡只有結構冒險可以用「多買一份硬體」乾淨解決。</p>
+</article>
+
+<article class="term-card" data-search="data hazard raw read after write 資料冒險 真相依 相依距離">
+<h2>資料冒險與 RAW（data hazard, read-after-write）</h2>
+<p><strong>白話：</strong>後一條指令要用的值，前一條還沒寫回去。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-管線冒險旁路與插泡.html">04 章</a>。第 04 章那段 5 條相依距離 1 的程式就是拿來量它的。</p>
+<p><strong>機制：</strong>五級管線裡前一條要到 WB 才寫回，後一條在 ID 就要讀，相依距離 1 時差 3 拍。沒有旁路時每一對要插 3 − 1 = 2 拍，4 對共 8 拍，總時間 5 + 4 + 8 = 17 拍。</p>
+<p><strong>不要混淆：</strong>RAW 是真相依，值真的要流過去，換名字換不掉（對照第 <a href="06-超純量亂序與推測執行.html">06 章</a>的 WAR 與 WAW）。它也不是編譯器沒排好，是階段排列的必然。</p>
+</article>
+
+<article class="term-card" data-search="forwarding bypassing 旁路 前遞 多工器 ex mem 短路">
+<h2>旁路（forwarding／bypassing）</h2>
+<p><strong>白話：</strong>不等結果寫回暫存器，直接從產生它的那一級拉一條線送到需要它的那一級。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-管線冒險旁路與插泡.html">04 章</a>。同一段 5 條相依距離 1 的程式，有旁路 10 拍、沒有旁路 17 拍。</p>
+<p><strong>機制：</strong>把 EX 的輸出接回 EX 的輸入、MEM 的輸出接回 EX 的輸入，用多工器選來源。代價是多幾條長線與多工器，會吃掉一點 T<sub>c</sub>。</p>
+<p><strong>不要混淆：</strong>本課一律寫「旁路」；部分教材把 forwarding 譯成「轉發」。旁路不會把時間往前搬，它只是改走一條比較短的線；所以載入使用冒險那一拍泡它救不了。</p>
+</article>
+
+<article class="term-card" data-search="stall bubble 停頓 插泡 泡 nop 凍結 氣泡">
+<h2>停頓與插泡（stall &amp; bubble）</h2>
+<p><strong>白話：</strong>讓後面的指令原地不動一拍，前面被清成一個什麼都不做的空位往下走。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-管線冒險旁路與插泡.html">04</a>、<a href="05-分支預測與管線清空.html">05</a>、<a href="08-快取設計四維度.html">08</a>、<a href="10-TLB與頁缺失的代價.html">10 章</a>都會用到這個動作。</p>
+<p><strong>機制：</strong>停頓是「凍結前段」，泡是「往後段送 NOP」，兩者是同一個動作的兩個視角。第 04 章那 1 拍泡讓總時間從 9 拍變成 10 拍。</p>
+<p><strong>不要混淆：</strong>泡不是被丟掉的指令，它不改變任何結果，只是佔掉一拍。清空（flush）才是真的把已經抓進來的指令作廢，兩者的成本量級也差很多。</p>
+</article>
+
+<article class="term-card" data-search="load use hazard 載入使用冒險 lw 一拍泡 必然 排程">
+<h2>載入使用冒險（load-use hazard）</h2>
+<p><strong>白話：</strong>剛從記憶體載入的值，下一條指令立刻就要用。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-管線冒險旁路與插泡.html">04 章</a>，它是「就算旁路做到滿也躲不掉」的那一種。</p>
+<p><strong>機制：</strong>載入的資料要到 MEM 結束才拿得到，比下一條的 EX 需要它的時間晚一拍，所以必須插 1 拍泡，旁路只能接到再下一拍。第 04 章有旁路的 10 拍裡就含這 1 拍。</p>
+<p><strong>不要混淆：</strong>這是<strong>即使有完整旁路也躲不掉</strong>的那一種，它是管線階段排列的必然結果，不是設計偷懶。編譯器能做的只是把一條不相干的指令排進那一拍。</p>
+</article>
+
+<article class="term-card" data-search="control hazard 控制冒險 分支 延遲槽 取指 下一條">
+<h2>控制冒險（control hazard）</h2>
+<p><strong>白話：</strong>分支的結果還沒算出來，下一條該從哪裡抓不知道。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-分支預測與管線清空.html">05 章</a>。</p>
+<p><strong>機制：</strong>管線每拍都要抓一條指令，不能等。歷史上的三種做法是停頓、延遲槽與預測；現代處理器一律用預測，猜錯就把已經抓進來的指令清掉。CPI = CPI<sub>base</sub> + 分支比例 × 誤判率 × 懲罰拍數。</p>
+<p><strong>不要混淆：</strong>懲罰的大小跟管線深度成正比，跟分支多不多是另一個因子。上面那條式子裡三項獨立，只降其中一項的效果很容易被高估。</p>
+</article>
+
+<article class="term-card" data-search="branch predictor 分支預測器 靜態 雙位元 2-bit saturating counter 飽和計數器 迴圈">
+<h2>分支預測器：靜態與雙位元飽和計數器（branch predictor: static &amp; 2-bit saturating counter）</h2>
+<p><strong>白話：</strong>猜這個分支這次會不會跳。靜態是永遠猜同一邊，2 位元計數器是「連錯兩次才改口」。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-分支預測與管線清空.html">05 章</a>。</p>
+<p><strong>機制：</strong>2 位元計數器有強不跳 <code>00</code>、弱不跳 <code>01</code>、弱跳 <code>10</code>、強跳 <code>11</code> 四個狀態，猜對往該方向加一、猜錯減一，飽和不繞回。第 05 章的迴圈樣式重複 4 次、初始 <code>01</code>，誤判 5 次；同一序列給 1 位元預測器則誤判 8 次。</p>
+<p><strong>不要混淆：</strong>多一個位元不是「多記一次歷史」，是「多一次容忍」：它讓迴圈最後那個不跳不會立刻推翻整個習慣。所以它救得了迴圈，救不了 T N 交替樣式——那種樣式換初始值也只是把錯的位置整批平移。</p>
+</article>
+
+<article class="term-card" data-search="misprediction penalty pipeline flush 誤判懲罰 管線清空 作廢 重來">
+<h2>誤判懲罰與管線清空（misprediction penalty &amp; pipeline flush）</h2>
+<p><strong>白話：</strong>猜錯之後，已經抓進來的那些指令要全部作廢重來，這段浪費就是懲罰。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-分支預測與管線清空.html">05 章</a>，也是第 <a href="06-超純量亂序與推測執行.html">06 章</a>深管線代價的來源。</p>
+<p><strong>機制：</strong>懲罰拍數大致等於「從取指到分支被解出來」之間的級數。在 CPI = CPI<sub>base</sub> + 分支比例 × 誤判率 × 懲罰拍數 這條式子裡，把誤判率減半與把懲罰減半對 CPI 的效果相同。</p>
+<p><strong>不要混淆：</strong>被清空的指令在功能上等於沒發生，暫存器與記憶體都不會被改。但它們花掉的時間與電是真的，這也是管線不能無限加深的原因。</p>
+</article>
+
+</div>
+
+<h2>第三組｜超純量與平行（第 06–07 章，10 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="superscalar 超純量 多發射 發射寬度 執行埠 ipc">
+<h2>超純量（superscalar）</h2>
+<p><strong>白話：</strong>一拍發射多條指令，而不是一拍一條。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-超純量亂序與推測執行.html">06 章</a>。第 06 章那台機器是寬 4；桌機與手機的大核心都是這一類。</p>
+<p><strong>機制：</strong>要有多份執行單元、多埠的暫存器檔案，以及能在一拍內解出多條相依關係的排程邏輯。這些邏輯的成本大致隨寬度的平方成長，所以實務上的寬度停在個位數。</p>
+<p><strong>不要混淆：</strong>本課一律寫「超純量」；中國教材寫「超標量」，是同一個 superscalar。發射寬度是上限不是實得：第 06 章寬 4 的機器實際 IPC 只有 2.500000，因為程式本身只取得出 2.5 的平行度。</p>
+</article>
+
+<article class="term-card" data-search="out-of-order execution 亂序執行 引退 順序引退 精確例外 排程">
+<h2>亂序執行（out-of-order execution）</h2>
+<p><strong>白話：</strong>誰的來源運算元先備好誰先做，但對外看起來仍然照原順序完成。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-超純量亂序與推測執行.html">06 章</a>。</p>
+<p><strong>機制：</strong>前端照順序解碼與配發，中間亂序執行，後端由重排序緩衝器照順序引退。這樣既能繞過正在等待的指令，又能維持精確例外。</p>
+<p><strong>不要混淆：</strong>亂序不會改變程式結果，它改變的只有「什麼時候算」。它也不是萬靈丹——第 06 章把重新命名關掉，同一台機器的 IPC 就從 2.500000 掉到 1.500000。</p>
+</article>
+
+<article class="term-card" data-search="register renaming 暫存器重新命名 實體暫存器 映射表 名字">
+<h2>暫存器重新命名（register renaming）</h2>
+<p><strong>白話：</strong>把程式裡寫的暫存器名字，映射到一堆數量多很多的實體暫存器上。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-超純量亂序與推測執行.html">06 章</a>，是亂序執行能成立的前提。</p>
+<p><strong>機制：</strong>每一次寫入都配一個新的實體暫存器，讀取則指向當時最新的那一個；名字沒有人再讀就回收。ISA 只給 16 或 32 個名字，實體卻可能有一兩百個。</p>
+<p><strong>不要混淆：</strong>它消掉的是名字造成的假相依，不是所有相依。第 06 章關掉它 IPC 從 2.500000 掉到 1.500000，掉的那一段就是 WAR 與 WAW 回來的結果。</p>
+</article>
+
+<article class="term-card" data-search="false dependence war waw 假相依 write after read write after write 名字衝突">
+<h2>假相依：WAR 與 WAW（false dependence）</h2>
+<p><strong>白話：</strong>兩條指令只是剛好用了同一個暫存器名字，值其實沒有要從一條流到另一條。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-超純量亂序與推測執行.html">06 章</a>。</p>
+<p><strong>機制：</strong>WAR 是先讀後寫（write-after-read），WAW 是先寫後寫（write-after-write）。兩者都因為重新命名把後面那次寫入換到新的實體暫存器而消失。</p>
+<p><strong>不要混淆：</strong>WAR 與 WAW 只是兩條指令剛好用了同一個名字，換個實體暫存器就沒了；RAW 換不掉，因為值真的要流過去。</p>
+</article>
+
+<article class="term-card" data-search="reorder buffer rob 重排序緩衝器 視窗 little's law 引退 指令視窗">
+<h2>重排序緩衝器（reorder buffer, ROB）</h2>
+<p><strong>白話：</strong>一張照原順序排好的清單，記著每條指令算完了沒、可不可以正式生效。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-超純量亂序與推測執行.html">06 章</a>。它就是第 06 章那個「視窗 64」。</p>
+<p><strong>機制：</strong>指令配發時進入 ROB 尾端，算完只是標記完成，要等它成為最舊的一項才引退並改寫架構狀態。Little's law 給出上限：IPC ≤ 視窗大小 / 平均停留拍數（≤ 讀作小於或等於），第 06 章 64 / 16 = 4。</p>
+<p><strong>不要混淆：</strong>ROB 大不等於快。第 06 章視窗上限 4、發射寬度也 4，實得 IPC 仍只有 2.500000——瓶頸在程式的 ILP，加大 ROB 不會動它。</p>
+</article>
+
+<article class="term-card" data-search="speculative execution 推測執行 猜測 分支之後 架構狀態 丟棄">
+<h2>推測執行（speculative execution）</h2>
+<p><strong>白話：</strong>還不確定該不該做就先做，事後證明不該做就把結果丟掉。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-超純量亂序與推測執行.html">06 章</a>。分支預測之後抓進來的那些指令，全都是推測執行的。</p>
+<p><strong>機制：</strong>推測的結果只寫進實體暫存器與 ROB，不寫進架構狀態；要等引退才生效。猜錯就把那一段整批作廢，等於第 05 章的管線清空。</p>
+<p><strong>不要混淆：</strong>推測在<strong>功能上</strong>永遠正確，錯的結果會被丟掉。問題出在它留下的微架構痕跡，那是另一個層次的事。</p>
+</article>
+
+<article class="term-card" data-search="speculation side channel 推測留下的痕跡 微架構痕跡 spectre meltdown 計時差 更新">
+<h2>推測留下的痕跡（speculation side channel）</h2>
+<p><strong>白話：</strong>推測執行會把資料帶進快取，之後可以用計時差看出它來過，這是 Spectre 與 Meltdown 這一類問題的直覺。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-超純量亂序與推測執行.html">06 章</a>的倫理邊界。本課只講到這層直覺為止。</p>
+<p><strong>機制：</strong>架構狀態被完整還原，微架構狀態（快取內容、預測器歷史）沒有還原，於是「被丟掉的那一次執行」仍留下可以觀察的差異。本課不寫任何步驟、程式碼或量測方法。</p>
+<p><strong>不要混淆：</strong>這不是程式的邏輯錯誤，也不是靠改寫自己的程式就能躲掉的事。修補是系統廠商與作業系統的事，讀者該做的是保持更新。</p>
+</article>
+
+<article class="term-card" data-search="simd vectorization 向量化 single instruction multiple data 通道 向量寬度 avx neon">
+<h2>SIMD 與向量化（single instruction multiple data &amp; vectorization）</h2>
+<p><strong>白話：</strong>一條指令同時對一排資料做同一個運算。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-SIMD與平行加速上限.html">07 章</a>。影像、音訊與矩陣運算靠它，訊號處理那一側的負載見<a href="../信號與系統-互動課程/15-數位濾波器與多速率.html">信號與系統的數位濾波器與多速率</a>。</p>
+<p><strong>機制：</strong>寬度 W 的向量單位把 N 個元素分成 ⌈N / W⌉ 次（⌈ ⌉ 讀作向上取整）。第 07 章 N = 1000、W = 16，得 63 次，最後一次只用了 8 條通道。有效加速 S<sub>simd</sub> = N / ⌈N / W⌉。</p>
+<p><strong>不要混淆：</strong>SIMD 加的是每拍處理幾個元素，不是每拍發射幾條指令。它也要求資料連續且不分歧；每個元素走不同分支時，向量化會退化成逐一處理。</p>
+</article>
+
+<article class="term-card" data-search="amdahl law 定律 加速上限 可平行化比例 序列部分 speedup">
+<h2>Amdahl 定律（Amdahl's law）</h2>
+<p><strong>白話：</strong>只加速一部分，整體的收益會被沒加速的那一部分卡住。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-SIMD與平行加速上限.html">07 章</a>，也是全課所有「加速」的天花板。</p>
+<p><strong>機制：</strong>S = 1 / ((1 − p) + p / s)，p 是可平行化的<strong>時間</strong>比例、s 是那一段的加速倍率。第 07 章 p = 0.8、s = 8，得 3.333333 倍；上限 S<sub>max</sub> = 1 / (1 − p) = 5.000000 倍。</p>
+<p><strong>不要混淆：</strong>上限跟 s 無關，s 開到無限大也只有 5.000000 倍。p 是時間佔比不是程式碼行數佔比，量錯這一項會得到完全樂觀的結論。</p>
+</article>
+
+<article class="term-card" data-search="ilp dlp tlp 指令級平行 資料級平行 執行緒級平行 instruction data thread level parallelism">
+<h2>ILP、DLP 與 TLP（instruction-／data-／thread-level parallelism）</h2>
+<p><strong>白話：</strong>三種平行度——同一條指令流裡可以同時做的（ILP）、同一個運算套在很多資料上（DLP）、好幾條互相獨立的執行流（TLP）。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-超純量亂序與推測執行.html">06 章</a>吃 ILP、第 <a href="07-SIMD與平行加速上限.html">07 章</a>吃 DLP、第 <a href="09-多核一致性MESI.html">09 章</a>吃 TLP。</p>
+<p><strong>機制：</strong>三者分別由亂序超純量核心、SIMD 向量單位、多核心與多執行緒硬體去取。第 06 章那段程式的 ILP 是 2.5，所以寬 4 的機器只跑出 IPC 2.500000。</p>
+<p><strong>不要混淆：</strong>三種平行度都來自程式而不是硬體。硬體只能「取得出多少算多少」，程式本來沒有的平行度，加再多硬體也變不出來。</p>
+</article>
+
+</div>
+
+<h2>第四組｜快取與一致性（第 08–09 章，12 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="cache 快取 命中 失誤 hit miss l1 l2 l3 amat">
+<h2>快取（cache）</h2>
+<p><strong>白話：</strong>把最近用過的資料留在離處理器很近的小記憶體裡，賭它馬上又會被用到。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08 章</a>起的主線，機制面的前置見<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">計算機組織的記憶體階層與虛擬記憶體</a>。</p>
+<p><strong>機制：</strong>命中就付 t<sub>hit</sub>，失誤要再付 t<sub>penalty</sub> 去下一層拿。第 10 章的資料存取例子：t<sub>hit</sub> 1 拍、失誤率 5 %、t<sub>penalty</sub> 60 拍，AMAT = 1 + 0.05 × 60 = 4.000000 拍。</p>
+<p><strong>不要混淆：</strong>本課一律用台灣標準用語「快取」；中國教材寫「緩存」，是同一個 cache。快取由硬體自動管理，程式不能直接指定放什麼進去；能做的只有改資料佈局與存取順序。</p>
+</article>
+
+<article class="term-card" data-search="temporal spatial locality 時間區域性 空間區域性 局部性 走訪 重複使用">
+<h2>時間區域性與空間區域性（temporal &amp; spatial locality）</h2>
+<p><strong>白話：</strong>剛用過的東西很快會再用（時間），用過的東西旁邊那些很快也會用（空間）。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08 章</a>。它是整個記憶體階層能夠成立的唯一理由。</p>
+<p><strong>機制：</strong>時間區域性由「留著先不換掉」利用，空間區域性由「一次抓一整條快取行」利用。第 08 章的行是 32 位元組，讀一個位元組就把鄰近 32 個一起帶進來。</p>
+<p><strong>不要混淆：</strong>區域性是程式的性質不是硬體的性質。隨機跳著存取大陣列的程式沒有區域性，快取做再大也救不了它。</p>
+</article>
+
+<article class="term-card" data-search="cache line block size 快取行 區塊大小 32 位元組 顆粒 搬移單位">
+<h2>快取行與區塊大小（cache line &amp; block size）</h2>
+<p><strong>白話：</strong>快取搬移資料的最小單位，一次就是一整條。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08</a> 與第 <a href="09-多核一致性MESI.html">09 章</a>。第 09 章的偽共享問題完全是它造成的。</p>
+<p><strong>機制：</strong>第 08 章用 32 位元組的行、256 位元組的容量，共 8 條。行越大越吃得到空間區域性，但同樣容量下條數越少，衝突機會越高，一次失誤要搬的資料也越多。</p>
+<p><strong>不要混淆：</strong>行大小不是「一次最多讀幾個位元組」的上限，而是搬移的顆粒。你只讀 1 個位元組，記憶體匯流排上仍然走了 32 個位元組。</p>
+</article>
+
+<article class="term-card" data-search="direct mapped set associative fully associative 直接對映 組相聯 全相聯 路數 way">
+<h2>對映方式：直接、組相聯與全相聯（direct-mapped, set-associative &amp; fully-associative）</h2>
+<p><strong>白話：</strong>一個區塊可以放進快取的哪些位置——只有一個位置、幾個位置之一、或任何位置。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08 章</a>四維度的第一維。</p>
+<p><strong>機制：</strong>組數 = 容量 / (區塊大小 × 路數)，組索引 = 區塊編號 mod 組數。第 08 章 256 / (32 × 1) = 8 組；改成二路變 4 組，交錯序列的命中率就從 0.000000 % 跳到 87.500000 %。</p>
+<p><strong>不要混淆：</strong>相聯度提高換來的是命中率，付出的是比較器數量、面積與 t<sub>hit</sub>。全相聯在大容量上不可行，正是因為 t<sub>hit</sub> 會被那一整排比較器拖垮。</p>
+</article>
+
+<article class="term-card" data-search="tag index block offset 標籤 索引 區塊內偏移 位址切分 位元數">
+<h2>標籤、索引與區塊內偏移（tag, index &amp; block offset）</h2>
+<p><strong>白話：</strong>把一個位址切成三段，各自回答「在不在」「該去哪一組找」「在那條行裡的第幾個位元組」。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08 章</a>。順序固定由高位到低位：標籤、索引、區塊內偏移。</p>
+<p><strong>機制：</strong>偏移位元數 = log<sub>2</sub>(區塊大小)，索引位元數 = log<sub>2</sub>(組數)，其餘全給標籤。第 08 章 32 位元組行、8 組，就是偏移 5 位元、索引 3 位元。位址 0 落在區塊 0、位址 256 落在區塊 8，8 mod 8 = 0，兩者搶同一組。</p>
+<p><strong>不要混淆：</strong>索引指的是「第幾組」不是「第幾條行」；同一組裡放得下幾條由路數決定。標籤也不必存整個高位以外的東西——索引已經隱含在存放的位置裡，不必重複存。</p>
+</article>
+
+<article class="term-card" data-search="replacement policy lru fifo mru 替換策略 最近最少使用 近似 犧牲者">
+<h2>替換策略：LRU、FIFO 與 MRU（replacement policy）</h2>
+<p><strong>白話：</strong>組滿了要踢一條出去，踢哪一條的規則。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08 章</a>四維度的第二維。</p>
+<p><strong>機制：</strong>LRU 踢最久沒用的，FIFO 踢最早進來的，MRU 踢剛用過的。有時間區域性時 LRU 最好；工作集剛好超過容量而且循環走訪時 LRU 會全軍覆沒，MRU 反而好。真實硬體多用近似 LRU，因為完整 LRU 要記的位元數隨路數暴漲。</p>
+<p><strong>不要混淆：</strong>本課不做隨機替換的互動實驗，因為結果必須可重現。策略換來的差距通常遠小於相聯度與容量的差距，先調後兩者才划算。</p>
+</article>
+
+<article class="term-card" data-search="write back write through 寫回 寫穿 髒位元 dirty 寫流量">
+<h2>寫策略：寫回與寫穿（write-back &amp; write-through）</h2>
+<p><strong>白話：</strong>寫進快取之後，要不要順手也寫到下一層。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08 章</a>四維度的第三維，也是第 <a href="09-多核一致性MESI.html">09 章</a> MESI 的前提。</p>
+<p><strong>機制：</strong>寫穿每次都往下寫，下層永遠是最新的，但寫的流量大。寫回只改快取並標記為髒，被替換時才寫下去，流量小但下層有一段時間是舊的。多核一致性協定幾乎都建立在寫回之上。</p>
+<p><strong>不要混淆：</strong>寫回不是「比較不安全」，斷電風險由更上層的機制處理。兩者真正的差別是匯流排流量與延遲分佈，不是正確性。</p>
+</article>
+
+<article class="term-card" data-search="write allocate no-write-allocate 寫配置 寫不配置 寫失誤 清零">
+<h2>寫配置與不配置（write-allocate &amp; no-write-allocate）</h2>
+<p><strong>白話：</strong>寫入時發生失誤，要不要先把那一條行抓進快取再改。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08 章</a>四維度的第四維。</p>
+<p><strong>機制：</strong>寫配置先把行讀進來再改，適合「寫了之後還會讀」的樣式，通常跟寫回搭配。不配置直接往下一層寫，適合大量一次性寫入（例如把一大塊記憶體清零），通常跟寫穿搭配。</p>
+<p><strong>不要混淆：</strong>這一維與寫回／寫穿是兩個獨立的選擇，只是實務上有慣用的配對。四個維度合起來才決定一個快取的行為，只講其中一維預測不了命中率。</p>
+</article>
+
+<article class="term-card" data-search="compulsory capacity conflict miss 失誤三分類 強制失誤 容量失誤 衝突失誤 3c">
+<h2>失誤三分類（compulsory, capacity &amp; conflict miss）</h2>
+<p><strong>白話：</strong>把失誤歸成三種原因——第一次碰到、根本裝不下、明明有空位卻擠在同一組。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08 章</a>。它決定你該加容量還是加相聯度。</p>
+<p><strong>機制：</strong>強制失誤是無限大全相聯也會有的；容量失誤是同容量全相聯多出來的；剩下的是衝突失誤。第 08 章那 16 次存取在直接對映下全失誤，同容量全相聯只失誤 2 次，所以 16 − 2 = 14 次是衝突失誤，換成二路組相聯就消失。</p>
+<p><strong>不要混淆：</strong>這是<strong>分析工具</strong>不是物理量。循環走訪超過容量時，衝突失誤會算出負值——那是三分類法本身的破口。</p>
+</article>
+
+<article class="term-card" data-search="amat average memory access time 平均記憶體存取時間 失誤率 懲罰 遞迴">
+<h2>平均記憶體存取時間（average memory access time, AMAT）</h2>
+<p><strong>白話：</strong>把命中與失誤按比例攤平之後，一次存取平均要多久。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08</a> 與第 <a href="10-TLB與頁缺失的代價.html">10 章</a>，是比較不同快取設計的統一尺。</p>
+<p><strong>機制：</strong>AMAT = t<sub>hit</sub> + 失誤率 × t<sub>penalty</sub>。第 10 章的資料存取：1 + 0.05 × 60 = 4.000000 拍；再加上轉譯的 2.100000 拍，每次存取合計 6.100000 拍。多層快取時，把下一層的 AMAT 當成上一層的 t<sub>penalty</sub> 遞迴代入。</p>
+<p><strong>不要混淆：</strong>AMAT 是平均值，推不出單次存取會多久。也不要用它比較不同工作量：失誤率是程式的性質，換一個程式整條式子每一項都會變。</p>
+</article>
+
+<article class="term-card" data-search="mesi protocol 一致性 modified exclusive shared invalid 快取一致性 coherence busupgr">
+<h2>MESI 協定（MESI protocol）</h2>
+<p><strong>白話：</strong>多核心各有自己的快取時，用四個狀態記住「這條行我有沒有、是不是只有我有、我改過沒有」。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-多核一致性MESI.html">09 章</a>。</p>
+<p><strong>機制：</strong>四個狀態是 M（Modified 已修改）、E（Exclusive 獨占）、S（Shared 共享）、I（Invalid 無效）。讀進來若只有自己持有就是 E，接著要寫可以直接 E → M，不必發匯流排交易。第 09 章兩核心交替寫同一條行，穩態每輪 40 + 10 + 40 + 10 = 100 拍，除以 4 次存取是 25.000000 拍/存取。</p>
+<p><strong>不要混淆：</strong>一致性（coherence）管的是「同一個位址誰看到哪個值」，記憶體一致性模型（consistency）管的是「不同位址之間的順序」。MESI 只解決前者，後者要靠記憶體屏障。</p>
+</article>
+
+<article class="term-card" data-search="false sharing 偽共享 同一條行 填充 padding 多執行緒 效能殺手">
+<h2>偽共享（false sharing）</h2>
+<p><strong>白話：</strong>兩個核心改的是不同變數，但兩個變數住在同一條快取行，硬體只好把它們當成同一份資料互相搶。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-多核一致性MESI.html">09 章</a>。多執行緒程式最常見的無聲效能殺手。</p>
+<p><strong>機制：</strong>第 09 章各寫各的行時每輪只要 4 拍，擠進同一條行就變成 100 拍，差 25.000000 倍。解法是把各執行緒常寫的資料補齊到快取行邊界。</p>
+<p><strong>不要混淆：</strong>程式的結果完全正確，只是慢。它不是邏輯錯誤，是資料佈局問題；加鎖與它無關。</p>
+</article>
+
+</div>
+
+<h2>第五組｜位址轉譯與 I/O（第 10–11 章，10 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="tlb translation lookaside buffer 轉譯後備緩衝區 頁表走訪 虛擬位址 實體位址">
+<h2>轉譯後備緩衝區（translation lookaside buffer, TLB）</h2>
+<p><strong>白話：</strong>專門存「虛擬頁對應到哪一個實體頁」的小快取，免得每次存取都去走一遍頁表。</p>
+<p><strong>位置／角色：</strong>第 <a href="10-TLB與頁缺失的代價.html">10 章</a>。分頁表本身的結構見<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">計算機組織的記憶體階層與虛擬記憶體</a>。</p>
+<p><strong>機制：</strong>第 10 章的設定是命中率 99 %、命中查詢 1 拍、失誤走訪 100 拍、頁缺失率 10<sup>−6</sup>。平均轉譯 = 1 + 0.01 × 100 + 10<sup>−6</sup> × 100000 = 2.100000 拍。</p>
+<p><strong>不要混淆：</strong>TLB 失誤與頁缺失是兩件事：前者是翻譯不在 TLB（頁還在記憶體），後者是頁根本不在記憶體。兩者的懲罰差了三個數量級。</p>
+</article>
+
+<article class="term-card" data-search="page fault 頁缺失 換入 ssd 磁碟 例外 作業系統">
+<h2>頁缺失（page fault）</h2>
+<p><strong>白話：</strong>要用的那一頁根本不在記憶體裡，得先去 SSD 或磁碟把它搬進來。</p>
+<p><strong>位置／角色：</strong>第 <a href="10-TLB與頁缺失的代價.html">10 章</a>。</p>
+<p><strong>機制：</strong>第 10 章的 SSD 例子是一次 50 µs（µ 讀作微，1 µs = 10<sup>−6</sup> 秒），在 2 GHz 下等於 100000 拍。發生率只有百萬分之一，攤下來仍佔轉譯與存取總成本 1.639344 %。</p>
+<p><strong>不要混淆：</strong>頁缺失是作業系統處理的例外，不是硬體故障。它可怕的地方不在機率而在懲罰量級——率再高一百倍就會完全主導執行時間。</p>
+</article>
+
+<article class="term-card" data-search="thrashing 顛簸 工作集 換頁 記憶體不足 使用率崩潰">
+<h2>顛簸（thrashing）</h2>
+<p><strong>白話：</strong>工作集比可用的實體記憶體大，剛換出去的頁馬上又要用，機器把時間全花在搬頁上。</p>
+<p><strong>位置／角色：</strong>第 <a href="10-TLB與頁缺失的代價.html">10 章</a>的極端邊界。</p>
+<p><strong>機制：</strong>頁缺失率一旦從 10<sup>−6</sup> 升到千分之一這種量級，每次 100000 拍的懲罰會直接主導總時間，處理器使用率崩到接近零，但磁碟燈與風扇都很忙。</p>
+<p><strong>不要混淆：</strong>顛簸看起來像「CPU 不夠快」，其實 CPU 大部分時間在等。加 CPU 沒有用，加記憶體或縮小工作集才有用。</p>
+</article>
+
+<article class="term-card" data-search="memory hierarchy 記憶體階層 量級 l1 主記憶體 ssd 暫存器 金字塔">
+<h2>記憶體階層（memory hierarchy）</h2>
+<p><strong>白話：</strong>從暫存器、L1、L2、L3、主記憶體到 SSD，一層比一層大、一層比一層慢。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-快取設計四維度.html">08</a> 與第 <a href="10-TLB與頁缺失的代價.html">10 章</a>的背景，前置見<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">計算機組織的記憶體階層與虛擬記憶體</a>。</p>
+<p><strong>機制：</strong>本課用到的量級對照：一拍 0.500000 ns、L1 命中 1 拍、快取失誤懲罰 60 拍、TLB 走訪 100 拍、SSD 頁缺失 100000 拍。相鄰兩層通常差一個數量級以上。</p>
+<p><strong>不要混淆：</strong>階層不是「越靠近越好」，而是成本與速度的分工。每一層都靠區域性才有效；沒有區域性時，多層階層只會把每次存取的成本一層層疊起來。</p>
+</article>
+
+<article class="term-card" data-search="polling 輪詢 查詢 忙等 事件率 旗標">
+<h2>輪詢（polling）</h2>
+<p><strong>白話：</strong>CPU 自己定期去問裝置「好了沒」。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-輪詢中斷與DMA.html">11 章</a>。</p>
+<p><strong>機制：</strong>成本 = 輪詢頻率 × 每次查詢的拍數，跟事件實際發生幾次無關。事件率很高時它省掉整套中斷進出的開銷，反而最划算。</p>
+<p><strong>不要混淆：</strong>輪詢不一定比較笨。事件率很低時大部分查詢都白查，成本卻照付；事件率很高時反而是中斷的固定開銷變成負擔。要比的是兩條成本曲線的交點，不是哪一個「比較先進」。</p>
+</article>
+
+<article class="term-card" data-search="interrupt 中斷 向量表 舉手 事件 非同步">
+<h2>中斷（interrupt）</h2>
+<p><strong>白話：</strong>裝置有事的時候主動舉手，CPU 停下手邊的工作去處理。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-輪詢中斷與DMA.html">11 章</a>。鍵盤、網路卡、計時器全靠它。</p>
+<p><strong>機制：</strong>第 11 章的設定是 1000 次/秒、每次 512 位元組、2 GHz。中斷方式每次要 800 拍進出，加上 512 × 4 拍搬移，合計 2848000 拍/秒，佔用率 0.142400 %。</p>
+<p><strong>不要混淆：</strong>中斷降低的是<strong>延遲</strong>不是 CPU 佔用。高事件率下輪詢反而可能比中斷省。</p>
+</article>
+
+<article class="term-card" data-search="isr interrupt service routine latency 中斷服務常式 中斷延遲 即時 現場保存">
+<h2>中斷服務常式與中斷延遲（interrupt service routine &amp; interrupt latency）</h2>
+<p><strong>白話：</strong>舉手之後真正跑的那一段程式叫服務常式；從舉手到它開始跑的那段時間叫中斷延遲。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-輪詢中斷與DMA.html">11 章</a>，即時系統設計最在意的指標。狀態保存與呼叫邊界見<a href="../../../專題/計算機組織/互動課程/09-程序ABI呼叫與系統邊界.html">計算機組織的程序 ABI 呼叫與系統邊界</a>。</p>
+<p><strong>機制：</strong>延遲來自「把目前的執行狀態存起來、查向量表、跳過去」這段固定開銷。第 11 章把進出成本估成 800 拍，在 2 GHz 下是 0.400000 µs。服務常式越短，其他中斷被擋住的時間就越短。</p>
+<p><strong>不要混淆：</strong>延遲與佔用率是兩個獨立指標。服務常式寫得很長會拉高佔用率，卻不見得拉高它自己的延遲——被拉高的是別人的延遲。</p>
+</article>
+
+<article class="term-card" data-search="dma direct memory access 直接記憶體存取 控制器 描述子 網路卡 磁碟">
+<h2>直接記憶體存取（direct memory access, DMA）</h2>
+<p><strong>白話：</strong>讓專門的控制器自己去搬資料，CPU 只負責交代任務與收完成通知。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-輪詢中斷與DMA.html">11 章</a>。網路卡、磁碟、音訊介面都用它。</p>
+<p><strong>機制：</strong>第 11 章同樣的條件下，DMA 每次只花 1200 拍（設定加完成中斷），合計 1200000 拍/秒，佔用率 0.060000 %，比中斷方式的 0.142400 % 低一半以上。</p>
+<p><strong>不要混淆：</strong>DMA 不是「不佔資源」。資料仍然走記憶體匯流排，會跟 CPU 搶頻寬；而且控制器寫進去的資料可能與快取內容不一致，這件事要另外處理。</p>
+</article>
+
+<article class="term-card" data-search="cpu utilization 佔用率 使用率 拍數比例 每秒總拍數 成本比較">
+<h2>CPU 佔用率（CPU utilization）</h2>
+<p><strong>白話：</strong>單位時間裡有多少比例的拍數被某一件事吃掉。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-輪詢中斷與DMA.html">11 章</a>比較三種 I/O 方式的統一尺。</p>
+<p><strong>機制：</strong>佔用率 = 該事每秒花掉的拍數 / 每秒總拍數。第 11 章 2 GHz 即每秒 2 × 10<sup>9</sup> 拍；DMA 的 1200000 拍/秒得 0.060000 %，中斷的 2848000 拍/秒得 0.142400 %（數字與 % 之間留一個半形空格是本課的排版規約）。</p>
+<p><strong>不要混淆：</strong>佔用率低不等於反應快。DMA 佔用率低，但每一次事件的延遲不見得比較短；想知道反應快不快要另外量中斷延遲。</p>
+</article>
+
+<article class="term-card" data-search="memory-mapped io mmio 記憶體對映 裝置暫存器 揮發性 韌體 位址空間">
+<h2>記憶體對映 I/O（memory-mapped I/O）</h2>
+<p><strong>白話：</strong>把裝置的暫存器擺進記憶體位址空間，用一般的載入與儲存指令就能操作它。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-輪詢中斷與DMA.html">11</a> 與第 <a href="12-匯流排家族PCIe到CAN.html">12 章</a>，也是所有微控制器韌體的日常。</p>
+<p><strong>機制：</strong>對某個位址寫一個值就等於對裝置下一道命令。這些位址不能被快取、也不能被編譯器優化掉，所以要標成揮發性；讀寫的順序往往也有意義。</p>
+<p><strong>不要混淆：</strong>它看起來跟一般記憶體一樣，語意卻完全不同——同一個位址讀兩次可以得到不同的值，寫進去的值讀回來也可能不一樣。把它當成普通變數是韌體最常見的錯誤來源。</p>
+</article>
+
+</div>
+
+<h2>第六組｜匯流排與處理器家族（第 12–13 章，6 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="bus point-to-point link 匯流排 點對點連結 共用線路 pcie usb 交換器">
+<h2>匯流排與點對點連結（bus &amp; point-to-point link）</h2>
+<p><strong>白話：</strong>一條大家共用的線路，對上兩個端點之間專屬的一條線。</p>
+<p><strong>位置／角色：</strong>第 <a href="12-匯流排家族PCIe到CAN.html">12 章</a>。舊的並列介面是前者，PCIe 與 USB 這些現代介面是後者。</p>
+<p><strong>機制：</strong>共用線路要仲裁，頻率被最遠那一段走線限制住；點對點只有兩個端點，可以把訊號速率推到每秒數十 Gbit，再用多條通道疊加。</p>
+<p><strong>不要混淆：</strong>本課一律寫「匯流排」；中國教材寫「總線」，是同一個 bus。名字裡有「匯流排」的現代介面（例如 PCIe）在電氣上其實是點對點加交換器，只是沿用了舊名字。</p>
+</article>
+
+<article class="term-card" data-search="line code overhead 8b/10b 128b/130b 線路編碼 編碼效率 gt/s 有效位元組率">
+<h2>線路編碼負擔：8b/10b 與 128b/130b（line-code overhead）</h2>
+<p><strong>白話：</strong>為了讓接收端能從資料本身恢復時脈，傳送端要多插一些位元，這些位元不載資料。</p>
+<p><strong>位置／角色：</strong>第 <a href="12-匯流排家族PCIe到CAN.html">12 章</a>。算任何序列介面的實際速率時，第一個要扣掉的就是它。</p>
+<p><strong>機制：</strong>有效位元組率 = 原始位元率 × 編碼效率 / 8。第 12 章的 PCIe 4.0 ×4：64 × 10<sup>9</sup> bit/s × 128/130 / 8 = 7876.923077 MB/s（MB/s 的 M 是 10 的次方），傳 64 KiB（KiB 是 2 的次方，65536 位元組）要 8.320000 µs。</p>
+<p><strong>不要混淆：</strong>規格書上的 GT/s 是原始傳輸率不是資料率。8b/10b 的效率是 80 %、128b/130b 約 98.5 %，直接拿 GT/s 比較兩代介面會低估新一代的進步。</p>
+</article>
+
+<article class="term-card" data-search="bus arbitration 匯流排仲裁 優先權 can 位元級 無破壞性 集中式 分散式">
+<h2>匯流排仲裁（bus arbitration）</h2>
+<p><strong>白話：</strong>好幾個裝置同時想講話時，決定誰先講的規則。</p>
+<p><strong>位置／角色：</strong>第 <a href="12-匯流排家族PCIe到CAN.html">12 章</a>。車用的 CAN 是最漂亮的例子。</p>
+<p><strong>機制：</strong>常見的有集中式（一個仲裁器發許可）與分散式（各節點依規則自行退讓）。CAN 用識別碼逐位元比較，數值小的優先，整個過程在訊框開頭就分出勝負。</p>
+<p><strong>不要混淆：</strong>CAN 的位元級仲裁是<strong>無破壞性</strong>的——輸的那一方退出而贏的那一方不必重傳。這跟乙太網路那種偵測到碰撞就兩邊都重來的做法完全不同。</p>
+</article>
+
+<article class="term-card" data-search="serial parallel bus 序列匯流排 並列匯流排 uart spi i²c can skew 串音">
+<h2>序列與並列匯流排（serial &amp; parallel bus）</h2>
+<p><strong>白話：</strong>一次送一個位元，或一次送好幾個位元。</p>
+<p><strong>位置／角色：</strong>第 <a href="12-匯流排家族PCIe到CAN.html">12 章</a>。UART、I²C、SPI、CAN、PCIe 是序列，老式記憶體與印表機介面是並列。</p>
+<p><strong>機制：</strong>並列在低頻時直觀地快，但線與線之間的到達時間差與串音讓它在高頻失效；序列把頻率推高再用多通道疊加，反而贏。第 12 章 UART 115200 的 8N1 每個位元組要 10 個位元，有效速率 11520 位元組/秒，傳 64 KiB 要 5.688889 秒。</p>
+<p><strong>不要混淆：</strong>序列不是「比較慢」，並列也不是「比較快」。決勝點在能把頻率推到多高，不在一次送幾條線。</p>
+</article>
+
+<article class="term-card" data-search="microcontroller mcu 微控制器 單晶片 韌體 即時 低功耗 周邊">
+<h2>微控制器（microcontroller, MCU）</h2>
+<p><strong>白話：</strong>把處理器核心、快閃記憶體、隨機存取記憶體與一堆周邊裝在同一顆晶片上的完整小電腦。</p>
+<p><strong>位置／角色：</strong>第 <a href="13-處理器家族選型.html">13 章</a>。感測節點、家電與車身控制模組用的都是它。</p>
+<p><strong>機制：</strong>特徵是記憶體小（幾十 KiB 等級）、沒有作業系統或只跑即時核心、直接用記憶體對映 I/O 操作周邊、功耗常在毫瓦等級。碼密度與中斷延遲是它最在意的兩個指標。</p>
+<p><strong>不要混淆：</strong>微控制器不是「比較弱的 CPU」，是取捨目標不同：它要的是確定的反應時間與低功耗，不是尖峰吞吐量。拿跑分比較兩者沒有意義。</p>
+</article>
+
+<article class="term-card" data-search="dsp gpu npu fpga 加速器 accelerator 效率係數 峰值算力 選型 總成本">
+<h2>加速器家族：DSP、GPU、NPU 與 FPGA（accelerator families）</h2>
+<p><strong>白話：</strong>專門做某一類運算的晶片——訊號處理、大量平行的繪圖與通用計算、神經網路推論、可以重新配線的邏輯。</p>
+<p><strong>位置／角色：</strong>第 <a href="13-處理器家族選型.html">13 章</a>的選型實驗。可程式邏輯那一側見<a href="../邏輯設計-互動課程/13-可程式邏輯與HDL.html">邏輯設計的可程式邏輯與 HDL</a>。</p>
+<p><strong>機制：</strong>第 13 章的例子：矩陣負載 10 Gops/s，DSP 峰值 20 Gops/s 但效率係數只有 0.40，實際可達 8 Gops/s，需要 ⌈10 / 8⌉ = 2 顆（⌈ ⌉ 讀作向上取整），總功耗 2 × 2 = 4.000000 W，剛好在 5 W 預算內。</p>
+<p><strong>不要混淆：</strong>峰值算力是行銷數字，乘上效率係數才是可用的。選型也不是只比效能與能效：兩者都滿足需求時比的是總成本，第 13 章那顆能效更好的 NPU 因為單價高，在 10000 顆產量下總價貴 100000 美元而落選。</p>
+</article>
+
+</div>
+
+<nav class="pager" aria-label="章節導覽"><a href="13-處理器家族選型.html">← 上一頁：處理器家族選型</a><a href="自我檢核.html">下一頁：自我檢核 →</a></nav>
+</main>
+<footer class="site-footer"><span>名詞與概念字典</span><a href="自我檢核.html">去自我檢核</a></footer>
+</body></html>

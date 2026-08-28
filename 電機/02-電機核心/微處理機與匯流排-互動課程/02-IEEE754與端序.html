@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 IEEE 754 與端序｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">02・誤差不是玄學，它有欄位、有大小</p>
+<h1>IEEE 754 與端序：把一個小數切成三段，誤差就有帳可算</h1>
+<p class="lead">「浮點數會有誤差」這句話沒有資訊量。這章把一個十進位數拆成符號、指數、尾數三個欄位，算出機器實際存進去的是哪一個數、離你要的差多少、這個量級下最小可分辨的間隔是多少；最後用同一組位元組把端序講完。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-微處理機世界觀與效能公式.html">00 微處理機世界觀與效能公式</a>的三因子。<strong>前置：</strong>見〈02 二補數與有號數運算〉，整數怎麼表示、溢位旗標怎麼判在<a href="../邏輯設計-互動課程/02-二補數與有號數運算.html">邏輯設計那一頁</a>；位元組與位元寬度的基本用法見<a href="../../../專題/計算機組織/互動課程/index.html">計算機組織互動課</a>。本章只做浮點。</p>
+
+<h2>痛點：0.1 加 0.2 為什麼不等於 0.3</h2>
+<p>「我在程式裡印出 <code>0.1 + 0.2</code>，得到 0.30000000000000004。這是編譯器的錯，還是我的電腦壞了？加一次就錯，那我算一百萬次會不會錯到面目全非？」</p>
+<p>兩件事都不是。0.1 這個數<strong>從一開始就沒有被存進去</strong>——它在二進位裡是無限循環小數，任何有限位元的格式都只能存一個最接近它的替身。誤差在賦值那一刻就已經產生，跟你後來算幾次無關。真正要問的問題是：那個替身離 0.1 多遠？這個距離由哪一個欄位決定？換成雙精度會好多少？這些問題都有明確的答案，這章就是把答案算出來。</p>
+
+<h2>白話直覺：三個欄位分工，精度是相對的</h2>
+<p>IEEE 754 的 binary32（單精度）把 32 個位元切成 1 個符號、8 個指數、23 個尾數，指數的偏移量是 127；binary64（雙精度）切成 1 ＋ 11 ＋ 52，偏移量 1023。可以暫時把它想成科學記號：一個正負號、一個 10 的次方、一串有效數字；比喻到此為止。精確的說法是——底數固定為 2，指數欄位存的是<strong>加了偏移量的無號整數</strong>，尾數欄位存的是正規化之後小數點後面那些位元，而小數點前面那個 1 <strong>不存</strong>，這叫隱含前導 1。</p>
+<p>照因果鏈走一次。<strong>工作量從哪來：</strong>要用固定的 32 或 64 個位元，覆蓋從 10<sup>−38</sup> 到 10<sup>38</sup> 這麼寬的範圍。<strong>這一招做了什麼決定：</strong>放棄「固定間隔」，改成「固定有效位數」，讓間隔隨數值大小一起放大。<strong>省下多少、多花多少：</strong>省下的是位元數，代價是加減法要先對齊指數、比較要處理特例、每一次運算都會再捨入一次。<strong>邊界在哪：</strong>兩個量級相差很遠的數相加時，小的那個會被整個捨掉，這是浮點運算不滿足結合律的根源。<strong>儀器量到什麼：</strong>除錯器可以直接印出變數的位元組，你會看到那四個位元組跟你以為的數字對不起來。</p>
+<p>幾個保留編碼要先記住：指數欄位<strong>全 0</strong> 時沒有隱含 1，代表 0 與<strong>非正規數（subnormal）</strong>，用來填補 0 附近的空隙；指數欄位<strong>全 1</strong> 時，尾數為 0 是<strong>無限大（infinity）</strong>，尾數非 0 是 <strong>NaN（not a number）</strong>。至於<strong>端序（endianness）</strong>，講的是同一個多位元組值在記憶體裡由低位址往高位址怎麼排：小端序把最低位的位元組放在最低位址，大端序反過來。</p>
+<p class="note">來源：11-計算機組織與微處理機 §2。</p>
+
+<h2>推導：偏移量、隱含 1 與 ULP</h2>
+<p><strong>（a）指數為什麼用偏移量而不用二補數。</strong>加上偏移之後，指數欄位的<strong>無號</strong>大小順序剛好等於它代表的數值大小順序。於是比較兩個正浮點數可以直接把整組位元當無號整數比，硬體省下一整條特例路徑。若改用二補數，負指數的最高位會是 1，排序就反了。</p>
+<p><strong>（b）隱含 1 買到什麼。</strong>正規數一律寫成 <code>1.xxx × 2<sup>e</sup></code>，開頭那個 1 是正規化的必然結果，不必存，等於白賺一個位元的精度——binary32 實際有 24 個有效位元，binary64 有 53 個。代價是<strong>這個編碼沒辦法表示 0</strong>，所以只好把「指數全 0」這個編碼挪出來當 0 與非正規數用。</p>
+<p><strong>（c）ULP 怎麼算。</strong><strong>ULP（unit in the last place）</strong>是這個量級下相鄰兩個可表示數的間隔。尾數有 23 個小數位元，所以在去偏移指數為 e 的那一段裡，</p>
+<p><code>ULP ＝ 2<sup>e − 23</sup></code></p>
+<p>e 是去偏移之後的指數（無單位的整數），23 是 binary32 的尾數位元數（binary64 要換成 52）。e 每加 1，間隔就加倍。<strong>所以浮點的精度是相對的，不是絕對的</strong>：在 12 附近可以分辨到 10<sup>−7</sup>，在 10<sup>7</sup> 附近就只剩個位數。本課只算單一次賦值的表示誤差，不處理連續運算的誤差累積模型。</p>
+<p><strong>（d）0.1 為什麼存不下。</strong>0.1 換成二進位是 <code>0.0001100110011…</code>，1100 這四位無限循環。截到 24 個有效位元一定有殘差，就像十進位寫不完 1 / 3 一樣。這不是實作缺陷，是<strong>底數 2 與底數 10 的質因數不同</strong>：任何分母含有 5 的既約分數，在二進位裡都是無限循環。</p>
+
+<h2>數值實例：12.375 的完整拆解</h2>
+<p>取輸入值 12.375、格式 binary32。</p>
+<table><thead><tr><th>欄位</th><th>內容</th><th>說明</th></tr></thead><tbody>
+<tr><th>十進位轉二進位</th><td><code>1100.011<sub>2</sub></code> ＝ <code>1.100011 × 2³</code></td><td>正規化</td></tr>
+<tr><th>符號位元</th><td><strong>0</strong></td><td>正數</td></tr>
+<tr><th>指數欄位</th><td><code>1000 0010</code>（十進位 <strong>130</strong>）</td><td>130 − 127 ＝ <strong>3</strong></td></tr>
+<tr><th>尾數欄位（23 位元）</th><td><code>100 0110 0000 0000 0000 0000</code></td><td>隱含前導 1 不存</td></tr>
+<tr><th>完整位元組合</th><td><code>0100 0001 0100 0110 0000 0000 0000 0000</code></td><td></td></tr>
+<tr><th>十六進位</th><td><strong><code>0x41460000</code></strong></td><td></td></tr>
+<tr><th>實際儲存值</th><td><strong>12.375（剛好可精確表示）</strong></td><td>誤差 0</td></tr>
+<tr><th>ULP（此量級）</th><td>2<sup>3−23</sup> ＝ 2<sup>−20</sup> ＝ <strong>9.536743 × 10<sup>−7</sup></strong></td><td></td></tr>
+<tr><th>小端序位元組</th><td><strong><code>00 00 46 41</code></strong></td><td>低位元組放低位址</td></tr>
+<tr><th>大端序位元組</th><td><strong><code>41 46 00 00</code></strong></td><td>高位元組放低位址</td></tr>
+<tr><th>同值的 binary64</th><td><strong><code>0x4028C00000000000</code></strong>（小端序 <code>00 00 00 00 00 C0 28 40</code>）</td><td>指數欄位 1026，去偏移仍是 3</td></tr>
+</tbody></table>
+<p><strong>邊界對照。</strong>把輸入換成 <strong>0.1</strong>：binary32 是 <strong><code>0x3DCCCCCD</code></strong>，實際儲存值 <strong>0.100000001490116119384765625</strong>，絕對誤差 <strong>1.490116 × 10<sup>−9</sup></strong>；換成 binary64 是 <code>0x3FB999999999999A</code>，<strong>還是存不下，只是誤差小很多</strong>。</p>
+<p><strong>特例位元樣式。</strong><code>+0</code> ＝ <code>0x00000000</code>；最小非正規數 ＝ <code>0x00000001</code> ＝ <strong>1.401298 × 10<sup>−45</sup></strong>；最小正規數 ＝ <strong>1.175494 × 10<sup>−38</sup></strong>；最大有限值 ＝ <strong>3.402823 × 10<sup>38</sup></strong>；<code>+∞</code> ＝ <code>0x7F800000</code>；quiet NaN ＝ <code>0x7FC00000</code>。有效十進位位數 ＝ 有效位元數 × log<sub>10</sub>2：binary32 是 24 × log<sub>10</sub>2 ＝ <strong>7.224720 位</strong>，binary64 是 53 × log<sub>10</sub>2 ＝ <strong>15.954590 位</strong>——這就是「印到第 7 位還準、第 8 位開始不能信」的來源。</p>
+
+<section class="workspace"><h2>自由實驗：把一個數拆成三個欄位</h2>
+<p>在下面填一個十進位數，選格式與端序，機器就把它實際存下來的位元樣式攤開給你看：符號、指數欄位、尾數欄位、去偏移後的指數、實際儲存值、絕對誤差、這個量級的 ULP，以及它在記憶體裡的位元組順序。特例選單可以直接跳到零、非正規數、無限大與 NaN 的位元樣式。</p>
+<div class="controls">
+<label for="fp-value">要拆解的十進位值<input id="fp-value" type="number" step="any" value="12.375"></label>
+<label for="fp-format">浮點格式<select id="fp-format"><option value="f32">binary32 單精度（32 位元）</option><option value="f64">binary64 雙精度（64 位元）</option></select></label>
+<label for="fp-special">要看的特例<select id="fp-special"><option value="normal">用上面輸入的值</option><option value="zero">正零</option><option value="denorm">最小非正規數</option><option value="minnorm">最小正規數</option><option value="maxnorm">最大有限值</option><option value="inf">正無限大</option><option value="nan">quiet NaN</option></select></label>
+<label for="fp-endian">記憶體位元組順序<select id="fp-endian"><option value="little">小端序（little-endian）</option><option value="big">大端序（big-endian）</option></select></label>
+</div>
+<div id="fp754-output" class="output" aria-live="polite">目前是 binary32、小端序，特例選的是「用上面輸入的值」，所以輸入值、格式與端序這三個控制都會影響結果。輸入值 12.375。位元樣式：<code>0 1000 0010 100 0110 0000 0000 0000 0000</code>（符號 ／ 指數 ／ 尾數）。指數欄位十進位 <strong>130</strong>，去偏移 130 − 127 ＝ <strong>3</strong>。十六進位 <strong><code>0x41460000</code></strong>，實際儲存值 <strong>12.375</strong>，絕對誤差 <strong>0</strong>，ULP ＝ 2<sup>3−23</sup> ＝ <strong>9.536743 × 10<sup>−7</sup></strong>。記憶體位元組（小端序）：<code>00 00 46 41</code>。判讀：這個值剛好可以精確表示，因為它是 2 的次方的有限和（8 ＋ 4 ＋ 0.25 ＋ 0.125）。為什麼：<strong>浮點的精度是相對的——同樣 23 個尾數位元，在 12 附近可分辨到 10<sup>−7</sup>，在 10<sup>7</sup> 附近就只剩個位數。</strong>邊界提醒：把值改成 0.1，誤差會變成 1.490116 × 10<sup>−9</sup>；填一個大於 3.402823 × 10<sup>38</sup> 的數會溢位成無限大，那是規格定義的行為不是錯誤；切到 NaN 會看到它不等於任何東西，包括它自己。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>浮點誤差不是「電腦算錯」。是<strong>這個格式一開始就存不下那個數</strong>，誤差在賦值那一刻就已經定案，跟後面算幾次無關。</li>
+<li>雙精度不是「兩倍精度」。它是 53 個有效位元對 24 個，可分辨的相對間隔差 2<sup>29</sup> 倍，不是 2 倍。</li>
+<li>非正規數不是壞掉的數。它是刻意保留下來，讓 0 附近不要出現斷崖；代價是很多硬體處理它會慢上一個數量級。</li>
+<li>端序是<strong>記憶體裡的位元組順序</strong>，不是位元順序。暫存器裡的值沒有端序問題，端序只在資料落到記憶體或送上匯流排時才存在。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>在除錯器裡對一個浮點變數下 <code>x/4xb</code>，會逐位元組印出它在記憶體裡的四個位元組；把同一個檔案搬到端序不同的機器上讀，數值會整個亂掉。</p>
+<p><strong>能證明什麼。</strong>能證明這台機器的端序；能證明這個變數實際存了哪四個位元組，因而能證明「你以為的 0.1」與「機器裡的 0.1」不是同一個數。</p>
+<p><strong>不能證明什麼。</strong>證明不了某一次計算的誤差是「格式造成」還是「演算法不穩定」造成——那要把同一段算式改用雙精度重跑一次，看誤差是等比例縮小（格式）還是幾乎不變（演算法）。也證明不了程式的最終結果可以接受，那是數值分析的問題。</p>
+
+<h2>連到哪門課</h2>
+<p>這一章在三個地方立刻用得上：跨機器交換二進位檔案時要先講好端序；比較兩個浮點數時要用容差而不是相等；估算感測器讀值的有效位數時要知道 binary32 只有 7 位十進位可信。浮點運算單元在管線裡佔幾拍、能不能跟整數指令同時發射，會在第 06 章與第 07 章再出現。</p>
+<p>整數的補數表示與溢位旗標見<a href="../邏輯設計-互動課程/02-二補數與有號數運算.html">邏輯設計的二補數與有號數運算</a>；位元組與位元寬度在整台機器裡怎麼被使用見<a href="../../../專題/計算機組織/互動課程/index.html">計算機組織互動課</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="01-ISA契約與定址模式.html">← 上一頁：ISA 契約與定址模式</a><a href="03-五階段管線與吞吐量.html">下一頁：五階段管線與吞吐量 →</a></nav>
+</main>
+<footer class="site-footer"><span>02 IEEE 754 與端序</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

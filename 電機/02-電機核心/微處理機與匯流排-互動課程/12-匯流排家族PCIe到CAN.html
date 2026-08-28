@@ -1,0 +1,82 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 匯流排家族 PCIe 到 CAN｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">12・一條線也叫匯流排，一疊差動對也叫匯流排</p>
+<h1>匯流排家族：從 PCIe 到 CAN，同一筆 64 KiB 為什麼差六個數量級</h1>
+<p class="lead">上一章決定裝置事件怎麼被服務，這一章決定資料怎麼走過去。六種介面放進同一張表，用同一筆 64 KiB 算各自要傳多久，最快與最慢差六十幾萬倍。速率只是四個評分項之一，另外三項是距離、裝置數與線數。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="11-輪詢中斷與DMA.html">11 輪詢、中斷與 DMA</a>的三種 I/O 服務方式，以及姊妹課<a href="../邏輯設計-互動課程/10-時脈與時序限制.html">邏輯設計 10 時脈與時序限制</a>裡「建立與保持時間決定取樣得對不對」這件事。</p>
+
+<h2>痛點：把頻率除以 8 得到的數字，為什麼跟實測對不上</h2>
+<p>三個現場問題其實是同一題。「接一顆溫度感測器，SPI、I²C、UART 都支援，選哪個？」「I²C 快速模式 400 kHz，除以 8 得到 50000 位元組每秒，實測只有四萬四千多，少的跑到哪？」「車上為什麼不用 USB，偏要用 500 kbit/s 的 CAN？」</p>
+<p>共同答案是：線上跑的不是純資料。每個位元都要先滿足「接收端能不能還原時脈」「誰讓誰」「傳錯了怎麼被發現」，剩下的才是資料。位元率除以 8 只是上界，能用的是<strong>有效位元組率</strong>。而且線拉不拉得到、掛不掛得下、接腳夠不夠，任一項不過關，速率再漂亮都沒意義。</p>
+
+<h2>白話直覺：共用一組線的代價，是要有一套誰先講的規則</h2>
+<p>匯流排（bus）是多個裝置共用同一組線、靠仲裁（arbitration）決定誰能發話；點對點連結（point-to-point link）只有兩端，想接第三個得靠交換器（switch）或集線器（hub）。比喻只用這一次：共用匯流排像會議室，同時只能一個人講。比喻立刻收回——仲裁是電氣機制：CAN 靠顯性位元蓋過隱性位元，送隱性卻讀回顯性的一方當場退出，贏家不必重送。</p>
+<p>因果鏈走一遍。<strong>工作量從哪來</strong>：把 N 個位元組從這端搬到那端。<strong>做了什麼決定</strong>：用幾條線、序列還是並列、共用還是點對點、用哪種線路編碼（line coding）。<strong>花掉多少</strong>：8b/10b 吃掉 20 %，128b/130b 只吃約 1.5 %，I²C 每 8 個位元多一個確認位元，CAN 訊框 111 個位元裡只有 64 個是資料。<strong>邊界在哪</strong>：距離一長，並列線的偏斜（skew）與串音先壞掉，高速介面因此幾乎全改序列差動。<strong>儀器量到什麼</strong>：邏輯分析儀量得到交易與間隔，協定分析儀量得到訊框與使用率。</p>
+<p>另一條分界是主從式與多主式。SPI 單主多從，主機出時脈，每個從機各要一條晶片選擇線；I²C 與 CAN 是多主式，用位址或識別碼取代選擇線。前者用線數換簡單，後者用協定換線數。</p>
+<p class="note">來源：11-計算機組織與微處理機 §6.2。</p>
+
+<h2>推導：那 20 % 到底買到了什麼</h2>
+<p><strong>（a）為什麼要有線路編碼。</strong>高速序列介面沒有獨立的時脈線，接收端得從資料流本身還原時脈。若資料是一長串相同位元，線上沒有邊緣，取樣點會飄；長期只送一種位準也會讓耦合電容充上直流偏壓。所以編碼要保證邊緣密度與直流平衡，代價就是那些不載資料的位元。</p>
+<p><code>有效位元組率 = 原始位元率 × 編碼效率 / 8</code></p>
+<p>原始位元率單位是位元每秒，指線上實際切換的速率；編碼效率無單位，等於資料位元數 ÷ 線上位元數；除以 8 把位元換成位元組。<strong>本課是一階教學模型</strong>，只扣線路編碼，沒算標頭、重傳、軟體間隔與交換器延遲，實測一定更低。</p>
+<p><strong>（b）為什麼 128b/130b 比 8b/10b 划算。</strong>目的相同，成本差一個數量級：前者每 128 個資料位元只多送 2 個，效率 98.461538 %；後者每 8 個就要多送 2 個，效率 80.000000 %。做法是用擾碼打散資料、再靠那 2 個位元做區塊對齊，代價是要更準的時脈還原。<strong>這是製程進步換來的</strong>。</p>
+<p><strong>（c）CAN 的效率為什麼這麼低。</strong>111 個位元裡，識別碼、控制欄位、CRC、確認槽與訊框間隔都不是資料，只有 64 個是，效率 57.657658 %。換到的是位元級無破壞性仲裁與強健的錯誤偵測：優先權由識別碼決定，輸的訊框不必重傳。<strong>汽車要的是重要訊息一定先到、壞掉一定被發現</strong>。</p>
+<p><strong>（d）SPI 的線數為什麼會膨脹。</strong>時脈、主出從入、主入從出三條共用，但每個從機要一條獨立的晶片選擇線，所以 <code>線數 = 3 + 從機數</code>。I²C 兩條線上跑位址，用協定取代選擇線，掛幾個都只要 2 條；代價是兩條都是開汲極，必須外掛上拉電阻（常見 2.2 kΩ 到 10 kΩ），電阻與線上電容決定上升時間，掛太多就上不去 400 kHz。</p>
+<p><strong>（e）單位不能混。</strong>容量用 2 的次方，64 KiB ＝ 65536 位元組；速率用 10 的次方，1 MB/s ＝ 10<sup>6</sup> 位元組每秒。傳輸時間 ＝ 位元組數 ÷ 有效位元組率，這一步兩套單位同時出現，各標一次才不會差 2.4 %。</p>
+
+<h2>數值實例：同一筆 64 KiB，六種介面各要多久</h2>
+<p>下表是本課鎖定的家族表。<strong>這些速率是教學用的代表值，不是規格書</strong>：換世代、換模式、換廠商實作，數字就變——但算法不會變。</p>
+<table><thead><tr><th>家族</th><th>原始位元率</th><th>編碼效率</th><th>有效位元組率</th><th>訊號線數</th><th>拓樸</th><th>典型最長距離</th><th>可掛裝置數</th></tr></thead><tbody>
+<tr><td>PCIe 4.0 ×4</td><td>64 Gbit/s（16 GT/s × 4 lane）</td><td>128/130 ＝ 98.461538 %</td><td><strong>7876.923077 MB/s</strong></td><td>18</td><td>點對點</td><td>0.3 m</td><td>1</td></tr>
+<tr><td>USB 3.2 Gen 1</td><td>5 Gbit/s</td><td>8b/10b ＝ 80.000000 %</td><td><strong>500.000000 MB/s</strong></td><td>9</td><td>階層星狀</td><td>3 m</td><td>127</td></tr>
+<tr><td>SPI（50 MHz）</td><td>50 Mbit/s</td><td>100 %</td><td><strong>6.250000 MB/s</strong></td><td>3 ＋ 從機數</td><td>單主多從</td><td>0.3 m</td><td>8</td></tr>
+<tr><td>I²C（400 kHz 快速模式）</td><td>400 kbit/s</td><td>8/9 ＝ 88.888889 %</td><td><strong>0.044444 MB/s</strong></td><td>2</td><td>多主多從共用</td><td>1 m</td><td>112</td></tr>
+<tr><td>UART（115200 8N1）</td><td>115.2 kbit/s</td><td>8/10 ＝ 80.000000 %</td><td><strong>0.011520 MB/s</strong></td><td>2</td><td>點對點</td><td>15 m</td><td>1</td></tr>
+<tr><td>CAN 2.0B（500 kbit/s）</td><td>500 kbit/s</td><td>64/111 ＝ 57.657658 %</td><td><strong>0.036036 MB/s</strong></td><td>2</td><td>多主匯流排＋仲裁</td><td>40 m</td><td>110</td></tr>
+</tbody></table>
+<p>拓樸不畫圖，用文字鏈讀。點對點 <code>主機 ── 一組差動對 ── 裝置</code>；階層星狀 <code>主控 ── hub ── hub ── 裝置</code>，每多一層多一段轉送延遲；單主多從 <code>主機 ── SCLK／MOSI／MISO 共用 ── 從機甲、從機乙</code>，從機再各拉一條 CS；多主共用 <code>節點 ── 同一對線 ── 節點 ── 節點</code>，兩端各接終端電阻。</p>
+<p>拿互動元件的預設值算一次：SPI、64 KiB（65536 位元組）、裝置 4、線長 0.2 m、需求速率 1 MB/s。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>有效位元組率</td><td>50000000 × 1 / 8</td><td><strong>6.250000 MB/s</strong></td></tr>
+<tr><td>傳 64 KiB 要多久</td><td>65536 / 6250000</td><td><strong>10.485760 ms</strong></td></tr>
+<tr><td>訊號線數</td><td>3 ＋ 4</td><td><strong>7 條</strong></td></tr>
+<tr><td>速率判定</td><td>6.250000 ≥ 1</td><td><strong>通過</strong></td></tr>
+<tr><td>裝置數判定</td><td>4 ≤ 8</td><td><strong>通過</strong></td></tr>
+<tr><td>距離判定</td><td>0.2 ≤ 0.3</td><td><strong>通過</strong></td></tr>
+</tbody></table>
+<p>同一筆 64 KiB 換到六種介面：PCIe 4.0 ×4 <strong>8.320000 µs</strong>、USB 3.2 Gen 1 <strong>131.072000 µs</strong>、SPI 50 MHz <strong>10.485760 ms</strong>、I²C 400 kHz <strong>1.474560 s</strong>、CAN 500 kbit/s <strong>1.818624 s</strong>、UART 115200 <strong>5.688889 s</strong>。<strong>PCIe 比 UART 快 683760.683761 倍</strong>。量級對照：一拍 0.500000 ns（2.0 GHz），L1 命中 1 拍，主記憶體 200 拍才 100 ns，而 UART 那 5.688889 s 夠 CPU 跑一百多億拍。</p>
+<p>邊界對照：切到 <strong>PCIe</strong>、裝置 4、長度 1 m，兩項不通過——它是點對點，掛 4 個要 switch，1 m 也遠超 0.3 m。切到 <strong>CAN</strong>、長度 40 m、裝置 32，全部通過，<strong>六種裡只有它拉得到 40 m 又掛幾十個節點</strong>，代價是 0.036036 MB/s。切到 <strong>SPI</strong>、裝置 8，線數 <strong>11 條</strong>，這是它的天花板。</p>
+
+<section class="workspace"><h2>自由實驗：六種介面的速率、線數與三項判定</h2>
+<p>場景是：你有一筆固定大小的資料要搬，手上有六種介面可選，板子上要掛幾個裝置、線拉多長、應用要求多快都由你決定。左邊選家族，右邊四支滑桿給條件。要看的是三件事：有效位元組率跟原始位元率差多少、這筆資料傳完要多久、以及速率、裝置數、距離三項判定有沒有全部通過。</p>
+<div class="controls">
+<label for="bs-family">介面家族<select id="bs-family"><option value="spi">SPI 50 MHz</option><option value="i2c">I²C 400 kHz</option><option value="uart">UART 115200</option><option value="can">CAN 500 kbit/s</option><option value="usb">USB 3.2 Gen 1</option><option value="pcie">PCIe 4.0 x4</option></select></label>
+<label for="bs-payload">要傳的資料量（KiB）<input id="bs-payload" type="range" min="1" max="1024" step="1" value="64"></label>
+<label for="bs-nodes">要掛的裝置數<input id="bs-nodes" type="range" min="1" max="32" step="1" value="4"></label>
+<label for="bs-len">線路長度（公尺）<input id="bs-len" type="range" min="0.1" max="50" step="0.1" value="0.2"></label>
+<label for="bs-need">需求速率（MB/s）<input id="bs-need" type="range" min="0.01" max="1000" step="0.01" value="1"></label>
+</div>
+<div id="buspick-output" class="output" aria-live="polite">SPI 50 MHz：原始位元率 50 Mbit/s、編碼效率 100 %，有效位元組率 6.250000 MB/s。傳 64 KiB（65536 位元組）要 10.485760 ms。訊號線數 3 ＋ 4 ＝ 7 條。速率判定：6.250000 ≥ 1.000000，通過。裝置數判定：4 ≤ 8，通過。距離判定：0.2 ≤ 0.3 m，通過。同一筆 64 KiB：PCIe 4.0 x4 8.320000 µs、USB 3.2 Gen 1 131.072000 µs、SPI 10.485760 ms、I²C 1.474560 s、CAN 1.818624 s、UART 5.688889 s。SPI 每多一個從機就要多一條晶片選擇線，線數會隨裝置數增加，這是它的擴充性天花板。有效位元組率不是原始位元率除以 8，中間還要扣掉線路編碼與協定開銷。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li><strong>GT/s 不是 Gbit/s。</strong>GT/s 算的是每秒送出多少符號，要乘上編碼效率才是資料位元率。</li>
+<li><strong>「PCIe ×4」的 4 是通道數，不是倍率。</strong>每個通道是一對收、一對送的差動線，通道多是把線並起來，不是把時脈調快四倍。</li>
+<li><strong>I²C 的 2 條線是開汲極，不是推挽輸出。</strong>它只會把線拉低，拉高靠外部上拉電阻，少一顆電阻整條匯流排就不會動。</li>
+<li><strong>UART 沒有時脈線。</strong>兩端各自產生鮑率，靠起始位元對齊、過取樣判位元，誤差超過約 2 % 就收到亂碼。<strong>這跟速度慢是兩回事</strong>。</li>
+<li><strong>共用匯流排的頻寬是分掉的。</strong>USB 掛 127 個裝置，不是每個都有 500 MB/s。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>邏輯分析儀掛在 SPI 或 I²C 上，看得到每筆交易的位址、讀寫位元、確認位元、資料與交易間隔；協定分析儀可以解出 USB 或 CAN 的訊框並統計使用率。<strong>能證明</strong>：實際時脈頻率、一筆交易花多久、使用率多高、確認位元有沒有回來。<strong>不能證明</strong>：訊號品質好不好，那要示波器看邊緣與眼圖；也證明不了「就是速率不夠」——很多時候慢在軟體的交易間隔，匯流排大半時間閒著，這在使用率上看得出來。</p>
+<p class="warning">通電狀態下插拔 SPI 或 I²C 排線，訊號腳可能先於接地腳接觸，電流會灌進 I/O 保護二極體而燒毀輸入電路；把 5 V 匯流排直接接上 3.3 V 元件也會超過絕對最大額定。標準做法是接線前先斷電，接線後確認兩端邏輯位準是否相同，不同就加位準轉換電路，並確認上拉電阻接到正確的電源。</p>
+
+<h2>連到哪門課</h2>
+<p>非同步序列為什麼要起始位元與過取樣，接回<a href="../邏輯設計-互動課程/09-閂鎖與正反器.html">邏輯設計 09</a>；同步取樣的頻率上限見<a href="../邏輯設計-互動課程/10-時脈與時序限制.html">邏輯設計 10</a>；推高時脈的功耗代價見<a href="../電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學 09</a>。裝置怎麼被服務見<a href="11-輪詢中斷與DMA.html">本課第 11 章</a>；線一長冒出來的訊號完整性、阻抗匹配與電磁相容（EMC），本課只點名，留給電磁學第 15 章與 IoT 知識群「04-天線RF與EMC」。下一章比這些介面接的晶片。</p>
+<nav class="pager" aria-label="章節導覽"><a href="11-輪詢中斷與DMA.html">← 上一頁：輪詢、中斷與 DMA</a><a href="13-處理器家族選型.html">下一頁：處理器家族選型 →</a></nav>
+</main>
+<footer class="site-footer"><span>12 匯流排家族 PCIe 到 CAN</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

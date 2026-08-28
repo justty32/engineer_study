@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 五階段管線與吞吐量｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・管線買到的是吞吐量，不是延遲</p>
+<h1>五階段管線與吞吐量：為什麼切成五級不會快五倍，而且只跑一條指令時反而更慢</h1>
+<p class="lead">同一批工作量，只換一種排班方式，總時間就從 1020.000000 ns 掉到 228.800000 ns。這章把這個 4.458042 倍算清楚，說明它為什麼永遠追不上級數 5，以及級數繼續往上加會在哪裡失效。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-微處理機世界觀與效能公式.html">00 微處理機世界觀與效能公式</a>的 T<sub>c</sub> 與三因子、<a href="01-ISA契約與定址模式.html">01 ISA 契約與定址模式</a>的指令分類。<strong>前置：</strong>見〈04 處理器資料路徑與指令週期〉<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>——一條指令怎麼被取出、解碼、執行、寫回是那一頁的機制，本章不重講，只做吞吐量的量化。</p>
+
+<h2>痛點：硬體明明只有一套，為什麼可以同時處理五條指令</h2>
+<p>「規格書上寫五階段管線，是不是代表這顆晶片裡有五套加法器？」不是。硬體還是那一套，管線改的是<strong>排班方式</strong>。所以真正該問的是：既然硬體沒有變多，省下來的時間是從哪裡冒出來的？有沒有上限？</p>
+<p>第二個痛點更實際。有人把級數從 5 加到 12，期待快兩倍多，實測卻只快了一點點而且功耗上升；也有人寫的短程式在有管線的機器上反而更慢。這兩件事看似矛盾，其實是同一條公式的兩端。</p>
+
+<h2>白話直覺：管線是排隊上生產線，不是把工人變多</h2>
+<p>單週期（single-cycle）設計的每一拍要做完一整條指令，時脈週期必須長到裝得下<strong>最慢那條指令</strong>的全部工作。可以暫時想成只有一位師傅的洗衣店：一件衣服洗完、烘完、摺完才輪到下一件；比喻到此為止，精確的說法是——單週期的時脈週期由全部階段的延遲總和決定，任一瞬間只有一個階段的硬體在動，其餘都閒置。</p>
+<p>五個階段的名字照既有課的順序照抄：IF（取指）、ID（解碼）、EX（執行）、MEM（記憶體存取）、WB（寫回）。每個階段裡面做什麼是既有課的內容，本章只把它們當成五個格子來算時間。</p>
+<p>照因果鏈走一遍。工作量從哪來：N 條指令，每條都要穿過同樣長的組合邏輯，總延遲記為 t<sub>comb</sub>。這一招做了什麼決定：把那條長路切成 k 段，每兩段之間插一組管線暫存器，於是第一條指令走第二段時，第二條可以同時走第一段。省下多少：時脈週期從 t<sub>comb</sub> ＋ t<sub>latch</sub> 掉到 t<sub>comb</sub> / k ＋ t<sub>latch</sub>，穩態下每一拍完成一條。多花多少：k − 1 組管線暫存器的面積與功耗，以及那個切不掉的 t<sub>latch</sub>。邊界或反例在哪：N 很小時填充佔比高到讓管線輸給單週期，k 很大時時脈週期趨近 t<sub>latch</sub>，再切也擠不出東西。儀器量到什麼：在沒有冒險的直線程式碼上，每指令拍數會趨近 1。</p>
+<p>兩個名詞在這裡分乾淨。吞吐量（throughput）是單位時間完成幾條指令，管線把它拉高；延遲（latency）是一條指令從進去到出來要多久，管線反而把它<strong>拉長</strong>。填充（fill）與排空（drain）指剛啟動與收尾時管線沒滿的那幾拍，合起來就是公式裡那個 k − 1。</p>
+<p class="note">來源：11-計算機組織與微處理機 §4.1、§4.2。</p>
+
+<h2>推導：四個結論一步一步長出來</h2>
+<p><strong>（a）總時間為什麼是 T<sub>total</sub> ＝ (N ＋ k − 1) × T<sub>p</sub>。</strong>第一條指令必須走完全部 k 級才產出結果，這段花掉 k 拍；從第二條開始每多一拍就多產出一條，剩下的 N − 1 條各只再花 1 拍。兩段相加是 k ＋ (N − 1) ＝ N ＋ k − 1 拍，每拍長 T<sub>p</sub>。符號與單位：N 是指令數（條），k 是級數（無單位），T<sub>p</sub> 是管線時脈週期（ns）。假設是所有指令都不停頓、沒有任何冒險，這個假設會在第 04 與第 05 章被打破。</p>
+<p><strong>（b）理想加速上限是 T<sub>1</sub> / T<sub>p</sub>，不是 k。</strong>單週期的時脈週期是 T<sub>1</sub> ＝ t<sub>comb</sub> ＋ t<sub>latch</sub>，管線的是 T<sub>p</sub> ＝ t<sub>comb</sub> / k ＋ t<sub>latch</sub>。N 很大時填充可以忽略，加速比趨近 T<sub>1</sub> / T<sub>p</sub> ＝ (t<sub>comb</sub> ＋ t<sub>latch</sub>) / (t<sub>comb</sub> / k ＋ t<sub>latch</sub>)。只要 t<sub>latch</sub> 大於 0，分母就比 (t<sub>comb</sub> ＋ t<sub>latch</sub>) / k 大，整個比值恆小於 k。t<sub>latch</sub> 是每級管線暫存器的固定負擔，單位 ns，本課固定取 0.2 ns；它<strong>不會被切分</strong>，這是整章最關鍵的一句。</p>
+<p><strong>（c）級數為什麼不能無限往上加。</strong>當 k 大到讓 t<sub>comb</sub> / k 遠小於 t<sub>latch</sub> 時，T<sub>p</sub> 已經約等於 t<sub>latch</sub>，加速比停在 (t<sub>comb</sub> ＋ t<sub>latch</sub>) / t<sub>latch</sub> 這個天花板上；再切只是多付管線暫存器的面積與功耗。而且級數越深，第 05 章的分支誤判懲罰拍數越大，實際表現還會反過來變差。</p>
+<p><strong>（d）為什麼單條指令的延遲一定變差。</strong>一條指令走完整條管線要 k × T<sub>p</sub> ＝ t<sub>comb</sub> ＋ k × t<sub>latch</sub>，而單週期只要 t<sub>comb</sub> ＋ t<sub>latch</sub>。只要 k 大於 1 且 t<sub>latch</sub> 大於 0，前者恆大於後者。管線讓每條指令走得更久，卻讓單位時間走完的條數變多，這正是吞吐量與延遲不是倒數關係的來源。</p>
+<p><strong>模型的假設與邊界。</strong>本課用的是一階教學模型：假設 t<sub>comb</sub> 可切成 k 段完全等長、沒有任何冒險、時脈沒有偏斜與抖動。真實處理器不是這樣：各級長度不可能剛好相等，最長那一級才決定週期；而且真實機器是十幾到二十級。</p>
+
+<h2>數值實例：100 條指令、5 級、10.0 ns、0.2 ns</h2>
+<p>取 N ＝ 100 條指令、k ＝ 5 級、t<sub>comb</sub> ＝ 10.0 ns、t<sub>latch</sub> ＝ 0.2 ns，也就是下面互動元件的預設值。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>單週期時脈週期 T<sub>1</sub></td><td>10.0 ＋ 0.2</td><td><strong>10.200000 ns</strong></td></tr>
+<tr><td>管線時脈週期 T<sub>p</sub></td><td>10.0 / 5 ＋ 0.2</td><td><strong>2.200000 ns</strong></td></tr>
+<tr><td>單週期總時間</td><td>100 × 10.2</td><td><strong>1020.000000 ns</strong></td></tr>
+<tr><td>管線總時間</td><td>(100 ＋ 4) × 2.2</td><td><strong>228.800000 ns</strong></td></tr>
+<tr><td>實際加速比</td><td>1020 / 228.8</td><td><strong>4.458042 倍</strong></td></tr>
+<tr><td>理想加速上限</td><td>10.2 / 2.2</td><td><strong>4.636364 倍</strong></td></tr>
+<tr><td>填充損失</td><td>4 × 2.2</td><td><strong>8.800000 ns（佔 3.846154 %）</strong></td></tr>
+<tr><td>吞吐量</td><td>100 / 228.8</td><td><strong>0.437063 指令/ns</strong></td></tr>
+<tr><td>暫存器負擔佔 T<sub>p</sub></td><td>0.2 / 2.2</td><td><strong>9.090909 %</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>本課其他章固定用 2.0 GHz 當基準，一拍 0.500000 ns；L1 快取命中約 1 拍，主記憶體存取約 200 拍，一次到 SSD 的頁缺失約 100000 拍。這章的 T<sub>p</sub> ＝ 2.200000 ns 只是「一拍有多長」，管線動得了這一拍，動不了那 200 拍——那是第 08 章與第 10 章的事。</p>
+<p><strong>邊界對照一：級數拉到 12。</strong>T<sub>p</sub> ＝ 1.033333 ns、總時間 114.700000 ns、加速 8.892764 倍（理想上限 9.870968），但暫存器負擔已佔 T<sub>p</sub> 的 19.354839 %。級數翻了 2.4 倍，加速連 2 倍都不到，每拍還有近五分之一在付管線暫存器的錢，邊際效益急速遞減。</p>
+<p><strong>邊界對照二：級數 1。</strong>級數 1 就是沒有管線，加速比 1.000000 倍：把 k 代 1，T<sub>p</sub> 等於 T<sub>1</sub>、填充項歸零。</p>
+<p><strong>邊界對照三：只跑 1 條指令。</strong>單週期 10.200000 ns、管線 11.000000 ns，加速 0.927273 倍——管線反而慢。填充成本此時完全裸露，沒有後續指令可以攤薄它，這就是痛點裡「短程式反而變慢」的答案。</p>
+<p><strong>邊界對照四：指令數 200。</strong>加速 4.545455 倍，比 100 條時更接近理想上限 4.636364 倍。指令越多，那 k − 1 拍被攤得越薄，但永遠碰不到上限。</p>
+
+<section class="workspace"><h2>自由實驗：四個旋鈕與管線的九個量</h2>
+<p>場景是同一批工作量跑在兩台機器上：一台單週期，一台 k 級管線，兩台的組合邏輯延遲總和一樣，管線那台每一級之間多付一組管線暫存器。你要看的是三件事：實際加速比、它與理想上限的差距，以及管線暫存器負擔在一拍裡佔掉多少。把指令數調小、把級數調大，就會看到管線由勝轉敗。</p>
+<div class="controls">
+<label for="pp-n">要跑的指令數 N<input id="pp-n" type="range" min="1" max="200" step="1" value="100"></label>
+<label for="pp-stages">管線級數 k<input id="pp-stages" type="range" min="1" max="12" step="1" value="5"></label>
+<label for="pp-tcomb">組合邏輯延遲總和 t_comb（ns）<input id="pp-tcomb" type="range" min="1" max="20" step="0.1" value="10"></label>
+<label for="pp-latch">每級管線暫存器負擔 t_latch（ns）<input id="pp-latch" type="range" min="0" max="1" step="0.01" value="0.2"></label>
+</div>
+<div id="pipe5-output" class="output" aria-live="polite">目前設定：N ＝ 100 條、k ＝ 5 級、t_comb ＝ 10.0 ns、t_latch ＝ 0.2 ns。單週期時脈週期 T_1 ＝ <strong>10.200000 ns</strong>；管線時脈週期 T_p ＝ <strong>2.200000 ns</strong>；單週期總時間 <strong>1020.000000 ns</strong>；管線總時間 <strong>228.800000 ns</strong>；實際加速比 <strong>4.458042 倍</strong>；理想加速上限 <strong>4.636364 倍</strong>；填充損失 <strong>8.800000 ns</strong>；吞吐量 <strong>0.437063 指令/ns</strong>；暫存器負擔佔 T_p 的 <strong>9.090909 %</strong>。<strong>判讀：管線贏了 4.458042 倍，但追不上級數 5，也追不上理想上限 4.636364 倍。</strong>為什麼：加速比追不上級數，因為 t_latch 不會被切分，它原封不動地留在每一拍裡。邊界提醒：把指令數調到 1，加速比會掉到 0.927273 倍，管線反而慢，因為管線改善的是吞吐量不是單條指令的延遲；把級數調到 12，暫存器負擔會佔到 T_p 的 19.354839 %，此時再加級數只是多付功耗；級數 1 就是沒有管線，加速比必然是 1.000000；把 t_latch 調到 0 是理想化的零負擔，加速上限剛好等於級數，真實電路做不到。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>管線不會讓任何一條指令變快。它讓機器<strong>每一拍完成一條</strong>，而單一條指令走完全程的時間反而變長了。</li>
+<li>級數 k 不等於加速 k 倍。上限是 T<sub>1</sub> / T<sub>p</sub>，而且只有指令數趨近無限大時才碰得到；本章例子裡級數 5 只換到 4.458042 倍。</li>
+<li>「五階段」是教學用的經典切法，不是產業現況。真實處理器多在 14 到 20 級，而且執行階段裡有很多條長度完全不同的路徑。</li>
+<li>吞吐量的單位是「指令/秒」，延遲的單位是「秒/指令」，兩者<strong>不是倒數關係</strong>。在管線機器上它們可以同時變大。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>用 <code>perf stat</code> 讀 <code>cycles</code> 與 <code>instructions</code>，相除就是實測的每指令拍數。挑一段沒有分支也沒有相依鏈的直線程式碼跑很多次，再把迴圈長度縮到只剩幾條指令，比較兩次的數字。</p>
+<p><strong>能證明什麼。</strong>長的直線程式碼上每指令拍數趨近 1，就是管線在穩態運作、每拍確實產出一條指令的證據；迴圈縮短後數字明顯上升，那是填充成本裸露。</p>
+<p><strong>不能證明什麼。</strong>量不出這台機器的管線有幾級——廠商公布的級數與實際切法不一定一致。也證明不了「每指令拍數接近 1 就沒有停頓」：在超純量機器上，停頓與同時發射多條指令可能剛好互相抵消。</p>
+
+<h2>連到哪門課</h2>
+<p>這章的模型適用於任何有管線的處理器，從手機到微控制器都是。指令週期本身的機制見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>；每級暫存器為什麼一定有固定負擔見<a href="../邏輯設計-互動課程/10-時脈與時序限制.html">邏輯設計的時脈與時序限制</a>；把時脈拉高要付的功耗代價見<a href="../電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學的 CMOS 反相器與數位功耗</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-IEEE754與端序.html">← 上一頁：IEEE 754 與端序</a><a href="04-管線冒險旁路與插泡.html">下一頁：管線冒險、旁路與插泡 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 五階段管線與吞吐量</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>
