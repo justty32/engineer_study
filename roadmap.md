@@ -154,3 +154,5 @@
     IoT聯網裝置/
   互動學習網站/    ← GitHub Pages 中央入口，彙整各專題互動課程
 ```
+
+互動課程的**完整清單**（依領域分組、含本地與線上連結）見 [README.md 的「互動課程」一節](README.md#互動課程)；課程簡介與最新順序以中央入口 [`互動學習網站/index.html`](互動學習網站/index.html)（線上 <https://justty32.github.io/engineer_study/>）為準。新增一門互動課時要同步更新：中央入口、`.github/workflows/pages.yml` 課程表、所屬領域的 `學習計畫.md` 或 `README.md`，以及根目錄 README 的分組清單。

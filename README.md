@@ -42,6 +42,58 @@
 - 歷史：見 [`歷史/學習計畫.md`](歷史/學習計畫.md)
 - 共通基礎（數學、物理等跨領域基礎，無獨立學習計畫）：見 [`共通基礎/README.md`](共通基礎/README.md)
 
+## 互動課程
+
+除了純文字筆記，部分主題另外改寫成**可操作的互動網頁課程**：把筆記內容重排成分章的零基礎主線，每章配一個可以自己調參數、即時看結果的自由實驗，並附名詞字典與自我檢核題。原始碼就放在各主題自己的目錄下（`互動課程/`、`互動網站/`），本地用瀏覽器直接開 `index.html` 即可。
+
+- **線上中央入口**：<https://justty32.github.io/engineer_study/>（GitHub Pages，目前 28 門）
+- **本地中央入口**：[`互動學習網站/index.html`](互動學習網站/index.html)——課程簡介與最新清單以此頁為準
+
+以下依所屬領域分組（每門：本地連結 · 線上 slug）：
+
+### 共通基礎
+
+- [工程數學先修（零基礎互動課）](共通基礎/數學/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/engineering-math/)
+- [普通物理（零基礎互動課）](共通基礎/物理/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/general-physics/)
+
+### 電機
+
+- [電路學（零基礎互動課）](電機/02-電機核心/電路學-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/circuit-analysis/)
+- [電子學（零基礎互動課）](電機/02-電機核心/電子學-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/electronics/)
+- [電磁學（零基礎互動課）](電機/02-電機核心/電磁學-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/electromagnetics/)
+- [信號與系統（零基礎互動課）](電機/02-電機核心/信號與系統-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/signals-systems/)
+- [邏輯設計（零基礎互動課）](電機/02-電機核心/邏輯設計-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/logic-design/)
+- [電力系統](電機/04-電力特化/P1-電力系統-互動網站/index.html) · [線上](https://justty32.github.io/engineer_study/power-systems/)
+
+### 專題 — IoT 聯網裝置
+
+- [IoT 聯網裝置](專題/IoT聯網裝置/互動網站/index.html) · [線上](https://justty32.github.io/engineer_study/iot-device/)
+- [IoT 板級電源與 PCB](專題/IoT聯網裝置/知識群互動網站/01-板級電源與PCB/index.html) · [線上](https://justty32.github.io/engineer_study/iot-power-pcb/)
+- [IoT 嵌入式韌體與 RTOS](專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS/index.html) · [線上](https://justty32.github.io/engineer_study/iot-firmware-rtos/)
+- [IoT 連線模組與網路](專題/IoT聯網裝置/知識群互動網站/03-連線模組與網路/index.html) · [線上](https://justty32.github.io/engineer_study/iot-connectivity/)
+- [IoT 天線、RF 與 EMC](專題/IoT聯網裝置/知識群互動網站/04-天線RF與EMC/index.html) · [線上](https://justty32.github.io/engineer_study/iot-rf-antenna/)
+- [IoT 裝置安全與量產生命週期](專題/IoT聯網裝置/知識群互動網站/05-裝置安全與量產生命週期/index.html) · [線上](https://justty32.github.io/engineer_study/iot-security-production/)
+- [板級介面與工業匯流排](專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/index.html) · [線上](https://justty32.github.io/engineer_study/iot-hardware-bus/)
+- [微控制器與韌體核心](專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心/index.html) · [線上](https://justty32.github.io/engineer_study/iot-mcu-firmware/)
+
+### 專題 — 資訊安全與系統
+
+- [網路安全零基礎課程](專題/網路安全/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/network-security/)
+- [進階攻擊手法細講](專題/網路安全/攻擊手法細講/index.html) · [線上](https://justty32.github.io/engineer_study/attack-techniques/)
+- [網路協定細講](專題/網路協定/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/network-protocols/)
+- [從電晶體到 C++ 執行](專題/計算機組織/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/computer-organization/)
+- [作業系統（零基礎）](專題/作業系統/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/operating-systems/)
+- [Linux（零基礎實務）](專題/Linux/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/linux/)
+- [逆向工程](專題/逆向工程/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/reverse-engineering/)
+
+### 專題 — 機器人
+
+- [機器人數學基礎](專題/機器人數學基礎/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/robot-math/)
+- [七軸機械手臂運動學](專題/機器人運動學/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/robot-arm-kinematics/)
+- [機器人路徑與運動規劃](專題/機器人路徑規劃/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/robot-motion-planning/)
+- [機器人視覺](專題/機器人視覺/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/robot-vision/)
+- [機器人學習與訓練](專題/機器人學習/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/robot-learning/)
+
 ## 目錄結構
 
 每個學科一個頂層資料夾，內含學習計畫、分階段的筆記子資料夾，以及中英名詞對照表；`人文社會/` 較特殊，底下再分「地理學類」「宗教學類」兩個子領域，各自擁有一份學習計畫：
