@@ -1,0 +1,75 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>15 運算放大器與電子系統｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">15・把電晶體積木組成可量化的真實系統</p>
+<h1>運算放大器與電子系統：從增益核心走到電源與資料</h1>
+<p class="lead">運算放大器把差動對、電流鏡、增益級、輸出緩衝與補償裝進同一顆晶片；振盪器、穩壓器與資料轉換器再利用回授與頻率選擇完成系統功能。本章用四條可算的判準串起整門課。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="13-差動對與電流鏡.html">13 的差動對</a>、<a href="14-回授與穩定性.html">14 的回授</a>，以及<a href="../電路學-互動課程/13-RLC共振與品質因數.html">電路學的共振與 Q</a>。</p>
+
+<h2>痛點：元件公式都會了，為什麼仍選不出整個系統</h2>
+<p>「我會算差動對、回授與 RC，拿到感測器、電源和 ADC 規格時卻不知道先看哪一條？」因為系統設計不是把最大數字湊在一起，而是辨認瓶頸：小訊號可能卡在 GBW，大訊號卡在轉換速率；電源可能卡在熱；ADC 標稱位元數可能被雜訊與取樣率吃掉。每個方塊都要用端口、能量與時間尺度檢查。</p>
+<p>運算放大器（operational amplifier, op amp）是高開迴路增益的差動電壓放大器。它通常不單獨工作，而由外部負回授設定閉迴路功能。後續的比較器、主動濾波器、振盪器、穩壓器及 ADC 前端，都是同一批放大、切換、儲能與回授積木的不同組合。</p>
+
+<h2>白話直覺：訊號決定狀態，真正的能量都由電源供應</h2>
+<p>可以暫時把電子系統想成資料管線，每級只保留下一級需要的資訊；比喻到此為止，精確描述仍須追蹤導通路徑與能量。典型兩級運算放大器的正、負電源相對地供能；輸入差動對把兩端電壓差轉成電流，電流鏡主動負載把差分電流合成高增益單端電壓，第二級共源放大，推挽射隨器向負載供電流，所有路徑經電源返回而閉合。</p>
+<p>米勒補償電容跨在第二級輸入與輸出，故意建立低主極點，讓迴路增益降到一之前保有相位裕度。輸入失調電壓、偏壓電流、有限 CMRR 與電源拒斥比會造成直流誤差；有限 GBW 限制小訊號頻寬；轉換速率（slew rate, SR）限制輸出每秒最大電壓變化；雜訊則設定最小可辨信號。主動濾波器以運算放大器加 R、C 實作 Sallen–Key 或多回授拓樸，但多項式選擇留給後續課程。</p>
+<p>比較器讓微小差值把輸出推向兩個電源端。施密特觸發器（Schmitt trigger）加正回授形成遲滯（hysteresis）：輸入上升與下降使用不同門檻，雜訊在門檻附近來回時不會反覆切換。這與第 14 章穩定放大的負回授方向相反，是故意建立兩個穩態。</p>
+<p>振盪器把某頻率的迴路相位與增益調到可自我維持。RC 型適合低頻；LC 型由電感與電容來回交換磁場、電場能量，適合射頻；石英晶體的高 Q 讓共振點銳利；壓控振盪器供鎖相迴路調頻；多諧振盪器利用充放電與切換產生方波。啟振能量來自電源，回授只選擇哪些擾動被強化。</p>
+<p>電源管理則直接搬運能量。低壓差線性穩壓器（Low Dropout Regulator, LDO）的串聯電晶體持續導通，多餘電壓乘電流變成熱；Buck 讓 MOSFET 在三極區全通與截止區全斷間切換，電感電流維持閉合路徑，輸出電容平滑端點電壓，脈衝寬度調變以佔空比控制平均值。資料轉換器最後在連續電壓與離散碼之間建立有限解析度的映射。</p>
+<p class="note">來源：07-電子學-下 第 12、13、14、15 章。</p>
+<p class="warning">安全警語：切換式電源的輸入端可能直接來自市電整流，是致命電壓；電感與變壓器在斷開瞬間會產生遠高於輸入的感應電壓；輸出電容在斷電後仍帶電。所有實驗一律使用低壓隔離電源與現成模組，不要自行接市電。</p>
+
+<h2>推導：四條式子分別守住頻率、能量、解析度與取樣</h2>
+<p>LC 共振時電感與電容的電抗大小相等，角頻率 ω<sub>0</sub> = 1/√(LC)，因此 f<sub>0</sub> = 1/(2π√(LC))。L 單位 H、C 單位 F、f<sub>0</sub> 單位 Hz；假設元件線性且忽略寄生與損耗。晶體的等效 Q 可達 10<sup>4</sup> 至 10<sup>6</sup>，共振點很窄，所以頻率比一般 LC 穩定。</p>
+<p>LDO 中串聯元件的輸入與輸出電流近似相同。輸出功率 P<sub>out</sub> = V<sub>out</sub>I<sub>out</sub>，輸入功率 P<sub>in</sub> = V<sub>in</sub>I<sub>out</sub>，故 η = P<sub>out</sub>/P<sub>in</sub> = V<sub>out</sub>/V<sub>in</sub>，損耗為 (V<sub>in</sub> − V<sub>out</sub>)I<sub>out</sub>。電壓單位 V、電流 A、功率 W；忽略穩壓器自身靜態電流。理想 Buck 在穩態的電感平均電壓為零，得到 V<sub>out</sub> = DV<sub>in</sub>，所以 D = V<sub>out</sub>/V<sub>in</sub>。</p>
+<p>N 位元 ADC 有 2<sup>N</sup> 個量化階，最低有效位元 LSB = V<sub>ref</sub>/2<sup>N</sup>。量化誤差假設在 ±LSB/2 均勻分布，其均方根為 LSB/√12；滿刻度弦波均方根為 (2<sup>N</sup>LSB/2)/√2。兩者相除並取 20log<sub>10</sub>，得理論 SNR = 6.02N + 1.76 dB。這只計量化雜訊，不含熱雜訊、時脈抖動與非線性，所以有效位元數（Effective Number Of Bits, ENOB）一定較低。</p>
+<p>取樣率 f<sub>s</sub> 每秒取得 f<sub>s</sub> 個樣本，可無歧義表示的最高頻率是 f<sub>s</sub>/2。超過此界線的頻率會折回基頻形成混疊，不能靠提高位元數補救，必須先用抗混疊濾波器限制輸入頻寬。DAC 常見 R–2R 階梯、電流舵與 Sigma Delta；ADC 有 Flash、逐次逼近、Pipeline、Sigma Delta 與整合型，速度、解析度、功耗與複雜度各有邊界。</p>
+
+<h2>數值實例：同時核對頻率、發熱與量化階</h2>
+<p><strong>振盪器：</strong>L = 100 µH、C = 100 pF，f<sub>0</sub> = <strong>1591549.430919 Hz ＝ 1.591549 MHz</strong>。L = 1 µH、C = 10 pF 時為 <strong>50329212.104487 Hz ＝ 50.329212 MHz</strong>；L = 1000 µH、C = 10000 pF 時為 <strong>50329.212104 Hz ＝ 50.329212 kHz</strong>。</p>
+<p><strong>電源：</strong>V<sub>in</sub> = 12 V、V<sub>out</sub> = 3.3 V、I<sub>out</sub> = 0.5 A，Buck 實測效率取 90 %。</p>
+<table><thead><tr><th>量</th><th>LDO</th><th>Buck</th></tr></thead><tbody>
+<tr><td>輸出功率</td><td><strong>1.650000 W</strong></td><td><strong>1.650000 W</strong></td></tr>
+<tr><td>效率</td><td><strong>27.500000 %</strong></td><td><strong>90.000000 %</strong></td></tr>
+<tr><td>輸入功率</td><td><strong>6.000000 W</strong></td><td><strong>1.833333 W</strong></td></tr>
+<tr><td>損耗</td><td><strong>4.350000 W</strong></td><td><strong>0.183333 W</strong></td></tr>
+<tr><td>輸入平均電流</td><td><strong>0.500000 A</strong></td><td><strong>0.152778 A</strong></td></tr>
+<tr><td>佔空比</td><td>不適用</td><td><strong>0.275000</strong></td></tr>
+</tbody></table>
+<p>LDO 白白燒掉 4.35 W，是輸出功率的 2.64 倍；若 V<sub>in</sub> 改為 5 V，效率為 <strong>66.000000 %</strong>，損耗降至 <strong>0.850000 W</strong>，所以 LDO 只在小壓差時合理。</p>
+<p><strong>資料轉換：</strong>V<sub>ref</sub> = 3.3 V、N = 12、f<sub>s</sub> = 1000 kHz，量化階數 <strong>4096</strong>，LSB = <strong>805.664062 µV</strong>，理論 SNR = <strong>74.000000 dB</strong>，可重建最高頻率 <strong>500.000000 kHz</strong>。N = 8、16、24 時，LSB 分別為 <strong>12890.625000</strong>、<strong>50.354004</strong>、<strong>0.196695 µV</strong>，SNR 為 <strong>49.920000</strong>、<strong>98.080000</strong>、<strong>146.240000 dB</strong>；24 位元的量化階已低於真實電路雜訊底，ENOB 通常只有二十出頭。</p>
+
+<section class="workspace"><h2>自由實驗：同步比較振盪器、電源與 ADC</h2>
+<p>振盪模式由 L、C 閉合儲能回路；電源模式由輸入經 LDO 串聯元件或 Buck 開關與濾波器送到負載，再回地；轉換模式以 V<sub>ref</sub> 為碼域端點。切換主題時三段結果都同步計算，便於看見頻率、功率與解析度的不同瓶頸。</p>
+<div class="controls">
+<label for="sy-mode">主題<select id="sy-mode"><option value="osc">振盪器：LC 諧振頻率</option><option value="supply">電源：LDO vs 切換式</option><option value="conv">資料轉換：ADC 解析度</option></select></label>
+<label for="sy-l">諧振電感 L（µH）<input id="sy-l" type="range" min="1" max="1000" step="1" value="100"></label>
+<label for="sy-c">諧振電容 C（pF）<input id="sy-c" type="range" min="10" max="10000" step="10" value="100"></label>
+<label for="sy-vin">電源輸入電壓 V<sub>in</sub>（V）<input id="sy-vin" type="range" min="1" max="24" step="0.1" value="12"></label>
+<label for="sy-vout">輸出電壓 V<sub>out</sub>（V，也當 ADC 的 V<sub>ref</sub>）<input id="sy-vout" type="range" min="0.8" max="12" step="0.1" value="3.3"></label>
+<label for="sy-bits">ADC 位元數 N<input id="sy-bits" type="range" min="6" max="24" step="1" value="12"></label>
+<label for="sy-fs">取樣率 f<sub>s</sub>（kHz）<input id="sy-fs" type="range" min="1" max="10000" step="1" value="1000"></label>
+</div>
+<div id="syscap-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>運算放大器的 GBW 是開迴路單極點性質；閉迴路頻寬近似等於 GBW 除以閉迴路增益，不能把兩者當同一規格。</li>
+<li>頻寬限制小訊號，轉換速率限制大訊號；大振幅方波的固定斜率不等於小訊號 −3 dB 頻寬不足。</li>
+<li>施密特觸發器使用正回授建立兩個穩態；一般線性運算放大器使用負回授維持單一工作點。</li>
+<li>LDO 的壓差是正常穩壓所需的最小 V<sub>in</sub> − V<sub>out</sub>，效率則是功率比，兩者不能互相取代。</li>
+<li>ADC 標稱位元數決定碼數，ENOB 才反映雜訊與非線性後的有效解析度；取樣率則另行限制可用頻寬。</li>
+</ul>
+
+<h2>可觀察證據：每個瓶頸都要用對儀器</h2>
+<p>以網路分析儀量運算放大器閉迴路增益與 −3 dB 頻寬，能證明 GBW；以示波器送大幅方波量最大 dv/dt，能證明 SR，卻不能據此分解內部各級增益。頻譜分析儀量振盪器主頻與相位雜訊裙擺，能證明振盪頻率及穩定度，不能單靠裙擺直接得到晶體內部參數。</p>
+<p>用電流探棒、示波器與功率計量 LDO、Buck 的輸入輸出電壓及平均電流，能算效率與總損耗；熱像儀能定位發熱，但不能只靠溫度把導通損、切換損與磁性損耗逐項分開。把已知滿刻度弦波送進 ADC，擷取數位碼做 FFT，可量 SNR、ENOB 與無雜散動態範圍；這能證明整體轉換表現，不能證明某一顆比較器或電容陣列單獨造成多少誤差。</p>
+
+<h2>連到哪門課</h2>
+<p>LC 與 Q 見<a href="../電路學-互動課程/13-RLC共振與品質因數.html">電路學的 RLC 共振</a>；效率與功率見<a href="../電路學-互動課程/11-交流功率與功因.html">交流功率</a>；Buck 濾波見<a href="../電路學-互動課程/07-一階暫態RC與RL.html">RC 與 RL 暫態</a>；振盪的物理見<a href="../../../共通基礎/物理/互動課程/06-簡諧運動與共振.html">普通物理的共振</a>；取樣與頻譜見<a href="../../../共通基礎/數學/互動課程/10-傅立葉分析.html">工程數學先修的傅立葉分析</a>。濾波器多項式、電源補償與鎖相迴路分別留給訊號與系統、電力電子及通訊系統課。</p>
+<nav class="pager" aria-label="章節導覽"><a href="14-回授與穩定性.html">← 上一頁：回授與穩定性</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>15 運算放大器與電子系統</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

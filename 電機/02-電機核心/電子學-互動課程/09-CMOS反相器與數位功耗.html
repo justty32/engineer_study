@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 CMOS 反相器與數位功耗｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・用互補開關搬運電荷並計算每次切換成本</p>
+<h1>CMOS 反相器與數位功耗：穩態省電，切換付費</h1>
+<p class="lead">一顆 PMOS 拉高、一顆 NMOS 拉低，讓兩個穩定邏輯狀態都沒有理想的電源到地直流路徑。真正的功耗主要發生在輸出電容充放電與兩顆短暫同時導通時，而且電源電壓以平方進入成本。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-MOSFET原理與三個工作區.html">08 MOSFET 原理與三個工作區</a>，以及<a href="../電路學-互動課程/07-一階暫態RC與RL.html">電路學 07 一階暫態</a>的 RC 充放電。</p>
+
+<h2>痛點：CMOS 說靜態幾乎不耗電，晶片為什麼還會發燙</h2>
+<p>「穩定的 0 或 1 明明只有一顆電晶體導通，為什麼時脈一快功耗就暴增？降低電壓又為什麼比降低頻率有效？」答案不在穩態真值表，而在每次切換都要搬運輸出節點的電荷。互補式金氧半導體（Complementary Metal Oxide Semiconductor, CMOS）用相反極性的兩顆 MOSFET 避免穩態直通，但它不會消除電容，也不會讓轉態瞬間變成零時間。</p>
+<p>反相器拓樸固定為：V<sub>DD</sub> → PMOS 源極；PMOS 汲極 → 輸出節點 OUT；OUT → NMOS 汲極；NMOS 源極 → 地；輸入 IN 同時接兩個閘極。負載電容 C<sub>L</sub> 從 OUT 接到地，代表下一級閘極、走線與接面電容的總和。輸入不是直接把電荷送到輸出，而是選擇哪顆電晶體提供輸出充電或放電路徑。</p>
+
+<h2>白話直覺：兩顆門將輪班，但交班仍有成本</h2>
+<p>可暫時把 NMOS 與 PMOS 想成只允許一方值班的兩扇門；比喻到此為止，精確機制是輸入電壓同時改變兩顆的 V<sub>GS</sub>，使輸出節點經 PMOS 接電源或經 NMOS 接地。地是 0 V 參考，V<sub>DD</sub> 是能量來源。</p>
+<p>輸入為低準位時，NMOS 的 V<sub>GS</sub> 不到門檻而截止，PMOS 的閘源偏壓足以導通。電源到 OUT 的路徑閉合，電子與傳統電流方向相反地移動，C<sub>L</sub> 被充到 V<sub>DD</sub>；NMOS 路徑開路，所以沒有理想的 V<sub>DD</sub> 到地回路。端點結果是輸出為高準位。輸入為高準位時，PMOS 截止、NMOS 導通，OUT 經 NMOS 接地，C<sub>L</sub> 儲存的能量在通道中轉成熱，輸出降到 0 V；同樣沒有穩態直通路徑。</p>
+<p>輸入停在中間時，兩顆可能同時導通，V<sub>DD</sub> → PMOS → NMOS → 地形成閉合回路，產生短路直通電流（short circuit current）。同時，輸出節點還在充放電，端點電壓尚未被明確判成 0 或 1。輸入邊緣愈慢，兩顆重疊導通的時間愈長，直通能量愈大；因此數位電路不只在乎邏輯值，也在乎邊緣速率。</p>
+<p>穩定狀態仍有次臨界漏電與閘極穿隧漏電，所以「靜態功耗極低」不是零。製程縮小、門檻降低時，漏電可能成為重要比例。本章互動只算負載電容的動態功耗，不把直通、漏電、內部節點與短路故障混成一個假精確數字。</p>
+<p class="note">來源：07-電子學-中 第 7 章。</p>
+
+<h2>推導：切換閾值與 CV<sub>DD</sub>² 從哪裡來</h2>
+<p>切換閾值（switching threshold）V<sub>M</sub> 定義為 V<sub>in</sub> = V<sub>out</sub> 的工作點，不是輸入門檻 V<sub>th</sub>。在兩顆皆以長通道飽和平方律工作、忽略 λ 與體效應時，電流大小相等：</p>
+<p>(1/2)k<sub>n</sub>(V<sub>M</sub> − V<sub>th,n</sub>)² = (1/2)k<sub>p</sub>(V<sub>DD</sub> − V<sub>M</sub> − |V<sub>th,p</sub>|)²。</p>
+<p>兩側取正平方根，令 k<sub>r</sub> = k<sub>p</sub>/k<sub>n</sub>，整理得 V<sub>M</sub> = [V<sub>th,n</sub> + √k<sub>r</sub>(V<sub>DD</sub> − |V<sub>th,p</sub>|)] / (1 + √k<sub>r</sub>)。所有電壓單位 V，k 比無單位。若 k<sub>r</sub> = 1 且兩個門檻絕對值相等，分子對稱，V<sub>M</sub> = V<sub>DD</sub>/2。</p>
+<p>PMOS 的電洞遷移率低於 NMOS 的電子遷移率；第 01 章的錨定值是 480 對 1350 cm²/(V⋅s)。若兩顆幾何尺寸相同，PMOS 通常較弱，V<sub>M</sub> 被拉低。設計上加大 PMOS 的 W/L，使 k<sub>p</sub> 接近 k<sub>n</sub>，才得到對稱轉態。這個結果是電流匹配，不是規定兩顆外形一定相同。</p>
+<p>再算能量。把 C<sub>L</sub> 從 0 充到 V<sub>DD</sub>，最後電荷 Q = C<sub>L</sub>V<sub>DD</sub>。電源送出的能量是 QV<sub>DD</sub> = C<sub>L</sub>V<sub>DD</sub>²；電容只儲存 (1/2)C<sub>L</sub>V<sub>DD</sub>²，另一半在 PMOS 通道電阻上變成熱，而且總量與電阻值無關。放電時，電容儲存的另一半又在 NMOS 通道變熱。因此完整的 0→1→0 循環耗能 E = C<sub>L</sub>V<sub>DD</sub>²。</p>
+<p>若每秒完整切換 f 次，動態功耗 P = Ef = C<sub>L</sub>V<sub>DD</sub>²f。C<sub>L</sub> 單位 F、f 單位 Hz、E 單位 J、P 單位 W。這裡假設每循環確實翻轉一次；實際晶片常加活動率 α，成為 αC<sub>L</sub>V<sub>DD</sub>²f。V<sub>DD</sub> 從 3.3 V 降到 1.0 V，比例是 (1.0/3.3)² = <strong>0.091827</strong>，也就是省 <strong>90.8173 %</strong>。代價是 V<sub>OV</sub> 與充電電流下降，延遲通常增加。</p>
+<p>頻率與活動率也要分清楚。時脈可能每秒走很多週期，但某個資料節點若長時間保持原值，就沒有每週期都搬運完整的 C<sub>L</sub>V<sub>DD</sub> 電荷；時脈閘控正是讓不工作的區塊停止這種切換。另一方面，增加扇出會把更多下一級閘極接到 OUT，使 C<sub>L</sub> 上升，延遲與能量同時增加。因此軟體看到的運算率，必須經過實際翻轉次數、資料相關性與實體負載，才會成為晶片的動態功耗。</p>
+<p>粗略邏輯安全區也能由門檻看出：V<sub>in</sub> &lt; V<sub>th,n</sub> 時 NMOS 保證截止；V<sub>in</sub> &gt; V<sub>DD</sub> − |V<sub>th,p</sub>| 時 PMOS 保證截止。兩界之間是轉態區。這不是正式雜訊邊限，因真正的 V<sub>IL</sub> 與 V<sub>IH</sub> 要由完整轉移特性曲線斜率為 −1 的兩點決定。</p>
+
+<h2>數值實例：20 fF 在 100 MHz 下每閘耗多少</h2>
+<p>V<sub>DD</sub> = 3.3 V、V<sub>th,n</sub> = |V<sub>th,p</sub>| = 0.7 V、k<sub>r</sub> = 1、C<sub>L</sub> = 20 fF、f = 100 MHz、V<sub>in</sub> = 1.65 V。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>切換閾值</td><td>(0.7 + 1 × (3.3 − 0.7)) / (1 + 1)</td><td><strong>1.650000 V</strong></td></tr>
+<tr><td>目前輸入狀態</td><td>V<sub>in</sub> = V<sub>M</sub></td><td><strong>轉態區（兩顆同時導通，直通電流最大）</strong></td></tr>
+<tr><td>NMOS 保證截止上界</td><td>V<sub>th,n</sub></td><td><strong>0.700000 V</strong></td></tr>
+<tr><td>PMOS 保證截止下界</td><td>3.3 − 0.7</td><td><strong>2.600000 V</strong></td></tr>
+<tr><td>每次完整切換能量</td><td>20 fF × 3.3²</td><td><strong>217.800000 fJ</strong></td></tr>
+<tr><td>動態功耗</td><td>C<sub>L</sub>V<sub>DD</sub>²f</td><td><strong>21.780000 µW</strong></td></tr>
+</tbody></table>
+<p>k<sub>r</sub> = 0.5 時 V<sub>M</sub> = <strong>1.487006 V</strong>，NMOS 較強而閾值偏低；k<sub>r</sub> = 1 時為 <strong>1.650000 V</strong>；k<sub>r</sub> = 2 時為 <strong>1.812994 V</strong>，PMOS 較強而閾值偏高。</p>
+<p>C<sub>L</sub> = 20 fF、f = 100 MHz 時，把 V<sub>DD</sub> 從 3.3 V 降至 1.0 V，功耗由 <strong>21.780000 µW</strong> 降為 <strong>2.000000 µW</strong>，省 <strong>90.817264 %</strong>。若仍用 3.3 V 而把頻率增至 1000 MHz，功耗線性增為 <strong>217.800000 µW</strong>。一顆十億閘、每閘 20 fF、3.3 V、1 GHz 且全部同時切換的理想化晶片會達 <strong>217.8 kW</strong>，說明降壓、時脈閘控與活動率估計缺一不可。</p>
+
+<section class="workspace"><h2>自由實驗：看反相狀態與切換成本</h2>
+<p>V<sub>DD</sub> 接 PMOS 源極，PMOS 與 NMOS 的汲極共接 OUT，NMOS 源極接地，IN 同時接兩個閘極，C<sub>L</sub> 從 OUT 接地。調整電源、輸入、門檻、強度比、頻率與負載，觀察導通路徑、輸出與能量帳。</p>
+<div class="controls">
+<label for="cm-vdd">電源電壓 V<sub>DD</sub>（V）<input id="cm-vdd" type="range" min="0.8" max="5" step="0.1" value="3.3"></label>
+<label for="cm-vin">輸入電壓 V<sub>in</sub>（V）<input id="cm-vin" type="range" min="0" max="5" step="0.05" value="1.65"></label>
+<label for="cm-vthn">門檻電壓 V<sub>th</sub>（兩顆同值，V）<input id="cm-vthn" type="range" min="0.2" max="1.5" step="0.05" value="0.7"></label>
+<label for="cm-kratio">強度比<select id="cm-kratio"><option value="0.5">k_p/k_n = 0.5（PMOS 較弱）</option><option value="1" selected>k_p/k_n = 1（對稱設計）</option><option value="2">k_p/k_n = 2（PMOS 較強）</option></select></label>
+<label for="cm-f">切換頻率 f（MHz）<input id="cm-f" type="range" min="1" max="1000" step="1" value="100"></label>
+<label for="cm-cl">負載電容 C<sub>L</sub>（fF）<input id="cm-cl" type="range" min="1" max="200" step="1" value="20"></label>
+</div>
+<div id="cmos-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>靜態功耗極低不等於零；次臨界與閘極漏電在先進製程可能占顯著比例，而本章平方式沒有包含它們。</li>
+<li>C<sub>L</sub>V<sub>DD</sub>² 是完整 0→1→0 循環的能量；只看單邊翻轉時是其一半，必須先確認事件定義。</li>
+<li>直通電流與負載電容充放電電流是兩項不同損耗；前者依賴輸入邊緣與兩顆同時導通的時間，本互動只算後者。</li>
+<li>V<sub>M</sub> 是 V<sub>in</sub> = V<sub>out</sub> 的切換閾值，不是 MOSFET 的 V<sub>th</sub>，也不是完整定義的雜訊邊限。</li>
+<li>降低 V<sub>DD</sub> 依平方省動態功耗，但不能無限降低；若 V<sub>th</sub> 沒同步調整，電晶體可能打不開且延遲暴增。</li>
+</ul>
+
+<h2>可觀察證據：同步量輸入、輸出與電源電流</h2>
+<p>用可調直流電源緩慢掃 V<sub>in</sub>，以兩支三用電表或示波器量 V<sub>in</sub>、V<sub>out</sub>，並用高解析度電流表量電源電流，可得到轉移數值與直通電流峰值；峰值附近對應 V<sub>M</sub>，能證明兩顆重疊導通與靜態漏電不為零。以示波器量切換波形，再把電源電流流過取樣電阻轉成電壓，可看見每個邊緣的電流尖峰並積分估能量。這些量測不能把 C<sub>L</sub> 拆成閘極、走線與接面電容各自多少，也不能單靠總電流證明能量在兩顆電晶體間的瞬時分配。</p>
+
+<h2>連到哪門課</h2>
+<p>反相器是數位邏輯閘、記憶體與處理器的底層單元；本章只到 V<sub>M</sub> 與功耗，組合邏輯、正反器與時序留給數位邏輯設計。切換延遲可銜接<a href="../電路學-互動課程/07-一階暫態RC與RL.html">電路學的一階暫態</a>，每循環能量可回到<a href="../../../共通基礎/物理/互動課程/03-功與能量.html">普通物理的功與能量</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="08-MOSFET原理與三個工作區.html">← 上一頁：MOSFET 原理與三個工作區</a><a href="10-小訊號模型.html">下一頁：小訊號模型 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 CMOS 反相器與數位功耗</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,94 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">檢・用數字與判讀確認模型</p>
+<h1>自我檢核</h1>
+<p class="lead">每章三題，涵蓋量級計算與概念邊界。需要時直接沿章節連結回看，填答不會限制課程瀏覽。</p>
+<p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯只會告訴你為什麼，並附上該回去看的章節。可以無限重做。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 電磁世界觀</h2><p>回去看：<a href="00-電磁世界觀.html">00 電磁世界觀</a></p>
+<section class="card"><p><strong>q00-1｜</strong>決定一個問題該用集總電路模型還是電磁場模型的關鍵是什麼？</p><label for="q00-1">你的答案<select id="q00-1"><option value="">請選擇</option><option value="a">尺寸與波長的比值 d/λ</option><option value="b">電壓高低</option><option value="c">元件數量</option><option value="d">電流大小</option></select></label><button type="button" id="q00-1-check">對答案</button><div id="q00-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-2｜</strong>頻率 f = 100 MHz 的波在真空中傳播，波長是多少？</p><label for="q00-2">你的答案（m）<input id="q00-2" type="number" step="any"></label><button type="button" id="q00-2-check">對答案</button><div id="q00-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-3｜</strong>同一波長下，結構最長尺寸 d = 0.1 m，尺寸比 d/λ 是多少？</p><label for="q00-3">你的答案（無單位）<input id="q00-3" type="number" step="any"></label><button type="button" id="q00-3-check">對答案</button><div id="q00-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>01 向量場語言</h2><p>回去看：<a href="01-向量場語言.html">01 向量場語言</a></p>
+<section class="card"><p><strong>q01-1｜</strong>向量場 <b>F</b> = (ax − ωy, ay + ωx, bz)，a = 1、b = 1 時，散度是多少？</p><label for="q01-1">你的答案（1/s）<input id="q01-1" type="number" step="any"></label><button type="button" id="q01-1-check">對答案</button><div id="q01-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-2｜</strong>同一向量場在 ω = 2 時，旋度的 z 分量是多少？</p><label for="q01-2">你的答案（1/s）<input id="q01-2" type="number" step="any"></label><button type="button" id="q01-2-check">對答案</button><div id="q01-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-3｜</strong>散度為 0 但旋度不為 0 的場，最像哪一種真實的場？</p><label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">靜電場</option><option value="b">靜磁場</option><option value="c">重力場</option><option value="d">溫度場</option></select></label><button type="button" id="q01-3-check">對答案</button><div id="q01-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>02 庫侖定律與電場</h2><p>回去看：<a href="02-庫侖定律與電場.html">02 庫侖定律與電場</a></p>
+<section class="card"><p><strong>q02-1｜</strong>q<sub>1</sub> = +5 nC、q<sub>2</sub> = −3 nC，相距 r = 0.30 m，庫侖力大小是多少？</p><label for="q02-1">你的答案（µN）<input id="q02-1" type="number" step="any"></label><button type="button" id="q02-1-check">對答案</button><div id="q02-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-2｜</strong>同上兩顆電荷，在兩者連線中點的合成電場大小是多少？</p><label for="q02-2">你的答案（V/m）<input id="q02-2" type="number" step="any"></label><button type="button" id="q02-2-check">對答案</button><div id="q02-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-3｜</strong>某點電場為零但電位不為零，可能嗎？</p><label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">可能：場是向量會抵消，電位是純量相加</option><option value="b">不可能</option><option value="c">只有在導體裡可能</option><option value="d">只有在真空可能</option></select></label><button type="button" id="q02-3-check">對答案</button><div id="q02-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>03 高斯定律</h2><p>回去看：<a href="03-高斯定律.html">03 高斯定律</a></p>
+<section class="card"><p><strong>q03-1｜</strong>點電荷 Q = 10 nC，以 r = 0.10 m 的球面包住它，球面上的電場大小是多少？</p><label for="q03-1">你的答案（V/m）<input id="q03-1" type="number" step="any"></label><button type="button" id="q03-1-check">對答案</button><div id="q03-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-2｜</strong>同上，穿過球面的電通量 Q/ε<sub>0</sub> 是多少？</p><label for="q03-2">你的答案（V⋅m）<input id="q03-2" type="number" step="any"></label><button type="button" id="q03-2-check">對答案</button><div id="q03-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-3｜</strong>無限大均勻帶電平面的 E 隨觀測距離如何變？</p><label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">依 1/r² 變小</option><option value="b">依 1/r 變小</option><option value="c">完全不變</option><option value="d">線性增加</option></select></label><button type="button" id="q03-3-check">對答案</button><div id="q03-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>04 電位與電位梯度</h2><p>回去看：<a href="04-電位與電位梯度.html">04 電位與電位梯度</a></p>
+<section class="card"><p><strong>q04-1｜</strong>點電荷 Q = 10 nC，在 r = 0.10 m 處相對無限遠的電位是多少？</p><label for="q04-1">你的答案（V）<input id="q04-1" type="number" step="any"></label><button type="button" id="q04-1-check">對答案</button><div id="q04-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-2｜</strong>電偶極矩 p = 1 × 10<sup>−10</sup> C⋅m、r = 0.10 m、θ = 0° 時，遠場偶極電位是多少？</p><label for="q04-2">你的答案（V）<input id="q04-2" type="number" step="any"></label><button type="button" id="q04-2-check">對答案</button><div id="q04-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-3｜</strong>電偶極的赤道面，也就是 θ = 90° 的位置，V 與 E 是什麼狀態？</p><label for="q04-3">你的答案<select id="q04-3"><option value="">請選擇</option><option value="a">V = 0 且 E = 0</option><option value="b">V = 0 但 E ≠ 0</option><option value="c">V ≠ 0 但 E = 0</option><option value="d">兩者都最大</option></select></label><button type="button" id="q04-3-check">對答案</button><div id="q04-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>05 介電質與邊界條件</h2><p>回去看：<a href="05-介電質與邊界條件.html">05 介電質與邊界條件</a></p>
+<section class="card"><p><strong>q05-1｜</strong>介質 1 的 ε<sub>r1</sub> = 1，介質 2 的 ε<sub>r2</sub> = 4；θ<sub>1</sub> = 60°、E<sub>1</sub> = 1000 V/m。沒有自由面電荷時，介質 2 的法向場是多少？</p><label for="q05-1">你的答案（V/m）<input id="q05-1" type="number" step="any"></label><button type="button" id="q05-1-check">對答案</button><div id="q05-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-2｜</strong>沿用同一界面條件，介質 2 的合成電場大小是多少？</p><label for="q05-2">你的答案（V/m）<input id="q05-2" type="number" step="any"></label><button type="button" id="q05-2-check">對答案</button><div id="q05-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-3｜</strong>沒有時變磁通且沒有自由面電荷時，跨越介電質界面連續的是哪兩個分量？</p><label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">E 的法向與 D 的切向</option><option value="b">E 的切向與 D 的法向</option><option value="c">兩者的法向</option><option value="d">兩者的切向</option></select></label><button type="button" id="q05-3-check">對答案</button><div id="q05-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>06 電容與電場儲能</h2><p>回去看：<a href="06-電容與電場儲能.html">06 電容與電場儲能</a></p>
+<section class="card"><p><strong>q06-1｜</strong>平行板面積 A = 100 cm²、間距 d = 1 mm、ε<sub>r</sub> = 1，忽略邊緣效應時電容是多少？</p><label for="q06-1">你的答案（pF）<input id="q06-1" type="number" step="any"></label><button type="button" id="q06-1-check">對答案</button><div id="q06-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-2｜</strong>同上電容器加 100 V，儲存的電場能量是多少？</p><label for="q06-2">你的答案（nJ）<input id="q06-2" type="number" step="any"></label><button type="button" id="q06-2-check">對答案</button><div id="q06-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-3｜</strong>同上，板間均勻電場是多少？</p><label for="q06-3">你的答案（kV/m）<input id="q06-3" type="number" step="any"></label><button type="button" id="q06-3-check">對答案</button><div id="q06-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>07 電流密度與焦耳熱</h2><p>回去看：<a href="07-電流密度與焦耳熱.html">07 電流密度與焦耳熱</a></p>
+<section class="card"><p><strong>q07-1｜</strong>銅線長 ℓ = 10 m、截面積 A = 1 mm²，銅電阻率取 1.68 × 10<sup>−8</sup> Ω⋅m，電阻是多少？</p><label for="q07-1">你的答案（Ω）<input id="q07-1" type="number" step="any"></label><button type="button" id="q07-1-check">對答案</button><div id="q07-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-2｜</strong>同上銅線通 1 A 時，導線內部的電場大小是多少？</p><label for="q07-2">你的答案（V/m）<input id="q07-2" type="number" step="any"></label><button type="button" id="q07-2-check">對答案</button><div id="q07-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-3｜</strong>電子漂移速度只有 0.07 mm/s，閉合開關後燈為什麼幾乎立刻亮？</p><label for="q07-3">你的答案<select id="q07-3"><option value="">請選擇</option><option value="a">電子其實跑很快</option><option value="b">電流是從燈那端流過來的</option><option value="c">建立電場的訊號以接近光速傳播</option><option value="d">燈裡有儲存的電荷</option></select></label><button type="button" id="q07-3-check">對答案</button><div id="q07-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>08 磁場與羅倫茲力</h2><p>回去看：<a href="08-磁場與羅倫茲力.html">08 磁場與羅倫茲力</a></p>
+<section class="card"><p><strong>q08-1｜</strong>質子以 v = 1 × 10<sup>6</sup> m/s 垂直射入 B = 0.5 T 的均勻磁場，所受磁力是多少？</p><label for="q08-1">你的答案（× 10<sup>−14</sup> N）<input id="q08-1" type="number" step="any"></label><button type="button" id="q08-1-check">對答案</button><div id="q08-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-2｜</strong>同一質子在該磁場中的迴旋半徑是多少？</p><label for="q08-2">你的答案（m）<input id="q08-2" type="number" step="any"></label><button type="button" id="q08-2-check">對答案</button><div id="q08-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-3｜</strong>在非相對論且均勻磁場的假設下，迴旋頻率 f<sub>c</sub> 與粒子速率有何關係？</p><label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">正比</option><option value="b">完全無關</option><option value="c">反比</option><option value="d">平方正比</option></select></label><button type="button" id="q08-3-check">對答案</button><div id="q08-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>09 畢歐沙伐與安培定律</h2><p>回去看：<a href="09-畢歐沙伐與安培定律.html">09 畢歐沙伐與安培定律</a></p>
+<section class="card"><p><strong>q09-1｜</strong>電流 I = 10 A 的無限長直導線，在垂直距離 ρ = 5 cm 處的磁場是多少？</p><label for="q09-1">你的答案（µT）<input id="q09-1" type="number" step="any"></label><button type="button" id="q09-1-check">對答案</button><div id="q09-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-2｜</strong>電流 I = 10 A、半徑 a = 5 cm 的單匝圓迴圈，在軸心的磁場是多少？</p><label for="q09-2">你的答案（µT）<input id="q09-2" type="number" step="any"></label><button type="button" id="q09-2-check">對答案</button><div id="q09-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-3｜</strong>電流 I = 10 A、匝數密度 n = 10 匝/cm 的長螺線管，內部磁場是多少？</p><label for="q09-3">你的答案（mT）<input id="q09-3" type="number" step="any"></label><button type="button" id="q09-3-check">對答案</button><div id="q09-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>10 磁性材料與磁路</h2><p>回去看：<a href="10-磁性材料與磁路.html">10 磁性材料與磁路</a></p>
+<section class="card"><p><strong>q10-1｜</strong>µ<sub>r</sub> = 2000、磁路長 ℓ = 0.30 m、截面積 A = 4 cm² 的鐵心磁阻是多少？</p><label for="q10-1">你的答案（× 10<sup>5</sup> A/Wb）<input id="q10-1" type="number" step="any"></label><button type="button" id="q10-1-check">對答案</button><div id="q10-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-2｜</strong>同上鐵心繞 N = 200 匝、通 I = 0.5 A，沒有氣隙時磁通密度是多少？</p><label for="q10-2">你的答案（T）<input id="q10-2" type="number" step="any"></label><button type="button" id="q10-2-check">對答案</button><div id="q10-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-3｜</strong>同上磁路加入 g = 1 mm 的氣隙後，磁通密度是多少？</p><label for="q10-3">你的答案（T）<input id="q10-3" type="number" step="any"></label><button type="button" id="q10-3-check">對答案</button><div id="q10-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>11 電磁感應</h2><p>回去看：<a href="11-電磁感應.html">11 電磁感應</a></p>
+<section class="card"><p><strong>q11-1｜</strong>導體棒在 B = 0.5 T 的磁場中，以 L = 0.2 m、v = 3 m/s 垂直切割磁場，動生電動勢是多少？</p><label for="q11-1">你的答案（V）<input id="q11-1" type="number" step="any"></label><button type="button" id="q11-1-check">對答案</button><div id="q11-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-2｜</strong>同上迴路總電阻 R = 2 Ω，作用在棒上的反抗力是多少？</p><label for="q11-2">你的答案（N）<input id="q11-2" type="number" step="any"></label><button type="button" id="q11-2-check">對答案</button><div id="q11-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-3｜</strong>線圈 N = 100、面積 A = 0.04 m²，置於 B<sub>0</sub> = 0.5 T、f = 50 Hz 的正弦磁場，電動勢峰值是多少？</p><label for="q11-3">你的答案（V）<input id="q11-3" type="number" step="any"></label><button type="button" id="q11-3-check">對答案</button><div id="q11-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>12 位移電流與馬克士威方程式</h2><p>回去看：<a href="12-位移電流與馬克士威方程式.html">12 位移電流與馬克士威方程式</a></p>
+<section class="card"><p><strong>q12-1｜</strong>真空平行板電容器 A = 100 cm²、d = 1 mm，外加峰值 V<sub>0</sub> = 100 V、f = 1 kHz 的正弦電壓，位移電流峰值是多少？</p><label for="q12-1">你的答案（µA）<input id="q12-1" type="number" step="any"></label><button type="button" id="q12-1-check">對答案</button><div id="q12-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q12-2｜</strong>位移電流補進哪一條方程式，才能與電荷守恆相容？</p><label for="q12-2">你的答案<select id="q12-2"><option value="">請選擇</option><option value="a">高斯定律</option><option value="b">法拉第定律</option><option value="c">安培定律</option><option value="d">磁高斯定律</option></select></label><button type="button" id="q12-2-check">對答案</button><div id="q12-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q12-3｜</strong>位移電流的物理意義是什麼？</p><label for="q12-3">你的答案<select id="q12-3"><option value="">請選擇</option><option value="a">電荷真的在真空中流動</option><option value="b">變化的電場也會產生磁場</option><option value="c">電容器會漏電</option><option value="d">磁場的源多了一個磁荷</option></select></label><button type="button" id="q12-3-check">對答案</button><div id="q12-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>13 電磁波與平面波</h2><p>回去看：<a href="13-電磁波與平面波.html">13 電磁波與平面波</a></p>
+<section class="card"><p><strong>q13-1｜</strong>頻率 f = 1 GHz 的平面波在真空中的波長是多少？</p><label for="q13-1">你的答案（m）<input id="q13-1" type="number" step="any"></label><button type="button" id="q13-1-check">對答案</button><div id="q13-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q13-2｜</strong>真空的本質阻抗 η<sub>0</sub> 是多少？</p><label for="q13-2">你的答案（Ω）<input id="q13-2" type="number" step="any"></label><button type="button" id="q13-2-check">對答案</button><div id="q13-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q13-3｜</strong>電場峰值 E<sub>0</sub> = 1 V/m 的平面波在真空中傳播，平均功率密度是多少？</p><label for="q13-3">你的答案（× 10<sup>−3</sup> W/m²）<input id="q13-3" type="number" step="any"></label><button type="button" id="q13-3-check">對答案</button><div id="q13-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>14 介質中的波與界面</h2><p>回去看：<a href="14-介質中的波與界面.html">14 介質中的波與界面</a></p>
+<section class="card"><p><strong>q14-1｜</strong>銅的 σ = 5.952381 × 10<sup>7</sup> S/m，在 1 MHz 時的趨膚深度是多少？</p><label for="q14-1">你的答案（µm）<input id="q14-1" type="number" step="any"></label><button type="button" id="q14-1-check">對答案</button><div id="q14-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q14-2｜</strong>厚 100 µm 的銅在 1 MHz 下，單由場進入導體造成的吸收衰減是多少？</p><label for="q14-2">你的答案（dB）<input id="q14-2" type="number" step="any"></label><button type="button" id="q14-2-check">對答案</button><div id="q14-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q14-3｜</strong>平面波由真空垂直入射 FR–4，ε<sub>r</sub> = 4.4，反射係數的大小是多少？</p><label for="q14-3">你的答案（無單位）<input id="q14-3" type="number" step="any"></label><button type="button" id="q14-3-check">對答案</button><div id="q14-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>15 傳輸線與駐波</h2><p>回去看：<a href="15-傳輸線與駐波.html">15 傳輸線與駐波</a></p>
+<section class="card"><p><strong>q15-1｜</strong>特性阻抗 Z<sub>0</sub> = 50 Ω 的傳輸線接上 Z<sub>L</sub> = 75 Ω 負載，負載端反射係數大小是多少？</p><label for="q15-1">你的答案（無單位）<input id="q15-1" type="number" step="any"></label><button type="button" id="q15-1-check">對答案</button><div id="q15-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q15-2｜</strong>沿用同一條線與負載，駐波比（voltage standing wave ratio, VSWR）是多少？</p><label for="q15-2">你的答案（無單位）<input id="q15-2" type="number" step="any"></label><button type="button" id="q15-2-check">對答案</button><div id="q15-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q15-3｜</strong>沿用同一條線與負載，從負載往源端看 βℓ = 90°，也就是 λ/4 時，輸入阻抗是多少？</p><label for="q15-3">你的答案（Ω）<input id="q15-3" type="number" step="any"></label><button type="button" id="q15-3-check">對答案</button><div id="q15-3-output" class="output" aria-live="polite"></div></section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

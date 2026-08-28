@@ -1,0 +1,71 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 MOSFET 原理與三個工作區｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・用絕緣閘極建立可控制的導電通道</p>
+<h1>MOSFET 原理與三個工作區：先看通道是否存在</h1>
+<p class="lead">閘極不必持續吸收直流電流，仍能靠電場改變半導體表面的載子濃度。只要依序算超驅動電壓、比較汲源電壓，就能判斷它是關閉、像受控電阻，還是呈現放大器需要的定電流行為。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-半導體與載子.html">01 半導體與載子</a>的摻雜、電子與電場，以及<a href="../電路學-互動課程/06-電容與電感.html">電路學 06 電容與電感</a>的電場儲能。</p>
+
+<h2>痛點：閘極沒有直流電流，怎麼可能控制汲極電流</h2>
+<p>「沒有電流進控制端，控制作用從哪裡來？而且 MOSFET 的飽和區為什麼反而拿來放大？」把閘極當成必須供應載子的入口，就會錯過真正機制。金氧半場效電晶體（Metal Oxide Semiconductor Field Effect Transistor, MOSFET）的閘極隔著氧化層，控制量是電場，不是穩態閘極電流；外部電源供應汲極電流與能量，閘極只改變源極到汲極之間能不能形成通道。</p>
+<p>以增強型 NMOS 為例，p 型基板內有兩個 n+ 摻雜區，分別作源極（Source, S）與汲極（Drain, D）；表面覆蓋極薄的二氧化矽，氧化層上方是閘極（Gate, G）。PMOS 將摻雜型別與電壓極性反轉。這不是把輸入與輸出用導線接起來，而是用一個近似電容的結構改造表面載子分布。</p>
+
+<h2>白話直覺：閘極是在鋪路，不是在供應車流</h2>
+<p>可暫時把閘極電場想成鋪出一條路；比喻到此為止，精確說法是正 V<sub>GS</sub> 排斥表面電洞並吸引電子，當表面電子足夠多時形成反轉層（inversion layer），也就是 n 型導電通道。源極接地作參考，汲極經負載接正電源，閘極由電壓源相對源極驅動。</p>
+<p>當 V<sub>GS</sub> = 0 時，源極與汲極之間只剩背對背的反偏 PN 接面，汲源回路沒有可持續導通的通道，I<sub>D</sub> 近似為零。當 V<sub>GS</sub> 超過門檻電壓 V<sub>th</sub>，閘極與基板之間的電場把電子吸到氧化層下，通道閉合；汲源電壓 V<sub>DS</sub> 再沿通道建立橫向電場，推動電子由源極往汲極移動，傳統電流方向則由汲極往源極。能量由汲極電源送入負載與通道，不是由閘極供應。</p>
+<p>V<sub>DS</sub> 很小時，整條通道都存在，兩端壓差增加便增加載子漂移，MOSFET 表現成由 V<sub>GS</sub> 控制阻值的電阻，這是三極區／線性區（triode / linear）。提高 V<sub>DS</sub> 後，汲極端局部通道電位上升，使那裡的有效超驅動逐漸歸零；到 V<sub>DS</sub> = V<sub>OV</sub> 時汲極端通道夾止。再增加 V<sub>DS</sub>，額外電壓主要落在夾止區，電流幾乎不變，進入飽和區（saturation）。因此端點電壓的結果是：三極區電流明顯隨 V<sub>DS</sub> 變，飽和區則主要由 V<sub>GS</sub> 決定。</p>
+<p>閘極直流電流近似零只代表氧化層不提供穩態導電路徑。改變閘極電壓時仍須對閘極電容充放電，驅動器會在切換瞬間提供電流並交換能量；頻率愈高，這筆成本愈不能忽略。第 09 章會把這件事放進 CMOS 功耗帳。</p>
+<p class="note">來源：07-電子學-中 §6.1–§6.3、§6.5–§6.7。</p>
+
+<h2>推導：從沿途通道電荷走到平方律</h2>
+<p>先定義超驅動電壓（overdrive voltage）V<sub>OV</sub> = V<sub>GS</sub> − V<sub>th</sub>，單位 V。若 V<sub>OV</sub> ≤ 0，沒有強反轉通道，採截止區（cutoff）模型 I<sub>D</sub> ≈ 0。此處忽略次臨界漏電、接面漏電與閘極穿隧電流，溫度固定 300 K。</p>
+<p>通道位置 x 的電位記為 V(x)。當地可移動電荷量與 V<sub>GS</sub> − V<sub>th</sub> − V(x) 成正比；愈靠近汲極，V(x) 愈高，通道電荷愈少。把沿通道每一小段的電荷與漂移關係累加，得到三極區公式 I<sub>D</sub> = k[V<sub>OV</sub>V<sub>DS</sub> − (1/2)V<sub>DS</sub>²]。其中 k = µ<sub>n</sub>C<sub>ox</sub>(W/L)，單位 A/V²；µ<sub>n</sub> 是電子遷移率，C<sub>ox</sub> 是單位面積閘氧電容，W/L 是通道寬長比。假設長通道、遷移率不隨電場變、接觸電阻可忽略。</p>
+<p>若 V<sub>DS</sub> ≪ V<sub>OV</sub>，二次項遠小於一次項，I<sub>D</sub> ≈ kV<sub>OV</sub>V<sub>DS</sub>，所以小 V<sub>DS</sub> 下的等效電阻約為 1/(kV<sub>OV</sub>)。這就是 MOSFET 作 CMOS 開關與類比開關時使用三極區的理由；截止區負責開路，三極區負責低阻導通。</p>
+<p>對三極區公式求 ∂I<sub>D</sub>/∂V<sub>DS</sub> = k(V<sub>OV</sub> − V<sub>DS</sub>)。令導數為零，得邊界 V<sub>DS</sub> = V<sub>OV</sub>；代回原式，得到理想飽和電流 I<sub>D</sub> = (1/2)kV<sub>OV</sub>²。邊界兩側公式給同一電流，可作程式斷言。真實通道的夾止點會隨 V<sub>DS</sub> 略移，通道長度調變（channel length modulation）以 (1 + λV<sub>DS</sub>) 修正，λ 單位 V<sup>−1</sup>，故 r<sub>o</sub> = 1/(λI<sub>D</sub>)。</p>
+<p>跨導（transconductance, g<sub>m</sub>）是 Q 點上 ∂I<sub>D</sub>/∂V<sub>GS</sub>，單位 A/V。飽和區有 g<sub>m</sub> = kV<sub>OV</sub>(1 + λV<sub>DS</sub>)；忽略 λ 時亦可寫成 2I<sub>D</sub>/V<sub>OV</sub> = √(2kI<sub>D</sub>)。再與 r<sub>o</sub> 相乘，得本徵增益 g<sub>m</sub>r<sub>o</sub> = 2/(λV<sub>OV</sub>)，顯示理想平方律下電流消去。</p>
+<p>基板不與源極等電位時會有體效應（body effect）：V<sub>th</sub> = V<sub>th0</sub> + γ[√(V<sub>SB</sub> + 2φ<sub>F</sub>) − √(2φ<sub>F</sub>)]。V<sub>SB</sub> 增加會使門檻升高。短通道元件還會出現更強的通道長度調變、漏電流與速度飽和，因此平方律是建立判區直覺的模型，不是所有製程的精密模擬器；FinFET 與環繞閘極結構用三維閘極改善靜電控制。</p>
+
+<h2>數值實例：同一顆 NMOS，V<sub>DS</sub> 決定使用哪條式子</h2>
+<p>NMOS、V<sub>GS</sub> = 2 V、V<sub>th</sub> = 1 V、k = 500 µA/V²、λ = 0.02 V<sup>−1</sup>、V<sub>DS</sub> = 5 V。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>超驅動電壓</td><td>2 − 1</td><td><strong>1.000000 V</strong></td></tr>
+<tr><td>工作區判定</td><td>V<sub>DS</sub> = 5 ≥ V<sub>OV</sub> = 1</td><td><strong>飽和區</strong></td></tr>
+<tr><td>汲極電流</td><td>(1/2) × 500 µA/V² × 1² × (1 + 0.02 × 5)</td><td><strong>275.000000 µA</strong></td></tr>
+<tr><td>跨導</td><td>500 × 1 × 1.1</td><td><strong>550.000000 µA/V</strong></td></tr>
+<tr><td>輸出阻抗</td><td>1 / (0.02 × 275 µA)</td><td><strong>181818.181818 Ω</strong></td></tr>
+<tr><td>本徵增益</td><td>2 / (0.02 × 1)</td><td><strong>100.000000</strong></td></tr>
+</tbody></table>
+<p>改成 V<sub>DS</sub> = 0.5 V 時為<strong>三極區</strong>，I<sub>D</sub> = <strong>187.500000 µA</strong>，r<sub>DS</sub> = <strong>2666.666667 Ω</strong>。V<sub>DS</sub> = 1.0 V 是飽和區邊界；依含 λ 的飽和式得 <strong>255.000000 µA</strong>，理想三極式在邊界給 <strong>250.000000 µA</strong>，差別只來自 λ 項。V<sub>GS</sub> = 0.5 V 時為截止區，I<sub>D</sub> = <strong>0.000000 µA</strong>。λ = 0 時則有 I<sub>D</sub> = <strong>250.000000 µA</strong>、g<sub>m</sub> = <strong>500.000000 µA/V</strong>、r<sub>o</sub> 無限大。</p>
+<p>體效應範例採 V<sub>th0</sub> = 0.7 V、γ = 0.4 √V、2φ<sub>F</sub> = 0.6 V、V<sub>SB</sub> = 1 V，得到 V<sub>th</sub> = <strong>0.896126 V</strong>，升高 <strong>0.196126 V</strong>。這會減少既定 V<sub>GS</sub> 下的 V<sub>OV</sub>，進而降低電流與跨導。</p>
+
+<section class="workspace"><h2>自由實驗：掃過 MOSFET 三個工作區</h2>
+<p>汲極由正電源經負載供能，源極與基板接地，閘極由獨立電壓源設定 V<sub>GS</sub>；汲源回路只有形成反轉通道後才閉合。調整端點電壓、門檻、k 與 λ，觀察工作區、電流、跨導及輸出阻抗如何同步改變。</p>
+<div class="controls">
+<label for="mo-vgs">閘—源電壓 V<sub>GS</sub>（V）<input id="mo-vgs" type="range" min="0" max="5" step="0.05" value="2"></label>
+<label for="mo-vds">汲—源電壓 V<sub>DS</sub>（V）<input id="mo-vds" type="range" min="0" max="10" step="0.1" value="5"></label>
+<label for="mo-vth">門檻電壓 V<sub>th</sub>（V）<input id="mo-vth" type="range" min="0.3" max="2" step="0.05" value="1"></label>
+<label for="mo-k">製程與尺寸參數 k（µA/V²）<input id="mo-k" type="range" min="50" max="2000" step="50" value="500"></label>
+<label for="mo-lambda">通道長度調變<select id="mo-lambda"><option value="0">λ = 0（理想長通道）</option><option value="0.02" selected>λ = 0.02 /V（長通道）</option><option value="0.05">λ = 0.05 /V（短通道）</option></select></label>
+</div>
+<div id="mosfet-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li><strong>MOSFET 的飽和區是放大用的定電流區；BJT 的飽和區是開關全開、V<sub>CE</sub> ≈ 0.2 V，兩者意思相反。</strong>請回看<a href="06-BJT原理與工作區.html">第 06 章 BJT 原理與工作區</a>；MOSFET 當開關用的是三極區與截止區，不是飽和區。</li>
+<li>閘極直流電流近似零，不代表切換時完全沒有閘極電流；高頻驅動必須反覆搬運閘極電荷。</li>
+<li>V<sub>th</sub> 是形成強反轉的模型邊界，不是「輸出突然完全打開」的固定開關點；製程、體效應與偏壓都會改變它。</li>
+<li>k = µ<sub>n</sub>C<sub>ox</sub>(W/L) 同時含製程參數與尺寸比；電路設計者通常能選 W/L，不能任意指定遷移率與氧化層電容。</li>
+<li>飽和區電流「幾乎不隨 V<sub>DS</sub> 變」不是完全不變；λ 造成有限 r<sub>o</sub>，短通道時偏離更明顯。</li>
+</ul>
+
+<h2>可觀察證據：用曲線追蹤儀量端口行為</h2>
+<p>曲線追蹤儀固定多個 V<sub>GS</sub> 並掃 V<sub>DS</sub>，可量得一族 I<sub>D</sub> 數值；低 V<sub>DS</sub> 段隨電壓上升、越過 V<sub>DS</sub> = V<sub>OV</sub> 後趨近平坦，能證明三極區、飽和區與轉折邊界。以低壓小訊號改變 V<sub>DS</sub> 可由斜率反推 r<sub>o</sub>，掃 V<sub>GS</sub> 則可外插 V<sub>th</sub> 並估 k、λ。這些端口量測不能分別證明 µ<sub>n</sub> 與 C<sub>ox</sub> 各是多少，也不能證明版圖 W/L、氧化層厚度或通道內部的空間分布；那些需要製程資料與結構量測。</p>
+
+<h2>連到哪門課</h2>
+<p>MOSFET 是積體電路的類比電流源、數位開關與電源開關。閘極電場與反轉層可銜接<a href="../../../共通基礎/物理/互動課程/08-靜電學.html">普通物理的靜電學</a>，閘極充放電則銜接<a href="../電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>。下一章把 NMOS 與 PMOS 互補串接，第 10 章再把飽和區工作點線性化。</p>
+<nav class="pager" aria-label="章節導覽"><a href="07-BJT偏壓與Q點.html">← 上一頁：BJT 偏壓與 Q 點</a><a href="09-CMOS反相器與數位功耗.html">下一頁：CMOS 反相器與數位功耗 →</a></nav>
+</main>
+<footer class="site-footer"><span>08 MOSFET 原理與三個工作區</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

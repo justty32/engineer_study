@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 半導體與載子｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">01・從能量位置算到一塊矽的電阻率</p>
+<h1>半導體與載子：用少量摻雜改寫導電性</h1>
+<p class="lead">純矽既不是好導體，也不是理想絕緣體；它的價值在於可用極少雜質精準改變可移動載子的數量。本章把能帶、電子、電洞與摻雜接到可驗算的導電率。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-電子學世界觀.html">00 的非線性與模型觀念</a>，以及原子含原子核與電子的基本圖像。</p>
+
+<h2>痛點：摻進一點雜質，為什麼電流能差幾十萬倍</h2>
+<p>「矽裡本來就有很多電子，為什麼還說純矽幾乎不導電？每幾百萬個原子只換一個雜質，又怎麼可能讓電阻率劇烈下降？」真正關鍵不是材料裡有多少電子，而是多少電子處在可以改變位置、能對外加電場產生淨移動的能量狀態。被化學鍵綁在價帶裡的電子很多，卻不能像自由載子一樣長距離搬運電荷。摻雜的作用是大幅改變可用載子濃度，而不是把整塊材料充成帶正電或帶負電。</p>
+<p><strong>能帶（energy band）</strong>是固體中電子容許佔據的能量區間。最高被填滿的區間稱<strong>價帶（valence band）</strong>，最低未填滿或部分填滿的區間稱<strong>導帶（conduction band）</strong>；兩者間不容許穩態電子存在的區域是<strong>能隙（band gap, E<sub>g</sub>）</strong>。導體的能隙為零或能帶重疊，絕緣體通常 E<sub>g</sub> &gt; 3 eV，半導體介於兩者；矽、鍺、砷化鎵分別為 1.12 eV、0.66 eV、1.42 eV。能隙決定熱激發有多難，不直接等於載子移動多快。</p>
+<p>純淨材料稱<strong>本徵半導體（intrinsic semiconductor）</strong>。在固定 300 K，有些價帶電子獲得足夠熱能躍入導帶，留下可由鄰近電子依序填補的空位。這個空位稱<strong>電洞（hole）</strong>，可當作帶 +q 的載子計算；每產生一個導帶電子也同時產生一個電洞，因此 n = p = n<sub>i</sub>。矽的本徵載子濃度 n<sub>i</sub> = 1.5 × 10<sup>10</sup> cm<sup>−3</sup>，相對於原子密度仍極低。</p>
+
+<h2>白話直覺：載子數量是可調的資料欄位</h2>
+<p>可以把摻雜暫時想成替材料設定主要載子型別的組態值；比喻到此為止，真實機制是雜質原子的價電子數改變了低能量載子狀態。先在矽棒兩端接直流電源並選一端為地，形成電源正端 → 矽樣品 → 電源負端的閉合路徑。未加電場時，載子熱運動方向雜亂，平均電流為零；加上電位差後，電場建立，電子漂移方向與傳統電流相反，電洞的等效移動方向與傳統電流相同。載子從電源與材料的接觸端進出，沿樣品傳遞電荷，電源送出的能量最後轉成晶格熱。</p>
+<p>摻五價的磷或砷稱<strong>摻雜（doping）</strong>，多出容易游離的一個電子，形成 n 型材料；電子是多數載子，電洞仍存在但成為少數載子。摻三價的硼或鎵形成 p 型材料，缺少的一個鍵結電子表現為電洞，多數載子改成電洞。外加電壓不變時，更多載子可同時響應電場，所以導電率上升、樣品端點間電壓分布對應較大的電流。整體材料仍電中性：可移動電子的負電荷由固定施體離子的正電荷抵銷，電洞的正電荷也有固定受體離子對應。</p>
+<p>載子有兩種驅動來源。<strong>漂移電流（drift current）</strong>由電場推動；路徑必須閉合，穩態電流才能維持。<strong>擴散電流（diffusion current）</strong>由濃度梯度推動，即使沒有外加電場，載子也會由高濃度區往低濃度區散開。兩者可能同向也可能反向。下一章把 n 型與 p 型接起來後，擴散先搬動載子並留下固定離子，固定離子再建立電場產生反向漂移，直到淨電流為零。</p>
+<p class="note">來源：07-電子學-上 §1.1–§1.4、第 4 章。</p>
+
+<h2>推導：從載子濃度走到電流密度</h2>
+<p><strong>（a）少數載子沒有消失。</strong>熱平衡下的<strong>質量作用定律（mass action law）</strong>是 np = n<sub>i</sub>²。n 與 p 分別是電子與電洞濃度，單位 cm<sup>−3</sup>；n<sub>i</sub> 是本徵濃度，同單位。對 n 型材料，施體濃度 N<sub>D</sub> 遠大於 n<sub>i</sub> 時，電中性近似給 n ≈ N<sub>D</sub>，再得 p = n<sub>i</sub>²/N<sub>D</sub>。這表示天平被壓向電子一側，不是電洞變成絕對零。假設為完全游離、熱平衡、均勻摻雜，且忽略高濃度下的能帶與遷移率修正。</p>
+<p><strong>（b）導電率來自速度與數量。</strong>載子在低電場下的平均漂移速度 v = µE。v 單位 cm/s，µ 是遷移率，單位 cm²/(V⋅s)，E 是電場，單位 V/cm。單一載子的電流密度為 qnv，把電子與電洞兩項相加，得到 J = q(nµ<sub>n</sub> + pµ<sub>p</sub>)E = σE。J 是電流密度，單位 A/cm²；q = 1.602176634 × 10<sup>−19</sup> C；σ 是導電率，單位 S/cm。單位相乘為 C × cm<sup>−3</sup> × cm²/(V⋅s) = S/cm，與公式一致。電阻率 ρ = 1/σ，單位 Ω⋅cm。</p>
+<p><strong>（c）為什麼少量摻雜這麼有效。</strong>本徵矽的兩種載子都只有 1.5 × 10<sup>10</sup> cm<sup>−3</sup>，所以 σ = qn<sub>i</sub>(µ<sub>n</sub> + µ<sub>p</sub>) = 4.397975 × 10<sup>−6</sup> S/cm。若 N<sub>D</sub> = 10<sup>16</sup> cm<sup>−3</sup>，電子項直接增大近六個數量級，總導電率成為 2.162938456 S/cm，約上升 491803.278689 倍。雜質比例雖只有約五百萬分之一，卻是相對於原本極稀少的自由載子增加，不是相對於全部矽原子增加。</p>
+<p><strong>（d）擴散項保留不同資訊。</strong>電子擴散可寫 J<sub>n</sub> = qD<sub>n</sub> ⋅ dn/dx。D<sub>n</sub> 是電子擴散係數，單位 cm²/s；dn/dx 是濃度梯度，單位 cm<sup>−4</sup>，所以 J<sub>n</sub> 的單位仍為 A/cm²。這裡只交代方向與量綱，不推導統計力學。漂移看 E，擴散看濃度斜率；兩個驅動量不能互相替代。</p>
+<p><strong>（e）製程把空間分布寫進晶圓。</strong>積體電路由矽晶圓開始，依序經氧化、微影、蝕刻、離子佈植摻雜、沉積與金屬連線，把不同濃度與型別安排在指定位置。製程節點如 7 nm、3 nm 是一組世代標稱，不等於每個幾何尺寸都恰為該數字；摩爾定律描述長期密度趨勢，也不是材料定律。本章只需要知道元件的 n 區、p 區與接觸不是自然長成，而是製程刻意建立。</p>
+
+<h2>數值實例：n 型矽在固定電場下的導電能力</h2>
+<p>Si、300 K、n<sub>i</sub> = 1.5 × 10<sup>10</sup> cm<sup>−3</sup>、µ<sub>n</sub> = 1350 cm²/(V⋅s)、µ<sub>p</sub> = 480 cm²/(V⋅s)、q = 1.602176634 × 10<sup>−19</sup> C；n 型、N<sub>D</sub> = 10<sup>16</sup> cm<sup>−3</sup>、外加電場 E = 10 V/cm。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>電子濃度</td><td>n ≈ N<sub>D</sub></td><td><strong>1.000000 × 10<sup>16</sup> cm<sup>−3</sup></strong></td></tr>
+<tr><td>電洞濃度</td><td>n<sub>i</sub>²/N<sub>D</sub></td><td><strong>2.250000 × 10<sup>4</sup> cm<sup>−3</sup></strong></td></tr>
+<tr><td>多數／少數比</td><td>n/p</td><td><strong>4.444444 × 10<sup>11</sup> 倍</strong></td></tr>
+<tr><td>導電率</td><td>q(nµ<sub>n</sub> + pµ<sub>p</sub>)</td><td><strong>2.162938456 S/cm</strong></td></tr>
+<tr><td>電阻率</td><td>1/σ</td><td><strong>0.462334 Ω⋅cm</strong></td></tr>
+<tr><td>漂移電流密度</td><td>σE</td><td><strong>21.629385 A/cm²</strong></td></tr>
+</tbody></table>
+<p>同樣 E = 10 V/cm 的本徵矽，σ = 4.397975 × 10<sup>−6</sup> S/cm、ρ = 227377.379762 Ω⋅cm、J = 4.397975 × 10<sup>−5</sup> A/cm²；摻雜把電流密度提高 491803.278689 倍。同樣濃度 10<sup>16</sup> cm<sup>−3</sup> 的 p 型，σ = 0.769044784 S/cm、ρ = 1.300314 Ω⋅cm；p 型電阻率是 n 型的 2.812500 倍，因為 µ<sub>p</sub>/µ<sub>n</sub> = 480/1350 = 0.355556。</p>
+
+<section class="workspace"><h2>自由實驗：切換載子型別與摻雜濃度</h2>
+<p>拓樸是直流電源正端接矽樣品一端，另一端回到電源負端並作為地，樣品內形成均勻電場與閉合電流路徑。選擇材料型別、摻雜濃度與電場，觀察電子、電洞、導電率、電阻率及漂移電流密度如何同步改變。</p>
+<div class="controls">
+<label for="car-type">材料型別<select id="car-type"><option value="ntype">n 型（摻 V 族，多數載子是電子）</option><option value="ptype">p 型（摻 III 族，多數載子是電洞）</option><option value="intrinsic">本徵（純矽，不摻雜）</option></select></label>
+<label for="car-dope">摻雜濃度指數 x（濃度 = 10<sup>x</sup> cm<sup>−3</sup>）<input id="car-dope" type="range" min="13" max="19" step="1" value="16"></label>
+<label for="car-field">外加電場 E（V/cm）<input id="car-field" type="range" min="1" max="100" step="1" value="10"></label>
+</div>
+<div id="carrier-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>電洞不是獨立基本粒子，而是價帶少一個電子的集體行為；計算邊界內它有 +q 電荷與明確遷移率，可當準粒子處理。</li>
+<li>n 型表示電子是多數載子，不表示材料整體帶負電；固定施體離子與可動電子的電荷在巨觀上互相抵銷。</li>
+<li>摻雜濃度不是自由載子濃度在所有條件下的精確同義詞；只有完全游離、均勻、非退化且 N<sub>D</sub> ≫ n<sub>i</sub> 時才可用 n ≈ N<sub>D</sub>。</li>
+<li>能隙控制產生載子的難易，遷移率控制載子在電場下的漂移速度；一個材料能隙小，不代表載子必定移動較快。</li>
+<li>漂移需要電場，擴散需要濃度梯度；兩者都搬運電荷，但驅動條件與方向判讀不同。</li>
+<li>製程節點是技術世代名稱，不是所有電晶體尺寸的單一精確值；本章也不由節點推論良率或效能。</li>
+</ul>
+
+<h2>可觀察證據：電阻率、型別與濃度要分開量</h2>
+<p>四點探針（four point probe）讓外側探針送電流、內側探針量電壓，可降低接觸電阻影響並得到薄片電阻 R<sub>s</sub>，配合厚度換算電阻率。霍爾效應量測（Hall measurement）在已知電流與磁場下量橫向霍爾電壓，其正負可判斷主要載子是電洞或電子，大小可推算載子濃度，再與導電率合併求遷移率。這些儀器能證明樣品在量測條件下的電阻率、主要載子型別、濃度與遷移率，並檢查「載子多使 σ 增大」的數值關係。它們不能直接證明能隙；能隙要靠光吸收邊緣或溫度相依性。它們也不能只憑載子型別辨認雜質究竟是磷還是砷，更不能證明微觀每個原子的位置。探針量到的是有限區域的平均，摻雜若不均勻，單一讀值不能代表整片晶圓。</p>
+
+<h2>連到哪門課</h2>
+<p>能帶、能隙與半導體的量子圖像見<a href="../../../共通基礎/物理/互動課程/15-量子與半導體.html">普通物理的量子與半導體</a>；熱激發與濃度梯度造成擴散的巨觀圖像見<a href="../../../共通基礎/物理/互動課程/07-熱學與流體.html">普通物理的熱學與流體</a>。本章的 σ 與 ρ 會直接用於積體電路走線、接觸及寄生電阻估算；下一章則把 n 型與 p 型接在一起，讓擴散與漂移自行建立一個單向元件。</p>
+<nav class="pager" aria-label="章節導覽"><a href="00-電子學世界觀.html">← 上一頁：電子學世界觀</a><a href="02-PN接面與二極體方程.html">下一頁：PN 接面與二極體方程 →</a></nav>
+</main>
+<footer class="site-footer"><span>01 半導體與載子</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

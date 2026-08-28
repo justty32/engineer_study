@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 BJT 原理與工作區｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・用薄基極把小電流變成可控制的大電流</p>
+<h1>BJT 原理與工作區：β 只在作用區兌現</h1>
+<p class="lead">雙極性接面電晶體不是兩顆獨立二極體黏在一起，而是靠很薄的基極讓射極注入載子穿越。先看兩個接面的偏壓，再驗證外部電路是否容許 βI<sub>B</sub>，才能正確判斷放大或開關狀態。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-PN接面與二極體方程.html">02 PN 接面與二極體方程</a>的順偏、反偏與載子，以及<a href="00-電子學世界觀.html">00 電子學世界觀</a>的工作點觀念。</p>
+
+<h2>痛點：資料手冊寫 β，為什麼算出的集極電流常常不成立</h2>
+<p>「I<sub>C</sub> = βI<sub>B</sub> 不是 BJT 的定義嗎？基極多灌一點，集極電流為什麼不再跟著增加？」因為這條式子只描述作用區的一種端口關係，不是所有外部條件下都成立的承諾。集極電源與電阻最多只能供應有限電流；若 βI<sub>B</sub> 要求的電流會讓 V<sub>CE</sub> 低於約 0.2 V，兩個接面的偏壓狀態已改變，必須切換模型。</p>
+<p>雙極性接面電晶體（Bipolar Junction Transistor, BJT）有 NPN 與 PNP 兩型。以 NPN 為例，三端為集極（Collector, C）、基極（Base, B）與射極（Emitter, E）；射極重摻雜，基極薄且輕摻雜，集極負責收集穿越基極的載子。它包含基射與基集兩個 PN 接面，但共享的薄基極讓兩者互相耦合，不能以兩顆分離二極體取代。</p>
+
+<h2>白話直覺：不是基極生出大電流，而是它准許載子穿過</h2>
+<p>可暫時把 BJT 想成小流量控制大流量的閥門；比喻到此為止，精確機制是 V<sub>BE</sub> 改變射極向基極注入的載子濃度，而反偏的基集接面電場把穿過薄基極的載子掃入集極。以射極為地，V<sub>CC</sub> 正端經 R<sub>C</sub> 接集極，基極由電流源供應 I<sub>B</sub>。</p>
+<p>作用區（active）時，基射接面順偏、基集接面反偏。基極驅動與射極形成閉合回路，射極注入的電子進入基極；少部分與電洞複合，外部基極端必須補上這些載子，形成 I<sub>B</sub>。大部分電子來不及複合便到達基集空乏區，被電場掃向集極，形成 I<sub>C</sub>。能量主要由 V<sub>CC</sub> 經 R<sub>C</sub> 與集射路徑送出，基極訊號只改變這條大電流路徑的狀態，結果是 I<sub>C</sub> 約為 βI<sub>B</sub>，集極端電壓隨 R<sub>C</sub> 壓降而下降。</p>
+<p>截止區（cutoff）時兩接面不提供正常順向注入，外部集射回路雖接著電源，電晶體路徑近似開路，I<sub>C</sub> ≈ 0，集極電壓接近 V<sub>CC</sub>。增加 I<sub>B</sub> 使名目 R<sub>C</sub> 壓降愈來愈大，當集極電壓壓到基極附近，基集接面也順偏，進入飽和區（saturation）。此時 V<sub>CE</sub> ≈ 0.2 V，集射路徑像閉合開關，I<sub>C</sub> 由 V<sub>CC</sub> 與 R<sub>C</sub> 決定，βI<sub>B</sub> 不再成立。反向作用區則交換集極與射極角色，因摻雜不對稱而效能差，實務少用。</p>
+<p class="note">來源：07-電子學-中 §5.1–§5.5。</p>
+
+<h2>推導：每一次先假設作用區，再讓外部電路裁決</h2>
+<p>電流關係由端點守恆開始：I<sub>E</sub> = I<sub>C</sub> + I<sub>B</sub>。定義共基電流增益 α = I<sub>C</sub>/I<sub>E</sub>，以及共射電流增益 β = I<sub>C</sub>/I<sub>B</sub>，兩者皆無單位。把 I<sub>C</sub> = βI<sub>B</sub> 與 I<sub>E</sub> = (β + 1)I<sub>B</sub> 代入，得 α = β/(β + 1)。β = 100 時 α = <strong>0.990099</strong>，意思是 99.0099 % 的射極電流到達集極，只有 0.9901 % 成為基極電流。</p>
+<p>更底層的作用區關係是 I<sub>C</sub> = I<sub>S</sub> ⋅ exp[V<sub>BE</sub>/V<sub>T</sub>]。I<sub>S</sub> 是尺度電流，單位 A；V<sub>BE</sub> 與熱電壓 V<sub>T</sub> 單位 V。它指出 V<sub>BE</sub> 才是指數控制來源，β 關係是基極複合電流與集極電流比例的描述。此處假設溫度固定 300 K、處於正向作用區，並先忽略 Early 效應。</p>
+<p>若把判區寫成程式，順序不能只看 I<sub>B</sub> 是否大於零。先由接面偏壓排除截止，再建立作用區候選值，最後讓 V<sub>CC</sub> 與 R<sub>C</sub> 算出的上限決定是否飽和。這像帶有前置條件與事後斷言的函式：βI<sub>B</sub> 是候選輸出，V<sub>CE</sub> ≥ 0.2 V 是作用區斷言；斷言失敗就回傳飽和模型。這樣才能避免先把錯誤模型算到底，再把負電壓誤當真實工作點。</p>
+<p>判斷飽和時，先假設作用區並算 I<sub>C,active</sub> = βI<sub>B</sub>，再算 V<sub>CE</sub> = V<sub>CC</sub> − I<sub>C,active</sub>R<sub>C</sub>。若 V<sub>CE</sub> ≥ 0.2 V，假設可接受；若小於 0.2 V，假設違反工作區邊界，改用 I<sub>C,sat</sub> = (V<sub>CC</sub> − 0.2)/R<sub>C</sub>。臨界基極電流因此是 I<sub>B,sat</sub> = (V<sub>CC</sub> − 0.2)/(βR<sub>C</sub>)。電壓單位 V、電阻單位 Ω、電流單位 A，並以固定 V<sub>CE,sat</sub> = 0.2 V 簡化。</p>
+<p>作用區仍不是完美電流源。Early 效應使 I<sub>C</sub> = I<sub>C0</sub>(1 + V<sub>CE</sub>/V<sub>A</sub>)，V<sub>A</sub> 是 Early 電壓，常約 50 V 至 100 V。微分得 ∂I<sub>C</sub>/∂V<sub>CE</sub> = I<sub>C0</sub>/V<sub>A</sub>，倒數給輸出阻抗 r<sub>o</sub> = V<sub>A</sub>/I<sub>C</sub>，單位 Ω。r<sub>o</sub> 有限正是電流源不夠理想的量化；完整跨四區的 Ebers–Moll 模型則同時保留兩個接面方程。</p>
+
+<h2>數值實例：20 µA 還在作用區，200 µA 已經浪費</h2>
+<p>NPN、I<sub>B</sub> = 20 µA、β = 100、V<sub>CC</sub> = 12 V、R<sub>C</sub> = 1 kΩ、V<sub>A</sub> = 100 V。拓樸：V<sub>CC</sub> → R<sub>C</sub> → 集極 C；射極 E → 地；基極 B 由定電流源 I<sub>B</sub> 驅動。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>飽和臨界集極電流</td><td>(12 − 0.2) / 1000</td><td><strong>11.800000 mA</strong></td></tr>
+<tr><td>飽和臨界基極電流</td><td>11.8 / 100</td><td><strong>118.000000 µA（I<sub>B</sub> = 20 µA ≪ 118）</strong></td></tr>
+<tr><td>集極電流</td><td>100 × 20 µA</td><td><strong>2.000000 mA</strong></td></tr>
+<tr><td>射極電流</td><td>(100 + 1) × 20 µA</td><td><strong>2.020000 mA</strong></td></tr>
+<tr><td>α</td><td>100 / 101</td><td><strong>0.990099</strong></td></tr>
+<tr><td>集射電壓</td><td>12 − 0.002 × 1000</td><td><strong>10.000000 V</strong></td></tr>
+<tr><td>輸出阻抗</td><td>100 / 0.002</td><td><strong>50000.000000 Ω ＝ 50 kΩ</strong></td></tr>
+</tbody></table>
+<p>I<sub>B</sub> = 118 µA 恰好是臨界點，I<sub>C</sub> = <strong>11.800000 mA</strong>、V<sub>CE</sub> = <strong>0.200000 V</strong>。I<sub>B</sub> = 200 µA、β = 100 時，名目 I<sub>C</sub> 為 20 mA，但實際被鎖在 <strong>11.800000 mA</strong>、V<sub>CE</sub> = <strong>0.200000 V</strong>；多灌的基極電流完全浪費。V<sub>A</sub> = 50 V 時 r<sub>o</sub> 減半為 <strong>25000.000000 Ω</strong>。</p>
+<p>同一個數值也揭示放大與開關的不同目標。放大器希望工作點留在作用區，讓 I<sub>B</sub> 的小變化仍映射成 I<sub>C</sub> 變化；開關則故意提供超過 I<sub>B,sat</sub> 的基極電流，確保元件差異不會讓它離開飽和。不過超過所需太多只增加驅動損耗與關斷時要移除的儲存電荷，並不會讓負載電流無限增加。</p>
+
+<section class="workspace"><h2>自由實驗：讓外部電路裁決 BJT 工作區</h2>
+<p>V<sub>CC</sub> 正端經 R<sub>C</sub> 接集極 C，射極 E 接地，基極 B 由定電流源 I<sub>B</sub> 驅動並回到地。調整基極電流、β、電源與集極電阻，再切換 Early 電壓，觀察作用區假設何時被外部供電上限否決。</p>
+<div class="controls">
+<label for="bj-ib">基極電流 I<sub>B</sub>（µA）<input id="bj-ib" type="range" min="1" max="200" step="1" value="20"></label>
+<label for="bj-beta">電流增益 β<input id="bj-beta" type="range" min="50" max="500" step="10" value="100"></label>
+<label for="bj-vcc">電源電壓 V<sub>CC</sub>（V）<input id="bj-vcc" type="range" min="3" max="24" step="1" value="12"></label>
+<label for="bj-rc">集極電阻 R<sub>C</sub>（Ω）<input id="bj-rc" type="range" min="100" max="10000" step="100" value="1000"></label>
+<label for="bj-va">Early 電壓<select id="bj-va"><option value="50">Early 電壓 V_A = 50 V</option><option value="100" selected>Early 電壓 V_A = 100 V</option><option value="inf">V_A 無限大（理想電流源）</option></select></label>
+</div>
+<div id="bjt-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li><strong>BJT 的飽和區是開關全開</strong>，V<sub>CE</sub> ≈ 0.2 V，I<sub>C</sub> 由外部電路決定；第 08 章 MOSFET 的飽和區卻是定電流、放大用，兩者意思完全相反。</li>
+<li>β 不是精密元件常數；同型號不同顆可差數倍，也隨電流與溫度改變，因此依賴其精確值的偏壓設計沒有穩健性。</li>
+<li>I<sub>C</sub> = βI<sub>B</sub> 只在作用區成立；飽和區由負載限流，截止區近似沒有集極電流，不能把同一式硬套四區。</li>
+<li>說 BJT 是電流控制元件方便做端口計算，但更精確的物理關係是 V<sub>BE</sub> 以指數方式控制載子注入與 I<sub>C</sub>。</li>
+<li>α 接近一不代表電流沒有放大；它比較集極與射極電流，β 則比較集極與小得多的基極電流，分母不同。</li>
+</ul>
+
+<h2>可觀察證據：量一族工作點，而不是相信一個 β</h2>
+<p>曲線追蹤儀可在多個固定 I<sub>B</sub> 下掃 V<sub>CE</sub>，量到一族 I<sub>C</sub> 數值；低 V<sub>CE</sub> 處轉入約 0.2 V 的飽和邊界，能證明外部電路限制與 V<sub>CE,sat</sub>，作用區斜率外插到橫軸的交點可估 V<sub>A</sub>。三用電表的 hFE 檔能量某個測試電流下的 β，但不能證明它在其他電流或溫度仍相同。這些端口量測也不能直接證明基極實際厚度、載子傳輸時間或 I<sub>S</sub>；那些需要製程資料與更精細的動態量測。</p>
+
+<h2>連到哪門課</h2>
+<p>BJT 是類比放大級、射頻前端與離散開關的核心元件。把它視為由控制端決定輸出的電流源，可銜接<a href="../電路學-互動課程/04-疊加原理與相依源.html">電路學的相依源</a>；載子受電場推動並穿越薄基極的物理，可回到<a href="../../../共通基礎/物理/互動課程/09-電流與電路基礎.html">普通物理的電流與電路基礎</a>。下一章將以射極電阻建立直流負回授，處理 β 靠不住造成的 Q 點漂移。</p>
+<nav class="pager" aria-label="章節導覽"><a href="05-穩壓限幅與特殊二極體.html">← 上一頁：穩壓限幅與特殊二極體</a><a href="07-BJT偏壓與Q點.html">下一頁：BJT 偏壓與 Q 點 →</a></nav>
+</main>
+<footer class="site-footer"><span>06 BJT 原理與工作區</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

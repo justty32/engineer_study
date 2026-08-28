@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 磁性材料與磁路｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・材料把磁通集中，氣隙卻常主宰整條磁路</p>
+<h1>磁性材料與磁路：分清 B、H，再像算電路一樣算鐵心</h1>
+<p class="lead">自由電流建立磁場強度，材料磁化再共同決定磁通密度。磁路類比能快速估算變壓器與電感，但漏磁、飽和與磁滯會讓它偏離理想值，氣隙更可能用千分之幾的長度吃掉大部分磁動勢。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="09-畢歐沙伐與安培定律.html">09 畢歐沙伐與安培定律</a>的安培定律，以及<a href="07-電流密度與焦耳熱.html">07 電流密度與焦耳熱</a>的歐姆定律類比。</p>
+
+<h2>痛點：B、H 都叫磁場，氣隙又為何能打敗整塊鐵</h2>
+<p>在真空中 <b>B</b> = µ<sub>0</sub><b>H</b>，兩者只差固定比例，很容易被誤認為同一個量。放入磁性材料後，原子磁偶極會重新排列，<b>H</b> 主要記錄自由電流的激磁，<b>B</b> 則把材料磁化也算進去，兩者角色才真正分開。羅倫茲力直接使用的是 <b>B</b>，而安培定律以 <b>H</b> 包圍自由電流。</p>
+<p>磁化向量（magnetization）<b>M</b> 單位 A/m，表示單位體積的磁偶極矩；磁場強度（magnetic field strength）<b>H</b> 也用 A/m。關係為 <b>B</b> = µ<sub>0</sub>(<b>H</b> + <b>M</b>)。線性介質近似 <b>M</b> = χ<sub>m</sub><b>H</b>，所以 <b>B</b> = µ<sub>0</sub>(1 + χ<sub>m</sub>)<b>H</b> = µ<b>H</b>，且 µ = µ<sub>0</sub>µ<sub>r</sub>。本課粗體代表向量，非粗體代表大小。</p>
+<p class="warning">鐵心進入飽和後，有效磁導率與電感會急遽下降，線圈電流可能暴衝；這是變壓器與返馳電源燒毀的典型路徑。繞組長時間過流會過熱並使絕緣劣化，實作不可只相信線性計算值。</p>
+
+<h2>白話直覺：鐵心鋪路，氣隙設下一個昂貴關卡</h2>
+<p>可暫時把磁路想成電路：磁動勢像電壓、磁通像電流、磁阻像電阻；比喻到此為止，磁通並不搬運電荷，磁阻也不耗散功率。源是線圈中的自由電流 NI，它沿鐵心建立 <b>H</b>；材料磁化讓同一 H 對應更大的 B。封閉鐵心內磁通沿截面延續，而均勻段的磁場大小約由長度、截面積與磁導率決定。</p>
+<p>磁場能量存在整個空間，但在有氣隙的儲能電感中，能量多集中於氣隙，因空氣需要比高磁導率鐵心大得多的 H 才維持同一 B。跨材料界面時，沒有表面電流便有 H 切向連續，而 B 法向連續；有限鐵心還會漏磁與產生邊緣擴散。高斯計可量氣隙 B，LCR 表可量端點電感，再由模型反推等效磁阻。</p>
+<p>完整因果鏈是：自由電流在繞組中產生磁動勢，H 沿磁路方向分配；材料磁化使 B 集中，均勻鐵心內理想值近似不隨截面位置改變；能量主要存於低磁導率的氣隙；材料界面、氣隙、飽和與漏磁改變場；儀器最後量到氣隙 B、線圈 L 或感應電壓。量級對照是：地磁約 50 µT、喇叭磁鐵約 1 T，而矽鋼片約在 1.5 T 附近飽和；後兩者只差一半，工程裕量不能忽略。</p>
+<p class="note">來源：08-電磁學-中 §10.1–§10.5。</p>
+
+<h2>推導：安培定律如何變成磁路版歐姆定律</h2>
+<p><strong>磁路類比。</strong>磁動勢（magnetomotive force）寫作 F<sub>m</sub> = NI，磁阻（magnetic reluctance）寫作 R<sub>m</sub> = ℓ/(µA)。首次出現時要釐清：下標 m 代表 magnetic，R<sub>m</sub> 是磁阻，F<sub>m</sub> 是磁動勢。F<sub>m</sub> 單位 A⋅匝，R<sub>m</sub> 單位 A/Wb，Φ 是磁通、單位 Wb，不能把磁阻單位寫成 Ω。</p>
+<p>對均勻鐵心，安培定律 ∮<sub>C</sub> <b>H</b>⋅d<b>ℓ</b> = I<sub>自由</sub> 化為 Hℓ = NI；又 Φ = BA = µHA。由第二式得 H = Φ/(µA)，代回第一式便有 NI = Φ ⋅ ℓ/(µA)，也就是 F<sub>m</sub> = ΦR<sub>m</sub>。它與 V = IR 形式相同，假設是磁路截面均勻、材料線性且等向、漏磁可忽略。</p>
+<p><strong>串聯磁阻。</strong>由 ∇⋅<b>B</b> = 0 與界面 B<sub>n1</sub> = B<sub>n2</sub>，理想同截面鐵心與氣隙承載同一 Φ。各段磁動勢降相加，因此 R<sub>m,總</sub> = R<sub>m,鐵心</sub> + R<sub>m,氣隙</sub>。因 R<sub>m</sub> ∝ ℓ/µ，µ<sub>r</sub> = 2000 的鐵心中 1 mm 空氣等效於 2000 mm 鐵心，所以短氣隙可主宰總磁阻。</p>
+<p><strong>電感與能量。</strong>由 Φ = NI/R<sub>m</sub>，磁通連結 λ = NΦ = N²I/R<sub>m</sub>。電感定義 L = λ/I，因此 L = N²/R<sub>m</sub>，單位 H。儲能 W = (1/2)LI²；線性介質的磁場能量密度 w<sub>m</sub> = (1/2)<b>H</b>⋅<b>B</b>。開氣隙會降低 L，卻能讓 B 在較大電流下仍不飽和，並把可逆能量放進近似線性的空氣。</p>
+<p><strong>材料邊界與損耗。</strong>抗磁性（diamagnetic）材料 µ<sub>r</sub> 略小於 1，順磁性（paramagnetic）略大於 1，鐵磁性（ferromagnetic）很大且非線性。鐵磁材料的磁滯（hysteresis）使 B 不再是 H 的單值函數；剩磁 B<sub>r</sub> 是 H = 0 時殘留的 B，矯頑磁力 H<sub>c</sub> 是把 B 拉回零所需的反向 H。磁滯迴圈面積代表每週期損耗；渦流損在高頻加劇，可用疊層矽鋼或高電阻率鐵氧體降低。</p>
+<p><strong>模型失效。</strong>磁通不像電流會被絕緣體完全限制，空氣磁導率不是零，故必有漏磁；接近飽和時 µ<sub>r</sub> 下降，線性答案會高估 B 與 L；有磁滯時同一 H 可能對應不同 B。這三條限制決定磁路只能是工作點附近的工程模型。</p>
+
+<h2>數值實例：一毫米氣隙吃掉近七倍鐵心磁阻</h2>
+<p>環形鐵心 µ<sub>r</sub> = 2000、平均磁路長 ℓ = 0.30 m、截面積 A = 4 cm² = 4 × 10<sup>−4</sup> m²、N = 200 匝、I = 0.5 A、氣隙 g = 0。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>磁動勢</td><td>F<sub>m</sub> = NI = 200 × 0.5</td><td><strong>100.000000 A⋅匝</strong></td></tr>
+<tr><td>鐵心磁阻</td><td>R<sub>m</sub> = ℓ/(µ<sub>0</sub>µ<sub>r</sub>A) = 0.30/(4π × 10<sup>−7</sup> × 2000 × 4 × 10<sup>−4</sup>)</td><td><strong>2.984155 × 10<sup>5</sup> A/Wb</strong></td></tr>
+<tr><td>磁通</td><td>Φ = F<sub>m</sub>/R<sub>m</sub></td><td><strong>3.351032 × 10<sup>−4</sup> Wb</strong></td></tr>
+<tr><td>磁通密度</td><td>B = Φ/A</td><td><strong>0.837758 T</strong></td></tr>
+<tr><td>磁場強度</td><td>H = B/(µ<sub>0</sub>µ<sub>r</sub>)</td><td><strong>333.333333 A/m</strong></td></tr>
+<tr><td>電感</td><td>L = N²/R<sub>m</sub> = 40000 / 2.984155 × 10<sup>5</sup></td><td><strong>0.134041 H</strong></td></tr>
+<tr><td>檢查</td><td>L = NΦ/I = 200 × 3.351032 × 10<sup>−4</sup> / 0.5</td><td><strong>0.134041 H ✓</strong></td></tr>
+<tr><td>儲能</td><td>W = (1/2)LI²</td><td><strong>0.016755 J</strong></td></tr>
+</tbody></table>
+<p>邊界對照：加一個 g = <strong>1 mm</strong> 的氣隙 → R<sub>m,鐵心</sub> = <strong>2.974208 × 10<sup>5</sup></strong>、R<sub>m,氣隙</sub> = <strong>1.989437 × 10<sup>6</sup></strong>（是鐵心的 <strong>6.7 倍</strong>）、R<sub>m,總</sub> = <strong>2.286858 × 10<sup>6</sup></strong>、Φ = <strong>4.372813 × 10<sup>−5</sup> Wb</strong>、B = <strong>0.109320 T</strong>（只剩原來的 <strong>13.05 %</strong>）、氣隙裡 H = B/µ<sub>0</sub> = <strong>86994.345 A/m</strong>（是鐵心裡的 2000 倍）、氣隙儲能 = <strong>1.902050 × 10<sup>−3</sup> J</strong>。1 mm 的空氣打敗了 300 mm 的鐵——但也正因如此，氣隙才是把能量存進電感的地方。把 I 拉到 <strong>1.0 A</strong>（g = 0）→ B = <strong>1.675516 T</strong>，已超過矽鋼片約 1.5 T 的飽和點，真實鐵心到不了這個值。µ<sub>r</sub> 拉到 <strong>5000</strong> → B = <strong>2.094395 T</strong>（更嚴重的飽和）；µ<sub>r</sub> 降到 1（空心）→ B = <strong>4.188790 × 10<sup>−4</sup> T ＝ 418.879020 µT</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：看氣隙如何重分配磁阻與能量</h2>
+<p>固定平均磁路長 0.30 m、截面積 4 × 10<sup>−4</sup> m²，線圈包住環形鐵心。調整材料、匝數、電流與氣隙，檢查磁通密度、電感和飽和風險。</p>
+<div class="controls">
+<label for="mag-mur">鐵心相對磁導率 µ<sub>r</sub><input id="mag-mur" type="range" min="100" max="8000" step="100" value="2000"></label>
+<label for="mag-n">繞組匝數 N<input id="mag-n" type="range" min="20" max="1000" step="20" value="200"></label>
+<label for="mag-i">繞組電流 I（A）<input id="mag-i" type="range" min="0.1" max="5" step="0.1" value="0.5"></label>
+<label for="mag-gap">氣隙長度 g（mm）<input id="mag-gap" type="range" min="0" max="5" step="0.1" value="0"></label>
+</div>
+<div id="magcircuit-output" class="output" aria-live="polite">F<sub>m</sub> = 100.000000 A⋅匝；R<sub>m,鐵心</sub> = 2.984155 × 10<sup>5</sup> A/Wb；R<sub>m,氣隙</sub> = 0 A/Wb；Φ = 3.351032 × 10<sup>−4</sup> Wb；B = 0.837758 T；H = 333.333333 A/m；L = 0.134041 H；W = 0.016755 J。線性區，µ<sub>r</sub> 大致可視為常數。沒有氣隙時電感最大，但也最容易飽和；模型另假設沒有漏磁與磁滯，滑到高 B 時必須改用真實磁滯資料。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li><b>H</b> 不是 <b>B</b> 除以 µ<sub>0</sub> 的簡寫；材料中兩者差 µ<sub>r</sub>，界面連續條件也分別管切向 H 與法向 B。</li>
+<li>鐵磁材料的 µ<sub>r</sub> 不是固定常數；標示 2000 只代表某個工作點附近的線性近似。</li>
+<li>磁阻單位是 A/Wb，不是 Ω；磁路類比只有代數形式相似，磁通不消耗能量，磁阻也不是耗散元件。</li>
+<li>磁滯損與渦流損不是同一機制；前者與迴圈面積及頻率相關，後者由鐵心內感應電流造成且高頻增加更快。</li>
+<li>開氣隙降低電感不代表設計變差；它可提高可承受電流並把可逆能量存入近線性的氣隙。</li>
+</ul>
+
+<h2>可觀察證據：量得到 B 與 L，量不到磁阻本身</h2>
+<p>霍爾高斯計探頭可伸入氣隙，直接量到該位置的 B；鐵心內部通常沒有空間容納探頭，因此內部 B 多由磁通連續與截面積推估。LCR 表在指定頻率與小訊號振幅下量到端點電感 L，再由 L = N²/R<sub>m,總</sub> 反推等效磁阻。這能證明氣隙磁通密度、端點電感以及它們隨氣隙的變化，不能直接證明鐵心每一點的 <b>M</b> 分佈，也量不到作為模型量的 R<sub>m</sub> 本身。</p>
+<p>磁性分析儀可用一次側電流求 H，以二次側感應電壓積分求 B，逐點得到磁滯迴圈。它能證明剩磁、矯頑磁力、迴圈面積與飽和轉折；不能證明漏磁為零，也不能把單一頻率、小訊號所得 µ<sub>r</sub> 無條件套到大訊號與所有頻率。</p>
+
+<h2>連到哪門課</h2>
+<p>磁路與變壓器端點模型連到<a href="../電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>。在電機機械中，同一套 F<sub>m</sub>、R<sub>m</sub> 與氣隙分析用來估算馬達磁通；在電力電子中則決定儲能電感能否承受峰值電流。下一章會讓 Φ 隨時間變化，由此產生電動勢。</p>
+<nav class="pager" aria-label="章節導覽"><a href="09-畢歐沙伐與安培定律.html">← 上一頁：畢歐沙伐與安培定律</a><a href="11-電磁感應.html">下一頁：電磁感應 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 磁性材料與磁路</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

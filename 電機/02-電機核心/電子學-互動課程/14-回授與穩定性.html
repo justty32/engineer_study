@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>14 回授與穩定性｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">14・用開迴路餘裕換精準度，再檢查相位帳</p>
+<h1>回授與穩定性：同一個除法帶來精準、頻寬與風險</h1>
+<p class="lead">負回授把輸出的一部分送回輸入相減，使增益不再依賴飄動的電晶體參數。它也把失真與漂移一起壓低、把頻寬拉寬，但高頻相位延遲可能把原本的相減翻成相加。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="11-單級放大器三大組態.html">11 單級放大器三大組態</a>、<a href="12-米勒效應與頻寬.html">12 米勒效應與頻寬</a>、<a href="13-差動對與電流鏡.html">13 差動對與電流鏡</a>，以及<a href="../電路學-互動課程/12-一階濾波器與頻率響應.html">電路學的頻率與相位</a>。</p>
+
+<h2>痛點：明明叫負回授，為什麼電路還會自己振盪</h2>
+<p>「輸出回來做相減，不就只會讓增益變小，怎麼可能愈繞愈大？」這個直覺只看低頻符號，忽略放大器的增益與相位都隨頻率改變。訊號穿過多個儲能節點會逐步延遲；當迴路累積到 −180°，原先電路圖上的相減對該頻率而言等效為相加。若繞一圈後振幅還不小於原值，擾動就不會消退。</p>
+<p>負回授（negative feedback）取輸出的一部分回送至比較點。A 是開迴路增益，表示切斷回送路徑時前向放大器的增益；β<sub>f</sub> 是回授比例；Aβ<sub>f</sub> 稱為迴路增益（loop gain）。<strong>回授比例 β<sub>f</sub> 不是 BJT 的電流增益 β；兩者符號長得相像，意義與單位關係毫無關聯，本課一律用下標 f 區分回授比例。</strong></p>
+
+<h2>白話直覺：輸出被持續拿來修正輸入誤差</h2>
+<p>可以暫時把負回授想成每次迭代都用輸出殘差修正下一次輸入；比喻到此為止，精確關係是比較器產生 x<sub>e</sub> = x<sub>in</sub> − β<sub>f</sub>x<sub>out</sub>，前向放大器再令 x<sub>out</sub> = Ax<sub>e</sub>。電源相對地替內部電晶體供能，輸入與回送網路只設定誤差信號；前向級與負載形成閉合電流路徑，能量仍由電源送往負載，不是由回授網路創造。</p>
+<p>輸出若偏高，回送量增加，誤差變小，前向級把輸出往下修；輸出若偏低，誤差增加，前向級把它往上推。當 Aβ<sub>f</sub> 很大，維持有限輸出只需極小 x<sub>e</sub>，所以閉迴路結果主要由回授網路的被動元件比例決定。電晶體參數、非線性與溫度造成的內部誤差，也要繞過同一修正迴路，因而一起被壓低。</p>
+<p>回授有四種端口邊界。串—並是電壓取樣、電壓比較，使 R<sub>in</sub> 上升、R<sub>out</sub> 下降；並—並是電壓取樣、電流比較，使兩者都下降；串—串是電流取樣、電壓比較，使兩者都上升；並—串是電流取樣、電流比較，使 R<sub>in</sub> 下降、R<sub>out</sub> 上升。不能只說回授一定提高輸入阻抗，方向取決於輸入如何混合、輸出如何取樣。</p>
+<p>高頻時，每個電容節點讓端點電壓落後。若總相位到 −180°，原本抑制偏差的路徑改成強化偏差；只要 |Aβ<sub>f</sub>| 仍 ≥ 1，雜訊或上電瞬變便能逐圈增長。相位裕度（Phase Margin）是在 |L(jω)| = 1 的頻率，相位距 −180° 還剩多少，常見設計目標為 45° 至 60°。</p>
+<p class="note">來源：07-電子學-下 §11.1–§11.3、§13.1。</p>
+
+<h2>推導：消去誤差項，所有好處都出自同一分母</h2>
+<p>由 x<sub>e</sub> = x<sub>in</sub> − β<sub>f</sub>x<sub>out</sub> 與 x<sub>out</sub> = Ax<sub>e</sub>，代入得 x<sub>out</sub> = A(x<sub>in</sub> − β<sub>f</sub>x<sub>out</sub>)。移項為 x<sub>out</sub>(1 + Aβ<sub>f</sub>) = Ax<sub>in</sub>，因此閉迴路增益 A<sub>f</sub> = x<sub>out</sub>/x<sub>in</sub> = A/(1 + Aβ<sub>f</sub>)。各增益與比例皆無單位。</p>
+<p>當 Aβ<sub>f</sub> ≫ 1，A<sub>f</sub> ≈ 1/β<sub>f</sub>。對 A 微分可得相對靈敏度 dA<sub>f</sub>/A<sub>f</sub> = [1/(1 + Aβ<sub>f</sub>)] ⋅ dA/A；開迴路增益若變 50 %，閉迴路只變 50 %/(1 + Aβ<sub>f</sub>)。前向級產生的失真也在迴路內，近似由同一因數除掉。這些近似假設回授網路線性，且討論頻率內尚保持負回授。</p>
+<p>令單極點開迴路 A(s) = A<sub>0</sub>/(1 + s/ω<sub>1</sub>)。代入閉迴路式並整理，直流增益降為 A<sub>0</sub>/(1 + A<sub>0</sub>β<sub>f</sub>)，極點卻升到 ω<sub>1</sub>(1 + A<sub>0</sub>β<sub>f</sub>)。兩者相乘仍為 A<sub>0</sub>ω<sub>1</sub>，所以單極點模型的增益—頻寬乘積（Gain Bandwidth Product, GBW）守恆。這不是多極點系統的精確定理。</p>
+<p>穩定性用 L(jω) = A(jω)β<sub>f</sub> 檢查。在 |L| = 1 處若相位為 −135°，相位裕度是 45°；若到 −180°，分母 1 + L 趨近零。以正回授觀點寫巴克豪森準則（Barkhausen criterion），某頻率同時滿足 |L(jω<sub>0</sub>)| = 1 與 arg L(jω<sub>0</sub>) = 0°，就能自我維持振盪。單極點相位最多趨近 −90°，所以本章互動模型永遠穩定；真實放大器的第二、第三極點才造成風險。</p>
+<p>相位裕度也是步階響應形狀的原因。相位裕度較小表示閉迴路極點較接近振盪條件，輸入突變後，儲能節點之間的能量會來回交換，輸出先越過終值再逐步收斂；裕度較大通常過衝較少，但補償把主極點壓低時也可能降低速度。工程選擇不是追求最大裕度，而是在穩定、整定時間、雜訊與負載變動間留足餘裕。</p>
+
+<h2>數值實例：犧牲一千倍開迴路餘裕，換到精準增益</h2>
+<p>A = 100 dB，即 A = 10<sup>5</sup>；β<sub>f</sub> = 0.01、主極點 f<sub>1</sub> = 10 Hz、開迴路失真 5 %。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>Aβ<sub>f</sub></td><td>100000 × 0.01</td><td><strong>1000.000000</strong></td></tr>
+<tr><td>A<sub>f</sub></td><td>100000 / 1001</td><td><strong>99.900100（39.991318 dB）</strong></td></tr>
+<tr><td>理想值與誤差</td><td>1 / 0.01</td><td><strong>100.000000；−0.099900 %</strong></td></tr>
+<tr><td>閉迴路頻寬</td><td>10 × 1001</td><td><strong>10010.000000 Hz</strong></td></tr>
+<tr><td>開／閉迴路 GBW</td><td>100000 × 10</td><td><strong>1000000.000000 Hz；完全相同</strong></td></tr>
+<tr><td>閉迴路失真</td><td>5 % / 1001</td><td><strong>0.004995 %</strong></td></tr>
+<tr><td>A 變 ±50 % 時 A<sub>f</sub> 變化</td><td>±50 % / 1001</td><td><strong>±0.049950 %</strong></td></tr>
+</tbody></table>
+<p>β<sub>f</sub> 為 0.001、0.01、0.1、1 時，Aβ<sub>f</sub> 依序為 <strong>100.000000</strong>、<strong>1000.000000</strong>、<strong>10000.000000</strong>、<strong>100000.000000</strong>；A<sub>f</sub> 為 <strong>990.099010</strong>、<strong>99.900100</strong>、<strong>9.999000</strong>、<strong>0.999990</strong>，頻寬為 <strong>1010.000000</strong>、<strong>10010.000000</strong>、<strong>100010.000000</strong>、<strong>1000010.000000 Hz</strong>。若 A 只有 20 dB 且 β<sub>f</sub> = 0.01，迴路增益僅 <strong>0.100000</strong>，A<sub>f</sub> = <strong>9.090909</strong>，離理想 100 差 <strong>−90.909091 %</strong>，近似完全不能用。</p>
+<p>β<sub>f</sub> = 1 對應單位增益緩衝器，輸出全部回到反相比較端。它的閉迴路增益最小，迴路增益與單位增益頻率卻最大，因此是檢驗放大器是否具單位增益穩定性的嚴格接法。資料手冊若只保證較高閉迴路增益，直接接成電壓隨耦器可能振盪；負載電容還會新增極點，使原本足夠的相位裕度下降。</p>
+
+<section class="workspace"><h2>自由實驗：把開迴路餘裕分配給精準度與頻寬</h2>
+<p>輸入在比較點減去 β<sub>f</sub> 倍輸出，誤差送入開迴路放大器，輸出驅動負載並經回授網路返回比較點，訊號與電源回路都以地為參考。調整 A、β<sub>f</sub>、主極點與失真，觀察同一個回授因數如何同步改變結果。</p>
+<div class="controls">
+<label for="fb-a">開迴路增益 A（dB）<input id="fb-a" type="range" min="20" max="120" step="1" value="100"></label>
+<label for="fb-beta">回授比例 β<sub>f</sub><input id="fb-beta" type="range" min="0.001" max="1" step="0.001" value="0.01"></label>
+<label for="fb-f1">開迴路主極點 f<sub>1</sub>（Hz）<input id="fb-f1" type="range" min="1" max="1000" step="1" value="10"></label>
+<label for="fb-dist">開迴路失真（%）<input id="fb-dist" type="range" min="0.1" max="20" step="0.1" value="5"></label>
+</div>
+<div id="feedback-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>回授比例 β<sub>f</sub> 不是 BJT 的 β；前者描述輸出取回多少，後者描述作用區集極與基極電流比。</li>
+<li>A<sub>f</sub> ≈ 1/β<sub>f</sub> 只在 Aβ<sub>f</sub> ≫ 1 成立；迴路增益小於一時，閉迴路仍主要由 A 決定。</li>
+<li>負回授不保證穩定；高頻相位累積到 −180° 後，相減會等效成相加，仍須檢查單位迴路增益處的相位裕度。</li>
+<li>GBW 守恆是單極點模型的精確結果；多極點、零點、轉換速率與輸出限流都會讓真實結果偏離。</li>
+<li>四種回授拓樸對輸入與輸出阻抗的方向不同；不能把串—並電壓放大器的結論套到電流放大器。</li>
+</ul>
+
+<h2>可觀察證據：同時量閉迴路響應與迴路本身</h2>
+<p>把同一放大器接成兩種閉迴路增益，以訊號產生器和示波器掃頻，量各自中頻增益與 −3 dB 頻寬；乘積近似相同能證明單極點區間的 GBW 守恆。用網路分析儀在回授路徑注入小訊號，量 L(jω) 的大小與相位，可在 |L| = 1 處直接讀相位裕度；輸入方波量過衝，約 4 % 常對應 65°、25 % 常對應 45°，只能間接估算。頻譜分析儀量諧波可證明閉迴路失真降低。這些量測不能分別證明 A 與 β<sub>f</sub> 的內部值，也不能只靠端口響應判定四種回授接法，拓樸仍要查電路連接。</p>
+
+<h2>連到哪門課</h2>
+<p>射極退化是局部負回授，運算放大器則以大開迴路增益建立精準閉迴路功能。相位與頻率響應見<a href="../電路學-互動課程/12-一階濾波器與頻率響應.html">電路學的一階濾波器</a>；迴路增益的複數平面觀點見<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複變入門</a>。奈奎斯特判據、根軌跡與補償網路的完整設計留給控制系統課。</p>
+<nav class="pager" aria-label="章節導覽"><a href="13-差動對與電流鏡.html">← 上一頁：差動對與電流鏡</a><a href="15-運算放大器與電子系統.html">下一頁：運算放大器與電子系統 →</a></nav>
+</main>
+<footer class="site-footer"><span>14 回授與穩定性</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 PN 接面與二極體方程｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">02・讓擴散與漂移在接面上互相拉鋸</p>
+<h1>PN 接面與二極體方程：單向導通從哪裡來</h1>
+<p class="lead">二極體不是裝了一扇機械單向門，而是兩種摻雜區接觸後自己建立電場。外加偏壓改變這道電場障壁，載子供應率便以指數方式改變。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-半導體與載子.html">01 的載子、摻雜、擴散與漂移</a>。</p>
+
+<h2>痛點：沒有活動零件，二極體為什麼只讓一邊好走</h2>
+<p>「把 p 型與 n 型矽黏在一起，為什麼就能整流？如果內建電場真的約有 0.7 V，為什麼拿電表量不到？反向偏壓愈大，電場明明愈強，電流怎麼反而幾乎固定？」要回答這些問題，不能把二極體當成超過門檻就彈開的開關。接面附近同時有濃度梯度造成的擴散，以及固定離子造成的漂移；平衡、順偏、反偏只是這兩股機制在不同外加電壓下的結果。</p>
+<p>n 側電子濃度高，p 側電洞濃度高。剛接觸時，電子向 p 側擴散並與電洞復合，電洞也向 n 側擴散；接合附近失去可動載子，留下 n 側帶正的施體離子與 p 側帶負的受體離子。這段區域稱<strong>空乏區（depletion region）</strong>。固定離子建立由 n 側指向 p 側的內建電場，對後續多數載子施加與擴散相反的力。擴散與漂移最後恰好抵銷，淨電流為零，但兩種微觀流動並非都停止。</p>
+<p>空乏區兩端的能量障壁可用<strong>內建電位（built in potential, V<sub>0</sub>）</strong>表示。它由兩側摻雜與本徵濃度決定。V<sub>0</sub> 不是外部端點間可取用的電池；金屬接點也有接觸電位，接上電表後沿完整回路的各段電位差互相抵銷。若能在零偏下直接取出穩定電壓與功率，就會違反熱平衡。</p>
+
+<h2>白話直覺：外加偏壓是在改障壁，不是硬推固定電流</h2>
+<p>可以暫時把空乏區想成一座會隨外加電壓變高或變低的坡；比喻到此為止，精確機制是外加電場改變接面能帶彎曲與多數載子跨越障壁的機率。先把電源負端設為地。順向偏壓（forward bias）時，p 側接正、n 側接負，電源正端 → 限流電阻 → p 側 → PN 接面 → n 側 → 電源負端形成閉合路徑。外加電場抵消一部分內建電場，空乏區變窄，多數載子大量跨越接面，在對側成為少數載子並擴散、復合。</p>
+<p>傳統電流由 p 側流向 n 側；電源提供的能量一部分耗在外部電阻，一部分在載子復合與晶格散射中轉成熱。電流增加使限流電阻壓降增加，因此二極體端點電壓不會無限制跟著電源上升，而會由外部回路重新決定。最終結果是順向電壓只增加一小段，電流便可能增加十倍，顯示強烈非線性。</p>
+<p>反向偏壓（reverse bias）把 p 側接負、n 側接正。外加電場與內建電場同向，空乏區變寬，多數載子路徑近似斷開，回路只剩熱產生的少數載子被強電場掃過接面。電場變強只會更快清走已存在的少數載子，供應速率卻沒有增加，所以電流逼近 −I<sub>S</sub>。若反向電壓大到進入<strong>崩潰（breakdown）</strong>，齊納穿隧或雪崩碰撞游離會額外產生載子，這時電流才急升，必須由外部電阻限流。</p>
+<p class="note">來源：07-電子學-上 §2.1–§2.4。</p>
+
+<h2>推導：從零淨電流到蕭克萊方程</h2>
+<p><strong>（a）內建電位。</strong>平衡時，載子濃度梯度造成的擴散電流與內建電場造成的漂移電流大小相等、方向相反。把淨電流為零的條件積分過空乏區，得到 V<sub>0</sub> = V<sub>T</sub> ⋅ ln(N<sub>A</sub>N<sub>D</sub>/n<sub>i</sub>²)。N<sub>A</sub>、N<sub>D</sub> 分別是受體與施體濃度，單位 cm<sup>−3</sup>；n<sub>i</sub> 同單位；V<sub>T</sub> = kT/q = 25.851999786 mV，單位 V。濃度比無單位，因此可以取自然對數。假設是突變接面、熱平衡、完全游離、非退化摻雜與固定 300 K。V<sub>0</sub> 跟濃度及溫度有關，跟接面面積無關。</p>
+<p><strong>（b）端口電流。</strong><strong>蕭克萊二極體方程（Shockley diode equation）</strong>為 I<sub>D</sub> = I<sub>S</sub>{exp[V<sub>D</sub>/(nV<sub>T</sub>)] − 1}。I<sub>D</sub> 與 I<sub>S</sub> 單位 A；V<sub>D</sub> 與 V<sub>T</sub> 單位 V；n 是無單位的理想因子，介於 1–2。V<sub>D</sub> 以陽極相對陰極為正。模型假設穩態、低注入，忽略串聯歐姆電阻、自熱、表面漏電與崩潰；因此不可拿它預測任意大電流。</p>
+<p><strong>（c）每十倍電流的電壓。</strong>在順偏且指數項遠大於 1 時，兩個工作點電流比約為 exp[ΔV/(nV<sub>T</sub>)]。令 n = 1 且比值為 10，得到 exp[ΔV/V<sub>T</sub>] = 10，進而 ΔV = V<sub>T</sub> ⋅ ln10 = 25.851999786 × 2.302585093 = 59.526429 mV。這是半對數 I–V 資料中每一個 decade 的電壓斜率；若 n = 2，所需電壓也加倍。</p>
+<p><strong>（d）兩個極端。</strong>V<sub>D</sub> = 0 時，exp(0) = 1，所以 I<sub>D</sub> = I<sub>S</sub>(1 − 1) = 0，並不是 I<sub>S</sub>。V<sub>D</sub> 足夠為負時，指數項趨近 0，I<sub>D</sub> → −I<sub>S</sub>；限制反向電流的是少數載子供應率，不是電場強度。V<sub>D</sub> = 0.7 V 時，exp[V<sub>D</sub>/V<sub>T</sub>] 約 5.75 × 10<sup>11</sup>，減 1 不影響六位有效數字，順偏計算才能省略該項。</p>
+<p><strong>（e）兩種崩潰的邊界。</strong>齊納崩潰以高摻雜、狹窄空乏區中的量子穿隧為主，常見於較低崩潰電壓並具負溫度係數；雪崩崩潰以載子碰撞游離為主，常見於較高電壓並具正溫度係數。兩者都不是正常反向飽和區，進入後若無限流會造成過熱損壞。</p>
+
+<h2>數值實例：摻雜決定障壁，偏壓決定端口電流</h2>
+<p>Si、300 K、n<sub>i</sub> = 1.5 × 10<sup>10</sup> cm<sup>−3</sup>、N<sub>A</sub> = 10<sup>17</sup> cm<sup>−3</sup>、N<sub>D</sub> = 10<sup>16</sup> cm<sup>−3</sup>、I<sub>S</sub> = 1 × 10<sup>−14</sup> A、n = 1、V<sub>D</sub> = 700 mV。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>內建電位</td><td>V<sub>T</sub> ⋅ ln(10<sup>17</sup> × 10<sup>16</sup>/(1.5 × 10<sup>10</sup>)²)</td><td><strong>0.752879 V</strong></td></tr>
+<tr><td>順偏電流</td><td>I<sub>S</sub>{exp[0.7/V<sub>T</sub>] − 1}</td><td><strong>5.747546 mA</strong></td></tr>
+<tr><td>電流變十倍所需電壓</td><td>V<sub>T</sub> ⋅ ln10</td><td><strong>59.526429 mV</strong></td></tr>
+<tr><td>零偏</td><td>I<sub>S</sub>(1 − 1)</td><td><strong>0.000000 mA（不是 I<sub>S</sub>）</strong></td></tr>
+<tr><td>反偏 −0.5 V</td><td>完整方程</td><td><strong>−1.000000 × 10<sup>−14</sup> A ＝ −0.010000 pA</strong></td></tr>
+<tr><td>反偏 −1.0 V</td><td>完整方程</td><td><strong>−1.000000 × 10<sup>−14</sup> A（與 −0.5 V 完全相同）</strong></td></tr>
+<tr><td>順偏 800 mV</td><td>完整方程</td><td><strong>275.048002 mA</strong></td></tr>
+</tbody></table>
+<p>N<sub>A</sub> = N<sub>D</sub> = 10<sup>14</sup> 時，V<sub>0</sub> = 0.455247 V；兩者都為 10<sup>19</sup> 時，V<sub>0</sub> = 1.050512 V。兩側各重摻五個數量級，內建電位只增加約 0.6 V，因為濃度乘積進入的是對數。</p>
+
+<section class="workspace"><h2>自由實驗：改變摻雜與外加偏壓</h2>
+<p>拓樸是可調直流源正端經限流路徑接二極體 p 側，n 側回到地；偏壓設為負值時交換外加電場方向，但仍以 p 側相對 n 側定義 V<sub>D</sub>。調整兩側摻雜、偏壓與 I<sub>S</sub>，觀察內建電位、端口電流及順偏／零偏／反偏判讀。</p>
+<div class="controls">
+<label for="pn-na">p 側摻雜指數 x（N<sub>A</sub> = 10<sup>x</sup> cm<sup>−3</sup>）<input id="pn-na" type="range" min="14" max="19" step="1" value="17"></label>
+<label for="pn-nd">n 側摻雜指數 x（N<sub>D</sub> = 10<sup>x</sup> cm<sup>−3</sup>）<input id="pn-nd" type="range" min="14" max="19" step="1" value="16"></label>
+<label for="pn-v">二極體偏壓 V<sub>D</sub>（mV，負值＝反偏）<input id="pn-v" type="range" min="-1000" max="800" step="10" value="700"></label>
+<label for="pn-is">反向飽和電流<select id="pn-is"><option value="1e-15">I_S = 1 fA</option><option value="1e-14" selected>I_S = 10 fA</option><option value="1e-12">I_S = 1 pA</option></select></label>
+</div>
+<div id="pnjunc-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>V<sub>0</sub> 是零偏熱平衡時接面內部的電位差，不能由外部端點直接量；0.7 V 是某個順向電流下的端口壓降，兩者角色不同。</li>
+<li>I<sub>S</sub> 名稱中的「飽和」只指反偏電流漸近值，與 BJT 或 MOSFET 的飽和工作區沒有共同判準。</li>
+<li>理想方程預測反向電流固定，但真實表面漏電與軟崩潰會隨反向電壓變；模型邊界在進入崩潰及漏電主導前。</li>
+<li>空乏區不是絕對沒有任何載子，而是可動載子濃度遠低於中性區；少數載子仍可被電場掃過。</li>
+<li>順向導通不是跨過固定門檻後才突然開始；指數曲線連續存在，所謂導通電壓取決於指定的電流與量測解析度。</li>
+<li>外加反向電場變強不代表 I<sub>S</sub> 必須變大；未崩潰前，瓶頸是少數載子產生率，而不是掃過速度。</li>
+</ul>
+
+<h2>可觀察證據：掃描端口只能看見外部 I–V</h2>
+<p>用曲線追蹤儀（curve tracer），或用電源供應器、限流電阻與電流表逐點掃描 V<sub>D</sub>，記錄每一組端口電壓與電流。順偏資料放到半對數座標後，指數主導區應近似直線；每 59.526429 mV 增加十倍支持 n ≈ 1，若每 decade 需要 90–120 mV，則支持 n 約為 1.5–2。大電流時偏離直線可顯示串聯電阻影響，反向急升可量崩潰電壓。這能證明端口方程在某範圍內的斜率、理想因子、串聯電阻效應與崩潰位置。它不能直接證明 I<sub>S</sub> 真值，因為通常靠外插且受表面漏電汙染；不能量出 V<sub>0</sub>，也不能僅由直流 I–V 得到空乏區寬度，後者需用電容—電壓量測反推。儀器讀到的是端口總效應，不是接面內每一股微觀電流。</p>
+
+<h2>連到哪門課</h2>
+<p>空乏區內建電場與電位的物理見<a href="../../../共通基礎/物理/互動課程/08-靜電學.html">普通物理的靜電學</a>；能帶與載子統計見<a href="../../../共通基礎/物理/互動課程/15-量子與半導體.html">普通物理的量子與半導體</a>。PN 接面不只構成二極體，也是 BJT 的兩個接面與 MOSFET 源極、汲極隔離接面的共同基礎。下一章把這條元件方程放進外部回路，求出真正可量的工作點。</p>
+<nav class="pager" aria-label="章節導覽"><a href="01-半導體與載子.html">← 上一頁：半導體與載子</a><a href="03-二極體工作點與模型.html">下一頁：二極體工作點與模型 →</a></nav>
+</main>
+<footer class="site-footer"><span>02 PN 接面與二極體方程</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

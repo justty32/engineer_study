@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 小訊號模型｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・把非線性元件編譯成 Q 點附近的線性模型</p>
+<h1>小訊號模型：先求工作點，再用局部斜率算增益</h1>
+<p class="lead">小訊號不是另一種電流，而是把總電壓與總電流拆成固定偏壓加微小變化。對非線性關係在 Q 點做一次泰勒展開，就能得到可用節點分析、疊加原理與相依源求解的線性等效電路。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="06-BJT原理與工作區.html">06 BJT 原理與工作區</a>、<a href="07-BJT偏壓與Q點.html">07 BJT 偏壓與 Q 點</a>、<a href="08-MOSFET原理與三個工作區.html">08 MOSFET 原理與三區</a>，以及導數與泰勒一次項。</p>
+
+<h2>痛點：電晶體明明非線性，放大器怎麼能直接算一個增益</h2>
+<p>「把 g<sub>m</sub>、r<sub>π</sub>、r<sub>o</sub> 塞進等效電路就會算，但這些元件從哪裡冒出來？為什麼換了偏壓又要全部重算？」因為小訊號模型（small signal model）不是電晶體永久不變的替身，而是某個靜態工作點附近的切線。Q 點改變，切線斜率與等效阻抗就改變；訊號跨得太遠，曲率又會使線性近似失效。</p>
+<p>用軟體語彙看，直流分析像先用非線性求解器得到狀態物件 Q；交流小訊號分析再對元件方程取雅可比矩陣，只保留一次項，建立一個只在 Q 附近有效的線性函式。省略第一步，就像在沒有初始化狀態時呼叫只接受局部座標的函式，數學可以跑，物理卻沒有對應工作區。</p>
+
+<h2>白話直覺：在彎曲道路的一小段用切線導航</h2>
+<p>可暫時把非線性曲線想成彎路，而小訊號模型是當前位置的切線；比喻到此為止，精確定義是把端口量寫成直流值加微小增量，並對元件方程作一階偏導。電源建立 Q 點，交流源只在其上擾動；分析小訊號時，理想直流電壓源視為交流接地。</p>
+<p>以共射 BJT 為例，V<sub>CC</sub> 經 R<sub>C</sub> 到集極，射極接地，偏壓網路讓基極維持某個 V<sub>BE,Q</sub>。集射回路已由直流電源閉合，射極注入的載子穿過薄基極並被集極電場收集。小小的 v<sub>be</sub> 改變注入量，形成 i<sub>c</sub> = g<sub>m</sub>v<sub>be</sub>；R<sub>C</sub> 上壓降隨之改變，集極電壓朝相反方向變動。訊號能量主要仍由 V<sub>CC</sub> 提供，輸入只控制能量流。</p>
+<p>MOSFET 則先由閘源偏壓形成反轉通道，汲源回路由電源與負載閉合。微小 v<sub>gs</sub> 改變通道電荷，使 i<sub>d</sub> = g<sub>m</sub>v<sub>gs</sub>；閘極直流路徑仍開路，但高頻時必須對 C<sub>gs</sub> 與 C<sub>gd</sub> 充放電。輸出端有限斜率以 r<sub>o</sub> 表示，載子與能量的實際來源仍是偏壓電源。</p>
+<p>端點結果可以分層看：直流值決定元件留在哪個工作區與可擺幅空間，小訊號值決定局部增益與阻抗，兩者相加才是儀器看到的總波形。若輸入太大，使瞬時工作點碰到截止或飽和邊界，線性相依源不再描述真實電流，輸出便削波或產生諧波失真。</p>
+<p class="note">來源：07-電子學-中 §8.1–§8.4、§6.4。</p>
+
+<h2>推導：一次泰勒項如何變成三個參數</h2>
+<p>一般非線性電流 I = F(V) 在 Q 點 V<sub>Q</sub> 附近可寫成 I(V<sub>Q</sub> + v) ≈ I(V<sub>Q</sub>) + [dI/dV]<sub>Q</sub>v。第一項是直流 I<sub>Q</sub>，第二項是小訊號 i；因此 i = gv，其中 g 是 Q 點局部斜率，單位 A/V。近似忽略二次以上項，要求擾動足夠小，而且元件不跨工作區。</p>
+<p>BJT 作用區的 I<sub>C</sub> = I<sub>S</sub> ⋅ exp[V<sub>BE</sub>/V<sub>T</sub>]。對 V<sub>BE</sub> 微分，g<sub>m</sub> = ∂I<sub>C</sub>/∂V<sub>BE</sub> = I<sub>C</sub>/V<sub>T</sub>。V<sub>T</sub> = 25.851999786 mV，溫度固定 300 K。這表示 BJT 的跨導只由 Q 點集極電流決定；元件尺寸與製程會影響達到該電流所需偏壓，卻不出現在這個理想跨導式中。</p>
+<p>因 i<sub>b</sub> = i<sub>c</sub>/β，而 i<sub>c</sub> = g<sub>m</sub>v<sub>be</sub>，所以基極看進去的局部電阻 r<sub>π</sub> = v<sub>be</sub>/i<sub>b</sub> = β/g<sub>m</sub>。Early 效應使集極電流也隨 V<sub>CE</sub> 略變，等效輸出電阻 r<sub>o</sub> = V<sub>A</sub>/I<sub>C</sub>。混合 π 模型（hybrid pi model）因此是：基極到射極放 r<sub>π</sub>，集極到射極放相依電流源 g<sub>m</sub>v<sub>be</sub>，並聯 r<sub>o</sub>。‖ 讀作「並聯」，不是絕對值也不是範數。</p>
+<p>MOSFET 在長通道飽和區有 I<sub>D</sub> = (1/2)kV<sub>OV</sub>²。對 V<sub>GS</sub> 微分得 g<sub>m</sub> = kV<sub>OV</sub>。由原式先解 V<sub>OV</sub> = √(2I<sub>D</sub>/k)，可得到另外兩個完全等價的寫法：g<sub>m</sub> = √(2kI<sub>D</sub>) = 2I<sub>D</sub>/V<sub>OV</sub>。三式應算出同一數值，前提是忽略 λ 對跨導的修正並仍處於強反轉平方律區。</p>
+<p>MOSFET 的 r<sub>o</sub> = 1/(λI<sub>D</sub>)；若以 V<sub>A</sub> = 1/λ 表示，也可寫成 V<sub>A</sub>/I<sub>D</sub>。其小訊號電路在汲源間放 g<sub>m</sub>v<sub>gs</sub> 相依源並聯 r<sub>o</sub>，閘極直流輸入電阻視為無限大。高頻還須加入 BJT 的 C<sub>π</sub>、C<sub>µ</sub>，或 MOSFET 的 C<sub>gs</sub>、C<sub>gd</sub>；第 12 章再處理米勒效應。</p>
+<p>本徵增益（intrinsic gain）g<sub>m</sub>r<sub>o</sub> 是單顆元件在理想高阻負載下可提供的局部增益尺度。BJT 為 (I<sub>C</sub>/V<sub>T</sub>)(V<sub>A</sub>/I<sub>C</sub>) = V<sub>A</sub>/V<sub>T</sub>，電流消去。MOSFET 為 2/(λV<sub>OV</sub>)；在固定 k 與等效 V<sub>A</sub> 下，提高 I<sub>D</sub> 會提高 V<sub>OV</sub>，反而降低本徵增益。</p>
+<p>分析流程因此必須保留兩份帳。直流帳把訊號源設為零，求出每個端點的 Q 點並確認工作區；小訊號帳把直流電壓源設為交流地，以剛算出的參數替換電晶體，再解線性網路。最後把小訊號擺幅疊回 Q 點，檢查每個瞬時端點仍沒有跨入截止或飽和。這個回頭檢查相當於程式的事後條件，能抓出「線性方程算對，但假設已失效」的答案。</p>
+
+<h2>數值實例：同樣 1 mA，比較兩種元件的局部效率</h2>
+<p>靜態電流 I = 1 mA、β = 100、V<sub>A</sub> = 100 V，MOSFET 以同一數值作 1/λ，k = 500 µA/V²、V<sub>T</sub> = 25.851999786 mV。</p>
+<table><thead><tr><th>量</th><th>BJT</th><th>MOSFET</th></tr></thead><tbody>
+<tr><td>控制變數</td><td>V<sub>BE</sub>，伴隨 I<sub>B</sub> = I<sub>C</sub>/β</td><td>V<sub>GS</sub>，閘極直流電流為零</td></tr>
+<tr><td>超驅動／熱電壓</td><td>V<sub>T</sub> = <strong>25.851999786 mV</strong></td><td>V<sub>OV</sub> = <strong>2.000000 V</strong></td></tr>
+<tr><td>跨導</td><td><strong>38.681727 mA/V</strong></td><td><strong>1.000000 mA/V</strong></td></tr>
+<tr><td>輸入電阻</td><td>r<sub>π</sub> = <strong>2585.199979 Ω</strong></td><td><strong>無限大（直流）</strong></td></tr>
+<tr><td>輸出電阻</td><td><strong>100000.000000 Ω</strong></td><td><strong>100000.000000 Ω</strong></td></tr>
+<tr><td>本徵增益</td><td><strong>3868.172707</strong></td><td><strong>100.000000</strong></td></tr>
+</tbody></table>
+<p>同樣 1 mA，BJT 的跨導與本徵增益都是 MOSFET 的 <strong>38.681727 倍</strong>。I = 0.1 mA 時，BJT g<sub>m</sub> = <strong>3.868173 mA/V</strong>、本徵增益 <strong>3868.172707</strong>；MOSFET g<sub>m</sub> = <strong>0.316228 mA/V</strong>、本徵增益 <strong>316.227766</strong>。I = 10 mA 時，BJT 為 <strong>386.817271 mA/V</strong>、<strong>3868.172707</strong>；MOSFET 為 <strong>3.162278 mA/V</strong>、<strong>31.622777</strong>。</p>
+<p>結果不是宣告 BJT 在所有場合都優勝。MOSFET 的閘極直流輸入阻抗極高、易於密集整合，且是 CMOS 數位電路核心；BJT 則在相同偏壓電流下提供較高跨導與常見的低雜訊優勢。元件選擇還要看輸入負載、電壓餘裕、頻率、匹配與製程。</p>
+
+<section class="workspace"><h2>自由實驗：同電流比較 BJT 與 MOSFET</h2>
+<p>兩種元件都先由偏壓電源建立指定靜態電流，輸出端經負載回到電源；BJT 以基射小電壓控制集極相依電流，MOSFET 以閘源小電壓控制汲極相依電流。切換主角並調參數，兩組結果仍會同時計算供比較。</p>
+<div class="controls">
+<label for="ss-dev">選擇元件<select id="ss-dev"><option value="bjt">BJT（混合 π 模型）</option><option value="mos">MOSFET（飽和區小訊號模型）</option></select></label>
+<label for="ss-i">靜態電流 I<sub>C</sub> 或 I<sub>D</sub>（mA）<input id="ss-i" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+<label for="ss-beta">BJT 電流增益 β（MOSFET 模式不用）<input id="ss-beta" type="range" min="50" max="500" step="10" value="100"></label>
+<label for="ss-va">V<sub>A</sub> 或 1/λ（V）<input id="ss-va" type="range" min="20" max="200" step="10" value="100"></label>
+<label for="ss-kn">MOSFET 的 k（µA/V²，BJT 模式不用）<input id="ss-kn" type="range" min="50" max="2000" step="50" value="500"></label>
+</div>
+<div id="smallsig-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>小訊號參數只屬於指定 Q 點；不先給 I<sub>C</sub> 或 I<sub>D</sub>，單問「這顆電晶體的 g<sub>m</sub>」沒有完整意義。</li>
+<li>r<sub>π</sub> 是基極的局部小訊號輸入電阻，不是直流比值 V<sub>BE</sub>/I<sub>B</sub>，兩者數值與用途都不同。</li>
+<li>相依源 g<sub>m</sub>v<sub>be</sub> 或 g<sub>m</sub>v<sub>gs</sub> 在固定 Q 點模型內是線性元件，因此可用疊加；原始電晶體仍是非線性元件。</li>
+<li>MOSFET 輸入電阻無限大只指理想直流；高頻時 C<sub>gs</sub> 與 C<sub>gd</sub> 使輸入阻抗有限且隨頻率下降。</li>
+<li>本徵增益是元件能力尺度，不等於接上有限負載、偏壓網路與源阻抗後的實際級增益。</li>
+</ul>
+
+<h2>可觀察證據：由受控小擾動反推局部參數</h2>
+<p>把放大器偏在固定 Q 點，用訊號產生器輸入 5 mV 小弦波，示波器量輸入與輸出振幅及相位；已知 R<sub>C</sub> 時，可由 A<sub>v</sub> = −g<sub>m</sub>R<sub>C</sub> 間接反推 g<sub>m</sub>，並與 I<sub>C</sub>/V<sub>T</sub> 比較。逐步把輸入增到 50 mV，若增益下降且頻譜分析儀看到諧波增加，就能證明小訊號近似開始失效。改變負載再看增益飽和，可估 r<sub>o</sub>。這些量測不能用單一增益值分離 g<sub>m</sub>、r<sub>π</sub> 與所有負載效應，也不能直接看見等效相依源；必須改變源阻抗與負載做多組量測。</p>
+
+<h2>連到哪門課</h2>
+<p>小訊號模型是類比積體電路、射頻前端與感測器讀出電路的共同語言。一次線性化可銜接<a href="../../../共通基礎/數學/互動課程/03-級數與泰勒.html">工程數學的級數與泰勒展開</a>，等效相依源與疊加則銜接<a href="../電路學-互動課程/04-疊加原理與相依源.html">電路學的疊加原理與相依源</a>。下一章把模型接上外部電阻，算三種單級放大器。</p>
+<nav class="pager" aria-label="章節導覽"><a href="09-CMOS反相器與數位功耗.html">← 上一頁：CMOS 反相器與數位功耗</a><a href="11-單級放大器三大組態.html">下一頁：單級放大器三大組態 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 小訊號模型</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

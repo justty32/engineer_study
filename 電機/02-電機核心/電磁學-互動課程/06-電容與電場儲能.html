@@ -1,0 +1,77 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 電容與電場儲能｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・從幾何與材料算出元件值與場能量</p>
+<h1>電容與電場儲能：能量其實在兩導體之間</h1>
+<p class="lead">電容不是神祕常數，而是導體幾何與介質共同決定的比例。從 Q = CV 出發，可以推得平行板、同軸與球形構型，並把元件儲能重新解讀為空間中的電場能量。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-介電質與邊界條件.html">05 介電質與邊界條件</a>的 ε、<b>E</b> 與 <b>D</b>。</p>
+
+<h2>痛點：電容器到底裝了什麼，為何換形狀就換數值</h2>
+<p>電路圖把 C 畫成一個固定數字，容易讓人以為電容器像容器般收納淨電荷。實際上兩片板分別帶 +Q 與 −Q，總電荷仍為零；外部做功把電荷分離，建立電場並把能量留在場中。電容量（capacitance）C 定義為 Q/V，單位法拉 F = C/V，表示每增加一伏特電位差需要分離多少庫侖電荷。</p>
+<p>另一個困惑是同樣電壓下，板距變小為何 C 增大、場也增強。原因是 C 只問每伏特可分離多少電荷，而 E = V/d 問每公尺掉多少電位；兩者都可同時增大。要判斷安全性不能只看 C，還要看局部最大 E 是否越過介電強度。</p>
+
+<h2>白話直覺：電源搬開電荷，場替它保存做過的功</h2>
+<p>可暫把兩導體想成把正負電荷分居兩岸；比喻到此為止，精確狀態是兩導體間的電位差與場。源是電源搬運的自由電荷，正板到負板之間的 <b>E</b> 由正指向負；平行板遠離邊緣時近似均勻，同軸與球形的場則隨半徑變小，最大值都在內導體表面。</p>
+<p>電源做的功存於電場覆蓋的空間，能量密度為 w<sub>e</sub> = (1/2)<b>E</b>⋅<b>D</b>。加入高 ε 材料會極化並改變邊界電荷，因此相同幾何與 V 下能容納更多 Q；縮小間距也使 C 增大，但局部 E 上升，崩潰餘裕下降。LCR 表量到端口的交流電壓與電流相位，再回報該頻率的等效 C；它沒有直接看見場能。</p>
+<p>空氣約在 3 MV/m 崩潰，FR−4 約 20 MV/m。本章預設 100 kV/m 是空氣門檻的 3.33 %；滑到 0.1 mm 與 1000 V 時則達 10 MV/m，真實空氣會先打火。常見 100 nF 陶瓷電容的等效 A/d 比本例大千倍以上，靠多層極薄陶瓷堆疊取得，不是靠一對巨大平板。</p>
+<p class="note">來源：08-電磁學-上 §6.1–§6.3。</p>
+
+<h2>推導：把高斯定律、電位差與充電做功接起來</h2>
+<p><strong>平行板。</strong>忽略邊緣場，兩片無限大板各給 ρ<sub>s</sub>/(2ε)，板間相加得 E = ρ<sub>s</sub>/ε。又 V = Ed、ρ<sub>s</sub> = Q/A，所以 V = Qd/(εA)，整理為 C = Q/V = εA/d。A 單位 m²，d 單位 m，ε 單位 F/m。假設介質線性、均質、等向且場靜態。</p>
+<p><strong>同軸與球形。</strong>同軸由柱對稱高斯面得 E(ρ) = ρ<sub>ℓ</sub>/(2περ)，積分 V = ∫<sub>a</sub><sup>b</sup> E dρ = ρ<sub>ℓ</sub>ln(b/a)/(2πε)，因此每單位長度 C = 2πε/ln(b/a)。球形以球對稱積分得到 C = 4πε ⋅ ab/(b − a)。兩者必須 b &gt; a，且內表面場最大；若幾何不合法，公式沒有物理意義。</p>
+<p><strong>儲能。</strong>充電途中已搬 q 時，瞬時電壓 v = q/C，再搬 dq 所需功為 dW = v dq。由 0 積到 Q，W = ∫<sub>0</sub><sup>Q</sup> (q/C)dq = Q²/(2C) = (1/2)QV = (1/2)CV²。係數二分之一來自電壓從零線性升到終值，不是任意常數。</p>
+<p><strong>場能密度。</strong>平行板中 W = (1/2)(εA/d)(Ed)² = (1/2)εE²(Ad)。括號 Ad 是場所在體積，因此 w<sub>e</sub> = (1/2)εE² = (1/2)<b>E</b>⋅<b>D</b>，單位 J/m³。對不均勻場要把 w<sub>e</sub> 對全部空間積分，不能拿最大場乘整個體積。</p>
+<p>還可用固定控制量分辨常見矛盾。電容器仍接著理想電壓源時，插入介質使 C 增大，電源補入電荷，W = (1/2)CV² 因而增加；先充電再斷開電源時 Q 固定，插入介質後 W = Q²/(2C) 反而下降，少掉的能量轉成把介質吸入的機械功。兩種答案都對，差別只在電源是否仍能交換電荷。</p>
+<p>幾何也決定場的均勻程度。平行板公式忽略邊緣場，只有板寬遠大於間距時才準；同軸場隨 1/ρ 下降，球形場隨 1/r² 下降。這說明相同端口電壓不代表每處承受同樣電應力，絕緣設計必須查看尖角、內導體與材料交界的局部最大值。實務元件還有漏電阻、等效串聯電阻與寄生電感，理想 C 只在有限頻帶內成立。</p>
+<p>若把板距減半而固定 V，理想 C 加倍、Q 加倍、W 加倍，E 也加倍；若固定 Q，C 加倍會讓 V 與 W 各減半。這組極端檢查能快速發現把控制條件混在一起的錯誤。當 d 接近表面粗糙度或材料厚度不均時，連續介質與均勻場假設也會先失效。</p>
+<p>電容的尺度感也很重要：一法拉代表每一伏特就要分離一庫侖，對單層空氣平行板是極大的要求，所以本例只有皮法等級。商用微法與毫法元件靠高介電常數、極薄介質、巨大有效面積或電化學界面取得；數值大不代表體積中的每一處場都小，也不代表可承受更高電壓。</p>
+
+<h2>數值實例：一百平方公分的真空平行板</h2>
+<p>平行板 A = 100 cm² = 0.01 m²、d = 1 mm = 0.001 m、ε<sub>r</sub> = 1、V = 100 V。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>電容</td><td>C = ε<sub>0</sub>ε<sub>r</sub>A/d = 8.8541878128 × 10<sup>−12</sup> × 0.01 / 0.001</td><td><strong>88.541878 pF</strong></td></tr>
+<tr><td>電荷</td><td>Q = CV = 8.8541878 × 10<sup>−11</sup> × 100</td><td><strong>8.854188 nC</strong></td></tr>
+<tr><td>儲能</td><td>W = (1/2)CV²</td><td><strong>442.709391 nJ</strong></td></tr>
+<tr><td>檢查</td><td>W = Q²/(2C)</td><td><strong>442.709391 nJ ✓</strong></td></tr>
+<tr><td>板間場</td><td>E = V/d = 100/0.001</td><td><strong>100000.000000 V/m ＝ 100 kV/m</strong></td></tr>
+<tr><td>能量密度</td><td>w<sub>e</sub> = (1/2)ε<sub>0</sub>E²</td><td><strong>0.044271 J/m³</strong></td></tr>
+<tr><td>檢查</td><td>W = w<sub>e</sub> × (A × d) = 0.044271 × 10<sup>−5</sup></td><td><strong>442.709391 nJ ✓（三種算法一致）</strong></td></tr>
+<tr><td>崩潰餘裕</td><td>100 kV/m ÷ 3000 kV/m</td><td><strong>3.33 %（安全）</strong></td></tr>
+</tbody></table>
+<p>邊界對照：同軸 a = 1 mm、b = 3.5 mm、ε<sub>r</sub> = 1 → ln(b/a) = <strong>1.252763</strong>、C = <strong>44.407844 pF/m</strong>；同一組尺寸換成 PTFE（ε<sub>r</sub> = 2.1）→ <strong>93.256473 pF/m</strong>。球形 a = 1 mm、b = 3.5 mm、ε<sub>r</sub> = 1 → <strong>0.155771 pF</strong>（<strong>球形電容器小得驚人，這就是為什麼實務上不用它</strong>）。把 ε<sub>r</sub> 從 1 拉到 4.4（FR−4）→ 平行板 C 變成 <strong>389.584264 pF</strong>。把 V 拉到 <strong>1000 V</strong> → E = 10<sup>6</sup> V/m，仍在空氣崩潰的 1/3。</p>
+
+<section class="workspace"><h2>自由實驗：幾何、材料與電壓</h2>
+<p>兩導體之間填入均勻線性介質。切換平行板、同軸或球形構型，觀察幾何與 ε 如何決定 C，以及電壓如何決定 Q、W 與最大場。</p>
+<div class="controls">
+<label for="cap-geom">構型<select id="cap-geom"><option value="parallel">平行板</option><option value="coax">同軸（每公尺）</option><option value="sphere">球形</option></select></label>
+<label for="cap-area">板面積 A（cm²，只有平行板用）<input id="cap-area" type="range" min="10" max="400" step="10" value="100"></label>
+<label for="cap-gap">板間距 d（mm，只有平行板用）<input id="cap-gap" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+<label for="cap-a">內半徑 a（mm，同軸與球形用）<input id="cap-a" type="range" min="0.5" max="10" step="0.5" value="1"></label>
+<label for="cap-b">外半徑 b（mm，同軸與球形用）<input id="cap-b" type="range" min="1" max="30" step="0.5" value="3.5"></label>
+<label for="cap-er">相對介電常數 ε<sub>r</sub><input id="cap-er" type="range" min="1" max="12" step="0.1" value="1"></label>
+<label for="cap-v">外加電壓 V（V）<input id="cap-v" type="range" min="10" max="1000" step="10" value="100"></label>
+</div>
+<div id="capacitor-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>電容是每伏特分離多少電荷，不是最多能裝多少電；最大工作電壓由材料與幾何另行限制。</li>
+<li>兩片板總電荷為零，儲存的是電荷分離與場能，不是憑空增加淨電荷。</li>
+<li>C 只由幾何與材料決定；在線性模型中改 V 會改 Q 與 W，不會改 C。</li>
+<li>平行板可用均勻 E = V/d；同軸與球形場不均勻，不能拿平均場判斷崩潰。</li>
+<li>電容並聯相加、串聯倒數相加，與電阻相反；根源是面積與距離的幾何關係。</li>
+<li>LCR 表的 C 是指定頻率下的等效值，不保證在直流、高頻或接近崩潰時不變。</li>
+</ul>
+
+<h2>可觀察證據：端口讀值可驗幾何效應，不能直接看見場能</h2>
+<p>LCR 表在 1 kHz 或 100 kHz 等指定頻率量測交流端口關係，可比較板面積、間距與介質改變後的 C。兩片鋁箔隔紙即可量到數十 pF；若面積加倍而其他條件不變，讀值近似加倍，能支持 C ∝ A。</p>
+<p>這能證明該頻率、該裝配下的等效電容與串並聯規則，不能直接證明能量位於場中；場能位置是由端口做功與空間能量密度積分得到同一 W 的理論與間接實驗結論。電表也不能單獨證明局部最大場或介電崩潰起點，邊緣場、漏電與寄生參數都會使理想模型偏離。</p>
+
+<h2>連到哪門課</h2>
+<p><a href="../電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>把 C 當集總元件並研究充放電；本章說明這個元件值從何而來。同軸每單位長度電容會與第 15 章的每單位長度電感共同決定 Z<sub>0</sub> = √(L/C)，也是高速數位與射頻走線設計的入口。</p>
+<nav class="pager" aria-label="章節導覽"><a href="05-介電質與邊界條件.html">← 上一頁：介電質與邊界條件</a><a href="07-電流密度與焦耳熱.html">下一頁：電流密度與焦耳熱 →</a></nav>
+</main>
+<footer class="site-footer"><span>06 電容與電場儲能</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

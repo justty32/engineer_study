@@ -1,0 +1,110 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">自由練習・用數字與判讀句檢查模型</p>
+<h1>自我檢核</h1>
+<p class="lead">每章三題。選一個選項或填入數字，再按「對答案」查看原因與回看章節；任何題目都可以跳過。</p>
+<p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯只會告訴你為什麼，並附上該回去看的章節。可以無限重做。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 電子學世界觀</h2>
+<p>回去看：<a href="00-電子學世界觀.html">00 電子學世界觀</a></p>
+<section class="card"><p><strong>q00-1｜</strong>小訊號線性化成立的條件是哪一項？</p><label for="q00-1">你的答案<select id="q00-1"><option value="">請選擇</option><option value="a">訊號振幅遠小於 V_T</option><option value="b">工作點電流夠大</option><option value="c">元件本身是線性的</option><option value="d">頻率夠低</option></select></label><button type="button" id="q00-1-check">對答案</button><div id="q00-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-2｜</strong>I<sub>S</sub> = 1 fA、V = 700 mV 的二極體電流是多少 mA？</p><label for="q00-2">你的答案（mA）<input id="q00-2" type="number" step="any"></label><button type="button" id="q00-2-check">對答案</button><div id="q00-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-3｜</strong>同一工作點的小訊號電阻 r<sub>d</sub> 是多少 Ω？</p><label for="q00-3">你的答案（Ω）<input id="q00-3" type="number" step="any"></label><button type="button" id="q00-3-check">對答案</button><div id="q00-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>01 半導體與載子</h2>
+<p>回去看：<a href="01-半導體與載子.html">01 半導體與載子</a></p>
+<section class="card"><p><strong>q01-1｜</strong>質量作用定律說明哪一項？</p><label for="q01-1">你的答案<select id="q01-1"><option value="">請選擇</option><option value="a">np = n_i²</option><option value="b">n + p = n_i</option><option value="c">摻雜後 n = p</option><option value="d">n_i 正比於摻雜濃度</option></select></label><button type="button" id="q01-1-check">對答案</button><div id="q01-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-2｜</strong>N<sub>D</sub> = 10<sup>16</sup> cm<sup>−3</sup> 時，少數載子濃度是 2.25 × 10<sup>x</sup> cm<sup>−3</sup>，x 是多少？</p><label for="q01-2">你的答案（無單位）<input id="q01-2" type="number" step="any"></label><button type="button" id="q01-2-check">對答案</button><div id="q01-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-3｜</strong>同一樣品的電阻率是多少 Ω⋅cm？</p><label for="q01-3">你的答案（Ω⋅cm）<input id="q01-3" type="number" step="any"></label><button type="button" id="q01-3-check">對答案</button><div id="q01-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>02 PN 接面與二極體方程</h2>
+<p>回去看：<a href="02-PN接面與二極體方程.html">02 PN 接面與二極體方程</a></p>
+<section class="card"><p><strong>q02-1｜</strong>反向偏壓時，二極體電流如何變化？</p><label for="q02-1">你的答案<select id="q02-1"><option value="">請選擇</option><option value="a">隨反向電壓線性增加</option><option value="b">鎖在 −I_S 幾乎不隨電壓變</option><option value="c">恰好為零</option><option value="d">指數增加</option></select></label><button type="button" id="q02-1-check">對答案</button><div id="q02-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-2｜</strong>N<sub>A</sub> = 10<sup>17</sup> cm<sup>−3</sup>、N<sub>D</sub> = 10<sup>16</sup> cm<sup>−3</sup> 時，內建電位是多少 V？</p><label for="q02-2">你的答案（V）<input id="q02-2" type="number" step="any"></label><button type="button" id="q02-2-check">對答案</button><div id="q02-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-3｜</strong>二極體電流變成 10 倍所需的電壓增量是多少 mV？</p><label for="q02-3">你的答案（mV）<input id="q02-3" type="number" step="any"></label><button type="button" id="q02-3-check">對答案</button><div id="q02-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>03 二極體工作點與模型</h2>
+<p>回去看：<a href="03-二極體工作點與模型.html">03 二極體工作點與模型</a></p>
+<section class="card"><p><strong>q03-1｜</strong>電流很小時，恆壓降模型會怎樣？</p><label for="q03-1">你的答案<select id="q03-1"><option value="">請選擇</option><option value="a">更準</option><option value="b">誤差變大，因為真實壓降遠低於 0.7 V</option><option value="c">完全不受影響</option><option value="d">只在交流時失效</option></select></label><button type="button" id="q03-1-check">對答案</button><div id="q03-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-2｜</strong>V<sub>s</sub> = 5 V、R = 1 kΩ 時，恆壓降模型算出的電流是多少 mA？</p><label for="q03-2">你的答案（mA）<input id="q03-2" type="number" step="any"></label><button type="button" id="q03-2-check">對答案</button><div id="q03-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-3｜</strong>同一電路用完整指數模型解出的 V<sub>D</sub> 是多少 V？</p><label for="q03-3">你的答案（V）<input id="q03-3" type="number" step="any"></label><button type="button" id="q03-3-check">對答案</button><div id="q03-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>04 整流與濾波</h2>
+<p>回去看：<a href="04-整流與濾波.html">04 整流與濾波</a></p>
+<section class="card"><p><strong>q04-1｜</strong>全波整流比半波整流好在哪裡？</p><label for="q04-1">你的答案<select id="q04-1"><option value="">請選擇</option><option value="a">二極體壓降較小</option><option value="b">有效漣波頻率是兩倍，同一個電容漣波減半</option><option value="c">輸出峰值較高</option><option value="d">不需要濾波電容</option></select></label><button type="button" id="q04-1-check">對答案</button><div id="q04-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-2｜</strong>全波橋式整流器的 V<sub>m</sub> = 12 V 時，輸出峰值是多少 V？</p><label for="q04-2">你的答案（V）<input id="q04-2" type="number" step="any"></label><button type="button" id="q04-2-check">對答案</button><div id="q04-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-3｜</strong>上述條件再取 60 Hz、1 kΩ、470 µF 時，漣波電壓是多少 V？</p><label for="q04-3">你的答案（V）<input id="q04-3" type="number" step="any"></label><button type="button" id="q04-3-check">對答案</button><div id="q04-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>05 穩壓、限幅與特殊二極體</h2>
+<p>回去看：<a href="05-穩壓限幅與特殊二極體.html">05 穩壓、限幅與特殊二極體</a></p>
+<section class="card"><p><strong>q05-1｜</strong>負載變得太重時，齊納穩壓器會怎樣？</p><label for="q05-1">你的答案<select id="q05-1"><option value="">請選擇</option><option value="a">輸出仍鎖在 V_Z</option><option value="b">脫出穩壓，輸出跟著輸入分壓</option><option value="c">齊納一定燒毀</option><option value="d">V_Z 自己變小</option></select></label><button type="button" id="q05-1-check">對答案</button><div id="q05-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-2｜</strong>輸入 15 V、串聯 470 Ω、V<sub>Z</sub> = 5.1 V、負載 1 kΩ 時，齊納電流是多少 mA？</p><label for="q05-2">你的答案（mA）<input id="q05-2" type="number" step="any"></label><button type="button" id="q05-2-check">對答案</button><div id="q05-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-3｜</strong>同一電路的齊納功耗是多少 mW？</p><label for="q05-3">你的答案（mW）<input id="q05-3" type="number" step="any"></label><button type="button" id="q05-3-check">對答案</button><div id="q05-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>06 BJT 原理與工作區</h2>
+<p>回去看：<a href="06-BJT原理與工作區.html">06 BJT 原理與工作區</a></p>
+<section class="card"><p><strong>q06-1｜</strong>BJT 的飽和區是什麼意思？</p><label for="q06-1">你的答案<select id="q06-1"><option value="">請選擇</option><option value="a">定電流的放大區</option><option value="b">開關全開，V_CE ≈ 0.2 V</option><option value="c">完全不導通</option><option value="d">與 MOSFET 的飽和區同義</option></select></label><button type="button" id="q06-1-check">對答案</button><div id="q06-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-2｜</strong>I<sub>B</sub> = 20 µA、β（讀作貝塔）= 100 時，集極電流是多少 mA？</p><label for="q06-2">你的答案（mA）<input id="q06-2" type="number" step="any"></label><button type="button" id="q06-2-check">對答案</button><div id="q06-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-3｜</strong>V<sub>CC</sub> = 12 V、R<sub>C</sub> = 1 kΩ 時，V<sub>CE</sub> 是多少 V？</p><label for="q06-3">你的答案（V）<input id="q06-3" type="number" step="any"></label><button type="button" id="q06-3-check">對答案</button><div id="q06-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>07 BJT 偏壓與 Q 點</h2>
+<p>回去看：<a href="07-BJT偏壓與Q點.html">07 BJT 偏壓與 Q 點</a></p>
+<section class="card"><p><strong>q07-1｜</strong>分壓加射極電阻為什麼對 β 不敏感？</p><label for="q07-1">你的答案<select id="q07-1"><option value="">請選擇</option><option value="a">R_E 提供直流負回授，(β+1)R_E 遠大於 R_TH</option><option value="b">β 本來就很穩定</option><option value="c">因為 V_BE 固定</option><option value="d">因為 R_1、R_2 很大</option></select></label><button type="button" id="q07-1-check">對答案</button><div id="q07-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-2｜</strong>12 V、47 kΩ、10 kΩ 分壓的戴維寧電壓是多少 V？</p><label for="q07-2">你的答案（V）<input id="q07-2" type="number" step="any"></label><button type="button" id="q07-2-check">對答案</button><div id="q07-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-3｜</strong>同一偏壓電路取 R<sub>E</sub> = 1 kΩ、β = 100 時，集極電流是多少 mA？</p><label for="q07-3">你的答案（mA）<input id="q07-3" type="number" step="any"></label><button type="button" id="q07-3-check">對答案</button><div id="q07-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>08 MOSFET 原理與三個工作區</h2>
+<p>回去看：<a href="08-MOSFET原理與三個工作區.html">08 MOSFET 原理與三個工作區</a></p>
+<section class="card"><p><strong>q08-1｜</strong>MOSFET 的飽和區是什麼意思？</p><label for="q08-1">你的答案<select id="q08-1"><option value="">請選擇</option><option value="a">開關全開</option><option value="b">放大用的定電流區</option><option value="c">通道尚未形成</option><option value="d">與 BJT 的飽和區同義</option></select></label><button type="button" id="q08-1-check">對答案</button><div id="q08-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-2｜</strong>V<sub>GS</sub> = 2 V、V<sub>th</sub> = 1 V、k = 500 µA/V²、λ（讀作藍姆達）= 0.02、V<sub>DS</sub> = 5 V 時，I<sub>D</sub> 是多少 µA？</p><label for="q08-2">你的答案（µA）<input id="q08-2" type="number" step="any"></label><button type="button" id="q08-2-check">對答案</button><div id="q08-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-3｜</strong>同一工作點的 r<sub>o</sub> 是多少 Ω？</p><label for="q08-3">你的答案（Ω）<input id="q08-3" type="number" step="any"></label><button type="button" id="q08-3-check">對答案</button><div id="q08-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>09 CMOS 反相器與數位功耗</h2>
+<p>回去看：<a href="09-CMOS反相器與數位功耗.html">09 CMOS 反相器與數位功耗</a></p>
+<section class="card"><p><strong>q09-1｜</strong>降低 V<sub>DD</sub> 為什麼是最有效的省電手段？</p><label for="q09-1">你的答案<select id="q09-1"><option value="">請選擇</option><option value="a">動態功耗與 V_DD 成平方關係</option><option value="b">與 V_DD 成正比</option><option value="c">頻率會自動降低</option><option value="d">漏電流會消失</option></select></label><button type="button" id="q09-1-check">對答案</button><div id="q09-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-2｜</strong>V<sub>DD</sub> = 3.3 V、V<sub>th</sub> = 0.7 V、k<sub>r</sub> = 1 時，切換閾值 V<sub>M</sub> 是多少 V？</p><label for="q09-2">你的答案（V）<input id="q09-2" type="number" step="any"></label><button type="button" id="q09-2-check">對答案</button><div id="q09-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-3｜</strong>C<sub>L</sub> = 20 fF、V<sub>DD</sub> = 3.3 V、f = 100 MHz 時，動態功耗是多少 µW？</p><label for="q09-3">你的答案（µW）<input id="q09-3" type="number" step="any"></label><button type="button" id="q09-3-check">對答案</button><div id="q09-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>10 小訊號模型</h2>
+<p>回去看：<a href="10-小訊號模型.html">10 小訊號模型</a></p>
+<section class="card"><p><strong>q10-1｜</strong>MOSFET 的 g<sub>m</sub>（讀作 g m）與汲極電流有何關係？</p><label for="q10-1">你的答案<select id="q10-1"><option value="">請選擇</option><option value="a">正比於 I_D</option><option value="b">正比於 √I_D</option><option value="c">與 I_D 無關</option><option value="d">反比於 I_D</option></select></label><button type="button" id="q10-1-check">對答案</button><div id="q10-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-2｜</strong>I<sub>C</sub> = 1 mA 時，BJT 跨導是多少 mA/V？</p><label for="q10-2">你的答案（mA/V）<input id="q10-2" type="number" step="any"></label><button type="button" id="q10-2-check">對答案</button><div id="q10-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-3｜</strong>同一工作點取 β = 100 時，r<sub>π</sub>（讀作 r 派）是多少 Ω？</p><label for="q10-3">你的答案（Ω）<input id="q10-3" type="number" step="any"></label><button type="button" id="q10-3-check">對答案</button><div id="q10-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>11 單級放大器三大組態</h2>
+<p>回去看：<a href="11-單級放大器三大組態.html">11 單級放大器三大組態</a></p>
+<section class="card"><p><strong>q11-1｜</strong>共集（射隨器）組態的主要用途是什麼？</p><label for="q11-1">你的答案<select id="q11-1"><option value="">請選擇</option><option value="a">提供大電壓增益</option><option value="b">低輸出阻抗當緩衝、驅動重負載</option><option value="c">提高頻寬</option><option value="d">讓訊號反相</option></select></label><button type="button" id="q11-1-check">對答案</button><div id="q11-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-2｜</strong>I<sub>C</sub> = 1 mA、R<sub>C</sub> = 5 kΩ 時，無退化共射的電壓增益絕對值是多少？</p><label for="q11-2">你的答案（無單位）<input id="q11-2" type="number" step="any"></label><button type="button" id="q11-2-check">對答案</button><div id="q11-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-3｜</strong>同一電路加上 R<sub>E</sub> = 100 Ω 後，電壓增益絕對值是多少？</p><label for="q11-3">你的答案（無單位）<input id="q11-3" type="number" step="any"></label><button type="button" id="q11-3-check">對答案</button><div id="q11-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>12 米勒效應與頻寬</h2>
+<p>回去看：<a href="12-米勒效應與頻寬.html">12 米勒效應與頻寬</a></p>
+<section class="card"><p><strong>q12-1｜</strong>疊接為什麼能提高頻寬？</p><label for="q12-1">你的答案<select id="q12-1"><option value="">請選擇</option><option value="a">增益變小了</option><option value="b">下級增益被壓成約 −1，米勒效應幾乎消失</option><option value="c">實體電容變小</option><option value="d">源阻抗自動變小</option></select></label><button type="button" id="q12-1-check">對答案</button><div id="q12-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q12-2｜</strong>|A<sub>v</sub>| = 200、C<sub>gd</sub> = 1 pF、C<sub>gs</sub> = 5 pF 時，輸入總電容是多少 pF？</p><label for="q12-2">你的答案（pF）<input id="q12-2" type="number" step="any"></label><button type="button" id="q12-2-check">對答案</button><div id="q12-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q12-3｜</strong>同一電路取 R<sub>s</sub> = 2 kΩ 時，高頻 −3 dB 點是多少 kHz？</p><label for="q12-3">你的答案（kHz）<input id="q12-3" type="number" step="any"></label><button type="button" id="q12-3-check">對答案</button><div id="q12-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>13 差動對與電流鏡</h2>
+<p>回去看：<a href="13-差動對與電流鏡.html">13 差動對與電流鏡</a></p>
+<section class="card"><p><strong>q13-1｜</strong>換成電流鏡主動負載後，共模拒斥比 CMRR 會如何？</p><label for="q13-1">你的答案<select id="q13-1"><option value="">請選擇</option><option value="a">提高 10 倍</option><option value="b">完全不變，因為 CMRR = 2g_mR_oc 與負載無關</option><option value="c">降低 10 倍</option><option value="d">變成無限大</option></select></label><button type="button" id="q13-1-check">對答案</button><div id="q13-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q13-2｜</strong>I<sub>tail</sub> = 1 mA、R<sub>C</sub> = 10 kΩ 時，單端差模增益是多少？</p><label for="q13-2">你的答案（無單位）<input id="q13-2" type="number" step="any"></label><button type="button" id="q13-2-check">對答案</button><div id="q13-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q13-3｜</strong>R<sub>oc</sub> = 500 kΩ 時，共模拒斥比是多少 dB？</p><label for="q13-3">你的答案（dB）<input id="q13-3" type="number" step="any"></label><button type="button" id="q13-3-check">對答案</button><div id="q13-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>14 回授與穩定性</h2>
+<p>回去看：<a href="14-回授與穩定性.html">14 回授與穩定性</a></p>
+<section class="card"><p><strong>q14-1｜</strong>負回授為什麼可能造成振盪？</p><label for="q14-1">你的答案<select id="q14-1"><option value="">請選擇</option><option value="a">高頻相位轉過 −180° 後負回授變成正回授</option><option value="b">增益太小</option><option value="c">電阻發熱</option><option value="d">電容漏電</option></select></label><button type="button" id="q14-1-check">對答案</button><div id="q14-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q14-2｜</strong>A = 10<sup>5</sup>、β<sub>f</sub>（讀作貝塔 f）= 0.01 時，閉迴路增益是多少？</p><label for="q14-2">你的答案（無單位）<input id="q14-2" type="number" step="any"></label><button type="button" id="q14-2-check">對答案</button><div id="q14-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q14-3｜</strong>同一系統的開迴路主極點為 10 Hz 時，閉迴路 −3 dB 頻寬是多少 Hz？</p><label for="q14-3">你的答案（Hz）<input id="q14-3" type="number" step="any"></label><button type="button" id="q14-3-check">對答案</button><div id="q14-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>15 運算放大器與電子系統</h2>
+<p>回去看：<a href="15-運算放大器與電子系統.html">15 運算放大器與電子系統</a></p>
+<section class="card"><p><strong>q15-1｜</strong>12 位元類比數位轉換器 ADC 的理論訊號雜訊比 SNR 約為多少？</p><label for="q15-1">你的答案<select id="q15-1"><option value="">請選擇</option><option value="a">74 dB（6.02N + 1.76）</option><option value="b">12 dB</option><option value="c">96 dB</option><option value="d">與位元數無關</option></select></label><button type="button" id="q15-1-check">對答案</button><div id="q15-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q15-2｜</strong>L = 100 µH、C = 100 pF 時，LC 振盪頻率是多少 Hz？</p><label for="q15-2">你的答案（Hz）<input id="q15-2" type="number" step="any"></label><button type="button" id="q15-2-check">對答案</button><div id="q15-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q15-3｜</strong>12 V 降到 3.3 V 時，低壓降穩壓器 LDO 的效率是多少 %？</p><label for="q15-3">你的答案（%）<input id="q15-3" type="number" step="any"></label><button type="button" id="q15-3-check">對答案</button><div id="q15-3-output" class="output" aria-live="polite"></div></section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

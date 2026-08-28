@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 整流與濾波｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・把交流的兩個半週變成可用的直流</p>
+<h1>整流與濾波：先翻正，再用電容撐住峰值</h1>
+<p class="lead">二極體的單向導通能決定交流電流在哪個半週通過，電容則在峰值附近儲能、其餘時間補給負載。本章把這兩個動作接成電源前端，並用漣波數字判斷近似何時可信。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-二極體工作點與模型.html">03 二極體工作點與模型</a>的恆壓降模型，以及電路學的<a href="../電路學-互動課程/09-弦波與相量.html">弦波峰值與有效值</a>、<a href="../電路學-互動課程/07-一階暫態RC與RL.html">RC 放電</a>。</p>
+
+<h2>痛點：交流明明一直換方向，為什麼接幾顆二極體就有直流</h2>
+<p>「我知道二極體只讓電流走一邊，但負半週被擋掉不就只剩一串脈衝，怎麼會變成電源？」真正的缺口在於把整流與濾波混成同一件事。整流器（rectifier）只負責重新安排導通路徑，使負載電流保持同方向；濾波電容（filter capacitor）才負責在沒有輸入脈衝時暫時供能。兩者接起來仍不是完美定值，輸出會在每次充電峰值之間下滑，這段峰對峰擺動稱為漣波（ripple）。</p>
+<p>半波整流每個週期只使用一個半週，電流路徑串過一顆二極體；全波橋式整流（bridge rectifier）以四顆二極體交替形成兩條路，負半週也被換向，因此每週期補充電容兩次。橋式任一時刻的閉合路徑都串著兩顆二極體，恆壓降模型要扣 1.4 V，而半波只扣 0.7 V。這正是一個工程取捨：全波峰值少 0.7 V，補能頻率卻加倍，同一顆電容的漣波約減半。</p>
+
+<h2>白話直覺：電容只是在兩次補貨之間代墊能量</h2>
+<p>可以暫時把電容想成短時間的能量緩衝庫；比喻到此為止，精確機制是電荷累積使端電壓改變，且儲能為 CV²/2。以橋式電路的負端與負載下端為地，交流源在正半週時，一對二極體順偏，形成交流源 → 二極體 → 電容與負載 → 二極體 → 交流源的閉合回路；負半週時改由另一對順偏，負載中的傳統電流方向仍相同。電子實際移動方向與傳統電流相反，但不論哪個半週，能量都從交流源送入負載並補回電容。</p>
+<p>輸入整流後的瞬時電壓高於電容電壓再加兩顆二極體壓降時，導通路徑才打開，電容快速充到接近峰值。輸入一離開峰頂，二極體立刻反偏，源與負載的路徑斷開；此時只有電容 → 負載 → 地 → 電容的局部回路閉合，電容放電，輸出端點電壓緩慢下降。下一個峰值到來後再補回失去的電荷，結果便是帶有小幅週期起伏的直流。</p>
+<p>因為真正充電只發生在「輸入剛好高過電容」的短時間，平均負載電流雖不大，二極體與變壓器次級看到的卻是又高又窄的電流脈衝。電容愈大，兩峰之間掉得愈少，但要在更短時間補回相同電荷，峰值充電電流可能更尖。這會增加元件熱應力，也在供電端形成諧波；選變壓器與二極體不能只照直流平均電流。</p>
+<p class="note">來源：07-電子學-上 §3.1。</p>
+<p class="warning">整流器的輸入側若直接接市電是致命電壓；濾波電容在斷電後仍然帶電，可能維持數分鐘。所有實驗一律使用低壓隔離電源或訊號產生器，斷電後先用洩放電阻放電再觸碰。</p>
+
+<h2>推導：把每次少掉的電荷換成漣波電壓</h2>
+<p>先定義 V<sub>pk</sub> 為扣除導通二極體壓降後的輸出峰值，單位 V；R 為負載電阻，單位 Ω；C 為濾波電容，單位 F；f<sub>eff</sub> 為電容每秒被補充的次數，單位 Hz；ΔV 為峰對峰漣波，單位 V。假設漣波很小，負載電流在兩峰之間近似固定為 I ≈ V<sub>pk</sub>/R。半波的 f<sub>eff</sub> = f，全波則 f<sub>eff</sub> = 2f。</p>
+<p>一次放電的近似時間是 Δt = 1/f<sub>eff</sub>。電荷守恆給 ΔQ = IΔt，而電容關係給 ΔQ = CΔV；兩式相等得到 CΔV = I/f<sub>eff</sub>，所以 ΔV = I/(f<sub>eff</sub>C) = V<sub>pk</sub>/(f<sub>eff</sub>RC)。直流準位可用上下端中點估計：V<sub>dc</sub> ≈ V<sub>pk</sub> − ΔV/2。本課漣波百分比固定定義為 ΔV/V<sub>pk</sub> × 100 %。</p>
+<p>關鍵假設是 RC ≫ 1/f<sub>eff</sub>，也就是每次只放掉很小一部分電荷，指數放電的前段才近似直線。若公式算得 ΔV 接近甚至大於 V<sub>pk</sub>，不是電壓真的會跌到任意負值，而是線性近似已越界，必須改用完整指數波形與二極體導通條件求解。全波把 f<sub>eff</sub> 加倍，所以同一 V<sub>pk</sub>、R、C 下 ΔV 減半；代價則是多一顆串聯壓降與更多元件。</p>
+<p>這段放電就是一階 RC 暫態，只取指數曲線最靠近起點的一小段。極端檢查也很直接：C 趨近很大或 R 很大時，單位時間電壓下降趨近零；C 很小或負載很重時，輸出幾乎跟著整流脈衝升降，稱它為平滑直流便失去意義。</p>
+
+<h2>數值實例：470 µF 如何把全波漣波壓到 1.773050 %</h2>
+<p>全波橋式、輸入弦波峰值 V<sub>m</sub> = 12 V、f = 60 Hz、R<sub>L</sub> = 1 kΩ、C = 470 µF。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>二極體總壓降</td><td>2 × 0.7（橋式串兩顆）</td><td><strong>1.400000 V</strong></td></tr>
+<tr><td>輸出峰值</td><td>12 − 1.4</td><td><strong>10.600000 V</strong></td></tr>
+<tr><td>有效漣波頻率</td><td>2 × 60</td><td><strong>120.000000 Hz</strong></td></tr>
+<tr><td>漣波電壓</td><td>10.6 / (120 × 1000 × 470 × 10<sup>−6</sup>)</td><td><strong>0.187943 V</strong></td></tr>
+<tr><td>直流準位</td><td>10.6 − 0.187943/2</td><td><strong>10.506028 V</strong></td></tr>
+<tr><td>漣波百分比</td><td>0.187943 / 10.6</td><td><strong>1.773050 %</strong></td></tr>
+<tr><td>負載電流（峰值時）</td><td>10.6 / 1000</td><td><strong>10.600000 mA</strong></td></tr>
+</tbody></table>
+<p>半波對照（同樣 12 V、60 Hz、1 kΩ、470 µF）：壓降只有 0.7 V → V<sub>pk</sub> = <strong>11.300000 V</strong>，但 f<sub>eff</sub> 只有 <strong>60 Hz</strong> → ΔV = <strong>0.400709 V</strong>、V<sub>dc</sub> = <strong>11.099645 V</strong>、漣波 <strong>3.546099 %</strong>。半波的輸出峰值比較高，漣波卻是全波的兩倍。</p>
+<p>電容大小的影響（全波、12 V、60 Hz、1 kΩ）：C = 10 µF → ΔV = <strong>8.833333 V</strong>、漣波 <strong>83.333333 %</strong>（近似已失效）；C = 470 µF → <strong>1.773050 %</strong>；C = 2000 µF → ΔV = <strong>0.044167 V</strong>、漣波 <strong>0.416667 %</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：整流型式與濾波電容</h2>
+<p>交流源接整流器輸入，整流器輸出端同時跨接濾波電容與負載電阻，兩者下端為地。切換半波或全波並調整峰值、頻率、負載與電容，觀察輸出峰值、補能頻率、漣波與近似是否仍可信。</p>
+<div class="controls">
+<label for="rec-type">整流型式<select id="rec-type"><option value="full">全波橋式（四顆二極體，串兩顆）</option><option value="half">半波（一顆二極體）</option></select></label>
+<label for="rec-vm">輸入弦波峰值 V<sub>m</sub>（V）<input id="rec-vm" type="range" min="5" max="40" step="1" value="12"></label>
+<label for="rec-f">輸入頻率 f（Hz）<input id="rec-f" type="range" min="50" max="400" step="10" value="60"></label>
+<label for="rec-r">負載電阻 R<sub>L</sub>（Ω）<input id="rec-r" type="range" min="100" max="5000" step="100" value="1000"></label>
+<label for="rec-c">濾波電容 C（µF）<input id="rec-c" type="range" min="10" max="2000" step="10" value="470"></label>
+</div>
+<div id="rect-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>整流只讓負載電流同向，穩壓才把輸出維持在指定準位；整流加濾波後仍有漣波，不能把它當理想直流源。</li>
+<li>V<sub>m</sub> 是峰值，不是有效值；市電標示 110 V 是有效值，其弦波峰值約為 110 × √2 ≈ 155.6 V。</li>
+<li>橋式導通路徑每次串兩顆二極體，不是一顆；在低電壓系統中，1.4 V 可能吃掉很大比例的電壓預算。</li>
+<li>本課漣波百分比用 ΔV/V<sub>pk</sub>；其他資料可能用 V<sub>dc</sub> 作分母，或用有效值漣波因數，數字不能未看定義就比較。</li>
+<li>加大 C 能減少漣波，但也提高充電脈衝與湧入電流；電容不是愈大就沒有代價，還要考慮額定電壓、等效串聯電阻與放電安全。</li>
+</ul>
+
+<h2>可觀察證據：用示波器分開看直流準位與小漣波</h2>
+<p>用示波器直流耦合量輸出對地，可讀出約 10.506028 V 的準位與峰谷；改用 AC 耦合會扣掉大直流，讓 0.187943 V 的漣波更容易量。量到 120 Hz 能證明 60 Hz 輸入被全波整流，量到 60 Hz 則支持半波；電流探棒若看到又窄又高的二極體充電脈衝，能證明補電只發生在峰頂附近。這些量測不能單獨證明每顆二極體各掉 0.7 V，必須分別跨量，也不能由漣波反推電容標稱值而排除所有其他因素，因為負載、電容誤差與等效串聯電阻都會改變結果。</p>
+
+<h2>連到哪門課</h2>
+<p>電源供應器、充電器與音訊設備都先面對整流後的脈動能量。弦波的峰值與有效值可回到<a href="../電路學-互動課程/09-弦波與相量.html">電路學的弦波與相量</a>，線性漣波近似的底層則是<a href="../電路學-互動課程/07-一階暫態RC與RL.html">一階 RC 暫態</a>。下一章加入齊納穩壓，讓負載在輸入與漣波變動時仍看到受控電壓；後面的電源章還會以更高切換頻率重用「週期補能、電容平均輸出」的觀念。</p>
+<nav class="pager" aria-label="章節導覽"><a href="03-二極體工作點與模型.html">← 上一頁：二極體工作點與模型</a><a href="05-穩壓限幅與特殊二極體.html">下一頁：穩壓限幅與特殊二極體 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 整流與濾波</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,71 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 米勒效應與頻寬｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">12・找出高頻訊號被哪顆等效電容吃掉</p>
+<h1>米勒效應與頻寬：用疊接保住增益也保住速度</h1>
+<p class="lead">一顆只有 1 pF 的跨接電容，為何能把高增益級拖成 206 pF？關鍵不是實體電容變大，而是反相輸入與輸出朝相反方向擺動，使輸入端必須供應更多充放電電流。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="11-單級放大器三大組態.html">11 單級放大器三大組態</a>，以及<a href="../電路學-互動課程/12-一階濾波器與頻率響應.html">電路學的一階濾波器與 −3 dB</a>。</p>
+
+<h2>痛點：電晶體直流正常，為什麼頻率一高增益就消失</h2>
+<p>「資料手冊的 C<sub>gd</sub> 才 1 pF，訊號源也不算慢，為什麼共射或共源級到幾百 kHz 就掉增益？」只把閘源電容與跨接電容直接相加，會漏掉輸出也在動。共射／共源是反相級，輸入升高時輸出下降；跨在兩端的電容每次要跨越兩邊相反的位移，因此輸入端看到的充電需求遠大於實體電容量。</p>
+<p>米勒效應（Miller effect）是跨接阻抗在有增益的兩節點之間，從單一端口看見的等效阻抗改變。這是電路等效，不是材料或幾何尺寸發生變化。BJT 的跨集電容 C<sub>µ</sub>、MOSFET 的閘汲電容 C<sub>gd</sub> 都會參與；只有兩端反向擺動時才得到明顯的 (1 + |A<sub>v</sub>|) 倍放大。</p>
+
+<h2>白話直覺：兩端反向移動，充電路徑被迫多搬電荷</h2>
+<p>可以暫時把跨接電容想成連著兩扇反向移動門的彈簧；比喻到此為止，精確定義是電容電流由兩端電壓差的變化率決定。以訊號源對地為參考，源經 R<sub>s</sub> 驅動共源閘極，源極接交流地，汲極經負載到電源，C<sub>gd</sub> 跨接閘極與汲極，所有交流回路都經電源旁路回地而閉合。</p>
+<p>輸入上升時，閘極電場增強通道，汲極電流增加；負載壓降隨之增加，汲極電壓下降。能量由電源經負載與電晶體送往地，一部分同時用來替 C<sub>gs</sub> 與 C<sub>gd</sub> 重新分配電荷。若 v<sub>out</sub> = −|A<sub>v</sub>|v<sub>in</sub>，C<sub>gd</sub> 兩端變化不是 v<sub>in</sub>，而是 (1 + |A<sub>v</sub>|)v<sub>in</sub>。訊號源經 R<sub>s</sub> 必須供應放大的電容電流，輸入電壓來不及跟上，高頻增益便下降。</p>
+<p>射隨器輸出與輸入同向，跨接電容兩端差值反而很小；共基／共閘的輸入在射極／源極，基極／閘極是交流地，也沒有大幅反相輸出跨回輸入端。因此米勒效應只在反相放大發生。疊接（Cascode）把共射加共基，或把共源加共閘：上方電晶體的低輸入阻抗把下方輸出節點箝在小擺幅，下級增益約 −1，跨接電容只剩兩倍等效值，而總輸出仍可在上方負載取得高增益。</p>
+<p>更精確地說，共基的訊號從射極輸入，而跨集電容的另一端是固定在交流地的基極；共閘則由源極輸入，閘極固定在交流地。跨接電容因此位於輸出與交流地之間，沒有跨回輸入，也就沒有高增益反相節點把其端電壓差放大。疊接把共基或共閘放在共射或共源上方，正是利用這個端點配置隔離下方元件的輸入與最終輸出。</p>
+<p class="note">來源：07-電子學-下 §9.4。</p>
+
+<h2>推導：從電容電流推出米勒倍數與高頻極點</h2>
+<p>令跨接電容阻抗為 Z<sub>C</sub>，輸入端流入它的電流 i = (v<sub>in</sub> − v<sub>out</sub>)/Z<sub>C</sub>。在反相中頻增益 v<sub>out</sub> = −|A<sub>v</sub>|v<sub>in</sub> 下，i = v<sub>in</sub>(1 + |A<sub>v</sub>|)/Z<sub>C</sub>。同一輸入電壓引出的電流增為 (1 + |A<sub>v</sub>|) 倍，等效導納與等效電容也放大同樣倍數，所以 C<sub>mil</sub> = (1 + |A<sub>v</sub>|)C<sub>gd</sub>。</p>
+<p>再加上直接對交流地的 C<sub>gs</sub>，得到 C<sub>in</sub> = C<sub>gs</sub> + (1 + |A<sub>v</sub>|)C<sub>gd</sub>。訊號源戴維寧電阻 R<sub>s</sub> 與它形成一階低通，τ = R<sub>s</sub>C<sub>in</sub>，f<sub>H</sub> = 1/(2πτ)。τ 單位 s；R<sub>s</sub> 單位 Ω；電容單位 F；f<sub>H</sub> 單位 Hz。到 f<sub>H</sub> 時振幅為中頻值的 0.7071 倍，即 −3.010300 dB，之後每十倍頻約再降 20 dB。</p>
+<p>這個推導假設 A<sub>v</sub> 在關心頻段內為常數，故是低頻近似，不能拿固定中頻增益精算 f<sub>H</sub> 附近的完整多極點行為。輸出端的負載電阻與負載電容也會建立另一極點；本章只辨認輸入主極點，不宣稱真實頻率響應永遠只有一階。</p>
+<p>例如輸出端等效電阻近似 R<sub>C</sub>、總負載電容為 C<sub>L</sub> 時，還會出現約由 R<sub>C</sub>C<sub>L</sub> 決定的時間常數。若這個輸出極點比輸入極點更低，它才是首先限制頻寬的主極點；若兩者接近，幅度斜率與相位會同時受多個極點影響，不能只取兩個截止頻率中較小者便宣稱得到完整響應。本章的數值表刻意只隔離輸入端機制。</p>
+<p>也可從電荷量檢查同一結論。電容端電荷變化 ΔQ = CΔV；若輸入變化 Δv<sub>in</sub>，反相輸出同時變化 −|A<sub>v</sub>|Δv<sub>in</sub>，跨接電容所需電荷便是 C<sub>gd</sub>(1 + |A<sub>v</sub>|)Δv<sub>in</sub>。把它除以輸入變化，正好得到等效電容。這種端口等效只保留訊號源必須提供多少電荷，不能用來推論電容兩端的實際能量分配；後者還要保留輸出端等效與受控源。</p>
+<p>疊接時，下方電晶體看進上方共基／共閘輸入阻抗約 1/g<sub>m2</sub>，所以它的局部增益約為 −g<sub>m1</sub>/g<sub>m2</sub> ≈ −1，假設兩顆偏在同一電流且跨導近似相等。於是 C<sub>in</sub> = C<sub>gs</sub> + 2C<sub>gd</sub>。共射在 C<sub>gd</sub> 主導時，|A<sub>v</sub>|f<sub>H</sub> 趨近 1/(2πR<sub>s</sub>C<sub>gd</sub>)；疊接改變局部增益分配，因此能超越這條單級近似上限。</p>
+
+<h2>數值實例：1 pF 經反相增益變成 201 pF</h2>
+<p>|A<sub>v</sub>| = 200、R<sub>s</sub> = 2 kΩ、C<sub>gd</sub> = 1 pF、C<sub>gs</sub> = 5 pF。共射／共源下級增益為 −200；疊接下級約 −1，但兩者總電壓增益都維持 200。</p>
+<table><thead><tr><th>量</th><th>共射／共源</th><th>疊接 Cascode</th></tr></thead><tbody>
+<tr><td>米勒放大後跨接電容</td><td><strong>201.000000 pF</strong></td><td><strong>2.000000 pF</strong></td></tr>
+<tr><td>C<sub>in</sub></td><td><strong>206.000000 pF</strong></td><td><strong>7.000000 pF</strong></td></tr>
+<tr><td>f<sub>H</sub></td><td><strong>386298.405563 Hz</strong></td><td><strong>11368210.220850 Hz</strong></td></tr>
+<tr><td>換算</td><td><strong>386.298406 kHz</strong></td><td><strong>11.368210 MHz</strong></td></tr>
+<tr><td>增益—頻寬乘積</td><td><strong>77.259681 MHz</strong></td><td><strong>2273.642044 MHz</strong></td></tr>
+</tbody></table>
+<p>疊接把頻寬提高 <strong>29.428571 倍</strong>，實體 C<sub>gd</sub> 仍是 1 pF。共射增益改為 10、50、200、500 時，f<sub>H</sub> 依序為 <strong>4973591.971622</strong>、<strong>1421026.277606</strong>、<strong>386298.405563</strong>、<strong>157267.730328 Hz</strong>；GBW 則為 <strong>49.735920</strong>、<strong>71.051314</strong>、<strong>77.259681</strong>、<strong>78.633865 MHz</strong>，逐步逼近 <strong>79.577472 MHz</strong>，而非嚴格固定。</p>
+<p>因此「GBW 不變」只是 C<sub>gd</sub> 主導且增益夠大時的漸近說法。低增益時，固定的 C<sub>gs</sub> 仍占 C<sub>in</sub> 顯著份額，所以增益提高時 GBW 會由 49.735920 MHz 緩慢上升到 78.633865 MHz；當米勒項遠大於 C<sub>gs</sub>，它才趨近 1/(2πR<sub>s</sub>C<sub>gd</sub>)。這個趨勢不是放大器額外產生頻寬，而是被固定輸入電容拖累的比例逐漸變小。</p>
+<p>這組數字還說明三個可直接採取的設計方向。降低 R<sub>s</sub> 會等比例提高兩種拓樸的輸入極點，但前級必須供應更大充放電電流；縮小 C<sub>gd</sub> 需要選較小元件或不同製程，可能犧牲跨導與雜訊；降低單級增益則可把總增益分配到多級。疊接的代價是堆疊電晶體吃掉電壓餘裕，低電源電壓下可能先失去輸出擺幅，不能只比較頻寬倍數。</p>
+
+<section class="workspace"><h2>自由實驗：比較共射與疊接的輸入主極點</h2>
+<p>訊號源經 R<sub>s</sub> 接反相級輸入，C<sub>gs</sub> 對交流地，C<sub>gd</sub> 跨輸入與局部輸出；回路經電源旁路返回地。切換共射／共源與疊接，觀察同一組實體電容如何形成不同等效電容、頻寬與 GBW。</p>
+<div class="controls">
+<label for="fq-topo">放大拓樸<select id="fq-topo"><option value="ce">共射／共源（米勒效應全開）</option><option value="cascode">疊接 Cascode（米勒效應被壓掉）</option></select></label>
+<label for="fq-av">中頻電壓增益絕對值 |A<sub>v</sub>|<input id="fq-av" type="range" min="10" max="500" step="5" value="200"></label>
+<label for="fq-rs">訊號源阻抗 R<sub>s</sub>（Ω）<input id="fq-rs" type="range" min="100" max="50000" step="100" value="2000"></label>
+<label for="fq-cgd">跨接電容 C<sub>gd</sub> 或 C<sub>µ</sub>（pF）<input id="fq-cgd" type="range" min="0.1" max="20" step="0.1" value="1"></label>
+<label for="fq-cgs">輸入電容 C<sub>gs</sub> 或 C<sub>π</sub>（pF）<input id="fq-cgs" type="range" min="0.5" max="50" step="0.5" value="5"></label>
+</div>
+<div id="freq-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>米勒效應只在反相放大產生大倍數；射隨器同相，共基／共閘的控制端是交流地，都不適用 (1 + |A<sub>v</sub>|) 的說法。</li>
+<li>被放大的是輸入端所見的等效電容，不是實體 C<sub>gd</sub> 或 C<sub>µ</sub> 改變；拆下元件量電容不會讀到 201 pF。</li>
+<li>(1 + |A<sub>v</sub>|) 使用中頻增益並假設它近似常數；接近 f<sub>H</sub> 時增益已下降，不能把此式當完整頻率響應。</li>
+<li>本章 f<sub>H</sub> 是輸入主極點；輸出負載與其他寄生電容仍可建立更低極點，屆時單極點模型失效。</li>
+<li>GBW 近似不變只描述單純共射在 C<sub>gd</sub> 主導時的趨勢；疊接重分配局部增益，不受同一米勒上限約束。</li>
+</ul>
+
+<h2>可觀察證據：改源阻抗與增益，找出是哪個極點</h2>
+<p>用訊號產生器掃頻，以雙通道示波器或網路分析儀同時量輸入與輸出，找輸出降至中頻值 0.7071 倍的 −3.010300 dB 點。這能證明 f<sub>H</sub> 與每十倍頻約 −20 dB 的主極點行為；把 R<sub>s</sub> 換成不同值，若 f<sub>H</sub> 近似反比改變，能支持極點位於輸入端；再換負載電阻改變增益，若頻寬反向變化，能支持米勒效應主導。單次掃頻不能分別證明 C<sub>gd</sub> 與 C<sub>gs</sub> 的實際值，也不能直接證明疊接內部下級恰為 −1；要以多組條件解聯立，或量內部節點。</p>
+
+<h2>連到哪門課</h2>
+<p>高頻前端、示波器探棒緩衝與寬頻放大器都靠低源阻抗及疊接管理寄生電容。一階低通、−3 dB 與每十倍頻 −20 dB 見<a href="../電路學-互動課程/12-一階濾波器與頻率響應.html">電路學的頻率響應</a>；把極點寫成轉移函數則見<a href="../../../共通基礎/數學/互動課程/08-拉氏轉換.html">工程數學先修的拉氏轉換</a>。GBW 與相位裕度會在第 14 章接到回授穩定性。</p>
+<nav class="pager" aria-label="章節導覽"><a href="11-單級放大器三大組態.html">← 上一頁：單級放大器三大組態</a><a href="13-差動對與電流鏡.html">下一頁：差動對與電流鏡 →</a></nav>
+</main>
+<footer class="site-footer"><span>12 米勒效應與頻寬</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

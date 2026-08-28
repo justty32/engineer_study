@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 介電質與邊界條件｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・看懂材料如何改寫電場的大小與方向</p>
+<h1>介電質與邊界條件：連續的量不是同一個</h1>
+<p class="lead">介電質不提供可長距離流動的電荷，卻會因內部正負電荷微小位移而重塑電場。掌握 E 的切向連續、D 的法向連續，就能預測場穿越兩種材料時如何轉向。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="04-電位與電位梯度.html">04 電位與電位梯度</a>的偶極、等位面與靜電場。</p>
+
+<h2>痛點：E、D、P 都在講電，為什麼不能只留一個</h2>
+<p>把介電常數較大的材料放進電場，場會變小，界面上的方向也會改變。若只背 <b>D</b> = ε<b>E</b>，很容易把 <b>D</b> 誤認成另一種電場，或以為界面兩側所有分量都連續。真正分工是：<b>E</b> 描述單位正電荷受力，<b>P</b> 描述材料內每單位體積的偶極矩，<b>D</b> 則把束縛電荷的貢獻包進材料反應，使高斯定律只需追自由電荷。本課粗體代表向量，非粗體代表大小。</p>
+<p>極化（polarization）是外場使分子正負電荷中心產生微小相對位移；不是電子穿過整塊絕緣體，也不是材料永久帶上淨電荷。極化向量 <b>P</b> 的單位 C/m²。電位移向量（electric displacement field）<b>D</b> 的單位也是 C/m²，但角色不同：∇⋅<b>D</b> = ρ<sub>自由</sub>，讓工程師只列電極放入的自由電荷。</p>
+
+<h2>白話直覺：材料內的小偶極排隊，界面替場重新分配分量</h2>
+<p>可暫把介質想成會被拉歪、卻被束縛在原位的小彈簧；比喻到此為止，精確機制是束縛電荷的微小位移。源可能是電極上的自由電荷，原先的 <b>E</b> 由正指向負；距離與幾何決定真空場大小。材料加入後，外場使分子極化，材料兩端出現束縛面電荷，其反向場削弱內部 <b>E</b>，能量仍存在電場與被極化材料的狀態中。</p>
+<p>界面不允許靜電場憑空產生環流，所以 E 的切向分量相同；界面若沒有自由面電荷，高斯定律又要求 D 的法向分量相同。由於 <b>D</b> = ε<b>E</b>，高 ε 一側的 E 法向分量會縮小，而切向不變，合成方向遂更貼近界面。LCR 表最後不是直接看見分子，而是量已知幾何電容器的 C，再由 C = εA/d 反推材料反應。</p>
+<p>量級上，真空 ε<sub>r</sub> = 1，空氣約 1.0006，聚四氟乙烯約 2.1，FR−4 約 4.4，玻璃約 5 至 7，水在低頻約 80。相較空氣約 3 MV/m 的崩潰場，本章預設 1000 V/m 很小；但「ε 大」不代表一定耐高壓，介電常數與介電強度是兩種不同材料參數。</p>
+<p class="note">來源：08-電磁學-上 §5.1–§5.4。</p>
+
+<h2>推導：一個扁長方形與一個扁藥盒</h2>
+<p><strong>材料關係。</strong>線性介質中 <b>P</b> = χ<sub>e</sub>ε<sub>0</sub><b>E</b>，所以 <b>D</b> = ε<sub>0</sub><b>E</b> + <b>P</b> = ε<b>E</b>，且 ε = ε<sub>0</sub>(1 + χ<sub>e</sub>) = ε<sub>0</sub>ε<sub>r</sub>。ε<sub>r</sub> 無單位，χ<sub>e</sub> 是電極化率。此式假設材料線性、均質、等向、無色散；真實材料會隨場強、位置、方向與頻率偏離。</p>
+<p><strong>切向條件。</strong>跨界面取扁長方形路徑，兩條長邊長 Δℓ 且分居界面兩側，短邊趨近零。靜電環流為零，故 E<sub>t1</sub>Δℓ − E<sub>t2</sub>Δℓ = 0，得到 E<sub>t1</sub> = E<sub>t2</sub>。這是電位沿界面不能突然斷裂的結果。</p>
+<p><strong>法向條件。</strong>跨界面取面積 A 的扁藥盒，側面面積趨近零。廣義高斯定律給 D<sub>n1</sub>A − D<sub>n2</sub>A = ρ<sub>s</sub>A，故 D<sub>n1</sub> − D<sub>n2</sub> = ρ<sub>s</sub>。ρ<sub>s</sub> 是自由面電荷密度；若界面沒有自由電荷，D<sub>n</sub> 才連續。束縛面電荷密度則為 ρ<sub>sb</sub> = <b>P</b>⋅<b>a</b><sub>n</sub>，它是真實電荷，只是不能由導線抽走。</p>
+<p><strong>折射律。</strong>角度從法線量起，tan θ = E<sub>t</sub>/E<sub>n</sub>。把兩個連續條件相除，得 tan θ<sub>2</sub>/tan θ<sub>1</sub> = ε<sub>r2</sub>/ε<sub>r1</sub>。因此場由低 ε 進高 ε 時 θ 變大，也就是向界面躺平。這是靜電邊界規則，不等同波動光學的完整司乃耳定律；時變波還需同時處理磁場、頻率與反射。</p>
+<p>邊界條件也提供一種解題順序。先把入射側 <b>E</b> 拆成法向與切向，再保留切向 E、保留法向 D，最後用各側 ε 把 D 換回 E 並重新合成。這個流程比猜「折射方向」可靠，還能用兩個殘差檢查計算。若界面另放自由面電荷，就只修改 D 的法向差；切向 E 在靜電假設下仍不變。若材料具有方向性，ε 不再是單一數字而是張量，<b>D</b> 甚至未必與 <b>E</b> 平行，本章的簡單角度式便不適用。</p>
+<p>極化還會改變儲能與力。固定自由電荷時，插入介質通常降低電場與電位差；固定電壓時，電源會補進更多自由電荷。兩個實驗看似得到不同敘述，其實是邊界控制量不同。說「介質讓場變小」前必須交代固定 Q 還是固定 V，否則無法判斷能量由材料、場或電源之間如何交換。</p>
+
+<h2>數值實例：真空進入相對介電常數四的材料</h2>
+<p>ε<sub>r1</sub> = 1（真空）→ ε<sub>r2</sub> = 4，入射角 θ<sub>1</sub> = 60°（從法線量起），介質 1 側的場 |E<sub>1</sub>| = 1000 V/m。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>E<sub>1</sub> 切向</td><td>E<sub>1t</sub> = 1000 sin 60°</td><td><strong>866.025404 V/m</strong></td></tr>
+<tr><td>E<sub>1</sub> 法向</td><td>E<sub>1n</sub> = 1000 cos 60°</td><td><strong>500.000000 V/m</strong></td></tr>
+<tr><td>D<sub>1</sub> 法向</td><td>D<sub>1n</sub> = ε<sub>0</sub> × 1 × 500</td><td><strong>4.427094 × 10<sup>−9</sup> C/m²</strong></td></tr>
+<tr><td>E<sub>2</sub> 切向</td><td>E<sub>2t</sub> = E<sub>1t</sub>（連續）</td><td><strong>866.025404 V/m</strong></td></tr>
+<tr><td>E<sub>2</sub> 法向</td><td>E<sub>2n</sub> = D<sub>1n</sub>/(ε<sub>0</sub> × 4) = 500/4</td><td><strong>125.000000 V/m</strong></td></tr>
+<tr><td>E<sub>2</sub> 大小</td><td>√(866.025404² + 125²) = √765625</td><td><strong>875.000000 V/m</strong></td></tr>
+<tr><td>折射角</td><td>θ<sub>2</sub> = arctan(866.025404/125)（＝arctan(tan 60° × 4)）</td><td><strong>81.786789°</strong></td></tr>
+<tr><td>介質 2 的極化</td><td>P<sub>2</sub> = (ε<sub>r2</sub> − 1)ε<sub>0</sub>E<sub>2</sub> = 3 × ε<sub>0</sub> × 875</td><td><strong>2.324224 × 10<sup>−8</sup> C/m²</strong></td></tr>
+</tbody></table>
+<p>邊界對照：θ<sub>1</sub> = <strong>0°</strong>（垂直入射）→ E<sub>2t</sub> = 0、E<sub>2n</sub> = <strong>250 V/m</strong>、θ<sub>2</sub> = 0°——<strong>垂直入射不會折射，只會變小</strong>。ε<sub>r2</sub> = <strong>80</strong>（水）、θ<sub>1</sub> = 60° → E<sub>2n</sub> = <strong>6.250000 V/m</strong>、|E<sub>2</sub>| = <strong>866.047956 V/m</strong>、θ<sub>2</sub> = <strong>89.586511°</strong>——場線幾乎完全躺平在水面上。反過來 ε<sub>r1</sub> = 4 → ε<sub>r2</sub> = 1、θ<sub>1</sub> = 60° → E<sub>2n</sub> = <strong>2000 V/m</strong>、|E<sub>2</sub>| = <strong>2179.449472 V/m</strong>、θ<sub>2</sub> = <strong>23.413224°</strong>，場線變陡且變強。</p>
+
+<section class="workspace"><h2>自由實驗：電場穿越介質界面</h2>
+<p>界面兩側都是線性、均質、等向介質，且界面沒有自由面電荷。調整材料與入射場，觀察哪些分量保持連續、合成方向如何改變。</p>
+<div class="controls">
+<label for="die-er1">介質 1 的 ε<sub>r1</sub>（入射側）<input id="die-er1" type="range" min="1" max="12" step="0.1" value="1"></label>
+<label for="die-er2">介質 2 的 ε<sub>r2</sub>（穿透側）<input id="die-er2" type="range" min="1" max="12" step="0.1" value="4"></label>
+<label for="die-theta">入射角 θ<sub>1</sub>（°，從法線量起）<input id="die-theta" type="range" min="0" max="89" step="1" value="60"></label>
+<label for="die-e1">介質 1 側的場大小（V/m）<input id="die-e1" type="range" min="100" max="5000" step="100" value="1000"></label>
+</div>
+<div id="dielectric-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li><b>D</b> 不是介質版本的 <b>E</b>；前者方便只追自由電荷，後者決定電荷受力。</li>
+<li>無自由面電荷時連續的是 D 的法向，不是 E 的法向；有 ρ<sub>s</sub> 時 D 的法向也會跳變。</li>
+<li>靜電時連續的是 E 的切向，不是 D 的切向；ε 不同時 D 的切向通常不同。</li>
+<li>束縛電荷是真實電荷，但被分子結構束縛；自由與束縛是移動能力與記帳方式的區別。</li>
+<li>ε<sub>r</sub> 會隨頻率改變；水的 80 是低頻量級，不能直接套到光頻。</li>
+<li>介電常數大表示極化反應強，不表示介電強度必然高，也不表示材料沒有損耗。</li>
+</ul>
+
+<h2>可觀察證據：由電容反推材料，不是把探頭塞進界面</h2>
+<p>LCR 表可在指定頻率量已知 A 與 d 的平行板電容器，利用 C = ε<sub>0</sub>ε<sub>r</sub>A/d 反推 ε<sub>r</sub>；改變測試頻率，讀值變化能顯示色散。這能證明該試樣在該幾何、溫度與頻率下的等效介電常數，也能比較換材料後 C 增加幾倍。</p>
+<p>它不能直接證明分子偶極如何排列，不能直接讀出 <b>P</b> 或束縛面電荷，也不能量到數學上緊貼界面兩側的 E 法向跳變，因為任何探頭都有有限尺寸並擾動場。測得 C 也可能含邊緣場、電極接觸與損耗，故與理想平行板模型的差異不能全歸因於 ε。</p>
+
+<h2>連到哪門課</h2>
+<p>波動光學會把界面條件擴展成反射與折射，可先看<a href="../../../共通基礎/物理/互動課程/14-幾何光學與波動光學.html">普通物理的幾何光學與波動光學</a>。PCB 的 FR−4 介電常數會改變傳播速度與走線特性阻抗，第 15 章再接回傳輸線；下一章則用 ε 直接算幾何構型的電容與場能量。</p>
+<nav class="pager" aria-label="章節導覽"><a href="04-電位與電位梯度.html">← 上一頁：電位與電位梯度</a><a href="06-電容與電場儲能.html">下一頁：電容與電場儲能 →</a></nav>
+</main>
+<footer class="site-footer"><span>05 介電質與邊界條件</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

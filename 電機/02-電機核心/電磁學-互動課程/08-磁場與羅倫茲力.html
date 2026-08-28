@@ -1,0 +1,71 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 磁場與羅倫茲力｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・磁場不替粒子加速，只替運動轉彎</p>
+<h1>磁場與羅倫茲力：從受力方向讀懂帶電粒子的軌跡</h1>
+<p class="lead">磁場只對正在運動的電荷施展它的磁力部分，而且力永遠指向速度的側面。掌握外積、圓周運動與量級後，就能判斷粒子束、導線與馬達為何轉向而不憑空增加能量。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-向量場語言.html">01 向量場語言</a>的向量外積，以及<a href="02-庫侖定律與電場.html">02 庫侖定律與電場</a>的力概念。</p>
+
+<h2>痛點：磁鐵明明能推動東西，為什麼又說磁場不做功</h2>
+<p>手邊的磁鐵會吸起鐵片，馬達也確實能帶動負載，於是「磁場不做功」很像自相矛盾。關鍵是這句話針對單一移動電荷的磁力：力與瞬時速度垂直，不能改變速率，只能改方向。馬達得到的機械能來自電源；磁場把電流中的電荷所受側向力組織成轉矩，並不是免費供應能量。若同時有電場，總力仍可能改變速率，因此判斷能量時要把兩部分分開。</p>
+<p>羅倫茲力（Lorentz force）寫成 <b>F</b> = q(<b>E</b> + <b>v</b>×<b>B</b>)。q 是電荷量，單位 C；<b>E</b> 是電場，單位 V/m；<b>v</b> 是速度，單位 m/s；<b>B</b> 是磁通密度（magnetic flux density），單位 T；<b>F</b> 是力，單位 N。本課粗體代表向量，非粗體代表它的大小，例如 B = |<b>B</b>|。電場部分可沿速度做功，磁場部分則由外積保證垂直。</p>
+<p class="warning">釹鐵硼強磁鐵在幾公分距離就可能猛然吸合並夾傷手指；強磁場會干擾心律調節器、機械錶與磁卡。MRI 室內不可攜入鐵器，否則鐵器可能被加速成飛彈。</p>
+
+<h2>白話直覺：源在運動，力便往側面偏</h2>
+<p>可以暫時把磁場想成只會轉動方向盤、不踩油門的操作者；比喻到此為止，精確定義仍是 q<b>v</b>×<b>B</b>。源可以是後一章要研究的電流，也可以是磁性材料中的微觀磁偶極；在已知均勻 <b>B</b> 的區域，正電荷的受力方向由右手定則決定，負電荷則相反。力的大小 qvB sin θ 取決於速度與場的夾角，平行時為零，垂直時最大。</p>
+<p>若粒子垂直射入均勻場，磁力始終朝圓心，場的大小不因粒子在圓上的位置而變，軌跡因此封閉成圓；若另有平行速度分量，它保持不變，圓周運動與前進疊成螺旋。磁場能量存於場及建立場的電源系統，不會在理想磁力中傳給粒子。加入材料會改變 <b>B</b>，鐵磁材料還可能飽和；跨越材料邊界時，法向 B 的連續條件也會改變分佈。霍爾高斯計只能量探頭所在位置、敏感軸方向的 B 分量。</p>
+<p>完整因果鏈是：電流或磁化是磁場的源，場繞著電流並依幾何與距離改變；運動電荷受垂直於 <b>v</b> 與 <b>B</b> 的力，動能不變而方向改變；能量仍在場與供電系統中；材料磁導率與邊界重新分配 B；儀器最後只讀到局部方向分量與受力結果。量級上，地磁約 50 µT、冰箱磁鐵約 5 mT、喇叭磁鐵約 1 T、醫用 MRI 約 1.5–3 T，相差超過四個數量級。</p>
+<p class="note">來源：08-電磁學-中 §8.1–§8.2。</p>
+
+<h2>推導：垂直力如何導出半徑與固定迴旋頻率</h2>
+<p><strong>磁力不做功。</strong>瞬時功率 P = <b>F</b>⋅<b>v</b> = q(<b>v</b>×<b>B</b>)⋅<b>v</b>。外積 <b>v</b>×<b>B</b> 必與 <b>v</b> 垂直，因此內積為零，P = 0。動能 K = (1/2)mv² 不變。這裡假設只有靜態均勻磁場，不含電場、碰撞、輻射損失與相對論效應。</p>
+<p><strong>迴旋半徑。</strong>當 θ = 90° 時，磁力 qvB 正好充當向心力 mv²/r，所以 mv²/r = qvB，消去一個 v 得 r = mv/(qB)。m 是粒子質量，單位 kg；r 是半徑，單位 m。速度愈快或質量愈大，軌道愈寬；電荷量或磁場愈大，轉彎愈急。一般夾角要把 v 換成橫向分量 v sin θ。</p>
+<p><strong>迴旋頻率。</strong>一圈長度為 2πr，故 f<sub>c</sub> = v/(2πr)。代入 r = mv/(qB) 後得到 f<sub>c</sub> = qB/(2πm)，速度完全消去；週期 T = 1/f<sub>c</sub>。粒子跑得更快時半徑同比放大，繞圈所需時間不變，這是迴旋加速器可用固定頻率反覆加速的基礎。速度接近光速時質量與動量關係改變，古典結論便不再精確。</p>
+<p><strong>導線受力。</strong>電流元受力 d<b>F</b> = I d<b>ℓ</b>×<b>B</b>。若直導線長 L，電流 I 與均勻場夾角 θ，沿整根積分得 F = BIL sin θ。I 單位 A，L 單位 m。許多移動電荷的微小側向力加總成可量的導線力，再由線圈幾何形成馬達轉矩。</p>
+<p><strong>磁高斯定律。</strong>∇⋅<b>B</b> = 0，讀作 del dot B 等於零。用散度定理可寫成 ∮<sub>S</sub> <b>B</b>⋅d<b>A</b> = 0：任何封閉面出去多少磁通，就必須進來多少。磁力線沒有起點與終點，至今也未找到孤立磁單極。這與 ∇⋅<b>E</b> = ρ<sub>v</sub>/ε<sub>0</sub> 的電荷可作電場源形成根本差別。</p>
+
+<h2>數值實例：質子在 0.5 T 場中畫出兩公分的圓</h2>
+<p>質子（q = 1.602176634 × 10<sup>−19</sup> C、m = 1.67262192369 × 10<sup>−27</sup> kg）以 v = 1 × 10<sup>6</sup> m/s 垂直射入 B = 0.5 T 的均勻磁場（θ = 90°）。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>磁力</td><td>F = qvB sin 90° = 1.602176634 × 10<sup>−19</sup> × 10<sup>6</sup> × 0.5</td><td><strong>8.010883 × 10<sup>−14</sup> N</strong></td></tr>
+<tr><td>迴旋半徑</td><td>r = mv/(qB)</td><td><strong>0.020879 m ＝ 2.09 cm</strong></td></tr>
+<tr><td>迴旋頻率</td><td>f<sub>c</sub> = qB/(2πm)</td><td><strong>7.622593 MHz</strong></td></tr>
+<tr><td>週期</td><td>T = 1/f<sub>c</sub></td><td><strong>1.311889 × 10<sup>−7</sup> s</strong></td></tr>
+<tr><td>檢查</td><td>r = v/(2πf<sub>c</sub>)</td><td><strong>0.020879 m ✓</strong></td></tr>
+<tr><td>動能</td><td>K = (1/2)mv²</td><td><strong>5.219842 keV</strong></td></tr>
+</tbody></table>
+<p>導線模式（固定長度 L = 0.20 m，與普通物理 10 章同一根）：B = 0.5 T、I = 0.15 A、θ = 90° → F = BIL = <strong>0.015000 N</strong>。</p>
+<p>邊界對照：θ = <strong>0°</strong>（速度平行磁場）→ F = <strong>0 N</strong>，粒子直線前進、完全不受影響——磁場只對「橫向」的運動有反應。θ = 30° → F = <strong>4.005442 × 10<sup>−14</sup> N</strong>（剛好一半）。B 降到 <strong>0.01 T</strong> → r = <strong>1.043968 m</strong>、f<sub>c</sub> = <strong>0.152452 MHz</strong>；B 升到 <strong>2 T</strong> → r = <strong>0.005220 m</strong>、f<sub>c</sub> = <strong>30.490373 MHz</strong>——半徑與 B 成反比、頻率與 B 成正比。導線模式 I 拉到 5 A → F = <strong>0.500000 N</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：比較質子軌跡與導線受力</h2>
+<p>均勻磁場覆蓋觀測區，帶電粒子或固定長度導線放在其中。切換受力對象並調整夾角，觀察力、半徑、頻率與能量關係。</p>
+<div class="controls">
+<label for="lor-mode">受力模式<select id="lor-mode"><option value="particle">帶電粒子（質子）</option><option value="wire">載流導線（長度固定 0.20 m）</option></select></label>
+<label for="lor-b">磁通密度 B（T）<input id="lor-b" type="range" min="0.01" max="2" step="0.01" value="0.5"></label>
+<label for="lor-angle">速度或電流與 B 的夾角 θ（°）<input id="lor-angle" type="range" min="0" max="90" step="1" value="90"></label>
+<label for="lor-v">粒子速率 v（× 10⁶ m/s，只有粒子模式用）<input id="lor-v" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+<label for="lor-i">導線電流 I（A，只有導線模式用）<input id="lor-i" type="range" min="0.05" max="5" step="0.05" value="0.15"></label>
+</div>
+<div id="lorentz-output" class="output" aria-live="polite">這個模式只用到 B、θ、v 三個滑桿，導線電流不影響結果。F = 8.010883 × 10<sup>−14</sup> N；r = 0.020879 m；f<sub>c</sub> = 7.622593 MHz；T = 1.311889 × 10<sup>−7</sup> s；K = 5.219842 keV。θ = 90°，力最大且軌跡是完整的圓。磁力垂直速度，動能不變；若把角度拉到 0°，沒有橫向分量，也就沒有圓周運動。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li><b>B</b> 與 <b>H</b> 是不同的場；本章只用真正進入羅倫茲力的 <b>B</b>，材料中的分工留到第 10 章。</li>
+<li>磁力不做功不等於馬達不輸出功；能量由電源輸入，磁場負責安排力與運動方向。</li>
+<li>磁力線是表達方向與密度的輔助畫法，不是空間中的實體細線；磁通才是可計算的積分量。</li>
+<li>電流方向依正電荷移動約定；金屬中電子實際漂移方向相反，代入導線力公式仍用約定電流。</li>
+<li>迴旋頻率與速度無關只屬非相對論、均勻靜磁場模型；高速粒子還要修正動量。</li>
+</ul>
+
+<h2>可觀察證據：高斯計量局部 B，力規量宏觀受力</h2>
+<p>霍爾效應高斯計把探頭置於磁場中，量到的是探頭敏感軸上的局部 B 分量；把探頭轉 90°，讀數會隨投影改變。沿空間逐點掃描可重建有限解析度的場分佈。這能證明某點的 B 大小與方向，也能用已知電荷速度預測彎曲半徑；但單一探頭不能證明整個空間的分佈，更不能證明宇宙中絕對不存在磁單極，只能說目前實驗未發現。</p>
+<p>另可把直導線置於磁鐵氣隙，串接電流表並以電子秤或力規量受力。儀器量到 I 與 F，改變角度能驗證 F = BIL sin θ，反轉電流會反轉力。這能證明載流導線確實受到與電流、磁場相關的側向力；不能單靠宏觀力讀值分辨每顆電子的微觀軌跡，也不能證明磁場提供了能量。</p>
+
+<h2>連到哪門課</h2>
+<p>向量外積與右手定則的數學操作見<a href="../../../共通基礎/數學/互動課程/04-向量與矩陣.html">工程數學先修的向量與矩陣</a>；磁力、導線與馬達的現象直觀見<a href="../../../共通基礎/物理/互動課程/10-磁場與電磁感應.html">普通物理的磁場與電磁感應</a>。粒子束偏轉用於質譜儀與加速器，導線受力則進入電機機械與馬達設計；下一章會從電流幾何反算產生的 <b>B</b>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="07-電流密度與焦耳熱.html">← 上一頁：電流密度與焦耳熱</a><a href="09-畢歐沙伐與安培定律.html">下一頁：畢歐沙伐與安培定律 →</a></nav>
+</main>
+<footer class="site-footer"><span>08 磁場與羅倫茲力</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>14 介質中的波與界面｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">14・用損耗比判材料、用趨膚深度判厚度、用阻抗判反射</p>
+<h1>介質中的波與界面：材料一面吃掉能量，一面逼波分成反射與透射</h1>
+<p class="lead">真實材料既能儲存場能，也可能讓自由電荷導電發熱。把兩種反應收進複數介電常數後，就能用同一套式子精確算出任意損耗比下的衰減、相位、本質阻抗與界面反射。</p>
+<p class="prereq">這章假設已懂：<a href="13-電磁波與平面波.html">13 電磁波與平面波</a>的 η 與平面波、<a href="05-介電質與邊界條件.html">05 介電質與邊界條件</a>的 ε、<a href="07-電流密度與焦耳熱.html">07 電流密度與焦耳熱</a>的 σ，以及複數的極式。</p>
+
+<h2>痛點：銅、海水與電路板在不同頻率下，到底會吸收還是反射多少</h2>
+<p>只背「導體擋電磁波、介質讓電磁波通過」無法做工程判斷。海水在某頻率可能接近良導體，在另一頻率卻落入傳導與位移電流同量級的中間區；同一片銅箔對 1 kHz 幾乎沒有吸收厚度，對 1 GHz 卻有數十個趨膚深度。屏蔽又不只靠吸收：金屬表面的巨大阻抗差會先把大部分波反射回去。</p>
+<p>另一個陷阱是只套良導體或良介質近似，卻沒有先檢查 σ/(ωε)。本章先建立對任意損耗比都精確的實數化通式，再把近似式當作極限檢查；如此中間材料不會被硬塞進錯誤分類。</p>
+
+<h2>白話直覺：場推動材料內電荷，能量不是被反彈，就是沿途變熱</h2>
+<p>可暫時把界面想成不同節奏的傳送帶；比喻到此為止，精確邊界條件是切向 E 與 H 連續。源在入射端的時變場，<b>E</b>、<b>H</b> 與傳播方向互相垂直。均質材料深處的波振幅按 e<sup>−αz</sup> 指數下降，而非按幾何距離平方下降；能量由坡印廷向量送入材料，σ 使自由電荷漂移並把場能轉成焦耳熱。</p>
+<p>到了界面，材料本質阻抗不同，單一透射波無法同時滿足兩個切向邊界條件，於是必須生出反射波。高導電材料通常讓能量大多在表面反射，少量進入者才在趨膚層內被吸收；低損介質則主要改變速度、波長與折射方向。向量網路分析儀量到反射與透射的複數比，屏蔽室量到有無材料時的功率差。因果鏈是：入射時變場抵達材料，場沿傳播方向推進且振幅隨深度指數衰減，能量向內流並轉熱；材料參數與界面迫使反射，儀器最後讀出 S 參數與衰減分貝。</p>
+<p class="note">來源：08-電磁學-下 §15.1–§15.3。</p>
+
+<h2>推導：把導電損耗收進複數 ε，再拆回可直接計算的實數式</h2>
+<p>時諧場（time&#45;harmonic field）以相量表示：<b>E</b>(<b>r</b>, t) = Re{<strong>E</strong>(<b>r</b>)e<sup>jωt</sup>}。這裡必須分清標記：<code>&lt;b&gt;</code> 是空間向量、<code>&lt;strong&gt;</code> 是複數相量，兩者不得互換。虛數單位一律寫 j；數學課寫 i，電機寫 j，因為 i 留給電流。相量把時間微分換成乘上 jω，但最後可觀察的場仍取實部。</p>
+<p>安培定律在材料中為 ∇×<strong>H</strong> = σ<strong>E</strong> + jωε<strong>E</strong>。把右側提出 jω，得到 jω(ε − jσ/ω)<strong>E</strong>，因此定義複介電常數 ε<sub>c</sub> = ε − jσ/ω。傳導電流於是被吸收進複數 ε，無損公式可原樣延伸。損耗比 p = tan δ = σ/(ωε)，表示傳導電流密度與位移電流密度的大小比。</p>
+<p>傳播常數（propagation constant）<strong>γ</strong> = α + jβ = jω√(µε<sub>c</sub>)。α 是衰減常數，單位 Np/m；β 是相位常數，單位 rad/m。波可寫 E = E<sub>0</sub>e<sup>−αz</sup>cos(ωt − βz)，所以 α 管振幅，β 管相位。為避免只給近似，令 q = arctan(p)、u = (1 + p²)<sup>1/4</sup>、v = c/√(ε<sub>r</sub>µ<sub>r</sub>)，則：</p>
+<p><strong>γ</strong> = (ω/v)⋅u∠(90° − q/2)，α = (ω/v)⋅u⋅sin(q/2)，β = (ω/v)⋅u⋅cos(q/2)。</p>
+<p>複數本質阻抗為 <strong>η</strong> = √(µ/ε<sub>c</sub>)，其精確實數化結果是 |<strong>η</strong>| = [η<sub>0</sub>√(µ<sub>r</sub>/ε<sub>r</sub>)]/u、∠<strong>η</strong> = q/2。這組 α、β、η 通式對任意 p 都精確。當 p → ∞，q → 90°、u → √p，便得到 α ≈ β ≈ √(ωµσ/2)；趨膚深度（skin depth）δ = 1/α ≈ √(2/(ωµσ))。當 p ≪ 1，則 α ≈ (σ/2)√(µ/ε)、β ≈ ω√(µε)。</p>
+<p>每走一個 δ，場振幅乘 e<sup>−1</sup>，剩 36.8 %；功率與振幅平方成正比，剩 13.5 %。厚度 t 的吸收衰減是 t/δ Np，換成分貝為 (t/δ) × 20 log<sub>10</sub>e = (t/δ) × 8.685890 dB。趨膚深度不是硬邊界，深處仍有場與電流，只是按指數變小。</p>
+<p>垂直入射時，界面切向場要求入射加反射等於透射：E<sub>i</sub> + E<sub>r</sub> = E<sub>t</sub>；磁場方向使 (E<sub>i</sub> − E<sub>r</sub>)/<strong>η</strong><sub>1</sub> = E<sub>t</sub>/<strong>η</strong><sub>2</sub>。聯立得到 <strong>Γ</strong> = (<strong>η</strong><sub>2</sub> − <strong>η</strong><sub>1</sub>)/(<strong>η</strong><sub>2</sub> + <strong>η</strong><sub>1</sub>) 與 <strong>T</strong> = 1 + <strong>Γ</strong>。|<strong>Γ</strong>| 是振幅比，|<strong>Γ</strong>|² 才是功率反射率，回波損耗為 −20 log<sub>10</sub>|<strong>Γ</strong>| dB。</p>
+<p>斜入射的完整菲涅耳公式留給光學與微波課。本課只保留低損介質的兩個邊界角：布魯斯特角 θ<sub>B</sub> = arctan(n<sub>2</sub>/n<sub>1</sub>) 只讓 TM 偏振零反射；臨界角 sin θ<sub>c</sub> = n<sub>2</sub>/n<sub>1</sub> 只在密介質射向疏介質時存在。</p>
+<p>屏蔽總效果不能只看材料厚度。波若從接縫、孔洞或未良好搭接的邊界繞入，理想平板的反射與吸收計算可能很好，整個機殼仍會洩漏；孔洞尺寸接近波長時尤其不能當成完整導體面。反過來，低頻磁場的波阻抗與近場組成不同，單靠高導電薄箔的反射也未必有效。α 與 δ 回答材料內的衰減，<strong>Γ</strong> 回答理想界面的反射，結構幾何則是另一層工程條件。</p>
+
+<h2>數值實例：一百微米銅箔的吸收，以及真空到電路板的反射</h2>
+<p>趨膚模式預設為銅（σ = 5.952380952 × 10<sup>7</sup> S/m、ε<sub>r</sub> = 1）、f = 10<sup>6</sup> Hz = 1 MHz、屏蔽厚度 t = 100 µm。</p>
+<p><strong>量級對照：</strong>銅在 1 MHz 的趨膚深度 65.234115 µm，比一根人類頭髮還細（直徑約 70 µm）——1 MHz 的電流幾乎全擠在導線表面不到一根頭髮的厚度裡跑，導線中心那一大塊銅在高頻形同虛設。而 100 µm 的銅箔（約兩張影印紙厚）就能提供 13.314950 dB 的吸收衰減；再加上金屬界面本身 99.9997 % 的反射，這就是為什麼薄薄一層金屬鍍層就足以當機殼屏蔽。</p>
+<table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody>
+<tr><td>p = σ/(ωε<sub>0</sub>ε<sub>r</sub>)</td><td>1.069947 × 10<sup>12</sup>，遠 ≫ 1，是徹底的良導體</td></tr>
+<tr><td>α 與 β</td><td>α = 15329.402499 1/m；β = 15329.402499 rad/m</td></tr>
+<tr><td>δ = 1/α</td><td>6.523411 × 10<sup>−5</sup> m ＝ 65.234115 µm</td></tr>
+<tr><td>良導體近似</td><td>√(2/(ωµ<sub>0</sub>σ)) = 6.523411 × 10<sup>−5</sup> m</td></tr>
+<tr><td>100 µm 衰減</td><td>1.532940 Np ＝ 13.314950 dB</td></tr>
+<tr><td>|<strong>η</strong>| 與相位</td><td>3.642080 × 10<sup>−4</sup> Ω，45.000000°</td></tr>
+</tbody></table>
+<p>f = 10<sup>3</sup> Hz 時 δ = 2062.883834 µm ＝ 2.06 mm，100 µm 銅箔只衰減 0.421056 dB；低頻磁屏蔽常須改用高 µ<sub>r</sub> 材料。f = 10<sup>9</sup> Hz 時 δ = 2.062884 µm，100 µm 衰減 421.055684 dB。海水在 1 MHz 時 p = 887.659400、α = 3.971598 1/m、δ = 0.251788 m，良導體近似為 0.251646 m，差 0.06 %。</p>
+<p>界面模式取真空到 FR&#45;4（ε<sub>r</sub> = 4.4、σ = 0）垂直入射：<strong>η</strong><sub>2</sub> = 179.599130 Ω、<strong>Γ</strong> = −0.354343、<strong>T</strong> = 0.645657、|<strong>Γ</strong>|² = 0.125559 ＝ 12.5559 %、回波損耗 9.011534 dB、等效 VSWR = 2.097618。θ<sub>1</sub> = 30° 時折射角 13.790100°；反向臨界角 28.472134°；布魯斯特角 64.511401°。同樣公式套到 1 MHz 銅，|<strong>Γ</strong>| = 0.999998633、功率反射率 0.999997266，也就是 99.9997 % 幾乎全反射。高頻曝露另有法規限值，本章數值只用於場與屏蔽模型，不作人體安全判定。</p>
+
+<section class="workspace"><h2>自由實驗：切換趨膚與界面兩種材料判讀</h2>
+<p>真空側的平面波抵達所選材料；趨膚模式看波進入後的指數衰減，界面模式看反射、透射與低損時的折射角。切換模式時，回饋會說明哪些滑桿有效。</p>
+<div class="controls">
+<label for="med-mode">分析模式<select id="med-mode"><option value="skin">趨膚深度與屏蔽</option><option value="interface">垂直入射的反射與折射</option></select></label>
+<label for="med-mat">材料<select id="med-mat"><option value="copper">銅（σ = 5.952381 × 10⁷ S/m、ε_r = 1）</option><option value="aluminum">鋁（σ = 3.773585 × 10⁷ S/m、ε_r = 1）</option><option value="seawater">海水（σ = 4 S/m、ε_r = 81）</option><option value="water">純水（σ = 5.5 × 10⁻⁶ S/m、ε_r = 80）</option><option value="fr4">FR&#45;4（σ = 0、ε_r = 4.4）</option></select></label>
+<label for="med-fexp">頻率指數 n（f = 10ⁿ Hz）<input id="med-fexp" type="range" min="3" max="11" step="1" value="6"></label>
+<label for="med-thick">屏蔽厚度 t（µm，只有趨膚模式用）<input id="med-thick" type="range" min="1" max="1000" step="1" value="100"></label>
+<label for="med-angle">入射角 θ<sub>1</sub>（°，只有界面模式用）<input id="med-angle" type="range" min="0" max="89" step="1" value="30"></label>
+</div>
+<div id="lossymedium-output" class="output" aria-live="polite">這個模式只用到材料、頻率與屏蔽厚度三個控制，入射角不影響結果。p = 1.069947 × 10<sup>12</sup>；α = 15329.402499 1/m；β = 15329.402499 rad/m；δ = 6.523411 × 10<sup>−5</sup> m ＝ 65.234115 µm；良導體近似也是 6.523411 × 10<sup>−5</sup> m，相對誤差 0.000000 %；t/δ = 1.532940 Np，衰減 13.314950 dB。良導體由傳導電流主導，波只在表面薄層存在；每個 δ 振幅剩 36.8 %、功率剩 13.5 %，換算 8.685890 dB。若改到無損材料，趨膚深度應顯示為無限大而非數值。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>趨膚深度是振幅降到 1/e 的尺度，不是電流到了該深度突然變成零；更深處仍有較小電流。</li>
+<li>Np 與 dB 都是對數衰減單位，1 Np = 8.685890 dB；把數值直接視為相等會差約 8.7 倍。</li>
+<li>α = β 只在良導體極限近似成立；海水等中間材料必須使用任意 p 的完整通式。</li>
+<li><strong>Γ</strong> 是複數振幅比，|<strong>Γ</strong>|² 才是功率比；負實數還表示反射相位翻轉 180°。</li>
+<li>布魯斯特角只適用於 TM 偏振；TE 波沒有相同的零反射角，臨界角也只存在於密到疏的方向。</li>
+</ul>
+
+<h2>可觀察證據：VNA 直接量反射比，趨膚深度仍要靠模型反推</h2>
+<p>向量網路分析儀（vector network analyzer, VNA）在校正參考面量 S<sub>11</sub> 與 S<sub>21</sub>，分別給反射與透射的大小和相位；屏蔽室則比較放入屏蔽材料前後的接收功率，得到實際屏蔽效能 dB。這能證明特定頻率、幾何與接縫條件下的反射係數及總衰減，也能配合多頻點模型反推 σ、ε<sub>r</sub>。</p>
+<p>它不能直接把探頭放進導體深處畫出場分布，也不能單靠一個 dB 讀值分離反射損耗、吸收損耗與接縫洩漏。趨膚深度是由振幅隨深度或頻率的曲線擬合出的模型參數，不是儀器螢幕直接看到的一層皮；若材料有色散、表面粗糙或磁性，簡化參數還需另行修正。</p>
+
+<h2>連到哪門課</h2>
+<p>折射、全反射與光纖的現象面見<a href="../../../共通基礎/物理/互動課程/13-反射折射與都卜勒.html">普通物理的反射折射與都卜勒</a>及<a href="../../../共通基礎/物理/互動課程/14-幾何光學與波動光學.html">幾何光學與波動光學</a>；相量開根號與極式見<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複變入門</a>。本章是電磁相容性、屏蔽、光纖與微波材料的基礎；下一章把同一個阻抗界面反射搬到傳輸線。</p>
+<nav class="pager" aria-label="章節導覽"><a href="13-電磁波與平面波.html">← 上一頁：電磁波與平面波</a><a href="15-傳輸線與駐波.html">下一頁：傳輸線與駐波 →</a></nav>
+</main>
+<footer class="site-footer"><span>14 介質中的波與界面</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 二極體工作點與模型｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・讓元件方程與外部回路在同一點相遇</p>
+<h1>二極體工作點與模型：精度不夠時再多算</h1>
+<p class="lead">二極體本身只有 I–V 關係，接上電源與電阻後才會得到唯一端口電壓與電流。本章用負載線與牛頓法找交點，再比較理想開關、恆壓降與完整指數模型。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-PN接面與二極體方程.html">02 的二極體方程</a>、<a href="../電路學-互動課程/01-電阻與歐姆定律.html">電路學的分壓</a>與<a href="../電路學-互動課程/02-KCL與KVL.html">KVL</a>。</p>
+
+<h2>痛點：0.7 V 到底是答案、假設，還是量測結果</h2>
+<p>「題目看到矽二極體就扣 0.7 V，為什麼有時答案很準，有時差到三成？如果完整方程才是真的，手算模型是不是都在騙人？負載線又為什麼能決定工作點？」困難在於把三個層次混在一起：0.7 V 是毫安培級的常用近似，完整指數是一個仍有限制的元件模型，而實際工作點還要同時滿足外部電源與電阻的回路方程。模型沒有單獨的正確或錯誤，只有在指定工作範圍內是否達到所需誤差。</p>
+<p><strong>負載線（load line）</strong>是外部線性電路施加在元件端口的限制。對電源 V<sub>s</sub>、串聯電阻 R 與二極體，KVL 給 I = (V<sub>s</sub> − V<sub>D</sub>)/R。若把 I 對 V<sub>D</sub> 的關係列成數值，這是一條斜率為 −1/R 的直線；二極體則提供彎曲的 I–V。兩者同時成立的交點就是工作點。本站不畫曲線，但可以直接用殘差是否趨近零確認兩條方程在同一組數字相遇。</p>
+<p>五種常見模型各有責任。理想開關把順偏二極體視為短路，適合先判通斷；恆壓降模型固定 V<sub>D</sub> = 0.7 V，適合毫安培級快速手算；分段線性模型在 0.7 V 後串入順向電阻 r<sub>f</sub>，估計大電流斜率；完整指數模型用蕭克萊方程做較精確直流分析；小訊號模型 r<sub>d</sub> = nV<sub>T</sub>/I<sub>D</sub> 只描述工作點附近的動態增量。它們不是五個互斥的元件，而是同一元件在不同問題與精度下的介面。</p>
+
+<h2>白話直覺：交點是兩份約束同時回傳成功</h2>
+<p>可以暫時把求工作點想成兩個函式對同一組 V 與 I 做驗證，只有兩者都回傳成功的資料才接受；比喻到此為止，精確定義是元件方程與電路方程的聯立解。把 V<sub>s</sub> 負端與二極體陰極設為地，拓樸為 V<sub>s</sub> 正端 → R → 節點 A → 二極體陽極 → 二極體陰極 → 地。順偏時路徑導通且回路閉合，傳統電流從電源正端流過 R 與接面回地，電子在半導體中的移動方向相反，電源能量主要在 R 與二極體中轉成熱。</p>
+<p>若先猜 V<sub>D</sub> 太低，指數模型給的二極體電流很小，但外部電阻依 (V<sub>s</sub> − V<sub>D</sub>)/R 要求較大電流，兩者不相容；載子累積與端點電壓會繼續改變。若猜 V<sub>D</sub> 太高，二極體要求的指數電流超過電阻能供應的電流，同樣無法穩定。只有在兩者相等時，節點沒有淨電荷繼續累積，V<sub>D</sub> 固定，電阻壓降加二極體壓降恰等於電源，形成可量測工作點。</p>
+<p>增大 R 會限制電流，負載線斜率絕對值變小，交點移向較低電流與較低 V<sub>D</sub>；降低 V<sub>s</sub> 也有相似效果。因二極體每增加 59.526429 mV 才讓電流增加十倍，常用的 1–20 mA 範圍內壓降只緩慢變動，0.7 V 因而好用。但進入數十微安培級時，真實壓降已接近 0.57 V，固定扣 0.7 V 會吃掉大部分可用電壓，誤差自然放大。</p>
+<p class="note">來源：07-電子學-上 §2.5。</p>
+
+<h2>推導：把非線性聯立問題交給牛頓法</h2>
+<p><strong>（a）先寫回路方程。</strong>由 KVL 得 V<sub>s</sub> = IR + V<sub>D</sub>，整理為 I = (V<sub>s</sub> − V<sub>D</sub>)/R。V<sub>s</sub>、V<sub>D</sub> 單位 V，I 單位 A，R 單位 Ω。這一式只描述外部電路；換二極體不會改變它。第二式才是 I = I<sub>S</sub>{exp[V<sub>D</sub>/V<sub>T</sub>] − 1}。假設電源與電阻理想，二極體 n = 1、溫度固定 300 K，忽略自熱與串聯歐姆電阻。</p>
+<p><strong>（b）建立殘差函式。</strong>令 f(V<sub>D</sub>) = I<sub>S</sub>{exp[V<sub>D</sub>/V<sub>T</sub>] − 1} − (V<sub>s</sub> − V<sub>D</sub>)/R。第一項是元件要求的電流，第二項是外部回路能供應的電流，所以 f 的單位 A；f = 0 就是兩者相等。其導數 f′(V<sub>D</sub>) = I<sub>S</sub> ⋅ exp[V<sub>D</sub>/V<sub>T</sub>]/V<sub>T</sub> + 1/R，單位 A/V。</p>
+<p><strong>（c）迭代更新。</strong>牛頓法（Newton's method）反覆做 V<sub>D</sub> ← V<sub>D</sub> − f/f′。f/f′ 的單位是 V，可解讀為依目前殘差與局部斜率修正電壓猜值。從 0.7 V 起步，重算指數電流、外部電流、殘差與斜率，再更新 V<sub>D</sub>；本例在 20 次內可達 12 位有效數字。程式固定做更多次只是簡化控制流程，最後仍要檢查殘差，而不是因迴圈跑完就宣告正確。</p>
+<p><strong>（d）三個直流模型。</strong>理想開關順偏令 V<sub>D</sub> = 0，故 I = V<sub>s</sub>/R。恆壓降令 V<sub>D</sub> = 0.7 V，故 I = max[0,(V<sub>s</sub> − 0.7)/R]；max 避免模型在電源低於門檻時給出錯誤的負順向電流。完整指數則求上面的 f = 0。比較時以完整指數為基準計算相對誤差，但仍要記得基準模型也未包含真實元件全部效應。</p>
+<p><strong>（e）工作點決定小訊號電阻。</strong>順偏且 I<sub>D</sub> ≫ I<sub>S</sub> 時，r<sub>d</sub> = V<sub>T</sub>/I<sub>D</sub>。4.307456 mA 時為 6.001686 Ω；0.042675 mA 時為 605.787718 Ω，相差約一百倍。r<sub>d</sub> 單位 Ω，只能用於 Q 點附近 ΔV 與 ΔI 的關係，不能替代直流壓降除以直流電流。</p>
+
+<h2>數值實例：同一回路的三種答案</h2>
+<p>二極體主電路取 V<sub>s</sub> = 5 V、R = 1 kΩ、I<sub>S</sub> = 1 × 10<sup>−14</sup> A、n = 1、V<sub>T</sub> = 25.851999786 mV。拓樸：V<sub>s</sub> 正端 → R → 節點 A；節點 A → 二極體陽極；二極體陰極 → 地；V<sub>s</sub> 負端 → 地。</p>
+<table><thead><tr><th>模型</th><th>假設</th><th>I<sub>D</sub></th><th>V<sub>D</sub></th><th>相對誤差</th></tr></thead><tbody>
+<tr><td>理想開關</td><td>順偏 V<sub>D</sub> = 0</td><td><strong>5.000000 mA</strong></td><td>0.000000 V</td><td><strong>+16.077786 %</strong></td></tr>
+<tr><td>恆壓降</td><td>V<sub>D</sub> = 0.7 V</td><td><strong>4.300000 mA</strong></td><td>0.700000 V</td><td><strong>−0.173104 %</strong></td></tr>
+<tr><td>完整指數</td><td>牛頓法解聯立</td><td><strong>4.307456 mA</strong></td><td><strong>0.692544 V</strong></td><td>0</td></tr>
+</tbody></table>
+<p>此工作點 r<sub>d</sub> = 0.025851999786/0.004307456 = 6.001686 Ω。邊界對照如下。</p>
+<table><thead><tr><th>V<sub>s</sub></th><th>R</th><th>完整 I<sub>D</sub></th><th>完整 V<sub>D</sub></th><th>恆壓降 I<sub>D</sub></th><th>誤差</th><th>r<sub>d</sub></th></tr></thead><tbody>
+<tr><td>5 V</td><td>1 kΩ</td><td>4.307456 mA</td><td>0.692544 V</td><td>4.300000 mA</td><td>−0.173104 %</td><td>6.001686 Ω</td></tr>
+<tr><td>12 V</td><td>1 kΩ</td><td>11.282563 mA</td><td>0.717437 V</td><td>11.300000 mA</td><td>+0.154546 %</td><td>2.291323 Ω</td></tr>
+<tr><td>5 V</td><td>10 kΩ</td><td>0.436663 mA</td><td>0.633370 V</td><td>0.430000 mA</td><td>−1.525892 %</td><td>59.203549 Ω</td></tr>
+<tr><td>1 V</td><td>10 kΩ</td><td>0.042675 mA</td><td>0.573250 V</td><td>0.030000 mA</td><td>−29.701254 %</td><td>605.787718 Ω</td></tr>
+</tbody></table>
+<p>結論是電流愈小，恆壓降模型愈可能失準；0.7 V 是毫安培級經驗值，不是跨越所有工作點的物理常數。</p>
+
+<section class="workspace"><h2>自由實驗：讓三種模型解同一個回路</h2>
+<p>拓樸為 V<sub>s</sub> 正端 → 串聯電阻 R → 節點 A → 二極體陽極；二極體陰極與 V<sub>s</sub> 負端都接地，輸出觀察節點 A 的 V<sub>D</sub>。調整電源與電阻並選一種模型，三種結果仍會同時計算，方便比較誤差與牛頓法殘差。</p>
+<div class="controls">
+<label for="dl-vs">電源電壓 V<sub>s</sub>（V）<input id="dl-vs" type="range" min="1" max="12" step="0.1" value="5"></label>
+<label for="dl-r">串聯電阻 R（Ω）<input id="dl-r" type="range" min="100" max="10000" step="100" value="1000"></label>
+<label for="dl-model">二極體模型<select id="dl-model"><option value="ideal">理想開關（V_D = 0）</option><option value="cvd" selected>恆壓降（V_D = 0.7 V）</option><option value="exp">完整指數（牛頓法迭代）</option></select></label>
+</div>
+<div id="dload-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>負載線只由外部 V<sub>s</sub> 與 R 決定；換二極體時它不動，改變的是元件方程與兩者交點。</li>
+<li>0.7 V 不是矽的物理常數，而是毫安培級常用壓降；鍺、蕭特基與 LED 有不同範圍，矽在微安培級也明顯較低。</li>
+<li>r<sub>d</sub> 是小訊號增量比，不能拿來算直流 I<sub>D</sub>；直流比 V<sub>D</sub>/I<sub>D</sub> 與局部導數倒數是不同問題。</li>
+<li>牛頓法收斂只表示所寫的元件方程與電路方程同時滿足；若模型漏掉串聯電阻、自熱或崩潰，收斂答案仍可能偏離實物。</li>
+<li>理想開關的短路只代表模型令 V<sub>D</sub> = 0，不代表真實導通二極體沒有耗能或可承受無限電流。</li>
+<li>分段線性模型的 r<sub>f</sub> 描述較大範圍順向斜率，小訊號 r<sub>d</sub> 描述單一 Q 點附近；兩者名稱相似但適用尺度不同。</li>
+</ul>
+
+<h2>可觀察證據：同時量二極體壓降與電阻壓降</h2>
+<p>用可調電源供應器接 R 與二極體串聯，三用電表以電壓檔量二極體兩端 V<sub>D</sub>，再量電阻兩端 V<sub>R</sub>，用 I<sub>D</sub> = V<sub>R</sub>/R 換算電流，通常比把電流檔直接串入更少改變回路。改變 V<sub>s</sub> 並記錄多組 (V<sub>D</sub>, I<sub>D</sub>)，能證明每個外部條件對應一個工作點、量出恆壓降模型在該點的實際誤差，也能觀察 V<sub>D</sub> 隨電流緩慢上升。它不能只靠直流資料直接量到 r<sub>d</sub>，要在 Q 點疊加小訊號並量 ΔV/ΔI；也不能由單一工作點分離 I<sub>S</sub> 與 n，需對多點資料擬合。三用電表二極體檔顯示的是儀器固定測試電流下的順向壓降，通常測試電流約 0.1–1 mA；它不能證明所有回路都固定為 0.7 V，換儀器或元件便可能換數字。</p>
+
+<h2>連到哪門課</h2>
+<p>負載線就是 KVL 的數值版本，分壓與歐姆定律見<a href="../電路學-互動課程/01-電阻與歐姆定律.html">電路學 01</a>，完整回路約束見<a href="../電路學-互動課程/02-KCL與KVL.html">電路學 02</a>。以切線反覆修正猜值的牛頓法見<a href="../../../共通基礎/數學/互動課程/01-極限與導數.html">工程數學先修的極限與導數</a>。後續 BJT 與 MOSFET 仍會以「外部負載線與元件曲線交點」求工作區與 Q 點，只是未知數增加。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-PN接面與二極體方程.html">← 上一頁：PN 接面與二極體方程</a><a href="04-整流與濾波.html">下一頁：整流與濾波 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 二極體工作點與模型</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

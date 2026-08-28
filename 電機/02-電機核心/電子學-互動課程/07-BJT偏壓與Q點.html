@@ -1,0 +1,81 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 BJT 偏壓與 Q 點｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・用外部電阻把不可靠的 β 壓成小誤差</p>
+<h1>BJT 偏壓與 Q 點：讓射極電阻自動拉回工作電流</h1>
+<p class="lead">放大器不能靠運氣落在作用區，必須先建立沒有訊號時的靜態電壓與電流。分壓器提供基極參考，射極電阻形成直流負回授，讓 Q 點主要由外部電阻而非 β 決定。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="06-BJT原理與工作區.html">06 BJT 原理與工作區</a>的四區與 β 邊界，以及電路學的<a href="../電路學-互動課程/05-戴維寧與最大功率.html">戴維寧等效</a>。</p>
+
+<h2>痛點：換一顆同型號電晶體，放大器為什麼就偏掉</h2>
+<p>「型號一樣、電阻也一樣，β 只是資料手冊上的一個參數，為什麼輸出靜態電壓會差那麼多？」因為固定基極電流的電路直接得到 I<sub>C</sub> = βI<sub>B</sub>，β 加倍，集極電流就跟著加倍。β 不但有製造散布，也隨集極電流與溫度變；若設計把它當精密常數，工作點會漂到飽和或截止，交流訊號還沒進來就沒有對稱擺動空間。</p>
+<p>靜態工作點（quiescent point, Q 點）是沒有交流訊號時的 I<sub>C</sub> 與 V<sub>CE</sub>。好的 Q 點需要 V<sub>BE</sub> 適當順偏、V<sub>CE</sub> 遠離約 0.2 V 的飽和邊界，並且對 β 變化不敏感。這不是把數字設得愈高愈好，而是保留訊號向上與向下擺動的餘裕，同時控制耗電與增益。</p>
+
+<h2>白話直覺：電流一想升高，射極就自己抬高門檻</h2>
+<p>可以暫時把射極電阻想成會自動踩煞車的裝置；比喻到此為止，精確機制是 I<sub>E</sub> 增加造成 V<sub>E</sub> = I<sub>E</sub>R<sub>E</sub> 上升，在基極電位大致固定時壓低 V<sub>BE</sub>，而較小的 V<sub>BE</sub> 會指數地減少載子注入。</p>
+<p>以電源負端為地，拓樸是 V<sub>CC</sub> → R<sub>1</sub> → 基極節點 B，B → R<sub>2</sub> → 地；V<sub>CC</sub> → R<sub>C</sub> → 集極 C；射極 E → R<sub>E</sub> → 地。分壓器先建立基極參考，但基極電流會從分壓點分走，因此不能無條件把 B 點視為理想分壓電壓。基射接面順偏後，基極回路與集極回路都閉合；射極注入的載子大部分到集極，傳統電流由 V<sub>CC</sub> 經 R<sub>C</sub>、電晶體與 R<sub>E</sub> 回地，電源能量在電阻與電晶體中耗散。</p>
+<p>若 β 或溫度使 I<sub>C</sub> 想增加，I<sub>E</sub> 幾乎同步增加，R<sub>E</sub> 壓降把射極端點抬高。基極由分壓網路維持在較硬的參考電位，於是 V<sub>BE</sub> 變小，載子注入與 I<sub>C</sub> 被拉回。反方向也一樣：電流下降會使 V<sub>E</sub> 下降、V<sub>BE</sub> 回升。結果是直流負回授把元件參數變動轉成較小的 Q 點漂移。</p>
+<p class="note">來源：07-電子學-中 §5.6。</p>
+
+<h2>推導：戴維寧化後，穩定性直接藏在分母</h2>
+<p>先把 V<sub>CC</sub>、R<sub>1</sub>、R<sub>2</sub> 從基極端看成戴維寧等效。V<sub>TH</sub> = V<sub>CC</sub>R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>)，單位 V；R<sub>TH</sub> = R<sub>1</sub>‖R<sub>2</sub> = R<sub>1</sub>R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>)，單位 Ω。‖ 讀作「並聯」，不是絕對值也不是範數。等效只保留基極端口關係，原電路並沒有真的多出一顆 V<sub>TH</sub> 電源。</p>
+<p>沿基極回路寫 KVL：V<sub>TH</sub> = I<sub>B</sub>R<sub>TH</sub> + V<sub>BE</sub> + I<sub>E</sub>R<sub>E</sub>。作用區中 I<sub>E</sub> = (β + 1)I<sub>B</sub>，整理得 I<sub>B</sub> = (V<sub>TH</sub> − V<sub>BE</sub>) / [R<sub>TH</sub> + (β + 1)R<sub>E</sub>]，再以 I<sub>C</sub> = βI<sub>B</sub>、V<sub>E</sub> = I<sub>E</sub>R<sub>E</sub>、V<sub>C</sub> = V<sub>CC</sub> − I<sub>C</sub>R<sub>C</sub>、V<sub>CE</sub> = V<sub>C</sub> − V<sub>E</sub> 求 Q 點。</p>
+<p>計算仍要做工作區驗證。若 V<sub>TH</sub> ≤ V<sub>BE</sub>，上式會給負 I<sub>B</sub>，這不是電流真的反向，而是「基射順偏、作用區」的假設從一開始就不成立，應改判截止並把電流截為零。若算出的 V<sub>CE</sub> 小於 0.2 V，則已跨入飽和區，作用區公式也失效；負 V<sub>CE</sub> 只是一面醒目的除錯旗標，告訴你必須換模型，不能當成可實作的 Q 點。</p>
+<p>若 (β + 1)R<sub>E</sub> ≫ R<sub>TH</sub>，則 I<sub>C</sub> ≈ β(V<sub>TH</sub> − V<sub>BE</sub>)/[(β + 1)R<sub>E</sub>] ≈ (V<sub>TH</sub> − V<sub>BE</sub>)/R<sub>E</sub>。β 同時出現在分子與分母而近似消失，因此定義穩定度指標 S = (β + 1)R<sub>E</sub>/R<sub>TH</sub>，無單位，本課以 S ≥ 10 為合格準則。這裡假設 BJT 在作用區、V<sub>BE</sub> = 0.7 V，且忽略 Early 效應。</p>
+<p>S ≥ 10 來自要求分母中的射極回授項至少是 R<sub>TH</sub> 的十倍，使基極網路造成的 β 敏感度只占較小份額；它是設計準則，不是物理突變門檻。放寬到 5，可用較大的分壓電阻來省電並提高輸入阻抗，但 Q 點對 β 與基極負載更敏感；收緊到 20，穩定度更好，代價通常是分壓電流與耗電增加，或必須加大 R<sub>E</sub> 而犧牲電壓餘裕。</p>
+<p>固定基極偏壓只有 V<sub>CC</sub> 經 R<sub>B</sub> 到基極時，I<sub>B</sub> = (V<sub>CC</sub> − V<sub>BE</sub>)/R<sub>B</sub> 幾乎不含 β，因此 I<sub>C</sub> 正比於 β，沒有自我修正。射極電阻雖穩定直流，交流訊號也會在它上面產生反向變化而降低增益；實務可在 R<sub>E</sub> 並聯大電容，使直流仍看到 R<sub>E</sub>，工作頻帶的交流則近似繞過它。這項取捨會在放大器章正式量化。</p>
+<p>這是同一顆元件在直流與交流扮演不同角色的第一個明確例子：旁路電容在直流穩態等同開路，R<sub>E</sub> 仍負責固定 Q 點；頻率夠高時電容阻抗下降，交流射極電流主要走電容，因而減弱射極退化。第 11 章分析單級放大器增益、第 13 章分析差動對的共同射極節點時，還會再次把直流偏壓路徑與交流小訊號路徑分開看。</p>
+<p>溫度上升也會試圖推動工作點。矽 BJT 在固定電流附近，V<sub>BE</sub> 每升溫 1 °C 約下降 2 mV；若基極電位固定，較低的導通門檻會讓 I<sub>C</sub> 往上升，進一步增加耗散。加入 R<sub>E</sub> 後，上升的 I<sub>E</sub> 會抬高 V<sub>E</sub>，把 V<sub>BE</sub> 壓回較小值，形成抑制熱漂移的局部負回授，但仍不能取代散熱與額定檢查。</p>
+<p>設計時還要檢查分壓器本身的代價。把 R<sub>1</sub> 與 R<sub>2</sub> 選小，R<sub>TH</sub> 下降，基極電流較難拉動 V<sub>TH</sub>，穩定度改善；但分壓器會持續從 V<sub>CC</sub> 取走更多電流，輸入阻抗與效率也下降。選得太大雖省電，基極負載與漏電卻更容易改變節點。工程上常讓分壓電流明顯大於預期基極電流，再以實際功耗、輸入阻抗與 S 指標共同裁決，而不是只追求某一個漂亮數字。</p>
+
+<h2>數值實例：β 加倍，Q 點只漂 4.418546 %</h2>
+<p>V<sub>CC</sub> = 12 V、R<sub>1</sub> = 47 kΩ、R<sub>2</sub> = 10 kΩ、R<sub>E</sub> = 1 kΩ、R<sub>C</sub> = 2.2 kΩ、β = 100、V<sub>BE</sub> = 0.7 V。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>戴維寧電壓</td><td>12 × 10 / 57</td><td><strong>2.105263 V</strong></td></tr>
+<tr><td>戴維寧電阻</td><td>47 × 10 / 57 kΩ</td><td><strong>8245.614035 Ω</strong></td></tr>
+<tr><td>穩定度指標</td><td>(β + 1)R<sub>E</sub> / R<sub>TH</sub> = 101000 / 8245.614035</td><td><strong>12.248936（≥ 10，合格）</strong></td></tr>
+<tr><td>基極電流</td><td>(2.105263 − 0.7) / (8245.614035 + 101 × 1000)</td><td><strong>12.863337 µA</strong></td></tr>
+<tr><td>集極電流</td><td>100 × 12.863337 µA</td><td><strong>1.286334 mA</strong></td></tr>
+<tr><td>射極電流</td><td>101 × 12.863337 µA</td><td><strong>1.299197 mA</strong></td></tr>
+<tr><td>射極電位</td><td>1.299197 mA × 1 kΩ</td><td><strong>1.299197 V</strong></td></tr>
+<tr><td>集極電位</td><td>12 − 1.286334 mA × 2.2 kΩ</td><td><strong>9.170066 V</strong></td></tr>
+<tr><td>集射電壓</td><td>9.170066 − 1.299197</td><td><strong>7.870869 V（遠離 0.2 V，作用區）</strong></td></tr>
+</tbody></table>
+<table><thead><tr><th>偏壓法</th><th>β = 100 的 I<sub>C</sub></th><th>β = 200 的 I<sub>C</sub></th><th>I<sub>C</sub> 變化</th></tr></thead><tbody>
+<tr><td>分壓 ＋ R<sub>E</sub> = 1 kΩ</td><td><strong>1.286334 mA</strong></td><td><strong>1.343171 mA</strong></td><td><strong>+4.418546 %</strong></td></tr>
+<tr><td>固定基極偏壓 R<sub>B</sub> = 878.465668 kΩ</td><td><strong>1.286334 mA</strong></td><td><strong>2.572667 mA</strong></td><td><strong>+100.000000 %</strong></td></tr>
+</tbody></table>
+<p>β 加倍時，分壓加射極退化只漂 <strong>4.418546 %</strong>，固定基極偏壓漂 <strong>100.000000 %</strong>，差了 22.6 倍。固定基極偏壓在 β = 200 時 V<sub>CE</sub> 掉到 <strong>6.340132 V</strong>，分壓加 R<sub>E</sub> 只掉到 <strong>7.695137 V</strong>。</p>
+<p>這個百分比比較的是同一組外部元件在 β 改變前後的集極電流，不是量測誤差，也不是增益變化。它把「對 β 不敏感」轉成可重現的測試：固定所有電阻，只替換 β，再比較兩個 Q 點。</p>
+
+<section class="workspace"><h2>自由實驗：偏壓網路對 β 的敏感度</h2>
+<p>V<sub>CC</sub> 經 R<sub>1</sub> 到基極 B，B 經 R<sub>2</sub> 到地；V<sub>CC</sub> 經 R<sub>C</sub> 到集極 C，射極 E 經 R<sub>E</sub> 到地。調整電源、分壓、射極與集極電阻及 β，觀察戴維寧等效、Q 點、穩定度與 β 加倍後的漂移。</p>
+<div class="controls">
+<label for="bb-vcc">電源電壓 V<sub>CC</sub>（V）<input id="bb-vcc" type="range" min="5" max="24" step="1" value="12"></label>
+<label for="bb-r1">上分壓電阻 R<sub>1</sub>（kΩ）<input id="bb-r1" type="range" min="1" max="200" step="1" value="47"></label>
+<label for="bb-r2">下分壓電阻 R<sub>2</sub>（kΩ）<input id="bb-r2" type="range" min="1" max="200" step="1" value="10"></label>
+<label for="bb-re">射極電阻 R<sub>E</sub>（Ω）<input id="bb-re" type="range" min="100" max="5000" step="100" value="1000"></label>
+<label for="bb-rc">集極電阻 R<sub>C</sub>（Ω）<input id="bb-rc" type="range" min="100" max="10000" step="100" value="2200"></label>
+<label for="bb-beta">電流增益 β<input id="bb-beta" type="range" min="50" max="500" step="10" value="100"></label>
+</div>
+<div id="bjtbias-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>戴維寧化只保留基極端口看到的電壓電流關係，原分壓器仍會被基極電流負載，電路中沒有真的換上一顆 2.105263 V 電源。</li>
+<li>穩定度指標大表示 Q 點較不依賴 β，不表示交流增益大；R<sub>E</sub> 增大通常提高穩定性卻降低增益，是取捨而非免費改善。</li>
+<li>V<sub>BE</sub> = 0.7 V 是工作點近似，不是元件常數；它隨電流與溫度改變，正是設計需要負回授的原因之一。</li>
+<li>Q 點遠離飽和不代表 V<sub>CE</sub> 愈高愈好；若 R<sub>C</sub> 壓降太小，留給電阻轉換電流變化的幅度與增益也會變小。</li>
+<li>射極退化電阻的直流角色是穩定偏壓，交流角色是局部負回授；旁路電容只能在指定頻帶減弱後者，不能移除直流穩定機制。</li>
+</ul>
+
+<h2>可觀察證據：用兩個節點電壓重建 Q 點</h2>
+<p>用三用電表量射極對地 V<sub>E</sub>，除以已知 R<sub>E</sub> 可得 I<sub>E</sub>，這比把電流表串入微小支路更方便；再量集極對地 V<sub>C</sub>，相減得到 V<sub>CE</sub>。換另一顆同型號電晶體後重新量一次，能證明實際 Q 點及元件散布造成的漂移；加熱後觀察方向，也能驗證回授是否把變化壓小。這些量測不能直接證明 β 的精確值，因為還要準確取得僅數 µA 的 I<sub>B</sub>；也不能證明 V<sub>BE</sub> 恰為 0.7 V，電表量到的真實值通常落在 0.6 V 至 0.75 V。</p>
+
+<h2>連到哪門課</h2>
+<p>分壓加射極退化是離散放大器與類比積體電路偏壓的基本模板。化簡方法直接使用<a href="../電路學-互動課程/05-戴維寧與最大功率.html">戴維寧等效</a>，若要從原電路逐節點驗算，可回到<a href="../電路學-互動課程/03-節點與網目分析.html">節點與網目分析</a>。射極電阻以增益換穩定度，是第 14 章一般負回授理論的具體案例；下一步則先比較 MOSFET 的控制機制與工作區。</p>
+<nav class="pager" aria-label="章節導覽"><a href="06-BJT原理與工作區.html">← 上一頁：BJT 原理與工作區</a><a href="08-MOSFET原理與三個工作區.html">下一頁：MOSFET 原理與三個工作區 →</a></nav>
+</main>
+<footer class="site-footer"><span>07 BJT 偏壓與 Q 點</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

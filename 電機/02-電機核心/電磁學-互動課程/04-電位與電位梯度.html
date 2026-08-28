@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 電位與電位梯度｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・把難加的向量場先改寫成好加的純量</p>
+<h1>電位與電位梯度：先算高度，再找最陡的下坡</h1>
+<p class="lead">電位把電場對路徑的累積濃縮成每單位電荷的能量。先把各個電荷的純量貢獻相加，再取一次梯度，通常比逐一處理三個方向的電場省力，也能直接看出導體與邊界的約束。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-高斯定律.html">03 高斯定律</a>的電場與通量；導數與梯度可回看<a href="../../../共通基礎/數學/互動課程/01-極限與導數.html">工程數學先修</a>。</p>
+
+<h2>痛點：電位明明是純量，怎麼又能決定向量電場</h2>
+<p>最容易卡住的地方有三個。第一，V 看起來只是一個數，為何對它做梯度就能得到有方向的 <b>E</b>？第二，公式前面的負號是記號還是物理方向？第三，某點 V = 0 時，為何電場仍可能很大？如果只背 E = V/d，遇到點電荷、偶極或不均勻場就會立即失效。真正通用的關係是 <b>E</b> = −∇V；本課以粗體代表空間向量，非粗體代表它的大小。</p>
+<p>電位（electric potential）V 的單位是伏特 V，也就是 J/C。它回答的是：以無窮遠為零參考，把 1 C 正試驗電荷緩慢搬到指定點，外力每庫侖要提供多少能量。電位能 W 則屬於某顆實際電荷，兩者關係為 W = qV；少了 q，焦耳與伏特不能互換。</p>
+
+<h2>白話直覺：電荷造出能量地形，電場指出最陡下降方向</h2>
+<p>可暫時把 V 想成地形高度，<b>E</b> 像最陡下坡箭頭；比喻到此為止，精確定義仍是線積分與梯度。源在帶電物體：正點電荷使周圍電位為正，電場向外；負點電荷使電位為負，電場向內。點電荷的 V 隨距離以 1/r 下降，而 E 以 1/r² 下降，所以同樣把距離加倍，電位減半，場卻只剩四分之一。</p>
+<p>能量存在整個電場所在空間；正試驗電荷若可自由移動，會沿 <b>E</b> 朝較低 V 前進並把電位能轉成動能。導體或材料邊界會重新分配表面電荷，使靜電平衡導體內 <b>E</b> = <b>0</b>，整塊導體成為等位體。高阻抗靜電計最後量到的是探頭與接地參考之間的電位差，不是宇宙中的絕對高度。這條鏈因此是：電荷是源，場沿電位下降最快處指向，能量在場中，導體邊界改寫電位分布，儀器讀出兩點之差。</p>
+<p>電偶極（electric dipole）由 +Q 與 −Q 相隔 d 組成，偶極矩 <b>p</b> = Q<b>d</b>，方向由負電荷指向正電荷，單位 C⋅m。遠處同時看見一正一負，兩者大部分抵消，所以偶極電位以 1/r²、電場以 1/r³ 更快衰減。空氣約在 3 MV/m 崩潰；本章預設點電荷在 10 cm 處的 8987.551792 V/m 只有它的約千分之三，量級遠未到打火。</p>
+<p class="note">來源：08-電磁學-上 §4.1–§4.5。</p>
+
+<h2>推導：從路徑無關到梯度與偶極遠場</h2>
+<p><strong>路徑無關。</strong>靜電場滿足 ∇×<b>E</b> = <b>0</b>。由史托克斯定理，任一封閉路徑都有 ∮<sub>C</sub> <b>E</b>⋅d<b>ℓ</b> = 0，因此從 A 到 P 的線積分只看端點，不看繞路方式，才可定義 V(P) − V(A) = −∫<sub>A</sub><sup>P</sup> <b>E</b>⋅d<b>ℓ</b>。這裡假設電荷靜止、場不隨時間變；第 11 章若有時變磁通，環流不再為零，這個純靜電前提就破了。</p>
+<p><strong>梯度的負號。</strong>位移一小段 d<b>ℓ</b> 時，dV = −<b>E</b>⋅d<b>ℓ</b>。梯度 ∇V 讀作 del V，是每個方向的變化率組成的向量，指向 V 增加最快處；因此 <b>E</b> = −∇V 必指向下降最快處。沿等位面移動時 dV = 0，故 <b>E</b>⋅d<b>ℓ</b> = 0，電場必與等位面垂直，而不是視覺上的大概垂直。</p>
+<p><strong>點電荷。</strong>徑向場大小為 kQ/r′²，故 V = −∫<sub>∞</sub><sup>r</sup> (kQ/r′²) dr′ = kQ/r，其中 k = 1/(4πε<sub>0</sub>) = 8.9875517923 × 10<sup>9</sup> N⋅m²/C²。多個源時 V = ΣkQ<sub>i</sub>/r<sub>i</sub> 直接作帶正負號的純量加法，最後才算 −∇V；直接算 <b>E</b> 則每一源都要拆三個方向。</p>
+<p><strong>偶極近似。</strong>在 r ≫ d 的遠場，兩電荷到觀測點的距離差約為 d cos θ，所以 V = kQ(1/r<sub>−</sub> − 1/r<sub>+</sub>) ≈ kp cos θ/r²。再取梯度得 E<sub>r</sub> = 2kp cos θ/r³、E<sub>θ</sub> = kp sin θ/r³。外場還會給偶極力矩 <b>τ</b> = <b>p</b>×<b>E</b><sub>0</sub>，使它傾向對齊場。無自由電荷區域滿足 ∇²V = 0；若有體電荷則 ∇²V = −ρ<sub>v</sub>/ε<sub>0</sub>。兩式分別是拉普拉斯方程與卜瓦松方程，配合邊界值才有唯一物理解。</p>
+
+<h2>數值實例：同一距離比較點電荷與偶極</h2>
+<p>Q = 10 nC、r = 10 cm = 0.10 m（點電荷模式）；偶極模式取同樣的 Q = 10 nC、間距 d = 10 mm = 0.010 m、θ = 0°、r = 0.10 m。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>點電荷電位</td><td>V = kQ/r = 8.9875517923 × 10<sup>9</sup> × 10<sup>−8</sup> / 0.10</td><td><strong>898.755179 V</strong></td></tr>
+<tr><td>點電荷電場</td><td>E = kQ/r²</td><td><strong>8987.551792 V/m</strong></td></tr>
+<tr><td>檢查</td><td>E = V/r ？ 898.755179 / 0.10</td><td><strong>8987.551792 ✓（僅對 1/r 型電位成立）</strong></td></tr>
+<tr><td>搬 1 nC 從無窮遠到 r</td><td>W = qV = 10<sup>−9</sup> × 898.755179</td><td><strong>8.987552 × 10<sup>−7</sup> J</strong></td></tr>
+<tr><td>偶極矩</td><td>p = Qd = 10<sup>−8</sup> × 0.010</td><td><strong>1.000000 × 10<sup>−10</sup> C⋅m</strong></td></tr>
+<tr><td>偶極電位（θ = 0°）</td><td>V = kp cos θ/r² = 8.9875517923 × 10<sup>9</sup> × 10<sup>−10</sup> / 0.01</td><td><strong>89.875518 V</strong></td></tr>
+<tr><td>偶極徑向場</td><td>E<sub>r</sub> = 2kp cos θ/r³</td><td><strong>1797.510358 V/m</strong></td></tr>
+<tr><td>偶極切向場</td><td>E<sub>θ</sub> = kp sin θ/r³ = 0</td><td><strong>0.000000 V/m</strong></td></tr>
+</tbody></table>
+<p>邊界對照：θ = <strong>90°</strong>（偶極的赤道面）→ V = <strong>0.000000 V</strong>、E<sub>r</sub> = 0、E<sub>θ</sub> = <strong>898.755179 V/m</strong>、|E| = <strong>898.755179 V/m</strong>——<strong>電位為零但電場不為零</strong>，因為赤道面上兩個電荷的距離相同、電位剛好抵消，但兩個場的水平分量同向相加。θ = <strong>60°</strong> → V = <strong>44.937759 V</strong>、E<sub>r</sub> = <strong>898.755179 V/m</strong>、E<sub>θ</sub> = <strong>778.344817 V/m</strong>、|E| = <strong>1188.941347 V/m</strong>。r 加倍到 <strong>0.20 m</strong> → 點電荷 V 減半（<strong>449.377590 V</strong>）、偶極 V 掉到 1/4（<strong>22.468879 V</strong>）。</p>
+
+<section class="workspace"><h2>自由實驗：點電荷與電偶極</h2>
+<p>源放在原點附近，觀測點距原點 r；偶極軸定義 θ = 0°。切換源的模型，觀察純量電位、場分量與遠場近似的有效範圍。</p>
+<div class="controls">
+<label for="pot-mode">源的模式<select id="pot-mode"><option value="point">單一點電荷</option><option value="dipole">電偶極（遠場近似）</option></select></label>
+<label for="pot-q">電荷量 Q（nC）<input id="pot-q" type="range" min="1" max="100" step="1" value="10"></label>
+<label for="pot-r">觀測距離 r（cm）<input id="pot-r" type="range" min="2" max="100" step="1" value="10"></label>
+<label for="pot-d">偶極間距 d（mm，只有偶極模式用）<input id="pot-d" type="range" min="1" max="50" step="1" value="10"></label>
+<label for="pot-theta">與偶極軸的夾角 θ（°，只有偶極模式用）<input id="pot-theta" type="range" min="0" max="180" step="1" value="0"></label>
+</div>
+<div id="potential-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>V 是每庫侖的電位能，W = qV 才是指定電荷的電位能；兩者單位分別為 V 與 J。</li>
+<li>V 的零點可平移，電位差與 <b>E</b> 不變；選無窮遠為零是方便的參考，不是自然界唯一零點。</li>
+<li>E = V/d 只適用均勻場；一般不均勻場必須用 <b>E</b> = −∇V，點電荷的 E = V/r 也不是通式。</li>
+<li>V = 0 不推出 <b>E</b> = <b>0</b>；偶極赤道面就是反例，只有局部 V 處處不變才表示梯度為零。</li>
+<li>等位面與電場垂直源自內積為零；導體等位只限靜電平衡，不可直接套到有電阻壓降的載流導線。</li>
+<li>偶極矩由負指向正；它描述分離量與方向，不能只用總電荷為零就判定偶極矩也為零。</li>
+</ul>
+
+<h2>可觀察證據：只能量電位差，不能接上無窮遠</h2>
+<p>高阻抗靜電計可量帶電體相對接地點的電位；普通三用電表約 10 MΩ 的輸入阻抗常會把少量靜電荷放掉。沿靜電平衡導體選多個接點，若讀值在解析度內皆為 0 V，能支持「導體是等位體」；移動非接觸電場探棒並比較讀值，也能支持場在何處較強。</p>
+<p>這些量測能證明指定參考下的兩點電位差與導體表面的等位性，不能證明所選零點是絕對電位，也不能直接量到 ∇V 的全部空間分布。儀器更不能直接讀出偶極矩；只能配合已知幾何與模型，由多點電位反推。探棒本身還會擾動小電荷系統，因此「量到」始終帶著負載與空間解析度的邊界。</p>
+<p>實作量測時還要先記錄接地位置、探頭輸入電容與環境濕度；否則同一物體的電荷會沿潮濕表面緩慢洩漏，讀值隨時間下降。這種下降能顯示系統不是理想靜電隔離，卻不能被誤解成電位定義本身隨時間改變。</p>
+
+<h2>連到哪門課</h2>
+<p>求梯度、拉普拉斯方程與邊界值問題會在<a href="../../../共通基礎/數學/互動課程/11-PDE與向量分析.html">工程數學先修的偏微分方程與向量分析</a>正式練習；節點電壓則是電路語言中的同一個電位概念，可接到<a href="../電路學-互動課程/02-KCL與KVL.html">電路學的 KCL 與 KVL</a>。下一章會把介電質看成大量可被外場轉向或拉伸的微小偶極，天線課也會用時變偶極作為最基本的輻射模型。</p>
+<nav class="pager" aria-label="章節導覽"><a href="03-高斯定律.html">← 上一頁：高斯定律</a><a href="05-介電質與邊界條件.html">下一頁：介電質與邊界條件 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 電位與電位梯度</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

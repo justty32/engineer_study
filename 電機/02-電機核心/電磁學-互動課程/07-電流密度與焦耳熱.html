@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 電流密度與焦耳熱｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・把電阻還原成材料、幾何與場</p>
+<h1>電流密度與焦耳熱：電荷守恆如何長成 KCL</h1>
+<p class="lead">總電流只告訴你有多少電荷穿過截面，電流密度還告訴你它集中在哪裡。場版歐姆定律與連續性方程能推回熟悉的 R = ρℓ/A，也能指出熱最先出現的位置。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="06-電容與電場儲能.html">06 電容與電場儲能</a>的電荷、場能與材料參數。</p>
+
+<h2>痛點：一安培流過粗線與細線，為何結果差那麼多</h2>
+<p>電路學常把一段導線壓成單一電阻 R，於是相同 I 看起來就應有相同效果；然而截面縮小會讓電流擠在更少面積，局部發熱急升。需要描述空間分布時，必須使用電流密度（current density）<b>J</b>，單位 A/m²，總電流才是 I = ∫<sub>S</sub> <b>J</b>⋅d<b>A</b>。本課粗體代表向量，非粗體代表大小。</p>
+<p>另一個直覺陷阱是電子移動很慢，燈為何幾乎立刻亮。漂移速度描述載子平均淨位移；訊號與能量建立靠電磁場沿導線周圍傳播，兩者不是同一速度。若把電子想成從開關一路衝到燈泡，會錯估約十二個數量級。</p>
+
+<h2>白話直覺：場先建立，載子慢慢漂，能量沿途變成熱</h2>
+<p>可暫把 <b>J</b> 想成每一小塊截面的交通密度；比喻到此為止，精確定義是單位面積的電荷流率與方向。源是電源在導線兩端建立的電位差，導線內 <b>E</b> 由高電位指向低電位；均勻直導線中場約為 V/ℓ，不靠離電源多遠的平方律，而由整個邊界值問題決定。</p>
+<p>電場推動大量自由載子形成 <b>J</b>，能量由場交給晶格，轉為焦耳熱；局部功率密度 p = <b>J</b>⋅<b>E</b>，所以細處與接點特別熱。材料以電導率 σ 改變關係：σ 大時，同樣 J 只需很小 E。介面若 σ 不同，表面自由電荷會自行累積並調整法向場，直到穩態 J<sub>n</sub> 連續。四線式電阻計量端到端壓降，熱像儀量表面溫升，兩者把場模型投影成可見證據。</p>
+<p>預設銅線內 E = 0.0168 V/m，遠小於空氣崩潰的 3 MV/m；小不是沒有，它乘十公尺仍形成 0.168 V 壓降。銅中 1 A、1 mm² 的漂移速度約 7.342952 × 10<sup>−5</sup> m/s，也就是每秒約 0.07 mm；訊號場卻以接近光速的量級建立。</p>
+<p class="note">來源：08-電磁學-上 §7.1–§7.4。</p>
+
+<h2>推導：從局部材料定律積成整段導線</h2>
+<p><strong>場版歐姆定律。</strong>均勻、等向、線性且溫度固定的材料滿足 <b>J</b> = σ<b>E</b>，σ 單位 S/m，電阻率 ρ = 1/σ，單位 Ω⋅m。均勻導線中 J = I/A、E = V/ℓ，代入 I/A = σV/ℓ，得 V = Iℓ/(σA) = IR，因此 R = ℓ/(σA) = ρℓ/A。σ 是材料性質；R 還包含長度與截面，是元件端口結果。</p>
+<p><strong>功率密度。</strong>單位體積內場交出的功率為 p = <b>J</b>⋅<b>E</b> = σE²，單位 W/m³。均勻導線中 p = (I/A)(V/ℓ)，乘體積 Aℓ 得 P = IV = I²R。這說明端口功率不是另一套定律，而是局部能量轉換對體積的總和。</p>
+<p><strong>連續性方程。</strong>封閉面流出的電流必等於內部電荷減少率：∮<sub>S</sub> <b>J</b>⋅d<b>A</b> = −dQ<sub>內</sub>/dt。用散度定理並把 Q 寫成體電荷積分，縮到任意小體積便得 ∇⋅<b>J</b> = −∂ρ<sub>v</sub>/∂t。穩態時右側為零，流入節點的電流等於流出電流，這就是 KCL 的場論來源。</p>
+<p><strong>電荷弛豫。</strong>把 <b>J</b> = σ<b>E</b> 與 ∇⋅<b>E</b> = ρ<sub>v</sub>/ε 代入連續性方程，得 ∂ρ<sub>v</sub>/∂t = −(σ/ε)ρ<sub>v</sub>，解為 ρ<sub>v</sub> = ρ<sub>0</sub>e<sup>−t/τ</sup>，τ = ε/σ。取真空 ε 時，銅的 τ ≈ <strong>1.487504 × 10<sup>−19</sup> s</strong>，說明導體內淨體電荷幾乎瞬間移到表面。漂移關係 I = nqv<sub>d</sub>A；取銅 n ≈ 8.5 × 10<sup>28</sup> /m³，可得本例的慢速漂移。</p>
+<p>截面改變時，穩態總電流仍連續，但 J = I/A 會在細處增大。對同一材料，E = ρJ 也同步增大，而 p = ρJ² 以平方上升；這就是接點、刮傷與銅箔頸縮成為熱點的原因。若溫度升高又使金屬 ρ 增大，定電流驅動下發熱會進一步增加，理想定溫線性模型便開始失效。</p>
+<p>KCL 其實是連續性方程在小節點上的穩態積分結果。若節點電荷正在累積，流入與流出傳導電流可暫時不相等，差值等於 dQ/dt；電容正是有意利用這種暫態。第 12 章再問「導線電流到了電容間隙去哪裡」，位移電流會把場的變化補進安培定律，而不是讓真實電子穿過絕緣層。</p>
+<p>工程選線不能只讓 R 足夠小，還要讓允許電流密度、溫升與壓降同時合格。相同截面積若散熱環境不同，最後溫度也不同；因此約 2 至 5 A/mm² 只能當一般量級警戒，不是跨材料、線材與 PCB 疊構都通用的法規值。場方程預測熱源位置，熱傳課才接手預測溫度。</p>
+
+<h2>數值實例：十公尺、一平方毫米的銅線</h2>
+<p>銅線 ρ = 1.68 × 10<sup>−8</sup> Ω⋅m（σ = 5.952380952 × 10<sup>7</sup> S/m）、長度 ℓ = 10 m、截面積 A = 1 mm² = 10<sup>−6</sup> m²、I = 1 A。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>電流密度</td><td>J = I/A = 1 / 10<sup>−6</sup></td><td><strong>1.000000 × 10<sup>6</sup> A/m²</strong></td></tr>
+<tr><td>導線內電場</td><td>E = J/σ = Jρ = 10<sup>6</sup> × 1.68 × 10<sup>−8</sup></td><td><strong>0.016800 V/m</strong></td></tr>
+<tr><td>兩端電壓</td><td>V = Eℓ = 0.0168 × 10</td><td><strong>0.168000 V</strong></td></tr>
+<tr><td>電阻</td><td>R = ρℓ/A = 1.68 × 10<sup>−8</sup> × 10 / 10<sup>−6</sup></td><td><strong>0.168000 Ω</strong></td></tr>
+<tr><td>功率</td><td>P = I²R = 1 × 0.168</td><td><strong>0.168000 W</strong></td></tr>
+<tr><td>功率密度</td><td>p = JE = 10<sup>6</sup> × 0.0168</td><td><strong>16800.000000 W/m³</strong></td></tr>
+<tr><td>檢查</td><td>p × 體積 = 16800 × 10<sup>−5</sup></td><td><strong>0.168000 W ✓</strong></td></tr>
+</tbody></table>
+<p><a href="../../../共通基礎/物理/互動課程/09-電流與電路基礎.html">普通物理的電流與電路基礎</a>用同一根銅線得到 R = 0.168 Ω，兩課刻意共用 ρ = 1.68 × 10<sup>−8</sup> Ω⋅m。教科書若取 σ = 5.8 × 10<sup>7</sup> S/m，會得 R = 0.172414 Ω；這是材料基準不同，不改本課錨定值。</p>
+<p>邊界對照：換成鋁（ρ = 2.65 × 10<sup>−8</sup>）→ R = <strong>0.265000 Ω</strong>、P = <strong>0.265000 W</strong>；鐵（ρ = 9.71 × 10<sup>−8</sup>）→ R = <strong>0.971000 Ω</strong>、P = <strong>0.971000 W</strong>；海水（ρ = 0.2 Ω⋅m）→ R = <strong>2000000.000000 Ω</strong>、P = <strong>2000000.000000 W</strong>。最後一組不可能維持 1 A；用途只是展示材料差七個數量級的後果。</p>
+
+<section class="workspace"><h2>自由實驗：材料、線徑與發熱</h2>
+<p>以均勻直線導體承載穩態電流，忽略溫升造成的電阻率變化。調整材料、截面與長度，觀察局部 J、E、p 如何積成端口 R 與 P。</p>
+<div class="controls">
+<label for="con-mat">材料<select id="con-mat"><option value="copper">銅 ρ = 1.68 × 10⁻⁸ Ω⋅m</option><option value="aluminum">鋁 ρ = 2.65 × 10⁻⁸ Ω⋅m</option><option value="iron">鐵 ρ = 9.71 × 10⁻⁸ Ω⋅m</option><option value="seawater">海水 ρ = 0.2 Ω⋅m</option></select></label>
+<label for="con-i">電流 I（A）<input id="con-i" type="range" min="0.1" max="20" step="0.1" value="1"></label>
+<label for="con-area">截面積 A（mm²）<input id="con-area" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+<label for="con-len">長度 ℓ（m）<input id="con-len" type="range" min="1" max="100" step="1" value="10"></label>
+</div>
+<div id="conduction-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li><b>J</b> 是局部每平方公尺的電流，I 是穿過指定面的總量；只有均勻分布時才可直接用 J = I/A。</li>
+<li>σ 與 ρ 是材料性質且互為倒數，R 還取決於幾何；換線長或線徑不會改變理想材料的 σ。</li>
+<li>漂移速度是載子平均淨移動，訊號速度是場擾動傳播；慢電子不會導致燈延遲數小時。</li>
+<li>焦耳熱 p 是體積密度，P 是整體功率；不能把 W/m³ 的數值直接當瓦特。</li>
+<li>穩態 ∇⋅<b>J</b> = 0 表示不累積電荷，不代表每處 J 大小相同；截面改變時密度可改變。</li>
+<li>p = σE² 是線性有限電導模型；超導體的 E = 0 與材料機制不能靠令 σ → ∞ 粗暴解釋。</li>
+</ul>
+
+<h2>可觀察證據：四線量毫歐姆，熱像看功率集中</h2>
+<p>四線制（Kelvin）量測用一對導線送測試電流、另一對只量待測段壓降，能避開表棒與接觸電阻，解析毫歐姆導線；兩線制常被數十毫歐接觸值淹沒。熱像儀則量表面紅外輻射換算溫度，能看出細頸或接點最先升溫。</p>
+<p>這些證據能支持導線直流 R、材料電阻率比例與發熱集中位置，不能直接量到金屬內部 0.0168 V/m 的局部 <b>E</b>，也不能單獨證明電子漂移速度；後者需結合霍爾量測、載子密度與模型間接推得。熱像看到溫度還受散熱與表面放射率影響，不等同瞬時 p 的直接影像。</p>
+
+<h2>連到哪門課</h2>
+<p><a href="../電路學-互動課程/01-電阻與歐姆定律.html">電路學的電阻與歐姆定律</a>從端口使用 v = iR；本章揭示 R 是材料定律對幾何的積分。連續性方程還會在第 12 章迫使馬克士威加入位移電流，修補電容器間隙中的電荷守恆；PCB 與電力課則用 J 與熱限制決定銅箔寬度和導線尺寸。</p>
+<nav class="pager" aria-label="章節導覽"><a href="06-電容與電場儲能.html">← 上一頁：電容與電場儲能</a><a href="08-磁場與羅倫茲力.html">下一頁：磁場與羅倫茲力 →</a></nav>
+</main>
+<footer class="site-footer"><span>07 電流密度與焦耳熱</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

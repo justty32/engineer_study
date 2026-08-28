@@ -1,0 +1,38 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>課程地圖｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html" aria-current="page">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">從載子到系統・先找工作點，再做小訊號線性化</p>
+<h1>電子學（零基礎互動課）</h1>
+<p class="lead">電路學把元件當黑箱，電子學則把盒子打開；元件一旦變成非線性，分析就要拆成「先找工作點、再做小訊號線性化」兩段。本課從電子與電洞一路蓋到運算放大器、電源與資料轉換，每章安排一個可立即看到數值與原因的自由實驗。</p>
+<div class="flow"><span>能帶與載子</span><span>PN 接面</span><span>二極體模型</span><span>整流與穩壓</span><span>BJT</span><span>MOSFET</span><span>CMOS</span><span>小訊號</span><span>三大組態</span><span>頻寬與疊接</span><span>差動對</span><span>回授</span><span>運算放大器</span></div>
+<p class="note">每章只有一個自由實驗，改控制就立即看到數值與原因；沒有計分，練習題集中在自我檢核頁，答錯不擋路。</p>
+<p class="warning">本站不畫圖，I–V 曲線、負載線、轉移特性曲線與波德圖以數值與判讀句呈現：區域名稱、電流、跨導、輸出阻抗，以及每十倍頻掉幾 dB 都會直接寫清楚。</p>
+<section class="chapter-list">
+<a class="chapter-card" href="00-電子學世界觀.html"><h2><span class="number">00</span> 電子學世界觀</h2><p>先看懂非線性、工作點與小訊號，掌握全課共用的兩段式方法。</p></a>
+<a class="chapter-card" href="01-半導體與載子.html"><h2><span class="number">01</span> 半導體與載子</h2><p>從能帶、電子與電洞出發，算出摻雜如何改變導電性。</p></a>
+<a class="chapter-card" href="02-PN接面與二極體方程.html"><h2><span class="number">02</span> PN 接面與二極體方程</h2><p>追蹤擴散與漂移的拉鋸，理解二極體為何單向導通。</p></a>
+<a class="chapter-card" href="03-二極體工作點與模型.html"><h2><span class="number">03</span> 二極體工作點與模型</h2><p>聯立負載線與元件方程，量化三種常用模型的誤差。</p></a>
+<a class="chapter-card" href="04-整流與濾波.html"><h2><span class="number">04</span> 整流與濾波</h2><p>把交流變成直流，算出峰值、放電漣波與負載影響。</p></a>
+<a class="chapter-card" href="05-穩壓限幅與特殊二極體.html"><h2><span class="number">05</span> 穩壓限幅與特殊二極體</h2><p>用崩潰、光與接面電容完成穩壓、保護與感測。</p></a>
+<a class="chapter-card" href="06-BJT原理與工作區.html"><h2><span class="number">06</span> BJT 原理與工作區</h2><p>沿著載子穿越薄基極的路徑，分清截止、作用與飽和。</p></a>
+<a class="chapter-card" href="07-BJT偏壓與Q點.html"><h2><span class="number">07</span> BJT 偏壓與 Q 點</h2><p>把分壓網路化成戴維寧源，建立對 β 不敏感的偏壓。</p></a>
+<a class="chapter-card" href="08-MOSFET原理與三個工作區.html"><h2><span class="number">08</span> MOSFET 原理與三個工作區</h2><p>看閘極電場如何建立通道，判斷截止、三極與飽和區。</p></a>
+<a class="chapter-card" href="09-CMOS反相器與數位功耗.html"><h2><span class="number">09</span> CMOS 反相器與數位功耗</h2><p>連起切換閾值、充放電能量與電源電壓的平方代價。</p></a>
+<a class="chapter-card" href="10-小訊號模型.html"><h2><span class="number">10</span> 小訊號模型</h2><p>把工作點附近的曲線換成跨導與輸出阻抗等效電路。</p></a>
+<a class="chapter-card" href="11-單級放大器三大組態.html"><h2><span class="number">11</span> 單級放大器三大組態</h2><p>比較共射、共集與共基在增益、阻抗和頻寬上的角色。</p></a>
+<a class="chapter-card" href="12-米勒效應與頻寬.html"><h2><span class="number">12</span> 米勒效應與頻寬</h2><p>找出回授電容如何被增益放大，並用疊接救回頻寬。</p></a>
+<a class="chapter-card" href="13-差動對與電流鏡.html"><h2><span class="number">13</span> 差動對與電流鏡</h2><p>把兩個輸入相減、拒絕共模，再以主動負載提高增益。</p></a>
+<a class="chapter-card" href="14-回授與穩定性.html"><h2><span class="number">14</span> 回授與穩定性</h2><p>用迴路增益換取精準度與頻寬，同時看見振盪風險。</p></a>
+<a class="chapter-card" href="15-運算放大器與電子系統.html"><h2><span class="number">15</span> 運算放大器與電子系統</h2><p>從運算放大器出海，連到振盪器、電源與資料轉換。</p></a>
+<a class="chapter-card" href="名詞與概念字典.html"><h2><span class="number">查</span> 名詞與概念字典</h2><p>查繁中與英文術語，也查它的物理機制與適用邊界。</p></a>
+<a class="chapter-card" href="自我檢核.html"><h2><span class="number">檢</span> 自我檢核</h2><p>用可重做題目檢查模型，答錯會解釋原因但不阻擋瀏覽。</p></a>
+</section>
+<h2>先修與去向</h2>
+<p>本課的直接前置是<a href="../電路學-互動課程/index.html">電路學</a>；半導體的物理背景見<a href="../../../共通基礎/物理/互動課程/15-量子與半導體.html">普通物理的量子與半導體</a>，計算所需工具見<a href="../../../共通基礎/數學/互動課程/index.html">工程數學先修</a>。學完可銜接數位邏輯、控制系統、電力電子與通訊系統。</p>
+<h2>來源</h2>
+<ul><li>07-電子學-上.md</li><li>07-電子學-中.md</li><li>07-電子學-下.md</li><li>中英名詞對照表-2.md</li></ul>
+<nav class="pager" aria-label="章節導覽"><a href="自我檢核.html">← 自我檢核</a><a href="00-電子學世界觀.html">開始：電子學世界觀 →</a></nav>
+</main>
+<footer class="site-footer"><span>電子學（零基礎互動課）</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

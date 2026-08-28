@@ -118,6 +118,8 @@ jobs:
           共通基礎/數學/互動課程|engineering-math
           共通基礎/物理/互動課程|general-physics
           電機/02-電機核心/電路學-互動課程|circuit-analysis
+          電機/02-電機核心/電子學-互動課程|electronics
+          電機/02-電機核心/電磁學-互動課程|electromagnetics
           COURSES
 
           python3 <<'PY'
@@ -171,6 +173,16 @@ jobs:
               "circuit-analysis": {
                   "../../../共通基礎/數學/互動課程/": "../engineering-math/",
                   "../../../專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/": "../iot-hardware-bus/",
+              },
+              "electronics": {
+                  "../../../共通基礎/數學/互動課程/": "../engineering-math/",
+                  "../../../共通基礎/物理/互動課程/": "../general-physics/",
+                  "../電路學-互動課程/": "../circuit-analysis/",
+              },
+              "electromagnetics": {
+                  "../../../共通基礎/數學/互動課程/": "../engineering-math/",
+                  "../../../共通基礎/物理/互動課程/": "../general-physics/",
+                  "../電路學-互動課程/": "../circuit-analysis/",
               },
           }
 

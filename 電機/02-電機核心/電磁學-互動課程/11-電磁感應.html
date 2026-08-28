@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 電磁感應｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">11・磁通只要變化，迴路就出現環流電場</p>
+<h1>電磁感應：把動生、變生與冷次定律接成能量守恆</h1>
+<p class="lead">導棒切過磁場與固定線圈遇到時變磁場，看似兩種發電方法，其實都在改變穿過迴路的磁通。負號不是背誦方向的裝飾，而是保證輸出的電能必須由外力或原側電源支付。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="09-畢歐沙伐與安培定律.html">09 畢歐沙伐與安培定律</a>的磁通，以及<a href="01-向量場語言.html">01 向量場語言</a>的旋度；一階微分可回看<a href="../../../共通基礎/數學/互動課程/01-極限與導數.html">工程數學先修</a>。</p>
+
+<h2>痛點：磁鐵與線圈都沒有接電池，電壓究竟從哪裡來</h2>
+<p>靜止磁鐵放在線圈旁不會持續發電；只有導體運動、磁場改變、迴路面積改變或方向改變，使磁通隨時間變化，端點才出現電壓。把「有磁場」誤寫成「有感應」會漏掉最重要的導數。發電機的輸出來自推動轉子的機械功，變壓器的輸出來自一次側電源，兩者都不是磁場免費贈送能量。</p>
+<p>法拉第定律（Faraday's law）為 ε<sub>emf</sub> = −dΦ<sub>B</sub>/dt。ε<sub>emf</sub> 是電動勢（electromotive force, EMF），單位 V；它不是介電常數 ε，本章凡指電動勢一律加下標 emf。Φ<sub>B</sub> 是磁通，單位 Wb。負號代表冷次定律（Lenz's law）：感應效應總是反抗磁通的變化，而不是一律反抗磁通本身。</p>
+<p class="warning">電感電流被突然切斷時，V = L di/dt 會產生很高的反電動勢尖峰；繼電器、電磁閥與直流馬達線圈務必並聯續流二極體或適當緩衝電路。感應加熱設備與大型電感附近也不要放置金屬飾品。</p>
+
+<h2>白話直覺：變化才是源，阻力就是能量帳單</h2>
+<p>可暫時把感應電流想成對磁通變化踩煞車；比喻到此為止，方向要由法拉第定律與右手定則精確決定。源位於變化的磁通：動生情況是導棒移動而掃過不同面積，變生情況則是固定迴路中的 <b>B</b> 隨時間改變。感應電場沿封閉迴路繞行，大小與磁通變化率成正比，不是由某個靜止電荷向外發散。</p>
+<p>能量從推棒子的手、轉動發電機的軸，或激磁一次側的電源流入，再存進磁場或送到負載與電阻發熱。鐵心提高耦合，氣隙降低電感，漏磁、磁滯、渦流與繞組電阻則造成真實損耗；開關邊界過快還會產生高壓尖峰。示波器量到線圈端電壓，也就是磁通變化率乘匝數，磁通本身必須再積分才能推得。</p>
+<p>完整因果鏈是：運動導體或時變磁場使穿過迴路的 Φ 改變，環流電場按冷次方向建立並沿導線推動電荷；耦合與距離決定變化率傳到多少，能量由機械端或原側電源流向場與負載；鐵心、氣隙、漏磁與電阻改變結果；示波器、搜尋線圈與力規分別量到電動勢、磁通變化率與反抗力。量級上，同樣 0.5 T 的場接近喇叭磁鐵 1 T 的一半，遠大於地磁 50 µT，但若磁通不變，輸出仍是零。</p>
+<p class="note">來源：08-電磁學-中 §12.1–§12.5。</p>
+
+<h2>推導：羅倫茲力、環流電場與功率平衡是同一件事</h2>
+<p><strong>動生電動勢。</strong>導體內自由電荷隨棒以速度 <b>v</b> 移動，在固定 <b>B</b> 中受 q<b>v</b>×<b>B</b>。除以 q 可視為等效場 <b>v</b>×<b>B</b>，沿迴路積分得 ε<sub>emf</sub> = ∮<sub>C</sub> (<b>v</b>×<b>B</b>)⋅d<b>ℓ</b>。若長 L 的直棒以 v 垂直切過均勻 B，便有 ε<sub>emf</sub> = BLv。這不是另一條新定律，而是羅倫茲力在移動導體中的表現。</p>
+<p><strong>冷次方向與反抗力。</strong>若感應電流產生的磁場協助原先變化，磁通會變得更快，電流又更大，形成無外部能量來源的自我增強，因此方向必須反抗變化。閉合迴路電阻為 R 時，I = BLv/R。導棒受反向磁力 F = BIL，代入 I 得 F = B²L²v/R。機械功率 Fv = B²L²v²/R；電功率 ε<sub>emf</sub>I 與熱功率 I²R 也都是同一數值。手感受到的阻力，正是負載取得能量的代價。</p>
+<p><strong>變生電動勢。</strong>固定迴路中的法拉第定律可寫成 ∮<sub>C</sub> <b>E</b>⋅d<b>ℓ</b> = −dΦ<sub>B</sub>/dt。配合史托克斯定理得到 ∇×<b>E</b> = −∂<b>B</b>/∂t，讀作 del cross E。時變磁場使電場有旋，所以第 04 章以單一純量電位描述整圈的方式失效：沿封閉路徑積分不再必然為零。</p>
+<p>若 Φ(t) = B<sub>0</sub>A sin(2πft)，則 dΦ/dt = B<sub>0</sub>A ⋅ 2πf cos(2πft)。N 匝線圈的峰值為 ε<sub>emf,max</sub> = NB<sub>0</sub>A ⋅ 2πf，有效值 ε<sub>emf,rms</sub> = ε<sub>emf,max</sub>/√2。這裡假設場在迴路面積 A 上均勻、各匝磁通相同、波形正弦且不計繞組電阻與鐵心飽和。</p>
+<p><strong>自感、互感與變壓器。</strong>自感（self inductance）以磁通連結 λ = LI 定義；第 10 章線性磁路給 L = N²/R<sub>m</sub>，其中下標 m 代表 magnetic，R<sub>m</sub> 是磁阻。電感儲能 W = (1/2)LI²，場能密度 w<sub>m</sub> = (1/2)<b>H</b>⋅<b>B</b> = B²/(2µ)。互感（mutual inductance）M = k√(L<sub>1</sub>L<sub>2</sub>)，k ∈ [0, 1] 是共同穿過兩線圈的磁通比例。鐵心變壓器 k ≈ 0.99，空心耦合線圈可能只有 0.3。</p>
+<p>理想變壓器有 V<sub>2</sub>/V<sub>1</sub> = N<sub>2</sub>/N<sub>1</sub>、I<sub>2</sub>/I<sub>1</sub> = N<sub>1</sub>/N<sub>2</sub>，負載反映阻抗 Z<sub>ref</sub> = Z<sub>2</sub>(N<sub>1</sub>/N<sub>2</sub>)²。它改變電壓與電流比例，不創造功率；真實元件另有銅損、磁滯、渦流和漏感。</p>
+
+<h2>數值實例：推棒的功率一分不差變成電阻熱</h2>
+<p>動生模式取 B = 0.5 T、導軌間距 L = 0.2 m、棒速 v = 3 m/s、迴路電阻 R = 2 Ω。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>感應電動勢</td><td>ε<sub>emf</sub> = BLv = 0.5 × 0.2 × 3</td><td><strong>0.300000 V</strong></td></tr>
+<tr><td>感應電流</td><td>I = ε<sub>emf</sub>/R = 0.3/2</td><td><strong>0.150000 A</strong></td></tr>
+<tr><td>反抗力</td><td>F = BIL = 0.5 × 0.15 × 0.2</td><td><strong>0.015000 N</strong></td></tr>
+<tr><td>機械功率</td><td>P = Fv = 0.015 × 3</td><td><strong>0.045000 W</strong></td></tr>
+<tr><td>電功率</td><td>P = ε<sub>emf</sub>I = 0.3 × 0.15</td><td><strong>0.045000 W ✓</strong></td></tr>
+<tr><td>熱功率</td><td>P = I²R = 0.15² × 2</td><td><strong>0.045000 W ✓（三者相等，能量守恆）</strong></td></tr>
+</tbody></table>
+<p>變生模式取 N = 100 匝、正方形迴路邊長 L = 0.2 m（面積 A = 0.04 m²）、B<sub>0</sub> = 0.5 T、f = 50 Hz。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>最大磁通</td><td>Φ<sub>max</sub> = B<sub>0</sub>A = 0.5 × 0.04</td><td><strong>2.000000 × 10<sup>−2</sup> Wb</strong></td></tr>
+<tr><td>磁通變化率峰值</td><td>dΦ/dt|<sub>max</sub> = Φ<sub>max</sub> ⋅ 2πf</td><td><strong>6.283185 Wb/s</strong></td></tr>
+<tr><td>感應電動勢峰值</td><td>ε<sub>emf,max</sub> = N ⋅ dΦ/dt|<sub>max</sub></td><td><strong>628.318531 V</strong></td></tr>
+<tr><td>有效值</td><td>ε<sub>emf,rms</sub> = ε<sub>emf,max</sub>/√2</td><td><strong>444.288294 V</strong></td></tr>
+</tbody></table>
+<p>邊界對照：動生模式 v = <strong>0</strong> → ε<sub>emf</sub> = 0、F = 0、P = 0——不動就不發電，磁場再強也一樣。v 拉到 <strong>10 m/s</strong> → ε<sub>emf</sub> = <strong>1.000000 V</strong>、I = <strong>0.500000 A</strong>、F = <strong>0.050000 N</strong>、P = <strong>0.500000 W</strong>（速度加 3.33 倍、功率變 11.1 倍，因為 P ∝ v²）。變生模式 f = <strong>60 Hz</strong> → ε<sub>emf,max</sub> = <strong>753.982237 V</strong>、ε<sub>emf,rms</sub> = <strong>533.145953 V</strong>；f = <strong>400 Hz</strong>（航空電源）→ ε<sub>emf,max</sub> = <strong>5026.548246 V</strong>——同樣的鐵心在 400 Hz 能做出 8 倍的電壓，這就是航空與開關電源用高頻的原因。互感例：k = 0.9、L<sub>1</sub> = 10 mH、L<sub>2</sub> = 40 mH → M = 0.9√(0.01 × 0.04) = <strong>18.000000 mH</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：在動生與變生之間切換</h2>
+<p>動生模式讓導棒在固定場中跨過導軌；變生模式則固定正方形線圈並讓均勻磁場按正弦變化。切換模式，觀察輸入能量如何對應到電動勢與功率。</p>
+<div class="controls">
+<label for="far-mode">感應模式<select id="far-mode"><option value="motional">動生（導棒在固定磁場中滑動）</option><option value="varying">變生（固定線圈、磁場隨時間變）</option></select></label>
+<label for="far-b">磁通密度 B（動生）或峰值 B<sub>0</sub>（變生）（T）<input id="far-b" type="range" min="0.05" max="2" step="0.05" value="0.5"></label>
+<label for="far-l">導軌間距（動生）或正方形線圈邊長（變生）L（m）<input id="far-l" type="range" min="0.05" max="1" step="0.05" value="0.2"></label>
+<label for="far-v">棒速 v（m/s，只有動生用）<input id="far-v" type="range" min="0" max="20" step="0.5" value="3"></label>
+<label for="far-r">迴路電阻 R（Ω，只有動生用）<input id="far-r" type="range" min="0.5" max="20" step="0.5" value="2"></label>
+<label for="far-n">線圈匝數 N（只有變生用）<input id="far-n" type="range" min="1" max="500" step="1" value="100"></label>
+<label for="far-f">磁場變化頻率 f（Hz，只有變生用）<input id="far-f" type="range" min="1" max="400" step="1" value="50"></label>
+</div>
+<div id="faraday-output" class="output" aria-live="polite">這個模式只用到 B、L、v、R 四個滑桿，N 與 f 不影響結果。ε<sub>emf</sub> = 0.300000 V；I = 0.150000 A；F = 0.015000 N；P<sub>機械</sub> = 0.045000 W；P<sub>電</sub> = 0.045000 W；P<sub>熱</sub> = 0.045000 W。三個功率相等，因為冷次定律讓反抗力把機械功送入電路；若速度拉到零，磁通不變，所有輸出都歸零。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>ε<sub>emf</sub> 是電動勢，單位 V；ε 是介電常數，單位 F/m，兩者完全不同，本章以前者加下標區分。</li>
+<li>感應電流反抗的是磁通變化；磁通增加時抑制增加，磁通減少時則試圖維持原值。</li>
+<li>動生與變生可因參考系改變而互換描述，但同一實驗中的可觀測電流不會因此改變。</li>
+<li>線性區的電感 L 由幾何與材料決定，不是電流愈大就必然愈大；鐵心飽和時反而會下降。</li>
+<li>理想變壓器只換電壓與電流比例，不提升功率；真實輸出還會因銅損、鐵損與漏感而較小。</li>
+</ul>
+
+<h2>可觀察證據：示波器量變化率，力規量能量代價</h2>
+<p>把搜尋線圈接示波器，線圈端電壓給出 −N dΦ/dt 的波形；知道匝數後積分可重建 Φ 的相對變化。改變頻率與匝數可驗證電動勢分別與 f、N 成正比，反接線圈可驗證方向符合冷次定律。這能證明磁通變化率與感應電動勢的比例，不能直接量磁通絕對值，因積分常數與探頭初始條件仍未知。</p>
+<p>在導軌裝力規，同時用電壓表與電流表量 ε<sub>emf</sub>、I，可比較 Fv、ε<sub>emf</sub>I 與 I²R。這能證明推得愈快時反抗力增加，且機械功轉為電功與熱；不能單靠一條探棒證明時變電場無法用全域單一電位描述。要檢查路徑依賴，必須控制兩條探棒迴路包圍的面積，否則量到的差異也可能只是量測迴路本身的感應。</p>
+
+<h2>連到哪門課</h2>
+<p>變壓器的端點匝比與三相應用見<a href="../電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>，電感元件的電壓電流關係見<a href="../電路學-互動課程/06-電容與電感.html">電容與電感</a>；動棒發電與冷次方向的現象面見<a href="../../../共通基礎/物理/互動課程/10-磁場與電磁感應.html">普通物理的磁場與電磁感應</a>。下一章會補上位移電流，使時變場中的安培定律與電荷守恆相容。</p>
+<nav class="pager" aria-label="章節導覽"><a href="10-磁性材料與磁路.html">← 上一頁：磁性材料與磁路</a><a href="12-位移電流與馬克士威方程式.html">下一頁：位移電流與馬克士威方程式 →</a></nav>
+</main>
+<footer class="site-footer"><span>11 電磁感應</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

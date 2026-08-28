@@ -1,0 +1,77 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 穩壓限幅與特殊二極體｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・讓二極體決定電壓邊界與能量出口</p>
+<h1>穩壓、限幅與特殊二極體：先假設導通，再驗證電流</h1>
+<p class="lead">二極體不只整流；反向崩潰、光電轉換、接面電容與低壓降都能成為設計功能。本章以齊納穩壓器示範非線性電路最可靠的解法：先選狀態、算完，再檢查假設。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-二極體工作點與模型.html">03 二極體工作點與模型</a>的順偏與反向崩潰，以及電路學的分壓與<a href="../電路學-互動課程/05-戴維寧與最大功率.html">戴維寧等效</a>。</p>
+
+<h2>痛點：輸出說是 5.1 V，為什麼換個負載就突然守不住</h2>
+<p>「齊納二極體標 5.1 V，接上去不就自動得到 5.1 V 嗎？」這句話漏掉兩個必要條件：它必須反向進入崩潰，而且串聯電阻供應的電流要同時餵負載與維持齊納。當輸入太低或負載太重，剩給齊納的電流降到零，所謂 5.1 V 約束就不存在；當輸入太高或負載太輕，多餘電流全由齊納吸收，電壓雖穩，元件卻可能因功耗燒毀。</p>
+<p>齊納二極體（Zener diode）故意工作在可逆的反向崩潰區。它的電流可以改變很多，而兩端電壓只改變一點，因而適合做簡單電壓參考。這不是憑空消除輸入差額：串聯電阻把電壓差轉成熱，齊納也把分到的電功率轉成熱。穩壓問題本質上是一份節點電流帳與兩份熱帳。</p>
+
+<h2>白話直覺：齊納吸收的是負載暫時用不到的電流</h2>
+<p>可把齊納暫時想成輸出節點的溢流口；比喻到此為止，精確定義是在反向崩潰區以陡峭的電流電壓關係限制節點電壓。電源負端與齊納陽極設為地，拓樸是 V<sub>in</sub> → R<sub>s</sub> → 輸出節點；輸出節點一條路經 R<sub>L</sub> 回地，另一條路經反接齊納回地。</p>
+<p>當未接齊納時的分壓足以超過 V<sub>Z</sub>，齊納的反向崩潰路徑打開，回路閉合。傳統電流由電源經 R<sub>s</sub> 到節點後分成 I<sub>L</sub> 與 I<sub>Z</sub>，電子方向相反；電源能量一部分送到負載，一部分在 R<sub>s</sub> 與齊納轉成熱。輸入升高時 R<sub>s</sub> 電流增加，負載電流因輸出近似固定而少變，多出的份額流進齊納，所以輸出端仍靠近 V<sub>Z</sub>。</p>
+<p>若把 R<sub>L</sub> 調小，負載路徑需要更多電流，I<sub>Z</sub> 便被擠小；降到零時齊納路徑斷開，輸出只剩 R<sub>s</sub> 與 R<sub>L</sub> 分壓。反方向若負載幾乎開路，串聯電流大多進齊納，端點電壓仍漂亮，熱卻集中在小封裝。結果不能只看 V<sub>out</sub>，還要同時看 I<sub>Z</sub> 是否高於維持值以及 P<sub>Z</sub> 是否低於額定值。</p>
+<p>限幅器與箝位器都會利用二極體的單向導通，解決的問題卻不同。若輸入是跨過門檻的正弦波，正向限幅器會把超過門檻的波峰削平，輸出振幅與形狀都改變；若同一正弦波送入帶電容的箝位器，穩態輸出仍保留近似原振幅與波形，只是整段向上或向下平移，使某一側波峰貼住指定準位。前者限制瞬時範圍，後者重設直流準位。</p>
+<p class="note">來源：07-電子學-上 §3.2–§3.5。</p>
+<p class="warning">整流器輸入側若接市電是致命電壓，前級濾波電容斷電後仍可能帶電；實驗一律使用低壓隔離電源，確認放電後才改線。齊納穩壓器的 R<sub>s</sub> 與齊納本身會持續發熱，功耗超過常見小型封裝的 250 mW 或 500 mW 就可能燒毀，通電時不要徒手觸碰。</p>
+
+<h2>推導：先把齊納當成 5.1 V，再用結果否決自己</h2>
+<p>先假設齊納導通，理想化其動態電阻 r<sub>z</sub> = 0，於是 V<sub>out</sub> = V<sub>Z</sub>。V<sub>in</sub> 與 V<sub>Z</sub> 單位 V，R<sub>s</sub> 與 R<sub>L</sub> 單位 Ω，電流單位 A。負載電流 I<sub>L</sub> = V<sub>Z</sub>/R<sub>L</sub>，串聯電流 I<sub>s</sub> = (V<sub>in</sub> − V<sub>Z</sub>)/R<sub>s</sub>；節點電流定律給 I<sub>Z</sub> = I<sub>s</sub> − I<sub>L</sub>。</p>
+<p>接著檢查 I<sub>Z</sub>。若 I<sub>Z</sub> ≤ 0，假設自相矛盾，因為反向崩潰支路不可能供出所缺電流；此時把齊納視為開路，輸出退化為 V<sub>out</sub> = V<sub>in</sub> ⋅ R<sub>L</sub>/(R<sub>s</sub> + R<sub>L</sub>)。即使 I<sub>Z</sub> 大於零，本課仍要求 I<sub>Z</sub> ≥ I<sub>Zmin</sub> = 5 mA 才算可靠穩壓。最後算 P<sub>Z</sub> = V<sub>Z</sub>I<sub>Z</sub> 與 P<sub>Rs</sub> = (V<sub>in</sub> − V<sub>Z</sub>)I<sub>s</sub>，單位 W，檢查熱額定。</p>
+<p>這種「先假設、再驗證、不成立就換模型」很像程式的條件分支，也是後面判斷 BJT 與 MOSFET 工作區的通用演算法。真實齊納的崩潰區並非垂直線，而可近似為 V<sub>Z</sub> 串聯小動態電阻 r<sub>z</sub>；本章為突出電流預算而取 r<sub>z</sub> = 0，不能拿來估精密線性調整率。</p>
+<p>實作這個演算法時，不要從答案外觀猜狀態：先選「齊納導通」模型，解完整個線性化電路，再以 I<sub>Z</sub> &gt; 0 驗證；失敗便切換成開路模型並重算。第 06 章判斷 BJT 是截止、作用或飽和，以及第 08 章判斷 MOSFET 工作區，都是先套一組區域方程式，再用算出的端點電壓與電流檢查不等式。同一套方法可避免把非線性元件的公式跨區誤用。</p>
+<p>崩潰物理也有邊界。V<sub>Z</sub> 小於 5 V 時主要是齊納穿隧，溫度係數為負；高於 6 V 時主要是雪崩，溫度係數為正；5 V 至 6 V 附近兩者部分抵銷，因此 5.6 V 與 6.2 V 常用於較穩定的參考。這是定性說明，本課不提供溫度滑桿。</p>
+
+<h2>數值實例：電流先分帳，再判斷有沒有餘裕</h2>
+<p>V<sub>in</sub> = 15 V、R<sub>s</sub> = 470 Ω、V<sub>Z</sub> = 5.1 V、R<sub>L</sub> = 1 kΩ、I<sub>Zmin</sub> = 5 mA。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>開路分壓（檢查用）</td><td>15 × 1000 / 1470</td><td><strong>10.204082 V（&gt; 5.1 V，所以齊納會崩潰）</strong></td></tr>
+<tr><td>輸出電壓</td><td>V<sub>Z</sub></td><td><strong>5.100000 V</strong></td></tr>
+<tr><td>負載電流</td><td>5.1 / 1000</td><td><strong>5.100000 mA</strong></td></tr>
+<tr><td>串聯電阻電流</td><td>(15 − 5.1) / 470</td><td><strong>21.063830 mA</strong></td></tr>
+<tr><td>齊納電流</td><td>21.063830 − 5.1</td><td><strong>15.963830 mA（&gt; 5 mA，穩壓成立）</strong></td></tr>
+<tr><td>齊納功耗</td><td>5.1 × 0.01596383</td><td><strong>81.415532 mW</strong></td></tr>
+<tr><td>R<sub>s</sub> 功耗</td><td>9.9 × 0.02106383</td><td><strong>208.531915 mW</strong></td></tr>
+</tbody></table>
+<table><thead><tr><th>V<sub>in</sub></th><th>R<sub>s</sub></th><th>R<sub>L</sub></th><th>狀態</th><th>V<sub>out</sub></th><th>I<sub>Z</sub></th><th>P<sub>Z</sub></th></tr></thead><tbody>
+<tr><td>15 V</td><td>470 Ω</td><td>1 kΩ</td><td>穩壓成立</td><td><strong>5.100000 V</strong></td><td><strong>15.963830 mA</strong></td><td><strong>81.415532 mW</strong></td></tr>
+<tr><td>5 V</td><td>470 Ω</td><td>1 kΩ</td><td><strong>脫出穩壓</strong>（分壓只有 3.401361 V）</td><td><strong>3.401361 V</strong></td><td><strong>0.000000 mA</strong></td><td><strong>0.000000 mW</strong></td></tr>
+<tr><td>15 V</td><td>470 Ω</td><td>100 Ω</td><td><strong>脫出穩壓</strong>（負載太重）</td><td><strong>2.631579 V</strong></td><td><strong>0.000000 mA</strong></td><td><strong>0.000000 mW</strong></td></tr>
+<tr><td>30 V</td><td>470 Ω</td><td>1 kΩ</td><td>穩壓成立但<strong>功耗逼近封裝上限</strong>（達 250 mW 額定的 97.672596 %）</td><td><strong>5.100000 V</strong></td><td><strong>47.878723 mA</strong></td><td><strong>244.181489 mW</strong></td></tr>
+</tbody></table>
+<p>兩種失效方向必須分開：輸入太低或負載太重，齊納拿不到電流，輸出跟著分壓結果跑；輸入太高或負載太輕，齊納吃下大部分電流，輸出看似穩定卻可能過熱。</p>
+
+<section class="workspace"><h2>自由實驗：齊納穩壓的可用窗口</h2>
+<p>直流源 V<sub>in</sub> 經 R<sub>s</sub> 接輸出節點；輸出節點接齊納陰極，齊納陽極接地，同一節點再經 R<sub>L</sub> 回地。調整輸入、串聯電阻、齊納電壓與負載，觀察電流分帳、脫出穩壓與功耗超標。</p>
+<div class="controls">
+<label for="zn-vin">輸入電壓 V<sub>in</sub>（V）<input id="zn-vin" type="range" min="5" max="30" step="0.5" value="15"></label>
+<label for="zn-rs">串聯電阻 R<sub>s</sub>（Ω）<input id="zn-rs" type="range" min="50" max="2000" step="10" value="470"></label>
+<label for="zn-vz">齊納電壓 V<sub>Z</sub>（V）<input id="zn-vz" type="range" min="3" max="15" step="0.1" value="5.1"></label>
+<label for="zn-rl">負載電阻 R<sub>L</sub>（Ω）<input id="zn-rl" type="range" min="100" max="10000" step="100" value="1000"></label>
+</div>
+<div id="zener-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>齊納二極體穩壓時是陰極接高電位的反接；若像一般二極體正接，它只呈現普通順向壓降，不會得到標示的 V<sub>Z</sub>。</li>
+<li>受限電流下的齊納崩潰是可逆工作狀態，不等於損壞；超過功率或接面溫度額定才會造成燒毀。</li>
+<li>限幅器（clipper）切掉超出門檻的波形，箝位器（clamper）以電容與二極體平移整段直流準位；前者改形狀，後者理想上保留形狀。</li>
+<li>發光二極體（Light Emitting Diode, LED）不能直接跨接定電壓源，必須串限流電阻或使用定電流驅動，因為其指數電流會因小電壓變動急升。</li>
+<li>串聯電阻不是用來「吃掉固定壓降」，而是把電源與 LED 的電壓差轉成可控制的電流。LED 的 I–V 關係近似指數；第 00 章的尺度例顯示順向電壓只多 5 mV，電流便可多 21.337852 %，直接跨接低阻抗電壓源時，微小溫升或元件差異就可能造成電流暴增。</li>
+<li>倍壓器能得到輸入振幅的數倍電壓，不代表功率也倍增；負載取得的能量仍受輸入與元件損耗限制。</li>
+</ul>
+
+<h2>可觀察證據：掃輸入與負載，找出穩壓窗口</h2>
+<p>用可調直流電源供電，三用電表量齊納兩端 V<sub>out</sub>，再量 R<sub>s</sub> 壓降並除以阻值求 I<sub>s</sub>。改變輸入時輸出幾乎不動，能證明目前落在穩壓區；逐步減小負載電阻，若輸出開始隨輸入與負載變動，就能定位脫出穩壓的邊界。示波器以 AC 耦合比較輸入與輸出漣波，可量抑制程度。這些結果不能直接證明動態電阻 r<sub>z</sub>，那需要疊加小訊號並量 ΔV/ΔI；也不能判定崩潰來自穿隧或雪崩，必須量溫度係數的方向。</p>
+
+<h2>連到哪門課</h2>
+<p>齊納穩壓器是電源、過壓保護與參考電壓的最小模型，其先假設再檢查流程會直接沿用到電晶體工作區。分壓與來源等效可回到<a href="../電路學-互動課程/05-戴維寧與最大功率.html">電路學的戴維寧等效</a>；LED 的能隙、光子能量與波長 λ = hc/E<sub>g</sub> 可銜接<a href="../../../共通基礎/物理/互動課程/15-量子與半導體.html">普通物理的量子與半導體</a>。光二極體用於光纖接收，變容二極體（varactor diode）以反偏改變空乏區寬度與電容，蕭特基二極體（Schottky diode）則以金屬與半導體接面換得較低壓降與快速切換。</p>
+<nav class="pager" aria-label="章節導覽"><a href="04-整流與濾波.html">← 上一頁：整流與濾波</a><a href="06-BJT原理與工作區.html">下一頁：BJT 原理與工作區 →</a></nav>
+</main>
+<footer class="site-footer"><span>05 穩壓限幅與特殊二極體</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

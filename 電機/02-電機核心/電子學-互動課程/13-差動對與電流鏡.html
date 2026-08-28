@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 差動對與電流鏡｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">13・讓兩顆電晶體只回應輸入差值</p>
+<h1>差動對與電流鏡：把共同擾動拒於輸出之外</h1>
+<p class="lead">差動對不是兩個放大器相減而已，而是讓固定尾電流在兩支路間重新分配。電流鏡主動負載能把差模增益放大十倍，卻不會替尾電流源改善共模拒斥比。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="11-單級放大器三大組態.html">11 的共射組態</a>，以及<a href="10-小訊號模型.html">10 的小訊號模型</a>。</p>
+
+<h2>痛點：兩個輸入一起飄，為什麼理想輸出可以不動</h2>
+<p>「兩顆電晶體的基極電壓都升高，集極電流不是都該增加嗎？為何差動對卻說共模增益接近零？」單看各顆的指數關係會得到錯誤直覺，因為兩顆共用同一個尾電流源。總電流被鎖住後，一邊增加就必須由另一邊減少；兩邊一起升高時，尾節點會跟著升高，使各自的基射電壓近乎不變。</p>
+<p>差動對（differential pair）接收 v<sub>1</sub> 與 v<sub>2</sub>，關心差模輸入 v<sub>id</sub> = v<sub>1</sub> − v<sub>2</sub>。兩端一起變化叫共模輸入。差模增益 A<sub>d</sub> 描述輸出對差值的反應，共模增益 A<sub>cm</sub> 描述輸出對共同變化的反應；共模拒斥比（Common Mode Rejection Ratio, CMRR）= |A<sub>d</sub>/A<sub>cm</sub>|，常以 dB 表示。</p>
+
+<h2>白話直覺：尾電流是固定預算，差值只決定怎麼分配</h2>
+<p>可以暫時把尾電流想成兩個執行緒共享的固定運算配額；比喻到此為止，精確機制是尾電流源用高輸出阻抗限制兩支路電流總和。正電源各經負載接兩個集極，兩射極相連後經尾電流源到負電源或地，兩條集射路徑都閉合。</p>
+<p>平衡時每邊取得 I<sub>tail</sub>/2。若 v<sub>1</sub> 相對 v<sub>2</sub> 升高，第一顆基射偏壓增加，更多載子由其射極注入並被集極收集；共用射極節點也上升，第二顆基射偏壓下降，因此尾電流從第二支路轉向第一支路。第一側負載壓降增加、集極電壓下降，另一側相反，輸入差值便轉成輸出電壓。</p>
+<p>若兩輸入一起上升，尾節點跟隨上升，兩個 V<sub>BE</sub> 理想上不變，尾電流也不變，輸出便不動。真實尾電流源有有限輸出阻抗 R<sub>oc</sub>，尾節點電壓改變仍會漏成少量電流變化，所以 A<sub>cm</sub> 不為零。R<sub>oc</sub> 愈大，共同擾動愈難改變總電流，CMRR 愈高。</p>
+<p>電流鏡（current mirror）用配對電晶體把參考電流複製到輸出，既能提供尾電流，也能作主動負載（active load）。作負載時，它在直流維持偏壓電流，在小訊號卻呈現很大的輸出阻抗，讓相同電流變化產生更大輸出電壓。這增加 A<sub>d</sub>，但 A<sub>cm</sub> 也被相同負載倍數放大，所以比值 CMRR 不變。</p>
+<p class="note">來源：07-電子學-下 §10.1–§10.3。</p>
+
+<h2>推導：把差模與共模拆成兩個半電路</h2>
+<p>差模驅動時兩輸入大小相等、方向相反，對稱面沒有小訊號電流，尾節點成為虛地。每一半就是無射極退化的共射級。每邊靜態電流 I<sub>C</sub> = I<sub>tail</sub>/2，跨導 g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub>，單位 A/V；單端差模增益大小 A<sub>d</sub> = g<sub>m</sub>R<sub>L,eff</sub>，無單位。此處固定 T = 300 K，V<sub>T</sub> = 25.851999786 mV，假設兩顆完全匹配且處於作用區。</p>
+<p>共模驅動時兩邊同步，流入尾阻抗的增量相加。從任一半電路看，R<sub>oc</sub> 等效為 2R<sub>oc</sub> 的射極退化，因此在 g<sub>m</sub> ⋅ 2R<sub>oc</sub> ≫ 1 時，A<sub>cm</sub> = −R<sub>L,eff</sub>/(2R<sub>oc</sub>)。取大小相除，CMRR = g<sub>m</sub>R<sub>L,eff</sub> / [R<sub>L,eff</sub>/(2R<sub>oc</sub>)] = 2g<sub>m</sub>R<sub>oc</sub>。</p>
+<p><strong>R<sub>L,eff</sub> 在分子與分母完全約掉，因此 CMRR = 2g<sub>m</sub>R<sub>oc</sub> 與負載阻抗無關。主動負載買到的是差模增益，不是 CMRR。</strong>要提高此模型下的 CMRR，必須增加尾電流源輸出阻抗，或在相同 R<sub>oc</sub> 下提高 g<sub>m</sub>；換大集極電阻只會同時放大差模與共模。</p>
+<p>主動負載若由兩顆相同電晶體輸出阻抗構成，R<sub>L,eff</sub> = r<sub>o</sub>‖r<sub>o</sub> = r<sub>o</sub>/2；‖ 讀作「並聯」，不是絕對值也不是範數。以 r<sub>o</sub> = V<sub>A</sub>/I<sub>C</sub> 計算，V<sub>A</sub> 單位 V，r<sub>o</sub> 單位 Ω。這裡忽略鏡像誤差、基極電流、有限順從範圍與元件失配。</p>
+<p>大訊號時，電流重新分配遵循 ΔI = I<sub>tail</sub> ⋅ tanh[v<sub>id</sub>/(2V<sub>T</sub>)]。在零點線性化才有 ΔI ≈ g<sub>m</sub>v<sub>id</sub>；條件是 |v<sub>id</sub>| ≪ 2V<sub>T</sub> = 51.704000 mV。當 |v<sub>id</sub>| 超過 4V<sub>T</sub> = 103.407999 mV，電流幾乎全倒向一邊，差動對由放大器轉成比較器。</p>
+<p>若把分析寫成程式，可先用共模與差模座標取代兩個原始輸入：v<sub>icm</sub> = (v<sub>1</sub> + v<sub>2</sub>)/2，v<sub>id</sub> = v<sub>1</sub> − v<sub>2</sub>。線性小訊號模型中，這兩個模式因對稱性互不混合，輸出可分別計算再疊加；真實元件一旦失配，模式便會耦合，共模的一部分轉成差模輸出。這也解釋為何晶片版圖要求兩顆輸入電晶體尺寸、方向與周圍環境對稱。</p>
+
+<h2>數值實例：主動負載增益十倍，CMRR 一個 dB 都不變</h2>
+<p>I<sub>tail</sub> = 1 mA、R<sub>C</sub> = 10 kΩ、R<sub>oc</sub> = 500 kΩ、V<sub>A</sub> = 100 V、v<sub>id</sub> = 10 mV。每邊 I<sub>C</sub> = <strong>0.500000 mA</strong>，g<sub>m</sub> = <strong>19.340864 mA/V</strong>。</p>
+<table><thead><tr><th>量</th><th>電阻負載</th><th>電流鏡主動負載</th></tr></thead><tbody>
+<tr><td>R<sub>L,eff</sub></td><td><strong>10000.000000 Ω</strong></td><td><strong>100000.000000 Ω</strong></td></tr>
+<tr><td>A<sub>d</sub></td><td><strong>193.408635（45.729517 dB）</strong></td><td><strong>1934.086354（65.729517 dB）</strong></td></tr>
+<tr><td>A<sub>cm</sub></td><td><strong>0.010000（−40.000000 dB）</strong></td><td><strong>0.100000（−20.000000 dB）</strong></td></tr>
+<tr><td>CMRR</td><td><strong>19340.863536 ＝ 85.729517 dB</strong></td><td><strong>19340.863536 ＝ 85.729517 dB</strong></td></tr>
+<tr><td>輸出</td><td><strong>1.934086 V</strong></td><td><strong>19.340864 V</strong></td></tr>
+</tbody></table>
+<p>CMRR = 2 × 0.019340864 × 500000 = <strong>19340.863536</strong>。在 10 mV 輸入下，真實 ΔI = <strong>0.191033 mA</strong>，線性預測 <strong>0.193409 mA</strong>，高估 <strong>1.243798 %</strong>。輸入 1、52、100 mV 時，真實值依序為 <strong>0.019338</strong>、<strong>0.763988</strong>、<strong>0.959062 mA</strong>，線性預測高估 <strong>0.012469 %</strong>、<strong>31.641452 %</strong>、<strong>101.664284 %</strong>，說明小訊號公式有明確振幅邊界。</p>
+<p>數值中的 19.340864 V 是未考慮電源軌與作用區餘裕的小訊號外插值，不代表實體電路真能輸出如此電壓。若供電不足，集極負載的直流壓降會先讓電晶體飽和，輸出削波；提高負載阻抗雖帶來大增益，也縮小可用擺幅並降低頻寬。設計時必須先解直流工作點、確認兩側仍在作用區，再把此處的小訊號增益當局部斜率使用。</p>
+
+<section class="workspace"><h2>自由實驗：分開看差模增益與共模拒斥</h2>
+<p>正電源分別經負載接兩個集極，兩射極相連後經有限輸出阻抗的尾電流源回地，單端輸出取其中一個集極。調整尾電流、負載、尾源阻抗與差模輸入，觀察主動負載改變哪些量，又不改變哪些量。</p>
+<div class="controls">
+<label for="dp-itail">尾電流 I<sub>tail</sub>（mA）<input id="dp-itail" type="range" min="0.1" max="5" step="0.1" value="1"></label>
+<label for="dp-rc">集極電阻 R<sub>C</sub>（Ω，電阻負載模式用）<input id="dp-rc" type="range" min="500" max="50000" step="500" value="10000"></label>
+<label for="dp-roc">尾電流源輸出阻抗 R<sub>oc</sub>（kΩ）<input id="dp-roc" type="range" min="10" max="2000" step="10" value="500"></label>
+<label for="dp-load">負載型式<select id="dp-load"><option value="resistor">電阻負載 R_C</option><option value="mirror">電流鏡主動負載（r_o 並聯）</option></select></label>
+<label for="dp-vid">差模輸入 v<sub>id</sub>（mV）<input id="dp-vid" type="range" min="-100" max="100" step="1" value="10"></label>
+</div>
+<div id="diffpair-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>單端 A<sub>d</sub> 的 g<sub>m</sub> 要用每邊 I<sub>tail</sub>/2 計算；把整個尾電流代入會多兩倍。</li>
+<li>本章做單端輸出；理想全差動輸出的共模增益趨近零，其 CMRR 主要由兩側不對稱決定，不能直接套同一結果。</li>
+<li>主動負載在直流是定電流偏壓，在小訊號是高阻抗；兩種模型回答不同問題，不可把高阻抗誤解成沒有直流電流。</li>
+<li>CMRR 高只代表共模抑制好，不保證低雜訊、寬頻寬、低失真或足夠輸出擺幅。</li>
+<li>主動負載提高 A<sub>d</sub>，也按相同比例提高 A<sub>cm</sub>；因此它不改善由 R<sub>oc</sub> 限制的 CMRR。</li>
+</ul>
+
+<h2>可觀察證據：分別注入差模與共模訊號</h2>
+<p>用雙通道訊號產生器先送等幅反相信號，示波器量單端輸出與 v<sub>id</sub> 得 A<sub>d</sub>；再把兩輸入短接送同相信號，量 A<sub>cm</sub>，相除並取 20log<sub>10</sub> 得實測 CMRR。掃大 v<sub>id</sub> 可量輸出開始壓縮的線性範圍；把尾電阻換成高輸出阻抗電流鏡，CMRR 應提升。這些量測能證明端口的 A<sub>d</sub>、A<sub>cm</sub>、CMRR 與線性範圍，不能單獨證明兩顆電晶體的失配量，也不能唯一反推出 R<sub>oc</sub>，因為輸入失調與負載不對稱也會汙染結果。</p>
+
+<h2>連到哪門課</h2>
+<p>差動對是運算放大器、ADC 比較器與通訊接收器前端的輸入核心。對稱半電路的節點推導可回到<a href="../電路學-互動課程/03-節點與網目分析.html">電路學的節點分析</a>；本章的差動對與電流鏡會在第 15 章組成運算放大器輸入級。多級串接時，前級重視高輸入阻抗與低雜訊，中段取得增益，末級才負責低輸出阻抗與驅動負載。</p>
+<nav class="pager" aria-label="章節導覽"><a href="12-米勒效應與頻寬.html">← 上一頁：米勒效應與頻寬</a><a href="14-回授與穩定性.html">下一頁：回授與穩定性 →</a></nav>
+</main>
+<footer class="site-footer"><span>13 差動對與電流鏡</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

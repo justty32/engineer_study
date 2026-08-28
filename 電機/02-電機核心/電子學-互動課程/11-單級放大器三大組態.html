@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 單級放大器三大組態｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">11・從輸入、輸出與共同端選出放大級性格</p>
+<h1>單級放大器三大組態：增益、驅動力與頻寬各有代價</h1>
+<p class="lead">同一顆電晶體只要換訊號進出端，就會呈現不同的電壓增益、相位與端口阻抗。共射要電壓增益，共集要低輸出阻抗，共基要低輸入阻抗與高頻能力；射極退化則用增益交換穩定與線性。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="10-小訊號模型.html">10 小訊號模型</a>的 g<sub>m</sub>、r<sub>π</sub>、r<sub>o</sub>，以及<a href="../電路學-互動課程/05-戴維寧與最大功率.html">電路學 05 戴維寧與最大功率</a>的端口與輸出阻抗。</p>
+
+<h2>痛點：三張增益表背完了，遇到負載還是不知道選哪一種</h2>
+<p>「共射、共集、共基只是把端點名字輪替嗎？射隨器增益小於一，為什麼還叫放大器？」組態的核心不是名稱，而是訊號從哪一端進、從哪一端出，以及哪一端在小訊號下固定。這三個選擇同時決定相位、輸入端要吸多少電流、輸出端能否推動負載，以及內部電容會不會被增益放大。</p>
+<p>以雙極性接面電晶體為主：共射（Common Emitter, CE）由基極輸入、集極輸出、射極作共同端；共集（Common Collector, CC）由基極輸入、射極輸出、集極在小訊號下接地，也稱射極隨耦器（emitter follower）；共基（Common Base, CB）由射極輸入、集極輸出、基極作共同端。MOSFET 一一對應為共源（CS）、共汲（CD，源隨器）與共閘（CG）。</p>
+
+<h2>白話直覺：同一引擎，從不同端口接取不同能力</h2>
+<p>可暫時把三種組態想成同一函式暴露不同介面；比喻到此為止，精確差異是輸入電壓如何成為 v<sub>be</sub>，以及相依電流 g<sub>m</sub>v<sub>be</sub> 流過哪個輸出電阻。V<sub>CC</sub> 是能量來源，地是參考；偏壓先讓 BJT 留在作用區，耦合訊號只在 Q 點附近擾動。</p>
+<p>共射拓樸為 V<sub>CC</sub> → R<sub>C</sub> → 集極 C；射極 E → R<sub>E</sub> → 地；基極 B 接偏壓與輸入；輸出取自集極。輸入升高使 v<sub>be</sub> 增加，更多載子由射極注入並被集極收集，集極電流增加，R<sub>C</sub> 壓降變大，集極電壓下降，所以輸出反相。電源、R<sub>C</sub>、集射路徑與射極回路閉合，輸入控制由電源流向負載的能量。</p>
+<p>共集仍由基極輸入，但輸出取射極，集極接 V<sub>CC</sub> 並在小訊號下視為接地。基極上升時射極也上升，直到 v<sub>be</sub> 的變化只剩一小部分，因此輸出同相且電壓增益略小於一。射極電流可遠大於基極輸入電流，輸出端又由局部負回授維持低阻抗，所以它能隔離高阻抗訊號源與低阻抗負載；放大的是電流與驅動能力，不是電壓。</p>
+<p>共基把基極固定在交流地，由射極輸入、集極輸出。射極電壓上升會減少 v<sub>be</sub>，使集極電流下降，R<sub>C</sub> 壓降變小，集極電壓上升，因此輸出同相。射極端必須直接推動載子注入，輸入阻抗約 1/g<sub>m</sub>，很小；它適合電流型訊號與疊接。基極與集極之間沒有一個大反相增益，故高頻時米勒效應較弱。</p>
+<p>射極退化電阻（emitter degeneration）讓共射電流增加時，射極電壓也升高，抵銷一部分 v<sub>be</sub> 增量。這條局部負回授同時降低增益、提高輸入阻抗並改善線性與偏壓穩定；它不是免費修正，也不能只說其中一項好處而忽略其他端口一起改變。</p>
+<p class="note">來源：07-電子學-下 §9.1–§9.3。</p>
+
+<h2>推導：共同尺度都是 g<sub>m</sub> 乘輸出電阻</h2>
+<p>先忽略 r<sub>o</sub>、負載與偏壓網路，假設元件留在作用區、訊號足夠小、V<sub>CC</sub> 為交流地。共射且 R<sub>E</sub> = 0 時，i<sub>c</sub> = g<sub>m</sub>v<sub>be</sub>，輸出 v<sub>out</sub> = −i<sub>c</sub>R<sub>C</sub> = −g<sub>m</sub>v<sub>be</sub>R<sub>C</sub>。因 v<sub>in</sub> = v<sub>be</sub>，所以 A<sub>v</sub> = v<sub>out</sub>/v<sub>in</sub> = −g<sub>m</sub>R<sub>C</sub>。A<sub>v</sub> 無單位，負號只表示反相；R<sub>in</sub> = r<sub>π</sub>，R<sub>out</sub> = R<sub>C</sub>。</p>
+<p>加入 R<sub>E</sub> 後，射極小訊號電流 i<sub>e</sub> ≈ g<sub>m</sub>v<sub>be</sub>，故 v<sub>in</sub> = v<sub>be</sub> + i<sub>e</sub>R<sub>E</sub> ≈ v<sub>be</sub>(1 + g<sub>m</sub>R<sub>E</sub>)。輸出仍為 −g<sub>m</sub>v<sub>be</sub>R<sub>C</sub>，相除得 A<sub>v</sub> = −g<sub>m</sub>R<sub>C</sub> / (1 + g<sub>m</sub>R<sub>E</sub>)。若 g<sub>m</sub>R<sub>E</sub> ≫ 1，A<sub>v</sub> ≈ −R<sub>C</sub>/R<sub>E</sub>，增益由電阻比主導。輸入阻抗同時增為 r<sub>π</sub> + (β + 1)R<sub>E</sub>。</p>
+<p>共集的輸出 v<sub>out</sub> = i<sub>e</sub>R<sub>E</sub>，輸入 v<sub>in</sub> = v<sub>be</sub> + v<sub>out</sub>。以 r<sub>π</sub> = v<sub>be</sub>/i<sub>b</sub>、i<sub>e</sub> = (β + 1)i<sub>b</sub> 代入，得到 A<sub>v</sub> = (β + 1)R<sub>E</sub> / [r<sub>π</sub> + (β + 1)R<sub>E</sub>]，必小於一。R<sub>in</sub> = r<sub>π</sub> + (β + 1)R<sub>E</sub>；R<sub>out</sub> = [r<sub>π</sub>/(β + 1)]‖R<sub>E</sub> ≈ 1/g<sub>m</sub>。‖ 讀作「並聯」，不是絕對值也不是範數。</p>
+<p>共基從射極看入的阻抗 R<sub>in</sub> = r<sub>π</sub>/(β + 1) ≈ 1/g<sub>m</sub>，集極輸出仍有電流變化乘 R<sub>C</sub>，但相位同向，所以 A<sub>v</sub> = +g<sub>m</sub>R<sub>C</sub>，R<sub>out</sub> = R<sub>C</sub>。三者共同尺度都是跨導乘輸出端所見電阻；差別來自輸入是否完整落在 v<sub>be</sub>、輸出取哪一端，以及局部回授如何重塑阻抗。</p>
+<p>實際電路若保留 r<sub>o</sub> 與負載 R<sub>L</sub>，共射與共基的有效集極負載會是 R<sub>C</sub>‖r<sub>o</sub>‖R<sub>L</sub>，增益低於理想值。這也說明算出極大 A<sub>v</sub> 後還要檢查直流壓降、輸出擺幅與工作區，不能只讓公式回傳一個沒有電源餘裕的數字。</p>
+
+<h2>數值實例：同一個 Q 點，端口選擇改變功能</h2>
+<p>I<sub>C</sub> = 1 mA、β = 100、R<sub>C</sub> = 5 kΩ、V<sub>T</sub> = 25.851999786 mV。由第 10 章得 g<sub>m</sub> = <strong>38.681727 mA/V</strong>、r<sub>π</sub> = <strong>2585.199979 Ω</strong>、1/g<sub>m</sub> = <strong>25.852000 Ω</strong>、r<sub>π</sub>/(β + 1) = <strong>25.596039 Ω</strong>。</p>
+<table><thead><tr><th>組態</th><th>R<sub>E</sub></th><th>A<sub>v</sub></th><th>R<sub>in</sub></th><th>R<sub>out</sub></th></tr></thead><tbody>
+<tr><td>共射 CE</td><td>0 Ω</td><td><strong>−193.408635</strong></td><td><strong>2585.199979 Ω</strong></td><td><strong>5000.000000 Ω</strong></td></tr>
+<tr><td>共射 CE</td><td>100 Ω</td><td><strong>−39.729206</strong></td><td><strong>12685.199979 Ω</strong></td><td><strong>5000.000000 Ω</strong></td></tr>
+<tr><td>共集 CC</td><td>100 Ω</td><td><strong>+0.796203</strong></td><td><strong>12685.199979 Ω</strong></td><td><strong>20.379655 Ω</strong></td></tr>
+<tr><td>共集 CC</td><td>1000 Ω</td><td><strong>+0.975043</strong></td><td><strong>103585.199979 Ω</strong></td><td><strong>24.957233 Ω</strong></td></tr>
+<tr><td>共基 CB</td><td>不適用</td><td><strong>+193.408635</strong></td><td><strong>25.596039 Ω</strong></td><td><strong>5000.000000 Ω</strong></td></tr>
+</tbody></table>
+<p>共射加 500 Ω 退化後，A<sub>v</sub> = <strong>−9.508379</strong>，接近 −R<sub>C</sub>/R<sub>E</sub> = <strong>−10</strong>，誤差 <strong>4.916 %</strong>；此時 g<sub>m</sub>R<sub>E</sub> = <strong>19.340864</strong>，已遠大於一。共基與無退化共射的增益大小同為 <strong>193.408635</strong>，只差正負號，但輸入阻抗由 <strong>2585.199979 Ω</strong> 降到 <strong>25.596039 Ω</strong>，剛好差 β + 1 = <strong>101</strong> 倍。</p>
+<p>這組數值也展示工程選擇：要把微小高阻抗電壓放大，先考慮共射；要讓訊號源推動較重負載，使用共集隔離；若前級輸出本來就是電流，且頻寬比高輸入阻抗重要，共基可能更合適。三者不是排名，而是不同端口契約。</p>
+
+<section class="workspace"><h2>自由實驗：切換三大組態與射極退化</h2>
+<p>共射為 V<sub>CC</sub> → R<sub>C</sub> → 集極，射極經 R<sub>E</sub> 回地，基極輸入、集極輸出；共集由基極輸入、射極輸出；共基固定基極並由射極輸入、集極輸出。調整 Q 點與電阻，觀察增益、相位及兩端阻抗。</p>
+<div class="controls">
+<label for="st-topo">放大器組態<select id="st-topo"><option value="ce">共射 CE（要增益，輸出反相）</option><option value="cc">共集 CC 射隨器（要驅動力，增益約 1）</option><option value="cb">共基 CB（要頻寬，輸入阻抗極小）</option></select></label>
+<label for="st-ic">靜態集極電流 I<sub>C</sub>（mA）<input id="st-ic" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+<label for="st-beta">電流增益 β<input id="st-beta" type="range" min="50" max="500" step="10" value="100"></label>
+<label for="st-rc">集極電阻 R<sub>C</sub>（Ω，CC 模式不用）<input id="st-rc" type="range" min="100" max="20000" step="100" value="5000"></label>
+<label for="st-re">射極電阻 R<sub>E</sub>（Ω）<input id="st-re" type="range" min="0" max="2000" step="10" value="0"></label>
+</div>
+<div id="stage-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>共射 A<sub>v</sub> 的負號表示輸出反相，不表示品質較差；相位是多級串接與回授方向不可省略的資訊。</li>
+<li>射隨器電壓增益小於一不代表沒有放大作用；它提供電流增益、高輸入阻抗與低輸出阻抗，價值是驅動負載。</li>
+<li>R<sub>in</sub> 與 R<sub>out</sub> 是指定 Q 點與頻率下的端口小訊號阻抗，不等於直流偏壓電阻，也不保證跨所有頻率固定。</li>
+<li>共基輸入阻抗小是適合電流驅動與疊接的特點；若訊號源是高阻抗電壓源，它才會成為嚴重負載。</li>
+<li>退化電阻降低的是局部電壓增益，同時提高線性與輸入阻抗；旁路電容若在工作頻率近似短路，交流退化效果會消失。</li>
+</ul>
+
+<h2>可觀察證據：同時量增益、相位與兩個端口</h2>
+<p>用訊號產生器串一顆已知 R<sub>s</sub> 驅動輸入，示波器量 R<sub>s</sub> 前後的電壓，可由分壓反推 R<sub>in</sub>；再量輸入與輸出的振幅比及零交越方向，能證明 A<sub>v</sub> 大小與同相或反相。輸出端切換已知負載，觀察有負載與無負載振幅差，可由戴維寧分壓反推 R<sub>out</sub>。更換 R<sub>E</sub> 後重測，能證明退化對增益的壓抑量。這些量測不能由單一 A<sub>v</sub> 分離 g<sub>m</sub>、R<sub>C</sub>、r<sub>o</sub> 與負載各自貢獻，也不能由 CE 電壓增益直接證明 β；必須配合直流工作點及多組端口量測。</p>
+
+<h2>連到哪門課</h2>
+<p>三大組態用在感測器前級、音訊、射頻與驅動緩衝。端口等效與負載效應可銜接<a href="../電路學-互動課程/05-戴維寧與最大功率.html">電路學的戴維寧與最大功率</a>，相依電流源的列式可回到<a href="../電路學-互動課程/04-疊加原理與相依源.html">疊加原理與相依源</a>。第 12 章會說明共基與疊接為何能減少米勒效應，第 14 章再把退化推廣成負回授通式。</p>
+<nav class="pager" aria-label="章節導覽"><a href="10-小訊號模型.html">← 上一頁：小訊號模型</a><a href="12-米勒效應與頻寬.html">下一頁：米勒效應與頻寬 →</a></nav>
+</main>
+<footer class="site-footer"><span>11 單級放大器三大組態</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

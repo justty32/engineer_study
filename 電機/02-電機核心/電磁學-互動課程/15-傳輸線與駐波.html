@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>15 傳輸線與駐波｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">15・當導線有長度，負載會把波送回源端</p>
+<h1>傳輸線與駐波：阻抗不只屬於元件，也會隨觀測位置改變</h1>
+<p class="lead">尺寸接近波長時，電壓與電流不能再假設整條線同時改變。傳輸線把每一小段的電感與電容串接成分布系統；負載不匹配時，為滿足線尾邊界條件而產生反射，入射與反射疊加便形成駐波。</p>
+<p class="prereq">這章假設已懂：<a href="14-介質中的波與界面.html">14 介質中的波與界面</a>的反射係數、<a href="13-電磁波與平面波.html">13 電磁波與平面波</a>的 β，以及電路學的阻抗。</p>
+
+<h2>痛點：明明接的是同一顆 75 Ω 負載，為什麼沿線看會變成複數阻抗</h2>
+<p>在低頻短導線裡，把一個節點視為處處同電壓很方便；但訊號傳過線需要有限時間。當線長不再遠小於波長，源端改變時，負載端尚未得知，線上各處的電壓與電流具有不同相位。此時「導線只是連接」的集總假設失效，必須追蹤向前與向後兩個行波。</p>
+<p>反射也不是訊號碰壁後隨意彈回。單一行波在線上有固定的電壓電流比；負載若要求另一個比值，線尾只能加上一個反向波，使總電壓與總電流的比恰好等於負載阻抗。站在不同位置時，兩波相位差不同，總比值便改變，即使負載本身從未改變。</p>
+
+<h2>白話直覺：每小段線延遲下一段，線尾的不匹配再把能量送回來</h2>
+<p>可暫時把傳輸線想成一列相鄰狀態依序更新；比喻到此為止，真實機制是每單位長度 L、C，以及有損時的 R、G 所滿足的電報員偏微分方程。源在訊號產生器，正向電壓與電流波沿線前進；無損線的單一行波振幅不按距離下降，有損線才按 e<sup>−αz</sup> 衰減。</p>
+<p>能量存在分布電場與磁場並沿線流向負載。當負載等於特性阻抗時，邊界接受原行波的電壓電流比，能量進入負載而不反射；不匹配時，反射波攜部分能量回源端，並與入射波形成位置固定的最大值與最小值。連接器、彎折、介電材料與幾何都會改變局部 Z<sub>0</sub>，造成額外反射。向量網路分析儀量到反射大小與相位，時域反射計量到回波時間與極性。因果鏈是：源送出行波，場受導體邊界導引，能量沿線流；負載與不連續處改變邊界條件並產生回波，儀器最後讀到 S<sub>11</sub>、延遲與駐波比。</p>
+<p class="note">來源：08-電磁學-下 §16.1–§16.7、第 17 章。</p>
+
+<h2>推導：兩條電報員方程如何長出行波、反射與輸入阻抗</h2>
+<p>先固定符號語言。時諧電壓與電流用複數相量 <strong>V</strong>(z)、<strong>I</strong>(z) 表示；<code>&lt;b&gt;</code> 是空間向量、<code>&lt;strong&gt;</code> 是複數相量，兩者不得互換。虛數單位一律寫 j；數學課寫 i，電機寫 j，因為 i 留給電流。傳輸線的 V、I 是兩導體之間與沿線方向定義的純量相量，不等同於空間場向量 <b>E</b>、<b>H</b>。</p>
+<p>一般均勻線每單位長度有 R（Ω/m）、L（H/m）、G（S/m）、C（F/m）。電報員方程（telegrapher's equations）是 d<strong>V</strong>/dz = −(R + jωL)<strong>I</strong> 與 d<strong>I</strong>/dz = −(G + jωC)<strong>V</strong>。對第一式再微分並代入第二式，得到 d²<strong>V</strong>/dz² = <strong>γ</strong>²<strong>V</strong>，其中 <strong>γ</strong> = √[(R + jωL)(G + jωC)]。</p>
+<p>二階方程的通解含兩個方向：<strong>V</strong>(z) = <strong>V</strong><sup>+</sup>e<sup>−γz</sup> + <strong>V</strong><sup>−</sup>e<sup>+γz</sup>。代回第一式可得正向波 <strong>V</strong><sup>+</sup>/<strong>I</strong><sup>+</sup> = <strong>Z</strong><sub>0</sub>，反向波則因電流參考方向相反而有負號；<strong>Z</strong><sub>0</sub> = √[(R + jωL)/(G + jωC)]。無損時 R = G = 0，Z<sub>0</sub> = √(L/C)、<strong>γ</strong> = jω√(LC)、v<sub>p</sub> = 1/√(LC)。Z<sub>0</sub> 是單一行波願意維持的 V/I，不是一顆實體電阻，也不自行耗能。</p>
+<p>把負載端設為 z = 0，則 <strong>V</strong>(0) = <strong>V</strong><sup>+</sup> + <strong>V</strong><sup>−</sup>，<strong>I</strong>(0) = (<strong>V</strong><sup>+</sup> − <strong>V</strong><sup>−</sup>)/Z<sub>0</sub>。令兩式相除等於 <strong>Z</strong><sub>L</sub>，解得負載反射係數 <strong>Γ</strong><sub>L</sub> = <strong>V</strong><sup>−</sup>/<strong>V</strong><sup>+</sup> = (<strong>Z</strong><sub>L</sub> − Z<sub>0</sub>)/(<strong>Z</strong><sub>L</sub> + Z<sub>0</sub>)。它和第 14 章的界面反射完全同形，只是本質阻抗換成特性阻抗。</p>
+<p>兩波同相處電壓振幅為 |<strong>V</strong><sup>+</sup>|(1 + |<strong>Γ</strong>|)，反相處為 |<strong>V</strong><sup>+</sup>|(1 − |<strong>Γ</strong>|)，所以電壓駐波比（voltage standing wave ratio, VSWR）= (1 + |<strong>Γ</strong>|)/(1 − |<strong>Γ</strong>|)。匹配時 |<strong>Γ</strong>| = 0、VSWR = 1；短路、開路或純電抗負載使 |<strong>Γ</strong>| = 1、VSWR 無限大。</p>
+<p>距負載電氣長度 βℓ 處的總電壓除以總電流，整理為 <strong>Z</strong><sub>in</sub>(ℓ) = Z<sub>0</sub>(<strong>Z</strong><sub>L</sub> + jZ<sub>0</sub>tan βℓ)/(Z<sub>0</sub> + j<strong>Z</strong><sub>L</sub>tan βℓ)。βℓ = 180° 時正反波相對相位重現，<strong>Z</strong><sub>in</sub> = <strong>Z</strong><sub>L</sub>；βℓ = 90° 時 tan 的極限給 <strong>Z</strong><sub>in</sub> = Z<sub>0</sub>²/<strong>Z</strong><sub>L</sub>。因此四分之一波長轉換器要在 50 Ω 與 75 Ω 之間匹配，選 Z<sub>0</sub> = √(50 × 75)。</p>
+<p>同軸線也把前面兩章合體：每單位長度 C = 2πε/ln(b/a)、L = (µ/2π)ln(b/a)，所以 Z<sub>0</sub> = (η<sub>0</sub>/2π)ln(b/a)/√ε<sub>r</sub>。同軸支援橫電磁模（transverse electromagnetic mode, TEM），理想 TEM 沒有截止頻率；波導的 TE、TM 模與諧振腔則留給微波課。</p>
+<p>實際線路有 R 與 G，因而 <strong>Z</strong><sub>0</sub>、<strong>γ</strong> 都隨頻率成為複數，反射往返時也持續衰減。無損式仍是建立方向感的基準，卻不能用來保證長纜末端的振幅。匹配消除的是負載端新增的回波；它不會消除導體損、介質損、輻射或串接元件本身的插入損耗。</p>
+
+<h2>數值實例：五十歐姆線接七十五歐姆負載</h2>
+<p>Z<sub>0</sub> = 50 Ω、<strong>Z</strong><sub>L</sub> = 75 + j0 Ω、電氣長度 βℓ = 0°，也就是直接站在負載端。</p>
+<table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody>
+<tr><td><strong>Γ</strong><sub>L</sub></td><td>0.200000 + j0.000000</td></tr>
+<tr><td>|<strong>Γ</strong>|</td><td>0.200000</td></tr>
+<tr><td>功率反射率</td><td>0.040000 ＝ 4 %</td></tr>
+<tr><td>功率透射率</td><td>0.960000 ＝ 96 %</td></tr>
+<tr><td>VSWR</td><td>1.500000</td></tr>
+<tr><td>回波損耗</td><td>13.979400 dB</td></tr>
+<tr><td><strong>Z</strong><sub>in</sub></td><td>75.000000 + j0.000000 Ω</td></tr>
+</tbody></table>
+<p>βℓ = 45° 時 <strong>Z</strong><sub>in</sub> = 46.153846 − j19.230769 Ω；同一個純電阻負載在 λ/8 外看成電容性。βℓ = 90° 時 <strong>Z</strong><sub>in</sub> = 33.333333 + j0 Ω，也就是 2500/75；βℓ = 180° 又回到 75.000000 Ω。若 <strong>Z</strong><sub>L</sub> = 150 Ω，<strong>Γ</strong> = 0.500000、VSWR = 3.000000、回波損耗 6.020600 dB；若為 25 Ω，<strong>Γ</strong> = −0.333333、VSWR = 2.000000、回波損耗 9.542425 dB。</p>
+<p>短路負載配 βℓ = 45° 時，<strong>Γ</strong> = −1、VSWR = ∞、<strong>Z</strong><sub>in</sub> = 0 + j50 Ω；短路線段因此可呈純電感，βℓ = 90° 時則轉成開路。若 <strong>Z</strong><sub>L</sub> = 75 + j50 Ω，<strong>Γ</strong> = 0.310345 + j0.275862、|<strong>Γ</strong>| = 0.415227、VSWR = 2.420133、回波損耗 7.634280 dB。四分之一波長轉換器需要 61.237244 Ω。另取同軸 a = 1 mm、b = 3.5 mm、ε<sub>r</sub> = 2.1，得到 C = 93.256473 pF/m、L = 2.505526 × 10<sup>−7</sup> H/m、Z<sub>0</sub> = 51.833431 Ω、v<sub>p</sub> = 2.068765 × 10<sup>8</sup> m/s；口訣用 60 代替 η<sub>0</sub>/2π 會給 51.869315 Ω，差 0.069 %。量級上，Wi&#45;Fi 2.4 GHz 的真空波長約 12.5 cm，一段幾公分走線已不能總當成零長度接點。</p>
+
+<section class="workspace"><h2>自由實驗：沿線移動觀測點，看阻抗如何旋轉</h2>
+<p>訊號源接一條無損均勻傳輸線，負載位於線尾；四個控制設定線的特性阻抗、負載複阻抗與從負載往源端看的電氣長度。觀察反射量與輸入阻抗各自怎麼變。</p>
+<div class="controls">
+<label for="tl-z0">特性阻抗 Z<sub>0</sub>（Ω）<input id="tl-z0" type="range" min="10" max="300" step="1" value="50"></label>
+<label for="tl-rl">負載電阻 R<sub>L</sub>（Ω）<input id="tl-rl" type="range" min="0" max="500" step="1" value="75"></label>
+<label for="tl-xl">負載電抗 X<sub>L</sub>（Ω，正為電感性、負為電容性）<input id="tl-xl" type="range" min="-300" max="300" step="1" value="0"></label>
+<label for="tl-len">電氣長度 βℓ（°，360° ＝ 一個波長）<input id="tl-len" type="range" min="0" max="360" step="1" value="0"></label>
+</div>
+<div id="tline-output" class="output" aria-live="polite"><strong>Γ</strong> = 0.200000 + j0.000000；|<strong>Γ</strong>| = 0.200000；功率反射 4.000000 %、透射 96.000000 %；VSWR = 1.500000；回波損耗 13.979400 dB；<strong>Z</strong><sub>in</sub> = 75.000000 + j0.000000 Ω。這是失配，4 % 功率回到源端；因 βℓ = 0°，輸入阻抗等於負載。|<strong>Γ</strong>| 不隨電氣長度改變，只有觀測位置的阻抗改變。這條式子和第 14 章的界面反射一模一樣，只是 η 換成 Z<sub>0</sub>；傳輸線就是被導引起來的平面波。短路或四分之一波長等極端位置需改用開路文字，不能輸出無效數值。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>Z<sub>0</sub> 是單一行波的電壓電流比，不是一顆電阻；無損線本身不因標示 50 Ω 就消耗功率。</li>
+<li>VSWR 與 |<strong>Γ</strong>| 一一對應，是同一反射程度的兩種尺度，不是互相獨立的品質指標。</li>
+<li>傳輸線匹配為消除反射，條件是 <strong>Z</strong><sub>L</sub> = Z<sub>0</sub>；集總電路的最大功率傳遞著眼於源與負載取捨，不能把目的混為一談。</li>
+<li>電氣長度 βℓ 與物理長度 ℓ 不同；同一條線在不同頻率有不同 βℓ，半波與四分之一波條件也隨頻率移動。</li>
+<li>駐波是入射與反射的疊加圖樣，不是能量永遠在原地越積越多；有損耗與源端吸收時仍符合能量守恆。</li>
+</ul>
+
+<h2>可觀察證據：VNA 看複數反射，TDR 用回波時間定位不連續</h2>
+<p>向量網路分析儀（vector network analyzer, VNA）在校正參考面量 S<sub>11</sub>，直接給 <strong>Γ</strong> 的大小與相位，並可換算 VSWR、回波損耗與負載阻抗。改變纜線長度後，若負載與線保持不變，|<strong>Γ</strong>| 理想上不變而相位旋轉；這能證明反射量由終端失配決定，也能檢查半波阻抗重現與四分之一波轉換。</p>
+<p>時域反射計（time domain reflectometer, TDR）送出快速階躍並量回波，到達時間配合相速可定位接頭、斷線或短路，回波極性可區分阻抗升高與降低。它能證明哪個位置有不連續並估計 Z<sub>0</sub>；不能在不擾動線路的情況下直接給出某點絕對電壓，也不能證明 Z<sub>0</sub> 是一個實體電阻。探棒、轉接頭與校正面本身都可能加入反射，量測前必須去嵌入或校正。</p>
+
+<h2>連到哪門課</h2>
+<p>集總模型的適用邊界回到<a href="../電路學-互動課程/00-電路世界觀.html">電路學的電路世界觀</a>，複阻抗則見<a href="../電路學-互動課程/10-阻抗與交流穩態.html">阻抗與交流穩態</a>；反射的光學對照見<a href="../../../共通基礎/物理/互動課程/13-反射折射與都卜勒.html">普通物理的反射折射與都卜勒</a>。往後的波導截止頻率、諧振腔、史密斯圖圖解匹配、天線方向圖與陣列屬於微波與天線課；本課到此已把第 00 章的尺寸與波長判準收成可算的傳輸線工具。</p>
+<nav class="pager" aria-label="章節導覽"><a href="14-介質中的波與界面.html">← 上一頁：介質中的波與界面</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>15 傳輸線與駐波</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>
