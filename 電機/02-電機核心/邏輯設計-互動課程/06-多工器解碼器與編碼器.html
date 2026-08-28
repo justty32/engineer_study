@@ -1,0 +1,75 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 多工器、解碼器與編碼器｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・不做算術，只做選擇與翻譯</p>
+<h1>多工器、解碼器與編碼器：一顆多工器就是一張可以接線的查表</h1>
+<p class="lead">這四個元件都不算加減乘除，只回答「要哪一條」與「這個碼是哪一條」。多工器還有一個常被忽略的身分：它的布林式本身就是一個標準 SOP，只是乘積項的係數變成可外接的資料線，所以不必化簡也能實作任何函數。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-布林代數與邏輯閘.html">03 布林代數與邏輯閘</a>的 AND、OR、NOT 與閘的接法，以及<a href="04-標準型SOP與POS.html">04 標準型 SOP 與 POS</a>的真值表與最小項。</p>
+
+<h2>痛點：化簡了半天，為什麼有人不化簡也把電路做出來了</h2>
+<p>學完卡諾圖後最常見的疑問是：既然每個函數都得先列真值表、再圈相鄰格、再數閘數，那為什麼有人只拿一顆晶片，把真值表那一欄的八個值用跳線接成高低電位，電路就會動了？他一次化簡都沒做，而這還是正規解法。</p>
+<p>問題出在我們把「實作一個布林函數」等同於「用閘拼出最簡 SOP」。其實還有第二條路：把整張真值表原封不動存起來，用選擇線去查。這一章的四個元件都不做算術，只做選擇與翻譯，而多工器剛好就是那張表——看懂這件事，也就看懂了第 13 章的可程式邏輯為什麼用查找表當基本單元。</p>
+
+<h2>白話直覺：選好之後只有一條路被接通，其餘七條被硬壓成 0</h2>
+<p>可以先把多工器（multiplexer, MUX）想成收音機的選台旋鈕：轉到哪台就聽哪台。比喻到此為止——真實的多工器裡沒有任何會轉動的東西，它是八個 AND 閘加一顆 OR 閘，選擇線解碼後只讓一個 AND 閘有機會輸出 1，其餘七個被硬壓成 0，所以 OR 閘只看得到被選中的那一路。</p>
+<p>順著因果鏈走一次。輸入從哪來：八條資料線 D<sub>0</sub> 到 D<sub>7</sub> 可能來自感測器、暫存器，也可能只是接固定的高低電位；三條選擇線 S<sub>2</sub>S<sub>1</sub>S<sub>0</sub> 通常來自計數器或控制邏輯。這一層做了什麼決定：把八條線壓成一條，代價是另外七筆資料這一拍被丟掉。花掉多少：8 對 1 多工器約是八個四輸入 AND、一顆八輸入 OR 與三個反相器，訊號要穿過解碼與選擇兩層，約 2 到 3 個閘延遲，以單閘 1.0 ns 估就是 2 到 3 ns；沒被選中的七條線照樣在充放電，功耗不會因此消失。邊界在哪：致能（enable, EN）腳拉低時輸出被強制為 0，這個 0 不代表資料真的是 0。儀器量到什麼：示波器夾在輸出腳只看得到一條波形，看不出它來自哪條輸入。</p>
+<p>另外三個元件是同一個想法的不同接法。解多工器（demultiplexer, DEMUX）把一條資料送到 2<sup>n</sup> 條輸出的其中一條，是多工器的反向；解碼器（decoder）把 n 位元的碼翻成 2<sup>n</sup> 條「只有一條為 1」的輸出線，它其實就是資料端固定接 1 的解多工器；編碼器（encoder）再反過來，把 2<sup>n</sup> 條線壓回 n 位元的碼。寫成程式的話：多工器是陣列取索引，解碼器是把整數展開成只有一格為真的陣列，編碼器是回報那一格的索引。</p>
+<p class="note">來源：10-邏輯設計 §4.2。</p>
+
+<h2>推導：把四個元件的布林式一條一條寫出來</h2>
+<p><strong>（a）8 對 1 多工器的完整式子。</strong>三條選擇線共八種組合，每種對應一個最小項。把「選中第 i 條」寫成該最小項乘上 D<sub>i</sub> 再全部相加，得到 Y = Σ<sub>i=0..7</sub> (D<sub>i</sub> · 第 i 個最小項)，展開就是 <code>Y = D<sub>0</sub> · ¬S<sub>2</sub> · ¬S<sub>1</sub> · ¬S<sub>0</sub> + D<sub>1</sub> · ¬S<sub>2</sub> · ¬S<sub>1</sub> · S<sub>0</sub> + D<sub>2</sub> · ¬S<sub>2</sub> · S<sub>1</sub> · ¬S<sub>0</sub> + … + D<sub>7</sub> · S<sub>2</sub> · S<sub>1</sub> · S<sub>0</sub></code>。這個式子的形狀就是第 04 章的標準 SOP，八個乘積項一個不少，差別只在每項的係數從固定的 0 或 1 變成可外接的 D<sub>i</sub>。所以任何三變數函數都能這樣實作：選擇線接 A、B、C，真值表輸出那一欄的八個值接到 D<sub>0</sub> 到 D<sub>7</sub>，不必化簡也不必再加閘。多工器天生就是一張查表。</p>
+<p><strong>（b）解碼器的每一條輸出就是一個最小項。</strong>3 對 8 解碼器的第 5 條輸出是 <code>Y<sub>5</sub> = S<sub>2</sub> · ¬S<sub>1</sub> · S<sub>0</sub></code>，第 3 條是 <code>Y<sub>3</sub> = ¬S<sub>2</sub> · S<sub>1</sub> · S<sub>0</sub></code>，其餘依此類推。八條輸出剛好把八個最小項全部產生出來，把函數用到的那幾條接進一顆 OR 閘就是標準 SOP。這是實作 SOP 的另一種作法，而且一顆解碼器可同時餵好幾個輸出函數。</p>
+<p><strong>（c）編碼器為什麼一定要做成優先編碼器。</strong>樸素作法是把每條輸入接到它自己那個碼為 1 的位元上，再用 OR 閘合併，這在「同時只有一條線為 1」時正確。但兩條同時為 1 就出事：D<sub>3</sub> 的碼是 <code>011</code>、D<sub>5</sub> 是 <code>101</code>，OR 陣列逐位元相或得到 <code>111</code>，也就是 7——一個根本沒被按下的索引。優先編碼器（priority encoder）用一條規則堵住這個洞：同時為 1 時只回報索引最大的那一條。代價是每個輸出位元要多帶「比它更大的輸入都不為 1」的條件，閘數變多。</p>
+<p><strong>（d）為什麼還要多拉一支 GS 腳。</strong>三位元的輸出只有八種值，沒有一種能表示「一條都沒有」。輸入全 0 會輸出 <code>000</code>，只有 D<sub>0</sub> 為 1 也輸出 <code>000</code>，碼一模一樣。GS（group select）就是分辨這兩種情況的那條線：有任何輸入為 1 時 GS = 1，全 0 時 GS = 0。少了它，中斷控制器分不出「0 號裝置發出中斷」與「沒有裝置中斷」。</p>
+
+<h2>數值實例：同一組輸入分別餵進四個元件</h2>
+<p>設定選擇線 S<sub>2</sub>S<sub>1</sub>S<sub>0</sub> = <code>101</code>（十進位 5），致能 EN = 1，八條資料線 D<sub>0</sub> 到 D<sub>7</sub> = 1, 0, 1, 1, 0, 1, 0, 0，分別送進四個元件。</p>
+<table><thead><tr><th>元件</th><th>輸出</th></tr></thead><tbody>
+<tr><td>8 對 1 多工器</td><td>Y = D<sub>5</sub> = <strong>1</strong></td></tr>
+<tr><td>1 對 8 解多工器（資料輸入取 D<sub>0</sub> = 1）</td><td>Y<sub>5</sub> = <strong>1</strong>，其餘 7 條全 <strong>0</strong></td></tr>
+<tr><td>3 對 8 解碼器</td><td>Y<sub>5</sub> = <strong>1</strong>，其餘 7 條全 <strong>0</strong>（<strong>與上一列一模一樣，因為解碼器就是資料端固定接 1 的解多工器</strong>）</td></tr>
+<tr><td>8 對 3 優先編碼器（取索引最大者）</td><td>為 1 的輸入是 D<sub>0</sub>、D<sub>2</sub>、D<sub>3</sub>、D<sub>5</sub>，最大索引是 5 → 輸出 <strong><code>101</code></strong>，GS = <strong>1</strong></td></tr>
+</tbody></table>
+<p>邊界對照：把 <strong>EN 設成 0</strong> → 多工器 Y = 0、解多工器與解碼器八條輸出全 0、優先編碼器輸出 <code>000</code> 且 GS = 0——<strong>這時的 <code>000</code> 不是選中 0，是根本沒有致能</strong>。把<strong>八條輸入全設成 0</strong> → 優先編碼器輸出 <code>000</code> 但 GS = <strong>0</strong>，這正是 GS 存在的理由；只有 D<sub>0</sub> 為 1 時同樣輸出 <code>000</code>，但 GS = 1。</p>
+<p><strong>用 8 對 1 多工器實作第 04 章的多數決</strong>：多數決是 F = Σm(3, 5, 6, 7)，把 D<sub>0</sub> 到 D<sub>7</sub> 設成 0, 0, 0, 1, 0, 1, 1, 1，選擇線接 A、B、C，輸出就是多數決，不用化簡也不用任何額外的閘。取捨要擺在一起看：第 04 章的最簡 SOP 是 A · B + B · C + A · C，4 個閘、6 個字面；查表法 0 個閘，但要一顆多工器加八條接線，訊號仍得穿過 2 到 3 個閘延遲，以單閘 1.0 ns 計約 2 到 3 ns。省的是設計時間，不是面積與延遲。</p>
+
+<section class="workspace"><h2>自由實驗：同一組控制切換四個元件</h2>
+<p>下面這組控制同時接到四個元件上：一條三位元的選擇線、一支致能腳、八條資料線。選一個元件，改選擇線與資料線，看輸出怎麼變；重點是切到「解多工器」與「解碼器」時互相對照，以及切到「優先編碼器」時多勾幾條資料線，看它回報哪一條。</p>
+<div class="controls">
+<label for="md-block">元件<select id="md-block"><option value="mux">8 對 1 多工器</option><option value="demux">1 對 8 解多工器</option><option value="dec">3 對 8 解碼器</option><option value="enc">8 對 3 優先編碼器</option></select></label>
+<label for="md-sel">選擇線 S_2 S_1 S_0（十進位）<input id="md-sel" type="range" min="0" max="7" step="1" value="5"></label>
+<label for="md-en"><input id="md-en" type="checkbox" checked>致能 EN</label>
+<table><thead><tr><th>輸入</th><th>值</th></tr></thead><tbody>
+<tr><th scope="row">D0</th><td><label for="md-d0"><input id="md-d0" type="checkbox" checked>D0</label></td></tr>
+<tr><th scope="row">D1</th><td><label for="md-d1"><input id="md-d1" type="checkbox">D1</label></td></tr>
+<tr><th scope="row">D2</th><td><label for="md-d2"><input id="md-d2" type="checkbox" checked>D2</label></td></tr>
+<tr><th scope="row">D3</th><td><label for="md-d3"><input id="md-d3" type="checkbox" checked>D3</label></td></tr>
+<tr><th scope="row">D4</th><td><label for="md-d4"><input id="md-d4" type="checkbox">D4</label></td></tr>
+<tr><th scope="row">D5</th><td><label for="md-d5"><input id="md-d5" type="checkbox" checked>D5</label></td></tr>
+<tr><th scope="row">D6</th><td><label for="md-d6"><input id="md-d6" type="checkbox">D6</label></td></tr>
+<tr><th scope="row">D7</th><td><label for="md-d7"><input id="md-d7" type="checkbox">D7</label></td></tr>
+</tbody></table>
+</div>
+<div id="muxdec-output" class="output" aria-live="polite">這個元件用到選擇線、全部 8 條資料線與 EN。選擇線 = 5，二進位 <code>101</code>；資料線 D0 到 D7 = 1, 0, 1, 1, 0, 1, 0, 0；EN = 1。輸出 Y = D5 = 1。選擇線 <code>101</code> 指到 D5，所以 Y 就是 D5 的值；其他七條完全不影響輸出。多工器的布林式就是一個標準 SOP，只是乘積項的係數變成可設定的資料線——所以它是一張查表。把 EN 取消勾選時全部元件輸出 0，那時的 <code>000</code> 不是選中 0，是根本沒致能。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>多工器選的是<strong>哪一條線</strong>，不是把幾條線加起來；其餘七條不進入結果。</li>
+<li>解多工器與解碼器的差別只在資料端接什麼：接真的資料線是解多工器，固定接 1 是解碼器，內部邏輯一樣。</li>
+<li>優先編碼器輸出的 <code>000</code> 沒有 GS 就沒有意義，它可能是「D<sub>0</sub> 被按下」也可能是「一條都沒被按下」。</li>
+<li>「用多工器實作函數」不需要化簡，但代價是<strong>用八條資料線的硬體去實作可能只要三、四個閘的函數</strong>：省的是設計時間，不是面積也不是延遲。</li>
+<li>致能腳拉低的全 0 輸出不是「算出來是 0」，是「這顆元件不參與」。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>拿一顆 74151（8 對 1 多工器），選擇線接三個指撥開關，八條資料線依多數決真值表接到高位準或低位準，輸出接 LED 加限流電阻。掃過八種選擇線組合，把 LED 亮滅與真值表逐列比對，再接到用四個閘搭的最簡 SOP 電路比對輸出。</p>
+<p><strong>能證明</strong>：這顆多工器的選擇邏輯正確，以及查表法與化簡法在八種輸入下輸出完全一致。<strong>不能證明</strong>：兩種作法延遲相同——多工器內部也是好幾層閘，肉眼看 LED 分辨不出 2 ns 的差別，要比延遲得用示波器抓輸入與輸出邊緣。也證明不了「化簡法一定比較好」：這實驗只量到功能，量不到面積與延遲。</p>
+
+<h2>連到哪門課</h2>
+<p>可程式邏輯裡的查找表（look-up table, LUT）就是「內容可以寫進去的多工器」：組態位元取代外接的資料線，選擇線就是函數的輸入，這是本課第 13 章的主題。處理器的資料路徑裡則到處都是多工器——選運算元、選寫回哪個暫存器、選下一個位址從哪來，見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>。下一章把選擇換成算術，而 ALU 的最後一級剛好又是一顆多工器。</p>
+<nav class="pager" aria-label="章節導覽"><a href="05-卡諾圖與不關心項.html">← 上一頁：卡諾圖與不關心項</a><a href="07-加法器比較器與ALU.html">下一頁：加法器、比較器與 ALU →</a></nav>
+</main>
+<footer class="site-footer"><span>06 多工器、解碼器與編碼器</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

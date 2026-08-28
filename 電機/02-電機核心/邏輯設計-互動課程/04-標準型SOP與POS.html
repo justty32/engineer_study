@@ -1,0 +1,88 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 標準型SOP與POS｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・任何真值表都能機械地翻成式子</p>
+<h1>標準型 SOP 與 POS：一定寫得出來的起點，也一定不是最省的終點</h1>
+<p class="lead">拿到一張真值表，不必靈感也不必試誤，照兩條固定規則就能寫出電路的式子。這章給的是那兩條規則，以及一個同樣重要的壞消息：機械產生的式子必然比最短的答案貴。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-布林代數與邏輯閘.html">03 布林代數與邏輯閘</a>的真值表，以及 ¬、·、+ 三種基本運算。</p>
+
+<h2>痛點：表寫完了，然後呢</h2>
+<p>把規格翻成真值表通常不難：三個感測器至少兩個回報異常就發警報，這句話直接對應 8 列的 0 與 1。難的是下一步——這張表要怎麼變成一張可以交給工廠的接線圖？很多人在這裡卡住，因為前一章學到的恆等式只教你「怎麼把式子變短」，沒教你「第一個式子從哪來」。</p>
+<p>更麻煩的是，如果沒有一套機械程序，每個人看同一張表寫出來的式子都不一樣，就沒辦法比較誰的比較省，也沒辦法把這件事交給工具做。這章要的正是「不必想」的程序：兩條規則，逐列掃過去，式子就出來了。代價是這個式子把每一列都當成獨立的一項，所以它幾乎永遠比最短答案貴——但它保證存在，這件事本身就有價值：它證明了任何布林函數都做得出來。</p>
+<p class="note">來源：10-邏輯設計 §2.3。</p>
+
+<h2>白話直覺：把「哪幾列是 1」直接翻成「哪幾條線並聯」</h2>
+<p>可以暫時把標準型想成一份逐列的清單：函數等於「第 3 列成立，或第 5 列成立，或第 6 列成立，或第 7 列成立」；比喻到此為止，收回精確定義——所謂「第 i 列成立」是一個具體的乘積項，它由全部輸入變數各出現一次組成，只有在那一列的輸入組合下才等於 1。</p>
+<p>依因果順序走一次。<strong>輸入從哪來</strong>：n 條訊號線，以及它們各自的反相版本，共 2n 條可用的字面。<strong>這一層做了什麼決定</strong>：每一個乘積項用一個及閘去偵測「是不是正好落在我這一列」，最後用一個或閘把所有被偵測到的列並起來，得到輸出。<strong>花掉多少代價</strong>：若函數有 k 列為 1、有 n 個輸入，就是 k 個 n 輸入的及閘 + 1 個 k 輸入的或閘，再加上被用到的反相器；延遲固定是三層，反相器一層、及閘一層、或閘一層，單閘傳播延遲取 1.0 ns 時約 3.0 ns。<strong>邊界在哪</strong>：k 很大時或閘的輸入數會爆掉，真實元件庫沒有 32 輸入的或閘，必須拆成樹狀多層，延遲就不再是三層；此外 k = 0 或 k = 2<sup>n</sup> 時函數退化成常數，一個閘都不用。<strong>儀器量到什麼</strong>：邏輯分析儀掃過全部 2<sup>n</sup> 種輸入，可以逐列驗證輸出與表相同，但看不出你用了幾個閘。</p>
+<p>寫成程式的話：真值表是一張查表陣列，標準型就是把這張陣列展開成一長串「或起來的條件」；下一章的化簡則是把這串條件合併成比較少、比較短的條件。</p>
+
+<h2>推導：兩條相反的規則，以及閘數怎麼算</h2>
+<p><strong>（a）最小項（minterm, m<sub>i</sub>）為什麼只在自己那一列為 1。</strong>以三變數的 m<sub>5</sub> 為例，索引 5 的二進位是 ABC = 101，規則是「變數為 1 取原變數、為 0 取反相」，所以 m<sub>5</sub> = A · ¬B · C。這個乘積只有在三個因子同時為 1 時才是 1，也就是 A = 1、B = 0、C = 1，正好是第 5 列。其他任何一列至少有一個因子為 0，整個乘積就是 0。</p>
+<p><strong>（b）最大項（maxterm, M<sub>i</sub>）為什麼只在自己那一列為 0。</strong>同樣取索引 5，ABC = 101，但規則<strong>相反</strong>：「變數為 1 取反相、為 0 取原變數」，所以 M<sub>5</sub> = ¬A + B + ¬C。這個和只有在三項同時為 0 時才是 0，也就是 A = 1、B = 0、C = 1，同樣是第 5 列；其他列至少有一項為 1，整個和就是 1。<strong>最大項的取反規則與最小項相反，這是本章最常錯的地方，不是筆誤。</strong>可以這樣記：最小項用「等於這一列」去偵測，最大項用「不等於這一列」去否決。</p>
+<p><strong>（c）為什麼 Σm 與 ΠM 的索引互補。</strong>真值表的每一列非 0 即 1，沒有第三種可能。積之和（sum of products, SOP）把為 1 的列全部或起來，和之積（product of sums, POS）把為 0 的列全部且起來；一個索引若在 Σm 裡，就不可能在 ΠM 裡，反之亦然。所以兩個集合的元素個數相加必定是 2<sup>n</sup>，三變數就是 8。</p>
+<p><strong>（d）本課的閘數計法（互動元件用同一套）。</strong>SOP：每個乘積項一個及閘（單一字面的項不需要閘）、輸出一個或閘（只有一個項時不需要）、每個被用到的反相輸入一個反相器（同一個變數的反相只算一次）。POS 完全對稱：每個和項一個或閘、輸出一個及閘、反相輸入同上。字面數的計法更簡單：把式子裡出現的變數符號個數加總，標準型就是項數乘以變數數。</p>
+
+<h2>數值實例：三變數多數決</h2>
+<p>規格是「三個輸入中至少兩個為 1 時輸出 1」，這就是多數決（majority）。真值表如下，加粗的四列是輸出為 1 的列。</p>
+<table><thead><tr><th>列</th><th>A B C</th><th>F</th></tr></thead><tbody>
+<tr><td>0</td><td>0 0 0</td><td>0</td></tr>
+<tr><td>1</td><td>0 0 1</td><td>0</td></tr>
+<tr><td>2</td><td>0 1 0</td><td>0</td></tr>
+<tr><td>3</td><td>0 1 1</td><td><strong>1</strong></td></tr>
+<tr><td>4</td><td>1 0 0</td><td>0</td></tr>
+<tr><td>5</td><td>1 0 1</td><td><strong>1</strong></td></tr>
+<tr><td>6</td><td>1 1 0</td><td><strong>1</strong></td></tr>
+<tr><td>7</td><td>1 1 1</td><td><strong>1</strong></td></tr>
+</tbody></table>
+<table><thead><tr><th>項目</th><th>結果</th></tr></thead><tbody>
+<tr><td>最小項集合</td><td><strong>Σm(3, 5, 6, 7)</strong></td></tr>
+<tr><td>最大項集合</td><td><strong>ΠM(0, 1, 2, 4)</strong></td></tr>
+<tr><td>標準 SOP</td><td><strong>F = ¬A · B · C + A · ¬B · C + A · B · ¬C + A · B · C</strong></td></tr>
+<tr><td>標準 POS</td><td><strong>F = (A + B + C) · (A + B + ¬C) · (A + ¬B + C) · (¬A + B + C)</strong></td></tr>
+<tr><td>標準 SOP 字面數</td><td>4 項 × 3 = <strong>12</strong></td></tr>
+<tr><td>標準 SOP 閘數</td><td>3 個 NOT（¬A、¬B、¬C）+ 4 個 3 輸入 AND + 1 個 4 輸入 OR = <strong>8</strong></td></tr>
+<tr><td>標準 POS 字面數</td><td>4 項 × 3 = <strong>12</strong></td></tr>
+<tr><td>標準 POS 閘數</td><td>3 個 NOT + 4 個 3 輸入 OR + 1 個 4 輸入 AND = <strong>8</strong></td></tr>
+<tr><td>最簡 SOP（第 05 章會算給你看）</td><td><strong>F = A · B + B · C + A · C</strong>，6 個字面，0 個 NOT + 3 個 2 輸入 AND + 1 個 3 輸入 OR = <strong>4 個閘</strong></td></tr>
+</tbody></table>
+<p>最簡 SOP 要逐列驗證才算數：ABC = 000 → 0 + 0 + 0 = 0；001 → 0；010 → 0；011 → B · C = 1 → <strong>1</strong>；100 → 0；101 → A · C = 1 → <strong>1</strong>；110 → A · B = 1 → <strong>1</strong>；111 → <strong>1</strong>。與上面的真值表逐列相同。<strong>8 個閘變 4 個閘，而且不再需要任何反相器。</strong>以單閘 1.0 ns 估算，標準 SOP 是反相器、及閘、或閘三層約 3.0 ns，最簡 SOP 只有兩層約 2.0 ns。</p>
+<p>邊界對照有三組。<strong>全部 8 列都是 1</strong> → Σm(0…7)，SOP 寫出來是 8 個乘積項，但函數其實就是常數 F = 1，一個閘都不用；POS 是空集合（沒有任何最大項），本課約定顯示 F = 1。<strong>全部 8 列都是 0</strong> → SOP 是空集合，顯示 F = 0；POS 則是 8 個和項。<strong>只有 m<sub>0</sub> 是 1</strong> → SOP 只有一項 ¬A · ¬B · ¬C，3 個 NOT + 1 個 AND + 0 個 OR = 4 個閘，POS 卻有 7 個和項——這時候 SOP 明顯划算，<strong>這就是為什麼兩種標準型都要會</strong>：先數一數為 1 的列多還是為 0 的列多，挑短的那一種當起點。</p>
+
+<section class="workspace"><h2>自由實驗：改真值表的 F 欄，看兩種標準型同步長出來</h2>
+<p>場景是一個三輸入、一輸出的組合電路，輸入 A、B、C 由高位到低位。下面這張表的 F 欄可以逐格勾選，勾起來代表那一列輸出 1。改完之後看兩件事：最小項集合與最大項集合怎麼互補地變動，以及兩種標準型的字面數與閘數誰比較划算。</p>
+<div class="controls">
+<table><thead><tr><th>列</th><th>A</th><th>B</th><th>C</th><th>F</th></tr></thead><tbody>
+<tr><td>0</td><td>0</td><td>0</td><td>0</td><td><label for="cn-m0"><input id="cn-m0" type="checkbox">m0（A=0 B=0 C=0）</label></td></tr>
+<tr><td>1</td><td>0</td><td>0</td><td>1</td><td><label for="cn-m1"><input id="cn-m1" type="checkbox">m1（A=0 B=0 C=1）</label></td></tr>
+<tr><td>2</td><td>0</td><td>1</td><td>0</td><td><label for="cn-m2"><input id="cn-m2" type="checkbox">m2（A=0 B=1 C=0）</label></td></tr>
+<tr><td>3</td><td>0</td><td>1</td><td>1</td><td><label for="cn-m3"><input id="cn-m3" type="checkbox" checked>m3（A=0 B=1 C=1）</label></td></tr>
+<tr><td>4</td><td>1</td><td>0</td><td>0</td><td><label for="cn-m4"><input id="cn-m4" type="checkbox">m4（A=1 B=0 C=0）</label></td></tr>
+<tr><td>5</td><td>1</td><td>0</td><td>1</td><td><label for="cn-m5"><input id="cn-m5" type="checkbox" checked>m5（A=1 B=0 C=1）</label></td></tr>
+<tr><td>6</td><td>1</td><td>1</td><td>0</td><td><label for="cn-m6"><input id="cn-m6" type="checkbox" checked>m6（A=1 B=1 C=0）</label></td></tr>
+<tr><td>7</td><td>1</td><td>1</td><td>1</td><td><label for="cn-m7"><input id="cn-m7" type="checkbox" checked>m7（A=1 B=1 C=1）</label></td></tr>
+</tbody></table>
+<label for="cn-form">要顯示的標準型<select id="cn-form"><option value="sop">只看積之和 SOP</option><option value="pos">只看和之積 POS</option><option value="both" selected>兩種都看</option></select></label>
+</div>
+<div id="canonical-output" class="output" aria-live="polite">這個模式顯示哪幾種標準型；8 個勾選格永遠都在用。目前 <strong>Σm(3, 5, 6, 7)</strong>、<strong>ΠM(0, 1, 2, 4)</strong>；兩個索引集合的元素個數相加必定等於 8，這裡是 4 + 4 = 8。標準 SOP：F = ¬A · B · C + A · ¬B · C + A · B · ¬C + A · B · C，字面數 4 × 3 = 12，閘數 3 個 NOT + 4 個 3 輸入 AND + 1 個 4 輸入 OR = 8。標準 POS：F = (A + B + C) · (A + B + ¬C) · (A + ¬B + C) · (¬A + B + C)，字面數 4 × 3 = 12，閘數 3 個 NOT + 4 個 3 輸入 OR + 1 個 4 輸入 AND = 8。為 1 與為 0 的列各 4 列，所以兩種一樣長，挑哪一種當起點都可以。標準型是機械產生的，所以一定寫得出來；但它把每一列都當成獨立的一項，所以一定不是最省——第 05 章會把它壓成 F = A · B + B · C + A · C，只要 4 個閘。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>最大項的取反規則與最小項<strong>相反</strong>。邊界就在同一個索引上：索引 5 的 m<sub>5</sub> = A · ¬B · C，而 M<sub>5</sub> = ¬A + B + ¬C，兩者不是把符號換一換就好，連 0 與 1 該取誰都反過來。</li>
+<li>Σ 與 Π 不是加總與連乘的算術符號。它們是簡記：Σm 讀作「把這些最小項或起來」，ΠM 讀作「把這些最大項且起來」，裡面的索引是列號，不是被加起來的數值。</li>
+<li>標準型不等於最簡型。同一個函數的標準 SOP 只有一種寫法，是唯一的；最簡型卻可能有好幾個一樣短的答案，不保證唯一。</li>
+<li>ΠM(0, 1, 2, 4) 裡的索引指的是<strong>函數為 0</strong> 的那幾列，不是為 1 的列。看到 Π 就要換一套讀法，否則會把函數讀成它的補數。</li>
+<li>字面數少不等於閘數少。單一字面的乘積項不需要及閘，多輸入的閘在真實元件庫裡又要拆成多層；字面數只是第一層近似。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>把這張真值表輸入任何一套 EDA 工具或線上邏輯化簡器，可以驗證它產生的標準 SOP 與這裡逐項相同；再把標準型與最簡型分別合成，用測試向量掃過全部 8 種輸入，在模擬器裡逐列比對兩個電路的輸出。實體上也可以做：把兩種接法各接一遍在麵包板上，指撥開關掃 8 種組合，用 LED 或邏輯分析儀對照。</p>
+<p><strong>能證明</strong>：兩個電路對全部 8 種輸入的輸出完全相同，也就是功能等價；以及各自用掉幾顆晶片、幾個閘——這是數得出來的。<strong>不能證明</strong>：哪一種在真實晶片上比較快。閘數少不代表延遲短，實際延遲還要看繞線長度、負載電容、每個閘的驅動能力與扇出；那要靠佈局後的靜態時序分析報告，不是靠數閘數。</p>
+
+<h2>連到哪門課</h2>
+<p>標準型是起點，把它壓到最短是下一章的卡諾圖與 Quine–McCluskey；另一條完全不化簡的路，是拿一顆多工器把真值表當查表直接查，見本課<a href="06-多工器解碼器與編碼器.html">06 多工器、解碼器與編碼器</a>。這些組合邏輯在一台真實處理器裡的位置——控制訊號怎麼由指令欄位算出來、算術單元怎麼接——見<a href="../../../專題/計算機組織/互動課程/02-組合邏輯與算術.html">計算機組織的組合邏輯與算術</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="03-布林代數與邏輯閘.html">← 上一頁：布林代數與邏輯閘</a><a href="05-卡諾圖與不關心項.html">下一頁：卡諾圖與不關心項 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 標準型 SOP 與 POS</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

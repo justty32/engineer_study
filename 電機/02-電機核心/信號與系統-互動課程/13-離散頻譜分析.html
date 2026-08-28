@@ -1,0 +1,79 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 離散頻譜分析｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">13・DTFT 是理論、DFT 是取樣版、FFT 只是快速演算法</p>
+<h1>離散頻譜分析：解析度只由窗長決定，其餘都是交換條件</h1>
+<p class="lead">按下「FFT」之後螢幕上那張圖，能看到多細的頻率、為什麼一根線會裂成一團、加窗與零填充各自買到了什麼——這章把三個名字分清楚，並且把每一項都算成具體的數字。這是本課最貼近日常工具的一章。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="12-取樣與混疊.html">12 取樣與混疊</a>的取樣與頻譜複製、<a href="06-傅立葉轉換.html">06 傅立葉轉換</a>的頻譜概念，以及<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複數與極式</a>。</p>
+
+<h2>痛點：DTFT、DFT、FFT 三個名字，工具列上只有一個按鈕</h2>
+<p>做過訊號分析的人幾乎都遇過同一組挫折。名字先有三個：DTFT、DFT、FFT，課本輪流出現，但軟體只給一顆按鈕，看不出差在哪。接著是解析度：明明取樣率很高，兩根靠得很近的譜線就是分不開，把取樣率再調高也沒用。然後是那個奇怪的現象——訊號頻率稍微動一點點，原本乾淨的一根線就散成一整片裙邊，看起來像壞掉了。</p>
+<p>最後是兩個看起來很像的補救動作：加窗與零填充。兩者都會讓圖變好看，但只有一個真的增加了資訊，另一個純粹是內插。分不清楚的人會誤以為「補很多 0 就能看得更細」，然後在報告裡寫下一個根本不存在的頻率差。這章要把每一項都變成可以用滑桿驗證的數字。</p>
+
+<h2>白話直覺：頻譜分析是拿一段有限長的錄音去問「裡面有哪些頻率」</h2>
+<p>訊號從哪裡來？從上一章的 ADC 來，是一串以 f<sub>s</sub> 取樣的樣本。系統對它做了什麼？其實不是系統做的，是<strong>你</strong>做的：你從這串樣本裡截一段長度 N 的視窗送進 FFT。這件事在哪個域最好描述？當然是頻率域，但要付出兩個代價：一是輸出只在離散的幾個頻率上有值，二是截斷本身會在頻譜上留下痕跡。換域的代價因此是「看得到頻率、但看不清時間」，而且窗長直接決定了看得多細。儀器量到什麼？頻譜分析儀給你的是每根 bin 的振幅，它量不到 bin 與 bin 之間發生了什麼。</p>
+<p><strong>離散時間傅立葉轉換（discrete-time Fourier transform, DTFT）</strong>寫成 X(e<sup>jω</sup>) = ∑<sub>n=−∞</sub><sup>∞</sup> x[n]e<sup>−jωn</sup>。它的輸入是離散的無限長序列，輸出卻是<strong>連續且以 2π 為週期</strong>的函數。這個週期性不是巧合，正是上一章「取樣讓頻譜每隔 f<sub>s</sub> 複製一份」的直接後果，所以有意義的頻率範圍只有 [−π, π]，對應實際的 [−f<sub>s</sub>/2, f<sub>s</sub>/2]。</p>
+<p><strong>離散傅立葉轉換（discrete Fourier transform, DFT）</strong>寫成 X[k] = ∑<sub>n=0</sub><sup>N−1</sup> x[n]·exp(−j 2π k n / N)。輸入有限長、輸出離散，這才是電腦真正能算的版本；用軟體的語彙說，它就是一個 N×N 的複數矩陣乘上一個長度 N 的向量。<strong>快速傅立葉轉換（fast Fourier transform, FFT）</strong>不是第四種轉換，它只是把這個矩陣乘法的對稱性用光的演算法，最有名的是 Cooley–Tukey 蝶形運算，要求 N 是 2 的冪次。</p>
+<p class="note">來源：09-信號與系統-下 §11、§12.1–§12.3。</p>
+
+<h2>推導：週期性、解析度、洩漏、零填充、運算量</h2>
+<p><strong>DTFT 為什麼是 2π 週期。</strong>把 ω 換成 ω + 2π：e<sup>−j(ω+2π)n</sup> = e<sup>−jωn</sup>e<sup>−j2πn</sup>。因為 n 是<strong>整數</strong>，第二項恆等於 1，所以 X(e<sup>jω</sup>) 的值原封不動。換句話說，離散時間的頻率本質上只有一個 2π 寬的範圍，超出去的都是同一件事重複——這正是上一章混疊的頻域說法。</p>
+<p><strong>解析度 Δf 的來歷。</strong>N 點樣本涵蓋的實際時間是 T<sub>win</sub> = N/f<sub>s</sub> 秒。要分辨兩個頻率相差多少，最起碼要能在這段時間內看到它們之間的一個完整拍差，也就是「一個週期剛好塞滿這個窗」，於是最小可分辨的頻率差是 Δf = 1/T<sub>win</sub> = f<sub>s</sub>/N。第 k 根 bin 的中心頻率是 k·Δf。<strong>解析度只由窗長決定</strong>，跟你用什麼演算法、補多少 0 都無關。</p>
+<p><strong>為什麼會洩漏。</strong>DFT 隱含一個假設：這 N 點就是一個週期，前後無限重複。若訊號在窗內不是整數個週期，把窗尾接回窗頭時會出現一個跳躍；跳躍在頻域是寬頻的，能量因此散到鄰近所有 bin，這就是<strong>譜洩漏（spectral leakage）</strong>。<strong>加窗（windowing）</strong>的做法是先把序列乘上一條兩端平滑歸零的曲線（Hann、Hamming、Blackman），接縫消失，裙邊跟著下降；代價是主瓣變寬，也就是解析度變差。</p>
+<p><strong>為什麼零填充不增加解析度。</strong><strong>零填充（zero-padding）</strong>是把 N 點補 0 到更長再做 FFT。補進去的 0 不含任何觀測資訊，<strong>有效</strong>的 T<sub>win</sub> 完全沒變，所以 1/T<sub>win</sub> 也沒變。它做的事是在同一條 DTFT 曲線上多取幾個樣本點，屬於內插；圖會變平滑、峰值位置讀起來更順眼，但兩根本來分不開的線還是分不開。</p>
+<p><strong>運算量。</strong>直接算 DFT 要做 N 次求和、每次 N 項，共 N² 次複數乘法。基 2 FFT 遞迴地把長度對半拆，共 log<sub>2</sub>N 層、每層 N/2 個蝶形，因此是 (N/2)log<sub>2</sub>N 次。兩者相除就是加速倍率，N 愈大差距愈懸殊。</p>
+<p><strong>四個窗函數的固定數值</strong>（查表常數，本課全程只用這一組）：</p>
+<table><thead><tr><th>窗</th><th>主瓣寬度（bin）</th><th>最高旁瓣（dB）</th><th>一句話</th></tr></thead><tbody>
+<tr><td>rect（矩形／不加窗）</td><td>2</td><td><strong>−13.3</strong></td><td>解析度最好、洩漏最嚴重</td></tr>
+<tr><td>hann</td><td>4</td><td><strong>−31.5</strong></td><td>通用首選，兩端平滑歸零</td></tr>
+<tr><td>hamming</td><td>4</td><td><strong>−42.7</strong></td><td>主瓣與 hann 同寬，最近的旁瓣壓得更低</td></tr>
+<tr><td>blackman</td><td>6</td><td><strong>−58.1</strong></td><td>洩漏最小，代價是主瓣寬三倍</td></tr>
+</tbody></table>
+
+<h2>數值實例：N = 1024、f<sub>s</sub> = 8000 Hz、f = 1000 Hz、hann 窗</h2>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>頻率解析度</td><td>Δf = f<sub>s</sub>/N = 8000/1024</td><td><strong>7.812500 Hz</strong></td></tr>
+<tr><td>窗長</td><td>T<sub>win</sub> = N/f<sub>s</sub> = 1024/8000</td><td><strong>0.128000 s</strong></td></tr>
+<tr><td>精確 bin 位置</td><td>f·N/f<sub>s</sub> = 1000 × 1024/8000</td><td><strong>128.000000（正好整數）</strong></td></tr>
+<tr><td>最近的 bin</td><td>k = round(128.000000)</td><td><strong>k = 128，中心 1000.000000 Hz</strong></td></tr>
+<tr><td>誤差</td><td>f − k·Δf</td><td><strong>0.000000 Hz → 無洩漏</strong></td></tr>
+<tr><td>hann 主瓣寬度</td><td>4 × 7.812500</td><td><strong>31.250000 Hz</strong></td></tr>
+<tr><td>直接 DFT 運算量</td><td>N²</td><td><strong>1048576 次複數乘法</strong></td></tr>
+<tr><td>FFT 運算量</td><td>(N/2)log<sub>2</sub>N = 512 × 10</td><td><strong>5120 次</strong></td></tr>
+<tr><td>加速倍率</td><td>1048576 / 5120</td><td><strong>204.800000 倍</strong></td></tr>
+</tbody></table>
+<p>邊界對照：f = <strong>1010 Hz</strong> → 精確位置 <strong>129.280000</strong>、最近 bin <strong>k = 129</strong>（中心 <strong>1007.812500 Hz</strong>）、誤差 <strong>2.187500 Hz</strong> → <strong>有洩漏</strong>，能量散到鄰近 bin。N = <strong>256</strong>（2<sup>8</sup>）→ Δf = <strong>31.250000 Hz</strong>、T<sub>win</sub> = <strong>0.032000 s</strong>、加速 <strong>64.000000 倍</strong>（<strong>窗短了 4 倍，解析度就差 4 倍</strong>）。N = <strong>16384</strong>（2<sup>14</sup>）→ Δf = <strong>0.488281 Hz</strong>、T<sub>win</sub> = <strong>2.048000 s</strong>、加速 <strong>2340.571429 倍</strong>（<strong>要看得細就得等得久，這是硬性交換</strong>）。N = <strong>16</strong> → Δf = <strong>500.000000 Hz</strong>、加速只有 <strong>8.000000 倍</strong>（<strong>小 N 時 FFT 的優勢不明顯</strong>）。零填充 1024 → 4096：顯示間隔從 <strong>7.812500 Hz</strong> 變成 <strong>1.953125 Hz</strong>，但 <strong>T<sub>win</sub> 仍是 0.128000 s，真正的解析度沒有改變</strong>。</p>
+<p>量級對照：N = 1024 配 f<sub>s</sub> = 8000 Hz 就是 0.128 秒的窗，Δf = 7.8125 Hz；要達到 1 Hz 的解析度就得量滿 1 秒，要分辨市電 50 Hz 與 51 Hz 也是同一個代價。CD 的 44100 Hz 配 1024 點則是 0.023 秒的窗、Δf 約 43 Hz——同樣的點數，取樣率愈高解析度反而愈粗。</p>
+
+<section class="workspace"><h2>自由實驗：把窗長、訊號頻率與窗形分開調整</h2>
+<p>取一段長度 N ＝ 2 的某個次方的樣本，取樣率 f<sub>s</sub>，裡面有一個頻率 f 的弦波，再選一種窗。要看三件事：這個 f 有沒有落在 bin 中心（決定會不會洩漏）、窗長換來多少解析度、以及選的窗把旁瓣壓低了多少、主瓣又賠掉多寬。</p>
+<div class="controls">
+<label for="dft-nexp">點數指數（N ＝ 2 的這個次方）<input id="dft-nexp" type="range" min="4" max="14" step="1" value="10"></label>
+<label for="dft-fs">取樣頻率 f<sub>s</sub>（Hz）<input id="dft-fs" type="range" min="1000" max="48000" step="1000" value="8000"></label>
+<label for="dft-f">訊號頻率 f（Hz）<input id="dft-f" type="range" min="10" max="20000" step="1" value="1000"></label>
+<label for="dft-win">窗函數<select id="dft-win"><option value="rect">矩形（不加窗）</option><option value="hann" selected>Hann</option><option value="hamming">Hamming</option><option value="blackman">Blackman</option></select></label>
+</div>
+<div id="dftlab-output" class="output" aria-live="polite">N = 1024，Δf = 7.812500 Hz，窗長 0.128000 s；精確 bin 位置 128.000000，最近 bin k = 128（中心 1000.000000 Hz），誤差 0.000000 Hz。N² = 1048576 次複數乘法，(N/2)log<sub>2</sub>N = 5120 次，加速 204.800000 倍。<strong>整數週期，無洩漏</strong>：訊號頻率正好落在第 128 根 bin 的中心，窗內剛好裝 128 個完整週期，頭尾接得上，能量集中在一根線上。<strong>解析度只由窗長決定</strong>：Δf = 1/T<sub>win</sub>。要分辨相差 1 Hz 的兩根線，就得量滿 1 秒，沒有捷徑。選了 Hann 窗：主瓣 4 個 bin（＝31.250000 Hz，解析度變差），最高旁瓣 −31.5 dB（洩漏被壓低）。<strong>沒有一個窗兩邊都贏。</strong>把 N 補 0 到兩倍只會讓譜線看起來更密（內插），T<sub>win</sub> 沒變，<strong>真正能分辨的最小頻率差完全不變</strong>。量級對照：N = 1024、f<sub>s</sub> = 8000 就是 0.128 秒的窗，Δf = 7.8125 Hz；要達到 1 Hz 解析度得量滿 1 秒。把點數指數滑到 4 會看到加速只剩 8.000000 倍，N 小的時候 FFT 沒什麼好處；把 f 推過 f<sub>s</sub>/2 則要先回第 12 章處理混疊。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>DTFT、DFT、FFT 是三件事。DTFT 是理論，輸出連續；DFT 是它在頻率軸上的取樣版，輸出離散；<strong>FFT 只是算 DFT 的快速演算法，不是另一種轉換</strong>，算出來的數字與直接 DFT 完全相同。</li>
+<li>「解析度」與「顯示點的密度」不同。前者由窗長 T<sub>win</sub> 決定，後者可以靠零填充任意加密。圖上點很多不代表你分得開兩根線。</li>
+<li>加窗不是「讓訊號變好看」。它是一筆明碼標價的交易：主瓣變寬（解析度變差）換旁瓣變低（洩漏變小），rect 與 blackman 分別站在這條軸的兩端。</li>
+<li>bin 中心頻率 k·f<sub>s</sub>/N 與訊號的真實頻率不一定相等。用 FFT 直接讀頻率天生有 ±Δf/2 的量化誤差，要更準得對峰值附近做內插估計。</li>
+<li>提高取樣率不會提高頻率解析度。Δf = f<sub>s</sub>/N，f<sub>s</sub> 變大而 N 不變時 Δf 反而變粗；真正有用的是把 N 加大，也就是量久一點。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>這一章不需要特殊設備，任何頻譜分析軟體或示波器的 FFT 功能都能直接重現。用函數產生器輸出一個乾淨的正弦波，先把頻率調到剛好落在 bin 中心，畫面上是一根細線；再把頻率慢慢往旁邊移幾 Hz，會親眼看到那根線裂成一團裙邊，而訊號本身一點都沒變。接著切換窗函數，裙邊的高度會整片跟著升降，主瓣的胖瘦也同時改變——那就是上面那張表在畫面上的樣子。最後把 FFT 點數從 1024 改成 16384，會看到峰值變窄、更新速度變慢，因為每張圖要等 2.048 秒的資料。</p>
+<p><strong>能證明什麼</strong>：Δf 與窗長成倒數的關係、洩漏確實存在且與「是否整數週期」有關、不同窗的旁瓣高度差異、FFT 相對於直接 DFT 的加速。</p>
+<p><strong>不能證明什麼</strong>：兩根靠得比 Δf 還近的譜線是不是「其實有兩根」。<strong>這是解析度的物理極限，不是儀器不夠好</strong>，換更貴的機器、補更多 0 都沒用，唯一的辦法是量久一點。也證明不了訊號的相位是否穩定——單張 FFT 只是一個快照，要看穩定性得連續算很多張再比較。</p>
+
+<h2>連到哪門課</h2>
+<p>連續版的傅立葉轉換與矩形對 sinc 的轉換對見本課<a href="06-傅立葉轉換.html">06 傅立葉轉換</a>；離散頻譜為什麼是週期的，根源在<a href="12-取樣與混疊.html">12 取樣與混疊</a>的頻譜複製。式子裡 exp(−j 2π k n / N) 的複數運算、極式與尤拉公式見<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複變入門</a>。FFT 的蝶形細節與定點量化誤差留給數位訊號處理專科。真實裝置這一側，音訊軟體的頻譜圖、振動診斷的階次分析、通訊接收機的載波搜尋，用的都是本章這幾個數字。下一章要把 DFT 的頻率軸捲成一個圓，讓第 07 章的極點觀點整套搬到離散世界。</p>
+<nav class="pager" aria-label="章節導覽"><a href="12-取樣與混疊.html">← 上一頁：取樣與混疊</a><a href="14-Z轉換與單位圓.html">下一頁：Z 轉換與單位圓 →</a></nav>
+</main>
+<footer class="site-footer"><span>13 離散頻譜分析</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

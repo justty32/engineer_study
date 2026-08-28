@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 延遲、功耗與險境｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・閘要花時間、要驅動電容、要耗電</p>
+<h1>延遲、功耗與險境：兩條路徑延遲不一樣，就會生出一個假的脈衝</h1>
+<p class="lead">前面五章把閘當成瞬間完成、不耗電的東西。這章把它拉回真實世界：訊號穿過閘要時間，輸出要驅動下游的電容，每次翻轉都要從電源搬電荷。而「延遲不一致」會直接製造出一個新的錯誤類別——險境與突波。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="07-加法器比較器與ALU.html">07 加法器、比較器與 ALU</a>的閘延遲模型，以及<a href="03-布林代數與邏輯閘.html">03 布林代數與邏輯閘</a>的 SOP 電路怎麼接成兩層閘。</p>
+
+<h2>痛點：布林代數說輸出不會變，示波器卻抓到它跳了一下</h2>
+<p>有一個電路 F = A · B + ¬A · C，把 B 與 C 都固定在 1，然後讓 A 從 1 變成 0。用布林代數算：A = 1 時 F = 1 · 1 + 0 · 1 = 1；A = 0 時 F = 0 · 1 + 1 · 1 = 1。兩邊都是 1，所以輸出不該有任何變化。可是把探棒接上去，會看到輸出在中間掉到 0 又彈回來，寬度大約 1 ns。</p>
+<p>電路沒有壞，布林代數也沒錯。錯的是我們的假設：代數只描述「穩定之後」的值，沒有描述「切換途中」。A 這個訊號分兩條路走進 OR 閘，一條直接進 AND，另一條要先穿過反相器才進 AND；兩條路的長度不一樣，中間就出現一段兩邊都還沒接上的空窗。這一章要把這段空窗算出來，順便把延遲與功耗的帳一起算清楚。</p>
+
+<h2>白話直覺：訊號是一支從輸入往輸出前進的隊伍，兩支隊伍不會同時到</h2>
+<p>先把兩個成本講明白。傳播延遲（propagation delay, t<sub>pd</sub>）是輸入變化到輸出跟著變化所需的時間；轉換時間（transition time, t<sub>r</sub> 與 t<sub>f</sub>）是輸出電壓從低爬到高、或從高掉到低本身要花的時間。扇出（fan-out）是一個輸出同時驅動幾個下游輸入，每多接一個就多一份輸入電容要充放電，延遲隨負載電容線性增加；扇入（fan-in）是一個閘自己有幾個輸入，扇入大的閘本身就比較慢。</p>
+<p>順著因果鏈走一次。輸入從哪來：A、B、C 來自上游的閘或暫存器，帶著各自的到達時間。這一層做了什麼決定：兩層閘算出 F，但兩條路徑的到達時間差了一個反相器。花掉多少：以本課預設值，突波寬度 1.000000 ns、輸出總延遲 0.700000 ns、動態功耗 217.800000 µW；217.8 µW 大約是一顆指示用 LED 亮度的千分之一，可是一顆晶片上有幾億個這種節點。邊界在哪：把冗餘項加回去，突波就消失，成本是多一個 AND 閘。儀器量到什麼：示波器看得到那個 1 ns 的脈衝，邏輯分析儀在時脈邊緣取樣則完全看不到。</p>
+<p>險境（hazard）與突波（glitch）是兩件事。險境是<strong>電路結構的性質</strong>：這個實作在某種輸入變化下有可能讓輸出短暫跑掉。靜態險境（static hazard）指輸出應該不變卻跳了一下，動態險境（dynamic hazard）指輸出應該只變一次卻跳了好幾次。突波則是<strong>實際量到的那個短脈衝</strong>——險境是病因，突波是症狀。</p>
+<p class="note">來源：10-邏輯設計 §4.3、§9。</p>
+
+<h2>推導：把空窗的起點與終點算出來</h2>
+<p><strong>（a）靜態一險境的完整時序推導。</strong>電路 F = A · B + ¬A · C，固定 B = C = 1，A 由 1 變 0。設反相器延遲 t<sub>inv</sub>、AND 與 OR 閘各 t<sub>gate</sub>，取 A 變化的時刻為 0。第一條路：T1 = A · B 只經過一個 AND，所以 T1 在 <strong>t<sub>gate</sub></strong> 落下。第二條路：¬A 要到 <strong>t<sub>inv</sub></strong> 才升起，再經過一個 AND，所以 T2 = ¬A · C 要到 <strong>t<sub>inv</sub> + t<sub>gate</sub></strong> 才升起。於是 OR 閘的兩個輸入從 t<sub>gate</sub> 到 t<sub>inv</sub> + t<sub>gate</sub> 之間同時是 0，這段空窗再經過 OR 自己的 t<sub>gate</sub> 反映到輸出：<strong>輸出在 2·t<sub>gate</sub> 掉到 0、在 t<sub>inv</sub> + 2·t<sub>gate</sub> 回到 1，突波寬度恰好等於 t<sub>inv</sub></strong>。符號說明：t<sub>inv</sub> 與 t<sub>gate</sub> 單位都是 ns，本課假設同類閘延遲相同、不隨輸入組合變化，真實電路不是這樣。</p>
+<p><strong>（b）冗餘項為什麼能消除它。</strong>把式子改成 F = A · B + ¬A · C + B · C。第三項在 B = C = 1 時<strong>恆為 1</strong>，而且完全不含 A，所以 A 怎麼變它都撐住輸出，OR 閘永遠有一個輸入是 1，空窗被填掉。代價是多一個 AND 閘，而且 OR 閘從 2 輸入變成 3 輸入。</p>
+<p><strong>（c）在卡諾圖上冗餘項長什麼樣。</strong>它就是「跨在兩個相鄰圈之間、把交界蓋住」的那個圈。第 05 章的最簡 SOP 剛好會把它化簡掉，因為它的每一格都已被別的圈蓋過——<strong>所以最簡不等於最好</strong>。</p>
+<p><strong>（d）動態功耗從哪來。</strong>輸出每次 0 → 1，都要從電源把 C · V<sub>DD</sub> 的電荷搬到負載電容上；每次 1 → 0，這些電荷倒進地。一個完整週期共消耗 C · V<sub>DD</sub>² 的能量，乘上切換頻率就得到功率：<code>P = α · C · V<sub>DD</sub>² · f</code>。α 是切換活動因子，<strong>本課固定 α = 1</strong>。另一半是靜態功耗，來自關不緊的電晶體漏電流，與頻率無關，製程越先進佔比越高。</p>
+<p><strong>（e）本課鎖定的負載延遲模型。</strong><code>t<sub>load</sub> = k<sub>load</sub> · C<sub>total</sub></code>，其中 k<sub>load</sub> = 1.0 ns/pF、<code>C<sub>total</sub> = 扇出 × 每個負載的輸入電容</code>。輸出總延遲就是閘自己的 t<sub>gate</sub> 再加上 t<sub>load</sub>。</p>
+
+<h2>數值實例：t<sub>inv</sub> = 1.0 ns、t<sub>gate</sub> = 0.5 ns、扇出 4</h2>
+<p>取 t<sub>inv</sub> = 1.0 ns、t<sub>gate</sub> = 0.5 ns、未加冗餘項；扇出 4、每個負載 0.05 pF、V<sub>DD</sub> = 3.3 V、切換頻率 100 MHz。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>突波開始</td><td>2 × 0.5</td><td><strong>1.000000 ns</strong></td></tr>
+<tr><td>突波結束</td><td>1.0 + 2 × 0.5</td><td><strong>2.000000 ns</strong></td></tr>
+<tr><td>突波寬度</td><td>t<sub>inv</sub></td><td><strong>1.000000 ns</strong></td></tr>
+<tr><td>加冗餘項 B · C 後</td><td>第三項恆為 1</td><td><strong>無突波</strong>，成本 +1 個 AND 閘、OR 變 3 輸入</td></tr>
+<tr><td>總負載電容</td><td>4 × 0.05</td><td><strong>0.200000 pF</strong></td></tr>
+<tr><td>負載延遲</td><td>1.0 ns/pF × 0.2 pF</td><td><strong>0.200000 ns</strong></td></tr>
+<tr><td>輸出總延遲</td><td>0.5 + 0.2</td><td><strong>0.700000 ns</strong></td></tr>
+<tr><td>動態功耗</td><td>1 × 0.2 pF × 3.3² V² × 100 MHz</td><td><strong>217.800000 µW</strong></td></tr>
+</tbody></table>
+<p>時間軸用三句話讀完：<code>0 ns</code>，A 由 1 變 0；<code>1.000000 ns</code>，F 掉到 0；<code>2.000000 ns</code>，F 回到 1。中間那 1.000000 ns 就是突波，而 F 在數學上根本不該變。</p>
+<p>邊界對照：把 <strong>t<sub>inv</sub> 拉到 0.1 ns</strong> → 突波只剩 0.100000 ns 寬，但窄突波不代表沒事，它一樣可能被非同步清除腳吃進去。把<strong>扇出改成 16、每個負載 1 pF、V<sub>DD</sub> = 5 V、頻率 500 MHz</strong> → C<sub>total</sub> = 16.000000 pF、負載延遲 <strong>16.000000 ns</strong>、動態功耗 <strong>200.000000 mW</strong>——<strong>同一個閘，功耗差了將近一千倍</strong>，而且延遲已經由負載主導，不是閘本身。反過來把<strong>扇出設 1、負載 0.01 pF、V<sub>DD</sub> = 0.8 V、頻率 1 MHz</strong> → 動態功耗只有 <strong>6.400000 nW</strong>。功耗與電壓成平方關係，所以降壓是最有效的省電手段——這就是製程一路從 5 V 降到 0.8 V 的原因。</p>
+
+<section class="workspace"><h2>自由實驗：險境一區、功耗一區</h2>
+<p>這個實驗有兩區互不影響的控制。險境那一區用兩個延遲與一個冗餘項核取，算出 F = A · B + ¬A · C 在 B = C = 1、A 由 1 變 0 時的突波起訖與寬度；功耗那一區用扇出、每個負載的輸入電容、電源電壓與切換頻率，算出總負載電容、負載延遲與動態功耗。</p>
+<div class="controls">
+<label for="hz-tinv">反相器延遲 t_inv（ns）<input id="hz-tinv" type="range" min="0.1" max="3" step="0.1" value="1"></label>
+<label for="hz-tgate">AND / OR 閘延遲 t_gate（ns）<input id="hz-tgate" type="range" min="0.1" max="3" step="0.1" value="0.5"></label>
+<label for="hz-fix"><input id="hz-fix" type="checkbox">加入冗餘項 B · C</label>
+<label for="hz-fanout">扇出（驅動幾個輸入）<input id="hz-fanout" type="range" min="1" max="16" step="1" value="4"></label>
+<label for="hz-cload">每個負載的輸入電容（pF）<input id="hz-cload" type="range" min="0.01" max="1" step="0.01" value="0.05"></label>
+<label for="hz-vdd">電源電壓 V_DD（V）<input id="hz-vdd" type="range" min="0.8" max="5" step="0.1" value="3.3"></label>
+<label for="hz-freq">切換頻率（MHz）<input id="hz-freq" type="range" min="1" max="500" step="1" value="100"></label>
+</div>
+<div id="hazard-output" class="output" aria-live="polite">這個 widget 有兩區：險境那一區用 t_inv、t_gate 與冗餘項核取，功耗那一區用扇出、負載電容、電壓與頻率，兩區互不影響。時間軸：<code>0 ns</code>，A 由 1 變 0；<code>1.000000 ns</code>，F 掉到 0；<code>2.000000 ns</code>，F 回到 1。突波寬度 1.000000 ns。總負載電容 0.200000 pF；負載延遲 0.200000 ns；輸出總延遲 0.700000 ns。動態功耗 217.800000 µW。輸出出現一個 1.000000 ns 的突波：F 在數學上不該變（B = C = 1 時 F 恆為 1），變的原因是兩條路徑的延遲不一樣。217.8 µW 大約是一顆 LED 亮度的千分之一；但一顆晶片上有幾億個這種節點。功耗與電壓成平方關係，所以降壓是最有效的省電手段——這就是製程一路從 5 V 降到 0.8 V 的原因。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>險境是<strong>電路結構的性質</strong>，突波是<strong>實際量到的那個脈衝</strong>。沒量到突波不代表沒有險境，只代表這次的輸入變化或探棒頻寬沒把它顯示出來。</li>
+<li>靜態險境不是「電路壞了」。同步電路裡它通常無害，因為正反器只在時脈邊緣看資料；會出事的是非同步清除腳這種隨時都在聽的輸入。</li>
+<li>冗餘項不是「化簡錯了」，它是<strong>故意留下來的多餘項</strong>；最簡 SOP 反而會把它刪掉。</li>
+<li>扇出的代價是延遲與功耗，不是「訊號變弱」。數位輸出照樣會把電壓拉到滿檔，只是拉得比較慢。</li>
+<li>傳播延遲與轉換時間是兩個量：前者是「什麼時候開始變」，後者是「變一次要花多久」。</li>
+</ul>
+
+<p class="warning"><strong>靜電放電（ESD）會打壞 CMOS 輸入。</strong>CMOS 的輸入是絕緣的閘極，人體累積的靜電可達數千伏特，直接碰到接腳就可能打穿閘極氧化層。取放晶片前先碰一下接地的金屬、用防靜電袋保存、不要在地毯上組裝。被 ESD 打過的晶片常常「還會動但參數變差」，比直接壞掉更難查。</p>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>用高頻寬示波器（至少 500 MHz）配低電容探棒，把探棒放在 F 的輸出節點，切換 A 就可以抓到那個 1 ns 的突波；換成邏輯分析儀在時脈邊緣取樣，同一個突波完全看不到。功耗那一側用電流探棒或電源供應器的電流讀值，把頻率加倍，可以看到電流大致跟著加倍。</p>
+<p><strong>能證明</strong>：突波真的存在、寬度大約多少、以及動態功耗隨頻率成長。<strong>不能證明</strong>：突波有沒有造成真正的錯誤——那要看它有沒有被抓進正反器；也證明不了「加了冗餘項就一定沒突波」，加冗餘項只保證消除<strong>這一種</strong>輸入變化造成的靜態險境，其他路徑要各自分析。探棒本身也帶電容，量到的寬度不完全是原來那個。</p>
+
+<h2>連到哪門課</h2>
+<p>動態功耗的物理來源，也就是負載電容怎麼充放電，見<a href="../電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學的 CMOS 反相器與數位功耗</a>；電容充放電要多少電荷，見<a href="../電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>。至於為什麼同步設計能讓突波變成無害，要等到<a href="09-閂鎖與正反器.html">09 閂鎖與正反器</a>與<a href="10-時脈與時序限制.html">10 時脈與時序限制</a>：只要突波在下一個時脈邊緣之前平息，正反器根本看不到它。</p>
+<nav class="pager" aria-label="章節導覽"><a href="07-加法器比較器與ALU.html">← 上一頁：加法器、比較器與 ALU</a><a href="09-閂鎖與正反器.html">下一頁：閂鎖與正反器 →</a></nav>
+</main>
+<footer class="site-footer"><span>08 延遲、功耗與險境</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

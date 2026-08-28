@@ -312,7 +312,7 @@ flowchart LR
 | 項目 | 內容 |
 |------|------|
 | 新增 | `wf/workflows/interactive-study-site/tools/sync-styles.py`（160 行，stdlib only） |
-| 正本 | `專題/機器人運動學/互動課程/styles.css`（sha256 `894f24a1…`，4141 B） |
+| 正本 | `專題/機器人運動學/互動課程/styles.css`（sha256 `80eb33ac…`，4163 B） |
 | 管轄範圍 | A 家族 5 門課（正本自身＋4 門下游）。B、C 家族與主站刻意不納管，腳本內以註解記錄，避免將來誤加 |
 | 介面 | `--check` 只比對（漂移或缺檔 → exit 1）；`--sync` 以**二進位模式**覆寫（不做 CRLF 正規化，遵守 BUILD-WITH-CODEX 的例外條款） |
 | 登記新課 | 在腳本頂部 `FAMILY` 清單加一行相對路徑，腳本 docstring 已寫明流程 |
@@ -324,7 +324,7 @@ flowchart LR
 ```text
 $ python wf/workflows/interactive-study-site/tools/sync-styles.py --check
 正本　　：專題/機器人運動學/互動課程/styles.css
-sha256　：894f24a10105d006f0cd6742aff11a7ac970e8c82a1411a1efbeb8d1f00f3c2a
+sha256　：80eb33ac3c13e07358b9c7fbc383f040a159a6cb85791c0f74b98cb8ce1eda90
 位元組數：4141
 [相同] 專題/機器人數學基礎/互動課程
 [相同] 專題/作業系統/互動課程

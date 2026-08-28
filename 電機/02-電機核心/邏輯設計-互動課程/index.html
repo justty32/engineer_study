@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>邏輯設計（零基礎互動課）</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html" aria-current="page">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">從「為什麼要把電壓切成 0 與 1」蓋到 FPGA</p>
+<h1>邏輯設計（零基礎互動課）</h1>
+<p class="lead">這門課給任何看得懂電壓、想知道「電腦到底怎麼用一堆開關算出答案」的人。我們不從真值表背起，而是從一個更前面的問題開始：為什麼要放棄連續電壓、硬把它切成 0 與 1，這個約定買到了什麼、又付出了什麼。每一章只有一個離散互動實驗，改了控制就立刻看到數值與原因；學完之後接得上計算機組織、FPGA 開發與嵌入式。</p>
+<div class="flow"><span>0 與 1</span><span>進位與編碼</span><span>二補數</span><span>布林代數</span><span>SOP 與 POS</span><span>卡諾圖</span><span>多工器與解碼器</span><span>加法器與 ALU</span><span>延遲與險境</span><span>閂鎖與正反器</span><span>時脈與時序</span><span>狀態機</span><span>計數器與記憶體</span><span>FPGA 與 HDL</span></div>
+<p class="note">每章只有一個自由實驗，控制一改就即時看到結果、判讀句與為什麼，沒有計分、沒有進度條、沒有解鎖。練習題全部集中在自我檢核頁，答錯不擋路、可以無限重做。</p>
+<p class="warning">本站不畫圖。狀態圖一律改用狀態表、時序圖改用 8 拍表格、卡諾圖改用 16 格表格、電路圖改用訊號流的文字鏈呈現。若你習慣先看圖再理解，這裡要換一種讀法：先讀表格的每一列在說什麼，再讀判讀句。</p>
+<section class="chapter-list">
+<a class="chapter-card" href="00-數位世界觀.html"><h2><span class="number">00</span> 數位世界觀</h2><p>0 與 1 是一個電壓區間的約定，中間那條禁區沒有人負責。</p></a>
+<a class="chapter-card" href="01-數值系統與編碼.html"><h2><span class="number">01</span> 數值系統與編碼</h2><p>同一個量有很多種位元寫法，每一種都是為了解決一個不同的問題。</p></a>
+<a class="chapter-card" href="02-二補數與有號數運算.html"><h2><span class="number">02</span> 二補數與有號數運算</h2><p>讓減法變成加法，同一組位元用無號與有號兩種讀法。</p></a>
+<a class="chapter-card" href="03-布林代數與邏輯閘.html"><h2><span class="number">03</span> 布林代數與邏輯閘</h2><p>七種運算、恆等式與狄摩根定律，以及為什麼 NAND 是通用閘。</p></a>
+<a class="chapter-card" href="04-標準型SOP與POS.html"><h2><span class="number">04</span> 標準型 SOP 與 POS</h2><p>任何真值表都能機械式地寫成兩種標準型，代價是閘數。</p></a>
+<a class="chapter-card" href="05-卡諾圖與不關心項.html"><h2><span class="number">05</span> 卡諾圖與不關心項</h2><p>把相鄰的最小項合併，不可能發生的輸入可以免費拿來化簡。</p></a>
+<a class="chapter-card" href="06-多工器解碼器與編碼器.html"><h2><span class="number">06</span> 多工器、解碼器與編碼器</h2><p>用選擇線查表，把整張真值表直接接成電路。</p></a>
+<a class="chapter-card" href="07-加法器比較器與ALU.html"><h2><span class="number">07</span> 加法器、比較器與 ALU</h2><p>進位鏈就是瓶頸，超前進位用面積換速度。</p></a>
+<a class="chapter-card" href="08-延遲功耗與險境.html"><h2><span class="number">08</span> 延遲、功耗與險境</h2><p>組合邏輯的物理代價：傳播延遲、扇出、動態功耗與突波。</p></a>
+<a class="chapter-card" href="09-閂鎖與正反器.html"><h2><span class="number">09</span> 閂鎖與正反器</h2><p>電路第一次有了記憶：位準敏感與邊緣敏感差在哪。</p></a>
+<a class="chapter-card" href="10-時脈與時序限制.html"><h2><span class="number">10</span> 時脈與時序限制</h2><p>建立時間決定跑多快，保持時間違規降頻救不了。</p></a>
+<a class="chapter-card" href="11-有限狀態機.html"><h2><span class="number">11</span> 有限狀態機</h2><p>把一句規格變成狀態表，Moore 與 Mealy 的取捨。</p></a>
+<a class="chapter-card" href="12-暫存器計數器與記憶體.html"><h2><span class="number">12</span> 暫存器、計數器與記憶體</h2><p>移位、計數與位元胞：SRAM 與 DRAM 的密度代價。</p></a>
+<a class="chapter-card" href="13-可程式邏輯與HDL.html"><h2><span class="number">13</span> 可程式邏輯與 HDL</h2><p>把前面全部丟給工具做：查找表、合成流程與併發思維。</p></a>
+<a class="chapter-card" href="名詞與概念字典.html"><h2><span class="number">查</span> 名詞與概念字典</h2><p>58 張卡片，繁中與英文對照、白話、機制與邊界。</p></a>
+<a class="chapter-card" href="自我檢核.html"><h2><span class="number">檢</span> 自我檢核</h2><p>每章 3 題共 42 題，即時對錯與解釋，不計分、可重做。</p></a>
+</section>
+<h2>先修與去向</h2>
+<p>這門課只假設你知道電壓是什麼、會看表格，不假設任何電路學、電子學或程式語言。若想知道一個閘裡的電晶體怎麼導通、雜訊裕度的轉移曲線怎麼來，那是元件面的前置，見<a href="../電子學-互動課程/index.html">電子學互動課</a>；若連電壓、電流與電容的基本關係都想補，見<a href="../電路學-互動課程/index.html">電路學互動課</a>。學完之後把這些層疊成一台真正的電腦，見<a href="../../../專題/計算機組織/互動課程/index.html">計算機組織互動課</a>。</p>
+<h2>來源</h2>
+<ul>
+<li>10-邏輯設計.md</li>
+<li>中英名詞對照表-2.md</li>
+</ul>
+<h2>用語說明</h2>
+<p>本課一律用台灣標準用語：正反器、閂鎖、多工器、解多工器、解碼器、時脈、突波、保持時間、暫存器、查找表。其他書上可能看到的另一套譯法，本課正文完全不用，只在字典頁對應卡片的「不要混淆」欄位列出一次，方便你查別的資料時對得上。布林符號也統一：反相寫 ¬A、乘積寫 A · B、和寫 A + B、互斥或寫 A ⊕ B，負號與減號一律用 −。</p>
+<nav class="pager" aria-label="章節導覽"><a href="自我檢核.html">← 自我檢核</a><a href="00-數位世界觀.html">開始：數位世界觀 →</a></nav>
+</main>
+<footer class="site-footer"><span>邏輯設計（零基礎互動課）</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

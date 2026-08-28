@@ -1,0 +1,71 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>15 數位濾波器與多速率｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">15・FIR 與 IIR 的取捨是一組可以算的數字</p>
+<h1>數位濾波器與多速率：增益、群延遲、運算量與預扭曲，全部算給你看</h1>
+<p class="lead">「FIR 相位線性、IIR 比較省」這句話大家都會背，但省多少、線性到什麼程度、代價在哪，很少人算過。這章把兩種濾波器擺在同一組數字上比，再補上實務一定會遇到的兩件事：雙線性變換的預扭曲，以及改變取樣率的抽取與內插。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="14-Z轉換與單位圓.html">14 Z 轉換與單位圓</a>的單位圓與極點、<a href="09-濾波器與群延遲.html">09 濾波器與群延遲</a>的濾波器規格與群延遲，以及<a href="12-取樣與混疊.html">12 取樣與混疊</a>的奈奎斯特條件。</p>
+
+<h2>痛點：兩個名字、三種設計法，卻沒有一個數字可以拿來比</h2>
+<p>翻開任何一本數位訊號處理，FIR 與 IIR 的比較表都長得差不多：一個線性相位、本質穩定但階數高，一個省運算、可以做得很陡但相位不線性。問題是這張表全是形容詞。省多少？陡多少？「相位不線性」到底會讓波形變成什麼樣子？沒有數字，選型就只能靠感覺。</p>
+<p>第二個卡點是雙線性變換。課本說先在 s 域設計一個類比原型再映射過來，然後補一句「記得預扭曲」，卻很少說清楚不預扭曲會差多少。第三個卡點是抽取：「每 M 個取一個」聽起來像刪除多餘資料，直覺上不會有損失，於是很多人省掉前面那顆低通，結果混疊悄悄混進來。這章把這三件事各自算成具體的數字。</p>
+
+<h2>白話直覺：濾波器是拿係數換三樣東西——陡度、延遲、運算時間</h2>
+<p>訊號從哪裡來？從 ADC 來，是一串以 f<sub>s</sub> 取樣的 x[n]。系統對它做了什麼？做一次加權求和：<strong>有限脈衝響應（finite impulse response, FIR）</strong>只加權過去 M 個輸入，<strong>無限脈衝響應（infinite impulse response, IIR）</strong>還把過去的輸出加回來。這件事在哪個域最好描述？頻率域看得到「哪些頻率被留下」，z 域看得到「零點與極點擺在哪」。換域的代價是什麼？時間上的代價就是延遲：把某些頻率壓掉，一定得先「等」到足夠的樣本進來。儀器量到什麼？掃頻可以量到 |H|，邏輯分析儀可以量到每個輸出樣本花掉的處理時間。</p>
+<p>FIR 的 h[n] 只有有限長，展開成 H(z) 之後分母是 z 的冪次，<strong>極點全部落在原點，所以它本質穩定</strong>，不管係數怎麼設都不會發散。係數左右對稱時它還有一項連 IIR 都做不到的性質：<strong>嚴格線性相位</strong>，群延遲恆為 (M − 1)/2 個樣本，與頻率無關。IIR 因為有回授，同樣的陡度只要少得多的係數，代價是極點可能跑出單位圓、相位非線性，而且第 14 章那個量化問題會找上門。多速率則是第三條路：與其用一顆很貴的濾波器在高取樣率下硬幹，不如<strong>抽取（decimation）</strong>先把取樣率降下來再處理，或用<strong>內插（interpolation）</strong>把它升上去。</p>
+<p class="note">來源：09-信號與系統-下 §15.1–§15.4、§16。</p>
+
+<h2>推導：從等比級數到預扭曲</h2>
+<p><strong>移動平均的頻率響應。</strong>M 點移動平均是 h[n] = 1/M（n = 0 到 M − 1），代進 DTFT 得 H(e<sup>jω</sup>) = (1/M)∑<sub>n=0</sub><sup>M−1</sup>e<sup>−jωn</sup>。這是公比 e<sup>−jω</sup> 的等比級數，和為 (1/M)·(1 − e<sup>−jωM</sup>)/(1 − e<sup>−jω</sup>)。分子分母各提出半角的指數因子後化簡，取模長得到 <strong>|H(e<sup>jω</sup>)| = |sin(Mω/2) / (M·sin(ω/2))|</strong>；ω = 0 時分子分母同時為 0，取極限是 1，程式裡必須走保護路徑，不能直接除。</p>
+<p><strong>群延遲為什麼是 (M − 1)/2。</strong>剛才提出的那個指數因子就是相位，形式是 −ω(M − 1)/2，是 ω 的一次式。群延遲定義為 τ<sub>g</sub> = −d∠H/dω，微分掉 ω 之後剩下常數 (M − 1)/2 個樣本。<strong>線性相位就是這樣來的，而且對任何對稱 FIR 都成立</strong>：所有頻率成分延後一樣多，波形只平移、不變形。</p>
+<p><strong>零點在哪。</strong>令分子 sin(Mω/2) = 0 且分母 sin(ω/2) ≠ 0，得 ω = 2πk/M，換算成實際頻率就是 <strong>f = k·f<sub>s</sub>/M</strong>。第一個零點在 f<sub>s</sub>/M，M 愈大零點愈靠近直流，濾得愈狠。</p>
+<p><strong>一階 IIR 的 −3 dB 頻率。</strong>y[n] = a·y[n−1] + (1 − a)x[n] 的轉移函數是 (1 − a)/(1 − a·z<sup>−1</sup>)，代 z = e<sup>jω</sup> 取模得 |H| = (1 − a)/√(1 − 2a·cos ω + a²)。令 |H|² = 1/2 解出 <strong>cos ω = (4a − 1 − a²)/(2a)</strong>。這個值可能超出 ±1，代表 −3 dB 點落在奈奎斯特頻率之外，也就是這個 a 幾乎不濾波；程式必須先檢查再呼叫 arccos。</p>
+<p><strong>雙線性變換與預扭曲。</strong>把類比原型搬到 z 域最常用的映射是 s = (2/T<sub>s</sub>)·(1 − z<sup>−1</sup>)/(1 + z<sup>−1</sup>)，它把整條虛軸壓進單位圓，所以<strong>不會混疊</strong>，但代價是頻率軸被扭曲：ω<sub>類比</sub> = (2/T<sub>s</sub>)tan(ω<sub>數位</sub>T<sub>s</sub>/2)。低頻時 tan 幾乎等於自變數，誤差可以忽略；接近奈奎斯特時 tan 發散，偏差極大。所以設計類比原型前要先把目標頻率「反扭」回去：<strong>f<sub>類比</sub> = (f<sub>s</sub>/π)·tan(πf<sub>數位</sub>/f<sub>s</sub>)</strong>，這一步就叫預扭曲（prewarping）。原型本身可以是巴特沃斯、柴比雪夫或貝索，那是第 09 章的事。</p>
+<p><strong>抽取為什麼一定要先濾波。</strong>每 M 個樣本取一個，等於用 f<sub>s</sub>/M 重新取樣一次，第 12 章的規則原封不動適用：訊號中高於 f<sub>s</sub>/(2M) 的成分會摺到新的頻帶裡。所以<strong>抽取之前必須先低通到 f<sub>s</sub>/(2M)</strong>。內插反過來：先插 L − 1 個 0 把取樣率拉到 L·f<sub>s</sub>，再低通把插 0 造成的鏡像濾掉。多相分解則是把濾波器係數按相位拆組，讓兩者只算「最後用得到的那些乘法」。實作架構上，直接型 I／II、轉置型、平行與格狀各有取捨，而<strong>高 Q 的設計一定要拆成級聯二階節</strong>，理由就是第 14 章的極點量化。</p>
+
+<h2>數值實例：M = 8 點移動平均 FIR，f<sub>s</sub> = 8000 Hz，觀測 f = 500 Hz</h2>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>角頻率</td><td>ω = 2π × 500/8000</td><td><strong>0.392699 rad/樣本</strong></td></tr>
+<tr><td>增益</td><td>|H| = |sin(8ω/2)/(8·sin(ω/2))|</td><td><strong>0.640729（−3.866514 dB）</strong></td></tr>
+<tr><td>第一個零點</td><td>f = f<sub>s</sub>/M = 8000/8</td><td><strong>1000.000000 Hz</strong></td></tr>
+<tr><td>群延遲</td><td>(M − 1)/2 = 3.5 樣本</td><td><strong>4.375000 × 10<sup>−4</sup> s ＝ 437.500000 µs</strong></td></tr>
+<tr><td>直流增益</td><td>ω = 0</td><td><strong>1.000000（0.000000 dB）</strong></td></tr>
+<tr><td>運算量</td><td>M 次乘加 × f<sub>s</sub></td><td><strong>64000 次乘加／秒</strong></td></tr>
+</tbody></table>
+<p>邊界對照：f = <strong>1000 Hz</strong> → |H| = <strong>0.000000</strong>（<strong>剛好在零點上，完全被濾掉</strong>）；f = <strong>1500 Hz</strong> → <strong>0.224994（−12.956579 dB）</strong>（<strong>旁瓣，只剩兩成多</strong>）；f = <strong>250 Hz</strong> → <strong>0.901764（−0.898140 dB）</strong>。M = <strong>4</strong> → 第一個零點 <strong>2000.000000 Hz</strong>、500 Hz 處 |H| = <strong>0.906127（−0.856214 dB）</strong>、群延遲 <strong>1.5 樣本</strong>（<strong>短的濾波器比較不濾也比較不延遲</strong>）；M = <strong>32</strong> → 第一個零點 <strong>250.000000 Hz</strong>、500 Hz 處 |H| = <strong>0.000000</strong>、群延遲 <strong>15.5 樣本</strong>。</p>
+<p>換成<strong>一階 IIR</strong>（a = 0.8、f<sub>s</sub> = 8000）：f = 500 → |H| = <strong>0.497222（−6.068991 dB）</strong>、<strong>−3 dB 頻率 285.301514 Hz</strong>、每個輸出只要 <strong>2 次乘加（16000 次／秒，只有 FIR 的四分之一）</strong>；a = <strong>0.5</strong> → −3 dB 頻率 <strong>920.213825 Hz</strong>；a = <strong>0.95</strong> → <strong>65.322974 Hz</strong>（<strong>a 愈接近 1 濾得愈狠</strong>）；a = <strong>0.05</strong> → 餘弦值算出來是 <strong>−8.025000</strong>（超出 ±1）→ <strong>−3 dB 頻率高過奈奎斯特頻率，這個 a 幾乎不濾波</strong>。<strong>抽取</strong>：M = 8、f<sub>s</sub> = 8000 → 新取樣率 <strong>1000.000000 Hz</strong>、抽取前必須先低通到 <strong>500.000000 Hz</strong>；M = 4 → <strong>2000.000000 Hz</strong> 與 <strong>1000.000000 Hz</strong>。<strong>預扭曲</strong>（f<sub>s</sub> = 8000）：目標 1000 Hz → 類比原型要設在 <strong>1054.786175 Hz</strong>（<strong>差 5.478618 %</strong>）；目標 3000 Hz → <strong>6147.744354 Hz</strong>（<strong>差超過一倍</strong>）；目標 100 Hz → <strong>100.051436 Hz</strong>（<strong>低頻幾乎不用扭</strong>）。</p>
+<p>量級對照：f<sub>s</sub> = 8000 Hz 是電話品質，M = 8 的 FIR 每秒要做 64000 次乘加，一階 IIR 只要 16000 次；若把同一組設計搬到 CD 的 44.1 kHz，兩者分別變成 352800 與 88200 次。群延遲 437.5 µs 對語音無感，但用在需要即時回饋的控制迴路裡就是不能忽略的相位落後。</p>
+
+<section class="workspace"><h2>自由實驗：三種模式，同一組數字</h2>
+<p>同一串以 f<sub>s</sub> 取樣的訊號，可以送進 M 點移動平均 FIR、一階遞迴 IIR，或先做 M 倍抽取。切換模式並拉動滑桿，比較同一個觀測頻率 f 上的增益、群延遲、−3 dB 位置與每秒運算量，以及抽取後新的取樣率與抗混疊截止頻率。</p>
+<div class="controls">
+<label for="dgf-mode">模式<select id="dgf-mode"><option value="fir">FIR：M 點移動平均</option><option value="iir">IIR：一階遞迴</option><option value="decim">多速率：抽取與內插</option></select></label>
+<label for="dgf-m">FIR 點數 M，或抽取倍率 M（IIR 模式不用）<input id="dgf-m" type="range" min="2" max="32" step="1" value="8"></label>
+<label for="dgf-a">IIR 係數 a（只有 IIR 模式用）<input id="dgf-a" type="range" min="0.05" max="0.95" step="0.05" value="0.8"></label>
+<label for="dgf-f">觀測頻率 f（Hz）<input id="dgf-f" type="range" min="0" max="4000" step="50" value="500"></label>
+<label for="dgf-fs">取樣頻率 f<sub>s</sub>（Hz）<input id="dgf-fs" type="range" min="1000" max="48000" step="1000" value="8000"></label>
+</div>
+<div id="digfilter-output" class="output" aria-live="polite">這個模式只用到 M、f、f<sub>s</sub> 三個滑桿，IIR 係數 a 不影響結果。ω = 0.392699 rad/樣本，|H| = 0.640729（−3.866514 dB），第一個零點 1000.000000 Hz，運算量 64000 次乘加／秒。群延遲恆為 (M − 1)/2 ＝ 3.500000 個樣本（4.375000 × 10<sup>−4</sup> s ＝ 437.500000 µs），<strong>與頻率無關</strong>——這就是線性相位，所有頻率成分延後一樣多，波形只平移不變形。零點在 f = k·f<sub>s</sub>/M，把 f 滑到 1000 Hz 會看到增益掉到 0，因為那裡正好是第一個零點。<strong>要相位不失真、要保證穩定選 FIR；要省運算、要陡峭的邊選 IIR。</strong>切到 IIR 會看到只要 2 次乘加，切到多速率會看到抽取前必須先低通到新的奈奎斯特頻率；把 f 推過 f<sub>s</sub>/2 則要先回第 12 章處理混疊。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>FIR 的「有限」講的是 h[n] 的長度有限，不是「輸出有限」。任何 BIBO 穩定的系統輸出都有限，那是另一回事。</li>
+<li>線性相位是<strong>對稱 FIR</strong> 的特權，一般 IIR 做不到。離線時可以用前後各濾一次的方式湊出零相位，代價是不能即時，而且運算量加倍。</li>
+<li>移動平均是低通，但<strong>不是好低通</strong>。它的旁瓣只低 −13 dB，跟矩形窗一樣——因為它就是矩形窗，第 13 章那張表的第一列。要陡峭的過渡帶得換設計法。</li>
+<li>抽取不是「把資料丟掉」這麼單純。<strong>丟之前沒濾波，丟掉的資訊會變成混疊污染留下來的部分</strong>，而且第 12 章說過混疊不可逆，事後補濾也救不回來。</li>
+<li>預扭曲修正的只有<strong>一個</strong>指定頻率點。整條頻率軸仍然是扭曲的，所以雙線性設計出來的濾波器在其他頻率上與類比原型不會完全一致。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>在 DSP 板或任何能跑迴圈的環境把這兩種濾波器實作出來，掃頻量 |H|：輸入一系列已知振幅的弦波，記錄穩態輸出振幅比，就能畫出實測的頻率響應，並直接驗證移動平均的零點是不是落在 f<sub>s</sub>/M 的整數倍上。用邏輯分析儀在每次輸出前後翻轉一支腳位，量到的脈波寬度就是每個樣本的處理時間，M 次乘加與 2 次乘加的差別會直接顯示在畫面上。相位那一項可以用方波驗證：把方波打進去看輸出的轉角，FIR 的前緣與後緣對稱地圓，IIR 則前後不一樣——<strong>那個不對稱就是相位非線性的時域證據</strong>。</p>
+<p><strong>能證明什麼</strong>：實作出來的濾波器實際的頻率響應、群延遲、零點位置，以及每個樣本真正花掉的運算時間。</p>
+<p><strong>不能證明什麼</strong>：定點實作後「係數量化過的極點究竟在哪」——那要靠專門的量化分析，掃頻只看得到結果、看不到位置。也證明不了「這個設計是最省的」：要宣稱最省，得跟 Parks–McClellan（Remez 演算法，最小最大誤差）的理論下限比較，而那已經超出本課範圍。</p>
+
+<h2>連到哪門課</h2>
+<p>類比濾波器的規格、階數與四個設計家族見本課<a href="09-濾波器與群延遲.html">09 濾波器與群延遲</a>與<a href="../電路學-互動課程/12-一階濾波器與頻率響應.html">電路學的一階濾波器與頻率響應</a>；雙線性變換用到的拉氏原型見<a href="../../../共通基礎/數學/互動課程/08-拉氏轉換.html">工程數學先修的拉氏轉換</a>。真實裝置這一側，耳機的主動降噪、量測儀器的數位抗混疊前級、軟體無線電的降頻鏈，用的都是本章這幾個數字。<strong>往後</strong>：Parks–McClellan 的演算法細節、定點量化誤差與極限循環、多相分解的實作、濾波器組與小波、子帶編碼（JPEG、MP3）全部留給數位訊號處理專科。本課到此收線——從「訊號是一個函數」開始，到現在你能拿係數算出增益、延遲與運算量，下一步是把它寫成程式跑起來。</p>
+<nav class="pager" aria-label="章節導覽"><a href="14-Z轉換與單位圓.html">← 上一頁：Z 轉換與單位圓</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>15 數位濾波器與多速率</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

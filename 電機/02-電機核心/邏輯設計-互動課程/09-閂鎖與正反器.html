@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 閂鎖與正反器｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・輸出從只看現在變成還看過去</p>
+<h1>閂鎖與正反器：兩個閘首尾相接，就撐出一個位元的記憶</h1>
+<p class="lead">前面八章的電路，輸出永遠只是當下輸入的函數。這章把輸出接回輸入，電路就開始記得過去；位準觸發與邊緣觸發差在哪，決定了往後所有同步設計的方法論。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-布林代數與邏輯閘.html">03 布林代數與邏輯閘</a>的 NOR 與反相器，以及<a href="08-延遲功耗與險境.html">08 延遲、功耗與險境</a>的傳播延遲。</p>
+
+<h2>痛點：閘只會看現在，那電腦怎麼記住東西</h2>
+<p>「組合邏輯我懂了：給一組輸入，閘就算出一組輸出。可是按一下開關燈就一直亮著，計數器按一下就從 3 變成 4，這些都要記得剛剛發生過什麼。只會看現在的閘，怎麼做得出記得過去的東西？」</p>
+<p>前面每個電路都能用一張真值表寫完，因為輸出是輸入的函數。一旦要記住東西，同一組輸入就可能對應兩種輸出，差別在於「上一刻是什麼」。跨過去只需做一件電路上很小、觀念上很大的事：把輸出接回輸入。接著第二個問題就來了：「記一次」是哪一瞬間？這就是位準觸發與邊緣觸發的分野。</p>
+
+<h2>白話直覺：自己撐住自己，就是一個位元的記憶</h2>
+<p>可以暫時把交叉耦合（cross-coupled）想成兩個人互相扶著才站得住；比喻到此為止。精確的說法是：每個閘的輸出同時是另一個閘的輸入，兩張真值表必須同時被滿足，整條迴路只剩少數幾組自洽的解，這些解就叫穩定狀態。</p>
+<p>照因果鏈走一遍。輸入從哪來：S 與 R 兩條控制線，加上迴路繞回來的舊值。這一層做了什麼決定：S、R 都是 0 時不做決定，讓迴路維持既有的自洽解；其中一條拉高就打破自洽，把迴路推到指定的那一邊。花掉多少：一個 SR 閂鎖只要兩個 NOR 閘、約 8 顆電晶體，狀態翻過去要等一個閘延遲把新值繞回來（本課取單閘 1.0 ns），一顆 D 正反器從邊緣到輸出穩定約 t<sub>cq</sub> = 0.40 ns。邊界在哪：S 與 R 同時為 1 時迴路被兩邊壓住，穩定狀態的定義失效，這就是禁止組合。儀器量到什麼：示波器會看到輸入回到保持之後輸出並不退回去，那個「不退回去」就是記憶。</p>
+<p>閂鎖（latch）與正反器（flip-flop）的差別只有一句話：閂鎖看致能的位準，致能為 1 的整段時間輸入都穿得過去；正反器看時脈的邊緣，只在翻越的那一瞬間取樣一次。位準觸發（level-sensitive）的元件小而快，但透通那段時間裡輸入的抖動與突波都會跟著跑出去；邊緣觸發（edge-triggered）多花一級電路，換到「一個週期只看一次」這個可被工具分析的性質。現代同步設計幾乎只用 D 正反器，因為它的時序模型最單純。</p>
+<p class="note">來源：10-邏輯設計 §5.1。</p>
+
+<h2>推導：從交叉耦合推到四個特性方程</h2>
+<p><strong>（a）交叉耦合為什麼會記住。</strong>兩個反相閘首尾相接：假設 Q = 1，送進另一個閘反相成 ¬Q = 0；¬Q = 0 再繞回來反相成 Q = 1，剛好回到出發點。迴路自己撐住自己，不需外力就能停在這裡；同樣的推法對 Q = 0 也成立。兩個自洽點就是兩個穩定狀態，剛好記住 1 個位元。</p>
+<p><strong>（b）SR 閂鎖與禁止組合。</strong>把兩個反相閘換成 NOR 閘，多出來的那隻腳就是控制線。NOR 的性質是任一輸入為 1 則輸出為 0：S = 1 把 ¬Q 壓成 0、Q 撐成 1，這是設定；R = 1 對稱地清除；S = R = 0 時兩個 NOR 退化成反相閘，回到（a）的保持。特性方程 <code>Q<sup>+</sup> = S + ¬R · Q</code>，限制 <code>S · R = 0</code>。S = R = 1 時兩個輸出被同時壓成 0，Q 與 ¬Q 不再互補；更嚴重的是兩者同時放開的瞬間，停在哪一邊取決於路徑的延遲差，這是真正的競賽（race）。</p>
+<p><strong>（c）主從式為什麼能做到邊緣觸發。</strong>D 閂鎖是 SR 閂鎖前面加一個反相器（S = D、R = ¬D，不可能同時為 1）再加致能 EN：EN = 1 時輸出跟著輸入跑，叫透通（transparent），EN = 0 時鎖住。主從式（master-slave）D 正反器把兩個致能相反的 D 閂鎖串起來：時脈為 0 時主閂鎖透通、從閂鎖鎖住；時脈升起的瞬間主閂鎖鎖住、把那一刻的 D 凍結，從閂鎖同時打開送出去。任何時刻都至少有一個閂鎖鎖著，資料不可能一路穿過兩級，這就是邊緣觸發的機制，代價是多一級延遲，即 t<sub>cq</sub> 的來源。</p>
+<p><strong>（d）四個特性方程。</strong>D：<code>Q<sup>+</sup> = D</code>；T：<code>Q<sup>+</sup> = T ⊕ Q</code>；JK：<code>Q<sup>+</sup> = J · ¬Q + ¬K · Q</code>；SR：<code>Q<sup>+</sup> = S + ¬R · Q</code>（限制 <code>S · R = 0</code>）。Q 是目前狀態、Q<sup>+</sup> 是這次取樣之後的狀態，都是邏輯值（無單位）；D、T、J、K、S、R 是同一時刻的輸入。本課一律假設同類閘的傳播延遲相同、不隨輸入組合變化，真實電路不是這樣：同一顆晶片上的閘延遲會隨製程、電壓與溫度改變。</p>
+<p><strong>（e）JK 為什麼能翻轉。</strong>把 J = 1、K = 1 代進去：J = 1 讓第一項變成 ¬Q，K = 1 讓 ¬K = 0 而使第二項消失，於是 <code>Q<sup>+</sup> = ¬Q</code>。JK 正好把 SR 那個沒用的禁止組合換成有用的功能：00 保持、01 清除、10 設定、11 翻轉。T 正反器是把 J 與 K 綁在一起的特例，計數器的基本元件。</p>
+
+<h2>數值實例：同一組 8 拍輸入餵給五種元件</h2>
+<p>取 8 拍輸入，第一輸入 A = 0, 1, 1, 0, 1, 0, 0, 1，第二輸入 B = 0, 0, 1, 1, 0, 0, 1, 1，初始 Q = 0。A 依元件當作 D／T／J／S，B 當作 EN／K／R；D 與 T 用不到 B。</p>
+<table><thead><tr><th>拍</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr></thead><tbody>
+<tr><th>第一輸入 A</th><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+<tr><th>第二輸入 B</th><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+<tr><th>D 正反器</th><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+<tr><th>T 正反器</th><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+<tr><th>JK 正反器</th><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+<tr><th>D 閂鎖</th><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+<tr><th>SR 閂鎖</th><td>0</td><td>1</td><td>1（禁止）</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0（禁止）</td></tr>
+</tbody></table>
+<p><strong>T 正反器逐拍。</strong>第 0 拍 T = 0 保持 0；第 1 拍 T = 1 由 0 翻成 1；第 2 拍 T = 1 翻回 0；第 3 拍 T = 0 保持 0；第 4 拍 T = 1 翻成 1；第 5、6 拍 T = 0 一直保持 1；第 7 拍 T = 1 翻回 0。整列等於初始值加上前面 1 的個數的奇偶，這就是計數的雛形。</p>
+<p><strong>JK 正反器逐拍。</strong>第 0 拍 00 保持 0；第 1 拍 J = 1、K = 0 設定成 1；第 2 拍 J = K = 1 翻轉，由 1 變 0；第 3 拍 J = 0、K = 1 清除，仍是 0；第 4 拍設定成 1；第 5 拍 00 保持 1；第 6 拍 J = 0、K = 1 清除成 0；第 7 拍 J = K = 1 翻轉，由 0 變 1。第 2 拍與第 7 拍同樣是 11，一個往下一個往上，因為結果取決於上一拍的 Q，這就是有狀態的定義。</p>
+<p><strong>兩種閂鎖逐拍。</strong>D 閂鎖在 EN = 1 的第 2、3 拍透通，Q 直接等於 D；EN = 0 的第 4、5 拍鎖住上一次的 0。SR 閂鎖在第 2 與第 7 拍碰上 S = R = 1，這是禁止組合，本課約定保持前一個值，真實電路的行為不保證。</p>
+<p><strong>邊界對照與量級。</strong>把初始 Q 改成 1，T 正反器整列反相成 1, 0, 1, 1, 0, 0, 0, 1，D 正反器完全不變——這就是有記憶與沒記憶的分界：D 正反器只看最新的輸入，T 正反器看的是初始值加上翻轉次數的奇偶。量級上單閘延遲約 1.0 ns、正反器 t<sub>cq</sub> 約 0.40 ns。</p>
+
+<section class="workspace"><h2>自由實驗：五種元件吃同一組 8 拍輸入</h2>
+<p>下面兩排各 8 個核取方塊就是 8 拍的第一輸入與第二輸入，勾起來代表這一拍是 1。上方選單決定這些位元被當成哪一種元件的輸入：D 與 T 只用第一排，JK 用 J 與 K 兩排，D 閂鎖用 D 與 EN，SR 閂鎖用 S 與 R。改完之後看 Q 的 8 拍序列怎麼變、每一拍為什麼是那個值。</p>
+<div class="controls">
+<label for="ff-type">元件<select id="ff-type"><option value="dff">D 正反器（正緣觸發）</option><option value="tff">T 正反器（正緣觸發）</option><option value="jkff">JK 正反器（正緣觸發）</option><option value="dlatch">D 閂鎖（位準觸發）</option><option value="srlatch">SR 閂鎖（位準觸發）</option></select></label>
+<label for="ff-q0"><input id="ff-q0" type="checkbox">初始狀態 Q = 1</label>
+<table><thead><tr><th>訊號</th><th>第 0 拍</th><th>第 1 拍</th><th>第 2 拍</th><th>第 3 拍</th><th>第 4 拍</th><th>第 5 拍</th><th>第 6 拍</th><th>第 7 拍</th></tr></thead><tbody>
+<tr><th>第一輸入 D</th><td><label for="ff-a0"><input id="ff-a0" type="checkbox">第 0 拍</label></td><td><label for="ff-a1"><input id="ff-a1" type="checkbox" checked>第 1 拍</label></td><td><label for="ff-a2"><input id="ff-a2" type="checkbox" checked>第 2 拍</label></td><td><label for="ff-a3"><input id="ff-a3" type="checkbox">第 3 拍</label></td><td><label for="ff-a4"><input id="ff-a4" type="checkbox" checked>第 4 拍</label></td><td><label for="ff-a5"><input id="ff-a5" type="checkbox">第 5 拍</label></td><td><label for="ff-a6"><input id="ff-a6" type="checkbox">第 6 拍</label></td><td><label for="ff-a7"><input id="ff-a7" type="checkbox" checked>第 7 拍</label></td></tr>
+<tr><th>第二輸入 −</th><td><label for="ff-b0"><input id="ff-b0" type="checkbox">第 0 拍</label></td><td><label for="ff-b1"><input id="ff-b1" type="checkbox">第 1 拍</label></td><td><label for="ff-b2"><input id="ff-b2" type="checkbox" checked>第 2 拍</label></td><td><label for="ff-b3"><input id="ff-b3" type="checkbox" checked>第 3 拍</label></td><td><label for="ff-b4"><input id="ff-b4" type="checkbox">第 4 拍</label></td><td><label for="ff-b5"><input id="ff-b5" type="checkbox">第 5 拍</label></td><td><label for="ff-b6"><input id="ff-b6" type="checkbox" checked>第 6 拍</label></td><td><label for="ff-b7"><input id="ff-b7" type="checkbox" checked>第 7 拍</label></td></tr>
+</tbody></table>
+</div>
+<div id="ffwave-output" class="output" aria-live="polite">目前是 <strong>D 正反器（正緣觸發）</strong>，這個模式只用到第一排，第二排完全不影響結果。第一輸入 D ＝ 0, 1, 1, 0, 1, 0, 0, 1；初始 Q = 0；Q ＝ <strong>0, 1, 1, 0, 1, 0, 0, 1</strong>。逐拍：第 0 拍 D = 0 → Q = 0；第 1 拍 D = 1 → Q = 1；第 2 拍 D = 1 → Q = 1；第 3 拍 D = 0 → Q = 0；第 4 拍 D = 1 → Q = 1；第 5 拍 D = 0 → Q = 0；第 6 拍 D = 0 → Q = 0；第 7 拍 D = 1 → Q = 1。<strong>Q 完全複製第一排——D 正反器不做任何運算，它只把資料延後到時脈邊緣。</strong>正反器只在時脈邊緣看一次資料，所以邊緣之間發生什麼都不重要，第 08 章的突波就是這樣被同步設計吃掉的。邊界提醒：切成 T 並勾起初始狀態，整列會反相；切成 D 閂鎖而第二排全不勾，EN 從頭到尾是 0，Q 恆為初始值；切成 SR 閂鎖並讓同一拍兩排都勾，就會踩到禁止組合。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>閂鎖不是「比較差的正反器」。它比較小、比較快，缺點只在於難以用標準時序分析工具處理，所以同步設計刻意不用它。</li>
+<li>「邊緣觸發」不是「反應比較快」。它反而多了一級電路與 t<sub>cq</sub> 這段延遲，換到的東西叫時序可分析，不是速度。</li>
+<li>JK 的 11 是翻轉，不是禁止；禁止組合是 SR 的 11。</li>
+<li>D 正反器讓資料延後一拍不是缺點。正因為輸出要等下一個邊緣才更新，中間整個週期都留給組合邏輯慢慢算。</li></ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>拿一顆 7474（雙 D 正反器）與一顆 7475（D 閂鎖），把同一個會抖動的訊號源接到兩者的 D 腳，7474 的時脈接乾淨方波、7475 的 EN 接高位準，用雙通道示波器同時看 D 與 Q。</p>
+<p><strong>量到什麼（能證明）。</strong>7474 的 Q 在週期中間完全不動，只在時脈上升邊緣改變；同一個 D 接到 7475 時 Q 會跟著亂跳。把游標放在邊緣與 Q 的變化點之間可以量出 t<sub>cq</sub> 的實際大小，這證明邊緣觸發與位準觸發的行為差異是真的。</p>
+<p><strong>不能證明什麼。</strong>量不出正反器內部真的是主從結構，同樣的外部行為可以用別種實作做出來。也證明不了 Q 永遠不會出錯：若 D 剛好在邊緣附近變化，輸出可能停在中間電位一段不確定的時間，這叫亞穩態（metastability），是機率事件，量一萬次都正常不代表下一次不會出事。</p>
+
+<h2>連到哪門課</h2>
+<p>正反器一排接起來就是暫存器與記憶體，見本課<a href="12-暫存器計數器與記憶體.html">第 12 章</a>；接上時脈之後最快能跑多少是下一章的主題。裡面那兩個 NOR 閘由 MOSFET 開關組成，見<a href="../電子學-互動課程/08-MOSFET原理與三個工作區.html">電子學的 MOSFET 原理</a>。暫存器、程式計數器這些時序邏輯在處理器裡的位置見<a href="../../../專題/計算機組織/互動課程/03-時序邏輯與記憶.html">計算機組織的時序邏輯與記憶</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="08-延遲功耗與險境.html">← 上一頁：延遲、功耗與險境</a><a href="10-時脈與時序限制.html">下一頁：時脈與時序限制 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 閂鎖與正反器</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

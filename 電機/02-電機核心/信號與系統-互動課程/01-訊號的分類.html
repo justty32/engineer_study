@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 訊號的分類｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">01・能量或功率，決定你之後該用轉換還是用級數</p>
+<h1>訊號的分類：拿到一個訊號，算得出它屬於哪一類</h1>
+<p class="lead">五組分類不是拿來背的名詞表，而是五個可以動手算的判斷。其中最有用的一組是能量訊號與功率訊號，因為它直接決定第 05、06 章要用傅立葉級數還是傅立葉轉換。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-訊號與系統世界觀.html">00 訊號與系統世界觀</a>的「訊號是一個函數」，以及<a href="../../../共通基礎/數學/互動課程/02-積分.html">工程數學先修的積分＝累積面積</a>。</p>
+
+<h2>痛點：分類背得出來，卻不知道分了要幹嘛</h2>
+<p>翻開任何一本課本，第一章都是五組對立的名詞：連續／離散、類比／數位、週期／非週期、能量／功率、奇／偶。名詞本身沒有難度，難的是沒有人說「分完之後會影響什麼」。於是讀者記住了「弦波是功率訊號」，卻答不出為什麼要問這件事，也答不出拿到一段陌生的波形時，該用哪個式子去驗。</p>
+<p>先講用途。能量與功率這一組是分水嶺：<strong>能量有限的訊號用傅立葉轉換去看它的連續頻譜，功率有限而能量無限的週期訊號用傅立葉級數去看它的離散諧波</strong>。兩條路的數學工具不同、畫出來的頻譜長相也不同（一條連續曲線 vs 一排離散的線）。走錯路的下場是積分發散，算不出東西來。至於奇偶分解，它的用途是把積分砍掉一半：偶訊號的傅立葉係數只剩餘弦項，奇訊號只剩正弦項。連續／離散那一組則決定你寫的是積分還是求和。</p>
+<p class="note">來源：09-信號與系統-上 §1。</p>
+
+<h2>白話直覺：訊號帶著多少東西，以及那些東西夠不夠加總</h2>
+<p><strong>訊號從哪來</strong>：一段麥克風錄到的電壓、一次雷擊在天線上感應的脈衝、一台馬達持續運轉的電流，都是 x(t)。<strong>系統對它做了什麼</strong>：先別管系統，這章要問的是這個函數自己的性質——它會不會結束、會不會重複、它「總共帶了多少」。<strong>這件事在哪個域最好描述</strong>：時間域就夠了，因為能量與功率都是時間軸上的積分；但算出來的結果會決定你能不能換到頻率域，以及換過去之後看到的是連續譜還是離散譜。</p>
+<p><strong>換域的代價是什麼</strong>：如果一個訊號的能量無限（例如永不停止的弦波），硬要對它做傅立葉轉換，數學上會得到無限高的 δ 函數，那不是可以拿來乘的普通函數。改用傅立葉級數，代價則是你必須假設它<strong>永遠</strong>週期下去，而真實訊號從來不是。<strong>儀器量到什麼</strong>：示波器的 RMS 讀值就是在有限的量測窗內算 √P，它給你的永遠是「這段窗內的平均」，不是數學意義上那個 T → ∞ 的極限。</p>
+<p>可以暫時把能量訊號想成一顆會用完的電池、把功率訊號想成一條持續供電的電源；比喻到此為止。精確定義是：<strong>能量訊號（energy signal）</strong>滿足 <code>E = ∫<sub>−∞</sub><sup>∞</sup> |x(t)|² dt &lt; ∞</code> 且平均功率 P = 0；<strong>功率訊號（power signal）</strong>滿足 <code>P = lim<sub>T→∞</sub> (1/T)∫<sub>−T/2</sub><sup>T/2</sup> |x(t)|² dt</code> 有限而 E = ∞。所有週期訊號都是功率訊號，所有有限長且有界的訊號都是能量訊號；兩者都不是的訊號也存在，例如斜坡 t·u(t)，它的能量與功率都發散。</p>
+
+<h2>推導：能量、功率與奇偶分解是怎麼列出來的</h2>
+<p><strong>（a）為什麼要分兩種。</strong><code>∫|x(t)|² dt</code> 的物理意義是「把 x 當成電壓加在 1 Ω 電阻上，總共放掉多少焦耳」——瞬時功率是 v²/R，R = 1 時就是 x²，對時間積分就是能量。對一個永遠持續的弦波，這個積分必然發散，問「總共多少」沒有意義。所以只好換一個問法：<strong>平均每秒放掉多少</strong>，也就是把能量除以時間長度再取極限，這就是平均功率 P。單位上，E 是 V²·s、P 是 V²（在 1 Ω 的約定下才等於 J 與 W）。</p>
+<p><strong>（b）衰減指數的能量。</strong>取 x(t) = A·e<sup>−t/τ</sup>·u(t)，A 是振幅（V）、τ 是時間常數（s），u(t) 讓它在 t &lt; 0 時為 0。代入定義：<code>E = ∫<sub>0</sub><sup>∞</sup> A²e<sup>−2t/τ</sup> dt</code>。把指數積出來，∫e<sup>−at</sup>dt = −(1/a)e<sup>−at</sup>，這裡 a = 2/τ，代入上下限得 <code>E = A²·(τ/2)·[1 − 0] = A²τ/2</code>。有限，所以是能量訊號；能量有限的訊號在無限長的時間上取平均，分子有限、分母趨於無限，P 必為 0。</p>
+<p><strong>（c）弦波的功率。</strong>取 x(t) = A·cos(2πft)，週期 T = 1/f。<code>P = (1/T)∫<sub>0</sub><sup>T</sup> A²cos²(2πft) dt</code>。關鍵一步是半角公式 cos²θ = (1 + cos2θ)/2，於是被積函數變成 A²/2 + (A²/2)cos(4πft)。第二項在一個完整週期上的積分是 0（正負面積相消），只剩第一項：<code>P = (1/T)·(A²/2)·T = A²/2</code>。均方根值（root mean square, rms）定義為 <code>x<sub>rms</sub> = √P</code>，所以弦波的 <code>x<sub>rms</sub> = A/√2 = 0.707107A</code>。這就是市電「110 V 是 rms、峰值 155.563492 V」的來歷，兩者差的正是 √2。</p>
+<p><strong>（d）奇偶分解為什麼唯一。</strong>假設 x(t) = x<sub>e</sub>(t) + x<sub>o</sub>(t)，其中偶部滿足 x<sub>e</sub>(−t) = x<sub>e</sub>(t)、奇部滿足 x<sub>o</sub>(−t) = −x<sub>o</sub>(t)。把 t 換成 −t 得第二式 x(−t) = x<sub>e</sub>(t) − x<sub>o</sub>(t)。兩式相加消掉奇部，得 <code>x<sub>e</sub>(t) = [x(t) + x(−t)]/2</code>；相減消掉偶部，得 <code>x<sub>o</sub>(t) = [x(t) − x(−t)]/2</code>。聯立方程只有這一組解，所以分解存在且唯一，對任何訊號都成立。</p>
+
+<h2>數值實例：衰減指數 A = 2 V、τ = 0.5 s</h2>
+<p>取 x(t) = A·e<sup>−t/τ</sup>·u(t)，A = 2 V、τ = 0.5 s。這組數字是本章互動元件的預設值。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>能量</td><td>E = A²τ/2 = 4 × 0.5 / 2</td><td><strong>1.000000 V²·s</strong></td></tr>
+<tr><td>平均功率</td><td>P（能量有限 ⇒ 平均功率為 0）</td><td><strong>0.000000</strong></td></tr>
+<tr><td>分類</td><td>E 有限、P = 0</td><td><strong>能量訊號</strong></td></tr>
+<tr><td>奇偶</td><td>x(−t) ≠ ±x(t)（t &lt; 0 恆為 0）</td><td><strong>非奇非偶</strong></td></tr>
+</tbody></table>
+<p>邊界對照。弦波 A = 1 V → <strong>E = ∞、P = 0.500000 V²、rms = 0.707107 V、功率訊號、偶函數</strong>（cos 是偶的）；A = 3 V → <strong>P = 4.500000 V²、rms = 2.121320 V</strong>。矩形脈衝（以 t = 0 為中心，高 A = 1、寬 T = 1 s）→ <strong>E = 1.000000 V²·s、能量訊號、偶函數</strong>；A = 2、T = 0.5 → <strong>E = 2.000000 V²·s</strong>。單位步階 A·u(t)、A = 1 → <strong>E = ∞、P = 0.500000 V²、功率訊號</strong>（只有一半的時間軸有值）。衰減指數 A = 0.5、τ = 0.1 → <strong>E = 0.012500 V²·s</strong>；A = 5、τ = 5 → <strong>E = 62.500000 V²·s</strong>。</p>
+<p>量級對照：市電標示的 110 V 指的是 rms，峰值是 110 × √2 ＝ <strong>155.563492 V</strong>。所以絕緣耐壓要照 155 V 設計而不是 110 V；同理，電池 3.7 V 是直流值，它的 rms 就等於它自己。</p>
+
+<section class="workspace"><h2>自由實驗：四種訊號的能量、功率與奇偶</h2>
+<p>選一種訊號當作 x(t)，再用滑桿調它的振幅與時間參數。四種訊號分成兩掛：衰減指數與矩形脈衝終究會消失，弦波與單位步階則永遠不停。觀察能量會不會發散、平均功率是不是 0，以及分類跟著怎麼變。</p>
+<div class="controls">
+<label for="cls-type">訊號種類<select id="cls-type"><option value="exp">衰減指數 A·exp(−t/tau)·u(t)</option><option value="sine">弦波 A·cos(2*pi*f*t)</option><option value="rect">矩形脈衝 高 A、寬 T、以 t=0 為中心</option><option value="step">單位步階 A·u(t)</option></select></label>
+<label for="cls-a">振幅 A（V）<input id="cls-a" type="range" min="0.5" max="5" step="0.1" value="2"></label>
+<label for="cls-tau">時間參數 τ 或脈衝寬 T（s，弦波與步階模式不用）<input id="cls-tau" type="range" min="0.1" max="5" step="0.1" value="0.5"></label>
+<label for="cls-f">弦波頻率 f（Hz，只有弦波模式用）<input id="cls-f" type="range" min="1" max="100" step="1" value="50"></label>
+</div>
+<div id="sigclass-output" class="output" aria-live="polite">這個模式只用到振幅 A 與時間參數 τ 兩個滑桿，弦波頻率不影響結果。能量 E = 1.000000 V²·s；平均功率 P = 0.000000 V²；rms 不適用；<strong>能量訊號</strong>：總能量有限，因為訊號終究會消失；能量有限的訊號平均功率一定是 0，所以問它的功率沒有意義。奇偶：t &lt; 0 恆為 0，所以<strong>非奇非偶</strong>。能量或功率有限與否，決定了下一步該用傅立葉轉換（能量訊號）還是傅立葉級數（週期功率訊號）——這是第 05、06 章分家的原因。量級對照：市電 110 V 指的是 rms，峰值是 110 × √2 ＝ 155.563492 V。把 A 調到 0.5、τ 調到 0.1，E 會掉到 0.012500——又矮又短，能量自然小。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>「類比 vs 數位」講的是<strong>值</strong>離不離散，「連續 vs 離散」講的是<strong>時間</strong>離不離散。四種組合都存在：取樣但還沒量化的訊號就是「離散時間、類比值」，這正是取樣保持電路輸出的東西。</li>
+<li>能量訊號的「能量」不是焦耳，它是 <code>∫|x(t)|² dt</code>，單位是 V²·s；只有在「x 是電壓、負載 1 Ω」的約定下才等於焦耳。看到 E 就講焦耳是偷換單位。</li>
+<li>功率訊號的 P 是<strong>時間平均功率</strong>，不是瞬時功率。弦波的瞬時功率一直在 0 到 A² 之間跳，平均下來才是 A²/2。</li>
+<li>週期訊號一定是功率訊號，但功率訊號不一定週期。白噪音、隨機資料流都有有限的平均功率卻毫無週期性，這一步的邏輯是單向的。</li>
+<li>能量有限與「振幅有限」不是同一件事。單位步階的振幅只有 1，能量卻是無限的；反之一個很高很窄的脈衝振幅很大，能量可以很小。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>示波器的 RMS 量測就是在算 √P：它在螢幕上那一段時間窗內把樣本平方、平均、開根號。真有效值（true RMS）電表對方波、三角波、脈衝這些非弦波也給正確的 rms；便宜的平均值整流型電表只是量整流後的平均值再乘一個對弦波成立的固定係數，遇到方波就會報錯，誤差可達一成以上。要量能量而非功率，做法是用示波器擷取整段波形，把樣本平方後乘取樣間隔累加起來。</p>
+<p><strong>能證明什麼</strong>：某段訊號在某個時間窗內的 rms、峰值、以及兩者相除得到的峰均比；也能證明兩個訊號誰帶的功率大。這些都是窗內的、有數字的事實。</p>
+<p><strong>不能證明什麼</strong>：量測窗永遠有限，所以證明不了訊號是不是<strong>真的</strong>週期——只能說「在這 10 ms 內看起來週期」。也證明不了能量是不是「無限」：無限是數學模型外推的性質，不是量到的。同理，P = 0 這個結論來自 T → ∞ 的極限，儀器上只會看到一個隨窗長變大而愈來愈小的數字。</p>
+
+<h2>連到哪門課</h2>
+<p>能量與功率的積分本體、以及「積分＝把小塊面積累積起來」的直覺見<a href="../../../共通基礎/數學/互動課程/02-積分.html">工程數學先修的積分</a>。rms 與峰值在交流電路裡怎麼用、相量為什麼把峰值除以 √2，見<a href="../電路學-互動課程/09-弦波與相量.html">電路學的弦波與相量</a>。</p>
+<p>真實世界裡，這一章的判斷天天在用：音訊工程師看的 LUFS 與峰值是同一組概念的加權版本，電源工程師關心的是電流的 rms（決定發熱）而不是峰值，通訊工程師關心的峰均比決定功率放大器要留多少餘裕。下一章把訊號拆成六個可以組裝的基本積木，並處理平移、反轉、縮放三種運算的順序陷阱。</p>
+<nav class="pager" aria-label="章節導覽"><a href="00-訊號與系統世界觀.html">← 上一頁：訊號與系統世界觀</a><a href="02-基本訊號與訊號運算.html">下一頁：基本訊號與訊號運算 →</a></nav>
+</main>
+<footer class="site-footer"><span>01 訊號的分類</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

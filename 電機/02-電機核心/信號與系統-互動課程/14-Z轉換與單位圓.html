@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>14 Z 轉換與單位圓｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">14・s 平面的無限長虛軸被捲成一個圓</p>
+<h1>Z 轉換與單位圓：看極點的半徑與角度就說得出穩定性、共振頻率與衰減速度</h1>
+<p class="lead">第 07 章用極點在左半平面或右半平面判斷連續系統穩不穩，離散世界把同一件事換成「在不在單位圓內」。這章把半徑 r 與角度 θ 翻譯成四件可驗算的事：穩定性、共振在幾 Hz、幾個樣本後衰減到三成七、差分方程長什麼樣。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="13-離散頻譜分析.html">13 離散頻譜分析</a>的離散頻譜與 2π 週期性、<a href="07-拉氏轉換與轉移函數.html">07 拉氏轉換與轉移函數</a>的極點與轉移函數，以及<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複數與極式</a>。</p>
+
+<h2>痛點：又一個轉換，而且這次多了一個叫「收斂域」的東西</h2>
+<p>學到這裡通常已累積三重疑問。第一重是「為什麼還要再學一個轉換」：傅立葉看得到頻譜，拉氏看得到極點，離散世界為什麼不能沿用，非得再記一套 z。第二重是那個指數的符號：定義式寫的是 z<sup>−n</sup>，負號長在指數上像刻意找麻煩，課本也很少解釋為什麼不是 z<sup>n</sup>。</p>
+<p>第三重最讓人卡住——收斂域。同一個 X(z) 的式子，配上不同的收斂域就對應到完全不同的 x[n]，一個穩定、一個不穩定。拉氏那邊也有，但習題幾乎都預設單邊與因果，多數人從沒真的用到它。這章把 z 的極式 r·exp(jθ) 拆成兩個滑桿，讓每個數字都對應到一句能驗證的話。</p>
+
+<h2>白話直覺：把離散頻率軸捲成一個圓，圓上是頻率，圓內圓外是生死</h2>
+<p>訊號從哪裡來？從第 12 章的取樣鏈來，是一串以 f<sub>s</sub> 取樣的樣本 x[n]。系統對它做了什麼？做的是一個差分方程：新輸出等於幾個舊輸出乘上係數再加輸入，用軟體語彙說就是一個帶狀態的迴圈。這件事在哪個域最好描述？在 z 域，整個迴圈塌縮成一個有理式 H(z)，極點位置就把「會收斂還是爆掉、會不會振盪、振多快」一次講完。換域的代價是什麼？時間資訊被壓平，z 域只看得出整體的衰減率與振盪率。儀器量到什麼？除錯輸出量得到 h[n] 這串數字、它的振盪週期與包絡衰減，但量不到「極點的理論值」。</p>
+<p><strong>Z 轉換（Z-transform）</strong>寫成 X(z) = ∑<sub>n=−∞</sub><sup>∞</sup> x[n]z<sup>−n</sup>，其中 z = r·exp(jω) 是複數，r 是半徑（無單位）、ω 是角度（單位是每個樣本的弧度）。可以暫時把 z 平面想成一張地圖，離圓心的距離代表「這個模態每過一個樣本被乘上多少」，角度代表「每過一個樣本轉多少相位」；比喻到此為止，精確的說法是 z<sup>n</sup> 這族序列是離散 LTI 系統的特徵函數，送進系統只會被乘上一個複數 H(z)。</p>
+<p><strong>單位圓（unit circle）|z| = 1 是 z 平面上最重要的一條線</strong>：只要單位圓落在收斂域內，把 z = e<sup>jω</sup> 代進 X(z)，得到的就是第 13 章的 DTFT。離散時間的整條頻率軸不是一條無限長的直線，而是這個圓的圓周；繞一圈就是 2π，也就是一個完整的 f<sub>s</sub>。<strong>收斂域（region of convergence, ROC）</strong>則是讓那個無窮級數真的收斂的 z 的集合，通常是 |z| &gt; r<sub>0</sub>（右側訊號）或 |z| &lt; r<sub>1</sub>（左側訊號）的環形區域。同一個 X(z) 配不同的收斂域，反轉換出來是不同的 x[n]——收斂域是答案的一半，不是附註。</p>
+<p class="note">來源：09-信號與系統-下 §13.1–§13.4。</p>
+
+<h2>推導：從延遲算子一路推到共振峰的幾何解釋</h2>
+<p><strong>為什麼指數是 z<sup>−n</sup> 而不是 z<sup>n</sup>。</strong>把定義式套在延遲一個樣本的序列 x[n − 1] 上：∑<sub>n</sub> x[n − 1]z<sup>−n</sup>，令 m = n − 1 得到 ∑<sub>m</sub> x[m]z<sup>−m−1</sup> = z<sup>−1</sup>X(z)。<strong>z<sup>−1</sup> 就是「延遲一個樣本」這個動作本身</strong>，不是「除以 z」的代數巧合，所以 y[n − 1] 直接寫成 z<sup>−1</sup>Y(z)，整條遞迴式立刻變成代數式。<strong>Z 轉換之於差分方程，就像拉氏之於微分方程</strong>：都把「有記憶的運算」換成「乘一個因子」。</p>
+<p><strong>s 平面怎麼捲成 z 平面。</strong>連續時間的模態是 e<sup>st</sup>，以 T<sub>s</sub> 為間隔取樣後第 n 個樣本是 [exp(sT<sub>s</sub>)]<sup>n</sup>；對照離散模態 z<sup>n</sup> 就得到 z = exp(sT<sub>s</sub>)。把 s = σ + jω 拆成大小與角度：|z| = exp(σT<sub>s</sub>)，所以 σ &lt; 0（左半平面）對應 |z| &lt; 1（單位圓內）、σ = 0（虛軸）對應 |z| = 1、σ &gt; 0（右半平面）對應 |z| &gt; 1。角度是 ∠z = ωT<sub>s</sub>，ω 每增加一個 f<sub>s</sub> 就多轉 2π 繞回原處。<strong>s 平面那條無限長的虛軸被捲成一個有限長的圓周，這就是離散頻譜為什麼是週期的幾何解釋</strong>。</p>
+<p><strong>轉移函數與共軛極點。</strong>離散系統的轉移函數是 H(z) = (∑<sub>m</sub> b<sub>m</sub>z<sup>−m</sup>) / (∑<sub>k</sub> a<sub>k</sub>z<sup>−k</sup>)，分母的根就是極點。係數是實數時複極點必成對共軛出現：p = r·exp(jθ) 與 p<sup>∗</sup> = r·exp(−jθ)。對 H(z) = 1/[(1 − pz<sup>−1</sup>)(1 − p<sup>∗</sup>z<sup>−1</sup>)] 做部分分式，得 h[n] = (p<sup>n+1</sup> − p<sup>∗n+1</sup>)/(p − p<sup>∗</sup>)，用尤拉公式化簡成 h[n] = r<sup>n</sup>·sin((n + 1)θ)/sin θ；θ = 0 或 180° 時 sin θ = 0，取極限得 r<sup>n</sup>(n + 1)cos(nθ)。<strong>不是 r<sup>n</sup>cos(θn)</strong>——那是兩個模態直接相加除以 2，對應的初始條件並不是 δ[n]；拿差分方程對 δ[n] 遞迴一遍就分得出來：h[2] 應該是 r² = 0.810000，cos 式卻給 0。<strong>r 只管包絡衰減、θ 只管振盪快慢</strong>：r &lt; 1 遞減、r = 1 永不衰減、r &gt; 1 指數成長，所以<strong>因果系統穩定的充要條件就是所有極點落在單位圓內</strong>。</p>
+<p><strong>差分方程的係數怎麼來。</strong>分母寫成兩個因式相乘：(1 − pz<sup>−1</sup>)(1 − p<sup>∗</sup>z<sup>−1</sup>)，交叉項是 −(p + p<sup>∗</sup>)z<sup>−1</sup> = −2r·cos θ·z<sup>−1</sup>，常數項是 p·p<sup>∗</sup>z<sup>−2</sup> = r²z<sup>−2</sup>，所以分母是 1 − 2r·cos θ·z<sup>−1</sup> + r²z<sup>−2</sup>。把 H(z) = Y(z)/X(z) 交叉相乘再換回時域，得到 <strong>y[n] = 2r·cos θ·y[n − 1] − r²·y[n − 2] + x[n]</strong>：兩個實數係數、兩個記憶格，就是一個共振器。</p>
+<p><strong>共振峰的幾何意義。</strong>把 z = e<sup>jω</sup> 代進 H(z)，取模長可以整理成實數式 |H(e<sup>jω</sup>)| = 1 / √((1 − 2r·cos(θ − ω) + r²)(1 − 2r·cos(θ + ω) + r²))。這兩個因式各是「單位圓上的觀測點到其中一個極點的距離平方」。<strong>分母是距離的乘積，距離愈近，|H| 愈大</strong>；ω 掃到 θ 時觀測點離極點最近，於是出現共振峰，而 r 愈接近 1 最短距離愈小，峰就愈高愈尖，品質因數 Q 愈高。共振頻率換算成 f<sub>peak</sub> = (θ/360°)·f<sub>s</sub>。</p>
+<p><strong>衰減常數。</strong>包絡 r<sup>n</sup> 掉到 1/e（36.8 %）時，取對數解 n·ln r = −1 得到 n<sub>τ</sub> = −1/ln r 個樣本，再除以 f<sub>s</sub> 就是秒。r = 0 不可以取對數，因為極點退化到原點，系統沒有記憶。反轉換有四條路：長除法、部分分式加查表（最常用）、圍道積分取留數（連回複變），以及把差分方程當迴圈跑。</p>
+
+<h2>數值實例：一對共軛極點 r = 0.9、θ = 45°、f<sub>s</sub> = 8000 Hz，觀測 n = 5</h2>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>脈衝響應</td><td>h[5] = 0.9<sup>5</sup>·sin(270°)/sin(45°) = 0.590490 × (−1.414214)</td><td><strong>−0.835079</strong></td></tr>
+<tr><td>穩定判定</td><td>r = 0.9 &lt; 1</td><td><strong>穩定（極點在單位圓內）</strong></td></tr>
+<tr><td>共振頻率</td><td>f<sub>peak</sub> = (45/360) × 8000</td><td><strong>1000.000000 Hz</strong></td></tr>
+<tr><td>衰減常數</td><td>n<sub>τ</sub> = −1/ln(0.9)</td><td><strong>9.491222 個樣本 ＝ 1.186403 ms</strong></td></tr>
+<tr><td>差分方程</td><td>y[n] = 2 × 0.9 × cos45°·y[n−1] − 0.81·y[n−2] + x[n]</td><td><strong>y[n] = 1.272792·y[n−1] − 0.810000·y[n−2] + x[n]</strong></td></tr>
+<tr><td>|H| 在共振點</td><td>ω = θ</td><td><strong>7.432941</strong></td></tr>
+<tr><td>|H| 在直流</td><td>ω = 0</td><td><strong>1.861477</strong></td></tr>
+<tr><td>|H| 在 f<sub>s</sub>/2</td><td>ω = π（4000 Hz）</td><td><strong>0.324381</strong></td></tr>
+<tr><td>峰／直流比</td><td>7.432941 / 1.861477</td><td><strong>3.993034 倍</strong></td></tr>
+</tbody></table>
+<p>邊界對照：r = <strong>0.99</strong> → |H| 峰值 <strong>71.065111</strong>、n<sub>τ</sub> = <strong>99.499162 個樣本</strong>（<strong>極點逼近單位圓，峰高了將近十倍、拖尾長了十倍</strong>）；h[5] = <strong>−1.344903</strong>。r = <strong>0.5</strong> → |H| 峰值只有 <strong>1.788854</strong>、n<sub>τ</sub> = <strong>1.442695</strong>（<strong>幾乎沒有共振</strong>）。r = <strong>1.0</strong> → <strong>邊界穩定</strong>，|H| 在共振點<strong>發散</strong>，h[5] = <strong>−1.414214</strong>（永不衰減）。r = <strong>1.05</strong> → <strong>不穩定</strong>，h[5] = <strong>−1.804935</strong>、h[20] = <strong>−2.653298</strong>（1.05<sup>20</sup> = <strong>2.653298</strong>，且 sin(21 × 45°)/sin 45° = −1）。θ = <strong>0°</strong>（實極點）→ |H| 在直流是 <strong>100.000000</strong>（＝1/(1 − r)²）、共振頻率 <strong>0.000000 Hz</strong>——<strong>這就是一個低通</strong>。θ = <strong>180°</strong> → 共振在 <strong>4000.000000 Hz</strong>、直流只有 <strong>0.277008</strong>——<strong>這是一個高通</strong>。θ = <strong>90°</strong> → 共振 <strong>2000.000000 Hz</strong>、|H| 峰值 <strong>5.263158</strong>、直流與 f<sub>s</sub>/2 都是 <strong>0.552486</strong>。</p>
+<p>量級對照：f<sub>s</sub> = 8000 Hz 是電話品質的取樣率，θ = 45° 對應的 1000 Hz 正是本課的參考轉角頻率。r = 0.9 的拖尾是 9.49 個樣本、約 1.19 ms；換成 CD 的 44.1 kHz，拖尾仍是 9.49 個樣本，卻只剩 0.215 ms——<strong>同一組係數在不同 f<sub>s</sub> 下，濾的頻率與拖的時間全部跟著變</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：拉動極點的半徑與角度</h2>
+<p>系統是一對共軛極點 p = r·exp(±jθ) 組成的二階共振器，輸入打一個 δ[n]，輸出是 h[n] = r<sup>n</sup>·sin((n + 1)θ)/sin θ。半徑 r 決定衰減、角度 θ 決定振盪頻率、f<sub>s</sub> 把角度換算成 Hz、n 決定看第幾個樣本。要看的是四件事同時變化：穩定判定、共振頻率、拖尾長度，以及頻率響應在共振點、直流與 f<sub>s</sub>/2 三處的高低差。</p>
+<div class="controls">
+<label for="zpl-r">極點半徑 r<input id="zpl-r" type="range" min="0" max="1.2" step="0.01" value="0.9"></label>
+<label for="zpl-theta">極點角度 θ（°）<input id="zpl-theta" type="range" min="0" max="180" step="1" value="45"></label>
+<label for="zpl-n">觀測樣本 n<input id="zpl-n" type="range" min="0" max="40" step="1" value="5"></label>
+<label for="zpl-fs">取樣頻率 f<sub>s</sub>（Hz）<input id="zpl-fs" type="range" min="1000" max="48000" step="1000" value="8000"></label>
+</div>
+<div id="zplane-output" class="output" aria-live="polite">極點 z = 0.900000·exp(±j45.000000°)，h[5] = −0.835079。<strong>穩定</strong>：極點在單位圓內，h[n] 以 r<sup>n</sup> 衰減，大約 n<sub>τ</sub> = 9.491222 個樣本（1.186403 ms）後掉到 36.8 %。共振頻率 1000.000000 Hz。差分方程：y[n] = 1.272792·y[n−1] − 0.810000·y[n−2] + x[n]。|H| 在共振點 7.432941、在直流 1.861477、在 f<sub>s</sub>/2（4000.000000 Hz）0.324381，峰／直流比 3.993034 倍。|H| 的分母就是「單位圓上的觀測點到極點的距離」——<strong>距離愈近值愈大</strong>，所以 r 愈接近 1，共振峰愈高愈尖，代價是拖尾愈長。連續時間看「在不在左半平面」，離散時間看「在不在單位圓內」——z = exp(sT<sub>s</sub>) 把無限長的虛軸捲成一個圓，這就是離散頻譜為什麼是週期的幾何理由。把 r 滑到 1 會看到邊界穩定與發散的峰值，滑過 1 會看到指數成長，滑到 0 則退化成沒有記憶的系統。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>z<sup>−1</sup> 是「延遲一個樣本」的算子，不是「除以 z」這種代數巧合。差分方程的每一格記憶都變成一個 z<sup>−1</sup>，遞迴式因此變成有理式。</li>
+<li>收斂域不是裝飾。<strong>沒有它，同一個 H(z) 可以是穩定的因果系統，也可以是不穩定的反因果系統</strong>；反轉換時先問「收斂域在哪」，再決定要展成右側序列還是左側序列。</li>
+<li>「極點在單位圓內」是<strong>離散</strong>時間的穩定條件，不能拿去判斷連續時間系統——連續那邊看的是左半平面。兩者靠 z = exp(sT<sub>s</sub>) 對應，但判準本身不能互換。</li>
+<li>θ 的單位是「每個樣本的弧度」，不是 Hz。要換成實際頻率必須乘上 f<sub>s</sub>/2π——<strong>同一組係數在不同 f<sub>s</sub> 下濾的是不同頻率</strong>，8 kHz 設計好的共振器搬到 48 kHz，共振點會跑到六倍遠。</li>
+<li>|H| 的峰值高度不是增益設定值，而是極點到單位圓距離的結果；想調峰高只能動 r，動 θ 只會平移峰的位置。r = 1 也不是「剛剛好可以用」的設計點，而是要刻意避開——理論上是理想振盪器，實作上捨入誤差就足以把它推到圈外變成發散。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>把算出來的兩個係數放進 DSP 板、微控制器，甚至一張試算表，寫成 y[n] = 1.272792·y[n−1] − 0.810000·y[n−2] + x[n] 的迴圈，在 n = 0 打進一個 δ[n]、其餘全給 0，印出的輸出就是 h[n]。量兩件事：一是振盪週期，數相鄰兩個峰隔幾個樣本，一個週期是 360°/θ 個樣本，θ = 45° 就是 8 個；二是包絡衰減，取相鄰兩個同號峰值相除，比值開 8 次方根就是 r。另一條路是掃頻：量不同頻率下穩態輸出與輸入的振幅比，得到 |H| 的實測曲線。</p>
+<p><strong>能證明什麼</strong>：實際跑起來的濾波器真正的極點位置、共振頻率、峰值高度與品質因數，以及拖尾持續幾個樣本。</p>
+<p><strong>不能證明什麼</strong>：極點的「理論值」。定點實作時係數必須量化成有限位元，極點只能落在格點上，量到的 r 與 θ 是量化後的結果，不是紙上那一組。<strong>r 特別接近 1 時偏移最嚴重</strong>，係數的微小誤差會放大成極點位置的大幅移動——這正是高 Q 的無限脈衝響應濾波器要拆成級聯二階節的理由，第 15 章接著談。也證明不了收斂域：實測只看得到實際跑出來的那一個 h[n]。</p>
+
+<h2>連到哪門課</h2>
+<p>連續版的極點、s 平面與穩定性見本課<a href="07-拉氏轉換與轉移函數.html">07 拉氏轉換與轉移函數</a>；<a href="08-極零點與二階系統.html">08 極零點與二階系統</a>的 ζ 與 ω<sub>n</sub> 就是 r 與 θ 的連續世界版本。複數的極式與尤拉公式見<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複變入門</a>，拉氏與 Z 的對照見<a href="../../../共通基礎/數學/互動課程/08-拉氏轉換.html">拉氏轉換</a>。真實裝置這一側，音訊等化器的每一段、馬達控制迴路的陷波器，用的都是這種二階節。下一章把 r 與 θ 換成實際的濾波器設計參數。</p>
+<nav class="pager" aria-label="章節導覽"><a href="13-離散頻譜分析.html">← 上一頁：離散頻譜分析</a><a href="15-數位濾波器與多速率.html">下一頁：數位濾波器與多速率 →</a></nav>
+</main>
+<footer class="site-footer"><span>14 Z 轉換與單位圓</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,308 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">檢・14 章各 3 題，共 42 題</p>
+<h1>自我檢核：把每一章的關鍵數字與判斷各檢查一次</h1>
+<p class="lead">每一題都取自該章正文出現過的數字或結論，沒有新的題型也沒有陷阱。填完按「對答案」，回饋會告訴你為什麼，並附上該回去看的章節。</p>
+<p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯只會告訴你為什麼，並附上該回去看的章節。可以無限重做。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 數位世界觀</h2>
+<p>回去看：<a href="00-數位世界觀.html">00 數位世界觀</a></p>
+<section class="card">
+<p><strong>q00-1｜</strong>數位電路為什麼要把連續的電壓切成 0 與 1 兩種值？</p>
+<label for="q00-1">你的答案<select id="q00-1"><option value="">請選擇</option><option value="a">因為只需判斷高於或低於門檻，小雜訊不會累積成錯誤</option><option value="b">因為電晶體只能開關</option><option value="c">因為二進位比較省電</option><option value="d">因為十進位太難算</option></select></label>
+<button type="button" id="q00-1-check">對答案</button>
+<div id="q00-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q00-2｜</strong>3.3 V CMOS 家族的 V<sub>OH</sub> = 3.10 V、V<sub>IH</sub> = 2.31 V。它的高位雜訊裕度 NM<sub>H</sub> 是多少？</p>
+<label for="q00-2">你的答案（V）<input id="q00-2" type="number" step="any"></label>
+<button type="button" id="q00-2-check">對答案</button>
+<div id="q00-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q00-3｜</strong>同一個家族的 V<sub>IH</sub> = 2.31 V、V<sub>IL</sub> = 0.99 V。禁區寬度 V<sub>IH</sub> − V<sub>IL</sub> 是多少？</p>
+<label for="q00-3">你的答案（V）<input id="q00-3" type="number" step="any"></label>
+<button type="button" id="q00-3-check">對答案</button>
+<div id="q00-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>01 數值系統與編碼</h2>
+<p>回去看：<a href="01-數值系統與編碼.html">01 數值系統與編碼</a></p>
+<section class="card">
+<p><strong>q01-1｜</strong>二進位 <code>0110 0100</code> 的十進位值是多少？</p>
+<label for="q01-1">你的答案（無單位）<input id="q01-1" type="number" step="any"></label>
+<button type="button" id="q01-1-check">對答案</button>
+<div id="q01-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q01-2｜</strong>十進位 7 的格雷碼是多少？請把格雷碼那組位元當成二進位讀出來，以十進位填。</p>
+<label for="q01-2">你的答案（無單位）<input id="q01-2" type="number" step="any"></label>
+<button type="button" id="q01-2-check">對答案</button>
+<div id="q01-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q01-3｜</strong>7 變成 8 的時候，純二進位與格雷碼各有幾個位元改變？</p>
+<label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">二進位 4 個、格雷碼 1 個</option><option value="b">兩者都是 1 個</option><option value="c">二進位 1 個、格雷碼 4 個</option><option value="d">兩者都是 4 個</option></select></label>
+<button type="button" id="q01-3-check">對答案</button>
+<div id="q01-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>02 二補數與有號數運算</h2>
+<p>回去看：<a href="02-二補數與有號數運算.html">02 二補數與有號數運算</a></p>
+<section class="card">
+<p><strong>q02-1｜</strong>8 位元二補數下，位元組 <code>1001 0001</code> 讀作有號十進位是多少？答案是負數時，直接在數字前面加上負號輸入即可。</p>
+<label for="q02-1">你的答案（無單位）<input id="q02-1" type="number" step="any"></label>
+<button type="button" id="q02-1-check">對答案</button>
+<div id="q02-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q02-2｜</strong>8 位元下 100 − 45 的結果是多少（十進位）？</p>
+<label for="q02-2">你的答案（無單位）<input id="q02-2" type="number" step="any"></label>
+<button type="button" id="q02-2-check">對答案</button>
+<div id="q02-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q02-3｜</strong>8 位元有號運算下 100 + 45 得到 <code>1001 0001</code>，為什麼說這是溢位？</p>
+<label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">兩個正數相加卻得到負數，超出 −128…127</option><option value="b">因為進位旗標 C 是 1</option><option value="c">因為結果大於 100</option><option value="d">因為 45 不是 2 的次方</option></select></label>
+<button type="button" id="q02-3-check">對答案</button>
+<div id="q02-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>03 布林代數與邏輯閘</h2>
+<p>回去看：<a href="03-布林代數與邏輯閘.html">03 布林代數與邏輯閘</a></p>
+<section class="card">
+<p><strong>q03-1｜</strong>¬(A · B) 等於下面哪一個？</p>
+<label for="q03-1">你的答案<select id="q03-1"><option value="">請選擇</option><option value="a">¬A · ¬B</option><option value="b">¬A + ¬B</option><option value="c">A + B</option><option value="d">¬(A + B)</option></select></label>
+<button type="button" id="q03-1-check">對答案</button>
+<div id="q03-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q03-2｜</strong>兩輸入互斥或 A ⊕ B 的真值表中，輸出為 1 的有幾列？</p>
+<label for="q03-2">你的答案（列）<input id="q03-2" type="number" step="any"></label>
+<button type="button" id="q03-2-check">對答案</button>
+<div id="q03-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q03-3｜</strong>只用反及閘（NAND）能不能做出所有邏輯函數？</p>
+<label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">可以，NAND 是通用閘</option><option value="b">不行，還需要 OR</option><option value="c">只有兩輸入時可以</option><option value="d">只能做組合邏輯不能做序向</option></select></label>
+<button type="button" id="q03-3-check">對答案</button>
+<div id="q03-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>04 標準型 SOP 與 POS</h2>
+<p>回去看：<a href="04-標準型SOP與POS.html">04 標準型 SOP 與 POS</a></p>
+<section class="card">
+<p><strong>q04-1｜</strong>三變數多數決 F = Σm(3, 5, 6, 7) 的標準 SOP 有幾個乘積項？</p>
+<label for="q04-1">你的答案（項）<input id="q04-1" type="number" step="any"></label>
+<button type="button" id="q04-1-check">對答案</button>
+<div id="q04-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q04-2｜</strong>同一個函數的標準 POS 有幾個和項？</p>
+<label for="q04-2">你的答案（項）<input id="q04-2" type="number" step="any"></label>
+<button type="button" id="q04-2-check">對答案</button>
+<div id="q04-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q04-3｜</strong>這個多數決函數化簡後的最簡 SOP 是哪一個？</p>
+<label for="q04-3">你的答案<select id="q04-3"><option value="">請選擇</option><option value="a">A · B + B · C + A · C</option><option value="b">A + B + C</option><option value="c">A · B · C</option><option value="d">¬A + ¬B + ¬C</option></select></label>
+<button type="button" id="q04-3-check">對答案</button>
+<div id="q04-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>05 卡諾圖與不關心項</h2>
+<p>回去看：<a href="05-卡諾圖與不關心項.html">05 卡諾圖與不關心項</a></p>
+<section class="card">
+<p><strong>q05-1｜</strong>BCD ≥ 5 偵測器（on-set 5–9、不關心項 10–15）有幾個質蘊涵項？</p>
+<label for="q05-1">你的答案（個）<input id="q05-1" type="number" step="any"></label>
+<button type="button" id="q05-1-check">對答案</button>
+<div id="q05-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q05-2｜</strong>同一題的最簡 SOP 有幾個字面？</p>
+<label for="q05-2">你的答案（個）<input id="q05-2" type="number" step="any"></label>
+<button type="button" id="q05-2-check">對答案</button>
+<div id="q05-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q05-3｜</strong>不關心項為什麼能幫助化簡？</p>
+<label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">它可以任意當 0 或 1，讓圈畫得更大</option><option value="b">它會被自動刪掉</option><option value="c">它代表錯誤輸入</option><option value="d">它讓真值表變小</option></select></label>
+<button type="button" id="q05-3-check">對答案</button>
+<div id="q05-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>06 多工器、解碼器與編碼器</h2>
+<p>回去看：<a href="06-多工器解碼器與編碼器.html">06 多工器、解碼器與編碼器</a></p>
+<section class="card">
+<p><strong>q06-1｜</strong>3 對 8 解碼器有幾條輸出線？</p>
+<label for="q06-1">你的答案（條）<input id="q06-1" type="number" step="any"></label>
+<button type="button" id="q06-1-check">對答案</button>
+<div id="q06-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q06-2｜</strong>選擇線 S<sub>2</sub>S<sub>1</sub>S<sub>0</sub> = 101 的 8 對 1 多工器，選中的是第幾條資料輸入？請填 0 到 7。</p>
+<label for="q06-2">你的答案（無單位）<input id="q06-2" type="number" step="any"></label>
+<button type="button" id="q06-2-check">對答案</button>
+<div id="q06-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q06-3｜</strong>8 對 3 優先編碼器的 GS（group select）有什麼用？</p>
+<label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">區分「輸入全 0」與「只有 D0 是 1」這兩種都輸出 000 的情況</option><option value="b">表示編碼器是否致能</option><option value="c">表示輸出是否溢位</option><option value="d">表示輸入是否為合法 BCD</option></select></label>
+<button type="button" id="q06-3-check">對答案</button>
+<div id="q06-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>07 加法器、比較器與 ALU</h2>
+<p>回去看：<a href="07-加法器比較器與ALU.html">07 加法器、比較器與 ALU</a></p>
+<section class="card">
+<p><strong>q07-1｜</strong>單閘延遲 1.0 ns 時，4 位元漣波進位加法器的最壞延遲是多少？</p>
+<label for="q07-1">你的答案（ns）<input id="q07-1" type="number" step="any"></label>
+<button type="button" id="q07-1-check">對答案</button>
+<div id="q07-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q07-2｜</strong>同樣條件下，4 位元超前進位加法器的最壞延遲是多少？</p>
+<label for="q07-2">你的答案（ns）<input id="q07-2" type="number" step="any"></label>
+<button type="button" id="q07-2-check">對答案</button>
+<div id="q07-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q07-3｜</strong>4 位元下 A = <code>1001</code>、B = <code>0111</code> 相加，結果與旗標是哪一組？</p>
+<label for="q07-3">你的答案<select id="q07-3"><option value="">請選擇</option><option value="a">和 0000、C = 1、V = 0</option><option value="b">和 0000、C = 0、V = 1</option><option value="c">和 1111、C = 0、V = 0</option><option value="d">和 0001、C = 1、V = 1</option></select></label>
+<button type="button" id="q07-3-check">對答案</button>
+<div id="q07-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>08 延遲、功耗與險境</h2>
+<p>回去看：<a href="08-延遲功耗與險境.html">08 延遲、功耗與險境</a></p>
+<section class="card">
+<p><strong>q08-1｜</strong>t<sub>inv</sub> = 1.0 ns、t<sub>gate</sub> = 0.5 ns 時，F = A · B + ¬A · C 在 B = C = 1、A 由 1 變 0 的突波寬度是多少？</p>
+<label for="q08-1">你的答案（ns）<input id="q08-1" type="number" step="any"></label>
+<button type="button" id="q08-1-check">對答案</button>
+<div id="q08-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q08-2｜</strong>扇出 4、每個負載 0.05 pF、3.3 V、100 MHz 時的動態功耗是多少？</p>
+<label for="q08-2">你的答案（µW）<input id="q08-2" type="number" step="any"></label>
+<button type="button" id="q08-2-check">對答案</button>
+<div id="q08-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q08-3｜</strong>消除上面這個靜態險境的標準作法是哪一個？</p>
+<label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">加入冗餘項 B · C</option><option value="b">把 OR 換成 XOR</option><option value="c">提高時脈頻率</option><option value="d">減少扇出</option></select></label>
+<button type="button" id="q08-3-check">對答案</button>
+<div id="q08-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>09 閂鎖與正反器</h2>
+<p>回去看：<a href="09-閂鎖與正反器.html">09 閂鎖與正反器</a></p>
+<section class="card">
+<p><strong>q09-1｜</strong>閂鎖與正反器最根本的差別是什麼？</p>
+<label for="q09-1">你的答案<select id="q09-1"><option value="">請選擇</option><option value="a">閂鎖是位準觸發、正反器是邊緣觸發</option><option value="b">閂鎖比較快</option><option value="c">正反器不需要時脈</option><option value="d">閂鎖不能儲存資料</option></select></label>
+<button type="button" id="q09-1-check">對答案</button>
+<div id="q09-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q09-2｜</strong>SR 閂鎖的哪一組輸入是禁止組合？</p>
+<label for="q09-2">你的答案<select id="q09-2"><option value="">請選擇</option><option value="a">S = 1、R = 1</option><option value="b">S = 0、R = 0</option><option value="c">S = 1、R = 0</option><option value="d">S = 0、R = 1</option></select></label>
+<button type="button" id="q09-2-check">對答案</button>
+<div id="q09-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q09-3｜</strong>初始 Q = 0 的 T 正反器，輸入序列 0, 1, 1, 0, 1, 0, 0, 1 走完 8 拍後 Q 是多少？請填 0 或 1。</p>
+<label for="q09-3">你的答案（無單位）<input id="q09-3" type="number" step="any"></label>
+<button type="button" id="q09-3-check">對答案</button>
+<div id="q09-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>10 時脈與時序限制</h2>
+<p>回去看：<a href="10-時脈與時序限制.html">10 時脈與時序限制</a></p>
+<section class="card">
+<p><strong>q10-1｜</strong>t<sub>cq</sub> = 0.40 ns、t<sub>logic</sub> = 4.00 ns、t<sub>su</sub> = 0.20 ns、抖動 0.05 ns、偏斜 0 時，最小時脈週期 T<sub>clk</sub> 是多少？</p>
+<label for="q10-1">你的答案（ns）<input id="q10-1" type="number" step="any"></label>
+<button type="button" id="q10-1-check">對答案</button>
+<div id="q10-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q10-2｜</strong>同一組條件下的最大時脈頻率 f<sub>max</sub> 是多少？</p>
+<label for="q10-2">你的答案（MHz）<input id="q10-2" type="number" step="any"></label>
+<button type="button" id="q10-2-check">對答案</button>
+<div id="q10-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q10-3｜</strong>保持時間違規為什麼不能靠降低時脈頻率解決？</p>
+<label for="q10-3">你的答案<select id="q10-3"><option value="">請選擇</option><option value="a">因為它只牽涉同一個時脈邊緣的最短路徑，限制式裡沒有週期</option><option value="b">因為降頻會增加偏斜</option><option value="c">因為它是製程問題</option><option value="d">因為降頻會讓建立時間變差</option></select></label>
+<button type="button" id="q10-3-check">對答案</button>
+<div id="q10-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>11 有限狀態機</h2>
+<p>回去看：<a href="11-有限狀態機.html">11 有限狀態機</a></p>
+<section class="card">
+<p><strong>q11-1｜</strong>偵測 1101（允許重疊）的 Mealy 機需要幾個狀態？</p>
+<label for="q11-1">你的答案（個）<input id="q11-1" type="number" step="any"></label>
+<button type="button" id="q11-1-check">對答案</button>
+<div id="q11-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q11-2｜</strong>同一個偵測器改用 Moore 機需要幾個狀態？</p>
+<label for="q11-2">你的答案（個）<input id="q11-2" type="number" step="any"></label>
+<button type="button" id="q11-2-check">對答案</button>
+<div id="q11-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q11-3｜</strong>輸入 <code>110110101101</code> 送進這台 Mealy 偵測器，一共偵測到幾次 1101？</p>
+<label for="q11-3">你的答案（次）<input id="q11-3" type="number" step="any"></label>
+<button type="button" id="q11-3-check">對答案</button>
+<div id="q11-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>12 暫存器、計數器與記憶體</h2>
+<p>回去看：<a href="12-暫存器計數器與記憶體.html">12 暫存器、計數器與記憶體</a></p>
+<section class="card">
+<p><strong>q12-1｜</strong>模 10 計數器最少需要幾個正反器？</p>
+<label for="q12-1">你的答案（個）<input id="q12-1" type="number" step="any"></label>
+<button type="button" id="q12-1-check">對答案</button>
+<div id="q12-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q12-2｜</strong>16 條位址線、8 位元字寬的記憶體，容量是多少？</p>
+<label for="q12-2">你的答案（位元組）<input id="q12-2" type="number" step="any"></label>
+<button type="button" id="q12-2-check">對答案</button>
+<div id="q12-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q12-3｜</strong>DRAM 為什麼需要更新（refresh）？</p>
+<label for="q12-3">你的答案<select id="q12-3"><option value="">請選擇</option><option value="a">它用電容儲存電荷，電荷會因漏電流流失</option><option value="b">它的正反器會自己翻轉</option><option value="c">它斷電後資料會消失</option><option value="d">它讀取時會破壞位址解碼</option></select></label>
+<button type="button" id="q12-3-check">對答案</button>
+<div id="q12-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>13 可程式邏輯與 HDL</h2>
+<p>回去看：<a href="13-可程式邏輯與HDL.html">13 可程式邏輯與 HDL</a></p>
+<section class="card">
+<p><strong>q13-1｜</strong>一個 4 輸入查找表（4-LUT）需要幾個組態位元？</p>
+<label for="q13-1">你的答案（個）<input id="q13-1" type="number" step="any"></label>
+<button type="button" id="q13-1-check">對答案</button>
+<div id="q13-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q13-2｜</strong>用 4-LUT 實作任意 6 輸入函數，最壞需要幾個 LUT？</p>
+<label for="q13-2">你的答案（個）<input id="q13-2" type="number" step="any"></label>
+<button type="button" id="q13-2-check">對答案</button>
+<div id="q13-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q13-3｜</strong>NRE 500 萬美元、ASIC 單價 2 美元、FPGA 單價 50 美元時，兩者總成本相等的產量是多少？</p>
+<label for="q13-3">你的答案（顆）<input id="q13-3" type="number" step="any"></label>
+<button type="button" id="q13-3-check">對答案</button>
+<div id="q13-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

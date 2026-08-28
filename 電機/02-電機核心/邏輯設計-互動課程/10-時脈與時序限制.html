@@ -1,0 +1,75 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 時脈與時序限制｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・一個週期必須裝得下三段時間</p>
+<h1>時脈與時序限制：這個電路最快能跑幾 MHz，以及為什麼降頻救不了另一種病</h1>
+<p class="lead">同一條路徑有兩條完全不同的限制式：一條說資料不能太晚到，另一條說資料不能太早到。前者違規時降頻可以救，後者不行。這章把兩條式子從頭推出來，再用一組數字算到底。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="09-閂鎖與正反器.html">09 閂鎖與正反器</a>的 D 正反器與 t<sub>cq</sub>，以及<a href="08-延遲功耗與險境.html">08 延遲、功耗與險境</a>的傳播延遲。</p>
+
+<h2>痛點：規格書上那個 MHz 到底是誰決定的</h2>
+<p>「電路做出來了，模擬也跑對了，那我該把時脈設多少？資料手冊寫 200 MHz，是不是接上去就有 200 MHz？」不是。那個數字是元件廠商在特定條件下量的，你這塊板子上的頻率上限由<strong>你自己的最長那條路徑</strong>決定：從某顆正反器的輸出出發、穿過一堆組合邏輯、到下一顆正反器的輸入為止。</p>
+<p>更難的是第二個問題：有些電路在 100 MHz 會錯、在 1 MHz 也會錯，把時脈降到爬都不動還是錯。初學者遇到這種狀況通常會懷疑元件壞了，其實那是保持時間違規——它的限制式裡根本沒有週期這一項。分不清這兩種病，就會一直用錯的藥。</p>
+
+<h2>白話直覺：時脈只做一件事，規定大家什麼時候一起看資料</h2>
+<p>時脈（clock）不參與運算，它唯一的作用是規定所有正反器在同一時刻取樣。可以暫時想成一節課的下課鐘：鐘響時所有人同時交卷；比喻到此為止，精確的說法是每個上升邊緣定義一次取樣時刻，兩次取樣之間的一切中間值都不算數。</p>
+<p>照因果鏈走一遍。輸入從哪來：發送端正反器在某個邊緣把資料推出來。這一層做了什麼決定：讓資料在整個週期裡慢慢穿過組合邏輯，只要求它在下一個邊緣之前站穩。花掉多少時間：t<sub>cq</sub> 是離開正反器要的時間（本課 0.40 ns）、t<sub>logic</sub> 是穿過組合邏輯的最長路徑（例中 4.00 ns）、t<sub>su</sub> 是接收端要求資料提早站穩的時間（0.20 ns），三段加起來就是週期的下限。邊界或例外在哪：如果資料走得太快，快到在同一個邊緣就衝進接收端，那它會把接收端還沒讀到的舊值蓋掉，這是另一條限制。儀器量到什麼：靜態時序分析（static timing analysis, STA）報告會逐條列出每段延遲與最後的餘裕，實體板子則可以逐步升頻直到功能出錯。</p>
+<p>兩個容易混的量在這裡出現。時脈偏斜（clock skew）是同一個邊緣到達不同正反器的時間差，來自時脈樹上兩條分支長度不同，它是固定的、可以設計的；時脈抖動（clock jitter）是同一顆正反器上邊緣本身在時間軸上的隨機晃動，來自振盪器與電源雜訊，只能壓低不能消除。餘裕（slack）則是限制式兩邊相減，正的代表過關，負的代表違規。</p>
+<p class="note">來源：10-邏輯設計 §5.2。</p>
+
+<h2>推導：兩條限制式怎麼長出來</h2>
+<p><strong>（a）建立時間限制。</strong>資料從發送端的時脈邊緣出發，先花 t<sub>cq</sub> 才出得來，再花 t<sub>logic</sub> 穿過組合邏輯，必須在接收端的下一個邊緣<strong>之前</strong> t<sub>su</sub> 就站穩。把這三段塞進一個週期，得到 <code>T<sub>clk</sub> ≥ t<sub>cq</sub> + t<sub>logic</sub> + t<sub>su</sub> + t<sub>jitter</sub> − t<sub>skew</sub></code>。所有符號單位都是 ns，都是同一條路徑上的量。</p>
+<p><strong>（b）抖動為什麼加、偏斜為什麼減。</strong>抖動會讓下一個邊緣可能提早到，等於這一次的週期比名目值短，所以必須先預留起來，是加項。偏斜若讓接收端的邊緣比發送端<strong>晚</strong>到，等於多給了資料一點時間，所以是減項；刻意做出這種偏斜叫 useful skew，是真的在用的手法。</p>
+<p><strong>（c）保持時間限制。</strong>資料同樣從發送端出發（t<sub>cq</sub>），但這次走<strong>最短</strong>路徑 t<sub>min</sub>，它必須晚於接收端<strong>同一個</strong>邊緣之後的 t<sub>h</sub> 才准到，否則就把接收端還沒取樣完的舊值蓋掉。於是 <code>t<sub>cq</sub> + t<sub>min</sub> ≥ t<sub>h</sub> + t<sub>skew</sub></code>。注意整條式子裡完全沒有 T<sub>clk</sub>——這就是降頻一點用都沒有的原因。救法只有兩種：在短路徑上插延遲緩衝器把 t<sub>min</sub> 加大，或修時脈樹把 t<sub>skew</sub> 減小。</p>
+<p><strong>（d）偏斜對兩條限制作用相反。</strong>正偏斜在建立式裡是減項（放寬），在保持式裡是加項（收緊）。同一個調整讓一條限制變鬆、另一條變緊，這是時序收斂最常見的兩難。</p>
+<p><strong>（e）換算與假設。</strong><code>f<sub>max</sub> = 1 / T<sub>clk,min</sub></code>；T 以 ns 為單位時，f（MHz）= 1000 / T。t<sub>pd</sub> 這類延遲本課一律假設同類閘相同、不隨輸入組合變化，真實電路不是這樣：延遲會隨製程、電壓、溫度改變，繞線也會貢獻延遲，所以工具才要跑多角落分析並留餘裕。</p>
+
+<h2>數值實例：一組參數算到底</h2>
+<p>取 t<sub>cq</sub> = 0.40 ns、t<sub>logic</sub> = 4.00 ns、t<sub>su</sub> = 0.20 ns、t<sub>h</sub> = 0.10 ns、t<sub>skew</sub> = 0.00 ns、t<sub>jitter</sub> = 0.05 ns、t<sub>min</sub> = 0.50 ns，實際運作頻率 150 MHz。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>最小時脈週期</td><td>0.40 + 4.00 + 0.20 + 0.05 − 0.00</td><td><strong>4.650000 ns</strong></td></tr>
+<tr><td>最大時脈頻率</td><td>1000 / 4.65</td><td><strong>215.053763 MHz</strong></td></tr>
+<tr><td>目前週期</td><td>1000 / 150</td><td><strong>6.666667 ns</strong></td></tr>
+<tr><td>建立餘裕</td><td>6.666667 − 4.650000</td><td><strong>+2.016667 ns（通過）</strong></td></tr>
+<tr><td>保持需求</td><td>0.10 + 0.00</td><td><strong>0.100000 ns</strong></td></tr>
+<tr><td>保持實際</td><td>0.40 + 0.50</td><td><strong>0.900000 ns</strong></td></tr>
+<tr><td>保持餘裕</td><td>0.900000 − 0.100000</td><td><strong>+0.800000 ns（通過）</strong></td></tr>
+</tbody></table>
+<p><strong>邊界對照一：偏斜。</strong>把 t<sub>skew</sub> 拉到 +0.50 ns，最小週期降到 4.150000 ns、f<sub>max</sub> 升到 240.963855 MHz，建立變鬆；但保持需求升到 0.600000 ns、保持餘裕降到 0.300000 ns，保持變緊。同一個旋鈕往兩邊拉，正是（d）說的兩難。</p>
+<p><strong>邊界對照二：保持違規。</strong>在上面的基礎上再把 t<sub>min</sub> 降到 0.05 ns、t<sub>h</sub> 升到 0.50 ns，保持實際變成 0.450000 ns、需求變成 1.000000 ns，餘裕 −0.550000 ns，違規。這時候把頻率從 150 MHz 降到 1 MHz 也完全沒有用，因為保持限制式裡根本沒有 T<sub>clk</sub>。</p>
+<p><strong>邊界對照三：邏輯太深。</strong>把 t<sub>logic</sub> 拉到 20 ns，最小週期 20.650000 ns、f<sub>max</sub> 只剩 48.426150 MHz。組合邏輯太深是頻率上不去最常見的原因，解法是把它切成兩級，中間插一顆正反器（也就是管線）。量級上，一顆正反器的 t<sub>cq</sub> 只有 0.40 ns，而單一邏輯閘就要 1.0 ns，所以真正吃掉週期的幾乎都是組合邏輯，不是正反器本身。</p>
+
+<section class="workspace"><h2>自由實驗：八個旋鈕與兩條限制式</h2>
+<p>下面八個滑桿就是一條路徑上的全部參數：發送端的 t<sub>cq</sub>、中間組合邏輯的最長與最短路徑、接收端的 t<sub>su</sub> 與 t<sub>h</sub>、時脈樹的偏斜與抖動，以及你打算跑的實際頻率。改任何一個，最小週期、f<sub>max</sub>、兩個餘裕都會重算。重點是看清楚哪些旋鈕會動到建立、哪些會動到保持、哪一個兩邊都動。</p>
+<div class="controls">
+<label for="tm-tcq">t_cq 時脈到 Q（ns）<input id="tm-tcq" type="range" min="0.05" max="2" step="0.05" value="0.4"></label>
+<label for="tm-tlogic">t_logic 組合邏輯最長路徑（ns）<input id="tm-tlogic" type="range" min="0.1" max="20" step="0.1" value="4"></label>
+<label for="tm-tsu">t_su 建立時間（ns）<input id="tm-tsu" type="range" min="0.02" max="1" step="0.01" value="0.2"></label>
+<label for="tm-th">t_h 保持時間（ns）<input id="tm-th" type="range" min="0" max="0.5" step="0.01" value="0.1"></label>
+<label for="tm-skew">t_skew 時脈偏斜（ns，接收端較晚為正）<input id="tm-skew" type="range" min="-0.5" max="0.5" step="0.01" value="0"></label>
+<label for="tm-jitter">t_jitter 時脈抖動（ns）<input id="tm-jitter" type="range" min="0" max="0.5" step="0.01" value="0.05"></label>
+<label for="tm-tmin">t_min 組合邏輯最短路徑（ns）<input id="tm-tmin" type="range" min="0.05" max="5" step="0.05" value="0.5"></label>
+<label for="tm-freq">實際運作頻率（MHz）<input id="tm-freq" type="range" min="1" max="1000" step="1" value="150"></label>
+</div>
+<div id="timing-output" class="output" aria-live="polite">最小時脈週期 <strong>4.650000 ns</strong>（0.40 + 4.00 + 0.20 + 0.05 − 0.00）；最大時脈頻率 <strong>215.053763 MHz</strong>；目前週期 <strong>6.666667 ns</strong>（150 MHz）；建立餘裕 <strong>+2.016667 ns（通過）</strong>；保持需求 <strong>0.100000 ns</strong>；保持實際 <strong>0.900000 ns</strong>；保持餘裕 <strong>+0.800000 ns（通過）</strong>。<strong>時序收斂：在這個頻率下資料來得及、也不會太早。</strong>時脈的唯一作用是規定大家什麼時候一起看資料；一個週期必須裝得下 t_cq + 組合邏輯 + t_su。邊界提醒：把偏斜拉成正值會放寬建立、收緊保持；把最短路徑調小、保持時間調大就會看到保持餘裕變負，那時候降頻完全沒有用；若偏斜大到讓需求變成 0 或負，建立限制在這組參數下不成立，f_max 會改由別的路徑決定。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>t<sub>su</sub> 與 t<sub>h</sub> 不是同一個數的兩種說法。一個要求資料在邊緣<strong>之前</strong>就穩定，一個要求它在邊緣<strong>之後</strong>還撐一段；兩者夾出一個資料不准變化的視窗。</li>
+<li>偏斜與抖動不是同一件事。偏斜是<strong>不同地點</strong>的邊緣時間差，固定、可以設計甚至刻意利用；抖動是<strong>同一地點</strong>的邊緣晃動，隨機、只能壓低。</li>
+<li>f<sub>max</sub> 不是「這顆晶片的速度」。它是<strong>這一條路徑</strong>的上限，整個設計要取所有路徑裡最糟的那一條。</li>
+<li>亞穩態不能靠多加幾級同步器消除。兩級同步器只是把失效平均時間（MTBF）推到夠久，機率永遠不是零。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>合成與佈局繞線跑完之後看 STA 報告，它會逐條列出關鍵路徑的 t<sub>cq</sub>、每一級邏輯延遲、繞線延遲、t<sub>su</sub> 與最終餘裕；在實體板子上則可以用可調時脈源逐步提高頻率，配合一個會檢查結果的測試向量，找出功能開始出錯的頻率。</p>
+<p><strong>量到什麼（能證明）。</strong>STA 報告能證明在工具的延遲模型與指定的角落條件下，這條路徑還剩多少餘裕、瓶頸在哪一級。升頻測試能證明這塊板子在當下的溫度與電壓下，功能大約在哪個頻率開始失效，也能反過來驗證餘裕估得合不合理。</p>
+<p><strong>不能證明什麼。</strong>單一條件下的報告或測試不能證明所有製程、電壓、溫度角落都通過，那要跑多角落分析。也證明不了「沒有亞穩態」：亞穩態是機率事件，只能算 MTBF，量不到「永遠不會」。此外升頻測試找到的邊界只反映當時那一顆晶片與那一塊板子，換一片就會不一樣。</p>
+
+<h2>連到哪門課</h2>
+<p>把太深的組合邏輯切成兩級以拉高頻率，就是管線的想法，見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>。t<sub>cq</sub> 與 t<sub>su</sub> 的物理來源在本課<a href="09-閂鎖與正反器.html">第 09 章</a>的主從結構，再往下是電晶體的充放電時間，見<a href="../電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學的 CMOS 反相器與數位功耗</a>。下一章把這套時序規則套到真正會記事情的電路上。</p>
+<nav class="pager" aria-label="章節導覽"><a href="09-閂鎖與正反器.html">← 上一頁：閂鎖與正反器</a><a href="11-有限狀態機.html">下一頁：有限狀態機 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 時脈與時序限制</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

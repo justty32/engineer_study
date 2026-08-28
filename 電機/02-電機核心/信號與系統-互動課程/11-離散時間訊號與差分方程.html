@@ -1,0 +1,75 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 離散時間訊號與差分方程｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">11・積分換成求和，系統變成一個帶狀態的迴圈</p>
+<h1>離散時間訊號與差分方程：把前十章整批搬到 x[n]，順便認識 FIR 與 IIR</h1>
+<p class="lead">離散時間的觀念幾乎全部是連續時間的複製貼上，只有兩個地方會咬人：縮放與穩定。這章把摺積和推一次、把一階遞迴的脈衝響應逐格展開一次，看清 FIR 與 IIR 各自買到什麼、付出什麼。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="04-線性非時變與摺積.html">04 線性非時變與摺積</a>的摺積與 BIBO 條件、<a href="02-基本訊號與訊號運算.html">02 基本訊號與訊號運算</a>的 δ[n] 與 u[n]，以及<a href="../../../共通基礎/數學/互動課程/03-級數與泰勒.html">工程數學先修的幾何級數與收斂</a>。</p>
+
+<h2>痛點：換成方括號以後，哪些東西原封不動，哪些會悄悄壞掉</h2>
+<p>寫過程式的人看到 x[n] 通常比看到 x(t) 還安心：那不就是一個陣列嗎。麻煩正是這份安心，它會讓人把連續時間的規則直接抄過來，卻沒發現其中一條在離散世界的意思完全變了。平移、反轉、奇偶分解、能量、功率確實可以照抄；但只要碰到縮放，直覺立刻出錯，因為陣列裡根本沒有第 0.5 格這種東西。</p>
+<p>第二個坎是差分方程（difference equation）。課本把 ∑<sub>k=0</sub><sup>N</sup> a<sub>k</sub>y[n − k] = ∑<sub>m=0</sub><sup>M</sup> b<sub>m</sub>x[n − m] 端出來，說「這就是數位濾波器的標準形」，讀者卻看不出它和摺積是什麼關係，也看不出為什麼有些系統寫得出把舊輸出拿回來用的遞迴，有些只能寫成一串固定係數的加權和。</p>
+<p>第三個坎是穩定。「無限脈衝響應的 I 是 infinite，既然無限長，怎麼可能穩定？」這句話問得很合理，這章要用一個手算得完的例子把它按死：h[n] 每一項都不為零，但 ∑|h[n]| 是明確的有限數字，而穩定與否看的是後者。</p>
+
+<h2>白話直覺：系統就是一個帶狀態的迴圈，狀態留多久決定它屬於哪一種</h2>
+<p>訊號從哪裡來？從一個把類比電壓每隔固定時間記錄一次的裝置來，記錄下來的就是一串數字，第 n 個數字叫 x[n]。系統對它做了什麼？系統是一段迴圈：每讀進一個新樣本，就用它和手上還留著的舊資料算出一個新的輸出。這件事在哪個域最好描述？在樣本域看得見因果順序，每個輸出來自哪幾格輸入一清二楚；但要判斷這個迴圈會不會愈滾愈大，時間域只能一格一格試，換到第 14 章的 z 域就變成看極點在不在單位圓內。換域的代價是必須接受複變函數與收斂域這一整套語言。儀器量到什麼？邏輯分析儀只量得到一串實際輸出的數字。</p>
+<p>離散時間訊號（discrete-time signal）寫成 x[n]，n 是<strong>整數</strong>。這裡要立刻收掉一個常見的誤解：離散不是「時間切得很細」，而是<strong>根本沒有 n = 0.5 這件事</strong>——它不是精度問題，是定義域問題。索引 n 是<strong>樣本序號</strong>，沒有單位；要換成秒必須乘上取樣週期 T<sub>s</sub>，而 T<sub>s</sub> 要等第 12 章才會出現。</p>
+<p>連續時間學過的運算幾乎都能照搬：平移寫 x[n − n<sub>0</sub>]，反轉寫 x[−n]，奇偶分解一樣是 x<sub>e</sub>[n] = (x[n] + x[−n])/2 與 x<sub>o</sub>[n] = (x[n] − x[−n])/2，能量寫 E = ∑<sub>n=−∞</sub><sup>∞</sup> |x[n]|²。唯獨縮放要小心：x[2n] 是<strong>降取樣（downsampling）</strong>，它把奇數格整個丟掉，資訊是真的沒了；x[n/2] 只在 n 為偶數時有定義，中間那些格要靠內插補出來，補出來的值是猜的。</p>
+<p>系統這一側只有兩種迴圈寫法。第一種不回頭看自己的輸出，只把最近 M 個輸入平均；它的脈衝響應只有 M 項，之後永遠是零，所以叫<strong>有限脈衝響應（finite impulse response, FIR）</strong>。第二種把上一次的輸出乘一個係數再加回來，例如 y[n] = a·y[n − 1] + x[n]；一根脈衝進去之後，回授讓它衰減卻永遠除不盡，所以叫<strong>無限脈衝響應（infinite impulse response, IIR）</strong>。可以暫時把它想成一個漏水的水桶，每個樣本漏掉固定比例、永遠漏不完；比喻到此為止，精確的說法是 h[n] = a<sup>n</sup>u[n]，一個公比為 a 的幾何數列。</p>
+<p class="note">來源：09-信號與系統-下 §10.1–§10.3。</p>
+
+<h2>推導：從篩選性到摺積和，再從遞迴展開出脈衝響應</h2>
+<p><strong>第一步，離散版的篩選性。</strong>任何序列都可以寫成 x[n] = ∑<sub>k=−∞</sub><sup>∞</sup> x[k]δ[n − k]。這一行看起來和連續版一樣，意思卻樸素得多：δ[n] 就是一個<strong>普通數列</strong>，n = 0 時值為 1、其餘為零，沒有無限大、不需要極限。整條式子只是在說「把陣列每一格單獨挑出來再加回去」。</p>
+<p><strong>第二步到第四步，逐字對應連續版。</strong>系統對 δ[n] 的響應叫脈衝響應 h[n]；由<strong>時不變</strong>，系統對 δ[n − k] 的響應是 h[n − k]；由<strong>線性的齊次性</strong>，乘上權重 x[k] 之後響應是 x[k]h[n − k]；由<strong>線性的可加性</strong>，把所有 k 加起來就得到<strong>摺積和</strong> y[n] = x[n] ∗ h[n] = ∑<sub>k=−∞</sub><sup>∞</sup> x[k]h[n − k]。與第 04 章唯一的差別是積分號換成求和號。因果條件 h[n] = 0（n &lt; 0），BIBO 穩定條件 ∑<sub>n</sub>|h[n]| &lt; ∞。</p>
+<p><strong>一階 IIR 的脈衝響應要用手展開一次。</strong>對 y[n] = a·y[n − 1] + x[n] 打入 x[n] = δ[n]，假設初始靜止（y[−1] = 0）。n = 0 時 y[0] = a·0 + 1 = 1；n = 1 時 y[1] = a·1 + 0 = a；n = 2 時 y[2] = a²；n = 3 時 y[3] = a³。於是 h[n] = a<sup>n</sup>u[n]，每一項都不為零，這就是「無限」的字面意思。</p>
+<p><strong>步階響應要用幾何級數收尾。</strong>把 x[n] = u[n] 代進摺積和，n ≥ 0 時 y[n] = ∑<sub>k=0</sub><sup>n</sup> a<sup>k</sup>。這是首項 1、公比 a、共 n + 1 項的幾何級數，套公式得 y[n] = (1 − a<sup>n+1</sup>)/(1 − a)。|a| &lt; 1 時 a<sup>n+1</sup> → 0，所以終值是 1/(1 − a)，它就是<strong>直流增益</strong>，也正好等於 ∑<sub>n</sub>h[n]。</p>
+<p><strong>穩定條件與時間常數。</strong>取絕對值再求和：∑<sub>n=0</sub><sup>∞</sup>|a<sup>n</sup>| = 1/(1 − |a|)，只要 |a| &lt; 1 就收斂，系統 BIBO 穩定；|a| ≥ 1 時級數發散。<strong>這個「|a| 要小於 1」就是第 14 章「極點必須落在單位圓內」的雛形</strong>。衰減速度可借用連續時間的說法：令 a<sup>n</sup> = exp(−n / n<sub>τ</sub>) 兩邊取自然對數，得等效時間常數 n<sub>τ</sub> = −1/ln a，單位是<strong>樣本</strong>而不是秒。</p>
+<p><strong>移動平均的步階響應是一條斜線接一條水平線。</strong>M 點移動平均的 h[n] = 1/M（0 ≤ n ≤ M − 1），其餘為零，所以 y[n] = (1/M)∑<sub>k=0</sub><sup>M−1</sup> x[n − k]。打入步階時，視窗裡有幾個 1 就加幾個，於是 y[n] = min(n + 1, M)/M：前 M 個樣本線性爬升，第 M 個樣本剛好到 1，之後<strong>完全停住，一步不多</strong>。它的 Σ|h[n]| 恆等於 1，所以<strong>沒有回授的系統不可能不穩定</strong>。</p>
+<p><strong>成本比較。</strong>M 點 FIR 每算一個輸出要 M 次乘加；一階 IIR 只要 2 次，而且不管衰減拖多長都還是 2 次。這就是 IIR 在嵌入式系統裡受歡迎的理由。</p>
+
+<h2>數值實例：一階 IIR，a = 0.8、步階輸入、觀測第 5 個樣本</h2>
+<p>系統 y[n] = 0.8·y[n − 1] + x[n]，輸入單位步階 u[n]，初始靜止，觀測 n = 5。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>脈衝響應</td><td>h[5] = a<sup>5</sup> = 0.8<sup>5</sup></td><td><strong>0.327680</strong></td></tr>
+<tr><td>步階響應</td><td>y[5] = (1 − 0.8<sup>6</sup>)/(1 − 0.8) = (1 − 0.262144)/0.2</td><td><strong>3.689280</strong></td></tr>
+<tr><td>終值（直流增益）</td><td>∑h[n] = 1/(1 − 0.8)</td><td><strong>5.000000</strong></td></tr>
+<tr><td>穩定判定</td><td>∑|h[n]| = 5.000000 &lt; ∞</td><td><strong>BIBO 穩定</strong></td></tr>
+<tr><td>等效時間常數</td><td>n<sub>τ</sub> = −1/ln(0.8)</td><td><strong>4.481420 個樣本</strong></td></tr>
+<tr><td>已到終值的幾成</td><td>3.689280 / 5.000000</td><td><strong>73.785600 %</strong></td></tr>
+</tbody></table>
+<p>邊界對照：n = <strong>0</strong> → y = <strong>1.000000</strong>（<strong>第一個樣本就是 x[0]</strong>）；n = <strong>1</strong> → y = <strong>1.800000</strong>；n = <strong>40</strong> → y = <strong>4.999468</strong>（<strong>幾乎到終值</strong>）。a = <strong>0.5</strong> → y[5] = <strong>1.968750</strong>、直流增益 <strong>2.000000</strong>、n<sub>τ</sub> = <strong>1.442695</strong>（<strong>快但增益小</strong>）；a = <strong>0.95</strong> → y[5] = <strong>5.298162</strong>、直流增益 <strong>20.000000</strong>、n<sub>τ</sub> = <strong>19.495726</strong>（<strong>慢但增益大</strong>）；a = <strong>0.99</strong>、n = 40 → y = <strong>33.771796</strong>、直流增益 <strong>100.000000</strong>（<strong>離終值還很遠</strong>）。換成 <strong>M = 8 點移動平均</strong>、步階輸入：n = <strong>5</strong> → y = <strong>0.750000</strong>；n = <strong>7</strong> → y = <strong>1.000000</strong>（<strong>恰好 M 個樣本後到達終值，一步不多</strong>）；n = <strong>20</strong> → y = <strong>1.000000</strong>。M = <strong>16</strong>、n = 5 → y = <strong>0.375000</strong>。</p>
+<p>量級對照：這些樣本數要有感覺，得先借一下下一章的取樣頻率。以電話品質的 f<sub>s</sub> = 8000 Hz 換算，一個樣本是 125 µs，M = 8 的移動平均剛好涵蓋 1 ms，a = 0.8 的等效時間常數 4.481420 樣本約 0.56 ms。相對地，市電 50 Hz 的一個週期是 20 ms，也就是 160 個樣本——想用移動平均把它濾乾淨，成本立刻從 8 次乘加變成 160 次。</p>
+
+<section class="workspace"><h2>自由實驗：同一個輸入，兩種系統原型</h2>
+<p>系統可以選一階遞迴 IIR 或 M 點移動平均 FIR，輸入可以選單位步階或單位脈衝，觀測樣本 n 可以滑到 40。要看三件事：這一格的輸出值、脈衝響應的絕對值總和是不是有限、以及達到終值需要幾個樣本。</p>
+<div class="controls">
+<label for="dts-mode">系統型式<select id="dts-mode"><option value="iir">一階遞迴 IIR：y[n] = a*y[n-1] + x[n]</option><option value="fir">M 點移動平均 FIR</option></select></label>
+<label for="dts-x">輸入訊號<select id="dts-x"><option value="step">單位步階 u[n]</option><option value="impulse">單位脈衝 delta[n]</option></select></label>
+<label for="dts-a">遞迴係數 a（只有 IIR 模式用）<input id="dts-a" type="range" min="0" max="0.99" step="0.01" value="0.8"></label>
+<label for="dts-m">平均點數 M（只有 FIR 模式用）<input id="dts-m" type="range" min="2" max="32" step="1" value="8"></label>
+<label for="dts-n">觀測樣本 n<input id="dts-n" type="range" min="0" max="40" step="1" value="5"></label>
+</div>
+<div id="dtsystem-output" class="output" aria-live="polite">這個模式只用到「遞迴係數 a」與「觀測樣本 n」兩個滑桿，「平均點數 M」不影響結果。y[5] = 3.689280，h[5] = 0.327680，Σ|h[n]| = 5.000000，直流增益 5.000000，n<sub>τ</sub> = 4.481420 個樣本，已達終值 73.785600 %。<strong>IIR</strong>：h[n] = a<sup>n</sup> 永遠不會真的到 0，只是愈來愈小。Σ|h[n]| = 1/(1 − a) = 5.000000 &lt; ∞，所以 <strong>BIBO 穩定</strong>；每個輸出只要 2 次乘加，<strong>很便宜</strong>。IIR 用回授換效率（少量係數就能做出很窄的濾波），FIR 用長度換保證（沒有回授就不可能不穩定，而且可以做到嚴格線性相位）——<strong>第 15 章會用頻率響應把這個取捨算給你看</strong>。把 a 滑到 0 會看到遞迴整個消失、系統退化成 y[n] = x[n]；把 a 滑到 0.99 再把 n 拉到 40，會看到直流增益衝到 100.000000 而輸出才走到 33.771796，離終值還有很長一段。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>x[n] 的 n 是<strong>樣本序號</strong>，不是秒。同一串樣本在 8000 Hz 與 48000 Hz 底下代表的實際時間差六倍，要換成秒必須乘上 T<sub>s</sub>。</li>
+<li>δ[n] 與 δ(t) 不是同一種東西。δ[n] 是一個值為 1 的數列項，可以直接寫進陣列；δ(t) 是面積為 1、高度無限的分布，只能活在積分裡。</li>
+<li>「IIR 因為無限所以不穩定」是錯的。無限長講的是 h[n] 的項數，發散講的是 ∑|h[n]|；只要 |a| &lt; 1，項數無限而總和有限，系統照樣 BIBO 穩定。</li>
+<li>FIR 的「有限」講的是 h[n] 的長度，不是輸出的長度。輸入若是永不結束的步階，移動平均的輸出也永遠有值，只是從第 M 個樣本起不再變化。</li>
+<li>降取樣 x[2n] 與內插 x[n/2] 不是互為反運算。前者丟掉的樣本無法從留下的樣本推回來，後者補出來的值是模型算的、不是量到的。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>這一章不需要昂貴儀器，連試算表都行：一欄填滿 1 當作步階輸入，另一欄寫「本格輸入加上 0.8 乘前一格輸出」，往下拉四十列，就能一格一格印出 y[n]，再和閉合式 (1 − a<sup>n+1</sup>)/(1 − a) 逐格對照；兩者若在第五格都給出 3.689280，代表遞迴實作與級數求和一致。想量真實硬體，就把差分方程燒進 DSP 開發板，用邏輯分析儀在每次輸出時翻轉一支腳位，讀出每個樣本的運算時間：FIR 的耗時隨 M 線性上升，一階 IIR 幾乎是一條平線。</p>
+<p><strong>能證明什麼</strong>：某個差分方程的實際輸出序列、達到終值需要幾個樣本、每個輸出花掉多少運算量與時間。</p>
+<p><strong>不能證明什麼</strong>：h[n]「真的」無限長。真實實作用有限字長，a<sup>n</sup> 小到低於量化位階就變成 0，機器上看到的 IIR 其實是被截斷的序列。也證明不了「這個系統是 LTI」——量出一條輸出序列只說明它對這個輸入的反應，要斷定線性與時不變，仍得回到第 03 章另外做疊加測試與時移測試。</p>
+
+<h2>連到哪門課</h2>
+<p>幾何級數的求和公式與收斂條件見<a href="../../../共通基礎/數學/互動課程/03-級數與泰勒.html">工程數學先修的級數與泰勒</a>，本章兩條閉合式都是它的直接應用；連續版的摺積與 BIBO 條件見本課<a href="04-線性非時變與摺積.html">04 線性非時變與摺積</a>，兩者可以逐行對照著讀。這兩種系統的頻率響應會在第 15 章算給你看，而「|a| &lt; 1」為什麼等價於「極點在單位圓內」則是第 14 章的主題。真實裝置這一側，感測器讀值的去抖動、數位音量的平滑、電池電量的估計，用的幾乎都是本章這個只要兩次乘加的一階遞迴。下一章要把類比與數位兩個世界接起來，回答一個更尖銳的問題：這串樣本到底夠不夠還原原本那條連續曲線。</p>
+<nav class="pager" aria-label="章節導覽"><a href="10-調變與頻譜搬移.html">← 上一頁：調變與頻譜搬移</a><a href="12-取樣與混疊.html">下一頁：取樣與混疊 →</a></nav>
+</main>
+<footer class="site-footer"><span>11 離散時間訊號與差分方程</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

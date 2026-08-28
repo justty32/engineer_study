@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 極零點與二階系統｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・兩個參數綁死四個工程指標</p>
+<h1>極零點與二階系統：看到 ζ 就知道波形會怎麼晃</h1>
+<p class="lead">上一章把系統的個性交給極點位置，這章把最常用的那一型收成兩個參數：阻尼比 ζ 與自然頻率 ω<sub>n</sub>。超越量、峰值時間、整定時間與共振峰全部由它們決定，而且分工乾淨得驚人：形狀只看 ζ，快慢只看 ω<sub>n</sub>。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="07-拉氏轉換與轉移函數.html">07 拉氏轉換與轉移函數</a>的極點與轉移函數，以及<a href="../電路學-互動課程/08-二階RLC暫態.html">電路學的二階 RLC 暫態</a>那三種放電行為。</p>
+
+<h2>痛點：超越量、整定時間這些規格到底從哪裡冒出來的</h2>
+<p>控制課的規格表寫得很硬：超越量不得超過 10 %、整定時間要小於 0.5 秒、共振峰不得高於 1.3。可是這些數字看起來彼此獨立，改一個好像會動到全部，於是設計變成試誤。真正的問題是沒有人先說清楚：這四個指標其實只由兩個參數決定，而且分工是固定的。</p>
+<p>第二個痛點是名字太像。ω<sub>n</sub>、ω<sub>d</sub>、ω<sub>r</sub> 全部叫「某某頻率」，符號只差一個下標，數值又都在同一個量級，講快一點就分不清誰是誰。同一組參數下這三個數字明明不一樣（本章預設值是 10.000000、8.660254、7.071068 rad/s），卻常被當成同一件事。</p>
+<p>第三個痛點是「有沒有共振峰」與「會不會超越」被混為一談。頻率響應平坦不代表步階響應不會衝過頭，這兩件事分屬頻域與時域，門檻也不同：ζ ≥ 0.707107 就沒有共振峰，但要 ζ ≥ 1 才沒有超越，中間那一段是最容易誤判的區域。</p>
+
+<h2>白話直覺：一個會回彈的系統，回彈多用力由阻尼決定</h2>
+<p>訊號從哪來？就當它是一個突然給到位的命令：電源開機、馬達收到新的位置目標、喇叭收到一個直流階。系統對它做了什麼？系統有慣性也有阻力，它不會直接停在新位置，而是衝過去一點再彈回來，來回幾次才安頓。這件事在哪個域最好描述？兩邊都要：時域看衝過頭多少、多久安頓；頻域看在哪個頻率被放大、放大多少。同一組極點同時決定這兩張臉。</p>
+<p>可以暫時把 ζ 想成阻尼器的黏度，ω<sub>n</sub> 想成彈簧的硬度；比喻到此為止，精確的定義是 H(s) = ω<sub>n</sub>² / (s² + 2ζω<sub>n</sub>s + ω<sub>n</sub>²)，其中 ω<sub>n</sub> 是自然頻率（natural frequency），單位 rad/s，ζ 是阻尼比（damping ratio），無單位。分子刻意寫成 ω<sub>n</sub>² 是為了讓直流增益等於 1，也就是最後一定停在輸入值上，不多不少。</p>
+<p>換域的代價是什麼？在時域看得到超越與整定，卻看不出哪個頻率被放大；在頻域看得到共振峰，卻看不出第一個峰發生在第幾毫秒。而且兩邊的「峰」不是同一個數字：本章預設值下共振峰 M<sub>r</sub> = 1.154701、超越後的峰值 1.163034，接近純屬巧合。儀器量到什麼？示波器給第一個峰的高度與時間，網路分析儀給振幅與相位曲線；把兩者拼起來才是完整的二階描述。</p>
+<p class="note">來源：09-信號與系統-上 §7.3–§7.4。</p>
+
+<h2>推導：從公式解到四個指標</h2>
+<p><strong>（a）極點怎麼來。</strong>對分母 s² + 2ζω<sub>n</sub>s + ω<sub>n</sub>² 用公式解，判別式是 4ζ²ω<sub>n</sub>² − 4ω<sub>n</sub>² = 4ω<sub>n</sub>²(ζ² − 1)。它的正負就是四種阻尼的分界：ζ > 1 判別式為正，兩個相異實根，過阻尼，不振盪但慢；ζ = 1 判別式為零，重根，臨界阻尼，是所有不振盪情形裡最快的；0 < ζ < 1 判別式為負，一對共軛複根 s = −ζω<sub>n</sub> ± jω<sub>n</sub>√(1 − ζ²)，欠阻尼，會振盪也會超越；ζ = 0 極點落在虛軸，無阻尼，等幅振盪。共軛極點的虛部就是<strong>阻尼振盪頻率</strong> ω<sub>d</sub> = ω<sub>n</sub>√(1 − ζ²)，實部 −ζω<sub>n</sub> 就是上一章的衰減率 σ。</p>
+<p><strong>（b）欠阻尼的步階響應。</strong>簡化假設是線性、非時變、初始靜止、單位步階輸入。反轉換後得 y(t) = 1 − exp(−ζω<sub>n</sub>t)[cos(ω<sub>d</sub>t) + (ζ/√(1 − ζ²))sin(ω<sub>d</sub>t)]。第一項 1 是終值，中括號那一團是衰減中的振盪，前面的指數就是包絡。</p>
+<p><strong>（c）超越量的來歷。</strong>對 y 微分令零，中括號裡的項化簡後只剩正弦，第一個非零解落在 ω<sub>d</sub>t = π，於是<strong>峰值時間</strong> t<sub>p</sub> = π/ω<sub>d</sub>。把它代回 y，指數項變成 exp(−ζω<sub>n</sub>π/ω<sub>d</sub>)，而 ω<sub>n</sub>/ω<sub>d</sub> = 1/√(1 − ζ²)，所以<strong>超越量</strong> M<sub>p</sub> = exp(−πζ/√(1 − ζ²))。式子裡完全沒有 ω<sub>n</sub>：<strong>M<sub>p</sub> 只跟 ζ 有關</strong>，ω<sub>n</sub> 只決定快慢，不決定形狀。</p>
+<p><strong>（d）整定時間的來歷。</strong>用 2 % 準則，要求包絡 exp(−ζω<sub>n</sub>t) 掉到 0.02，解得 t = ln(50)/(ζω<sub>n</sub>) = 3.912/(ζω<sub>n</sub>)。工程上把 3.912 取整成 4，寫成 t<sub>s</sub> ≈ 4/(ζω<sub>n</sub>)。這個 4 是慣例不是定理，換成 5 % 準則就變成 3。</p>
+<p><strong>（e）共振峰與 0.707107 這個門檻。</strong>把 s = jω 代進去得 |H(jω)| = ω<sub>n</sub>² / √((ω<sub>n</sub>² − ω²)² + (2ζω<sub>n</sub>ω)²)。要找峰就對分母內那一團求極值，得 ω<sub>r</sub>² = ω<sub>n</sub>²(1 − 2ζ²)。當 1 − 2ζ² ≤ 0，也就是 ζ ≥ 1/√2 = 0.707107 時根本沒有實數解，<strong>沒有共振峰</strong>，振幅從直流開始就單調下降。有峰時峰值 M<sub>r</sub> = 1/(2ζ√(1 − ζ²))。另外在 ω = ω<sub>n</sub> 這一點，分母第一項歸零，|H| = 1/(2ζ)，而相位恆為 −90°，與 ζ 無關——<strong>這是實驗室量 ω<sub>n</sub> 最可靠的方法</strong>。電路學那一側的品質因數換算是 Q = 1/(2ζ)。</p>
+<p><strong>（f）不振盪的兩個分支。</strong>ζ = 1 時重根落在 −ω<sub>n</sub>，步階響應是 y(t) = 1 − (1 + ω<sub>n</sub>t)·exp(−ω<sub>n</sub>t)。ζ > 1 時兩個實極點 s<sub>1,2</sub> = −ζω<sub>n</sub> ± ω<sub>n</sub>√(ζ² − 1)，步階響應 y(t) = 1 − (s<sub>2</sub>·exp(s<sub>1</sub>t) − s<sub>1</sub>·exp(s<sub>2</sub>t))/(s<sub>2</sub> − s<sub>1</sub>)。兩個實極點差很遠時，靠近原點那個衰減慢，整條曲線由它主導。</p>
+
+<h2>數值實例：ζ = 0.5、ω<sub>n</sub> = 10 rad/s 的完整體檢</h2>
+<p>取 ζ = 0.5、ω<sub>n</sub> = 10 rad/s，頻域觀測 ω = 10 rad/s，時域觀測 t = 0.5 s。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>極點</td><td>−ζω<sub>n</sub> ± jω<sub>n</sub>√(1 − ζ²)</td><td><strong>−5.000000 ± j8.660254</strong></td></tr>
+<tr><td>阻尼振盪頻率</td><td>ω<sub>d</sub> = 10√0.75</td><td><strong>8.660254 rad/s</strong></td></tr>
+<tr><td>超越量</td><td>M<sub>p</sub> = exp(−π×0.5/0.866025)</td><td><strong>0.163034 ＝ 16.303353 %</strong></td></tr>
+<tr><td>峰值時間</td><td>t<sub>p</sub> = π/ω<sub>d</sub></td><td><strong>0.362760 s</strong>（該處 y = <strong>1.163034</strong>）</td></tr>
+<tr><td>整定時間</td><td>t<sub>s</sub> ≈ 4/(0.5 × 10)</td><td><strong>0.800000 s</strong></td></tr>
+<tr><td>共振頻率</td><td>ω<sub>r</sub> = 10√(1 − 0.5)</td><td><strong>7.071068 rad/s</strong></td></tr>
+<tr><td>共振峰值</td><td>M<sub>r</sub> = 1/(2 × 0.5 × 0.866025)</td><td><strong>1.154701（＝ 1.249387 dB）</strong></td></tr>
+<tr><td>ω = ω<sub>n</sub> 處</td><td>|H| = 1/(2ζ)、∠H</td><td><strong>1.000000、−90.000000°</strong></td></tr>
+<tr><td>步階響應</td><td>y(0.5)</td><td><strong>1.074591</strong>（已越過終值又回落）</td></tr>
+<tr><td>品質因數</td><td>Q = 1/(2ζ)</td><td><strong>1.000000</strong></td></tr>
+</tbody></table>
+<p>邊界對照：ζ = <strong>0.2</strong> → M<sub>p</sub> = <strong>52.662060 %</strong>、ω<sub>d</sub> = <strong>9.797959</strong>、t<sub>s</sub> = <strong>2.000000 s</strong>、M<sub>r</sub> = <strong>2.551552</strong>、|H(ω<sub>n</sub>)| = <strong>2.500000</strong>、y(0.5) = <strong>1.005544</strong>。ζ = <strong>0.05</strong> → M<sub>p</sub> = <strong>85.446789 %</strong>、y(t<sub>p</sub>) = <strong>1.854468</strong>、|H(ω<sub>n</sub>)| = <strong>10.000000</strong>（<strong>幾乎是個振盪器</strong>）。ζ = <strong>0.7</strong> → M<sub>p</sub> = <strong>4.598791 %</strong>、<strong>沒有共振峰</strong>（0.7 < 0.707107 只差一點點，M<sub>r</sub> = <strong>1.000200</strong>，實務上視為平坦）、y(0.5) = <strong>1.039775</strong>。ζ = <strong>1</strong>（臨界）→ <strong>無超越</strong>、y(0.5) = <strong>0.959572</strong>、t<sub>s</sub> = <strong>0.400000 s</strong>。ζ = <strong>2</strong>（過阻尼）→ 極點 <strong>−2.679492</strong> 與 <strong>−37.320508</strong>、y(0.5) = <strong>0.717829</strong>（<strong>慢的那個極點主導</strong>）。ω<sub>n</sub> = <strong>20</strong>、ζ = 0.5 → M<sub>p</sub> <strong>不變</strong>（16.303353 %）、t<sub>s</sub> = <strong>0.400000 s</strong>、y(0.5) = <strong>1.002170</strong>（<strong>ω<sub>n</sub> 只改快慢不改形狀</strong>）。</p>
+<p>量級對照：ω<sub>n</sub> = 10 rad/s 換成頻率只有 1.591549 Hz，比市電的 50 Hz 慢得多，是機構伺服或電源軟啟動那個量級；t<sub>s</sub> = 0.8 s 是用眼睛就看得出來的晃動。同一個 ζ 若把 ω<sub>n</sub> 拉到 6283.185307 rad/s（1000 Hz），波形長得一模一樣，只是整條時間軸壓縮了 628 倍，整定時間變成 1.273240 ms。</p>
+
+<section class="workspace"><h2>自由實驗：把 ζ 與 ω<sub>n</sub> 的分工看清楚</h2>
+<p>系統是標準二階式 H(s) = ω<sub>n</sub>² / (s² + 2ζω<sub>n</sub>s + ω<sub>n</sub>²)，輸入是單位步階。前兩個滑桿決定系統本身，後兩個滑桿決定你站在哪個頻率、哪個時刻觀測。要看的是：只動 ω<sub>n</sub> 時超越量一格都不動，只有時間軸被拉伸或壓縮；ζ 跨過 0.707107 時共振峰整個消失，但步階響應還在超越。</p>
+<div class="controls">
+<label for="sec-zeta">阻尼比 ζ<input id="sec-zeta" type="range" min="0.05" max="2" step="0.05" value="0.5"></label>
+<label for="sec-wn">自然頻率 ω<sub>n</sub>（rad/s）<input id="sec-wn" type="range" min="1" max="50" step="1" value="10"></label>
+<label for="sec-w">觀測角頻率 ω（rad/s）<input id="sec-w" type="range" min="0" max="100" step="1" value="10"></label>
+<label for="sec-t">步階響應的觀測時刻 t（s）<input id="sec-t" type="range" min="0" max="3" step="0.05" value="0.5"></label>
+</div>
+<div id="secondorder-output" class="output" aria-live="polite"><strong>欠阻尼</strong>：極點 −5.000000 ± j8.660254、ω<sub>d</sub> = 8.660254 rad/s、Q = 1.000000。會超越 16.303353 %，第一個峰在 t<sub>p</sub> = 0.362760 s，大約 t<sub>s</sub> = 0.800000 s 後穩定下來。共振頻率 ω<sub>r</sub> = 7.071068 rad/s、共振峰 M<sub>r</sub> = 1.154701。目前 |H(jω)| = 1.000000（0.000000 dB）、∠H = −90.000000°、y(0.500000) = 1.074591。<strong>現在剛好站在 ω<sub>n</sub> 上</strong>：|H| = 1/(2ζ) = 1.000000，相位一定是 −90.000000°——這是實驗室量 ω<sub>n</sub> 最可靠的方法，因為相位比振幅好認。<strong>M<sub>p</sub> 只由 ζ 決定，ω<sub>n</sub> 只決定快慢</strong>：把 ω<sub>n</sub> 加倍，波形形狀一模一樣，只是時間軸壓縮一半。Q = 1/(2ζ)，所以 ζ = 0.5 就是 Q = 1；電路學的 RLC 共振講的是同一件事。把 ζ 滑到 0.05 會逼近振盪器，滑到 1 是臨界阻尼、不超越且最快，滑過 1 之後變成兩個實極點、由慢的那個主導；ζ 一旦到達 0.707107 以上就不再有共振峰。t 滑到 0 時 y 一定是 0.000000。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>ω<sub>n</sub>、ω<sub>d</sub>、ω<sub>r</sub> 是<strong>三個不同的頻率</strong>。本章預設值分別是 10.000000、8.660254、7.071068 rad/s，只有 ζ → 0 時三者才靠攏成同一個數。</li>
+<li>「阻尼比 ζ」與「衰減率 σ」不是同一個量。ζ 無單位，σ = ζω<sub>n</sub> 才是每秒衰減多少，單位 1/s；同樣的 ζ 配不同的 ω<sub>n</sub>，衰減速度差很多。</li>
+<li>共振峰 M<sub>r</sub> 與超越量 M<sub>p</sub> 都叫「峰」，但一個在頻域、一個在時域，數值不相等（1.154701 對 1.163034，接近純屬巧合）。</li>
+<li>ζ ≥ 0.707107 沒有共振峰<strong>不代表</strong>沒有超越。ζ = 0.7 的頻率響應已經單調下降，步階響應仍然超越 4.598791 %；要完全不超越得等到 ζ ≥ 1。</li>
+<li>整定時間公式裡的 4 是 2 % 準則的工程近似，精確值是 ln(50) = 3.912。換成 5 % 準則會變成 3，報數字前要先講清楚用哪個準則。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>時域這一側：用函數產生器送一個低頻方波當步階，示波器量第一個峰比終值高出的比例就是 M<sub>p</sub>，量峰出現的時刻就是 t<sub>p</sub>。由 M<sub>p</sub> 反解得到 ζ，再由 t<sub>p</sub> = π/ω<sub>d</sub> 得到 ω<sub>d</sub>，兩者合起來就得到 ω<sub>n</sub>。頻域這一側：用網路分析儀掃頻，找相位穿過 −90° 的那一點，那就是 ω<sub>n</sub>，而且這個判準不受增益校正誤差影響，比找振幅峰值可靠得多。</p>
+<p><strong>能證明什麼</strong>：ζ 與 ω<sub>n</sub> 的實際值、共振峰的高度與位置、直流增益是不是真的等於 1。改一個元件再量一次，就能看到極點確實照公式移動。</p>
+<p><strong>不能證明什麼</strong>：這個系統<strong>真的是</strong>二階。真實裝置一定有更多極點與寄生零點，只是被主導的那一對蓋住；量到的曲線與二階模型吻合，只說明二階是好用的近似，不說明高階項不存在，而高頻段的偏離通常就是它們露出的馬腳。也證明不了整定時間公式裡的「4」——那是準則的選擇，不是量出來的物理量。此外網路分析儀給的是穩態頻率響應，量不到暫態；示波器給的是暫態，量不到相位曲線，兩台儀器缺一不可。</p>
+
+<h2>連到哪門課</h2>
+<p>這一章的四個指標就是控制系統寫規格的語言：伺服迴路的超越量上限、電源迴授的相位裕度、機械手臂的整定時間，全都是在挪 ζ 與 ω<sub>n</sub>。元件那一側，RLC 的 α 與 ω<sub>0</sub> 版本見<a href="../電路學-互動課程/08-二階RLC暫態.html">電路學的二階 RLC 暫態</a>，換算是 α = ζω<sub>n</sub>、ω<sub>0</sub> = ω<sub>n</sub>；品質因數 Q 與共振見<a href="../電路學-互動課程/13-RLC共振與品質因數.html">RLC 共振與品質因數</a>，換算是 Q = 1/(2ζ)。至於怎麼設計控制器把 ζ 挪到想要的位置，那是控制系統的題目。下一章把同一組工具轉向濾波器，看看「要多陡」與「相位要多線性」怎麼互相衝突。</p>
+<nav class="pager" aria-label="章節導覽"><a href="07-拉氏轉換與轉移函數.html">← 上一頁：拉氏轉換與轉移函數</a><a href="09-濾波器與群延遲.html">下一頁：濾波器與群延遲 →</a></nav>
+</main>
+<footer class="site-footer"><span>08 極零點與二階系統</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

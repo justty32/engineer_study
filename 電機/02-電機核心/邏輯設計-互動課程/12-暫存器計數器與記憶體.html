@@ -1,0 +1,92 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 暫存器計數器與記憶體｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">12・把一個位元的記憶往寬、往深、往前推</p>
+<h1>暫存器、計數器與記憶體：從四個正反器長到三百萬顆電晶體</h1>
+<p class="lead">一排共用時脈的正反器是暫存器，讓它自己往前走是計數器，用位址從幾十萬個位元裡挑出一個字則是記憶體。三者的位元胞、選中方式與成本結構都不同，這章一次講清楚。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="11-有限狀態機.html">11 有限狀態機</a>的狀態編碼與狀態表，以及<a href="09-閂鎖與正反器.html">09 閂鎖與正反器</a>的 D 正反器與邊緣觸發。</p>
+
+<h2>痛點：一個正反器記一個位元，那幾 GB 是複製幾十億份嗎</h2>
+<p>第 09 章教會一個 D 正反器記住一個位元，第 11 章教會用四個正反器裝下一台狀態機。可是隨手一支手機就有好幾 GB，難道是把同一個正反器複製幾十億份？而且既然都叫「記憶」，為什麼講到暫存器、快取與主記憶體時，語氣像在講三種毫不相干的東西？</p>
+<p>落差在這裡：一個位元的記憶往「寬」長是暫存器，讓它自己往前走是計數器，往「深」長到幾十萬個位元則是記憶體。三者的位元胞成本差二十倍，被選中的方式更是兩套機制；混成一團想，就會以為記憶體只是「比較大的暫存器」。</p>
+
+<h2>白話直覺：同一個時脈邊緣，一整排位元同時換人</h2>
+<p>暫存器（register）就是 n 個共用同一條時脈的 D 正反器。可以暫時把它想成程式裡的一個變數，比喻到此為止——精確地說，它是 n 個邊緣觸發的儲存元件，輸入端接組合邏輯、輸出端接回組合邏輯，內部沒有先後次序。</p>
+<p>因果鏈走一遍。<strong>輸入從哪來</strong>：前一級的 Q 或外部資料線。<strong>做了什麼決定</strong>：在時脈邊緣把當下的 D 值一次鎖進去，其餘時間不理會輸入怎麼晃。<strong>花掉多少</strong>：一顆正反器約 20 顆電晶體，SRAM 位元胞只要 6 顆，DRAM 只要 1 顆電晶體加 1 顆電容。<strong>邊界在哪</strong>：位元一多就不可能每個都拉線出來，必須改用位址挑。<strong>儀器量到什麼</strong>：邏輯分析儀抓四條輸出，就能看見位元每拍往右挪一格。</p>
+<p>真正的分野是「怎麼被選中」。暫存器靠名字直接接線，每一個都有專屬的線、隨時可見；記憶體靠位址解碼挑出一個字，你給 16 條位址線，硬體才算出要打開第幾條字元線（word line）。這個差別決定了面積、速度與用法。</p>
+<p class="note">來源：10-邏輯設計 §6.3、§7。</p>
+
+<h2>推導：四件事同時發生、延遲為何累積、指數怎麼變平方根</h2>
+<p><strong>（a）移位暫存器每一拍在做什麼。</strong>移位暫存器（shift register）把每一級的 D 接到上一級的 Q，用途是串並轉換、序列偵測與偽隨機序列產生。四位元右移寫出來是 Q<sub>3</sub> ← SIN、Q<sub>2</sub> ← Q<sub>3</sub>、Q<sub>1</sub> ← Q<sub>2</sub>、Q<sub>0</sub> ← Q<sub>1</sub>。關鍵是<strong>這四件事同時發生</strong>：共用同一個時脈邊緣，每一級抓到的是上一級在邊緣「之前」的舊值，不會像軟體迴圈那樣被前一行覆蓋。這是硬體併發思維的頭一個例子。</p>
+<p><strong>（b）漣波計數器的延遲為什麼會累積。</strong>計數器（counter）是 T 正反器串起來的特化狀態機。非同步（漣波）計數器把後一級的時脈接到前一級的 Q：第 1 級翻轉完成、輸出真的變了，第 2 級才看到自己的時脈邊緣，所以 n 級最壞延遲是 n × t<sub>ff</sub>。同步計數器讓所有正反器共用時脈同時翻轉，延遲不隨位元數成長，代價是多一組進位邏輯。本課取 t<sub>ff</sub> ＝ t<sub>cq</sub> ＝ 0.40 ns，並假設每級延遲相同——真實元件會隨溫度與製程變動。</p>
+<p><strong>（c）位址解碼為什麼要拆成列與行。</strong>16 條位址線對 65536 個字，單層解碼要 65536 個 16 輸入 AND 閘。改成 8 條做 8 對 256 的列解碼、另外 8 條做 8 對 256 的行解碼，只要 512 個 8 輸入 AND 閘。指數 2<sup>n</sup> 變成兩個平方根的和 2 × 2<sup>n/2</sup>，這就是大型記憶體都長成方陣的原因。挑中的字元線把整列讀到位元線（bit line）上，微弱的電壓差再由感測放大器（sense amplifier）放大成 0 或 1。</p>
+<p><strong>（d）DRAM 為什麼一定要更新。</strong>DRAM 把位元存成電容上的電荷，電荷會經由漏電流流失。典型規格是 64 ms 內必須把每一列讀出來再寫回去，這個動作叫更新（refresh）。整片切成 256 列，64 ms 平均分下去就是每 250 µs 刷一列。更新期間該列不能給正常存取用，這是 DRAM 頻寬天生要繳的稅。</p>
+<p><strong>（e）密度差從哪裡來。</strong>SRAM 用 6 顆電晶體的交叉耦合結構（6T），電源不斷就自己撐住，快、不需更新，但面積大。DRAM 是 1 顆電晶體加 1 顆電容（1T1C），同樣面積約可放進 SRAM 的 4 到 8 倍位元。再往下是非揮發的一族：ROM、PROM、EPROM、EEPROM 與 Flash，斷電資料還在，代價是寫入慢且次數有限。另有內容定址記憶體（content-addressable memory, CAM），給的不是位址而是內容，一個週期內比對整片，代價是每個位元多一組比較電路、面積至少是 SRAM 的兩倍。大型記憶體還會加上錯誤更正碼（error-correcting code, ECC）。</p>
+
+<h2>數值實例：四位元移位八拍、模 10 計數器、64 KiB SRAM</h2>
+<p>移位暫存器取 4 位元、初始內容 <code>0000</code>，串列輸入八拍是 1, 0, 1, 1, 0, 0, 1, 0。每拍新位元從 Q<sub>3</sub> 進來，其餘往右挪一格。</p>
+<table><thead><tr><th>拍</th><th>串列輸入</th><th>移位後內容 Q<sub>3</sub>Q<sub>2</sub>Q<sub>1</sub>Q<sub>0</sub></th><th>十進位</th></tr></thead><tbody>
+<tr><td>0</td><td>1</td><td><strong><code>1000</code></strong></td><td>8</td></tr>
+<tr><td>1</td><td>0</td><td><strong><code>0100</code></strong></td><td>4</td></tr>
+<tr><td>2</td><td>1</td><td><strong><code>1010</code></strong></td><td>10</td></tr>
+<tr><td>3</td><td>1</td><td><strong><code>1101</code></strong></td><td>13</td></tr>
+<tr><td>4</td><td>0</td><td><strong><code>0110</code></strong></td><td>6</td></tr>
+<tr><td>5</td><td>0</td><td><strong><code>0011</code></strong></td><td>3</td></tr>
+<tr><td>6</td><td>1</td><td><strong><code>1001</code></strong></td><td>9</td></tr>
+<tr><td>7</td><td>0</td><td><strong><code>0100</code></strong></td><td>4</td></tr>
+</tbody></table>
+<p><strong>第 3 拍的內容剛好是 <code>1101</code>——正是<a href="11-有限狀態機.html">第 11 章</a>那台狀態機在找的樣式。</strong>序列偵測器因此可以用「移位暫存器 ＋ 一個 4 輸入 AND 閘」實作：多花 4 個正反器，換到不必寫狀態表。</p>
+<table><thead><tr><th>項目</th><th>結果</th></tr></thead><tbody>
+<tr><td>模 10 計數器的正反器數</td><td>⌈log<sub>2</sub>10⌉ ＝ <strong>4</strong></td></tr>
+<tr><td>未使用狀態</td><td>2<sup>4</sup> − 10 ＝ <strong>6 個</strong>（10、11、12、13、14、15）</td></tr>
+<tr><td>漣波計數器最壞延遲</td><td>4 × 0.40 ＝ <strong>1.600000 ns</strong>（<strong>625.000000 MHz</strong>）</td></tr>
+<tr><td>同步計數器</td><td>所有正反器同時翻轉，<strong>延遲不隨位元數成長</strong></td></tr>
+<tr><td>SRAM 容量（16 位址線、8 位元字寬）</td><td>2<sup>16</sup> × 8 ＝ <strong>524288 位元 ＝ 65536 位元組 ＝ 64 KiB</strong></td></tr>
+<tr><td>SRAM 電晶體數</td><td>524288 × 6 ＝ <strong>3145728 顆</strong></td></tr>
+<tr><td>位址解碼</td><td>拆成 <strong>8 對 256 列解碼 ＋ 8 對 256 行解碼</strong></td></tr>
+<tr><td>換成 DRAM</td><td>524288 顆電晶體 ＋ 524288 顆電容；256 列、64 ms 內全刷完 → 每 <strong>250 µs</strong> 刷一列</td></tr>
+</tbody></table>
+<p>模 N 計數器要 ⌈log<sub>2</sub>N⌉ 個正反器，留下 2<sup>位元數</sup> − N 個未使用狀態；那 6 個狀態上電時可能被撞進去，安全的計數器必須讓它們都能走回 0。量級對照：64 KiB 的 SRAM 就要 3145728 顆電晶體，DRAM 的更新週期只有 64 ms，這說明了為什麼快取只有幾 MB、主記憶體卻能有幾 GB。</p>
+<p>邊界對照：<strong>模 16</strong> → 4 個正反器、<strong>0 個未使用狀態</strong>，剛好用滿是最省的模數，這正是二進位計數器最常見的原因。<strong>模 2</strong> → 1 個正反器，漣波延遲 0.400000 ns（2500.000000 MHz）。<strong>位址線 24、字寬 64</strong> → 2<sup>24</sup> × 64 ＝ 1073741824 位元 ＝ <strong>134217728 位元組 ＝ 128 MiB</strong>，若用 SRAM 需要 6442450944 顆電晶體——<strong>這就是為什麼主記憶體一定是 DRAM</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：一排、一串、一大片</h2>
+<p>同一個實驗有三個模式。移位暫存器模式讓你決定八拍的串列輸入，看四個位元怎麼一拍挪一格；計數器模式讓你拉模數，看要幾個正反器、剩幾個未使用狀態；記憶體模式讓你拉位址線與字寬，看容量、電晶體數與位址解碼怎麼拆。要看的是數字，也是每次附帶的那句原因。</p>
+<div class="controls">
+<label for="rm-mode">要看的東西<select id="rm-mode"><option value="shift">4 位元移位暫存器</option><option value="counter">模 N 計數器</option><option value="memory">記憶體規格</option></select></label>
+<table><thead><tr><th>拍次</th><th>串列輸入 SIN</th></tr></thead><tbody>
+<tr><th>0</th><td><label for="rm-sin0"><input id="rm-sin0" type="checkbox" checked>第 0 拍</label></td></tr>
+<tr><th>1</th><td><label for="rm-sin1"><input id="rm-sin1" type="checkbox">第 1 拍</label></td></tr>
+<tr><th>2</th><td><label for="rm-sin2"><input id="rm-sin2" type="checkbox" checked>第 2 拍</label></td></tr>
+<tr><th>3</th><td><label for="rm-sin3"><input id="rm-sin3" type="checkbox" checked>第 3 拍</label></td></tr>
+<tr><th>4</th><td><label for="rm-sin4"><input id="rm-sin4" type="checkbox">第 4 拍</label></td></tr>
+<tr><th>5</th><td><label for="rm-sin5"><input id="rm-sin5" type="checkbox">第 5 拍</label></td></tr>
+<tr><th>6</th><td><label for="rm-sin6"><input id="rm-sin6" type="checkbox" checked>第 6 拍</label></td></tr>
+<tr><th>7</th><td><label for="rm-sin7"><input id="rm-sin7" type="checkbox">第 7 拍</label></td></tr>
+</tbody></table>
+<label for="rm-mod">計數器的模數 N<input id="rm-mod" type="range" min="2" max="16" step="1" value="10"></label>
+<label for="rm-tech">記憶體種類<select id="rm-tech"><option value="sram">SRAM（6T）</option><option value="dram">DRAM（1T1C）</option><option value="rom">ROM / Flash（非揮發）</option><option value="cam">CAM（內容定址）</option></select></label>
+<label for="rm-addr">位址線條數<input id="rm-addr" type="range" min="8" max="24" step="1" value="16"></label>
+<label for="rm-word">字寬（位元）<input id="rm-word" type="range" min="4" max="64" step="4" value="8"></label>
+</div>
+<div id="regmem-output" class="output" aria-live="polite">這個模式只用到 8 個串列輸入格，模數、記憶體種類、位址線與字寬都不影響結果。串列輸入 1, 0, 1, 1, 0, 0, 1, 0，初始內容 0000，逐拍內容為 1000、0100、1010、1101、0110、0011、1001、0100。每一拍新的位元從 Q3 進來，其餘全部往右挪一格；這四件事在同一個時脈邊緣同時發生，所以不會互相覆蓋。第 3 拍的內容 1101 正是第 11 章那台狀態機在找的樣式。若把八格全部取消勾選，內容會一直是 0000，這時看不出移位行為，要至少勾一格才有東西可看。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>暫存器不是「小的記憶體」。暫存器靠名字接線、所有位元隨時可見；記憶體靠位址解碼挑一個字，每週期只露出一個字寬。差別在選中機制，不在大小。</li>
+<li>DRAM 的「更新」不是「重新整理畫面」。它是把電容上快漏光的電荷讀出來再寫回去，資料內容完全不變，只是把電位撐回滿格。</li>
+<li>ROM 的 R 是 read-only 的歷史名稱。現在的 Flash 可以寫，只是慢、必須先抹除整塊，而且次數有上限，典型是 10<sup>4</sup> 到 10<sup>5</sup> 次。</li>
+<li>未使用狀態不是「不會發生」。上電瞬間正反器的內容不確定，模 10 計數器那 6 個狀態都可能是起點，設計時必須讓它們都有回到 0 的路。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>用邏輯分析儀接上移位暫存器的四條輸出與時脈，設成時脈邊緣取樣，就能一拍一拍看到同一個位元往右挪一格。要量 DRAM，可在允許停用更新的控制器上把更新關掉，室溫下幾秒內就會出現位元錯誤，加熱之後來得更快。</p>
+<p><strong>能證明</strong>：移位的實際行為與方向、每一拍的內容等於預測值、DRAM 的資料保存時間隨溫度縮短。<strong>不能證明</strong>：這顆 SRAM 內部真的是 6T——它可能是 8T 或其他變體，外部行為一樣；也不能證明「這片記憶體沒有壞位元」，那要跑完整的測試圖樣，有些錯誤只在特定資料圖樣下才出現。邏輯分析儀只告訴你取樣時刻是 0 還是 1。</p>
+
+<h2>連到哪門課</h2>
+<p>這章的東西就在你面前的機器裡：CPU 的通用暫存器是一排接了名字的正反器，快取是 SRAM，記憶體模組是 DRAM，韌體在 Flash 裡，交換器查轉發表用 CAM。快取與虛擬記憶體怎麼疊起來，見計算機組織的<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">記憶體階層與虛擬記憶體</a>；暫存器在資料路徑裡的角色，見同一課的<a href="../../../專題/計算機組織/互動課程/03-時序邏輯與記憶.html">時序邏輯與記憶</a>。下一章把前面的手工活全部交給工具。</p>
+<nav class="pager" aria-label="章節導覽"><a href="11-有限狀態機.html">← 上一頁：有限狀態機</a><a href="13-可程式邏輯與HDL.html">下一頁：可程式邏輯與 HDL →</a></nav>
+</main>
+<footer class="site-footer"><span>12 暫存器計數器與記憶體</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 調變與頻譜搬移｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・乘一個載波，整段頻譜就搬家</p>
+<h1>調變與頻譜搬移：一個電台佔多少頻寬、功率花在哪裡</h1>
+<p class="lead">第 06 章那條「時域相乘等於頻域搬移」的性質，在這章兌現成一個真實系統：調幅廣播。同一個式子可以直接算出電台佔多少頻寬、發射功率有幾成真的在載資訊、以及為什麼調得太深聲音會破。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="06-傅立葉轉換.html">06 傅立葉轉換</a>的頻率平移性質，以及<a href="09-濾波器與群延遲.html">09 濾波器與群延遲</a>的頻寬概念與通道規劃的想法。</p>
+
+<h2>痛點：為什麼要把訊號搬到一百倍高的頻率去</h2>
+<p>語音明明只有幾千赫茲，為什麼廣播電台要把它搬到一千千赫茲再發射？直接發原來的低頻不是更省事嗎？這個問題如果沒有先回答，後面的調變公式全部變成無意義的三角恆等式練習。實際的理由很硬：天線的有效長度跟波長同一個量級，幾千赫茲的波長是幾十公里，做不出天線；而且大家都用同一段低頻，誰也分不開誰。</p>
+<p>第二個痛點是調變指數 m。很多人把它當成音量旋鈕，以為調大就是聲音大，於是「過調變」聽起來只是「開太大聲」。其實 m 是一個有精確幾何意義的比值：m = 1 時包絡剛好碰到零，超過 1 包絡就會想變成負數，而這件事二極體做不到，於是波形被折回去。</p>
+<p>第三個痛點是「頻寬到底由誰決定」。有人說載波頻率愈高頻寬愈寬，有人說調得愈深佔得愈寬，兩種說法都錯。頻寬只由訊息的最高頻率決定，B = 2f<sub>m</sub>，跟載波頻率無關，也跟 m 完全無關。</p>
+
+<h2>白話直覺：把訊息背在載波上，代價是功率與頻寬的帳</h2>
+<p>訊號從哪來？就當它是麥克風錄下的一段語音，頻率範圍幾十赫茲到幾千赫茲。系統對它做了什麼？系統把它乘上一個高頻正弦波，也就是載波。這件事在哪個域最好描述？頻率域，因為在時域看起來只是兩個波形相乘，在頻率域卻是一個乾淨的搬家動作：整段頻譜被複製兩份，一份搬到 +f<sub>c</sub>、一份搬到 −f<sub>c</sub>。第 06 章的對偶性質 x·g ⇔ (1/2π)X ∗ G 說的就是這件事——時域相乘等於頻域摺積，而跟一根譜線摺積就是平移。</p>
+<p>換域的代價是什麼？第一是頻寬：原本 0 到 f<sub>m</sub> 的訊息，搬家後佔掉 f<sub>c</sub> − f<sub>m</sub> 到 f<sub>c</sub> + f<sub>m</sub> 共 2f<sub>m</sub> 的寬度，正好是原來的兩倍，因為上下邊帶各放了一份。第二是功率：標準調幅（amplitude modulation, AM）為了讓接收機便宜，刻意留下載波，而載波完全不帶資訊，卻吃掉大部分功率。第三是失真：調得太深，包絡檢波就救不回來。儀器量到什麼？頻譜分析儀對一個單音 AM 訊號會看到三根線，示波器則看到被包絡包住的載波。</p>
+<p>標準 AM 的式子是 y(t) = A<sub>c</sub>[1 + m·x<sub>n</sub>(t)]cos(ω<sub>c</sub>t)，其中 A<sub>c</sub> 是載波振幅（V）、ω<sub>c</sub> 是載波角頻率（rad/s）、x<sub>n</sub>(t) 是歸一化後峰值為 1 的訊息、m 是調變指數（modulation index，無單位）。簡化假設是線性、非時變、訊息為單音、載波與訊息不相關。</p>
+<p class="note">來源：09-信號與系統-上 第 9 章。</p>
+
+<h2>推導：三根譜線與功率怎麼分</h2>
+<p><strong>（a）三根線怎麼來。</strong>令訊息是單音 cos(ω<sub>m</sub>t)，展開 y(t) = A<sub>c</sub>cos(ω<sub>c</sub>t) + m·A<sub>c</sub>cos(ω<sub>m</sub>t)cos(ω<sub>c</sub>t)。第二項用積化和差：cos(ω<sub>c</sub>t)·cos(ω<sub>m</sub>t) = (1/2)[cos((ω<sub>c</sub> − ω<sub>m</sub>)t) + cos((ω<sub>c</sub> + ω<sub>m</sub>)t)]。於是整條式子變成三個純正弦的和：頻率 f<sub>c</sub> 的載波（振幅 A<sub>c</sub>）、頻率 f<sub>c</sub> − f<sub>m</sub> 的下邊帶與 f<sub>c</sub> + f<sub>m</sub> 的上邊帶（振幅各 mA<sub>c</sub>/2）。<strong>佔用頻寬 B = 2f<sub>m</sub></strong>，因為最高與最低那兩根線相距 2f<sub>m</sub>。</p>
+<p><strong>（b）功率怎麼分。</strong>振幅 A 的正弦波平均功率是 A²/2（在 1 Ω 上）。載波功率 P<sub>c</sub> = A<sub>c</sub>²/2；每個邊帶振幅是 mA<sub>c</sub>/2，功率就是 (mA<sub>c</sub>/2)²/2 = m²A<sub>c</sub>²/8 = m²P<sub>c</sub>/4。兩個邊帶加起來 m²P<sub>c</sub>/2，所以總功率 P<sub>t</sub> = P<sub>c</sub>(1 + m²/2)。</p>
+<p><strong>（c）功率效率與「為什麼還要送載波」。</strong>真正帶資訊的只有兩個邊帶，所以效率 η = (m²/2)/(1 + m²/2)。代 m = 1 得 η = 33.333333 %，這是標準 AM 的<strong>理論上限</strong>——三分之二的發射功率花在完全不帶資訊的載波上。這看起來很笨，但那顆載波換來的是接收端可以只用一顆二極體加一組 RC 就解調：包絡檢測。<strong>這是 1920 年代用功率換成本的工程決策，不是笨</strong>；當年每一台收音機都要便宜，而發射機只有一台。</p>
+<p><strong>（d）為什麼 m > 1 會破。</strong>包絡是 A<sub>c</sub>[1 + m·cos(ω<sub>m</sub>t)]，最大值 A<sub>c</sub>(1 + m)、最小值 A<sub>c</sub>(1 − m)。m > 1 時後者變成負數，可是二極體只認絕對值，於是那一段波形被折回去，包絡不再與訊息成正比，聲音失真。反過來，只要 m ≤ 1，量波形就能反推調變深度：m = (E<sub>max</sub> − E<sub>min</sub>)/(E<sub>max</sub> + E<sub>min</sub>)。同步檢測不怕過調變，但它必須在接收端重建一個與發射端同頻同相的載波，成本高得多。</p>
+<p><strong>（e）頻寬與電台間隔。</strong>調幅廣播的頻道間隔是 10 kHz，而 B = 2f<sub>m</sub>，所以 f<sub>m</sub> 的實務上限只有 5 kHz。人聲與樂器的高頻成分遠遠超過 5 kHz，全部被削掉——<strong>這就是 AM 廣播聽起來悶悶的物理原因</strong>。想省頻寬或省功率還有兩條路：雙邊帶抑制載波（double-sideband suppressed carrier, DSB-SC）不送載波，效率一口氣拉滿；單邊帶（single-sideband, SSB）連一個邊帶都丟掉，頻寬減半，因為上下邊帶帶的是同一份資訊。兩者的代價都是接收機變貴。調頻（frequency modulation, FM）與調相（phase modulation, PM）把訊息編進頻率或相位，抗雜訊好得多但佔更多頻寬，細節留給通訊系統。</p>
+
+<h2>數值實例：一個 1000 kHz 的電台</h2>
+<p>取 f<sub>c</sub> = 1000 kHz、f<sub>m</sub> = 5 kHz、m = 0.5、P<sub>c</sub> = 100 W，包絡計算取 A<sub>c</sub> = 1。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>上邊帶</td><td>f<sub>c</sub> + f<sub>m</sub></td><td><strong>1005 kHz</strong></td></tr>
+<tr><td>下邊帶</td><td>f<sub>c</sub> − f<sub>m</sub></td><td><strong>995 kHz</strong></td></tr>
+<tr><td>佔用頻寬</td><td>B = 2f<sub>m</sub></td><td><strong>10 kHz</strong></td></tr>
+<tr><td>每個邊帶功率</td><td>m²P<sub>c</sub>/4 = 0.25 × 100/4</td><td><strong>6.250000 W</strong></td></tr>
+<tr><td>總功率</td><td>P<sub>t</sub> = 100(1 + 0.125)</td><td><strong>112.500000 W</strong></td></tr>
+<tr><td>功率效率</td><td>η = 12.5/112.5</td><td><strong>11.111111 %</strong></td></tr>
+<tr><td>包絡最大／最小</td><td>A<sub>c</sub>(1 + m)／A<sub>c</sub>(1 − m)，A<sub>c</sub> = 1</td><td><strong>1.500000／0.500000</strong></td></tr>
+<tr><td>由波形反推 m</td><td>(1.5 − 0.5)/(1.5 + 0.5)</td><td><strong>0.500000 ✓</strong></td></tr>
+</tbody></table>
+<p>邊界對照：m = <strong>1</strong>（滿調變）→ 每邊帶 <strong>25.000000 W</strong>、P<sub>t</sub> = <strong>150.000000 W</strong>、η = <strong>33.333333 %</strong>（<strong>理論上限，仍有三分之二浪費在載波</strong>）。m = <strong>0.2</strong> → 每邊帶 <strong>1.000000 W</strong>、P<sub>t</sub> = <strong>102.000000 W</strong>、η = <strong>1.960784 %</strong>（<strong>幾乎全部功率都在載波上</strong>）。m = <strong>0</strong> → η = <strong>0.000000 %</strong>（<strong>只有載波，沒有資訊</strong>）。m = <strong>1.5</strong> → P<sub>t</sub> = <strong>212.500000 W</strong>、η = <strong>52.941176 %</strong>，但<strong>過調變，包絡檢波會失真</strong>。f<sub>m</sub> = <strong>15 kHz</strong> → 頻寬 <strong>30 kHz</strong>（<strong>超過 AM 頻道間隔 10 kHz，會干擾隔壁台</strong>）。P<sub>c</sub> = <strong>50 W</strong>、m = 0.5 → P<sub>t</sub> = <strong>56.250000 W</strong>、每邊帶 <strong>3.125000 W</strong>、<strong>η 仍是 11.111111 %</strong>（<strong>效率只由 m 決定</strong>）。</p>
+<p>量級對照：這個電台佔的 10 kHz，正好是本課一路引用的 AM 頻道間隔，也差不多是一路電話語音取樣率 8000 Hz 的量級；相比之下音樂 CD 的取樣率 44.1 kHz 對應的音訊頻寬就有 20 kHz 以上，四倍於整條 AM 頻道。載波 1000 kHz 是訊息 5 kHz 的兩百倍，這個比例讓後端只要一顆帶通就能把隔壁台分開。</p>
+
+<section class="workspace"><h2>自由實驗：把頻寬與功率效率的帳分開看</h2>
+<p>系統是標準調幅發射機：訊息是最高頻率 f<sub>m</sub> 的單音，載波頻率 f<sub>c</sub>、功率 P<sub>c</sub>，調變指數 m。程式算出上下邊帶頻率、佔用頻寬、每個邊帶與總功率、功率效率，以及包絡的上下限。要看的是：把 m 拉大只會把功率從載波搬到邊帶，頻寬一格都不動；把 P<sub>c</sub> 拉大則兩邊一起變大，效率完全不變。</p>
+<div class="controls">
+<label for="amm-fc">載波頻率 f<sub>c</sub>（kHz）<input id="amm-fc" type="range" min="100" max="2000" step="5" value="1000"></label>
+<label for="amm-fm">訊息最高頻率 f<sub>m</sub>（kHz）<input id="amm-fm" type="range" min="1" max="50" step="1" value="5"></label>
+<label for="amm-m">調變指數 m<input id="amm-m" type="range" min="0" max="1.5" step="0.05" value="0.5"></label>
+<label for="amm-pc">載波功率 P<sub>c</sub>（W）<input id="amm-pc" type="range" min="10" max="500" step="10" value="100"></label>
+</div>
+<div id="ammod-output" class="output" aria-live="polite">上邊帶 1005.000000 kHz、下邊帶 995.000000 kHz、佔用頻寬 10.000000 kHz。每個邊帶功率 6.250000 W、總功率 112.500000 W、功率效率 11.111111 %。包絡最大 1.500000、最小 0.500000。<strong>正常調變</strong>：包絡在 0.500000 與 1.500000 之間擺動且不會碰到 0，<strong>一顆二極體加 RC 就能解調</strong>。效率 11.111111 %。效率 η = (m²/2)/(1 + m²/2) <strong>只由 m 決定，與載波功率無關</strong>——把發射機開大只是讓兩邊一起變大。AM 廣播的頻道間隔是 10 kHz，所以 f<sub>m</sub> 實務上限只有 5 kHz——<strong>這就是 AM 廣播聽起來悶悶的物理原因</strong>。頻寬 2f<sub>m</sub> 與 m 完全無關：調得深不會佔更多頻寬，只會把功率從載波搬到邊帶。把 m 滑到 0 就只剩一根載波、效率歸零；滑過 1 就是過調變，包絡下限會折返，聲音破掉；把 f<sub>m</sub> 滑到接近 f<sub>c</sub> 的一半時，這已經不是窄頻調變了。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>調變指數 m 不是「調變頻率」，也不是「音量百分比的上限」。它是包絡起伏相對於載波的比值，m = 1 是包絡剛好碰到 0 的臨界，超過就折返。</li>
+<li>「頻寬」由<strong>訊息的最高頻率</strong>決定，不由載波頻率決定。1000 kHz 的台和 100 kHz 的台，只要 f<sub>m</sub> 相同，佔的頻寬一模一樣都是 2f<sub>m</sub>。</li>
+<li>上下邊帶帶的是<strong>同一份資訊</strong>，互為鏡像。所以單邊帶可以丟掉其中一個而不損失內容，換得頻寬減半；但這不代表兩個邊帶是多餘的，包絡檢波要靠它們對稱才成立。</li>
+<li>AM 的 A 是 amplitude（振幅），與「類比」無關。FM 也是類比調變，兩者的差別在於資訊被編進振幅還是頻率。</li>
+<li>效率高不等於系統好。DSB-SC 的效率是 100 %，但接收機必須重建載波；標準 AM 效率最高只有 33.333333 %，換來的是最便宜的接收機。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>頻譜分析儀對一個單音 AM 訊號會看到三根線：中間是載波，兩邊各一根邊帶，邊帶比載波低 20 log<sub>10</sub>(m/2) dB。m = 0.5 時這個差值是 −12.041200 dB，直接量兩根線的高度差就能反推 m。示波器則看時域：螢幕上是一條被包絡包住的載波，用游標量出包絡的最大值 E<sub>max</sub> 與最小值 E<sub>min</sub>，代進 m = (E<sub>max</sub> − E<sub>min</sub>)/(E<sub>max</sub> + E<sub>min</sub>) 就得到調變指數，兩種量法應該一致。</p>
+<p><strong>能證明什麼</strong>：m 的實際值、佔用頻寬、載波與邊帶的功率比，以及有沒有過調變（包絡碰到零就是臨界）。把 P<sub>c</sub> 改大再量一次，還能驗證效率確實沒有變。</p>
+<p><strong>不能證明什麼</strong>：接收端聽起來如何。那還牽涉解調器的時間常數、通道雜訊與自動增益控制，發射端的頻譜漂亮不保證聽感好。也證明不了「這個台沒有干擾隔壁」——那要看整個頻段的實際佔用與鄰台的實際功率，單看自己這三根線不夠。另外頻譜分析儀一般不給相位，所以上下邊帶的相位關係在螢幕上看不出來，而那正是區分標準 AM 與單邊帶的關鍵之一。</p>
+
+<h2>連到哪門課</h2>
+<p>頻率平移性質的數學本體見本課<a href="06-傅立葉轉換.html">第 06 章</a>與<a href="../../../共通基礎/數學/互動課程/10-傅立葉分析.html">工程數學先修的傅立葉分析</a>；載波與相量的關係見<a href="../電路學-互動課程/09-弦波與相量.html">電路學的弦波與相量</a>，那裡把單一頻率的正弦存成一個複數，正好是本章三根譜線的代數表示。真實裝置這一側，超外差收音機的混頻級、頻譜分析儀本身的掃頻結構、無線電對講機的發射鏈，用的都是同一條搬移性質。往後，FM 的貝索頻譜、數位調變（正交振幅調變與正交分頻多工）與雜訊分析全部留給通訊系統。下一章離開連續時間，把前十章的觀念整批搬到 x[n] 的世界。</p>
+<nav class="pager" aria-label="章節導覽"><a href="09-濾波器與群延遲.html">← 上一頁：濾波器與群延遲</a><a href="11-離散時間訊號與差分方程.html">下一頁：離散時間訊號與差分方程 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 調變與頻譜搬移</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

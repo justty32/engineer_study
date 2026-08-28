@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 基本訊號與訊號運算｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">02・六個積木，加上三種會互相打架的時間軸運算</p>
+<h1>基本訊號與訊號運算：δ 的篩選性是下一章的唯一地基</h1>
+<p class="lead">這章把六個基本訊號變成可以拿來組裝任何東西的積木，並且把平移、反轉、縮放三種運算的順序陷阱一次講清楚。核心只有一件事：δ(t) 的篩選性，它是第 04 章摺積唯一站得住腳的地基。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-訊號的分類.html">01 訊號的分類</a>裡的能量／功率與奇偶判斷，以及訊號就是一個函數這件事。</p>
+
+<h2>痛點：δ 到底是什麼，還有 x(2t − 1) 到底移了多少</h2>
+<p>兩個最常見的卡點。第一個是 δ(t)：課本說它「寬度趨近 0、高度趨近無限、面積恆為 1」，聽起來像在描述一個很誇張的脈衝，於是讀者把它想成「一個很大的數」。可是接著又說它不是函數而是分布，而且它的高度沒有意義——前後好像在打架。第二個是運算的順序：把 x(t) 變成 x(2t − 1)，到底是先壓縮再平移、還是先平移再壓縮？移的是 1 還是 0.5？兩種做法會得到<strong>不同的訊號</strong>，而大多數人只是照著代數硬推，推完也不確定對不對。</p>
+<p>這兩件事其實是同一種毛病：把符號當成圖形去記，而不是當成定義去用。δ 的定義從頭到尾只有一句「和別的函數配對後給出什麼數」；訊號運算的定義從頭到尾只有一句「把哪個數餵給原函數」。只要每次都回到「內部引數是多少」，兩個卡點都會消失。</p>
+<p class="note">來源：09-信號與系統-上 §2。</p>
+
+<h2>白話直覺：先有量測針，再有可以組裝的積木</h2>
+<p><strong>訊號從哪來</strong>：真實訊號千奇百怪，但工程上習慣用少數幾個標準形狀去描述它們——開關一按是步階、雷擊或敲擊是脈衝、電容放電是指數、旋轉機械是弦波。<strong>系統對它做了什麼</strong>：系統看到的永遠只是「某一時刻的輸入值」，所以我們需要一種工具，能把「某一時刻的值」單獨挑出來——那就是 δ。可以暫時把 δ 想成一支取值針，插在時間軸的某一點，把整條曲線壓成一個數；比喻到此為止，精確的說法是 δ 是一個線性泛函，它把函數 f 映射到 f(t<sub>0</sub>) 這個純量。</p>
+<p><strong>這件事在哪個域最好描述</strong>：這一章全部留在時間域。理由是所有換域的工具都要先有「把訊號拆成一堆延遲脈衝的加權和」這個表示法，而那個表示法就是篩選性的直接推論。<strong>換域的代價是什麼</strong>：δ 在頻率域是一條平坦到無限高頻的直線，也就是它需要無限頻寬。這件事的實務代價是——真正的 δ 不可能被產生出來，只能用「寬度遠小於系統時間常數」的窄脈衝去近似。<strong>儀器量到什麼</strong>：函數產生器打一個很窄的方波、示波器接在輸出端，量到的就是一條近似的脈衝響應；窄到什麼程度才算夠，由系統自己的時間常數決定。</p>
+<p>六個積木分成連續與離散兩組。連續：單位步階 u(t)（t &lt; 0 為 0、t ≥ 0 為 1）、單位脈衝 δ(t)、斜坡 r(t) = t·u(t)、指數 e<sup>at</sup>（a 是實數時只有增長或衰減，a 是複數時同時帶來振盪）、弦波 cos(ωt + φ)。離散：δ[n]、u[n]、幾何序列 a<sup>n</sup>。要特別注意的是離散的 δ[n] <strong>完全沒有無限大的問題</strong>——它就是一個 n = 0 時值為 1、其餘為 0 的普通數列。連續的 δ(t) 才是分布。</p>
+
+<h2>推導：從 δ 的定義推到篩選性，再推到運算的標準形</h2>
+<p><strong>（a）為什麼 δ 只能用積分後的效果定義。</strong>假設有一個普通函數 g，它在 t = 0 以外都等於 0，只在 t = 0 有值（哪怕是很大的值）。單點是零測度集，所以 <code>∫g(t)dt = 0</code>，不管那個值多大都一樣。但我們要的 δ 必須滿足 <code>∫<sub>−∞</sub><sup>∞</sup> δ(t) dt = 1</code>。矛盾說明：<strong>沒有任何普通函數能當 δ</strong>。出路是不去問 δ 在每一點等於多少，改成只規定它「與別的函數配對後給出什麼數」。這種物件叫做分布（distribution），δ 的「高度」從此不是一個可以談的量，只有面積是。</p>
+<p><strong>（b）篩選性怎麼來。</strong>看 <code>∫<sub>−∞</sub><sup>∞</sup> f(t)δ(t − t<sub>0</sub>) dt</code>。δ(t − t<sub>0</sub>) 只在 t = t<sub>0</sub> 的無限小鄰域內非零，在那個鄰域裡 f 是連續的，所以可以視為常數 f(t<sub>0</sub>) 提到積分外面，剩下的 <code>∫δ(t − t<sub>0</sub>)dt = 1</code>。於是 <code>∫ f(t)δ(t − t<sub>0</sub>) dt = f(t<sub>0</sub>)</code>，這就是<strong>篩選性（sifting property）</strong>。假設條件是 f 在 t<sub>0</sub> 處連續。順帶一提，δ 與 u 是一對微積分關係：<code>δ(t) = du/dt</code>、<code>u(t) = ∫<sub>−∞</sub><sup>t</sup> δ(τ)dτ</code>，而 <code>r(t) = ∫<sub>−∞</sub><sup>t</sup> u(τ)dτ</code>，三個積木其實是同一條鏈上的三格。</p>
+<p><strong>（c）複合運算的順序陷阱。</strong><code>y(t) = x(2(t − 1))</code> 與 <code>y(t) = x(2t − 1)</code> <strong>不是同一個訊號</strong>：前者在 t = 1 時內部引數為 0，後者在 t = 0.5 時內部引數才為 0。本課的統一作法是先把式子整理成標準形 <code>x(a(t − t<sub>0</sub>))</code>，整理完的 t<sub>0</sub> 才是真正的平移量。把 2t − 1 提出 2 得 2(t − 0.5)，所以 <code>x(2t − 1) = x(2(t − 0.5))</code>——<strong>平移的是 0.5 不是 1</strong>。記法很簡單：課本寫 x(at − b) 時，真正的平移量是 b/a。</p>
+<p><strong>（d）離散的縮放為什麼要小心。</strong>連續時間的 x(at) 只是把時間軸拉伸或壓縮，資訊原則上還在。離散時間就不一樣：<code>x[2n]</code> 是把偶數項留下、奇數項<strong>丟掉</strong>，這叫降取樣，被丟的樣本真的沒了；而 <code>x[n/2]</code> 只在 n 是偶數時有定義，奇數位置是空的，必須靠內插補出來，補出來的值是猜的、不是量到的。這一組不對稱正是第 15 章多速率處理的起點。</p>
+
+<h2>數值實例：x(t) = e<sup>−t</sup>·u(t) 做 y(t) = A·x(a(t − t<sub>0</sub>))</h2>
+<p>取 A = 1、a = 1、t<sub>0</sub> = 1 s、觀測時刻 t = 2 s。這組數字是本章互動元件的預設值。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>內部引數</td><td>arg = a(t − t<sub>0</sub>) = 1 × (2 − 1)</td><td><strong>1.000000</strong></td></tr>
+<tr><td>輸出值</td><td>y = A·e<sup>−arg</sup>（arg ≥ 0）</td><td><strong>0.367879</strong></td></tr>
+<tr><td>篩選性</td><td>∫ x(τ)δ(τ − 1) dτ = x(1)</td><td><strong>0.367879</strong></td></tr>
+<tr><td>意義</td><td>訊號被<strong>延後 1 秒</strong>，所以 t = 2 秒看到的是原本 t = 1 秒的值</td><td>—</td></tr>
+</tbody></table>
+<p>邊界對照。a = <strong>−1</strong>、t<sub>0</sub> = 1、t = <strong>0</strong> → arg = <strong>1.000000</strong>、y = <strong>0.367879</strong>（<strong>時間反轉後，t = 0 看到的是原本 t = 1 的值</strong>）。a = <strong>2</strong> → arg = <strong>2.000000</strong>、y = <strong>0.135335</strong>（<strong>壓縮成兩倍快，同樣的 1 秒走完原本 2 秒的路</strong>）。a = <strong>0.5</strong> → arg = <strong>0.500000</strong>、y = <strong>0.606531</strong>。t = <strong>0.5</strong>（arg = <strong>−0.500000</strong>）→ y = <strong>0.000000</strong>（<strong>u(t) 在負引數處是 0</strong>）。A = 2 → y = <strong>0.735759</strong>。換成斜坡且 arg = 1 → y = <strong>1.000000</strong>；換成弦波 cos(2π·arg) 且 arg = 1 → y = <strong>1.000000</strong>，arg = 0.25 → y = <strong>0.000000</strong>。</p>
+<p>量級對照：要用窄脈衝去近似 δ，寬度必須遠小於系統的時間常數。上面這個系統的時間常數是 1 s，那麼 1 ms 的脈衝就綽綽有餘（差 1000 倍）；但如果系統是電話語音鏈路，取樣週期只有 125.000000 µs，同樣一個 1 ms 的脈衝反而已經算「寬」了。<strong>窄不窄從來不是絕對值，是比值</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：把縮放、反轉、平移拆開來看引數</h2>
+<p>場景是拿一個基底訊號 x，做標準形變換 y(t) = x(a(t − t<sub>0</sub>))，再在某個觀測時刻 t 讀值。三個滑桿分別控制縮放係數、平移量與觀測時刻；四種基底都會用到全部三個滑桿，沒有哪個模式會讓滑桿失效。重點是盯著內部引數 arg，因為輸出值完全由它決定。</p>
+<div class="controls">
+<label for="ops-base">基底訊號<select id="ops-base"><option value="exp">衰減指數 exp(−t)·u(t)</option><option value="step">單位步階 u(t)</option><option value="ramp">斜坡 t·u(t)</option><option value="cos">弦波 cos(2*pi*t)</option></select></label>
+<label for="ops-a">時間縮放係數 a（負值代表時間反轉）<input id="ops-a" type="range" min="-3" max="3" step="0.5" value="1"></label>
+<label for="ops-t0">平移量 t<sub>0</sub>（s，正值代表延後）<input id="ops-t0" type="range" min="-3" max="3" step="0.1" value="1"></label>
+<label for="ops-t">觀測時刻 t（s）<input id="ops-t" type="range" min="-5" max="5" step="0.1" value="2"></label>
+</div>
+<div id="sigops-output" class="output" aria-live="polite">這個模式三個滑桿都會用到：縮放、平移與觀測時刻共同決定內部引數。內部引數 arg = 1.000000；輸出 y(t) = 0.367879；篩選性 ∫x(τ)δ(τ − t<sub>0</sub>)dτ = x(t<sub>0</sub>) = 0.367879。目前的變換是：先把時間軸<strong>壓縮 1 倍</strong>，再<strong>延後 1.0 秒</strong>。δ 不是一個很高很窄的脈衝而已——它的用途是<strong>把一條曲線在某一點的值挑出來</strong>，第 04 章的摺積就是靠這件事把任意輸入拆成無限多個延遲脈衝。本實驗算的是 x(a(t − t<sub>0</sub>))；如果你在課本看到 x(at − b)，真正的平移量是 b/a 不是 b。把 a 調成 0 會走退化路徑，把觀測時刻調到讓 arg 變負時，因果訊號的輸出會是 0，那不是壞掉，是 u( ) 的定義。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>δ(t) 不是「一個很大的數」。它的<strong>高度沒有意義</strong>，只有面積有意義：2δ(t) 是面積為 2 的脈衝，不是高度為 2 的脈衝。看到 δ 就想像一根箭頭，箭頭旁邊標的永遠是面積。</li>
+<li>δ[n] 與 δ(t) 是兩種不同的東西。離散的 δ[n] 就是一個值為 1 的數列項，是不折不扣的普通函數，完全沒有無限大的問題；只有連續的 δ(t) 才需要分布理論。</li>
+<li>x(t − 2) 是<strong>往右</strong>移、也就是延後，不是往左。初學者最常記反。驗算法：原本在 t = 0 發生的事，現在要 t = 2 才讓內部引數等於 0。</li>
+<li>x(2t) 是<strong>變快</strong>不是變慢。因為要讓內部引數達到同一個值，只需要一半的時間，整個訊號被擠進一半的時間長度裡。</li>
+<li>連續的縮放與離散的縮放不對稱。x(at) 原則上可逆，x[2n] 卻真的丟掉了樣本；把離散縮放當成「拉一下時間軸」會直接踩到第 12 章的混疊。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>函數產生器可以輸出很窄的方波脈衝來<strong>近似</strong> δ：只要脈衝寬度遠小於系統的時間常數，系統的響應就近似脈衝響應。實務上會拿兩個不同寬度的脈衝各打一次，如果輸出波形形狀不變、只有幅度按面積等比例縮放，就代表已經進入「夠窄」的區間。時間平移這件事在儀器上也是直接可見的：示波器的觸發延遲設定就是在把顯示的時間軸做平移，兩通道之間的延遲游標讀的就是 t<sub>0</sub>。</p>
+<p><strong>能證明什麼</strong>：系統對一個具體窄脈衝的實際響應曲線、兩個訊號之間的時間差（可到次奈秒等級）、以及脈衝變窄時響應是否收斂到固定形狀。</p>
+<p><strong>不能證明什麼</strong>：量不到真正的 δ(t)——它不存在於物理世界，寬度為 0 的訊號需要無限頻寬與無限峰值功率，任何產生器都做不到。也證明不了「篩選性」本身：那是定義，不是實驗結論，實驗只能顯示「近似得夠好時，結果與定義推出的預測一致」。同樣地，儀器量不到「時間縮放」這個運算，只能量到縮放後那個新訊號的樣子。</p>
+
+<h2>連到哪門課</h2>
+<p>δ 作為極限與微分的觀點（為什麼它是 u(t) 的導數、為什麼要用分布才嚴謹）見<a href="../../../共通基礎/數學/互動課程/01-極限與導數.html">工程數學先修的極限與導數</a>；篩選性那一步的積分技巧與「積分＝面積」的直覺見<a href="../../../共通基礎/數學/互動課程/02-積分.html">積分</a>。</p>
+<p>真實裝置那一側，雷達與超音波量測就是打一個近似脈衝再看回波、房間的殘響量測用的是脈衝或掃頻訊號、數位音訊的取樣可以看成一連串加權的 δ。下一章把焦點從訊號換到系統，用六個性質逐條檢測一個系統，並在違反時算出殘差；那六條裡的線性與非時變，正是第 04 章能用一條 h(t) 描述整個系統的前提。</p>
+<nav class="pager" aria-label="章節導覽"><a href="01-訊號的分類.html">← 上一頁：訊號的分類</a><a href="03-系統的六個性質.html">下一頁：系統的六個性質 →</a></nav>
+</main>
+<footer class="site-footer"><span>02 基本訊號與訊號運算</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

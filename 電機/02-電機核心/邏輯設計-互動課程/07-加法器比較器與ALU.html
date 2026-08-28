@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 加法器、比較器與 ALU｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・同一個功能，用面積換速度</p>
+<h1>加法器、比較器與 ALU：進位鏈是瓶頸，超前進位用閘數把它買掉</h1>
+<p class="lead">第 02 章的二補數到這裡變成真的電路。加法器把選擇換成算術，而它最經典的取捨是：漣波進位又小又慢、超前進位又大又快。減法、比較與整顆 ALU 都可以掛在同一組加法器上。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-二補數與有號數運算.html">02 二補數與有號數運算</a>的補數表示與四個旗標、<a href="03-布林代數與邏輯閘.html">03 布林代數與邏輯閘</a>的 XOR，以及<a href="06-多工器解碼器與編碼器.html">06 多工器、解碼器與編碼器</a>的多工器。</p>
+
+<h2>痛點：加法器不是「會加就好」，慢在哪裡看不出來</h2>
+<p>用筆算加法時我們從個位加到最高位，每一位都要等前一位的進位。硬體照著抄一遍就是漣波進位加法器（ripple-carry adder），確實會動，但問題馬上來了：位元數變成 32 位、64 位時，進位要一路傳過去，加法器變慢，整台機器的時脈也跟著被拉下來。</p>
+<p>於是出現一個看起來矛盾的解法：超前進位（carry look-ahead, CLA）用多出來的閘，把每一位的進位直接從輸入算出來，不等前一位。它不是「不用進位」，而是「不等進位」。這一章要把兩種架構的延遲與閘數都算出來，看清楚「用面積換速度」到底換了多少；順帶把減法、比較器與 ALU 都接到同一組加法器上。</p>
+
+<h2>白話直覺：一條資訊必須橫著走完四級，或者所有人同時開始算</h2>
+<p>先把單一位的工作講清楚。全加器（full adder, FA）吃三個輸入：本位的 A<sub>i</sub>、B<sub>i</sub>，以及低一位送上來的進位 C<sub>i</sub>；吐出兩個輸出：本位的和 S<sub>i</sub> 與送給高一位的進位 C<sub>i+1</sub>。半加器（half adder, HA）就是沒有 C<sub>in</sub> 的版本。</p>
+<p>順著因果鏈走一次。輸入從哪來：A、B 通常來自暫存器，C<sub>in</sub> 在加法時接 0、減法時接 1。這一層做了什麼決定：把兩個 4 位元數字變成一個 4 位元的和加一個進位旗標——注意結果只有 4 位元，超出的部分不會自己長出來，只會反映在旗標上。花掉多少：漣波架構每個 FA 5 個閘、4 位元共 20 個閘，最壞路徑 9 個閘延遲；CLA 26 個閘，路徑固定 4 個閘延遲。以本課鎖定的單閘 1.0 ns 算，就是 9.000000 ns 對 4.000000 ns。邊界在哪：本課假設所有同類閘的延遲都是同一個 t<sub>pd</sub>、不隨輸入組合改變，真實製程完全不是這樣，AND 與 XOR 的延遲不同，同一顆閘的上升與下降也不同。儀器量到什麼：合成報告會給關鍵路徑的估計值，真正的答案要看靜態時序分析。</p>
+<p>ALU（arithmetic logic unit）則沒有神秘之處：把加法器、AND 陣列、OR 陣列、XOR 陣列的結果全部同時算出來，最後用一顆多工器依運算碼選一個送出去。所以 ALU 的延遲通常等於「最慢那條路徑」加上多工器，而最慢那條幾乎總是加法器的進位鏈。</p>
+<p class="note">來源：10-邏輯設計 §4.2。</p>
+
+<h2>推導：把進位與延遲一條一條寫出來</h2>
+<p><strong>（a）全加器的式子。</strong>和是三個輸入的奇偶性，所以 <code>S = A ⊕ B ⊕ C<sub>in</sub></code>。進位可以寫成 <code>C<sub>out</sub> = A · B + C<sub>in</sub> · (A ⊕ B)</code>，讀法是：兩個輸入都是 1 就一定進位（這是產生，generate），或者剛好只有一個是 1 而且低位有進位送上來（這是傳遞，propagate）。所以定義 <code>G<sub>i</sub> = A<sub>i</sub> · B<sub>i</sub></code>、<code>P<sub>i</sub> = A<sub>i</sub> ⊕ B<sub>i</sub></code>，進位遞迴式就是 <code>C<sub>i+1</sub> = G<sub>i</sub> + P<sub>i</sub> · C<sub>i</sub></code>。</p>
+<p><strong>（b）本課鎖定的延遲模型。</strong>以「閘延遲」為單位：一個 FA 從 C<sub>in</sub> 到 C<sub>out</sub> 是 <strong>2 個閘延遲</strong>（一層 AND、一層 OR），從 C<sub>in</sub> 到 S 是 <strong>1 個閘延遲</strong>（一個 XOR）。四級串起來時，進位要走完四個 FA 才輪到最高位算和，所以 4 位元漣波的最壞路徑 = 4 × 2 + 1 = <strong>9 個閘延遲</strong>。符號說明：t<sub>pd</sub> 是單一閘的傳播延遲，單位 ns；本課假設所有同類閘延遲相同、不隨輸入組合變化，真實電路不是這樣。</p>
+<p><strong>（c）CLA 為什麼是固定的 4 個閘延遲。</strong>把遞迴式往下代入：<code>C<sub>2</sub> = G<sub>1</sub> + P<sub>1</sub> · G<sub>0</sub> + P<sub>1</sub> · P<sub>0</sub> · C<sub>0</sub></code>，再往上代都是同一個形狀——一層 AND 後接一層 OR，兩層而已，跟位元數無關。算 P、G 要 1 個閘延遲，進位邏輯 2 個閘延遲，最後算和的 XOR 1 個閘延遲，合計 <strong>4 個閘延遲</strong>。代價藏在寬度裡：位數越高，那些 AND 項的輸入數越多、數量也越多。</p>
+<p><strong>（d）本課鎖定的閘數計法。</strong>漣波每個 FA = 2 個 XOR + 2 個 AND + 1 個 OR = <strong>5 個閘</strong>，4 位元共 <strong>20 個閘</strong>。CLA = 4 個 P 的 XOR + 4 個 G 的 AND（<strong>8 個</strong>） + 進位邏輯的 AND 閘 1 + 2 + 3 + 4 = 10 個與 OR 閘 4 個（<strong>14 個</strong>） + 4 個和的 XOR（<strong>4 個</strong>）= <strong>26 個閘</strong>。</p>
+<p><strong>（e）溢位為什麼是 <code>V = C<sub>4</sub> ⊕ C<sub>3</sub></code>。</strong>承第 02 章：有號溢位的意思是「結果跑出可表示範圍」。最高位進位 C<sub>4</sub> 與次高位進位 C<sub>3</sub> 相同時，符號位的變化是正常的進位傳遞；兩者不同時，符號位被下面送上來的進位翻掉了，這正是溢位。無號的進位旗標 C 則直接看 C<sub>4</sub>——同一個電路、同一組位元，兩個旗標各講各的故事。</p>
+
+<h2>數值實例：4 位元，A = 1001、B = 0111</h2>
+<p>取 A = <code>1001</code>、B = <code>0111</code>，C<sub>in</sub> = 0，單閘傳播延遲 t<sub>pd</sub> = 1.0 ns。逐位算進位鏈：</p>
+<table><thead><tr><th>位元 i</th><th>A<sub>i</sub></th><th>B<sub>i</sub></th><th>C<sub>i</sub></th><th>S<sub>i</sub></th><th>C<sub>i+1</sub></th></tr></thead><tbody>
+<tr><td>0</td><td>1</td><td>1</td><td>0</td><td><strong>0</strong></td><td><strong>1</strong></td></tr>
+<tr><td>1</td><td>0</td><td>1</td><td>1</td><td><strong>0</strong></td><td><strong>1</strong></td></tr>
+<tr><td>2</td><td>0</td><td>1</td><td>1</td><td><strong>0</strong></td><td><strong>1</strong></td></tr>
+<tr><td>3</td><td>1</td><td>0</td><td>1</td><td><strong>0</strong></td><td><strong>1</strong></td></tr>
+</tbody></table>
+<table><thead><tr><th>項目</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>和</td><td>逐位串起來</td><td><strong><code>0000</code></strong></td></tr>
+<tr><td>C（carry，取 C<sub>4</sub>）</td><td>最高位進位</td><td><strong>1</strong></td></tr>
+<tr><td>V（overflow）</td><td>C<sub>4</sub> ⊕ C<sub>3</sub> = 1 ⊕ 1</td><td><strong>0</strong></td></tr>
+<tr><td>無號解讀</td><td>9 + 7 = 16，超過 4 位元的 15</td><td><strong>進位跑掉了，C = 1</strong></td></tr>
+<tr><td>有號解讀</td><td><code>1001</code> = −7、<code>0111</code> = 7</td><td><strong>−7 + 7 = 0，完全正確，V = 0</strong></td></tr>
+<tr><td>漣波最壞延遲</td><td>9 × 1.0</td><td><strong>9.000000 ns</strong>（f<sub>max</sub> = <strong>111.111111 MHz</strong>）</td></tr>
+<tr><td>CLA 最壞延遲</td><td>4 × 1.0</td><td><strong>4.000000 ns</strong>（f<sub>max</sub> = <strong>250.000000 MHz</strong>）</td></tr>
+<tr><td>加速比</td><td>9.0 / 4.0</td><td><strong>2.250000 倍</strong></td></tr>
+<tr><td>閘數</td><td>漣波 <strong>20</strong> / CLA <strong>26</strong></td><td>多花 <strong>30 %</strong> 的閘換到 <strong>2.25 倍</strong>的速度</td></tr>
+</tbody></table>
+<p>這一組正好是漣波的<strong>最壞情形</strong>：第 0 位產生的進位一路傳到第 3 位，四級全部串起來，一級都沒有斷。</p>
+<p>邊界對照：<strong>減法</strong> A − B = <code>1001</code> + <code>1000</code> + 1（因為 ¬<code>0111</code> = <code>1000</code>）→ 逐位得 S = <strong><code>0010</code></strong>（十進位 2）、C<sub>4</sub> = <strong>1</strong>、C<sub>3</sub> = 0 → <strong>V = 1</strong>。無號看：9 − 7 = 2 正確，C = 1 代表不需借位。有號看：−7 − 7 = −14，超出 −8 到 7 的範圍 → <strong>V = 1，結果 <code>0010</code> = 2 是錯的</strong>。<strong>同一組位元，無號對、有號錯。</strong>其餘運算：<code>AND</code> → <code>0001</code>；<code>OR</code> → <code>1111</code>；<code>XOR</code> → <code>1110</code>；<code>比較</code> → 無號 <strong>A &gt; B</strong>、有號 <strong>A &lt; B</strong>（因為 <code>1001</code> 有號是 −7）。</p>
+
+<section class="workspace"><h2>自由實驗：拉 A 與 B，看進位鏈與成本一起變</h2>
+<p>下面是一顆 4 位元 ALU：兩個運算元、一支進位輸入、一個運算選擇，再加上進位電路架構與單閘延遲兩個成本參數。改 A 與 B 觀察進位鏈在第幾位斷掉，改架構與延遲觀察 f<sub>max</sub>；注意邏輯運算不使用進位鏈，但下面的成本比較照樣算給你看。</p>
+<div class="controls">
+<label for="ad-op">ALU 運算<select id="ad-op"><option value="add">A + B（加法）</option><option value="sub">A − B（減法）</option><option value="and">A AND B</option><option value="or">A OR B</option><option value="xor">A XOR B</option><option value="cmp">比較 A 與 B</option></select></label>
+<label for="ad-a">A（0–15）<input id="ad-a" type="range" min="0" max="15" step="1" value="9"></label>
+<label for="ad-b">B（0–15）<input id="ad-b" type="range" min="0" max="15" step="1" value="7"></label>
+<label for="ad-cin"><input id="ad-cin" type="checkbox">進位輸入 C_in（只有加法用得到）</label>
+<label for="ad-style">進位電路架構<select id="ad-style"><option value="ripple">漣波進位（ripple-carry）</option><option value="cla">超前進位（carry look-ahead）</option></select></label>
+<label for="ad-tpd">單閘傳播延遲 t_pd（ns）<input id="ad-tpd" type="range" min="0.1" max="5" step="0.1" value="1"></label>
+</div>
+<div id="adder-output" class="output" aria-live="polite">這個運算用到 A、B、C_in。A = 9 = <code>1001</code>（無號 9、有號 −7），B = 7 = <code>0111</code>（無號 7、有號 7），C_in = 0。進位鏈 C<sub>0</sub>–C<sub>4</sub> = 0, 1, 1, 1, 1；和 = <code>0000</code>，無號 0、有號 0。旗標 C = 1、V = 0、N = 0、Z = 1。進位從第 0 位一路走到第 3 位，這是漣波架構的最壞情形。漣波延遲 9.000000 ns（111.111111 MHz、20 閘），超前進位 4.000000 ns（250.000000 MHz、26 閘）。CLA 把每一位的進位都直接從 A、B 算出來，不等前一位，所以延遲不隨位元數成長——代價是進位邏輯的閘數隨位元數平方成長。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>C 與 V 不是同一件事的兩種說法（見第 02 章）：C 是無號觀點的溢位，V 是有號觀點的溢位，同一組位元可以一個為 1、一個為 0。</li>
+<li>超前進位不是「不用進位」，它只是<strong>不等</strong>前一位算完；每一位的進位還是要算，只是改成直接從 A、B 展開。</li>
+<li>比較器不需要真的做減法，但用減法器的旗標得到比較結果是最省的作法——這就是 ALU 只放一顆加法器的原因。</li>
+<li>「4 位元加法器」的位元寬度不是效能指標，延遲才是。位元數只決定能表示的範圍，兩顆同樣 4 位元的加法器速度可以差兩倍以上。</li>
+<li>進位鏈實際斷在第幾位是資料決定的，但電路必須照最壞情形設計；平均比較快不能拿來當時脈上限。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>把 4 位元漣波加法器與 CLA 分別合成到 FPGA，用內建邏輯分析儀抓輸入到輸出的對應關係，再看合成報告裡的關鍵路徑延遲與資源使用量（LUT 數）。兩份報告放在一起比，就能看到閘數與延遲的交換。</p>
+<p><strong>能證明</strong>：兩者功能相同（同一組輸入給同一組和與旗標）、關鍵路徑延遲不同、佔用的 LUT 數不同。<strong>不能證明</strong>：實際能跑到多少 MHz——那還要看繞線延遲、時脈品質與溫度電壓角落。合成報告給的是估計值，真正的答案在靜態時序分析報告（見第 10 章）。內建邏輯分析儀本身也會佔資源、改變繞線，量到的不完全是原來那顆電路。</p>
+
+<h2>連到哪門課</h2>
+<p>ALU 怎麼接進處理器的資料路徑、運算碼從哪來，見<a href="../../../專題/計算機組織/互動課程/02-組合邏輯與算術.html">計算機組織的組合邏輯與算術</a>。加法器的延遲怎麼變成整個 CPU 的頻率上限，是本課第 10 章的主題；而延遲本身從哪來、扇出與功耗要付多少，就是下一章。</p>
+<nav class="pager" aria-label="章節導覽"><a href="06-多工器解碼器與編碼器.html">← 上一頁：多工器、解碼器與編碼器</a><a href="08-延遲功耗與險境.html">下一頁：延遲、功耗與險境 →</a></nav>
+</main>
+<footer class="site-footer"><span>07 加法器、比較器與 ALU</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

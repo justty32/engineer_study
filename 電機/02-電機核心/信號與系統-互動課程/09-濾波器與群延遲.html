@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 濾波器與群延遲｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・要多陡就要多少階，代價寫在相位上</p>
+<h1>濾波器與群延遲：把「濾掉不要的頻率」變成一組可以算的規格</h1>
+<p class="lead">濾波器不是一個開關，它是一份預算表：通帶邊緣在哪、阻帶要壓多低、過渡帶留多寬，這三個要求一填，最小階數就被決定了。而每加一階就多一對極點，相位轉得更多、群延遲更不平坦，波形也就更走樣。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-極零點與二階系統.html">08 極零點與二階系統</a>的頻率響應與共振峰，以及<a href="../電路學-互動課程/12-一階濾波器與頻率響應.html">電路學的一階濾波器與頻率響應</a>那個 −3 dB 轉角。</p>
+
+<h2>痛點：為什麼濾波器不能「直接把不要的頻率設成零」</h2>
+<p>直覺上這件事應該很簡單：想要的頻率乘 1、不想要的乘 0，寫成程式就是一行判斷式。可是真的照這樣做出來的濾波器不但做不出來，連數學上都違反因果。課本會說「理想濾波器不可實現」，卻很少把「為什麼不可以」講到讓人服氣。</p>
+<p>第二個痛點是階數。規格書寫「五階巴特沃斯」，聽起來像是「用了五顆元件」，於是有人以為多加一顆電容就多一階。階數其實是 H(s) 分母的次數，也等於極點的個數，跟元件數量沒有固定換算；更重要的是，階數不是隨便挑的，它是被通帶邊緣、阻帶邊緣與阻帶要求三個數字反算出來的。</p>
+<p>第三個痛點是群延遲。振幅曲線漂亮不等於波形不變形。方波打進一個振幅規格完美的濾波器，出來的角被磨圓、還帶振鈴，這件事在振幅圖上完全看不出來，因為它藏在相位裡。這章要把「相位不線性」翻譯成一個有單位、可以量、可以比較的量：群延遲，單位是秒。</p>
+
+<h2>白話直覺：濾波器是預算表，陡峭度要用相位去換</h2>
+<p>訊號從哪來？就當它是一路混著雜訊與干擾的量測訊號，或一串要送進取樣器之前必須先削掉高頻的類比訊號。系統對它做了什麼？系統把每個頻率成分乘上一個複數 H(jω)：大小決定留多少，角度決定延後多久。這件事在哪個域最好描述？當然是頻率域，因為濾波在那裡就是逐點相乘。</p>
+<p>換域的代價是什麼？代價全部記在相位上。振幅要在很短的頻率跨距內從 1 掉到很小，相位就必須在同一段裡轉很多圈；相位轉得急，各頻率成分被延後的時間就不一樣，合起來的波形自然變形。這就是本章的核心交換：<strong>陡峭度、通帶平坦度、相位線性，三者不能同時最好</strong>。儀器量到什麼？網路分析儀掃頻給出 |H| 與 ∠H 兩條曲線，群延遲則由相位曲線的斜率算出來。</p>
+<p>群延遲（group delay）的定義是 τ<sub>g</sub> = −d∠H/dω，單位是秒（∠H 用 rad、ω 用 rad/s）。它的白話意思是「這個頻率附近的一團成分整體被延後多久」。如果所有頻率的 τ<sub>g</sub> 都一樣，代表整個波形只是被平移，形狀完全不動，這就是<strong>線性相位</strong>；一旦 τ<sub>g</sub> 隨頻率變化，低頻與高頻不同步抵達，方波的角就被磨圓，通訊上前後符號互相踩線，叫做符際干擾（intersymbol interference, ISI）。</p>
+<p class="note">來源：09-信號與系統-上 第 8 章。</p>
+
+<h2>推導：從理想的破產推到階數公式</h2>
+<p><strong>（a）為什麼理想濾波器不可實現。</strong>理想低通在 |f| < f<sub>c</sub> 內 |H| = 1、之外為 0，相位線性。把這個矩形做反轉換，得到 h(t) = 2f<sub>c</sub>·sinc(2f<sub>c</sub>t)，其中 sinc(x) = sin(πx) / (πx)、sinc(0) = 1；有些教科書用 sin(x)/x，本課全程用歸一化版。這個 h(t) 有兩個致命問題：它在 t < 0 有值，代表系統要在輸入到達之前就先反應，違反因果；而且它兩側衰減得很慢，無限長，永遠截不完。所以理想濾波器只能當參考，可實現的作法是用有理式 H(s) 去逼近它。</p>
+<p><strong>（b）四個設計家族的取捨。</strong>巴特沃斯（Butterworth）通帶最平坦，代價是過渡帶不夠陡；柴比雪夫（Chebyshev）允許通帶或阻帶出現漣波，換來同階數下更陡的下降；貝索（Bessel）放棄陡峭度，換群延遲最平坦、波形最不失真；橢圓（elliptic）兩邊都放漣波，同階數最陡但相位最糟。要最平坦選巴特沃斯，要最陡選橢圓，要波形不變形選貝索，要在陡與階數之間妥協選柴比雪夫。</p>
+<p><strong>（c）巴特沃斯的振幅式與每階 20 dB。</strong>n 階巴特沃斯的振幅是 |H(f)| = 1/√(1 + (f/f<sub>c</sub>)<sup>2n</sup>)，其中 f<sub>c</sub> 是通帶邊緣，定義成 |H| 掉到 1/√2 ＝ 0.707107（也就是 −3.010300 dB）的那個頻率。f 遠大於 f<sub>c</sub> 時分母的 1 可以忽略，|H| ≈ (f<sub>c</sub>/f)<sup>n</sup>，取 dB 得 −20n·log<sub>10</sub>(f/f<sub>c</sub>)。頻率每差十倍，log 項加 1，所以衰減 <strong>每階每十倍頻 20 dB</strong>，n 階就是 20n dB/decade。</p>
+<p><strong>（d）階數公式怎麼來。</strong>規格要求在阻帶邊緣 f<sub>s</sub> 至少衰減 A<sub>s</sub> dB，也就是 10·log<sub>10</sub>(1 + (f<sub>s</sub>/f<sub>c</sub>)<sup>2n</sup>) ≥ A<sub>s</sub>。兩邊先化成 (f<sub>s</sub>/f<sub>c</sub>)<sup>2n</sup> ≥ 10<sup>A<sub>s</sub>/10</sup> − 1，再取以 10 為底的對數並解 n，得 n<sub>min</sub> = log<sub>10</sub>(10<sup>A<sub>s</sub>/10</sup> − 1) / (2·log<sub>10</sub>(f<sub>s</sub>/f<sub>c</sub>))，取上整就是實際要用的階數。階數只能是整數，所以幾乎一定會多給一點餘裕。</p>
+<p><strong>（e）一階系統群延遲的閉合式。</strong>一階低通的相位是 ∠H = −arctan(ω/ω<sub>c</sub>)，其中 ω<sub>c</sub> = 2πf<sub>c</sub>。對 ω 微分再取負號，得 τ<sub>g</sub> = (1/ω<sub>c</sub>)/(1 + (ω/ω<sub>c</sub>)²)。在直流時 τ<sub>g</sub> = 1/ω<sub>c</sub>，在 ω = ω<sub>c</sub> 時剛好掉到一半。<strong>同一顆濾波器，直流成分與轉角頻率成分被延後的時間差了一倍，這個「不平坦」就是波形失真的來源</strong>，而且階數愈高，相位轉得愈多，群延遲的起伏就愈大。</p>
+
+<h2>數值實例：40 dB 的阻帶要求要幾階</h2>
+<p>巴特沃斯低通，通帶邊緣（−3 dB）f<sub>c</sub> = 1000 Hz、阻帶邊緣 f<sub>s</sub> = 3000 Hz、阻帶要求 A<sub>s</sub> = 40 dB，實際採用 n = 5，觀測 f = 2000 Hz。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>頻率比</td><td>f<sub>s</sub>/f<sub>c</sub> = 3000/1000</td><td><strong>3.000000</strong></td></tr>
+<tr><td>所需最小階數</td><td>n<sub>min</sub> = log<sub>10</sub>(10<sup>4</sup> − 1)/(2 log<sub>10</sub>3)</td><td><strong>4.191761 → 取 5 階</strong></td></tr>
+<tr><td>5 階在 3000 Hz 的衰減</td><td>10 log<sub>10</sub>(1 + 3<sup>10</sup>)</td><td><strong>47.712199 dB ✓（超過 40，合格）</strong></td></tr>
+<tr><td>5 階在 2000 Hz</td><td>|H| = 1/√(1 + 2<sup>10</sup>)</td><td><strong>0.031235（−30.107239 dB）</strong></td></tr>
+<tr><td>在 f<sub>c</sub> 處</td><td>|H| = 1/√2</td><td><strong>0.707107（−3.010300 dB）</strong></td></tr>
+<tr><td>下降斜率</td><td>20n dB/decade</td><td><strong>100 dB/decade</strong></td></tr>
+<tr><td>一階系統的群延遲（f<sub>c</sub> = 1000 Hz）</td><td>直流 1/(2πf<sub>c</sub>)；f = f<sub>c</sub> 時減半</td><td><strong>159.154943 µs → 79.577472 µs</strong>（<strong>差 79.577472 µs</strong>）</td></tr>
+</tbody></table>
+<p>邊界對照：只用 <strong>4 階</strong> → 3000 Hz 只衰減 <strong>38.170362 dB</strong>，<strong>不到 40，不合格</strong>（這就是為什麼要取上整）。要求提高到 f<sub>s</sub> = <strong>2000 Hz</strong>（阻帶更靠近）、A<sub>s</sub> = 40 dB → n<sub>min</sub> = <strong>6.643784 → 7 階</strong>，7 階在 2000 Hz 給 <strong>42.144464 dB</strong>——<strong>阻帶邊緣往通帶靠近一點，階數就從 5 跳到 7</strong>。放寬成 f<sub>s</sub> = <strong>10000 Hz</strong>、A<sub>s</sub> = <strong>60 dB</strong> → n<sub>min</sub> = <strong>3.000000</strong>（剛好整數），3 階給 <strong>60.000004 dB</strong>。5 階在 500 Hz → <strong>0.999512（−0.004239 dB）</strong>，<strong>通帶內幾乎沒有損失，這就是「最平坦」的意思</strong>。</p>
+<p>量級對照：f<sub>c</sub> = 1000 Hz 差不多是一路電話語音的中段，而電話取樣率 8000 Hz 之前那顆抗混疊濾波器要在 3400 Hz 到 4000 Hz 之間做完全部衰減，過渡帶比本例窄得多，階數自然更高。群延遲 159.154943 µs 換算成距離大約是聲音在空氣中走 5 公分，對聽感無所謂；但同樣的不平坦落在數位通訊的符號率上，就足以讓相鄰符號互相干擾。</p>
+
+<section class="workspace"><h2>自由實驗：把規格與階數的帳算給自己看</h2>
+<p>系統是 n 階巴特沃斯低通。前三個滑桿是規格（通帶邊緣、阻帶邊緣、阻帶要求衰減），第四個滑桿是你實際打算採用的階數，第五個滑桿決定站在哪個頻率觀測。程式會算出規格反推的最小階數、採用階數在阻帶邊緣的實際衰減、觀測頻率的增益與 dB，以及一階系統的群延遲。要看的是：把阻帶邊緣往通帶拉近，最小階數會跳得多快。</p>
+<div class="controls">
+<label for="flt-fc">通帶邊緣（−3 dB）f<sub>c</sub>（Hz）<input id="flt-fc" type="range" min="100" max="5000" step="100" value="1000"></label>
+<label for="flt-fs">阻帶邊緣 f<sub>s</sub>（Hz）<input id="flt-fs" type="range" min="200" max="20000" step="100" value="3000"></label>
+<label for="flt-as">阻帶要求衰減 A<sub>s</sub>（dB）<input id="flt-as" type="range" min="10" max="80" step="5" value="40"></label>
+<label for="flt-n">實際採用的階數 n<input id="flt-n" type="range" min="1" max="10" step="1" value="5"></label>
+<label for="flt-f">觀測頻率 f（Hz）<input id="flt-f" type="range" min="0" max="20000" step="100" value="2000"></label>
+</div>
+<div id="filterorder-output" class="output" aria-live="polite">f<sub>s</sub>/f<sub>c</sub> = 3.000000、n<sub>min</sub> = 4.191761 → 取上整需要 5 階。<strong>規格達成</strong>：採用 5 階在 f<sub>s</sub> 給 47.712199 dB，超過要求的 40.000000 dB。目前 |H(2000.000000 Hz)| = 0.031235（−30.107239 dB），下降斜率 100 dB/decade。階數愈高愈陡（每階 20 dB/decade），但<strong>每加一階就多一對極點</strong>，相位轉得更多、群延遲更不平坦、元件容差的影響也更大。同樣是 f<sub>c</sub> = 1000.000000 Hz 的一階系統，直流成分被延後 159.154943 µs，f<sub>c</sub> 處只延後 79.577472 µs——<strong>兩個頻率的成分不同步抵達，方波的角就是這樣被磨圓的</strong>。要最平坦選巴特沃斯、要最陡選橢圓、要波形不變形選貝索、要在陡與階數之間妥協選柴比雪夫。把阻帶邊緣滑到低於通帶邊緣時規格就不成立，因為沒有過渡帶可言；把階數滑到小於所需值時會直接告訴你差幾 dB，而補救只有加階數、放寬阻帶邊緣、降低要求三選一。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>「階數」不是「幾個元件」。它是 H(s) 分母的次數，也等於極點的個數；同一個階數可以用不同的電路拓樸實現，元件數量不固定。</li>
+<li>−3 dB 是<strong>通帶邊緣的定義</strong>，不是「濾波器開始起作用的地方」。5 階在 500 Hz 已經掉到 0.999512，在 f<sub>c</sub> 之前很久增益就不是 1 了，只是掉得很少。</li>
+<li>相位延遲（−∠H/ω）與群延遲（−d∠H/dω）是兩個不同的量，單位雖然都是秒。只有相位嚴格線性時兩者才相等；本課錨定的一階系統在 f<sub>c</sub> 處是 125.000000 µs 與 79.577472 µs，差很多。</li>
+<li>巴特沃斯的「最平坦」指的是<strong>通帶振幅</strong>最平坦，它的<strong>群延遲</strong>並不平坦。群延遲最平坦是貝索的專長，而貝索的振幅下降很慢，兩者不能兼得。</li>
+<li>阻帶衰減達標不代表相位可以接受。規格表若只寫振幅，等於默許波形被磨圓；要保波形就得另外寫群延遲的容許起伏。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>網路分析儀掃頻可以直接畫出 |H| 與 ∠H 兩條曲線：由 |H| 讀出 −3 dB 點與各頻率的實際衰減，由 ∠H 的斜率算出群延遲隨頻率的變化。另一個更直觀的做法是把方波打進濾波器，用示波器看輸出：上升緣被磨圓的程度反映高頻被削掉多少，緣後的振鈴則反映通帶邊緣附近的相位急轉與過衝。這兩種量測互相印證，一個在頻域一個在時域。</p>
+<p><strong>能證明什麼</strong>：這顆濾波器的實際衰減曲線、−3 dB 點的真實位置、群延遲曲線的形狀與起伏幅度，以及它有沒有達到規格書上的阻帶要求。</p>
+<p><strong>不能證明什麼</strong>：它「是」幾階。斜率可以拿來估階數，但元件容差與寄生效應會讓高頻段偏離理論的 20n dB/decade，估出來的數字往往不是整數。也證明不了「通帶完全平坦」——量測本身有雜訊底線，低於底線的起伏根本量不到，只能說「在解析度內看不出不平坦」。此外網路分析儀給的是穩態頻率響應，量不到暫態；要看暫態得回去用步階或脈衝。</p>
+
+<h2>連到哪門課</h2>
+<p>抗混疊濾波器、音訊分頻網路、電源的輸出濾波、量測前端的帶通，全都是在填這章的預算表。一階 RC 的頻率響應與 f<sub>c</sub> = 1/(2πRC) 見<a href="../電路學-互動課程/12-一階濾波器與頻率響應.html">電路學的一階濾波器與頻率響應</a>；共振與品質因數見<a href="../電路學-互動課程/13-RLC共振與品質因數.html">RLC 共振與品質因數</a>，高階濾波器通常就是把多個二階節串起來，每一節有自己的 Q。數位版的 FIR 與 IIR 取捨見本課第 15 章，那裡的線性相位是真的可以做到嚴格線性，代價是延遲更長。下一章換個用途：同樣是頻率域的操作，這次不是刪掉頻率，而是把整段頻譜整體搬家。</p>
+<nav class="pager" aria-label="章節導覽"><a href="08-極零點與二階系統.html">← 上一頁：極零點與二階系統</a><a href="10-調變與頻譜搬移.html">下一頁：調變與頻譜搬移 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 濾波器與群延遲</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

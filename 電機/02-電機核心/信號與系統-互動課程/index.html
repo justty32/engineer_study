@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>課程地圖｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html" aria-current="page">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">信號與系統・從一個函數走到數位濾波器</p>
+<h1>信號與系統（零基礎互動課）</h1>
+<p class="lead">這門課寫給電機本科出身、名詞全部聽過卻說不出機制的自學者：摺積、頻譜、零極點、混疊都認得，但講不出「為什麼要換域」與「這個式子在算什麼」。課程從「訊號是一個函數、系統是把函數變成另一個函數的機器」講起，每章安排一個自由實驗，逐步服務數位訊號處理（digital signal processing, DSP）、通訊與控制。</p>
+<div class="flow"><span>為什麼要換域</span><span>訊號分類</span><span>基本訊號</span><span>系統性質</span><span>摺積</span><span>傅立葉級數</span><span>傅立葉轉換</span><span>拉氏與轉移函數</span><span>零極點</span><span>濾波器</span><span>調變</span><span>差分方程</span><span>取樣與混疊</span><span>離散頻譜</span><span>Z 轉換</span><span>數位濾波器</span></div>
+<p class="note">每章只有一個自由實驗，改動控制就立即看到數值與原因；沒有計分，練習題集中在自我檢核頁，答錯不擋路。</p>
+<p class="warning">本站不畫圖，波形、頻譜、波德圖與零極點圖一律以數值與判讀句呈現，包括大小、相位、dB、百分比與樣本值。</p>
+
+<section class="chapter-list">
+<a class="chapter-card" href="00-訊號與系統世界觀.html"><h2><span class="number">00</span> 訊號與系統世界觀</h2><p>系統一旦有記憶，輸出就不再是輸入乘一個數。</p></a>
+<a class="chapter-card" href="01-訊號的分類.html"><h2><span class="number">01</span> 訊號的分類</h2><p>算能量與功率，決定之後用轉換還是用級數。</p></a>
+<a class="chapter-card" href="02-基本訊號與訊號運算.html"><h2><span class="number">02</span> 基本訊號與訊號運算</h2><p>六個積木加上平移、反轉、縮放的順序陷阱。</p></a>
+<a class="chapter-card" href="03-系統的六個性質.html"><h2><span class="number">03</span> 系統的六個性質</h2><p>逐條測給你看，違反時還算得出殘差。</p></a>
+<a class="chapter-card" href="04-線性非時變與摺積.html"><h2><span class="number">04</span> 線性非時變與摺積</h2><p>一條脈衝響應為什麼就決定了整個系統。</p></a>
+<a class="chapter-card" href="05-傅立葉級數.html"><h2><span class="number">05</span> 傅立葉級數</h2><p>把週期訊號拆成諧波，並算它們各佔多少功率。</p></a>
+<a class="chapter-card" href="06-傅立葉轉換.html"><h2><span class="number">06</span> 傅立葉轉換</h2><p>非週期訊號的連續頻譜與七大性質怎麼用。</p></a>
+<a class="chapter-card" href="07-拉氏轉換與轉移函數.html"><h2><span class="number">07</span> 拉氏轉換與轉移函數</h2><p>把微分方程換成代數，並讀懂 s 平面。</p></a>
+<a class="chapter-card" href="08-極零點與二階系統.html"><h2><span class="number">08</span> 極零點與二階系統</h2><p>由阻尼比算超越量、整定時間與共振峰值。</p></a>
+<a class="chapter-card" href="09-濾波器與群延遲.html"><h2><span class="number">09</span> 濾波器與群延遲</h2><p>由規格反算階數，並看清相位造成的波形變形。</p></a>
+<a class="chapter-card" href="10-調變與頻譜搬移.html"><h2><span class="number">10</span> 調變與頻譜搬移</h2><p>乘一個弦波就把頻譜搬走，代價是頻寬加倍。</p></a>
+<a class="chapter-card" href="11-離散時間訊號與差分方程.html"><h2><span class="number">11</span> 離散時間訊號與差分方程</h2><p>把系統寫成一個帶狀態的迴圈來算輸出。</p></a>
+<a class="chapter-card" href="12-取樣與混疊.html"><h2><span class="number">12</span> 取樣與混疊</h2><p>取樣率不夠時，高頻會偽裝成一個假的低頻。</p></a>
+<a class="chapter-card" href="13-離散頻譜分析.html"><h2><span class="number">13</span> 離散頻譜分析</h2><p>解析度由窗長決定，零填充買不到新資訊。</p></a>
+<a class="chapter-card" href="14-Z轉換與單位圓.html"><h2><span class="number">14</span> Z 轉換與單位圓</h2><p>單位圓取代虛軸，極點半徑決定衰減快慢。</p></a>
+<a class="chapter-card" href="15-數位濾波器與多速率.html"><h2><span class="number">15</span> 數位濾波器與多速率</h2><p>在陡峭度與線性相位之間做取捨，並改變取樣率。</p></a>
+<a class="chapter-card" href="名詞與概念字典.html"><h2><span class="number">查</span> 名詞與概念字典</h2><p>回查繁中、英文、機制、位置與易混邊界。</p></a>
+<a class="chapter-card" href="自我檢核.html"><h2><span class="number">檢</span> 自我檢核</h2><p>用可重做且不計分的題目檢查模型能否轉移。</p></a>
+</section>
+
+<h2>先修與去向</h2>
+<p>數學前置在<a href="../../../共通基礎/數學/互動課程/index.html">工程數學先修</a>，元件那一側是<a href="../電路學-互動課程/index.html">電路學</a>：電路學先有 R、L、C 才算電壓電流，本課先有訊號與系統，元件只是其中一種實現。隨機過程與雜訊分析、狀態空間與可控可觀測、數位調變與壓縮編碼，分別留給通訊系統、控制系統與數位訊號處理專科。</p>
+<h2>來源</h2>
+<ul><li>09-信號與系統-上.md</li><li>09-信號與系統-下.md</li><li>中英名詞對照表-2.md</li></ul>
+<h2>用語說明</h2>
+<p>本課一律寫「摺積」（中英名詞對照表寫的是「卷積」，兩者是同一個 convolution 的兩種譯法，遇到別的書請自行對應）；連續時間一律寫 x(t)、離散時間一律寫 x[n]，括號形狀是本課區分兩個世界的唯一視覺線索；虛數單位一律寫 j，因為 i 在電機留給電流。</p>
+<nav class="pager" aria-label="章節導覽"><a href="自我檢核.html">← 自我檢核</a><a href="00-訊號與系統世界觀.html">開始：訊號與系統世界觀 →</a></nav>
+</main>
+<footer class="site-footer"><span>信號與系統（零基礎互動課）</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

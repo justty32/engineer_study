@@ -120,6 +120,8 @@ jobs:
           電機/02-電機核心/電路學-互動課程|circuit-analysis
           電機/02-電機核心/電子學-互動課程|electronics
           電機/02-電機核心/電磁學-互動課程|electromagnetics
+          電機/02-電機核心/信號與系統-互動課程|signals-systems
+          電機/02-電機核心/邏輯設計-互動課程|logic-design
           COURSES
 
           python3 <<'PY'
@@ -177,6 +179,15 @@ jobs:
               "electronics": {
                   "../../../共通基礎/數學/互動課程/": "../engineering-math/",
                   "../../../共通基礎/物理/互動課程/": "../general-physics/",
+                  "../電路學-互動課程/": "../circuit-analysis/",
+              },
+              "logic-design": {
+                  "../電子學-互動課程/": "../electronics/",
+                  "../電路學-互動課程/": "../circuit-analysis/",
+                  "../../../專題/計算機組織/互動課程/": "../computer-organization/",
+              },
+              "signals-systems": {
+                  "../../../共通基礎/數學/互動課程/": "../engineering-math/",
                   "../電路學-互動課程/": "../circuit-analysis/",
               },
               "electromagnetics": {

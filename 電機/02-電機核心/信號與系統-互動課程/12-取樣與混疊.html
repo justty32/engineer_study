@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 取樣與混疊｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">12・兩個世界的橋，也是全課唯一不可逆的一步</p>
+<h1>取樣與混疊：取樣率不夠不是變差，是變成另一個頻率</h1>
+<p class="lead">前十一章丟掉的東西都還救得回來，這一章不行。取樣把連續曲線換成一串數字，若取樣率不夠，兩個不同頻率會產生一模一樣的樣本，事後任何演算法都分不出來。這章把這件事算成一個具體的頻率。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="11-離散時間訊號與差分方程.html">11 離散時間訊號與差分方程</a>的 x[n] 與樣本序號、<a href="06-傅立葉轉換.html">06 傅立葉轉換</a>的頻譜與相乘定理，以及<a href="../../../共通基礎/數學/互動課程/10-傅立葉分析.html">工程數學先修的傅立葉分析</a>。</p>
+
+<h2>痛點：「取樣率要大於兩倍」這句口號背後到底發生了什麼</h2>
+<p>取樣定理是全世界最常被背誦、最少被理解的一句話。多數人記得「兩倍」這個數字，卻答不出三個問題：為什麼剛好是兩倍而不是三倍或十倍？不夠的時候會發生什麼，是雜訊變大、波形變醜，還是別的？既然事後可以用很強的數位濾波器處理，為什麼一定要在類比端先放一顆抗混疊濾波器？</p>
+<p>第三個問題最要命，因為它的答案違反軟體工程師的本能。寫程式的人習慣「先把資料收進來，之後再慢慢處理」，但取樣是唯一一個資訊真的離開系統的環節：混疊之後的樣本，與另一個頻率產生的樣本<strong>逐位元完全相同</strong>，沒有任何殘留線索可以還原。這章要把那組相同的樣本直接列出來給你看。</p>
+
+<h2>白話直覺：每隔固定時間拍一張快照，快門太慢就會拍出倒轉的輪子</h2>
+<p>訊號從哪裡來？從麥克風、天線或感測器來，它是一條連續曲線 x(t)。系統對它做了什麼？取樣器每隔 T<sub>s</sub> 秒讀一次值，得到 x[n] = x(nT<sub>s</sub>)；中間發生的事完全沒被記錄。這件事在哪個域最好描述？時間域只看得到一堆點，看不出問題；換到頻率域，取樣的作用變得極為乾淨——原頻譜每隔 f<sub>s</sub> 複製一份。換域的代價是必須接受「複製品會互相重疊」這個純頻域的說法，而且重疊之後就分不開了。儀器量到什麼？頻譜分析儀會在混疊後的位置量到一根紮實的譜線，它看起來和真訊號毫無差別。</p>
+<p>可以暫時把取樣想成拍電影：快門每秒開 24 次，輪子若轉得比快門快，螢幕上就會看到輪子倒著轉。比喻到此為止，精確的說法是：<strong>混疊（aliasing）</strong>不是誤差也不是雜訊，而是高於 f<sub>s</sub>/2 的成分被<strong>確定性地</strong>對映到 [0, f<sub>s</sub>/2] 裡的另一個頻率上，這個新頻率叫視在頻率 f<sub>a</sub>。</p>
+<p><strong>取樣（sampling）</strong>的理想模型是 x[n] = x(nT<sub>s</sub>)，T<sub>s</sub> = 1/f<sub>s</sub>（單位 s），假設取樣瞬間完成、時間點完全準確。<strong>取樣定理（Nyquist–Shannon sampling theorem）</strong>說：若 x(t) 的頻寬是 W（Hz，指最高頻率成分），且 f<sub>s</sub> &gt; 2W，則這串樣本足以<strong>完美還原</strong>原訊號。f<sub>N</sub> = 2W 叫<strong>奈奎斯特速率</strong>，是訊號的性質；f<sub>s</sub>/2 叫<strong>奈奎斯特頻率</strong>，是取樣系統的性質。兩者中文常被混為一談，看到這個詞務必先問「講的是訊號還是取樣器」。</p>
+<p class="note">來源：09-信號與系統-下 §14.1–§14.4。</p>
+
+<h2>推導：從頻譜複製到不可逆，再到 DAC 的下垂</h2>
+<p><strong>為什麼取樣會讓頻譜週期化。</strong>理想取樣等於把 x(t) 乘上一列間隔 T<sub>s</sub> 的脈衝串。第 06 章的相乘定理說時域相乘對應頻域摺積，而脈衝串的頻譜還是脈衝串（間隔 f<sub>s</sub>）。與一列脈衝摺積等於把原頻譜搬到每根脈衝的位置各放一份，於是取樣後的頻譜就是原頻譜<strong>每隔 f<sub>s</sub> 複製一份</strong>，無限延伸。</p>
+<p><strong>混疊條件。</strong>原頻譜佔 [−W, W]，第一份複製品佔 [f<sub>s</sub> − W, f<sub>s</sub> + W]。兩者不重疊的條件是 W &lt; f<sub>s</sub> − W，也就是 f<sub>s</sub> &gt; 2W。「兩倍」這個數字就是這樣來的——它不是經驗值，是兩段區間不相交的幾何條件。</p>
+<p><strong>不可逆的那一行。</strong>取 f<sub>s</sub> − f 這個頻率的餘弦，在取樣點上算一次：cos(2π(f<sub>s</sub> − f)nT<sub>s</sub>) = cos(2πn − 2πfnT<sub>s</sub>) = cos(2πfnT<sub>s</sub>)。中間那步用到 n 是整數所以 2πn 可以整個丟掉，最後一步用到餘弦是偶函數。結論是 f 與 f<sub>s</sub> − f 這兩個<strong>不同</strong>的訊號，在所有取樣點上給出<strong>完全相同</strong>的數值。既然樣本一模一樣，就不存在任何演算法能把它們分開——這一行就是混疊不可逆的全部理由。推廣到任意 k 便得視在頻率 f<sub>a</sub> = |f − k·f<sub>s</sub>|，k 取最接近 f/f<sub>s</sub> 的整數。</p>
+<p><strong>還原與 ZOH。</strong>理想還原是 sinc 內插 x(t) = ∑<sub>n</sub> x[nT<sub>s</sub>]·sinc((t − nT<sub>s</sub>)/T<sub>s</sub>)，其中 sinc(x) = sin(πx)/(πx)、sinc(0) = 1（<strong>本課全程用這個歸一化版本</strong>，有些教科書寫 sin(x)/x，兩者的零點位置不同，不可混用）。這條式子不可實現，因為 sinc 無限長且非因果。實務用<strong>零階保持（zero-order hold, ZOH）</strong>：把每個樣本撐成寬 T<sub>s</sub> 的方塊，等於與寬 T<sub>s</sub> 的矩形摺積，再由第 06 章「矩形 ⇔ sinc」直接得到 |H<sub>ZOH</sub>(f)| = |sinc(f/f<sub>s</sub>)|。它在高頻造成可預期的衰減，稱為下垂（droop），因為完全可算，所以能事後用數位等化補回來。</p>
+<p><strong>臨界點為什麼危險。</strong>f 恰為 f<sub>s</sub>/2 時，取樣點每半個週期落一次；相位若剛好對準零交越，量到的會是一整排 0，訊號完全消失。定理寫的是 f<sub>s</sub> <strong>嚴格大於</strong> 2W，等號不算數。完整鏈因此是：類比 → 抗混疊濾波 → ADC → 數位處理 → DAC → 重建濾波 → 類比。</p>
+
+<h2>數值實例：3000 Hz 的弦波用 8000 Hz 取樣</h2>
+<p>f = 3000 Hz、振幅 A = 1 V 的弦波，以 f<sub>s</sub> = 8000 Hz 取樣，觀測第 n = 3 個樣本。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>取樣週期</td><td>T<sub>s</sub> = 1/8000</td><td><strong>1.250000 × 10<sup>−4</sup> s ＝ 125.000000 µs</strong></td></tr>
+<tr><td>奈奎斯特頻率</td><td>f<sub>s</sub>/2</td><td><strong>4000.000000 Hz</strong></td></tr>
+<tr><td>判定</td><td>3000 &lt; 4000</td><td><strong>未混疊</strong></td></tr>
+<tr><td>視在頻率</td><td>f<sub>a</sub> = |3000 − 0 × 8000|</td><td><strong>3000.000000 Hz（就是它自己）</strong></td></tr>
+<tr><td>第 3 個樣本</td><td>A·cos(2π × 3000 × 3/8000)</td><td><strong>0.707107</strong></td></tr>
+<tr><td>ZOH 衰減</td><td>|sinc(3000/8000)| = |sinc(0.375)|</td><td><strong>0.784213（−2.111316 dB）</strong></td></tr>
+</tbody></table>
+<p>邊界對照：f = <strong>5000 Hz</strong>、f<sub>s</sub> = 8000 → <strong>已混疊</strong>，視在頻率 <strong>3000.000000 Hz</strong>；<strong>前六個樣本是 1.000000、−0.707107、0.000000、0.707107、−1.000000、0.707107，與 3000 Hz 的那一組完全相同</strong>——<strong>這就是「不可逆」的具體長相</strong>。f = <strong>11000 Hz</strong> → 視在頻率也是 <strong>3000.000000 Hz</strong>（<strong>三個頻率共用同一組樣本</strong>）。f = <strong>7000 Hz</strong> → 視在 <strong>1000.000000 Hz</strong>；f = <strong>9000 Hz</strong> → 視在 <strong>1000.000000 Hz</strong>。f = <strong>4000 Hz</strong>（恰好 f<sub>s</sub>/2）→ 視在 <strong>4000.000000 Hz</strong>，但<strong>臨界情形</strong>：取樣點可能全落在零交越，還原不保證。f = <strong>1000 Hz</strong> → ZOH 衰減只有 <strong>0.974495（−0.224405 dB）</strong>；f = <strong>3900 Hz</strong> → <strong>0.652440（−3.709189 dB）</strong>——<strong>ZOH 在接近奈奎斯特頻率處已經吃掉將近 4 dB</strong>。f = <strong>20000 Hz</strong>、f<sub>s</sub> = <strong>44100 Hz</strong>（CD）→ 未混疊，ZOH 衰減 <strong>0.694402（−3.167779 dB）</strong>。</p>
+<p>量級對照：電話系統用 8000 Hz 取樣，所以只留 3400 Hz 以下的語音，s 與 f 這兩個高頻擦音因此聽起來很像；CD 用 44100 Hz，剛好讓 20000 Hz 的人耳上限留有餘裕；專業錄音用 48000 Hz。至於市電 50 Hz，用 8000 Hz 取樣等於一個週期取 160 點，遠遠過剩。</p>
+
+<section class="workspace"><h2>自由實驗：把訊號頻率推過奈奎斯特頻率</h2>
+<p>一個振幅 A 的餘弦訊號以 f<sub>s</sub> 取樣，觀測第 n 個樣本。把 f 慢慢往上推過 f<sub>s</sub>/2，看視在頻率怎麼折返、前六個樣本何時與較低頻率的那一組重合，以及 ZOH 的高頻衰減有多嚴重。</p>
+<div class="controls">
+<label for="smp-f">訊號頻率 f（Hz）<input id="smp-f" type="range" min="100" max="20000" step="100" value="3000"></label>
+<label for="smp-fs">取樣頻率 f<sub>s</sub>（Hz）<input id="smp-fs" type="range" min="1000" max="48000" step="500" value="8000"></label>
+<label for="smp-a">訊號振幅 A（V）<input id="smp-a" type="range" min="0.5" max="5" step="0.1" value="1"></label>
+<label for="smp-n">第 n 個樣本<input id="smp-n" type="range" min="0" max="20" step="1" value="3"></label>
+</div>
+<div id="sampling-output" class="output" aria-live="polite">T<sub>s</sub> = 1.250000 × 10<sup>−4</sup> s＝125.000000 µs；奈奎斯特頻率 4000.000000 Hz；視在頻率 3000.000000 Hz；第 3 個樣本 0.707107 V。前 6 個樣本：1.000000、−0.707107、0.000000、0.707107、−1.000000、0.707107。ZOH 衰減 0.784213（−2.111316 dB）。<strong>沒有混疊</strong>：f = 3000.000000 Hz &lt; f<sub>s</sub>/2 = 4000.000000 Hz，這些樣本足以完美還原原訊號（理論上用 sinc 內插）。取樣把頻譜每隔 f<sub>s</sub> 複製一份；f<sub>s</sub> 不夠大時複製品的裙邊互相重疊，重疊的部分就永遠分不開了。DAC 用零階保持把樣本撐成方塊，等於與一個寬 T<sub>s</sub> 的矩形摺積，所以高頻被 sinc 壓下去（現在是 −2.111316 dB）——這叫 droop，可以事後用數位等化補回來。量級對照：電話 8000 Hz、CD 44100 Hz、專業錄音 48000 Hz；電話只留 3400 Hz 以下的語音，所以聽不出 s 與 f 的差別。把 f 推到 5000 Hz 就會看到視在頻率掉回 3000.000000 Hz 而樣本一字不差；把 n 滑到 0，樣本恆為 A，任何頻率皆然。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>奈奎斯特速率（2W，訊號的性質）與奈奎斯特頻率（f<sub>s</sub>/2，取樣系統的性質）是兩個不同的量，中文卻常常都叫「奈奎斯特頻率」。看到這個詞先確認在講哪一個。</li>
+<li>混疊<strong>不是</strong>「訊號變差」，而是「變成另一個頻率」。它不是雜訊，是完全確定性的假訊號，取樣一百次會得到一百次相同的結果。</li>
+<li>抗混疊濾波器（anti-aliasing filter）一定裝在 ADC <strong>之前</strong>的類比域。數位濾波器再強也只能處理已經進來的樣本，而該丟的資訊在取樣那一刻就不在樣本裡了。</li>
+<li>提高取樣率能把混疊推遠，但不能取代抗混疊濾波器。世界上永遠有比你的 f<sub>s</sub>/2 更高頻的東西——射頻干擾、開關電源的切換雜訊——它們照樣會折回來。</li>
+<li>ZOH 的下垂與混疊是兩回事。下垂是可算、可補償的振幅誤差，混疊是不可逆的頻率錯位；把 droop 補平不會讓混疊消失。</li>
+</ul>
+
+<p class="warning">本章的損失是<strong>不可逆</strong>的：一旦取樣率不足，資訊就不在樣本裡了，再貴的 DSP 也救不回來。這是整門課唯一一個「做錯就沒救」的環節。</p>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>把 5000 Hz 的正弦波送進一台 8000 Hz 取樣的擷取卡，對取到的樣本做 FFT，會在 3000 Hz 看到一根紮實的譜線——而且它和真的 3000 Hz 訊號所產生的譜線長得一模一樣，高度、寬度、相位全都對得上。老式數位示波器在取樣率不足時也很容易重現這件事：螢幕上會出現一條緩慢飄移的低頻波，看起來很乾淨，其實整條都是假的。把抗混疊濾波器接上去再量一次，那根線就消失了。</p>
+<p><strong>能證明什麼</strong>：混疊之後的視在頻率是多少、抗混疊濾波器裝上去之後假線是否消失、ZOH 造成的高頻衰減有多少 dB（用網路分析儀掃 DAC 的輸出即可）。</p>
+<p><strong>不能證明什麼</strong>：眼前這根譜線「是真的還是混疊來的」。<strong>單靠一次量測絕對分不出來</strong>，因為兩者的樣本完全相同。標準做法是改變 f<sub>s</sub> 再量一次：真訊號的頻率不會動，混疊來的假線會跟著 f<sub>s</sub> 跑。也證明不了「訊號頻寬確實低於 f<sub>s</sub>/2」——你的量測系統本身就是用同一個 f<sub>s</sub> 取樣的，它看不見自己看不見的東西。</p>
+
+<h2>連到哪門課</h2>
+<p>頻譜複製所依賴的相乘定理與摺積定理見本課<a href="06-傅立葉轉換.html">06 傅立葉轉換</a>與<a href="../../../共通基礎/數學/互動課程/10-傅立葉分析.html">工程數學先修的傅立葉分析</a>；抗混疊濾波器要幾階、通帶到阻帶留多少過渡帶，用的是本課<a href="09-濾波器與群延遲.html">09 濾波器與群延遲</a>的那套預算算法。ADC 與 DAC 的電路實現、取樣保持電路與量化雜訊留給電子學與混合訊號設計。真實裝置這一側，數位相機的摩爾紋、示波器的假波形、感測器讀值裡莫名其妙的低頻起伏，追到底幾乎都是同一件事。下一章要處理另一個問題：手上已經有一串合法的樣本了，用電腦做頻譜分析時，能看到多細的頻率。</p>
+<nav class="pager" aria-label="章節導覽"><a href="11-離散時間訊號與差分方程.html">← 上一頁：離散時間訊號與差分方程</a><a href="13-離散頻譜分析.html">下一頁：離散頻譜分析 →</a></nav>
+</main>
+<footer class="site-footer"><span>12 取樣與混疊</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

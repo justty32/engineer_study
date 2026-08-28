@@ -1,0 +1,79 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 卡諾圖與不關心項｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・相鄰就是只差一個變數，圈起來就能把它消掉</p>
+<h1>卡諾圖與不關心項：把化簡從背口訣變成可操作的程序</h1>
+<p class="lead">上一章的標準型一定寫得出來，但一定不是最省。這章給出把它壓短的機械程序，並說明「這個輸入組合不可能發生」為什麼是免費的化簡燃料。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="04-標準型SOP與POS.html">04 標準型 SOP 與 POS</a>的最小項與積之和寫法。</p>
+
+<h2>痛點：化簡到底有沒有終點</h2>
+<p>拿到標準型之後，用第 03 章的恆等式東湊西湊，通常真的能變短一點。問題是：什麼時候該停？兩個人化出兩個不一樣的式子，誰對？這種靠眼力與運氣的做法沒辦法交給工具，也沒辦法在報告上寫「這已經是最短的了」。</p>
+<p>第二個痛點來自規格本身。BCD 編碼只用到 0 到 9，10 到 15 這六種位元組合根本不會出現在輸入端。如果硬要為這六種不可能的輸入指定輸出，等於白白多付閘；但如果放著不管，又不知道該怎麼在式子裡表達「隨便」。這章要的就是一套把「隨便」變成好處的做法，以及一個能宣告「化到底了」的判準。</p>
+<p class="note">來源：10-邏輯設計 §3.1、§3.3。</p>
+
+<h2>白話直覺：把表重排成「鄰居只差一個位元」的格子</h2>
+<p>可以暫時把卡諾圖（Karnaugh map）想成把真值表折成一塊布，讓原本相隔很遠的列變成鄰居；比喻到此為止，收回精確定義——卡諾圖就是一張二維表格，列標與行標都照格雷碼順序 00, 01, 11, 10 排，於是任何上下或左右相鄰的兩格，其輸入組合恰好只差一個位元。</p>
+<p>依因果順序走一次。<strong>輸入從哪來</strong>：一張真值表的 2<sup>n</sup> 個輸出值，其中有些是 1、有些是 0、有些是不關心項（don't-care term）。<strong>這一層做了什麼決定</strong>：把相鄰而且都是 1 的格子圈成一組，圈裡那個「取遍 0 與 1」的變數就被消掉，一個圈換成一個乘積項。<strong>花掉多少代價</strong>：圈越大、乘積項的字面越少，對應的及閘輸入數就越少；本章的例子從 10 個閘壓到 3 個閘，若單閘傳播延遲取 1.0 ns，路徑也從三層約 3.0 ns 縮到兩層約 2.0 ns。<strong>邊界在哪</strong>：卡諾圖靠「用眼睛看相鄰」運作，5 變數已經要疊兩張圖，6 變數以上人眼就失效了，必須換成 Quine–McCluskey 這種表格化算法；而且不關心項的好處建立在「那些輸入真的不會發生」這個規格假設上，假設錯了電路就會做出你沒設計過的行為。<strong>儀器量到什麼</strong>：測試向量掃過全部 2<sup>n</sup> 種輸入，可以逐格比對化簡前後兩個電路，但只在合法輸入上該相同。</p>
+<p>寫成程式的話：真值表是查表陣列，卡諾圖化簡就是把這張陣列壓成一串較短的條件式，而不關心項是「這幾格你愛填什麼都行」的自由度。</p>
+
+<h2>推導：相鄰為什麼能消變數，以及演算法怎麼走</h2>
+<p><strong>（a）相鄰能消變數的代數理由。</strong>A · B · ¬C + A · B · C = A · B · (¬C + C)（分配律，把 A · B 提出來）= A · B · 1（用互補律 ¬C + C = 1）= A · B（單位律）。兩格合成一格，C 消失了，因為在這兩格裡 C 取遍了 0 與 1，輸出卻沒變。</p>
+<p><strong>（b）圈為什麼必須是 2 的次方而且要對齊。</strong>上面的合併能成立，前提是被合併的那些格子構成「某 k 個變數取遍全部 2<sup>k</sup> 種組合、其餘變數固定不變」的完整集合。少一格就不完整，多一格就會把固定的變數也弄亂，兩者都無法整段提出公因式。所以圈 2<sup>k</sup> 格消掉 k 個變數，而 3 格、6 格這種大小不合法。</p>
+<p><strong>（c）卡諾圖為什麼是環狀的。</strong>AB 的格雷碼順序是 00, 01, 11, 10，首尾兩項 10 與 00 也只差一個位元，所以最上一列與最下一列其實相鄰，最左一行與最右一行也相鄰。圈可以從邊緣繞回另一邊。</p>
+<p><strong>（d）Quine–McCluskey 的三步驟（互動元件就是照這個實作）。</strong>第一步，把 on-set 與不關心項的最小項依 1 的個數分組，反覆把「只差一個位元」的兩項合併成帶 <code>-</code> 的樣式，直到不能再合併，剩下沒被合併掉的就是<strong>質蘊涵項（prime implicant）</strong>。第二步，做覆蓋表，只有一個質蘊涵項覆蓋的最小項（<strong>不含不關心項</strong>）→ 那個質蘊涵項是<strong>必要質蘊涵項（essential prime implicant）</strong>，全部選入。第三步，若還有最小項沒被覆蓋，反覆挑「覆蓋最多未覆蓋最小項」的質蘊涵項，平手時取字面數較少者，再平手取位元樣式字典序較小者（<code>-</code> 小於 <code>0</code> 小於 <code>1</code>）。</p>
+<p class="note">來源：10-邏輯設計 §3.2。</p>
+
+<h2>數值實例：BCD 大於等於 5 偵測器</h2>
+<p>輸入 A B C D 是一個 BCD 數字，A 是最高位；F = 1 表示這個數字大於等於 5。規格寫成 F = Σm(5, 6, 7, 8, 9) + d(10, 11, 12, 13, 14, 15)——10 到 15 不是合法的 BCD 編碼，所以列為不關心項。卡諾圖的列是 AB、行是 CD，兩軸都用格雷碼順序：</p>
+<table><thead><tr><th>AB \ CD</th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead><tbody>
+<tr><th>00</th><td>m0 = 0</td><td>m1 = 0</td><td>m3 = 0</td><td>m2 = 0</td></tr>
+<tr><th>01</th><td>m4 = 0</td><td>m5 = <strong>1</strong></td><td>m7 = <strong>1</strong></td><td>m6 = <strong>1</strong></td></tr>
+<tr><th>11</th><td>m12 = x</td><td>m13 = x</td><td>m15 = x</td><td>m14 = x</td></tr>
+<tr><th>10</th><td>m8 = <strong>1</strong></td><td>m9 = <strong>1</strong></td><td>m11 = x</td><td>m10 = x</td></tr>
+</tbody></table>
+<p>把三步驟跑完，結果如下。</p>
+<table><thead><tr><th>項目</th><th>結果</th></tr></thead><tbody>
+<tr><td>質蘊涵項</td><td><strong>3 個</strong>：<code>1---</code> = <strong>A</strong>、<code>-1-1</code> = <strong>B · D</strong>、<code>-11-</code> = <strong>B · C</strong></td></tr>
+<tr><td>必要性</td><td>m8 只被 <strong>A</strong> 覆蓋 → A 必要；m5 只被 <strong>B · D</strong> 覆蓋 → B · D 必要；m6 只被 <strong>B · C</strong> 覆蓋 → B · C 必要。三個全部必要，不需要第三步的貪婪挑選</td></tr>
+<tr><td>最簡 SOP</td><td><strong>F = A + B · D + B · C</strong></td></tr>
+<tr><td>字面數</td><td>1 + 2 + 2 = <strong>5</strong></td></tr>
+<tr><td>閘數</td><td>0 個 NOT + 2 個 2 輸入 AND + 1 個 3 輸入 OR = <strong>3</strong></td></tr>
+<tr><td>標準 SOP（不化簡）</td><td>5 個 4 字面的乘積項 = <strong>20 個字面</strong>；4 個 NOT + 5 個 4 輸入 AND + 1 個 5 輸入 OR = <strong>10 個閘</strong></td></tr>
+<tr><td>省下</td><td>閘數 <strong>10 → 3</strong>，字面數 <strong>20 → 5</strong></td></tr>
+</tbody></table>
+<p>最簡 SOP 必須逐列驗證，x 代表不關心、怎麼算都可以：m0 <code>0000</code> → A=0、B · D=0、B · C=0 → <strong>0</strong> ✓；m1 <code>0001</code> → 0 ✓；m2 <code>0010</code> → 0 ✓；m3 <code>0011</code> → B=0 → 0 ✓；m4 <code>0100</code> → A=0、B · D = 1 · 0 = 0、B · C = 1 · 0 = 0 → <strong>0</strong> ✓；m5 <code>0101</code> → B · D = 1 · 1 = <strong>1</strong> ✓；m6 <code>0110</code> → B · C = 1 · 1 = <strong>1</strong> ✓；m7 <code>0111</code> → <strong>1</strong> ✓；m8 <code>1000</code> → A = <strong>1</strong> ✓；m9 <code>1001</code> → A = <strong>1</strong> ✓；m10 到 m15 → A = 1 或 B = 1，輸出 1，但它們是不關心項，<strong>輸出什麼都不算錯</strong>。</p>
+<p>四組邊界對照要記住。第一，<strong>16 格全部設成 1</strong> → 唯一的質蘊涵項是 <code>----</code>，F = 1，<strong>0 個閘</strong>。第二，<strong>16 格全部設成 0</strong> → 沒有任何最小項，F = 0，<strong>0 個閘</strong>。第三，<strong>16 格全部設成 x</strong> → on-set 為空，本課約定輸出 F = 0，並提示全部都是不關心項時 F 可以是任何函數，本課取最省的 0。第四，<strong>四變數奇偶檢查</strong> F = A ⊕ B ⊕ C ⊕ D，也就是 Σm(1, 2, 4, 7, 8, 11, 13, 14) 這 8 格（1 的個數為奇數者）→ <strong>8 個質蘊涵項，每個都是 4 字面的單格，全部必要，完全化簡不掉</strong>。這是卡諾圖的最壞情形：<strong>相鄰格永遠一個 1 一個 0，沒有任何兩格可以合併。</strong></p>
+
+<section class="workspace"><h2>自由實驗：逐格切 0／1／x，看質蘊涵項與最簡式重算</h2>
+<p>下面是一張四變數卡諾圖，列標是 AB、行標是 CD，兩軸都照格雷碼順序 00, 01, 11, 10，所以左右上下相鄰的格子只差一個位元，而且左右與上下都繞回去。每格可以選 0、1 或 x。改完之後看：質蘊涵項有幾個、哪幾個是必要的、最簡式省下多少閘。</p>
+<div class="controls">
+<table><thead><tr><th>AB \ CD</th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead><tbody>
+<tr><th>00</th><td><label for="km-c0">m0<select id="km-c0"><option value="0" selected>0</option><option value="1">1</option><option value="x">x（不關心）</option></select></label></td><td><label for="km-c1">m1<select id="km-c1"><option value="0" selected>0</option><option value="1">1</option><option value="x">x（不關心）</option></select></label></td><td><label for="km-c3">m3<select id="km-c3"><option value="0" selected>0</option><option value="1">1</option><option value="x">x（不關心）</option></select></label></td><td><label for="km-c2">m2<select id="km-c2"><option value="0" selected>0</option><option value="1">1</option><option value="x">x（不關心）</option></select></label></td></tr>
+<tr><th>01</th><td><label for="km-c4">m4<select id="km-c4"><option value="0" selected>0</option><option value="1">1</option><option value="x">x（不關心）</option></select></label></td><td><label for="km-c5">m5<select id="km-c5"><option value="0">0</option><option value="1" selected>1</option><option value="x">x（不關心）</option></select></label></td><td><label for="km-c7">m7<select id="km-c7"><option value="0">0</option><option value="1" selected>1</option><option value="x">x（不關心）</option></select></label></td><td><label for="km-c6">m6<select id="km-c6"><option value="0">0</option><option value="1" selected>1</option><option value="x">x（不關心）</option></select></label></td></tr>
+<tr><th>11</th><td><label for="km-c12">m12<select id="km-c12"><option value="0">0</option><option value="1">1</option><option value="x" selected>x（不關心）</option></select></label></td><td><label for="km-c13">m13<select id="km-c13"><option value="0">0</option><option value="1">1</option><option value="x" selected>x（不關心）</option></select></label></td><td><label for="km-c15">m15<select id="km-c15"><option value="0">0</option><option value="1">1</option><option value="x" selected>x（不關心）</option></select></label></td><td><label for="km-c14">m14<select id="km-c14"><option value="0">0</option><option value="1">1</option><option value="x" selected>x（不關心）</option></select></label></td></tr>
+<tr><th>10</th><td><label for="km-c8">m8<select id="km-c8"><option value="0">0</option><option value="1" selected>1</option><option value="x">x（不關心）</option></select></label></td><td><label for="km-c9">m9<select id="km-c9"><option value="0">0</option><option value="1" selected>1</option><option value="x">x（不關心）</option></select></label></td><td><label for="km-c11">m11<select id="km-c11"><option value="0">0</option><option value="1">1</option><option value="x" selected>x（不關心）</option></select></label></td><td><label for="km-c10">m10<select id="km-c10"><option value="0">0</option><option value="1">1</option><option value="x" selected>x（不關心）</option></select></label></td></tr>
+</tbody></table>
+</div>
+<div id="kmap-output" class="output" aria-live="polite">目前 <strong>Σm(5, 6, 7, 8, 9)</strong>、<strong>d(10, 11, 12, 13, 14, 15)</strong>。質蘊涵項 3 個：<code>1---</code> → A（1 字面）、<code>-1-1</code> → B · D（2 字面）、<code>-11-</code> → B · C（2 字面）。必要性：m8 只被 A 覆蓋 → A 必要；m5 只被 B · D 覆蓋 → B · D 必要；m6 只被 B · C 覆蓋 → B · C 必要。<strong>三個圈都是必要的，沒有再化簡的空間。</strong>最簡 SOP：<strong>F = A + B · D + B · C</strong>，字面數 1 + 2 + 2 = 5，閘數 0 個 NOT + 2 個 2 輸入 AND + 1 個 3 輸入 OR = 3。標準 SOP 不化簡是 20 個字面、10 個閘，所以閘數 10 → 3、字面數 20 → 5。A 這個圈用到了 m10、m11、m12、m13、m14、m15 這些不關心項；它們不會出現在真實輸入，所以免費。圈變大一倍就消掉一個變數，因為那個變數在圈內取遍了 0 與 1。把整張圖切成全 x 之類的極端值時，on-set 為空，本課約定輸出 F = 0。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>卡諾圖的行列順序不是 00, 01, 10, 11。邊界就在第二格與第三格之間：照二進位順序排的話，01 與 10 差了兩個位元，「相鄰只差一個位元」這個前提立刻破掉，整個方法失效。</li>
+<li>圈可以重疊，但不能有洞、不能是非 2 的次方。重疊沒關係是因為 A + A = A，同一格被兩個圈蓋到不會算兩次；但 3 格、6 格的圈提不出公因式，寫不成單一乘積項。</li>
+<li>不關心項可以圈進去，但<strong>不用</strong>特地去覆蓋它。判斷質蘊涵項是否必要時，只看 on-set 裡的最小項；一個只蓋住不關心項的圈，留著只是白花閘。</li>
+<li>「最簡」指的是字面數或閘數最少，不是「唯一」。同一個函數可能有好幾個一樣簡的答案；只有當全部質蘊涵項都必要時，答案才唯一。</li>
+<li>質蘊涵項不等於必要質蘊涵項。質蘊涵項只是「不能再變大的圈」，必要與否要看有沒有哪個最小項只被它一個蓋到。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>把化簡前的標準型電路與化簡後的三閘電路都合成，在模擬器裡用測試向量掃過全部 16 種輸入並逐筆比對；也可以把兩者燒進同一片可程式邏輯元件，用邏輯分析儀同時抓兩路輸出。</p>
+<p><strong>能證明</strong>：在 0 到 9 這 10 種合法輸入下兩個電路完全等價，而在 10 到 15 這 6 種輸入下可能不同（化簡後的電路會把它們輸出成 1）；以及化簡後的閘數確實由 10 降到 3，這是數得出來也量得到功耗差異的。<strong>不能證明</strong>：那 6 種非法輸入「永遠不會發生」。那是規格的假設，不是量測結果；如果上游元件故障或雜訊翻轉了某個位元，化簡後的電路就會做出你從來沒設計過的行為。<strong>這是不關心項最大的風險</strong>，安全相關的設計常常刻意放棄這份免費的化簡燃料，把不關心項全部釘成 0。</p>
+
+<h2>連到哪門課</h2>
+<p>真實的 EDA 工具不會畫卡諾圖，它把 Quine–McCluskey 這類算法規模化成可以處理上百萬個閘的邏輯合成流程，見本課<a href="13-可程式邏輯與HDL.html">13 可程式邏輯與 HDL</a>。化簡出來的組合邏輯在處理器裡最典型的用途，是控制單元把指令欄位解出一堆控制訊號，見<a href="../../../專題/計算機組織/互動課程/02-組合邏輯與算術.html">計算機組織的組合邏輯與算術</a>。下一章換一條完全不同的路：不化簡，直接拿一顆多工器把真值表當查表用。</p>
+<nav class="pager" aria-label="章節導覽"><a href="04-標準型SOP與POS.html">← 上一頁：標準型 SOP 與 POS</a><a href="06-多工器解碼器與編碼器.html">下一頁：多工器、解碼器與編碼器 →</a></nav>
+</main>
+<footer class="site-footer"><span>05 卡諾圖與不關心項</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 可程式邏輯與 HDL｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">13・不再手畫閘：把前面十三章交給工具</p>
+<h1>可程式邏輯與 HDL：查找表吞掉真值表，以及該用 CPLD、FPGA 還是 ASIC</h1>
+<p class="lead">現代人不手畫閘。規格用硬體描述語言寫出來，合成工具自動做完化簡、狀態編碼與時序最佳化。這章講工具底下那顆可寫入的多工器，以及產量多少時該換方案。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-卡諾圖與不關心項.html">05 卡諾圖與不關心項</a>的化簡、<a href="11-有限狀態機.html">11 有限狀態機</a>的狀態編碼，以及<a href="12-暫存器計數器與記憶體.html">12 暫存器計數器與記憶體</a>的記憶體結構。</p>
+
+<h2>痛點：學了化簡與狀態表，工程師卻好像都沒在做</h2>
+<p>前面十三章教了真值表、標準型、卡諾圖化簡、閘數計算、進位鏈延遲、狀態表與時序限制。可是打開一份現代硬體專案，看到的不是閘的接線圖，而是一疊很像程式的文字檔。於是自然冒出兩個疑問：那些手算是不是白學了？既然都能「寫」硬體，為什麼還要分 CPLD、FPGA 與 ASIC？</p>
+<p>答案是同一句：工具接手的是<strong>執行</strong>，不是<strong>判斷</strong>。合成軟體化簡做得比人好，但它不會告訴你這條路徑為什麼過不了時序，也不會替你決定用哪一種晶片。要看懂它吐出的資源報告與時序報告，你得知道那些數字怎麼算——那正是前面十三章。</p>
+
+<h2>白話直覺：一顆可寫入的多工器就是整張真值表</h2>
+<p>可程式邏輯元件（programmable logic device, PLD）這一族裡，現場可程式閘陣列（field programmable gate array, FPGA）是主角，核心是查找表（look-up table, LUT）＋ 正反器 ＋ 繞線矩陣 ＋ 嵌入塊（區塊 RAM、DSP、輸入輸出電路）。<strong>一個 k 輸入 LUT，就是一顆 2<sup>k</sup> 對 1 的多工器加上 2<sup>k</sup> 個組態位元</strong>——這正是<a href="06-多工器解碼器與編碼器.html">第 06 章</a>那顆多工器的工業化版本：資料線變成可寫入的記憶體位元、選擇線變成函數的輸入變數。</p>
+<p>因果鏈走一遍。<strong>輸入從哪來</strong>：你寫的規格，經合成變成一張接線圖。<strong>做了什麼決定</strong>：工具把每一小塊邏輯塞進一顆 LUT 的組態位元，再決定哪顆接哪顆。<strong>花掉多少</strong>：LUT 用記憶體模擬邏輯，同樣的設計在 FPGA 上通常比 ASIC 慢 3 到 5 倍、功耗高約 10 倍。<strong>邊界在哪</strong>：輸入數超過 k 就要拆成好幾顆串起來，延遲跟著疊。<strong>儀器量到什麼</strong>：資源報告說用了幾顆 LUT，靜態時序分析（static timing analysis, STA）報告說估計的 f<sub>max</sub>。</p>
+<p>把比喻收回來：LUT 不是「小 CPU」，裡面沒有指令，只有一排寫死的位元和一顆選擇器，上電就全部同時生效。這也是 CPLD 與 FPGA 的分野——複雜可程式邏輯元件（complex programmable logic device, CPLD）以巨集單元（macrocell）為單位，容量小但延遲可預測；FPGA 容量大，代價是延遲要靠工具反覆試才收斂。第三種是特定應用積體電路（application-specific integrated circuit, ASIC）：效能、功耗與單價最好，但要繳一筆一次性工程費（non-recurring engineering, NRE）。</p>
+<p class="note">來源：10-邏輯設計 §8.1、§8.2、§8.3。</p>
+
+<h2>推導：組態位元、夏農展開、成本交叉點</h2>
+<p><strong>（a）為什麼 k 輸入 LUT 要 2<sup>k</sup> 個組態位元。</strong>它必須能實作 k 個輸入的<strong>任何</strong>函數。k 個輸入有 2<sup>k</sup> 種組合，每一種對應真值表的一列，該列的輸出存一個位元。k 輸入函數共有 2<sup>2<sup>k</sup></sup> 種，剛好等於 2<sup>k</sup> 個位元的所有排列。所以 k 每加 1 成本就加倍——這就是主流 FPGA 停在 4 到 6 輸入的原因。</p>
+<p><strong>（b）用 k-LUT 實作任意 n 輸入函數最壞要幾顆。</strong>n ≤ k 時一顆就夠。n > k 時用夏農展開（Shannon expansion）：F ＝ ¬x · F|<sub>x=0</sub> + x · F|<sub>x=1</sub>，把一個變數固定成 0 與 1 各得一個子函數，再用一個二選一選起來。每展開一個變數，問題砍成兩半再加一個選擇，遞迴到剩下變數不超過 k 為止，總數 2<sup>n−k+1</sup> − 1 顆。這是最壞情形；真實函數常有結構，化簡後會少很多。</p>
+<p><strong>（c）成本模型。</strong>ASIC 總成本 ＝ NRE ＋ 單價 × 產量；FPGA 總成本 ＝ 單價 × 產量，沒有 NRE。兩者相等時移項得交叉點產量 ＝ NRE ÷（FPGA 單價 − ASIC 單價）。單位：NRE 是美元，單價是美元每顆。本課固定 ASIC 2 美元、FPGA 50 美元、CPLD 5 美元，並假設單價不隨產量變動——真實報價有階梯折扣，這裡簡化成直線好讓交叉點看得清楚。</p>
+<p><strong>（d）為什麼 HDL 是「描述」不是「程式」。</strong>硬體描述語言（hardware description language, HDL）主要有 Verilog 與 VHDL。寫下兩行賦值，在硬體裡是兩條<strong>同時存在</strong>的接線；同一個時脈邊緣上所有非阻塞賦值一起取舊值、一起生效，這與第 12 章移位暫存器四件事同時發生是同一回事。軟體背景最容易踩的雷就是把它讀成順序執行。描述有三個抽象層：行為層（behavioral）只講功能、暫存器轉移層（register transfer level, RTL）講每個時脈邊緣哪些暫存器收什麼結果、閘級（gate-level）直接列出閘與連線。</p>
+<p><strong>（e）為什麼時序收斂才是真正的難點。</strong>流程是 HDL → 合成（synthesis）→ 佈局繞線（place and route）→ 時序驗證 → 燒錄或製造。功能對了只是第一關：佈局繞線之後，<a href="10-時脈與時序限制.html">第 10 章</a>那條 T<sub>clk</sub> ≥ t<sub>cq</sub> + t<sub>logic</sub> + t<sub>su</sub> + t<sub>jitter</sub> − t<sub>skew</sub> 要對全設計數萬條路徑同時成立才叫收斂。大型專案後期幾乎都耗在這一步。</p>
+
+<h2>數值實例：4 輸入 LUT、6 輸入函數、產量一萬顆</h2>
+<p>取 4 輸入 LUT、目標函數 6 個輸入、產量 10<sup>4</sup> 顆、ASIC 的 NRE 500 萬美元。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>一個 4-LUT 的組態位元</td><td>2<sup>4</sup></td><td><strong>16</strong></td></tr>
+<tr><td>實作 6 輸入函數最壞需要的 LUT</td><td>2<sup>6−4+1</sup> − 1 ＝ 2<sup>3</sup> − 1</td><td><strong>7</strong></td></tr>
+<tr><td>總組態位元</td><td>7 × 16</td><td><strong>112</strong></td></tr>
+<tr><td>CPLD 可行性</td><td>7 ≤ 512 巨集單元</td><td><strong>可行</strong></td></tr>
+<tr><td>ASIC 總成本</td><td>5000000 + 2 × 10000</td><td><strong>5020000 美元 → 502.000000 美元/顆</strong></td></tr>
+<tr><td>FPGA 總成本</td><td>50 × 10000</td><td><strong>500000 美元 → 50.000000 美元/顆</strong></td></tr>
+<tr><td>CPLD 總成本</td><td>5 × 10000</td><td><strong>50000 美元 → 5.000000 美元/顆</strong></td></tr>
+<tr><td>判定</td><td>產量太小，NRE 攤不掉</td><td><strong>這個規模用 CPLD 最划算</strong></td></tr>
+<tr><td>ASIC 與 FPGA 的交叉點</td><td>5000000 ÷ (50 − 2)</td><td><strong>104166.666667 顆</strong></td></tr>
+<tr><td>ASIC 與 CPLD 的交叉點</td><td>5000000 ÷ (5 − 2)</td><td><strong>1666666.666667 顆</strong></td></tr>
+</tbody></table>
+<p>讀法是：一萬顆離十萬顆的交叉點還差一個數量級，500 萬美元的 NRE 攤到每顆就是 500 美元，比整顆 CPLD 貴一百倍。量級對照請記住——單閘延遲約 1 ns、正反器 t<sub>cq</sub> 約 0.40 ns、64 KiB SRAM 約 3.1 M 顆電晶體、ASIC 的 NRE 約 500 萬美元。</p>
+<p>邊界對照：<strong>產量拉到 10<sup>7</sup></strong> → ASIC 總成本 25000000 美元（<strong>2.500000 美元/顆</strong>）、FPGA 500000000 美元（50.000000 美元/顆），<strong>ASIC 便宜 20 倍，NRE 完全攤掉了</strong>。<strong>目標函數 12 個輸入、LUT 只有 2 個輸入</strong> → 最壞 2<sup>11</sup> − 1 ＝ <strong>2047 個 LUT</strong>，遠超過 512 個巨集單元，<strong>CPLD 不可行</strong>；組態位元 2047 × 4 ＝ <strong>8188</strong>。<strong>目標函數 2 個輸入、6-LUT</strong> → n ≤ k，<strong>1 個 LUT、64 個組態位元</strong>，其中大部分位元都浪費掉了——<strong>這是 FPGA 的常態，資源利用率天生就不會滿</strong>。</p>
+
+<section class="workspace"><h2>自由實驗：LUT 數量與三種方案的成本交叉點</h2>
+<p>左邊兩支滑桿決定硬體要花多少 LUT：LUT 的輸入數 k 決定一顆能吞多大的函數，目標函數的輸入數 n 決定要拆幾層。右邊兩支決定錢：產量與 ASIC 的一次性工程費。方案選單只是把你的選擇標出來，三種方案的成本一律同時算給你看，這樣才看得到交叉點在哪一邊。</p>
+<div class="controls">
+<label for="pl-tech">你想採用的方案<select id="pl-tech"><option value="cpld">CPLD</option><option value="fpga" selected>FPGA</option><option value="asic">ASIC</option></select></label>
+<label for="pl-lut">LUT 的輸入數 k<input id="pl-lut" type="range" min="2" max="6" step="1" value="4"></label>
+<label for="pl-nin">目標函數的輸入變數數 n<input id="pl-nin" type="range" min="2" max="12" step="1" value="6"></label>
+<label for="pl-volexp">產量（10 的幾次方顆）<input id="pl-volexp" type="range" min="0" max="7" step="1" value="4"></label>
+<label for="pl-nre">ASIC 的一次性工程費 NRE（百萬美元）<input id="pl-nre" type="range" min="0.1" max="50" step="0.1" value="5"></label>
+</div>
+<div id="pld-output" class="output" aria-live="polite">方案選項只決定下面哪一行被標成你的選擇；k 與 n 決定 LUT 數，產量與 NRE 決定成本。一個 4-LUT 有 16 個組態位元；6 輸入函數最壞要 7 個 LUT，總組態位元 112。產量 10000 顆時：ASIC 5020000 美元（502.000000 美元/顆）、FPGA 500000 美元（50.000000 美元/顆）、CPLD 50000 美元（5.000000 美元/顆）；7 個 LUT 未超過 512 個巨集單元，CPLD 可行。ASIC 與 FPGA 的交叉點 104166.666667 顆，與 CPLD 的交叉點 1666666.666667 顆。產量還沒到 104166.666667 顆，NRE 攤不掉，這個規模用 CPLD 最划算。LUT 就是一顆可寫入的多工器，k 個輸入需要 2^k 個組態位元，所以 k 每加 1 成本就加倍。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>FPGA 不是「跑得比較慢的 ASIC」。它是<strong>用查表模擬邏輯</strong>的另一種架構，同樣的設計通常慢 3 到 5 倍、功耗高約 10 倍，換到的是能改。</li>
+<li>HDL 裡的非阻塞賦值符號不是「小於等於」，也不是「賦值完往下跑」。同一個時脈邊緣上的非阻塞賦值一起取舊值、一起生效。</li>
+<li>「時序收斂」不是「模擬跑過」。模擬只驗功能，時序要看 STA 報告；模擬全綠而 STA 報告紅一片是很常見的狀況。</li>
+<li>LUT 數不等於閘數。廠商標的「等效閘數」是換算出來的行銷數字，真正該看的是資源報告裡的 LUT、正反器、區塊 RAM 與 DSP。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>第一種證據來自工具：把同一份 HDL 用面積優先與速度優先兩種設定各合成一次，比較資源報告的 LUT 數與 STA 報告的 f<sub>max</sub>。通常速度優先用掉更多 LUT 卻換到更高頻率，這就是把化簡與時序放在同一個天平上秤。第二種來自實機：把設計燒進 FPGA，用內建的邏輯分析儀抓晶片內部的波形。</p>
+<p><strong>能證明</strong>：工具在這組設定下用掉多少資源、估計的最高頻率、實際硬體在你給的激勵下的行為。<strong>不能證明</strong>：這是「最佳」實作——合成是啟發式搜尋，換個種子結果就不同；也不能證明 ASIC 流片後會長成什麼樣，FPGA 原型驗的是功能，不是最終的時序與功耗。內建邏輯分析儀會佔用 LUT 並改變繞線，量到的是「被觀測後的電路」。</p>
+<p class="warning">FPGA 的輸入輸出接腳分成好幾組（bank），每一組的電壓由外部供電腳位決定，不是韌體說了算。把 3.3 V 的訊號接到設定成 1.8 V 的 bank，或把 bank 的電源接錯電壓，會在上電瞬間燒毀整排輸入輸出電路，嚴重時整顆晶片報廢。接任何外部電路之前，先確認該 bank 的電壓設定與資料手冊上的絕對最大額定。</p>
+
+<h2>連到哪門課</h2>
+<p>LUT 的前身就是本課<a href="06-多工器解碼器與編碼器.html">第 06 章</a>的多工器，合成工具內部的化簡演算法則是<a href="05-卡諾圖與不關心項.html">第 05 章</a>那套 Quine–McCluskey 的規模化版本；工具替你做的狀態編碼來自<a href="11-有限狀態機.html">第 11 章</a>，關鍵路徑報告來自<a href="10-時脈與時序限制.html">第 10 章</a>。把這些疊成一台完整的電腦，見<a href="../../../專題/計算機組織/互動課程/index.html">計算機組織互動課</a>。訊號完整性屬於 IoT 知識群裡天線 RF 與 EMC 的主題；FIR、FFT 留給信號與系統。這門課到此結束：下一頁的字典把名詞收成一張表。</p>
+<nav class="pager" aria-label="章節導覽"><a href="12-暫存器計數器與記憶體.html">← 上一頁：暫存器、計數器與記憶體</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>13 可程式邏輯與 HDL</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

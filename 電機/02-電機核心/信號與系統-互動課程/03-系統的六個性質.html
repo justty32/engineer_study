@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 系統的六個性質｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・六個性質，逐條測給你看</p>
+<h1>系統的六個性質：把定義背誦換成一張測得出殘差的判定表</h1>
+<p class="lead">系統是一個算子 T，把輸入訊號整條對應成輸出訊號。這章不背定義，而是拿六個具體系統逐條測：線性、時不變、因果、BIBO 穩定、無記憶、可逆，違反的時候算得出殘差、指得出反例。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-基本訊號與訊號運算.html">02 基本訊號與訊號運算</a>的 u(t)、δ(t) 與 r(t)，以及<a href="../../../共通基礎/數學/互動課程/04-向量與矩陣.html">工程數學先修的線性與疊加</a>。</p>
+
+<h2>痛點：六個名詞都認得，卻不知道要拿什麼去測</h2>
+<p>常見的學法是把六個性質抄成六行定義，遇到題目就憑印象猜。真正卡住的其實是三件事：不知道拿什麼訊號去測、不知道違反時輸出會長什麼樣、也不知道為什麼後面幾乎只談其中兩個性質的組合。難的不是定義，是把定義翻成一個動手做得出來的實驗。</p>
+<p>更麻煩的是名詞的日常意義會來搗亂。「線性」在中學數學裡是「畫出來是一條直線」，可是 y(t) = x(t) + 3 畫出來確實是直線，卻不是這門課說的線性系統；「時不變」聽起來像「輸出不隨時間改變」，但一個時不變系統的輸出當然會隨時間變，不變的是系統這條規則。每一個名詞都要重新定錨。</p>
+<p>這章的產出是一張判定表：六個系統、六個性質，每一格都能講出理由。它同時是下一章的入場券——只有同時線性又時不變的系統，才換得到「一個脈衝響應就描述整個系統」這個特權。</p>
+
+<h2>白話直覺：系統是一條規則，六個性質是六種對規則的追問</h2>
+<p>訊號從哪裡來？可能是麥克風把聲壓變成電壓、可能是感測器把溫度變成電流，總之是一個隨時間變化的函數 x(t)。系統對它做了什麼？系統是一個算子，寫成 y(t) = T{x(t)}；注意輸入是整條函數、輸出也是整條函數，不是把某一個瞬間的數字丟進一個公式而已。可以暫時把 T 想成一個吃陣列吐陣列的函式；比喻到此為止，真正的定義是「從訊號集合到訊號集合的對應」，它允許輸出的某一刻依賴輸入的過去、甚至未來。</p>
+<p>這件事在哪個域最好描述？在時間域，因為六個性質全部是對「輸入怎麼變、輸出跟著怎麼變」的追問，都不需要換域就講得完。換域的代價是什麼？如果現在就跳到頻率域，會直接假設疊加成立、假設規則不隨時間變，那正是這章要檢查的前提；先在時間域確認前提，之後換域才不是空中樓閣。儀器量到什麼？儀器只能量有限次、有限振幅、有限時間長度的輸入輸出對，因此它永遠只能推翻一個性質、不能證實一個性質。</p>
+<p>六個性質彼此獨立：因果（causal）不保證穩定，無記憶（memoryless）一定因果、反過來不成立。工程上真正被大量分析的對象是線性非時變系統（linear time-invariant system, LTI），因為它同時滿足前兩個性質，一整套換域工具才派得上用場。</p>
+<p class="note">來源：09-信號與系統-上 第 3 章。</p>
+
+<h2>推導：五個反例，把六條定義逼到可以驗算</h2>
+<p><strong>先把疊加寫清楚。</strong>線性（linear）＝可加性加上齊次性，合起來就是疊加：T{a·x<sub>1</sub> + b·x<sub>2</sub>} = a·T{x<sub>1</sub>} + b·T{x<sub>2</sub>}，其中 a、b 是任意常數（無單位），x<sub>1</sub>、x<sub>2</sub> 是任意兩個輸入訊號（單位 V）。測法是把左式與右式各算一次，兩者相減得到殘差；殘差不為零就推翻線性。</p>
+<p><strong>（a）為什麼 y = x + 3 不是線性的。</strong>取 a = 2、b = 3、x<sub>1</sub> = x<sub>2</sub> = 1（皆為常數輸入）。左式先疊加再送進系統：(2×1 + 3×1) + 3 = 8。右式先各自送進系統再疊加：2(1 + 3) + 3(1 + 3) = 20。兩者差 12。這個系統畫出來是一條斜率 1、截距 3 的直線，卻不滿足疊加，這種系統叫仿射（affine）。<strong>「線性」在本課專指疊加，不是「圖形是直線」</strong>，這是最常見的誤解。毛病出在那個固定偏移：疊加的右式把 3 加了兩次還各乘上係數，左式只加了一次。</p>
+<p><strong>（b）為什麼 y = x² 不線性。</strong>同一組數字，左式 (2 + 3)² = 25，右式 2×1² + 3×1² = 5，殘差 20。原因看展開式就清楚：(a·x<sub>1</sub> + b·x<sub>2</sub>)² = a²x<sub>1</sub>² + b²x<sub>2</sub>² + 2·a·b·x<sub>1</sub>x<sub>2</sub>，多出來的交叉項 2·a·b·x<sub>1</sub>x<sub>2</sub> 正是疊加被破壞的地方，而且它隨振幅平方成長。這也解釋了為什麼放大器在小訊號時看起來很線性、一過載就露餡。</p>
+<p><strong>（c）為什麼 y(t) = x(2t) 時變。</strong>時不變（time-invariant）的定義是：輸入平移則輸出跟著平移，T{x(t − t<sub>0</sub>)} = y(t − t<sub>0</sub>)。把輸入延後 t<sub>0</sub> 再送進系統，得到 x(2t − t<sub>0</sub>)；把原輸出延後 t<sub>0</sub>，得到 x(2(t − t<sub>0</sub>)) = x(2t − 2t<sub>0</sub>)。兩者的平移量差了一倍，所以這個系統時變。順帶一提，它也不是因果的：t = 1 的輸出用到 x(2)，那是未來的輸入。</p>
+<p><strong>（d）為什麼積分器不 BIBO 穩定。</strong>BIBO 穩定（bounded-input bounded-output）要求：只要輸入有界，輸出就必須有界。取輸入 u(t)，它的上界是 1（有界）；積分器的輸出是 r(t) = t·u(t)，隨 t 無上限成長（無界）。找到一個有界輸入配上無界輸出，穩定就被推翻了。積分器同時也不是無記憶的——現在的輸出用到過去所有輸入。</p>
+<p><strong>（e）可逆與「一對一」的關係。</strong>可逆（invertible）＝存在一個反系統把輸入還原，等價於「不同輸入必給不同輸出」。y = x² 把 +1 與 −1 送到同一個輸出 1，看到輸出再也分不出原輸入是哪一個，所以不可逆。注意 y = x + 3 雖然不線性，卻是可逆的（減 3 就還原），這說明六個性質確實互相獨立。</p>
+
+<h2>數值實例：同一組測試訊號，三個系統三種結果</h2>
+<p>疊加測試，取 a = 2、b = 3、x<sub>1</sub> = 1、x<sub>2</sub> = 1（皆為常數輸入）。</p>
+<table><thead><tr><th>系統</th><th>左式 T{a·x<sub>1</sub> + b·x<sub>2</sub>}</th><th>右式 a·T{x<sub>1</sub>} + b·T{x<sub>2</sub>}</th><th>殘差</th><th>線性？</th></tr></thead><tbody>
+<tr><td>y = 2x</td><td><strong>10.000000</strong></td><td><strong>10.000000</strong></td><td><strong>0.000000</strong></td><td>是</td></tr>
+<tr><td>y = x²</td><td><strong>25.000000</strong></td><td><strong>5.000000</strong></td><td><strong>20.000000</strong></td><td><strong>否</strong></td></tr>
+<tr><td>y = x + 3</td><td><strong>8.000000</strong></td><td><strong>20.000000</strong></td><td><strong>−12.000000</strong></td><td><strong>否</strong></td></tr>
+</tbody></table>
+<p>邊界對照：改成 x<sub>1</sub> = 2、x<sub>2</sub> = 1 → y = x² 的左式 <strong>49.000000</strong>、右式 <strong>11.000000</strong>、殘差 <strong>38.000000</strong>（<strong>殘差隨振幅變大，因為交叉項是二次的</strong>）；y = x + 3 的左式 <strong>10.000000</strong>、右式 <strong>22.000000</strong>、殘差 <strong>−12.000000</strong>（<strong>殘差不隨輸入變，因為那個 3 是固定的偏移</strong>）——<strong>這兩種「不線性」的機制完全不同</strong>。a = 0 且 b = 0 → 三個系統的殘差分別是 <strong>0.000000</strong>、<strong>0.000000</strong>、<strong>3.000000</strong>（偏移系統的殘差通式是 3 − 3(a + b)，<strong>連零輸入都藏不住那個偏移</strong>）。</p>
+<p>六個系統的完整判定表如下，互動元件用的也是同一張表。</p>
+<table><thead><tr><th>系統</th><th>線性</th><th>時不變</th><th>因果</th><th>BIBO 穩定</th><th>無記憶</th><th>可逆</th></tr></thead><tbody>
+<tr><td>比例：y(t) = 2x(t)</td><td>是</td><td>是</td><td>是</td><td>是</td><td>是</td><td>是</td></tr>
+<tr><td>平方：y(t) = x(t)²</td><td><strong>否</strong></td><td>是</td><td>是</td><td>是</td><td>是</td><td><strong>否</strong></td></tr>
+<tr><td>偏移：y(t) = x(t) + 3</td><td><strong>否</strong></td><td>是</td><td>是</td><td>是</td><td>是</td><td>是</td></tr>
+<tr><td>延遲：y(t) = x(t − 1)</td><td>是</td><td>是</td><td>是</td><td>是</td><td><strong>否</strong></td><td>是</td></tr>
+<tr><td>壓縮：y(t) = x(2t)</td><td>是</td><td><strong>否</strong></td><td><strong>否</strong></td><td>是</td><td><strong>否</strong></td><td>是</td></tr>
+<tr><td>積分：y(t) = ∫<sub>−∞</sub><sup>t</sup> x(τ)dτ</td><td>是</td><td>是</td><td>是</td><td><strong>否</strong></td><td><strong>否</strong></td><td>是</td></tr>
+</tbody></table>
+<p>量級對照：一台放大器從開機到熱平衡要好幾分鐘，而一路電話語音的取樣週期是 1/8000 秒，也就是 125.000000 µs。在一次取樣的尺度上把系統當成時不變很安全，在一小時的尺度上就未必——時不變是相對於你關心的時間尺度而言的。</p>
+
+<section class="workspace"><h2>自由實驗：對六個系統各做一次疊加測試</h2>
+<p>選一個系統，再選兩個常數測試輸入 x<sub>1</sub>、x<sub>2</sub> 與兩個疊加係數 a、b。程式會把「先疊加再進系統」與「先進系統再疊加」各算一次，列出兩式與殘差，同時把六個性質的判定一起顯示。要看的是：殘差是否為零、以及殘差怎麼隨輸入變化。</p>
+<div class="controls">
+<label for="chk-sys">受測系統<select id="chk-sys"><option value="gain">y(t) = 2*x(t)</option><option value="square" selected>y(t) = x(t)^2</option><option value="bias">y(t) = x(t) + 3</option><option value="delay">y(t) = x(t-1) 延遲一秒</option><option value="scale">y(t) = x(2t) 時間壓縮</option><option value="integ">y(t) = x 的積分</option></select></label>
+<label for="chk-a">疊加係數 a<input id="chk-a" type="range" min="-3" max="3" step="1" value="2"></label>
+<label for="chk-b">疊加係數 b<input id="chk-b" type="range" min="-3" max="3" step="1" value="3"></label>
+<label for="chk-x1">測試輸入 x<sub>1</sub> 的值<input id="chk-x1" type="range" min="-3" max="3" step="1" value="1"></label>
+<label for="chk-x2">測試輸入 x<sub>2</sub> 的值<input id="chk-x2" type="range" min="-3" max="3" step="1" value="1"></label>
+</div>
+<div id="syscheck-output" class="output" aria-live="polite">這個模式四個滑桿都會用到，切換系統只是換一個受測對象，不會讓任何滑桿失效。目前系統：平方 y(t) = x(t)²。六個性質：線性 否、時不變 是、因果 是、BIBO 穩定 是、無記憶 是、可逆 否。疊加測試：左式 25.000000、右式 5.000000、殘差 20.000000。<strong>線性被推翻</strong>：一個反例就夠了。殘差來自交叉項 2ab·x<sub>1</sub>x<sub>2</sub>，<strong>振幅愈大殘差愈大</strong>；平方也不可逆，因為 +1 與 −1 給出同一個輸出。六個性質裡只有<strong>線性＋時不變</strong>能換來「一個 h 就描述整個系統」的特權，這就是下一章只談 LTI 的原因。把 a 與 b 都拉到 0 時測試訊號整個消失，殘差會失去鑑別力，那時要換一組測試輸入。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>「線性」不是「圖形是直線」。y = x + 3 畫出來是直線卻不滿足疊加，這種系統叫仿射（affine）；判準永遠是疊加式，不是圖形長相。</li>
+<li>「時不變」不是「輸出不隨時間變」。時不變說的是系統這條規則不隨時間變；一個時不變系統送進會變的輸入，輸出當然會變。</li>
+<li>「因果」與「穩定」互相獨立。一個因果系統可以不穩定（正回授就會發散），一個非因果系統也可以很穩定（離線處理錄好的檔案時就允許用未來樣本）。</li>
+<li>「無記憶」比「因果」更嚴格。無記憶一定因果，因果不一定無記憶——延遲一秒的系統是因果的，但它必須把過去存起來。</li>
+<li>「不線性」有很多種機制。平方的殘差隨振幅成長，偏移的殘差固定不變；兩者都不線性，補救方法卻完全不同。</li>
+<li>單一組測試沒推翻線性，不等於系統線性。測試只能否證、不能證實，換一組振幅可能就露出破綻。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>疊加測試在實驗室的做法很直接：用函數產生器送 x<sub>1</sub>，示波器錄下輸出；再單獨送 x<sub>2</sub>，錄第二筆；最後把兩者依係數合成後同時送進去，錄第三筆。比較「兩筆輸出的加權和」與「同時輸入時的那一筆」，兩條波形相減就是殘差波形。時不變測試更簡單：同一個訊號在不同時刻各重放一次，把第二次的輸出往前平移相同的時間，看兩條是否重合。</p>
+<p><strong>能證明什麼</strong>：某個系統在某個振幅範圍、某個時間窗內<strong>不</strong>線性或<strong>不</strong>時不變。放大器一旦過載，殘差波形會明顯浮出雜訊底，而且隨輸入振幅快速變大，這是很硬的證據。也能量出殘差是「隨振幅成長」還是「固定偏移」，據此判斷是壓縮失真還是直流準位跑掉。</p>
+<p><strong>不能證明什麼</strong>：系統<strong>是</strong>線性的。任何有限次測試都只是「這幾組沒推翻它」，換一個更大的振幅就可能翻案。也證明不了時不變——元件會老化、溫度會漂移，量測窗一拉長，時不變的假設遲早失效。</p>
+
+<h2>連到哪門課</h2>
+<p>疊加原理在電路裡是解題技巧，先各自算單一電源的貢獻再相加，做法見<a href="../電路學-互動課程/04-疊加原理與相依源.html">電路學的疊加原理與相依源</a>；本課把同一件事當成系統的定義性質，而不是計算捷徑。線性與向量空間、基底、投影的關係見<a href="../../../共通基礎/數學/互動課程/04-向量與矩陣.html">工程數學先修的向量與矩陣</a>。真實裝置這一側，音訊放大器的總諧波失真規格量的正是「線性被違反多少」。下一章開始只留下線性又時不變的系統，看它能換到什麼。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-基本訊號與訊號運算.html">← 上一頁：基本訊號與訊號運算</a><a href="04-線性非時變與摺積.html">下一頁：線性非時變與摺積 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 系統的六個性質</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,79 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 布林代數與邏輯閘｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・真值表與代數式是同一個函數的兩種寫法</p>
+<h1>布林代數與邏輯閘：把「窮舉所有情況」寫成可以化簡的式子</h1>
+<p class="lead">一個邏輯函數可以用表描述，也可以用式子描述。這章先把兩種寫法接成雙向通道，再證明只用一種閘就能做出全部邏輯——這件事決定了整個 CMOS 產業長成今天的樣子。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-數位世界觀.html">00 數位世界觀</a>的「0 與 1 是電壓區間」，以及<a href="01-數值系統與編碼.html">01 數值系統與編碼</a>的位元與位元寬度。</p>
+
+<h2>痛點：表我看得懂，為什麼還要學一堆定律</h2>
+<p>很多人第一次看到真值表（truth table）都覺得沒什麼難的：把每一種輸入組合的答案逐列列出來就好了。既然表已經把函數講完，為什麼還要背交換律、吸收律、狄摩根定律這一大串？直接查表不行嗎？</p>
+<p>不行，理由有兩個。第一，表會爆炸。n 個輸入有 2<sup>n</sup> 列，每列答案各自可以是 0 或 1，所以一共有 2<sup>2<sup>n</sup></sup> 種可能的函數：2 個輸入 16 種、3 個輸入 256 種、4 個輸入 65536 種。表能描述函數，卻不告訴你「做出它要花幾個閘」。第二，表沒有可操作的化簡程序，式子有：有幾個乘積項、每項幾個字面，就大致對應要幾個閘、疊幾層延遲。</p>
+<p>第二個痛點更實際：晶片手冊裡最便宜、最常見的元件是反及閘與反或閘，不是看起來最直觀的及閘與或閘。為什麼？答案不在數學裡，在 CMOS 的結構裡。</p>
+<p class="note">來源：10-邏輯設計 §2.1、§2.2。</p>
+
+<h2>白話直覺：一層閘就是一次「所有輸入同時投票」的決定</h2>
+<p>可以暫時把一個閘想成一台投票機：輸入是選票，輸出是開票結果；比喻到此為止，收回精確定義——閘是一組電晶體構成的電路，輸出電壓由輸入電壓連續決定，是我們約定把電壓區間讀成 0 與 1，才有「函數」這個離散說法。</p>
+<p>依因果順序走一次。<strong>輸入從哪來</strong>：上一層閘的輸出電壓，已經落在高位準或低位準區間裡。<strong>這一層做了什麼決定</strong>：閘內的電晶體網路依輸入高低導通或截止，把輸出節點接到電源或接地；對外看起來，就是「查了一次真值表」。<strong>花掉多少代價</strong>：一顆 2 輸入反及閘（NAND gate）在 CMOS 裡是 4 顆電晶體，傳播延遲量級 1.0 ns；及閘（AND gate）不是更基本的東西，它是反及閘再串一個反相器，6 顆電晶體、延遲約兩倍。<strong>邊界在哪</strong>：輸入若落在禁區，輸出就不保證是合法的 0 或 1，布林代數的整套推理在那一刻失效；本課另假設同類閘延遲相同、不隨輸入組合變化，真實電路不是這樣。<strong>儀器量到什麼</strong>：邏輯分析儀只告訴你取樣時刻是 0 還是 1，看不到禁區，也看不到切換過程的電壓斜率。</p>
+<p>所以布林代數不是「一堆要背的規則」，而是「在不改變任何一列輸出的前提下，把電路換成比較便宜的接法」的合法動作清單。寫成程式的話：真值表就是一張查表陣列，代數式就是把它壓縮成條件式。</p>
+
+<h2>推導：先證恆等式，再證一種閘就夠</h2>
+<p><strong>（a）用真值表證狄摩根定律（De Morgan's laws）。</strong>布林代數的「證明」就是窮舉，因為輸入只有有限多種。取 A、B 兩個輸入共 4 列：左式 ¬(A + B) 在 00 這一列是 ¬0 = 1，在 01、10、11 三列都是 ¬1 = 0；右式 ¬A · ¬B 在 00 是 1 · 1 = 1，在 01 是 1 · 0 = 0，在 10 是 0 · 1 = 0，在 11 是 0 · 0 = 0。四列逐列相同，第一式成立。第二式同法：¬(A · B) 依序是 1、1、1、0，而 ¬A + ¬B 依序是 1、1、1、0，也逐列相同。</p>
+<p><strong>（b）反及閘的通用性（universal gate）。</strong>只要能用一種閘做出 NOT、AND、OR，就能做出任何函數——因為任何函數都寫得成這三種運算的組合。三個構造如下。<code>NOT A = A NAND A</code>：兩隻輸入接同一條線，等於算 ¬(A · A)，而 A · A = A（等冪律），所以結果就是 ¬A。<code>A AND B = (A NAND B) NAND (A NAND B)</code>：內層算出 ¬(A · B)，外層對它做剛剛那個「兩腳併一腳」的反相，得到 ¬¬(A · B) = A · B（雙重否定律）。<code>A OR B = (A NAND A) NAND (B NAND B)</code>：兩個內層先做出 ¬A 與 ¬B，外層算 ¬(¬A · ¬B)，由狄摩根第一式反過來讀，這就是 A + B。</p>
+<p><strong>（c）反或閘（NOR gate）也是通用閘</strong>，構造對稱：<code>NOT A = A NOR A</code>，因為 A + A = A 之後再反相；<code>A OR B = (A NOR B) NOR (A NOR B)</code>，內層做出 ¬(A + B)，外層再反相一次；<code>A AND B = (A NOR A) NOR (B NOR B)</code>，內層做出 ¬A 與 ¬B，外層算 ¬(¬A + ¬B)，由狄摩根第二式反過來讀就是 A · B。</p>
+<p><strong>（d）互斥或（XOR, exclusive OR）用四個反及閘組出來。</strong>構造是 <code>A ⊕ B = (A NAND (A NAND B)) NAND (B NAND (A NAND B))</code>。令 P = A NAND B，逐列驗證 4 列：A B = 00 時 P = 1，兩個內層分別是 ¬(0 · 1) = 1、¬(0 · 1) = 1，最外層 ¬(1 · 1) = 0；01 時 P = 1，內層是 ¬(0 · 1) = 1 與 ¬(1 · 1) = 0，最外層 ¬(1 · 0) = 1；10 時對稱得 1；11 時 P = 0，兩個內層都是 ¬(1 · 0) = 1，最外層 ¬(1 · 1) = 0。得到 0、1、1、0，正是互斥或。</p>
+<p><strong>（e）吸收律為什麼成立，逐步標明用了哪一條定律。</strong>要證 A + A · B = A。第一步 A + A · B = A · 1 + A · B（單位律，因為 A = A · 1）；第二步 = A · (1 + B)（分配律，把 A 提出來）；第三步 = A · 1（用 1 + B = 1，這是布林代數獨有的，算術沒有）；第四步 = A（單位律）。四步都各自對應一條公理，沒有一步是「看起來就是這樣」。</p>
+<p class="note">來源：10-邏輯設計 §2.2、§4.1。</p>
+
+<h2>數值實例：七種閘的完整真值表與六條恆等式的雙邊驗證</h2>
+<p>先把七種基本運算列完。NOT 一個輸入，其餘六種兩個輸入、四列。</p>
+<table><thead><tr><th>A</th><th>B</th><th>AND</th><th>OR</th><th>NAND</th><th>NOR</th><th>XOR</th><th>XNOR</th></tr></thead><tbody>
+<tr><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+<tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td><strong>1</strong></td><td>0</td></tr>
+<tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+<tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+</tbody></table>
+<p>NOT 只有一個輸入：¬0 = 1、¬1 = 0。本章與互動元件的預設輸入是 A = 0、B = 1、C = 0，選定的閘是 XOR，所以落在上表第二列，<strong>XOR 輸出 1</strong>（該列加粗處）。同列其他閘順手對照：AND 0、OR 1、NAND 1、NOR 0、XNOR 0。</p>
+<p>接著是六條恆等式的雙邊逐列驗證，這是本章的核心證據。前五條用 A、B 兩個輸入共 4 列，最後一條分配律用 A、B、C 三個輸入共 8 列。</p>
+<table><thead><tr><th>恆等式</th><th>A B (C)</th><th>左式</th><th>右式</th><th>相同？</th></tr></thead><tbody>
+<tr><td><code>¬(A + B) = ¬A · ¬B</code></td><td>00 / 01 / 10 / 11</td><td>1 / 0 / 0 / 0</td><td>1 / 0 / 0 / 0</td><td><strong>全部相同</strong></td></tr>
+<tr><td><code>¬(A · B) = ¬A + ¬B</code></td><td>00 / 01 / 10 / 11</td><td>1 / 1 / 1 / 0</td><td>1 / 1 / 1 / 0</td><td><strong>全部相同</strong></td></tr>
+<tr><td><code>A + A · B = A</code></td><td>00 / 01 / 10 / 11</td><td>0 / 0 / 1 / 1</td><td>0 / 0 / 1 / 1</td><td><strong>全部相同</strong></td></tr>
+<tr><td><code>A · (A + B) = A</code></td><td>00 / 01 / 10 / 11</td><td>0 / 0 / 1 / 1</td><td>0 / 0 / 1 / 1</td><td><strong>全部相同</strong></td></tr>
+<tr><td><code>A + ¬A · B = A + B</code></td><td>00 / 01 / 10 / 11</td><td>0 / 1 / 1 / 1</td><td>0 / 1 / 1 / 1</td><td><strong>全部相同</strong></td></tr>
+<tr><td><code>A · (B + C) = A · B + A · C</code></td><td>000…111（8 列）</td><td>0,0,0,0,0,1,1,1</td><td>0,0,0,0,0,1,1,1</td><td><strong>全部相同</strong></td></tr>
+</tbody></table>
+<p>分配律那 8 列的順序是 ABC = 000, 001, 010, 011, 100, 101, 110, 111。A = 0 的前 4 列兩邊都是 0，因為左式被 A 乘掉、右式兩個乘積項都含 A。A = 1 的後 4 列兩式都退化成 B + C，依序為 0、1、1、1。兩邊逐列相同，分配律成立。</p>
+<p>量級對照：恆等式左右兩邊功能相同，成本不同。以共識律 A + ¬A · B = A + B 為例，左邊要 1 個反相器、1 個及閘、1 個或閘共 3 個閘，右邊只要 1 個或閘；單閘傳播延遲取 1.0 ns 時，左邊兩層約 2.0 ns，右邊一層約 1.0 ns。這就是化簡的全部意義：輸出逐列不變，閘數與延遲雙雙變少。</p>
+
+<section class="workspace"><h2>自由實驗：切閘看真值表，切恆等式看逐列比對</h2>
+<p>場景是一顆兩輸入的閘接在指撥開關上：A、B 是兩隻輸入，C 只有驗證分配律時才會用到。上半區顯示選定閘的完整真值表並標出目前落在哪一列，下半區把選定恆等式的左右兩式對全部輸入組合各算一遍。要看的是：切換輸入時輸出怎麼跳，以及恆等式兩邊是不是每一列都一致。</p>
+<div class="controls">
+<label for="bg-gate">要看的閘<select id="bg-gate"><option value="and">AND（及閘）</option><option value="or">OR（或閘）</option><option value="not">NOT（反相器）</option><option value="nand">NAND（反及閘）</option><option value="nor">NOR（反或閘）</option><option value="xor" selected>XOR（互斥或閘）</option><option value="xnor">XNOR（反互斥或閘）</option></select></label>
+<label for="bg-a"><input id="bg-a" type="checkbox">輸入 A</label>
+<label for="bg-b"><input id="bg-b" type="checkbox" checked>輸入 B</label>
+<label for="bg-c"><input id="bg-c" type="checkbox">輸入 C（只有分配律用得到）</label>
+<label for="bg-law">要驗證的恆等式<select id="bg-law"><option value="demorgan1" selected>狄摩根一：¬(A + B) = ¬A · ¬B</option><option value="demorgan2">狄摩根二：¬(A · B) = ¬A + ¬B</option><option value="absorb1">吸收律一：A + A · B = A</option><option value="absorb2">吸收律二：A · (A + B) = A</option><option value="consensus">共識律：A + ¬A · B = A + B</option><option value="distrib">分配律：A · (B + C) = A · B + A · C</option></select></label>
+</div>
+<div id="boolgate-output" class="output" aria-live="polite">這個 widget 有兩區：上面看閘（用到 A、B，NOT 只用 A），下面驗恆等式（狄摩根／吸收／共識用 A、B，分配律才會用到 C）。閘 = XOR，真值表 00 → 0、01 → 1、10 → 1、11 → 0；目前 A = 0、B = 1，落在第 1 列，<strong>輸出 1</strong>。恆等式 = 狄摩根一 ¬(A + B) = ¬A · ¬B：00 列 1 = 1、01 列 0 = 0、10 列 0 = 0、11 列 0 = 0，四列全部相同，這條恆等式在全部 4 種輸入下都成立——布林代數的「證明」就是把全部情況窮舉一遍，因為只有有限多種。C 的勾選對這條恆等式沒有影響。XOR 不是基本閘，它是 A · ¬B + ¬A · B，用 4 個 NAND 可以組出來：A ⊕ B = (A NAND (A NAND B)) NAND (B NAND (A NAND B))。真值表與代數式是同一個函數的兩種寫法；能互相轉換，是後面所有化簡的前提。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>XOR 不是「或」的一種寫法。邊界在兩個輸入都是 1 的那一列：1 ⊕ 1 = 0，而 1 + 1 = 1。互斥或問的是「兩者不同嗎」，或問的是「至少有一個嗎」。</li>
+<li>NAND 不是「AND 的相反用途」，它是 ¬(A · B) 這個獨立的函數。在 CMOS 裡它反而比 AND 便宜：AND 等於 NAND 再串一個反相器。</li>
+<li>布林代數的 + 與 · 不是算術的加與乘。邊界有兩處：1 + 1 = 1（算術會進位），以及兩個運算對彼此<strong>都</strong>有分配律，A + B · C = (A + B) · (A + C) 也成立，算術只有乘對加有。</li>
+<li>「通用閘」是說用它能組出所有函數，不是說用它最省。用純 NAND 實作往往比混用閘多花層數；真實的合成工具會依照標準元件庫混用各種閘與各種驅動強度。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>最便宜的驗證方式是在麵包板上插一顆 7400（內含四個 2 輸入反及閘），把兩隻輸入接到指撥開關、輸出接一顆 LED，把 4 種輸入組合逐一撥過，用萬用電表量輸出電壓確認落在高位準或低位準區間。接著用其中三顆反及閘按上面的構造接成 AND，與一顆現成的及閘晶片對照。</p>
+<p><strong>能證明</strong>：這顆晶片的真值表確實是 ¬(A · B)；以及用三顆反及閘組出來的 AND，其四列輸出與單顆及閘晶片完全相同——功能等價這件事被量出來了。<strong>不能證明</strong>：兩者的延遲相同。三顆串起來的路徑會慢大約三倍，而萬用電表與 LED 完全看不到這件事，要換示波器抓輸入邊緣到輸出邊緣的時間差才量得到。也證明不了「布林代數對所有情況都成立」——你只驗了 4 列；只是這次輸入組合恰好只有 4 種，窮舉正好等於完整證明。</p>
+
+<h2>連到哪門課</h2>
+<p>本章結論在真實裝置上的落點，是任何一顆數位晶片的標準元件庫：合成工具拿到你的式子後，會把它對映成庫裡實際存在的閘。只用反及閘造出整套邏輯的完整過程，見<a href="../../../專題/計算機組織/互動課程/01-只用反及閘造邏輯.html">計算機組織的「只用反及閘造邏輯」</a>；為什麼 CMOS 天生做出來的就是反及閘與反或閘，見<a href="../電子學-互動課程/08-MOSFET原理與三個工作區.html">電子學的 MOSFET 原理與三個工作區</a>。下一章把真值表機械地翻成兩種標準型。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-二補數與有號數運算.html">← 上一頁：二補數與有號數運算</a><a href="04-標準型SOP與POS.html">下一頁：標準型 SOP 與 POS →</a></nav>
+</main>
+<footer class="site-footer"><span>03 布林代數與邏輯閘</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,512 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>名詞與概念字典｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html" aria-current="page">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">查・58 個名詞，四段式：白話、位置、機制、邊界</p>
+<h1>名詞與概念字典：把全課的名詞放在同一張桌上比較</h1>
+<p class="lead">每一張卡片都寫四件事：這個詞用白話說是什麼、它在本課哪一章與哪個真實裝置裡出現、它的機制與數字、以及最容易踩的邊界。搜尋框接受繁體中文、英文、縮寫與符號。</p>
+<p class="note">來源：10-邏輯設計 §1–§8，以及 中英名詞對照表-2.md 的「邏輯設計」節（23 詞）；其餘 35 詞由各章正文補齊。</p>
+<div class="dictionary-tools">
+<label for="term-search">搜尋名詞或概念</label>
+<input id="term-search" type="search" placeholder="搜尋繁中、英文、符號或用途">
+<span id="term-count" aria-live="polite"></span>
+</div>
+
+<h2>第一組｜數位表示與編碼（第 00–02 章，9 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="logic level 邏輯位準 數位訊號 voh vol vih vil 門檻 高位準 低位準">
+<h2>數位訊號與邏輯位準（logic level）</h2>
+<p><strong>白話：</strong>數位電路不是「只有兩個電壓」，而是把一整段連續電壓切成兩塊可信區間：高過某條線就宣告成 1，低過另一條線就宣告成 0，中間那段誰都不保證。</p>
+<p><strong>位置／角色：</strong>第 00 章的起點。四個門檻 V<sub>OH</sub>、V<sub>OL</sub>、V<sub>IH</sub>、V<sub>IL</sub> 是資料手冊上的合約，混接不同家族的晶片時第一個要查的就是它；門檻怎麼從轉移曲線來的，見<a href="../電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學的 CMOS 反相器與數位功耗</a>。</p>
+<p><strong>機制：</strong>本課鎖定的 3.3 V CMOS 家族是 V<sub>OH</sub> = 3.10 V、V<sub>OL</sub> = 0.20 V、V<sub>IH</sub> = 2.31 V（0.7 V<sub>DD</sub>）、V<sub>IL</sub> = 0.99 V（0.3 V<sub>DD</sub>）。輸出端承諾把 1 推到 3.10 V 以上，輸入端只要求 2.31 V 以上就願意讀成 1，兩者之間那段差額就是容錯空間。</p>
+<p><strong>不要混淆：</strong>邏輯 1 不等於電源電壓、邏輯 0 不等於 0 V；位準是四個門檻構成的合約，不是兩個電壓點。同一顆晶片的輸出規格與輸入規格是兩組不同的數字，不能互相代入。</p>
+</article>
+
+<article class="term-card" data-search="noise margin 雜訊裕度 禁區 nmh nml 未定義區">
+<h2>雜訊裕度（noise margin）</h2>
+<p><strong>白話：</strong>訊號在路上可以被干擾多少毫伏，下游還是讀對。它量的是「保證」與「要求」之間剩下多少空間。</p>
+<p><strong>位置／角色：</strong>第 00 章計算、第 08 章再用一次（扇出與長線會吃掉裕度）。板子上接排線、跨板通訊、接馬達驅動這類雜訊大的場合，第一個要算的就是它。</p>
+<p><strong>機制：</strong>NM<sub>H</sub> = V<sub>OH</sub> − V<sub>IH</sub> = 3.10 − 2.31 = 0.79 V，NM<sub>L</sub> = V<sub>IL</sub> − V<sub>OL</sub> = 0.99 − 0.20 = 0.79 V。兩個輸入門檻之間 V<sub>IH</sub> − V<sub>IL</sub> = 1.32 V 是禁區（forbidden region），落在裡面沒有人承諾會讀成什麼。</p>
+<p><strong>不要混淆：</strong>NM<sub>H</sub> 不是「輸出電壓減輸入電壓」，是<strong>上游的輸出保證</strong>減<strong>下游的輸入要求</strong>。裕度大也擋不住比輸入穩定時間還短的尖脈衝，因為那種干擾贏在時間而不是幅度。禁區寬度也不是兩個裕度相加。</p>
+</article>
+
+<article class="term-card" data-search="abstraction layer 抽象階層 抽象層 分層 電晶體 閘 模組">
+<h2>抽象階層（abstraction layer）</h2>
+<p><strong>白話：</strong>把「下一層怎麼做到的」封裝起來，只留一份對外承諾。用閘的人不必知道電晶體，用模組的人不必知道閘。</p>
+<p><strong>位置／角色：</strong>第 00 章立規矩，整門課都靠它往上疊：電晶體 → 閘 → 組合模組 → 正反器 → 狀態機 → 處理器。往下一層看見電晶體怎麼接成反及閘，見<a href="../../../專題/計算機組織/互動課程/00-電晶體到反及閘.html">計算機組織的電晶體到反及閘</a>。</p>
+<p><strong>機制：</strong>每一層的介面就是一組可量測的承諾：閘這一層承諾的是位準（V<sub>OH</sub>、V<sub>IH</sub>）與時間（t<sub>pd</sub>），正反器這一層承諾的是 t<sub>cq</sub>、t<sub>su</sub>、t<sub>h</sub>。只要承諾成立，上層就可以完全忽略下層的物理。</p>
+<p><strong>不要混淆：</strong>抽象不是「可以不管物理」，是「在規格內可以不管」。一旦超頻、超扇出、電源掉壓，承諾失效，抽象就會漏——除錯時往往必須往下拆一層才看得到原因。</p>
+</article>
+
+<article class="term-card" data-search="binary hexadecimal 二進位 十六進位 八進位 位置記數法 0x 基底">
+<h2>進位系統：二進位與十六進位（binary &amp; hexadecimal）</h2>
+<p><strong>白話：</strong>同一個量可以用不同的底數寫出來。二進位貼近硬體（每一位就是一條線），十六進位是給人看的壓縮寫法（一位剛好等於四個位元）。</p>
+<p><strong>位置／角色：</strong>第 01 章。看暫存器內容、記憶體位址、通訊封包時都直接用十六進位；第 12 章算記憶體容量時也回到 2 的次方。</p>
+<p><strong>機制：</strong>位置記數法：由右往左第 i 位的權重是底數的 i 次方。<code>0110 0100</code><sub>2</sub> = 64 + 32 + 4 = 100 = 0x64 = 144<sub>8</sub>。本課的排版規約是二進位每 4 位元空一格、十六進位一律 <code>0x</code> 前綴加大寫英數。</p>
+<p><strong>不要混淆：</strong>底數只是寫法，不是數值本身；100 與 0x64 是同一個量。十六進位不是「電腦內部用的進位」——電腦內部只有二進位，十六進位純粹是人類的縮寫。</p>
+</article>
+
+<article class="term-card" data-search="two's complement 二補數 二進位補數 有號數 負數 符號位">
+<h2>二進位補數（two's complement）</h2>
+<p><strong>白話：</strong>一種讓「減法可以用加法器做完」的負數編碼。最高位一旦是 1 就代表這個數是負的，但它不是單純的符號旗子，而是帶著負權重的一位。</p>
+<p><strong>位置／角色：</strong>第 02 章，第 07 章的加法器與 ALU 直接吃這套編碼。所有主流處理器的整數運算都用它，所以 C 語言的 <code>int</code> 溢位行為也源自這裡。</p>
+<p><strong>機制：</strong>n 位元下 −X 的編碼 = 2<sup>n</sup> − X，實作上是「逐位取反再加 1」；減法寫成 A − B = A + ¬B + 1（¬ 讀作 not，表示逐位反相）。8 位元下 <code>1001 0001</code> 以無號讀是 145、以二補數讀是 145 − 256 = −111，表示範圍 −128 到 127。</p>
+<p><strong>不要混淆：</strong><code>1000 0000</code> 在二補數是 −128，在「符號 + 大小」法是 −0。兩者是不同的編碼，不是同一件事的兩種寫法。位元本身不帶號，是你選的解讀方式決定它是 145 還是 −111。</p>
+</article>
+
+<article class="term-card" data-search="overflow 溢位 進位 旗標 carry flag v flag 有號">
+<h2>溢位（overflow）</h2>
+<p><strong>白話：</strong>算出來的答案超出這個位元寬度能表示的範圍，於是結果繞回去變成另一個數。硬體不會停下來，只會舉一支旗子。</p>
+<p><strong>位置／角色：</strong>第 02 章定義、第 07 章由加法器產生。組合語言的條件跳躍、C 語言的有號整數未定義行為、感測器累加器爆掉，都是在講這件事。</p>
+<p><strong>機制：</strong>V = C<sub>n</sub> ⊕ C<sub>n−1</sub>（⊕ 讀作 exclusive or）：最高位進位與次高位進位不同就是有號溢位。8 位元下 100 + 45 = <code>1001 0001</code>，兩個正數相加得到負數，V = 1、C = 0、N = 1、Z = 0。</p>
+<p><strong>不要混淆：</strong>V（有號溢位）與 C（無號進位）問的是不同問題，可以一個是 1 一個是 0。做無號算術時 V 沒有意義，做有號算術時 C 沒有意義；同一次加法兩支旗子都會產生，是你決定要看哪一支。</p>
+</article>
+
+<article class="term-card" data-search="bcd binary-coded decimal 二進碼十進數 十進位編碼 七段顯示">
+<h2>BCD（binary-coded decimal）</h2>
+<p><strong>白話：</strong>每一個十進位數字各自用 4 個位元寫，不換算成純二進位。給人看的數字用它最省事。</p>
+<p><strong>位置／角色：</strong>第 01 章。電子鐘、電表、計算機的七段顯示器與即時計時晶片（real-time clock, RTC）常直接吐 BCD；第 05 章的化簡實例「BCD ≥ 5 偵測器」也建立在它的 10 個合法碼上。</p>
+<p><strong>機制：</strong>十進位 7 是 <code>0111</code>，十進位 100 寫成三組 <code>0000 0001 0000 0000</code>。4 個位元有 16 種組合但只用 10 種，<code>1010</code> 到 <code>1111</code> 這 6 種是不合法碼——第 05 章正是把它們當成不關心項來化簡。</p>
+<p><strong>不要混淆：</strong>BCD 不是二進位的另一種寫法，兩者數值編碼不同：十進位 100 的純二進位是 <code>0110 0100</code>（8 位元），BCD 卻要 12 個位元。BCD 換到顯示很快，代價是浪費約 20 % 的編碼空間，而且加法要額外做加 6 修正。</p>
+</article>
+
+<article class="term-card" data-search="gray code 格雷碼 相鄰碼 旋轉編碼器 單位元變化">
+<h2>格雷碼（Gray code）</h2>
+<p><strong>白話：</strong>一種排法，讓相鄰的兩個值只差一個位元。目的是避免「多個位元同時翻轉」造成的中間假值。</p>
+<p><strong>位置／角色：</strong>第 01 章。旋轉編碼器、位置感測器、跨時脈域傳遞計數值（非同步 FIFO 的指標）都用它；第 05 章的卡諾圖行列順序 00、01、11、10 也是格雷碼，這正是相鄰格只差一個變數的原因。</p>
+<p><strong>機制：</strong>G = B ⊕ (B 右移一位)。十進位 7 的二進位是 <code>0000 0111</code>，格雷碼是 <code>0000 0100</code>（十進位 4）。7 → 8 時純二進位有 4 個位元同時翻轉，格雷碼只翻 1 個。</p>
+<p><strong>不要混淆：</strong>格雷碼是編碼不是數值：格雷碼 4 不等於數量 4，要算術必須先轉回二進位。它也不能減少位元數，只能減少同時翻轉的位元數。</p>
+</article>
+
+<article class="term-card" data-search="ascii unicode 字元編碼 character encoding utf-8 碼位">
+<h2>字元編碼：ASCII 與 Unicode（character encoding）</h2>
+<p><strong>白話：</strong>把文字和位元組對應起來的一張表。位元本身不知道自己是數字還是字，是這張表決定的。</p>
+<p><strong>位置／角色：</strong>第 01 章收尾。序列埠除錯、看十六進位傾印、處理鍵盤輸入時天天遇到；它也是「同一組位元、多種解讀」這個核心觀念的第三個例子。</p>
+<p><strong>機制：</strong>ASCII 用 7 個位元定義 128 個碼位，<code>0x41</code> 是 A、<code>0x64</code>（十進位 100）是小寫 d、<code>0x30</code> 是字元 0。Unicode 把碼位擴到百萬等級，UTF-8 則用 1 到 4 個位元組變長編碼，並向下相容 ASCII。</p>
+<p><strong>不要混淆：</strong>字元 <code>'7'</code>（0x37）與數值 7（0x07）是兩個不同的位元組；把字串直接當數字加會得到 55 而不是 7。Unicode 是碼位表，UTF-8 是把碼位放進位元組的方法，兩者不是同一層的東西。</p>
+</article>
+
+</div>
+
+<h2>第二組｜布林代數與邏輯化簡（第 03–05 章，12 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="boolean algebra 布林代數 恆等式 對偶 分配律 吸收律">
+<h2>布林代數（Boolean algebra）</h2>
+<p><strong>白話：</strong>只有兩個值的代數。變數只能是 0 或 1，運算只有三種：反相、乘積、和。化簡電路就是在這套規則裡搬式子。</p>
+<p><strong>位置／角色：</strong>第 03 章立規則，第 04、05 章拿它化簡。合成工具（synthesis tool）內部做的邏輯最佳化就是這套代數的自動化版本，見第 13 章。</p>
+<p><strong>機制：</strong>本課的符號固定為 ¬A（讀作 not A，反相）、A · B（· 讀作 and，U+00B7 中點）、A + B（讀作 or）。常用恆等式：A + A · B = A（吸收律）、A + ¬A · B = A + B（共識律）、A · (B + C) = A · B + A · C（分配律）。每一步化簡都要說得出用了哪一條。</p>
+<p><strong>不要混淆：</strong><code>+</code> 在這裡是 OR 不是算術加法：1 + 1 = 1，不是 2。布林代數的「乘法對加法分配」與「加法對乘法分配」<strong>兩邊都成立</strong>，這在一般算術裡是不成立的。</p>
+</article>
+
+<article class="term-card" data-search="truth table 真值表 列 輸入組合 函數定義">
+<h2>真值表（truth table）</h2>
+<p><strong>白話：</strong>把所有輸入組合列成一張表，每一列寫出輸出。它是邏輯函數的完整定義，沒有任何模糊空間。</p>
+<p><strong>位置／角色：</strong>第 03 章開始使用，第 04 章從它機械地產生標準型，第 05 章把它折成卡諾圖。寫程式的人可以把它當成一張查表（look-up table），第 13 章的 LUT 就是把這張表直接燒進硬體。</p>
+<p><strong>機制：</strong>n 個輸入就有 2<sup>n</sup> 列；3 個輸入 8 列、4 個輸入 16 列。欄位順序固定為輸入由高位到低位、最後一欄是輸出。兩個電路只要真值表相同，功能就相同，不管內部長得多不一樣。</p>
+<p><strong>不要混淆：</strong>真值表只定義「穩定後的輸出」，完全不描述時間。它相同不代表延遲相同，也不代表沒有突波——第 08 章的險境正是真值表看不到的東西。</p>
+</article>
+
+<article class="term-card" data-search="logic gate 邏輯閘 and or not nand nor xor 閘數">
+<h2>邏輯閘（logic gate）</h2>
+<p><strong>白話：</strong>把布林運算做成實體的最小積木。輸入是幾條線的電壓，輸出是一條線的電壓。</p>
+<p><strong>位置／角色：</strong>第 03 章。它是本課的計價單位：整門課都用「幾個閘、幾個閘延遲」來比較兩種設計。往下一層是 MOSFET 開關，見<a href="../電子學-互動課程/08-MOSFET原理與三個工作區.html">電子學的 MOSFET 原理與三個工作區</a>。</p>
+<p><strong>機制：</strong>七種常用運算是 NOT、AND、OR、NAND、NOR、XOR、XNOR。CMOS 製程下反及閘（NAND）約 4 顆電晶體、反或閘（NOR）約 4 顆、AND 要 6 顆（NAND 再串一個反相器）。本課統一假設單閘傳播延遲 1.0 ns。</p>
+<p><strong>不要混淆：</strong>AND 不比 NAND 便宜，反而更貴——CMOS 天生做出來的是反相型的閘。閘數少不一定快，因為延遲看的是最長路徑的層數，不是總閘數。</p>
+</article>
+
+<article class="term-card" data-search="xor exclusive or 互斥或 xnor 同或 奇偶 parity">
+<h2>互斥或（exclusive OR, XOR）</h2>
+<p><strong>白話：</strong>兩個輸入不一樣時輸出 1，一樣時輸出 0。也可以讀成「可控制的反相器」或「一位元加法的和」。</p>
+<p><strong>位置／角色：</strong>第 03 章定義，第 07 章的全加器與比較器、第 01 章的格雷碼轉換、第 12 章的線性回授移位暫存器與同位檢查全都靠它。</p>
+<p><strong>機制：</strong>A ⊕ B（⊕ 讀作 exclusive or，U+2295）的真值表只有 01 與 10 兩列輸出 1。重要性質：A ⊕ 0 = A、A ⊕ 1 = ¬A、A ⊕ A = 0。多輸入 XOR 等於「輸入中 1 的個數是奇數」，這就是奇偶檢查。XNOR 寫成 ¬(A ⊕ B)。</p>
+<p><strong>不要混淆：</strong>XOR 不是 OR：1 ⊕ 1 = 0 而 1 + 1 = 1，兩者只差最後一列。XOR 也不是「不等於」以外就沒用的比較器——把它接成鏈就變成加法與雜湊的基本件。</p>
+</article>
+
+<article class="term-card" data-search="universal gate 通用閘 nand nor 反及閘 反或閘 完備集">
+<h2>通用閘：反及閘與反或閘（universal gate: NAND &amp; NOR）</h2>
+<p><strong>白話：</strong>只用這一種閘就能組出所有邏輯函數的閘。整顆晶片理論上可以只由一種積木堆成。</p>
+<p><strong>位置／角色：</strong>第 03 章。實際晶圓廠的標準元件庫確實以反相型的閘為主；只用 NAND 造出全部的做法見<a href="../../../專題/計算機組織/互動課程/01-只用反及閘造邏輯.html">計算機組織的只用反及閘造邏輯</a>。</p>
+<p><strong>機制：</strong>三個構造就足以證明完備：¬A = A NAND A；A · B = (A NAND B) NAND (A NAND B)；A + B = (A NAND A) NAND (B NAND B)。反或閘同理。能造出 NOT、AND、OR 三者，就能造出任何真值表。</p>
+<p><strong>不要混淆：</strong>「通用」是說能組出所有函數，不是說最省。用 NAND 硬拼 OR 要 3 個閘、2 層延遲，比直接用一個 OR 貴；通用性是製程與備料上的好處，不是面積上的好處。</p>
+</article>
+
+<article class="term-card" data-search="de morgan 狄摩根定律 泡泡推移 反相 對偶">
+<h2>狄摩根定律（De Morgan's laws）</h2>
+<p><strong>白話：</strong>反相可以「穿過」運算符號，只要同時把 AND 換成 OR、OR 換成 AND。它是把電路改寫成另一種閘的萬用工具。</p>
+<p><strong>位置／角色：</strong>第 03 章。第 04 章把 SOP 轉成全 NAND 電路、第 05 章由 0 的圈得到 POS，靠的都是它；讀他人電路圖時的「泡泡推移」也是同一件事。</p>
+<p><strong>機制：</strong>第一式 ¬(A + B) = ¬A · ¬B；第二式 ¬(A · B) = ¬A + ¬B。四列全展開可以逐列驗證兩邊相同。推廣到多變數同樣成立：¬(A · B · C) = ¬A + ¬B + ¬C。</p>
+<p><strong>不要混淆：</strong>兩條式子方向相反，記反了就會把 ¬(A · B) 寫成 ¬A · ¬B。檢驗方法很簡單：A = 1、B = 0 時 ¬(A · B) = 1 但 ¬A · ¬B = 0，一組反例就能判斷自己有沒有記反。</p>
+</article>
+
+<article class="term-card" data-search="minterm maxterm 最小項 最大項 m5 M5 索引">
+<h2>最小項與最大項（minterm &amp; maxterm）</h2>
+<p><strong>白話：</strong>真值表每一列的專屬名字。最小項是「只有這一列為 1」的乘積項，最大項是「只有這一列為 0」的和項。</p>
+<p><strong>位置／角色：</strong>第 04 章的建材，第 05 章卡諾圖的每一格就是一個最小項；第 06 章的解碼器每一條輸出線也剛好是一個最小項，這是「解碼器 + OR 閘可以實作任何函數」的原因。</p>
+<p><strong>機制：</strong>三變數下 m<sub>5</sub> 對應 A B C = 101，寫成 A · ¬B · C；M<sub>5</sub> 對應同一列，寫成 ¬A + B + ¬C。集合寫法 Σm(3, 5, 6, 7)（Σ 讀作 sigma，表示這些最小項的和）與 ΠM(0, 1, 2, 4)（Π 讀作 pi，表示這些最大項的乘積）指的是同一個函數。</p>
+<p><strong>不要混淆：</strong>取反規則<strong>相反</strong>——最小項是變數為 0 時取反，最大項是變數為 1 時取反。這不是筆誤，是兩種標準型對偶的結果。另外「最小」不是指項最短，是指它只在一列為 1。</p>
+</article>
+
+<article class="term-card" data-search="canonical form sop pos 標準型 積之和 和之積 sum of products">
+<h2>標準型：積之和與和之積（canonical form: SOP &amp; POS）</h2>
+<p><strong>白話：</strong>任何真值表都能機械地寫成兩種標準式子：把為 1 的列加起來（SOP），或把為 0 的列乘起來（POS）。不必靈感，照抄就好。</p>
+<p><strong>位置／角色：</strong>第 04 章。它保證「任何函數都做得出來」，也保證任何函數都能用兩層閘實作（先 AND 後 OR，或先 OR 後 AND）；第 13 章的 PLA／CPLD 硬體結構就是固定的兩層 AND-OR 陣列。</p>
+<p><strong>機制：</strong>三變數多數決 F = Σm(3, 5, 6, 7) = ¬A · B · C + A · ¬B · C + A · B · ¬C + A · B · C，4 個乘積項、12 個字面、8 個閘；同一函數的 POS 是 ΠM(0, 1, 2, 4)，4 個和項。兩個索引集合的大小相加必定等於 2<sup>n</sup>。</p>
+<p><strong>不要混淆：</strong>標準型是<strong>唯一</strong>的，最簡型不唯一。標準型也不是最好的實作，它通常最貴——多數決化簡後只要 A · B + B · C + A · C（4 閘 6 字面）。SOP 與 POS 描述同一個函數，不是兩個不同的電路功能。</p>
+</article>
+
+<article class="term-card" data-search="karnaugh map 卡諾圖 k-map 圈 相鄰格 格雷碼順序">
+<h2>卡諾圖（Karnaugh map）</h2>
+<p><strong>白話：</strong>把真值表折成方格陣列，讓「只差一個變數」的列變成實體上相鄰的格子。相鄰的 1 圈起來，那個變數就被消掉了。</p>
+<p><strong>位置／角色：</strong>第 05 章的主角。手算 3 到 4 變數的化簡最快；5 變數以上就交給第 05 章末尾提到的 Quine–McCluskey 或合成工具。</p>
+<p><strong>機制：</strong>行列標頭用格雷碼順序 00、01、11、10，所以左右邊界與上下邊界是相連的（圓環狀相鄰）。圈的大小必須是 2 的次方：圈 2 格消 1 個變數、圈 4 格消 2 個、圈 8 格消 3 個。本課的互動固定 4 變數 16 格。</p>
+<p><strong>不要混淆：</strong>卡諾圖不是「畫圖」，它是一張重新排序過的真值表。圈得大不代表圈得對——圈必須是 2 的次方且完全落在 1 與不關心項上；而且圈可以重疊，重疊不是浪費。</p>
+</article>
+
+<article class="term-card" data-search="prime implicant essential 質蘊涵項 必要質蘊涵項 覆蓋 蘊涵項">
+<h2>質蘊涵項與必要質蘊涵項（prime implicant &amp; essential prime implicant）</h2>
+<p><strong>白話：</strong>質蘊涵項是「已經不能再擴大的圈」；必要質蘊涵項是「有某個 1 只有它蓋得到」的圈，非選不可。</p>
+<p><strong>位置／角色：</strong>第 05 章。它把「化簡」從靈感變成可判定的程序，也是判斷「還能不能再化簡」的唯一嚴謹依據；合成工具的邏輯最佳化用的是同一套定義。</p>
+<p><strong>機制：</strong>BCD ≥ 5 偵測器（on-set {5, 6, 7, 8, 9}、不關心 {10…15}）合併後只剩 3 個質蘊涵項：A（1---）、B · D（-1-1）、B · C（-11-），而且三個都是必要的，所以最簡 SOP = A + B · D + B · C，3 個閘、5 個字面。</p>
+<p><strong>不要混淆：</strong>質蘊涵項不等於最簡解的項：必要的一定要選，非必要的要挑組合去補完覆蓋，這一步可能有多組不同的答案。本課互動元件用的是<strong>貪婪覆蓋</strong>，它保證覆蓋正確但<strong>不保證項數或字面數最少</strong>——在 cyclic（循環覆蓋）的情形下可能多出項次；要確定最小解得另解覆蓋問題（例如 Petrick 法或窮舉最小覆蓋）。「圈得最大」也不等於「圈得最少」，成本看的是總字面數與閘數。</p>
+</article>
+
+<article class="term-card" data-search="don't care 不關心項 dc x 無關項 未使用組合">
+<h2>不關心項（don't-care term）</h2>
+<p><strong>白話：</strong>那個輸入組合根本不會發生，所以輸出寫 0 或 1 都行。化簡時可以順手把它當 1 用來把圈畫大。</p>
+<p><strong>位置／角色：</strong>第 05 章。BCD 的 <code>1010</code> 到 <code>1111</code>、模 10 計數器的 6 個未使用狀態、互斥訊號不可能同時為 1 的組合，都是它的來源。</p>
+<p><strong>機制：</strong>圈的時候不關心項可以當 1 納入圈內（讓圈變大、變數被消掉更多），但不必特地去覆蓋它。BCD ≥ 5 的例子裡，6 個不關心項讓質蘊涵項從一堆縮到 3 個，字面數從 20 掉到 5。</p>
+<p><strong>不要混淆：</strong>它不是「輸出可以是錯的」，是「這個輸入組合不會發生」。假設錯了，化簡後的電路會在那些輸入上做出你沒設計過的行為——安全相關的設計因此常常放棄不關心項，改成明確指定的安全輸出。</p>
+</article>
+
+<article class="term-card" data-search="quine mccluskey 演算法 表格法 合併 多變數化簡">
+<h2>Quine–McCluskey 演算法（Quine–McCluskey algorithm）</h2>
+<p><strong>白話：</strong>卡諾圖的表格化版本。用比對位元字串取代看圖，因此變數再多也能做，而且可以寫成程式。</p>
+<p><strong>位置／角色：</strong>第 05 章末尾。5 變數以上、或需要由工具自動處理時就換它上場；本課第 05 章互動元件的化簡結果就是用這個流程算出來的。</p>
+<p><strong>機制：</strong>兩階段。第一階段反覆合併只差一個位元的項（<code>0101</code> 與 <code>0111</code> 合成 <code>01-1</code>），合不動的就是質蘊涵項；第二階段用覆蓋表選出必要質蘊涵項，再貪婪補完剩下的 1。</p>
+<p><strong>不要混淆：</strong>它保證找出<strong>全部</strong>質蘊涵項，但第二階段的最小覆蓋問題本身是 NP-hard，實務工具用的是啟發式而非窮舉。它和卡諾圖不是兩套理論，只是同一件事的兩種操作方式。</p>
+</article>
+
+</div>
+
+<h2>第三組｜組合邏輯元件（第 06–07 章，9 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="combinational logic 組合邏輯 無記憶 純函數 立即輸出">
+<h2>組合邏輯（combinational logic）</h2>
+<p><strong>白話：</strong>輸出只由「現在的輸入」決定，沒有記憶。同樣的輸入永遠得到同樣的輸出，只是需要一點時間穩定下來。</p>
+<p><strong>位置／角色：</strong>第 06、07 章的全部元件都是它；第 11 章的狀態機把它當成「下一狀態邏輯」與「輸出邏輯」兩塊夾在正反器之間。寫程式的人可以把它想成沒有副作用的純函數。</p>
+<p><strong>機制：</strong>判準是電路裡沒有回授路徑。輸入改變後，輸出會在最長路徑的傳播延遲之後穩定；中間這段時間輸出可能亂跳（見突波）。所有組合電路都能寫成真值表。</p>
+<p><strong>不要混淆：</strong>「沒有記憶」不等於「沒有延遲」。組合邏輯一樣要花時間，而且它的最長路徑正是第 10 章 t<sub>logic</sub> 的來源。一旦接了回授就不再是組合邏輯，而變成閂鎖。</p>
+</article>
+
+<article class="term-card" data-search="multiplexer mux 多工器 選擇線 資料選擇 8對1">
+<h2>多工器（multiplexer, MUX）</h2>
+<p><strong>白話：</strong>一個電子式的旋鈕開關：n 條選擇線決定 2<sup>n</sup> 條資料線中的哪一條接到輸出。</p>
+<p><strong>位置／角色：</strong>第 06 章。它是資料路徑裡最常見的元件（處理器每個暫存器寫入前幾乎都有一顆），也是第 13 章 LUT 的實體本體；匯流排共用、輸入源切換也都靠它。</p>
+<p><strong>機制：</strong>8 對 1 的輸出 Y = Σ（每條選擇組合的最小項 · 對應資料線）。S<sub>2</sub>S<sub>1</sub>S<sub>0</sub> = 101 是二進位 5，選中 D<sub>5</sub>；資料 D<sub>0</sub>…D<sub>7</sub> = 1, 0, 1, 1, 0, 1, 0, 0 時 Y = 1。把 3 個輸入接到選擇線、真值表的 8 個輸出值接到資料線，就能直接實作任何 3 變數函數，完全不用化簡。</p>
+<p><strong>不要混淆：</strong>它不是開關矩陣，一次只能選一條，未被選中的資料線完全不影響輸出。用它實作函數是「查表」，用閘實作是「化簡」；前者面積固定、後者面積隨函數複雜度變化，兩者是取捨不是優劣。</p>
+</article>
+
+<article class="term-card" data-search="decoder demultiplexer 解碼器 解多工器 位址解碼 致能 one of n">
+<h2>解碼器與解多工器（decoder &amp; demultiplexer）</h2>
+<p><strong>白話：</strong>解碼器把 n 位元的編號翻成 2<sup>n</sup> 條線中「只有一條為 1」；解多工器則是多工器的反向，把一條輸入送到被選中的那條輸出。</p>
+<p><strong>位置／角色：</strong>第 06 章。記憶體的列選與行選、指令解碼、七段顯示驅動、晶片選擇訊號（chip select）全都是它；第 12 章的記憶體位址解碼直接用到。</p>
+<p><strong>機制：</strong>3 對 8 解碼器有 8 條輸出，第 i 條就是最小項 m<sub>i</sub>；因此「解碼器 + 一個 OR 閘」可以實作任何函數。加上致能腳（enable）之後，把致能腳當資料輸入，同一顆電路就成為解多工器——兩者結構相同，差別只在哪一支腳被當成資料。</p>
+<p><strong>不要混淆：</strong>解碼器的輸出線數是 2 的選擇線次方，不是選擇線數。很多實體晶片的輸出是低位準有效（被選中那條是 0），接錯會整組反過來；資料手冊上的上劃線或 N 字尾就是在講這件事。</p>
+</article>
+
+<article class="term-card" data-search="encoder priority encoder 編碼器 優先編碼器 gs 中斷 仲裁">
+<h2>編碼器與優先編碼器（encoder &amp; priority encoder）</h2>
+<p><strong>白話：</strong>解碼器的反向：把 2<sup>n</sup> 條線中為 1 的那一條，轉回 n 位元的編號。優先版本則規定「同時有多條為 1 時聽誰的」。</p>
+<p><strong>位置／角色：</strong>第 06 章。中斷控制器決定先服務哪個中斷、鍵盤掃描、匯流排仲裁、浮點數的前導零計數，都是優先編碼器。</p>
+<p><strong>機制：</strong>8 對 3 優先編碼器在輸入 D<sub>0</sub>…D<sub>7</sub> = 1, 0, 1, 1, 0, 1, 0, 0 時輸出 101（最高優先的 D<sub>5</sub>），並把 GS（group select，有效指示）拉成 1。純編碼器沒有 GS，遇到多條同時為 1 會吐出無意義的組合。</p>
+<p><strong>不要混淆：</strong>輸入全 0 與「只有 D<sub>0</sub> 是 1」都會輸出 000，GS 是唯一能區分這兩種情況的訊號。GS 與致能是兩回事：致能決定要不要工作，GS 回報「到底有沒有輸入為 1」。</p>
+</article>
+
+<article class="term-card" data-search="comparator 比較器 大於 等於 相等 magnitude">
+<h2>比較器（comparator）</h2>
+<p><strong>白話：</strong>判斷兩個數字誰大誰小或是否相等的電路。相等比較很便宜，大小比較就貴得多。</p>
+<p><strong>位置／角色：</strong>第 07 章。條件跳躍、排序網路、位址比對、第 12 章內容定址記憶體的每一列都內建一顆相等比較器。</p>
+<p><strong>機制：</strong>相等比較用逐位 XNOR 再全部 AND：A = B 等價於所有 ¬(A<sub>i</sub> ⊕ B<sub>i</sub>) 都為 1。大小比較則從最高位往下找第一個不同的位元，結構上和進位鏈一樣是串起來的，因此延遲隨位元數增加；實務上常直接借用減法器的旗標：A − B 之後看 N、Z、C、V。</p>
+<p><strong>不要混淆：</strong>有號比較與無號比較是兩回事：4 位元下 <code>1001</code> 以無號讀是 9、以二補數讀是 −7，和 <code>0111</code>（7）比較的結論剛好相反。用旗標判斷時，無號看 C 與 Z，有號要看 N 與 V 的組合。</p>
+</article>
+
+<article class="term-card" data-search="half adder full adder 半加器 全加器 進位 和 sum carry">
+<h2>半加器與全加器（half adder &amp; full adder）</h2>
+<p><strong>白話：</strong>一位元的加法積木。半加器只加兩個位元，全加器多吃一個進位輸入，所以才能串成多位元加法器。</p>
+<p><strong>位置／角色：</strong>第 07 章的建材，往上接成 ALU、乘法器與計數器；接成 ALU 的做法見<a href="../../../專題/計算機組織/互動課程/02-組合邏輯與算術.html">計算機組織的組合邏輯與算術</a>。</p>
+<p><strong>機制：</strong>半加器 S = A ⊕ B、C<sub>out</sub> = A · B。全加器 S = A ⊕ B ⊕ C<sub>in</sub>、C<sub>out</sub> = A · B + C<sub>in</sub> · (A ⊕ B)。以本課的 1.0 ns 單閘假設，全加器從 C<sub>in</sub> 到 C<sub>out</sub> 是 2 個閘延遲，這個數字決定了整條進位鏈的速度。</p>
+<p><strong>不要混淆：</strong>半加器不能靠串接變成多位元加法器，因為它沒有進位輸入。C<sub>out</sub> 也不是溢位：C 是無號的進位，V（有號溢位）要比較最高兩位的進位才算得出來。</p>
+</article>
+
+<article class="term-card" data-search="ripple carry adder 漣波進位加法器 進位鏈 最壞延遲">
+<h2>漣波進位加法器（ripple-carry adder）</h2>
+<p><strong>白話：</strong>把全加器一個接一個串起來，進位像水波一樣從最低位傳到最高位。最簡單、最省閘，也最慢。</p>
+<p><strong>位置／角色：</strong>第 07 章的基準線，第 08 章拿它當延遲分析的例子。小型微控制器與面積敏感的設計仍然大量使用它。</p>
+<p><strong>機制：</strong>4 位元最壞延遲 = 4 × 2 + 1 = 9 個閘延遲 = 9.0 ns（對應 111.111111 MHz），共 20 個閘。最壞情形是進位從第 0 位一路傳到第 3 位，例如 <code>1001</code> + <code>0111</code>：和 <code>0000</code>、C = 1、V = 0。位元數加倍，延遲就加倍。</p>
+<p><strong>不要混淆：</strong>「最壞延遲」不是每次加法都要花的時間，但同步設計必須照最壞情形抓時脈週期，所以實務上等於每次都花。它慢的原因是進位的<strong>相依性</strong>，不是閘慢——閘數其實比超前進位少。</p>
+</article>
+
+<article class="term-card" data-search="carry look-ahead cla 超前進位 產生 傳遞 generate propagate">
+<h2>超前進位（carry look-ahead, CLA）</h2>
+<p><strong>白話：</strong>不要一級一級等進位，改成先算出「這一位會不會自己產生進位、會不會把進位傳下去」，再一次把所有進位並行展開。</p>
+<p><strong>位置／角色：</strong>第 07 章。所有講究速度的加法器、處理器的 ALU、DSP 都用它或它的變形（進位選擇、進位跳躍）。</p>
+<p><strong>機制：</strong>P<sub>i</sub> = A<sub>i</sub> ⊕ B<sub>i</sub>（傳遞）、G<sub>i</sub> = A<sub>i</sub> · B<sub>i</sub>（產生）、C<sub>i+1</sub> = G<sub>i</sub> + P<sub>i</sub> · C<sub>i</sub>。把式子完全展開後每個進位都只要 2 層閘。4 位元下總延遲 4 個閘延遲 = 4.0 ns（250.000000 MHz），比漣波的 9.0 ns 快 2.25 倍，代價是閘數由 20 增為 26。</p>
+<p><strong>不要混淆：</strong>CLA 不是「不用進位」，它只是不等前一位算完。它也不能無限擴張：位元數一多，展開式的扇入會爆炸，所以實務是分組做（例如 4 位元一組再做組間超前）。</p>
+</article>
+
+<article class="term-card" data-search="alu 算術邏輯單元 arithmetic logic unit 旗標 運算選擇">
+<h2>算術邏輯單元（arithmetic logic unit, ALU）</h2>
+<p><strong>白話：</strong>把加、減與各種位元運算包成一顆，用幾條控制線決定這一次要做哪一種，並回報四支旗標。</p>
+<p><strong>位置／角色：</strong>第 07 章的收尾，也是第 11 章狀態機控制的對象。處理器資料路徑的核心就是它，見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>。</p>
+<p><strong>機制：</strong>減法用同一顆加法器完成：A − B = A + ¬B + 1，只要把 B 逐位反相並把 C<sub>in</sub> 設成 1。輸出端接多工器選出這次要的結果。四支旗標是 C（carry，進位）、V（overflow，溢位）、N（negative，負）、Z（zero，零）。</p>
+<p><strong>不要混淆：</strong>ALU 不含乘除法器（那通常是獨立單元），也不含記憶。旗標是<strong>每次運算都會產生</strong>的副產品，不是「出事才亮」的警示燈；要看哪一支旗標，取決於你把資料當有號還是無號。</p>
+</article>
+
+</div>
+
+<h2>第四組｜延遲、功耗與險境（第 08 章，6 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="propagation delay 傳播延遲 tpd 關鍵路徑 最長路徑">
+<h2>傳播延遲（propagation delay）</h2>
+<p><strong>白話：</strong>輸入變了之後，輸出要多久才穩定在新值。它是數位電路唯一真正的成本單位之一（另一個是功耗）。</p>
+<p><strong>位置／角色：</strong>第 08 章定義，第 07 章比較加法器時已經在用，第 10 章的 t<sub>logic</sub> 就是組合邏輯最長路徑的傳播延遲總和。</p>
+<p><strong>機制：</strong>符號 t<sub>pd</sub>，單位 ns。本課統一假設單閘 1.0 ns、反相器 1.0 ns、兩輸入閘 0.5 ns（第 08 章的險境實例），且假設延遲與輸入組合無關。整條路徑的延遲是沿途各閘相加，電路的 t<sub>pd</sub> 取所有路徑中的最大值，那條路徑叫關鍵路徑（critical path）。</p>
+<p><strong>不要混淆：</strong>「所有同類閘延遲相同」是本課為了算得動而做的假設，真實電路不是這樣：延遲會隨輸入組合、負載電容、溫度、電壓與製程偏差變化，所以資料手冊給的是最小／典型／最大三組值。</p>
+</article>
+
+<article class="term-card" data-search="fan-out 扇出 負載 驅動能力 緩衝器 buffer">
+<h2>扇出（fan-out）</h2>
+<p><strong>白話：</strong>一個輸出同時要餵幾個輸入。接得越多，每一次翻轉要充放的電容越大，於是又慢又耗電。</p>
+<p><strong>位置／角色：</strong>第 08 章。時脈樹、重設訊號、匯流排這種一對多的線最容易踩到；解法是插緩衝器或做成樹狀分配。</p>
+<p><strong>機制：</strong>本課假設每個負載 0.05 pF、負載延遲係數 k<sub>load</sub> = 1.0 ns/pF。扇出 4 時 C<sub>total</sub> = 4 × 0.05 = 0.200000 pF，額外延遲 0.200000 ns。功耗同時被放大，因為 P 與 C 成正比。</p>
+<p><strong>不要混淆：</strong>扇出不只是「能不能驅動得動」的直流問題（那看的是輸入電流），更是延遲與功耗的問題。加緩衝器會減少每一級的負載，但緩衝器自己也有延遲——它換的是「總延遲隨扇出線性成長」變成「隨對數成長」。</p>
+</article>
+
+<article class="term-card" data-search="dynamic power 動態功耗 cv2f 切換功耗 alpha 活動因子">
+<h2>動態功耗（dynamic power）</h2>
+<p><strong>白話：</strong>每次訊號翻轉都要把負載電容充飽或放光，那些電荷通過電晶體時變成熱。翻得越快、電壓越高、電容越大，就越燙。</p>
+<p><strong>位置／角色：</strong>第 08 章。它解釋了為什麼處理器要降頻降壓、為什麼時脈閘控（clock gating）能省電；電容充放電的物理源頭見<a href="../電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>。</p>
+<p><strong>機制：</strong>P = α · C · V<sub>DD</sub><sup>2</sup> · f，其中 α（讀作 alpha）是切換活動因子、C 是負載電容、f 是頻率；本課固定 α = 1。扇出 4（0.200000 pF）、3.3 V、100 MHz 時 P = 217.800000 µW（µ 讀作 micro，百萬分之一）。</p>
+<p><strong>不要混淆：</strong>它與電壓成<strong>平方</strong>關係而不是線性，所以降壓比降頻有效得多。動態功耗也不是全部：靜態的漏電流功耗在先進製程裡同樣可觀，而且降頻救不了漏電。</p>
+</article>
+
+<article class="term-card" data-search="hazard static dynamic 險境 靜態險境 動態險境 競賽">
+<h2>險境：靜態與動態（static &amp; dynamic hazard）</h2>
+<p><strong>白話：</strong>電路結構上存在「兩條路徑時間不同」的可能，使得輸出在切換過程中出現本來不該有的變化。它是結構的性質，不是某一次的現象。</p>
+<p><strong>位置／角色：</strong>第 08 章。非同步電路、正反器的非同步清除腳、致能與寫入訊號最怕它；同步設計之所以是主流，很大一部分就是為了讓險境變得無害。</p>
+<p><strong>機制：</strong>靜態險境是輸出應該保持不變卻短暫跳一下（靜態 1 險境或靜態 0 險境）；動態險境是輸出應該變一次卻變了三次。成因是同一個輸入變數透過長短不同的路徑抵達輸出，例如 F = A · B + ¬A · C 在 B = C = 1、A 由 1 變 0 時，¬A 那條多繞了一個反相器。</p>
+<p><strong>不要混淆：</strong>險境是可能性，不是必然發生。它取決於實際延遲，所以模擬看不到不代表板子上沒有；同樣地，加了冗餘項只能消除<strong>單一變數變化</strong>造成的靜態險境，多變數同時變化的情況仍然可能出問題。</p>
+</article>
+
+<article class="term-card" data-search="glitch 突波 脈衝 尖波 示波器 短脈衝">
+<h2>突波（glitch）</h2>
+<p><strong>白話：</strong>實際量到的那一根不該出現的窄脈衝。它是險境在特定延遲條件下真的發生了的結果。</p>
+<p><strong>位置／角色：</strong>第 08 章。它是唯一必須用示波器（而不是邏輯分析儀）才看得清楚的現象，也是第 11 章 Mealy 機輸出不能直接拿去驅動非同步輸入的原因。</p>
+<p><strong>機制：</strong>F = A · B + ¬A · C 在 B = C = 1、A 由 1 變 0（t<sub>inv</sub> = 1.0 ns、t<sub>gate</sub> = 0.5 ns）時，F 在 2 × t<sub>gate</sub> = 1.000000 ns 掉到 0、在 t<sub>inv</sub> + 2 × t<sub>gate</sub> = 2.000000 ns 回到 1，寬度恰好等於反相器延遲 1.000000 ns。加入冗餘項 B · C 之後消失。</p>
+<p><strong>不要混淆：</strong>本課一律寫「突波」；來源筆記與部分教材寫「毛刺」，是同一個 glitch。更重要的邊界是：險境是<strong>電路結構的性質</strong>，突波是<strong>實際量到的那個脈衝</strong>。沒量到不代表沒有險境；量到了也不一定造成錯誤——同步電路裡正反器只在邊緣看資料。</p>
+</article>
+
+<article class="term-card" data-search="redundant term consensus 冗餘項 共識項 消除險境 多餘項">
+<h2>冗餘項與共識項（redundant term &amp; consensus term）</h2>
+<p><strong>白話：</strong>邏輯上完全多餘、刪掉也不改變真值表的一項，故意留著用來把切換過程中的空檔補起來。</p>
+<p><strong>位置／角色：</strong>第 08 章消除靜態險境的標準作法。合成工具預設會把它最佳化掉，所以實務上要用屬性標記「不要動這一項」。</p>
+<p><strong>機制：</strong>共識定理：A · B + ¬A · C + B · C = A · B + ¬A · C。第三項 B · C 就是共識項，它在 B = C = 1 時恆為 1、與 A 完全無關，所以 A 怎麼變它都撐住輸出。代價是多 1 個 AND 閘、OR 從 2 輸入變 3 輸入。</p>
+<p><strong>不要混淆：</strong>它不是「化簡沒做完」，是<strong>故意留下來的多餘項</strong>。最簡 SOP 反而會把它刪掉——最簡不等於最好。這也說明化簡目標必須先講清楚：要面積最小，還是要無險境。</p>
+</article>
+
+</div>
+
+<h2>第五組｜序向邏輯與時序（第 09–11 章，13 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="sequential logic 序向邏輯 時序邏輯 記憶 狀態 回授">
+<h2>序向邏輯（sequential logic）</h2>
+<p><strong>白話：</strong>輸出不只看現在的輸入，還看之前發生過什麼。要做到這件事，電路必須把自己的輸出繞回輸入。</p>
+<p><strong>位置／角色：</strong>第 09 章開始，第 10、11、12 章全部建立在它上面。凡是「記得住」的東西——計數器、暫存器、記憶體、狀態機——都是序向邏輯。</p>
+<p><strong>機制：</strong>結構是「組合邏輯 + 記憶元件 + 回授」。同步設計把所有記憶元件掛在同一個時脈上，讓狀態只在邊緣改變，於是整個電路的行為可以被切成一拍一拍分析；非同步設計沒有這個共同節拍，分析難度高一個等級。</p>
+<p><strong>不要混淆：</strong>有回授不等於能可靠記憶：回授加上不當延遲就是振盪。序向邏輯之所以可分析，靠的是「狀態只在時脈邊緣更新」這個人為約束，而不是回授本身。</p>
+</article>
+
+<article class="term-card" data-search="latch 閂鎖 sr latch d latch 透通 enable 位準">
+<h2>閂鎖（latch）</h2>
+<p><strong>白話：</strong>最小的記憶單元。致能為 1 時輸入直接穿到輸出（透通），致能變 0 的瞬間把當時的值留住。</p>
+<p><strong>位置／角色：</strong>第 09 章。它是正反器的建材（兩個閂鎖串成一個邊緣觸發的正反器），也是 SRAM 位元胞與部分低功耗設計的基礎；但在標準同步流程裡通常被刻意避免。</p>
+<p><strong>機制：</strong>SR 閂鎖由兩個交叉回授的 NOR（或 NAND）構成：S = 1 置位、R = 1 清除、兩者皆 0 保持。S = R = 1 是禁止組合，因為 Q 與 ¬Q 會同時被強制成同一個值，同時放開會進入不可預測的競賽。D 閂鎖在前面加一個反相器，消掉禁止組合，只留下「透通」與「保持」。</p>
+<p><strong>不要混淆：</strong>本課一律寫「閂鎖」；中英名詞對照表與部分教材寫「鎖存器」，是同一個 latch。它不是「比較差的正反器」，它更小更快；問題在於 EN = 1 時是透通的，輸入的突波會直接穿過去，標準時序分析工具也難處理。</p>
+</article>
+
+<article class="term-card" data-search="flip-flop 正反器 d ff jk t sr 邊緣 特性方程">
+<h2>正反器（flip-flop）</h2>
+<p><strong>白話：</strong>只在時脈邊緣看一次輸入的記憶單元。其餘時間不管輸入怎麼跳，輸出都不動。</p>
+<p><strong>位置／角色：</strong>第 09 章的主角，第 10 章分析它的時序、第 11 章用它存狀態、第 12 章把它排成暫存器與計數器。它是同步數位設計的最小狀態單位；用法見<a href="../../../專題/計算機組織/互動課程/03-時序邏輯與記憶.html">計算機組織的時序邏輯與記憶</a>。</p>
+<p><strong>機制：</strong>特性方程決定下一狀態 Q<sup>+</sup>：D 型 Q<sup>+</sup> = D；T 型 Q<sup>+</sup> = T ⊕ Q；JK 型 Q<sup>+</sup> = J · ¬Q + ¬K · Q；SR 型 Q<sup>+</sup> = S + ¬R · Q（限制 S · R = 0）。初值 Q = 0、輸入序列 0, 1, 1, 0, 1, 0, 0, 1 走完 8 拍時，D 型 Q = 0, 1, 1, 0, 1, 0, 0, 1，T 型 Q = 0, 1, 0, 0, 1, 1, 1, 0。本課假設 t<sub>cq</sub> = 0.40 ns。</p>
+<p><strong>不要混淆：</strong>本課一律用台灣標準用語「正反器」；中國教材寫「觸發器」，是同一個 flip-flop。與閂鎖的差別是<strong>邊緣觸發 vs 位準觸發</strong>，不是快慢。邊緣觸發多了一級延遲，換到的是時序可分析。</p>
+</article>
+
+<article class="term-card" data-search="level-sensitive edge-triggered 位準觸發 邊緣觸發 上升緣 主從">
+<h2>位準觸發與邊緣觸發（level-sensitive &amp; edge-triggered）</h2>
+<p><strong>白話：</strong>兩種「什麼時候聽輸入」的規則。位準觸發是「只要致能是 1 就一直聽」，邊緣觸發是「只在電壓跨過門檻的那一瞬間聽一次」。</p>
+<p><strong>位置／角色：</strong>第 09 章。它是閂鎖與正反器唯一的本質差異，也是第 10 章時序分析成立的前提——有明確的取樣時刻，才有建立與保持時間可談。</p>
+<p><strong>機制：</strong>邊緣觸發的標準做法是主從結構：兩個位準觸發的閂鎖串起來，前一個在時脈為 0 時透通、後一個在時脈為 1 時透通，兩者永遠不同時打開，於是資料每個週期只能前進一格。上升緣與下降緣觸發只是接法不同，分析方式一樣。</p>
+<p><strong>不要混淆：</strong>「邊緣」在真實世界不是零寬度的瞬間，而是一段有斜率的轉換；建立時間與保持時間正是為了把這段不確定圍起來而存在的規格。時脈邊緣太緩（上升時間過長）會讓這些規格失效。</p>
+</article>
+
+<article class="term-card" data-search="clock 時脈 週期 頻率 同步 節拍 clk">
+<h2>時脈（clock）</h2>
+<p><strong>白話：</strong>全電路共用的節拍訊號。它本身不帶資料，只負責宣告「現在可以更新狀態了」。</p>
+<p><strong>位置／角色：</strong>第 10 章的核心，第 11、12 章的每個元件都掛在它上面。時脈樹的品質決定整顆晶片的速度上限，也是功耗最大的單一網路。</p>
+<p><strong>機制：</strong>週期 T<sub>clk</sub>（單位 ns）與頻率 f = 1 / T<sub>clk</sub> 互為倒數；用 ns 表示週期時，f 的 MHz 值 = 1000 / T<sub>clk</sub>。同步設計的核心約束是：所有正反器在同一個邊緣取樣，因此組合邏輯必須在一個週期內做完。</p>
+<p><strong>不要混淆：</strong>提高頻率不會讓邏輯變快，只會縮短給它的時間；能不能提高由第 10 章的建立時間限制決定。時脈也不是「越快越好」——動態功耗與頻率成正比，而且保持時間違規完全不受頻率影響。</p>
+</article>
+
+<article class="term-card" data-search="setup time hold time 建立時間 保持時間 tsu th 餘裕 slack">
+<h2>建立時間與保持時間（setup time &amp; hold time）</h2>
+<p><strong>白話：</strong>正反器對輸入資料的兩個要求：邊緣到來之前資料要先穩定多久（建立），邊緣過去之後還要維持多久（保持）。</p>
+<p><strong>位置／角色：</strong>第 10 章。所有靜態時序分析（STA）報告都在檢查這兩件事；FPGA 與 ASIC 流程裡「時序收斂」指的就是全部路徑的這兩項餘裕都不為負。</p>
+<p><strong>機制：</strong>建立限制 T<sub>clk</sub> ≥ t<sub>cq</sub> + t<sub>logic</sub> + t<sub>su</sub> + t<sub>jitter</sub> − t<sub>skew</sub>；本課的錨定值 0.40 + 4.00 + 0.20 + 0.05 − 0 = 4.650000 ns，對應 f<sub>max</sub> = 215.053763 MHz。保持限制 t<sub>cq</sub> + t<sub>min</sub> ≥ t<sub>h</sub> + t<sub>skew</sub>，看的是最短路徑。</p>
+<p><strong>不要混淆：</strong>本課一律寫「保持時間」；中英名詞對照表寫「持住時間」，是同一個 hold time。一個在時脈邊緣<strong>之前</strong>、一個在<strong>之後</strong>。更關鍵的是：建立違規降頻可以救，保持違規降頻完全沒用，因為保持限制式裡根本沒有 T<sub>clk</sub>。</p>
+</article>
+
+<article class="term-card" data-search="clock skew jitter 時脈偏斜 抖動 tskew tjitter 時脈樹">
+<h2>時脈偏斜與時脈抖動（clock skew &amp; jitter）</h2>
+<p><strong>白話：</strong>偏斜是「同一個邊緣抵達不同正反器的時間差」，抖動是「同一個正反器上，邊緣每次到得早一點或晚一點」。一個是空間上的不齊，一個是時間上的不穩。</p>
+<p><strong>位置／角色：</strong>第 10 章。它們是時脈樹設計與 PLL 規格的主戰場，也是為什麼大晶片要花大量面積在時脈分配網路上。</p>
+<p><strong>機制：</strong>在建立限制裡，t<sub>jitter</sub> 是加項（下一個邊緣可能提早到，時間變少），t<sub>skew</sub> 是減項（接收端晚到等於多給時間）。但同一個正的偏斜在保持限制裡卻站到反邊：t<sub>cq</sub> + t<sub>min</sub> ≥ t<sub>h</sub> + t<sub>skew</sub>，偏斜越大越容易違規。</p>
+<p><strong>不要混淆：</strong>偏斜不是純粹的壞事，它可以「借時間」給吃緊的路徑（有意為之時叫 useful skew），但同時會惡化保持餘裕。抖動則沒有這種兩面性，它永遠只吃掉餘裕。</p>
+</article>
+
+<article class="term-card" data-search="fmax timing closure 最大時脈頻率 時序收斂 sta 關鍵路徑">
+<h2>最大時脈頻率與時序收斂（maximum clock frequency &amp; timing closure）</h2>
+<p><strong>白話：</strong>f<sub>max</sub> 是「最慢那條路徑允許的最高頻率」；時序收斂是「把所有路徑都調到不違規」這件工程工作。</p>
+<p><strong>位置／角色：</strong>第 10 章。FPGA 與 ASIC 的設計迭代大半時間花在這裡：改邏輯、切管線、換佈局、加緩衝器，直到報告全綠。</p>
+<p><strong>機制：</strong>f<sub>max</sub> = 1 / T<sub>clk,min</sub>；本課錨定的 T<sub>clk,min</sub> = 4.650000 ns 對應 215.053763 MHz。在 150 MHz（6.666667 ns）運行時建立餘裕為 2.016667 ns、保持餘裕 0.800000 ns。餘裕（slack）為正代表過關，為負就是違規量。</p>
+<p><strong>不要混淆：</strong>f<sub>max</sub> 不是「這顆晶片的速度」，它是<strong>這一條路徑</strong>的上限，換一個設計就換一個數字。模擬跑得過也不代表時序收斂——功能模擬不檢查 t<sub>su</sub> 與 t<sub>h</sub>，那要看 STA 報告。</p>
+</article>
+
+<article class="term-card" data-search="metastability 亞穩態 同步器 跨時脈域 mtbf 準穩態">
+<h2>亞穩態（metastability）</h2>
+<p><strong>白話：</strong>資料剛好在邊緣附近變動、違反了建立或保持時間時，正反器的輸出會卡在 0 與 1 之間一段不確定的時間，之後才隨機倒向某一邊。</p>
+<p><strong>位置／角色：</strong>第 10 章。凡是非同步輸入（按鍵、外部訊號、跨時脈域的資料）進入同步電路的地方都會遇到；解法是同步器（synchronizer）。</p>
+<p><strong>機制：</strong>標準做法是兩級（或三級）串接的 D 正反器：第一級可能進入亞穩態，但在下一個週期到來前多半已經決定下來，第二級因此看到的是穩定值。它的可靠度用平均無故障時間（MTBF）描述，隨可用的解析時間呈指數改善。</p>
+<p><strong>不要混淆：</strong>亞穩態不能被<strong>消除</strong>，只能把發生機率壓到工程上可接受。加同步器換來的是時間（多一拍延遲），不是保證；而且多位元資料不能各自過同步器，必須用格雷碼或握手，否則會拼出從未存在過的值。</p>
+</article>
+
+<article class="term-card" data-search="fsm finite state machine 有限狀態機 狀態表 轉移 控制單元">
+<h2>有限狀態機（finite state machine, FSM）</h2>
+<p><strong>白話：</strong>把「電路現在處在哪個階段」明確列成有限多個狀態，再規定每個狀態遇到每種輸入該跳去哪、輸出什麼。</p>
+<p><strong>位置／角色：</strong>第 11 章。通訊協定解析、按鍵去彈跳、交通號誌、處理器的控制單元都是它；控制單元怎麼變成狀態機見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>。</p>
+<p><strong>機制：</strong>標準流程是規格 → 狀態表 → 狀態編碼 → 下一狀態邏輯 → 輸出邏輯。硬體上是「正反器存目前狀態 + 兩塊組合邏輯」。偵測 1101（允許重疊）需要 4 個狀態（Mealy），狀態的意義就是「已經對上規格的哪一段前綴」。</p>
+<p><strong>不要混淆：</strong>狀態數不是越少越好：硬擠狀態會讓下一狀態邏輯變複雜，總面積反而變大。狀態機也一定要處理未使用狀態（上電時正反器的值不確定），否則可能永遠回不到合法狀態。</p>
+</article>
+
+<article class="term-card" data-search="moore mealy 米利 摩爾 輸出邏輯 慢一拍 狀態機">
+<h2>Moore 機與 Mealy 機（Moore &amp; Mealy machine）</h2>
+<p><strong>白話：</strong>兩種輸出規則。Moore 的輸出只看目前狀態，Mealy 的輸出同時看目前狀態與現在的輸入。</p>
+<p><strong>位置／角色：</strong>第 11 章。實務上兩種混用：對外的控制訊號常用 Moore（乾淨），內部快速回應常用 Mealy（省一拍）。</p>
+<p><strong>機制：</strong>偵測 1101（允許重疊）時 Mealy 要 4 個狀態、Moore 要 5 個（「已對上 1101」必須自己佔一個狀態才能當輸出）。輸入 <code>110110101101</code> 送進 Mealy 偵測器共宣告 3 次（第 3、6、11 拍）；Moore 在同一個 12 拍窗內只看得到 2 次，第三次落在第 12 拍之後。</p>
+<p><strong>不要混淆：</strong>Mealy 省狀態、快一拍，代價是輸出會跟著輸入的突波抖動，因此不能直接接到非同步清除或致能腳。Moore 的輸出穩定但慢一拍——這不是「比較差」，是不同的取捨。</p>
+</article>
+
+<article class="term-card" data-search="state encoding one-hot 狀態編碼 二進位編碼 格雷編碼 獨熱">
+<h2>狀態編碼與 one-hot（state encoding &amp; one-hot）</h2>
+<p><strong>白話：</strong>把抽象的狀態名字換成實際的位元組合。同一台狀態機可以有很多種編碼，功能相同但面積與速度不同。</p>
+<p><strong>位置／角色：</strong>第 11 章。FPGA 的合成工具預設常選 one-hot，因為 FPGA 的正反器多而 LUT 相對貴；ASIC 則常選二進位編碼省面積。</p>
+<p><strong>機制：</strong>N 個狀態用二進位編碼要 ⌈log<sub>2</sub>N⌉ 個正反器（⌈ ⌉ 讀作 ceiling，向上取整），5 個狀態要 3 個；one-hot 每個狀態一個正反器，5 個狀態要 5 個，但任一時刻只有一位是 1，所以「判斷現在在哪個狀態」只要看一條線，下一狀態邏輯極淺。</p>
+<p><strong>不要混淆：</strong>編碼不改變狀態機的行為，只改變面積與延遲的分配。one-hot 也不是「浪費」：它把成本從組合邏輯搬到正反器，在正反器便宜的平台上反而更快。它的風險是非法編碼（不只一位為 1）的機會變多，需要額外的復原設計。</p>
+</article>
+
+<article class="term-card" data-search="counter 計數器 模 n 漣波計數器 同步計數器 未使用狀態">
+<h2>計數器（counter）</h2>
+<p><strong>白話：</strong>每來一拍時脈就把內容加一（或減一）的狀態機。它是分頻、計時、位址產生的通用零件。</p>
+<p><strong>位置／角色：</strong>第 12 章。時脈分頻、PWM 產生、記憶體的更新位址、狀態機的計時延遲全都用它。</p>
+<p><strong>機制：</strong>模 N 計數器需要 ⌈log<sub>2</sub>N⌉ 個正反器：模 10 要 4 個，並且有 2<sup>4</sup> − 10 = 6 個未使用狀態（10 到 15）。同步計數器所有正反器共用時脈，延遲 = t<sub>cq</sub> + 進位鏈邏輯；漣波計數器把前一級的輸出當後一級的時脈，4 級累積 4 × 0.40 = 1.600000 ns（625.000000 MHz），省閘但每一位相位不齊。</p>
+<p><strong>不要混淆：</strong>未使用狀態不是「不會發生」：上電時正反器的值不確定，安全的計數器必須讓那 6 個狀態都能回到合法值。漣波計數器的輸出在切換瞬間會出現短暫的中間值（因為各位不同時到），拿去做解碼就會產生突波。</p>
+</article>
+
+</div>
+
+<h2>第六組｜暫存器、記憶體與可程式邏輯（第 12–13 章，9 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="register shift register 暫存器 移位暫存器 串並轉換 lfsr">
+<h2>暫存器與移位暫存器（register &amp; shift register）</h2>
+<p><strong>白話：</strong>把好幾個正反器並排、共用同一個時脈，就成了一個能一次存下 n 個位元的格子；如果再把每一格的輸出接到隔壁的輸入，資料就會每拍往旁邊挪一格。</p>
+<p><strong>位置／角色：</strong>第 12 章。處理器的通用暫存器、管線的級間緩衝、SPI 與 UART 的串並轉換、亞穩態同步器都是它。</p>
+<p><strong>機制：</strong>4 位元右移暫存器、串列輸入 1, 0, 1, 1, 0, 0, 1, 0 時，內容依序是 1000 → 0100 → 1010 → 1101 → 0110 → 0011 → 1001 → 0100。加上多工器就成為可載入、可保持、可移位的通用暫存器；把某幾位 XOR 後回授就是線性回授移位暫存器（LFSR），能產生確定性的偽隨機序列。</p>
+<p><strong>不要混淆：</strong>移位不等於乘除 2：算術右移要複製符號位，邏輯右移補 0，循環移位則把移出的位補回另一端，三者結果不同。暫存器也不是記憶體——它沒有位址解碼，所有位元同時可讀。</p>
+</article>
+
+<article class="term-card" data-search="sram static ram 靜態隨機存取記憶體 6t 位元胞 快取">
+<h2>SRAM</h2>
+<p><strong>白話：</strong>靜態隨機存取記憶體（static random-access memory, SRAM），用兩個交叉回授的反相器把一個位元「撐住」的記憶體。通電就一直記得，不需要人來提醒。</p>
+<p><strong>位置／角色：</strong>第 12 章。處理器快取、FPGA 的區塊記憶體與組態記憶體、微控制器的主記憶體都是它；快取的用法見<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">計算機組織的記憶體階層與虛擬記憶體</a>。</p>
+<p><strong>機制：</strong>標準位元胞是 6 顆電晶體（6T）：兩個反相器交叉回授加兩顆存取電晶體。16 條位址線 × 8 位元字寬 = 65536 位元組（64 KiB）= 524288 位元，以 6T 計就是 3145728 顆電晶體。讀取不破壞內容，存取時間短且穩定。</p>
+<p><strong>不要混淆：</strong>「靜態」是指不需要更新，不是指斷電後還記得——那是非揮發性，SRAM 一樣斷電就忘。它也不是「比較快的 DRAM」，兩者位元胞結構完全不同：SRAM 用 6 顆電晶體換速度，DRAM 用 1 顆換密度。</p>
+</article>
+
+<article class="term-card" data-search="dram refresh 動態記憶體 更新 1t1c 電容 漏電">
+<h2>DRAM 與更新（DRAM &amp; refresh）</h2>
+<p><strong>白話：</strong>用一顆電容存電荷來代表一個位元。電荷會慢慢漏光，所以必須定期把每一列讀出來再寫回去。</p>
+<p><strong>位置／角色：</strong>第 12 章。電腦與手機的主記憶體幾乎都是它；它的更新開銷與存取延遲正是記憶體階層存在的原因。</p>
+<p><strong>機制：</strong>位元胞是 1 顆電晶體加 1 顆電容（1T1C），面積遠小於 SRAM 的 6T。本課鎖定的更新週期是 64 ms：若一個陣列有 256 列，就必須每 250 µs 刷一列。讀取是破壞性的（電荷被讀走），所以每次讀完都要自動寫回。</p>
+<p><strong>不要混淆：</strong>更新與「斷電失憶」是兩件事：DRAM 通電時就得一直刷，那才是 refresh；斷電失憶是揮發性，兩者都成立但講的不是同一回事。更新期間該區塊不能被存取，這是 DRAM 延遲不穩定的原因之一。</p>
+</article>
+
+<article class="term-card" data-search="rom flash 唯讀記憶體 快閃記憶體 非揮發 浮閘 韌體">
+<h2>ROM 與快閃記憶體（ROM &amp; Flash）</h2>
+<p><strong>白話：</strong>斷電之後還記得的記憶體。ROM 在出廠時就把內容固定死，Flash 則可以整塊擦掉再重寫。</p>
+<p><strong>位置／角色：</strong>第 12 章。開機韌體、微控制器的程式區、FPGA 的組態檔、固態硬碟都是它。ROM 同時也是一種通用的邏輯實作方式：把真值表整張燒進去。</p>
+<p><strong>機制：</strong>ROM 的每條位址線組合就是一個最小項，輸出等於「這一列預先寫好的值」，因此 n 輸入 m 輸出的任意函數都能用 2<sup>n</sup> × m 位元的 ROM 實作。Flash 用浮閘（floating gate）鎖住電荷，寫入前必須先以區塊為單位擦除，且抹寫次數有限（典型 10<sup>4</sup> 到 10<sup>5</sup> 次）。</p>
+<p><strong>不要混淆：</strong>Flash 不是「可以隨便寫的 ROM」：它不能單一位元組原地改寫，必須整塊擦除，這就是為什麼需要磨損平均與檔案系統層的支援。用 ROM 實作邏輯的成本隨輸入數呈指數成長，所以只適合輸入很少的函數。</p>
+</article>
+
+<article class="term-card" data-search="cam content-addressable memory 內容定址記憶體 tlb 平行比對">
+<h2>內容定址記憶體（content-addressable memory, CAM）</h2>
+<p><strong>白話：</strong>反過來用的記憶體：你給它內容，它告訴你這個內容存在哪一格（或有沒有存在）。</p>
+<p><strong>位置／角色：</strong>第 12 章。快取的標籤比對、虛擬記憶體的 TLB、網路交換器的轉送表都用它，因為這些場合需要「一個週期內查完整張表」。</p>
+<p><strong>機制：</strong>每一列都內建一顆相等比較器，所有列同時和輸入的搜尋字比對，命中的那一列拉起匹配線，再由優先編碼器轉成位址。代價是面積與功耗都遠高於同容量的 SRAM，因為比較器數量與列數相同。</p>
+<p><strong>不要混淆：</strong>CAM 不是「查得比較快的 SRAM」，它做的是完全不同的查詢：SRAM 問「第 i 格是什麼」，CAM 問「哪一格是 X」。也因為每列都在比對，它的功耗與容量幾乎成正比，這限制了它的規模。</p>
+</article>
+
+<article class="term-card" data-search="pld cpld 可程式邏輯元件 巨集單元 pla 乘積項 陣列">
+<h2>可程式邏輯元件（programmable logic device, PLD／CPLD）</h2>
+<p><strong>白話：</strong>出廠時是空白的邏輯陣列，由使用者燒錄連線來決定它變成什麼電路。CPLD 是把多個這種陣列加上互連整合在一顆裡。</p>
+<p><strong>位置／角色：</strong>第 13 章。板上的膠合邏輯（glue logic）、電源時序控制、開機時要先就緒的邏輯常用 CPLD，因為它非揮發、上電即用。</p>
+<p><strong>機制：</strong>結構是固定的兩層 AND-OR 陣列，直接對應 SOP 標準型：可程式的 AND 陣列產生乘積項，OR 陣列把它們加起來，後面接一個巨集單元（macrocell，含一個正反器與輸出選擇）。本課假設 CPLD 容量上限 512 個巨集單元、單價 5 美元。</p>
+<p><strong>不要混淆：</strong>CPLD 不是「小一號的 FPGA」：它的邏輯用乘積項陣列、延遲高度可預測，FPGA 用查找表與可程式繞線、容量大得多但延遲取決於佈局繞線。乘積項數量有硬上限，函數一複雜就塞不進去，這與 LUT 的成長方式完全不同。</p>
+</article>
+
+<article class="term-card" data-search="fpga lut look-up table 查找表 組態位元 邏輯區塊 繞線">
+<h2>FPGA 與查找表（FPGA &amp; look-up table, LUT）</h2>
+<p><strong>白話：</strong>用一大片可寫入的小查表加上可程式的繞線，把任何電路「模擬」出來。改設計只要重新載入組態檔，不用重開光罩。</p>
+<p><strong>位置／角色：</strong>第 13 章。原型驗證、小量產品、需要高吞吐的訊號處理與影像處理都用它；它也是把本課前 12 章的所有電路真正做出來的最直接管道。</p>
+<p><strong>機制：</strong>k 輸入 LUT 需要 2<sup>k</sup> 個組態位元才能實作任何 k 輸入函數，4-LUT 就是 16 個。輸入數超過 k 時用夏農展開遞迴拆解，最壞需要 2<sup>n−k+1</sup> − 1 個 LUT：6 輸入用 4-LUT 最壞 7 個，共 112 個組態位元。組態通常存在 SRAM 裡，所以斷電就忘，要靠外部 Flash 開機載入。</p>
+<p><strong>不要混淆：</strong>LUT 就是一顆可寫入的多工器。FPGA 不是「跑得比較慢的 ASIC」，它是用查表模擬邏輯的另一種架構。k 每加 1 組態位元就加倍，這就是主流 FPGA 停在 4 到 6 輸入的原因。</p>
+</article>
+
+<article class="term-card" data-search="asic 特殊應用積體電路 nre 光罩 量產 成本交叉點">
+<h2>ASIC（application-specific integrated circuit）</h2>
+<p><strong>白話：</strong>為單一用途訂做的晶片。每個電晶體都照你的設計擺，因此又快又省電又便宜——前提是量夠大。</p>
+<p><strong>位置／角色：</strong>第 13 章的成本決策。手機晶片、網路交換晶片、消費性電子的主控晶片都是它；它是第 08 章功耗與第 10 章時序最終落地的地方。</p>
+<p><strong>機制：</strong>成本模型是「一次性工程費（NRE）+ 單價 × 產量」。本課鎖定 NRE 500 萬美元、ASIC 單價 2 美元、FPGA 單價 50 美元，交叉點 = 5000000 / (50 − 2) = 104166.666667 顆。產量 10<sup>4</sup> 時 ASIC 平均 502.000000 美元/顆，FPGA 只要 50.000000 美元/顆。</p>
+<p><strong>不要混淆：</strong>「ASIC 比較便宜」只在跨過交叉點之後才成立，而且 NRE 花下去就收不回，設計出錯要重開光罩。它也不是永遠比較快：FPGA 在需要頻繁改演算法的場合，總體效率反而更高。</p>
+</article>
+
+<article class="term-card" data-search="hdl verilog vhdl synthesis 硬體描述語言 合成 rtl 併發">
+<h2>硬體描述語言與合成（HDL: Verilog／VHDL &amp; synthesis）</h2>
+<p><strong>白話：</strong>用文字描述硬體長什麼樣、每一拍做什麼，再讓工具把它翻成閘與繞線。它不是程式語言，寫的每一行都同時存在。</p>
+<p><strong>位置／角色：</strong>第 13 章收尾。現代數位設計幾乎都從 HDL 開始，本課前 12 章的所有元件在實務上都是這樣被描述出來的。本課只講三個抽象層與流程，不教語法。</p>
+<p><strong>機制：</strong>三個抽象層：行為層（描述要做什麼）、暫存器轉移層（RTL，描述每個時脈邊緣哪些暫存器更新）、閘級（已對應到元件庫）。合成流程是 RTL → 邏輯最佳化（第 05 章的化簡自動化版）→ 技術對應 → 佈局繞線 → 靜態時序分析。</p>
+<p><strong>不要混淆：</strong>HDL 的「併發思維」是最大門檻：程式語言的敘述有先後，HDL 描述的電路全部同時通電運作，順序只存在於同一個時脈邊緣的因果裡。模擬跑得過也不代表能合成，更不代表時序收斂——那要看 STA 報告。</p>
+</article>
+
+</div>
+
+<nav class="pager" aria-label="章節導覽"><a href="13-可程式邏輯與HDL.html">← 上一頁：可程式邏輯與 HDL</a><a href="自我檢核.html">下一頁：自我檢核 →</a></nav>
+</main>
+<footer class="site-footer"><span>名詞與概念字典</span><a href="自我檢核.html">去自我檢核</a></footer>
+</body></html>

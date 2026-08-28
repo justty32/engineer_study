@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 傅立葉轉換｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・時間域的摺積等於頻率域的相乘</p>
+<h1>傅立葉轉換：離散譜線靠攏成連續頻譜，摺積退化成一個乘法</h1>
+<p class="lead">週期拉到無限大，上一章那些等距的譜線就會靠攏成一條連續曲線。這章給非週期訊號的頻譜，並拿到本課最重要的一條性質：時間域摺積等於頻率域相乘，於是第 04 章那個嚇人的積分變成一次乘法。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-傅立葉級數.html">05 傅立葉級數</a>的諧波與正交基底，以及<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複數極式</a>與 e<sup>jθ</sup> 的意思。</p>
+
+<h2>痛點：頻譜密度是什麼單位，為什麼摺積會變成相乘</h2>
+<p>上一章的係數 a<sub>k</sub> 有很清楚的意義：第 k 根諧波的振幅。可是非週期訊號沒有諧波，X(jω) 又是什麼？更奇怪的是，把一個 1 V 的脈衝丟進去，算出來的 X(0) 竟然是 0.001，單位還是 V·s。這個數字既不是電壓也不是功率，讀起來完全沒有直覺。</p>
+<p>第二個痛點是摺積定理。課本寫 x ∗ h ⇔ X·H，一行帶過，但這一行是整門課的樞紐：它把第 04 章那個要滑動、要翻轉、要積分的運算，換成頻率一根一根乘過去。為什麼可以這樣？以及付出了什麼代價——如果換域這麼划算，為什麼還要學時間域的摺積？</p>
+<p>第三個痛點是「頻寬」。同一個脈衝，有人說頻寬 442 Hz，有人說 1000 Hz，有人說 3000 Hz，全都沒錯，因為他們用的定義不同。這章把三種定義都算一次，讓你知道講數字時必須連定義一起講。</p>
+
+<h2>白話直覺：把週期拉到無限遠，譜線就從一根一根變成一片</h2>
+<p>訊號從哪來？就當它是一個孤立的矩形脈衝，例如一次按鍵、一個雷達發射脈波、或通訊系統送出的一個符號。系統對它做了什麼？系統照樣把它摺積掉，輸出被抹寬、被延遲。這件事在哪個域最好描述？在頻率域，因為摺積在那裡只是逐點相乘，系統的作用可以整條寫成 H(jω) 這一個複數函數。</p>
+<p>從級數到轉換的路很短：把週期 T 拉大，譜線間距 f<sub>0</sub> = 1/T 就變小，譜線愈來愈密；同時每根譜線的高度 a<sub>k</sub> 愈來愈矮（因為訊號的能量攤在愈來愈長的週期上）。把 a<sub>k</sub> 乘上 T 再取極限，矮下去的高度就被補回來，離散的譜線靠攏成一條連續曲線 X(jω)。所以連續時間傅立葉轉換（continuous-time Fourier transform, CTFT）給的 X(jω) 不是「某個頻率的振幅」，而是「每單位頻寬的量」，這就是它單位帶秒的原因，也是為什麼它叫頻譜密度（spectral density）。</p>
+<p>換域的代價是什麼？第一，X(jω) 是複數，要同時看大小與相位，只看大小會漏掉波形資訊；第二，理論上的轉換需要整條時間軸的訊號，實際量測只有有限長的窗，這個落差後面會變成洩漏；第三，時間域的因果順序在頻率域看不見了，「現在的輸出來自哪幾個過去時刻」這種問題必須換回時間域問。儀器量到什麼？頻譜分析儀給的是 |X| 的形狀，相位一般拿不到。虛數單位在本課一律寫 j，數學課寫 i，電機寫 j，因為 i 留給電流。</p>
+<p class="note">來源：09-信號與系統-上 第 6 章。</p>
+
+<h2>推導：矩形脈衝算出 sinc，時移只搬相位</h2>
+<p><strong>定義。</strong>X(jω) = ∫<sub>−∞</sub><sup>∞</sup> x(t)e<sup>−jωt</sup> dt，反轉換 x(t) = (1/2π)∫ X(jω)e<sup>jωt</sup> dω。ω 是角頻率（rad/s），與頻率的關係是 ω = 2πf。七大性質分別是線性、時移、頻移、縮放、微分、摺積、相乘。</p>
+<p><strong>（a）矩形脈衝的轉換。</strong>取高 A（V）、寬 T（s）、以 t = 0 為中心的矩形。第一步積出指數：X(jω) = ∫<sub>−T/2</sub><sup>T/2</sup> A·e<sup>−jωt</sup> dt = A·[e<sup>−jωT/2</sup> − e<sup>jωT/2</sup>]/(−jω)。第二步用 sin 的定義收起來：因為 sin(θ) = [e<sup>jθ</sup> − e<sup>−jθ</sup>]/(2j)，上式等於 2A·sin(ωT/2)/ω。代 ω = 2πf 得 X = A·sin(πfT)/(πf)，把分子分母同乘 T 就是 <strong>X(j2πf) = A·T·sinc(fT)</strong>。這裡 <strong>sinc(x) = sin(πx) / (πx)，且 sinc(0) = 1</strong>；有些教科書用 sin(x)/x，本課全程用歸一化版。</p>
+<p><strong>（b）為什麼 X(0) = A·T。</strong>把 ω = 0 代進定義，指數變成 1，積分就是 ∫x(t) dt，也就是訊號的<strong>總面積</strong>。所以直流分量永遠是面積；脈衝變寬，X(0) 跟著變大。</p>
+<p><strong>（c）第一個零點在 f = 1/T。</strong>解 sin(πfT) = 0，第一個非零解是 πfT = π，即 f = 1/T。之後每隔 1/T 就有一個零點。</p>
+<p><strong>（d）3 dB 頻寬。</strong>解 |sinc(x)| = 1/√2（振幅掉到 0.707107，也就是功率掉一半）得 x = 0.442946，所以 f<sub>3dB</sub> = 0.442946/T。三種頻寬定義（3 dB、第一零點、99 % 能量）給出三個不同的數字，講的時候要指名是哪一種。</p>
+<p><strong>（e）摺積定理的骨架。</strong>把 y(t) = ∫x(τ)h(t − τ) dτ 代進轉換的定義，得到雙重積分 ∫∫ x(τ)h(t − τ)e<sup>−jωt</sup> dτ dt。換元 λ = t − τ，則 e<sup>−jωt</sup> = e<sup>−jωτ</sup>·e<sup>−jωλ</sup>，兩個積分完全分離：一邊是 ∫x(τ)e<sup>−jωτ</sup>dτ = X(jω)，另一邊是 ∫h(λ)e<sup>−jωλ</sup>dλ = H(jω)。於是 <strong>x ∗ h ⇔ X·H</strong>。對偶地，時域相乘變成頻域摺積：x·g ⇔ (1/2π)X ∗ G，那是第 10 章調變的基礎。</p>
+<p><strong>（f）時移只改相位。</strong>x(t − t<sub>0</sub>) ⇔ X(jω)·exp(−jωt<sub>0</sub>)。因為 |exp(−jωt<sub>0</sub>)| = 1，所以 |X·exp(−jωt<sub>0</sub>)| = |X|，振幅譜一點都沒變；改變的只有相位，多了 −ωt<sub>0</sub>，這是 ω 的<strong>線性函數</strong>，斜率就是 −t<sub>0</sub>。換成度數是 −360°·f·t<sub>0</sub>。另外三條常用性質：縮放 x(at) ⇔ (1/|a|)X(jω/a)，<strong>時域壓縮就是頻域展寬</strong>；微分 dx/dt ⇔ jωX(jω)；帕塞瓦 ∫|x|²dt = (1/2π)∫|X|²dω。五組必背轉換對是 δ(t) ⇔ 1、1 ⇔ 2πδ(ω)、cos(ω<sub>0</sub>t) ⇔ π[δ(ω − ω<sub>0</sub>) + δ(ω + ω<sub>0</sub>)]、矩形 ⇔ sinc、高斯 ⇔ 高斯。</p>
+
+<h2>數值實例：1 ms 的矩形脈衝，在 500 Hz 看到什麼</h2>
+<p>矩形脈衝 A = 1 V、寬 T = 1 ms（以 t = 0 為中心），時移 t<sub>0</sub> = 0.5 ms，觀測 f = 500 Hz。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>直流分量</td><td>X(0) = A·T = 1 × 0.001</td><td><strong>1.000000 × 10<sup>−3</sup> V·s</strong></td></tr>
+<tr><td>sinc 值</td><td>sinc(fT) = sinc(0.5) = sin(π/2)/(π/2)</td><td><strong>0.636620</strong></td></tr>
+<tr><td>頻譜值</td><td>|X(j2π·500)| = 0.001 × 0.636620</td><td><strong>6.366198 × 10<sup>−4</sup> V·s</strong></td></tr>
+<tr><td>第一個零點</td><td>f = 1/T = 1/0.001</td><td><strong>1000.000000 Hz</strong></td></tr>
+<tr><td>3 dB 頻寬</td><td>f<sub>3dB</sub> = 0.442946/T</td><td><strong>442.946000 Hz</strong></td></tr>
+<tr><td>時移造成的相位</td><td>−360° × 500 × 0.0005</td><td><strong>−90.000000°</strong></td></tr>
+<tr><td>訊號能量</td><td>E = A²T</td><td><strong>1.000000 × 10<sup>−3</sup> V²·s</strong></td></tr>
+</tbody></table>
+<p>邊界對照：f = <strong>250 Hz</strong> → sinc = <strong>0.900316</strong>、|X| = <strong>9.003163 × 10<sup>−4</sup></strong>、時移相位 <strong>−45.000000°</strong>（<strong>相位與頻率成正比，斜率就是 −t<sub>0</sub></strong>）；f = <strong>1000 Hz</strong> → sinc = <strong>0.000000</strong>（<strong>第一個零點</strong>）；f = <strong>1500 Hz</strong> → sinc = <strong>−0.212207</strong>（<strong>負號代表相位翻 180°</strong>）、|X| = <strong>2.122066 × 10<sup>−4</sup></strong>。T = <strong>2 ms</strong>、A = <strong>2</strong> → X(0) = <strong>4.000000 × 10<sup>−3</sup></strong>、第一個零點 <strong>500.000000 Hz</strong>（<strong>脈衝變寬一倍，頻譜窄一半——倒數關係</strong>）。</p>
+<p>量級對照：1 ms 的脈衝主瓣就佔到 1000 Hz，而一路電話語音的取樣率是 8 kHz、一個 AM 廣播頻道只有 10 kHz 寬。想把脈衝縮到 0.1 ms 讓時間解析度變好十倍，第一個零點就跳到 10000 Hz，整條 AM 頻道剛好被一個脈衝吃光——這就是時間解析度與頻寬之間的帳。</p>
+
+<section class="workspace"><h2>自由實驗：把脈衝的高、寬、觀測頻率與時移分開調整</h2>
+<p>訊號是高 A、寬 T、以 t = 0 為中心的矩形脈衝，再整體平移 t<sub>0</sub>。滑桿選一個觀測頻率 f，程式算出該頻率的 sinc 值、頻譜大小與相位，並列出第一個零點、3 dB 頻寬與訊號能量。要看的是：T 一改，零點與頻寬怎麼反向跑；t<sub>0</sub> 一改，大小完全不動而相位線性傾斜。</p>
+<div class="controls">
+<label for="ftr-a">脈衝高度 A（V）<input id="ftr-a" type="range" min="0.5" max="3" step="0.1" value="1"></label>
+<label for="ftr-t">脈衝寬度 T（ms）<input id="ftr-t" type="range" min="0.2" max="5" step="0.1" value="1"></label>
+<label for="ftr-f">觀測頻率 f（Hz）<input id="ftr-f" type="range" min="0" max="3000" step="10" value="500"></label>
+<label for="ftr-t0">時間平移 t<sub>0</sub>（ms）<input id="ftr-t0" type="range" min="0" max="2" step="0.1" value="0.5"></label>
+</div>
+<div id="ctft-output" class="output" aria-live="polite">X(0) = 1.000000 × 10<sup>−3</sup> V·s、sinc(fT) = 0.636620、|X| = 6.366198 × 10<sup>−4</sup> V·s、相位 −90.000000°、第一個零點 1000.000000 Hz、3 dB 頻寬 442.946000 Hz、能量 1.000000 × 10<sup>−3</sup> V²·s。目前 f = 500 Hz 已超過 3 dB 頻寬但還在主瓣內，是脈衝的主要成分之一。<strong>脈衝愈窄（T 愈小），第一個零點 1/T 就愈遠，頻譜愈寬——時域與頻域的寬度成反比，這是本課最重要的權衡</strong>。t<sub>0</sub> 只改相位、完全不改 |X|；相位隨頻率線性下降，斜率就是 −t<sub>0</sub>。這就是第 09 章「線性相位＝不失真延遲」的來歷。量級對照：T = 1 ms 的脈衝佔的 3 dB 頻寬是 442.946000 Hz，大約是一條電話語音通道（約 3400 Hz）的八分之一。把 f 滑到 1/T 的整數倍時，這個頻率剛好落在 sinc 的零點上，該頻率成分完全不存在；滑到零點之外就進入旁瓣區，能量只剩主瓣的零頭，而且每過一個零點相位就翻 180°。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>X(jω) 的單位是 V·s，是<strong>頻譜密度</strong>而不是電壓。它是「每單位頻寬的量」，所以脈衝變寬時 X(0) 會跟著變大，不要拿它跟示波器上的伏特直接比。</li>
+<li>sinc 有兩種定義。本課全程用<strong>歸一化版</strong> sin(πx)/(πx)，零點落在整數；用 sin(x)/x 的書零點落在 π 的整數倍，兩者的頻寬數字會差一個 π。</li>
+<li>「頻寬」不是單一個數字。3 dB 頻寬、第一零點頻寬、99 % 能量頻寬對同一個脈衝分別是 442.946000 Hz、1000.000000 Hz 與更大的值，講數字一定要說是哪一種。</li>
+<li>|X| 相同不代表訊號相同。相位不同的兩個訊號，振幅譜可以一模一樣而波形差很多，這也是頻譜分析儀不給相位時的資訊缺口。</li>
+<li>傅立葉級數的 a<sub>k</sub> 與轉換的 X(jω) 不是同一種東西。前者無單位比照原訊號、後者帶秒；週期訊號的譜是離散線，非週期訊號的譜是連續曲線。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>把一串固定重複率的窄脈衝送進頻譜分析儀，螢幕上會看到一排等距的譜線（間距等於重複率），而這些線的高度被一條 sinc 形狀的包絡罩住，包絡的零點間隔正好是 1/T。把脈衝寬度調窄，整條包絡會攤平變寬，零點往外跑；把脈衝變高，整條包絡等比例抬高但零點不動。這是倒數關係最直接的證據。</p>
+<p><strong>能證明什麼</strong>：脈衝寬度與頻譜零點的倒數關係、主瓣與旁瓣的相對高度、脈衝面積（讀直流附近的包絡高度）。用同一台儀器改變 T 再量一次，就能驗證 1/T 這條規律，不必信任任何理論值。</p>
+<p><strong>不能證明什麼</strong>：相位譜。一般頻譜分析儀不給相位，所以「時移只改相位」這件事在振幅畫面上完全看不出來——量到的兩張圖會一模一樣，這正好是這條性質的反面證據。也證明不了「單次事件」的頻譜：量測需要訊號重複，或需要夠長的窗與夠好的觸發，孤立的一次脈衝在掃頻式儀器上根本抓不完整。</p>
+
+<h2>連到哪門課</h2>
+<p>轉換的存在條件、收斂與廣義函數的處理見<a href="../../../共通基礎/數學/互動課程/10-傅立葉分析.html">工程數學先修的傅立葉分析</a>；複數的極式與 e<sup>jθ</sup> 見<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">複變入門</a>。電路學的相量其實就是本章在單一頻率上的切片，把弦波存成一個複數再做代數運算，見<a href="../電路學-互動課程/09-弦波與相量.html">電路學的弦波與相量</a>。真實裝置這一側，雷達的脈波壓縮、通訊的成形濾波器、量測儀器的頻寬規格，全都在算同一件事：時間有多短、頻譜就有多寬。下一章把 jω 推廣成 s = σ + jω，讓不穩定與暫態也進得了這套工具。</p>
+<nav class="pager" aria-label="章節導覽"><a href="05-傅立葉級數.html">← 上一頁：傅立葉級數</a><a href="07-拉氏轉換與轉移函數.html">下一頁：拉氏轉換與轉移函數 →</a></nav>
+</main>
+<footer class="site-footer"><span>06 傅立葉轉換</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

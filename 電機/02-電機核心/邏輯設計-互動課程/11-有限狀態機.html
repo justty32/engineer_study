@@ -1,0 +1,88 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 有限狀態機｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">11・狀態的意義就是已經對上了規格的哪一段前綴</p>
+<h1>有限狀態機：把「要記得剛剛發生過什麼」變成一張可以直接接線的表</h1>
+<p class="lead">正反器讓電路有了記憶，但記憶要記什麼？這章給一套可操作的流程：規格 → 狀態表 → 狀態編碼 → 下一狀態邏輯加狀態暫存器加輸出邏輯，並用同一個規格把 Moore 與 Mealy 的差別算給你看。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="09-閂鎖與正反器.html">09 閂鎖與正反器</a>的 D 正反器、<a href="10-時脈與時序限制.html">10 時脈與時序限制</a>的時脈邊緣，以及<a href="04-標準型SOP與POS.html">04 標準型 SOP 與 POS</a>的組合邏輯寫法。</p>
+
+<h2>痛點：狀態要怎麼想出來，不是背幾個圈圈</h2>
+<p>「我知道正反器會記住位元，可是一個題目說『偵測到 1101 就輸出 1』，我怎麼知道要幾個狀態？書上直接畫好圈圈給我看，我照抄得出來，換一題就完全不會了。」</p>
+<p>問題出在狀態被當成畫圖的產物。其實狀態是可以推導的：每個狀態代表「到目前為止，已經對上了規格字串的哪一段前綴」。想清楚這句話，狀態表就自己寫出來了，圈圈只是事後的畫法。第二個常見的卡點是 Moore 與 Mealy——很多人記得「一個看狀態、一個看狀態加輸入」，卻算不出同一個規格下兩者差幾個狀態、輸出差幾拍。</p>
+
+<h2>白話直覺：狀態就是「我還記得多少」的壓縮</h2>
+<p>有限狀態機（finite state machine, FSM）＝有限個狀態＋轉移規則＋輸出規則。可以暫時把狀態想成閱讀時的書籤；比喻到此為止，精確的說法是：狀態是對「過去所有輸入」的一個有損壓縮，只留下未來還用得到的資訊。偵測 1101 時，過去讀了幾百位元不重要，重要的只有「結尾已經對上 1101 的前幾個字元」。</p>
+<p>照因果鏈走一遍。輸入從哪來：每個時脈邊緣進來一個位元。這一層做了什麼決定：由目前狀態與這個位元決定下一個狀態，必要時同時決定輸出。花掉多少：標準結構是三塊——狀態暫存器（正反器）、下一狀態邏輯（組合）、輸出邏輯（組合）。狀態數 N 決定正反器數，二進位編碼要 ⌈log<sub>2</sub>N⌉ 顆，one-hot 要 N 顆；每多一顆正反器就多一份面積與功耗，而下一狀態邏輯的深度直接算進第 10 章的 t<sub>logic</sub>。邊界或例外在哪：位元數湊不滿的編碼會留下未使用狀態，上電時正反器的值不確定，可能一開機就掉在裡面。儀器量到什麼：把設計燒進 FPGA，用內建邏輯分析儀同時抓輸入、狀態暫存器與輸出，逐拍對照。</p>
+<p>三種常見編碼各有取捨：二進位最省正反器；格雷碼（Gray code）讓相鄰狀態只差 1 個位元，減少同時翻轉的數量；one-hot 每個狀態一顆正反器，下一狀態邏輯最淺，在 FPGA 上通常反而最快。</p>
+<p class="note">來源：10-邏輯設計 §6.1、§6.2。</p>
+
+<h2>推導：從「偵測 1101（允許重疊）」推出兩張狀態表</h2>
+<p><strong>（a）狀態的意義。</strong>把狀態定義成「目前已經對上了規格字串的哪一段前綴」。規格是 1101，前綴有空字串、<code>1</code>、<code>11</code>、<code>110</code>、<code>1101</code> 五個，Mealy 只需要前四個。</p>
+<table><thead><tr><th>目前狀態</th><th>意義</th><th>輸入 0 → 下一狀態 / 輸出</th><th>輸入 1 → 下一狀態 / 輸出</th></tr></thead><tbody>
+<tr><td>T0</td><td>還沒對上任何東西</td><td>T0 / 0</td><td>T1 / 0</td></tr>
+<tr><td>T1</td><td>已對上 <code>1</code></td><td>T0 / 0</td><td>T2 / 0</td></tr>
+<tr><td>T2</td><td>已對上 <code>11</code></td><td>T3 / 0</td><td>T2 / 0</td></tr>
+<tr><td>T3</td><td>已對上 <code>110</code></td><td>T0 / 0</td><td><strong>T1 / 1</strong></td></tr>
+</tbody></table>
+<p><strong>（b）T2 收到 1 為什麼留在 T2。</strong>此時看到的結尾是 <code>111</code>，它最長的「既是自己的後綴、又是規格前綴」的部分是 <code>11</code>，所以還在 T2，不能退回 T0。<strong>（c）T3 收到 1 之後為什麼回 T1 而不是 T0。</strong>偵測成功的那一刻剛吃進去的 <code>1</code> 本身就可以當下一次的開頭，這就是「允許重疊」的意思。</p>
+<p><strong>（d）Moore 的狀態表。</strong>輸出必須是目前狀態的函數，所以「已經對上 1101」這件事得自己佔一個狀態。</p>
+<table><thead><tr><th>目前狀態</th><th>意義</th><th>輸出</th><th>輸入 0 → 下一狀態</th><th>輸入 1 → 下一狀態</th></tr></thead><tbody>
+<tr><td>S0</td><td>還沒對上</td><td>0</td><td>S0</td><td>S1</td></tr>
+<tr><td>S1</td><td>已對上 <code>1</code></td><td>0</td><td>S0</td><td>S2</td></tr>
+<tr><td>S2</td><td>已對上 <code>11</code></td><td>0</td><td>S3</td><td>S2</td></tr>
+<tr><td>S3</td><td>已對上 <code>110</code></td><td>0</td><td>S0</td><td>S4</td></tr>
+<tr><td>S4</td><td><strong>已對上 <code>1101</code></strong></td><td><strong>1</strong></td><td>S0</td><td>S2</td></tr>
+</tbody></table>
+<p><strong>（e）Moore 為什麼多一個狀態、又為什麼慢一拍。</strong>Mealy 可以把「偵測到了」掛在轉移上，Moore 只能掛在狀態上，所以多一個 S4。而輸出既然是狀態的函數，就得等時脈邊緣把狀態推進去才看得到，因此比 Mealy 晚一拍。<strong>（f）正反器數。</strong>二進位與格雷碼都要 ⌈log<sub>2</sub>N⌉ 顆，one-hot 就是 N 顆；未使用狀態數 = 2 的正反器數次方減掉狀態數。</p>
+
+<h2>數值實例：同一段 12 位元輸入餵給兩台機器</h2>
+<p>輸入序列 12 位元 <code>1101 1010 1101</code>（第 0 拍在最左），也就是 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1。</p>
+<table><thead><tr><th>拍</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th></tr></thead><tbody>
+<tr><th>輸入</th><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+<tr><th>Mealy 消化前的狀態</th><td>T0</td><td>T1</td><td>T2</td><td>T3</td><td>T1</td><td>T2</td><td>T3</td><td>T1</td><td>T0</td><td>T1</td><td>T2</td><td>T3</td></tr>
+<tr><th>Mealy 輸出</th><td>0</td><td>0</td><td>0</td><td><strong>1</strong></td><td>0</td><td>0</td><td><strong>1</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td><strong>1</strong></td></tr>
+<tr><th>Moore 消化前的狀態</th><td>S0</td><td>S1</td><td>S2</td><td>S3</td><td><strong>S4</strong></td><td>S2</td><td>S3</td><td><strong>S4</strong></td><td>S0</td><td>S1</td><td>S2</td><td>S3</td></tr>
+<tr><th>Moore 輸出</th><td>0</td><td>0</td><td>0</td><td>0</td><td><strong>1</strong></td><td>0</td><td>0</td><td><strong>1</strong></td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+</tbody></table>
+<p><strong>輸出定義。</strong>Mealy 的第 n 拍輸出 = f(消化第 n 個輸入<strong>前</strong>的狀態, 第 n 個輸入)；Moore 的第 n 拍輸出 = f(消化第 n 個輸入<strong>前</strong>的狀態)。所以 Mealy 在第 3 拍就宣告偵測到，Moore 要到第 4 拍進了 S4 才宣告。第三次偵測（輸入第 8 到 11 位的 1101）的 Moore 輸出落在第 12 拍，超出這 12 格的窗，所以表上只看得到兩次。第 3 拍與第 6 拍相距 3 拍，代表這兩次共用了中間那個 1，這就是允許重疊。</p>
+<table><thead><tr><th>項目</th><th>Mealy</th><th>Moore</th></tr></thead><tbody>
+<tr><td>狀態數</td><td><strong>4</strong></td><td><strong>5</strong></td></tr>
+<tr><td>二進位編碼的正反器數</td><td>⌈log<sub>2</sub>4⌉ = <strong>2</strong></td><td>⌈log<sub>2</sub>5⌉ = <strong>3</strong></td></tr>
+<tr><td>格雷碼編碼的正反器數</td><td><strong>2</strong></td><td><strong>3</strong></td></tr>
+<tr><td>one-hot 編碼的正反器數</td><td><strong>4</strong></td><td><strong>5</strong></td></tr>
+<tr><td>這 12 拍偵測到幾次</td><td><strong>3 次</strong>（第 3、6、11 拍）</td><td><strong>2 次在窗內</strong>（第 4、7 拍）</td></tr>
+</tbody></table>
+<p><strong>編碼對照。</strong>Moore 的二進位編碼是 S0 = <code>000</code>、S1 = <code>001</code>、S2 = <code>010</code>、S3 = <code>011</code>、S4 = <code>100</code>；格雷碼編碼是 S0 = <code>000</code>、S1 = <code>001</code>、S2 = <code>011</code>、S3 = <code>010</code>、S4 = <code>110</code>；one-hot 是 S0 = <code>10000</code>、S1 = <code>01000</code>、S2 = <code>00100</code>、S3 = <code>00010</code>、S4 = <code>00001</code>。二進位編碼下有 3 個未使用狀態（<code>101</code>、<code>110</code>、<code>111</code>），one-hot 下有 27 個（2<sup>5</sup> − 5）。未使用狀態越多，越需要寫「掉進去就回到 S0」的自恢復邏輯。</p>
+
+<section class="workspace"><h2>自由實驗：改 12 拍輸入，看兩台機器同時跑</h2>
+<p>下面 12 個核取方塊就是餵進狀態機的 12 拍輸入，勾起來代表這一拍是 1。兩台機器永遠同時跑，機器選單只決定下面那張逐拍狀態表要看哪一台，編碼選單只影響正反器數與未使用狀態數。改幾格試試看：偵測會不會消失、兩台機器的輸出差幾拍。</p>
+<div class="controls">
+<label for="fs-model">要看詳細狀態表的機器<select id="fs-model"><option value="mealy">Mealy 機（輸出看狀態 + 輸入）</option><option value="moore">Moore 機（輸出只看狀態）</option></select></label>
+<label for="fs-encode">狀態編碼<select id="fs-encode"><option value="binary">二進位編碼</option><option value="gray">格雷碼編碼</option><option value="onehot">one-hot 編碼</option></select></label>
+<table><thead><tr><th>拍</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th></tr></thead><tbody>
+<tr><th>輸入值</th><td><label for="fs-b0"><input id="fs-b0" type="checkbox" checked>第 0 拍</label></td><td><label for="fs-b1"><input id="fs-b1" type="checkbox" checked>第 1 拍</label></td><td><label for="fs-b2"><input id="fs-b2" type="checkbox">第 2 拍</label></td><td><label for="fs-b3"><input id="fs-b3" type="checkbox" checked>第 3 拍</label></td><td><label for="fs-b4"><input id="fs-b4" type="checkbox" checked>第 4 拍</label></td><td><label for="fs-b5"><input id="fs-b5" type="checkbox">第 5 拍</label></td><td><label for="fs-b6"><input id="fs-b6" type="checkbox" checked>第 6 拍</label></td><td><label for="fs-b7"><input id="fs-b7" type="checkbox">第 7 拍</label></td><td><label for="fs-b8"><input id="fs-b8" type="checkbox" checked>第 8 拍</label></td><td><label for="fs-b9"><input id="fs-b9" type="checkbox" checked>第 9 拍</label></td><td><label for="fs-b10"><input id="fs-b10" type="checkbox">第 10 拍</label></td><td><label for="fs-b11"><input id="fs-b11" type="checkbox" checked>第 11 拍</label></td></tr>
+</tbody></table>
+</div>
+<div id="fsm-output" class="output" aria-live="polite">輸入那 12 格永遠都在用；機器選項只決定下面的詳細狀態表，編碼選項只影響正反器數量的那三行。輸入 ＝ 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1。<strong>Mealy 輸出 ＝ 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1</strong>；<strong>Moore 輸出 ＝ 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0</strong>。詳細狀態表（Mealy）：消化前的狀態依序 T0, T1, T2, T3, T1, T2, T3, T1, T0, T1, T2, T3。狀態數 4，二進位編碼要 2 顆正反器，未使用狀態 0 個，這 12 拍共偵測 3 次。<strong>第 3 拍：剛好對上 1101。Mealy 在這一拍就宣告，Moore 要下一拍才宣告——因為 Moore 的輸出是狀態的函數，得等邊緣把狀態推進去。</strong>第 3 拍與第 6 拍相距 3 拍，這兩次共用了中間那個 1，這就是允許重疊。狀態的意義就是「已經對上了規格的哪一段前綴」，想清楚這句話，狀態表就自己寫出來了。邊界提醒：12 拍全不勾會一直停在 T0，偵測 0 次；12 拍全勾則連續的 1 停在 T2 不動，同樣偵測 0 次；切成 one-hot 會看到正反器數變多、未使用狀態暴增。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>「狀態」不是「輸出」。S4 的輸出是 1，但輸出是 1 不代表一定在 S4——Mealy 就沒有這樣的狀態。</li>
+<li>Mealy 狀態少不代表電路小。它的輸出邏輯要同時吃狀態與輸入，比較複雜，而且輸出會跟著輸入的突波抖動。</li>
+<li>one-hot 用最多正反器不代表最慢。它的下一狀態邏輯最淺，在 FPGA 上常常反而最快，多數合成工具預設就選它。</li>
+<li>「未使用狀態」不是「不會發生」。上電時正反器的值不確定，安全的狀態機必須讓任何未使用狀態都能回到已知狀態。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>把狀態機合成到 FPGA，用內建的邏輯分析儀（在晶片內部插一段取樣邏輯與緩衝區）同時抓輸入、狀態暫存器的每一位元與輸出，設好觸發條件後連續抓幾百拍；同時翻合成報告，看工具實際選了哪種編碼、用了幾顆正反器。</p>
+<p><strong>量到什麼（能證明）。</strong>能證明實際的狀態轉移序列與上面那張表一致、輸出比輸入晚幾拍、實際用掉幾顆正反器，也能證明重疊偵測確實發生在相距 3 拍的位置。</p>
+<p><strong>不能證明什麼。</strong>抓到的只是跑過的那幾百拍，不能證明狀態機在所有可能輸入下都正確——那要形式驗證或完整的測試向量。也證明不了「不會掉進未使用狀態」：那要靠設計時就把自恢復寫進去，量測只能說這次沒掉進去。此外內建邏輯分析儀本身會佔用資源並改變繞線，量到的時序不完全等於原來的設計。</p>
+
+<h2>連到哪門課</h2>
+<p>處理器的控制單元就是一台狀態機，見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>；狀態暫存器本身就是本課<a href="12-暫存器計數器與記憶體.html">第 12 章</a>的暫存器與計數器。把狀態表交給工具自動編碼與最佳化，是本課<a href="13-可程式邏輯與HDL.html">第 13 章</a>的內容。</p>
+<nav class="pager" aria-label="章節導覽"><a href="10-時脈與時序限制.html">← 上一頁：時脈與時序限制</a><a href="12-暫存器計數器與記憶體.html">下一頁：暫存器、計數器與記憶體 →</a></nav>
+</main>
+<footer class="site-footer"><span>11 有限狀態機</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>
