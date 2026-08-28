@@ -1,0 +1,83 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 — 把邏輯焊進網路</title><link rel="stylesheet" href="styles.css"></head><body data-page="07">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="06-神經符號與外部記憶.html" aria-label="上一篇：06 神經符號與外部記憶" title="06 神經符號與外部記憶">上一篇</a><a aria-current="page" href="07-把邏輯焊進網路.html" aria-label="目前章節：07 把邏輯焊進網路" title="07 把邏輯焊進網路">07</a><a href="08-KAN可符號化神經網路.html" aria-label="下一篇：08 KAN 可符號化神經網路" title="08 KAN 可符號化神經網路">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-邏輯神經網路-lnn-每個神經元就是一個邏輯閘">一、邏輯神經網路 LNN：每個神經元就是一個邏輯閘</a></li><li><a href="#二-邏輯張量網路-ltn-把邏輯當成損失函數">二、邏輯張量網路 LTN：把邏輯當成損失函數</a></li><li><a href="#三-神經定理證明器-ntp-可微的證明搜尋-還能軟性比對">三、神經定理證明器 NTP：可微的證明搜尋，還能軟性比對</a></li><li><a href="#四-向量符號架構-vsa-超維計算-符號-高維隨機向量">四、向量符號架構 VSA / 超維計算：符號＝高維隨機向量</a></li><li><a href="#五-四條路線怎麼選-以及共同盲點">五、四條路線怎麼選，以及共同盲點</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">07 · 不是只把神經網路與符號系統接一根線，而是讓神經元、損失函數或整張網路本身帶有邏輯結構</p><h1>07 — 把邏輯焊進網路</h1><p class="reading-time">閱讀時間：約 18 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p>本設計希望把黑盒限制在感知與候選生成，最後由可讀規則把關。<a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/%E5%8F%83%E8%80%83%E7%90%86%E8%AB%96_13_%E7%AC%A6%E8%99%9F%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF_%E6%8A%8A%E9%82%8F%E8%BC%AF%E7%84%8A%E9%80%B2%E7%B6%B2%E8%B7%AF.md" rel="noopener">符號神經網路的設計筆記</a>說明這個介面為什麼誘人。真正的難點不是「有沒有邏輯層」，而是感知概念能否正確接到那層邏輯。</p>
+<p>一般神經網路有兩個毛病：</p>
+<ol><li><strong>無法保證邏輯自洽</strong>——它可能同時相信「A 是鳥」又「A 不會飛也不是企鵝」這種互相矛盾的事，它自己不會察覺。</li><li><strong>無法把你已知的規則直接寫進去</strong>——你明明知道「所有人都會死」，卻只能盼它從資料裡自己學到，沒辦法當成硬規矩塞進去。</li></ol>
+<p>這一支的共同目標就是：<strong>讓網路在能用梯度學習的同時，結構上就帶著邏輯保證。</strong> 下面四條路線，是四種「把邏輯焊進去」的不同做法。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>神經符號 AI（neurosymbolic AI）</td><td>把可學模型與明確規則放進同一系統</td><td>影像模型認物件，規則引擎判斷能否通行</td></tr><tr><td>邏輯神經網路（LNN）</td><td>節點直接代表邏輯連接詞</td><td><code>鳥 AND 非企鵝 → 會飛</code></td></tr><tr><td>邏輯張量網路（LTN）</td><td>把公式轉成可微分滿足度</td><td>違反「貓都是動物」會增加損失</td></tr><tr><td>神經定理證明器（NTP）</td><td>把反向鏈證明搜尋做成可微運算</td><td>相近名稱可以軟性比對</td></tr><tr><td>向量符號架構（VSA）</td><td>用高維向量編碼與組合符號</td><td>把「顏色」與「紅」綁成一筆關係</td></tr><tr><td>開放世界假設</td><td>未知不等於假</td><td>沒寫某人會飛，不能直接判為不會</td></tr><tr><td>推理捷徑（reasoning shortcut）</td><td>概念接錯，標籤卻碰巧答對</td><td>把行人與紅燈互換，仍都導向停車</td></tr><tr><td>接地（grounding）</td><td>把內部符號連到輸入中的真正意義</td><td><code>pedestrian</code> 必須真的對到行人影像</td></tr></tbody></table></div>
+<hr>
+<h2 id="一-邏輯神經網路-lnn-每個神經元就是一個邏輯閘">一、邏輯神經網路 LNN：每個神經元就是一個邏輯閘</h2>
+<p><strong>Logical Neural Networks；IBM, Riegel 等 2020。</strong></p>
+<p><strong>想解決什麼</strong>：一般網路會同時接受互相衝突的敘述，也無法直接裝入已知規則。LNN 想保留梯度學習，同時讓運算單位具有明確邏輯語意。</p>
+<p><strong>核心想法</strong>：最直白的做法是讓<strong>每個神經元本身就是一個邏輯連接詞</strong>——AND、OR、NOT。它帶可學的權重（所以能訓練），但運算結果被約束成必須符合古典邏輯，每個節點同時維護真值的「上界」和「下界」。</p>
+<p>它的特色：</p>
+<ul><li>支援<strong>雙向推理</strong>：不只能「給前提推結論」，也能「給結論反推前提」。</li><li>能處理<strong>矛盾</strong>與<strong>開放世界假設</strong>（不知道的事不當成假）。</li></ul>
+<p>換句話說，LNN 是「<strong>一張可以訓練、又保證邏輯自洽的網路</strong>」。代價是大規模推理的成本高。</p>
+<blockquote class="note"><p>比喻：把一張布林電路（AND/OR/NOT 邏輯閘）變成可微、可訓練的版本——線路還是邏輯線路，但每個閘的「傾向」可以被資料調。</p></blockquote>
+<p><strong>和相近理論差在哪</strong>：LNN 把邏輯放在節點與連線的語意裡。LTN 把公式主要放進訓練目標；NTP 把證明搜尋做成可微程序；VSA 則先把符號編成高維向量。</p>
+<p><strong>常見誤解與限制</strong>：節點叫 AND，不代表輸入概念已經接對。若感知前端把「行人」認成「紅燈」，邏輯層仍可能合規地推出「停車」。此外，雙向推理與上下界傳播在大規模知識庫上成本高。</p>
+<hr>
+<h2 id="二-邏輯張量網路-ltn-把邏輯當成損失函數">二、邏輯張量網路 LTN：把邏輯當成損失函數</h2>
+<p><strong>Logic Tensor Networks；Serafini &amp; Garcez 2016。</strong></p>
+<p><strong>想解決什麼</strong>：資料學習與背景知識常被分成兩套系統。LTN 要讓「答錯」與「違反規則」都進入同一個梯度目標。</p>
+<p><strong>核心想法</strong>：把一階邏輯公式翻譯成<strong>可微分的「滿足度」</strong>：真值不再是非黑即白的 0 或 1，而是 0~1 之間的實數（模糊化）。於是「學習」就變成——<strong>用梯度去最大化這些邏輯公理被滿足的程度</strong>。</p>
+<p>一句話講清楚：<strong>LTN 把邏輯規則當成損失函數的一部分。</strong> 你寫下背景知識（「所有貓都是動物」），它就變成一條「希望被滿足」的約束；模型一邊從資料學，一邊被這些邏輯約束往「合邏輯」的方向拉。它解決的是「<strong>背景規則</strong>」和「<strong>資料學習</strong>」怎麼放進同一個可微目標裡共存。</p>
+<blockquote class="note"><p>比喻：訓練時除了「答錯要罰」，再加一條「違反已知規則也要罰」，兩種懲罰一起用梯度下降。</p></blockquote>
+<p><strong>和相近理論差在哪</strong>：LNN 的邏輯語意直接長在節點上；LTN 較像把現成神經模型包進一組軟約束。它最佳化的是滿足程度，不是產生一份離散證明。</p>
+<p><strong>常見誤解與限制</strong>：滿足度高不等於公式對所有輸入成立。模型甚至可能找到「滿足公式但無視資料」的短路。Sepsis 實驗中，未控制的 LTN 從純資料基線 F1 70.59% 崩到 18.79%，兩階段規則修剪才回到 75.82%。</p>
+<hr>
+<h2 id="三-神經定理證明器-ntp-可微的證明搜尋-還能軟性比對">三、神經定理證明器 NTP：可微的證明搜尋，還能軟性比對</h2>
+<p><strong>Neural Theorem Provers；Rocktäschel &amp; Riedel 2017。</strong></p>
+<p><strong>想解決什麼</strong>：傳統符號定理證明會從知識庫往回展開一棵 <strong>AND-OR 證明樹</strong>，硬比對符號是否完全一樣。它很脆：名稱稍有差異就無法匹配，也不會自己學新規則。</p>
+<p><strong>核心想法</strong>：NTP 把這棵證明樹編成一張網路，做<strong>可微分的反向鏈推理</strong>，於是：</p>
+<ul><li>能<strong>軟性比對相似符號</strong>：兩個符號的 embedding 夠像，就算匹配成功，不必字面完全相同（例如 <code>grandfather</code> 和 <code>grandpa</code> 能對上）。</li><li>過程中還能<strong>學出新規則</strong>。</li></ul>
+<p>限制很現實：證明樹一深，組合就爆炸。</p>
+<blockquote class="note"><p>比喻：原本的符號證明像嚴格的字串比對（<code>==</code>），NTP 換成「語意夠接近就算命中」的模糊比對，而且整個搜尋過程可以被訓練。</p></blockquote>
+<p><strong>和相近理論差在哪</strong>：LTN 問「公式整體滿足到什麼程度」；NTP 問「查詢能沿哪些規則證出來」。前者像軟約束最佳化，後者像帶相似度的查詢規劃器。</p>
+<p><strong>常見誤解與限制</strong>：可微不會消除組合爆炸。證明樹一深，候選規則與替換仍會急速增長。軟比對也可能把「長得像」誤當成「邏輯等價」，所以路徑適合當候選解釋，不該直接當形式證明。</p>
+<hr>
+<h2 id="四-向量符號架構-vsa-超維計算-符號-高維隨機向量">四、向量符號架構 VSA / 超維計算：符號＝高維隨機向量</h2>
+<p><strong>Vector-Symbolic Architectures / 超維計算；Plate, Kanerva 1990s 至今。</strong></p>
+<p><strong>想解決什麼</strong>：離散符號容易組合，卻難直接交給神經網路；一般向量容易學，結構關係卻不容易維持。VSA 想同時保留兩者的優點。</p>
+<p><strong>核心想法</strong>：把每個符號表示成一條<strong>高維的隨機向量</strong>（動輒上千、上萬維），然後用三種運算把它們組合起來：</p>
+<ul><li><strong>bind（綁定）</strong>：把兩個符號綁成一個新的「角色-填充」對。例如把「顏色」綁上「紅」。</li><li><strong>bundle（疊加）</strong>：把多個綁定加起來，變成一筆結構化的記錄（像一個物件有多個屬性）。</li><li><strong>permute（置換）</strong>：用來記順序。</li></ul>
+<p>於是「結構化的符號推理」整個搬進了向量空間來做。而因為它是<strong>分散式表示</strong>（資訊攤在上萬個維度上，沒有哪一維是關鍵），它對<strong>雜訊和局部損壞極其穩定</strong>——壞掉一小塊，整體還是大致對的。它解決的是「<strong>符號怎麼又能組合、又能像向量一樣被神經網路處理</strong>」。限制是要把向量精確解碼回符號、做嚴格推理，可能有困難。</p>
+<blockquote class="note"><p>比喻：有點像 ECOC 的「冗餘換可靠」的向量版——把一個符號攤平成上萬維的隨機編碼，掉幾維也認得出來，而且天生支援「把多個事實 bundle 成一個高級事實」。</p></blockquote>
+<p><strong>和相近理論差在哪</strong>：LNN、LTN、NTP 保留較直接的公式或證明語意。VSA 先把結構搬進向量空間，再用代數運算保存關係；它適合大量角色綁定與近似查詢，但不是現成的嚴格證明器。</p>
+<p><strong>常見誤解與限制</strong>：能綁定不等於能無損解碼。多次 bundle 後會產生干擾，精確取回符號與執行嚴格推理都可能困難。要求逐步稽核時，VSA 後面仍要接離散檢查。</p>
+<hr>
+<h2 id="五-四條路線怎麼選-以及共同盲點">五、四條路線怎麼選，以及共同盲點</h2>
+<p><strong>想解決什麼</strong>：選型時很容易把「邏輯放在哪裡」與「概念有沒有接對」混為一談。前者確實因架構而異，後者可能是共同失效。</p>
+<p><strong>核心想法</strong>：先依需求比較介面與成本，再把接地當成獨立驗收項目。</p>
+<div class="table-wrap"><table><thead><tr><th>路線</th><th>符號放在哪裡</th><th>主要優點</th><th>主要限制</th></tr></thead><tbody><tr><td><strong>LNN</strong></td><td>節點＝邏輯連接詞（AND/OR/NOT）</td><td>邏輯語意明確、保證自洽、可雙向推理</td><td>大規模推理成本高</td></tr><tr><td><strong>LTN</strong></td><td>損失函數裡的邏輯公式</td><td>容易和梯度訓練整合，規則與資料共存</td><td>模糊「滿足度高」不等於嚴格證明成立</td></tr><tr><td><strong>NTP</strong></td><td>可微分的證明搜尋過程</td><td>能軟性比對相似符號、還能學新規則</td><td>證明一深就組合爆炸</td></tr><tr><td><strong>VSA</strong></td><td>高維隨機向量</td><td>可組合、抗噪、適合被神經網路處理</td><td>精確解碼與嚴格推理可能困難</td></tr></tbody></table></div>
+<p>粗略原則如下：</p>
+<ul><li>需要<strong>硬約束、可重放的證明</strong> → 優先 LNN，或乾脆外接一個離散的符號驗證器。</li><li>需要把<strong>背景規則融進感知訓練</strong> → 考慮 LTN。</li><li>需要<strong>容忍名稱／概念近似</strong>（不必字面相同） → 考慮 NTP。</li><li>需要<strong>穩健地綁定大量結構、又抗噪</strong> → 評估 VSA。</li></ul>
+<p><strong>和相近理論差在哪</strong>：上表比較的是表示、訓練與推理介面，不是接地可靠度。Theorem 4.10 指出，在 one-hot 概念上，所有神經符號推理層的行為相同，因此 LNN、LTN、NTP 等不同架構擁有<strong>完全相同的確定性推理捷徑集合</strong>。換架構可以換成本與介面，不能自動換掉錯誤接地。</p>
+<p><strong>常見誤解與限制</strong>：</p>
+<ul><li><strong>最關鍵的一條：別把「訓練損失低」「公式滿足度高」當成「對所有輸入嚴格成立」。</strong> LTN 之類的「模糊滿足」只是「大致守規則」，不是數學證明。若你的目標是控制，最後那道關鍵規則仍應交給離散的檢查器去嚴格驗證。</li><li><strong>共同代價是「貴」。</strong> 把「NP-hard 的符號推理」和「深度學習」整合在一起，運算非常重，別期待免費的午餐。</li><li><strong>標籤答對不代表概念接對。</strong> 推理捷徑可能完全不傷分布內標籤準確率與輸出合規性，卻讓 OOD、持續學習、可重用性與解釋失效。約束式分析可把檢查寫成 CSP；但無捷徑判定是 coNP-complete、計數是 #P-complete、最小修復是 NP-hard。</li></ul>
+<h3 id="把共同盲點變成工程驗收">把共同盲點變成工程驗收</h3>
+<p>假設影像前端要辨認「行人」與「紅燈」，後端規則是兩者出現都必須停車。只用「是否停車」當標籤時，前端把兩個概念整組互換，訓練分數仍完全正確。這不是普通的過擬合。資料把所有停車情境都列完，對稱性仍然存在，因為後端從未要求兩個名稱各自對回真實概念。</p>
+<p>可操作的修法有幾類。最直接的是少量概念監督：抽查 <code>pedestrian</code> 是否真的落在行人區域。第二類是加入會打破對稱性的任務，例如某些行動只由行人觸發、另一些只由紅燈觸發。第三類是限制概念抽取器，讓不同物件由共享且分解的模組處理。第四類是不急著消除所有捷徑，而是標出哪些概念有多組等價接法，碰到它們就降低信心或棄權。</p>
+<p>驗收報表至少要拆成四欄：最終標籤、規則是否合規、概念接地、分布外重用。前兩欄回答「目前答對沒有」，後兩欄才回答「內部理由能不能信」。若只能取得標籤，應誠實把概念解釋標成未驗證，而不是用邏輯層的存在替它背書。</p>
+<p>選擇外接離散驗證器時也要分清責任。驗證器能證明「若輸入概念為真，動作符合規則」，不能證明感知前端送來的概念就是真。這和型別檢查很像：編譯器能證明呼叫符合型別，不能證明感測器把攝氏溫度誤標成華氏時，數值仍代表現實。</p>
+<p>所以，邏輯保證必須連同輸入假設一起讀。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>四條路線共用同一組推理捷徑</strong>（<a href="https://arxiv.org/abs/2510.14538" rel="noopener">arXiv 2510.14538</a>）：<strong>原文事實（作者自報）</strong>：Theorem 4.10 在概念輸出為確定性 one-hot、知識推理為確定性且符合文中完整性與可外推假設時，證明各種神經符號推理層依 Eq. 11 行為相同，因此 LNN、LTN、NTP 等架構具有完全相同的確定性推理捷徑集合；捷徑不傷分布內標籤準確率與輸出合規，卻會破壞 OOD、持續學習、可重用性與解釋。對本篇的意義：架構選型不能代替接地驗收。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2510.14538_Reasoning_Shortcuts.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2510.14538_Reasoning_Shortcuts.摘要.md</code></a></li></ul>
+<ul><li><strong>LTN 的邏輯短路可以有多慘</strong>（<a href="https://arxiv.org/abs/2603.26944" rel="noopener">arXiv 2603.26944</a>）：<strong>原文事實（作者自報）</strong>：在 Sepsis 資料集的論文設定中，未加控制的 LTN-NoP F1 從純資料基線 70.59% 降到 18.79%；加入兩階段規則修剪後回到 75.82%。對本篇的意義：最大化公式滿足度可能找到忽略資料的捷徑，規則也要做消融與修剪。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2603.26944_LTN_RulePruning.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2603.26944_LTN_RulePruning.摘要.md</code></a></li></ul>
+<ul><li><strong>推理捷徑可以轉成約束問題檢查</strong>（<a href="https://arxiv.org/abs/2604.23377" rel="noopener">arXiv 2604.23377</a>）：<strong>原文事實（作者自報）</strong>：研究把捷徑判定形式化為 CSP，證明無捷徑判定為 coNP-complete、捷徑計數為 #P-complete、最小修復為 NP-hard；在 8 個 RSBench 領域中，最大案例有 21 個輸出，以 ASP 驗證可在 1 秒內完成，但 SDD-OIA 抵抗所有受測修復策略。對本篇的意義：複雜度很硬，仍可先用 clingo 一類工具檢查小型約束是否唯一決定概念映射。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.23377_Reasoning_Shortcuts_Constraint.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.23377_Reasoning_Shortcuts_Constraint.摘要.md</code></a></li></ul>
+<ul><li><strong>t-norm 是會改變捷徑的旋鈕</strong>（<a href="https://arxiv.org/abs/2607.21185" rel="noopener">arXiv 2607.21185</a>）：<strong>原文事實（作者自報）</strong>：在論文的 MNIST 算術變體中，以 supported model semantics 的嚴格一對一接地取代軟機率分布可壓制推理捷徑；分析指出 Gödel t-norm 的梯度只流向最小項，容易固化捷徑，product t-norm 較平均分配梯度。結果限於該算術 protocol 與語意設定。對本篇的意義：模糊邏輯不是一個中性的開關，連接詞的可微實作也要納入消融。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2607.21185_DiffLogicProgramming.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2607.21185_DiffLogicProgramming.摘要.md</code></a></li></ul>
+<ul><li><strong>符號那半不必可微：EM-NeSy</strong>（<a href="https://arxiv.org/abs/2606.14463" rel="noopener">arXiv 2606.14463</a>）：<strong>原文事實（作者自報）</strong>：方法把學習拆成 E 步的任意符號推理引擎與 M 步的神經梯度更新，精確推理時等價於標準端到端神經符號訓練；在 100 位數 MNISTAdd，精確 DSL 法逾時，EM-NeSy 仍能訓練，並在論文 protocol 中比 EXAL 快近 30 倍，13 分鐘對 372 分鐘。這是特定合成算術任務與基線。對本篇的意義：不必為了端到端梯度放棄成熟的離散求解器。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2606.14463_EM_NeSy.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2606.14463_EM_NeSy.摘要.md</code></a></li></ul>
+<ul><li><strong>三十多套系統的共同數學語言</strong>（<a href="https://arxiv.org/abs/2507.11127" rel="noopener">arXiv 2507.11127</a>）：<strong>原文事實（作者自報）</strong>：研究以單一積分式統一 DeepProbLog、LTN、NeurASP、NeuPSL 等 30+ 系統，涵蓋 WMC 與 WMI；這是形式化統一與特例證明，不是同一 benchmark 的效能比較。對本篇的意義：四條路線可以共享分析框架，但共同框架仍不會自動消除接地捷徑。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2507.11127_Defining_Neurosymbolic_AI.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2507.11127_Defining_Neurosymbolic_AI.摘要.md</code></a></li></ul>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：LTN 的滿足度很高，能否當成數學證明？ <strong>答</strong>：不能。它是連續最佳化分數，可能靠短路滿足公式；嚴格結論仍要離散驗證。</li><li><strong>問</strong>：換成 LNN 或 NTP 能否保證接地正確？ <strong>答</strong>：不能。one-hot 概念上的確定性推理捷徑集合與推理層架構無關。</li><li><strong>問</strong>：VSA 為什麼抗噪？ <strong>答</strong>：資訊分散在大量維度，少數維度損壞通常不會摧毀整體相似度。</li><li><strong>問</strong>：選型時除了標籤準確率還要量什麼？ <strong>答</strong>：概念接地、OOD、持續學習、證明可重放性、推理成本與捷徑數。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2510.14538_Reasoning_Shortcuts.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2510.14538_Reasoning_Shortcuts.摘要.md</code></a>：完整整理推理捷徑的定義、不可識別性與緩解策略。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2603.26944_LTN_RulePruning.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2603.26944_LTN_RulePruning.摘要.md</code></a>：看見軟邏輯如何短路，以及規則修剪如何補救。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.23377_Reasoning_Shortcuts_Constraint.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.23377_Reasoning_Shortcuts_Constraint.摘要.md</code></a>：把共同盲點轉成能實際求解的 CSP／ASP 檢查。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>這一家把符號邏輯<strong>直接做進網路結構</strong>：LNN 讓神經元變邏輯閘、LTN 讓邏輯變損失函數、NTP 讓證明搜尋可微又能軟比對、VSA 讓符號變成抗噪的高維向量——目標都是「<strong>既能學，又守邏輯</strong>」。</p>
+<blockquote class="note"><p>為什麼有人會對它感興趣：因為純神經網路最讓人不放心的，就是它會違反明明已知的規則、又無法保證自洽；把邏輯焊進網路，等於讓 AI 在「能學」之外多了一層「不會亂來」的結構保證。</p></blockquote>
+<section class="self-check"><h2>自我檢核</h2><details><summary>LTN 的滿足度很高，能否當成數學證明？</summary><p>不能。它是連續最佳化分數，可能靠短路滿足公式；嚴格結論仍要離散驗證。</p></details><details><summary>換成 LNN 或 NTP 能否保證接地正確？</summary><p>不能。one-hot 概念上的確定性推理捷徑集合與推理層架構無關。</p></details><details><summary>VSA 為什麼抗噪？</summary><p>資訊分散在大量維度，少數維度損壞通常不會摧毀整體相似度。</p></details><details><summary>選型時除了標籤準確率還要量什麼？</summary><p>概念接地、OOD、持續學習、證明可重放性、推理成本與捷徑數。</p></details></section>
+<div class="pager"><a href="06-神經符號與外部記憶.html">← 06 神經符號與外部記憶</a><a href="08-KAN可符號化神經網路.html">08 KAN 可符號化神經網路 →</a></div></main></div><script src="app.js"></script></body></html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 — 符號接地與具身認知</title><link rel="stylesheet" href="styles.css"></head><body data-page="10">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="09-認知架構.html" aria-label="上一篇：09 認知架構" title="09 認知架構">上一篇</a><a aria-current="page" href="10-符號接地與具身認知.html" aria-label="目前章節：10 符號接地與具身認知" title="10 符號接地與具身認知">10</a><a href="11-AI對齊可解釋可控.html" aria-label="下一篇：11 AI 對齊、可解釋、可控" title="11 AI 對齊、可解釋、可控">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-符號接地問題-字典不能永遠查字典">一、符號接地問題：字典不能永遠查字典</a></li><li><a href="#二-具身認知-身體是概念的限制條件">二、具身認知：身體是概念的限制條件</a></li><li><a href="#三-世界模型-從夢中模擬到可拆-可查的系統">三、世界模型：從夢中模擬到可拆、可查的系統</a></li><li><a href="#四-經驗怎麼長出來-課程學習與多個體互動">四、經驗怎麼長出來：課程學習與多個體互動</a></li><li><a href="#它們各自補了哪塊-差異速覽">它們各自補了哪塊（差異速覽）</a></li><li><a href="#常見誤解與限制">常見誤解與限制</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">10 · 符號的意義不能只靠其他符號兜圈定義，而要連到感官、動作與可被外界驗證的互動</p><h1>10 — 符號接地與具身認知</h1><p class="reading-time">閱讀時間：約 18 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p>本設計需要把內部表徵接到可測量的環境狀態，否則可讀規則也可能只在符號圈內自洽。<a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/latest_2026-08/05_world_model_arc_causality.md" rel="noopener">世界模型與因果介面的最新設計</a>把這件事落到可查詢狀態、反事實測試與回滾。接地是「符號真的指到世界」的驗收，不是詞向量看起來很像。</p>
+<p>一組環環相扣的理論，共同主張一件事：<strong>符號（文字、詞語）本身沒有意義，意義來自它跟真實世界感官經驗的連結。</strong> 一個只會在文字之間打轉的系統，再流利也碰不到意義的地基。</p>
+<p>設想一個聊天機器人，它「知道」月亮這個詞跟「夜晚」「圓」「銀色」這些詞常常一起出現。但它從沒看過月亮、沒感受過夜晚的涼。問題來了：<strong>它真的「懂」月亮嗎，還是只是學會了詞與詞之間的統計關係？</strong> 這組理論就是在追問這件事，並指出「光靠文字學文字」會留下一個根本的空洞。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>符號接地（symbol grounding）</td><td>讓符號連到非符號的感知或行動</td><td>「紅」能定位影像中的紅物件</td></tr><tr><td>具身認知（embodied cognition）</td><td>認知受身體與感覺動作迴路塑造</td><td>有手才能由抓取經驗形成「可握」概念</td></tr><tr><td>世界模型（world model）</td><td>預測狀態如何因動作改變的內部模擬器</td><td>踩油門後車速會增加</td></tr><tr><td>前向模型</td><td>由狀態與動作預測結果</td><td><code>state + action → next_state</code></td></tr><tr><td>逆模型</td><td>由目標結果反推動作</td><td>想停車就選煞車</td></tr><tr><td>transition function</td><td>環境的狀態轉移規則</td><td>同一狀態採不同動作會去哪裡</td></tr><tr><td>課程學習</td><td>由易到難安排訓練經驗</td><td>先學直線行走，再學越障</td></tr><tr><td>自我對弈</td><td>agent 與自己的版本競爭</td><td>左手打右手逐步變強</td></tr><tr><td>PBT</td><td>族群中同時訓練並淘汰超參數</td><td>表現好的設定傳給下一批</td></tr></tbody></table></div>
+<h2 id="一-符號接地問題-字典不能永遠查字典">一、符號接地問題：字典不能永遠查字典</h2>
+<p><strong>想解決什麼</strong>：如果每個符號只用另一個符號定義，整個系統可以語法正確，卻沒有任何詞真正指向外界。</p>
+<p><strong>核心想法</strong>：</p>
+<h3 id="符號接地問題-symbol-grounding-problem-harnad-1990">符號接地問題（Symbol Grounding Problem；Harnad, 1990）</h3>
+<p>Stevan Harnad 承接哲學家 Searle 的「中文房間」思想實驗，提出這個問題的最有力版本。</p>
+<p>先講中文房間：一個完全不懂中文的人，被關在房間裡，手上有一本超詳細的規則書，告訴他「收到這串中文符號，就回那串中文符號」。外面的人傳中文進來，他照規則回，回得天衣無縫，外面的人以為他懂中文——<strong>但他從頭到尾一個字都不懂。</strong> 他只是在搬符號。</p>
+<p>Harnad 把這推進一步：<strong>如果一個符號的意義，只能靠「別的符號」來定義，那整個系統就像拿一本中文字典去查中文——每個字都用別的中文字解釋，你永遠在符號之間繞圈，碰不到任何一個字真正的意思。</strong></p>
+<p>他的結論：<strong>符號最終必須「接地」到非符號的東西——感官經驗。</strong> 「紅色」這個詞要有意義，系統得真的能在影像裡認出紅色；「甜」要有意義，得連到味覺。純文字聊天機器人缺的正是這塊地基。</p>
+<p>程式化的比喻：想像一份所有定義都互相循環引用的字典資料結構，沒有任何一個條目最終指向「外部的真實值」。整份字典在邏輯上自洽，但沒有一個詞 grounded 到真實。</p>
+<p><strong>和相近理論差在哪</strong>：語意網路能把詞與詞的關係整理得很清楚；接地問題追問的是網路最底層有沒有指向非符號經驗。更多詞條不會自動填上這個缺口。</p>
+<p><strong>常見誤解與限制</strong>：接地不是要求每個詞都配一個感測器讀值。抽象概念可以由已接地的低階概念組合而成。真正的要求是，整條定義鏈最後能落到可辨認、可操作、可外部測量的差異。</p>
+<h2 id="二-具身認知-身體是概念的限制條件">二、具身認知：身體是概念的限制條件</h2>
+<p><strong>想解決什麼</strong>：把心智當成與身體無關的純邏輯機器，會忽略「能怎麼動」對「能怎麼想」的塑形作用。</p>
+<p><strong>核心想法</strong>：</p>
+<h3 id="具身認知-embodied-cognition">具身認知（Embodied Cognition）</h3>
+<p>1990 年代興起，反對「認知＝抽象符號運算」這種笛卡兒式的觀點（把心智當成一台跟身體無關的純邏輯機器）。</p>
+<p>它的主張是：<strong>認知深深紮根在你的身體形態、感覺-動作迴路、以及跟環境的互動裡。你能怎麼想，受限於你有什麼樣的身體、能怎麼動。</strong> 換句話說，先有「我用手抓、用腳走、被燙到會縮」這些身體經驗，「重」「遠」「燙」這些概念才長得出來——概念是從身體經驗裡長出來的，不是憑空抽象運算出來的。</p>
+<p>這跟符號接地是同一陣營：意義不在符號自己的圈子裡，而在身體與世界的互動裡。</p>
+<p><strong>和相近理論差在哪</strong>：符號接地提出「意義從哪裡來」的問題；具身認知進一步主張，身體形態與感覺動作迴路不是輸入裝置，而是概念結構的一部分。</p>
+<p><strong>常見誤解與限制</strong>：有感測器不等於完成接地。攝影機資料若只拿來預測下一個像素，卻不能支持定位、行動與反事實測試，仍可能只是更大的統計配對器。</p>
+<h2 id="三-世界模型-從夢中模擬到可拆-可查的系統">三、世界模型：從夢中模擬到可拆、可查的系統</h2>
+<p><strong>想解決什麼</strong>：agent 每一步都去真實環境試錯太慢、太貴。工程上需要內部模擬器預測行動後果；2026 的新問題則是，這個模擬器究竟學到因果結構，還是只會生成看似合理的下一幀。</p>
+<p><strong>核心想法</strong>：</p>
+<h3 id="世界模型-前向-逆模型-world-models-ha-schmidhuber-2018">世界模型 / 前向・逆模型（World Models；Ha &amp; Schmidhuber, 2018）</h3>
+<p>這是上面哲學主張的一種工程化嘗試：讓 agent 不要每一步都真的去環境裡試錯（太貴、太慢），而是<strong>先學一個「環境的內部模擬器」，再在這個「夢」裡規劃和練習。</strong></p>
+<p>裡面有兩種模型：</p>
+<ul><li><strong>前向模型</strong>：預測「在這個狀態做這個動作 → 會得到什麼結果」。像在腦中模擬「我現在踩油門，車會往前」。</li><li><strong>逆模型</strong>：反推「我想要這個結果 → 該做什麼動作」。像「我想讓車停，所以該踩煞車」。</li></ul>
+<p>有了內部模擬器，agent 就能「閉著眼睛在腦中想像」多走幾步、規劃出一條路，再到真實環境執行。這給「意義奠基在與世界互動」提供了一條可運算的路：模型學的就是「動作如何改變世界」這種帶感官-動作的知識。</p>
+<p>2025–26 的進展把 2018 的單體模擬器往四個方向推。理論上，只要 agent 能以有界失敗率完成一般多步驟目標，它的 policy 就會在誤差界內唯一決定環境轉移函數。這表示世界模型不只是可選技巧，也可能是通用能力的必然內含結構。</p>
+<p>但「內部有模型」不等於「模型是我們期待的物理」。109M 參數 transformer 能準確預測行星軌跡，符號回歸卻從 5 組隨機銀河系得到 5 條不同的偽物理定律。預測準確可能只證明捷徑適合資料分布。</p>
+<p>工程上也開始拆模組。BRICKS-WM 把模型分成 agent、background 與學得的 interface，遷移時可凍結背景，只重學 agent 側。PoE-World 走符號路線：用上百個小型確定性 Python 程式組合世界模型。另一份 2018–2026 盤點則發現，163 篇實作型論文只有 6 篇提供執行時查詢具名 entity 狀態的介面；能生成影片，離可供規劃器查詢的模擬器仍很遠。完整脈絡詳見 <a href="20-世界模型.html" rel="noopener">20_世界模型.md</a>。</p>
+<p><strong>和相近理論差在哪</strong>：前向模型回答「做了會怎樣」，逆模型回答「想得到結果該做什麼」。BRICKS-WM 關心可重用模組與介面，PoE-World 關心可讀的小程式組合。生成模型只要產生像真的觀測，規劃用世界模型還得提供穩定、可查詢、能做反事實的狀態。</p>
+<p><strong>常見誤解與限制</strong>：在夢裡成功不代表到現實也成功。要用保留環境、長期 rollout、狀態查詢與干預測試檢查模型；若 agent 只鑽模擬器漏洞，規劃越強反而錯得越遠。</p>
+<p>世界模型這條線在 2026 已經長成獨立主題，本節只給入口，完整版見 <a href="20-世界模型.html" rel="noopener">20 世界模型</a>。</p>
+<h2 id="四-經驗怎麼長出來-課程學習與多個體互動">四、經驗怎麼長出來：課程學習與多個體互動</h2>
+<p><strong>想解決什麼</strong>：有身體與環境仍不保證學得動。經驗的順序太難，agent 可能始終拿不到有用回饋；沒有其他個體，社會概念也缺少互動來源。</p>
+<p><strong>核心想法</strong>：</p>
+<h3 id="課程學習-curriculum-learning-bengio-等-2009">課程學習（Curriculum Learning；Bengio 等, 2009）</h3>
+<p>很單純的一個主意：<strong>像教小孩一樣，由易到難安排訓練樣本，模型會收斂得更快，也比較不會卡在壞的局部最優。</strong></p>
+<p>例子：教一個 agent 玩遊戲，先給簡單關卡讓它學會基本操作，再慢慢加難度，比一開始就丟最難的關卡有效得多。和上面那些理論的連結在於：要讓系統累積「對世界的經驗」，循序漸進地餵經驗，比一次倒一堆更容易長出有結構的理解。</p>
+<h3 id="自我對弈-族群式訓練-self-play-population-based-training">自我對弈 / 族群式訓練（Self-Play / Population-Based Training）</h3>
+<p>讓多個個體互相博弈或一起演化，逼出能力與通用性：</p>
+<ul><li><strong>自我對弈（Self-Play）</strong>：AlphaZero 是經典——它不靠人類棋譜，而是<strong>自己跟自己下棋</strong>，左手打右手，一局比一局強，最後無師自通超越人類。</li><li><strong>族群式訓練（PBT）</strong>：一群模型邊訓練邊互相淘汰，表現好的把超參數「傳承」給下一批，像演化一樣篩選。</li></ul>
+<p>為什麼放在這篇：當你想讓 agent 學會「你／我／他」這種需要對手存在才有意義的概念，或學會社會性互動，光靠單一個體對著靜態資料學是學不出來的——<strong>得有別的個體在環境裡跟它互動</strong>，意義才接得上。這也是「意義來自互動」的延伸。</p>
+<p><strong>和相近理論差在哪</strong>：課程學習安排同一類經驗的難度；自我對弈與 PBT 改變經驗的生產者，讓對手與族群一起推高難度。前者像排課，後者像讓題目自己演化。</p>
+<p><strong>常見誤解與限制</strong>：由易到難不保證涵蓋真實分布，自我對弈也可能形成封閉的策略圈。若評估只在同一族群內進行，彼此適應會被誤認成外部泛化。</p>
+<h2 id="它們各自補了哪塊-差異速覽">它們各自補了哪塊（差異速覽）</h2>
+<div class="table-wrap"><table><thead><tr><th>理論</th><th>在這條線上的角色</th></tr></thead><tbody><tr><td>符號接地問題</td><td>點出病灶：純符號靠符號定義會空轉，要接到感官</td></tr><tr><td>具身認知</td><td>給出立場：意義紮根在身體與環境互動，先有身體經驗才有概念</td></tr><tr><td>世界模型</td><td>工程解法：學一個內部模擬器，在「夢」裡規劃，學的是動作如何改變世界</td></tr><tr><td>課程學習</td><td>訓練排程：由易到難餵經驗，更好累積對世界的理解</td></tr><tr><td>自我對弈／PBT</td><td>互動來源：靠多個體博弈/演化，逼出單體學不到的能力與社會概念</td></tr></tbody></table></div>
+<h2 id="常見誤解與限制">常見誤解與限制</h2>
+<ul><li><strong>「大語言模型既然這麼會講話，不就解決符號接地了？」</strong> 這正是爭議核心。批評者認為 LLM 仍主要在「文字之間」學統計關係，本質上是更強的中文房間；支持者認為大規模文字＋多模態（圖、影像）已經部分接地。這個問題在 2026 年仍未有定論。</li><li><strong>接地不是「文字共現」就算數</strong>：一個合格的驗收標準是——「紅色」這個符號要能去影像裡定位紅色物件、能引導行動、能被外部測量驗證。如果「紅色」只是跟其他詞向量靠得近，卻無法在現實裡指認，那它還沒接地。</li><li><strong>世界模型在「夢」裡規劃有個風險</strong>：模型學得不準時，agent 會在錯誤的內部模擬裡規劃出錯誤的計畫，真到現實就翻車。</li></ul>
+<h3 id="接地與世界模型的最小驗收">接地與世界模型的最小驗收</h3>
+<p>可以用三個問題檢查一個概念是否真的接地。第一，它能否指認：給新觀測時，能定位概念對應的物件或狀態。第二，它能否引導行動：要求靠近、避開或改變該概念時，agent 會選出有效動作。第三，它能否承受反事實：只改那個因素，預測與行動是否依預期改變。三項都比「詞向量很接近」更難作弊。</p>
+<p>世界模型再多一層驗收。規劃器應能查詢具名狀態，而不只觀看生成影片；同一初始狀態與動作要有可重現的轉移；長 rollout 的誤差要逐步量；模型預測與真實環境不一致時，要停止在夢裡加碼規劃。這些介面也是 <code>20_世界模型.md</code> 專篇要展開的主題，本篇只保留與接地直接相關的判準。</p>
+<p>還要區分感測接地與任務接地。模型能在影像框出「杯子」，只完成感測接地；它若不知道杯口朝下時不能倒水，就還缺動作與因果關係。反過來，一個控制器可能會抓杯子，卻把內部概念命名成任意代號。它有可用技能，不一定有能與人溝通的符號。完整系統需要指認、行動與名稱三者互相校準。</p>
+<p>具身也不等於一定使用實體機器人。模擬環境只要提供穩定的感知、動作與可驗證後果，也能讓概念取得部分接地；差別在 sim-to-real 落差。摩擦、延遲、遮擋與感測噪聲若沒進模擬器，agent 學到的是模擬器的身體。部署前要在真機上重新測量關鍵概念，而不能把模擬成功直接當成現實理解。</p>
+<p>接地測試還應保存失敗案例。若「紅色」只在白色背景上定位成功，換到暗處就失效，問題可能是感知分布，不是符號規則。把失敗分回感知、狀態、轉移與規劃四層，才能知道該補資料、改世界模型，還是修正後端規則。這種分層也讓測試與回滾有明確邊界，並避免一有錯就重訓整套系統。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>能辦事就一定含有世界模型</strong>（<a href="https://arxiv.org/abs/2506.01622" rel="noopener">arXiv 2506.01622</a>）：<strong>原文事實（作者自報）</strong>：DeepMind 的理論在多步驟目標任務與有界失敗率假設下，證明 agent policy 在誤差有界內唯一決定環境 transition function；合成環境 N=10,000、目標深度 D≥200 時，模型誤差為 0.031±0.002。這是合成環境與理論假設內的結果，不是 production agent 的直接量測。對本篇的意義：世界模型可能是一般能力的必然內含結構。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2506.01622_GeneralAgentsWorldModels.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2506.01622_GeneralAgentsWorldModels.摘要.md</code></a></li></ul>
+<ul><li><strong>預測得準卻沒有學到物理</strong>（<a href="https://arxiv.org/abs/2507.06952" rel="noopener">arXiv 2507.06952</a>）：<strong>原文事實（作者自報）</strong>：109M 參數 transformer 在論文行星軌跡設定中預測很準，但歸納偏誤探針顯示它未形成牛頓力學狀態表示；對 5 組隨機生成銀河系做符號回歸得到 5 條不同的偽物理定律，oracle 則全數還原正確定律。結果限於該合成物理 protocol。對本篇的意義：有世界模型不代表模型抓到可重用因果結構。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2507.06952_InductiveBiasProbe.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2507.06952_InductiveBiasProbe.摘要.md</code></a></li></ul>
+<ul><li><strong>世界模型可以拆成積木</strong>（<a href="https://arxiv.org/abs/2606.16489" rel="noopener">arXiv 2606.16489</a>）：<strong>原文事實（作者自報）</strong>：BRICKS-WM 在 DeepMind Control 純像素、無真值狀態監督設定，把模型拆成 Agent、Background 與潛在 interface；論文報告其表現匹敵 DreamerV3／TD-MPC2，並可凍結 background、只重學 agent 側與介面來跨 agent 遷移。結果限於該控制套件與論文比較設定。對本篇的意義：世界模型可由單體網路改成能凍結、重組與檢查介面的模組。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2606.16489_BRICKS_WM_Modular_World_Model.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2606.16489_BRICKS_WM_Modular_World_Model.摘要.md</code></a></li></ul>
+<ul><li><strong>世界模型也能是一群小程式</strong>（<a href="https://arxiv.org/abs/2505.10819" rel="noopener">arXiv 2505.10819</a>）：<strong>原文事實（作者自報）</strong>：PoE-World 以 LLM 合成上百個小型確定性 Python 程式，再用指數加權乘積組合；在 Atari Pong 與 Montezuma&#x27;s Revenge 使用少於 1,000 幀示範，論文對照的 PPO 在 Montezuma&#x27;s Revenge 跑到 2,000 萬步仍未拿正分。這是兩款 Atari 與特定示範 protocol，不代表一般世界模型。對本篇的意義：模擬器可以是可讀程式集合，不一定是一團權重。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2505.10819_PoEWorld.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2505.10819_PoEWorld.摘要.md</code></a></li></ul>
+<ul><li><strong>生成得像不等於能當模擬器</strong>（<a href="https://arxiv.org/abs/2608.23070" rel="noopener">arXiv 2608.23070</a>）：<strong>原文事實（作者自報）</strong>：研究盤點 2018–2026 約 200 篇論文並建立 8 個能力維度；163 篇實作型論文中只有 6 篇提供執行時查詢具名 entity 狀態的介面，放寬到 sensor-level 輸出也只有 45/163。這是文獻盤點，不是同一基準的實驗排名。對本篇的意義：可查詢狀態應成為世界模型是否能供規劃使用的驗收項。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2608.23070_GenerationToSimulation.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2608.23070_GenerationToSimulation.摘要.md</code></a></li></ul>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：文字共現為什麼不等於接地？ <strong>答</strong>：它只連到其他符號；接地還要求定位、行動或外部測量能驗證其所指。</li><li><strong>問</strong>：預測準確能否證明世界模型學到真實物理？ <strong>答</strong>：不能。模型可能利用資料捷徑，需靠干預、外插與狀態表示探針檢查。</li><li><strong>問</strong>：生成式世界模型與規劃模擬器差在哪？ <strong>答</strong>：後者還要能查詢具名狀態、接受動作與反事實條件，並維持長期一致性。</li><li><strong>問</strong>：自我對弈的泛化陷阱是什麼？ <strong>答</strong>：族群可能只彼此適應；同族勝率不能代替外部對手與新環境測試。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/machine_learning/blob/main/robosim_py/docs/m2_pd_control.md" rel="noopener"><code>m2_pd_control.md</code></a>：把感測誤差、致動器與回饋控制真的接起來。</li><li><a href="https://github.com/justty32/machine_learning/blob/main/robosim_py/docs/m3_env_design.md" rel="noopener"><code>m3_env_design.md</code></a>：環境狀態、獎賞與終止條件是接地的可跑介面。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2507.06952_InductiveBiasProbe.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2507.06952_InductiveBiasProbe.摘要.md</code></a>：用反例拆開預測準確與物理理解。</li><li><a href="20-世界模型.html" rel="noopener">20_世界模型.md</a>：集中整理 2025–26 的世界模型理論、模組化、符號化與評估。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>意義不是藏在符號自己的圈子裡——它要奠基在身體與五感跟真實世界的互動上，光靠文字接龍接不到真正的意義。</p>
+<blockquote class="note"><p>為什麼有人會對它感興趣：它直接戳中當前 LLM 最受質疑的一點——「它到底是真懂，還是只是超強的文字接龍？」這讓符號接地成了討論 AI 是否「真的理解」時繞不開的經典問題。</p></blockquote>
+<section class="self-check"><h2>自我檢核</h2><details><summary>文字共現為什麼不等於接地？</summary><p>它只連到其他符號；接地還要求定位、行動或外部測量能驗證其所指。</p></details><details><summary>預測準確能否證明世界模型學到真實物理？</summary><p>不能。模型可能利用資料捷徑，需靠干預、外插與狀態表示探針檢查。</p></details><details><summary>生成式世界模型與規劃模擬器差在哪？</summary><p>後者還要能查詢具名狀態、接受動作與反事實條件，並維持長期一致性。</p></details><details><summary>自我對弈的泛化陷阱是什麼？</summary><p>族群可能只彼此適應；同族勝率不能代替外部對手與新環境測試。</p></details></section>
+<div class="pager"><a href="09-認知架構.html">← 09 認知架構</a><a href="11-AI對齊可解釋可控.html">11 AI 對齊、可解釋、可控 →</a></div></main></div><script src="app.js"></script></body></html>

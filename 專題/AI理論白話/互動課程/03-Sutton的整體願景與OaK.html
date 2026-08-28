@@ -1,0 +1,75 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 — Sutton 的整體願景與 OaK</title><link rel="stylesheet" href="styles.css"></head><body data-page="03">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="02-階層式RL與元學習.html" aria-label="上一篇：02 階層式 RL 與元學習" title="02 階層式 RL 與元學習">上一篇</a><a aria-current="page" href="03-Sutton的整體願景與OaK.html" aria-label="目前章節：03 Sutton 的整體願景與 OaK" title="03 Sutton 的整體願景與 OaK">03</a><a href="04-信用分配與經濟式智能.html" aria-label="下一篇：04 信用分配與經濟式智能" title="04 信用分配與經濟式智能">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-獎賞假說與苦澀的教訓-這套願景押注什麼">一、獎賞假說與苦澀的教訓：這套願景押注什麼</a></li><li><a href="#二-td-策略梯度與-dyna-從真實經驗擴出想像經驗">二、TD、策略梯度與 Dyna：從真實經驗擴出想像經驗</a></li><li><a href="#三-gvf-與-horde-把知識改寫成可驗證預測">三、GVF 與 Horde：把知識改寫成可驗證預測</a></li><li><a href="#四-終身學習的障礙-可塑性流失">四、終身學習的障礙：可塑性流失</a></li><li><a href="#五-alberta-plan-與-oak-抽象如何一層層長出來">五、Alberta Plan 與 OaK：抽象如何一層層長出來</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">03 · Sutton 的 OaK 藍圖要讓智能從持續經驗中，自建預測、技能、模型與更高階抽象</p><h1>03 — Sutton 的整體願景與 OaK</h1><p class="reading-time">閱讀時間：約 18 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p>本設計也在追問：能否少灌人類規則，讓系統從經驗累積出可重用能力。 可先對照<a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/%E5%8F%83%E8%80%83%E7%90%86%E8%AB%96_15_OaK%E6%9E%B6%E6%A7%8B.md" rel="noopener">OaK 架構參考理論</a>。本篇補上這張藍圖的地基、五步進程，以及 Sutton 到 2026 年仍承認的三個缺口。</p>
+<p>重點不是膜拜一張總藍圖，而是知道每個元件靠什麼經驗學、如何被驗錯，以及哪一段目前仍只有研究問題。 藍圖的價值，在於把缺口也畫進去。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>獎賞假說（Reward Hypothesis）</td><td>把各種目標表成最大化單一累積訊號</td><td>贏棋與存活都寫成回報</td></tr><tr><td>苦澀的教訓（The Bitter Lesson）</td><td>長期押注可擴張的搜尋與學習</td><td>自我對弈取代手寫棋譜</td></tr><tr><td>Dyna</td><td>真實互動與模型想像共用一套學習更新</td><td>下完一手棋，再在腦中推演十手</td></tr><tr><td>一般化價值函數（General Value Function, GVF）</td><td>把知識寫成能由經驗驗錯的預測</td><td>「伸手靠火，溫度會上升」</td></tr><tr><td>Horde</td><td>同時學很多個 GVF 預測的小單元群</td><td>一份感測串流養出上千個預測</td></tr><tr><td>選項與知識（Options and Knowledge, OaK）</td><td>由技能與預測知識構成的終身學習藍圖</td><td>自造「搬障礙」技能並學它的後果</td></tr><tr><td>可塑性流失（loss of plasticity）</td><td>網路持續訓練後逐漸學不進新東西</td><td>神經元飽和，換新任務也不動</td></tr><tr><td>災難性遺忘（catastrophic forgetting）</td><td>學新資料時把舊能力沖掉</td><td>新關係學會後忘記舊關係</td></tr><tr><td>生成認知（enactive cognition）</td><td>認知由行動、知覺、身體與環境共同構成</td><td>看見什麼取決於能怎麼行動</td></tr><tr><td>外部接地（external grounding）</td><td>從系統外持續取得真實校正訊號</td><td>自我訓練仍保留真人或環境資料</td></tr></tbody></table></div>
+<h2 id="一-獎賞假說與苦澀的教訓-這套願景押注什麼">一、獎賞假說與苦澀的教訓：這套願景押注什麼</h2>
+<p><strong>想解決什麼</strong>：AI 研究常把語音、視覺、規劃與控制各自做成專用技巧。Sutton 想找一個能貫穿它們、並隨計算資源擴張的共同原則，而不是每個領域重新灌規則。</p>
+<p><strong>核心想法</strong>：Sutton 與 Barto 的《Reinforcement Learning: An Introduction》（1998；2018 二版）把多臂老虎機、動態規劃、蒙地卡羅、TD、函數逼近與 policy gradient 放進同一套語言。背後的獎賞假說主張：所有目標與意圖都可表述為最大化某個純量獎賞訊號的累積期望值。2019 年〈The Bitter Lesson〉再補一個工程判斷：回顧棋類、語音與視覺，通用搜尋和學習會持續吃到算力紅利，人手知識短期有效，長期容易封頂。</p>
+<p>AlphaZero 是直觀例子。早期棋類程式塞入大量開局與定式；自我對弈路線較少依賴人類棋譜，卻能靠通用搜尋與學習快速提升。苦澀之處不在「人類知識完全無用」，而是人很容易把短期有效的巧思誤認為可長期擴張的地基。</p>
+<p>教科書的重要性也不只是整理名詞。它把 prediction 與 control、on-policy 與 off-policy、tabular 與 approximation 放在同一個經驗驅動框架。這使研究者可以問同一組問題：資料從哪個行為策略來，更新目標是否含自己的估計，保證建立在哪些假設上。Sutton 的後續願景仍沿用這套座標。</p>
+<p>獎賞假說的力量來自介面簡單。環境每步只要回一個純量，agent 就能比較不同長期行動。它的風險也來自同一處：純量把多重價值壓成單一排序，設計者若漏掉安全、成本或他人偏好，agent 沒有理由自行補回。OaK 會讓能力自己長出來，不會讓缺失的價值規格自己變完整。</p>
+<p><strong>和相近理論差在哪</strong>：監督學習依賴標註答案；RL 讓行動後果與獎賞提供學習訊號。符號 AI 直接交付命題和規則；Sutton 的路線希望知識以可學、可驗的預測長出來。獎賞假說說明「目標用什麼形式表」，苦澀的教訓則說明「研究資源長期押在哪類方法」。</p>
+<p><strong>常見誤解與限制</strong>：苦澀的教訓不是「任何領域知識都該刪掉」。環境介面、獎賞函數、感測器與評測仍由人選，這些本身就在注入偏好。獎賞假說也有爭議：道德、好奇心與多重目標是否真能安全壓成一個數字？reward hacking 正是代理數字與真實意圖分離後的陰暗面。</p>
+<h2 id="二-td-策略梯度與-dyna-從真實經驗擴出想像經驗">二、TD、策略梯度與 Dyna：從真實經驗擴出想像經驗</h2>
+<p><strong>想解決什麼</strong>：只靠真實互動學習很浪費。一個機器人摔一次的成本很高，如果那筆經驗用完就丟，學習速度很難提升。另一方面，連續動作也不能只靠列舉 Q-table。</p>
+<p><strong>核心想法</strong>：TD（1988）用下一步估計修正這一步，不必等結局。策略梯度定理（Sutton, McAllester, Singh, Mansour, 2000）證明，可以直接對參數化策略求改進方向，而且公式不需要顯式環境動態，靠採樣就能估。Dyna（1990–91）則一邊和真實環境互動，一邊學環境模型，再從模型生成想像經驗；真實與想像轉移用同一套 TD 規則訓練。</p>
+<p>下棋時，人不只記住真正走過的棋，也會在腦中推演未走的變化。Dyna 讓一筆真實互動衍生多筆規劃更新。它把 model-free 學習、model learning 與 planning 放進一個迴圈。</p>
+<p><strong>和相近理論差在哪</strong>：純 model-free 方法直接從真實轉移更新，不顯式預測環境；純規劃方法假設模型已知。Dyna 同時學模型與價值，再讓模型服務規劃。策略梯度直接改策略，TD value learning 則先估價值；Actor-Critic 把兩者接起來。</p>
+<p><strong>常見誤解與限制</strong>：想像經驗不是免費真相。模型若把錯誤累積進長推演，規劃更新會污染真實學習。多做 imagined rollouts 只有在模型誤差受控、分布沒有跑太遠時才有幫助。</p>
+<p>Dyna 迴圈可拆成四步：真實互動產生 transition；用它更新 value 或 policy；同一筆資料更新環境模型；再從過去狀態抽樣，請模型生成額外 transition 做 planning update。model-free 與 planning 沒有兩套互不相干的學習器，而是共享更新規則，差別只在樣本來自世界還是模型。</p>
+<p>這個設計也讓除錯更具體。若真實資料上的 TD error 下降、模型想像上的 error 卻持續升高，問題可能在 world model；若兩者都穩定但策略不進步，可能是規劃抽樣沒有碰到關鍵狀態。把真實與想像來源分開記錄，比只看混合 loss 更容易發現污染。</p>
+<h2 id="三-gvf-與-horde-把知識改寫成可驗證預測">三、GVF 與 Horde：把知識改寫成可驗證預測</h2>
+<p><strong>想解決什麼</strong>：傳統知識常寫成符號命題，例如「火會燙」。這種句子對人容易懂，對只接收感覺—動作串流的 agent 卻很難自學，也難以用經驗直接推翻。</p>
+<p><strong>核心想法</strong>：一般化價值函數（General Value Function, GVF）把知識改寫為條件式、帶時間尺度的預測：「若依某策略行動，某個訊號未來的折扣累積值是多少？」Horde（Sutton et al., 2011）讓幾千個預測小單元並行，共用同一份經驗串流，各學自己的 GVF。</p>
+<p>「火會燙」可改成「若把手伸向火，溫度感測器在 0.5 秒內會快速上升」。後一句有政策、訊號與時間範圍，能實際測試。知識因此不是永遠正確的字串，而是一群會被新經驗修正的預測。</p>
+<p><strong>和相近理論差在哪</strong>：知識圖譜保存離散事實；GVF 保存的是在指定策略下對未來訊號的數值預測。一般 value function 常只預測任務獎賞；GVF 可以預測溫度、碰撞、持續時間等任意 cumulant。</p>
+<p><strong>常見誤解與限制</strong>：可驗證不等於人類可讀。GVF 的問題定義、訊號與策略若選得不好，只會得到大量精確卻無用的預測。Horde 能平行學很多知識，沒有自動回答「哪些預測值得建立」以及如何把它們組成高階概念。</p>
+<p>GVF 至少要說清楚三件事：預測累積哪個訊號、在什麼 policy 下預測，以及何時終止或如何折扣。少一項，「未來會怎樣」就沒有可操作語意。同一個溫度感測器，在「向火靠近」和「站著不動」兩個 policy 下，是兩條不同知識。</p>
+<p>Horde 的好處是 off-policy：同一條行為經驗可以同時餵給很多個假想 policy 的預測問題。這提高資料利用率，也把致命三角帶回來。大量 demon 並行不表示每一個都穩定，仍需選擇可收斂的更新或監測預測發散。</p>
+<h2 id="四-終身學習的障礙-可塑性流失">四、終身學習的障礙：可塑性流失</h2>
+<p><strong>想解決什麼</strong>：OaK 要求所有元件永遠在線學習。深度神經網路卻會在持續訓練中逐漸僵化：新任務來了，梯度仍在算，模型卻再也學不動。</p>
+<p><strong>核心想法</strong>：Dohare、Sutton 等人在 Nature 2024 系統化描述可塑性流失。神經元飽和、有效自由度崩塌後，模型吸收新資訊的能力衰退。continual backprop 會持續重置少用神經元，像擦掉白板上沒在用的角落，替新內容騰出空間。</p>
+<p><strong>和相近理論差在哪</strong>：災難性遺忘是「學新後忘舊」；可塑性流失是「連新東西都愈來愈學不進去」。replay、正則化或抽象訓練可能改善前者，不能因此宣稱已解決後者。</p>
+<p><strong>常見誤解與限制</strong>：continual backprop 是一條緩解路線，不是終身學習已被解完。截至 2026 年中，本輪掃描 342 篇 2025H2–2026 論文，仍沒有找到直接解決 Sutton 意義下可塑性流失的突破性方法。相鄰的災難性遺忘已有零歷史緩衝區方案，但兩個問題不能混稱。</p>
+<p>診斷兩者時可做一個簡單對照：保存一個新、容易、從未見過的小任務，定期測目前網路還能否像初始化時一樣快速學會。舊任務掉分主要指向遺忘；連這個新任務的學習速度也持續下降，才是在看可塑性。只量歷史準確率，會把兩種失效混在一條曲線裡。</p>
+<p>重置少用神經元也有代價。它可能擦掉尚未頻繁叫用、但在少數重要情境才有用的特徵。所謂「少用」必須配合效用估計、年齡與替換率，不能只按當前 activation 小就刪除。</p>
+<h2 id="五-alberta-plan-與-oak-抽象如何一層層長出來">五、Alberta Plan 與 OaK：抽象如何一層層長出來</h2>
+<p><strong>想解決什麼</strong>：TD、Dyna、GVF 與 options 各自能運作，卻還不是完整智能架構。真正困難的是讓 agent 在不中斷的串流中，自行決定要建立什麼特徵、學什麼技能、做哪些預測，還能用這些資產再往上組合。</p>
+<p><strong>核心想法</strong>：Alberta Plan（Sutton, Bowling, Pilarski, 2022）提出分步研究路線：agent 從感覺—動作串流出發，用 GVF 自建預測，把預測組成 options，用技能做規劃，在永不停止的設定下持續學習，再逐步形成抽象概念。OaK 是 Options and Knowledge，將這些元件收攏成一張「純從經驗長出智能」的藍圖。</p>
+<p>三個招牌特徵是：所有元件持續學習，沒有訓練完就凍結；每個權重可有自己學得的學習率，讓不同部分用不同速度更新；系統反覆跑以下五步進程，自造更高階抽象。</p>
+<pre class="mermaid" data-src="flowchart LR
+    A[&quot;① 造一個新特徵&lt;br/&gt;(注意值得關注的狀態)&quot;] --&gt; B[&quot;② 把達成此特徵&lt;br/&gt;設成子問題&quot;]
+    B --&gt; C[&quot;③ 解子問題&lt;br/&gt;得到技能 option&quot;]
+    C --&gt; D[&quot;④ 學技能的模型&lt;br/&gt;(它會帶來什麼後果)&quot;]
+    D --&gt; E[&quot;⑤ 用模型規劃&quot;]
+    E --&gt; A">flowchart LR
+    A["① 造一個新特徵<br/>(注意值得關注的狀態)"] --> B["② 把達成此特徵<br/>設成子問題"]
+    B --> C["③ 解子問題<br/>得到技能 option"]
+    C --> D["④ 學技能的模型<br/>(它會帶來什麼後果)"]
+    D --> E["⑤ 用模型規劃"]
+    E --> A</pre>
+<p>假設 agent 反覆遇到「先搬開障礙，才能抵達目標」：先建立「障礙已移除」特徵，再把移除障礙設成子目標；接著學出搬障礙的 option，學它對環境的影響，最後規劃時把整個技能當成高階動作。下一輪又可在這個基礎上建立更抽象的特徵。</p>
+<p>OaK 這一步「學到技能的模型，再把模型拿去規劃」如何接到 2025–26 的可驗證世界模型路線，可接著看<a href="20-世界模型.html" rel="noopener">20 世界模型</a>。</p>
+<p>五步不是只跑一次的流水線。新 option 的模型會改變規劃能看見的未來；新規劃又暴露哪些狀態值得建立特徵。若「門已打開」成為特徵，下一輪可能再形成「房間可通行」；多個房間技能又可組成「抵達建築另一側」。抽象層級是循環累積結果，不是預先畫好的固定樹。</p>
+<p>每個權重有自己的學習率，則是處理不同時間尺度的嘗試。短期感測規律可以快速更新，穩定技能模型要慢一些。若全部共用一個全域 learning rate，快訊號會嫌太慢，長期知識又會被新資料沖掉。自動調速的難點在於評估訊號本身也隨 agent 改變。</p>
+<p><strong>和相近理論差在哪</strong>：單一 HRL 方法通常假設技能或子目標的某些結構已知；OaK 想把特徵發現、技能學習、世界模型與規劃都納入持續成長。符號認知架構多半提供人類可讀的規則與型別；OaK 長出的元件主要是數值函數，不保證可命名或可讀。</p>
+<p><strong>常見誤解與限制</strong>：OaK 是研究藍圖，不是已跑通的成品。可塑性流失、非平穩、模型誤差、抽象選擇與收斂都仍是開放題。Sutton 與 Rafiee 在 2026 年又明確指出 RL/OaK 還缺三塊：評估判準仍由外部獎賞指定；行動與知覺的不可分割性未充分實現；具身性仍被當成實作細節，而非認知成立的構成條件。</p>
+<p>這三個缺口會互相牽動。若身體與環境只是可替換輸入介面，系統很難讓「能做什麼」參與「看見什麼」的形成；若評估仍由外部純量完全指定，agent 也沒有內生判準決定哪些新預測或技能值得建立。生成認知的批評不是替 OaK 多加一個模組，而是要求重新看待 agent、身體與環境的邊界。</p>
+<p>因此「純從經驗」不能解讀成「沒有外部世界也行」。經驗正是系統與外界互動後的約束。若資料逐漸全由自身模型生成，錯誤會在自指迴圈裡失去校正來源；2026 的理論結果把外部接地比例不能歸零寫成了明確條件。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>Sutton 本人列出 OaK 仍缺的三塊</strong>（<a href="https://arxiv.org/abs/2605.24238" rel="noopener">arXiv 2605.24238</a>）：<strong>原文事實（作者自報）</strong>：Sutton 與 Rafiee 的生成認知立場論文沒有實驗，主張 RL 與 enactive cognition 有結構性共鳴但仍不完整：評估判準由外部獎賞函數指定，行動與知覺的不可分割性未充分實現，具身性也被當成實作細節而非構成條件。這是概念論證，沒有 benchmark、樣本數、模型規模、隨機種子或 production 評測。對本篇的意義：OaK 可稱完整研究藍圖，不能稱完整認知理論或已完成系統。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2605.24238_Toward_Enactive_AI.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2605.24238_Toward_Enactive_AI.摘要.md</code></a></li></ul>
+<ul><li><strong>純自指迴圈無法自行增加真實資訊</strong>（<a href="https://arxiv.org/abs/2601.05280" rel="noopener">arXiv 2601.05280</a>）：<strong>原文事實（作者自報）</strong>：純理論工作把遞迴自我訓練寫成 <code>P_train = αₜ·P_data + (1−αₜ)·Pₜ</code>；當 <code>α=0</code>，熵序列是上鞅並幾乎必然收斂到 mode collapse（Theorem 2），資料處理不等式也給出自指迴圈不能增加與真分布互資訊的結果（Corollary 3）；若 <code>αₜ ≥ α* &gt; 0</code>，則可收斂到真分布（Theorem 5）。論文沒有實機 benchmark、樣本、模型、種子或 production 實驗。對本篇的意義：「從經驗長出來」的經驗不能退化成系統反覆吃自己的輸出，外部接地比例不能歸零。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2601.05280_LimitsSelfImproving.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2601.05280_LimitsSelfImproving.摘要.md</code></a></li></ul>
+<ul><li><strong>遺忘有新路線，可塑性流失仍未突破</strong>（<a href="https://arxiv.org/abs/2603.17198" rel="noopener">arXiv 2603.17198</a>）：<strong>原文事實（作者自報）</strong>：AAT 在 RCB 與 NAB 的線上連續學習設定中，把 loss 曲面方差降低 17.00%（CV 0.1549→0.1375）；抽象程度消融呈 <code>random &lt; category &lt; mask</code>，三個種子下整體變異數降到 0.0071，純 SFT 為 0.0197。主跨基準實驗只測 Qwen2.5-1.5B/3B 與 SmolLM-1.7B（附錄另在 RCB 上測到 7B），並非 production。它處理的是災難性遺忘，不是學習能力本身衰退的可塑性流失。對本篇的意義：相鄰問題有進展，不能拿來宣告 OaK 的終身可塑性已解。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2603.17198_Abstraction_Inductive_Bias_CL.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2603.17198_Abstraction_Inductive_Bias_CL.摘要.md</code></a></li></ul>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：獎賞假說與苦澀的教訓分別在主張什麼？ <strong>答</strong>：前者主張目標可表成累積純量獎賞；後者主張長期應押注可隨算力擴張的搜尋與學習。</li><li><strong>問</strong>：Dyna 為什麼可能加速，也可能害到學習？ <strong>答</strong>：模型能生成額外更新；模型若錯，想像經驗也會把錯誤灌回價值與策略。</li><li><strong>問</strong>：可塑性流失和災難性遺忘差在哪？ <strong>答</strong>：前者是新東西學不進去，後者是學新時把舊能力忘掉。</li><li><strong>問</strong>：2026 年 Sutton 自己認為 RL/OaK 還缺什麼？ <strong>答</strong>：內生評估判準、行動—知覺不可分割性，以及把具身性視為構成條件。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/machine_learning/blob/main/rl_cpp/docs/00_overview.md" rel="noopener"><code>rl_cpp/docs/00_overview.md</code></a>：整個實作路線沿 Sutton 與 Barto 的章節前進，適合建立心智模型。</li><li><a href="https://github.com/justty32/machine_learning/blob/main/rl_cpp/docs/m2_dp.md" rel="noopener"><code>rl_cpp/docs/m2_dp.md</code></a>：動態規劃是 Dyna 與 model-based planning 的地基。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2605.24238_Toward_Enactive_AI.%E6%91%98%E8%A6%81.md" rel="noopener"><code>Toward Enactive AI 摘要</code></a>：直接看 Sutton 2026 年對 RL 缺口的自我批評。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2601.05280_LimitsSelfImproving.%E6%91%98%E8%A6%81.md" rel="noopener"><code>自我改進限制摘要</code></a>：看外部資料比例為何不能歸零。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>Sutton 的整體願景從獎賞假說與苦澀的教訓出發，經過 TD、策略梯度、Dyna、GVF/Horde，最後收攏成 OaK 的五步自造抽象進程：讓智能從經驗與獎賞中逐層長出來。它令人著迷，因為這條線跨越數十年、企圖涵蓋完整智能；它也仍是藍圖，連作者本人都明確標出尚未補齊的地基。</p>
+<section class="self-check"><h2>自我檢核</h2><details><summary>獎賞假說與苦澀的教訓分別在主張什麼？</summary><p>前者主張目標可表成累積純量獎賞；後者主張長期應押注可隨算力擴張的搜尋與學習。</p></details><details><summary>Dyna 為什麼可能加速，也可能害到學習？</summary><p>模型能生成額外更新；模型若錯，想像經驗也會把錯誤灌回價值與策略。</p></details><details><summary>可塑性流失和災難性遺忘差在哪？</summary><p>前者是新東西學不進去，後者是學新時把舊能力忘掉。</p></details><details><summary>2026 年 Sutton 自己認為 RL/OaK 還缺什麼？</summary><p>內生評估判準、行動—知覺不可分割性，以及把具身性視為構成條件。</p></details></section>
+<div class="pager"><a href="02-階層式RL與元學習.html">← 02 階層式 RL 與元學習</a><a href="04-信用分配與經濟式智能.html">04 信用分配與經濟式智能 →</a></div></main></div><script src="app.js"></script></body></html>

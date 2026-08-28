@@ -1,0 +1,72 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 — 階層式 RL 與元學習</title><link rel="stylesheet" href="styles.css"></head><body data-page="02">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="01-強化學習入門.html" aria-label="上一篇：01 強化學習入門" title="01 強化學習入門">上一篇</a><a aria-current="page" href="02-階層式RL與元學習.html" aria-label="目前章節：02 階層式 RL 與元學習" title="02 階層式 RL 與元學習">02</a><a href="03-Sutton的整體願景與OaK.html" aria-label="下一篇：03 Sutton 的整體願景與 OaK" title="03 Sutton 的整體願景與 OaK">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-階層式-rl-把動作分層">一、階層式 RL：把動作分層</a></li><li><a href="#二-元強化學習-學會怎麼學">二、元強化學習：學會怎麼學</a></li><li><a href="#三-脈絡內學習-不改權重也能當場適應">三、脈絡內學習：不改權重也能當場適應</a></li><li><a href="#四-演化策略-沒有可用梯度時怎麼找方向">四、演化策略：沒有可用梯度時怎麼找方向</a></li><li><a href="#五-對比學習-用正負對照磨出表徵">五、對比學習：用正負對照磨出表徵</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">02 · 階層式 RL 把長任務拆成技能，元學習則讓系統面對新任務時更快學會</p><h1>02 — 階層式 RL 與元學習</h1><p class="reading-time">閱讀時間：約 18 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p>本設計不可能替每個新任務都從原始動作重練一次。它需要可重用的中介能力，也需要知道新任務來時該怎麼適應。 這和<a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/06_meta%E5%B1%A4%E4%BF%A1%E7%94%A8%E5%88%86%E9%85%8D%E8%88%87%E4%B8%89%E5%B1%A4%E7%A2%8E%E5%BD%A2.md" rel="noopener">三層碎形與 meta 層信用分配</a>直接相連：上層選技能，下層執行，meta 層再判斷整套學法是否值得保留。</p>
+<p>讀完後應能分辨技能重用、任務遷移與脈絡內適應，並知道三者需要不同的訓練資料與驗收方式。 尤其要分清楚：少走幾步、少改幾次權重與少看幾個示範，不是同一種效率。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>階層式強化學習（Hierarchical RL, HRL）</td><td>用高層技能取代一長串原始動作</td><td>高層選「去機場」，低層處理走路與搭車</td></tr><tr><td>技能（skill）</td><td>能跨多步完成一個局部目標的策略</td><td>「打開門」包含靠近、抓握與旋轉</td></tr><tr><td>選項（option）</td><td>有啟動、內部策略與終止條件的技能</td><td>只有站在門前才能叫用「開門」</td></tr><tr><td>子目標（subgoal）</td><td>高層交給低層達成的中間狀態</td><td>先走到鑰匙旁</td></tr><tr><td>元學習（meta-learning）</td><td>學一套更快學新任務的方法</td><td>看幾次示範就適應新控制器</td></tr><tr><td>元強化學習（Meta-RL）</td><td>在任務分布上學會快速試探與適應</td><td>換一台機器人後幾回合內調整策略</td></tr><tr><td>脈絡內學習（in-context learning, ICL）</td><td>不改權重，只靠當下脈絡改行為</td><td>prompt 給兩個例子後完成第三個</td></tr><tr><td>零樣本（zero-shot）</td><td>沒有該任務示範就直接嘗試</td><td>第一次進新房間就開始找路</td></tr><tr><td>少樣本（few-shot）</td><td>看少量示範後處理新任務</td><td>先看三次專家操作</td></tr><tr><td>演化策略（Evolution Strategies, ES）</td><td>用隨機擾動與回報估調參方向</td><td>往四周試步後朝較高處移動</td></tr><tr><td>對比學習（contrastive learning）</td><td>拉近正例、推遠負例來學表徵</td><td>同一物件兩張照片要靠近，貓與狗要分開</td></tr></tbody></table></div>
+<h2 id="一-階層式-rl-把動作分層">一、階層式 RL：把動作分層</h2>
+<p><strong>想解決什麼</strong>：最樸素的 RL 每一步都從左移、右移等原始動作挑選。任務一長，可能的動作序列就呈指數成長。已學會的「開門」若不能重用，換一間房又得從握把角度開始摸索。</p>
+<p><strong>核心想法</strong>：高層負責選技能或子目標，低層負責執行細節。規劃出國旅行時，人想的是「訂機票 → 訂旅館 → 打包 → 去機場」，不是「抬右手、握滑鼠、移動游標 0.3 公分」。每個大塊技能內部才展開細動作。這能壓縮搜尋空間，也讓同一技能跨任務重用。</p>
+<div class="table-wrap"><table><thead><tr><th>流派</th><th>提出者</th><th>核心比喻</th><th>一句話差別</th></tr></thead><tbody><tr><td>Options</td><td>Sutton, Precup, Singh 1999</td><td>可重用的巨集技能</td><td>技能由啟動條件、內部策略、終止條件組成</td></tr><tr><td>MAXQ</td><td>Dietterich 2000</td><td>任務樹遞迴分解</td><td>大任務拆成子任務樹，各自學價值</td></tr><tr><td>Feudal</td><td>Dayan &amp; Hinton 1993；FeUdal Networks 2017</td><td>經理與員工</td><td>上層下子目標，下層決定怎麼完成</td></tr></tbody></table></div>
+<p>這裡的 option 是一段從互動資料學出的跨步策略；2026 年 LLM agent 談的「技能」則常是檔案化、可讀、可版本化的 artifact。後者會漂移、被同名新版遮蔽，甚至因累積修補而腐化，和 option 在新狀態失去泛化是不同失效模式；技能檔案如何建立、修補與退役，可接著看<a href="19-技能庫的生老病死.html" rel="noopener">19 技能庫的生老病死</a>。</p>
+<p>Options 強調「技能是什麼」：在哪些狀態可以叫用、叫用後一路怎麼做、何時交還控制權。MAXQ 強調「任務怎麼拆」，像把大函式拆成子函式呼叫樹。Feudal 強調層間溝通，上層只管目標，不逐步遙控下層。</p>
+<p>把 option 寫成介面，可以看到它和普通 action 的差距：</p>
+<pre><code class="lang-text">option = {
+  initiation:  目前是否站在一扇可開的門前，
+  policy:      靠近把手、抓握、旋轉、推門，
+  termination: 門已開、失敗超時、或環境不再安全
+}</code></pre>
+<p>高層選一次「開門」，低層可能執行十幾步。對高層來說，時間尺度變粗，原本長度 100 的規劃可能縮成 8 個技能決策。但低層不能把失敗藏起來；option 應回傳成功、失敗、耗時與終止原因，否則高層學不到何時不該叫用。</p>
+<p>MAXQ 的樹也不是單純把程式函式名稱換成任務名稱。每個子任務要學「完成後對父任務還剩多少價值」。同一個「去門口」在逃生與搬貨任務裡，完成價值可能完全不同。階層分解降低搜尋量，也會引入跨層 value decomposition 的假設。</p>
+<p><strong>和相近理論差在哪</strong>：一般 action 是單一步驟；option 跨越多個時間步。行為樹或手寫工作流程也有層級，但通常由人先定義；HRL 的目標是連技能策略、終止或子目標也能由資料學出來。</p>
+<p><strong>常見誤解與限制</strong>：「有兩層」不代表一定更好。子目標選錯會把真正短路徑排除；技能只在訓練環境有效時，重用反而帶來負遷移。高層還必須處理低層技能執行多久、失敗後何時收回控制權，以及各層信用如何分配。</p>
+<p>技能發現本身就是難題。按固定房間、物件或人類命名切技能很容易理解，卻把領域知識先寫進去；完全從狀態 visitation 自動找 bottleneck，又可能只發現「常經過」而非「對任務有用」的地方。候選技能至少要以重用率、成功率、執行成本與跨任務遷移分開評估。</p>
+<p>終止條件也會改變高層看到的決策問題。option 太早結束，高層又得逐步控制，失去時間抽象；太晚結束，環境已變仍收不回控制權。若低層只回成功布林值，高層看不到「做到一半」「安全中止」「超時」的差異，信用便會被粗暴壓成一個數字。</p>
+<p>另一個坑是 skill chaining。技能 A 的終止狀態必須落在技能 B 的 initiation set，高層才能把兩者接起來。各技能單獨成功率很高，介面卻對不上時，整條長任務仍會失敗。這和函式單元測試全過、整合測試仍壞掉是同一種問題。</p>
+<h2 id="二-元強化學習-學會怎麼學">二、元強化學習：學會怎麼學</h2>
+<p><strong>想解決什麼</strong>：樸素 RL 換一個任務就重頭訓練。人學會騎腳踏車後，學機車通常比較快；模型若無法把「怎麼摸索」帶到下一題，樣本效率會很差。</p>
+<p><strong>核心想法</strong>：被學的對象從某個任務的解，提升為學習演算法、超參數或容易適應的初始狀態。程式化比喻是：與其替每個新 API 手寫錯誤處理，不如累積一套面對陌生 API 時如何快速試探的手感。學的是摸索方法，不是某一個 API 的答案。</p>
+<ul><li>RL²（Duan et al., 2016）把整段學習過程塞進 RNN 隱藏狀態。RNN 跨多個任務接收觀察、動作與獎賞，它的記憶逐漸表現得像一個學習演算法。</li><li>MAML（Finn et al., 2017）學一組特別容易微調的初始參數。從這裡出發，新任務只需幾步梯度下降。它像把模型放在離各任務都不遠的中心點。</li><li>Schmidhuber（1987）的自我指涉路線讓學習演算法學自己該如何改進。企圖最徹底，也最難穩定收斂。</li></ul>
+<p><strong>和相近理論差在哪</strong>：遷移學習通常把一個來源任務的表徵搬到目標任務；元學習在一整個任務分布上訓練「適應過程」。RL² 把適應藏在狀態記憶，MAML 透過權重更新適應，兩者的內層機制不同。</p>
+<p><strong>常見誤解與限制</strong>：元學習不會憑空得到通用性。訓練任務分布若太窄，模型只是記住一套快速猜題套路；新任務超出分布時仍會失效。比較元學習方法時還要固定暖啟動、輸入維度、隨機種子與彙總指標，否則「學得快」可能只是條件比較有利。</p>
+<p>元訓練常有兩層迴圈。內層在一個任務裡收集少量資料並適應；外層觀察適應後表現，再更新「如何適應」。MAML 的內層是幾步梯度，外層讓初始參數更適合這種梯度更新。RL² 的內層沒有顯式改權重，而是讓 recurrent state 吸收最近的試探結果。</p>
+<div class="table-wrap"><table><thead><tr><th>問題</th><th>一般 RL</th><th>Meta-RL</th></tr></thead><tbody><tr><td>訓練單位</td><td>一個環境或任務</td><td>一個任務分布</td></tr><tr><td>快速變化放哪</td><td>策略參數逐步更新</td><td>隱藏狀態、context 或少量內層更新</td></tr><tr><td>評估重點</td><td>最終回報</td><td>新任務前幾次互動的適應速度</td></tr><tr><td>常見洩漏</td><td>測試軌跡進 replay</td><td>meta-test 任務與 meta-train 太相似</td></tr></tbody></table></div>
+<p>實驗最容易踩的坑是把「看過同一任務的不同種子」稱為新任務。真正的 meta-test 應保留任務、目標或動力學條件，而不只是換初始位置。還要畫出 adaptation curve，不能只報最後回報；若第 100 回合才追上從零訓練，便很難稱為快速學習。</p>
+<h2 id="三-脈絡內學習-不改權重也能當場適應">三、脈絡內學習：不改權重也能當場適應</h2>
+<p><strong>想解決什麼</strong>：MAML 仍需在新任務上更新權重。若部署時不能改參數，系統能否只靠剛看到的示範、歷史狀態與回饋改變行為？</p>
+<p><strong>核心想法</strong>：脈絡內學習（in-context learning, ICL）把範例放進 context，模型在一次前向傳播中依範例改變輸出，權重保持不動。例如給語言模型「英文 cat → 法文 chat」「英文 dog → 法文 chien」，再問 bird，它能依格式回答 oiseau。〈Why Can GPT Learn In-Context?〉（ACL 2023）等工作把某些 Transformer 注意力行為解釋為前向傳播內的隱式梯度式更新。</p>
+<p>2026 的 Decision Pre-Trained Transformer 把這個想法搬到連續控制。context 不再是幾句文字，而是過去的狀態、動作、獎賞與示範。模型可在不改權重下，依線上回饋修正控制策略。這把 ICL 從「prompt 裡看例子」接回 Meta-RL 的原始問題。</p>
+<p><strong>和相近理論差在哪</strong>：MAML 透過幾步梯度下降改權重；RL² 與 Decision Pre-Trained Transformer 可把適應編碼在循環狀態或 Transformer context。三者都可能做到 few-shot，但「學到的東西放在哪裡」不同。</p>
+<p><strong>常見誤解與限制</strong>：「前向傳播像梯度下降」是對特定架構與任務的分析，不代表所有 ICL 都在執行同一個最佳化演算法。context 長度有限，錯誤示範也會污染適應。連續控制成果不能直接推出語言、機器人實機或長時間 production 都同樣穩定。</p>
+<p>在 RL context 中，一筆 token 對應的可能不是字，而是 <code>(狀態, 動作, 獎賞)</code>。模型先看到幾次「採取這個動作後回報變差」，後續便降低類似動作的機率。外部看起來像在線更新策略，實際權重完全沒變；暫時知識只存在當次 context。context 被截斷或新 episode 清空後，適應也可能一起消失。</p>
+<p>zero-shot 在這裡也容易誤讀。它不表示模型從未看過相近動力學，而是保留任務沒有出現在訓練集合；模型仍從大量其他任務學到探索先驗。few-shot 另加入專家示範，測的是能否利用高品質軌跡。兩種設定回答不同問題，不能只挑較高分者當總結。</p>
+<p>context-based 適應還需要治理記憶順序。最新軌跡可能最符合目前環境，早期失敗卻包含探索邊界；只截取最近片段會忘掉已排除的行動，保留全部又超過 context。摘要、挑選與壓縮於是變成 Meta-RL 的一部分，不再只是語言模型的提示工程。</p>
+<p>真正比較 ICL agent 時，至少要分開報：沒有示範的 zero-shot、給相同數量專家軌跡的 few-shot、允許線上環境回饋的 adaptation，以及把權重微調當上限的版本。若資料預算不同，就無法判斷提升來自學習機制還是多看了經驗。</p>
+<h2 id="四-演化策略-沒有可用梯度時怎麼找方向">四、演化策略：沒有可用梯度時怎麼找方向</h2>
+<p><strong>想解決什麼</strong>：有些獎賞不可微、稀疏或跨越很長時間，無法沿計算圖反向傳播。策略中還可能包含離散結構，使梯度根本不存在。</p>
+<p><strong>核心想法</strong>：演化策略（Evolution Strategies, ES；Salimans et al., 2017）對目前參數加一批隨機擾動，跑完後看各版本報酬，再把「擾動方向 × 報酬」加權平均，估出往哪裡調會更好。像蒙眼找山頂：往四面踏幾步，感覺哪邊較高，就往那邊移動。</p>
+<p><strong>和相近理論差在哪</strong>：反向傳播使用單次軌跡的解析或隨機梯度；ES 把整個策略當黑箱，只要求能評分。它能處理離散與不可微系統，但通常需要大量平行評估，樣本效率未必好。</p>
+<p><strong>常見誤解與限制</strong>：「不需要梯度」不等於沒有方向估計。ES 仍用隨機樣本估一個搜尋方向，只是梯度來自參數擾動與回報的相關性。維度很高、評估昂貴或回報噪聲大時，估計會很不穩。</p>
+<p>ES 的優點是各擾動版本能平行執行，而且每個 worker 只需回傳一個回報與隨機種子，不必傳整條梯度。代價是它用很多完整 rollout 換一個方向估計。模擬便宜、梯度斷裂時可能划算；真實機器每次試驗昂貴時，樣本成本通常成為主問題。</p>
+<p>若回報尺度差異很大，少數幸運 rollout 會支配更新。常見做法會對回報做排序或正規化，再配對正負擾動降低變異。這些技巧改善估計，仍不能解決稀疏獎賞下所有候選都拿同分的情況。</p>
+<h2 id="五-對比學習-用正負對照磨出表徵">五、對比學習：用正負對照磨出表徵</h2>
+<p><strong>想解決什麼</strong>：只看一堆正例，模型可能知道哪些東西大致像目標，卻不知道邊界在哪。階層技能與元學習若沒有可遷移表徵，上層仍得面對雜亂的原始輸入。</p>
+<p><strong>核心想法</strong>：對比學習（contrastive learning）拉近正例表徵、推遠負例。只看貓照片時，「貓」的概念可能很模糊；同時標出狗不是貓，邊界會清楚得多。在影像中，同一張圖的兩種合理增強常當正對，不同圖片當負對。</p>
+<p><strong>和相近理論差在哪</strong>：分類學習直接預測人工類別；對比學習先塑造表徵空間，之後可供控制、檢索或分類使用。它本身不是 HRL，也不會自動產生 option，但能讓技能狀態與任務相似性更容易被辨認。</p>
+<p><strong>常見誤解與限制</strong>：負例若選錯，模型會被迫把本來相近的東西推開；資料增強若改變語意，正例也會變成假正例。學到好的幾何結構不等於已解決長程信用分配或技能終止條件。</p>
+<p>對控制任務來說，正例可以是同一狀態的兩種感測雜訊版本，也可以是執行同一技能時的不同軌跡；負例則可能來自不同技能或失敗狀態。選法直接決定表徵保留什麼。若把「不同房間但同樣在開門」當負例，模型會學到房間外觀，而不是可遷移的開門結構。</p>
+<p>因此對比學習比較像替 HRL 與 Meta-RL 準備座標系。它可以讓相近任務、狀態或技能在表示空間靠近，降低後續搜尋難度；真正的高層決策、時間信用與新任務適應仍要由另外的學習迴路完成。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>ICL 擴到連續控制通才 agent</strong>（<a href="https://arxiv.org/abs/2604.05112" rel="noopener">arXiv 2604.05112</a>）：<strong>原文事實（作者自報）</strong>：Vintix II 把 Decision Pre-Trained Transformer 加上 flow-matching 策略頭，涵蓋 10 個領域、209 個訓練任務與 700M+ transitions；46 個保留任務同時測 zero-shot 線上自我修正與 few-shot 專家示範。離線在 MetaDrive、CityLearn、SinerGym、ControlGym 分別達 demonstrator 的 102%、78%、92%、100%，Meta-World ML45 split 比 prompted Vintix 高 63%。這是非語言的連續控制實驗，摘要未把它當作機器人實機 production 保證。對本篇的意義：不改權重、靠 context 適應已能在多領域 RL 規模化，不再只是 LLM prompt 現象。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.05112_VintixII_DPT_ICRL.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.05112_VintixII_DPT_ICRL.摘要.md</code></a></li></ul>
+<ul><li><strong>五種元學習方法不能互換</strong>（<a href="https://arxiv.org/abs/2507.17668" rel="noopener">arXiv 2507.17668</a>）：<strong>原文事實（作者自報）</strong>：研究以 16 seeds 與 IQM，比較黑箱 ES、黑箱蒸餾、PySR 符號蒸餾、o3-mini LLM 提案等五種方法，橫跨 LPO、LPG、OPEN、No Features 四種 meta-learned algorithms。LLM 提案在 No Features 全面最強，卻不能用於沒有暖啟動的 LPG；符號蒸餾在高維或遞迴輸入的前饋 OPEN 上雙雙失敗。這是指定演算法族與實驗設定的比較，不是 production 排名。對本篇的意義：選元學習法要看是否有暖啟動、輸入結構與可符號化程度，沒有單一方法全面最佳。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2507.17668_meta_learn_rl_algorithms.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2507.17668_meta_learn_rl_algorithms.摘要.md</code></a></li></ul>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：option 和單一步 action 差在哪？ <strong>答</strong>：option 有啟動條件、跨多步的內部策略與終止條件。</li><li><strong>問</strong>：MAML 與 ICL 的適應發生在哪裡？ <strong>答</strong>：MAML 在新任務上更新權重；ICL 保持權重不變，把適應放進 context 計算。</li><li><strong>問</strong>：為什麼元學習不等於通用智能？ <strong>答</strong>：它仍受 meta-training 任務分布限制，超出分布時可能只剩錯誤的快速猜法。</li><li><strong>問</strong>：ES 真的完全沒有方向資訊嗎？ <strong>答</strong>：不是。它用隨機參數擾動與回報的相關性估計搜尋方向。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/machine_learning/blob/main/robosim_py/docs/m4_policy_gradient.md" rel="noopener"><code>robosim_py/docs/m4_policy_gradient.md</code></a>：從 REINFORCE 到 PPO，看技能底層如何處理連續控制。</li><li><a href="https://github.com/justty32/machine_learning/blob/main/robosim_py/docs/m5_offpolicy.md" rel="noopener"><code>robosim_py/docs/m5_offpolicy.md</code></a>：用 DDPG 到 TD3 理解離策略連續動作學習。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.05112_VintixII_DPT_ICRL.%E6%91%98%E8%A6%81.md" rel="noopener"><code>Vintix II 摘要</code></a>：查看 Decision Pre-Trained Transformer 的任務與評測限制。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2507.17668_meta_learn_rl_algorithms.%E6%91%98%E8%A6%81.md" rel="noopener"><code>元學習方法比較摘要</code></a>：看暖啟動與輸入結構如何改變方法選擇。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>階層式 RL 把動作分成技能層與執行層，元學習則把「如何快速適應」本身變成學習目標；從 MAML、RL² 到不改權重的 Decision Pre-Trained Transformer，追求的都是讓系統舉一反三、重用技能，面對新任務時不必從零開始。</p>
+<section class="self-check"><h2>自我檢核</h2><details><summary>option 和單一步 action 差在哪？</summary><p>option 有啟動條件、跨多步的內部策略與終止條件。</p></details><details><summary>MAML 與 ICL 的適應發生在哪裡？</summary><p>MAML 在新任務上更新權重；ICL 保持權重不變，把適應放進 context 計算。</p></details><details><summary>為什麼元學習不等於通用智能？</summary><p>它仍受 meta-training 任務分布限制，超出分布時可能只剩錯誤的快速猜法。</p></details><details><summary>ES 真的完全沒有方向資訊嗎？</summary><p>不是。它用隨機參數擾動與回報的相關性估計搜尋方向。</p></details></section>
+<div class="pager"><a href="01-強化學習入門.html">← 01 強化學習入門</a><a href="03-Sutton的整體願景與OaK.html">03 Sutton 的整體願景與 OaK →</a></div></main></div><script src="app.js"></script></body></html>

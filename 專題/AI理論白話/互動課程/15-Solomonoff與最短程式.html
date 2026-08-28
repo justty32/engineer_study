@@ -1,0 +1,83 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>15 — Solomonoff 與最短程式</title><link rel="stylesheet" href="styles.css"></head><body data-page="15">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="14-元胞自動機與發育式成長.html" aria-label="上一篇：14 元胞自動機與發育式成長" title="14 元胞自動機與發育式成長">上一篇</a><a aria-current="page" href="15-Solomonoff與最短程式.html" aria-label="目前章節：15 Solomonoff 與最短程式" title="15 Solomonoff 與最短程式">15</a><a href="16-ARC-AGI泛化量尺.html" aria-label="下一篇：16 ARC-AGI" title="16 ARC-AGI">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-kolmogorov-複雜度-一個東西真正有多少規律">一、Kolmogorov 複雜度：一個東西真正有多少規律</a></li><li><a href="#二-solomonoff-歸納-讓所有解釋按長度投票">二、Solomonoff 歸納：讓所有解釋按長度投票</a></li><li><a href="#三-mdl-把模型本身也列入帳單">三、MDL：把模型本身也列入帳單</a></li><li><a href="#四-aixi-預測世界後再選行動">四、AIXI：預測世界後再選行動</a></li><li><a href="#五-壓縮進步-為什麼-半懂不懂-最有趣">五、壓縮進步：為什麼「半懂不懂」最有趣</a></li><li><a href="#六-不可計算與可跑近似的分界">六、不可計算與可跑近似的分界</a></li><li><a href="#七-做一張可稽核的描述長度帳本">七、做一張可稽核的描述長度帳本</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">15 · 能以較短程式重現資料的規則，通常是較好的解釋；Kolmogorov、Solomonoff 與 MDL 把這句奧坎剃刀分成理論上限與可跑近似</p><h1>15 — Solomonoff 與最短程式</h1><p class="reading-time">閱讀時間：約 18 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p><a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/09_%E6%9C%80%E9%AB%98%E5%AE%9A%E4%BD%8D_%E5%B0%8D%E6%9C%80%E7%9F%AD%E7%A8%8B%E5%BC%8F%E7%90%86%E6%83%B3%E7%9A%84%E5%8F%AF%E8%B7%91%E8%BF%91%E4%BC%BC.md" rel="noopener">「對最短程式理想的可跑近似」</a>直接把這條理論當成北極星：候選不只要答對，還要用較短、可重用的規則答對。工程關鍵不是宣稱找到宇宙中最短的程式，而是固定 DSL、編碼與驗證協定後，讓可跑系統逐步壓低總描述成本。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>歸納（induction）</td><td>從有限觀察猜未見規律</td><td>看見 <code>2,4,6,8</code> 後猜 <code>10</code></td></tr><tr><td>奧坎剃刀（Occam&#x27;s razor）</td><td>解釋力相同時偏好簡單者</td><td>能用一行迴圈就不逐項抄值</td></tr><tr><td>Kolmogorov 複雜度</td><td>產生某物的最短程式長度</td><td>重複字串比亂碼容易用短程式產生</td></tr><tr><td>Solomonoff 歸納</td><td>讓所有可生成資料的程式按長度加權投票</td><td>短程式取得較高預測權重</td></tr><tr><td>最短描述長度（Minimum Description Length, MDL）</td><td>同時計算模型與資料的編碼成本</td><td>模型太簡單與死背資料都會付代價</td></tr><tr><td>通用圖靈機（Universal Turing Machine, UTM）</td><td>能模擬其他機器的固定計算模型</td><td>換一段程式就執行不同工作</td></tr><tr><td>AIXI</td><td>Solomonoff 預測加上序列決策的理論智能體</td><td>對可能世界加權後選長期報酬最大的動作</td></tr><tr><td>函式庫學習（library learning）</td><td>把常用程式片段升級成新零件</td><td>多題重用同一個旋轉函式</td></tr><tr><td>parsimony pressure</td><td>在適應度中懲罰過長程式</td><td>同分時選 AST 較小者</td></tr><tr><td>不可計算（uncomputable）</td><td>不存在能對所有輸入都算出精確答案的演算法</td><td>精確求任意字串的 Kolmogorov 複雜度</td></tr><tr><td>code-golf</td><td>以最短程式完成指定輸出</td><td>CompressARC 把解題改寫成印出謎題的短程式</td></tr></tbody></table></div>
+<h2 id="一-kolmogorov-複雜度-一個東西真正有多少規律">一、Kolmogorov 複雜度：一個東西真正有多少規律</h2>
+<p><strong>想解決什麼</strong>：我們會直覺說某些資料「很規則」、某些資料「像亂碼」，但字串長度本身分不出兩者。需要一個量尺，把「可由短規則生成」和「只能逐字照抄」區分開。</p>
+<p><strong>核心想法</strong>：Solomonoff、Kolmogorov 與 Chaitin 在 1960 年代各自發展出這條線。一個字串 <code>x</code> 的 Kolmogorov 複雜度 <code>K(x)</code>，就是能輸出 <code>x</code> 的最短程式長度。看兩個同樣長的字串：</p>
+<ul><li><code>&quot;abababababababab&quot;</code> 可以由 <code>print(&quot;ab&quot; * 8)</code> 生成，描述很短。</li><li><code>&quot;8f3a0c7e1d92b6f4&quot;</code> 若沒有更深規律，最短辦法接近整段照抄。</li></ul>
+<p>有規律的東西能被短程式生成，<code>K</code> 小；真正隨機的東西壓不掉，<code>K</code> 大。壓縮之所以像理解，是因為壓短通常代表你抓到能重建資料的規律。</p>
+<p><strong>和相近理論差在哪</strong>：Shannon entropy 衡量一個機率來源平均有多少不確定性；Kolmogorov 複雜度問單一物件最短能怎麼生成。一般壓縮軟體提供的是某套演算法下的壓縮結果，不是 <code>K(x)</code> 的精確值。</p>
+<p><strong>常見誤解與限制</strong>：<code>K(x)</code> 不可計算。你可以找到一個很短的程式，卻永遠不能對任意 <code>x</code> 保證再也沒有更短者。原因會碰到停機問題：候選程式可能永遠跑不完，無法用通用程序逐一排除。</p>
+<h2 id="二-solomonoff-歸納-讓所有解釋按長度投票">二、Solomonoff 歸納：讓所有解釋按長度投票</h2>
+<p><strong>想解決什麼</strong>：看到 <code>2,4,6,8</code> 時，為什麼該猜 <code>10</code> 而不是 <code>42</code>？有限觀察永遠容許無限多條規則。歸納問題需要的不只是產生一個解釋，而是替所有相容解釋分配可信度。</p>
+<p><strong>核心想法</strong>：Solomonoff 的做法是列出所有能產生目前資料的程式，依程式長度給權重。長度為 <code>l</code> 的程式大致取得 <code>2^{-l}</code> 的權重；短解釋多投票，長解釋少投票，再加權預測下一個值。它把奧坎剃刀從一句偏好寫成機率式原則。</p>
+<p>可以把整條主軸看成從理想一路降到近似：</p>
+<pre class="mermaid" data-src="flowchart LR
+  K[&quot;Kolmogorov 複雜度&lt;br/&gt;(複雜度的理想定義)&quot;] --&gt; S[&quot;Solomonoff 歸納&lt;br/&gt;(通用預測，不可計算)&quot;]
+  S --&gt; M[&quot;MDL 最短描述長度&lt;br/&gt;(可跑近似)&quot;]
+  S --&gt; A[&quot;AIXI&lt;br/&gt;(序列決策理論上限)&quot;]
+  M --&gt; SC[&quot;壓縮進步&lt;br/&gt;(人工好奇心)&quot;]">flowchart LR
+  K["Kolmogorov 複雜度<br/>(複雜度的理想定義)"] --> S["Solomonoff 歸納<br/>(通用預測，不可計算)"]
+  S --> M["MDL 最短描述長度<br/>(可跑近似)"]
+  S --> A["AIXI<br/>(序列決策理論上限)"]
+  M --> SC["壓縮進步<br/>(人工好奇心)"]</pre>
+<p><strong>和相近理論差在哪</strong>：一般貝氏推論先由人指定模型家族與先驗；Solomonoff 想把所有可計算生成程序都納入，並以程式長度形成通用先驗。它的涵蓋面更廣，計算代價也因此無法承受。</p>
+<p><strong>常見誤解與限制</strong>：Solomonoff 歸納不是可以直接寫成完整迴圈的演算法。它要枚舉無窮多程式，還要處理不停機候選，因此不可計算。它的角色是告訴我們「理想歸納器應偏好什麼」，不是拿來直接跑 production。</p>
+<h2 id="三-mdl-把模型本身也列入帳單">三、MDL：把模型本身也列入帳單</h2>
+<p><strong>想解決什麼</strong>：只看訓練誤差會獎勵死背。只看模型大小又可能選到什麼都解釋不了的常數模型。MDL 要把「規則多複雜」和「規則還漏掉多少資料」放進同一張帳單。</p>
+<p><strong>核心想法</strong>：Rissanen 在 1978 年提出最短描述長度。判斷模型好不好，看這個總和：</p>
+<pre><code class="lang-text">總成本 ＝ 描述「模型本身」的長度
+       ＋ 在這個模型底下描述「資料」的長度</code></pre>
+<p>模型若只說「全部猜 0」，第一段極短，第二段卻因大量例外而爆炸。模型若把每筆資料硬背下來，第二段接近零，第一段又爆炸。最好的模型，是兩段加起來最短者。這就是過度擬合的壓縮版說法。</p>
+<p>函式庫學習可直接套這個觀點。某片段在很多任務重複出現，就把它抽成新 helper。每個解答可能縮短，但 helper 本身也要付描述成本。只有整批任務的總長度下降，這次抽象才真的划算。「越學越短」的正式地基就在這裡。</p>
+<p>CompressARC 把 MDL 落到 ARC-AGI-1。它不枚舉離散程式，而是對單一待解謎題過度擬合一個等變網路，把謎題壓進權重，再精算權重與種子的位元長度。未知輸出格子像程式尚未填的部分；最短自含程式若抓到共同規律，就應以正確圖樣補上。</p>
+<p><strong>和相近理論差在哪</strong>：正則化常在損失中加一個權重大小懲罰；MDL 要求把模型、參數、零件庫與殘差都解讀成可編碼成本。交叉驗證用保留資料檢查泛化；MDL 則用描述長度抑制死背。兩者可以一起使用，並非互斥。</p>
+<p><strong>常見誤解與限制</strong>：「可計算」是相對於精確 Kolmogorov 複雜度而言，不表示 MDL 最佳解容易找到。編碼方案、模型家族與搜尋程序都由工程師選定。CompressARC 也是梯度近似搜尋，不是在宇宙所有程式中找到絕對最短者。</p>
+<h2 id="四-aixi-預測世界後再選行動">四、AIXI：預測世界後再選行動</h2>
+<p><strong>想解決什麼</strong>：Solomonoff 處理「下一個觀察會是什麼」，智能體還得回答「我現在做什麼，長期結果最好」。行動會改變之後看見的資料，不能只做被動預測。</p>
+<p><strong>核心想法</strong>：Hutter 在 2000 年代把 Solomonoff 的通用世界模型與序列決策結合成 AIXI。它對所有可能的可計算世界按簡單性加權，估計每個動作會帶來的長期報酬，再選期望值最高的動作。AIXI 回答的是「一個理論上最強的通用智能體可如何定義」。</p>
+<p><strong>和相近理論差在哪</strong>：一般強化學習先固定環境類別、模型架構或策略空間；AIXI 把所有可計算環境納入理論考量。AIXI 也不是一個特定神經網路架構，而是不可計算的規範性上界。</p>
+<p><strong>常見誤解與限制</strong>：AIXI 不可計算，也沒有自動處理現實中的安全、資源與錯誤規格。AIXItl、MC-AIXI 等近似版必須限制時間、程式長度或模型類別；一旦加限制，保證與行為就相對於那些工程選擇。</p>
+<p><strong>2026 的 AIXI 用法</strong>：Shane Legg、Marcus Hutter 等 14 人的報告是立場／路線圖，不是實驗論文。作者以 AIXI 的 Legg–Hutter 分數當理論上界，把它解釋為「不可計算、只能由越來越強的系統從下逼近」的實務框架；報告估算硬體、投資與演算法效率相乘後，有效算力約以每年 10 倍進展，並列出四條 AGI→ASI 路徑與六大瓶頸。</p>
+<h2 id="五-壓縮進步-為什麼-半懂不懂-最有趣">五、壓縮進步：為什麼「半懂不懂」最有趣</h2>
+<p><strong>想解決什麼</strong>：智能體若只靠外在獎賞探索，獎賞稀疏時可能不知道去哪裡。完全熟悉的資料沒有新東西可學，純亂碼又無法學。需要一種內在訊號，把注意力放在仍有規律可挖之處。</p>
+<p><strong>核心想法</strong>：Schmidhuber 把學習視為壓縮，把好奇心定義成「壓縮器的進步」。已完全看懂的東西壓無可壓，很無聊；完全隨機的東西壓不動，也很無聊；介於兩者之間、目前還能讓壓縮率改善的經驗，才有學習價值。這把人工好奇心連回最短描述的主線。</p>
+<p>Speed Prior 再把程式執行時間列入簡單性。兩個同樣短的解釋，較快產生預測者應取得較高優先權。它提醒我們，程式長度不是唯一現實成本。</p>
+<p><strong>和相近理論差在哪</strong>：預測誤差獎勵會偏好最難預測的白噪音；壓縮進步獎勵的是「比以前更能壓縮」，因此理想上不會永遠追逐不可壓縮噪音。外在獎賞關心任務成敗，內在壓縮獎賞關心模型是否學到新規律，兩者仍須權衡。</p>
+<p><strong>常見誤解與限制</strong>：壓縮器本身的能力會決定什麼看起來有趣。弱壓縮器可能把簡單規律當噪音，強壓縮器也可能迅速耗盡某領域的新奇度。壓縮進步是一個驅動訊號，不是目標正確性或安全性的替代品。</p>
+<h2 id="六-不可計算與可跑近似的分界">六、不可計算與可跑近似的分界</h2>
+<p><strong>想解決什麼</strong>：這套理論最容易被講成「找最短程式就好」，彷彿工程只差算力。真正的分界是：理想量尺不可計算，實作必須先限制語言、編碼、候選與時間。</p>
+<div class="table-wrap"><table><thead><tr><th></th><th>不可計算的理想上限</th><th>可跑近似</th></tr></thead><tbody><tr><td>角色</td><td>說明最好能做到多好</td><td>在現實限制下逼近</td></tr><tr><td>例子</td><td>Kolmogorov 複雜度、Solomonoff 歸納、AIXI</td><td>MDL、CompressARC、函式庫學習、程式搜尋與演化</td></tr><tr><td>為何有差</td><td>無窮程式與停機問題</td><td>固定語言、編碼和有限預算</td></tr><tr><td>結論形式</td><td>通用但不能完整執行</td><td>可重現，但只對所選協定成立</td></tr></tbody></table></div>
+<p><strong>核心想法</strong>：工程上必須先固定 DSL 與編碼，再比較候選描述長度。換語言或零件庫，最短解可能跟著改變。實作應記錄模型長度、資料殘差、搜尋展開數、執行時間與驗證結果，避免只留一個無法解釋的「簡單度」分數。</p>
+<p><strong>和相近理論差在哪</strong>：理論中的 UTM 變更只造成固定常數差，對漸近結論影響有限；有限資料的工程系統裡，那個常數可能大到足以翻轉候選排名。因此「不變性定理」不能拿來否認 DSL 選擇的實務影響。</p>
+<p><strong>常見誤解與限制</strong>：</p>
+<ul><li><strong>最短不是絕對的</strong>。它永遠相對於語言與編碼。</li><li><strong>短不等於安全，也不等於正確</strong>。短程式仍可能呼叫危險操作，或鑽資料漏洞。</li><li><strong>短不等於好找</strong>。人類行為研究顯示，解題時間和步數跟搜尋展開的候選數高度相關，跟最後程式長度卻沒有可靠關聯。</li><li><strong>加更多零件不一定更好</strong>。若每題都加專用捷徑，函式庫本身的描述成本會膨脹。</li><li><strong>壓縮過去不保證服務未來</strong>。環境非平穩時，該固化哪些 helper 還牽涉未來任務分布，而未來尚未發生。</li></ul>
+<p><strong>抽象該壓縮過去還是未來</strong>：現有 DreamCoder、Stitch 式函式庫學習預設任務分布靜態，只回溯已見語料。作者自報的 Pattern Builder Task 在兩種課程各有 30 人，比較六個計算模型與人類；在非平穩 E2 課程中，人類的語料壓縮持續超越回溯式演算法與 LLM 模型，緊貼理論最優的前瞻式壓縮。這代表非平穩環境裡，MDL 的「整批任務」還包含未發生的部分；而附錄也證明，即使在極度受限的扁平程式設定下，尋找最佳單一 helper 仍是 NP-complete（歸約自 Maximum-Edge-Biclique）。</p>
+<p>求短也要求對地方：把 MDL 分段成本加進 RL 訓練訊號的 2026 結果見 <a href="19-技能庫的生老病死.html" rel="noopener">19 技能庫的生老病死</a>。</p>
+<h2 id="七-做一張可稽核的描述長度帳本">七、做一張可稽核的描述長度帳本</h2>
+<p><strong>想解決什麼</strong>：工程文件若只寫「這個解比較短」，通常無法重現。到底算 AST 節點、原始碼字元、壓縮後位元，還是模型參數？helper 的定義成本算一次還是每題重算？答案不同，排名就可能不同。</p>
+<p><strong>核心想法</strong>：先固定一套前綴編碼。每個運算子有代號，常數與變數有自分隔編碼，AST 不需要額外括號就能解碼。接著把總成本拆成至少三欄：DSL／函式庫本身的成本、每題程式的成本、未被程式解釋之資料或例外的成本。若還關心速度，再另外記執行步數與搜尋展開數，不要偷偷混進長度後失去可解釋性。</p>
+<p>例如三題都用到 <code>rotate90</code>。若它原本就是 DSL 內建運算子，每次呼叫只付一個代號；若它是新抽出的 helper，就要先付定義成本，再付三次呼叫成本。只有「定義一次＋三次呼叫」比三份展開程式更短，函式庫更新才降低總帳單。這也解釋為何只看單題縮短幅度會誤判。</p>
+<p>可以用假數字做帳。三份展開程式各 40 bits，總共 120 bits；抽出 helper 需 55 bits，每次呼叫 8 bits，總共是 <code>55 + 3×8 = 79 bits</code>，這批任務省 41 bits。若只有一題使用，成本變成 63 bits，反而比原本 40 bits 貴。helper 是否「漂亮」不在判準內，跨多少題攤平定義成本才是關鍵。</p>
+<p><strong>和相近理論差在哪</strong>：AST 節點數容易計算，適合早期比較；位元級 MDL 需要明確機率模型或編碼器，較精細也較容易藏入假設；執行時間與 nodes expanded 是計算成本，不是描述長度。三者可以並列，不能互相冒名。</p>
+<p><strong>常見誤解與限制</strong>：描述長度帳本只能保證比較規則一致，不能保證所選語言公平。某個 DSL 若把目標答案做成單一內建指令，所有解都會假短。驗收時仍要檢查零件是否跨題重用、是否使用答案資訊、保留資料是否通過，以及換一批任務後總成本是否仍下降。帳本、DSL 版本與任務清單要一起保存，否則之後看到 79 bits，也不知道它是怎麼算出來的。</p>
+<p>若編碼規則有改版，舊結果要用舊帳本保留，不能直接拿新舊 bits 排名。</p>
+<p>最短紀錄必須能由解碼器無歧義還原，否則長度比較沒有共同基準。</p>
+<p>解碼失敗就應判為無效候選。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>抽象該壓縮過去還是壓縮未來</strong>（<a href="https://arxiv.org/abs/2605.09985" rel="noopener">arXiv 2605.09985</a>）：<strong>原文事實（作者自報）</strong>：現有 DreamCoder、Stitch 式 library learning 預設任務分布靜態，只回溯壓縮已見語料；Pattern Builder Task 以兩種課程各 <code>n=30</code> 比較六個計算模型與人類，非平穩 E2 中人類的語料壓縮持續超越回溯式壓縮演算法與 LLM 模型，緊貼理論最優的前瞻式壓縮。附錄證明，極度受限的扁平程式設定下，找最佳單一 helper 仍是 NP-complete（歸約自 Maximum-Edge-Biclique）。對本篇的意義：非平穩環境的 MDL 帳本不能只回看已見任務，還要對未來任務生成過程做明示假設。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2605.09985_ProspectiveCompression.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2605.09985_ProspectiveCompression.摘要.md</code></a></li><li><strong>AIXI 的原班人馬 2026 怎麼用它：從 AGI 到 ASI</strong>（<a href="https://arxiv.org/abs/2606.12683" rel="noopener">arXiv 2606.12683</a>）：<strong>原文事實（作者自報）</strong>：這是 Shane Legg、Marcus Hutter 等 14 人掛名的立場／路線圖報告，不是實驗論文；它以 AIXI（Legg–Hutter 分數）為不可計算的理論上界，估算硬體、投資與演算法效率相乘後的有效算力約以每年 10 倍進展，並提出四條 AGI→ASI 路徑與六大瓶頸。對本篇的意義：AIXI 在路線圖中不是待實作的模型，而是只能由更強系統從下逼近的實務參照上界。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2606.12683_From_AGI_to_ASI.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2606.12683_From_AGI_to_ASI.摘要.md</code></a></li></ul>
+<ul><li><strong>MDL 真的跑起來：CompressARC</strong>（<a href="https://arxiv.org/abs/2512.06104" rel="noopener">arXiv 2512.06104</a>）：<strong>原文事實（作者自報）</strong>：76K 參數、零預訓練，把 ARC-AGI-1 化成 code-golf／MDL 問題；全部學習只在推論時發生，只用移除答案後的待解謎題作唯一訓練樣本。每題猜 2 次，輸出形狀與所有像素全對才算對，評估集解出 20%、訓練集 34.75%；同樣極端協定下 U-Net 幾乎全敗。作者明說 20% 遠低於 SOTA，方法是概念驗證，形狀複製任務弱且可能 posterior collapse。對本篇的意義：它把「模型長度＋資料長度」轉成可微損失，示範 MDL 如何成為可跑偏置。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2512.06104_CompressARC.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2512.06104_CompressARC.摘要.md</code></a></li><li><strong>短程式不等於低搜尋成本</strong>（<a href="https://arxiv.org/abs/2603.23244" rel="noopener">arXiv 2603.23244</a>）：<strong>原文事實（作者自報）</strong>：30 名參與者依序完成 14 道 Pattern Builder Task，任何中間步驟都可存成 helper；搜尋模型的 nodes expanded 與平均解題時間 <code>r=.82</code>、平均步數 <code>r=.79</code>，program length 與時間、步數只有 <code>r=−.20</code> 且 <code>p&gt;.05</code>。這是單一條件的探索性人類研究，最終樣本由 34 人依預註冊規則排除 4 人而得；模型只把完整解答併入庫，不能刻畫人類的部分抽象。對本篇的意義：描述短是結果，找到那個描述可能仍很難。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2603.23244_Online_Library_Learning_Human.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2603.23244_Online_Library_Learning_Human.摘要.md</code></a></li><li><strong>壓縮率的量化光譜</strong>（<a href="https://arxiv.org/abs/2604.15877" rel="noopener">arXiv 2604.15877</a>）：<strong>原文事實（作者自報）</strong>：框架／立場論文把情節記憶、程序技能、宣告式規則放在 5–20×、50–500×、1,000×+ 的壓縮軸上；對 22 篇主要論文的 1,136 條參考文獻做分析，兩社群互引率不到 1%，並映射 20+ 個系統，未見能自適應跨層壓縮者。倍率與效能數字彙整自他人 benchmark，本文沒有自做訓練實驗，四層劃分也只是簡化框架。對本篇的意義：MDL 不只問「要不要壓」，還能追問經驗該停在記憶、技能或規則哪一層。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.15877_ExperienceCompressionSpectrum.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.15877_ExperienceCompressionSpectrum.摘要.md</code></a></li></ul>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：Kolmogorov 複雜度為什麼不能直接算？ <strong>答</strong>：你無法對任意候選判定它是否終止，也無法保證沒有更短程式，因此會碰到停機問題。</li><li><strong>問</strong>：MDL 為什麼不會無條件偏好最小模型？ <strong>答</strong>：因為帳單同時包含模型長度與資料殘差；模型太小、解釋不了資料時，第二項會上升。</li><li><strong>問</strong>：程式越短，搜尋一定越快嗎？ <strong>答</strong>：不一定。搜尋器可能展開大量候選才找到短解；實驗中的人類努力也更接近 nodes expanded，而非最終程式長度。</li><li><strong>問</strong>：CompressARC 找到的是 Kolmogorov 意義下的最短程式嗎？ <strong>答</strong>：不是。它在特定等變網路、位元編碼與梯度程序下近似最小化描述長度。</li><li><strong>問</strong>：AIXI 是可部署的 agent 嗎？ <strong>答</strong>：不是。它是不可計算的理論上界，任何可跑版本都必須限制模型、時間或程式空間。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/machine_learning/blob/main/progsynth_cpp/docs/m4_gp_synth.md" rel="noopener">GP 程式合成</a>：parsimony pressure 是 MDL 精神在遺傳程式設計裡的可跑近似。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2512.06104_CompressARC.%E6%91%98%E8%A6%81.md" rel="noopener">CompressARC 摘要</a>：看 MDL 如何被改寫成單題、零預訓練的可微最佳化。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2603.23244_Online_Library_Learning_Human.%E6%91%98%E8%A6%81.md" rel="noopener">線上函式庫學習與人類行為摘要</a>：把最終程式長度與搜尋成本拆開。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.15877_ExperienceCompressionSpectrum.%E6%91%98%E8%A6%81.md" rel="noopener">經驗壓縮光譜摘要</a>：把記憶、技能、規則排到同一條壓縮軸上。</li><li><a href="13-Lisp程式即資料.html" rel="noopener">Lisp 程式即資料</a>：補上最短程式要如何表示、列舉與受限執行。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>把奧坎剃刀數學化的這群理論告訴我們：壓縮就是理解，最短程式是較好的解釋。理想版 Kolmogorov／Solomonoff／AIXI 漂亮但跑不動；真正能用的是相對於固定語言與編碼的 MDL 近似，而且必須把搜尋成本、驗證與安全一起列入帳單。</p>
+<p>之所以有人對它感興趣：它給「簡單較好」一個不只靠美感的理由，並把壓縮、預測、程式合成與好奇心放進同一個地基。</p>
+<section class="self-check"><h2>自我檢核</h2><details><summary>Kolmogorov 複雜度為什麼不能直接算？</summary><p>你無法對任意候選判定它是否終止，也無法保證沒有更短程式，因此會碰到停機問題。</p></details><details><summary>MDL 為什麼不會無條件偏好最小模型？</summary><p>因為帳單同時包含模型長度與資料殘差；模型太小、解釋不了資料時，第二項會上升。</p></details><details><summary>程式越短，搜尋一定越快嗎？</summary><p>不一定。搜尋器可能展開大量候選才找到短解；實驗中的人類努力也更接近 nodes expanded，而非最終程式長度。</p></details><details><summary>CompressARC 找到的是 Kolmogorov 意義下的最短程式嗎？</summary><p>不是。它在特定等變網路、位元編碼與梯度程序下近似最小化描述長度。</p></details><details><summary>AIXI 是可部署的 agent 嗎？</summary><p>不是。它是不可計算的理論上界，任何可跑版本都必須限制模型、時間或程式空間。</p></details></section>
+<div class="pager"><a href="14-元胞自動機與發育式成長.html">← 14 元胞自動機與發育式成長</a><a href="16-ARC-AGI泛化量尺.html">16 ARC-AGI →</a></div></main></div><script src="app.js"></script></body></html>

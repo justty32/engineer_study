@@ -1,0 +1,86 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 — 認知架構</title><link rel="stylesheet" href="styles.css"></head><body data-page="09">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="08-KAN可符號化神經網路.html" aria-label="上一篇：08 KAN 可符號化神經網路" title="08 KAN 可符號化神經網路">上一篇</a><a aria-current="page" href="09-認知架構.html" aria-label="目前章節：09 認知架構" title="09 認知架構">09</a><a href="10-符號接地與具身認知.html" aria-label="下一篇：10 符號接地與具身認知" title="10 符號接地與具身認知">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-去中心化的心智-心智社會與包容架構">一、去中心化的心智：心智社會與包容架構</a></li><li><a href="#二-有限舞台與雙記憶-gwt-act-r">二、有限舞台與雙記憶：GWT、ACT-R</a></li><li><a href="#三-卡關後重想-soar-與專家系統">三、卡關後重想：SOAR 與專家系統</a></li><li><a href="#四-共享工作面-黑板系統與-2026-變形">四、共享工作面：黑板系統與 2026 變形</a></li><li><a href="#它們各自補了哪塊-差異速覽">它們各自補了哪塊（差異速覽）</a></li><li><a href="#常見誤解與限制">常見誤解與限制</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">09 · 認知架構談的不是單一演算法，而是一個會思考與行動的智能體，該怎麼安排記憶、注意力、模組分工與卡關後的重想</p><h1>09 — 認知架構</h1><p class="reading-time">閱讀時間：約 19 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p>大模型能回答問題，不等於它已經是一個能持續行動的智能體。<a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/%E5%8F%83%E8%80%83%E7%90%86%E8%AB%96_05_%E8%AA%8D%E7%9F%A5%E6%9E%B6%E6%A7%8B_grounding_%E6%8E%A7%E5%88%B6.md" rel="noopener">認知架構、接地與控制的設計參考</a>需要的是感知、規劃、記憶、控制與重試的整體迴圈。這些老架構提供的不是現成模型，而是一張很實用的工程檢查表。</p>
+<p>這篇講的是一群「整體設計藍圖」。當你想做一個會思考、會行動的智能體，光有一個聰明的模型還不夠，你得回答一堆工程問題：記憶要分幾種？同一時刻誰能佔用「注意力」？很多模組要怎麼合作？想不出答案時要怎麼辦？</p>
+<p>不同年代的研究者給了不同答案，下面這幾套是最有代表性的。它們彼此競爭，但放在一起看，剛好把「組織一個心智」的各個面向都覆蓋到了。</p>
+<p>最早大家以為「智能＝一個夠聰明的中央程式」。但這條路一直撞牆：中央程式太龐大、太脆、改一個地方就到處壞。於是有人開始問——<strong>會不會智能根本不是一個聰明核心，而是很多不那麼聰明的零件協作出來的？</strong> 這幾套架構，多半是在回答「該怎麼把零件組裝成一個會思考的整體」。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>認知架構（cognitive architecture）</td><td>組織完整智能體的藍圖</td><td>規定感知、記憶、規劃如何交接</td></tr><tr><td>agent</td><td>能感知、決策並行動的個體</td><td>遊戲角色會觀察後重規劃</td></tr><tr><td>產生式規則</td><td>符合條件就觸發的 if-then 規則</td><td><code>看到紅燈 → 煞車</code></td></tr><tr><td>全局工作空間（GWT）</td><td>容量很小的共享廣播舞台</td><td>多模組競爭同一個發布槽位</td></tr><tr><td>impasse</td><td>現有規則無法決定下一步的卡關</td><td>兩個方案成本相同，需開子目標</td></tr><tr><td>chunking</td><td>把解過的子問題編成新規則</td><td>下次遇到同情境直接套用</td></tr><tr><td>宣告性記憶</td><td>存「是什麼」的事實</td><td>巴黎是法國首都</td></tr><tr><td>程序性記憶</td><td>存「怎麼做」的規則</td><td>看到紅燈就煞車</td></tr><tr><td>黑板系統</td><td>模組透過共享狀態間接合作</td><td>規劃器與檢查器共寫同一份候選解</td></tr></tbody></table></div>
+<h2 id="一-去中心化的心智-心智社會與包容架構">一、去中心化的心智：心智社會與包容架構</h2>
+<p><strong>想解決什麼</strong>：中央程式會越長越脆。Minsky 與 Brooks 都改問：能否讓許多局部能力合作，不靠一個全知總管？</p>
+<p><strong>核心想法</strong>：以下兩套架構從不同方向回答。</p>
+<h3 id="心智社會-society-of-mind-minsky-1986">心智社會（Society of Mind；Minsky, 1986）</h3>
+<p>Marvin Minsky 的主張很反直覺：<strong>心智是由一大堆「本身沒有智能」的小 agent 拼出來的，沒有總指揮。</strong> 智能是這些笨零件互相呼叫、競爭、接力之後「湧現」出來的。</p>
+<p>生活化例子：你「拿起一個杯子」這個動作，其實是「伸手」「張開手指」「抓握」「保持平衡」這些小程序彼此抑制、接棒完成的。沒有哪一個小程序懂「拿杯子」的全局意義——但合起來就做到了。寫程式的人可以想成：沒有一個 <code>main()</code> 在統籌，只有一堆互相觸發的小函式，行為從它們的互動中跑出來。</p>
+<p>限制：Minsky 給的是哲學藍圖，不是能直接訓練的工程方案，落地很難。</p>
+<h3 id="包容架構-行為式-ai-subsumption-brooks-1986">包容架構 / 行為式 AI（Subsumption；Brooks, 1986）</h3>
+<p>Rodney Brooks 反對「先在腦中建一份完整世界地圖、再規劃」這套老做法，因為地圖又笨重又容易過時。他主張把智能拆成一疊「感知→動作」的反射層：避障層、漫遊層、探索層……<strong>每層獨立並行跑，高層只在必要時「壓制」低層的輸出。</strong></p>
+<p>他有句名言：<strong>「世界本身就是最好的模型。」</strong> 意思是與其在腦中維護一份隨時可能失準的地圖，不如直接去現場感測。</p>
+<p>例子：掃地機器人不需要先畫出整個房間，它只要「撞到→轉向」「沒撞到→前進」這幾條反射層疊起來，就能在真實房間裡活動。限制是純反射很難做長程、抽象的規劃。</p>
+<p><strong>和相近理論差在哪</strong>：心智社會強調許多小 agent 的互動與湧現；包容架構強調感知到動作的並行反射層，以及高層對低層的壓制。前者是心智組織藍圖，後者更接近可部署的機器人控制架構。</p>
+<p><strong>常見誤解與限制</strong>：沒有中央總管，不代表沒有控制問題。心智社會難直接訓練；包容架構雖能快速反應，卻不擅長長程與抽象規劃。局部模組一多，衝突仲裁仍得有人負責。</p>
+<h2 id="二-有限舞台與雙記憶-gwt-act-r">二、有限舞台與雙記憶：GWT、ACT-R</h2>
+<p><strong>想解決什麼</strong>：許多模組可以並行，但同一時刻哪些資訊能進入決策？事實記憶與操作規則又該如何分工？</p>
+<p><strong>核心想法</strong>：GWT 用競爭與廣播處理注意力，ACT-R 用兩種記憶處理知識取用。</p>
+<h3 id="全局工作空間理論-gwt-baars-1988-dehaene-後續神經實證">全局工作空間理論（GWT；Baars, 1988 / Dehaene 後續神經實證）</h3>
+<p>這套要解釋的是意識：<strong>為什麼大腦裡那麼多平行的無意識歷程，最後只有少數內容能「被我們意識到、能講出來、能被全腦共用」？</strong></p>
+<p>核心機制：眾多專門模組同時並行，搶一個<strong>容量極小</strong>的「全局工作空間」（一個小舞台）。<strong>勝者把自己的內容「廣播」給全腦其他模組</strong>，於是它能同時被記憶、語言、決策取用——這就對應到「意識」。注意力，就是決定誰能擠上這個小舞台的篩選閘門。</p>
+<p>程式化的比喻：一堆背景執行緒搶一個容量為 1 的全域廣播頻道，搶到的那個訊息會被廣播給所有其他執行緒共享。瓶頸（舞台很小）是刻意的，因為「全部同時意識到」反而無法形成連貫行為。</p>
+<h3 id="act-r-john-anderson-1990-年代起">ACT-R（John Anderson；1990 年代起）</h3>
+<p>ACT-R 的招牌是<strong>雙記憶系統</strong>，而且要能對上人類心理實驗的反應時間數據：</p>
+<ul><li><strong>宣告性記憶（declarative）</strong>：存「事實」，像一塊塊知識（chunk）。例：「巴黎是法國首都」。</li><li><strong>程序性記憶（procedural）</strong>：存「怎麼做」，也就是 if-then 規則。例：「看到紅燈就踩煞車」。</li></ul>
+<p>認知就是這兩種記憶不斷比對狀態、觸發、改寫的循環。每塊知識還帶一個「激活度」，決定它被取用得多快、會不會被遺忘——常用的調得快、久沒用的就沉下去。</p>
+<p>程式化的比喻：宣告性記憶像資料庫裡的事實表，程序性記憶像一堆 if-then 規則；激活度像 LRU 快取的熱度分數。</p>
+<p><strong>和相近理論差在哪</strong>：GWT 管的是「誰能被全系統同時取用」；ACT-R 管的是「事實與技能如何儲存、競爭與取回」。前者像容量為 1 的廣播頻道，後者像帶熱度的資料庫加規則引擎。</p>
+<p><strong>常見誤解與限制</strong>：工作空間瓶頸不是算力不足的瑕疵，而是形成連貫行為的設計；但容量與競爭規則很難設定。ACT-R 能對心理實驗反應時間提出預測，卻不是從大規模原始資料自動長出能力的通用訓練方案。</p>
+<h2 id="三-卡關後重想-soar-與專家系統">三、卡關後重想：SOAR 與專家系統</h2>
+<p><strong>想解決什麼</strong>：規則系統最怕走到沒有規則可用的狀態。SOAR 把卡關變成新的問題；專家系統則把領域知識明確寫成可演繹規則。</p>
+<p><strong>核心想法</strong>：SOAR 是 Newell「統一認知理論」的旗艦實作，幾十年持續開發。幾個關鍵機制：</p>
+<ul><li><strong>問題空間搜尋</strong>：所有目標導向的行為，都看成「在一個問題空間裡，從目前狀態找路走到目標狀態」。</li><li><strong>產生式規則（production rules）</strong>：知識的唯一單位就是 if-then 規則。系統不斷比對「現在的狀態符合哪條規則」，然後觸發它。</li><li><strong>卡關→自動開子目標（impasse → subgoal）</strong>：當現有規則不足以決定下一步，SOAR 會<strong>自動生出一個子目標</strong>去專門解決這個卡關，而且可以遞迴往下開。這就是「想不出來時，自動退一步去想一個更小的問題」。</li><li><strong>Chunking（組塊化）</strong>：解掉一個子目標之後，SOAR 把「這次的解法過程」總結成<strong>一條新規則</strong>存起來。下次遇到同樣情況，直接套規則，不用再從頭搜尋。這是它的核心學習機制。</li></ul>
+<p>後期版本還加上了強化學習、情節記憶、語意記憶。</p>
+<h3 id="專家系統-語義網路-知識圖譜">專家系統 / 語義網路 / 知識圖譜</h3>
+<p>1970–80 年代 AI 的主流。<strong>專家系統</strong>把領域知識寫成「事實＋if-then 規則」，再由推理引擎做演繹（經典例子是醫療診斷系統 MYCIN）。<strong>語義網路</strong>用節點代表概念、用邊代表關係（is-a「是一種」、part-of「是一部分」），把知識組織成一張網——這就是今天「知識圖譜」的前身。</p>
+<p>限制都一樣：知識要人工一條條灌進去，又脆、又難處理例外與不確定性。這也是為什麼後來資料驅動的機器學習取而代之。</p>
+<p><strong>和相近理論差在哪</strong>：專家系統遇到缺規則通常只會失敗或要求人工補；SOAR 把 impasse 本身變成可遞迴處理的子目標，並把解法編回規則庫。</p>
+<p><strong>常見誤解與限制</strong>：chunking 不是理解的保證。若子目標的條件抓錯，新規則只會更快重現舊錯誤。人工規則也會面臨例外爆炸、維護成本與不確定性處理困難。</p>
+<h2 id="四-共享工作面-黑板系統與-2026-變形">四、共享工作面：黑板系統與 2026 變形</h2>
+<p><strong>想解決什麼</strong>：多個專家若彼此直接呼叫，依賴關係很快纏成一團。黑板系統讓模組只讀寫共享狀態，降低耦合。</p>
+<p><strong>核心想法</strong>：</p>
+<h3 id="黑板系統-blackboard-hearsay-ii-1970-年代-cmu-語音辨識">黑板系統（Blackboard；Hearsay-II，1970 年代 CMU 語音辨識）</h3>
+<p>為了讓「好幾個各有專長、但誰也不夠強」的模組合力解一個難題而生。做法是：<strong>這些「知識源」不直接互相呼叫，而是讀寫同一塊共享的「黑板」。</strong> 誰看到自己能補上一塊，就上去黑板寫一筆，逐步把零碎的局部猜測拼成完整解答。</p>
+<p>例子：解一道難題時，叫來幾位各有專長的專家，圍著同一塊白板。誰想到一段就上去寫，別人看到後接著補。優點是模組鬆耦合、好增刪；限制是「誰該何時動手」這個控制流本身很難設計。</p>
+<p>2026 的 SCL 把 Retrieval、Cognition、Control、Action、Memory 五模組放進受 Regulation 管理的迴圈；CORAL 則讓多個 agent 透過檔案系統式的 attempts、notes、skills 共享持久記憶。兩者都保留「不直接互叫，透過共享工作面合作」的黑板精神。</p>
+<p><strong>和相近理論差在哪</strong>：傳統黑板由中央排程器決定知識源何時動手；CORAL 不預設通訊拓撲，協調更去中心化。SCL 則刻意讓神經模組生能力、符號控制層做治理。</p>
+<p><strong>常見誤解與限制</strong>：共享黑板不會自己解決控制流。誰可以寫、衝突如何合併、何時終止、錯誤資料怎麼回滾，都要另訂規則。共享記憶若被污染，也會把錯誤廣播給所有模組。</p>
+<h2 id="它們各自補了哪塊-差異速覽">它們各自補了哪塊（差異速覽）</h2>
+<div class="table-wrap"><table><thead><tr><th>架構</th><th>它主要回答的問題</th><th>一句話特色</th></tr></thead><tbody><tr><td>心智社會</td><td>智能從何而來</td><td>一堆笨 agent 湧現出聰明</td></tr><tr><td>包容架構</td><td>不靠中央模型怎麼行動</td><td>反射層堆疊，世界本身就是模型</td></tr><tr><td>全局工作空間</td><td>注意力／意識怎麼運作</td><td>小舞台競爭＋勝者廣播</td></tr><tr><td>SOAR</td><td>卡關與學習如何形成循環</td><td>卡關開子目標＋chunking 存規則</td></tr><tr><td>ACT-R</td><td>記憶該怎麼分工</td><td>宣告性 vs 程序性雙記憶</td></tr><tr><td>黑板系統</td><td>多模組怎麼鬆耦合協作</td><td>共寫一塊共享黑板</td></tr><tr><td>專家系統／語義網路</td><td>知識怎麼明確表達與推理</td><td>人工灌入規則與關係圖</td></tr><tr><td>SCL</td><td>神經能力如何接受符號治理</td><td>軟符號引導＋確定性控制</td></tr><tr><td>CORAL</td><td>多 agent 如何累積可重用經驗</td><td>檔案系統式持久黑板</td></tr></tbody></table></div>
+<h2 id="常見誤解與限制">常見誤解與限制</h2>
+<ul><li><strong>「認知架構＝在模仿大腦」</strong>：不完全是。它們更像「組織一個會思考系統的工程藍圖」，靈感取自人類認知，但目的不是證明系統「像人」，而是提供清楚的模組邊界。</li><li><strong>它們多半是符號式的、要人工灌規則</strong>：在深度學習當道的今天，純符號架構難以從資料中自己長出能力——這是它們共同的痛點。</li><li><strong>這些不能直接合併成單一演算法</strong>：比較合理的用法是「分別當參考」，例如借 GWT 的注意力瓶頸、借 SOAR 的卡關重思、借 ACT-R 的雙記憶。</li></ul>
+<h3 id="把架構翻成可執行的迴圈">把架構翻成可執行的迴圈</h3>
+<p>一個最小 agent 可以把上述思想排成固定循環：感知模組把環境寫入工作記憶；規劃器從目標與事實產生候選計畫；控制器挑一個動作；執行器回報結果；記憶模組保存成功、失敗與原因。若前置條件已不成立，計畫立即作廢並重規劃。這個循環同時借了黑板的共享狀態、SOAR 的卡關處理與 ACT-R 的記憶分工。</p>
+<pre><code class="lang-text">observe → update memory → propose plan → validate → act
+   ↑                                            │
+   └──────────── failure / changed world ───────┘</code></pre>
+<p>實作時最容易漏掉的是資料所有權。工作記憶應有明確 schema，標記每筆事實的來源、時間與信心。規劃器可以提出候選，不能直接竄改感測事實；執行器可以回報成敗，不能自行把失敗寫成成功。模組邊界若只存在於架構圖，實際上仍共用一個可任意修改的物件，就沒有治理效果。</p>
+<p>第二個陷阱是把「記住」當成「學會」。黑板保存一次成功軌跡，只代表下次能檢索；SOAR 的 chunking 還要抽出成立條件，ACT-R 還要處理取用競爭。若規則過度具體，只能重播；若過度一般化，會把偶然成功套到不相干情境。因此每個新技能都要帶前置條件、效果、失敗案例與版本。</p>
+<p>第三個陷阱是沒有終止規則。多個模組一直在黑板補充內容，看似忙碌，任務卻沒有進展。控制器應量測狀態是否真正改變、同一工具是否重複呼叫、資源預算是否耗盡。SCL 的去重、容錯上限與終止判定，就是把傳統黑板最難的調度問題寫成確定性控制。</p>
+<p>以「替使用者訂一段行程」為例，Retrieval 只負責取得車次與旅館資料；Cognition 產生候選；Control 檢查日期、預算與重複預訂；Action 才能呼叫外部服務；Memory 保存已確認選擇。若日期改變，舊計畫不該由每個模組自行猜測是否仍有效，而要由共同狀態標成 stale，再觸發重規劃。這就是認知架構把日常例外變成一般控制規則的價值。</p>
+<p>同一例子也顯示 GWT 與黑板的差別。黑板可以同時保存很多候選與事實；工作空間只廣播當下最需要全系統處理的一件事，例如「轉車時間不足」。若把整塊黑板全部廣播，每個模組都要重讀大量無關資訊；若工作空間沒有保留來源連結，勝出訊息又會失去證據。因此小舞台應傳遞摘要與指標，完整內容留在可追溯記憶。</p>
+<p>記憶還要分時間尺度。工作記憶保存本輪狀態，情節記憶保存某次任務的事件序列，語意記憶保存較穩定的事實，程序記憶保存可執行技能。把四者塞進同一向量庫，檢索雖方便，更新規則卻會混亂：一次失敗可能誤改長期事實，一條過期事實也可能被當成技能。ACT-R 與 SOAR 的老分法，在現代 agent 上仍是資料治理的好起點。</p>
+<p>最後要用故障注入驗收架構，而不是只跑成功 demo。讓感測資料延遲、規劃器回空集合、工具重複回應、記憶出現衝突，再看系統是否能停下、開子目標或回滾。認知架構的好壞，不只看正常路徑能不能完成，也看模組失靈時錯誤是否被限制在清楚邊界內。</p>
+<p>這也解釋了為什麼架構文件要列出狀態機，而不能只畫模組方塊。方塊告訴你有哪些零件；狀態機才說明誰有權讓任務從「候選」走到「已執行」，失敗又回到哪一步。沒有這些轉移條件，模組化只是檔名不同，行為仍無法稽核。可稽核，才有資格安全地自動重試，也才能逐步找出究竟是哪個模組失靈。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>結構化認知迴圈 SCL</strong>（<a href="https://arxiv.org/abs/2511.17673" rel="noopener">arXiv 2511.17673</a>）：<strong>原文事實（作者自報）</strong>：R-CCAM 由 Retrieval、Cognition、Control、Action、Memory 五模組加 Regulation 組成；SCL Core 的 mock LLM 受控實驗為 0/4 迴圈策略違例、零冗餘工具調用、100% 審計軌跡完整，GPT-4o 即時旅行規劃 demo 有 150+ 查詢、0 策略違例、98.7% 任務完成率。前者是 mock LLM 受控實驗，後者是單一旅行規劃 demo，不是 production 部署。對本篇的意義：符號層不必學能力，也可以只負責治理神經模組。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2511.17673_StructuredCognitiveLoop.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2511.17673_StructuredCognitiveLoop.摘要.md</code></a></li></ul>
+<ul><li><strong>去中心化黑板 CORAL</strong>（<a href="https://arxiv.org/abs/2604.01658" rel="noopener">arXiv 2604.01658</a>）：<strong>原文事實（作者自報）</strong>：CORAL 以 attempts、notes、skills 的檔案系統式共享記憶協調 agent；在 11 個任務上單 agent 全面勝過論文所列 OpenEvolve、ShinkaEvolve、EvoX，8 個建立新 SOTA，改善率 3–10 倍，5–20 次評估內收斂；四 agent 的 Kernel Engineering 從 1,363 壓到 1,103 cycles，移除 notes／skills 後退化 18.6%。結果限於論文 11 任務與該評估預算，不代表一般 production 多 agent。對本篇的意義：黑板概念在 LLM agent 時代仍有效，而且知識累積有消融證據。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.01658_CORAL.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.01658_CORAL.摘要.md</code></a></li></ul>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：認知架構與單一模型有何不同？ <strong>答</strong>：前者規定感知、記憶、規劃、控制與行動如何協作；模型只是一個零件。</li><li><strong>問</strong>：SOAR 卡關後做什麼？ <strong>答</strong>：自動開子目標，解完後用 chunking 編成新規則。</li><li><strong>問</strong>：GWT 的容量瓶頸為什麼是刻意設計？ <strong>答</strong>：它讓少數內容被全系統共享，避免所有歷程同時爭奪行為控制。</li><li><strong>問</strong>：黑板系統最大的未解工程問題是什麼？ <strong>答</strong>：寫入權限、排程、衝突合併、終止與污染回復仍需明確控制。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/machine_learning/blob/main/goap_cpp/docs/m5_agent.md" rel="noopener"><code>m5_agent.md</code></a>：可跑的感知、規劃、執行與重規劃迴圈。</li><li><a href="https://github.com/justty32/machine_learning/blob/main/goap_cpp/docs/m3_backward.md" rel="noopener"><code>m3_backward.md</code></a>：後向規劃可對照 SOAR 的目標導向搜尋。</li><li><a href="https://github.com/justty32/machine_learning/blob/main/goap_cpp/docs/m4_context.md" rel="noopener"><code>m4_context.md</code></a>：動態成本示範計畫如何隨情境改變。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2511.17673_StructuredCognitiveLoop.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2511.17673_StructuredCognitiveLoop.摘要.md</code></a>：看現代 agent 如何重組符號治理與認知迴圈。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.01658_CORAL.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.01658_CORAL.摘要.md</code></a>：查看共享持久記憶的多 agent 黑板變形。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>認知架構回答的是「一個會思考的東西內部要怎麼擺放」——記憶分幾種、注意力給誰、模組怎麼協作、卡關了怎麼自動退一步重想。</p>
+<blockquote class="note"><p>為什麼有人會對它感興趣：因為現在的大模型很強，但「整體怎麼組織成一個會持續行動的智能體」這件事，這些老架構早就把問題拆得很清楚，是很好的設計清單。</p></blockquote>
+<section class="self-check"><h2>自我檢核</h2><details><summary>認知架構與單一模型有何不同？</summary><p>前者規定感知、記憶、規劃、控制與行動如何協作；模型只是一個零件。</p></details><details><summary>SOAR 卡關後做什麼？</summary><p>自動開子目標，解完後用 chunking 編成新規則。</p></details><details><summary>GWT 的容量瓶頸為什麼是刻意設計？</summary><p>它讓少數內容被全系統共享，避免所有歷程同時爭奪行為控制。</p></details><details><summary>黑板系統最大的未解工程問題是什麼？</summary><p>寫入權限、排程、衝突合併、終止與污染回復仍需明確控制。</p></details></section>
+<div class="pager"><a href="08-KAN可符號化神經網路.html">← 08 KAN 可符號化神經網路</a><a href="10-符號接地與具身認知.html">10 符號接地與具身認知 →</a></div></main></div><script src="app.js"></script></body></html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>17 — 巢狀學習 HOPE 與圖神經網路</title><link rel="stylesheet" href="styles.css"></head><body data-page="17">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="16-ARC-AGI泛化量尺.html" aria-label="上一篇：16 ARC-AGI" title="16 ARC-AGI">上一篇</a><a aria-current="page" href="17-巢狀學習HOPE與圖神經網路.html" aria-label="目前章節：17 巢狀學習 HOPE 與圖神經網路" title="17 巢狀學習 HOPE 與圖神經網路">17</a><a href="18-自我改進與驗證器上限.html" aria-label="下一篇：18 自我改進 agent 與驗證器上限" title="18 自我改進 agent 與驗證器上限">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-巢狀學習-不同記憶用不同速度改">一、巢狀學習：不同記憶用不同速度改</a></li><li><a href="#二-hope-把學習規則本身也變成可學物件">二、HOPE：把學習規則本身也變成可學物件</a></li><li><a href="#三-gnn-沿著關係邊做可學習的推理">三、GNN：沿著關係邊做可學習的推理</a></li><li><a href="#四-gnn-的延伸-注意力-演算法與故障歸因">四、GNN 的延伸：注意力、演算法與故障歸因</a></li><li><a href="#五-訊息傳太遠會發生什麼">五、訊息傳太遠會發生什麼</a></li><li><a href="#六-架構上限-先問做不做得到-再問學不學得到">六、架構上限：先問做不做得到，再問學不學得到</a></li><li><a href="#七-把兩條線接起來時-先分清時間與關係">七、把兩條線接起來時，先分清時間與關係</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">17 · 巢狀學習用不同更新速度組織多層記憶，圖神經網路則沿關係邊傳遞訊息；兩者分別回答「何時改」與「沿哪種結構算」</p><h1>17 — 巢狀學習 HOPE 與圖神經網路</h1><p class="reading-time">閱讀時間：約 18 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p><a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/latest_2026-08/01_outer_verification_rollback.md" rel="noopener">外層驗證與回滾</a>需要知道哪些狀態能快速試改、哪些知識要慢慢固化，也需要把多步驟或多 agent 軌跡表示成可追查的關係。HOPE 提供多時間尺度的更新觀；GNN 提供沿結構傳播與定位故障的工具。兩者能互補，但不能互相取代。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>巢狀學習（Nested Learning, NL）</td><td>把模型看成多層、各自以不同速度更新的記憶</td><td>快層每題改，慢層隔很多批才改</td></tr><tr><td>最佳化器（optimizer）</td><td>依誤差更新參數的規則</td><td>Adam 決定每個權重怎麼移動</td></tr><tr><td>更新頻率（update frequency）</td><td>某組記憶多久改一次</td><td>便條紙每分鐘改，規範每季改</td></tr><tr><td>災難性遺忘（catastrophic forgetting）</td><td>學新知後把舊能力沖掉</td><td>新任務變好，舊任務突然失敗</td></tr><tr><td>HOPE</td><td>依 NL 觀點建立的自我修改序列模型</td><td>學習規則本身也成為可調物件</td></tr><tr><td>連續記憶系統（Continuum Memory System, CMS）</td><td>由快到慢排列多組記憶</td><td>秒級、中期、長期多個頻率層</td></tr><tr><td>圖（graph）</td><td>節點加上節點間的邊</td><td>人是節點，朋友關係是邊</td></tr><tr><td>圖神經網路（Graph Neural Network, GNN）</td><td>直接在圖結構上學習的神經網路</td><td>分子中沿化學鍵傳訊息</td></tr><tr><td>訊息傳遞（message passing）</td><td>鄰居交換、聚合後更新節點狀態</td><td>每輪收集相鄰道路資訊</td></tr><tr><td>圖注意力網路（Graph Attention Network, GAT）</td><td>學習不同鄰居的重要程度</td><td>對關鍵上游 agent 給較高權重</td></tr><tr><td>過度平滑（over-smoothing）</td><td>層數太多後節點表示變得太像</td><td>多輪後每個帳號都難以區分</td></tr><tr><td>表達力上限（expressivity limit）</td><td>特定架構在原則上分不開的問題</td><td>某類 GNN 無法區分兩張不同圖</td></tr><tr><td>狀態空間模型（State Space Model, SSM）</td><td>以隱藏狀態遞迴處理序列的架構</td><td>Mamba 類模型沿序列更新狀態</td></tr></tbody></table></div>
+<h2 id="一-巢狀學習-不同記憶用不同速度改">一、巢狀學習：不同記憶用不同速度改</h2>
+<p><strong>想解決什麼</strong>：大模型常有兩個老毛病。第一，學新資料時會忘掉舊資料；第二，訓練完後權重大致凍結，很難一邊使用、一邊持續學。超長上下文又讓單一記憶機制顧此失彼。Google Research 在 NeurIPS 2025 提出巢狀學習觀點，想把這些問題放回「更新如何組織」。</p>
+<p><strong>核心想法</strong>：巢狀學習把模型重新看成一組層層套疊的最佳化問題，每層都有自己的更新頻率。快層接住剛發生的事件；中層累積反覆出現的模式；慢層保存較穩定的知識。生活化比喻是：</p>
+<ul><li><strong>快層</strong>像工作便條紙，隨手寫、隨手改。</li><li><strong>中層</strong>像這個月養成的工作習慣，幾天到幾週調一次。</li><li><strong>慢層</strong>像多年累積的常識，只有反覆證據才更動。</li></ul>
+<p>新資訊先落在快層。若它持續出現，再逐步沉澱到較慢層。這樣能快速反應，又不至於每來一筆資料就重寫根基。</p>
+<p><strong>和相近理論差在哪</strong>：一般訓練把模型架構與最佳化器分開，前者做前向計算，後者在外部更新權重。NL 主張兩者都可視為關聯式記憶，只是位於不同層級與時間尺度。它不是單純把 learning rate 調成幾組，而是提供一個統一描述。</p>
+<p><strong>常見誤解與限制</strong>：多時間尺度不保證不遺忘。資料如何跨層轉移、錯誤記憶如何撤回、各頻率怎麼設，都還是工程問題。若慢層吸收了錯誤規則，反而比快層錯誤更難修。實務上常先用幾組固定頻率，而不是一開始就追求連續光譜。</p>
+<h2 id="二-hope-把學習規則本身也變成可學物件">二、HOPE：把學習規則本身也變成可學物件</h2>
+<p><strong>想解決什麼</strong>：固定最佳化器由人預先決定每種參數如何更新。面對分布變動、超長序列或持續學習，單一更新規則可能無法同時處理快速適配與長期穩定。</p>
+<p><strong>核心想法</strong>：HOPE 是依 NL 觀點建立的自我修改序列模型。第一個招牌是「更新規則本身也成為可學參數」。一般模型只學內容；HOPE 還讓「怎麼學」進入模型可調的範圍。它可視為 Titans 長期記憶架構的自我指涉版本，目標是在測試時持續更新記憶。</p>
+<p>第二個招牌是連續記憶系統 CMS。記憶不只分短期與長期兩格，而是排列成由快到慢的更新光譜。不同層以自己的節奏保留資訊，讓頻繁但短暫的訊號和少見但穩定的規律不必爭用同一組權重。</p>
+<p><strong>和相近理論差在哪</strong>：外部記憶把資料寫到可讀寫儲存區，核心網路權重可以不變；HOPE 把多層關聯式記憶與更新規則放進模型本身。Meta-learning 也學「怎麼學」，但 NL 特別強調最佳化器、架構與記憶可放進同一個巢狀框架。</p>
+<p><strong>常見誤解與限制</strong>：「自我修改」不是科幻式失控進化。它指更新規則也可調，仍受訓練目標、架構與執行協定約束。HOPE 是架構方向，不是已解決持續學習的萬靈丹；穩定性、計算成本、錯誤固化與跨時間尺度的信用分配仍要實測。</p>
+<h2 id="三-gnn-沿著關係邊做可學習的推理">三、GNN：沿著關係邊做可學習的推理</h2>
+<p><strong>想解決什麼</strong>：很多資料不是整齊表格或序列，而是「東西加上關係」：社交網路的人與朋友、分子的原子與化學鍵、地圖的地點與道路、知識網路的概念與關聯。普通全連接網路若把節點硬排成一列，會把任意排列當成有意義順序。</p>
+<p><strong>核心想法</strong>：GNN 直接在圖上計算。每個節點帶特徵，邊表示關係。每一輪，每個節點先把目前訊息傳給鄰居，再聚合收到的訊息，最後更新自己。</p>
+<pre class="mermaid" data-src="flowchart LR
+  A[&quot;節點把目前訊息&lt;br/&gt;傳給相鄰節點&quot;] --&gt; B[&quot;各節點聚合&lt;br/&gt;收到的鄰居訊息&quot;]
+  B --&gt; C[&quot;依聚合結果&lt;br/&gt;更新節點特徵&quot;]
+  C --&gt; A">flowchart LR
+  A["節點把目前訊息<br/>傳給相鄰節點"] --> B["各節點聚合<br/>收到的鄰居訊息"]
+  B --> C["依聚合結果<br/>更新節點特徵"]
+  C --> A</pre>
+<p>跑一輪後，節點知道一跳鄰居的資訊；跑兩輪後，可間接納入兩跳範圍。用生活例子就是傳八卦：交換一次只知道朋友圈版本，多交換幾輪才拼出社群裡的整體輪廓。模型參數在所有節點共享，因此同一模型能處理大小與形狀不同的圖。</p>
+<p><strong>和相近理論差在哪</strong>：卷積網路使用規則網格上的固定鄰域；GNN 允許每個節點的鄰居數不同。Transformer 可讓任意 token 彼此注意，GNN 通常先由已知圖結構限制訊息沿哪些邊流動。這個限制既是效率來源，也是歸納偏置。</p>
+<p><strong>常見誤解與限制</strong>：GNN 不是先把圖攤平成向量再丟進普通網路。它的關鍵是沿邊傳播與共享參數。另一方面，邊的定義若錯，訊息就沿錯關係擴散；每個節點的內容特徵怎麼來，也仍須設計。</p>
+<h2 id="四-gnn-的延伸-注意力-演算法與故障歸因">四、GNN 的延伸：注意力、演算法與故障歸因</h2>
+<p><strong>想解決什麼</strong>：平均所有鄰居會把關鍵訊號沖淡。只做節點分類也浪費了圖能表達流程、因果候選與 agent 身分關係的優點。延伸方法要回答「該聽誰」與「能否在結構上模仿程序」。</p>
+<p><strong>核心想法</strong>：圖注意力網路 GAT 讓節點自己學每個鄰居的權重。重要鄰居多聽，不相關鄰居少聽。神經演算法推理則用 GNN 模仿最短路徑、排序等傳統演算法的逐步狀態更新，目的不是取代精確演算法，而是把程序式歸納偏置遷移到沒有現成解法的資料。</p>
+<p>多 agent 故障歸因是更具體的場景。把每個對話 turn 當節點，連上相鄰時間步與同一 agent 的跨 turn 邊，GNN 就能同時使用時序偏離、agent 一致性與語意特徵。它不是只問最後答案錯沒錯，而是試著找「哪個 agent、哪一類錯誤」。</p>
+<p><strong>和相近理論差在哪</strong>：LLM auditor 主要靠長文字脈絡做語意判斷；GNN 故障歸因把軌跡先結構化，再沿明確的時間與身分邊傳訊息。前者內容理解較強，後者便宜且能直接利用關係。實務上可先用 GNN 篩選，再把少數不確定案例交給較昂貴的 LLM 或重播驗證。</p>
+<p><strong>常見誤解與限制</strong>：預測到責任 agent 不等於找到決定性錯誤步，更不等於建立因果。Who&amp;When 的標註依專家判斷，沒有對每個候選步驟做反事實重播。AFANet 的結果也只來自 AEGIS-Bench 與 Who&amp;When，跨領域泛化仍未知。</p>
+<h2 id="五-訊息傳太遠會發生什麼">五、訊息傳太遠會發生什麼</h2>
+<p><strong>想解決什麼</strong>：直覺會說多跑幾輪，就能看見更遠節點。但 GNN 加深後常先遇到過度平滑：所有節點表示逐漸趨同，原本要辨認的差異反而消失。</p>
+<p><strong>核心想法</strong>：每輪聚合都把鄰居資訊混進自己。若反覆平均，局部差異會像顏料一直攪拌，最後變成相近顏色。增加殘差連線、正規化、跳接或分層 pooling 可以緩解，但每種方法也改變訊息如何保存。</p>
+<p>另一個瓶頸是 over-squashing：遠方大量訊息要擠進固定維度向量，關鍵訊號可能在傳到目標節點前被壓扁。這和過度平滑不同；前者是資訊通道太窄，後者是節點表示太像。兩者都說明「多傳幾輪」不是免費午餐。</p>
+<p><strong>和相近理論差在哪</strong>：感受野不足是資訊根本傳不到；over-squashing 是傳得到但塞不下；過度平滑是混合後失去可區分性。三種症狀都可能表現成深層 GNN 變差，診斷與修法卻不同。</p>
+<p><strong>常見誤解與限制</strong>：GNN 強在結構，不代表自動理解節點內容。若輸入文字需要深語意，便宜結構模型可能還是要搭配預訓練嵌入。若圖由模型自行建立，錯邊、漏邊與動態關係又會成為新的誤差來源。</p>
+<h2 id="六-架構上限-先問做不做得到-再問學不學得到">六、架構上限：先問做不做得到，再問學不學得到</h2>
+<p><strong>想解決什麼</strong>：模型失敗時，人們常先加參數、資料或訓練步數。但若架構在原則上無法區分某些結構，更多最佳化不會突破上限；反過來，理論能表達也不保證梯度找得到。</p>
+<p><strong>核心想法</strong>：GNN 研究常以 Weisfeiler–Lehman（WL）類測試描述訊息傳遞架構能區分哪些圖。2026 的研究把同一種問題擴到其他架構：Transformer 配 CoT 的可長度泛化上限可用複雜度類刻畫；對角 SSM 的群狀態追蹤能力可用交換群與次正規列刻畫。共同習慣是先問「這個參數化原則上能表示什麼」。</p>
+<p>接著再問可學習性。2 層對角 SSM 理論上能表示某些非交換可解群，梯度卻可能找不到解析解。這和 GNN 的 WL 上限是不同失效：前者解存在但訓練到不了；後者是在指定架構下解根本無法表示。</p>
+<p><strong>和相近理論差在哪</strong>：表達力定理針對一類架構與參數化，不是對所有神經網路下永久判決。PD-SSM 把轉移矩陣從純對角改成 <code>A=P·D</code>，就能讓單層模擬任意有限狀態自動機，同時保留平行掃描。上限可能是牆，也可能是設計提示。</p>
+<p><strong>常見誤解與限制</strong>：換參數化能搬動上限，不表示訓練、速度與真實任務表現都免費改善。PD-SSM 的置換結構有額外開銷，真實時間序列基準的增益也可能落在誤差範圍。理論結果必須連同精度、層數、群類別、訓練長度與基準一起讀。</p>
+<h2 id="七-把兩條線接起來時-先分清時間與關係">七、把兩條線接起來時，先分清時間與關係</h2>
+<p><strong>想解決什麼</strong>：HOPE 與 GNN 放在同一篇，很容易讓人誤以為它們是兩個競爭架構。其實前者主要安排記憶何時更新，後者主要安排資訊沿哪些關係傳遞。要組合它們，先把兩個座標分開。</p>
+<p><strong>核心想法</strong>：多 agent 系統可以先建一張圖。節點是 agent、工具呼叫或對話 turn，邊是時間相鄰、同一 agent、資料依賴或控制流。GNN 在這張圖上聚合局部證據。接著再依證據穩定度安排更新速度：剛偵測到的異常放快層，多次重現的故障模式進中層，通過重播與回歸測試的規則才進慢層。</p>
+<p><strong>和相近理論差在哪</strong>：圖的層數回答訊息傳幾跳；記憶的時間尺度回答狀態多久改一次。兩者都會用到「層」這個字，卻不是同一維度。GNN 加深不會自動得到長期記憶；把更新放慢也不會自動理解圖結構。</p>
+<p><strong>常見誤解與限制</strong>：這種接法只是設計分工，不是 HOPE 與 GNN 組合後已有實證保證。快層的錯誤若被過早固化，會污染慢層；圖上的錯邊也會讓錯誤證據看似反覆出現。外層仍要保留版本、反事實重播、回歸測試與撤回路徑。</p>
+<p>最小實驗應先固定圖，再只改更新頻率；下一輪固定更新頻率，再改圖的邊。兩個軸一次只動一個，才能知道改善究竟來自關係表示，還是記憶排程。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>表達力上限不只 GNN 有</strong>（<a href="https://arxiv.org/abs/2603.01959" rel="noopener">arXiv 2603.01959</a>；<a href="https://arxiv.org/abs/2604.25800" rel="noopener">arXiv 2604.25800</a>）：<strong>原文事實（作者自報）</strong>：有限精度下，單層輸入相依複數值對角 SSM 不能表達非交換群追蹤，<code>k</code> 層的充要條件是長度 <code>k</code> 的交換因子次正規列；FP32 實驗中，2 層 AUSSM 理論能表達 S₃、A₄，標準訓練仍失敗。另一個理論結果指出，在標準位置編碼與有限字母表下，配 CoT 的 Transformer 可長度泛化學習仍只到 TC⁰；正面構造需要隨規模增長的 signpost token，25M 參數 GPT-2 只在三個演算法任務測到最多 2 倍訓練長度。對本篇的意義：架構上限與可學習性是一整條研究線，不是 GNN 的孤例。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2603.01959_Diagonal_SSM_StateTracking_Limits.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2603.01959_Diagonal_SSM_StateTracking_Limits.摘要.md</code></a>、<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.25800_Barriers_Universal_Reasoning_CoT.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.25800_Barriers_Universal_Reasoning_CoT.摘要.md</code></a></li><li><strong>上限能靠參數化繞過：PD-SSM</strong>（<a href="https://arxiv.org/abs/2509.22284" rel="noopener">arXiv 2509.22284</a>）：<strong>原文事實（作者自報）</strong>：以 <code>A=P·D</code>，也就是逐列 one-hot 的稀疏置換型矩陣乘複數對角矩陣，單層即可精確表示任意 N 狀態有限自動機，含 A₅／S₅，並保留 <code>Θ(LN)</code> 平行掃描。四個 FSA 模擬任務為 98.8±0.9%，複數對角基線為 73.6±7.1%；但生成 P 有額外成本，實測比純對角 SSM 慢約 7 倍，真實時間序列增益有限。對本篇的意義：表達力上限常針對特定結構，換結構能移動牆，但要重新付工程成本。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2509.22284_PD_SSM_State_Tracking.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2509.22284_PD_SSM_State_Tracking.摘要.md</code></a></li><li><strong>GNN 用於多 agent 失敗歸因</strong>（<a href="https://arxiv.org/abs/2608.18575" rel="noopener">arXiv 2608.18575</a>；<a href="https://arxiv.org/abs/2505.00212" rel="noopener">arXiv 2505.00212</a>）：<strong>原文事實（作者自報）</strong>：Who&amp;When 含 127 種多 agent 系統、184 個人工標註失敗任務，既有 GPT-4o 全域法（all-at-once）在 agent 級的總體彙總值為 53.5%（細分格落在 51.12%–55.17%），精確 step 級只有 14.2%；標註由三名專家協商，沒有逐候選反事實重播。AFANet 用 65K 參數 GNN，在 AEGIS-Bench 與 Who&amp;When 的 pair-level 指標打平或超過作者重跑的微調 7B／14B LLM；推論 1.16 秒／樣本，7B 基線 199 秒，但只測兩個資料集，跨分布仍待驗證。對本篇的意義：結構訊號能成為便宜的第一層故障篩選，不能直接當成因果證明。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2608.18575_GNNFailureAttribution.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2608.18575_GNNFailureAttribution.摘要.md</code></a>、<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2505.00212_WhoAndWhenFailureAttribution.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2505.00212_WhoAndWhenFailureAttribution.摘要.md</code></a></li></ul>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：巢狀學習和「設兩個 learning rate」有什麼差別？ <strong>答</strong>：多組 learning rate 是可用實作；NL 更進一步把架構、最佳化器與記憶都視為不同頻率的巢狀最佳化問題。</li><li><strong>問</strong>：HOPE 的自我修改是否代表模型脫離約束？ <strong>答</strong>：不是。它指更新規則也可學，仍受架構、訓練目標與執行協定限制。</li><li><strong>問</strong>：GNN 多跑幾輪一定比較好嗎？ <strong>答</strong>：不一定。可能過度平滑，也可能把遠方大量資訊壓進太小向量而 over-squashing。</li><li><strong>問</strong>：理論上能表達，為什麼實驗仍會失敗？ <strong>答</strong>：解可能存在於權重空間，梯度卻到不了；表達力與可學習性必須分開檢查。</li><li><strong>問</strong>：AFANet 找到故障 agent，是否等於找到真正原因？ <strong>答</strong>：不是。它是受限基準上的預測；因果歸因還需要重播、反事實測試或其他外部驗證。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2603.01959_Diagonal_SSM_StateTracking_Limits.%E6%91%98%E8%A6%81.md" rel="noopener">對角 SSM 狀態追蹤上限摘要</a>：看群論如何精確刻畫層數與表達力。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.25800_Barriers_Universal_Reasoning_CoT.%E6%91%98%E8%A6%81.md" rel="noopener">Transformer 長度泛化障礙摘要</a>：把表達力和可長度泛化學習拆開。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2509.22284_PD_SSM_State_Tracking.%E6%91%98%E8%A6%81.md" rel="noopener">PD-SSM 摘要</a>：看 <code>A=P·D</code> 如何搬動對角 SSM 的上限。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2608.18575_GNNFailureAttribution.%E6%91%98%E8%A6%81.md" rel="noopener">AFANet 摘要</a>：多 agent 軌跡圖與 65K 參數故障分類器的做法。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2505.00212_WhoAndWhenFailureAttribution.%E6%91%98%E8%A6%81.md" rel="noopener">Who&amp;When 摘要</a>：理解「找誰」與「找哪一步」的難度落差。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>巢狀學習／HOPE 把模型看成多層、各自以不同速度更新的記憶，目標是邊用邊學又少忘舊知；GNN 在東西加關係的資料上，沿邊反覆傳訊息與聚合。兩條線真正共通的提醒是：先說清楚狀態如何組織、資訊沿哪裡流，再分開檢查表達力、可學習性與驗證成本。</p>
+<p>之所以有人對它感興趣：HOPE 給持續學習與超長記憶一個多時間尺度的工程方向；GNN 則把關係結構上的推理與故障定位變成可訓練工具。它們補的是主流固定權重序列模型較弱的兩個環節。</p>
+<section class="self-check"><h2>自我檢核</h2><details><summary>巢狀學習和「設兩個 learning rate」有什麼差別？</summary><p>多組 learning rate 是可用實作；NL 更進一步把架構、最佳化器與記憶都視為不同頻率的巢狀最佳化問題。</p></details><details><summary>HOPE 的自我修改是否代表模型脫離約束？</summary><p>不是。它指更新規則也可學，仍受架構、訓練目標與執行協定限制。</p></details><details><summary>GNN 多跑幾輪一定比較好嗎？</summary><p>不一定。可能過度平滑，也可能把遠方大量資訊壓進太小向量而 over-squashing。</p></details><details><summary>理論上能表達，為什麼實驗仍會失敗？</summary><p>解可能存在於權重空間，梯度卻到不了；表達力與可學習性必須分開檢查。</p></details><details><summary>AFANet 找到故障 agent，是否等於找到真正原因？</summary><p>不是。它是受限基準上的預測；因果歸因還需要重播、反事實測試或其他外部驗證。</p></details></section>
+<div class="pager"><a href="16-ARC-AGI泛化量尺.html">← 16 ARC-AGI</a><a href="18-自我改進與驗證器上限.html">18 自我改進 agent 與驗證器上限 →</a></div></main></div><script src="app.js"></script></body></html>

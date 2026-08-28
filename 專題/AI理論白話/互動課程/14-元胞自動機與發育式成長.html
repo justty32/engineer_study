@@ -1,0 +1,70 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>14 — 元胞自動機與發育式成長</title><link rel="stylesheet" href="styles.css"></head><body data-page="14">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="13-Lisp程式即資料.html" aria-label="上一篇：13 Lisp 程式即資料" title="13 Lisp 程式即資料">上一篇</a><a aria-current="page" href="14-元胞自動機與發育式成長.html" aria-label="目前章節：14 元胞自動機與發育式成長" title="14 元胞自動機與發育式成長">14</a><a href="15-Solomonoff與最短程式.html" aria-label="下一篇：15 Solomonoff 與最短程式" title="15 Solomonoff 與最短程式">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-古典元胞自動機-局部規則能不能長出計算">一、古典元胞自動機：局部規則能不能長出計算</a></li><li><a href="#二-lenia-與固定規則上的初始條件搜尋">二、Lenia 與固定規則上的初始條件搜尋</a></li><li><a href="#三-growing-nca-把局部規則學出來">三、Growing NCA：把局部規則學出來</a></li><li><a href="#四-從圖案走向抽象推理與句法">四、從圖案走向抽象推理與句法</a></li><li><a href="#五-可微邏輯-ca-學完後把規則離散化">五、可微邏輯 CA：學完後把規則離散化</a></li><li><a href="#六-怎麼判斷-ca-是否真的幫上忙">六、怎麼判斷 CA 是否真的幫上忙</a></li><li><a href="#七-更新協定-同一條規則也能跑出不同世界">七、更新協定：同一條規則也能跑出不同世界</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">14 · 元胞自動機讓每個細胞只依局部鄰居與共享規則更新，卻能由下而上長出全域結構、計算與損傷修復</p><h1>14 — 元胞自動機與發育式成長</h1><p class="reading-time">閱讀時間：約 18 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p><a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/00_%E7%B4%A2%E5%BC%95.md" rel="noopener">AI 設計討論索引</a>關心的是能力能否從小而可驗證的機制逐步長出來，而不是一次塞進龐大黑箱。元胞自動機提供一個乾淨試驗場：規則、鄰域、初始條件與每一步狀態都能留下紀錄，適合檢查「局部規則究竟長出了什麼」。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>元胞自動機（Cellular Automata, CA）</td><td>格子上的細胞依鄰居同步更新</td><td>生命遊戲每格只看周圍八格</td></tr><tr><td>局部規則（local rule）</td><td>每個位置共用的更新方式</td><td>鄰居恰有三個時誕生</td></tr><tr><td>湧現（emergence）</td><td>全域行為由局部互動長出</td><td>滑翔機從幾個活細胞中出現</td></tr><tr><td>形態發生（morphogenesis）</td><td>從種子逐步形成有組織的形狀</td><td>一格長成指定圖案</td></tr><tr><td>Lenia</td><td>連續狀態、連續時間的 CA 家族</td><td>長出會移動的 orbium</td></tr><tr><td>神經元胞自動機（Neural CA, NCA）</td><td>以小神經網路當共享局部規則</td><td>每格用同一網路算下一步</td></tr><tr><td>反向傳播（backpropagation）</td><td>由輸出誤差調整可微參數</td><td>訓練 NCA 長成目標影像</td></tr><tr><td>再生（regeneration）</td><td>受損後恢復原有結構</td><td>切掉圖案一角後補回</td></tr><tr><td>EngramNCA</td><td>帶隱藏記憶與調控機制的 NCA</td><td>決定何時、何地啟動操作</td></tr><tr><td>可微邏輯（differentiable logic）</td><td>訓練時連續、部署時可離散化的邏輯</td><td>學完轉成 and／or／not</td></tr><tr><td>初始條件（initial condition）</td><td>動力系統開始運行時的狀態</td><td>固定生命遊戲規則，只改滑翔機位置</td></tr></tbody></table></div>
+<h2 id="一-古典元胞自動機-局部規則能不能長出計算">一、古典元胞自動機：局部規則能不能長出計算</h2>
+<p><strong>想解決什麼</strong>：一個根本問題是：秩序與計算能不能不靠藍圖、不靠中央控制，只靠局部互動由下而上長出來？我們熟悉的程式由上而下執行明確步驟；CA 反過來讓每個小單位只知道自己與鄰居。</p>
+<p><strong>核心想法</strong>：把細胞排在格子上，每個細胞有狀態，最簡單是「活」或「死」。每一步，所有細胞同步使用同一條規則更新。von Neumann 在 1940 年代用這類系統研究能自我複製的機器。Conway 於 1970 年提出生命遊戲，只靠存活、死亡與誕生規則，就生出會移動的滑翔機、會週期變化的振盪器與能持續製造圖樣的結構。生命遊戲甚至是圖靈完備的，可以承載任意計算。</p>
+<p>Wolfram 在 1983 年系統整理一維 CA，指出「簡單規則產生複雜行為」不是單一玩具的巧合。它也呼應生物發育的直覺：受精卵分裂後，每個細胞只取得局部訊號，沒有哪個細胞握有完整總藍圖，完整個體卻能長成。</p>
+<p><strong>和相近理論差在哪</strong>：一般有限狀態機只有一個全域狀態依輸入轉移；CA 把許多有限狀態單元鋪在空間上，靠鄰域反覆互動。傳統模擬也能計算局部更新，但 CA 把「同一規則在所有位置重複」當成核心歸納偏置。</p>
+<p><strong>常見誤解與限制</strong>：古典 CA 的規則通常由人設計或窮舉出來，它不會自己學。圖靈完備也不表示任意初始圖樣都能完成有用計算。你想要特定花樣或控制行為，仍得找到合適規則與初始條件。</p>
+<h2 id="二-lenia-與固定規則上的初始條件搜尋">二、Lenia 與固定規則上的初始條件搜尋</h2>
+<p><strong>想解決什麼</strong>：生命遊戲的狀態跳動而僵硬，很難表現柔軟、連續的形變。另一個問題是：如果規則固定，能不能把「程式」放在初始狀態裡，靠搜尋起始圖樣完成不同任務？</p>
+<p><strong>核心想法</strong>：Bert Chan 在 2018 年提出 Lenia，把生命遊戲的離散狀態推廣成連續狀態、連續時間與較平滑的鄰域作用。結果長出會移動、變形、自我維持、像微生物的結構，例如 orbium。它證明自我維持的動態結構能在純局部規則下大量湧現，是人工生命的代表作。</p>
+<p>固定規則還能走另一條路。把 CA 視為一台機器，規則是硬參數，初始條件是運行時可換的 program。以生命遊戲為例，規則完全不動，只搜尋滑翔機放在哪裡；不同初始圖樣就像不同程式，經相同動力學產生不同輸出。</p>
+<p><strong>和相近理論差在哪</strong>：Lenia 改的是狀態空間與更新動力，追求柔性的人工生命；初始條件搜尋則固定更新規則，只改起始狀態。後者和訓練 NCA 權重正好形成對照：一個把能力塞進 program，一個把能力塞進共享規則。</p>
+<p><strong>常見誤解與限制</strong>：固定規則具有通用計算能力，不代表搜尋地景就好走。初始條件稍改一格，結果可能整個崩掉；隨機搜尋與遺傳演算法也可能表現相近。理論上的通用性不能替代實際的可搜尋性證據。</p>
+<h2 id="三-growing-nca-把局部規則學出來">三、Growing NCA：把局部規則學出來</h2>
+<p><strong>想解決什麼</strong>：古典 CA 最痛的地方是規則靠人設計。想讓系統長出指定圖案，就得反覆猜局部規則。Growing Neural Cellular Automata（Growing NCA，Mordvintsev et al., 2020）把這個設計問題改成可訓練問題。</p>
+<p><strong>核心想法</strong>：每個細胞把自己與鄰居的狀態向量餵進一顆小神經網路，網路輸出「下一步怎麼改自己」。所有位置共享同一顆網路。因為整條更新路徑可微分，訓練可以把最後圖案與目標的差異反向傳回局部規則。</p>
+<p>成果有兩個。第一，一顆種子細胞能逐步長成指定圖案，這在生物學叫形態發生。第二，把長好的圖案切掉一塊，它還能自我再生。規則不是記住每格最終該長什麼，而是在各處反覆執行「怎麼長、怎麼補」的局部程序。</p>
+<p><strong>和相近理論差在哪</strong>：卷積網路也在所有位置共享參數，但通常固定跑幾層後直接輸出；NCA 把同一更新器反覆作用在可持續演變的細胞狀態上。循環神經網路沿時間共享參數，NCA 則同時把時間遞迴與空間鄰域放在格子上。</p>
+<p><strong>常見誤解與限制</strong>：再生能力不是自動得到的。訓練若只看完整圖案，模型可能沒學過受損狀態；實務上常把中途狀態放入池中，主動破壞後再訓練。細胞狀態又是連續向量，內部做法仍可能是難解讀的黑箱，訓練也可能不穩。</p>
+<h2 id="四-從圖案走向抽象推理與句法">四、從圖案走向抽象推理與句法</h2>
+<p><strong>想解決什麼</strong>：長出一張圖案很亮眼，但智能系統還要根據少數示範改變行為、組合多種操作，甚至處理結構化規則。問題因此從「能不能長形狀」推進到「局部互動能不能長出推理結構」。</p>
+<p><strong>核心想法</strong>：Kevin Xu 與 Risto Miikkulainen 在 2025 年把 NCA 直接用於 ARC。每道題各自訓練一個 NCA，讓圖案傳播、形狀抽取與尺度不變生成等發育動態，把輸入格子逐步長成輸出格子。在可行任務上約有 13% 完全正確。分數不高，但說明沒有中央控制與符號鷹架的自組織系統，確實能碰到部分抽象網格變換。</p>
+<p>後續 ARC-NCA／EngramNCA 加入隱藏記憶與兩階段機制。系統先學低階形態和操作，再學一套調控規則，決定何時、何地啟動並傳播這些能力。白話比喻是先學基礎技能，再學一個指揮依情境調用技能，用來補標準 NCA 只會一種長法、難以組合的缺口。</p>
+<p>2026 年的 Proto-CKY 又把邊界推到句法。一個 2D NCA 只接收整個算術運算式是否合文法的 1-bit 監督，內部卻長出與 CKY 解析結構量化對齊的空間表示。這不是精確重作 CKY，而是功能對齊、物理形式不同的局部計算原型。</p>
+<p><strong>和相近理論差在哪</strong>：ARC NCA 學輸入網格到輸出網格的轉換；EngramNCA 多一層記憶與調控；Proto-CKY 做的是上下文無關文法成員判定。三者都用局部更新，但任務、監督與內部結構不同，不能只用「都會湧現」概括。</p>
+<p><strong>常見誤解與限制</strong>：Proto-CKY 是單一作者、最小系統的概念驗證，還沒有擴到自然語言或大型文法。1-bit 監督很弱，不等於無監督；內部對齊係數也不是完整可解釋性證明。ARC 的 13% 同樣只說明路線可行，不表示 NCA 已成為通用抽象推理器。</p>
+<h2 id="五-可微邏輯-ca-學完後把規則離散化">五、可微邏輯 CA：學完後把規則離散化</h2>
+<p><strong>想解決什麼</strong>：主流 NCA 的細胞狀態與更新器都是連續黑箱。系統即使能長出目標圖案，人也很難讀懂每個細胞採用的規則，更難在部署前逐條檢查。</p>
+<p><strong>核心想法</strong>：Differentiable Logic CA 在 2025 年把細胞裡的小神經網路換成可微分邏輯閘。訓練時把它當連續網路，用梯度學習；訓練後則離散成 and、or、not 等布林邏輯。它從重現生命遊戲一路做到較複雜的圖樣生成，示範「可訓練」與「可讀局部規則」可以放在同一套方法裡。</p>
+<div class="table-wrap"><table><thead><tr><th>方法</th><th>規則怎麼來</th><th>關鍵新增</th></tr></thead><tbody><tr><td>古典 CA</td><td>人手設計／窮舉</td><td>簡單規則能產生複雜湧現</td></tr><tr><td>Lenia</td><td>人手設計並連續化</td><td>柔性、會動的人工生命</td></tr><tr><td>Emergent Models</td><td>固定規則，只搜尋初始條件</td><td>把 program 放進起始狀態</td></tr><tr><td>Growing NCA</td><td>共享小網路學出來</td><td>從種子發育與損傷再生</td></tr><tr><td>Neural CA for ARC</td><td>每題學一條局部規則</td><td>把發育動態用於抽象網格變換</td></tr><tr><td>Proto-CKY</td><td>以 1-bit 文法標籤訓練</td><td>局部互動長出句法式空間結構</td></tr><tr><td>EngramNCA</td><td>規則加隱藏記憶</td><td>基礎能力加何時、何地啟動的調控</td></tr><tr><td>Differentiable Logic CA</td><td>訓練時連續，學完離散</td><td>規則能轉成可讀布林邏輯</td></tr></tbody></table></div>
+<p><strong>和相近理論差在哪</strong>：事後解釋連續 NCA，是先訓練黑箱再猜它在做什麼；可微邏輯 CA 從架構上限制可用元件，學完直接得到離散規則。代價是表示空間更受限，並非每種連續動力都能方便轉成布林邏輯。</p>
+<p><strong>常見誤解與限制</strong>：可讀的局部規則不等於可預測的全域行為。生命遊戲的規則只有幾行，長期演化仍可極度複雜。離散化也可能帶來準確率落差，因此必須在離散後重新測試，而不是只檢查訓練時的連續版本。</p>
+<h2 id="六-怎麼判斷-ca-是否真的幫上忙">六、怎麼判斷 CA 是否真的幫上忙</h2>
+<p><strong>想解決什麼</strong>：CA 很容易產生漂亮動畫，卻未必回答目標導向、長期規劃與信用分配。需要一組能把「看起來像生命」和「確實解決問題」分開的檢查方式。</p>
+<p><strong>核心想法</strong>：最小實驗可以讓固定或學得的局部規則，從單一種子長出能完成簡單算術或網格變換的結構。除了最終正確率，還要測未見尺寸、刪除局部細胞後的恢復率、不同更新步數、不同種子與規則擾動。每一步都可留成狀態軌跡，檢查全域能力在哪一段形成。</p>
+<p><strong>和相近理論差在哪</strong>：規劃器直接搜尋動作序列；NCA 搜尋或學習的是反覆執行的局部更新規則。前者適合明確目標與長程因果，後者擅長結構形成、分散控制與修復。兩者可以相接，但不能假設其中一個自然包含另一個。</p>
+<p><strong>常見誤解與限制</strong>：CA 的參數少、規則共享，不表示運行成本低。格子很大、迭代步數很多時，總計算量仍高。自組織也不會自動解決「目標由誰給」「哪一步造成成敗」「何時停止」；這些問題仍要靠目標函式、驗證器或外部控制層。</p>
+<h2 id="七-更新協定-同一條規則也能跑出不同世界">七、更新協定：同一條規則也能跑出不同世界</h2>
+<p><strong>想解決什麼</strong>：CA 的論文常把注意力放在局部規則，讀者便容易忽略更新協定。其實同步或非同步、邊界怎麼處理、細胞是否隨機跳過更新，都會改變全域結果。若訓練與評估協定不同，所謂再生或泛化可能只是實作細節。</p>
+<p><strong>核心想法</strong>：古典 CA 通常採同步更新。每格先從同一個舊時間點讀鄰居，再一起寫入新網格。若直接在原網格由左到右覆寫，右側細胞會讀到「本輪已更新」的左鄰居，系統就變成另一套非同步動力。最小實作因此常保留 <code>current</code> 與 <code>next</code> 兩張格子：先完整計算 <code>next</code>，一輪結束後再交換。</p>
+<p>邊界同樣重要。週期邊界把左邊接到右邊、上面接到下面，整張網格像甜甜圈；固定邊界把外部視為永遠死掉；反射邊界則像鏡子。相同種子靠近邊緣時，三種設定會看到不同鄰居。報告「長到 64×64」卻沒說邊界與初始位置，別人很難重現。</p>
+<p><strong>和相近理論差在哪</strong>：資料增強改的是訓練樣本；更新協定改的是系統動力。隨機細胞更新可當成正則化，逼 NCA 不依賴完美同步；隨機損傷則專門訓練再生。兩者都加入隨機性，測的能力不同。</p>
+<p><strong>常見誤解與限制</strong>：從一顆種子長成一次，不足以證明穩定發育。至少要分開測四件事：不同隨機種子是否成功、迭代步數改變後是否維持形狀、未見網格尺寸能否運作、損傷後能否恢復。若只挑最好看的 rollout，會把脆弱系統誤認為可靠規則。</p>
+<p>一份緊湊的實驗表可以同時記錄「任務正確率、成形步數、損傷比例、恢復步數、離散後正確率」。前兩項看是否完成目標；中間兩項看再生；最後一項專門檢查 Differentiable Logic CA 從連續訓練版轉成布林規則後有沒有掉能力。再把每次 run 的種子與格子軌跡保留下來，才能區分穩定機制和偶然的漂亮圖樣。</p>
+<p>評估時可用一個小矩陣逐格測，不必一次發明大 benchmark：</p>
+<div class="table-wrap"><table><thead><tr><th>變動軸</th><th>訓練內設定</th><th>最小外推測試</th><th>想排除的捷徑</th></tr></thead><tbody><tr><td>網格尺寸</td><td>32×32</td><td>48×48、64×64</td><td>記住絕對座標</td></tr><tr><td>更新步數</td><td>64–96 步</td><td>32、128、192 步</td><td>只在固定時刻看起來正確</td></tr><tr><td>種子位置</td><td>中央</td><td>靠近四邊與角落</td><td>假設固定中心</td></tr><tr><td>損傷</td><td>無或小洞</td><td>切除 10%、25%、50%</td><td>只會正常發育，不會修復</td></tr><tr><td>更新排程</td><td>同步</td><td>隨機跳過部分細胞</td><td>依賴精確時鐘</td></tr><tr><td>邊界</td><td>固定</td><td>週期、反射</td><td>偷用邊界當定位訊號</td></tr></tbody></table></div>
+<p>每個格子至少報多個隨機種子的平均與失敗次數，並保留最差案例。若目標是程式推理，還要把「圖樣相似」和「輸出完全正確」分開；視覺上差一格可能幾乎看不出來，ARC 類協定卻會整題判錯。若目標是再生，則不能只比較最終影像，還要確認修復途中沒有先擴散失控，再碰巧回到相似形狀。</p>
+<p>軌跡本身也可以當診斷材料。若每次成功都先形成相同中介結構，再由那個結構完成輸出，才有理由懷疑系統學到可重用程序；若中介狀態隨種子完全不同，只在最後一幀碰巧相似，就要更保守。對 Proto-CKY 類工作，除了終局成員判定，還應比較內部空間組織是否隨運算式結構穩定改變；對固定規則的初始條件搜尋，則要分開記錄規則成本、program 大小與找到 program 所花的評估次數。</p>
+<p>最後要保留失敗影片，而不只保存成功動畫。失控擴散、停在半成品、邊界黏住與損傷後長成另一個穩定形狀，分別指向不同問題。把它們全算成「未成功」會失去診斷資訊；分型後，才知道下一輪該改訓練分布、更新協定、局部規則容量，還是停止條件。</p>
+<p>每種失敗型態都應附隨機種子與第一個偏離正常軌跡的時間點，方便重播。</p>
+<p>無法重播的結果不算穩定證據。</p>
+<p>可重播才有比較基準。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>句法能從局部互動湧現：Proto-CKY</strong>（<a href="https://arxiv.org/abs/2604.17857" rel="noopener">arXiv 2604.17857</a>）：<strong>原文事實（作者自報）</strong>：一個 18,658 參數的 2D NCA，只靠該運算式是否合文法的 1-bit 邊界訊號訓練，在四個上下文無關文法上各自長出 Proto-CKY；它超越正則語言、泛化到超出訓練分布的較長運算式，內部空間組織與文法結構 Pearson <code>r≈0.71</code>，受擾動後還能再生。協定限制是單一作者、算術運算式文法的最小概念驗證，Proto-CKY 與 CKY 功能對齊但形式不相同。對本篇的意義：NCA 長出的不只圖案，也可能是解析結構。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.17857_NCA_Emergent_Syntax.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.17857_NCA_Emergent_Syntax.摘要.md</code></a></li><li><strong>固定規則，只搜尋初始條件</strong>（<a href="https://arxiv.org/abs/2608.14019" rel="noopener">arXiv 2608.14019</a>）：<strong>原文事實（作者自報）</strong>：EM43 用 70 參數、140 bits，訓練域 <code>x∈[0,30]</code>、測試域 <code>[30,1000]</code>，在五個單輸入任務皆為 100%／100%；固定生命遊戲規則、只搜尋滑翔機位置的 <code>x±k</code> 任務也是 100%／100%。但條件式任務只有 60%／50%，隨機搜尋與 GA 幾乎相同，雙輸入乘法在算力預算內未收斂。作者明說所有實測組合都未證明具 latent universality，論文定位為 foundational。對本篇的意義：規則與 program 可分開，但固定小規則並未消除搜尋困難。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2608.14019_EmergentModels.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2608.14019_EmergentModels.摘要.md</code></a></li></ul>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：古典 CA 與 NCA 最大差別是什麼？ <strong>答</strong>：古典 CA 的局部規則由人設計或窮舉；NCA 把共享局部規則參數化，讓它能由資料學出來。</li><li><strong>問</strong>：為什麼切掉一塊後能再生？ <strong>答</strong>：能力存在所有細胞共享的更新規則中；殘存細胞仍能依局部狀態執行修復程序，但前提是訓練涵蓋受損情境。</li><li><strong>問</strong>：固定規則具有通用性，是否表示初始條件容易搜尋？ <strong>答</strong>：不是。表達力只說解可能存在，搜尋地景仍可能脆弱且缺乏可利用結構。</li><li><strong>問</strong>：可微邏輯 CA 解決了所有可解釋性問題嗎？ <strong>答</strong>：沒有。局部規則可讀，不代表長期全域行為容易預測；離散化後也須重新驗證。</li><li><strong>問</strong>：NCA 適合取代規劃器嗎？ <strong>答</strong>：通常不適合。NCA 擅長結構形成與修復，目標導向、長期規劃及信用分配仍需其他機制。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.17857_NCA_Emergent_Syntax.%E6%91%98%E8%A6%81.md" rel="noopener">Proto-CKY 摘要</a>：看 1-bit 監督如何把 NCA 從圖案推到句法結構。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2608.14019_EmergentModels.%E6%91%98%E8%A6%81.md" rel="noopener">Emergent Models 摘要</a>：固定規則與可變初始 program 的完整對照。</li><li><a href="13-Lisp程式即資料.html" rel="noopener">Lisp 程式即資料</a>：初始條件作為 program 時，可與顯式語法樹的程式表示互相比較。</li><li><a href="16-ARC-AGI泛化量尺.html" rel="noopener">ARC-AGI 泛化量尺</a>：Neural CA for ARC 所面對的少樣本網格推理基準。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>元胞自動機的精神是「不靠中央藍圖，純靠共享的局部互動由下而上長出秩序與計算」。把局部規則換成可訓練網路後，系統能從種子發育、受損後再生，甚至開始長出抽象網格轉換與句法式結構。</p>
+<p>之所以有人對它感興趣：它示範一條和由上而下寫好藍圖不同的造物路線。能力可以像生物一樣長出來；可微邏輯 CA 又讓其中一部分局部規則有機會在訓練後被人讀懂。</p>
+<section class="self-check"><h2>自我檢核</h2><details><summary>古典 CA 與 NCA 最大差別是什麼？</summary><p>古典 CA 的局部規則由人設計或窮舉；NCA 把共享局部規則參數化，讓它能由資料學出來。</p></details><details><summary>為什麼切掉一塊後能再生？</summary><p>能力存在所有細胞共享的更新規則中；殘存細胞仍能依局部狀態執行修復程序，但前提是訓練涵蓋受損情境。</p></details><details><summary>固定規則具有通用性，是否表示初始條件容易搜尋？</summary><p>不是。表達力只說解可能存在，搜尋地景仍可能脆弱且缺乏可利用結構。</p></details><details><summary>可微邏輯 CA 解決了所有可解釋性問題嗎？</summary><p>沒有。局部規則可讀，不代表長期全域行為容易預測；離散化後也須重新驗證。</p></details><details><summary>NCA 適合取代規劃器嗎？</summary><p>通常不適合。NCA 擅長結構形成與修復，目標導向、長期規劃及信用分配仍需其他機制。</p></details></section>
+<div class="pager"><a href="13-Lisp程式即資料.html">← 13 Lisp 程式即資料</a><a href="15-Solomonoff與最短程式.html">15 Solomonoff 與最短程式 →</a></div></main></div><script src="app.js"></script></body></html>

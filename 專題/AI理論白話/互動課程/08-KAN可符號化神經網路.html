@@ -1,0 +1,80 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 — KAN 可符號化神經網路</title><link rel="stylesheet" href="styles.css"></head><body data-page="08">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="07-把邏輯焊進網路.html" aria-label="上一篇：07 把邏輯焊進網路" title="07 把邏輯焊進網路">上一篇</a><a aria-current="page" href="08-KAN可符號化神經網路.html" aria-label="目前章節：08 KAN 可符號化神經網路" title="08 KAN 可符號化神經網路">08</a><a href="09-認知架構.html" aria-label="下一篇：09 認知架構" title="09 認知架構">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-數學底牌-kolmogorov-arnold-表示定理">一、數學底牌：Kolmogorov–Arnold 表示定理</a></li><li><a href="#二-kan-架構-把可學的曲線放在-邊-上">二、KAN 架構：把可學的曲線放在「邊」上</a></li><li><a href="#三-kan-2-0-multkan-kanpiler-往科學發現走">三、KAN 2.0（MultKAN + kanpiler）：往科學發現走</a></li><li><a href="#四-誠實的限制-別把它當銀彈">四、誠實的限制（別把它當銀彈）</a></li><li><a href="#五-怎麼用它-兩種典型管線">五、怎麼用它：兩種典型管線</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">08 · KAN 把可學的一維曲線放在網路的邊上，嘗試用梯度找到函數，再把整張網路讀回數學公式</p><h1>08 — KAN 可符號化神經網路</h1><p class="reading-time">閱讀時間：約 18 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p>本設計希望梯度負責連續搜尋，符號層負責可讀、可驗證的最終表示。<a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/%E5%8F%83%E8%80%83%E7%90%86%E8%AB%96_11_KAN_%E5%8F%AF%E7%AC%A6%E8%99%9F%E5%8C%96%E7%9A%84%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF.md" rel="noopener">KAN 的設計參考</a>提供一座少見的雙向橋：公式可以編成網路，網路也可嘗試還原成公式。關鍵是別把「網路能表示」誤讀成「訓練一定找得回」。</p>
+<p>一般的神經網路（MLP）是個<strong>黑箱</strong>：訓練完之後你拿到的是一大堆權重數字，沒有人看得懂它們的意義，也沒辦法把它變回一條人能讀、能驗算的公式。這在很多場合很要命——尤其是科學研究，科學要的是「<strong>公式、定律、可解釋的因果</strong>」，而不是一團摸不透的數字。</p>
+<p>KAN 想當「<strong>神經（連結主義）</strong>」和「<strong>符號（科學公式）</strong>」之間的那座橋：梯度照樣訓練，但最後吐出來的是人看得懂的式子。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>KAN（Kolmogorov–Arnold Network）</td><td>邊上放可學一維函數的神經網路</td><td>一條邊可以學成近似 <code>sin(x)</code> 的曲線</td></tr><tr><td>MLP（多層感知器）</td><td>邊上是純量權重的傳統網路</td><td>每條邊只學一個乘數</td></tr><tr><td>樣條（spline）</td><td>用多段平滑曲線拼成的函數</td><td>調控制點即可改變曲線形狀</td></tr><tr><td>符號回歸（symbolic regression）</td><td>由資料反推可讀公式</td><td>從觀測值找回 <code>y=x²+1</code></td></tr><tr><td>grid</td><td>樣條劃分輸入區間的格點數</td><td>grid 越密，參數通常越多</td></tr><tr><td>spline 階 <code>k</code></td><td>控制樣條多項式階數的設定</td><td>階數會影響平滑度與參數量</td></tr><tr><td>MultKAN</td><td>加入乘法節點的 KAN</td><td>可直接表達兩個子式相乘</td></tr><tr><td>kanpiler</td><td>把既有公式編成 KAN 的工具</td><td>先把物理公式裝入網路再微調</td></tr><tr><td>可回復性（recoverability）</td><td>訓練能否找回真正公式</td><td>容得下答案，不代表找得到</td></tr></tbody></table></div>
+<hr>
+<h2 id="一-數學底牌-kolmogorov-arnold-表示定理">一、數學底牌：Kolmogorov–Arnold 表示定理</h2>
+<p><strong>Kolmogorov 1957、Arnold。</strong></p>
+<p><strong>想解決什麼</strong>：多變數函數看起來需要直接處理高維交互作用。這條定理替「用一維小函數拼複雜函數」提供數學底牌。</p>
+<p><strong>核心想法</strong>：<strong>任何一個多變數的連續函數，原則上都能寫成「一堆單變數函數的相加與複合」。</strong></p>
+<p>白話講：一個牽涉很多變數、看起來很複雜的函數，理論上保證可以拆解成許多「一次只吃一個變數」的簡單一維函數，再把它們加起來、套起來組合。</p>
+<p>這條定理長年被認為「只是存在性、不實用」——它告訴你「能拆」，但沒告訴你「怎麼拆、拆出來能不能訓練」。KAN 的貢獻就是把這條定理<strong>真的做成了一個可訓練的網路結構</strong>。</p>
+<blockquote class="note"><p>對程式設計師的比喻：把一個多參數的複雜函數，重構成一堆「單參數小函數」的組合呼叫——這條定理保證這種重構在數學上一定做得到。</p></blockquote>
+<p><strong>和相近理論差在哪</strong>：通用近似定理也說 MLP 可以逼近廣泛函數，但不要求內部邊是可直接畫出的單變數曲線。KAN 把函數分解放進架構偏好，讓讀回局部函數成為可能。</p>
+<p><strong>常見誤解與限制</strong>：存在性只回答「有沒有表示」，不回答指定深度、寬度、變數路由與最佳化器能否找到。同一目標式可以存在於函數空間中，訓練仍可能完全回復失敗。</p>
+<hr>
+<h2 id="二-kan-架構-把可學的曲線放在-邊-上">二、KAN 架構：把可學的曲線放在「邊」上</h2>
+<p><strong>Liu, Tegmark 等 2024.04。</strong></p>
+<p><strong>想解決什麼</strong>：MLP 訓練後留下大量純量權重。單看某個權重，很難知道它對應哪個科學關係。KAN 希望每個局部變換都能被畫出、剪枝與命名。</p>
+<p><strong>核心想法</strong>：KAN 跟傳統 MLP 的設計剛好對著幹：</p>
+<div class="table-wrap"><table><thead><tr><th></th><th>激活函數（固定的）</th><th>可學的東西</th></tr></thead><tbody><tr><td><strong>MLP（傳統）</strong></td><td>放在<strong>節點</strong>上</td><td>放在<strong>邊</strong>上的是純量權重</td></tr><tr><td><strong>KAN</strong></td><td>——</td><td>放在<strong>邊</strong>上的是<strong>可學的一維函數（樣條 spline）</strong>；<strong>節點只做相加</strong></td></tr></tbody></table></div>
+<p>也就是說，KAN 把傳統網路邊上那個「沒意義的純量權重」，換成了一條<strong>可以學、而且畫得出來的一維曲線</strong>。節點不做別的，只負責把進來的東西加起來。</p>
+<p>於是每一條邊都是一條<strong>看得見的曲線</strong>。這就直接解決了「MLP 是黑箱、權重沒意義、無法解讀」的問題。</p>
+<p><strong>為什麼它能直接吐出公式（符號回歸）：</strong> 訓練完之後，每條邊上學到的那條樣條曲線，可以被<strong>擬合成一個封閉式</strong>——看它像 <code>sin</code>、像 <code>exp</code>、還是像 <code>x²</code>，就把它換成對應的數學函數。每條邊都換完之後，整張網路就<strong>直接組合成一條方程式</strong>。這就是所謂的「<strong>符號回歸（symbolic regression）</strong>」：用資料反推出背後的公式。</p>
+<p>這也巧妙繞過了神經符號的老難題——別人卡在「神經網路那團向量要怎麼接成符號」的斷崖上，KAN 的答案是「<strong>讓每一條邊一開始就是一條可解釋的一維函數</strong>」，於是符號化只是「擬合一條曲線」，根本不必跨那道斷崖。</p>
+<p><strong>和相近理論差在哪</strong>：一般符號回歸直接在運算子與語法樹空間搜尋，容易遇到組合爆炸。KAN 先在連續空間找曲線，再做離散化；它少掉部分枚舉，卻增加 spline 參數、最佳化與符號化誤差。</p>
+<p><strong>常見誤解與限制</strong>：曲線看得見，不代表因果關係正確。兩個高度相關的輸入可以讓邊呈現漂亮形狀，模型仍可能抓到偽相關。評估不能只展示曲線圖，還要測分布外資料、干預與不同種子的一致性。</p>
+<hr>
+<h2 id="三-kan-2-0-multkan-kanpiler-往科學發現走">三、KAN 2.0（MultKAN + kanpiler）：往科學發現走</h2>
+<p><strong>KANs Meet Science；Liu &amp; Tegmark 2024.08。</strong></p>
+<p><strong>想解決什麼</strong>：原版 KAN 的節點只做加法，但科學公式常有乘積，也常需要把已知公式先裝入模型再微調。KAN 2.0 想找出相關特徵、揭露模組化結構、發現符號公式。</p>
+<p><strong>核心想法</strong>：它加了兩個工具：</p>
+<ul><li><strong>MultKAN</strong>：原版 KAN 的節點只會做<strong>加法</strong>，表達力受限。MultKAN 加入了「<strong>乘法節點</strong>」，更貼近真實世界公式裡常出現的相乘關係。</li><li><strong>kanpiler</strong>：能把一條<strong>符號公式「編譯」成一張 KAN</strong>。重點是這是<strong>雙向</strong>的—— 神經和符號可以<strong>來回互轉</strong>，這在神經符號領域是很罕見的「可逆介面」。<ul><li>公式 → KAN（kanpiler）</li><li>KAN → 公式（符號回歸）</li></ul></li></ul>
+<p><strong>和相近理論差在哪</strong>：純神經模型通常只支援「資料到權重」；電腦代數系統只處理已知符號。KAN 2.0 嘗試讓已知公式與可學曲線來回轉換，這是它對科學發現流程最有吸引力的部分。</p>
+<p><strong>常見誤解與限制</strong>：雙向介面不是無損序列化。公式編成 KAN 後可精確表達，不代表從帶噪資料訓練出的 KAN 能還原同一條短式。乘法節點也增加架構選擇；變數送到不合適的支路時，真正公式可能永遠回不來。</p>
+<hr>
+<h2 id="四-誠實的限制-別把它當銀彈">四、誠實的限制（別把它當銀彈）</h2>
+<p><strong>想解決什麼</strong>：一句「會吐公式」漏掉三道關卡：先擬合資料、再把曲線化成短式、最後確認短式穩定且可泛化。任何一道失敗，都不能算找回定律。</p>
+<p><strong>核心想法</strong>：KAN 很迷人，但有幾個要老實標記的問題：</p>
+<ul><li><strong>訓練慢、不穩定</strong>：邊上的 B-spline 最佳化容易不穩，許多論文只報「單次跑出來的結果」，其實藏了訓練不穩的事實（換個隨機種子可能結果就不一樣）。</li><li><strong>公式未必真好讀</strong>：它確實能吐公式，但學出來的式子<strong>有時仍然很複雜</strong>，不見得是那種一眼看懂的漂亮短式。</li><li><strong>準確度不是壓倒性更好</strong>：多數情況下，它的準確度只是和 MLP <strong>差不多</strong>，不是大幅領先。</li><li><strong>參數量是結構性成本</strong>：同樣寬深配置下，KAN 的參數量約為 MLP 的 <code>G+k+3</code> 倍，其中 <code>G</code> 是 grid 數，<code>k</code> 是 spline 階。每條邊存的是曲線，不只是一個數。</li><li><strong>可表示不等於可回復</strong>：同一目標式只因變數路由不同，回復率就能從 0/64 到 64/64；平衡樹拓樸在 3,776 次受控試驗中全面失敗，95% CI 上界為 0.10%。</li></ul>
+<p>特別提醒一個容易踩的誤解：<strong>「能畫出每條邊的函數」不等於「一定能得到簡短、穩定、且因果正確的公式」。</strong> 能可視化、能剪枝，是它的優點；但要真的壓出一條短而正確的式子，還得自己額外下功夫去控制複雜度。</p>
+<p><strong>和相近理論差在哪</strong>：MLP 的參數主要花在連線權重，KAN 每條邊要表示一整條曲線。MetaKAN 壓縮係數表示；GA-KAN 搜尋連接、grid 與深度，砍掉不需要的結構。兩者處理的是不同成本。</p>
+<p><strong>常見誤解與限制</strong>：架構容得下答案，只是表達力；訓練能否找到答案，才是可回復性。若只報最好種子與測試內插，這兩件事看起來會被混成一件事。</p>
+<hr>
+<h2 id="五-怎麼用它-兩種典型管線">五、怎麼用它：兩種典型管線</h2>
+<p><strong>想解決什麼</strong>：直接要求 KAN 從原始資料一次吐出最終公式，會把連續擬合、結構分解、符號選擇與驗證擠在同一步。失敗時很難定位。</p>
+<p><strong>核心想法</strong>：有兩種典型用法：</p>
+<ol><li><strong>當 encoder 或數值子模組</strong>：拿它輸出那種「比較容易檢查」的連續變換。</li><li><strong>當符號候選的產生器</strong>：先用梯度找出函數大概長什麼形狀，再把這個形狀交給程式搜尋器去離散化、驗證。第二種更符合「<strong>梯度負責感知／連續搜尋，符號層負責最終動作</strong>」的分工。</li></ol>
+<p>KAN-SR 把第二種做法變成完整管線：先用可微 KAN 擬合，再用對稱性與可分離性拆子問題，把網路拆成模組化代數組件，最後匹配符號函數庫，不暴力枚舉完整公式樹。</p>
+<p>評估它時，除了看預測誤差，還該量：公式有多長、不同隨機種子跑出來的公式一不一致、在沒見過的分佈上穩不穩、剪枝後性能掉多少、符號化前後誤差差多少。如果到頭來只能得到一堆複雜的 spline，那就不能算真的完成「可控的符號化」。</p>
+<p><strong>和相近理論差在哪</strong>：端到端 KAN 把希望押在同一張網路；管線式用法允許外部搜尋器重組候選，再用獨立資料或符號驗證器淘汰錯式。後者更符合「梯度找方向，符號層拍板」。</p>
+<p><strong>常見誤解與限制</strong>：把 spline 替換成 <code>sin</code> 後預測仍準，只表示替換在測試範圍內近似成功。它不證明公式在未觀測區域成立，也不證明變數有因果意義。驗收要加入外插、噪聲、無關變數與種子重跑。</p>
+<h3 id="一個可重現的評估流程">一個可重現的評估流程</h3>
+<p>第一步先切開「預測」與「回復」。預測測試只看保留資料的誤差；回復測試則把輸出公式正規化後，檢查是否與目標式代數等價。<code>R²&gt;0.99</code> 可能來自一條局部近似式，不能算精確回復。若真實公式未知，就只能報候選式的外插與干預表現，不能宣稱發現定律。</p>
+<p>第二步固定資料，系統性改變架構。至少測不同寬度、深度、grid、spline 階與變數路由。每種配置跑多個種子，報成功次數而非只報最佳公式。這能分辨「資料沒有訊息」「最佳化不穩」與「架構路由根本不利回復」。平衡樹 0/3,776 的結果之所以重要，就是它把第三種失敗單獨抓了出來。</p>
+<p>第三步記錄符號化的每次手術。剪掉哪條邊、把哪條 spline 換成哪個函式、替換前後誤差各多少，都應留下軌跡。人工看圖後選 <code>sin</code> 也是搜尋的一部分，不能在報告裡當作模型自動發現。GA-KAN 與 KAN-SR 的價值，正是把部分人工判斷轉成可重跑的搜尋步驟。</p>
+<p>最後用兩套資料驗證。內插資料檢查曲線在觀測範圍內是否貼合；外插資料檢查公式是否抓到較穩定的結構。若公式在內插準、外插崩，最誠實的稱呼是可讀近似器，不是科學定律。這個區分也適用於所有符號回歸方法，不只 KAN。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>參數量是 KAN 的結構性痛點</strong>（<a href="https://arxiv.org/abs/2506.07549" rel="noopener">arXiv 2506.07549</a>）：<strong>原文事實（作者自報）</strong>：ICML 2025 的 MetaKAN 指出，同結構 KAN 的參數量約為 MLP 的 <code>G+k+3</code> 倍；MetaKAN 在 Feynman 符號回歸 grid=5 的 17 條方程中有 11 條 MSE 較低、參數少 21–47%，CIFAR-10 的 4 層 MetaKANConv 為 45.86%，392K 參數相較基線 3.49M 少 89%，高 6.03 個百分點。結果限於論文所測方程與 CIFAR-10 配置；作者也說極小 KAN 可能因固定成本增加參數。對本篇的意義：曲線自由度有明確空間價格，也已有壓縮方向。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2506.07549_MetaKAN.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2506.07549_MetaKAN.摘要.md</code></a></li></ul>
+<ul><li><strong>自動化手動剪枝：GA-KAN</strong>（<a href="https://arxiv.org/abs/2501.17411" rel="noopener">arXiv 2501.17411</a>）：<strong>原文事實（作者自報）</strong>：研究把連接、grid 與深度編進染色體，用遺傳演算法搜尋架構；在 5 個 UCI 資料集上零人工介入達到與手工剪枝 KAN 相當或更高的準確度，WDBC 為 100%，參數量 1,560，相較手工版 27,328 大幅下降。結果限於這 5 個資料集與論文搜尋預算。對本篇的意義：它處理結構冗餘，與 MetaKAN 處理係數表示冗餘互補。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2501.17411_GA_KAN.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2501.17411_GA_KAN.摘要.md</code></a></li></ul>
+<ul><li><strong>KAN 當符號回歸前端</strong>（<a href="https://arxiv.org/abs/2509.10089" rel="noopener">arXiv 2509.10089</a>）：<strong>原文事實（作者自報）</strong>：KAN-SR 用可微 KAN 加 AI Feynman 式對稱性與可分離性分析，把問題拆成子問題，再以非線性最小平方匹配符號函數庫；在 SRSD-Feynman 上勝過論文所研究基線，含無關變數時優勢較明顯，並以 neural CDE 延伸到生物製程動態建模。結果受函數庫、分解假設與該基準限制。對本篇的意義：它把「梯度找形狀，再交給符號層」變成可跑管線。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2509.10089_KAN_SR.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2509.10089_KAN_SR.摘要.md</code></a></li></ul>
+<ul><li><strong>可表示不等於可回復</strong>（<a href="https://arxiv.org/abs/2604.23256" rel="noopener">arXiv 2604.23256</a>）：<strong>原文事實（作者自報）</strong>：受控實驗使用深度 3 的樹與 24 種運算子、形狀、葉組合；同一目標式在不同變數路由架構下，回復率可從 0/64 到 64/64，平衡樹拓樸在 3,776 次試驗中為 0 次成功，95% CI 上界 0.10%。這是受控深度與運算子空間，不等同所有 KAN 配置。對本篇的意義：函數空間包含答案只是第一關，架構誘導偏差會決定訓練能否找回答案。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.23256_Architecture_Recoverability_Bias_DSR.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.23256_Architecture_Recoverability_Bias_DSR.摘要.md</code></a></li></ul>
+<p>本輪掃描的 342 篇 2025 下半年至 2026 論文中，KAN 類只有 4 篇，且未找到其他 2026 年 KAN 新結果。這是本輪文獻範圍內的空白，不是整個領域已停止研究的證明。</p>
+<ul><li><strong>把眼光放寬到整個符號回歸</strong>（<a href="https://arxiv.org/abs/2606.09276" rel="noopener">arXiv 2606.09276</a>）：<strong>原文事實（作者自報）</strong>：ERBench 使用抗污染祕密評測集比較 6 個 SOTA 符號回歸演算法，只有 PySR 得到非平凡符號回復率，約 30%，其餘包含 DSR 近乎 0；PySR 在公式複雜度超過 13 個運算子時也降到近 0。這是該祕密資料集、6 種演算法與複雜度定義下的結果。對本篇的意義：KAN 的限制不是孤例，從資料精確吐回公式在 2026 仍是整個領域的硬問題。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2606.09276_ERBench_Equation_Recovery_Benchmark.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2606.09276_ERBench_Equation_Recovery_Benchmark.摘要.md</code></a></li></ul>
+<p>符號回歸還有一個報表陷阱：數值擬合與精確式子常被放在同一欄。兩條公式在觀測區間可以幾乎重合，離開區間後卻往相反方向走。若任務目的是壓縮或快速模擬，近似式可能已足夠；若任務目的是科學發現，就必須要求代數等價、單位一致、外插與可重現。先寫清用途，才知道「成功」究竟是哪一種成功。</p>
+<p>參數公平比較也不能只配相同層數與寬度。KAN 每條邊的自由度由 grid 與 spline 階決定；MLP 每條邊只有純量。較合理的比較至少要同時提供同寬深、同參數量與同計算預算三組。否則「同結構」可能讓 KAN 取得多很多參數，而「同參數」又會迫使它縮窄，兩種問題回答的其實不同。</p>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：KAN 與 MLP 最直觀的架構差異是什麼？ <strong>答</strong>：MLP 的邊學純量權重、節點套固定激活函數；KAN 的邊學一維函數、節點主要相加。</li><li><strong>問</strong>：表示定理為什麼不能保證找回公式？ <strong>答</strong>：它只保證表示存在，不保證指定架構、資料與最佳化能找到。</li><li><strong>問</strong>：參數量為什麼可能大很多？ <strong>答</strong>：每條邊不是一個數，而是一條由 grid 與 spline 係數描述的曲線。</li><li><strong>問</strong>：把 KAN 當候選產生器後還要驗什麼？ <strong>答</strong>：公式長度、種子一致性、外插、無關變數、符號化誤差與因果干預。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2506.07549_MetaKAN.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2506.07549_MetaKAN.摘要.md</code></a>：理解 KAN 參數膨脹從哪裡來，以及元學習器怎麼壓縮係數。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2509.10089_KAN_SR.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2509.10089_KAN_SR.摘要.md</code></a>：查看 KAN 與符號簡化、函數庫匹配組成的完整管線。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.23256_Architecture_Recoverability_Bias_DSR.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.23256_Architecture_Recoverability_Bias_DSR.摘要.md</code></a>：用受控實驗拆開表達力與可回復性。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>KAN 是一種「<strong>用梯度訓練、但輸出是人看得懂的數學公式</strong>」的神經網路——它把可學的一維曲線放在邊上、節點只做加法，於是每條邊都畫得出來，整張網路能直接擬合成一條方程式。</p>
+<blockquote class="note"><p>為什麼有人會對它感興趣：因為它證明了「<strong>梯度真的可以吐出符號</strong>」這條路是通的，等於在神經和符號之間架了一座少見的雙向橋——雖然目前它還慢、還不穩、公式也未必夠漂亮。</p></blockquote>
+<section class="self-check"><h2>自我檢核</h2><details><summary>KAN 與 MLP 最直觀的架構差異是什麼？</summary><p>MLP 的邊學純量權重、節點套固定激活函數；KAN 的邊學一維函數、節點主要相加。</p></details><details><summary>表示定理為什麼不能保證找回公式？</summary><p>它只保證表示存在，不保證指定架構、資料與最佳化能找到。</p></details><details><summary>參數量為什麼可能大很多？</summary><p>每條邊不是一個數，而是一條由 grid 與 spline 係數描述的曲線。</p></details><details><summary>把 KAN 當候選產生器後還要驗什麼？</summary><p>公式長度、種子一致性、外插、無關變數、符號化誤差與因果干預。</p></details></section>
+<div class="pager"><a href="07-把邏輯焊進網路.html">← 07 把邏輯焊進網路</a><a href="09-認知架構.html">09 認知架構 →</a></div></main></div><script src="app.js"></script></body></html>

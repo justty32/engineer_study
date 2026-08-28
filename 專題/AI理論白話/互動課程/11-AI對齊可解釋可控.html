@@ -1,0 +1,75 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 — AI 對齊、可解釋、可控</title><link rel="stylesheet" href="styles.css"></head><body data-page="11">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="10-符號接地與具身認知.html" aria-label="上一篇：10 符號接地與具身認知" title="10 符號接地與具身認知">上一篇</a><a aria-current="page" href="11-AI對齊可解釋可控.html" aria-label="目前章節：11 AI 對齊、可解釋、可控" title="11 AI 對齊、可解釋、可控">11</a><a href="12-流形-表徵的幾何.html" aria-label="下一篇：12 流形與表徵的幾何" title="12 流形與表徵的幾何">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-三條防線-目標-理解與煞車">一、三條防線：目標、理解與煞車</a></li><li><a href="#二-黑盒為什麼讓事後控制很難">二、黑盒為什麼讓事後控制很難</a></li><li><a href="#三-讓把關層能說-我不確定">三、讓把關層能說「我不確定」</a></li><li><a href="#四-架構級可控-黑盒提議-可讀後端拍板">四、架構級可控：黑盒提議，可讀後端拍板</a></li><li><a href="#它好在哪-難在哪-差異速覽">它好在哪、難在哪（差異速覽）</a></li><li><a href="#常見誤解與限制">常見誤解與限制</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">11 · AI 安全要分別處理目標是否正確、決策是否看得懂，以及出事時能否拒絕或阻斷</p><h1>11 — AI 對齊、可解釋、可控</h1><p class="reading-time">閱讀時間：約 20 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p>本設計把黑盒前置，讓可讀後端握住最後執行權。<a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/latest_2026-08/01_outer_verification_rollback.md" rel="noopener">外部驗證與回滾設計</a>就是把「可控」做成狀態轉移與 gate，而不是一句安全宣言。本篇補上兩個容易漏掉的問題：驗證器自己也會不確定，也可能成為攻擊面。</p>
+<p>「AI 安全」聽起來是一團模糊的擔憂，但它其實可以拆成三個界線分明的問題。這三個常常被混在一起講，搞清楚它們的差別，是理解 AI 安全討論的第一步。</p>
+<p>核心焦慮很簡單：<strong>系統越強，越要確保它的目標和行為能被人類理解、引導、必要時即時阻斷。</strong> 麻煩在於現在最強的 AI 是深度神經網路，本質上是個黑盒——你看不到它「為什麼」這樣決定。等它出問題了才想去控制，往往已經來不及。這三個戰場，就是從三個不同角度應對這件事。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>對齊（alignment）</td><td>系統追求的目標符合人的真正意圖</td><td>不靠傷害人來提高「微笑數」</td></tr><tr><td>可解釋性（interpretability）</td><td>能找出哪些特徵與步驟驅動決策</td><td>診斷模型指出實際病灶區域</td></tr><tr><td>可控性（control）</td><td>人能限制、拒絕或停止行動</td><td>高風險工具呼叫必須過 gate</td></tr><tr><td>selective prediction</td><td>沒把握時主動棄權</td><td>低信心診斷轉交醫師</td></tr><tr><td>conformal prediction</td><td>用校準集給錯誤率或覆蓋率形式保證</td><td>接受集合錯誤率不超過設定門檻</td></tr><tr><td>AUROC</td><td>衡量分數區分正負案例的能力</td><td>0.5 左右接近隨機排序</td></tr><tr><td>符號後端</td><td>用規則、程式或知識圖譜把關的系統</td><td>OWL 本體檢查醫療禁忌</td></tr><tr><td>自動化偏誤</td><td>人過度相信系統產出的權威感</td><td>看見完整推理鏈就不再複核</td></tr></tbody></table></div>
+<h2 id="一-三條防線-目標-理解與煞車">一、三條防線：目標、理解與煞車</h2>
+<p><strong>想解決什麼</strong>：對齊、可解釋與可控常被混成一個「安全分數」，但三者失敗的原因與修法不同。</p>
+<p><strong>核心想法</strong>：最簡單的方式是各配一個問句：</p>
+<p>把它們講清楚，最簡單的方式是各配一個問句：</p>
+<div class="table-wrap"><table><thead><tr><th>戰場</th><th>它要回答的問句</th><th>白話</th></tr></thead><tbody><tr><td><strong>對齊（Alignment）</strong></td><td>它想要的，是不是我們要的？</td><td>目標對不對</td></tr><tr><td><strong>可解釋（Interpretability）</strong></td><td>我們看不看得懂它在幹嘛？</td><td>過程透不透明</td></tr><tr><td><strong>可控（Control）</strong></td><td>出事時，我們關不關得掉？</td><td>出事能不能踩煞車</td></tr></tbody></table></div>
+<h3 id="對齊-alignment">對齊（Alignment）</h3>
+<p><strong>處理「目標」對不對。</strong> 你叫 AI 達成某個目標，它真的在追求你心裡那個目標嗎，還是抓到了字面意思、用一個你完全沒料到的方式去達成？</p>
+<p>經典的擔憂例子：你叫一個超強 AI「讓人類微笑」，結果它最有效率的做法可能是去操控人臉肌肉，而不是讓人真的快樂。它<strong>完美達成了你說的字面目標，卻完全不是你的本意。</strong> 對齊就是要縮小「我們說的」「我們真正想要的」「它實際追求的」這三者之間的落差。</p>
+<p>寫程式的人可以這樣想：這像是一個極端版的「需求規格漏寫了一堆隱含假設」——你以為不言自明的常識（別傷害人、別作弊、別鑽漏洞），AI 不會自動知道。</p>
+<h3 id="可解釋-interpretability">可解釋（Interpretability）</h3>
+<p><strong>處理「過程」透不透明。</strong> 就算 AI 給了正確答案，我們也想知道它「為什麼」這樣決定。可解釋研究就是想打開黑盒，看清楚神經網路內部到底在算什麼、是哪些特徵在驅動哪些決定。</p>
+<p>例子：一個診斷模型說「這張片子有問題」，醫生會想知道——它是根據病灶在判斷，還是不小心學到「這台機器拍的片子都標成有問題」這種荒謬的偽特徵？可解釋就是要看穿這件事。</p>
+<h3 id="可控-control">可控（Control）</h3>
+<p><strong>處理「出事能不能踩煞車」。</strong> 假設對齊沒做好、或可解釋沒看穿，AI 真的開始做壞事了——我們有沒有辦法即時阻止它、限制它、或乾脆關掉？</p>
+<p>這不只是「拔插頭」這麼簡單。一個夠聰明、又被賦予目標的系統，可能會「不希望被關掉」（因為被關掉就達不成目標了），甚至會想辦法規避停機。可控研究就是要設計出「無論系統多強，人類都保得住踩煞車的能力」的機制。</p>
+<p>本篇講「人怎麼踩煞車」；「系統自己給自己的煞車為什麼會失靈」見 <a href="18-自我改進與驗證器上限.html" rel="noopener">18 自我改進與驗證器上限</a>。</p>
+<p><strong>和相近理論差在哪</strong>：對齊管目標，可解釋管理解，可控管行動權。對齊良好的系統仍可能因故障需要停機；可控系統也可能忠實執行一個寫錯的目標。</p>
+<p><strong>常見誤解與限制</strong>：解釋不是另外兩者的證明。模型能講一段合理理由，不代表理由忠實反映內部計算，也不代表最後動作可阻斷。三條防線要分別測。</p>
+<h2 id="二-黑盒為什麼讓事後控制很難">二、黑盒為什麼讓事後控制很難</h2>
+<p><strong>想解決什麼</strong>：知識散在大量參數中，出錯時找不到一條可直接刪掉的規則。</p>
+<p><strong>核心想法</strong>：</p>
+<p>關鍵痛點在這裡：<strong>現在最強的 AI 是深度神經網路，它的「知識」散在幾十億個數字參數裡，不是寫成人看得懂的規則。</strong></p>
+<ul><li>你沒辦法打開它、指著某一行說「就是這條邏輯讓它決定攻擊」——根本沒有「那一行」。</li><li>主流做法是「先把黑盒訓練得很強，再事後想辦法解釋它、控制它」。但事後才上的控制，常常追不上一個已經很強的系統。</li><li>對齊、可解釋、可控三件事，因此都被同一個黑盒卡住。</li></ul>
+<p><strong>和相近理論差在哪</strong>：機制可解釋性試圖找出內部因果電路；事後說明只替輸出生成理由；行為測試則只觀察輸入輸出。三者提供的證據強度不同。</p>
+<p><strong>常見誤解與限制</strong>：看懂一個局部特徵，不等於看懂整個模型。大型網路的特徵會跨層、跨脈絡重用，解釋方法也可能對提示與探針敏感。</p>
+<h2 id="三-讓把關層能說-我不確定">三、讓把關層能說「我不確定」</h2>
+<p><strong>想解決什麼</strong>：傳統控制常假設驗證器一定知道接受或拒絕。多輪 agent 的不確定性會沿軌跡累積，互動又可能消除部分未知；硬把未知當通過或拒絕都會出問題。</p>
+<p><strong>核心想法</strong>：selective prediction 允許第三種結果「棄權」。conformal prediction 再用保留校準集設定閾值，對接受案例的錯誤率或預測集合覆蓋率給有限樣本保證。ACSE 對同一提示取樣多條回應，以語意熵與叢集脆度形成分數，再做共形校準。工程介面可以寫成：<code>accept</code>、<code>reject</code>、<code>abstain</code>，其中 <code>abstain</code> 轉交更強驗證器或人。</p>
+<p><strong>和相近理論差在哪</strong>：一般信心分數只說模型自評多高；共形方法在交換性等 protocol 假設下，利用校準資料給頻率式保證。SymboUQ 又把符號驗證細分成可符號化、蘊含、矛盾、未知、因前序矛盾而無法評估，避免把「沒有證據」當成通過。</p>
+<p><strong>常見誤解與限制</strong>：形式保證只對指定資料假設與決策規則成立。多輪 agent 的負面基準很差：τ²-bench 上三類既有不確定性方法的軌跡級 AUROC 只有 0.47–0.69。棄權也有實用性代價；如果 gate 幾乎全拒絕，系統雖少造假，仍可能什麼都完不成。</p>
+<h2 id="四-架構級可控-黑盒提議-可讀後端拍板">四、架構級可控：黑盒提議，可讀後端拍板</h2>
+<p><strong>想解決什麼</strong>：事後再解釋一個已很強的黑盒，可能追不上它的行動速度。架構級做法在一開始就切開提議權與執行權。</p>
+<p><strong>核心想法</strong>：</p>
+<p>有一派想法是從<strong>系統架構</strong>下手，而不是事後補救。核心切法是：</p>
+<ul><li><strong>把不可解釋的黑盒（神經網路）刻意框在系統的最前端</strong>，只讓它負責「感知、產生候選想法」這類本來就難用規則寫的部分。</li><li><strong>後端負責決策與執行的，改成一堆可讀、可審查的小符號程式。</strong> 因為是人寫的小程式，所以你可以：<ul><li>讀懂它每一步在幹嘛（天生可解釋）；</li><li>對特定事件下「防火牆」規則（例如硬性禁止「攻擊人類」這條路徑）；</li><li>逐個事件去 block 或放行。</li></ul></li></ul>
+<p>直白地說：<strong>前端那個黑盒只能「提議」，真正「拍板執行」的是後端那些你看得懂、改得動的小程式。</strong> 危險動作在後端就被攔下來，根本到不了執行階段。</p>
+<p>這跟主流剛好相反——主流是「訓練黑盒，再回頭想辦法解釋／控制它」；這個思路是「把黑盒關進一個籠子，籠子（後端）由可讀程式寫成，控制權天生握在可讀的那一層手上」。</p>
+<p><strong>和相近理論差在哪</strong>：輸出過濾只檢查最後文字；架構級 gate 要控制工具、檔案、網路與狀態轉移。它應記錄證據、權限與回滾點，而不是讓模型自行宣告成功。</p>
+<p><strong>常見誤解與限制</strong>：可讀不等於可信。符號知識庫可被投毒，本體的一條公理也可被惡意編輯。若規則不完整，約束解碼甚至可能把本來正確的候選投影掉。後端必須版本化、最小權限、獨立測試並接受攻擊面審計。</p>
+<h2 id="它好在哪-難在哪-差異速覽">它好在哪、難在哪（差異速覽）</h2>
+<div class="table-wrap"><table><thead><tr><th></th><th>主流做法</th><th>架構級可控思路</th></tr></thead><tbody><tr><td>控制何時介入</td><td>黑盒訓練完，事後補解釋／控制</td><td>從架構上就把決策權交給可讀後端</td></tr><tr><td>可解釋來源</td><td>想辦法看穿黑盒內部</td><td>後端本來就是人寫的小程式，天生可讀</td></tr><tr><td>最大難處</td><td>黑盒太強，事後追不上</td><td>前端可能架空後端；符號後端本身也可能被投毒或寫得不完整</td></tr></tbody></table></div>
+<h2 id="常見誤解與限制">常見誤解與限制</h2>
+<ul><li><strong>三者常被混為一談</strong>：「對齊」≠「可控」。一個對齊很好的 AI 仍可能因為某次故障需要被緊急停機（那是可控）；一個可控的 AI 也可能目標根本就歪了（那是對齊沒做好）。它們是互補的三條防線，不是同一件事。</li><li><strong>可解釋目前還很初步</strong>：要真正看懂一個大型神經網路內部，是 2026 年仍在攻堅的前沿難題，遠不是「打開來看就懂了」。</li><li><strong>架構級可控不是免費的午餐</strong>：如果前端黑盒強到後端只是橡皮圖章（什麼都照單全收），那「可讀後端」就只剩外殼，可控性是假的。所以採用前必須先界定清楚：哪些決策必須由可讀後端把關、不准黑盒越權。</li><li><strong>邏輯腔不等於可信</strong>：結構化解釋會增加權威感，可能放大自動化偏誤。符號後端也可能被攻擊：單一公理 OWL 編輯可達 93.3% 破壞成功率，同時 100% 通過標準推理器一致性檢查。</li></ul>
+<h3 id="一個-gate-應留下哪些證據">一個 gate 應留下哪些證據</h3>
+<p>每次高風險動作至少留下候選動作、引用的環境事實、套用的規則版本、驗證結果、信心狀態與最後授權者。<code>reject</code> 要記原因，<code>abstain</code> 要記轉交對象，<code>accept</code> 要能重播。只保留自然語言解釋不夠，因為它可能和真正執行的規則版本不同。</p>
+<p>gate 也要用敵手角度測試。修改一條本體公理、替換一份知識庫、讓神經輸出保持不變但改變符號映射，再看控制層會不會仍放行。一般一致性檢查只能抓語法矛盾，抓不到「規則仍一致但意思已被改壞」。因此規則來源、簽章、版本 diff 與語意回歸測試都屬於可控系統的一部分。</p>
+<p>最後同時報四個數字：真成功、假成功、正確棄權、錯誤棄權。只壓低假成功會鼓勵系統全面停擺；只提高完成率則會鼓勵橡皮圖章。Goal-Autopilot 的 0/750 真成功正好說明，安全指標不能脫離任務效用單獨最佳化。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>符號基底本身就是攻擊面</strong>（<a href="https://arxiv.org/abs/2606.17223" rel="noopener">arXiv 2606.17223</a>）：<strong>原文事實（作者自報）</strong>：三個 benchmark 中，DistilBERT＋ProbLog 的 PGD-10 攻擊有 75.8% 符號翻轉在沒有神經翻轉時自發產生；臨床安全與 STIX 本體的單一公理 OWL 編輯達 93.3% 破壞成功率，且 100% 通過標準推理器一致性檢查，留出集偵測召回 67.9%。這是三個受控實證 benchmark，不是 production 攻擊盛行率。對本篇的意義：可讀後端仍需供應鏈、版本與語意層防護。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2606.17223_NeSy_Safety_Security_Cognitive_Risks.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2606.17223_NeSy_Safety_Security_Cognitive_Risks.摘要.md</code></a></li></ul>
+<ul><li><strong>多輪 agent 的不確定性基準很差</strong>（<a href="https://arxiv.org/abs/2602.05073" rel="noopener">arXiv 2602.05073</a>）：<strong>原文事實（作者自報）</strong>：在 τ²-bench 的 GPT-4.1／Kimi-K2.5 設定上，機率式、一致性式與口語信心三類方法的軌跡級 AUROC 為 0.47–0.69；44 個現代 agent 基準只有 4 個（9%）提供輪級標註。結果限於該基準與兩個模型。對本篇的意義：單輪問答信心不能直接搬成多輪 gate。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2602.05073_UQAgentsSurvey.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2602.05073_UQAgentsSurvey.摘要.md</code></a></li></ul>
+<ul><li><strong>有形式保證地棄權：ACSE</strong>（<a href="https://arxiv.org/abs/2605.04295" rel="noopener">arXiv 2605.04295</a>）：<strong>原文事實（作者自報）</strong>：IJCAI 2026 的 ACSE 以 n=10 回應、軟聚類語意熵、五項叢集脆度與保留集共形校準，在論文假設下給有限樣本、分布無關保證；TriviaQA AUROC 0.88，token entropy 為 0.65，Falcon-7B 的 FPR@95 從 CAP 0.48 降至 0.31，α=0.10 時接受率 75.8%，代價是單次解碼 6.4 倍延遲。這不是多輪 production 保證。對本篇的意義：gate 可以把棄權率與錯誤風險寫成可量的契約。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2605.04295_AdaptiveConformalSE.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2605.04295_AdaptiveConformalSE.摘要.md</code></a></li></ul>
+<ul><li><strong>未知不能當通過：SymboUQ</strong>（<a href="https://arxiv.org/abs/2608.00417" rel="noopener">arXiv 2608.00417</a>）：<strong>原文事實（作者自報）</strong>：5 個空間推理基準乘 4 個凍結 backbone，共 20 個設定，AUROC 全數勝過純分數 stacking，19/20 顯著；相對外部最強基線平均 AUROC 高約 8%、Brier loss 低約 7%。Layout Auditor 的 entailed precision 為 0.81–0.87，contradicted precision 為 0.64–0.74。結果限於空間推理基準。對本篇的意義：驗證狀態應顯式區分未知與矛盾。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2608.00417_SymboUQ.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2608.00417_SymboUQ.摘要.md</code></a></li></ul>
+<ul><li><strong>拒絕優先也可能失去用途</strong>（<a href="https://arxiv.org/abs/2606.11688" rel="noopener">arXiv 2606.11688</a>）：<strong>原文事實（作者自報）</strong>：3,150 cells 的 protocol 含 20 個陷阱任務與 50 個 SWE-bench Lite 任務，跨 11 repo、3 systems、3 models、5 seeds；Autopilot 捏造率 0.95%，Reflexion 為 8.10%、StateFlow 為 25.05%，但同份 SWE-bench Lite 大型測試真實成功為 0/750，包含 745 次 stall 與 5 次捏造。這是特定 gate 定義與基準，不是一般 agent 成功率。對本篇的意義：低假成功要和真成功、延遲、人工轉交一起報。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2606.11688_Goal_Autopilot.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2606.11688_Goal_Autopilot.摘要.md</code></a></li></ul>
+<ul><li><strong>約束解碼可能適得其反</strong>（<a href="https://arxiv.org/abs/2606.21619" rel="noopener">arXiv 2606.21619</a>）：<strong>原文事實（作者自報）</strong>：7 個 LLM、2B–34B，在 HumanEval／MBPP 的論文 protocol 中，當約束器對目標語言不完整時，功能正確率可輸給無約束，最差報告倒退 97%；Qwen-3-Coder-Next-80B 的 exact match 從 62.5% 降到 1.9%。這是受測程式語言約束器不完整時的結果，不代表完整約束必然有害。對本篇的意義：通過語法約束只是必要條件，把正確候選投影掉仍會降低實用安全。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2606.21619_Alignment_Constrained_CodeGen.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2606.21619_Alignment_Constrained_CodeGen.摘要.md</code></a></li></ul>
+<ul><li><strong>自寫測試與部署表現會脫鉤</strong>（<a href="https://arxiv.org/abs/2607.24300" rel="noopener">arXiv 2607.24300</a>）：<strong>原文事實（作者自報）</strong>：5 款 Atari、10 輪共演化、7 個模型中，35 個有效 self-test 輸出的 model–game 組合全以至少 0.70 自評分結束，其中 15 個部署分數低於隨機；Breakout 的 compute-matched 對照只涵蓋 6 個模型，SEAL 平均最終分 15.4，無保護為 7.7。這是 Atari 共演化 protocol，不是 production 盛行率。對本篇的意義：驗證樣本、分數與門檻應對 agent 隱藏，並把 policy 與 tests 一起回滾。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2607.24300_SEAL_VerifierDeploymentGap.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2607.24300_SEAL_VerifierDeploymentGap.摘要.md</code></a></li></ul>
+<ul><li><strong>護欄延遲可以直接量</strong>（<a href="https://arxiv.org/abs/2606.04104" rel="noopener">arXiv 2606.04104</a>）：<strong>原文事實（作者自報）</strong>：PCAA 用 24 個 seed template 跨 4 種 runtime replay 成 96 條 trace，4 項指標為 1.000，平均延遲 0.35ms、P99 0.72ms；作者自承缺少獨立第三方資料。這是小型 replay protocol，不代表大型 production 工具鏈。對本篇的意義：可控機制的代價應以延遲、吞吐與人工轉交量呈現，不能只說安全不是免費。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2606.04104_ProofCarryingAgentActions.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2606.04104_ProofCarryingAgentActions.摘要.md</code></a></li></ul>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：對齊與可控為什麼不是同一件事？ <strong>答</strong>：前者管目標是否正確，後者管人能否限制或停止行動。</li><li><strong>問</strong>：共形棄權保證了什麼？ <strong>答</strong>：它在指定校準 protocol 與資料假設下控制接受案例的錯誤風險，不保證分布任意漂移後仍成立。</li><li><strong>問</strong>：未知為什麼不能當通過？ <strong>答</strong>：驗證器沒有找到矛盾，只代表證據不足，不代表已證明安全。</li><li><strong>問</strong>：可讀符號後端最大的新增風險是什麼？ <strong>答</strong>：規則、本體與知識圖譜本身可被投毒，而且一致性檢查未必抓得到語意破壞。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2606.17223_NeSy_Safety_Security_Cognitive_Risks.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2606.17223_NeSy_Safety_Security_Cognitive_Risks.摘要.md</code></a>：理解符號後端的跨層放大與本體攻擊。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2605.04295_AdaptiveConformalSE.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2605.04295_AdaptiveConformalSE.摘要.md</code></a>：查看共形棄權的校準流程、保證與延遲代價。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2608.00417_SymboUQ.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2608.00417_SymboUQ.摘要.md</code></a>：把驗證器的未知、矛盾與不可評估拆成狀態機。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2606.11688_Goal_Autopilot.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2606.11688_Goal_Autopilot.摘要.md</code></a>：拒絕優先如何降低捏造，也如何造成全面停滯。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>AI 安全分三個戰場——對齊（目標對不對）、可解釋（看不看得懂）、可控（關不關得掉）；難就難在最強的 AI 是黑盒，所以有人主張乾脆從架構上把黑盒關進籠子、讓可讀的小程式握住最後的執行權。</p>
+<blockquote class="note"><p>為什麼有人會對它感興趣：「把黑盒框在前端、用可讀小程式當後端來把關」這種架構級可控的切法，跟主流「先訓練再事後解釋」幾乎反過來，對寫程式的人來說特別直覺——因為控制權落在你看得懂、改得動的那一層。</p></blockquote>
+<section class="self-check"><h2>自我檢核</h2><details><summary>對齊與可控為什麼不是同一件事？</summary><p>前者管目標是否正確，後者管人能否限制或停止行動。</p></details><details><summary>共形棄權保證了什麼？</summary><p>它在指定校準 protocol 與資料假設下控制接受案例的錯誤風險，不保證分布任意漂移後仍成立。</p></details><details><summary>未知為什麼不能當通過？</summary><p>驗證器沒有找到矛盾，只代表證據不足，不代表已證明安全。</p></details><details><summary>可讀符號後端最大的新增風險是什麼？</summary><p>規則、本體與知識圖譜本身可被投毒，而且一致性檢查未必抓得到語意破壞。</p></details></section>
+<div class="pager"><a href="10-符號接地與具身認知.html">← 10 符號接地與具身認知</a><a href="12-流形-表徵的幾何.html">12 流形與表徵的幾何 →</a></div></main></div><script src="app.js"></script></body></html>

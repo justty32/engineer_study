@@ -1,0 +1,84 @@
+<!doctype html>
+<!-- 由 machine_learning/理論白話介紹/tools/build_html.py 產生，請改 md 不要改這裡 -->
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 — Lisp 程式即資料</title><link rel="stylesheet" href="styles.css"></head><body data-page="13">
+<a class="skip-link" href="#main-content">跳到主內容</a><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="12-流形-表徵的幾何.html" aria-label="上一篇：12 流形與表徵的幾何" title="12 流形與表徵的幾何">上一篇</a><a aria-current="page" href="13-Lisp程式即資料.html" aria-label="目前章節：13 Lisp 程式即資料" title="13 Lisp 程式即資料">13</a><a href="14-元胞自動機與發育式成長.html" aria-label="下一篇：14 元胞自動機與發育式成長" title="14 元胞自動機與發育式成長">下一篇</a><a href="名詞與概念字典.html">字典</a></nav><div class="layout"><aside class="toc"><details open><summary>本頁目錄</summary><ul><li><a href="#為什麼你會在意">為什麼你會在意</a></li><li><a href="#名詞速查">名詞速查</a></li><li><a href="#一-λ-演算-操作本身也是值">一、λ-演算：操作本身也是值</a></li><li><a href="#二-同像性-程式-樹與列表是同一份結構">二、同像性：程式、樹與列表是同一份結構</a></li><li><a href="#三-巨集與自我修改-讓程式生成程式">三、巨集與自我修改：讓程式生成程式</a></li><li><a href="#四-程式搜尋與演化-列表為什麼適合當基因">四、程式搜尋與演化：列表為什麼適合當基因</a></li><li><a href="#五-可計算性-圖靈完備的兩筆稅">五、可計算性：圖靈完備的兩筆稅</a></li><li><a href="#六-工程上的-lisp-式-dsl">六、工程上的 Lisp 式 DSL</a></li><li><a href="#七-最小求值器-把-資料-切換成-程式-的那一刻">七、最小求值器：把「資料」切換成「程式」的那一刻</a></li><li><a href="#2026-更新">2026 更新</a></li><li><a href="#自我檢核">自我檢核</a></li><li><a href="#延伸閱讀">延伸閱讀</a></li><li><a href="#一句話總結">一句話總結</a></li></ul></details></aside><main id="main-content"><p class="eyebrow">13 · Lisp 讓程式碼和資料使用同一種列表結構，因此程式能讀、生成、搜尋與改寫另一段程式</p><h1>13 — Lisp 程式即資料</h1><p class="reading-time">閱讀時間：約 18 分鐘</p>
+<h2 id="為什麼你會在意">為什麼你會在意</h2>
+<p><a href="https://github.com/justty32/machine_learning/blob/main/AI%E8%A8%AD%E8%A8%88%E8%A8%8E%E8%AB%96/09_%E6%9C%80%E9%AB%98%E5%AE%9A%E4%BD%8D_%E5%B0%8D%E6%9C%80%E7%9F%AD%E7%A8%8B%E5%BC%8F%E7%90%86%E6%83%B3%E7%9A%84%E5%8F%AF%E8%B7%91%E8%BF%91%E4%BC%BC.md" rel="noopener">「對最短程式理想的可跑近似」</a>需要一種能被列舉、變異、量長度與安全執行的程式表示。Lisp 式 AST 正好把這四件事放進同一份資料結構。重點不是改用某個 Lisp 品牌，而是替候選程式選一個容易操作、又能收緊能力邊界的表示法。</p>
+<h2 id="名詞速查">名詞速查</h2>
+<div class="table-wrap"><table><thead><tr><th>術語</th><th>白話</th><th>一句例子</th></tr></thead><tbody><tr><td>Lisp</td><td>以列表處理為核心的語言家族</td><td><code>(+ 1 2)</code> 是一份列表，也是一段程式</td></tr><tr><td>λ-演算（lambda calculus）</td><td>把函式視為可傳遞、可組合之值的計算模型</td><td>把「加一」函式傳給 <code>map</code></td></tr><tr><td>S-表達式（S-expression）</td><td>用巢狀列表表示程式與資料</td><td><code>(/ (- c b) a)</code></td></tr><tr><td>同像性（homoiconicity）</td><td>程式的外部表示就是語言容易操作的資料結構</td><td>巨集可直接改寫語法樹</td></tr><tr><td>抽象語法樹（AST）</td><td>程式語法的樹狀表示</td><td>根節點 <code>/</code> 有兩個子節點</td></tr><tr><td>巨集（macro）</td><td>在執行前生成或改寫程式結構的機制</td><td>自訂一個新的控制結構</td></tr><tr><td>元程式設計（metaprogramming）</td><td>寫程式來處理程式</td><td>自動產生一批函式定義</td></tr><tr><td>遺傳程式設計（Genetic Programming, GP）</td><td>以變異、重組與選擇搜尋程式</td><td>把運算樹的一棵子樹換掉</td></tr><tr><td>領域專用語言（DSL）</td><td>只提供特定問題所需操作的小語言</td><td>網格題只開放旋轉、裁切、填色</td></tr><tr><td>圖靈完備（Turing complete）</td><td>理論上能表達所有可機械計算的程序</td><td>完整 Lisp 可模擬圖靈機</td></tr><tr><td>長度泛化（length generalization）</td><td>從短例子學會後，仍能處理更長輸入</td><td>用長度 30 訓練，測長度 60</td></tr></tbody></table></div>
+<h2 id="一-λ-演算-操作本身也是值">一、λ-演算：操作本身也是值</h2>
+<p><strong>想解決什麼</strong>：Lisp 在 1958 年由 John McCarthy 提出。它最初要回答的問題是：能不能用一種統一形式，描述「運算」與「被運算的東西」？如果函式只能藏在語法裡，程式就很難把另一個操作當成輸入、輸出或組合材料。</p>
+<p><strong>核心想法</strong>：Lisp 蓋在 Church 於 1930 年代提出的 λ-演算之上。λ-演算把函式當成第一類公民。函式可以像數字一樣被傳遞、組合與操作。讀者常卡在「一段程式輸出的，到底該是一個操作，還是一個結果值？」答案是：操作本身就是一種值，不必二選一。你可以把「加法操作」丟給另一個函式，就像丟一個數字一樣自然。</p>
+<p><strong>和相近理論差在哪</strong>：圖靈機把計算描寫成讀寫頭在紙帶上移動；λ-演算把計算描寫成函式套用與代換。兩者的外表完全不同，但在可計算性上等價。Lisp 不是 λ-演算的原樣抄錄，而是把這種函式觀念放進可互動、可編程的語言。</p>
+<p><strong>常見誤解與限制</strong>：函式是一級值，不等於程式碼天然就是資料。許多現代語言也有高階函式，卻不一定提供 Lisp 那種直接、統一的語法樹表示。真正讓元程式設計順手的，是一級函式與 S-表達式一起出現。</p>
+<h2 id="二-同像性-程式-樹與列表是同一份結構">二、同像性：程式、樹與列表是同一份結構</h2>
+<p><strong>想解決什麼</strong>：一般語言的原始碼先是文字，再交給解析器變成 AST。若程式想生成或修改程式，往往得另外處理字串、語法與跳脫規則。Lisp 問的是：能不能讓程式從一開始就長成語言自己最會處理的資料？</p>
+<p><strong>核心想法</strong>：Lisp 用 S-表達式寫所有東西。看這段：</p>
+<pre><code class="lang-lisp">(/ (- c b) a)</code></pre>
+<p>它表示「<code>c</code> 減 <code>b</code>，再除以 <code>a</code>」。同一串東西可以看成一棵樹：根是 <code>/</code>，左子節點是 <code>(- c b)</code>，右子節點是 <code>a</code>；也可以看成巢狀列表：<code>[&quot;/&quot;, [&quot;-&quot;, &quot;c&quot;, &quot;b&quot;], &quot;a&quot;]</code>。程式＝樹＝列表，三者是同一份結構。這個性質叫同像性，也就是俗稱的「程式即資料（code as data）」。</p>
+<p><strong>和相近理論差在哪</strong>：反射（reflection）通常讓程式在執行期查詢型別、欄位或呼叫資訊；同像性更直接，因為語法本身就是可遍歷、可組裝的資料。序列化 AST 也能做到類似操作，但 Lisp 把這件事放進語言的日常語法，不必再發明一套樹的文字格式。</p>
+<p><strong>常見誤解與限制</strong>：程式即資料不表示任何資料都該直接執行。資料一旦進入求值器，就取得程式能力，也帶來注入、副作用與資源耗盡風險。實作時必須分清「只是檢視一棵樹」與「允許這棵樹執行」兩個權限層次。</p>
+<h2 id="三-巨集與自我修改-讓程式生成程式">三、巨集與自我修改：讓程式生成程式</h2>
+<p><strong>想解決什麼</strong>：如果每個新控制結構都要修改編譯器，語言很難隨問題成長。Lisp 想讓程式設計者直接用現有語言產生新語法，把重複的程式結構壓成可重用的生成規則。</p>
+<p><strong>核心想法</strong>：既然程式就是列表，寫一段程式去生成或改寫另一段程式便是日常操作。巨集可在求值前接收一棵語法樹，再回傳另一棵語法樹。連 <code>if/else</code>、迴圈或小型 DSL 的控制結構，都能以 S-表達式組合。「決策本身也是一種決策」「生產工廠的工廠」這類自我指涉點子，因此有直接的表示方式。</p>
+<p>2025 年的〈LLMs in a Persistent Lisp Metaprogramming Loop〉提出讓大型語言模型連上持久 Common Lisp REPL，跨回合保留函式、巨集與工具，再由模型檢視和改寫它們。這是<strong>概念性提案，作者自陳無實作與實測</strong>。它能當架構草圖，不能當成自我修改已被實驗證成有效的證據。</p>
+<p><strong>和相近理論差在哪</strong>：一般 function calling 只能從人先寫好的 API 清單選工具；持久 Lisp 環境想讓模型自己建立工具並累積狀態。差別不在括號，而在工具集合能否成為可讀、可改、可延續的程式資產。</p>
+<p><strong>常見誤解與限制</strong>：「自我修改」不是系統自動變聰明，也不是解除外部約束。修改規則本身仍須經過解析、測試、能力限制與回滾。完整 Common Lisp 的檔案、網路與行程能力太大，不適合直接交給未受信任的候選程式。</p>
+<h2 id="四-程式搜尋與演化-列表為什麼適合當基因">四、程式搜尋與演化：列表為什麼適合當基因</h2>
+<p><strong>想解決什麼</strong>：程式合成不是只要一個能執行的表示，還要能局部修改候選、保留語法有效性、比較品質，並把常用片段變成新零件。純文字上的隨機改字很容易產生語法錯誤。</p>
+<p><strong>核心想法</strong>：S-表達式是一棵樹，因此可以把子樹當成變異與重組單位。拿 <code>(/ (- c b) a)</code> 示範：</p>
+<ul><li>把 <code>-</code> 換成 <code>+</code>，得到 <code>(/ (+ c b) a)</code>。</li><li>把 <code>b</code> 換成另一個節點，得到 <code>(/ (- c d) a)</code>。</li><li>在外層包一層運算，得到 <code>(* (/ (- c b) a) 2)</code>。</li></ul>
+<p>這正是 Koza 的遺傳程式設計所做的事。它演化 Lisp 的 S-表達式樹，靠替換節點、改動或交換子樹來搜尋能解題的程式。只要每個節點帶型別，變異器還能限制「數字洞只能放回產生數字的子樹」，減少大量無效候選。</p>
+<p>另一個操作是函式庫學習（library learning）。系統發現某個片段常出現、很好用，就把它命名為基礎零件：</p>
+<pre><code class="lang-lisp">(define (remove-offset c b) (- c b))
+(/ (remove-offset c b) a)</code></pre>
+<p>DreamCoder 類系統就是一邊解題，一邊把好用片段沉澱成可重用詞彙。這不只縮短單一答案，也可能縮小之後的搜尋空間。</p>
+<p><strong>和相近理論差在哪</strong>：列舉搜尋依固定順序產生所有候選；遺傳程式設計以族群和隨機變異探索；函式庫學習則改變之後可用的原子零件。三者都能使用同一棵 AST，但搜尋策略與「學到什麼」不同。</p>
+<p><strong>常見誤解與限制</strong>：容易修改不等於容易找到。候選樹仍會組合爆炸；加入一個零件，也可能同時增加更多無用組合。真正的難題是搜尋順序、剪枝、型別、驗證器與資源預算，不是把括號排好就結束。</p>
+<h2 id="五-可計算性-圖靈完備的兩筆稅">五、可計算性：圖靈完備的兩筆稅</h2>
+<p><strong>想解決什麼</strong>：程式搜尋系統需要知道語言能力應開到哪裡。語言太弱，正解寫不出來；語言太強，候選可能不停機，也可能只在短範例上看似成功。</p>
+<p><strong>核心想法</strong>：Church–Turing 命題指出，圖靈機、λ-演算與一般遞迴函式在可計算能力上等價。白話講，一條無限紙帶加讀寫頭、Lisp／λ-演算與遞迴函式看似毫不相干，能算的東西卻一樣多。因此 Lisp 體系只要表達力足夠，理論上能算任何可算的東西。</p>
+<p>第一筆稅是停機問題。語言一旦圖靈完備，就沒有通用方法能事先判定任意程式會不會跑完。候選可能陷入無限迴圈，搜尋器也不能只靠靜態檢查把所有這類情況找出來。</p>
+<p>第二筆稅是可學習性。權重空間或語言裡「存在一個解」，不表示梯度或有限資料能找到它，更不表示從短輸入學到後能外推到長輸入。2026 年的 Transformer 與對角 SSM 結果，分別把「表達力不等於可長度泛化地學到」及「理論可表達但梯度找不到」做成了可檢查的反例。</p>
+<p><strong>把紙上完備性做成工具</strong>：作者自報的開源 PyTorch 套件可把圖靈機描述直接編譯成權重，不經訓練；它實作 WCM21 的 Transformer 建構（<code>O(1)</code> 精度、無需思維鏈），也實作 SS95 的有理數遞迴堆疊機（float64 下約可靠 pop 8 次）。這讓人能直接檢視、擾動原本只在證明裡的建構；但作者也明說，這種建構式可解釋性不會遷移到梯度下降訓練出的網路。</p>
+<p><strong>和相近理論差在哪</strong>：圖靈完備談的是存在性；停機性談執行是否結束；長度泛化談有限訓練能否外推；最佳化談訓練程序能否抵達那組權重。四個問題不能用一句「理論上做得到」混在一起。</p>
+<p><strong>常見誤解與限制</strong>：很多 DSL 故意放棄圖靈完備。例如規定 <code>for</code> 最多跑一萬次，或只允許保證終止的全函式。這是用表達力換取可分析、可驗證與有限搜尋。即使如此，終止保證也沒有自動解決長度泛化與搜尋成本。</p>
+<h2 id="六-工程上的-lisp-式-dsl">六、工程上的 Lisp 式 DSL</h2>
+<p><strong>想解決什麼</strong>：完整 Lisp 的巨集與自我修改能力很強，但早期系統需要的是可控候選，不是整個作業系統權限。最小實驗要把理論優點留下，同時壓住執行風險與搜尋空間。</p>
+<p><strong>核心想法</strong>：第一版完全可以在 Python、Rust 或 C++ 裡自建 Lisp 式 AST。節點只有封閉的純函式集合；每個節點有型別；求值器限制時間、記憶體、遞迴深度與輸出大小；序列化格式則讓程式長度可計算。這已足以支援列舉、變異、重組與描述長度比較。</p>
+<p><strong>和相近理論差在哪</strong>：sandbox 是執行隔離；DSL 是能力白名單；型別系統在生成時排除不合法組合；驗證器檢查輸出是否符合規格。它們處理不同失效面，應疊在一起，而不是互相取代。</p>
+<p><strong>常見誤解與限制</strong>：同像性只保證程式容易被當資料操作，沒有保證表示是最短的、搜尋是有效率的、結果是安全的或規則能跨題泛化。把 Lisp 當成「候選表示層」很有用；把它當成完整智能解法，則跳過了最難的部分。</p>
+<h2 id="七-最小求值器-把-資料-切換成-程式-的那一刻">七、最小求值器：把「資料」切換成「程式」的那一刻</h2>
+<p><strong>想解決什麼</strong>：初學者看到 S-表達式，常以為括號本身帶有魔力。真正需要說清楚的是：同一棵列表何時只是一份資料，何時開始被當成呼叫執行。若這條界線含糊，搜尋器、驗證器與 sandbox 的責任也會混在一起。</p>
+<p><strong>核心想法</strong>：最小求值器可以只有三種規則。常數直接回傳；符號到環境表查值；列表則先讀第一個元素作運算子，再遞迴求值其餘元素作參數。概念上的虛擬碼如下：</p>
+<pre><code class="lang-text">eval(node, env):
+  if node 是常數: return node
+  if node 是符號: return env[node]
+  op   = lookup(node[0])
+  args = [eval(x, env) for x in node[1:]]
+  return op(args)</code></pre>
+<p>對 <code>(/ (- c b) a)</code> 而言，求值器先查 <code>/</code>，再遞迴算 <code>(- c b)</code> 與 <code>a</code>。但若外層使用 quote，求值器可以直接回傳這棵列表，不執行 <code>/</code> 與 <code>-</code>。巨集則位於另一個時機：它接收尚未求值的語法樹，產生新樹，之後才交回一般求值流程。</p>
+<p><strong>和相近理論差在哪</strong>：解析器把文字變成 AST；求值器讓 AST 產生值；巨集展開器在求值前改 AST；編譯器則把 AST 轉成另一種可執行表示。小型 DSL 可以把四者合併在少量程式碼中，概念上仍應分開，因為錯誤與權限發生在不同階段。</p>
+<p><strong>常見誤解與限制</strong>：quote 不等於安全。被引用的列表之後仍可能再次送進求值器；巨集產生的樹也可能引入未核准運算。安全邊界應放在運算子白名單與求值器本身，並對每次執行設步數、深度與輸出上限，不能只靠候選程式自律。</p>
+<p>這個最小求值器也說明為何 AST 適合搜尋。搜尋器只生成結構，不必先生成文字再解析；型別檢查可在節點接上樹之前執行；驗證器則用相同求值器跑所有示範。若兩棵 AST 在所有已見輸入都輸出相同，還可先視為觀察等價，暫時保留較短或成本較低者。這些做法沒有解掉組合爆炸，但能讓每個候選的產生、執行與淘汰都有明確位置。</p>
+<p>把一次候選生命週期攤開，就能看見每層在擋什麼：</p>
+<div class="table-wrap"><table><thead><tr><th>階段</th><th>輸入</th><th>先檢查什麼</th><th>失敗時怎麼辦</th></tr></thead><tbody><tr><td>生成</td><td>帶型別的洞與可用運算子</td><td>子樹型別能否接上</td><td>不產生該候選</td></tr><tr><td>靜態檢查</td><td>完整 AST</td><td>運算子是否在白名單、常數是否越界</td><td>直接淘汰</td></tr><tr><td>受限求值</td><td>AST 與單一輸入</td><td>步數、深度、記憶體、輸出大小</td><td>中止並記為失敗</td></tr><tr><td>範例驗證</td><td>候選在全部示範的輸出</td><td>是否逐項符合規格</td><td>淘汰或保留反例</td></tr><tr><td>保留資料驗證</td><td>未參與搜尋的案例</td><td>是否只記住示範</td><td>降級，不進資產庫</td></tr><tr><td>固化</td><td>已通過候選</td><td>型別簽章、描述長度、版本與來源</td><td>建立可撤回的新零件</td></tr></tbody></table></div>
+<p>這張表也點破「程式即資料」真正省下的成本：每一階段操作的是同一棵 AST，不必在文字、編譯結果與另一套演化基因之間來回轉換。省下的是表示層摩擦，不是驗證責任。</p>
+<p>實作紀錄還應把候選的父節點、使用過的變異、淘汰理由與資源用量一起留下。當某個好解突然出現時，才能回放它從哪棵樹變來；當搜尋變慢時，也能判斷是型別剪枝不足、求值太貴，還是大量候選在同一組示範上觀察等價。這些資料比只保存最後冠軍更有用，因為下一輪要改善的是搜尋程序，不只是展示答案。</p>
+<p>同一份紀錄也讓失敗候選變成反例庫。之後若新增運算子或 helper，可先重跑舊反例，確認搜尋空間擴大沒有讓既有驗證邊界失效。</p>
+<p>反例若失效，應撤回新零件，而不是改掉舊測試配合它。</p>
+<p>這是最小回滾原則。</p>
+<p>回滾後也要保存失敗版本與理由，避免下一輪搜尋再次產生同一種越界候選。</p>
+<p>這能把一次失敗轉成後續剪枝規則，而不是只留錯誤訊息。</p>
+<h2 id="2026-更新">2026 更新</h2>
+<ul><li><strong>把「神經網路可模擬圖靈機」做成能跑的套件</strong>（<a href="https://arxiv.org/abs/2605.08150" rel="noopener">arXiv 2605.08150</a>）：<strong>原文事實（作者自報）</strong>：開源 PyTorch 套件把圖靈機描述直接編譯成權重，不需訓練；實作 WCM21（Transformer 建構，<code>O(1)</code> 精度、無需思維鏈）與 SS95（有理數遞迴堆疊機，float64 下約 8 次可靠 pop）。作者明確警告，建構式可解釋性不會遷移到梯度下降訓練出的網路。對本篇的意義：圖靈完備不再只是紙上的存在性證明，而是能實際檢視與擾動的工具。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2605.08150_Turing_Complete_NN_Library.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2605.08150_Turing_Complete_NN_Library.摘要.md</code></a></li></ul>
+<ul><li><strong>表達力的第二筆稅：長度泛化</strong>（<a href="https://arxiv.org/abs/2604.25800" rel="noopener">arXiv 2604.25800</a>）：<strong>原文事實（作者自報）</strong>：在標準位置編碼、有限字母表的理論協定下，配思維鏈的 Transformer 即使表達力達圖靈完備，可長度泛化學習的能力仍只落在 TC⁰，且不隨 CoT 長度增加；正面構造需讓字母表隨問題規模增長，以 signpost token 唯一定址，再用 value-change encoding 記錄值的變化。25M 參數 GPT-2 從零訓練於 Parity、S5、Boolean Evaluation，評估到最多 2 倍訓練長度；S5 只到約 1.7 倍。對本篇的意義：表達力存在，不代表能從有限短例子學到並外推。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.25800_Barriers_Universal_Reasoning_CoT.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2604.25800_Barriers_Universal_Reasoning_CoT.摘要.md</code></a></li><li><strong>解存在，梯度卻可能找不到</strong>（<a href="https://arxiv.org/abs/2603.01959" rel="noopener">arXiv 2603.01959</a>）：<strong>原文事實（作者自報）</strong>：有限精度下，單層輸入相依複數值對角 SSM 無法表達非交換群狀態追蹤；<code>k</code> 層的充要條件是目標群有長度 <code>k</code>、因子皆交換的次正規列。實驗以 FP32、訓練長度不超過 60 並測到 1000；2 層 AUSSM 理論可表達 S₃、A₄，標準訓練卻失敗，只有初始化在 S₃ 解析解附近才學會並外推。對本篇的意義：能寫出或表示一個候選，和搜尋程序能抵達它，是兩個問題。摘要檔：<a href="https://github.com/justty32/paper_readings/blob/main/summarize/2603.01959_Diagonal_SSM_StateTracking_Limits.%E6%91%98%E8%A6%81.md" rel="noopener"><code>2603.01959_Diagonal_SSM_StateTracking_Limits.摘要.md</code></a></li></ul>
+<h2 id="自我檢核">自我檢核</h2>
+<ol><li><strong>問</strong>：高階函式與同像性是同一件事嗎？ <strong>答</strong>：不是。高階函式讓操作成為值；同像性讓程式語法直接成為容易操作的資料結構。</li><li><strong>問</strong>：為什麼 S-表達式適合程式演化？ <strong>答</strong>：它天然是一棵樹，變異器能以節點或子樹為單位修改，型別還能限制替換是否合法。</li><li><strong>問</strong>：圖靈完備保證搜尋器能找到解嗎？ <strong>答</strong>：不保證。它只談表達力，沒有處理停機、搜尋成本、可學習性與長度泛化。</li><li><strong>問</strong>：為什麼早期系統常選受限 DSL，而不直接開放 Common Lisp？ <strong>答</strong>：受限 DSL 能封閉能力、保證部分終止性並縮小搜尋空間，較容易隔離與驗證。</li></ol>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul><li><a href="https://github.com/justty32/machine_learning/blob/main/progsynth_cpp/docs/00_overview.md" rel="noopener">程式合成 C++ 專案總覽</a>：<code>program.hpp</code> 的 AST 與直譯器，是程式即資料的最小可跑版本。</li><li><a href="https://github.com/justty32/machine_learning/blob/main/progsynth_cpp/docs/m1_enumerative.md" rel="noopener">列舉式合成</a>：直接看 AST 候選如何被逐一生成與驗證。</li><li><a href="https://github.com/justty32/machine_learning/blob/main/progsynth_cpp/docs/m7_typed.md" rel="noopener">多型別 DSL</a>：用型別導向列舉壓掉不合法的候選組合。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2604.25800_Barriers_Universal_Reasoning_CoT.%E6%91%98%E8%A6%81.md" rel="noopener">長度泛化障礙摘要</a>：補上「圖靈完備不等於學得會」的理論界線。</li><li><a href="https://github.com/justty32/paper_readings/blob/main/summarize/2506.10021_Persistent_Lisp_Metaprogramming_Loop.%E6%91%98%E8%A6%81.md" rel="noopener">持久 Lisp 元程式設計迴圈摘要</a>：可讀其協定設計，但要連同「無實作與實測」的限制一起看。</li></ul>
+<h2 id="一句話總結">一句話總結</h2>
+<p>Lisp 的精髓是「程式和資料長同一個樣子」。這讓程式變成可以被讀、生成、演化與改寫的一級物件，因此成為符號 AI 與程式演化的天然母語；真正落地時，還要用受限 DSL、型別、sandbox 與驗證器替這份表達力收邊。</p>
+<p>之所以有人對它感興趣：當你想讓系統自動搜尋、組合、演化出小程式時，Lisp 或 Lisp 式 DSL 幾乎是訂做的。列表、操作即值與元程式設計都在同一份語意裡，能省下大量重造表示層的力氣。</p>
+<section class="self-check"><h2>自我檢核</h2><details><summary>高階函式與同像性是同一件事嗎？</summary><p>不是。高階函式讓操作成為值；同像性讓程式語法直接成為容易操作的資料結構。</p></details><details><summary>為什麼 S-表達式適合程式演化？</summary><p>它天然是一棵樹，變異器能以節點或子樹為單位修改，型別還能限制替換是否合法。</p></details><details><summary>圖靈完備保證搜尋器能找到解嗎？</summary><p>不保證。它只談表達力，沒有處理停機、搜尋成本、可學習性與長度泛化。</p></details><details><summary>為什麼早期系統常選受限 DSL，而不直接開放 Common Lisp？</summary><p>受限 DSL 能封閉能力、保證部分終止性並縮小搜尋空間，較容易隔離與驗證。</p></details></section>
+<div class="pager"><a href="12-流形-表徵的幾何.html">← 12 流形與表徵的幾何</a><a href="14-元胞自動機與發育式成長.html">14 元胞自動機與發育式成長 →</a></div></main></div><script src="app.js"></script></body></html>
