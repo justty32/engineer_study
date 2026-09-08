@@ -3,7 +3,7 @@
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">13・DTFT 是理論、DFT 是取樣版、FFT 只是快速演算法</p>
-<h1>離散頻譜分析：解析度只由窗長決定，其餘都是交換條件</h1>
+<h1>離散頻譜分析：頻點間距由窗長決定，其餘都是交換條件</h1>
 <p class="lead">按下「FFT」之後螢幕上那張圖，能看到多細的頻率、為什麼一根線會裂成一團、加窗與零填充各自買到了什麼——這章把三個名字分清楚，並且把每一項都算成具體的數字。這是本課最貼近日常工具的一章。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="12-取樣與混疊.html">12 取樣與混疊</a>的取樣與頻譜複製、<a href="06-傅立葉轉換.html">06 傅立葉轉換</a>的頻譜概念，以及<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複數與極式</a>。</p>
 
@@ -14,13 +14,13 @@
 <h2>白話直覺：頻譜分析是拿一段有限長的錄音去問「裡面有哪些頻率」</h2>
 <p>訊號從哪裡來？從上一章的 ADC 來，是一串以 f<sub>s</sub> 取樣的樣本。系統對它做了什麼？其實不是系統做的，是<strong>你</strong>做的：你從這串樣本裡截一段長度 N 的視窗送進 FFT。這件事在哪個域最好描述？當然是頻率域，但要付出兩個代價：一是輸出只在離散的幾個頻率上有值，二是截斷本身會在頻譜上留下痕跡。換域的代價因此是「看得到頻率、但看不清時間」，而且窗長直接決定了看得多細。儀器量到什麼？頻譜分析儀給你的是每根 bin 的振幅，它量不到 bin 與 bin 之間發生了什麼。</p>
 <p><strong>離散時間傅立葉轉換（discrete-time Fourier transform, DTFT）</strong>寫成 X(e<sup>jω</sup>) = ∑<sub>n=−∞</sub><sup>∞</sup> x[n]e<sup>−jωn</sup>。它的輸入是離散的無限長序列，輸出卻是<strong>連續且以 2π 為週期</strong>的函數。這個週期性不是巧合，正是上一章「取樣讓頻譜每隔 f<sub>s</sub> 複製一份」的直接後果，所以有意義的頻率範圍只有 [−π, π]，對應實際的 [−f<sub>s</sub>/2, f<sub>s</sub>/2]。</p>
-<p><strong>離散傅立葉轉換（discrete Fourier transform, DFT）</strong>寫成 X[k] = ∑<sub>n=0</sub><sup>N−1</sup> x[n]·exp(−j 2π k n / N)。輸入有限長、輸出離散，這才是電腦真正能算的版本；用軟體的語彙說，它就是一個 N×N 的複數矩陣乘上一個長度 N 的向量。<strong>快速傅立葉轉換（fast Fourier transform, FFT）</strong>不是第四種轉換，它只是把這個矩陣乘法的對稱性用光的演算法，最有名的是 Cooley–Tukey 蝶形運算，要求 N 是 2 的冪次。</p>
+<p><strong>離散傅立葉轉換（discrete Fourier transform, DFT）</strong>寫成 X[k] = ∑<sub>n=0</sub><sup>N−1</sup> x[n]·exp(−j 2π k n / N)。輸入有限長、輸出離散，這才是電腦真正能算的版本；用軟體的語彙說，它就是一個 N×N 的複數矩陣乘上一個長度 N 的向量。<strong>快速傅立葉轉換（fast Fourier transform, FFT）</strong>不是第四種轉換，它只是把這個矩陣乘法的對稱性用光的演算法，常見的是 Cooley–Tukey 分解，其中基 2（radix-2）版本要求 N 是 2 的冪次；其他基數或混合基數的 FFT 不受這項限制。</p>
 <p class="note">來源：09-信號與系統-下 §11、§12.1–§12.3。</p>
 
 <h2>推導：週期性、解析度、洩漏、零填充、運算量</h2>
 <p><strong>DTFT 為什麼是 2π 週期。</strong>把 ω 換成 ω + 2π：e<sup>−j(ω+2π)n</sup> = e<sup>−jωn</sup>e<sup>−j2πn</sup>。因為 n 是<strong>整數</strong>，第二項恆等於 1，所以 X(e<sup>jω</sup>) 的值原封不動。換句話說，離散時間的頻率本質上只有一個 2π 寬的範圍，超出去的都是同一件事重複——這正是上一章混疊的頻域說法。</p>
-<p><strong>解析度 Δf 的來歷。</strong>N 點樣本涵蓋的實際時間是 T<sub>win</sub> = N/f<sub>s</sub> 秒。要分辨兩個頻率相差多少，最起碼要能在這段時間內看到它們之間的一個完整拍差，也就是「一個週期剛好塞滿這個窗」，於是最小可分辨的頻率差是 Δf = 1/T<sub>win</sub> = f<sub>s</sub>/N。第 k 根 bin 的中心頻率是 k·Δf。<strong>解析度只由窗長決定</strong>，跟你用什麼演算法、補多少 0 都無關。</p>
-<p><strong>為什麼會洩漏。</strong>DFT 隱含一個假設：這 N 點就是一個週期，前後無限重複。若訊號在窗內不是整數個週期，把窗尾接回窗頭時會出現一個跳躍；跳躍在頻域是寬頻的，能量因此散到鄰近所有 bin，這就是<strong>譜洩漏（spectral leakage）</strong>。<strong>加窗（windowing）</strong>的做法是先把序列乘上一條兩端平滑歸零的曲線（Hann、Hamming、Blackman），接縫消失，裙邊跟著下降；代價是主瓣變寬，也就是解析度變差。</p>
+<p><strong>解析度 Δf 的來歷。</strong>N 點樣本涵蓋的實際時間是 T<sub>win</sub> = N/f<sub>s</sub> 秒。要分辨兩個頻率相差多少，最起碼要能在這段時間內看到它們之間的一個完整拍差，也就是「一個週期剛好塞滿這個窗」，於是最小可分辨的頻率差是 Δf = 1/T<sub>win</sub> = f<sub>s</sub>/N。第 k 根 bin 的中心頻率是 k·Δf。<strong>頻點間距由窗長決定</strong>，跟你用什麼演算法、補多少 0 都無關。</p>
+<p><strong>為什麼會洩漏。</strong>DFT 隱含一個假設：這 N 點就是一個週期，前後無限重複。若訊號在窗內不是整數個週期，把窗尾接回窗頭時會出現一個跳躍；跳躍在頻域是寬頻的，能量因此散到鄰近所有 bin，這就是<strong>譜洩漏（spectral leakage）</strong>。<strong>加窗（windowing）</strong>的做法是先把序列乘上一條降低兩端權重的曲線（Hann、Hamming、Blackman；Hamming 端點不為 0），減弱接縫造成的旁瓣，裙邊跟著下降；代價是主瓣變寬，也就是解析度變差。</p>
 <p><strong>為什麼零填充不增加解析度。</strong><strong>零填充（zero-padding）</strong>是把 N 點補 0 到更長再做 FFT。補進去的 0 不含任何觀測資訊，<strong>有效</strong>的 T<sub>win</sub> 完全沒變，所以 1/T<sub>win</sub> 也沒變。它做的事是在同一條 DTFT 曲線上多取幾個樣本點，屬於內插；圖會變平滑、峰值位置讀起來更順眼，但兩根本來分不開的線還是分不開。</p>
 <p><strong>運算量。</strong>直接算 DFT 要做 N 次求和、每次 N 項，共 N² 次複數乘法。基 2 FFT 遞迴地把長度對半拆，共 log<sub>2</sub>N 層、每層 N/2 個蝶形，因此是 (N/2)log<sub>2</sub>N 次。兩者相除就是加速倍率，N 愈大差距愈懸殊。</p>
 <p><strong>四個窗函數的固定數值</strong>（查表常數，本課全程只用這一組）：</p>
@@ -54,7 +54,7 @@
 <label for="dft-f">訊號頻率 f（Hz）<input id="dft-f" type="range" min="10" max="20000" step="1" value="1000"></label>
 <label for="dft-win">窗函數<select id="dft-win"><option value="rect">矩形（不加窗）</option><option value="hann" selected>Hann</option><option value="hamming">Hamming</option><option value="blackman">Blackman</option></select></label>
 </div>
-<div id="dftlab-output" class="output" aria-live="polite">N = 1024，Δf = 7.812500 Hz，窗長 0.128000 s；精確 bin 位置 128.000000，最近 bin k = 128（中心 1000.000000 Hz），誤差 0.000000 Hz。N² = 1048576 次複數乘法，(N/2)log<sub>2</sub>N = 5120 次，加速 204.800000 倍。<strong>整數週期，無洩漏</strong>：訊號頻率正好落在第 128 根 bin 的中心，窗內剛好裝 128 個完整週期，頭尾接得上，能量集中在一根線上。<strong>解析度只由窗長決定</strong>：Δf = 1/T<sub>win</sub>。要分辨相差 1 Hz 的兩根線，就得量滿 1 秒，沒有捷徑。選了 Hann 窗：主瓣 4 個 bin（＝31.250000 Hz，解析度變差），最高旁瓣 −31.5 dB（洩漏被壓低）。<strong>沒有一個窗兩邊都贏。</strong>把 N 補 0 到兩倍只會讓譜線看起來更密（內插），T<sub>win</sub> 沒變，<strong>真正能分辨的最小頻率差完全不變</strong>。量級對照：N = 1024、f<sub>s</sub> = 8000 就是 0.128 秒的窗，Δf = 7.8125 Hz；要達到 1 Hz 解析度得量滿 1 秒。把點數指數滑到 4 會看到加速只剩 8.000000 倍，N 小的時候 FFT 沒什麼好處；把 f 推過 f<sub>s</sub>/2 則要先回第 12 章處理混疊。</div>
+<div id="dftlab-output" class="output" aria-live="polite">N = 1024，Δf = 7.812500 Hz，窗長 0.128000 s；精確 bin 位置 128.000000，最近 bin k = 128（中心 1000.000000 Hz），誤差 0.000000 Hz。N² = 1048576 次複數乘法，(N/2)log<sub>2</sub>N = 5120 次，加速 204.800000 倍。<strong>整數週期，但 Hann 窗會展寬譜峰</strong>：訊號頻率正好落在第 128 根 bin 的中心；乘上 Hann 窗後，能量會分布到鄰近 bin，不能沿用矩形窗的單一譜線結論。<strong>頻點間距由窗長決定</strong>：Δf = 1/T<sub>win</sub>。若需 1 Hz 的頻點間距，量測窗需 1 秒；實際分辨能力還取決於窗函數與訊號。選了 Hann 窗：主瓣 4 個 bin（＝31.250000 Hz，解析度變差），最高旁瓣 −31.5 dB（洩漏被壓低）。<strong>沒有一個窗兩邊都贏。</strong>把 N 補 0 到兩倍只會讓譜線看起來更密（內插），T<sub>win</sub> 沒變，<strong>真正能分辨的最小頻率差完全不變</strong>。量級對照：N = 1024、f<sub>s</sub> = 8000 就是 0.128 秒的窗，Δf = 7.8125 Hz；若需 1 Hz 的頻點間距，量測窗需 1 秒；實際分辨能力還取決於窗函數與訊號。把點數指數滑到 4 會看到加速只剩 8.000000 倍，N 小的時候 FFT 沒什麼好處；把 f 推過 f<sub>s</sub>/2 則要先回第 12 章處理混疊。</div>
 </section>
 
 <h2>不要混淆</h2>

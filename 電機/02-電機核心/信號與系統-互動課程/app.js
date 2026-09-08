@@ -565,8 +565,9 @@ function dftlab(){
     const ops=N*N,fftops=(N/2)*nexp,speed=ops/fftops;
     const lobe=WIN[win][0],side=WIN[win][1],lobeHz=lobe*df;
     let judge;
-    if(Math.abs(kexact-k)<1e-9)judge="<strong>整數週期，無洩漏</strong>：訊號頻率正好落在第 "+k+" 根 bin 的中心，窗內剛好裝 "+k+" 個完整週期，頭尾接得上，能量集中在一根線上。";
-    else judge="<strong>會洩漏</strong>：訊號頻率離 bin 中心差 "+num6(err)+" Hz，窗內不是整數個週期，接縫處的跳躍讓能量散到鄰近的 bin。<strong>這時候加窗才有意義。</strong>";
+    if(Math.abs(kexact-k)<1e-9 && win!=="rect")judge="<strong>整數週期，但加窗會展寬譜峰</strong>：訊號落在第 "+k+" 根 bin 中心；乘上 "+WNAME[win]+" 窗後，能量仍會分布到鄰近 bin，不能沿用矩形窗的單一譜線結論。";
+    else if(Math.abs(kexact-k)<1e-9)judge="<strong>整數週期，無洩漏</strong>：訊號頻率正好落在第 "+k+" 根 bin 的中心，窗內剛好裝 "+k+" 個完整週期，頭尾接得上，能量集中在一根線上。";
+    else judge="<strong>會洩漏</strong>：訊號頻率離 bin 中心差 "+num6(err)+" Hz，窗內不是整數個週期，接縫處的跳躍讓能量散到鄰近的 bin。<strong>加窗可降低旁瓣，但會展寬主瓣。</strong>";
     const alias=f>=fs/2?"<p><strong>先處理混疊</strong>：f 已超過奈奎斯特頻率 "+num6(fs/2)+" Hz，這根線在 FFT 上會出現在別的位置——回第 12 章。</p>":"";
     let edge="";
     if(nexp<=4)edge+="<p>邊界提醒：N ＝ "+N+" 很小，FFT 只快 "+num6(speed)+" 倍，這時候 FFT 沒什麼好處。</p>";
@@ -578,10 +579,10 @@ function dftlab(){
       "<p>選用窗："+WNAME[win]+"｜主瓣寬度 <strong>"+lobe+" 個 bin</strong>（＝ "+num6(lobeHz)+" Hz）｜最高旁瓣 <strong>"+num6(side)+" dB</strong></p>"+
       "<p>直接 DFT 運算量 N² ＝ <strong>"+ops+"</strong> 次複數乘法｜FFT (N/2)log<sub>2</sub>N ＝ <strong>"+fftops+"</strong> 次｜加速倍率 <strong>"+num6(speed)+" 倍</strong></p>"+
       "<p>"+judge+"</p>"+alias+
-      "<p>為什麼：<strong>解析度只由窗長決定</strong>：Δf ＝ 1/T<sub>win</sub>。要分辨相差 1 Hz 的兩根線，就得量滿 1 秒，沒有捷徑。</p>"+
+      "<p>為什麼：<strong>頻點間距由窗長決定</strong>：Δf ＝ 1/T<sub>win</sub>。若需 1 Hz 的頻點間距，量測窗需 1 秒；實際分辨能力還取決於窗函數與訊號。</p>"+
       "<p>加窗的取捨：主瓣 "+lobe+" 個 bin（＝ "+num6(lobeHz)+" Hz，解析度變差），最高旁瓣 "+num6(side)+" dB（洩漏被壓低）。<strong>沒有一個窗兩邊都贏。</strong></p>"+
       "<p>零填充：把 N 補 0 到兩倍只會讓譜線看起來更密（內插），T<sub>win</sub> 沒變，<strong>真正能分辨的最小頻率差完全不變</strong>。</p>"+
-      "<p>量級對照：N ＝ 1024、f<sub>s</sub> ＝ 8000 就是 0.128 秒的窗，Δf ＝ 7.8125 Hz；要達到 1 Hz 解析度得量滿 1 秒。</p>"+edge;
+      "<p>量級對照：N ＝ 1024、f<sub>s</sub> ＝ 8000 就是 0.128 秒的窗，Δf ＝ 7.8125 Hz；若需 1 Hz 的頻點間距，量測窗需 1 秒；實際分辨能力還取決於窗函數與訊號。</p>"+edge;
   };
   ['dft-nexp','dft-fs','dft-f','dft-win'].forEach(x=>on(x,'input',draw));
   draw();
@@ -783,7 +784,7 @@ function selfcheck(){
     'q12-1':q('q12-1',{t:'num',ans:3000,tol:5,why:'f_a ＝ |f − k·f_s|，k ＝ round(5000/8000) ＝ 1，所以 f_a ＝ |5000 − 8000| ＝ 3000.000000 Hz，而且它的樣本與真正的 3000 Hz 完全相同。',fix:'混疊不是「訊號變差」，而是變成另一個確定的頻率。'}),
     'q12-2':q('q12-2',{t:'num',ans:0.784213,tol:0.002,why:'|sinc(f/f_s)| ＝ |sinc(0.375)| ＝ 0.784213，也就是 −2.111316 dB，這是零階保持造成的 droop。',fix:'注意是 f/f_s 不是 f/(f_s/2)；ZOH 的零點在 f_s 的整數倍。'}),
     'q12-3':q('q12-3',{t:'sel',ans:'a',why:'混疊在取樣的那一刻就發生了，樣本裡已經分不出原始頻率，所以抗混疊濾波器必須在 ADC 之前的類比端把頻寬限制住。',fix:'數位端再強的濾波器也救不回已經重疊的頻譜。'}),
-    'q13-1':q('q13-1',{t:'num',ans:7.8125,tol:0.01,why:'Δf ＝ f_s/N ＝ 8000/1024 ＝ 7.812500 Hz，等價於 1/T_win，其中 T_win ＝ 0.128000 s。',fix:'解析度只由窗長決定，零填充不會讓它變好。'}),
+    'q13-1':q('q13-1',{t:'num',ans:7.8125,tol:0.01,why:'Δf ＝ f_s/N ＝ 8000/1024 ＝ 7.812500 Hz，等價於 1/T_win，其中 T_win ＝ 0.128000 s。',fix:'頻點間距由窗長決定，零填充不會讓它變好。'}),
     'q13-2':q('q13-2',{t:'num',ans:204.8,tol:1,why:'直接 DFT 要 N² ＝ 1048576 次複數乘法，基 2 FFT 要 (N/2)log2 N ＝ 512 × 10 ＝ 5120 次，加速 204.800000 倍。',fix:'N 很小時（例如 16）加速只有 8 倍，FFT 的優勢不明顯。'}),
     'q13-3':q('q13-3',{t:'sel',ans:'c',why:'補 0 沒有帶來新的觀測時間，T_win 沒變，所以真正能分辨的最小頻率差不變；它只是把 DTFT 取樣得更密，是內插。',fix:'要提高解析度只有一個辦法：量更久。'}),
     'q14-1':q('q14-1',{t:'num',ans:-0.835079,tol:0.002,why:'h[n] ＝ r^n·sin((n+1)θ)/sinθ ＝ 0.9^5 × sin(270°)/sin(45°) ＝ 0.590490 × (−1.414214) ＝ −0.835079。',fix:'(n + 1)θ ＝ 6 × 45° ＝ 270°，sin 270° ＝ −1，所以 h[5] 是負的。'}),
