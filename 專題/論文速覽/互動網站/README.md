@@ -9,38 +9,48 @@
 
 | 檔案 | 責任 |
 |------|------|
-| `index.html` | deck 總覽：列出所有 deck 並連進去（目前 1 個） |
-| `symbolic-arc-automata.html` | deck「ARC・符號・自動機 三十分鐘速覽」的閱讀頁；資料內嵌於 `<script id="deck-data">` |
-| `styles.css` | 兩頁共用樣式（手機優先、深色模式、無動畫偏好） |
+| `index.html` | deck 總覽：列出所有 deck 並連進去（5 個） |
+| `symbolic-arc-automata.html` | deck「ARC・符號・自動機」（A+B、C、E、F 類，4 線 150 篇）的閱讀頁；資料內嵌於 `<script id="deck-data">` |
+| `evolution-program-synthesis.html` | deck「演化・程式合成・自我改進」（D、G、H、J 類，4 線 96 篇） |
+| `agent-skills-cost-decoding.html` | deck「技能庫・成本・受限解碼」（I 類子主題 01、01z、02、03，3 線 122 篇） |
+| `agent-loop-workflow-memory.html` | deck「自我改進・工作流・記憶」（I 類子主題 08、04、05+06、09，4 線 178 篇） |
+| `nesy-binary-worldmodel-ndea.html` | deck「二值・世界模型・訪談」（I 類子主題 07、10 ＋ Ndea 訪談 14 集，3 線 51 條） |
+| `data/SCHEMA.md` | deck.json 完整資料契約（欄位、上限、連結規則、內容鐵律） |
+| `data/<deck_id>.json` | 各 deck 的資料真相層；閱讀頁的 `#deck-data` 由它灌入 |
+| `data/inline_deck.py` | 灌資料（`deck.json` → `<deck_id>.html`）／`--extract` 抽回 |
+| `data/make_page.py` | 從 `symbolic-arc-automata.html` 複製出新 deck 頁（改 title／description）並灌資料 |
+| `data/validate_deck.py` | 契約檢查：欄位、字數、連結對應 paper_readings 本機檔、必讀卡 ⊂ 全清單、paper_count |
+| `styles.css` | 全站共用樣式（手機優先、深色模式、無動畫偏好） |
 | `app.js` | 閱讀頁邏輯：讀 `#deck-data` 渲染、已讀／深讀狀態、上一張／下一張、計時器、主題切換 |
 | `README.md` | 本檔：頁面地圖、資料契約摘要、DOM 契約、如何再加一個 deck |
-| `驗收紀錄.md` | 已執行的檢查與證據；沒證據的項目不標通過（已封存，見 `archive/`） |
+| `archive/驗收紀錄.md` | 已執行的檢查與證據；沒證據的項目不標通過（已封存） |
 
 ## 資料契約摘要（deck.json）
 
-完整契約見 paper_readings 側的 `SCHEMA.md`；頁面只依賴下列欄位：
+完整契約見 [data/SCHEMA.md](data/SCHEMA.md)；頁面只依賴下列欄位：
 
 ```text
 deck: deck_id, title, subtitle, total_minutes, intro, lanes[], threads[], outro
 lane: id, name, minutes, paper_count, deep_doc,
       gist{summary, points[], open}, highlights[4], question, all_papers[]
 highlight: arxiv_id, title_zh, title_en, year, role, one_liner, plain?, core,
-           number{label, value, note}, why, links{arxiv, summary, translate}
+           number{label, value, note}, why, links{arxiv?, summary, translate?, transcript?}
 lane 另有可選 glossary?: [{term: "中文（English）", plain: "≤60 字"}] × 4～8
-all_papers 列: arxiv_id, status, title_zh, cat, summary_file|null, translate_file|null
+all_papers 列: arxiv_id, status, title_zh, cat, summary_file|null, translate_file|null, url?, label?
 thread: title, text, lane_ids[], paper_ids[]
 ```
 
-- `all_papers` 各列連到 `https://github.com/justty32/paper_readings/blob/main/summarize/<summary_file>`；`summary_file` 為 `null` 時只放 arXiv 連結 `https://arxiv.org/abs/<arxiv_id>`。
+- `all_papers` 各列連到 `https://github.com/justty32/paper_readings/blob/main/summarize/<summary_file>`；`summary_file` 為 `null` 時只放 arXiv 連結 `https://arxiv.org/abs/<arxiv_id>`。可選 `url`（絕對網址）優先於前兩者、`label` 取代第一欄顯示的 id——給非 arXiv 條目（Ndea 訪談 `ndea-01`～`ndea-14`）用。
+- `links.transcript`（可選）渲染成「逐字稿 ↗」；缺哪個連結就不渲染哪個按鈕。
 - `plain`（可選，≤80 字）：「用你的話說，這篇等於……」，渲染在 `one_liner` 之後、`core` 之前，視覺上是一句側註。
 - `glossary`（可選，4～8 條）：該線生僻名詞的白話解釋，渲染成全景卡之後的「名詞白話」`<details>`（標題顯示條數）；卡片正文中出現的 `term` 會被標成可點的行內按鈕，點了在原地展開該條白話。
 - 兩個欄位缺席時不渲染、不報錯（舊資料相容）。
 - 頁面完全資料驅動：lane 數、卡數、all_papers 列數皆由 JSON 決定，不寫死 4 或 16。
-- 灌資料：`python3 inline_deck.py <deck.json> [<html>]`（腳本放在 paper_readings 側的工作 scratchpad；作用是把 JSON 安全跳脫後寫進 `#deck-data`，可重複執行）。
+- 灌資料：`python3 data/inline_deck.py data/<deck_id>.json [<html>]`（把 JSON 安全跳脫後寫進 `#deck-data`，可重複執行，回讀比對）；`python3 data/validate_deck.py data/*.json` 做契約檢查。
 
 ## DOM 契約（Shell 與 JS 的唯一介面）
 
-寫入範圍互斥：**Shell worker 只寫 `index.html`、`symbolic-arc-automata.html`、`styles.css`；JS worker 只寫 `app.js`。** 任何一方需要新增 id／class，先改本節再實作。
+寫入範圍互斥：**Shell worker 只寫 `index.html`、各 `<deck_id>.html`、`styles.css`；JS worker 只寫 `app.js`。** 各 deck 頁的骨架以 `symbolic-arc-automata.html` 為模板（`data/make_page.py` 複製），不要手改個別 deck 頁。 任何一方需要新增 id／class，先改本節再實作。
 
 ### 全域
 
@@ -54,7 +64,7 @@ thread: title, text, lane_ids[], paper_ids[]
 - `body` 底部要留 `padding-bottom` 給固定底列（實作為 `calc(110px + env(safe-area-inset-bottom))`）。
 - localStorage 鍵（JS 擁有）：`pb:theme`＝`light|dark`；`pb:<deck_id>:read`＝已讀 arxiv_id 陣列；`pb:<deck_id>:deep`＝深讀 arxiv_id 陣列；`pb:<deck_id>:timer`＝計時開始的 epoch ms；`pb:<deck_id>:pos`＝目前卡片 nav index。
 
-### `symbolic-arc-automata.html` 靜態骨架（Shell 寫，JS 只填內容）
+### `<deck_id>.html` 靜態骨架（Shell 寫，JS 只填內容；以 `symbolic-arc-automata.html` 為準）
 
 ```html
 <a class="skip-link" href="#lanes">跳到內容</a>
@@ -230,7 +240,8 @@ JS 行為：`#theme-toggle` 切換 `light/dark`，`aria-pressed="true"` 表示�
 
 ## 如何再加一個 deck
 
-1. 內容側依 `SCHEMA.md` 產出新的 `deck.json`（新的 `deck_id`）。
-2. 複製 `symbolic-arc-automata.html` 為 `<deck_id>.html`，用 `inline_deck.py <deck.json> <deck_id>.html` 灌資料；`app.js` 與 `styles.css` 不用改（讀 `deck_id` 做 localStorage 命名空間）。
-3. 在 `index.html` 的 `.deck-list` 加一列 `a.deck-row` 指向新頁。
-4. `.github/workflows/pages.yml` 不必改（本目錄第一層 html/css/js 已整目錄登記）。
+1. 內容側依 [data/SCHEMA.md](data/SCHEMA.md) 產出 `data/<deck_id>.json`（新的 `deck_id`）；`python3 data/validate_deck.py data/<deck_id>.json` 到 errors=0。
+2. `python3 data/make_page.py data/<deck_id>.json`：複製 `symbolic-arc-automata.html` 為 `<deck_id>.html`、改 title／description、灌資料；`app.js` 與 `styles.css` 不用改（讀 `deck_id` 做 localStorage 命名空間）。之後改資料只要重跑 `python3 data/inline_deck.py data/<deck_id>.json`。
+3. 在 `index.html` 的 `.deck-list` 加一列 `a.deck-row` 指向新頁（標題、副標、「N 條主線・M 張必讀卡・30 分鐘」）。
+4. `.github/workflows/pages.yml` 不必改（本目錄第一層 html/css/js 已整目錄登記；`data/` 不部署，只是來源）。
+5. 全站不變式：所有 deck 的 `all_papers` 聯集＝paper_readings `index/` 全庫、每條恰好一次（目前 597＝150＋96＋122＋178＋51）。

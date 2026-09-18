@@ -219,9 +219,10 @@
 
   /* --------------------------------------------------------- 純計算函式 */
 
-  /** all_papers 一列的連結：有 summary_file 走 GitHub summarize，否則走 arXiv abs。
-   *  summary_file 內含中文與 `.摘要.md`，直接串接不要 encodeURI。 */
+  /** all_papers 一列的連結：有 url（絕對網址，非 arXiv 條目用）直接用；否則有 summary_file
+   *  走 GitHub summarize，再否則走 arXiv abs。summary_file 內含中文與 `.摘要.md`，直接串接不要 encodeURI。 */
   function summaryUrlFor(row) {
+    if (row && isNonEmptyString(row.url)) return row.url;
     if (row && isNonEmptyString(row.summary_file)) return GH_SUMMARY_BASE + row.summary_file;
     if (row && isNonEmptyString(row.arxiv_id)) return ARXIV_ABS_BASE + row.arxiv_id;
     return '';
@@ -446,7 +447,8 @@
     var linkSpec = [
       ['arxiv', 'arXiv ↗'],
       ['summary', '摘要 ↗'],
-      ['translate', '翻譯 ↗']
+      ['translate', '翻譯 ↗'],
+      ['transcript', '逐字稿 ↗']
     ];
     var pLinks = el('p', 'card-links');
     var linkCount = 0;
@@ -513,10 +515,11 @@
 
       var tdId = el('td', 'all-id');
       var href = summaryUrlFor(row);
+      var idText = isNonEmptyString(row.label) ? row.label : (row.arxiv_id || '');
       if (href) {
-        tdId.appendChild(extLink(null, href, row.arxiv_id || ''));
+        tdId.appendChild(extLink(null, href, idText));
       } else {
-        tdId.textContent = row.arxiv_id || '';
+        tdId.textContent = idText;
       }
       tr.appendChild(tdId);
 
