@@ -1291,7 +1291,7 @@ function selfcheck(){
 
 ## 9. 下游派工切分
 
-第一輪與第二輪各同時最多 2 個 job（依 `wf/workflows/interactive-study-site/BUILD-WITH-CODEX.md` 的 token 階梯）。`app.js` 是單一檔，**必須由單一 worker 獨佔寫入**，且要在四個 HTML 包完成、id 凍結之後才動工（或同時動工但以本 spec 為唯一依據，不看對方產出）。**各包的唯一寫入範圍互斥，沒有任何檔案有兩個寫入者。**
+第一輪與第二輪各同時最多 2 個 job（依 `wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md` 的 token 階梯）。`app.js` 是單一檔，**必須由單一 worker 獨佔寫入**，且要在四個 HTML 包完成、id 凍結之後才動工（或同時動工但以本 spec 為唯一依據，不看對方產出）。**各包的唯一寫入範圍互斥，沒有任何檔案有兩個寫入者。**
 
 | 包 | 唯一寫入範圍 | 讀取範圍 | 建議順序 |
 | --- | --- | --- | --- |

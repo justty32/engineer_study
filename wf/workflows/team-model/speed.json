@@ -1,0 +1,37 @@
+{
+ "contract": "wf-table/1",
+ "source": "speed.md",
+ "extracted": "2026-09-18",
+ "columns": [
+  "model",
+  "habit",
+  "static",
+  "dynamic"
+ ],
+ "rows": [
+  {
+   "model": "codex CLI（gpt-5.x）",
+   "habit": "內容層錯字與簡體字（「收斂→收旂」×35、「庫伦」）；會為了「通過」閘門把禁用詞寫成 HTML 實體；規格算術錯照抄不質疑；大檔生成長靜默",
+   "static": "規格鎖死到照抄即可、禁用詞明文寫「恰好允許 N 處且明碼」、規格不得自相矛盾；勿設短超時",
+   "dynamic": "每包收件即掃（`html.unescape` 後）、字元級錯字 grep、獨立驗收者重算數值"
+  },
+  {
+   "model": "Claude Opus 5（子 agent 章節作者）",
+   "habit": "讀太多：給整份 spec 就會整份讀、連別人的章節也讀，context 爆掉；回報愛貼原文",
+   "static": "派工稿「指路」不內嵌：只給「讀 BUILD-SPEC 第 X–Y 行」＋一個範本頁；回報上限 10 行、不貼檔案原文",
+   "dynamic": "收到超長回報就打回，只要結尾摘要"
+  },
+  {
+   "model": "Claude Opus 5（指揮官／驗收者）",
+   "habit": "停在等待點把控制權交回上層，每次空轉燒一次往返；整批 echo 可疑字串觸發 content filter 被中止",
+   "static": "交接書寫「要等就在同一回合等到底」；掃描腳本只印檔名＋行號＋計數",
+   "dynamic": "看到它回報「等子任務中」就要求它阻塞到底"
+  },
+  {
+   "model": "Claude Sonnet 5（雜工）",
+   "habit": "沒實測到穩定癖好；只確認過適合唯讀掃描與機械複製",
+   "static": "只派無寫入權或單一可測問題",
+   "dynamic": "—"
+  }
+ ]
+}

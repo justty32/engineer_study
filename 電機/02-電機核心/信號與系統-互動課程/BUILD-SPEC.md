@@ -1,6 +1,6 @@
 # BUILD-SPEC — 信號與系統（零基礎互動課）
 
-← 立案文件：[PROJECT-BRIEF.md](PROJECT-BRIEF.md)｜工作流：[build-with-codex](../../../wf/workflows/interactive-study-site/BUILD-WITH-CODEX.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)
+← 立案文件：[PROJECT-BRIEF.md](PROJECT-BRIEF.md)｜工作流：[build-with-codex](../../../wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)
 
 本檔是**建置契約**。冷啟動的 builder 與 verifier 只讀本檔＋PROJECT-BRIEF＋指定的來源筆記就能開工。所有 id、預設值、`select` 的 `value` 清單、數值實例都必須**一字不差**照做（大小寫、連字號、全形半形都不能差）。
 

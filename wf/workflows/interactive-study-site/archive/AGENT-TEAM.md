@@ -1,3 +1,5 @@
+> 封存 2026-09-18，由 `../../team-model.md`（模型分級與角色）與 `../BUILD-WITH-AGENTS.md`（任務卡、失敗處理）取代：三輪 gpt-5.6 worker 編排是 2026-08 以前 IoT／電力系統批次的舊產線，模型名已進 team-model 分級表。本檔不再維護。
+
 # Agent 編組與派工規則
 
 ← [工作流入口](README.md)｜[品質關卡](QUALITY-GATES.md)

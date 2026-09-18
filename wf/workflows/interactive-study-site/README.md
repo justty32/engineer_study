@@ -1,80 +1,82 @@
-# interactive-study-site — 知識轉互動學習網站
+# interactive-study-site — 把知識做成可操作的互動網頁課程（工作流入口）
 
-← [WORKFLOWS](../../WORKFLOWS.md)｜[INDEX](../../INDEX.md)｜[零基礎課程](FOUNDATIONS-FIRST.md)｜[硬體原理子工作流](PRINCIPLES-FIRST.md)｜[codex 批次加厚講解](ENRICH-EXISTING.md)｜[agent 編組](AGENT-TEAM.md)｜[品質關卡](QUALITY-GATES.md)｜[GitHub Pages](GITHUB-PAGES.md)
+[WORKFLOWS](../../WORKFLOWS.md)｜[INDEX](../../INDEX.md)｜零基礎剖面 [FOUNDATIONS-FIRST](FOUNDATIONS-FIRST.md)｜硬體原理子工作流 [PRINCIPLES-FIRST](PRINCIPLES-FIRST.md)｜品質關卡 [QUALITY-GATES](QUALITY-GATES.md)
 
-把既有筆記的一個明確知識面向，轉成可操作、會即時回饋、可循序完成的互動學習網站。網站不是把 Markdown 換皮，也不是行銷頁；第一個畫面就要是可用的學習工作台。
+把既有筆記的一個明確知識面向，做成**可操作、會即時回饋、可循序完成**的互動學習網站。不是把 Markdown 換皮，也不是行銷頁：第一個畫面就要是可用的學習工作台。
 
-若讀者尚未建立必要模型、看不懂術語，或回饋「先考後教」，先改走 [foundations-first 零基礎課程](FOUNDATIONS-FIRST.md)：零基礎入口 → 繁中／英文術語 → 概念因果 → 無評分自由實驗 → 實際應用 → 可觀察證據。硬體或物理主題再疊加 [principles-first 硬體原理子工作流](PRINCIPLES-FIRST.md) 的回路、能量、公式與量測關卡。
+**何時用**：使用者說「把這個主題做成互動網頁課程」「弄一個可以操作的教學網站」，而且讀者需要**動手做**才學得會。
+**何時不用**：讀者只要讀懂、不需要操作 → [plain-explain](../plain-explain.md)（純文字講解）。網站已存在、只是文字太薄 → [ENRICH-EXISTING](ENRICH-EXISTING.md)。內容還沒讀懂 → 先讀懂再回來。
 
-## 完成定義
+讀者尚未建立必要模型、看不懂術語，或回饋「先考後教」→ 流程 2–3 之間插入 [FOUNDATIONS-FIRST](FOUNDATIONS-FIRST.md) 剖面；硬體或物理主題再疊加 [PRINCIPLES-FIRST](PRINCIPLES-FIRST.md) 的回路、能量、公式與量測關卡。課綱課幾乎都同時套這兩層。
 
-```text
-Done when: 來源可追溯、學習目標可觀察、核心概念已互動化、
-           網站可離線啟動、桌面與行動版無重疊、互動與公式通過驗證、
-           agent 派工和網路用量都有紀錄。
-```
+## Done when
+
+- `PROJECT-BRIEF.md` 與 `BUILD-SPEC.md` 存在，且 BUILD-SPEC 的每個互動元件都填滿 `id / type / 範圍 / 預設 / 計算式 / 判準 / 數值實例`（骨架見 [TEMPLATE.build-spec.md](TEMPLATE.build-spec.md)）。
+- [QUALITY-GATES](QUALITY-GATES.md) 的驗收指令片段全數通過（缺 id 0、外部資源 0、LaTeX 殘留 0、相對連結全存在、`sync-styles.py --check` exit 0）。
+- `驗收紀錄.md` 存在，且每個關卡欄位是「通過／失敗／待人工」其中之一，沒有空欄。
 
 ## 非侵入式邊界
 
 - 工作流本身只放在 `wf/workflows/interactive-study-site/`，不在 repo 根目錄新增流程檔。
-- 每個網站的程式、規格與驗收紀錄放回知識來源所屬目錄，通常是 `<主題>/互動網站/`。
-- 不搬動或改寫原始筆記；網站以相對連結回指來源。
+- 每個網站的程式、規格與驗收紀錄放回知識來源所屬目錄（`<主題>/互動課程/` 或 `<主題>/互動網站/`）。
+- 不搬動或改寫原始筆記；網站以相對連結回指來源。**HTML 頁面不連 `.md` 檔**（Pages 上會變死連結），來源以文字標註章節。
 - 根目錄只透過既有 `AGENTS.md → wf/WORKFLOWS.md` 路由，不再新增入口。
 
 ## 必要輸入
 
-1. **主題邊界**：一次只選一個可說清楚的面向，例如「IoT 聯網裝置」或「電力系統基礎」。
-2. **目標讀者**：已會什麼、最容易卡在哪裡。
-3. **本地來源包**：權威筆記、名詞對照表、專題 index 與必要的相鄰課程。
+1. **主題邊界**：一次只做一個說得清楚的面向（例：「IoT 聯網裝置」「電力系統基礎」），不要一口氣做一整個學科。
+2. **讀者基線**：已會什麼、最容易卡在哪裡——格式與本專案預設基線見 [plain-explain](../plain-explain.md) 的「讀者基線」表。
+3. **本地來源包**：權威筆記、名詞對照表、專題 index 與必要的相鄰課程。缺什麼先列缺口，別邊做邊查。
 4. **可觀察成果**：讀者完成後能做出的判斷、計算、診斷或設計。
+
+四項都要寫進 `PROJECT-BRIEF.md`，**不可只存在對話紀錄裡**。
 
 ## 流程
 
-### 0. 立案與節流
+<!-- wf-nav -->
+1. **立案**：寫 `PROJECT-BRIEF.md`（骨架 [TEMPLATE.project-brief.md](TEMPLATE.project-brief.md)），鎖定範圍、完成準則、輸出位置與**不做事項**。同時定下預算（見下）。
+2. **內容切片**：把來源拆成「學習目標 → 核心概念 → 常見誤解 → 可操作任務」。每個切片記來源檔與章節；網站不得出現無法追溯的關鍵數值或結論。讀者已是強項的部分只留必要銜接。
+3. **互動建模**：每個目標選一種機制（狀態機、參數實驗、排序、故障診斷、取捨比較、階段閘門），並定義「使用者操作 → 狀態變化 → 即時回饋 → 正確性判準」四件事。**沒有判準的動畫、純翻卡、只換頁都不算互動。** 課程是純閱讀型（只有文字與導覽）→ 這步只需定義「每章的自我檢核問題」，`BUILD-SPEC.md` 的互動段寫「不適用」。
+4. **建置契約**：把前兩步整合成 `BUILD-SPEC.md`：資訊架構、DOM 契約、公式、預設值、檔案所有權、驗收方式。**每個 widget 的參數要鎖死到照抄即可實作**——規格留白，下游就會各自發明。
+5. **分批派工**：照 [BUILD-WITH-AGENTS](BUILD-WITH-AGENTS.md) 分層執行（Lead／指揮官／雜工／章節作者）；每個檔案只有一個作者，同一輪的寫入範圍必須互斥。
+6. **驗證交付**：照 [QUALITY-GATES](QUALITY-GATES.md) 逐關驗，結果寫進 `驗收紀錄.md`；完成後在來源主題的 index 加入網站入口；要對外發布再走 [GITHUB-PAGES](GITHUB-PAGES.md)。
 
-- Lead 寫 `PROJECT-BRIEF.md`，鎖定範圍、完成準則、輸出位置與不做事項。
-- 先盤點本地資料；本地來源足夠時，整案網路研究預算為 **0**。
-- Agent 同時最多 **2 個**，且最多只有 **1 個**可進行外部查詢。
+## 產物與落點
 
-### 1. 內容切片
+產物**放回知識來源所屬的目錄**，不堆在工作流資料夾裡；工作流檔只放方法。
 
-- Content Mapper 把來源拆成「學習目標 → 核心概念 → 常見誤解 → 可操作任務」。
-- 每個切片記來源檔與章節；網站不能出現無法追溯的關鍵數值或結論。
-- 已是讀者強項的內容只保留必要銜接，時間集中在真正薄弱處。
+| 產物 | 內容 | 誰寫 |
+|------|------|------|
+| `PROJECT-BRIEF.md` | 讀者基線、目標能力、來源、教學邊界、不做事項、用語裁決 | 立案者（架構師） |
+| `BUILD-SPEC.md` | 靜態結構、教學頁契約、每個互動的完整參數、逐章行號表、驗收方式 | 立案者 |
+| `派工計畫.md` | 任務編號、角色、唯一寫入範圍、狀態 | 派工者（指揮官） |
+| `建置進度.md` | 建置期間的檢查點（已完成檔、通過的關卡、待修缺陷）；**交付後刪除**，不進版控 | 派工者 |
+| `驗收紀錄.md` | 日期、環境、通過項、失敗項、已知限制、是否允許交付 | 獨立驗收者 |
 
-### 2. 互動建模
+## 預算（先講好，不是做到一半才問）
 
-- Interaction Designer 為每個目標選擇合適機制：狀態機、參數實驗、排序、故障診斷、取捨比較或階段閘門。
-- 每個互動都要定義「使用者操作、狀態變化、即時回饋、正確性判準」。
-- 互動必須幫助形成模型；純翻卡、無判準動畫或只換頁不算。
+- **外部查詢預設 0**：先把本地來源讀完。確有缺口就先列缺口清單，再由**單一**執行者串行查證，每批最多開 **4 個一手來源頁面**，Lead 審核後才可開下一批。禁止圖片搜尋、影片下載、爬取與一次展開大量分頁。
+- **同時最多 2 個 agent**，且最多只有 1 個可進行外部查詢。
+- **不下載依賴**：預設原生 HTML／CSS／JavaScript，不用外部字型、圖片、CDN、遠端 API 與第三方執行期依賴；課程要能**離線開啟**。worker 不得自行 `npm install` 或下載字型、框架、瀏覽器。
+- 真的需要新增依賴 → 先報名稱、用途、估計下載量與替代方案，取得使用者同意（守鐵律 3：授權來源）。
 
-### 3. 建置契約
+## 內容
 
-- Lead 整合前兩份草案，寫 `BUILD-SPEC.md`：資訊架構、DOM/資料契約、公式、預設值、檔案所有權與驗收方式。
-- 預設技術為原生 HTML、CSS、JavaScript，不使用外部字型、圖片、CDN 或套件。
-- 只有在既有引擎能明顯降低風險，且使用者同意下載成本時，才可增加依賴。
+<!-- wf-nav -->
+| 檔案 | 內容 |
+|------|------|
+| [FOUNDATIONS-FIRST.md](FOUNDATIONS-FIRST.md) | 零基礎剖面：多頁結構、先教後操作、自由實驗、拆頁條件、可延續性 |
+| [PRINCIPLES-FIRST.md](PRINCIPLES-FIRST.md) | 硬體／物理子工作流：回路、能量、公式、極端案例、儀器量測 |
+| [QUALITY-GATES.md](QUALITY-GATES.md) | 品質關卡 checklist ＋可複製的驗收指令（含零基礎、硬體原理加驗） |
+| [BUILD-WITH-AGENTS.md](BUILD-WITH-AGENTS.md) | 分層派工產線：token 階梯、單一作者、獨立驗收；本專案固定項與 codex 細節在 [build-with-agents/codex-notes.md](build-with-agents/codex-notes.md) |
+| [ENRICH-EXISTING.md](ENRICH-EXISTING.md) | 只加厚既有課的文字，不動互動與版面 |
+| [GITHUB-PAGES.md](GITHUB-PAGES.md) | 發布契約：只發成品、單一入口、slug 表在 `pages.yml`、驗 HTTP 200 |
+| [TEMPLATE.project-brief.md](TEMPLATE.project-brief.md)／[TEMPLATE.build-spec.md](TEMPLATE.build-spec.md) | 兩份產物的骨架，複製到產物目錄改寫 |
+| `tools/sync-styles.py` | `styles.css` 正本同步與閘門（`--check`／`--sync`） |
+| [archive/](archive/README.md) | 已封存：共用資產評估報告、舊版 gpt worker 編組 |
 
-### 4. 分批派工
+## 交接
 
-- **第一輪，最多 2 個**：內容盤點與互動題型，可並行且寫入不同檔案。
-- Lead 完成建置契約後，才進入第二輪。
-- **第二輪，最多 2 個**：Shell Worker 負責 HTML/CSS；Logic Worker 負責 JavaScript。兩者的 DOM 契約與寫入範圍不得重疊。
-- **第三輪，1 個**：Verifier 只做測試與問題清單，不直接重寫產品。
-- Lead 負責最終整合、衝突處理、事實與公式審核，以及是否通過品質關卡。
-
-實際角色、模型選擇與失敗升級方式見 [AGENT-TEAM.md](AGENT-TEAM.md)。
-
-### 5. 驗證與交付
-
-- 依 [QUALITY-GATES.md](QUALITY-GATES.md) 檢查內容、互動、可用性、離線性與版面。
-- 啟動本機靜態伺服器，至少驗證桌面與手機 viewport；不得為了測試臨時下載瀏覽器或套件。
-- 完成後在來源主題的 index 加入網站入口；若仍有缺口，留在派工計畫或 `wf/SESSION-LOG.md`。
-- 需要公開時依 [GitHub Pages 部署契約](GITHUB-PAGES.md) 建立單一入口，只發布網站成品，不直接公開工作流與規劃檔。
-
-## 網路與下載預算
-
-- **預設外部查詢：0。** 先讀 repo 內已有材料。
-- 確有資料缺口時，由 Lead 先列缺口，再由單一 Research Worker 串行查證；每批最多開 **4 個一手來源頁面**，Lead 審核後才可開下一批。
-- 禁止圖片搜尋、影片下載、網站爬取與一次展開大量分頁。
-- 禁止 worker 自行執行 `npm install`、下載字型、圖庫、框架或瀏覽器。
-- 若必須新增依賴，先回報名稱、用途、估計下載量與替代方案，取得使用者同意後才進行。
+- 內容還沒講得零基礎讀得懂 → 先走 [plain-explain](../plain-explain.md)，它的名詞表與概念表直接餵進流程第 2 步。
+- 建好之後文字仍太薄 → [ENRICH-EXISTING](ENRICH-EXISTING.md)；要對外發布 → [GITHUB-PAGES](GITHUB-PAGES.md)。
+- 卡在使用者（實機瀏覽器驗收、發布授權、要不要加依賴）→ [WAIT_USER](../../WAIT_USER.md) 一行；跨 session 的建置進度 → [SESSION-LOG](../../SESSION-LOG.md) 一行；Lead 裁決與為什麼這樣簡化模型 → [decisions](../decisions.md)。

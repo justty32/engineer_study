@@ -1,14 +1,17 @@
-# enrich-existing — 用 codex 批次擴充既有互動課程的文字講解
+# enrich-existing — 批次擴充既有互動課程的文字講解
 
-← [工作流入口](README.md)｜[零基礎課程](FOUNDATIONS-FIRST.md)｜[硬體原理子工作流](PRINCIPLES-FIRST.md)｜[品質關卡](QUALITY-GATES.md)
+[interactive-study-site](README.md)｜[WORKFLOWS](../../WORKFLOWS.md)｜零基礎剖面 [FOUNDATIONS-FIRST](FOUNDATIONS-FIRST.md)｜驗收關卡 [QUALITY-GATES](QUALITY-GATES.md)
 
-當「互動課程網站已經存在、互動也能動」，只是**文字講解太精簡、讀者讀不懂**時，用這個子工作流把每頁的解說做得更豐富、更深入淺出。指揮者（Claude）只做調度與驗證，實際改寫交給 **codex CLI** headless 批次執行。
+當「互動課程網站已經存在、互動也能動」，只是**文字講解太精簡、讀者讀不懂**時，用這個子工作流把每頁的解說做得更豐富、更深入淺出。指揮者（Claude）只做調度與驗證，實際改寫交給便宜的批次執行者——本檔以 **codex CLI** headless 為例；換成 Claude 子 agent 時「codex 呼叫方式」一節不適用，其餘照舊。
 
-## 適用時機
+**何時用**：課程頁已是自足互動 HTML（各頁互動小工具靠該群 `app.js` 內的元素 `id` 掛勾），目標是**加厚文字**：白話直覺、實例演算、因果與可觀察證據、常見誤解、術語中英對照。
+**何時不用**：要新增或改造互動元件、改版面、改結構 → 回 [interactive-study-site](README.md) 走建置契約與 [BUILD-WITH-AGENTS](BUILD-WITH-AGENTS.md)；課程還不存在 → 從第 1 步立案開始。
 
-- 課程頁已是自足互動 HTML（各頁互動小工具靠該群 `app.js` 內的元素 `id` 掛勾）。
-- 目標是**加厚文字**：白話直覺、實例演算、因果與可觀察證據、常見誤解、術語中英對照。
-- **不**重做互動、不改版面、不改結構。要新增互動元件請走主工作流的第二輪派工，不走本子工作流。
+## Done when
+
+- 下方驗收片段全數通過（`app.js`／`styles.css` 差異空、缺 id 0、LaTeX 殘留 0、外部資源 0）。
+- 每一群課程頁都有一份「這一頁補了什麼」的簡短清單（執行者收尾自檢的最後一項）。
+- 未通過項在 [SESSION-LOG](../../SESSION-LOG.md) 或 [WAIT_USER](../../WAIT_USER.md) 各有一行。
 
 ## 硬性紅線（傳給 codex，違反即失敗）
 
@@ -17,13 +20,13 @@
 3. **不得改檔名、topbar、pager 與頁間相對連結**。
 4. **不得加任何外部資源**（圖片／外部字型／CDN／遠端 API／第三方 script）；維持純離線純文字。
 5. **不改原意、不杜撰**；簡化模型標明假設與適用範圍。
-6. **公式一律純文字 HTML，禁止任何 LaTeX 語法**（不得出現 `\(` `\)` `\[` `\]` `$` `$$`，也不引入 MathJax／KaTeX）。本網站**沒有數學渲染器**，LaTeX 會顯示成生的反斜線。改用 Unicode 符號（θ × · √ ≈ ≤ ≥ Σ π Δ →）加 `<sub>`／`<sup>`（例：H<sub>T</sub>、2<sup>32</sup>、4×4）。這是既有頁面的慣例。
+6. **公式一律純文字 HTML，禁止任何 LaTeX 語法**（不得出現 `\(` `\)` `\[` `\]` `$` `$$`，也不引入 MathJax／KaTeX）。本站**沒有數學渲染器**，LaTeX 會顯示成生的反斜線。改用 Unicode 符號（θ × · √ ≈ ≤ ≥ Σ π Δ →）加 `<sub>`／`<sup>`。
 
 ## codex 呼叫方式
 
 - 帳號限制：以 ChatGPT 帳號登入時**不能用 `-m gpt-5-codex`**（回 400）；不指定 `-m`，用預設模型。
 - headless：`codex exec --sandbox workspace-write --cd <repo根> -`，prompt 走 stdin。
-- 每群一個 codex job，寫入不同資料夾者可並行（建議一次 2 群，控管速率與驗證負荷）。
+- 每群一個 codex job，寫入不同資料夾者可並行（一次 2 群）。
 - prompt = 「目標資料夾一行」＋（數學多的群加一句純文字公式提醒）＋下方《共用指令稿》。
 
 ## 流程
@@ -34,24 +37,19 @@
 4. **每群驗證**（見下）；有殘留問題就補一個 focused codex 修正 pass（例如「LaTeX → 純文字」）。
 5. **交付**：更新 `wf/SESSION-LOG.md` open 狀態；本庫無 build/test，驗收以內容、連結、格式、UTF-8 為準。
 
+各群的字數門檻（計法＝漢字＋全形標點）**一開始就統一講好**，否則前後群厚薄不均，還要追加一輪加厚——而加厚後又得逐一位元組比對互動區塊沒被動到（先 `git add -N` 建 baseline）。
+
 ## 每群驗收檢查（指揮者親自跑）
+
+先跑這一條（輸出應為空），再跑 [QUALITY-GATES](QUALITY-GATES.md)「可複製的驗收片段」的第 1、2、3、4、5 項：
 
 ```sh
 d="<目標群>"
-# 1) app.js / styles.css 未被動（應為空）
-git diff --stat -- "$d/app.js" "$d/styles.css"
-# 2) app.js 依賴的所有 id 仍存在於該群頁面
-ids=$(grep -oE 'byId\("[^"]+"\)|getElementById\("[^"]+"\)' "$d/app.js" | grep -oE '"[^"]+"' | tr -d '"' | sort -u)
-for id in $ids; do grep -qF "id=\"$id\"" "$d"/*.html || echo "MISSING id: $id"; done
-# 3) 無 LaTeX 殘留
-grep -rlF -e '\(' -e '\)' -e '\[' -e '\]' "$d"/*.html
-# 4) 無新增外部資產（僅允許回主站連結）
-grep -oiE '(src|href)="https?://[^"]+"' "$d"/*.html | grep -viE 'justty32.github.io'
-# 5) node 檢查（若動到 js；本子工作流不應動）
-node --check "$d/app.js"
+git diff --stat -- "$d/app.js" "$d/styles.css"   # 互動程式與樣式未被動
+node --check "$d/app.js"                          # 本子工作流不應動到 js，仍檢查一次
 ```
 
-全部通過（缺 id 0、LaTeX 殘留 0、外部資產 0、app.js 差異空）才算該群完成。
+全部通過（缺 id 0、LaTeX 殘留 0、外部資產 0、app.js 差異空）才算該群完成。**掃描關鍵詞前先把 HTML 字元實體反跳脫**（`html.unescape`）——否則被禁的詞寫成 `&#…;` 會同時躲過掃描、卻照樣渲染出來。
 
 ---
 
@@ -90,3 +88,9 @@ node --check "$d/app.js"
 - 確認沒有新增任何外部 URL，也沒有殘留 LaTeX 分隔符。
 - 最後用中文列出「每一頁各做了哪些擴充」的簡短清單。
 ```
+
+## 交接
+
+- 加厚完仍缺互動 → 回 [interactive-study-site](README.md) 走建置契約與派工（[BUILD-WITH-AGENTS](BUILD-WITH-AGENTS.md)）。
+- 全站驗收 → [QUALITY-GATES](QUALITY-GATES.md)；要重新發布 → [GITHUB-PAGES](GITHUB-PAGES.md)。
+- 卡在使用者（試點風格拍板、允許動樣式）→ [WAIT_USER](../../WAIT_USER.md) 一行。

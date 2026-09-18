@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """互動課程 styles.css 正本同步與閘門工具。
 
-背景見 ../SHARED-ASSETS-EVAL.md：本 repo 的 styles.css 分成三個模板家族，
+背景見 ../archive/SHARED-ASSETS-EVAL.md（已封存；裁決在 wf/workflows/decisions.md）：本 repo 的 styles.css 分成三個模板家族，
 其中「A 家族（課綱課）」的成員彼此位元組相同，且都是從同一份 cp 出來的。
 本工具把這個原本靠口頭慣例維持的關係，變成有正本、有腳本、有閘門的流程。
 
@@ -18,7 +18,7 @@
 設計約束（改動本檔前務必讀）：
   * 只用標準函式庫，不新增任何套件（QUALITY-GATES 第 4 節：不新增套件鎖檔）。
   * 一律以二進位模式讀寫，**不得做 CRLF 正規化**。styles.css 的驗收方式是
-    「位元組相同」，BUILD-WITH-CODEX 已把這類檔明文列為換行正規化的例外，
+    「位元組相同」，build-with-agents/codex-notes.md 已把這類檔明文列為換行正規化的例外，
     轉了反而違規。
   * 本工具只管 A 家族。B 家族（深色模式：逆向工程、網路協定）與
     C 家族（IoT 知識群、電力系統）各自客製，刻意不納入管轄。

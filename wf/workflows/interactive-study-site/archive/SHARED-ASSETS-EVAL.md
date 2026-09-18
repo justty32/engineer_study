@@ -1,3 +1,5 @@
+> 封存 2026-09-18，由 `../../decisions.md`（2026-08-27「共用資產抽取」條目）取代：本檔是一次性的唯讀評估報告，裁決（styles.css 正本＋`sync-styles.py --check` 閘門、pages.yml 表驅動；不抽 JS、不部署時共用）已落到 decisions，操作面在 `../build-with-agents/codex-notes.md` 與 `../GITHUB-PAGES.md`。本檔不再維護。
+
 # 共用資產抽取評估（SHARED-ASSETS-EVAL）
 
 ← [工作流入口](README.md)｜[品質關卡](QUALITY-GATES.md)｜[Pages 部署契約](GITHUB-PAGES.md)｜[codex 建課產線](BUILD-WITH-CODEX.md)

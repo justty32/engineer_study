@@ -1,6 +1,6 @@
 name: Deploy GitHub Pages
 
-# 觸發面說明（設計取捨見 wf/workflows/interactive-study-site/SHARED-ASSETS-EVAL.md）：
+# 觸發面說明（設計取捨見 wf/workflows/interactive-study-site/archive/SHARED-ASSETS-EVAL.md）：
 # 這裡刻意使用較寬的萬用路徑，而不是逐課列舉三行。理由是新增課程的頻率遠高於
 # 其他維運動作，逐課列舉每次要改三處且容易漏。副作用是「尚未登記進課程表的
 # 課程目錄」被改動時也會觸發一次部署——該次部署的產出與前一次相同（組站步驟

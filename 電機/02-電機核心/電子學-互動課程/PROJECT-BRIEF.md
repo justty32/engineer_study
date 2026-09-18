@@ -1,6 +1,6 @@
 # PROJECT-BRIEF — 電子學（零基礎互動課）
 
-← 工作流：[interactive-study-site](../../../wf/workflows/interactive-study-site/README.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[principles-first 硬體原理子工作流](../../../wf/workflows/interactive-study-site/PRINCIPLES-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)｜[build-with-codex 產線](../../../wf/workflows/interactive-study-site/BUILD-WITH-CODEX.md)
+← 工作流：[interactive-study-site](../../../wf/workflows/interactive-study-site/README.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[principles-first 硬體原理子工作流](../../../wf/workflows/interactive-study-site/PRINCIPLES-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)｜[build-with-codex 產線](../../../wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md)
 ← 建置契約：[BUILD-SPEC.md](BUILD-SPEC.md)
 
 ## 1. 一句話定位

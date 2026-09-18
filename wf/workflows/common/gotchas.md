@@ -1,15 +1,19 @@
 # 共通踩坑（跨工作流）
 
-← [INDEX](../../INDEX.md)
+[common/README](README.md)｜[INDEX](../../INDEX.md)
 
 不專屬任一工作流、任何人都可能撞到的坑，記/查這裡。某工作流專屬的坑記在該工作流自己的 `gotchas.md`（長出來後在下表加一列導流）。
+
+**記錄門檻**：**第二次撞到**、或使用者說「上次也是這樣」才記；一次性的意外不記。
 
 ## 哪類坑記哪裡
 
 | 坑的性質 | 記/查這裡 |
 |---------|----------|
 | 不專屬任一工作流的共通坑 | **common/gotchas**（本檔）|
+| 整理／拆檔／抽資料檔時的坑 | [tidy/gotchas](../tidy/gotchas.md) |
 
 ---
 
-- （目前無）
+- **PowerShell 寫檔會沿用 UTF-16 / 帶 BOM**：Windows 側工具覆寫既有 `.md` 曾把整檔變成 UTF-16 亂碼（2026-08-26 計算機組織課重做一次）。寫完跑 `file <path>` 確認 UTF-8，不對就 `iconv -f UTF-16LE -t UTF-8` 轉回。
+- **搬 `wf/` 內檔案時 `.claude/commands/` 的連結最容易斷**：指令檔在專案根、工作流在 `wf/`，相對路徑要多一層 `../wf/`；搬完跑 `bash wf/tools/wf-lint.sh wf` 之外再手動點一次根 `.claude/commands/*.md` 的連結（lint 只掃 `wf/`）。

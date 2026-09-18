@@ -1,6 +1,6 @@
 # BUILD-SPEC — 電磁學（零基礎互動課）
 
-← 立案文件：[PROJECT-BRIEF.md](PROJECT-BRIEF.md)｜工作流：[build-with-codex](../../../wf/workflows/interactive-study-site/BUILD-WITH-CODEX.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[principles-first](../../../wf/workflows/interactive-study-site/PRINCIPLES-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)
+← 立案文件：[PROJECT-BRIEF.md](PROJECT-BRIEF.md)｜工作流：[build-with-codex](../../../wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[principles-first](../../../wf/workflows/interactive-study-site/PRINCIPLES-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)
 
 本檔是**建置契約**。冷啟動的 builder 與 verifier 只讀本檔＋PROJECT-BRIEF＋指定的來源筆記就能開工。所有 id、預設值、`select` 的 `value` 清單、數值實例都必須**一字不差**照做（大小寫、連字號、全形半形都不能差）。
 
@@ -1318,7 +1318,7 @@ function selfcheck(){
 
 ## 9. 下游派工切分
 
-每輪同時最多 2 個 job（依 `wf/workflows/interactive-study-site/BUILD-WITH-CODEX.md` 的 token 階梯）。`app.js` 是單一檔，**必須由單一 worker 獨佔寫入**，且要在五個 HTML 包完成、id 凍結之後才動工（或同時動工但以本 spec 為唯一依據，不看對方產出）。**各包的唯一寫入範圍互斥，沒有任何檔案有兩個寫入者。**
+每輪同時最多 2 個 job（依 `wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md` 的 token 階梯）。`app.js` 是單一檔，**必須由單一 worker 獨佔寫入**，且要在五個 HTML 包完成、id 凍結之後才動工（或同時動工但以本 spec 為唯一依據，不看對方產出）。**各包的唯一寫入範圍互斥，沒有任何檔案有兩個寫入者。**
 
 | 包 | 唯一寫入範圍 | 讀取範圍 | 建議順序 |
 | --- | --- | --- | --- |

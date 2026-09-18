@@ -1100,7 +1100,7 @@ function selfcheck(){
 
 ## 9. 下游派工切分
 
-第一輪與第二輪各同時最多 2 個 codex job（依 `wf/workflows/interactive-study-site/BUILD-WITH-CODEX.md`）。`app.js` 是單一檔，**必須由單一 worker 獨佔寫入**，且要在五個 HTML 包全部完成、id 凍結之後才動工（或同時動工但以本 spec 為唯一依據，不看對方產出）。
+第一輪與第二輪各同時最多 2 個 codex job（依 `wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md`）。`app.js` 是單一檔，**必須由單一 worker 獨佔寫入**，且要在五個 HTML 包全部完成、id 凍結之後才動工（或同時動工但以本 spec 為唯一依據，不看對方產出）。
 
 ### 9.1 分包表
 

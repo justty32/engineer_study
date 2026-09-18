@@ -1,90 +1,45 @@
-# GitHub Pages 部署契約
+# publish — 把課程發布到 GitHub Pages
 
-← [工作流入口](README.md)｜[品質關卡](QUALITY-GATES.md)
+[interactive-study-site](README.md)｜[WORKFLOWS](../../WORKFLOWS.md)｜驗收關卡 [QUALITY-GATES](QUALITY-GATES.md)
 
-## 目標結構
+把驗收完的課程掛上 `https://justty32.github.io/engineer_study/`。這一步**只處理發布**，不改內容。部署設定在 `.github/workflows/pages.yml`，中央入口在 `互動學習網站/index.html`。
 
-同一個 Pages 網站提供主題總入口，案例放在穩定的 ASCII 路徑：
+**何時用**：內容已過 [QUALITY-GATES](QUALITY-GATES.md)，要給別人看得到。
+**何時不用**：課程只給自己或本機用；還沒驗收完 → 先驗收。
 
-```text
-/
-  index.html
-  iot-device/
-    index.html
-    styles.css
-    app.js
-  power-systems/
-    index.html
-    styles.css
-    app.js
-  iot-power-pcb/
-    index.html
-    styles.css
-    app.js
-  iot-firmware-rtos/
-    index.html
-    styles.css
-    app.js
-  iot-connectivity/
-    index.html
-    styles.css
-    app.js
-  iot-rf-antenna/
-    index.html
-    styles.css
-    app.js
-  iot-security-production/
-    index.html
-    styles.css
-    app.js
-  iot-hardware-bus/
-    index.html
-    hardware-principles.html
-    gpio-principles.html
-    i2c-principles.html
-    spi-principles.html
-    rs485-principles.html
-    schematic-reading.html
-    circuit-design.html
-    styles.css
-    *.js
-  iot-mcu-firmware/
-    index.html
-    00–06 課程頁
-    名詞與概念字典.html
-    styles.css
-    app.js
-```
+## Done when
 
-原始碼仍留在各知識來源的 `互動網站/` 目錄；GitHub Actions 只在 runner 上組合 `_site/` artifact，不把產出複製回 repo，也不把整個筆記庫當 Pages 根目錄。
+- 每個公開檔案（總入口、各課的 HTML／CSS／JS）都回傳 HTTP 200。
+- 部署頁面沒有外部執行期請求。
+- 實際網址、commit、workflow run 與行動裝置驗證結果寫進該課 `驗收紀錄.md`。
 
-## 初次部署前檢查
+## 契約
 
-1. `origin` 必須是使用者指定的 GitHub repo，且目前分支與預期發布分支一致。
-2. 確認 GitHub CLI 使用正確帳號，repo visibility 符合使用者預期。
-3. 查詢 Pages 是否已有 source、custom domain 或既有 deployment。
-4. 若已有設定、現有網站、custom domain、分支來源或保護規則與本契約衝突，**停止並詢問使用者**，不得覆蓋。
-5. 工作樹只包含本案與使用者已知的變更；commit 與 push 範圍必須可清楚列出。
+<!-- wf-nav -->
+- **只發布成品**：HTML、CSS、JavaScript 與必要資產。`PROJECT-BRIEF.md`、`BUILD-SPEC.md`、`派工計畫.md`、`驗收紀錄.md`、工作流檔一律**不發布**。
+- **單一入口**：整站一個總入口頁（`互動學習網站/index.html`），各課掛在自己的 slug 底下。
+- **slug 表在 `pages.yml`**：組站步驟的 heredoc 課程表，一行一課 `<來源目錄>|<slug>`，由 `while IFS='|' read` 驅動 `copy_course`；slug 用穩定的 ASCII 路徑，別跟著課名改。列出的來源缺檔會以 `::error::` 中止建置，不會靜默跳過。
+- **原始碼留在來源目錄**：GitHub Actions 只在 runner 上把成品組成 `_site/` artifact，不把產物複製回 repo，也不把整個筆記庫當站台根目錄。
+- **不假設部署在網域根目錄**：課內資產一律相對路徑（`./styles.css`、`./app.js`）。跨課連結在組站時依 `replacements` 改寫。
+- **HTML 不連 `.md`**：原始筆記若要公開，用 GitHub blob URL；只作開發來源的就不顯示成 Pages 內的失效相對連結。
+- **Actions 限制**：runner 只用官方 `actions/checkout`、`configure-pages`、`upload-pages-artifact`、`deploy-pages`；不執行 `npm install`、不抓圖片、不建置框架，只做複製與組裝。觸發條件是萬用路徑且只列 `html/css/js`（改規劃用 Markdown 不觸發）；同一分支有 concurrency cancellation，不會重複部署。本地端不安裝任何套件。
 
-## Actions 限制
+| 新增一門課要動 | 動作 |
+|---------------|------|
+| slug 表 | `pages.yml` 課程表加一行 `<來源目錄>|<slug>` |
+| 觸發路徑 | `on.push.paths` 已是萬用路徑，通常不必動；來源目錄若在新的頂層資料夾才要加 |
+| 跨課連結改寫 | 該課若用 `../../<其他課>/互動課程/` 形式連別課，在 Python `replacements` 對應 slug 下加一條「來源相對路徑 → `../<slug>/`」（例：機器人四門課的 `../../機器人數學基礎/互動課程/` → `../robot-math/`）|
+| 總入口 | `互動學習網站/index.html` 加一個連到新 slug 的入口；來源主題 README 加網站入口 |
 
-- 本地端不安裝任何套件；只推送一次精簡 commit。
-- GitHub runner 使用官方 `actions/checkout`、`actions/configure-pages`、`actions/upload-pages-artifact`、`actions/deploy-pages`。
-- 組合步驟只複製每個案例必要的 HTML、CSS、JavaScript 與總入口檔案；規劃 Markdown 不發布。
-- Action 不執行 npm install、不抓圖片、不建置框架。
-- 只在網站來源、總入口或 Pages workflow 變更時觸發；同一分支使用 concurrency cancellation，避免重複部署。
+## 流程
 
-## URL 與相對路徑
+1. **發布前確認**（不可自作主張）：`origin` 是使用者指定的 GitHub repo、分支與預期發布分支一致、GitHub CLI 帳號與 repo visibility 正確、Pages 是否已有 source／custom domain／既有 deployment。**任何一項與現況衝突就停下來問**，不得覆蓋。守鐵律 3（授權來源）。
+2. 確認工作樹只含本案與使用者已知的變更，commit 與 push 範圍列得出來；push 等使用者確認。
+3. 部署，等 workflow 與 Pages deployment 跑完，**不重複觸發**。
+4. **驗證**：逐一請求總入口與各課的 HTML／CSS／JS，確認全部 HTTP 200；檢查沒有外部請求；在行動寬度（約 `390px`）確認模組導航、數字輸入、狀態機、重設與進度保存可用。
+5. 把網址、commit、workflow run 與驗證結果寫進 `驗收紀錄.md`；跑不了的（真人實機觸控）記 [WAIT_USER](../../WAIT_USER.md)。
 
-- 網站不得假設部署於 domain root；案例內部資產使用相對路徑，例如 `./styles.css`、`./app.js`。
-- 總入口使用相對連結；IoT 路徑包含 `./iot-device/`、`./iot-power-pcb/`、`./iot-firmware-rtos/`、`./iot-connectivity/`、`./iot-rf-antenna/`、`./iot-security-production/`、`./iot-hardware-bus/` 與 `./iot-mcu-firmware/`；機器人叢集為 `./robot-math/`（數學先修）、`./robot-arm-kinematics/`、`./robot-motion-planning/`、`./robot-vision/`、`./robot-learning/`。
-- **新增課程的部署步驟**（在 `.github/workflows/pages.yml`）：① `on.push.paths` 加該課來源 `*.html/*.css/*.js`；② 組站步驟加 `copy_course '<來源目錄>' '<slug>'`；③ 若該課有 `../../<其他課>/互動課程/` 形式的跨課相對連結，在 Python `replacements` 對應 slug 下加改寫規則（來源相對路徑 → 部署 `../<slug>/`）。例：機器人四門課連到先修課的 `../../機器人數學基礎/互動課程/` 改寫成 `../robot-math/`。
-- 原始筆記的 repo 連結若要公開，使用 GitHub blob URL；若只作開發來源，則不顯示成 Pages 內的失效相對連結。
+## 交接
 
-## 部署驗證
-
-1. 等待 workflow 與 Pages deployment 完成，不重複觸發。
-2. 檢查總入口、每個案例、CSS、JavaScript 的 HTTP 狀態。
-3. 確認部署頁面沒有外部執行期請求。
-4. 在手機實機或既有行動瀏覽器驗證 `390px` 左右寬度：模組導航、數字輸入、狀態機、重設與進度保存。
-5. 將實際 URL、commit、workflow run 與手機驗證結果寫入各案 `驗收紀錄.md`。
+- 發布後才發現內容要補 → [ENRICH-EXISTING](ENRICH-EXISTING.md)（只加厚文字）或回 [interactive-study-site](README.md)。
+- 部署設定與帳號權限要使用者動手 → [WAIT_USER](../../WAIT_USER.md) 一行；為什麼 `pages.yml` 改成表驅動、樣式為什麼不部署時共用 → [decisions](../decisions.md)。

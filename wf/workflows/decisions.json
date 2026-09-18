@@ -1,0 +1,85 @@
+{
+ "contract": "wf-table/1",
+ "source": "decisions.md",
+ "extracted": "2026-09-18",
+ "columns": [
+  "date",
+  "decision",
+  "rejected",
+  "premise"
+ ],
+ "rows": [
+  {
+   "date": "2026-09-18",
+   "decision": "interactive-study-site 的 `BUILD-WITH-CODEX.md` 改名 `BUILD-WITH-AGENTS.md`，通用層採上游結構，codex／專案固定項拆到 `build-with-agents/codex-notes.md`；`SHARED-ASSETS-EVAL.md`、`AGENT-TEAM.md` 封存進 `interactive-study-site/archive/`",
+   "rejected": "整包覆蓋成上游 study-site（會丟掉 codex 踩雷、styles 正本閘門、pages.yml 課程表格式等專案知識）；保留 BUILD-WITH-CODEX 原檔（9.4 KB 超標、名稱綁死 codex，而現行預設是 Claude 子 agent）",
+   "premise": "上游 kernel v0.5；本專案作者層預設 Claude Opus 5 子 agent，codex 為可選"
+  },
+  {
+   "date": "2026-09-18",
+   "decision": "升級 kernel v0.5 時 `inbox/` 與 `tools/` 都留在 `wf/` 內，不搬到專案根",
+   "rejected": "上游標準是 `inbox/` 放根當對外介面；但本庫根目錄是筆記領域資料夾，多一個 `inbox/` 會混進內容樹；腳本 root 由 `<script>/../inbox` 推導，留在 `wf/` 不需改腳本",
+   "premise": "沒有外部專案的 agent 需要「只知專案根」就能投遞；有的話改成根 `inbox/` 並在 UPSTREAM 更新"
+  },
+  {
+   "date": "2026-09-18",
+   "decision": "lint 只對 `wf/`＋根入口跑 `--strict`；整庫只看 BROKEN",
+   "rejected": "整庫 `--strict` 會把筆記裡的長表格全報 BIGLIST（筆記是給人讀的，不該抽資料檔）；完全不掃整庫又會漏掉筆記間的死連結",
+   "premise": "筆記正文不採 `wf-table/1` 資料檔契約"
+  },
+  {
+   "date": "2026-09-18",
+   "decision": "模型陣容：頂層＝Claude Opus 5（指揮／彙整／決策）；工人＝Opus 5（普通任務）／Sonnet 5（簡單任務）；codex 產線保留為可選",
+   "rejected": "全用 codex：額度大但錯字、簡體字與算術錯需獨立驗收，指揮成本高；全用 Opus：品質穩但 token 貴，簡單任務浪費",
+   "premise": "三個模型的價格與速度比維持現況；變了重看 [team-model](team-model.md) 分級表"
+  },
+  {
+   "date": "2026-09-18",
+   "decision": "teaching flavor 用本專案版 `interactive-study-site/`，只逐段吸回上游新增，不整包覆蓋",
+   "rejected": "整包覆蓋上游 study-site：會丟掉 codex 產線、硬體原理剖面、styles 正本閘門等本專案獨有做法（上游正是從本專案回抽的）",
+   "premise": "上游 teaching 沒有長出本專案沒有、且更好的整套流程"
+  },
+  {
+   "date": "2026-08-28",
+   "decision": "建課產線 `BUILD-SPEC.md` 不拆檔，參考線例外放寬到 1400 行（其他 md 1200）",
+   "rejected": "硬拆成多檔：規格要鎖死每個 widget，行數與課程規模成正比，拆開會讓逐章行號表失效、下游 sed 抽節斷掉",
+   "premise": "章節作者只讀行號表指定的段落；規格仍是單一契約"
+  },
+  {
+   "date": "2026-08-27",
+   "decision": "課程正文字數計法＝**漢字＋全形標點**；spec 與驗收同一計法，短少 2% 以內不回派",
+   "rejected": "含半形英數／空白的計法（各包會因程式識別字與英文術語多寡厚薄不均，且與 spec 門檻對不上）",
+   "premise": "各包門檻在派工前寫進 BUILD-SPEC"
+  },
+  {
+   "date": "2026-08-27",
+   "decision": "共用資產：採「建置時複製」——`styles.css` 指定正本 `專題/機器人運動學/互動課程/styles.css`，`tools/sync-styles.py --check` 作驗收閘門，只管 A 家族（課綱課）；`pages.yml` 改表驅動（課程表一行一課＋萬用觸發路徑）；**不抽 JS、不部署時共用**",
+   "rejected": "部署時共用（破壞「所有資產在本目錄」的離線承諾、pages.yml 變長、單點故障 22 門課同時壞）；抽 JS（可抽取只約 2%，字典搜尋已漂移成三種語意，統一是行為變更要 13 門課重驗）；併入 4 門「同家族已換色」課（會改既有配色，先不併）",
+   "premise": "重評方案 3 的觸發：自我檢核框架逐字複本達 5 門已完成課，或同一 JS 缺陷要在 3 門以上重複修補"
+  },
+  {
+   "date": "2026-08-09",
+   "decision": "工作流採非侵入式佈局：專案根只留 `AGENTS.md`、`CLAUDE.md`、`.claude/commands/`，其餘全收 `wf/`",
+   "rejected": "標準佈局把 `WORKFLOWS.md`、`INDEX.md`、`workflows/` 攤在根：與十幾個領域資料夾混在一起，筆記庫頂層失焦",
+   "premise": "Claude Code 只讀根的 `.claude/`（所以那層留根）；工具不讀 `AGENTS.md` 就用轉址檔"
+  },
+  {
+   "date": "2026-08",
+   "decision": "信號與系統課譯名：convolution 一律「摺積」、aliasing 一律「混疊」；與 `電機/中英名詞對照表-2.md` 的「卷積」是已知不一致，本課不跟隨也不回頭改，掃描把「卷積／捲積」列為錯字項（字典卡與 index 用語說明各允許明碼引述 1 處）",
+   "rejected": "改對照表跟隨課程（超出該課範圍）；課程跟隨對照表（「卷積」非台灣慣用）",
+   "premise": "對照表若日後統一改「摺積」，掃描項可撤"
+  },
+  {
+   "date": "2026-06-20",
+   "decision": "名詞對照表：單科 <100 行併入領域共用檔（每科一節）；共用檔 >500 行切編號分檔並保留 `中英名詞對照表.md` 當總索引；各科筆記直連所屬分檔小節",
+   "rejected": "每科一檔：零碎小檔太多難導航；單一大檔不分：>500 行後編輯與連結錨點都難維護",
+   "premise": "門檻 100／500 行；分檔按階段分裝（電機 -2～-4），數理基礎併入 `共通基礎/` 後 -1 不再存在"
+  },
+  {
+   "date": "2026-05-27",
+   "decision": "筆記一律繁體中文、純文字不放圖、公式用 LaTeX、UTF-8",
+   "rejected": "英文或簡中：擁有者明確要繁中；插圖或生成圖：目標是先建立初步認識而非完整參考，圖片維護成本高且 agent 產圖品質不穩",
+   "premise": "擁有者的明確指示；改了要改 [PROJECT-GUIDE](../PROJECT-GUIDE.md) 硬性要求與 AGENTS 鐵律 1"
+  }
+ ]
+}
