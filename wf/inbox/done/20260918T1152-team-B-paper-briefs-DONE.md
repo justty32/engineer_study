@@ -25,7 +25,6 @@ reply-to: 不需回信
 
 ## 產出（檔案路徑 / commit / 分支）
 
-<!-- wf-nav -->
 - commit `578aabe` on main（未 push）：18 檔、+8332/−23。
 - 新檔：`專題/論文速覽/互動網站/{evolution-program-synthesis,agent-skills-cost-decoding,agent-loop-workflow-memory,nesy-binary-worldmodel-ndea}.html`、`data/`（SCHEMA.md、inline_deck.py、make_page.py、validate_deck.py、5 個 json）。
 - 改檔：`index.html`、`app.js`、`README.md`（站內）、`互動學習網站/index.html`、根 `README.md`。
