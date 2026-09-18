@@ -1,0 +1,78 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 編碼器與速度估測｜馬達驅動與控制</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・位置是數到的，速度是兩次位置算出的</p>
+<h1>編碼器與速度估測：低速數時間，高速數脈衝</h1>
+<p class="lead">1000 線編碼器在 300.000000 rpm、1.000000 ms 內只有 20.000000 個計數；M 法因此有 5.000000 % 誤差，並形成 4.934802 N·m 的轉矩命令跳動。這章比較 M 法與 T 法，找到 1500.000000 rpm 的交叉速度。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="09-SVPWM扇區與作用時間.html">09 SVPWM 扇區與作用時間</a>如何更新開關命令。<strong>前置：</strong>見〈暫存器、計數器與記憶體〉<a href="../../02-電機核心/邏輯設計-互動課程/12-暫存器計數器與記憶體.html">邏輯設計的計數器</a>，先認得邊緣與計數器。</p>
+
+<h2>痛點：編碼器只回報格子，控制器怎麼知道轉得多快</h2>
+<p>增量編碼器（incremental encoder）沒有直接輸出 rpm。它只讓 A、B 兩相在刻線通過時改變高低狀態，控制器必須從有限的整數計數或有限的計時器刻度推回速度。轉得慢時，一個固定視窗裡可能連一格都沒有；轉得快時，相鄰邊緣又近到只剩很少計時器刻度。</p>
+<p>因此問題不是「編碼器準不準」一句話能回答，而是要分清角度解析度、M 法的計數量化、T 法的時間量化，以及估測結果進入速度迴路後造成的轉矩命令跳動。</p>
+
+<h2>白話直覺：固定時間數車，或固定兩車量時間</h2>
+<p>可以暫時想成站在路邊，方法一是在固定一分鐘內數通過幾輛車，方法二是量相鄰兩輛車隔多久；比喻到此為止。真實機制是 A、B 正交（quadrature）波形相差 90°，B 領先或落後 A 決定旋轉方向；四倍頻（4× decoding）同時數 A、B 的上升與下降邊緣，所以 N 線得到 4N 計數/圈。Z 相每圈只出現一次，用來校正圈內索引。</p>
+<p>編碼器由隔離電源供電並共用接收器參考點，A、B 輸入比較器形成數位邊緣；轉軸帶動刻線，邊緣進入計數器。位置回授取自累積計數，速度回授取自計數差或邊緣時間。邏輯分析儀能直接看到兩相次序，韌體變數則顯示量化後的階梯速度。</p>
+<p>M 法（脈衝計數法）固定 T<sub>s</sub> 後數 c；T 法（週期量測法）固定相鄰邊緣，再數計時器 tick。前者在高速有很多計數，後者在低速有很多 tick，兩者的強項恰好相反。</p>
+<p>方向也不能事後猜測：A 先於 B 與 B 先於 A 必須對應相反的計數正負。接線互換會讓位置與速度符號一起反轉；若轉矩命令方向未同步修正，閉迴路就會把偏差越推越大。因此第一次啟動要先用低速手轉核對方向，再允許馬達帶力運轉。</p>
+<p class="note">來源：P3 下 §10。</p>
+
+<h2>推導：一個整數格如何變成速度誤差</h2>
+<p>一個光柵週期依序出現 A 上、B 上、A 下、B 下四個邊緣，因此每圈計數 cpr = 4N，角度解析度為 360° / (4N)。若規格寫 1000 線，控制器實際每圈收到 4000 個計數，兩者不能混用。</p>
+<p>M 法在 T<sub>s</sub> 內的理想計數 c = 4N × (n / 60) × T<sub>s</sub>，所以 n = c × 60 / (4N × T<sub>s</sub>)。c 只能是整數，差一個計數就差 Δn = 60 / (4N × T<sub>s</sub>) rpm，相對誤差採 1 / c。T 法的邊緣間隔 t<sub>edge</sub> = 60 / (4N × n)，計時器刻度數 ticks = f<sub>clk</sub> × t<sub>edge</sub>，差一個 tick 的相對誤差採 1 / ticks。</p>
+<p>令 c = ticks，可得交叉速度 n<sub>cross</sub> = 60 × √(f<sub>clk</sub> / T<sub>s</sub>) / (4N)。低於它選 T 法，高於它選 M 法。M/T 混合法（combined M/T method）會在兩者之間切換或合併資訊，本章只點名。</p>
+<p>速度量化還會走進控制器。一步角速度 Δω = 2π / (4N × T<sub>s</sub>)，乘上速度迴路比例增益 K<sub>p</sub>，得到 ΔT = K<sub>p</sub> × Δω。本課用的是線性教學模型，真實驅動器不完全如此；假設刻線等距、沒有邊緣抖動，且 T<sub>s</sub> 與邊緣不同步造成的誤差取一個計數。</p>
+<p>M 法的不確定性來自「視窗邊界前後是否多收一個邊緣」，T 法則來自「邊緣時間落在哪個計時器刻度」。這兩種誤差雖然都是整數量化，卻分別被計數量與時間刻度量縮放，所以速度改變時優勢會交換。交叉速度是選法的分界，不是馬達本體的性能上限。</p>
+
+<h2>數值實例：1000 線、1.000000 ms、300.000000 rpm</h2>
+<p>令 N = 1000 線、T<sub>s</sub> = 1.000000 ms、n = 300.000000 rpm（每分鐘轉數）、f<sub>clk</sub> = 10.000000 MHz，並沿用 K<sub>p</sub> = 3.141593。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>計數/圈</td><td>4 × 1000</td><td><strong>4000</strong></td></tr>
+<tr><td>角度解析度</td><td>360 / 4000</td><td><strong>0.090000°</strong></td></tr>
+<tr><td>T<sub>s</sub> 內計數</td><td>4000 × 5 × 0.001</td><td><strong>20.000000</strong></td></tr>
+<tr><td>M 法量化步距</td><td>60 / (4000 × 0.001)</td><td><strong>15.000000 rpm</strong></td></tr>
+<tr><td>M 法相對誤差</td><td>1 / 20</td><td><strong>5.000000 %</strong></td></tr>
+<tr><td>邊緣間隔</td><td>60 / (4000 × 300)</td><td><strong>50.000000 µs</strong></td></tr>
+<tr><td>T 法 tick 數</td><td>10<sup>7</sup> × 50 × 10<sup>−6</sup></td><td><strong>500.000000</strong></td></tr>
+<tr><td>T 法相對誤差</td><td>1 / 500</td><td><strong>0.200000 %</strong></td></tr>
+<tr><td>交叉速度</td><td>60 × √(10<sup>7</sup> / 0.001) / 4000</td><td><strong>1500.000000 rpm</strong></td></tr>
+<tr><td>轉矩命令跳動</td><td>3.141593 × 2π / (4000 × 0.001)</td><td><strong>4.934802 N·m</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>300.000000 rpm 時每 1.000000 ms 有 20.000000 計數，T 法誤差較小；1500.000000 rpm 時兩法都是 1.000000 %；3000.000000 rpm 時 M 法為 0.500000 %、T 法為 2.000000 %，應改用 M 法。若 n = 10.000000 rpm，視窗內只有 0.666667 計數，M 法會在零與一之間跳動。</p>
+<p>把線數降到 100，M 法步距變成 150.000000 rpm，誤差 50.000000 %，轉矩命令跳動達 49.348022 N·m；升到 10000 線，步距縮成 1.500000 rpm，跳動降為 0.493480 N·m。解析度能改善量化，但不能消除計算延遲。</p>
+
+<section class="workspace"><h2>自由實驗：替目前速度選 M 法或 T 法</h2>
+<p>選一顆增量編碼器，調整速度取樣週期、實際轉速與計時器時脈。比較固定視窗的計數誤差與相鄰邊緣的計時誤差，再看一格速度如何進入轉矩命令。</p>
+<div class="controls">
+<label for="en-n">編碼器線數 N<select id="en-n"><option value="100">100 線</option><option value="500">500 線</option><option value="1000" selected>1000 線</option><option value="2500">2500 線</option><option value="5000">5000 線</option><option value="10000">10000 線</option></select></label>
+<label for="en-ts">速度取樣週期 T_s（ms）<input id="en-ts" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+<label for="en-rpm">實際轉速 n（rpm）<input id="en-rpm" type="range" min="1" max="6000" step="1" value="300"></label>
+<label for="en-fclk">計時器時脈 f_clk（MHz）<input id="en-fclk" type="range" min="1" max="100" step="1" value="10"></label>
+</div>
+<div id="encoder-output" class="output" aria-live="polite">目前模式：N = 1000 線。<table><thead><tr><th>輸出</th><th>預設值</th></tr></thead><tbody><tr><td>計數/圈</td><td>4000</td></tr><tr><td>角度解析度</td><td>0.090000°</td></tr><tr><td>取樣週期內計數</td><td>20.000000</td></tr><tr><td>M 法量化步距</td><td>15.000000 rpm</td></tr><tr><td>M 法相對誤差</td><td>5.000000 %</td></tr><tr><td>邊緣間隔</td><td>50.000000 µs</td></tr><tr><td>T 法 tick 數</td><td>500.000000</td></tr><tr><td>T 法相對誤差</td><td>0.200000 %</td></tr><tr><td>交叉速度</td><td>1500.000000 rpm</td></tr><tr><td>建議</td><td>T 法</td></tr><tr><td>轉矩命令跳動</td><td>4.934802 N·m</td></tr></tbody></table><strong>判讀：低於交叉速度 1500.000000 rpm，T 法（量邊緣間隔）誤差 0.200000 % 比 M 法 5.000000 % 小。</strong>1 個計數的量化經速度迴路 K_p = 3.141593 變成 4.934802 N·m 的轉矩命令跳動；抖動已超過 1.000000 N·m，要加濾波或觀測器，代價是延遲。為什麼：低速時固定視窗只有少量整數計數，但兩個邊緣之間反而累積很多計時器刻度。邊界提醒：取樣週期內平均不到 1 個脈衝時，M 法會讀到 0 與 1 交替；n = 1 rpm 是極低速，應優先看 T 法；N = 100 線時線數太少，M 法在任何實用速度下都不夠；T_s ≥ 5.000000 ms 時，延遲已接近速度迴路週期的量級，會吃掉相位裕度。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>線數 N 與四倍頻後的 4N 計數差四倍；規格書常列線數，韌體公式使用的是每圈計數。</li>
+<li>角度解析度描述位置格子的大小，速度量化誤差描述有限時間內的差分，兩者不是同一個數字。</li>
+<li>M 法在低速差、T 法在高速差；選擇依交叉速度與計時器時脈而變，沒有一法永遠較好。</li>
+<li>霍爾感測器也能估速度，但 60° 一格只相當於 N = 1.5 線，適合六步換相，不等於高解析伺服回授。</li>
+<li>本章只算量化；刻線偏心、電氣雜訊、邊緣抖動與機械鬆動都會另外增加誤差。</li>
+<li>加長 T<sub>s</sub> 能累積更多計數，卻同時增加回授延遲；量化變小不代表控制表現必然改善。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>用邏輯分析儀同時抓 A、B 兩相；相位次序決定方向，邊緣頻率乘 60 / (4N) 得到 rpm。再把驅動器的速度回授變數送到除錯輸出或示波器，低速時會看到 M 法特有的階梯跳動。</p>
+<p><strong>能證明什麼。</strong>邊緣數與視窗長度可驗證 15.000000 rpm 的 M 法步距；計時器 tick 數可驗證 T 法在 300.000000 rpm 時只有 0.200000 % 的量化誤差，也能實測兩法交叉位置。</p>
+<p><strong>不能證明什麼。</strong>這些量測不能證明刻線本身等距，也不能把軸的真實速度波動與編碼器誤差完全分開；要用更高階的參考編碼器同軸比對。</p>
+<p>觀察階梯時要同時保留原始計數差與估測速度：若計數差已呈現整數跳動，速度跳階可歸因於 M 法量化；若原始邊緣間隔本身也不穩定，就不能只怪估測公式。這組對照能避免把機械振動當成純量化現象。</p>
+
+<h2>連到哪門課</h2>
+<p>四倍頻計數器與方向判定見<a href="../../02-電機核心/邏輯設計-互動課程/12-暫存器計數器與記憶體.html">邏輯設計的暫存器、計數器與記憶體</a>；取樣週期為何限制可見變化見<a href="../../02-電機核心/信號與系統-互動課程/12-取樣與混疊.html">信號與系統的取樣與混疊</a>。絕對編碼器（absolute encoder）與解角器（resolver）能提供不同形式的位置資訊，本章不展開。</p>
+<p><strong>韌體那一端：</strong>MCU 的正交解碼硬體（quadrature encoder interface, QEI）自動完成四倍頻與方向判定；M 法讀計數差，T 法讀輸入捕捉暫存器。</p>
+<nav class="pager" aria-label="章節導覽"><a href="09-SVPWM扇區與作用時間.html">← 上一頁：SVPWM 扇區與作用時間</a><a href="11-再生煞車與能量.html">下一頁：再生煞車與能量 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 編碼器與速度估測</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

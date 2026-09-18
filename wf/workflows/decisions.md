@@ -13,7 +13,7 @@
 
 ## 記錄
 
-記錄表已抽到 [decisions.json](decisions.json)（17 列；讀寫走資料檔契約，見 [common/data-files](common/data-files.md)）。
+記錄表已抽到 [decisions.json](decisions.json)（20 列；讀寫走資料檔契約，見 [common/data-files](common/data-files.md)）。
 
 | 欄位 | 內容 |
 |------|------|
@@ -22,6 +22,6 @@
 | `rejected` | 未選方案與原因 |
 | `premise` | 前提（變了就重看） |
 
-目前 17 列：專案級 9（繁中純文字、對照表分檔門檻、非侵入式佈局、kernel v0.5 升級的 inbox／lint／模型陣容／teaching 四項取捨、lint 範圍、inbox 五通道）＋互動課程建課裁決 8（BUILD-WITH-AGENTS 改名與封存、BUILD-SPEC 不拆、字數計法、共用資產建置時複製、摺積／混疊譯名、電機機械譯名、通訊課「鍵控」與 μ／µ 分工、gpt-sol 納入作者陣容）。
+目前 20 列：專案級 9（繁中純文字、對照表分檔門檻、非侵入式佈局、kernel v0.5 升級的 inbox／lint／模型陣容／teaching 四項取捨、lint 範圍、inbox 五通道）＋互動課程建課裁決 11（BUILD-WITH-AGENTS 改名與封存、BUILD-SPEC 不拆、字數計法、共用資產建置時複製、摺積／混疊譯名、電機機械譯名、通訊課「鍵控」與 μ／µ 分工、gpt-sol 納入作者陣容、電力電子「逆變器」、數位通訊「摺積碼／交錯」、馬達驅動「純量控制」）。
 
 > 條目多到資料檔難查（或要按主題分庫）就升級成 `decisions/` 資料夾（照 [STRUCTURE](../STRUCTURE.md)）。

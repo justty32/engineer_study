@@ -1,0 +1,79 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 dq 電壓方程與弱磁｜馬達驅動與控制</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・電壓有上限，高速要用電流換餘裕</p>
+<h1>dq 電壓方程與弱磁：反電動勢逼近上限後，負 i<sub>d</sub> 如何把基速推高</h1>
+<p class="lead">300 V 直流鏈的空間向量脈寬調變（space-vector PWM, SVPWM）線性區上限是 173.205081 V；本章預設在 3000 rpm、i<sub>q</sub> = 10 A 時需要 133.058855 V，尚有餘裕。若速度升到 6000 rpm，需求變成 261.209420 V；注入 −10 A 的 i<sub>d</sub> 可把基速由 3939.828277 推到 4837.738908 rpm，但仍要付出額外電流與銅損。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="07-Clarke與Park轉換.html">07 Clarke 與 Park 轉換</a>的 d、q 軸與 i<sub>d</sub>、i<sub>q</sub>。<strong>前置：</strong>見〈直流機轉矩轉速線〉<a href="../../02-電機核心/電機機械-互動課程/06-直流機轉矩轉速線.html">電機機械的直流機轉矩轉速線</a>，先理解反電動勢隨速度上升，以及弱磁升速的取捨。</p>
+
+<h2>痛點：電流命令沒有變，馬達為什麼高速時突然推不動</h2>
+<p>低速時 PI 多加一點電壓，就能把 i<sub>q</sub> 拉回命令；高速時即使數值繼續加，逆變器也不可能輸出超過直流鏈所容許的電壓向量。這不是 PI 不努力，而是可用電壓已經碰到幾何上限。</p>
+<p>更反直覺的是，控制器會故意加入不直接產生轉矩的負 i<sub>d</sub>。它看似浪費電流，實際上是在削弱定子所見的總磁鏈，降低隨速度上升的反電動勢，換取繼續加速的電壓餘裕。代價是電流向量變長、銅損增加，而且電流上限迫使 i<sub>q</sub> 讓出空間。</p>
+
+<h2>白話直覺：高速時先替電壓上限騰出空間</h2>
+<p>可以暫時把 173.205081 V 想成固定大小的行李箱，電阻壓降、交叉耦合與反電動勢都要塞進去；比喻到此為止，真實機制是 dq 電壓向量必須落在 SVPWM 線性區的圓內，圓半徑由 V<sub>dc</sub> / √3 決定。</p>
+<p>沿實體因果走一次。直流鏈相對負端供電，逆變器切換導通路徑，使三相電流流經定子繞組並建立磁場；i<sub>q</sub> 與永磁磁場作用產生轉矩，旋轉磁場同時形成反電動勢。電流感測器把三相值回授，控制器轉成 dq 後，PI 輸出 v<sub>d</sub>、v<sub>q</sub>，再受電壓極限夾住。示波輸出可看到 |v| 是否貼住上限，直流電壓表則確認 V<sub>dc</sub>。</p>
+<p>去耦（decoupling）以前饋方式抵銷 ±ω<sub>e</sub> L i 的交叉項；弱磁（field weakening）則用負 i<sub>d</sub> 降低 L<sub>d</sub> i<sub>d</sub> + ψ<sub>f</sub>。兩者都修改 dq 電壓需求，但前者為了讓兩軸互不干擾，後者為了在高速留出電壓。</p>
+<p class="note">來源：P3 上 §2.3–2.5、§5.2；P3 下 §7、§9.2、§9.3。</p>
+
+<h2>推導：旋轉座標多出的耦合項，如何決定基速</h2>
+<p><strong>（a）穩態方程。</strong>把 v = R i + L di/dt + E 寫進旋轉座標，座標本身旋轉會多出 ω<sub>e</sub> 乘磁鏈的項。穩態令電流導數為 0，得到 v<sub>d</sub> = R × i<sub>d</sub> − ω<sub>e</sub> × L<sub>q</sub> × i<sub>q</sub>，v<sub>q</sub> = R × i<sub>q</sub> + ω<sub>e</sub> × (L<sub>d</sub> × i<sub>d</sub> + ψ<sub>f</sub>)，電壓單位 V。</p>
+<p><strong>（b）速度把電壓吃掉。</strong>ω<sub>e</sub> = p × ω<sub>m</sub>，單位 rad/s。i<sub>d</sub> = 0 時，v<sub>q</sub> 高速近似 ω<sub>e</sub> × ψ<sub>f</sub>；它隨速度線性增加，而 |v| = √(v<sub>d</sub>² + v<sub>q</sub>²) 必須 ≤ V<sub>dc</sub> / √3。</p>
+<p><strong>（c）基速由二次式求出。</strong>把極限平方後寫成 aω<sub>e</sub>² + bω<sub>e</sub> + c = 0，其中 a = (L i<sub>q</sub>)² + (L i<sub>d</sub> + ψ<sub>f</sub>)²，b = 2 × [−R i<sub>d</sub> L i<sub>q</sub> + R i<sub>q</sub> (L i<sub>d</sub> + ψ<sub>f</sub>)]，c = R²(i<sub>d</sub>² + i<sub>q</sub>²) − V<sub>dc</sub>² / 3。取正根 ω<sub>e</sub> = (−b + √(b² − 4ac)) / (2a)，再換成 rpm。</p>
+<p><strong>（d）弱磁的交換。</strong>負 i<sub>d</sub> 使 L i<sub>d</sub> + ψ<sub>f</sub> 變小，a 下降，基速上升；但 |i| = √(i<sub>d</sub>² + i<sub>q</sub>²) 不能超過 20 A，故高速時必須降低 i<sub>q</sub>，由定轉矩區進入定功率區。本課用的是線性教學模型，真實驅動器不完全如此；假設穩態、表面式 L<sub>d</sub> = L<sub>q</sub> = 2 mH，忽略鐵損、飽和與切換非理想。</p>
+<p><strong>（e）電流與功率的代價。</strong>表面式模型的 T = 1.5 × p × ψ<sub>f</sub> × i<sub>q</sub> = 0.6 × i<sub>q</sub>，所以負 i<sub>d</sub> 不直接增加轉矩；機械功率 P<sub>m</sub> = T × ω<sub>m</sub>，銅損則為 1.5 × R × (i<sub>d</sub>² + i<sub>q</sub>²)。當總電流碰到 20 A，繼續加深弱磁就必須減少 i<sub>q</sub>，轉矩下降而速度上升，這才形成近似定功率區。</p>
+<p><strong>電壓圓與電流圓要同時滿足。</strong>弱磁把電壓需求往圓內拉，卻把電流向量往極限推；所以控制器不能只看電壓是否飽和。若電流已到上限，更多負 i<sub>d</sub> 必須由較少 i<sub>q</sub> 換來，轉矩隨之下降。這個取捨也說明基速以上只能近似維持功率，不代表速度能無限提高。</p>
+
+<h2>數值實例：3000 rpm 時電壓圓還剩多少</h2>
+<p>取 n = 3000 rpm、i<sub>q</sub> = 10 A、i<sub>d</sub> = 0、V<sub>dc</sub> = 300 V，與下方實驗預設值完全相同；R = 0.5 Ω、ψ<sub>f</sub> = 0.1 Wb、p = 4。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>ω<sub>m</sub></td><td>3000 × 2π / 60</td><td><strong>314.159265 rad/s</strong></td></tr>
+<tr><td>ω<sub>e</sub></td><td>4 × 314.159265</td><td><strong>1256.637061 rad/s（200.000000 Hz）</strong></td></tr>
+<tr><td>反電動勢 ω<sub>e</sub> ψ<sub>f</sub></td><td>1256.637061 × 0.1</td><td><strong>125.663706 V</strong></td></tr>
+<tr><td>交叉項 ω<sub>e</sub> L i<sub>q</sub></td><td>1256.637061 × 0.002 × 10</td><td><strong>25.132741 V</strong></td></tr>
+<tr><td>v<sub>d</sub></td><td>0 − 25.132741</td><td><strong>−25.132741 V</strong></td></tr>
+<tr><td>v<sub>q</sub></td><td>0.5 × 10 + 125.663706</td><td><strong>130.663706 V</strong></td></tr>
+<tr><td>電壓向量長度</td><td>√(25.132741² + 130.663706²)</td><td><strong>133.058855 V</strong></td></tr>
+<tr><td>上限 V<sub>dc</sub> / √3</td><td>300 / 1.732051</td><td><strong>173.205081 V（已用 76.821566 %）</strong></td></tr>
+<tr><td>轉矩</td><td>1.5 × 4 × 0.1 × 10</td><td><strong>6.000000 N·m</strong></td></tr>
+<tr><td>機械功率</td><td>6 × 314.159265</td><td><strong>1884.955592 W</strong></td></tr>
+<tr><td>銅損</td><td>1.5 × 0.5 × 100</td><td><strong>75.000000 W</strong></td></tr>
+<tr><td>電流向量長度</td><td>√(0 + 100)</td><td><strong>10.000000 A（上限 20）</strong></td></tr>
+<tr><td>基速</td><td>二次式</td><td><strong>3939.828277 rpm</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>200.000000 Hz 的電氣旋轉使反電動勢達 125.663706 V，遠大於 5.000000 V 的 R i<sub>q</sub>；因此高速限制主要來自反電動勢，而非電阻壓降。若 V<sub>dc</sub> 降到 48 V，上限僅 27.712813 V，3000 rpm 已用 480.134784 %，基速只有 533.565510 rpm。</p>
+<p><strong>邊界對照。</strong>6000 rpm、i<sub>d</sub> = 0 時 |v| = 261.209420 V，已飽和；i<sub>d</sub> = −10 A 時仍需 213.344305 V，但基速升到 4837.738908 rpm。若 i<sub>d</sub> = −20 A 且 i<sub>q</sub> = 10 A，|i| 超過 20 A；零速時 v<sub>q</sub> 只剩 5.000000 V，轉矩仍是 6 N·m。</p>
+<p>同一電流命令若把 V<sub>dc</sub> 提到 400 V，基速成為 5291.400674 rpm；若把 i<sub>q</sub> 提到 20 A，轉矩成為 12 N·m，但交叉項也變大，基速反而降到 3632.533727 rpm。電壓餘裕與轉矩需求必須一起看，不能只靠提高其中一個命令。</p>
+
+<section class="workspace"><h2>自由實驗：速度、弱磁與兩個極限圓</h2>
+<p>固定 R = 0.5 Ω、L = 2 mH、ψ<sub>f</sub> = 0.1 Wb、p = 4、電流上限 20 A。改變速度、i<sub>q</sub>、i<sub>d</sub> 與直流鏈電壓，觀察電壓用量、基速、轉矩和銅損。</p>
+<div class="controls">
+<label for="fv-n">轉速 n（rpm）<input id="fv-n" type="range" min="0" max="12000" step="100" value="3000"></label>
+<label for="fv-iq">轉矩電流 i_q（A）<input id="fv-iq" type="range" min="0" max="20" step="0.5" value="10"></label>
+<label for="fv-id">磁通電流 i_d（A，負值為弱磁）<input id="fv-id" type="range" min="-20" max="0" step="0.5" value="0"></label>
+<label for="fv-vdc">直流鏈電壓 V_dc（V）<input id="fv-vdc" type="range" min="48" max="400" step="1" value="300"></label>
+</div>
+<div id="focvolt-output" class="output" aria-live="polite"><table><thead><tr><th>量</th><th>預設值</th></tr></thead><tbody><tr><td>ω<sub>m</sub></td><td>314.159265 rad/s</td></tr><tr><td>ω<sub>e</sub></td><td>1256.637061 rad/s（200.000000 Hz）</td></tr><tr><td>反電動勢</td><td>125.663706 V</td></tr><tr><td>交叉項</td><td>25.132741 V</td></tr><tr><td>v<sub>d</sub></td><td>−25.132741 V</td></tr><tr><td>v<sub>q</sub></td><td>130.663706 V</td></tr><tr><td>電壓向量長度</td><td>133.058855 V</td></tr><tr><td>上限</td><td>173.205081 V（已用 76.821566 %）</td></tr><tr><td>轉矩</td><td>6.000000 N·m</td></tr><tr><td>機械功率</td><td>1884.955592 W</td></tr><tr><td>銅損</td><td>75.000000 W</td></tr><tr><td>電流向量長度</td><td>10.000000 A（上限 20）</td></tr><tr><td>基速</td><td>3939.828277 rpm</td></tr></tbody></table><strong>判讀：電壓用了 76.821566 %，線性區內有餘裕。</strong>交叉項 ω<sub>e</sub> L i<sub>q</sub> = 25.132741 V 是 d 軸看到的耦合，控制器要用前饋把它加回去。為什麼：反電動勢與交叉項都隨速度增加，最終把電壓向量推到 173.205081 V 上限。邊界提醒：零速時 v<sub>q</sub> 只剩 R i<sub>q</sub> = 5.000000 V，轉矩仍為 6.000000 N·m；48 V 直流鏈配這顆 0.1 Wb 馬達，基速只有 533.565510 rpm；電流向量超過 20 A 時，i<sub>d</sub> 與 i<sub>q</sub> 必須在極限圓內取捨。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>弱磁削弱的是定子所見總磁鏈，不等於把永磁體消磁；本課的負 i<sub>d</sub> 範圍用來算電壓餘裕，不代表任一實機都允許同樣大小。</li>
+<li>基速不是只由馬達銘牌決定，而是馬達參數、直流鏈與電流命令共同決定；同一顆馬達由 300 V 改成 400 V，基速會成為 5291.400674 rpm。</li>
+<li>電壓飽和時，電流迴路仍會執行，只是輸出被限制；第 02 章的反積分飽和必須避免積分項繼續累積，卻不能憑空增加可用電壓。</li>
+<li>表面式馬達的每安培最大轉矩（maximum torque per ampere, MTPA）在 i<sub>d</sub> = 0；內藏式因 L<sub>d</sub> ≠ L<sub>q</sub> 另有磁阻轉矩，這個結論不直接適用。</li>
+<li>去耦與弱磁不是同一功能：去耦補回 ω<sub>e</sub> L i 的交叉影響，弱磁則主動改變 d 軸磁鏈，兩者只是在電壓方程裡同時出現。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>把驅動器內部的 v<sub>d</sub>、v<sub>q</sub>、|v| 與工作週期送到示波輸出，以示波器觀察是否貼住限制；另以直流電壓表量 V<sub>dc</sub>，並同步讀取轉速與 dq 電流。</p>
+<p><strong>能證明什麼。</strong>|v| 貼到 V<sub>dc</sub> / √3、工作週期貼到 100 %，同時 i<sub>q</sub> 開始追不到命令，能證明電壓飽和與基速邊界；加入負 i<sub>d</sub> 後邊界上移，能驗證弱磁效果。</p>
+<p><strong>不能證明什麼。</strong>這些內部變數不能直接證明 ψ<sub>f</sub> 是否因溫度下降，也不能證明永磁體健康；要在已知速度下量空轉反電動勢，才可估算 ψ<sub>f</sub>。</p>
+
+<h2>連到哪門課</h2>
+<p>直流機用場電流減少磁通、換取更高速度，是同一取捨的直流版本，見<a href="../../02-電機核心/電機機械-互動課程/06-直流機轉矩轉速線.html">電機機械的直流機轉矩轉速線</a>；V<sub>dc</sub> / √3 為何是線性區上限，接到本課第 09 章的 SVPWM 作用時間。這套計算用在電動車、高速壓縮機與主軸驅動器。<strong>韌體那一端：</strong>去耦前饋是兩行加法；弱磁通常是一個「電壓餘裕 → i<sub>d</sub> 命令」的外層 PI。</p>
+<nav class="pager" aria-label="章節導覽"><a href="07-Clarke與Park轉換.html">← 上一頁：Clarke 與 Park 轉換</a><a href="09-SVPWM扇區與作用時間.html">下一頁：SVPWM 扇區與作用時間 →</a></nav>
+</main>
+<footer class="site-footer"><span>08 dq 電壓方程與弱磁</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

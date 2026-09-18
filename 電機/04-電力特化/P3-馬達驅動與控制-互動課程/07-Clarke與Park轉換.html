@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 Clarke 與 Park 轉換｜馬達驅動與控制</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・轉動座標，讓三相交流成為兩個固定數</p>
+<h1>Clarke 與 Park 轉換：把三相正弦改寫成可直接控制的 dq 直流量</h1>
+<p class="lead">Clarke 變換（Clarke transform）與 Park 變換（Park transform）把 10 A 三相電流由 −5.000000、10.000000、−5.000000 A 改寫成固定的 0.000000、10.000000 A；比例積分（proportional-integral, PI）控制器因此能追固定命令。若控制器的角度錯 45°，轉矩會由 6.000000 N·m 掉到 4.242641 N·m，少 29.289322 %。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="06-感應機Vf純量控制.html">06 感應機 V/f 純量控制</a>的旋轉磁場，以及<a href="00-驅動器世界觀與轉矩夾角.html">00 驅動器世界觀與轉矩夾角</a>的 γ。<strong>前置：</strong>見〈變壓器與三相〉<a href="../../02-電機核心/電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>，先知道平衡三相彼此相隔 120°。</p>
+
+<h2>痛點：三支電流一直變，PI 到底該追哪一個數</h2>
+<p>馬達穩定產生轉矩時，i<sub>a</sub>、i<sub>b</sub>、i<sub>c</sub> 仍是三條正弦；若讓三個 PI 直接追三條交流，它們每一刻都得追移動目標。軟體真正想知道的是：目前有多少電流沿著轉子磁場，又有多少垂直於它產生轉矩。</p>
+<p>座標轉換不是把電流改掉，也不是在馬達裡增加新繞組。它只把同一支電流向量從 abc 的三個投影，改寫成 αβ 的兩個投影，再改寫成跟轉子一起轉的 d、q 兩個投影。困難在於角度必須正確；座標若轉歪，控制器就會把產生轉矩的電流誤認成磁通電流。</p>
+
+<h2>白話直覺：鏡頭跟著轉，旋轉物體看起來就停住</h2>
+<p>可暫時想成攝影機追著轉子同速旋轉，原本繞圈的箭頭在畫面裡會靜止；比喻到此為止，真實機制是把兩個正交分量乘上 sin θ 與 cos θ，再相加成 d、q 投影，並沒有真的旋轉任何感測器或繞組。</p>
+<p>沿實體因果走一次。直流鏈相對負端供電，逆變器的開關路徑使三相電流流入與流出定子繞組，合成一支旋轉磁場；它和轉子永磁磁場的夾角決定轉矩。三支電流由電流感測器回授，Clarke 變換先建立靜止的 α、β 座標，Park 變換再用轉子角 θ 建立同步旋轉的 d、q 座標。示波器上 abc 與 αβ 持續起伏，而穩態 dq 應接近平線。</p>
+<p>d 軸（direct axis）指向轉子磁場，q 軸（quadrature axis）領先 90°。磁場導向控制（field-oriented control, FOC）令 i<sub>d</sub>、i<sub>q</sub> 各自有固定命令，PI 因而只需追直流數值。</p>
+<p class="note">來源：P3 上 §2.1、§2.2、§5.1。</p>
+
+<h2>推導：先把三個相量壓成兩個，再消掉轉子角</h2>
+<p><strong>（a）三相只有兩個自由度。</strong>平衡時 i<sub>a</sub> + i<sub>b</sub> + i<sub>c</sub> = 0，知道任兩相就能推出第三相。振幅不變式 Clarke 定義 i<sub>α</sub> = (2/3) × (i<sub>a</sub> − i<sub>b</sub> / 2 − i<sub>c</sub> / 2)，i<sub>β</sub> = (i<sub>b</sub> − i<sub>c</sub>) / √3，單位均為 A。</p>
+<p><strong>（b）αβ 是一支旋轉向量。</strong>令 i<sub>a</sub> = I<sub>m</sub> × cos(θ + φ)，i<sub>b</sub> = I<sub>m</sub> × cos(θ + φ − 120°)，i<sub>c</sub> = I<sub>m</sub> × cos(θ + φ − 240°)。代入後得 i<sub>α</sub> = I<sub>m</sub> × cos(θ + φ)，i<sub>β</sub> = I<sub>m</sub> × sin(θ + φ)，所以向量長度始終為 I<sub>m</sub>。</p>
+<p><strong>（c）Park 消掉 θ。</strong>控制器使用 θ̂ = θ + δ，並算 i<sub>d</sub> = i<sub>α</sub> × cos θ̂ + i<sub>β</sub> × sin θ̂、i<sub>q</sub> = −i<sub>α</sub> × sin θ̂ + i<sub>β</sub> × cos θ̂。化簡為 i<sub>d</sub> = I<sub>m</sub> × cos(φ − δ)、i<sub>q</sub> = I<sub>m</sub> × sin(φ − δ)；θ 完全消失，交流因此變成直流。</p>
+<p><strong>（d）角度錯的代價。</strong>表面式永磁同步馬達（permanent-magnet synchronous motor, PMSM）的 T = 1.5 × p × ψ<sub>f</sub> × i<sub>q</sub>。本章 p = 4、ψ<sub>f</sub> = 0.1 Wb，所以 T = 0.6 × i<sub>q</sub>；φ = 90° 時，角度誤差 δ 使轉矩比例成 cos δ，損失為 (1 − cos δ) × 100 %。本課用的是線性教學模型，真實驅動器不完全如此；假設三相平衡，且不計感測偏移與諧波。</p>
+<p><strong>角度之間的角色要分開。</strong>θ 描述轉子當下轉到哪裡，φ 描述電流向量相對 d 軸領先多少，δ 則描述控制器使用的 θ̂ 與真 θ 相差多少。只改 θ，三相數值會依序輪替，但 dq 不變；改 φ，dq 的分配真的改變；改 δ，物理電流向量沒變，卻被控制器投影到錯誤座標。這三種操作表面上都在改角度，工程後果完全不同。</p>
+<p><strong>為何 PI 因此變簡單。</strong>abc 中的命令每個電氣週期都跨過正、負峰值，誤差也不停改變；dq 中的穩態命令是固定的 i<sub>d</sub>、i<sub>q</sub>，積分項才可用固定方向消除穩態誤差。當轉速改變，只要 θ̂ 仍緊跟 θ，這兩個目標不必跟著提高振盪頻率。</p>
+<p><strong>轉換保留的是同一個物理狀態。</strong>abc、αβ 與 dq 不是三套不同電流，而是同一向量在不同基底的座標。只要轉換係數與角度定義一致，就能由 dq 反轉回 αβ，再回到三相命令。這也解釋向量長度不隨 θ 改變：旋轉座標只改投影方向，不憑空增加能量。</p>
+
+<h2>數值實例：轉子在 30°，三相各是多少，dq 為何不動</h2>
+<p>取 I<sub>m</sub> = 10 A、θ = 30°、φ = 90°、δ = 0°，與下方實驗預設值完全相同。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>i<sub>a</sub></td><td>10 × cos 120°</td><td><strong>−5.000000 A</strong></td></tr>
+<tr><td>i<sub>b</sub></td><td>10 × cos 0°</td><td><strong>10.000000 A</strong></td></tr>
+<tr><td>i<sub>c</sub></td><td>10 × cos(−120°)</td><td><strong>−5.000000 A</strong></td></tr>
+<tr><td>i<sub>α</sub></td><td>(2/3) × (−5 − 5 + 2.5)</td><td><strong>−5.000000 A</strong></td></tr>
+<tr><td>i<sub>β</sub></td><td>(10 + 5) / √3</td><td><strong>8.660254 A</strong></td></tr>
+<tr><td>向量長度</td><td>√(25 + 75)</td><td><strong>10.000000 A</strong></td></tr>
+<tr><td>i<sub>d</sub></td><td>−5 × cos 30° + 8.660254 × sin 30°</td><td><strong>0.000000 A</strong></td></tr>
+<tr><td>i<sub>q</sub></td><td>5 × sin 30° + 8.660254 × cos 30°</td><td><strong>10.000000 A</strong></td></tr>
+<tr><td>轉矩</td><td>1.5 × 4 × 0.1 × 10</td><td><strong>6.000000 N·m</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>θ 從 0° 拉到 90°，i<sub>a</sub> 由 0 變成 −10 A，i<sub>β</sub> 由 10 變成 0 A，但 i<sub>d</sub>、i<sub>q</sub> 仍是 0、10 A。若 PWM 中斷為 20 kHz，每 50 µs 都要用新角度完成一次轉換，否則 δ 會隨速度累積。</p>
+<p><strong>邊界對照。</strong>δ = 10° 時 i<sub>d</sub> = 1.736482 A、i<sub>q</sub> = 9.848078 A，轉矩少 1.519225 %；δ = 45° 時兩者都是 7.071068 A，轉矩少 29.289322 %。φ = 0° 時電流全落在 d 軸，轉矩為 0；φ = −90° 時 i<sub>q</sub> = −10 A，轉矩為 −6 N·m。</p>
+<p>再把 θ 拉到 200°，三相成為 3.420201、−9.848078、6.427876 A，dq 仍是 0、10 A；把 I<sub>m</sub> 拉到 20 A，所有電流與轉矩一起加倍，座標轉換本身不會放大或縮小向量。這兩個檢查分別驗證旋轉不變性與線性。</p>
+
+<section class="workspace"><h2>自由實驗：拉轉子角，看 dq 是否真的不動</h2>
+<p>固定表面式馬達 p = 4、ψ<sub>f</sub> = 0.1 Wb。改變電流振幅、真角度、電流向量角與控制器角度誤差，觀察 abc、αβ、dq、向量長度與轉矩。</p>
+<div class="controls">
+<label for="cp-im">電流振幅 I_m（A）<input id="cp-im" type="range" min="0" max="20" step="0.5" value="10"></label>
+<label for="cp-theta">轉子電氣角 θ（°）——拉它看 dq 不動<input id="cp-theta" type="range" min="0" max="360" step="5" value="30"></label>
+<label for="cp-phi">電流向量領先 d 軸的角度 φ（°）<input id="cp-phi" type="range" min="-90" max="180" step="5" value="90"></label>
+<label for="cp-delta">控制器的角度誤差 δ（°）<input id="cp-delta" type="range" min="-45" max="45" step="5" value="0"></label>
+</div>
+<div id="clarkepark-output" class="output" aria-live="polite"><table><thead><tr><th>量</th><th>預設值</th></tr></thead><tbody><tr><td>i<sub>a</sub></td><td>−5.000000 A</td></tr><tr><td>i<sub>b</sub></td><td>10.000000 A</td></tr><tr><td>i<sub>c</sub></td><td>−5.000000 A</td></tr><tr><td>i<sub>α</sub></td><td>−5.000000 A</td></tr><tr><td>i<sub>β</sub></td><td>8.660254 A</td></tr><tr><td>向量長度</td><td>10.000000 A</td></tr><tr><td>i<sub>d</sub></td><td>0.000000 A</td></tr><tr><td>i<sub>q</sub></td><td>10.000000 A</td></tr><tr><td>轉矩</td><td>6.000000 N·m</td></tr></tbody></table><table><thead><tr><th>θ</th><th>i<sub>a</sub></th><th>i<sub>b</sub></th><th>i<sub>c</sub></th><th>i<sub>d</sub></th><th>i<sub>q</sub></th></tr></thead><tbody><tr><td>0°</td><td>0.000000 A</td><td>8.660254 A</td><td>−8.660254 A</td><td>0.000000 A</td><td>10.000000 A</td></tr><tr><td>60°</td><td>−8.660254 A</td><td>8.660254 A</td><td>0.000000 A</td><td>0.000000 A</td><td>10.000000 A</td></tr><tr><td>120°</td><td>−8.660254 A</td><td>0.000000 A</td><td>8.660254 A</td><td>0.000000 A</td><td>10.000000 A</td></tr><tr><td>180°</td><td>0.000000 A</td><td>−8.660254 A</td><td>8.660254 A</td><td>0.000000 A</td><td>10.000000 A</td></tr><tr><td>240°</td><td>8.660254 A</td><td>−8.660254 A</td><td>0.000000 A</td><td>0.000000 A</td><td>10.000000 A</td></tr><tr><td>300°</td><td>8.660254 A</td><td>0.000000 A</td><td>−8.660254 A</td><td>0.000000 A</td><td>10.000000 A</td></tr></tbody></table><strong>判讀：i<sub>d</sub> = 0，全部電流都在產生轉矩（每安培最大轉矩，表面式的最佳點）。</strong>三相與 αβ 隨 θ 變，i<sub>d</sub>、i<sub>q</sub> 不隨 θ 變：這就是把交流變直流。向量長度 10.000000 A 不變：轉換不改變電流大小，只改變描述它的座標。為什麼：Park 使用與轉子相同的角度，把共同的 θ 從投影式消掉。邊界提醒：振幅為 0 時任何座標都是 0；φ = 0° 或 180° 時轉矩為 0；φ &lt; 0° 時是負轉矩；δ 不為 0° 會讓 i<sub>q</sub> 變少並產生假的 i<sub>d</sub>。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>Clarke 不需要轉子角，只把三相改寫成靜止的兩軸；Park 才使用角度。因此角度感測器失準直接污染 Park，不會改變原始三相電流。</li>
+<li>d、q 是跟著轉子的座標，不是馬達裡真有 d 相與 q 相繞組；拿探棒只能量到實體的 a、b、c 相，再由軟體換算。</li>
+<li>本課採振幅不變式，係數是 2/3；功率不變式使用另一組係數，兩者不能混代。本課轉矩式前面的 1.5 是與此選擇配套的係數。</li>
+<li>δ 是控制器使用角度與真角度之差，不是電流向量角 φ。前者是估測或安裝誤差，後者是控制命令決定磁通與轉矩如何分配。</li>
+<li>i<sub>d</sub> = 0 只在本課的表面式模型是每安培最大轉矩；內藏式馬達還有磁阻轉矩，最佳點不一定在 0。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>以三支電流探棒同時量 i<sub>a</sub>、i<sub>b</sub>、i<sub>c</sub>，同步記錄編碼器角度；把資料送進示波器數學功能，或匯出後逐點算 Clarke 與 Park。穩態時比較 abc 正弦、αβ 正弦與 dq 平線。</p>
+<p><strong>能證明什麼。</strong>三相隨 θ 改變、向量長度維持 10.000000 A，而 i<sub>d</sub>、i<sub>q</sub> 接近固定，能證明轉換公式與使用角度一致；i<sub>d</sub> 出現穩定偏移，則是角度誤差的線索。</p>
+<p><strong>不能證明什麼。</strong>只看 dq 平線不能直接證明 ψ<sub>f</sub> = 0.1 Wb，也不能單獨分辨角度偏移與電流感測器偏移；前者要量空轉反電動勢，後者要在零電流時校正。</p>
+
+<h2>連到哪門課</h2>
+<p>平衡三相、相量與 120° 關係見<a href="../../02-電機核心/電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>；γ 與轉矩的起點見本課第 00 章。此轉換用在伺服、電動車壓縮機與各種 FOC 驅動器，下一章會把固定的 i<sub>d</sub>、i<sub>q</sub> 接進 dq 電壓方程。<strong>韌體那一端：</strong>Clarke／Park 是每個 PWM 中斷裡的六次乘法加兩次三角函數查表，角度來自編碼器計數（第 10 章）。</p>
+<nav class="pager" aria-label="章節導覽"><a href="06-感應機Vf純量控制.html">← 上一頁：感應機 V/f 純量控制</a><a href="08-dq電壓方程與弱磁.html">下一頁：dq 電壓方程與弱磁 →</a></nav>
+</main>
+<footer class="site-footer"><span>07 Clarke 與 Park 轉換</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

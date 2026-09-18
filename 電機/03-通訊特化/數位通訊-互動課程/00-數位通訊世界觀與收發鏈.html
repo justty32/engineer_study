@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 數位通訊世界觀與收發鏈｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html" aria-current="page">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">00・先看位元走完整條路，再開始算</p>
+<h1>數位通訊世界觀與收發鏈：四個速率如何決定一條鏈路</h1>
+<p class="lead">一串位元不會直接飛過空間；它要經過編碼、分組、波形生成與接收判決，最後才回到位元。本章先把 16 個方塊放回同一張地圖，再用位元率、編碼率、符元率與頻寬算清楚代價。</p>
+<p class="prereq"><strong>這章假設已懂：</strong>不需要本課前章，從位元與四則運算開始。<strong>前置：</strong>見〈星座圖入門〉<a href="../通訊系統-互動課程/09-數位調變與星座圖.html">通訊系統的數位調變與星座圖</a>；五種星座的點怎麼排在那一頁，本章只引用。</p>
+
+<h2>痛點：一個位元率，為什麼算不出它要佔多少頻寬</h2>
+<p>規格若只寫「每秒送 1000 kbit」，你還不能知道天線端需要多寬的頻帶。編碼可能為每個資訊位元增加冗餘，一個符元又可能一次代表多個位元，脈衝整形還會把頻帶再放寬。把其中任何一項漏掉，同一個 1000 kbit/s 都會得到不同答案。</p>
+<p>另一個常見卡點是方塊太多：壓縮、加冗餘、排星座點、同步與解碼看似各做各的。其實它們共同處理同一筆帳：發射端決定「一秒產生多少個可判決的波形」，接收端再從受干擾的波形中猜回對應位元。</p>
+
+<h2>白話直覺：收發鏈是一條有匯率的加工線</h2>
+<p>可以暫時把位元想成原料，每過一站就按一個匯率換成下一種表示；比喻到此為止。精確地說，資訊位元先變成更多編碼位元，每 k 個編碼位元再選出一個符元，符元率配上滾降係數 α 才決定帶通頻寬。</p>
+<p>完整因果鏈從來源走一次。位元來自聲音、影像、感測值或檔案；訊源編碼（source coding）移除可省的表示，通道編碼（channel coding）刻意加冗餘，交錯（interleaving）重排順序，調變（modulation）把位元組合指派給星座點。脈衝整形限制頻譜，上變頻把波形搬到射頻，天線把電氣波形送入空間。通道加入加性白色高斯雜訊（additive white Gaussian noise, AWGN）、多徑與干擾；接收端依序下變頻、匹配濾波、同步、等化、解調、解交錯、通道解碼與訊源解碼，最後交還位元。</p>
+<p>這套決定買到的是可判決的距離、抗干擾能力與頻譜效率；付出的是頻寬、功率、延遲與運算複雜度。極端例子是編碼率 R 越小，冗餘越多，若其他條件不動，編碼後位元率與頻寬都上升；M 越大，每符元帶的位元較多，符元率下降，星座點卻更擠。頻譜分析儀能看到佔用頻寬，接收軟體能看到各處速率，但兩者都不能只靠一個數字判定整條鏈的所有選項。</p>
+<p class="note">來源：15-數位通訊-下 §16；15-數位通訊-上 §6。</p>
+
+<h2>推導：把位元帳與能量帳逐項接起來</h2>
+<p><strong>編碼後位元率。</strong>編碼率 R ＝ k<sub>info</sub> / n，表示每 n 個編碼位元中只有 k<sub>info</sub> 個資訊位元。每批輸入 k<sub>info</sub> 個就輸出 n 個，數量乘上 n / k<sub>info</sub> ＝ 1 / R；所花時間不變，因此 R<sub>c</sub> ＝ R<sub>b</sub> / R。R<sub>b</sub> 與 R<sub>c</sub> 的單位都是 kbit/s。</p>
+<p><strong>符元率。</strong>M 進制星座每符元承載 k ＝ log<sub>2</sub> M 個編碼位元：二元相位鍵控（binary phase shift keying, BPSK）k ＝ 1、四相相位鍵控（quadrature phase shift keying, QPSK）k ＝ 2、正交振幅調變（quadrature amplitude modulation, QAM）的 16／64／256 點各為 4／6／8。相同一秒內的 R<sub>c</sub> 個位元按 k 個一組，組數就是 R<sub>s</sub> ＝ R<sub>c</sub> / k，單位 kbaud。k 變大會降低符元率，但不保證可靠度不變，因為點距也會改變。</p>
+<p><strong>頻寬與效率。</strong>升餘弦的基頻頻寬是 (1 ＋ α) R<sub>s</sub> / 2，搬到載波後左右兩側各一份，故帶通頻寬 B ＝ (1 ＋ α) R<sub>s</sub>。這是通訊系統 07 的結論，本章只引用。B 的單位 kHz，頻譜效率 η ＝ R<sub>b</sub> / B，單位 bit/s/Hz；分子使用資訊位元率，不能把冗餘算成有效內容。</p>
+<p><strong>能量帳。</strong>平均功率可寫成 E<sub>b</sub>R<sub>b</sub>，一個符元時間是 1 / R<sub>s</sub> ＝ k / R<sub>c</sub>，所以 E<sub>s</sub> ＝ (k / R<sub>c</sub>) × (E<sub>b</sub>R<sub>b</sub>) ＝ k R E<sub>b</sub>。因此 E<sub>s</sub>/N<sub>0</sub> ＝ k R × E<sub>b</sub>/N<sub>0</sub>；E<sub>b</sub> 與 E<sub>s</sub> 的單位為 J，能量比無單位。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：升餘弦脈衝、單載波、線性調變、理想同步。真實系統不是這樣；保護頻帶、濾波器過渡帶、前導資訊與硬體非線性都會改變實際佔用量，公式只能當設計起點。</p>
+
+<h2>數值實例：1000 kbit/s、率 1/2、QPSK、α ＝ 0.25</h2>
+<p>取 R<sub>b</sub> ＝ 1000 kbit/s、R ＝ 1/2、QPSK（k ＝ 2）、α ＝ 0.25，與自由實驗預設值完全相同。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>編碼後位元率 R<sub>c</sub></td><td>1000 / (1/2)</td><td><strong>2000.000000 kbit/s</strong></td></tr>
+<tr><td>符元率 R<sub>s</sub></td><td>2000 / 2</td><td><strong>1000.000000 kbaud</strong></td></tr>
+<tr><td>頻寬 B</td><td>1.25 × 1000</td><td><strong>1250.000000 kHz</strong></td></tr>
+<tr><td>頻譜效率 η</td><td>1000 / 1250</td><td><strong>0.800000 bit/s/Hz</strong></td></tr>
+<tr><td>E<sub>s</sub>/N<sub>0</sub> 對 E<sub>b</sub>/N<sub>0</sub> 的倍率 kR</td><td>2 × 0.5</td><td><strong>1.000000（0.000000 dB）</strong></td></tr>
+</tbody></table>
+<p><strong>量級與邊界對照。</strong>不編碼、BPSK、α ＝ 0.25 時，R<sub>s</sub> ＝ 1000.000000 kbaud、B ＝ 1250.000000 kHz、η ＝ 0.800000，恰與預設相同；率 1/2 的冗餘被 QPSK 每符元多帶的一個位元抵銷。不編碼、64-QAM 時，R<sub>s</sub> ＝ 166.666667 kbaud、B ＝ 208.333333 kHz、η ＝ 4.800000，kR ＝ 6.000000（7.781513 dB）。(7,4) 漢明碼配 QPSK 時，R<sub>c</sub> ＝ 1750.000000、R<sub>s</sub> ＝ 875.000000、B ＝ 1093.750000、η ＝ 0.914286，kR ＝ 1.142857（0.579919 dB）。α ＝ 0 時 B ＝ 1000.000000 kHz，對應不可實現的理想 sinc；α ＝ 1 時 B ＝ 2000.000000 kHz。</p>
+<p>再看較高速邊界：R<sub>b</sub> ＝ 10000 kbit/s、R ＝ 5/6、256-QAM、α ＝ 0.05 時，R<sub>s</sub> ＝ 1500.000000 kbaud、B ＝ 1575.000000 kHz、η ＝ 6.349206，kR ＝ 6.666667（8.239087 dB）。高階星座壓低符元率，代價要到第 02 與第 04 章用距離與誤碼率結帳。</p>
+
+<section class="workspace"><h2>自由實驗：四個控制量如何改寫同一本帳</h2>
+<p>調整資訊位元率、編碼率、每符元位元數與滾降係數；程式會在下方空白輸出區即時更新數值與原因。預設狀態先用靜態表保留，沒有程式也能核對。</p>
+<div class="controls">
+<label for="ch-rb">資訊位元率 R_b（kbit/s）<input id="ch-rb" type="range" min="10" max="10000" step="10" value="1000"></label>
+<label for="ch-rate">編碼率 R<select id="ch-rate"><option value="1">不編碼（R = 1）</option><option value="4/7">(7,4) 漢明碼（R = 4/7）</option><option value="1/2" selected>率 1/2 摺積碼</option><option value="3/4">R = 3/4</option><option value="5/6">R = 5/6</option></select></label>
+<label for="ch-k">每符元位元數 k<select id="ch-k"><option value="1">BPSK（1 位元/符元）</option><option value="2" selected>QPSK（2）</option><option value="4">16-QAM（4）</option><option value="6">64-QAM（6）</option><option value="8">256-QAM（8）</option></select></label>
+<label for="ch-alpha">滾降係數 α<input id="ch-alpha" type="range" min="0" max="1" step="0.05" value="0.25"></label>
+</div>
+<table><thead><tr><th>預設回饋</th><th>數值</th></tr></thead><tbody><tr><td>R<sub>c</sub></td><td>2000.000000 kbit/s</td></tr><tr><td>R<sub>s</sub></td><td>1000.000000 kbaud</td></tr><tr><td>B</td><td>1250.000000 kHz</td></tr><tr><td>η</td><td>0.800000 bit/s/Hz</td></tr><tr><td>kR</td><td>1.000000（0.000000 dB）</td></tr></tbody></table>
+<table><thead><tr><th>方塊</th><th>做什麼</th><th>本課位置</th></tr></thead><tbody>
+<tr><td>訊源編碼</td><td>壓縮表示</td><td>資訊理論與編碼</td></tr><tr><td>通道編碼</td><td>加入可用冗餘</td><td>08–09</td></tr><tr><td>交錯</td><td>重排位元順序</td><td>10</td></tr><tr><td>調變</td><td>位元組合指派到星座</td><td>01–04</td></tr><tr><td>脈衝整形</td><td>限制頻譜</td><td>通訊系統 07</td></tr><tr><td>上變頻</td><td>搬到射頻</td><td>本章點名</td></tr><tr><td>天線</td><td>電氣波形與空間波互換</td><td>無線與行動通訊</td></tr><tr><td>通道</td><td>加入雜訊、多徑與干擾</td><td>06、11–12</td></tr><tr><td>下變頻</td><td>搬回基頻</td><td>本章點名</td></tr><tr><td>匹配濾波</td><td>收集判決所需能量</td><td>通訊系統 08</td></tr><tr><td>同步</td><td>對準載波與時序</td><td>05</td></tr><tr><td>等化</td><td>減少通道拖尾</td><td>06–07</td></tr><tr><td>解調</td><td>由接收點做判決</td><td>03</td></tr><tr><td>解交錯</td><td>還原原本順序</td><td>10</td></tr><tr><td>通道解碼</td><td>利用冗餘修正錯誤</td><td>08–09</td></tr><tr><td>訊源解碼</td><td>還原來源表示</td><td>資訊理論與編碼</td></tr>
+</tbody></table>
+<div id="chain-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>位元率不等於符元率；每符元承載 k 個位元後，符元率才是編碼後位元率除以 k，而頻寬直接跟著符元率走。</li>
+<li>編碼率 R 是資訊在編碼輸出中的占比，不是壓縮比；R 小於 1 表示輸出位元變多。</li>
+<li>E<sub>b</sub> 是每個資訊位元的能量；E<sub>c</sub> ＝ R E<sub>b</sub> 才是每個編碼位元的能量，代入公式前要先確認基準。</li>
+<li>頻譜效率 η 使用 R<sub>b</sub>，不是 R<sub>c</sub>；冗餘提高傳送量，卻不是新的有效資訊。</li>
+<li>收發鏈順序是功能地圖，不代表每台設備都有 16 顆獨立晶片；軟體與硬體都可能合併多個方塊。</li>
+</ul>
+
+<h2>可觀察證據：拿頻譜分析儀與 SDR 對帳</h2>
+<p><strong>用什麼量。</strong>頻譜分析儀量發射訊號的佔用頻寬，SDR 軟體讀取各處的樣本速率、每符元樣本數與解調設定；預期 B 落在 (1 ＋ α) R<sub>s</sub> 附近。</p>
+<p><strong>能證明什麼。</strong>頻寬與符元率的量級是否符合滾降係數，軟體流程是否確實依序完成各項轉換。</p>
+<p><strong>不能證明什麼。</strong>只看頻譜無法判定內部採哪一種編碼或哪一種星座；不同組合可能有相同頻寬，仍要解調並檢查位元映射。</p>
+
+<h2>連到哪門課</h2>
+<p>星座入門見<a href="../通訊系統-互動課程/09-數位調變與星座圖.html">通訊系統的數位調變與星座圖</a>；升餘弦頻寬見<a href="../通訊系統-互動課程/07-基頻傳輸ISI與升餘弦.html">通訊系統的基頻傳輸 ISI 與升餘弦</a>。訊源編碼與容量留給資訊理論與編碼課；衰落與 MIMO 留給無線與行動通訊課。軟體那一端，GNU Radio 流程圖的每個方塊對應這張鏈，<code>samp_rate / sps</code> 就是 R<sub>s</sub>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="index.html">← 上一頁：課程地圖</a><a href="01-訊號空間與正交基底.html">下一頁：訊號空間與正交基底 →</a></nav>
+</main>
+<footer class="site-footer"><span>00 數位通訊世界觀與收發鏈</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

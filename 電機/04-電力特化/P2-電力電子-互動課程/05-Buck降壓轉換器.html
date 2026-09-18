@@ -1,0 +1,86 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 Buck 降壓轉換器：伏秒平衡與 CCM／DCM｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・從兩段電感電壓看懂降壓與模式邊界</p>
+<h1>05 Buck 降壓轉換器：伏秒平衡與 CCM／DCM</h1>
+<p class="lead">同一個 12 V 電源與工作週期 0.50，在重載時輸出是 6.000000 V；負載電阻升到 30 Ω、電感電流碰到零後，輸出卻升成 7.087861 V。關鍵不是公式失準，而是電路多出第三段狀態。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="04-PWM與工作週期.html">04 PWM 與工作週期</a>的 D 與平均值。<strong>前置：</strong>見〈06 電容與電感〉<a href="../../02-電機核心/電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>；v ＝ L di/dt 與 i ＝ C dv/dt 已在那裡證明，本章只引用結論。</p>
+
+<h2>痛點：為什麼同一個 D 有時不只一個輸出電壓</h2>
+<p>平均電壓雖等於 D × V<sub>in</sub>，接上電感、二極體與負載後，輕載讀值卻可能更高。關鍵是電感電流能否在下次導通前保持大於零。</p>
+<p>降壓轉換器（Buck）由開關 S、二極體或同步開關、電感 L、電容 C 與負載 R 組成。電感電流一旦用完，兩段式推導就要改成三段式。因此輸出偏高未必是回授故障；負載下降可能使模式跨界，應先確認谷值是否為零，再選電壓比模型。</p>
+
+<h2>白話直覺：電感替負載接力，但接力可能提早結束</h2>
+<p>電感電壓決定電流斜率，儲能為 ½ × L × I²；理想二極體不允許電流反向。開關關斷後，電感會改走閉合回路繼續送能。</p>
+<p>輸入與輸出負端是共同參考點。導通時，輸入經開關、電感與負載形成回路；電感電壓是 V<sub>in</sub> − V<sub>o</sub>，電流上升。關斷時，電感、負載與二極體續流（freewheeling）；電感電壓為 −V<sub>o</sub>，電流下降。輸出電容吸收電感與負載電流之差。電流探棒會看到三角波，開關節點則有兩個電位。</p>
+<p>連續導通模式（continuous conduction mode, CCM）表示電感電流整個切換週期都大於零。不連續導通模式（discontinuous conduction mode, DCM）表示下降段先碰到零；二極體隨即關斷，回路不再閉合，直到下一次導通前電感電壓與電流都維持零。這件事在你的程式裡長什麼樣：伏秒平衡是迴圈不變量，每輪結束電感電流回到起點；若谷值小於零，就改走 DCM 的另一組公式。比喻到此為止，實際判準是二極體電流是否在週期結束前降到零。</p>
+<p>重載時電感電流來不及降到零；輕載時則提早放完能量。第三段雖無電感電流，負載仍由輸出電容供應。</p>
+<p class="note">來源：P2-電力電子（上）§3.1、§3.2。</p>
+
+<h2>推導：從兩段伏秒到第三段空閒</h2>
+<p><strong>（a）CCM 電壓比。</strong>工作週期（duty cycle, D）是導通時間占切換週期的比例。導通段長 D × T<sub>sw</sub>，電感電壓為 V<sub>in</sub> − V<sub>o</sub>；關斷段長 (1 − D) × T<sub>sw</sub>，電感電壓為 −V<sub>o</sub>。既有課已證明 v ＝ L di/dt，穩態一週期的電流增減相抵，因此伏秒平衡（volt-second balance）給 (V<sub>in</sub> − V<sub>o</sub>) × D ＝ V<sub>o</sub> × (1 − D)，整理得 V<sub>o</sub> ＝ D × V<sub>in</sub>。V 是伏特，T<sub>sw</sub> 是秒，D 無單位。</p>
+<p><strong>（b）電流三角波。</strong>導通段斜率為 (V<sub>in</sub> − V<sub>o</sub>) / L，乘上 D / f<sub>sw</sub> 得峰對峰漣波 Δi<sub>L</sub> ＝ (V<sub>in</sub> − V<sub>o</sub>) × D / (L × f<sub>sw</sub>)。L 的單位是 H，f<sub>sw</sub> 是 Hz，結果是 A。電容的安秒平衡（charge balance）要求一週期平均電流為零，所以電感平均電流等於 I<sub>o</sub> ＝ V<sub>o</sub> / R；峰、谷分別是 I<sub>o</sub> ＋ Δi<sub>L</sub> / 2 與 I<sub>o</sub> − Δi<sub>L</sub> / 2。</p>
+<p><strong>（c）模式邊界。</strong>谷值等於 0 時，I<sub>o</sub> ＝ Δi<sub>L</sub> / 2。代入前述關係可得到三個等價判準：谷值 ＝ 0；K ＝ K<sub>crit</sub>；R ＝ R<sub>crit</sub>。其中 K ＝ 2 × L × f<sub>sw</sub> / R、K<sub>crit</sub> ＝ 1 − D、R<sub>crit</sub> ＝ 2 × L × f<sub>sw</sub> / (1 − D)。K 與 K<sub>crit</sub> 無單位，R<sub>crit</sub> 的單位是 Ω；K ≥ K<sub>crit</sub> 為 CCM。</p>
+<p><strong>（d）DCM 電壓比。</strong>DCM 的第一段峰值 I<sub>pk</sub> ＝ (V<sub>in</sub> − V<sub>o</sub>) × D / (L × f<sub>sw</sub>)；第二段比例 D<sub>2</sub> ＝ D × (V<sub>in</sub> − V<sub>o</sub>) / V<sub>o</sub>。三角波面積給平均電流 ½ × I<sub>pk</sub> × (D ＋ D<sub>2</sub>) ＝ V<sub>o</sub> / R。聯立後，電壓比 M ＝ 2 / (1 ＋ √(1 ＋ 4 × K / D²))。第三段比例為 1 − D − D<sub>2</sub>；負載取得的能量變少，輸出電壓要升高，才重新滿足能量平衡。</p>
+<p>這個結果也提供兩個極端檢查。R 變小代表負載變重，K 變大，系統回到 CCM，M 逐漸靠近 D；R 變大代表近乎空載，K 變小，第三段拉長，理想模型會預測輸出繼續上升。真實電路在空載時會受控制器停脈衝、元件漏電與保護功能限制，因此不能把極限值當成產品規格。</p>
+<p>K 把 L、f<sub>sw</sub> 與 R 合成一個無因次量，方便比較不同設計：加大 L 或提高 f<sub>sw</sub> 都讓 K 增加，較容易維持 CCM；加大 R 則讓 K 減小，較容易進入 DCM。K 只用來判斷本模型的模式，不是效率或安全裕度。</p>
+<p>臨界電阻也能直接用來做規格判斷：只要實際 R 高於 R<sub>crit</sub>，負載便輕到足以讓谷值碰零；低於它則維持 CCM。這個說法只適用於本章的理想固定參數，元件容差與控制策略仍會移動實機邊界。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型，真實電路不是這樣。本章假設開關與二極體理想、開關瞬間切換、輸出電壓的漣波相對很小；也忽略元件壓降、寄生電阻與第三段振盪。這些假設下，CCM 的 V<sub>o</sub> 才與負載無關。</p>
+
+<h2>數值實例：12 V、D 0.50、22 µH 與 3 Ω</h2>
+<p>取 V<sub>in</sub> ＝ 12 V、D ＝ 0.50、L ＝ 22 µH、f<sub>sw</sub> ＝ 200 kHz、R ＝ 3 Ω，與自由實驗預設值完全相同。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>V<sub>o</sub>（CCM）</td><td>0.5 × 12</td><td><strong>6.000000 V</strong></td></tr>
+<tr><td>I<sub>o</sub></td><td>6 / 3</td><td><strong>2.000000 A</strong></td></tr>
+<tr><td>Δi<sub>L</sub></td><td>(12 − 6) × 0.5 / (22 µH × 200 kHz)</td><td><strong>0.681818 A</strong></td></tr>
+<tr><td>峰值</td><td>2 ＋ 0.340909</td><td><strong>2.340909 A</strong></td></tr>
+<tr><td>谷值</td><td>2 − 0.340909</td><td><strong>1.659091 A</strong></td></tr>
+<tr><td>上升斜率</td><td>6 / 22 µH</td><td><strong>0.272727 A/µs</strong></td></tr>
+<tr><td>下降斜率</td><td>−6 / 22 µH</td><td><strong>−0.272727 A/µs</strong></td></tr>
+<tr><td>K</td><td>2 × 22 µH × 200 kHz / 3</td><td><strong>2.933333</strong></td></tr>
+<tr><td>K<sub>crit</sub></td><td>1 − 0.5</td><td><strong>0.500000</strong></td></tr>
+<tr><td>R<sub>crit</sub></td><td>8.8 / 0.5</td><td><strong>17.600000 Ω</strong></td></tr>
+<tr><td>模式</td><td>K ≥ K<sub>crit</sub></td><td><strong>CCM</strong></td></tr>
+</tbody></table>
+<p>CCM 的逐段結果如下。時間、電壓與斜率都能直接對上示波器與電流探棒的讀值。</p>
+<table><thead><tr><th>段</th><th>時間</th><th>電感電壓</th><th>電流斜率</th><th>起點電流</th><th>終點電流</th></tr></thead><tbody>
+<tr><td>1</td><td>0–2.5 µs</td><td>6 V</td><td>0.272727 A/µs</td><td>1.659091 A</td><td>2.340909 A</td></tr>
+<tr><td>2</td><td>2.5–5 µs</td><td>−6 V</td><td>−0.272727 A/µs</td><td>2.340909 A</td><td>1.659091 A</td></tr>
+</tbody></table>
+<p><strong>輕載邊界。</strong>只把 R 改成 30 Ω，K 變成 0.293333，小於 0.500000，於是進入 DCM：M ＝ 0.590655、V<sub>o</sub> ＝ 7.087861 V，比 CCM 結果高 18.131025 %；I<sub>o</sub> ＝ 0.236262 A、峰值 0.558198 A、D<sub>2</sub> ＝ 0.346518、空閒比例 0.153482。R ＝ 17.6 Ω 時剛好臨界，谷值為 0。</p>
+<p><strong>另外三個邊界。</strong>L ＝ 1 µH 時 Δi<sub>L</sub> ＝ 15.000000 A、輸出 8.663877 V；D ＝ 0.05 與 0.95 的 Δi<sub>L</sub> 都是 0.129545 A，因為 D × (1 − D) 對稱；f<sub>sw</sub> ＝ 50 kHz 時 Δi<sub>L</sub> ＝ 2.727273 A，K ＝ 0.733333，仍是 CCM。若輸入改成 48 V、D ＝ 0.25，則輸出 12 V、Δi<sub>L</sub> ＝ 2.045455 A。</p>
+<p>不要只看平均值說電感安全。預設輸出電流是 2.000000 A，但元件每輪要承受 2.340909 A；若控制器遇到啟動、負載突變或電感值因溫度下降，峰值還會更高。設計時應把計算峰值、元件容差與暫態裕度一起放進額定電流，而不是選一顆剛好等於平均電流的電感。</p>
+
+<section class="workspace"><h2>自由實驗：改變負載，看兩段何時變三段</h2>
+<p>這是一個理想 Buck，輸出端接電阻負載。依序改輸入、D、L、切換頻率與 R，觀察模式、峰谷值和逐段電流；特別把 R 拉大，看看谷值碰到零後為何不能再用 CCM 電壓比。</p>
+<div class="controls">
+<label for="bk-vin">輸入電壓 V_in（V）<input id="bk-vin" type="range" min="5" max="48" step="1" value="12"></label>
+<label for="bk-d">工作週期 D<input id="bk-d" type="range" min="0.05" max="0.95" step="0.01" value="0.5"></label>
+<label for="bk-l">電感 L（µH）<input id="bk-l" type="range" min="1" max="100" step="1" value="22"></label>
+<label for="bk-f">切換頻率 f_sw（kHz）<input id="bk-f" type="range" min="50" max="1000" step="10" value="200"></label>
+<label for="bk-r">負載電阻 R（Ω）<input id="bk-r" type="range" min="0.5" max="50" step="0.5" value="3"></label>
+</div>
+<div id="buck-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>V<sub>o</sub> ＝ D × V<sub>in</sub> 是理想 CCM 的推導結果，不是 Buck 的定義；進入 DCM 後電壓比會隨負載變化。</li>
+<li>Δi<sub>L</sub> 是峰對峰值，不是峰值。真正選電感飽和電流時，要看 I<sub>o</sub> ＋ Δi<sub>L</sub> / 2。</li>
+<li>DCM 是輕載的正常狀態；狀態數量與控制模型會改變。</li>
+<li>同步整流把二極體換成第二顆金氧半場效電晶體（metal-oxide-semiconductor field-effect transistor, MOSFET）；若控制允許電感電流為負，就不會有 DCM，這稱為強制 CCM。</li>
+</ul>
+
+<h2>可觀察證據：探棒要同時看電流與開關節點</h2>
+<p>電流探棒可量三角波斜率、峰值與谷值；開關節點電壓在 CCM 有兩段，DCM 多出二極體關斷後的第三段，實機常伴隨寄生振盪。</p>
+<p><strong>能證明：</strong>谷值是否碰到零能證明目前是 CCM 或 DCM；Δi<sub>L</sub> 與斜率還能反推電感實際值是否接近標稱值。<strong>不能證明：</strong>單看正常波形不能證明電感的飽和電流；要把峰值推高並觀察斜率是否突然變陡，才可能辨識飽和跡象，而且仍要遵守元件額定值。</p>
+<p>電感電壓是兩節點之差，只量一端不能直接得到；若儀器與電路共地，也要避免接地意外短接電源節點。</p>
+
+<h2>連到哪門課</h2>
+<p>主機板會把 12 V 降至處理器低電壓，車用電源常把 12 V 降成 5 V。下一章沿用伏秒平衡分析 Boost；07 章用 Δi<sub>L</sub> 設計 L 與 C。基礎見<a href="../../02-電機核心/電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>。</p>
+<p>控制課會為 CCM、DCM 建立不同模型；磁性元件課則用峰值、平均值與頻率分析飽和、銅損和溫升。</p>
+<nav class="pager" aria-label="章節導覽"><a href="04-PWM與工作週期.html">← 上一頁：PWM 與工作週期</a><a href="06-Boost與BuckBoost.html">下一頁：Boost 與 Buck-Boost →</a></nav>
+</main>
+<footer class="site-footer"><span>05 Buck 降壓轉換器：伏秒平衡與 CCM／DCM</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

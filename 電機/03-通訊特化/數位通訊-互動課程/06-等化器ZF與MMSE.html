@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 等化器 ZF 與 MMSE｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・消掉拖尾，不等於免費復原</p>
+<h1>等化器 ZF 與 MMSE：反轉通道時，雜訊也會一起被拉高</h1>
+<p class="lead">多徑讓前一個符元拖到下一個，接收端便得倒過來解。零強制把 ISI 清掉，卻可能放大雜訊；MMSE 接受一點殘留 ISI，換取更穩定的總誤差。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-訊號空間與正交基底.html">01 訊號空間與正交基底</a>、<a href="04-誤碼率公式與Q函數.html">04 誤碼率公式與 Q 函數</a>。<strong>前置：</strong>見〈<a href="../通訊系統-互動課程/07-基頻傳輸ISI與升餘弦.html">通訊系統的 ISI 與眼圖</a>〉、〈<a href="../../02-電機核心/信號與系統-互動課程/04-線性非時變與摺積.html">信號與系統的線性非時變與摺積</a>〉；本章直接接手等化的取捨。</p>
+
+<h2>痛點：把拖尾消掉，為什麼判決反而可能更差</h2>
+<p>通道把一個符元的影響留到後面，接收機看到的就不再是單一符元。直覺會說：既然通道已知，做它的反運算就好。問題在於接收值同時含雜訊，反運算無法只挑有用成分；通道壓得最低的頻率，正是反運算拉得最高的地方。</p>
+<p>所以「拖尾比較少」與「判決比較準」不是同一個目標。零強制（zero-forcing, ZF）堅持前者；最小均方誤差（minimum mean-square error, MMSE）直接壓低總誤差，因此允許一點拖尾留下。兩者差多少，取決於通道洞有多深與輸入 SNR 有多高。</p>
+
+<h2>白話直覺：反轉一個深洞，就像把洞底的所有東西一起抬起</h2>
+<p>可以暫時把頻率響應想成起伏的地板：零強制要把每處墊成一樣高，深洞便需要最大倍率。比喻到此為止；精確地說，等化器的頻率響應 W ＝ 1/H，而輸入雜訊的功率會乘上 |W|²。</p>
+<p>因果鏈從發送符元 x[n] 開始。兩抽頭通道 h ＝ [1, a] 做出 y[n] ＝ x[n] ＋ a x[n − 1] ＋ 雜訊，a 決定前一個符元留下多少。等化器決定如何組合當前與過去的接收值；買到的是較少 ISI 與較開的眼圖，付出的是雜訊放大、抽頭運算與延遲。a 越接近 1，反轉的代價越大；a 大於或等於 1 時，這個因果形式的無限長零強制甚至不可實現。示波器能看眼張開了沒有，分析儀則能顯示估出的抽頭。</p>
+<p>判決回授等化器（decision-feedback equalizer, DFE）用過去判決抵掉後尾，但判錯會傳播；最大似然序列估計（maximum-likelihood sequence estimation, MLSE）直接比較整段候選序列，效果好而複雜度高。</p>
+<p class="note">來源：15-數位通訊-下 §9.2、§10。</p>
+
+<h2>推導：同一個頻率平均，看出 ZF 的代價與 MMSE 的折衷</h2>
+<p><strong>先反轉通道。</strong>H(θ) ＝ 1 ＋ a e<sup>−jθ</sup>，所以 |H|² ＝ 1 ＋ a² ＋ 2a cos θ；θ 是 0 到 2π 的歸一化角頻率，無單位。在 θ ＝ π 附近，|H|² ＝ (1 − a)²，a 越大洞越深。W ＝ 1/H 把 ISI 完全消掉，雜訊功率則乘 |W|²。對 θ 平均 1/(1 ＋ a² ＋ 2a cos θ)，用平均公式 1/√((1 ＋ a²)² − 4a²)，得 NE<sub>ZF</sub> ＝ 1/(1 − a²)。因此 SNR<sub>ZF</sub> ＝ SNR<sub>in</sub>/NE<sub>ZF</sub>。</p>
+<p><strong>再看時域抽頭。</strong>以 D 表示延遲一個符元，1/(1 ＋ aD) ＝ 1 − aD ＋ a²D² − a³D³ ＋ …，故第 n 個抽頭是 (−a)<sup>n</sup>。a ＝ 0.5 時，前 5 個抽頭平方和為 1 ＋ a² ＋ a<sup>4</sup> ＋ a<sup>6</sup> ＋ a<sup>8</sup> ＝ 1.332031，已接近無限和 1/(1 − a²) ＝ 1.333333。這也把頻域的雜訊放大連回抽頭能量。</p>
+<p><strong>MMSE 加入雜訊成本。</strong>令 E<sub>s</sub> ＝ 1、σ² ＝ 1/SNR<sub>in</sub>，W ＝ conj(H)/(|H|² ＋ σ²)，conj(H) 表示 H 的複數共軌。|H|² 大時它接近 1/H；|H|² 小時分母不再趨近零，所以不會硬拉深洞。令 c ＝ 1 ＋ a² ＋ σ²、b ＝ 2a，將 σ²/(c ＋ b cos θ) 取平均，得 MSE ＝ σ²/√(c² − b²)，而 SNR<sub>MMSE</sub> ＝ 1/MSE − 1。不等化時把 a x[n − 1] 當雜訊，ISI 功率是 a²，所以 SINR ＝ 1/(a² ＋ σ²)。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：兩抽頭最小相位通道、無限長線性等化器、E<sub>s</sub> ＝ 1，頻域平均以 4096 點對應閉合式。真實系統不是這樣：抽頭有限、通道可能非最小相位且隨時間改變，效果通常更差；a 大於或等於 1 時本頁零強制不可實現。</p>
+
+<h2>數值實例：a ＝ 0.5、輸入 SNR ＝ 15 dB</h2>
+<p>以下數字就是自由實驗的預設狀態；先看同一個通道下，不等化、零強制與 MMSE 如何分配錯誤成本。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>σ²</td><td>10<sup>−1.5</sup></td><td><strong>0.031623</strong></td></tr>
+<tr><td>不等化 SINR</td><td>1/(0.25 ＋ 0.031623)</td><td><strong>3.550849（5.503322 dB）</strong></td></tr>
+<tr><td>零強制雜訊放大 NE<sub>ZF</sub></td><td>1/(1 − 0.25)</td><td><strong>1.333333（1.249387 dB）</strong></td></tr>
+<tr><td>零強制輸出 SNR</td><td>1/(0.031623 × 1.333333)</td><td><strong>23.717082（13.750613 dB）</strong></td></tr>
+<tr><td>零強制前 5 個抽頭</td><td>(−0.5)<sup>n</sup></td><td><strong>1.000000、−0.500000、0.250000、−0.125000、0.062500</strong></td></tr>
+<tr><td>MMSE 的 MSE</td><td>0.031623/√(1.281623² − 1²)</td><td><strong>0.039450</strong></td></tr>
+<tr><td>MMSE 輸出 SNR</td><td>1/0.039450 − 1</td><td><strong>24.348707（13.864759 dB）</strong></td></tr>
+<tr><td>MMSE 比零強制多</td><td>13.864759 − 13.750613</td><td><strong>0.114146 dB</strong></td></tr>
+</tbody></table>
+<p><strong>邊界對照。</strong>a ＝ 0.9 時，NE<sub>ZF</sub> ＝ 5.263158（7.212464 dB），零強制為 7.787536 dB、MMSE 為 10.535224 dB，多 2.747688 dB，不等化為 0.748825 dB。a ＝ 0.95 時 NE ＝ 10.256410（10.109954 dB），零強制 4.890046 dB，MMSE 10.186229 dB，多 5.296183 dB。a ＝ 0 時三者都是 15.000000 dB。a ＝ 0.5、SNR ＝ 0 dB 時，零強制 −1.249387 dB、MMSE 0.067075 dB、不等化 −0.969100 dB；低 SNR 下零強制反而更差。</p>
+<p><strong>量級對照。</strong>a ＝ 0.5、30 dB 時，零強制 28.750613 dB、MMSE 28.754464 dB，高 SNR 下幾乎相同；a ＝ 0.95、0 dB 時，零強制 −10.109954 dB、MMSE 0.770765 dB，多 10.880718 dB。a ＝ 0.7 的 NE 為 1.960784（2.924298 dB），MMSE 多 0.440767 dB；a ＝ 0.3 的 NE 只有 1.098901（0.409586 dB）。</p>
+<p>這些邊界值把選擇原則說得很清楚：通道平坦或 SNR 很高時，兩種方法幾乎重合；通道有深洞或 SNR 低時，硬把 ISI 壓到零反而把更多錯誤能量送進判決器。實作時不能只問「ISI 還剩多少」，還要同時核對輸出 SNR 與有限抽頭誤差。</p>
+
+<section class="workspace"><h2>自由實驗：調通道深度與輸入 SNR</h2>
+<p>場景是兩抽頭通道 h ＝ [1, a]，符元能量歸一化為 1。調 a 改變頻率洞的深度，調 SNR 改變雜訊成本；輸出會並列不等化、零強制與 MMSE。</p>
+<div class="controls">
+<label for="eq-a">回音係數 a（通道 h = [1, a]）<input id="eq-a" type="range" min="0" max="0.95" step="0.05" value="0.5"></label>
+<label for="eq-snr">輸入 SNR（dB）<input id="eq-snr" type="range" min="0" max="30" step="1" value="15"></label>
+</div>
+<div id="eq-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>零強制的「零」是 ISI 為零，不是雜訊為零；反轉越深的頻率洞，雜訊放大越嚴重。</li>
+<li>MMSE 不保證消除全部 ISI；它刻意留一點 ISI，換取少放大一點雜訊。</li>
+<li>NE<sub>ZF</sub> 是全頻帶 |1/H|² 的平均，不是某一個抽頭的倍率；抽頭平方和才與它對應。</li>
+<li>等化解的是通道記憶造成的 ISI，不會把雜訊還原；後者需靠較高 E<sub>b</sub>/N<sub>0</sub> 與編碼。</li>
+<li>不等化 SINR 把 ISI 視為另一種干擾；它不是單獨量出的熱雜訊 SNR。</li>
+</ul>
+
+<h2>可觀察證據：眼圖與抽頭各回答一半</h2>
+<p><strong>用什麼量。</strong>用示波器在等化前後叠出眼圖，記錄判決時刻的眼高與眼寬；再用向量訊號分析儀或接收機診斷頁讀出等化器抽頭，比對是否呈現 1、−a、a² 的交錯衰減。</p>
+<p><strong>能證明什麼。</strong>眼開度增加可證明判決時刻的總擾動變小；抽頭形狀能證明接收機估到的通道拖尾與反轉方向。</p>
+<p><strong>不能證明什麼。</strong>單張眼圖不能獨立告訴你雜訊放大幾倍，因為殘留 ISI、時序誤差與雜訊都會讓線跡變厚；也不能只靠抽頭斷定實際誤碼率。</p>
+
+<h2>連到哪門課</h2>
+<p>ISI 與眼圖的機制見<a href="../通訊系統-互動課程/07-基頻傳輸ISI與升餘弦.html">通訊系統的基頻傳輸</a>；通道為什麼寫成摺積，見<a href="../../02-電機核心/信號與系統-互動課程/04-線性非時變與摺積.html">信號與系統的線性非時變與摺積</a>。<a href="12-OFDM與循環字首.html">本課 12 章</a>會說明 OFDM 如何把每條子載波的等化縮成一個複數乘法；DFE、MLSE 的完整設計及 FIR 實作留給數位訊號處理課。軟體那一端，<code>scipy.signal.lfilter([1], [1, a], y)</code> 就是 IIR 形式的零強制等化器。</p>
+<nav class="pager" aria-label="章節導覽"><a href="05-載波相位與同步.html">← 上一頁：載波相位與同步</a><a href="07-自適應等化LMS.html">下一頁：自適應等化 LMS →</a></nav>
+</main>
+<footer class="site-footer"><span>06 等化器 ZF 與 MMSE</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

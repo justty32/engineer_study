@@ -1,0 +1,92 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">檢・13 章各 3 題，共 39 題</p>
+<h1>自我檢核：每章用兩個數字與一個判斷確認理解</h1>
+<p class="lead">題目只使用各章已出現的數字、公式與邊界，不加入新的陷阱。填完按「對答案」，頁面會即時解釋原因並指出該回哪一章複習。</p>
+<p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯只會告訴你為什麼，並附上該回去看的章節。可以無限重做。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 數位通訊世界觀與收發鏈</h2>
+<p>回去看：<a href="00-數位通訊世界觀與收發鏈.html">00 數位通訊世界觀與收發鏈</a></p>
+<section class="card"><p><strong>q00-1｜</strong>R<sub>b</sub> ＝ 1000 kbit/s、率 1/2 編碼、QPSK。符元率是多少 kbaud？</p><label for="q00-1">你的答案（kbaud）<input id="q00-1" type="number" step="any"></label><button type="button" id="q00-1-check">對答案</button><div id="q00-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-2｜</strong>承上，滾降係數 0.25。帶通頻寬是多少 kHz？</p><label for="q00-2">你的答案（kHz）<input id="q00-2" type="number" step="any"></label><button type="button" id="q00-2-check">對答案</button><div id="q00-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-3｜</strong>E<sub>s</sub>/N<sub>0</sub> 與 E<sub>b</sub>/N<sub>0</sub> 的關係？</p><label for="q00-3">你的答案<select id="q00-3"><option value="">請選擇</option><option value="a">E_s/N_0 = k R × E_b/N_0</option><option value="b">E_s/N_0 = E_b/N_0 / (k R)</option><option value="c">兩者相等</option><option value="d">E_s/N_0 = k × E_b/N_0 / R</option></select></label><button type="button" id="q00-3-check">對答案</button><div id="q00-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>01 訊號空間與正交基底</h2>
+<p>回去看：<a href="01-訊號空間與正交基底.html">01 訊號空間與正交基底</a></p>
+<section class="card"><p><strong>q01-1｜</strong>E<sub>1</sub> ＝ E<sub>2</sub> ＝ 1、ρ ＝ −1。兩訊號的距離 d 是多少？</p><label for="q01-1">你的答案<input id="q01-1" type="number" step="any"></label><button type="button" id="q01-1-check">對答案</button><div id="q01-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-2｜</strong>E<sub>1</sub> ＝ E<sub>2</sub> ＝ 1、ρ ＝ 0。d² 是多少？</p><label for="q01-2">你的答案<input id="q01-2" type="number" step="any"></label><button type="button" id="q01-2-check">對答案</button><div id="q01-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-3｜</strong>同樣的能量下，二元訊號哪種佈局的誤碼率最低？</p><label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">反極性（ρ = −1）</option><option value="b">正交（ρ = 0）</option><option value="c">ON-OFF</option><option value="d">三者相同</option></select></label><button type="button" id="q01-3-check">對答案</button><div id="q01-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>02 M 進制星座與最小距離</h2>
+<p>回去看：<a href="02-M進制星座與最小距離.html">02 M 進制星座與最小距離</a></p>
+<section class="card"><p><strong>q02-1｜</strong>16-QAM 座標取 {±1, ±3}，未歸一化的平均符元能量是多少？</p><label for="q02-1">你的答案<input id="q02-1" type="number" step="any"></label><button type="button" id="q02-1-check">對答案</button><div id="q02-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-2｜</strong>同樣 E<sub>s</sub> ＝ 1，16-QAM 的 d<sub>min</sub> 比 16-PSK 大幾 dB？</p><label for="q02-2">你的答案（dB）<input id="q02-2" type="number" step="any"></label><button type="button" id="q02-2-check">對答案</button><div id="q02-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-3｜</strong>Gray 映射改變的是什麼？</p><label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">符元錯誤率</option><option value="b">誤碼率（每次符元錯誤只錯 1 位元）</option><option value="c">最小距離</option><option value="d">平均能量</option></select></label><button type="button" id="q02-3-check">對答案</button><div id="q02-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>03 最佳接收機與 ML 判決</h2>
+<p>回去看：<a href="03-最佳接收機與ML判決.html">03 最佳接收機與 ML 判決</a></p>
+<section class="card"><p><strong>q03-1｜</strong>反極性 ±1、P(s<sub>1</sub> ＝ +1) ＝ 0.8、E<sub>b</sub>/N<sub>0</sub> ＝ 4 dB。MAP 門檻 γ 是多少？</p><label for="q03-1">你的答案<input id="q03-1" type="number" step="any"></label><button type="button" id="q03-1-check">對答案</button><div id="q03-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-2｜</strong>承上，MAP 的錯誤率是 ML 的幾分之一（填 ML/MAP 的倍率）？</p><label for="q03-2">你的答案<input id="q03-2" type="number" step="any"></label><button type="button" id="q03-2-check">對答案</button><div id="q03-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-3｜</strong>接收點 r ＝ (0.9, −0.2)，QPSK 四點 (±0.707107, ±0.707107)。ML 判成哪一點？</p><label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">(0.707107, 0.707107)</option><option value="b">(−0.707107, 0.707107)</option><option value="c">(−0.707107, −0.707107)</option><option value="d">(0.707107, −0.707107)</option></select></label><button type="button" id="q03-3-check">對答案</button><div id="q03-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>04 誤碼率公式與 Q 函數</h2>
+<p>回去看：<a href="04-誤碼率公式與Q函數.html">04 誤碼率公式與 Q 函數</a></p>
+<section class="card"><p><strong>q04-1｜</strong>BPSK 要達到誤碼率 10<sup>−5</sup>，需要多少 dB 的 E<sub>b</sub>/N<sub>0</sub>？</p><label for="q04-1">你的答案（dB）<input id="q04-1" type="number" step="any"></label><button type="button" id="q04-1-check">對答案</button><div id="q04-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-2｜</strong>同一目標 10<sup>−5</sup>，16-QAM 比 BPSK 多需要幾 dB？</p><label for="q04-2">你的答案（dB）<input id="q04-2" type="number" step="any"></label><button type="button" id="q04-2-check">對答案</button><div id="q04-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-3｜</strong>DBPSK 的誤碼率公式？</p><label for="q04-3">你的答案<select id="q04-3"><option value="">請選擇</option><option value="a">Q(√(2γ_b))</option><option value="b">½ exp(−γ_b)</option><option value="c">½ exp(−γ_b/2)</option><option value="d">Q(√γ_b)</option></select></label><button type="button" id="q04-3-check">對答案</button><div id="q04-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>05 載波相位與同步</h2>
+<p>回去看：<a href="05-載波相位與同步.html">05 載波相位與同步</a></p>
+<section class="card"><p><strong>q05-1｜</strong>QPSK、相位誤差 10°，等效損失幾 dB？</p><label for="q05-1">你的答案（dB）<input id="q05-1" type="number" step="any"></label><button type="button" id="q05-1-check">對答案</button><div id="q05-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-2｜</strong>歸一化頻率偏移 Δf/R<sub>s</sub> ＝ 5 ‰，每個符元相位轉幾度？</p><label for="q05-2">你的答案（度）<input id="q05-2" type="number" step="any"></label><button type="button" id="q05-2-check">對答案</button><div id="q05-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-3｜</strong>Costas 迴路解 BPSK 為什麼有 180° 模糊？</p><label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">迴路濾波器太慢</option><option value="b">平方運算把 ±1 的調變抹掉，相位少了一半資訊</option><option value="c">雜訊太大</option><option value="d">符元時序沒對準</option></select></label><button type="button" id="q05-3-check">對答案</button><div id="q05-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>06 等化器 ZF 與 MMSE</h2>
+<p>回去看：<a href="06-等化器ZF與MMSE.html">06 等化器 ZF 與 MMSE</a></p>
+<section class="card"><p><strong>q06-1｜</strong>通道 h ＝ [1, 0.9]，零強制等化器的雜訊放大倍數（線性）是多少？</p><label for="q06-1">你的答案<input id="q06-1" type="number" step="any"></label><button type="button" id="q06-1-check">對答案</button><div id="q06-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-2｜</strong>a ＝ 0.5、輸入 SNR 15 dB，零強制輸出 SNR 是多少 dB？</p><label for="q06-2">你的答案（dB）<input id="q06-2" type="number" step="any"></label><button type="button" id="q06-2-check">對答案</button><div id="q06-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-3｜</strong>低 SNR 時 MMSE 比零強制好很多，原因？</p><label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">MMSE 完全消除 ISI</option><option value="b">MMSE 在通道壓低的頻率不硬拉，少放大雜訊</option><option value="c">MMSE 抽頭較多</option><option value="d">MMSE 不需要知道通道</option></select></label><button type="button" id="q06-3-check">對答案</button><div id="q06-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>07 自適應等化 LMS</h2>
+<p>回去看：<a href="07-自適應等化LMS.html">07 自適應等化 LMS</a></p>
+<section class="card"><p><strong>q07-1｜</strong>L ＝ 5、a ＝ 0.5，LMS 步長的教科書上界是多少？</p><label for="q07-1">你的答案<input id="q07-1" type="number" step="any"></label><button type="button" id="q07-1-check">對答案</button><div id="q07-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-2｜</strong>a ＝ 0.5，零強制理想抽頭的第 3 個（n ＝ 2）是多少？</p><label for="q07-2">你的答案<input id="q07-2" type="number" step="any"></label><button type="button" id="q07-2-check">對答案</button><div id="q07-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-3｜</strong>步長 μ 太大會怎樣？</p><label for="q07-3">你的答案<select id="q07-3"><option value="">請選擇</option><option value="a">收斂太慢</option><option value="b">抽頭發散、e² 爆炸</option><option value="c">沒有影響</option><option value="d">抽頭收斂到 0</option></select></label><button type="button" id="q07-3-check">對答案</button><div id="q07-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>08 漢明碼與症狀解碼</h2>
+<p>回去看：<a href="08-漢明碼與症狀解碼.html">08 漢明碼與症狀解碼</a></p>
+<section class="card"><p><strong>q08-1｜</strong>(7,4) 漢明碼、訊息 1011 的系統式碼字？</p><label for="q08-1">你的答案<select id="q08-1"><option value="">請選擇</option><option value="a">1011010</option><option value="b">1011101</option><option value="c">1011000</option><option value="d">1011111</option></select></label><button type="button" id="q08-1-check">對答案</button><div id="q08-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-2｜</strong>E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB、R ＝ 4/7，每個編碼位元的 E<sub>c</sub>/N<sub>0</sub> 是多少 dB？</p><label for="q08-2">你的答案（dB）<input id="q08-2" type="number" step="any"></label><button type="button" id="q08-2-check">對答案</button><div id="q08-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-3｜</strong>(7,4) 漢明碼硬判決在 10<sup>−5</sup> 的編碼增益是幾 dB？</p><label for="q08-3">你的答案（dB）<input id="q08-3" type="number" step="any"></label><button type="button" id="q08-3-check">對答案</button><div id="q08-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>09 摺積碼與 Viterbi 解碼</h2>
+<p>回去看：<a href="09-摺積碼與Viterbi解碼.html">09 摺積碼與 Viterbi 解碼</a></p>
+<section class="card"><p><strong>q09-1｜</strong>K ＝ 3、率 1/2、生成 (7,5) 的摺積碼，自由距離 d<sub>free</sub> 是多少？</p><label for="q09-1">你的答案<input id="q09-1" type="number" step="any"></label><button type="button" id="q09-1-check">對答案</button><div id="q09-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-2｜</strong>目前狀態 10、輸入 1，輸出與下一狀態？</p><label for="q09-2">你的答案<select id="q09-2"><option value="">請選擇</option><option value="a">輸出 01、下一狀態 11</option><option value="b">輸出 10、下一狀態 01</option><option value="c">輸出 11、下一狀態 10</option><option value="d">輸出 00、下一狀態 00</option></select></label><button type="button" id="q09-2-check">對答案</button><div id="q09-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-3｜</strong>約束長度 K ＝ 7 的摺積碼，Viterbi 要追蹤幾個狀態？</p><label for="q09-3">你的答案<input id="q09-3" type="number" step="any"></label><button type="button" id="q09-3-check">對答案</button><div id="q09-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>10 交錯與突發錯誤</h2>
+<p>回去看：<a href="10-交錯與突發錯誤.html">10 交錯與突發錯誤</a></p>
+<section class="card"><p><strong>q10-1｜</strong>交錯深度 4、碼長 7，發射端的交錯延遲是幾個位元？</p><label for="q10-1">你的答案（位元）<input id="q10-1" type="number" step="any"></label><button type="button" id="q10-1-check">對答案</button><div id="q10-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-2｜</strong>深度 4、突發長度 6，最壞情況一個碼字會挨幾個錯？</p><label for="q10-2">你的答案（個）<input id="q10-2" type="number" step="any"></label><button type="button" id="q10-2-check">對答案</button><div id="q10-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-3｜</strong>配 (7,4) 漢明碼時，區塊交錯器保證全部救回的條件？</p><label for="q10-3">你的答案<select id="q10-3"><option value="">請選擇</option><option value="a">b ≤ D</option><option value="b">b ≤ n</option><option value="c">b ≤ D × n</option><option value="d">沒有條件</option></select></label><button type="button" id="q10-3-check">對答案</button><div id="q10-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>11 展頻與 CDMA</h2>
+<p>回去看：<a href="11-展頻與CDMA.html">11 展頻與 CDMA</a></p>
+<section class="card"><p><strong>q11-1｜</strong>展頻因子 64 的處理增益是幾 dB？</p><label for="q11-1">你的答案（dB）<input id="q11-1" type="number" step="any"></label><button type="button" id="q11-1-check">對答案</button><div id="q11-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-2｜</strong>N ＝ 64、K ＝ 8，非同步隨機碼的多用戶干擾項 (K − 1)/N 是多少？</p><label for="q11-2">你的答案<input id="q11-2" type="number" step="any"></label><button type="button" id="q11-2-check">對答案</button><div id="q11-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-3｜</strong>Walsh 碼的正交性在什麼條件下成立？</p><label for="q11-3">你的答案<select id="q11-3"><option value="">請選擇</option><option value="a">任何時候</option><option value="b">只有碼片邊界對齊（同步）時</option><option value="c">只有用戶數少於 N 時</option><option value="d">只有功率相等時</option></select></label><button type="button" id="q11-3-check">對答案</button><div id="q11-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>12 OFDM 與循環字首</h2>
+<p>回去看：<a href="12-OFDM與循環字首.html">12 OFDM 與循環字首</a></p>
+<section class="card"><p><strong>q12-1｜</strong>B ＝ 20 MHz、N ＝ 64，子載波間距是多少 kHz？</p><label for="q12-1">你的答案（kHz）<input id="q12-1" type="number" step="any"></label><button type="button" id="q12-1-check">對答案</button><div id="q12-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q12-2｜</strong>承上、CP 比例 1/4，循環字首長度是多少 µs？</p><label for="q12-2">你的答案（µs）<input id="q12-2" type="number" step="any"></label><button type="button" id="q12-2-check">對答案</button><div id="q12-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q12-3｜</strong>循環字首做了什麼？</p><label for="q12-3">你的答案<select id="q12-3"><option value="">請選擇</option><option value="a">提高頻譜效率</option><option value="b">讓通道的線性摺積在 FFT 視窗內變成圓形摺積，每個子載波只要乘一個係數</option><option value="c">降低 PAPR</option><option value="d">消除頻率偏移</option></select></label><button type="button" id="q12-3-check">對答案</button><div id="q12-3-output" class="output" aria-live="polite"></div></section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

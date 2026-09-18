@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 步進馬達與微步｜馬達驅動與控制</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・數脈衝能定位，不代表轉子沒有偏移</p>
+<h1>步進馬達與微步：解析度切得細，可用轉矩卻不會變多</h1>
+<p class="lead">1.800000° 的全步切成 16 微步（microstepping）後，每格是 0.112500°，但 0.1 N·m 負載已足以讓轉子偏離 2.573780 個微步。本章把「指令分得細」與「實際站得準」分開，再看速度升高時電流為何追不上。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-速度與位置迴路串級.html">03 速度與位置迴路串級</a>裡的位置、速度與負載觀念。<strong>前置：</strong>見〈馬達家族與選型〉<a href="../../02-電機核心/電機機械-互動課程/12-馬達家族與選型.html">電機機械的步進馬達定位</a>。</p>
+
+<h2>痛點：命令走了幾格，轉子為什麼不一定在那裡</h2>
+<p>步進馬達（stepper motor）的控制器會數脈衝，卻沒有直接量轉子位置。這種開迴路方式在負載足夠小、速度足夠低時很好用，但命令位置只是磁場希望轉子對準的位置。負載轉矩一加，轉子必須落後一個夾角才能產生對等轉矩，因此「數得到」不等於「到得了」。</p>
+<p>微步（microstepping）再帶來一個容易誤會的直覺：把每個全步切成更多份，命令解析度確實提高，但相鄰兩格間的增量轉矩反而變小。高速時又有另一層限制：繞組電感拒絕電流立刻改變，每步留給電流上升的時間變短，可用轉矩便往下掉。</p>
+
+<h2>白話直覺：命令格子是刻度，負載決定指針偏多遠</h2>
+<p>可以暂時把微步想成把刻度尺畫得更密，但刻度變密不會讓指針更硬；比喻到此為止。真實機制是兩相繞組的電流依正弦表逐步改變，合成定子磁場的方向因而小幅移動；轉子落後該方向才產生轉矩。</p>
+<p>物理因果由直流鏈開始：逆變器的斬波驅動（chopper drive）讓某一相的實體回路導通，電流由直流鏈流進繞組，建立定子磁場，磁場與轉子夾角產生轉矩。本章沒有位置回授；控制器只數脈衝，電流探棒能看到每相電流是否爬到額定值，編碼器或刻度盤才能看到轉子偏移。</p>
+<p>混合式步進馬達每圈 200 全步，全步步距角為 1.800000°，50 齒轉子使 4 個全步對應 1 個電氣週期。保持轉矩（holding torque）是靜止時的最大值；失步（step loss）則是負載超過可用轉矩後，轉子跟不上命令。</p>
+<p class="note">來源：P3 上 §1.2（步進一行）；其餘由本課補充。</p>
+
+<h2>推導：從脈衝率一路算到失步邊界</h2>
+<p>每圈全步數為 N<sub>spr</sub>，微步細分為 m，則全步角 θ<sub>step</sub> = 360° / N<sub>spr</sub>，微步角 θ<sub>µ</sub> = θ<sub>step</sub> / m。控制器每秒發 f 個微步脈衝，rev/s = f / (N<sub>spr</sub> × m)。微步增量轉矩是 T<sub>inc</sub> = T<sub>h</sub> × sin(90° / m)，這個量會隨 m 增大而減小。</p>
+<p>每個全步要讓繞組電流改變方向，電流由 0 爬到 I 需要 t<sub>rise</sub> = L × I / (V − E)，其中反電動勢（back electromotive force, back EMF）E = K<sub>e</sub> × ω<sub>m</sub>。每個全步可用的時間 T<sub>full</sub> = m / f。當 t<sub>rise</sub> 超過 T<sub>full</sub>，本課以 T<sub>full</sub> / t<sub>rise</sub> 近似電流與可用轉矩比例。令兩者相等，得轉折速度 ω<sub>corner</sub> = 2π × V / (N<sub>spr</sub> × L × I + 2π × K<sub>e</sub>)；更遠的極限是 E = V，即 ω<sub>max</sub> = V / K<sub>e</sub>。</p>
+<p>靜態時的轉矩–角度曲線採 T = T<sub>avail</sub> × sin θ<sub>err</sub>，所以 θ<sub>err</sub> = asin(T<sub>L</sub> / T<sub>avail</sub>) 電氣度；換成機械角要乘 θ<sub>step</sub> / 90°，再除以 θ<sub>µ</sub> 得偏移的微步數。本課用的是線性教學模型，真實驅動器不完全如此：假設正弦轉矩曲線、斬波器理想，並忽略共振與鐵損。</p>
+<p>這條推導把兩種限制分開了：微步表決定命令刻度，繞組電流決定當下有多少轉矩可以拉住轉子。細分增加時，命令刻度雖然更密，相鄰刻度之間可用來抵抗擾動的增量轉矩卻更小；轉子仍要累積足夠的角度差，才能平衡同一個負載。速度升高後若電流又爬不滿，可用轉矩再縮小，所需角度差便繼續增加，最後跨過能維持同步的邊界而失步。因此判斷定位能力時，不能只讀驅動器設定的微步數，還要同時看負載、相電流與轉速。</p>
+
+<h2>數值實例：200 全步、16 微步與 16000 脈衝/s</h2>
+<p>預設 N<sub>spr</sub> = 200、m = 16、f = 16000 微步/s、V = 24 V、L = 3 mH、I = 2 A、T<sub>L</sub> = 0.1 N·m，固定 T<sub>h</sub> = 0.4 N·m、K<sub>e</sub> = 0.05 V·s/rad。轉速單位採每分鐘轉數（revolutions per minute, rpm），本例是 300.000000 rpm；每個全步只留 1.000000 ms 給電流變化，這是機械運動與電氣瞬態的量級對照。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>全步步距角</td><td>360 / 200</td><td><strong>1.800000°</strong></td></tr><tr><td>微步角</td><td>1.8 / 16</td><td><strong>0.112500°</strong></td></tr><tr><td>每圈微步數</td><td>200 × 16</td><td><strong>3200</strong></td></tr><tr><td>轉速</td><td>16000 / 3200 × 60</td><td><strong>300.000000 rpm（31.415927 rad/s）</strong></td></tr><tr><td>電氣頻率</td><td>5 × 50</td><td><strong>250.000000 Hz</strong></td></tr><tr><td>反電動勢</td><td>0.05 × 31.415927</td><td><strong>1.570796 V</strong></td></tr><tr><td>電流上升時間</td><td>0.003 × 2 / (24 − 1.570796)</td><td><strong>0.267508 ms</strong></td></tr><tr><td>全步週期</td><td>16 / 16000</td><td><strong>1.000000 ms</strong></td></tr><tr><td>可用轉矩比例</td><td>min(1, 1 / 0.267508)</td><td><strong>100.000000 %（T<sub>avail</sub> = 0.400000 N·m）</strong></td></tr><tr><td>轉折速度</td><td>2π × 24 / (200 × 0.003 × 2 + 2π × 0.05)</td><td><strong>951.022810 rpm</strong></td></tr><tr><td>反電動勢 = V 的速度</td><td>24 / 0.05</td><td><strong>4583.662361 rpm</strong></td></tr><tr><td>微步增量轉矩</td><td>0.4 × sin(90° / 16)</td><td><strong>0.039207 N·m（9.801714 %）</strong></td></tr><tr><td>負載造成的靜態誤差</td><td>asin(0.1 / 0.4)</td><td><strong>14.477512°（電氣）= 0.289550°（機械）= 2.573780 個微步</strong></td></tr>
+</tbody></table>
+<p>邊界對照：f = 64000 時轉速是 1200 rpm，可用轉矩只剩 73.820061 %，誤差 3.519171 微步；f = 160000 時可用轉矩為 0.055280 N·m，小於負載而失步。m = 256 時微步角縮成 0.007031°，同樣負載卻會偏 41.180479 微步，細分更高並沒有消除偏移。</p>
+<p>電源與繞組參數也有清楚邊界。V = 48 V 時轉折速度是 1902.045621 rpm，V = 12 V 時降為 475.511405 rpm；L = 10 mH 時降為 333.784617 rpm，I = 4 A 時為 530.551032 rpm。提高驅動電壓能幫助電流更快爬升，電感變大或要求更高相電流，則需要更長時間才能到達額定值。</p>
+<p>m = 1、f = 1000 時仍是 300 rpm，而微步增量轉矩為 100 %；這組對照把速度與細分效果分開了。</p>
+
+<section class="workspace"><h2>自由實驗：微步、速度與負載的拉鋸</h2>
+<p>這是一台固定保持轉矩 0.4 N·m、K_e = 0.05 V·s/rad 的步進馬達。改變脈衝率、電壓、電感與負載，觀察電流上升時間、可用轉矩與靜態偏移如何連在一起。</p>
+<div class="controls">
+<label for="st-spr">每圈全步數 N_spr<select id="st-spr"><option value="200" selected>200 步／圈（1.8°）</option><option value="400">400 步／圈（0.9°）</option></select></label>
+<label for="st-m">微步細分 m<select id="st-m"><option value="1">1（全步）</option><option value="2">2（半步）</option><option value="4">4</option><option value="8">8</option><option value="16" selected>16</option><option value="32">32</option><option value="256">256</option></select></label>
+<label for="st-f">脈衝率 f（微步／s）<input id="st-f" type="range" min="100" max="200000" step="100" value="16000"></label>
+<label for="st-v">驅動電壓 V（V）<input id="st-v" type="range" min="12" max="48" step="1" value="24"></label>
+<label for="st-l">相電感 L（mH）<input id="st-l" type="range" min="1" max="10" step="0.5" value="3"></label>
+<label for="st-i">額定相電流 I（A）<input id="st-i" type="range" min="0.5" max="4" step="0.1" value="2"></label>
+<label for="st-tl">負載轉矩 T_L（N·m）<input id="st-tl" type="range" min="0" max="0.4" step="0.02" value="0.1"></label>
+</div>
+<div id="stepper-output" class="output" aria-live="polite">
+<p>目前模式：N_spr = 200、m = 16。</p>
+<table><thead><tr><th>量</th><th>預設值</th></tr></thead><tbody><tr><td>全步步距角</td><td>1.800000°</td></tr><tr><td>微步角</td><td>0.112500°</td></tr><tr><td>每圈微步數</td><td>3200</td></tr><tr><td>轉速</td><td>300.000000 rpm（31.415927 rad/s）</td></tr><tr><td>電氣頻率</td><td>250.000000 Hz</td></tr><tr><td>反電動勢</td><td>1.570796 V</td></tr><tr><td>電流上升時間</td><td>0.267508 ms</td></tr><tr><td>全步週期</td><td>1.000000 ms</td></tr><tr><td>可用轉矩比例</td><td>100.000000 %（T<sub>avail</sub> = 0.400000 N·m）</td></tr><tr><td>轉折速度</td><td>951.022810 rpm</td></tr><tr><td>反電動勢 = V 的速度</td><td>4583.662361 rpm</td></tr><tr><td>微步增量轉矩</td><td>0.039207 N·m（9.801714 %）</td></tr><tr><td>負載造成的靜態誤差</td><td>14.477512°（電氣）= 0.289550°（機械）= 2.573780 個微步</td></tr></tbody></table>
+<p><strong>判讀：在轉折速度以下，電流每步都爬得到額定值，轉矩滿。</strong></p>
+<p>負載造成 14.477512° 電氣角、0.289550° 機械角、2.573780 微步的偏移。微步增量轉矩只有保持轉矩的 9.801714 %：微步提高的是解析度，不是剛性。為什麼：0.267508 ms 的電流上升時間短於 1.000000 ms 全步週期，所以斬波器能把電流撐到額定值。邊界提醒：偏移已超過 1 個微步，這時 m 再高也沒有意義；負載等於或超過可用轉矩時會失步，控制器無法得知；無負載時靜態誤差為 0；反電動勢已等於電源電壓時，電流推不進去，必然失步。</p>
+</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>微步解析度不等於定位精度；負載一加，轉子就要用夾角換轉矩。</li><li>保持轉矩是靜止時的最大值；轉速升高後，電流不足只會讓可用值更小。</li><li>開迴路步進驅動在失步後不知道真實位置；需要高精度時，要加編碼器形成閉迴路。</li><li>轉折速度表示電流開始爬不滿；反電動勢等於電源電壓是更遠的極限，兩者不是同一條邊界。</li></ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>用電流探棒量相電流：低速時會看到斬波器撐住額定值的平頂波形，高速時則變成爬不到頂的三角形。再於軸端加負載，用刻度盤或編碼器量靜態偏移。</p>
+<p><strong>能證明什麼。</strong>電流波形由平頂變成斜坡，能證明轉折速度來自電感與留給電流的時間；負載與偏移對照能驗證正弦轉矩曲線。</p>
+<p><strong>不能證明什麼。</strong>單次低速與高速量測不能找到共振點；要掃過脈衝頻率，再量振動或聲音。</p>
+
+<h2>連到哪門課</h2>
+<p>步進驅動用在 3D 列印機、小型數值控制機台與低成本定位機構。它在馬達家族的位置見<a href="../../02-電機核心/電機機械-互動課程/12-馬達家族與選型.html">馬達家族與選型</a>；RL 電流上升的形狀見<a href="../../02-電機核心/電路學-互動課程/07-一階暫態RC與RL.html">一階暫態 RC 與 RL</a>。</p>
+<p><strong>韌體那一端：</strong>脈衝率對應步進計時器的比較值，微步表是一張有 m 個項目的正弦查表，數值會送給兩相電流斬波器。</p>
+<nav class="pager" aria-label="章節導覽"><a href="03-速度與位置迴路串級.html">← 上一頁：速度與位置迴路串級</a><a href="05-BLDC六步換相與霍爾.html">下一頁：BLDC 六步換相與霍爾 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 步進馬達與微步</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

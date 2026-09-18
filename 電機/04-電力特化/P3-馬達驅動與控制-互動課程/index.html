@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>馬達驅動與控制（零基礎互動課）</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html" aria-current="page">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">從兩個磁場的夾角一路算到再生煞車的每一焦耳</p>
+<h1>馬達驅動與控制（零基礎互動課）</h1>
+<p class="lead">這門課只問一件事——驅動器怎麼把「想要的轉矩、轉速、位置」變成開關動作，再把量到的東西送回來修正；每章一個驅動器內部的數字實驗，改一個量看電壓、電流、轉矩、迴路響應與能量怎麼動。</p>
+<div class="flow"><span>轉矩與夾角</span><span>H 橋平均電壓</span><span>電流迴路 PI</span><span>速度位置串級</span><span>步進與微步</span><span>六步換相</span><span>V/f 純量</span><span>Clarke–Park</span><span>dq 與弱磁</span><span>SVPWM</span><span>編碼器</span><span>再生煞車</span></div>
+<p class="note">每章只有一個自由實驗、沒有計分；練習題集中在自我檢核頁，答錯不擋路。</p>
+<p class="warning">本課不重講馬達本體（電機機械課）、PID 與二階響應（控制系統課）、開關與逆變器原理（電力電子課）；每章開頭告訴你哪一頁是前置。</p>
+<section class="chapter-list">
+<a class="chapter-card" href="00-驅動器世界觀與轉矩夾角.html"><h2><span class="number">00</span> 驅動器世界觀與轉矩夾角</h2><p>馬達只認夾角：兩個磁場垂直時轉矩最大，六步換相平均只拿到 95.493 %。</p></a>
+<a class="chapter-card" href="01-H橋與平均電壓.html"><h2><span class="number">01</span> H 橋與平均電壓</h2><p>開關開 75 % 的時間，馬達就當它是 18 V；電感把漣波壓到 1.494 %。</p></a>
+<a class="chapter-card" href="02-電流迴路PI設計.html"><h2><span class="number">02</span> 電流迴路 PI 設計</h2><p>用 L/R 抵消馬達極點，PI 增益直接算出來；取樣延遲吃掉 13.5° 相位裕度。</p></a>
+<a class="chapter-card" href="03-速度與位置迴路串級.html"><h2><span class="number">03</span> 速度與位置迴路串級</h2><p>電流迴路比速度迴路快 10 倍時超越量 4.353 %，只快 1 倍時 24.622 %。</p></a>
+<a class="chapter-card" href="04-步進馬達與微步.html"><h2><span class="number">04</span> 步進馬達與微步</h2><p>1.8° 切成 16 微步只剩 0.1125°，但 0.1 N·m 的負載就讓它偏掉 2.574 個微步。</p></a>
+<a class="chapter-card" href="05-BLDC六步換相與霍爾.html"><h2><span class="number">05</span> BLDC 六步換相與霍爾</h2><p>三個霍爾位元決定哪兩相通電；轉矩在 86.6 % 與 100 % 之間來回。</p></a>
+<a class="chapter-card" href="06-感應機Vf純量控制.html"><h2><span class="number">06</span> 感應機 V/f 純量控制</h2><p>V/f 定值就是定磁通；3 Hz 不補償磁通只剩 79 %，轉速掉一半。</p></a>
+<a class="chapter-card" href="07-Clarke與Park轉換.html"><h2><span class="number">07</span> Clarke 與 Park 轉換</h2><p>三相正弦轉到 dq 變成兩個直流數；角度錯 45° 轉矩掉 29.289 %。</p></a>
+<a class="chapter-card" href="08-dq電壓方程與弱磁.html"><h2><span class="number">08</span> dq 電壓方程與弱磁</h2><p>反電動勢逼近 173.205 V 就飽和；注 −10 A 的 i_d 把基速從 3940 推到 4838 rpm。</p></a>
+<a class="chapter-card" href="09-SVPWM扇區與作用時間.html"><h2><span class="number">09</span> SVPWM 扇區與作用時間</h2><p>參考向量落在哪個扇區，兩個相鄰向量各作用幾微秒，三相工作週期就算出來。</p></a>
+<a class="chapter-card" href="10-編碼器與速度估測.html"><h2><span class="number">10</span> 編碼器與速度估測</h2><p>1000 線編碼器在 300 rpm 每毫秒只有 20 個脈衝，速度誤差 5 %，變成 4.935 N·m 的轉矩抖動。</p></a>
+<a class="chapter-card" href="11-再生煞車與能量.html"><h2><span class="number">11</span> 再生煞車與能量</h2><p>3000 rpm 煨停放出 2467 J，1000 µF 電容只吃得下 27.2 J，其餘要進電阻或電池。</p></a>
+<a class="chapter-card" href="名詞與概念字典.html"><h2><span class="number">查</span> 名詞與概念字典</h2><p>50 張卡片，繁中與英文對照、白話、機制與邊界。</p></a>
+<a class="chapter-card" href="自我檢核.html"><h2><span class="number">檢</span> 自我檢核</h2><p>每章 3 題共 36 題，即時對錯與解釋，不計分、可重做。</p></a>
+</section>
+<h2>先修與去向</h2>
+<p>馬達本體見<a href="../../02-電機核心/電機機械-互動課程/index.html">電機機械課</a>；PI 與二階響應見<a href="../../02-電機核心/控制系統-互動課程/index.html">控制系統課</a>；RL 暫態與開關元件見<a href="../../02-電機核心/電路學-互動課程/07-一階暫態RC與RL.html">電路學的一階暫態</a>與<a href="../../02-電機核心/電子學-互動課程/08-MOSFET原理與三個工作區.html">電子學的 MOSFET 原理</a>。</p>
+<h2>來源</h2>
+<ul><li>P3-馬達驅動與控制-上.md</li><li>P3-馬達驅動與控制-下.md</li><li>中英名詞對照表-2.md</li><li>中英名詞對照表-3.md</li></ul>
+<h2>用語說明</h2>
+<p>本課一律用「純量控制」「滑差」「工作週期」「迴路」「取樣」「逆變器」「直流鏈」「反積分飽和」；其他教材的另一套寫法只在字典對應卡的「不要混淆」欄列出，本頁不得引述。乘號 ×、負號 −、數值 6 位小數。</p>
+<nav class="pager" aria-label="章節導覽"><a href="自我檢核.html">← 自我檢核</a><a href="00-驅動器世界觀與轉矩夾角.html">開始：驅動器世界觀 →</a></nav>
+</main>
+<footer class="site-footer"><span>馬達驅動與控制（零基礎互動課）</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

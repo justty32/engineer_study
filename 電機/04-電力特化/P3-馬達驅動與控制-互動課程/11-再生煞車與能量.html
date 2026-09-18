@@ -1,0 +1,83 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 再生煞車與能量｜馬達驅動與控制</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">11・減速不是把能量消失，而是替它找出口</p>
+<h1>再生煞車與能量：直流鏈電容撐不住時，能量要去哪裡</h1>
+<p class="lead">0.050000 kg·m² 的負載從 3000.000000 rpm 煞停會釋出 2467.401100 J；1000.000000 µF 電容從 300.000000 V 升到 380.000000 V 只能吸收 27.200000 J。這章追蹤能量、電壓與功率，判斷煞車電阻或電池能否接住。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="10-編碼器與速度估測.html">10 編碼器與速度估測</a>如何取得轉速。<strong>前置：</strong>見〈電容與電感〉<a href="../../02-電機核心/電路學-互動課程/06-電容與電感.html">電路學的電容儲能</a>，先知道電容電壓改變代表儲能改變。</p>
+
+<h2>痛點：馬達停下來了，原本的動能不會憑空不見</h2>
+<p>驅動器命令負轉矩後，轉軸的速度下降。若機械動能經馬達與逆變器回到直流鏈，電容電壓就會上升；若上游電源不能吸收，幾十焦耳的電容緩衝很快就滿。只看「平均功率」會低估減速開始那一刻的峰值，也可能選到阻值過大的煞車電阻。</p>
+<p>真正要回答的是：總共有多少動能、其中多少回到直流鏈、電容可多存多少、多久碰到過電壓門檻，以及電阻在該電壓下能否消耗瞬時功率。這是一條能量守恆問題，不是單看一個轉矩命令。</p>
+
+<h2>白話直覺：直流鏈電容只是候車區，不是長期倉庫</h2>
+<p>可以暫時把電容想成很小的候車區，能量車流突然回來時先停一下，接著必須進電阻或電池；比喻到此為止。真實機制是再生煞車（regenerative braking）時，機械功率變成電功率，電流經逆變器上臂開關或二極體回到直流鏈，替電容充電並抬高 V<sub>dc</sub>。</p>
+<p>直流鏈的正負端定義電壓參考；負 i<sub>q</sub> 建立反向轉矩，轉子磁場對定子磁場做功，軸的動能沿導通路徑回送。速度迴路回授轉速，外層保護則監看直流鏈電壓。電壓表可看到 V<sub>dc</sub> 上升，直流電流探棒可看到能量流向反轉。</p>
+<p>煞車斬波器（brake chopper）在 V<sub>dc</sub> 超過 V<sub>trip</sub> 時接上煞車電阻（brake resistor），把能量變成熱，這叫動態煞車（dynamic braking）。若直流鏈接的是可充電電池，回送的電能才可能真正留存供稍後使用。</p>
+<p class="note">來源：P3 上 §3；P3 下 §11、§12；能量計算由本課依能量去向補充。</p>
+
+<h2>推導：從轉軸動能走到電容電壓與電阻功率</h2>
+<p>起、終角速度為 ω<sub>1</sub>、ω<sub>2</sub>，轉動慣量為 J，減少的動能 E<sub>k</sub> = 0.5 × J × (ω<sub>1</sub>² − ω<sub>2</sub>²)。等減速時間 t 內，煞車轉矩 T<sub>b</sub> = J × |ω<sub>1</sub> − ω<sub>2</sub>| / t。回收效率 η 合併馬達與逆變器損耗，所以回到直流鏈的能量 E<sub>b</sub> = η × E<sub>k</sub>，峰值功率 P<sub>peak</sub> = η × T<sub>b</sub> × max(ω<sub>1</sub>, ω<sub>2</sub>)，出現在高速端。</p>
+<p>電容從 V<sub>dc</sub> 升到 V<sub>trip</sub> 多吸收 E<sub>cap</sub> = 0.5 × C × (V<sub>trip</sub>² − V<sub>dc</sub>²)。沒有斬波器時，若全部回收能量都灌進理想電容，終電壓 V<sub>free</sub> = √(V<sub>dc</sub>² + 2 × E<sub>b</sub> / C)。以初始峰值估算，到門檻時間為 E<sub>cap</sub> / P<sub>peak</sub>。</p>
+<p>斬波器導通後，電阻功率 P<sub>R</sub> = V<sub>trip</sub>² / R<sub>b</sub>，至少要不小於 P<sub>peak</sub> 才能在最嚴苛瞬間壓住電壓；熱額定還要按重複煞車比例評估平均功率。第 01 章的四象限模型在電流反向時給出 P<sub>mech</sub> &lt; 0，正是機械能轉回電能的狀態。</p>
+<p>本課用的是線性教學模型，真實驅動器不完全如此；假設 η 固定、電容理想、減速率固定並忽略摩擦。電池充電限流、電阻熱時間常數與開關損耗都不在此模型內。</p>
+<p>這條能量鏈可以用守恆關係逐段檢查：轉軸減少的動能，扣掉馬達與逆變器損耗後才是進入直流鏈的份量；電容只收到電壓門檻為止的差額，其餘才由電阻或電池承接。若各段能量的大小關係對不上，應先查效率套用方向、電容單位與轉速到角速度的轉換，而非直接調整保護門檻。</p>
+<p>功率與能量也要分開判讀。電阻瞬間功率足夠，只能表示電壓當下能被壓住；重複減速時累積的能量會變成熱，還需由熱容量與散熱條件決定能否連續運作。反過來，電池即使能容納全部能量，充電電流上限仍可能限制允許的減速速率。</p>
+
+<h2>數值實例：3000.000000 rpm 在 2.000000 s 煞停</h2>
+<p>令 J = 0.050000 kg·m²、n<sub>1</sub> = 3000.000000 rpm、n<sub>2</sub> = 0.000000 rpm、t = 2.000000 s、C = 1000.000000 µF、V<sub>dc</sub> = 300.000000 V、V<sub>trip</sub> = 380.000000 V、η = 0.900000、R<sub>b</sub> = 20.000000 Ω。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>ω<sub>1</sub></td><td>3000 × 2π / 60</td><td><strong>314.159265 rad/s</strong></td></tr>
+<tr><td>動能</td><td>0.5 × 0.05 × 314.159265²</td><td><strong>2467.401100 J</strong></td></tr>
+<tr><td>平均再生功率</td><td>2467.401100 / 2</td><td><strong>1233.700550 W</strong></td></tr>
+<tr><td>煞車轉矩</td><td>0.05 × 314.159265 / 2</td><td><strong>7.853982 N·m</strong></td></tr>
+<tr><td>回直流鏈能量</td><td>0.9 × 2467.401100</td><td><strong>2220.660990 J（0.616850 Wh）</strong></td></tr>
+<tr><td>峰值再生功率</td><td>0.9 × 7.853982 × 314.159265</td><td><strong>2220.660990 W</strong></td></tr>
+<tr><td>電容能吸</td><td>0.5 × 0.001 × (380² − 300²)</td><td><strong>27.200000 J（1.224861 %）</strong></td></tr>
+<tr><td>到跳脫時間</td><td>27.2 / 2220.660990</td><td><strong>12.248605 ms</strong></td></tr>
+<tr><td>無斬波器終電壓</td><td>√(300² + 2 × 2220.660990 / 0.001)</td><td><strong>2128.690203 V</strong></td></tr>
+<tr><td>電阻功率</td><td>380² / 20</td><td><strong>7220.000000 W</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>平均再生功率是 1233.700550 W，減速起點的峰值卻有 2220.660990 W；電容只撐 12.248605 ms。若把煞車縮到 0.500000 s，轉矩升到 31.415927 N·m，峰值升到 8882.643961 W，已超過 7220.000000 W 的電阻能力。</p>
+<p>若 J 降為 0.005000 kg·m²，動能仍有 246.740110 J，理想終電壓仍達 730.843484 V。把 C 增到 10000.000000 µF 可吸 272.000000 J、撐 122.486053 ms，但仍不等於長期能量去處。</p>
+
+<section class="workspace"><h2>自由實驗：替一次減速安排能量出口</h2>
+<p>設定負載慣量、起終速度與煞車時間，再選直流鏈電容、保護門檻、效率與電阻。觀察電容多久滿、無斬波器時電壓多高，以及電阻是否能吃下峰值。</p>
+<div class="controls">
+<label for="rg-j">轉動慣量 J（kg·m²）<input id="rg-j" type="range" min="0.001" max="0.5" step="0.001" value="0.05"></label>
+<label for="rg-n1">起始轉速 n_1（rpm）<input id="rg-n1" type="range" min="0" max="6000" step="100" value="3000"></label>
+<label for="rg-n2">終止轉速 n_2（rpm）<input id="rg-n2" type="range" min="0" max="6000" step="100" value="0"></label>
+<label for="rg-t">煞車時間 t（s）<input id="rg-t" type="range" min="0.1" max="10" step="0.1" value="2"></label>
+<label for="rg-c">直流鏈電容 C（µF）<input id="rg-c" type="range" min="100" max="10000" step="100" value="1000"></label>
+<label for="rg-vdc">直流鏈電壓 V_dc（V）<input id="rg-vdc" type="range" min="48" max="400" step="1" value="300"></label>
+<label for="rg-vtrip">斬波器跳脫電壓 V_trip（V）<input id="rg-vtrip" type="range" min="60" max="450" step="5" value="380"></label>
+<label for="rg-eta">回收效率 η<input id="rg-eta" type="range" min="0.5" max="1" step="0.05" value="0.9"></label>
+<label for="rg-rb">煞車電阻 R_b（Ω）<input id="rg-rb" type="range" min="5" max="100" step="1" value="20"></label>
+</div>
+<div id="regen-output" class="output" aria-live="polite"><table><thead><tr><th>輸出</th><th>預設值</th></tr></thead><tbody><tr><td>ω_1</td><td>314.159265 rad/s</td></tr><tr><td>動能</td><td>2467.401100 J</td></tr><tr><td>平均再生功率</td><td>1233.700550 W</td></tr><tr><td>煞車轉矩</td><td>7.853982 N·m</td></tr><tr><td>回直流鏈能量</td><td>2220.660990 J（0.616850 Wh）</td></tr><tr><td>峰值再生功率</td><td>2220.660990 W</td></tr><tr><td>電容能吸</td><td>27.200000 J（1.224861 %）</td></tr><tr><td>到跳脫時間</td><td>12.248605 ms</td></tr><tr><td>無斬波器終電壓</td><td>2128.690203 V</td></tr><tr><td>電阻功率</td><td>7220.000000 W</td></tr></tbody></table><strong>判讀：減速，2467.401100 J 動能有 2220.660990 J 回到直流鏈。</strong>電容只吃得下 1.224861 %，12.248605 ms 後電壓到跳脫值，剩下的必須進電阻或電池；沒有斬波器時電壓會衝到 2128.690203 V。電阻 7220.000000 W ≥ 峰值 2220.660990 W，斬波器撐得住。若直流鏈是電池，這 0.616850 Wh 可以真正回收。為什麼：轉軸減少的動能經效率折減後回充電容，而電容允許的電壓區間只能容納很小一部分。邊界提醒：n_1 = n_2 時等速，沒有能量交換；V_trip ≤ V_dc 時斬波器會一直導通；極短煞車時間配上大 J 會產生極高峰值功率，電阻可能不足；若終速高於起速則是加速，能量從直流鏈流向馬達。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>再生代表能量回到直流鏈；斬波器加電阻最後把能量變熱，屬動態煞車，只是能量先經過直流鏈。</li>
+<li>電容是短時間緩衝，不是長期儲能裝置；1000.000000 µF 在 300.000000 V 雖已有 45.000000 J，升到門檻只可再收 27.200000 J。</li>
+<li>煞車轉矩由慣量與減速率決定，使用電阻或電池不會改變同一速度軌跡所需的理想轉矩。</li>
+<li>η 是馬達到逆變器再到直流鏈整條路徑的合併效率，不是單獨的馬達效率。</li>
+<li>7220.000000 W 是門檻電壓下的瞬時能力；電阻能否反覆煞車，還要核對熱容量與平均額定。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>用高壓差動探棒或直流電壓表量 V<sub>dc</sub>，減速時可看到電壓上升，到 V<sub>trip</sub> 後被斬波器夾住；直流電流探棒則會看到電流方向反轉。同步記錄轉速，才能把功率與減速階段對齊。</p>
+<p><strong>能證明什麼。</strong>電壓斜率與反向電流可證明能量流回直流鏈；門檻附近的週期性斬波可證明保護動作，電阻兩端電壓可驗證瞬時耗散功率。</p>
+<p>量測記錄應以同一時基對齊轉速、直流鏈電壓與電流。當轉速下降、電流反向與電壓上升連續發生，才能建立完整因果鏈；只看到電壓被夾住，也可能是電源或其他負載正在吸收能量。</p>
+<p><strong>不能證明什麼。</strong>只量直流鏈不能證明 η 的值，也不能分開馬達、逆變器與機械摩擦各自的損耗；必須同時量軸轉矩、速度及直流鏈功率。</p>
+
+<h2>連到哪門課</h2>
+<p>電容的 0.5 × C × V² 儲能見<a href="../../02-電機核心/電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>；四象限與負電流見<a href="01-H橋與平均電壓.html">第 01 章 H 橋與平均電壓</a>。</p>
+<p>後續去向只作定位：直接轉矩控制（direct torque control, DTC）直接用轉矩與磁鏈誤差查表選向量；無感測控制（sensorless control）用反電動勢或高頻注入估角度；高 dv/dt 會帶來電磁干擾（electromagnetic interference, EMI）與長纜反射；共模電壓可能造成軸承電蝕；功能安全的安全轉矩關閉（safe torque off, STO）要求可靠切斷轉矩。</p>
+<p><strong>韌體那一端：</strong>斬波器常由硬體比較器搭配一個 PWM 通道，門檻存成參數；再生限制可做成「直流鏈電壓到允許的負 i<sub>q</sub>」外層迴路。</p>
+<nav class="pager" aria-label="章節導覽"><a href="10-編碼器與速度估測.html">← 上一頁：編碼器與速度估測</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>11 再生煞車與能量</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

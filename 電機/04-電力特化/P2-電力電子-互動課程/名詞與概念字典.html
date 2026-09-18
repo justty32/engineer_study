@@ -1,0 +1,438 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>名詞與概念字典｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html" aria-current="page">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">查・50 個名詞，四段式：白話、位置、機制、邊界</p>
+<h1>名詞與概念字典：把全課的名詞放在同一張桌上比較</h1>
+<p class="lead">每張卡都從用途開始，再交代所在章節、真實裝置、運作機制與適用邊界。搜尋框接受繁體中文、英文、縮寫與符號，輸入 buck、thd、pwm 都找得到；不必先背完，閱讀主線遇到陌生詞再回來查即可。</p>
+<p class="note">來源：P2-電力電子（上）§1–§5、（下）§6–§11，以及中英名詞對照表-3.md 的「電力電子」節（21 詞）；其餘 29 詞由各章正文補齊。</p>
+<div class="dictionary-tools">
+<label for="term-search">搜尋名詞或概念</label>
+<input id="term-search" type="search" placeholder="搜尋繁中、英文、符號或用途">
+<span id="term-count" aria-live="polite"></span>
+</div>
+
+<h2>第一組｜開關與損耗（第 00–01 章，13 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="power electronics 電力電子 轉換 ac dc 效率 能量">
+<h2>電力電子（power electronics）</h2>
+<p><strong>白話：</strong>用半導體開關有節奏地接通與切斷能量路徑，把來源提供的電壓、電流或頻率整理成負載真正需要的形式。它關心的不只波形能否改變，也關心搬運過程浪費多少能量、元件會不會過熱，以及控制命令能否安全落地。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-電力電子世界觀與切換不耗能.html">00 章</a>建立全課世界觀；手機充電器、太陽能系統、伺服器電源與電動車驅動器都靠它在來源與負載之間轉換能量。後續各章只是針對交流、直流、磁性元件與熱問題展開不同做法。</p>
+<p><strong>機制：</strong>第 00 章把 12 V 轉成 5 V、供應 2 A，比較線性與切換兩條路。參考切換式效率為 92 % 時，損耗只有 <strong>0.869565 W</strong>；它靠開關大多處於全開或全關，避開電壓與電流同時很大的區域。</p>
+<p><strong>不要混淆：</strong>它不是把電能憑空變多，也不是只處理很大的功率。輸入功率仍等於輸出功率加損耗；從幾瓦的隨身裝置到大型輸電設備都能使用相同的能量守恆與切換觀念，只是元件、絕緣和散熱尺度不同。</p>
+</article>
+
+<article class="term-card" data-search="linear regulator ldo 線性穩壓器 壓差 穩壓 散熱">
+<h2>線性穩壓器（linear regulator, LDO）</h2>
+<p><strong>白話：</strong>像可連續調整的水閥，把多餘輸入電壓直接承受在元件兩端，以熱的形式消耗掉。低壓差穩壓器的英文全名是 low-dropout regulator，縮寫 LDO；它簡單、安靜、反應直接，適合壓差小且電流不大的場合。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-電力電子世界觀與切換不耗能.html">00 章</a>拿它和切換式方案比較。感測器類比電源、射頻電路末級淨化與低雜訊參考源常用它，因為外接元件少，輸出也沒有開關動作帶來的高頻成分。</p>
+<p><strong>機制：</strong>損耗等於輸入與輸出之差乘上負載電流。12 V 降到 5 V 且供應 2 A 時，線性穩壓損耗是 <strong>14.000000 W</strong>，效率是 5 / 12，也就是 41.666667 %；這些熱必須從封裝送到環境。</p>
+<p><strong>不要混淆：</strong>LDO 的「低壓差」只表示維持穩壓所需的最小餘裕較小，不表示任何輸入條件下都高效率。它不能把 3.3 V 升成 5 V；若輸入與輸出很接近，省去磁性元件與高頻雜訊的好處才可能勝過效率差距。</p>
+</article>
+
+<article class="term-card" data-search="switching converter 切換式轉換器 高效率 儲能元件">
+<h2>切換式轉換器（switching converter）</h2>
+<p><strong>白話：</strong>讓開關快速輪流接上不同回路，再用電感與電容把一段段能量流磨成需要的平均輸出。它不像線性元件長時間卡在半開狀態，因此能以較少發熱完成升壓、降壓、反向或隔離。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-電力電子世界觀與切換不耗能.html">00 章</a>先解釋效率優勢，之後第 05 至 07 章拆解實際拓樸。筆電電源、USB 充電器、主機板供電和電池管理模組都能看到這類電路。</p>
+<p><strong>機制：</strong>12 V 轉 5 V、輸出 2 A 時，輸出功率為 10.000000 W；採 92 % 參考效率，輸入功率為 <strong>10.869565 W</strong>。控制器改變每一輪接通時間，儲能元件再把脈動電流與電壓平均化。</p>
+<p><strong>不要混淆：</strong>高效率不代表完全不發熱，也不代表輸出天生平滑。導通電阻、切換過渡、磁性元件與電容都會損失能量；佈局不良還會產生尖峰與干擾，因此拓樸、元件、控制與實體配置必須一起設計。</p>
+</article>
+
+<article class="term-card" data-search="ideal switch 理想開關 切換不耗能 全開 全關">
+<h2>理想開關與切換不耗能（ideal switch）</h2>
+<p><strong>白話：</strong>理想開關打開時電流為零，閉合時兩端電壓為零，所以任一穩定狀態的電壓乘電流都為零。這個模型解釋了為何用切換搬能量可以很省，但它是分析起點，不是真實元件的保證。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-電力電子世界觀與切換不耗能.html">00 章</a>用它建立最小模型。充電器、直流轉換器與馬達驅動器的控制器，都努力讓功率元件快速穿越半開區域，以接近理想開關的兩個端點。</p>
+<p><strong>機制：</strong>同樣把 12 V 變成 5 V、輸出 2 A，線性方案的損耗是 14.000000 W，參考切換式方案只有 0.869565 W，前者是後者的 <strong>16.100000 倍</strong>。差距來自承受壓降的時間方式不同。</p>
+<p><strong>不要混淆：</strong>「切換不耗能」只描述理想穩態；真實元件開啟時有電阻，狀態轉換也需要有限時間。若把理想模型直接當產品結果，就會漏掉驅動、寄生參數、磁性元件與散熱需求，甚至選到無法承受尖峰的零件。</p>
+</article>
+
+<article class="term-card" data-search="power semiconductor switch 功率半導體開關 mosfet igbt scr 元件選型">
+<h2>功率半導體開關（power semiconductor switch）</h2>
+<p><strong>白話：</strong>能承受較高電壓與電流，並由小功率命令控制主能量回路的電子開關。常見家族各有速度、導通壓降、耐壓與可控制程度的取捨，工程師會依工作點挑選，而不是只看額定功率。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-功率開關與兩種損耗.html">01 章</a>比較元件家族。伺服器電源常用 MOSFET，工業馬達驅動器常見 IGBT，高功率相控整流則會用 SCR；它們都站在控制電路與主回路的交界。</p>
+<p><strong>機制：</strong>第 01 章以 10 A、20 mΩ、D 為 0.5 的 MOSFET 為例，導通損為 <strong>1.000000 W</strong>。控制端改變導通狀態，主端承接能量；耐壓、電流、溫度與安全工作區共同限制可用範圍。</p>
+<p><strong>不要混淆：</strong>功率元件與小訊號元件的基本物理可能相近，但封裝、晶片面積、寄生效應與熱路徑完全不同。額定電流也不是任何溫度與電壓下都能長期通過的固定許可，必須回到資料表條件降額使用。</p>
+</article>
+
+<article class="term-card" data-search="diode freewheeling 二極體 續流 單向 電感 回路">
+<h2>二極體與續流（diode, freewheeling）</h2>
+<p><strong>白話：</strong>二極體像只允許單向通行的門；續流則是在主開關關斷後，替電感電流保留一條可走的路。電感電流不能瞬間消失，若沒有替代路徑，電壓會猛烈上升直到別處被迫導通。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-功率開關與兩種損耗.html">01 章</a>介紹元件角色，第 05 章在 Buck 中具體使用。電磁閥、繼電器線圈、馬達繞組與轉換器電感旁都常見續流二極體或由受控開關替代的同步路徑。</p>
+<p><strong>機制：</strong>第 01 章的 48 V、10 A 切換工作點中，狀態轉換一次的參考能量是 <strong>12.000000 µJ</strong>。續流路徑接手電感電流可限制尖峰；二極體正向壓降與反向恢復仍會造成額外損失。</p>
+<p><strong>不要混淆：</strong>續流不是讓電流永遠不變，而是讓儲存在電感中的能量有受控出口；電流仍依回路電壓逐漸下降。一般整流二極體也未必適合高速切換，反向恢復太慢會增加電流尖峰與元件壓力。</p>
+</article>
+
+<article class="term-card" data-search="thyristor scr 閘流體 相控整流 鎖定 觸發">
+<h2>閘流體（thyristor, SCR）</h2>
+<p><strong>白話：</strong>矽控整流器的英文全名是 silicon-controlled rectifier，縮寫 SCR。它收到閘極觸發後會自行保持導通，直到主電流降得夠低才關斷，像按一下便鎖住、要等水流停下才復位的閥。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-功率開關與兩種損耗.html">01 章</a>先認識元件，第 <a href="03-三相與相控整流.html">03 章</a>用它調整整流平均電壓。工業加熱、軟啟動器與高功率整流設備看重它的耐壓、耐流與低導通損。</p>
+<p><strong>機制：</strong>以第 01 章 48 V、10 A 的參考點理解主回路尺度；MOSFET 的總損為 <strong>2.200000 W</strong>，而 SCR 的取捨不在同一控制方式。觸發只決定何時開始導通，交流過零或外部換相才負責結束。</p>
+<p><strong>不要混淆：</strong>本課一律寫「閘流體」；中國教材寫「晶閘管」。它不像 MOSFET 能靠控制端隨時命令關斷，普通 SCR 一旦鎖定，控制端撤掉也不會立刻停止主電流，設計回路時必須先安排關斷條件。</p>
+</article>
+
+<article class="term-card" data-search="insulated-gate bipolar transistor igbt 絕緣閘雙極性電晶體 高壓 馬達">
+<h2>絕緣閘雙極性電晶體（insulated-gate bipolar transistor, IGBT）</h2>
+<p><strong>白話：</strong>把容易用電壓驅動的絕緣閘結構，和適合高壓大電流的雙極導電特性結合在一起。它常在數百伏特以上的中高功率設備工作，導通時較像固定壓降，關斷尾電流則限制速度。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-功率開關與兩種損耗.html">01 章</a>與 MOSFET 並列比較。變頻冷氣、工業伺服、電動車牽引逆變器與大型不斷電系統，都可能在電壓與功率提高後選用 IGBT。</p>
+<p><strong>機制：</strong>第 01 章以飽和壓降 1.8 V、10 A、D 為 0.5 計算，IGBT 導通損為 <strong>9.000000 W</strong>。若切換過渡採 300 ns，切換損又是 7.200000 W，顯示速度與大電流能力必須一併評估。</p>
+<p><strong>不要混淆：</strong>控制端看似與 MOSFET 相同，不代表主端損耗模型相同。低電流時固定壓降可能不划算，高壓大電流時卻可能優於高耐壓 MOSFET；也不能只比導通數字而忽略較慢過渡帶來的熱。</p>
+</article>
+
+<article class="term-card" data-search="power mosfet r_on 功率 mosfet 導通電阻 高頻">
+<h2>功率 MOSFET 與導通電阻（power MOSFET, R_on）</h2>
+<p><strong>白話：</strong>金氧半場效電晶體的英文全名是 metal-oxide-semiconductor field-effect transistor，縮寫 MOSFET。功率型在開啟後可近似一個小電阻 R<sub>on</sub>，所以電流越大，平方關係造成的發熱越明顯。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-功率開關與兩種損耗.html">01 章</a>建立損耗模型。低壓直流電源、同步 Buck、電池保護與高頻充電器常用 MOSFET，因為它可快速開關，且控制端穩態幾乎不需直流電流。</p>
+<p><strong>機制：</strong>導通損可用電流平方乘導通電阻再乘 D 估算。10 A、20 mΩ、D 為 0.5 時得到 <strong>1.000000 W</strong>；電流升到 50 A，其他條件不變便成 25.000000 W，平方效應非常強。</p>
+<p><strong>不要混淆：</strong>R<sub>on</sub> 不是室溫下量到一次就永遠不變的常數，結溫升高通常也會上升。控制端電壓不足時元件沒有完全開啟，實際電阻會更大；資料表的最低值也不能直接當最壞情況。</p>
+</article>
+
+<article class="term-card" data-search="wide-bandgap sic gan 寬能隙元件 碳化矽 氮化鎵 高溫 高頻">
+<h2>寬能隙元件（wide-bandgap device, SiC／GaN）</h2>
+<p><strong>白話：</strong>以碳化矽 SiC 或氮化鎵 GaN 製作的功率元件，材料能隙比矽大，通常可承受更強電場、更高溫度並更快切換。它們讓磁性元件有機會縮小，但驅動與佈局也更敏感。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-功率開關與兩種損耗.html">01 章</a>比較材料家族。GaN 常見於高功率密度消費電源，SiC 常見於高壓車用驅動、太陽能與快速充電設備，兩者服務的電壓範圍並不完全相同。</p>
+<p><strong>機制：</strong>第 01 章的矽元件在 1 MHz 時切換損達 <strong>12.000000 W</strong>；縮短過渡時間可壓低這一項。寬能隙材料的低電荷與快速過渡提供優勢，但寄生電感造成的尖峰也會隨邊緣變快而更突出。</p>
+<p><strong>不要混淆：</strong>材料較先進不代表放進原電路就自然更好。閘極電壓範圍、反向導電、封裝寄生、電磁干擾與成本都不同；若驅動與印刷電路板沒有配合，快速邊緣反而會帶來振鈴與可靠度問題。</p>
+</article>
+
+<article class="term-card" data-search="conduction loss switching loss 導通損耗 切換損耗 熱 效率">
+<h2>導通損耗與切換損耗（conduction loss／switching loss）</h2>
+<p><strong>白話：</strong>導通損耗是在元件已開啟、電流持續流過時付出的代價；切換損耗是在開與關的過渡中，電壓和電流短暫重疊所消耗的能量。前者偏向隨負載增加，後者還會隨每秒切換次數增加。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-功率開關與兩種損耗.html">01 章</a>是全課元件選型的核心。充電器的效率表、散熱器大小與允許的切換速度，都必須把兩類損失加總後再判斷。</p>
+<p><strong>機制：</strong>第 01 章參考點的導通損為 1.000000 W，切換損為 1.200000 W，總和是 <strong>2.200000 W</strong>，其中後者占 54.545455 %。切換頻率提高，單次能量不變時每秒總耗能按比例增加。</p>
+<p><strong>不要混淆：</strong>兩類損失不能用同一個降低方法處理。降低導通電阻可能增加控制端電荷，使狀態轉換更慢；追求極快邊緣又可能提高尖峰與干擾。最佳元件是指定工作點下總損失與風險較小者。</p>
+</article>
+
+<article class="term-card" data-search="gate driver dead time 閘極驅動 死區時間 半橋 直通">
+<h2>閘極驅動與死區時間（gate driver, dead time）</h2>
+<p><strong>白話：</strong>閘極驅動器負責快速替控制端充電與放電，把控制器的小命令變成足以開關功率元件的電壓與瞬時電流。死區時間是在半橋上下元件交接時故意留白，防止兩者同時導通。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-功率開關與兩種損耗.html">01 章</a>說明驅動與保護。馬達逆變器、同步整流與半橋電源都有上下臂，驅動器除了搬運電荷，還常整合隔離、欠壓鎖定與故障關斷。</p>
+<p><strong>機制：</strong>第 01 章以 50 ns 過渡、100 kHz 為例，過渡時間占一輪的 <strong>0.500000 %</strong>。驅動越強可縮短過渡，但死區仍要涵蓋關斷延遲差；留得太長又會迫使電流走較耗能的替代路徑。</p>
+<p><strong>不要混淆：</strong>死區不是越長越安全。太短會直通，讓電源兩端近似短路；太長則增加二極體導電時間並使輸出失真。它也不是軟體排程空檔，而是針對元件延遲與製程差異設定的實體保護時間。</p>
+</article>
+
+<article class="term-card" data-search="soa zvs zcs 安全工作區 軟切換 零電壓 零電流">
+<h2>安全工作區與軟切換（SOA, ZVS／ZCS）</h2>
+<p><strong>白話：</strong>安全工作區的英文全名是 safe operating area，縮寫 SOA，描述元件可承受的電壓、電流、時間與溫度組合。零電壓切換 ZVS 與零電流切換 ZCS 則安排狀態轉換發生在其中一個量接近零時。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-功率開關與兩種損耗.html">01 章</a>把兩者連到可靠度與效率。諧振電源、感應加熱與高頻伺服器電源會用軟切換減少過渡損失，但仍需檢查啟動、輕載與故障時是否留在 SOA。</p>
+<p><strong>機制：</strong>第 01 章在 48 V、10 A、50 ns 下，每次切換能量為 <strong>12.000000 µJ</strong>。若能讓過渡時電壓或電流先降近零，重疊面積會縮小；諧振元件則負責塑造這個時機。</p>
+<p><strong>不要混淆：</strong>軟切換不是沒有任何損耗，也不自動保證安全。為了建立諧振條件可能增加循環電流；負載離開設計範圍時還可能失去零點。SOA 是不可跨越的限制，軟切換只是降低壓力的一種手段。</p>
+</article>
+
+</div>
+
+<h2>第二組｜整流與 PWM（第 02–04 章，12 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="rectifier 整流器 ac dc 二極體橋 全波">
+<h2>整流器（rectifier）</h2>
+<p><strong>白話：</strong>把方向來回改變的交流電，整理成主要朝同一方向流動的電壓或電流。最簡單的做法靠二極體單向導電，更高功率或需要控制平均值時則以受控元件決定何時接通。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-單相整流與電容濾波的代價.html">02 章</a>從單相橋式整流開始。家電電源輸入端、充電器、不斷電系統與工業直流匯流排，都要先把市電整理成後級可處理的直流。</p>
+<p><strong>機制：</strong>110 V 有效值的全波橋式整流，扣除兩顆各 0.7 V 的二極體壓降後，峰值為 <strong>154.163492 V</strong>。橋中每半輪由不同二極體對導通，讓負載端極性保持不變，但輸出仍是一串起伏的脈動。</p>
+<p><strong>不要混淆：</strong>整流後方向一致不等於已得到穩定直流，也不表示輸入電流形狀良好。若直接接大電容，電壓較平滑，電流卻集中在波峰附近；還需濾波、穩壓與輸入電流整形才能符合不同負載需求。</p>
+</article>
+
+<article class="term-card" data-search="capacitor filter ripple 電容濾波 漣波電壓 放電 充電">
+<h2>電容濾波與漣波電壓（capacitor filter, ripple）</h2>
+<p><strong>白話：</strong>電容在整流波峰時快速補充電荷，兩個波峰之間再向負載放電，像小水庫把間歇供水撐成較平穩的水位。剩下的週期性上下起伏叫漣波電壓，大小受負載、頻率與電容量控制。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-單相整流與電容濾波的代價.html">02 章</a>分析它的好處與代價。充電器前端、大型直流匯流排與簡單線性電源常用儲能電容支撐波峰間隔，並承受顯著的交流電流。</p>
+<p><strong>機制：</strong>全波 60 Hz、1000 µF、負載 1 A 時，充電機會每秒出現 120 次，計得漣波為 <strong>8.333333 V</strong>。電容越大或補充越頻繁，電壓下降越小；負載電流越大，兩峰之間掉得越快。</p>
+<p><strong>不要混淆：</strong>本課一律寫「漣波」；中國教材寫「紋波」。電壓起伏變小不代表整體代價必然降低，因為電容量加大會縮短充電窗口、抬高二極體與市電端的脈衝電流，還要檢查電容的額定漣波電流與壽命。</p>
+</article>
+
+<article class="term-card" data-search="conduction angle pulse current 導通角 脈衝電流 波峰 充電">
+<h2>導通角與脈衝電流（conduction angle）</h2>
+<p><strong>白話：</strong>導通角表示每半輪中，整流器真正從來源取電的角度範圍。電容電壓多數時間高於瞬時市電，只有接近波峰時來源才追得上，所以原本連續的負載需求被擠成短而高的充電脈衝。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-單相整流與電容濾波的代價.html">02 章</a>把電壓濾得平滑與輸入電流變尖連在一起。橋式整流器、保險絲、插座與電容都要依這些脈衝的峰值與有效值選型。</p>
+<p><strong>機制：</strong>第 02 章參考點的導通角是 <strong>18.924841°</strong>，只占半輪的 10.513801 %；用矩形近似後，1 A 負載對應的脈衝平均電流為 9.511308 A。角度縮小時，峰值與發熱壓力同步增加。</p>
+<p><strong>不要混淆：</strong>導通角不是功率元件整個週期的命令比例，也不是相控整流的觸發角。它由來源瞬時電壓與電容殘留電壓相交的位置決定；二極體沒有收到時序命令，仍會自然形成狹窄導通窗口。</p>
+</article>
+
+<article class="term-card" data-search="power factor correction pfc 功率因數修正 電流整形 升壓前級">
+<h2>功率因數修正（power factor correction, PFC）</h2>
+<p><strong>白話：</strong>讓設備從交流來源吸取的電流更接近跟著電壓變化，而不是只在波峰猛抽一口。功率因數修正的英文全名是 power factor correction，縮寫 PFC；目的在減少線路與上游設備承受的無效電流。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-單相整流與電容濾波的代價.html">02 章</a>從大電容輸入的問題引出 PFC。電腦電源、電動車充電器與較高功率照明設備，常在整流後加主動升壓前級整形電流。</p>
+<p><strong>機制：</strong>未修正的參考整流器估得功因只有 <strong>0.442150</strong>。PFC 控制器量測市電形狀，命令電感電流在整個半輪分散吸取，使平均功率相同時的輸入有效值下降，也減輕配線與整流器的發熱。</p>
+<p><strong>不要混淆：</strong>PFC 不等於後級輸出穩壓，也不保證所有諧波完全消失。它主要整形輸入電流並維持直流匯流排，後面通常仍需獨立轉換器調節負載；評估時還要分清位移造成的功因下降與波形造成的下降。</p>
+</article>
+
+<article class="term-card" data-search="phase-controlled rectifier alpha 相控整流 觸發角 平均電壓 scr">
+<h2>相控整流與觸發角（phase-controlled rectifier, α）</h2>
+<p><strong>白話：</strong>相控整流不讓元件一到正向偏壓就立刻導通，而是從交流過零後等待指定角度 α 再觸發。α 讀作阿爾法；延後接通會改變每半輪送進負載的面積，因此能調整直流平均值。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-三相與相控整流.html">03 章</a>用三相全橋說明。大型直流馬達驅動、工業加熱與傳統高壓直流輸電會用受控整流器，在高功率下以電網相位作為自然時序基準。</p>
+<p><strong>機制：</strong>220 V 線電壓的三相全橋在 α 為 30° 時，平均輸出是 <strong>257.299944 V</strong>，相對未延遲值為 86.602540 %。高電感讓電流連續時，平均值隨 cos α 變化，α 增大可一路降到零以下。</p>
+<p><strong>不要混淆：</strong>觸發角決定何時開始讓某一組元件接手，不是輸出脈波的寬度命令；其公式也依電流是否連續與負載類型而變。把高電感負載結果套到純電阻，會錯過電流中斷後不再出現的負電壓區段。</p>
+</article>
+
+<article class="term-card" data-search="inversion 反流 功率方向 回送 電感負載">
+<h2>反流（inversion）</h2>
+<p><strong>白話：</strong>反流是平均直流電壓翻成負值，而直流電流仍維持原方向，因此電壓乘電流變負，能量從直流側送回交流側。它關心的是功率方向，不是把每一條導線上的電流箭頭全部反轉。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-三相與相控整流.html">03 章</a>在 α 超過 90° 後進入此區。再生煞車、直流馬達回送能量與傳統高壓直流輸電的接收端，都可能利用相控設備讓功率反向。</p>
+<p><strong>機制：</strong>第 03 章三相全橋在 α 為 120°、高電感負載時，平均電壓為 <strong>−148.552192 V</strong>。電感維持電流連續，直流側又提供能量，交流系統便接收這份負平均功率。</p>
+<p><strong>不要混淆：</strong>電流方向不變，反向的是功率；需要電流連續且直流側有能量來源。純電阻負載無法把電流維持到負電壓區，在同一角度的平均輸出會是 0.000000 V，因此不能只看觸發角就宣布進入反流。</p>
+</article>
+
+<article class="term-card" data-search="commutation 換相 電流轉移 相控整流 橋臂">
+<h2>換相（commutation）</h2>
+<p><strong>白話：</strong>換相是把負載電流從目前導通的一組元件轉交給下一組。交流系統可利用線電壓自然改變完成交接；受控直流電路則可能需要額外回路，確保舊元件電流降到能夠關斷的程度。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-三相與相控整流.html">03 章</a>的三相橋每隔一段電角度就換一組元件。大型整流設備與高壓直流站非常重視換相裕度，因為電網擾動可能讓交接失敗並造成過大電流。</p>
+<p><strong>機制：</strong>220 V 三相全橋未延遲的平均值是 <strong>297.104384 V</strong>；實際換相期間，來源電感使前後元件短暫共同分擔電流，形成重疊角並降低平均輸出，這是理想瞬時交接模型沒有呈現的部分。</p>
+<p><strong>不要混淆：</strong>換相不是脈寬調變，也不等於把交流變直流的整個過程。它只描述導電責任的轉移；若元件本身可由控制端主動關斷，交接策略和只能等待電流自然降落的 SCR 會很不同。</p>
+</article>
+
+<article class="term-card" data-search="pulse number ripple frequency 脈波數 漣波頻率 三相 六脈波">
+<h2>脈波數與漣波頻率（pulse number）</h2>
+<p><strong>白話：</strong>脈波數表示交流一個基本週期裡，整流輸出重複出現幾段相似的波峰。段數越多，主要起伏越快，後級濾波器通常更容易把它壓小；這是多相整流比單相平順的重要原因。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-三相與相控整流.html">03 章</a>比較單相、三相半波與三相全橋。工業直流供電與高壓整流設備會以六脈波、十二脈波等名稱描述拓樸與變壓器相位組合。</p>
+<p><strong>機制：</strong>三相全橋每一電網週期產生 6 個脈波，60 Hz 來源對應的主要漣波頻率是 <strong>360 Hz</strong>；同一參考點的未延遲平均電壓為 297.104384 V。若來源改成 50 Hz，六脈波便成 300 Hz；頻率由電網基頻乘脈波數決定。</p>
+<p><strong>不要混淆：</strong>脈波數不是功率元件總數，也不是控制器每秒發出的脈衝數。六元件三相橋稱六脈波恰好容易誤導；判定方式應看一個交流週期裡直流輸出重複幾次，而非直接數零件。</p>
+</article>
+
+<article class="term-card" data-search="pulse-width modulation pwm 脈寬調變 比較器 平均電壓">
+<h2>脈寬調變（pulse-width modulation, PWM）</h2>
+<p><strong>白話：</strong>脈寬調變的英文全名是 pulse-width modulation，縮寫 PWM。它保持開關電壓幅度大致固定，改變每一輪開啟的時間寬度；負載或濾波器看到許多脈衝後，取得可控制的平均效果。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-PWM與工作週期.html">04 章</a>從比較器建立 PWM。直流馬達轉速控制、LED 亮度、Buck 控制與逆變器波形合成都依賴這種把連續命令轉成二態開關序列的方法。</p>
+<p><strong>機制：</strong>12 V 輸入、命令 0.42 時，平均電壓是 <strong>5.040000 V</strong>。控制命令高於載波的時間輸出為開，低於載波則為關；每輪的開啟比例跟著命令變化，後級再平均脈衝。</p>
+<p><strong>不要混淆：</strong>PWM 脈衝本身不是類比電壓，也不保證負載端立刻等於平均值。只有負載動態或濾波速度比切換慢得多，平均模型才好用；若直接驅動快速負載，瞬時高低電壓與邊緣仍然存在。</p>
+</article>
+
+<article class="term-card" data-search="duty cycle d 工作週期 導通時間 切換週期 比例">
+<h2>工作週期（duty cycle, D）</h2>
+<p><strong>白話：</strong>工作週期 D 是每一個切換週期中，開關處於指定狀態的時間比例。D 沒有單位，範圍通常從零到一；若 D 為 0.42，就表示一輪有 42 % 的時間處於開啟狀態。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-PWM與工作週期.html">04 章</a>把 D 連到脈衝寬度，第 05 至 08 章再用它決定轉換器與逆變器的平均行為。馬達控制器、LED 驅動與穩壓器都會即時調整 D。</p>
+<p><strong>機制：</strong>切換頻率 200 kHz 時，一輪長 <strong>5.000000 µs</strong>；D 為 0.42，導通時間是 2.100000 µs。µ 讀作微，表示百萬分之一；D 是導通時間除以整輪時間所得比例。</p>
+<p><strong>不要混淆：</strong>本課一律用台灣慣用語「工作週期」；中國教材寫「占空比」，是同一個 duty cycle。D 是時間比例不是電壓；只有後面有夠慢的濾波時平均才是 D × V<sub>in</sub>，瞬時輸出仍在高低狀態間切換。</p>
+</article>
+
+<article class="term-card" data-search="carrier modulating signal 載波 調變訊號 比較器 三角波 命令">
+<h2>載波與調變訊號（carrier／modulating signal）</h2>
+<p><strong>白話：</strong>載波是快速重複的尺，常用三角波或鋸齒波；調變訊號是較慢的命令，代表希望輸出如何變化。比較兩者高低，就能把連續命令切成寬度不同的二態脈衝。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-PWM與工作週期.html">04 章</a>用單一命令控制平均值，第 08 章再把慢弦波命令變成交流輸出。微控制器計時器與類比比較器都能實作這個角色分工。</p>
+<p><strong>機制：</strong>第 04 章命令 v<sub>m</sub> 為 0.42，以 8 格取樣載波時有 3 格導通，離散近似 D 為 <strong>0.375000</strong>。取樣越細，脈寬越接近理想比較結果，但時脈與切換頻率會限制格數。</p>
+<p><strong>不要混淆：</strong>載波不是要送給負載的目標頻率，調變訊號也不是功率端直接承受的波形。前者決定開關節奏，後者決定慢變包絡；兩者比值影響可用解析度與諧波分布，不能互換名稱。</p>
+</article>
+
+<article class="term-card" data-search="digital pwm resolution 數位 pwm 解析度 clock steps 位元 步階">
+<h2>數位 PWM 解析度（digital PWM resolution）</h2>
+<p><strong>白話：</strong>數位 PWM 用計數器切分每一輪，解析度就是一輪能分成多少個時間格。格數有限時，命令只能落在固定步階上；位元數越高，可選的脈寬越細，但同一時脈下可達切換速度會下降。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-PWM與工作週期.html">04 章</a>連結控制命令與硬體計時器。微控制器的馬達控制、數位電源控制器與可程式邏輯內的計數器，都必須先用時脈除以目標切換頻率。</p>
+<p><strong>機制：</strong>100 MHz 時脈除以 200 kHz 得 500 步，相當於 <strong>8.965784 位元</strong>；12 V 輸入時最小平均電壓步階為 24.000000 mV。提高切換頻率會縮短一輪，也會直接減少可用步數。</p>
+<p><strong>不要混淆：</strong>計數器硬體標示 16 位元，不表示任何切換速度下都有 65536 個有效步階。真正解析度由一輪可走的時脈數決定；量化步階也只是命令精細度，並不自動等於輸出穩壓精度。</p>
+</article>
+
+</div>
+
+<h2>第三組｜DC-DC 與濾波（第 05–07 章，12 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="dc-dc converter 直流—直流轉換器 buck boost 電壓轉換">
+<h2>直流—直流轉換器（DC-DC converter）</h2>
+<p><strong>白話：</strong>把一組直流電壓與電流條件改成另一組，同時盡量保留功率的轉換器。它用開關重新安排電感與電容的充放能路徑，可以降壓、升壓、反向、隔離，甚至讓能量雙向流動。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-Buck降壓轉換器.html">05 章</a>從 Buck 展開，第 06 章再看 Boost 與 Buck-Boost。手機內多組電壓、電動車低壓母線、太陽能電池與處理器核心供電，都由不同直流轉換器銜接。</p>
+<p><strong>機制：</strong>第 05 章參考 Buck 將 12 V 以 D 為 0.5 轉成 <strong>6.000000 V</strong>。開關狀態決定電感當下吸收或釋放能量，控制器再依輸出誤差調整 D，使長時間平均達到目標。</p>
+<p><strong>不要混淆：</strong>直流輸入與輸出不表示內部沒有交流成分；電感電流與開關節點每輪都在變。平均模型適合觀察慢尺度穩壓，元件額定與電磁干擾卻必須依瞬時峰值、斜率與漣波設計。</p>
+</article>
+
+<article class="term-card" data-search="buck converter 降壓轉換器 step-down 電感 續流">
+<h2>降壓轉換器（Buck converter）</h2>
+<p><strong>白話：</strong>Buck 是把較高直流電壓降成較低直流電壓的基本拓樸。主開關開啟時來源替電感與負載供能，關斷時電感透過續流路徑維持電流，輸出電容再吸收兩者差額。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-Buck降壓轉換器.html">05 章</a>完整分析 Buck。主機板處理器供電、電池降壓模組與工業控制板都大量使用；若把續流二極體換成受控元件，便成為效率更高的同步版本。</p>
+<p><strong>機制：</strong>12 V、D 為 0.5、22 µH、200 kHz、3 Ω 時，輸出為 6.000000 V，電流為 <strong>2.000000 A</strong>，電感峰谷差是 0.681818 A。穩態時兩段電感電壓的時間加權總和為零。</p>
+<p><strong>不要混淆：</strong>Buck 的輸出低於輸入是基本拓樸限制，不是控制器設定不夠大。理想比例也有前提：連續導通、元件理想且穩態；輕載進入 DCM 或把壓降、電阻納入後，輸出不再只由 D 決定。</p>
+</article>
+
+<article class="term-card" data-search="boost converter 升壓轉換器 step-up 電感 二極體">
+<h2>升壓轉換器（Boost converter）</h2>
+<p><strong>白話：</strong>Boost 先在開關開啟時讓來源替電感存能，再於關斷時把來源電壓與電感釋放的電壓串起來送向輸出，因此能得到高於輸入的直流電壓。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-Boost與BuckBoost.html">06 章</a>分析理想增益與寄生限制。太陽能前級、PFC、電池升壓與 LED 驅動器常用它；輸入端電感也使來源電流較連續。</p>
+<p><strong>機制：</strong>12 V、D 為 0.5 的理想輸出是 24 V；加入電感電阻 0.10 Ω 與 10 Ω 負載後，實際輸出降為 <strong>23.076923 V</strong>，效率 96.153846 %。循環電流增加使寄生損失抬頭。</p>
+<p><strong>不要混淆：</strong>理想式在 D 接近一時看似可無限升壓，真實電路不會。開關越久，送往負載的時間越少，電感與元件電流反而暴增；寄生電阻、額定電壓與控制範圍會先形成上限。</p>
+</article>
+
+<article class="term-card" data-search="buck-boost converter 升降壓轉換器 反相 非反相">
+<h2>升降壓轉換器（Buck-Boost converter）</h2>
+<p><strong>白話：</strong>能在輸入高於或低於目標時都維持輸出的拓樸家族。最基本單電感版本會讓輸出極性反向；實務上也有四開關非反相版本，可平順跨過輸入等於輸出的區域。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-Boost與BuckBoost.html">06 章</a>放在 Boost 之後比較。電池從滿電到低電的電壓可能跨過負載需求，行動裝置、USB 供電與車用模組便需要既能升又能降。</p>
+<p><strong>機制：</strong>第 06 章 Boost 參考點在 D 為 0.5 時理想增益為 <strong>2.000000</strong>；Buck-Boost 同樣透過兩個狀態的伏秒平衡建立增益，只是輸出接法與能量轉移順序不同，基本反相型的極性也隨之翻轉。</p>
+<p><strong>不要混淆：</strong>Buck-Boost 不是把一個 Buck 與一個 Boost 名字接起來就只有一種電路。反相、SEPIC、Ćuk 與四開關版本的接地關係、電流連續性與元件壓力不同，選型時必須指明拓樸。</p>
+</article>
+
+<article class="term-card" data-search="volt-second balance 伏秒平衡 電感 穩態 平均電壓">
+<h2>伏秒平衡（volt-second balance）</h2>
+<p><strong>白話：</strong>穩態每一輪結束時，電感電流應回到原來的值，所以電感兩端電壓乘時間的正面積與負面積必須抵消。這條規則把各開關狀態串起來，是推導直流轉換比例的核心。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-Buck降壓轉換器.html">05 章</a>用它推導 Buck，後續 Boost 與隔離式拓樸也沿用。設計者不用追蹤無數輪，只要列出一輪各段電感電壓與持續時間即可。</p>
+<p><strong>機制：</strong>參考 Buck 開啟時電感電壓為 6 V，關斷時為 −6 V，各占一半，因此電流上升與下降斜率分別是 <strong>0.272727 A/µs</strong> 與 −0.272727 A/µs，整輪淨變化為零。</p>
+<p><strong>不要混淆：</strong>伏秒平衡只保證週期穩態的電感電流不漂移，不保證輸出電壓沒有起伏，也不是任何瞬間電感電壓都為零。啟動、負載突變或磁芯飽和時，單輪平衡假設可能暫時失效。</p>
+</article>
+
+<article class="term-card" data-search="charge balance 安秒平衡 電容 穩態 平均電流">
+<h2>安秒平衡（charge balance）</h2>
+<p><strong>白話：</strong>穩態每一輪結束時，電容儲存的電荷要回到原值，因此流入與流出電容的電流面積必須相等。安培乘秒就是電荷量，這條規則可把電感電流與負載電流的差連到輸出起伏。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-Buck降壓轉換器.html">05 章</a>與第 07 章用它理解輸出電容。主機板穩壓器與任何負載突變大的電源，都依靠電容暫時補上電感來不及改變的電流。</p>
+<p><strong>機制：</strong>參考 Buck 的平均負載電流為 <strong>2.000000 A</strong>，電感電流在 1.659091 A 到 2.340909 A 間變化；高於 2 A 的面積替電容充電，低於 2 A 的面積由電容放電，兩者穩態相抵。</p>
+<p><strong>不要混淆：</strong>安秒平衡不是說電容電流每一刻為零，而是整輪平均為零。若平均不為零，電容電壓會逐輪漂移；即使平均為零，有限電容量與等效串聯電阻仍會造成可量到的漣波。</p>
+</article>
+
+<article class="term-card" data-search="continuous conduction mode ccm 連續導通模式 電感電流">
+<h2>連續導通模式（continuous conduction mode, CCM）</h2>
+<p><strong>白話：</strong>連續導通模式的英文全名是 continuous conduction mode，縮寫 CCM，表示電感電流整輪都保持大於零。電感始終參與能量轉移，因此一輪通常只有開與關兩個主要狀態。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-Buck降壓轉換器.html">05 章</a>先用 CCM 建立 Buck 的基本比例。中高負載穩壓器常以此模式運作，因為峰值較低、平均模型簡潔，濾波與控制也較容易預測。</p>
+<p><strong>機制：</strong>12 V、D 為 0.5、22 µH、200 kHz、3 Ω 時，電感谷值仍有 <strong>1.659091 A</strong>，沒有碰到零，因此屬 CCM；此時理想輸出 6.000000 V，電流波形在平均值兩側呈三角變化。</p>
+<p><strong>不要混淆：</strong>V<sub>o</sub> ＝ D × V<sub>in</sub> 是 CCM 的結論不是定義；DCM 下電壓比與負載有關。判斷模式要看谷值是否到零，不能只憑負載名稱或控制器設定猜測。</p>
+</article>
+
+<article class="term-card" data-search="discontinuous conduction mode dcm 不連續導通模式 零電流 輕載">
+<h2>不連續導通模式（discontinuous conduction mode, DCM）</h2>
+<p><strong>白話：</strong>不連續導通模式的英文全名是 discontinuous conduction mode，縮寫 DCM，表示每一輪有一段時間電感電流已降到零。於是除了開與關，還多出電感休息的第三狀態。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-Buck降壓轉換器.html">05 章</a>在輕載邊界引入 DCM。待機電源、節能模式與小功率轉換器常進入此狀態；控制器可能主動跳脈衝以降低不必要的切換耗能。</p>
+<p><strong>機制：</strong>參考 Buck 的臨界負載為 <strong>17.600000 Ω</strong>；負載提高到 30 Ω 時進入 DCM，輸出成 7.087861 V，比原本 6 V 高 18.131025 %。第三段零電流時間讓電壓比多了負載依賴。</p>
+<p><strong>不要混淆：</strong>DCM 不等於電路故障，也不是輸出電流永遠為零。它只說每輪局部區段的電感電流觸底；優點可能是輕載效率較好，代價則包含峰值較高、模型改變與可能落入可聽頻段。</p>
+</article>
+
+<article class="term-card" data-search="inductor current ripple delta i_l 電感電流漣波 峰谷 三角波">
+<h2>電感電流漣波（inductor current ripple, Δi_L）</h2>
+<p><strong>白話：</strong>Δi<sub>L</sub> 讀作電感電流差量，表示一輪中電流峰值與谷值的差。電感用有限斜率吸收開關電壓，所以電流不是完全平坦，而是在平均值周圍規律上升與下降。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-Buck降壓轉換器.html">05 章</a>計算波形，第 07 章再以目標比例選電感。處理器電源、馬達驅動與電池充電器都用它估算峰值電流、磁芯飽和與輸出電容負擔。</p>
+<p><strong>機制：</strong>12 V 降至 6 V、22 µH、200 kHz、D 為 0.5 時，Δi<sub>L</sub> 為 <strong>0.681818 A</strong>。它等於開啟段電感電壓乘時間再除以電感量；頻率或電感量增加都會降低峰谷差。</p>
+<p><strong>不要混淆：</strong>Δ 表示差量，不是平均電流，也不是從平均值到單側峰值；對稱三角波的單側偏移只有 Δi<sub>L</sub> 的一半。選元件時峰值要用平均值加一半差量，否則會低估飽和與電流額定。</p>
+</article>
+
+<article class="term-card" data-search="equivalent series resistance esr 等效串聯電阻 電容 漣波 發熱">
+<h2>等效串聯電阻（equivalent series resistance, ESR）</h2>
+<p><strong>白話：</strong>真實電容可想成理想電容串上一個小電阻，這個電阻叫等效串聯電阻，英文縮寫 ESR。脈動電流流過它會立刻產生額外電壓跳動，也會把能量變成熱。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-濾波與漣波設計.html">07 章</a>把 ESR 與理想電容量分開計算。輸出電容、直流匯流排與高電流主機板供電都要看 ESR，因為容量足夠不代表高頻阻抗與發熱合格。</p>
+<p><strong>機制：</strong>電感電流差量 0.600000 A 流過 50 mΩ 時，ESR 造成的漣波為 <strong>30.000000 mV</strong>，已高於理想電容目標 20 mV；若總目標只准 20 mV，ESR 上限需降至 33.333333 mΩ。</p>
+<p><strong>不要混淆：</strong>ESR 不是印刷電路板上外加的一顆明顯電阻，也不能靠無限增加容量必然消除。不同電容技術、溫度與頻率會改變它；並聯可降低等效值，但電流分配與佈局寄生仍需檢查。</p>
+</article>
+
+<article class="term-card" data-search="lc cutoff attenuation 截止頻率 衰減 電感 電容 濾波">
+<h2>LC 截止頻率與衰減（LC cutoff, attenuation）</h2>
+<p><strong>白話：</strong>電感阻擋電流快速改變，電容吸收電壓快速改變，兩者組合成低通濾波器。截止頻率是從通過慢變內容轉向壓制快速內容的尺度；切換成分離它越遠，理想衰減越大。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-濾波與漣波設計.html">07 章</a>把元件尺寸連到頻率響應。轉換器輸出、逆變器正弦濾波與電磁干擾濾波器都會使用 LC，但阻尼與負載條件各不相同。</p>
+<p><strong>機制：</strong>24.305556 µH 與 18.750000 µF 組合的截止頻率為 <strong>7455.327388 Hz</strong>；200 kHz 是其 26.826454 倍，理想二階高頻衰減估為 57.142531 dB。頻率比決定遠離截止點後的壓制程度。</p>
+<p><strong>不要混淆：</strong>截止頻率不是一道超過就完全消失的牆，也不是越低越好。LC 會共振，阻尼不足時截止附近可能放大；設得太低還會拖慢暫態反應、增加體積並使控制迴路難以穩定。</p>
+</article>
+
+<article class="term-card" data-search="isolated converter synchronous rectification 隔離式轉換器 同步整流 變壓器 mosfet">
+<h2>隔離式轉換器與同步整流（isolated converter, synchronous rectification）</h2>
+<p><strong>白話：</strong>隔離式轉換器用高頻變壓器傳遞能量，讓輸入與輸出沒有直流導電連接；同步整流則用受控 MOSFET 取代輸出二極體，以較小導通壓降降低大電流損失。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-Boost與BuckBoost.html">06 章</a>介紹隔離與能量雙向延伸。USB 充電器、醫療電源、伺服器電源與車用高低壓轉換器，需要安全隔離或接地分離時會採用變壓器。</p>
+<p><strong>機制：</strong>第 06 章參考 Boost 的輸出功率為 <strong>53.254438 W</strong>，提醒大電流路徑的每一小段壓降都會累積成熱。同步整流依電流方向準時開啟低電阻元件；隔離則以磁通把一次側脈衝耦合到二次側。</p>
+<p><strong>不要混淆：</strong>高頻變壓器能隔離並改變電壓比例，但不會自己完成穩壓；仍需開關時序、整流、濾波與回授。同步整流也不是任意並上一顆 MOSFET，時序錯誤可能造成反向電流或上下臂直通。</p>
+</article>
+
+</div>
+
+<h2>第四組｜逆變、諧波、熱與整合（第 08–11 章，13 張）</h2>
+<div class="term-list">
+
+<article class="term-card" data-search="inverter 逆變器 dc ac 馬達 太陽能">
+<h2>逆變器（inverter）</h2>
+<p><strong>白話：</strong>把直流來源切成正負交替的輸出，再用時序與濾波塑造需要的交流幅度與頻率。它可以產生固定電網頻率，也能依馬達轉速命令連續改變頻率與電壓。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-逆變器與SPWM.html">08 章</a>從半橋、全橋走到三相控制。太陽能併網、電動車驅動、不斷電系統與冷氣壓縮機都由直流匯流排透過逆變器驅動交流負載。</p>
+<p><strong>機制：</strong>單相全橋使用 400 V 直流、m<sub>a</sub> 為 0.80 時，基波峰值為 <strong>320.000000 V</strong>，有效值 226.274170 V。橋臂只輸出離散電位，但脈衝的低頻基波可被負載或濾波器取出。</p>
+<p><strong>不要混淆：</strong>本課依對照表寫「逆變器」；台灣光電業常寫「變流器」、台電高壓直流用「換流器」，都是同一個 inverter／converter 家族。具體設備仍要看能量方向、交流相數與可否雙向，不能只靠名稱推斷內部拓樸。</p>
+</article>
+
+<article class="term-card" data-search="half-bridge full-bridge 半橋 全橋 直流匯流排 雙極輸出">
+<h2>半橋與全橋（half-bridge／full-bridge）</h2>
+<p><strong>白話：</strong>半橋用一個橋臂在直流中點附近切換輸出；全橋用兩個橋臂夾住負載，兩端可交換極性。全橋能運用完整直流匯流排，代價是元件與驅動數量增加。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-逆變器與SPWM.html">08 章</a>比較兩種基本結構。D 類音訊放大、單相不斷電系統與馬達相臂，都可由半橋單元組合；三相逆變器實際上就是三個橋臂。</p>
+<p><strong>機制：</strong>400 V 匯流排、相同命令下，全橋基波峰值為 320.000000 V，半橋只有 <strong>160.000000 V</strong>。全橋讓負載兩端在正負匯流排差值間變化，因此可用電壓約為半橋兩倍。</p>
+<p><strong>不要混淆：</strong>半橋不是全橋缺一半就能隨意共地，直流中點的建立與電容平衡很重要。全橋輸出電壓加倍也不表示每顆元件耐壓加倍；單顆通常仍承受匯流排電壓，但切換狀態與共模行為不同。</p>
+</article>
+
+<article class="term-card" data-search="sinusoidal pwm spwm m_a m_f 弦波脈寬調變 調變比 頻率比">
+<h2>弦波脈寬調變與調變比（sinusoidal PWM, m_a／m_f）</h2>
+<p><strong>白話：</strong>弦波脈寬調變的英文全名是 sinusoidal pulse-width modulation，縮寫 SPWM。它用慢弦波命令和快三角載波比較；m<sub>a</sub> 是幅度比，m<sub>f</sub> 是頻率比，分別控制基波幅度與每基波週期的切換密度。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-逆變器與SPWM.html">08 章</a>用 SPWM 合成交流。馬達變頻器、併網逆變器與不斷電系統會依所需頻率產生參考弦波，再讓功率橋輸出可濾除的高頻脈衝。</p>
+<p><strong>機制：</strong>m<sub>a</sub> 為 0.80、V<sub>dc</sub> 為 400 V 時，全橋基波峰值為 320.000000 V，有效值為 <strong>226.274170 V</strong>。m<sub>f</sub> 為 21、基波 50 Hz，切換頻率是 1050 Hz。</p>
+<p><strong>不要混淆：</strong>m<sub>a</sub> 與工作週期不是同一個固定數；前者是參考波峰值對載波峰值的比，瞬時工作週期會沿弦波改變。m<sub>f</sub> 也不是諧波次數本身，而是載波與基波頻率的比例。</p>
+</article>
+
+<article class="term-card" data-search="overmodulation six-step 過調變 方波 線性區 電壓利用率">
+<h2>過調變與方波（overmodulation, six-step）</h2>
+<p><strong>白話：</strong>當弦波命令的幅度超出載波可線性比較的範圍，脈衝在波峰附近被夾住，進入過調變；再推到極端便接近每半輪只換相一次的方波或六步波。可用基波變大，但低次諧波也增加。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-逆變器與SPWM.html">08 章</a>把線性 SPWM 連到方波極限。馬達驅動在高速區、直流匯流排電壓不足時，可能犧牲波形品質以榨出更多基波電壓。</p>
+<p><strong>機制：</strong>400 V 單相全橋的方波基波峰值極限為 <strong>509.295818 V</strong>，高於 m<sub>a</sub> 為 0.80 時的 320.000000 V。輸出並沒有超過瞬時匯流排，增加的是方波傅立葉分量中的基波幅度。</p>
+<p><strong>不要混淆：</strong>過調變不是元件承受超額電壓，也不是把 m<sub>a</sub> 任意放大仍維持線性。進入此區後，命令增量與基波增量不再成固定比例，控制器要換映射方法，負載的諧波、噪音與熱也會改變。</p>
+</article>
+
+<article class="term-card" data-search="space-vector pwm svpwm 空間向量脈寬調變 三相 電壓利用率">
+<h2>空間向量脈寬調變（space-vector PWM, SVPWM）</h2>
+<p><strong>白話：</strong>空間向量脈寬調變的英文全名是 space-vector pulse-width modulation，縮寫 SVPWM。它把三相橋的八種開關狀態看成平面向量，在每一小段時間選相鄰向量與零向量的停留時間，合成所需旋轉方向。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-逆變器與SPWM.html">08 章</a>將它和三相 SPWM 比較。工業馬達、電動車牽引與伺服驅動器常用 SVPWM，提高直流匯流排利用率並有系統地安排切換序列。</p>
+<p><strong>機制：</strong>400 V 匯流排的三相條件下，SVPWM 線電壓上限是 <strong>282.842712 V</strong>，相較 SPWM 的 244.948974 V 高 15.470054 %。額外空間來自三相共同偏移，不改變線對線的目標基波。</p>
+<p><strong>不要混淆：</strong>SVPWM 不是另一種硬體橋，也不是讓直流電壓真的升高；它重新分配既有八種狀態的停留時間。若只看單相對地波形會看到共同偏移，但馬達繞組關心的是線電壓。</p>
+</article>
+
+<article class="term-card" data-search="harmonic 諧波 基波 整數倍 傅立葉 波形">
+<h2>諧波（harmonic）</h2>
+<p><strong>白話：</strong>週期波形可以拆成一個基波與多個整數倍頻率的弦波成分，後者叫諧波。它們共同拼出方波、脈衝與整流電流的尖角，也會在導線、馬達與濾波器中造成額外壓力。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-諧波與THD.html">09 章</a>用逐次累加表觀察各次成分。逆變器輸出品質、電網電流、馬達轉矩脈動與電磁相容評估都需要知道哪些頻率含量存在。</p>
+<p><strong>機制：</strong>方波的第 3 次相對基波幅度為 <strong>33.333333 %</strong>，第 5 次為 20.000000 %；次數越高通常幅度越小，但多個成分平方相加後仍形成可觀的總量。</p>
+<p><strong>不要混淆：</strong>諧波必須是基波整數倍，切換旁波帶與隨機雜訊不一定都叫諧波。某一次成分很小也不代表可忽略，因為它可能剛好碰到機械共振、濾波器共振或法規特別限制的頻帶。</p>
+</article>
+
+<article class="term-card" data-search="total harmonic distortion thd 總諧波失真 基波 比例 平方和">
+<h2>總諧波失真（total harmonic distortion, THD）</h2>
+<p><strong>白話：</strong>總諧波失真的英文全名是 total harmonic distortion，縮寫 THD。它把基波以外各次諧波的有效值平方相加、開根號，再除以基波，濃縮成一個相對比例。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-諧波與THD.html">09 章</a>比較方波、六步波、三角波與濾波效果。電網品質、音訊與馬達驅動都用 THD 快速描述波形偏離單一弦波的程度。</p>
+<p><strong>機制：</strong>方波累加到第 13 次時，THD 為 <strong>44.502424 %</strong>；累加到第 49 次為 47.297133 %，解析極限是 48.342585 %。逐次增加只會逼近完整波形的總諧波能量。</p>
+<p><strong>不要混淆：</strong>THD 是相對基波的比例，不是諧波的絕對量；基波變小 THD 就變大。比較兩台設備時還要看相同額定條件與頻寬，單一百分比也無法指出是哪一次諧波造成問題。</p>
+</article>
+
+<article class="term-card" data-search="displacement true power factor dpf pf 位移功因 真功因 諧波">
+<h2>位移功因與真功因（displacement／true power factor）</h2>
+<p><strong>白話：</strong>位移功因只看電壓與電流基波之間的相位差；真功因則看實際有功功率相對於電壓、電流有效值乘積，連波形扭曲造成的額外電流也算進去。兩者在純弦波時才可能相同。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-諧波與THD.html">09 章</a>把 THD 與配線利用率連起來。整流器、變頻設備與電網併接裝置即使相位對齊，也可能因尖峰電流而讓真功因偏低。</p>
+<p><strong>機制：</strong>方波累加到第 13 次、位移功因為 1.00 時，THD 44.502424 % 對應真功因 <strong>0.913615</strong>。諧波提高電流有效值，卻未按相同比例增加基波傳遞的有功功率。</p>
+<p><strong>不要混淆：</strong>把相位校正到零不代表真功因必為一，也不能從真功因單獨判斷是相位還是波形造成。報告數值時要說明是位移量或包含全部頻率成分的總量。</p>
+</article>
+
+<article class="term-card" data-search="thermal resistance junction temperature t_j 熱阻 結溫 散熱片">
+<h2>熱阻與結溫（thermal resistance, T_J）</h2>
+<p><strong>白話：</strong>熱阻描述每傳遞一瓦熱，兩點溫度相差多少 °C；結溫 T<sub>J</sub> 是半導體晶片內部接面溫度。熱從接面經封裝、介面材料、散熱片走到環境，各段熱阻像串聯電阻般累加。</p>
+<p><strong>位置／角色：</strong>第 <a href="10-散熱與效率.html">10 章</a>把電損耗轉成溫度。功率模組、充電器、馬達驅動器與任何裝散熱片的元件，都以結溫上限判斷能否安全長時間運作。</p>
+<p><strong>機制：</strong>10 W 損耗、環境 40 °C，θ<sub>JC</sub>、θ<sub>CS</sub>、θ<sub>SA</sub> 合計 <strong>4.800000 °C/W</strong>，因此 T<sub>J</sub> 為 88.000000 °C。θ 讀作西塔，代表溫差除以熱流功率。</p>
+<p><strong>不要混淆：</strong>熱像儀量到殼溫不是結溫；θ<sub>JC</sub> 那一段散熱片動不了。改善 θ<sub>SA</sub> 只能降低散熱片到環境的溫差，介面與封裝仍有固定落差，量測點與資料表熱阻路徑必須一致。</p>
+</article>
+
+<article class="term-card" data-search="derating 降額 溫度 額定 壽命 可靠度">
+<h2>降額（derating）</h2>
+<p><strong>白話：</strong>降額是刻意不把元件用到標示極限，為環境溫度、製造差異、老化、突波與模型誤差留下裕度。額定值是特定測試條件下的邊界，不是設計時應長期貼著運行的目標。</p>
+<p><strong>位置／角色：</strong>第 <a href="10-散熱與效率.html">10 章</a>把溫度裕度連到可靠度。電解電容、功率半導體、磁性元件與散熱器都需降額；車用、工業與密閉設備因環境較嚴苛，裕度通常更重要。</p>
+<p><strong>機制：</strong>參考設計的結溫 88.000000 °C，相對 150 °C 上限有 <strong>62.000000 °C</strong> 裕度。若環境升溫、散熱片積塵或損耗估低，這段餘量可吸收偏差；貼近上限則任何小變化都可能越界。</p>
+<p><strong>不要混淆：</strong>降額不是把所有額定值機械地乘同一百分比。電壓、電流、溫度與脈衝時間彼此耦合，資料表可能用曲線描述；設計者要找真正限制壽命或安全的應力，再依任務環境保留合理裕度。</p>
+</article>
+
+<article class="term-card" data-search="switching-frequency trade-off 切換頻率取捨 磁性元件 損耗 濾波">
+<h2>切換頻率取捨（switching-frequency trade-off）</h2>
+<p><strong>白話：</strong>提高切換頻率會縮短每輪時間，使相同漣波目標所需的電感與電容變小，控制更新也更快；代價是每秒狀態轉換更多，切換損、驅動損與電磁干擾通常上升。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-切換頻率取捨與設計總整合.html">11 章</a>把元件、濾波、熱與效率串成完整設計。高功率密度充電器與處理器電源尤其需要在體積、效率、溫升和成本之間找折衷點。</p>
+<p><strong>機制：</strong>同步 Buck 在 200 kHz 時切換損為 <strong>1.920000 W</strong>；提高到 1 MHz 後成 9.600000 W，而所需電感由 15.000000 µH 降為 3.000000 µH。尺寸收益與熱代價同時出現。</p>
+<p><strong>不要混淆：</strong>頻率越高不代表技術一定越好，越低也不保證效率最佳。降低頻率會增大被動元件與電流起伏，高頻則加重過渡與佈局問題；答案取決於指定負載、材料、冷卻與允許體積。</p>
+</article>
+
+<article class="term-card" data-search="averaged model voltage-mode current-mode control compensator 平均模型 電壓模式 電流模式控制 補償器">
+<h2>平均模型與控制模式（averaged model, voltage-／current-mode control, compensator）</h2>
+<p><strong>白話：</strong>平均模型把每輪快速開關細節換成慢尺度的平均關係，方便分析輸入、工作週期與輸出。電壓模式直接由輸出誤差決定命令；電流模式多加內層電感電流控制；補償器塑造反應速度與穩定裕度。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-切換頻率取捨與設計總整合.html">11 章</a>用整體設計銜接控制。伺服器電源、電池充電器與馬達驅動都不只需要正確拓樸，還要在輸入或負載突變後可靠回到目標。</p>
+<p><strong>機制：</strong>48 V 降到 12 V 的同步 Buck 平均工作週期是 <strong>0.250000</strong>。控制器以此為工作點微調命令；平均模型忽略 200 kHz 逐脈衝細節，讓補償器能針對較慢的輸出動態設計。</p>
+<p><strong>不要混淆：</strong>平均模型適合控制尺度，不適合估算尖峰、死區或元件應力。電流模式也不是只量電流便不管電壓，外層通常仍穩住輸出；補償器若只追求快，可能侵蝕相位裕度並引發振盪。</p>
+</article>
+
+<article class="term-card" data-search="vfd hvdc emi emc 應用速覽 變頻器 高壓直流輸電 電磁干擾 電磁相容">
+<h2>應用速覽：變頻器、HVDC 與 EMI（VFD, HVDC, EMI／EMC）</h2>
+<p><strong>白話：</strong>變頻器 VFD 改變馬達供電頻率與電壓；高壓直流輸電 HVDC 用整流與逆變跨長距離搬運大量能量；電磁干擾 EMI 是設備送出或受到的不良電磁影響，電磁相容 EMC 則是彼此共存的能力。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-切換頻率取捨與設計總整合.html">11 章</a>把全課放回真實系統。工廠泵浦用 VFD 節能，跨海電纜常選 HVDC；所有快速切換設備都必須同時處理傳導與輻射干擾。</p>
+<p><strong>機制：</strong>同步 Buck 整合例的輸出功率是 <strong>120.000000 W</strong>，總損 2.920000 W，效率 97.624471 %。大型應用雖尺度不同，仍沿用能量守恆、開關損失、濾波、熱路徑與控制穩定等同一套檢查。</p>
+<p><strong>不要混淆：</strong>VFD、HVDC 與 EMI 不是三種同層級元件：前兩者是能量轉換系統，後者是任何系統都可能面臨的現象。EMC 也不只是加一顆濾波器，還涉及回路面積、接地、屏蔽、邊緣速度與測試方法。</p>
+</article>
+
+</div>
+
+<nav class="pager" aria-label="章節導覽"><a href="11-切換頻率取捨與設計總整合.html">← 上一頁：切換頻率取捨與設計總整合</a><a href="自我檢核.html">下一頁：自我檢核 →</a></nav>
+</main>
+<footer class="site-footer"><span>名詞與概念字典</span><a href="自我檢核.html">去自我檢核</a></footer>
+</body></html>

@@ -1,0 +1,79 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 散熱與效率：熱阻鏈算結溫｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・把損耗的瓦數換成晶片結溫</p>
+<h1>10 散熱與效率：熱阻鏈算結溫</h1>
+<p class="lead">元件損耗 10 W 看似不大，放在 40 °C 環境並接上中型散熱片，結溫（junction temperature, T<sub>J</sub>）仍會到 88.000000 °C；沒有散熱片時，一階模型甚至得到 640.000000 °C。這章把熱走過的每一段路徑與降額裕度算清楚。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-功率開關與兩種損耗.html">01 功率開關與兩種損耗</a>算出的損耗。<strong>前置：</strong>見〈09 CMOS 反相器與數位功耗〉<a href="../../02-電機核心/電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學的 CMOS 反相器與數位功耗</a>。</p>
+
+<h2>痛點：效率已經很高，元件為什麼還會過熱</h2>
+<p>「效率有 95 %，剩下那一點應該不用管吧？」這個直覺忽略了輸出功率的尺度。輸出 200 W、損耗 10 W 時，效率確實是 95.238095 %，但那 10 W 仍持續在很小的晶片內變成熱。熱若無法穿過封裝、導熱介面與散熱片送到空氣，晶片結溫就會一路升高，直到散出的功率等於產生的功率，或元件先損壞。</p>
+<p>工程問題因此不是只問效率多少，而是問損耗在哪裡產生、熱從哪條路離開，以及最熱的內部位置離上限還有多少裕度。相同 10 W 放在不同封裝與氣流條件下，可以是安全的 88.000000 °C，也可以遠超材料上限。</p>
+<p>結溫是晶片主動區的溫度，通常無法直接接觸；殼溫則是封裝外表可量的位置。資料表的最高結溫是不可跨越的額定邊界，不是日常設計目標。若每次正常操作都貼著上限，環境升溫、風扇積塵、導熱介面老化或元件差異都可能把系統推過界，因此還要預留降額裕度。</p>
+
+<h2>白話直覺：熱要沿著一條有阻力的路離開</h2>
+<p>可以暫時把熱阻鏈比作三段狹窄程度不同的通道；比喻到此為止，精確定義是熱阻（thermal resistance）θ ＝ ΔT / P，單位 °C/W，表示每傳出 1 W 功率會建立多少溫差。晶片結（junction）是元件內部發熱區，熱先到封裝殼（case），經導熱介面到散熱片（sink），最後進入環境（ambient）。</p>
+<p>沿完整因果鏈看：電源供能，功率開關與負載形成閉合回路；元件導通與切換時把部分電能轉成熱，熱由晶片結依序流經 θ<sub>JC</sub>、θ<sub>CS</sub>、θ<sub>SA</sub>；每段都產生 P × θ 的溫升，故越靠近熱源溫度越高。熱電偶能量到殼溫，熱像儀能看到散熱片表面溫度，內部結溫則要靠模型推算。</p>
+<p>這件事在你的程式裡長什麼樣：三段熱阻是一串相加的參數，同一個 P 依序乘上各段，再把溫升累加到環境溫度；改一個參數，所有上游節點溫度都跟著變。</p>
+<p>三段熱阻也對應三種不同的工程手段。θ<sub>JC</sub> 由晶片貼合方式與封裝決定，換散熱片無法改它；θ<sub>CS</sub> 取決於接觸面、絕緣墊片、導熱材料厚度與鎖附壓力；θ<sub>SA</sub> 才由散熱片面積、鰭片方向與氣流決定。把問題分段後，量到哪一段溫差過大，就知道應改封裝、介面或對流條件，不必盲目加大所有零件。</p>
+<p class="note">來源：P2-電力電子（下）§7.3、§11。</p>
+
+<h2>推導：從每段溫升到所需散熱片</h2>
+<p><strong>（一）熱阻定義。</strong>θ ＝ ΔT / P，所以 ΔT ＝ P × θ。θ 是熱阻，單位 °C/W；ΔT 是兩端溫差，單位 °C；P 是穿過該段的穩態熱功率，單位 W。在單一熱流路徑裡，每段流過同一個 P，因此串聯熱阻可以直接相加。</p>
+<p><strong>（二）三個溫度節點。</strong>總熱阻 θ<sub>JA</sub> ＝ θ<sub>JC</sub> ＋ θ<sub>CS</sub> ＋ θ<sub>SA</sub>，所以結溫 T<sub>J</sub> ＝ T<sub>a</sub> ＋ P × θ<sub>JA</sub>。散熱片溫度 T<sub>S</sub> ＝ T<sub>a</sub> ＋ P × θ<sub>SA</sub>；殼溫 T<sub>C</sub> ＝ T<sub>a</sub> ＋ P × (θ<sub>CS</sub> ＋ θ<sub>SA</sub>)。T<sub>a</sub>、T<sub>S</sub>、T<sub>C</sub>、T<sub>J</sub> 都用 °C。</p>
+<p><strong>（三）反推設計要求。</strong>降額（derating）把目標設為 T<sub>J,target</sub> ＝ T<sub>J,max</sub> − 25 °C。移項可得 θ<sub>SA,req</sub> ＝ (T<sub>J,target</sub> − T<sub>a</sub>) / P − θ<sub>JC</sub> − θ<sub>CS</sub>。若結果小於 0，代表即使 θ<sub>SA</sub> 為 0 也不夠，必須降低損耗、換低 θ<sub>JC</sub> 封裝或用多顆元件分攤。</p>
+<p><strong>（四）效率仍要一起看。</strong>效率 η ＝ P<sub>o</sub> / (P<sub>o</sub> ＋ P<sub>loss</sub>)，P<sub>o</sub> 是輸出功率，P<sub>loss</sub> 是損耗，兩者單位皆為 W。效率是比例，不能取代絕對損耗與溫度計算。</p>
+<p><strong>（五）從量測反推路徑。</strong>穩態時，T<sub>C</sub> − T<sub>a</sub> ＝ P × (θ<sub>CS</sub> ＋ θ<sub>SA</sub>)。量得損耗、殼溫與環境溫度，便能估計安裝後的外部熱阻；數值過高常表示接觸不良或風道受阻。θ<sub>JC</sub> 仍須採用廠商資料或額外的溫敏電性參數。</p>
+<p><strong>模型假設與適用範圍。</strong>本課用的是一階教學模型，真實電路不是這樣：本章只用一維穩態熱阻鏈，忽略熱容與瞬態，假設熱只走封裝到散熱片這一條路，忽略經印刷電路板的旁路，並假設 θ 不隨溫度、氣流與安裝方向改變。啟動後短時間的溫升必須改用瞬態熱阻曲線。</p>
+<p>穩態假設要求等待溫度不再明顯變動。真實系統剛啟動時，晶片、封裝、散熱片各自儲存熱量，溫度不會立刻到穩態值；短脈衝可能在平均功率不高時產生局部高溫，也可能因熱容量而暫時低於穩態預估。脈衝寬度、重複率與廠商提供的瞬態熱阻必須一起評估，不能直接把峰值功率放進穩態式後就判定安全。</p>
+
+<h2>數值實例：10 W 經過三段熱阻</h2>
+<p>設定 P ＝ 10 W、P<sub>o</sub> ＝ 200 W、T<sub>a</sub> ＝ 40 °C、θ<sub>JC</sub> ＝ 0.5 °C/W、θ<sub>CS</sub> ＝ 0.3 °C/W、θ<sub>SA</sub> ＝ 4.0 °C/W、T<sub>J,max</sub> ＝ 150 °C；這些就是自由實驗的預設值。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>總熱阻</td><td>0.5 ＋ 0.3 ＋ 4.0</td><td><strong>4.800000 °C/W</strong></td></tr>
+<tr><td>結溫 T<sub>J</sub></td><td>40 ＋ 10 × 4.8</td><td><strong>88.000000 °C</strong></td></tr>
+<tr><td>殼溫 T<sub>C</sub></td><td>40 ＋ 10 × 4.3</td><td><strong>83.000000 °C</strong></td></tr>
+<tr><td>散熱片溫 T<sub>S</sub></td><td>40 ＋ 10 × 4.0</td><td><strong>80.000000 °C</strong></td></tr>
+<tr><td>裕度</td><td>150 − 88</td><td><strong>62.000000 °C</strong></td></tr>
+<tr><td>所需 θ<sub>SA</sub>（目標 125 °C）</td><td>(125 − 40) / 10 − 0.8</td><td><strong>7.700000 °C/W</strong></td></tr>
+<tr><td>效率</td><td>200 / 210</td><td><strong>95.238095 %</strong></td></tr>
+</tbody></table>
+<p>邊界對照顯示路徑的重要性：無散熱片以 θ<sub>JA</sub> ＝ 60 °C/W 計得 <strong>640.000000 °C</strong>；小型散熱片 10 °C/W 得 <strong>148.000000 °C</strong>；強制風冷 1.5 °C/W 得 <strong>63.000000 °C</strong>；液冷 0.3 °C/W 得 <strong>51.000000 °C</strong>。若環境升到 70 °C，同一中型散熱片會得到 <strong>118.000000 °C</strong>。這些結果只用來看趨勢，超過材料上限後模型數值不代表元件真的能到達該溫度。</p>
+<p>再看功率邊界：P ＝ 50 W 搭配液冷且 T<sub>J,max</sub> ＝ 175 °C 時，結溫為 <strong>95.000000 °C</strong>、殼溫 70 °C、所需 θ<sub>SA</sub> 為 <strong>1.400000 °C/W</strong>；同樣 50 W 改用中型散熱片，結溫升到 <strong>280.000000 °C</strong>，所需 θ<sub>SA</sub> 僅 <strong>0.900000 °C/W</strong>。這說明改善 θ<sub>SA</sub> 有明確數量目標，而不是只寫「加強散熱」。</p>
+<p>無散熱片也有可用區間。P ＝ 2 W 時模型得 <strong>160.000000 °C</strong>，已超過矽元件上限；P ＝ 1 W、T<sub>a</sub> ＝ 25 °C 時則為 <strong>85.000000 °C</strong>。所以 TO-220 不裝散熱片約只能處理 1–2 W 是條件式結論，仍要看環境、板面銅箔與安裝姿態。</p>
+
+<section class="workspace"><h2>自由實驗：從損耗與散熱方式預估結溫</h2>
+<p>場景是一顆功率元件把損耗送進封裝與散熱系統。調整功率、環境、封裝與散熱方式，觀察結溫、裕度、所需散熱片熱阻及效率如何一起改變；無散熱片模式改用廠商給的 θ<sub>JA</sub>。</p>
+<div class="controls">
+<label for="tm-p">元件損耗 P（W）<input id="tm-p" type="range" min="0.5" max="50" step="0.5" value="10"></label>
+<label for="tm-po">輸出功率 P_o（W）<input id="tm-po" type="range" min="10" max="2000" step="10" value="200"></label>
+<label for="tm-ta">環境溫度 T_a（°C）<input id="tm-ta" type="range" min="0" max="70" step="5" value="40"></label>
+<label for="tm-jc">θ_JC（°C/W，封裝）<input id="tm-jc" type="range" min="0.1" max="5" step="0.1" value="0.5"></label>
+<label for="tm-cs">θ_CS（°C/W，導熱介面）<input id="tm-cs" type="range" min="0" max="2" step="0.1" value="0.3"></label>
+<label for="tm-sink">散熱方式<select id="tm-sink"><option value="medium">中型散熱片、自然對流（θ_SA 4.0）</option><option value="none">無散熱片（TO-220 自然對流，θ_JA 60）</option><option value="small">小型散熱片（θ_SA 10）</option><option value="fan">散熱片＋強制風冷（θ_SA 1.5）</option><option value="cold">液冷冷板（θ_SA 0.3）</option></select></label>
+<label for="tm-tjmax">元件上限<select id="tm-tjmax"><option value="150">Si，T_J,max 150 °C</option><option value="175">SiC／車規，T_J,max 175 °C</option></select></label>
+</div>
+<div id="thermal-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>熱像儀量到殼或散熱片表面，不是晶片內部結溫；兩者之差仍取決於 P × θ<sub>JC</sub>。</li>
+<li>熱阻不是永遠不變的材料常數；風速、海拔、散熱片方向、接觸壓力都會改變實際值。</li>
+<li>效率 95 % 不代表不必散熱；輸出尺度夠大時，剩餘的 5 % 仍可能是數十瓦。</li>
+<li>散熱片只能改善 θ<sub>SA</sub>，動不了封裝內的 θ<sub>JC</sub>；封裝段超標時要改元件或降低損耗。</li>
+<li>降額不是額外浪費；它把溫度波動、老化與量產差異留在設計裕度內。</li>
+</ul>
+<p>溫度也支配壽命：電解電容附近每升高 10 °C，壽命約減半；焊點會承受熱循環疲勞，元件也不能超用安全工作區（safe operating area, SOA）。壽命需求可由消費設備 5 年、工業設備 10–20 年、車用設備 15 年起算，再依實際任務條件驗證。</p>
+
+<h2>可觀察證據：量殼溫與環境溫度，再推回熱阻</h2>
+<p>讓設備在固定負載下到達穩態，用熱電偶貼近元件殼面量 T<sub>C</sub>，同時量 T<sub>a</sub>；熱像儀可檢查散熱片是否有局部熱點。已知損耗 P 後，以 (T<sub>C</sub> − T<sub>a</sub>) / P 估計 θ<sub>CS</sub> ＋ θ<sub>SA</sub>，再用資料表的 θ<sub>JC</sub> 推算 T<sub>J</sub>。</p>
+<p><strong>能證明</strong>的是殼溫、散熱片溫度分布，以及目前安裝與氣流下 θ<sub>CS</sub> ＋ θ<sub>SA</sub> 的實際值。<strong>不能證明</strong>的是晶片內部結溫；那仍依賴廠商 θ<sub>JC</sub>，有些元件才可用體二極體壓降另作溫度計。穩態量測也不能證明啟動或脈衝負載的瞬態熱阻。</p>
+
+<h2>連到哪門課</h2>
+<p>第 11 章會把結溫放回切換頻率的設計取捨。這套方法也用在電動車逆變器液冷、伺服器電源風道與手機快充殼溫限制；電解電容高溫乾化、焊點熱循環疲勞與任務剖面的壽命模型則留給可靠度課。功耗如何在晶片內形成的前置機制，可回看<a href="../../02-電機核心/電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學的 CMOS 反相器與數位功耗</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="09-諧波與THD.html">← 上一頁：諧波與 THD</a><a href="11-切換頻率取捨與設計總整合.html">下一頁：切換頻率取捨與設計總整合 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 散熱與效率：熱阻鏈算結溫</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 訊號空間與正交基底｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">01・把整段波形壓成不遺失判決資訊的座標</p>
+<h1>訊號空間與正交基底：誤判為什麼只看兩點距離</h1>
+<p class="lead">接收機面對的是一整段隨時間變化的波形，判決卻能化成平面上的最近點問題。關鍵是用正交基底取出座標：能量變成長度平方，相關變成內積，可靠度最後只剩距離與雜訊尺度的比值。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-數位通訊世界觀與收發鏈.html">00 數位通訊世界觀與收發鏈</a>的調變、通道與判決位置。<strong>前置：</strong>見〈匹配濾波器只看能量〉<a href="../通訊系統-互動課程/08-匹配濾波器與位元錯誤率.html">通訊系統的匹配濾波器與誤碼率</a>；內積見〈向量與矩陣〉<a href="../../../共通基礎/數學/互動課程/04-向量與矩陣.html">工程數學先修的向量與矩陣</a>。</p>
+
+<h2>痛點：兩條波形相差很多，距離到底量在哪裡</h2>
+<p>星座圖把一整段波形畫成一個點，初學者很容易以為它只是方便看的縮圖。真正的疑問是：時間軸上有無限多個時刻，為什麼兩個數字就足以判決？如果換一組座標，點的位置變了，可靠度會不會也跟著變？</p>
+<p>另一個卡點是「能量大就可靠」並不完整。兩個訊號都能量很大，若方向幾乎相同，仍可能靠得很近；能量相同的反極性訊號則分居原點兩側，距離最大。可靠度要看兩點之間的差，不是單獨看任一點離原點多遠。</p>
+
+<h2>白話直覺：基底像量尺寸的尺，但不是圖案本身</h2>
+<p>可以暫時把基底想成互相垂直的尺，座標是波形在每把尺上的讀值；比喻到此為止。精確定義是正交歸一基底（orthonormal basis）φ<sub>k</sub>(t)，任兩個基底的內積 ⟨φ<sub>i</sub>, φ<sub>j</sub>⟩ 在 i ＝ j 時為 1，否則為 0。有限維訊號可寫成 s(t) ＝ Σ s<sub>k</sub>φ<sub>k</sub>(t)，而 s<sub>k</sub> ＝ ⟨s, φ<sub>k</sub>⟩ 就是座標。</p>
+<p>因果鏈從位元走一次：位元選出候選波形；接收機把收到的波形投影到共同基底，得到有限個座標；判決選距離最近的候選點。這個選擇買到的是把連續時間問題化成向量運算，而且不丟失候選集合內的資訊。代價是必須知道正確波形、同步與基底，維度多時還要多個相關運算。邊界是兩個候選完全相同時 d ＝ 0，再大的共同能量也無法區分；反極性則以相同平均能量得到最大距離。向量訊號分析儀量到 IQ 點雲，示波器的 XY 模式也能把兩個投影並列。</p>
+<p>能量 E<sub>i</sub> ＝ ‖s<sub>i</sub>‖²，相關係數 ρ ＝ ⟨s<sub>1</sub>, s<sub>2</sub>⟩ / √(E<sub>1</sub>E<sub>2</sub>)，且 −1 ≤ ρ ≤ 1。ρ ＝ −1 是反極性（antipodal），ρ ＝ 0 是正交（orthogonal），ρ ＝ 1 表示方向相同；ON-OFF 則有一點在原點。這些名稱描述幾何關係，不是不同的計分規則。</p>
+<p class="note">來源：15-數位通訊-下 §8.2、§8.3；15-數位通訊-上 §5.2。</p>
+
+<h2>推導：從 Gram–Schmidt 兩步走到誤判機率</h2>
+<p><strong>Gram–Schmidt 第一步：歸一化第一個訊號。</strong>令 φ<sub>1</sub> ＝ s<sub>1</sub> / √E<sub>1</sub>。因為 E<sub>1</sub> ＝ ⟨s<sub>1</sub>, s<sub>1</sub>⟩，所以 ‖φ<sub>1</sub>‖² ＝ 1；第一個訊號在這組座標是 s<sub>1</sub> ＝ (√E<sub>1</sub>, 0)。這一步把第一個方向定為第一軸。</p>
+<p><strong>Gram–Schmidt 第二步：扣投影再歸一化。</strong>第二個訊號在第一軸的投影為 ⟨s<sub>2</sub>, φ<sub>1</sub>⟩φ<sub>1</sub>。由 ρ 的定義，投影係數是 ρ√E<sub>2</sub>。令殘差 u<sub>2</sub> ＝ s<sub>2</sub> − ρ√E<sub>2</sub>φ<sub>1</sub>；它與 φ<sub>1</sub> 內積為 0，長度是 √(E<sub>2</sub>(1 − ρ²))。若長度非零，再令 φ<sub>2</sub> ＝ u<sub>2</sub> / ‖u<sub>2</sub>‖，便得到 s<sub>2</sub> ＝ (ρ√E<sub>2</sub>, √(E<sub>2</sub>(1 − ρ²)))。若殘差為零，第二個訊號與第一軸共線，不需要第二軸。兩步至此完整結束。</p>
+<p><strong>能量為什麼是座標平方和。</strong>把 s ＝ Σ s<sub>k</sub>φ<sub>k</sub> 代入能量：∫s²(t)dt ＝ Σ<sub>k</sub>Σ<sub>l</sub>s<sub>k</sub>s<sub>l</sub>⟨φ<sub>k</sub>, φ<sub>l</sub>⟩。正交使 k ≠ l 的交叉項歸零，歸一化使 k ＝ l 的內積為 1，最後只剩 Σ s<sub>k</sub>²。</p>
+<p><strong>距離怎麼長出來。</strong>d² ＝ ‖s<sub>1</sub> − s<sub>2</sub>‖²。展開內積得 d² ＝ E<sub>1</sub> ＋ E<sub>2</sub> − 2⟨s<sub>1</sub>, s<sub>2</sub>⟩ ＝ E<sub>1</sub> ＋ E<sub>2</sub> − 2ρ√(E<sub>1</sub>E<sub>2</sub>)。E 與 d² 的單位是 J，d 的單位是 √J；改用另一組正交基底會改座標，不會改內積、能量或距離。</p>
+<p><strong>誤判為什麼只看 d。</strong>等機率的兩個候選以中點為判決門檻。沿兩點連線的雜訊分量服從高斯分布，標準差為 √(N<sub>0</sub>/2)，必須跨越 d/2 才會落到另一側，所以 P<sub>e</sub> ＝ Q((d/2) / √(N<sub>0</sub>/2)) ＝ Q(d / √(2N<sub>0</sub>))；垂直連線的分量不改變哪一點較近。每維變異數 N<sub>0</sub>/2 是通訊系統 08 的匹配濾波器結論，本章只引用。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：AWGN、理想同步、兩個候選等機率、匹配濾波器輸出正確。真實系統不是這樣；先驗機率、同步誤差、波形失配與非高斯干擾會移動判決邊界。</p>
+
+<h2>數值實例：兩點各 1 J、ρ ＝ −1、N<sub>0</sub> ＝ 0.1</h2>
+<p>取 E<sub>1</sub> ＝ E<sub>2</sub> ＝ 1、ρ ＝ −1（反極性）、N<sub>0</sub> ＝ 0.1，與自由實驗預設值一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>內積 ⟨s<sub>1</sub>, s<sub>2</sub>⟩</td><td>−1 × √(1 × 1)</td><td><strong>−1.000000</strong></td></tr>
+<tr><td>d²</td><td>1 ＋ 1 − 2 × (−1)</td><td><strong>4.000000</strong></td></tr>
+<tr><td>d</td><td>√4</td><td><strong>2.000000</strong></td></tr>
+<tr><td>座標 s<sub>1</sub>、s<sub>2</sub></td><td>Gram–Schmidt</td><td><strong>(1.000000, 0.000000)、(−1.000000, 0.000000)</strong></td></tr>
+<tr><td>平均每位元能量 E<sub>b</sub></td><td>(1 ＋ 1) / 2</td><td><strong>1.000000（E<sub>b</sub>/N<sub>0</sub> ＝ 10.000000 dB）</strong></td></tr>
+<tr><td>Q 的引數</td><td>2 / √0.2</td><td><strong>4.472136</strong></td></tr>
+<tr><td>P<sub>e</sub></td><td>Q(4.472136)</td><td><strong>3.872108 × 10<sup>−6</sup></strong></td></tr>
+</tbody></table>
+<p>這個數字就是通訊系統 08 的 BPSK 在 10 dB 的誤碼率；同一件事，本章從兩點距離重新推出來。</p>
+<p><strong>量級與邊界對照。</strong>ρ ＝ 0 時，d ＝ 1.414214、s<sub>2</sub> ＝ (0.000000, 1.000000)、引數 3.162278、P<sub>e</sub> ＝ 7.827011 × 10<sup>−4</sup>，與反極性差 3.010300 dB。ρ ＝ 1 且能量相同時，d ＝ 0、P<sub>e</sub> ＝ 5.000000 × 10<sup>−1</sup>。ρ ＝ 0.5 時，d ＝ 1.000000、s<sub>2</sub> ＝ (0.500000, 0.866025)、P<sub>e</sub> ＝ 1.267366 × 10<sup>−2</sup>；ρ ＝ −0.5 時，d ＝ 1.732051、P<sub>e</sub> ＝ 5.375559 × 10<sup>−5</sup>。</p>
+<p>若 E<sub>1</sub> ＝ 1、E<sub>2</sub> ＝ 0.1、ρ ＝ 0，則 d ＝ 1.048809、E<sub>b</sub> ＝ 0.550000（7.403627 dB）、P<sub>e</sub> ＝ 9.508237 × 10<sup>−3</sup>。若兩個能量都升到 4 且 ρ ＝ −1，d ＝ 4、P<sub>e</sub> ＝ 1.872049 × 10<sup>−19</sup>。固定預設能量時，N<sub>0</sub> ＝ 2 使引數成為 1.000000，P<sub>e</sub> ＝ 1.586553 × 10<sup>−1</sup>；N<sub>0</sub> ＝ 0.05 則得到 1.269814 × 10<sup>−10</sup>。</p>
+
+<section class="workspace"><h2>自由實驗：調能量、相關與雜訊，看距離如何接管結果</h2>
+<p>四個控制量會同時更新內積、Gram–Schmidt 座標、距離、能量比與誤判機率。特別比較 ρ ＝ −1、0、1，觀察能量相同時幾何佈局造成的差異。</p>
+<div class="controls">
+<label for="ss-e1">訊號 1 的能量 E_1<input id="ss-e1" type="range" min="0.1" max="4" step="0.1" value="1"></label>
+<label for="ss-e2">訊號 2 的能量 E_2<input id="ss-e2" type="range" min="0.1" max="4" step="0.1" value="1"></label>
+<label for="ss-rho">相關係數 ρ<input id="ss-rho" type="range" min="-1" max="1" step="0.05" value="-1"></label>
+<label for="ss-n0">雜訊功率譜密度 N_0<input id="ss-n0" type="range" min="0.05" max="2" step="0.05" value="0.1"></label>
+</div>
+<div id="sigspace-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>正交 ρ ＝ 0 不代表二元佈局最好；能量相同時，反極性 ρ ＝ −1 的兩點距離更大。</li>
+<li>訊號空間的維度是所需基底個數，不是候選訊號個數；M 個候選可以全部落在二維平面。</li>
+<li>距離 d 的單位是能量平方根，d² 才與能量同單位；不能直接把 d 加到 E 上。</li>
+<li>每維雜訊變異數 N<sub>0</sub>/2 是匹配濾波器的結論，本章引用它來做幾何判決，沒有重新推導濾波器。</li>
+<li>換正交基底會改每個座標值，卻不會改能量、內積與兩點距離，因此不會憑空改善可靠度。</li>
+</ul>
+
+<h2>可觀察證據：拿 IQ 座標驗證投影結果</h2>
+<p><strong>用什麼量。</strong>向量訊號分析儀解調後取得 IQ 散點；也可把 I 與 Q 接到示波器 XY 模式。每個軸的讀值就是波形在同相與正交基底上的投影。</p>
+<p><strong>能證明什麼。</strong>能檢查訊號在指定基底上的座標、點到原點的能量尺度，以及候選點之間的距離。</p>
+<p><strong>不能證明什麼。</strong>單看座標不能證明基底選得是否方便；換一組正交基底會旋轉座標但保持距離。點雲也不能單獨分辨所有誤差來源。</p>
+
+<h2>連到哪門課</h2>
+<p>內積與投影見<a href="../../../共通基礎/數學/互動課程/04-向量與矩陣.html">工程數學先修的向量與矩陣</a>；匹配濾波器只看能量見<a href="../通訊系統-互動課程/08-匹配濾波器與位元錯誤率.html">通訊系統的匹配濾波器與誤碼率</a>；cos 與 sin 為什麼正交見<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統的調變與頻譜搬移</a>。軟體那一端，SDR 的 IQ 樣本 <code>complex64</code> 是二維座標，<code>abs(x)²</code> 是能量。</p>
+<nav class="pager" aria-label="章節導覽"><a href="00-數位通訊世界觀與收發鏈.html">← 上一頁：數位通訊世界觀與收發鏈</a><a href="02-M進制星座與最小距離.html">下一頁：M 進制星座與最小距離 →</a></nav>
+</main>
+<footer class="site-footer"><span>01 訊號空間與正交基底</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

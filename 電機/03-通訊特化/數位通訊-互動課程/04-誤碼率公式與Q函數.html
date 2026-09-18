@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 誤碼率公式與 Q 函數｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・九種方案都放回同一把距離尺</p>
+<h1>誤碼率公式與 Q 函數：從點距算到一批位元會錯幾個</h1>
+<p class="lead">公式看起來各自一套，骨架其實高度一致：把判決距離除以雜訊標準差，再送進 Q 函數。這章並排九種方案，既算指定 E<sub>b</sub>/N<sub>0</sub> 的誤碼率，也反解達標所需的 dB。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-M進制星座與最小距離.html">02 M 進制星座與最小距離</a>的 d<sub>min</sub>、<a href="03-最佳接收機與ML判決.html">03 最佳接收機與 ML 判決</a>的判決區域。<strong>前置：</strong>見〈Q 函數與二元 BER〉<a href="../通訊系統-互動課程/08-匹配濾波器與位元錯誤率.html">通訊系統的匹配濾波器與二元 BER</a>；定義已在那一頁完成，本章只引用。</p>
+
+<h2>痛點：公式表很多條，究竟要背哪一條</h2>
+<p>BPSK、QPSK、PSK、QAM 與 FSK 的式子排在一起時，根號、係數與指數看似毫無關係。若逐條死背，很難判斷自己拿錯的是符元錯誤率、誤碼率，還是用了不符合接收方式的式子；更難回答「傳一百萬位元，大概錯幾個」這種工程問題。</p>
+<p>正確入口是距離。星座決定 d<sub>min</sub>，E<sub>b</sub>/N<sub>0</sub> 決定 σ，最近鄰數與每符元位元數再修正越界機率。差分 BPSK 與非同調 BFSK 是兩個指數式例外，但它們仍清楚反映沒有完整相位參考所付的代價。</p>
+
+<h2>白話直覺：每條公式都在問離邊界有幾個標準差</h2>
+<p>可以把判決點想成站在道路中央，雜訊是把人左右推動的風；離邊界越多個標準差，吹過線的機率越低。比喻到此為止，精確的量是 d<sub>min</sub>/(2σ)，Q 函數把這個無單位距離轉成高斯尾端機率。</p>
+<p>因果鏈從位元開始：每 k 個位元映成一個符元，方案決定點距與最近鄰，接收端依判決區域還原位元。提高 E<sub>b</sub>/N<sub>0</sub> 買到更小誤碼率，增加 M 買到更高頻譜效率，代價是固定能量下點距縮短、所需功率提高。低 E<sub>b</sub>/N<sub>0</sub> 時，最近鄰近似可能偏離精確答案數十個百分點；實測也會混入同步、量化與非線性損失。誤碼率測試儀掃過多個 dB，便能看到理論曲線與實作品質的差距。</p>
+<p class="note">來源：15-數位通訊-上 §5.3、§6；15-數位通訊-下 §8.2。Q 函數定義不在本章重講。</p>
+<p class="note">公式來源：15-數位通訊-上 §5.3、§6。</p>
+
+<h2>推導：先算距離，再數鄰居，最後除回位元</h2>
+<p><strong>M−PSK。</strong>令 M ＝ 2<sup>k</sup> 且 E<sub>s</sub> ＝ 1，相鄰點距離是 2 sin(π/M)，σ ＝ √(1/(2kγ<sub>b</sub>))，其中 γ<sub>b</sub> ＝ E<sub>b</sub>/N<sub>0</sub> 的線性值。因此 d/(2σ) ＝ sin(π/M)√(2kγ<sub>b</sub>)。每點有兩個最近鄰，故 P<sub>s</sub> ≈ 2Q(√(2kγ<sub>b</sub>)sin(π/M))；Gray 映射下 P<sub>b</sub> ≈ P<sub>s</sub>/k。</p>
+<p><strong>方形 M−QAM。</strong>d<sub>min</sub> ＝ 2/√(2(M − 1)/3)，所以 d/(2σ) ＝ √(3kγ<sub>b</sub>/(M − 1))。角點、邊點與內點加權後，平均最近鄰數是 4(1 − 1/√M)，得到 P<sub>b</sub> ≈ (4/k)(1 − 1/√M)Q(√(3kγ<sub>b</sub>/(M − 1)))。M ＝ 16 時根號內係數為 12/15 ＝ 4/5，正好回到筆記式。</p>
+<p><strong>兩條指數式。</strong>DBPSK 用前一符元當相位參考，參考本身也帶雜訊，結果為 P<sub>b</sub> ＝ ½ exp(−γ<sub>b</sub>)；非同調 BFSK 不追載波相位，結果為 ½ exp(−γ<sub>b</sub>/2)。同調 BFSK 則為 Q(√γ<sub>b</sub>)。要反解目標值，可利用各式單調遞減，在 [−10, 60] dB 內二分 200 次。</p>
+<p><strong>BPSK 與 QPSK 為何共用一式。</strong>BPSK 的兩點相距 2√E<sub>b</sub>，到中央邊界的距離是 √E<sub>b</sub>，除以每維標準差 √(N<sub>0</sub>/2)，便得到 √(2γ<sub>b</sub>)。QPSK 可拆成 I、Q 兩個獨立的 BPSK，每軸仍分到一個位元的能量，因此 P<sub>b</sub> 都是 Q(√(2γ<sub>b</sub>))。它的符元錯誤率較高，但每符元同時承載兩個位元，不能把兩種機率混用。</p>
+<p><strong>從機率換成可量的件數。</strong>若傳送 N 個位元，期望錯誤數就是 N × P<sub>b</sub>。這是平均量，不是保證值；期望小於 1 仍可能偶爾看見錯誤。反過來，若要可靠估到 10<sup>−9</sup> 等級，觀察量必須遠大於 10<sup>9</sup> 位元，否則一次零錯只能給上限，不能證明真實機率等於零。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：AWGN、Gray 映射、理想同步；PSK 與 QAM 的近似式主要在高 E<sub>b</sub>/N<sub>0</sub> 準確。真實系統不是這樣，非方形星座與低比值區應查精確式或量測。</p>
+
+<h2>數值實例：10 dB、傳 10<sup>6</sup> 位元、目標 10<sup>−5</sup></h2>
+<p>下表就是自由實驗的預設條件。期望錯誤數等於 10<sup>6</sup> × P<sub>b</sub>；所需 dB 由二分法反解。</p>
+<table><thead><tr><th>方案</th><th>Q 引數或指數</th><th>P<sub>b</sub></th><th>期望錯誤數</th><th>所需 dB</th><th>相對 BPSK</th></tr></thead><tbody>
+<tr><td>BPSK／QPSK</td><td>√20 ＝ 4.472136</td><td><strong>3.872108 × 10<sup>−6</sup></strong></td><td>3.872108</td><td>9.587858</td><td>0.000000</td></tr>
+<tr><td>8−PSK</td><td>√60 sin(π/8) ＝ 2.964253</td><td><strong>1.011395 × 10<sup>−3</sup></strong></td><td>1011.395</td><td>12.971633</td><td>3.383774</td></tr>
+<tr><td>16−PSK</td><td>√80 sin(π/16) ＝ 1.744941</td><td><strong>2.024879 × 10<sup>−2</sup></strong></td><td>20248.79</td><td>17.435894</td><td>7.848036</td></tr>
+<tr><td>16−QAM</td><td>√8 ＝ 2.828427</td><td><strong>1.754151 × 10<sup>−3</sup></strong></td><td>1754.151</td><td>13.434522</td><td>3.846663</td></tr>
+<tr><td>64−QAM</td><td>√(180/63) ＝ 1.690309</td><td><strong>2.653261 × 10<sup>−2</sup></strong></td><td>26532.61</td><td>17.786888</td><td>8.199029</td></tr>
+<tr><td>256−QAM</td><td>√(240/255) ＝ 0.970143</td><td><strong>7.780675 × 10<sup>−2</sup></strong></td><td>77806.75</td><td>22.503156</td><td>12.915298</td></tr>
+<tr><td>DBPSK</td><td>e<sup>−10</sup></td><td><strong>2.269996 × 10<sup>−5</sup></strong></td><td>22.69996</td><td>10.342184</td><td>0.754325</td></tr>
+<tr><td>非同調 BFSK</td><td>e<sup>−5</sup></td><td><strong>3.368973 × 10<sup>−3</sup></strong></td><td>3368.973</td><td>13.352484</td><td>3.764625</td></tr>
+<tr><td>同調 BFSK</td><td>√10 ＝ 3.162278</td><td><strong>7.827011 × 10<sup>−4</sup></strong></td><td>782.7011</td><td>12.598158</td><td>3.010300</td></tr>
+</tbody></table>
+<p><strong>筆記 dB 差是粗略值。</strong>筆記 §6 寫 8−PSK 差 4 dB、16−QAM 差 4 dB、64−QAM 差 9 dB、256−QAM 差 14 dB；本課在 10<sup>−5</sup> 算得 <strong>3.383774、3.846663、8.199029、12.915298 dB</strong>。差距會隨目標誤碼率略變；到 10<sup>−9</sup> 時依序是 <strong>3.475579、3.911208、8.322350、13.091692 dB</strong>，所以不可把整數差當固定常數。</p>
+<p>DBPSK 在 10<sup>−5</sup> 需要 <strong>10.342184 dB</strong>，相對 BPSK 多 <strong>0.754325 dB</strong>。這個差距在高 SNR 時不到 1 dB，不能反推所有工作區都只差同一數字；低 SNR 時，前一符元所帶的雜訊更明顯，差距會擴大。</p>
+<p><strong>量級對照。</strong>0 dB 時 BPSK 為 <strong>7.864960 × 10<sup>−2</sup></strong>，256−QAM 為 <strong>1.778921 × 10<sup>−1</sup></strong>，非同調 BFSK 為 <strong>3.032653 × 10<sup>−1</sup></strong>；20 dB 時 BPSK 已到 <strong>1.044244 × 10<sup>−45</sup></strong>，64−QAM 仍為 <strong>2.633893 × 10<sup>−8</sup></strong>，256−QAM 為 <strong>5.053069 × 10<sup>−4</sup></strong>。</p>
+<p>目標改為 10<sup>−3</sup> 時，BPSK 需要 <strong>6.789523 dB</strong>，16−QAM 需要 <strong>10.522401 dB</strong>；目標收緊到 10<sup>−9</sup> 時，BPSK 需要 <strong>12.549550 dB</strong>，64−QAM 需要 <strong>20.871900 dB</strong>。若傳 10<sup>9</sup> 位元、BPSK 工作在 16 dB，期望錯誤數只有 <strong>2.267396 × 10<sup>−10</sup></strong> 個，顯示畫面應解讀為「期望連一個都不到」，而不是必然不會出錯。</p>
+
+<section class="workspace"><h2>自由實驗：九方案誤碼率帳本</h2>
+<p>場景是理想同步的 AWGN 鏈路。選方案、E_b/N_0、目標誤碼率與傳送量，回饋會同時計算當前錯誤率、期望錯誤數、達標所需 dB，並把九種方案排在同一張表。</p>
+<div class="controls">
+<label for="bf-scheme">調變方案<select id="bf-scheme"><option value="bpsk">BPSK／QPSK（同調）</option><option value="psk8">8-PSK</option><option value="psk16">16-PSK</option><option value="qam16">16-QAM</option><option value="qam64">64-QAM</option><option value="qam256">256-QAM</option><option value="dpsk">DBPSK（差分）</option><option value="ncfsk">非同調 BFSK</option><option value="cfsk">同調 BFSK</option></select></label>
+<label for="bf-ebn0">E_b/N_0（dB）<input id="bf-ebn0" type="range" min="0" max="20" step="0.5" value="10"></label>
+<label for="bf-target">目標誤碼率<select id="bf-target"><option value="1e-3">10^-3</option><option value="1e-5" selected>10^-5</option><option value="1e-6">10^-6</option><option value="1e-9">10^-9</option></select></label>
+<label for="bf-n">傳送位元數<select id="bf-n"><option value="1000">10^3 位元</option><option value="1000000" selected>10^6 位元</option><option value="1000000000">10^9 位元</option></select></label>
+</div>
+<div id="berfam-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>QPSK 與 BPSK 的誤碼率相同，不代表頻譜效率相同；QPSK 每符元帶兩個位元。</li><li>P<sub>s</sub> 是符元錯誤率，P<sub>b</sub> 是誤碼率；只有 Gray 映射與最近鄰條件下才近似差 k 倍。</li><li>「差幾 dB」必須先指定目標誤碼率，換一條水平線，差距就會改變。</li><li>非同調並非完全不需要同步；它仍需符元時序，只是不追載波相位。</li><li>期望錯誤數小於 1 不代表保證零錯，只代表大量重複實驗的平均值不到 1。</li></ul>
+
+<h2>可觀察證據：掃 dB 並疊上理論瀑布曲線</h2>
+<p><strong>用什麼量。</strong>誤碼率測試儀送已知偽隨機序列，逐點改變 E<sub>b</sub>/N<sub>0</sub>，把實測 P<sub>b</sub> 疊在理論曲線上。<strong>能證明什麼。</strong>同一目標下的水平差可量出實作損失有幾 dB。<strong>不能證明什麼。</strong>曲線平移無法單獨指出損失來自同步、量化或放大器非線性，仍需其他量測拆因。</p>
+
+<h2>連到哪門課</h2>
+<p>Q 函數與二元 BER 見<a href="../通訊系統-互動課程/08-匹配濾波器與位元錯誤率.html">通訊系統的匹配濾波器與二元 BER</a>；各方案的頻譜效率與 Shannon 極限見<a href="../通訊系統-互動課程/10-頻譜效率與Shannon極限.html">通訊系統的頻譜效率與 Shannon 極限</a>。這些曲線也提供接收機規格的共同語言：設計者先定目標誤碼率，再由方案曲線讀出最低能量需求，最後預留實作損失。軟體那一端，無線驅動程式依量得的 SNR 選擇 MCS；這張表提供每個候選檔位的理想基準。</p>
+<nav class="pager" aria-label="章節導覽"><a href="03-最佳接收機與ML判決.html">← 上一頁：最佳接收機與 ML 判決</a><a href="05-載波相位與同步.html">下一頁：載波相位與同步 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 誤碼率公式與 Q 函數</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,67 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 BLDC 六步換相與霍爾｜馬達驅動與控制</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・三個位元選一列，兩相通電接住轉子</p>
+<h1>BLDC 六步換相與霍爾：從位置碼查出下一組開關</h1>
+<p class="lead">三個霍爾位元把一個電氣週期分成六格，每格只讓兩相通電。在理想條件下，轉矩會在 86.603 % 與 100 % 之間移動，平均為 95.493 %；霍爾安裝偏 30° 時，某些角度甚至只剩一半。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-驅動器世界觀與轉矩夾角.html">00 驅動器世界觀與轉矩夾角</a>的 T = K<sub>t</sub> × I × sin γ。<strong>前置：</strong>見〈有限狀態機（finite state machine, FSM）〉<a href="../../02-電機核心/邏輯設計-互動課程/11-有限狀態機.html">邏輯設計的六狀態查表</a>。</p>
+
+<h2>痛點：只有三條霍爾線，驅動器怎麼知道要開哪兩相</h2>
+<p>無刷直流馬達（brushless DC motor, BLDC）沒有直流機的機械換向器，因此驅動器必須知道轉子大致位置，再在正確時刻改變導通相。三個霍爾感測器（Hall sensor）只有高、低兩種輸出，卻可組成六種有效碼；真正的工作是把這六種碼與六組開關狀態一對一鎖定。</p>
+<p>難點不只是背表。讀者還要知道為什麼 B+ C− 會得到 90° 的定子磁場，為什麼轉矩在每個扇區內先升後降，以及霍爾位置裝歪後，主要代價不是霍爾碼消失，而是換相時刻整體提前或延後。</p>
+
+<h2>白話直覺：霍爾碼是表格列號，不是連續角度</h2>
+<p>可以暂時把霍爾碼想成一本六頁手冊的頁碼，讀到某個碼就照那一列開關；比喻到此為止。真實機制是 H<sub>A</sub>、H<sub>B</sub>、H<sub>C</sub> 在電氣角上相差 120°，轉子北極進入每個感測器的 ±90° 範圍時，該位元輸出 1。</p>
+<p>從能量路徑看，直流鏈對參考點供電，逆變器依查表讓一相接高側、另一相接低側，第三相浮接。電流流過兩相繞組，向量差建立定子磁場；定子與轉子磁場的夾角 γ 決定轉矩。霍爾位元是回授量，邏輯分析儀能量到碼序列和開關邊緣，示波器則能看相電流。</p>
+<p>六步換相（six step commutation）的每一格是 60° 電氣角。本章定義相軸 A = 0°、B = 120°、C = 240°；p = 7 的 14 極馬達機械轉一圈有 7 個電氣週期，因而發生 42 次換相。</p>
+<table><thead><tr><th>扇區</th><th>θ 範圍</th><th>霍爾碼</th><th>通電相</th><th>定子磁場</th></tr></thead><tbody>
+<tr><td>1</td><td>330° ≤ θ &lt; 30°</td><td>100</td><td>B+ C−</td><td>90°</td></tr><tr><td>2</td><td>30° ≤ θ &lt; 90°</td><td>110</td><td>C+ A−</td><td>150°</td></tr><tr><td>3</td><td>90° ≤ θ &lt; 150°</td><td>010</td><td>B+ A−</td><td>210°</td></tr><tr><td>4</td><td>150° ≤ θ &lt; 210°</td><td>011</td><td>C+ B−</td><td>270°</td></tr><tr><td>5</td><td>210° ≤ θ &lt; 270°</td><td>001</td><td>A+ B−</td><td>330°</td></tr><tr><td>6</td><td>270° ≤ θ &lt; 330°</td><td>101</td><td>A+ C−</td><td>30°</td></tr>
+</tbody></table>
+<p>序列固定為 100 → 110 → 010 → 011 → 001 → 101，每次只有一個位元改變。這是格雷碼（Gray code）性質，也是現場查線的直接索引：若一個邊緣同時改了兩位，就要優先查霍爾線序、電源與門檻值，不應先改換相表。</p>
+<p class="note">來源：P3 上 §1.2（BLDC）、P3 下 §10（霍爾）。</p>
+
+<h2>推導：由三位元邏輯接到磁場夾角</h2>
+<p>霍爾判定規則是：對相軸 0°、120°、240° 中的任一個 k，當 (θ − k) mod 360 小於 90 或大於等於 270，H<sub>k</sub> = 1。例如 A+ B− 的合成方向是 1∠0° − 1∠120° = 1.5 − j0.866，也就是 −30°，等價於 330°。其餘列用同樣的兩相軸向量相減得到。</p>
+<p>扇區中心角 θ<sub>c</sub> 所需的定子方向是 θ<sub>c</sub> + 90°。當轉子走過一個扇區，定子方向保持不變，因此 γ 由 120° 掃到 60°，T = K<sub>t</sub> × I × sin γ。這段正弦的平均係數是 3 / π = 0.954930。若霍爾安裝偏移 δ，判斷扇區時改用 θ + δ，夾角窗整體平移，平均係數變成 (3 / π) × cos δ。</p>
+<p>本課用的是線性教學模型，真實驅動器不完全如此：假設梯形反電動勢理想、換相瞬間沒有電流缺口，並忽略電感在高速造成的相位落後。實機可用提前角補償後者，本章只保留這個邊界名稱。</p>
+<p>查表邏輯可拆成兩件事：霍爾碼先選出目前扇區，再由該列指定通電相。扇區內轉子角度持續前進，但通電相在下一個霍爾邊緣到來前保持不變，所以定子磁場呈階梯狀，夾角與轉矩則在每一階內連續改變。若碼序正確而轉矩仍週期性變弱，應比對霍爾邊緣與反電動勢過零時刻；若碼序本身跳列，則先查接線與邏輯判定。這個區分能避免把感測相序錯誤、安裝偏移與高速相位落後混成同一個故障。</p>
+
+<h2>數值實例：轉子 15° 時由 100 選出 B+ C−</h2>
+<p>預設 θ = 15°、I = 10 A、δ = 0°、K<sub>t</sub> = 0.5 N·m/A。一個扇區 60°，而本例夾角是 75°，對應 4.829629 N·m；一個完整電氣週期有 6 次查表，這是角度解析度與開關事件的量級對照。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody><tr><td>霍爾碼</td><td>θ = 15° 在 A 的 ±90° 內</td><td><strong>100</strong></td></tr><tr><td>扇區</td><td>330° ≤ 15° &lt; 30°</td><td><strong>1</strong></td></tr><tr><td>通電相</td><td>查表</td><td><strong>B+ C−（A 浮接）</strong></td></tr><tr><td>定子磁場方向</td><td>查表</td><td><strong>90°</strong></td></tr><tr><td>夾角 γ</td><td>90 − 15</td><td><strong>75°</strong></td></tr><tr><td>sin γ</td><td>—</td><td><strong>0.965926</strong></td></tr><tr><td>轉矩</td><td>0.5 × 10 × 0.965926</td><td><strong>4.829629 N·m</strong></td></tr><tr><td>90° 時的轉矩</td><td>0.5 × 10</td><td><strong>5.000000 N·m</strong></td></tr><tr><td>六步平均係數</td><td>(3 / π) × cos 0°</td><td><strong>0.954930（平均 4.774648 N·m）</strong></td></tr><tr><td>下一次換相</td><td>θ 到 30°</td><td><strong>切到 110、C+ A−</strong></td></tr></tbody></table>
+<p>邊界對照：θ = 0° 時 γ = 90°，轉矩 5.000000 N·m；θ = 30° 時剛換成 110、C+ A−，γ = 120°，轉矩 4.330127 N·m。δ = +30°且 θ = 0° 時會提早換相，γ = 150°，轉矩只剩 2.500000 N·m，平均係數也降為 0.826993。</p>
+<p>接著沿週期檢查邊界：θ = 90° 切到 010、B+ A−、定子 210°；θ = 150° 切到 011、C+ B−、定子 270°；θ = 210° 切到 001，θ = 270° 切到 101，θ = 330° 回到 100。因此 0° 附近的範圍必須跨過 360° 邊界處理，否則轉子每圈都會在同一處查錯列。</p>
+<p>扇區內也要看連續變化：θ = 29° 時 γ = 61°，轉矩 4.373099 N·m；θ = 359° 時 γ = 91°，轉矩 4.999238 N·m。δ = +10° 時平均係數是 0.940422；δ = −30° 的平均係數與 +30° 一樣為 0.826993，但轉矩漣波在角度軸上的位置相反。所以只看平均值還不夠，也要對齊轉子角度查漣波出現的時刻。</p>
+
+<section class="workspace"><h2>自由實驗：轉子角度、霍爾偏移與六步查表</h2>
+<p>轉動轉子電氣角，觀察霍爾碼、扇區、通電相與轉矩同步變化。再調整霍爾安裝偏移，看查表時刻移動後，夾角窗如何跑出原本的 60°–120°。</p>
+<div class="controls">
+<label for="bl-theta">轉子電氣角 θ（°）<input id="bl-theta" type="range" min="0" max="359" step="1" value="15"></label>
+<label for="bl-i">相電流 I（A）<input id="bl-i" type="range" min="0" max="20" step="0.5" value="10"></label>
+<label for="bl-offset">霍爾安裝偏移 δ（°）<input id="bl-offset" type="range" min="-30" max="30" step="5" value="0"></label>
+<label for="bl-kt">轉矩常數 K_t（N·m/A）<input id="bl-kt" type="range" min="0.05" max="1" step="0.05" value="0.5"></label>
+</div>
+<div id="bldc-output" class="output" aria-live="polite">
+<table><thead><tr><th>量</th><th>預設值</th></tr></thead><tbody><tr><td>霍爾碼</td><td>100</td></tr><tr><td>扇區</td><td>1</td></tr><tr><td>通電相</td><td>B+ C−（A 浮接）</td></tr><tr><td>定子磁場方向</td><td>90°</td></tr><tr><td>夾角 γ</td><td>75°</td></tr><tr><td>sin γ</td><td>0.965926</td></tr><tr><td>轉矩</td><td>4.829629 N·m</td></tr><tr><td>90° 時的轉矩</td><td>5.000000 N·m</td></tr><tr><td>六步平均係數</td><td>0.954930（平均 4.774648 N·m）</td></tr><tr><td>下一次換相</td><td>切到 110、C+ A−</td></tr></tbody></table>
+<table><thead><tr><th>扇區</th><th>θ 範圍</th><th>霍爾碼</th><th>通電相</th><th>定子磁場</th></tr></thead><tbody><tr><td><strong>1</strong></td><td><strong>330° ≤ θ &lt; 30°</strong></td><td><strong>100</strong></td><td><strong>B+ C−</strong></td><td><strong>90°</strong></td></tr><tr><td>2</td><td>30° ≤ θ &lt; 90°</td><td>110</td><td>C+ A−</td><td>150°</td></tr><tr><td>3</td><td>90° ≤ θ &lt; 150°</td><td>010</td><td>B+ A−</td><td>210°</td></tr><tr><td>4</td><td>150° ≤ θ &lt; 210°</td><td>011</td><td>C+ B−</td><td>270°</td></tr><tr><td>5</td><td>210° ≤ θ &lt; 270°</td><td>001</td><td>A+ B−</td><td>330°</td></tr><tr><td>6</td><td>270° ≤ θ &lt; 330°</td><td>101</td><td>A+ C−</td><td>30°</td></tr></tbody></table>
+<p><strong>判讀：霍爾碼 100 → 扇區 1 → 通電 B+ C−：這就是驅動器查表的全部。γ 在六步窗內，轉矩是 90° 時的 96.592583 %。</strong></p>
+<p>平均 95.493 %、最低 86.603 %。每步只變一個位元；若看到兩個位元同時變，是接線錯。為什麼：100 選中第 1 列，B+ C− 建立 90° 定子磁場，它與 15° 轉子的夾角是 75°。邊界提醒：I = 0 時沒有電流也沒有轉矩，霍爾碼仍可隨外力轉動而變，感測與驅動是兩件事；δ = ±30° 時，某些角度的 γ 會到 150° 或 30°，轉矩只剩一半。</p>
+</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>電氣角不是機械角；p = 7 的馬達機械轉 1°，電氣角已經走 7°。</li><li>95.493 % 是理想六步平均；真實系統在換相瞬間還有電流缺口，數值會更低。</li><li>霍爾碼是 60° 一格的位置粗量化，不是直接的速度量測；速度要由碼變化的時間差估算。</li><li>BLDC 六步與永磁同步馬達（permanent magnet synchronous motor, PMSM）的磁場導向控制（field oriented control, FOC）可用在同一類馬達本體；邊界在驅動波形，前者用方波，後者用正弦電流。</li></ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>用邏輯分析儀同時擷取三條霍爾線與六條閘極訊號，霍爾碼應照 100 → 110 → 010 → 011 → 001 → 101 循環，每碼對應固定的兩個閘極致能位元。示波器與電流探棒可另外量到 120° 導通的相電流方波。</p>
+<p><strong>能證明什麼。</strong>位元碼與閘極狀態的固定對應可驗證換相表，碼序列的方向可驗證霍爾相序與旋轉方向。</p>
+<p><strong>不能證明什麼。</strong>邏輯波形只顯示數位邊緣，不能單獨給出霍爾安裝偏移 δ；還要同時對照各相反電動勢的過零時刻。</p>
+
+<h2>連到哪門課</h2>
+<p>六步驅動用在風扇、無人機與電動工具。它在韌體裡就是一台六狀態的有限狀態機，轉移規則見<a href="../../02-電機核心/邏輯設計-互動課程/11-有限狀態機.html">邏輯設計的有限狀態機</a>；夾角 γ 如何決定轉矩，則回到<a href="00-驅動器世界觀與轉矩夾角.html">本課第 00 章</a>。</p>
+<p><strong>韌體那一端：</strong>霍爾三線接外部中斷，每次邊緣讀 3 位元，查一張 8 項的表；000 與 111 是錯誤碼，其餘六項改寫六個脈寬調變（pulse width modulation, PWM）通道的致能位元。</p>
+<nav class="pager" aria-label="章節導覽"><a href="04-步進馬達與微步.html">← 上一頁：步進馬達與微步</a><a href="06-感應機Vf純量控制.html">下一頁：感應機 V/f 純量控制 →</a></nav>
+</main>
+<footer class="site-footer"><span>05 BLDC 六步換相與霍爾</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

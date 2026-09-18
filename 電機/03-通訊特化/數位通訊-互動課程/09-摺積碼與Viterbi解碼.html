@@ -1,0 +1,64 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 摺積碼與 Viterbi 解碼｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・沿著格狀圖找回最接近的合法序列</p>
+<h1>摺積碼與 Viterbi 解碼：有記憶的編碼如何把錯誤從路徑中挑出來</h1>
+<p class="lead">區塊碼一次看固定長度，摺積碼則讓目前輸出同時帶著前兩個輸入的痕跡。Viterbi 解碼把所有合法序列收進格狀圖，逐級留下距離最短的候選路徑，最後再回溯原始訊息。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-漢明碼與症狀解碼.html">08 漢明碼與症狀解碼</a>的漢明距離、冗餘與糾錯能力。</p>
+
+<h2>痛點：接收端有很多條可能路徑，難道要全部列完才知道哪條對</h2>
+<p>摺積碼（convolutional code）每收到一組兩位元，都可能由兩個不同的前一狀態走來。若輸入越長，完整候選數會每級倍增；直接枚舉看似很快就無法負荷。真正的問題是：哪些舊路徑可以確定淘汰，而不會錯失最後的最大似然（maximum likelihood, ML）答案？</p>
+<p>另一個痛點是「有記憶」容易被誤解成接收端要猜測歷史。其實歷史被壓縮成有限狀態；K ＝ 3 時只須記住前兩個輸入，因此恰有四個狀態。編碼器、格狀圖與解碼器都遵守同一張轉移表。</p>
+
+<h2>白話直覺：每個路口只留到此為止花費最低的旅程</h2>
+<p>可以暫時把格狀圖（trellis）想成分層道路：每級是時間，每個狀態是路口，分支上的代價是接收兩位元與預期輸出的漢明距離。比喻到此為止；精確說法是，到達同一狀態的兩條候選路徑擁有完全相同的未來分支，所以累積度量較大的那條永遠不可能在後面反超，可以立即丟掉。</p>
+<p>位元從訊息進入兩級暫存器；編碼器以兩個模 2 加法式產生兩倍長的序列，買到合法序列之間更大的自由距離，付出率 R ＝ 1/2 的冗餘、解碼延遲與狀態搜尋成本。錯誤少時，接收路徑仍最靠近正確路徑；錯誤多到跨越兩條路徑的中線，ML 會忠實選到另一條合法路徑。解碼器可觀察累積路徑度量與重新編碼後的差異，但只憑最終度量看不出錯誤原本在哪裡。</p>
+<p>本章固定 K ＝ 3、g<sub>1</sub> ＝ 111、g<sub>2</sub> ＝ 101（八進位 7、5）。狀態是 (u[n − 1], u[n − 2])；c<sub>1</sub> ＝ u[n] ⊕ u[n − 1] ⊕ u[n − 2]，c<sub>2</sub> ＝ u[n] ⊕ u[n − 2]，下一狀態為 (u[n], u[n − 1])。</p>
+<table><thead><tr><th>目前狀態</th><th>輸入</th><th>輸出 c<sub>1</sub>c<sub>2</sub></th><th>下一狀態</th></tr></thead><tbody>
+<tr><td>00</td><td>0</td><td>00</td><td>00</td></tr><tr><td>00</td><td>1</td><td>11</td><td>10</td></tr>
+<tr><td>01</td><td>0</td><td>11</td><td>00</td></tr><tr><td>01</td><td>1</td><td>00</td><td>10</td></tr>
+<tr><td>10</td><td>0</td><td>10</td><td>01</td></tr><tr><td>10</td><td>1</td><td>01</td><td>11</td></tr>
+<tr><td>11</td><td>0</td><td>01</td><td>01</td></tr><tr><td>11</td><td>1</td><td>10</td><td>11</td></tr>
+</tbody></table>
+<p class="note">來源：15-數位通訊-下 §8.4、§11.3。</p>
+
+<h2>推導：從有限狀態到最短存活路徑</h2>
+<p><strong>編碼為何有記憶。</strong>輸出同時取決於 u[n]、u[n − 1] 與 u[n − 2]；同一個目前輸入在狀態 00 與 10 會產生不同輸出。前兩個輸入已完整決定未來需要的歷史，再更早的內容不必保留，這就是有限狀態與格狀圖成立的原因。</p>
+<p><strong>Viterbi 為何是 ML。</strong>在加性白色高斯雜訊且先做硬判決的一階模型中，最可能的合法序列就是與接收序列漢明距離最小者。每條合法序列對應格狀圖的一條路；分支度量是接收兩位元與分支輸出的距離，路徑度量是逐級累加。兩條路若到達相同狀態，後續可接的分支完全一致，因此只留較小者不會漏掉全域最佳解。平手時，本課依前一狀態 00、01、10、11 的順序處理，只在嚴格較小時取代。</p>
+<p><strong>自由距離與糾錯。</strong>從 00 輸入 1，輸出 11 到 10；再輸入 0，輸出 10 到 01；再輸入 0，輸出 11 回到 00。輸出重量為 2 ＋ 1 ＋ 2 ＝ 5，且這是離開全零路徑再回來的最小重量，所以 d<sub>free</sub> ＝ 5。任兩條路徑至少差 5 個編碼位元，錯 2 個後仍距正確路徑最近，故 t ＝ ⌊(5 − 1) / 2⌋ ＝ 2；3 個錯已越過保證邊界，但特定位置仍可能解對。</p>
+<p>漸近編碼增益在軟判決下為 10 log<sub>10</sub>(R d<sub>free</sub>) ＝ 3.979400 dB，硬判決下為 10 log<sub>10</sub>(R d<sub>free</sub> / 2) ＝ 0.969100 dB。這只是長序列的漸近比較，不等於每個短區塊都固定得到同樣改善。本課用硬判決、6 級與兩個清零位元的一階教學模型；真實系統常用軟判決分支度量與截斷回溯。</p>
+
+<h2>數值實例：1011 加清零、編碼後第 3 位翻轉</h2>
+<p>令 m ＝ 1011，加兩個清零位元成 101100，共 6 級、12 個編碼位元。狀態依序 00 → 10 → 01 → 10 → 11 → 01 → 00，輸出 <strong>11 10 00 01 01 11</strong>，即 <code>111000010111</code>；第 3 位翻轉後接收 <code>110000010111</code>。</p>
+<table><thead><tr><th>級</th><th>狀態 00</th><th>狀態 01</th><th>狀態 10</th><th>狀態 11</th></tr></thead><tbody>
+<tr><td>1</td><td>2</td><td>—</td><td>0</td><td>—</td></tr><tr><td>2</td><td>2</td><td>1</td><td>4</td><td>1</td></tr>
+<tr><td>3</td><td>2</td><td>2</td><td>1</td><td>2</td></tr><tr><td>4</td><td>3</td><td>2</td><td>3</td><td>1</td></tr>
+<tr><td>5</td><td>3</td><td>1</td><td>3</td><td>3</td></tr><tr><td>6</td><td><strong>1</strong></td><td>4</td><td>3</td><td>4</td></tr>
+</tbody></table>
+<p>由終點狀態 00 回溯得到輸入序列 <strong>101100</strong>，訊息 <strong>1011（正確）</strong>，最終度量 1 ＝ 錯誤數。無錯誤時各級度量為 2、—、0、— ／ 3、0、3、2 ／ 2、3、0、3 ／ 3、2、3、0 ／ 3、0、3、2 ／ 0、3、2、3，最終度量 0。</p>
+<p><strong>邊界對照。</strong>錯誤 3、6 時接收 <code>110001010111</code>，最終度量 2，仍解回 1011；錯誤 1、2、3 時接收 <code>000000010111</code>，會解成 <strong>0011（錯）</strong>，最終度量 2。錯誤 2、5、8 雖有 3 個，仍解回正確訊息且度量 3，說明「超過保證」不等於「必定失敗」。m ＝ 1111 且錯誤 4 時，碼字為 <code>110110100111</code>，仍可正確解碼。</p>
+
+<section class="workspace"><h2>自由實驗：翻轉編碼位元，看存活路徑如何改變</h2>
+<p>選一個 4 位元訊息，系統會補上兩個清零位元並編碼。再指定至多三個翻轉位置，觀察逐級路徑度量與回溯結果；重複位置會翻轉兩次而互相抵消。</p>
+<div class="controls">
+<label for="vt-msg">4 位元訊息 m（自動加 2 個清零位元）<select id="vt-msg"><option value="0000">0000</option><option value="0001">0001</option><option value="0010">0010</option><option value="0011">0011</option><option value="0100">0100</option><option value="0101">0101</option><option value="0110">0110</option><option value="0111">0111</option><option value="1000">1000</option><option value="1001">1001</option><option value="1010">1010</option><option value="1011" selected>1011</option><option value="1100">1100</option><option value="1101">1101</option><option value="1110">1110</option><option value="1111">1111</option></select></label>
+<label for="vt-e1">錯誤位置 1<select id="vt-e1"><option value="0">無</option><option value="1">第 1 位</option><option value="2">第 2 位</option><option value="3" selected>第 3 位</option><option value="4">第 4 位</option><option value="5">第 5 位</option><option value="6">第 6 位</option><option value="7">第 7 位</option><option value="8">第 8 位</option><option value="9">第 9 位</option><option value="10">第 10 位</option><option value="11">第 11 位</option><option value="12">第 12 位</option></select></label>
+<label for="vt-e2">錯誤位置 2<select id="vt-e2"><option value="0" selected>無</option><option value="1">第 1 位</option><option value="2">第 2 位</option><option value="3">第 3 位</option><option value="4">第 4 位</option><option value="5">第 5 位</option><option value="6">第 6 位</option><option value="7">第 7 位</option><option value="8">第 8 位</option><option value="9">第 9 位</option><option value="10">第 10 位</option><option value="11">第 11 位</option><option value="12">第 12 位</option></select></label>
+<label for="vt-e3">錯誤位置 3<select id="vt-e3"><option value="0" selected>無</option><option value="1">第 1 位</option><option value="2">第 2 位</option><option value="3">第 3 位</option><option value="4">第 4 位</option><option value="5">第 5 位</option><option value="6">第 6 位</option><option value="7">第 7 位</option><option value="8">第 8 位</option><option value="9">第 9 位</option><option value="10">第 10 位</option><option value="11">第 11 位</option><option value="12">第 12 位</option></select></label>
+</div><div id="viterbi-output" class="output" aria-live="polite"></div></section>
+
+<h2>不要混淆</h2>
+<ul><li>約束長度 K ＝ 3 是輸出會看幾個輸入；暫存器只有 K − 1 ＝ 2 個。</li><li>d<sub>free</sub> 是合法序列間的距離，不是某個固定長度碼字的重量分布。</li><li>Viterbi 每個狀態只留一條存活路徑，並非只留全圖一條；過早只留一條會失去正確答案。</li><li>複雜度隨狀態數 2<sup>K−1</sup> 指數成長；K ＝ 7 已有 64 個狀態，不能靠無限加深換可靠度。</li><li>最終度量小於或等於真實錯誤數；兩者相等不保證一定解對，仍可能有平手的錯誤路徑。</li></ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>讀解碼器輸出的路徑度量，或把解碼結果重新編碼，再逐位比對接收序列；誤碼率測試儀則可比較解碼前後的長期錯誤比例。</p>
+<p><strong>能證明什麼。</strong>重新編碼距離能證明解碼器選到的合法序列離接收結果多遠；前後誤碼率能證明編碼在特定條件下是否帶來編碼增益。</p>
+<p><strong>不能證明什麼。</strong>解碼器選錯時，最終度量不能指出原始錯誤位置，也不能單獨證明干擾來源；它只描述接收序列與所選路徑的距離。</p>
+
+<h2>連到哪門課</h2>
+<p>Viterbi 作為有符元間干擾通道的最佳序列偵測可回看<a href="06-等化器ZF與MMSE.html">本課 06 章</a>。Turbo、LDPC、Polar、軟判決 Viterbi 與截斷回溯留給資訊理論與編碼課。軟體那一端，GNU Radio 的 <code>fec.cc_decoder</code> 實作同一種狀態搜尋；NASA 標準設定 <code>k=7, rate=2, polys=[79,109]</code> 對應 64 個狀態。</p>
+<nav class="pager" aria-label="章節導覽"><a href="08-漢明碼與症狀解碼.html">← 上一頁：漢明碼與症狀解碼</a><a href="10-交錯與突發錯誤.html">下一頁：交錯與突發錯誤 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 摺積碼與 Viterbi 解碼</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

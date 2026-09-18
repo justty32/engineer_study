@@ -1,0 +1,62 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 最佳接收機與 ML 判決｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・四種說法其實都在找最可信的點</p>
+<h1>最佳接收機與 ML 判決：從後驗機率一路走到最近星座點</h1>
+<p class="lead">接收端拿到的不是乾淨答案，而是一個被雜訊推動的位置。這章把最大後驗、最大似然、最小距離與相關度量接成同一條推理，也看先驗不相等時移動門檻能少錯多少。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-訊號空間與正交基底.html">01 訊號空間與正交基底</a>的內積與距離、<a href="02-M進制星座與最小距離.html">02 M 進制星座與最小距離</a>的星座點。<strong>前置：</strong>見〈條件機率與高斯尾〉<a href="../../../共通基礎/數學/互動課程/12-機率與隨機變數.html">工程數學先修的機率與隨機變數</a>；本章只拿結論組成判決規則。</p>
+
+<h2>痛點：接收點離每個合法點都不遠，到底憑什麼選一個</h2>
+<p>發射端從 M 個候選訊號選一個，接收端卻只看到 r。若只說「挑最近的」，會漏掉兩個問題：為什麼距離代表機率，以及某個候選本來就比較常出現時，仍把邊界放正中央是否合理。這也是「最佳」兩字最容易被誤讀的地方。</p>
+<p>真正的目標是讓長期錯誤比例最小。每次觀察到 r，都應選此刻後驗機率最大的候選；若先驗相等，後驗排序才會只剩似然排序。最大似然（maximum likelihood, ML）因此是特定條件下的最佳規則，而最大後驗（maximum a posteriori, MAP）才直接對準整體錯誤率。</p>
+
+<h2>白話直覺：先看腳印像誰，再把誰常出現算進去</h2>
+<p>可以暫時把 r 想成泥地上的腳印：外形像哪雙鞋是似然，誰今天較常走過則是先驗；比喻到此為止。精確地說，貝氏關係給出 P(s<sub>i</sub> | r) ∝ p(r | s<sub>i</sub>)P(s<sub>i</sub>)，MAP 比較右側乘積，ML 只比較第一項。</p>
+<p>因果鏈從位元開始。位元被映成候選 s<sub>i</sub>，通道加入加性白色高斯雜訊（additive white Gaussian noise, AWGN），接收機便要把 r 歸入某個判決區域。採 MAP 買到最低平均錯誤率，代價是要知道先驗並多算一個權重；採 ML 不用先驗，但先驗偏斜時會多犯錯。若雜訊不是白色，普通歐氏距離不再直接代表似然，必須先處理相關性。向量訊號分析儀能看到邊界與點雲，誤碼率測試儀則能量到規則改變後的錯誤比例。</p>
+<p>相關器（correlator）計算 ⟨r, s<sub>i</sub>⟩。匹配濾波器（matched filter）在判決取樣時刻給出同一數值，因此兩種硬體描述最後餵給比較器的是相同量；其機制已在既有課完成，本章只用這個等價結果。</p>
+<p class="note">來源：15-數位通訊-下 §8.1–§8.3。</p>
+
+<h2>推導：MAP、ML、距離與相關度量如何變成同一件事</h2>
+<p><strong>第一步，MAP 為何最小化錯誤率。</strong>固定某個 r，若選後驗最大的候選，此次條件錯誤機率就是 1 − max P(s<sub>i</sub> | r)，任何其他選擇都不會更小。把所有 r 的條件錯誤機率積分，整體錯誤率也最小。先驗相等時，P(s<sub>i</sub>) 是共同常數，MAP 便退化為 ML。</p>
+<p><strong>第二步，AWGN 下 ML 為何是最小距離。</strong>N 維密度為 p(r | s<sub>i</sub>) ＝ (πN<sub>0</sub>)<sup>−N/2</sup> exp(−‖r − s<sub>i</sub>‖²/N<sub>0</sub>)。前面的係數對所有候選相同，而指數隨平方距離增大而變小，所以最大化密度等同最小化 ‖r − s<sub>i</sub>‖²。</p>
+<p><strong>第三步，把距離展開。</strong>‖r − s<sub>i</sub>‖² ＝ ‖r‖² − 2⟨r, s<sub>i</sub>⟩ ＋ E<sub>i</sub>。共同項 ‖r‖² 不影響排序，換號再除以 2，得到相關度量 ⟨r, s<sub>i</sub>⟩ − E<sub>i</sub>/2 取最大。等能量星座可省略最後一項，能量不等時不可省。</p>
+<p><strong>第四步，推 MAP 門檻。</strong>令 s<sub>1</sub> ＝ ＋1、s<sub>0</sub> ＝ −1，選 s<sub>1</sub> 的條件是 P<sub>1</sub>exp(−(r − 1)²/(2σ²)) &gt; P<sub>0</sub>exp(−(r ＋ 1)²/(2σ²))。取對數整理得 r &gt; (σ²/2) × ln(P<sub>0</sub>/P<sub>1</sub>) ＝ γ。若 P<sub>1</sub> &gt; P<sub>0</sub>，γ &lt; 0，邊界就向較少見的 s<sub>0</sub> 移動。總錯誤率為 P<sub>e</sub>(γ) ＝ P<sub>1</sub>Q((1 − γ)/σ) ＋ P<sub>0</sub>Q((1 ＋ γ)/σ)。</p>
+<p><strong>第五步，用對數似然比做同一判決。</strong>對數似然比（log-likelihood ratio, LLR）把兩個似然的比值取對數；二元判決只需比較 LLR 與由先驗形成的門檻。取對數把許多相乘項變成相加，數值也較不會下溢。LLR 的正負代表偏向哪個位元，絕對值代表證據強弱；只留下正負就是硬判決，連同大小交給後級就是軟判決。這不會改變 MAP 的答案，只是更適合實作。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：AWGN、E<sub>b</sub> ＝ 1、理想同步且先驗已知；真實系統不是這樣，先驗可能隨訊源統計或前級軟判決改變，有色雜訊也要先白化。</p>
+
+<h2>數值實例：先驗 0.8、4 dB，MAP 把門檻移到 −0.137973</h2>
+<p>取 P<sub>1</sub> ＝ 0.8、E<sub>b</sub>/N<sub>0</sub> ＝ 4 dB。N<sub>0</sub> ＝ <strong>0.398107</strong>，σ² ＝ <strong>0.199054</strong>、σ ＝ <strong>0.446154</strong>，ln(P<sub>0</sub>/P<sub>1</sub>) ＝ <strong>−1.386294</strong>，所以 γ ＝ <strong>−0.137973</strong>。ML 的 P<sub>e</sub> 是 <strong>1.250082 × 10<sup>−2</sup></strong>，MAP 為 <strong>9.635546 × 10<sup>−3</sup></strong>，改善 <strong>1.297365 倍</strong>；完全不看 r、只猜常見者仍會錯 <strong>2.000000 × 10<sup>−1</sup></strong>。</p>
+<p><strong>QPSK 相關度量表。</strong>四點為 (±0.707107, ±0.707107)，接收 r ＝ (0.9, −0.2)，每點 E<sub>i</sub> ＝ 1。</p>
+<table><thead><tr><th>點</th><th>座標</th><th>⟨r, s<sub>i</sub>⟩</th><th>⟨r, s<sub>i</sub>⟩ − E<sub>i</sub>/2</th><th>‖r − s<sub>i</sub>‖²</th></tr></thead><tbody>
+<tr><td>s<sub>0</sub></td><td>(0.707107, 0.707107)</td><td>0.494975</td><td>−0.005025</td><td>0.860051</td></tr>
+<tr><td>s<sub>1</sub></td><td>(−0.707107, 0.707107)</td><td>−0.777817</td><td>−1.277817</td><td>3.405635</td></tr>
+<tr><td>s<sub>2</sub></td><td>(−0.707107, −0.707107)</td><td>−0.494975</td><td>−0.994975</td><td>2.839949</td></tr>
+<tr><td>s<sub>3</sub></td><td>(0.707107, −0.707107)</td><td>0.777817</td><td><strong>0.277817（最大）</strong></td><td><strong>0.294365（最小）</strong></td></tr>
+</tbody></table>
+<p>兩種排序都選 s<sub>3</sub>。量級對照：先驗改成 0.5 時 γ ＝ 0，MAP 與 ML 都是 <strong>1.250082 × 10<sup>−2</sup></strong>；先驗改成 0.95 時 γ ＝ −0.293051，MAP 為 <strong>4.609416 × 10<sup>−3</sup></strong>，改善 <strong>2.712018 倍</strong>。原條件若升到 12 dB，ML 為 <strong>9.006010 × 10<sup>−9</sup></strong>、MAP 為 <strong>7.153391 × 10<sup>−9</sup></strong>，高 SNR 時先驗的收益變小。</p>
+<p>再看低比值邊界：P<sub>1</sub> ＝ 0.95、−2 dB 時，γ ＝ <strong>−1.166655</strong>，已推到 s<sub>0</sub> 之外；ML 為 <strong>1.306445 × 10<sup>−1</sup></strong>，MAP 為 <strong>3.580755 × 10<sup>−2</sup></strong>，只猜 s<sub>1</sub> 則是 <strong>5.000000 × 10<sup>−2</sup></strong>。即使先驗幾乎主導，接收值仍提供額外資訊，所以 MAP 仍優於完全不觀察。</p>
+
+<section class="workspace"><h2>自由實驗：移動 MAP 門檻</h2>
+<p>場景是歸一化反極性二元訊號，接收點受 AWGN 推動。調整先驗、E_b/N_0 與判決規則，比較實際門檻、ML 與 MAP 的錯誤率，以及只猜常見訊號的底線。</p>
+<div class="controls">
+<label for="ml-p1">先驗機率 P(s_1 = +1)<input id="ml-p1" type="range" min="0.05" max="0.95" step="0.05" value="0.8"></label>
+<label for="ml-ebn0">E_b/N_0（dB）<input id="ml-ebn0" type="range" min="-2" max="12" step="0.5" value="4"></label>
+<label for="ml-rule">判決規則<select id="ml-rule"><option value="ml">ML：忽略先驗，門檻在 0</option><option value="map" selected>MAP：用先驗，門檻移到 γ</option></select></label>
+</div>
+<div id="mapml-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>ML 只有在先驗相等時才使平均錯誤率最小；先驗不等時應看 MAP。</li><li>最小距離只在 AWGN 模型下等價於 ML；雜訊各方向尺度不同時要先白化。</li><li>相關度量的 −E<sub>i</sub>/2 在等能量星座可省，在 QAM 這類能量不等的星座不可省。</li><li>最小均方誤差是估測準則，ML 與 MAP 是判決準則；用途不同，名稱裡的「最小」不能互換。</li><li>門檻移動不是把少見訊號忽略掉，而是用先驗重新分配兩側的條件錯誤。</li></ul>
+
+<h2>可觀察證據：量邊界與實際錯誤比例</h2>
+<p><strong>用什麼量。</strong>用向量訊號分析儀疊出判決區域，再讓誤碼率測試儀送入先驗不等的已知資料流，分別記錄 ML 與 MAP 的錯誤比例。</p>
+<p><strong>能證明什麼。</strong>邊界位置與錯誤率若隨先驗按預測變化，就能證明 MAP 是否真的利用先驗改善平均結果。<strong>不能證明什麼。</strong>只看最後輸出無法證明內部採相關器或匹配濾波器，因為兩者在取樣時刻輸出相同。</p>
+
+<h2>連到哪門課</h2>
+<p>條件機率與高斯分布見<a href="../../../共通基礎/數學/互動課程/12-機率與隨機變數.html">工程數學先修</a>；匹配濾波器的機制見<a href="../通訊系統-互動課程/08-匹配濾波器與位元錯誤率.html">通訊系統的匹配濾波器與二元 BER</a>。軟判決與迭代解碼的先驗留給資訊理論與編碼課。軟體那一端，以候選陣列逐一算平方距離並取最小索引就是 ML，將 LLR 傳給解碼器就是軟判決介面。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-M進制星座與最小距離.html">← 上一頁：M 進制星座與最小距離</a><a href="04-誤碼率公式與Q函數.html">下一頁：誤碼率公式與 Q 函數 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 最佳接收機與 ML 判決</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,86 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">檢・12 章各 3 題，共 36 題</p>
+<h1>自我檢核：把每一章的關鍵數字與判斷各檢查一次</h1>
+<p class="lead">每一題都取自該章正文出現過的數字或結論，沒有新的題型也沒有陷阱。</p>
+<p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯只會告訴你為什麼，並附上該回去看的章節。可以無限重做。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 電力電子世界觀：為什麼切換不耗能</h2>
+<p>回去看：<a href="00-電力電子世界觀與切換不耗能.html">00 電力電子世界觀：為什麼切換不耗能</a></p>
+<section class="card"><p><strong>q00-1｜</strong>線性穩壓器把 12 V 降成 5 V，負載電流為 2 A 時，元件損耗是多少 W？</p><label for="q00-1">你的答案（W）<input id="q00-1" type="number" step="any"></label><button type="button" id="q00-1-check">對答案</button><div id="q00-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-2｜</strong>同一組 12 V 輸入、5 V 輸出與 2 A 負載的線性穩壓器，效率是多少 %？</p><label for="q00-2">你的答案（%）<input id="q00-2" type="number" step="any"></label><button type="button" id="q00-2-check">對答案</button><div id="q00-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-3｜</strong>比較 12 V 轉 5 V、2 A 的兩種做法時，在理想模型中，理想開關為什麼不消耗功率？</p><label for="q00-3">你的答案<select id="q00-3"><option value="">請選擇</option><option value="a">因為切換得夠快</option><option value="b">導通時電壓為 0、關斷時電流為 0，V × I 恆為 0</option><option value="c">因為電感把能量存起來</option><option value="d">因為頻率高</option></select></label><button type="button" id="q00-3-check">對答案</button><div id="q00-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>01 功率開關與兩種損耗</h2>
+<p>回去看：<a href="01-功率開關與兩種損耗.html">01 功率開關與兩種損耗</a></p>
+<section class="card"><p><strong>q01-1｜</strong>MOSFET 電流為 10 A、R<sub>on</sub> 為 20 mΩ、工作週期 D 為 0.5 時，導通損耗是多少 W？</p><label for="q01-1">你的答案（W）<input id="q01-1" type="number" step="any"></label><button type="button" id="q01-1-check">對答案</button><div id="q01-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-2｜</strong>電壓 48 V、電流 10 A、切換過渡時間 50 ns，若導通損耗為 1 W，切換損與它相等時的頻率是多少 kHz？</p><label for="q01-2">你的答案（kHz）<input id="q01-2" type="number" step="any"></label><button type="button" id="q01-2-check">對答案</button><div id="q01-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-3｜</strong>在 48 V、10 A、50 ns 的比較中，其他條件不變，只把切換頻率加倍時，哪一種損耗會跟著加倍？</p><label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">導通損</option><option value="b">兩者都加倍</option><option value="c">切換損</option><option value="d">都不變</option></select></label><button type="button" id="q01-3-check">對答案</button><div id="q01-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>02 單相整流：電容濾波的代價</h2>
+<p>回去看：<a href="02-單相整流與電容濾波的代價.html">02 單相整流：電容濾波的代價</a></p>
+<section class="card"><p><strong>q02-1｜</strong>全波整流使用 60 Hz 電源、1000 µF 電容並供應 1 A 負載時，一階模型的漣波電壓是多少 V？</p><label for="q02-1">你的答案（V）<input id="q02-1" type="number" step="any"></label><button type="button" id="q02-1-check">對答案</button><div id="q02-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-2｜</strong>同一組全波整流條件下，規格算出的導通比例是多少 %？</p><label for="q02-2">你的答案（%）<input id="q02-2" type="number" step="any"></label><button type="button" id="q02-2-check">對答案</button><div id="q02-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-3｜</strong>110 V、60 Hz 全波整流使用 1000 µF 電容並供應 1 A 負載時，電容濾波整流器的功因為什麼偏低？</p><label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">二極體壓降太大</option><option value="b">電容漏電</option><option value="c">市電頻率太低</option><option value="d">電流只在峰值附近短時間流動，是窄脈衝、諧波大</option></select></label><button type="button" id="q02-3-check">對答案</button><div id="q02-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>03 三相與相控整流：觸發角與反流</h2>
+<p>回去看：<a href="03-三相與相控整流.html">03 三相與相控整流：觸發角與反流</a></p>
+<section class="card"><p><strong>q03-1｜</strong>三相全橋以 220 V 線電壓供電，觸發角 α ＝ 30° 時，平均輸出電壓是多少 V？</p><label for="q03-1">你的答案（V）<input id="q03-1" type="number" step="any"></label><button type="button" id="q03-1-check">對答案</button><div id="q03-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-2｜</strong>同一個 220 V 線電壓的三相全橋，在 α ＝ 0° 時，V<sub>dc0</sub> 是多少 V？</p><label for="q03-2">你的答案（V）<input id="q03-2" type="number" step="any"></label><button type="button" id="q03-2-check">對答案</button><div id="q03-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-3｜</strong>220 V 線電壓的三相全橋把 α 設為 120° 時，要讓能量真的反向送回交流側，還需要哪個條件？</p><label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">電流連續（大電感）且直流側有能量來源</option><option value="b">純電阻負載即可</option><option value="c">提高市電頻率</option><option value="d">把閘流體換成二極體</option></select></label><button type="button" id="q03-3-check">對答案</button><div id="q03-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>04 PWM 與工作週期</h2>
+<p>回去看：<a href="04-PWM與工作週期.html">04 PWM 與工作週期</a></p>
+<section class="card"><p><strong>q04-1｜</strong>控制量 v<sub>m</sub> ＝ 0.42、輸入電壓 V<sub>in</sub> ＝ 12 V 時，PWM 的平均輸出電壓是多少 V？</p><label for="q04-1">你的答案（V）<input id="q04-1" type="number" step="any"></label><button type="button" id="q04-1-check">對答案</button><div id="q04-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-2｜</strong>PWM 時脈為 100 MHz、切換頻率為 200 kHz 時，一個切換週期共有多少步？</p><label for="q04-2">你的答案（步）<input id="q04-2" type="number" step="any"></label><button type="button" id="q04-2-check">對答案</button><div id="q04-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-3｜</strong>在 V<sub>in</sub> ＝ 12 V、D ＝ 0.42、切換頻率 200 kHz 時，理想 PWM 開關節點的瞬時電壓是什麼形狀？</p><label for="q04-3">你的答案<select id="q04-3"><option value="">請選擇</option><option value="a">一直是 D × V_in</option><option value="b">正弦波</option><option value="c">只有 0 與 V_in 兩種值，平均才是 D × V_in</option><option value="d">三角波</option></select></label><button type="button" id="q04-3-check">對答案</button><div id="q04-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>05 Buck 降壓轉換器：伏秒平衡與 CCM／DCM</h2>
+<p>回去看：<a href="05-Buck降壓轉換器.html">05 Buck 降壓轉換器：伏秒平衡與 CCM／DCM</a></p>
+<section class="card"><p><strong>q05-1｜</strong>Buck 使用 12 V 輸入、D ＝ 0.5、22 µH 電感與 200 kHz 切換頻率時，Δi<sub>L</sub> 是多少 A？</p><label for="q05-1">你的答案（A）<input id="q05-1" type="number" step="any"></label><button type="button" id="q05-1-check">對答案</button><div id="q05-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-2｜</strong>同一組 12 V、D ＝ 0.5、22 µH、200 kHz 的 Buck，臨界負載電阻 R<sub>crit</sub> 是多少 Ω？</p><label for="q05-2">你的答案（Ω）<input id="q05-2" type="number" step="any"></label><button type="button" id="q05-2-check">對答案</button><div id="q05-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-3｜</strong>12 V、D ＝ 0.5、22 µH、200 kHz 的 Buck 把負載改為 30 Ω 而進入 DCM 時，主要特徵是哪一項？</p><label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">V_o 與負載無關</option><option value="b">輕載時 V_o 高於 D × V_in，電壓比隨負載改變</option><option value="c">電感電流永不歸零</option><option value="d">效率為 0</option></select></label><button type="button" id="q05-3-check">對答案</button><div id="q05-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>06 Boost 與 Buck-Boost：增益曲線與寄生電阻上限</h2>
+<p>回去看：<a href="06-Boost與BuckBoost.html">06 Boost 與 Buck-Boost：增益曲線與寄生電阻上限</a></p>
+<section class="card"><p><strong>q06-1｜</strong>Boost 使用 12 V 輸入、D ＝ 0.5、10 Ω 負載與 0.1 Ω 電感寄生電阻時，實際 V<sub>o</sub> 是多少 V？</p><label for="q06-1">你的答案（V）<input id="q06-1" type="number" step="any"></label><button type="button" id="q06-1-check">對答案</button><div id="q06-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-2｜</strong>同一組 10 Ω 負載與 0.1 Ω 寄生電阻下，最佳工作週期 D<sub>opt</sub> 是多少？</p><label for="q06-2">你的答案（無單位）<input id="q06-2" type="number" step="any"></label><button type="button" id="q06-2-check">對答案</button><div id="q06-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-3｜</strong>12 V Boost 接 10 Ω 負載且電感寄生電阻為 0.1 Ω，工作週期 D 超過 D<sub>opt</sub> ＝ 0.9 後會發生什麼事？</p><label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">輸出無限大</option><option value="b">效率變好</option><option value="c">沒有變化</option><option value="d">輸出反而下降，且控制方向反轉，不可用</option></select></label><button type="button" id="q06-3-check">對答案</button><div id="q06-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>07 濾波與漣波設計：L、C 與 ESR</h2>
+<p>回去看：<a href="07-濾波與漣波設計.html">07 濾波與漣波設計：L、C 與 ESR</a></p>
+<section class="card"><p><strong>q07-1｜</strong>12 V 降到 5 V、負載 2 A、切換頻率 200 kHz，且 Δi<sub>L</sub> 取負載電流的 30 % 時，需要多少 µH 的電感？</p><label for="q07-1">你的答案（µH）<input id="q07-1" type="number" step="any"></label><button type="button" id="q07-1-check">對答案</button><div id="q07-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-2｜</strong>同一組條件把 ΔV<sub>o</sub> 目標定為 20 mV 時，需要多少 µF 的電容？</p><label for="q07-2">你的答案（µF）<input id="q07-2" type="number" step="any"></label><button type="button" id="q07-2-check">對答案</button><div id="q07-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-3｜</strong>12 V 轉 5 V、2 A、200 kHz、Δi<sub>L</sub> 30 %、ESR 50 mΩ 且 ΔV<sub>o</sub> 目標 20 mV 時，哪一個條件表示 ESR 已主導輸出漣波？</p><label for="q07-3">你的答案<select id="q07-3"><option value="">請選擇</option><option value="a">Δi_L × ESR 大於目標 ΔV_o</option><option value="b">電容值太大</option><option value="c">頻率太低</option><option value="d">電感太大</option></select></label><button type="button" id="q07-3-check">對答案</button><div id="q07-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>08 逆變器與 SPWM：調變比與基波</h2>
+<p>回去看：<a href="08-逆變器與SPWM.html">08 逆變器與 SPWM：調變比與基波</a></p>
+<section class="card"><p><strong>q08-1｜</strong>全橋逆變器的 V<sub>dc</sub> ＝ 400 V、m<sub>a</sub> ＝ 0.8 時，基波峰值是多少 V？</p><label for="q08-1">你的答案（V）<input id="q08-1" type="number" step="any"></label><button type="button" id="q08-1-check">對答案</button><div id="q08-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-2｜</strong>頻率比 m<sub>f</sub> ＝ 21、基波頻率 f<sub>1</sub> ＝ 50 Hz 時，切換頻率是多少 Hz？</p><label for="q08-2">你的答案（Hz）<input id="q08-2" type="number" step="any"></label><button type="button" id="q08-2-check">對答案</button><div id="q08-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-3｜</strong>全橋 V<sub>dc</sub> ＝ 400 V、m<sub>f</sub> ＝ 21、f<sub>1</sub> ＝ 50 Hz 時，SPWM 的 m<sub>a</sub> 超過 1、進入過調變後，輸出會如何變化？</p><label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">基波仍線性增加</option><option value="b">諧波消失</option><option value="c">基波增加變慢且出現 5、7 次低次諧波，極限是方波</option><option value="d">輸出變成直流</option></select></label><button type="button" id="q08-3-check">對答案</button><div id="q08-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>09 諧波與 THD：逐次累加與真功因</h2>
+<p>回去看：<a href="09-諧波與THD.html">09 諧波與 THD：逐次累加與真功因</a></p>
+<section class="card"><p><strong>q09-1｜</strong>方波的諧波由第 3 次累加到第 13 次時，總諧波失真 THD 是多少 %？</p><label for="q09-1">你的答案（%）<input id="q09-1" type="number" step="any"></label><button type="button" id="q09-1-check">對答案</button><div id="q09-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-2｜</strong>同一個 THD ＝ 44.502424 % 的方波，位移功因為 1 時，真功因是多少？</p><label for="q09-2">你的答案（無單位）<input id="q09-2" type="number" step="any"></label><button type="button" id="q09-2-check">對答案</button><div id="q09-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-3｜</strong>方波計到第 13 次得到 THD ＝ 44.502424 %，位移功因是 1，真功因卻只有約 0.91，原因是什麼？</p><label for="q09-3">你的答案<select id="q09-3"><option value="">請選擇</option><option value="a">電壓太低</option><option value="b">諧波電流增加視在功率但不做功</option><option value="c">電壓與電流有相位差</option><option value="d">電阻損耗</option></select></label><button type="button" id="q09-3-check">對答案</button><div id="q09-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>10 散熱與效率：熱阻鏈算結溫</h2>
+<p>回去看：<a href="10-散熱與效率.html">10 散熱與效率：熱阻鏈算結溫</a></p>
+<section class="card"><p><strong>q10-1｜</strong>損耗為 10 W、環境為 40 °C，θ<sub>JC</sub>、θ<sub>CS</sub>、θ<sub>SA</sub> 分別為 0.5、0.3、4.0 °C/W 時，結溫是多少 °C？</p><label for="q10-1">你的答案（°C）<input id="q10-1" type="number" step="any"></label><button type="button" id="q10-1-check">對答案</button><div id="q10-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-2｜</strong>同一組 10 W、40 °C、θ<sub>JC</sub> ＝ 0.5、θ<sub>CS</sub> ＝ 0.3 的條件，若目標結溫為 125 °C，所需 θ<sub>SA</sub> 是多少 °C/W？</p><label for="q10-2">你的答案（°C/W）<input id="q10-2" type="number" step="any"></label><button type="button" id="q10-2-check">對答案</button><div id="q10-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-3｜</strong>損耗 10 W、θ<sub>JC</sub> ＝ 0.5、θ<sub>CS</sub> ＝ 0.3、θ<sub>SA</sub> ＝ 4.0 °C/W 時，要降低 θ<sub>JC</sub> 那一段造成的溫升，哪一項說法正確？</p><label for="q10-3">你的答案<select id="q10-3"><option value="">請選擇</option><option value="a">換更大的散熱片</option><option value="b">換更好的導熱膏</option><option value="c">加更強的風扇</option><option value="d">散熱片與風扇都動不了 θ_JC，只能降損耗、換封裝或並聯元件</option></select></label><button type="button" id="q10-3-check">對答案</button><div id="q10-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>11 切換頻率取捨：損耗、體積與溫度的總整合</h2>
+<p>回去看：<a href="11-切換頻率取捨與設計總整合.html">11 切換頻率取捨：損耗、體積與溫度的總整合</a></p>
+<section class="card"><p><strong>q11-1｜</strong>同步 Buck 的 V<sub>in</sub> ＝ 48 V、I<sub>o</sub> ＝ 10 A、t<sub>sw</sub> ＝ 40 ns、f<sub>sw</sub> ＝ 200 kHz 時，高側切換損是多少 W？</p><label for="q11-1">你的答案（W）<input id="q11-1" type="number" step="any"></label><button type="button" id="q11-1-check">對答案</button><div id="q11-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-2｜</strong>同一個 48 V 轉 12 V、10 A、Δi<sub>L</sub> 30 % 的設計，把切換頻率提高到 1 MHz 時，需要多少 µH 的電感？</p><label for="q11-2">你的答案（µH）<input id="q11-2" type="number" step="any"></label><button type="button" id="q11-2-check">對答案</button><div id="q11-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-3｜</strong>48 V 轉 12 V、10 A 的同步 Buck 把頻率由 200 kHz 提高到 1 MHz 時，主要取捨是什麼？</p><label for="q11-3">你的答案<select id="q11-3"><option value="">請選擇</option><option value="a">電感與電容變小，但切換損與結溫上升</option><option value="b">全部變好</option><option value="c">全部變差</option><option value="d">只影響雜訊</option></select></label><button type="button" id="q11-3-check">對答案</button><div id="q11-3-output" class="output" aria-live="polite"></div></section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

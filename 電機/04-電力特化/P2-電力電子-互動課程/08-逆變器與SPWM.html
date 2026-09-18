@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 逆變器與 SPWM：調變比與基波｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・把直流切成可控制的交流基波</p>
+<h1>08 逆變器與 SPWM：調變比與基波</h1>
+<p class="lead">400 V 直流匯流排經單相全橋與弦波脈寬調變後，在 m<sub>a</sub> ＝ 0.8 時得到 320.000000 V 基波峰值。這章會把幅值、切換頻率、諧波落點與匯流排利用率分開算清楚。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="04-PWM與工作週期.html">04 PWM 與工作週期</a>的載波比較、<a href="05-Buck降壓轉換器.html">05 Buck 降壓轉換器</a>的橋臂概念。<strong>前置：</strong>見〈09 弦波與相量〉<a href="../../02-電機核心/電路學-互動課程/09-弦波與相量.html">電路學的弦波與相量</a>（峰值與有效值的 √2 已在該頁說明）。</p>
+
+<h2>痛點：一排只有正負電壓的開關，怎麼送出弦波</h2>
+<p>逆變器（inverter）把直流電能轉成交流電能，但橋臂的瞬時輸出只有少數幾個電位，並不會直接畫出平滑弦波。真正的問題是：負載為什麼仍能收到 50 Hz 的基波？為何把 m<sub>a</sub> 加倍，基波也跟著加倍；把 m<sub>f</sub> 加大，幅值卻幾乎不變？如果只盯著開關節點的脈衝，這三件事很容易混成一團。</p>
+<p>半橋用兩顆功率開關在 ±V<sub>dc</sub>/2 間切換；全橋或 H 橋用四顆開關，兩個橋臂反相相減而得到 ±V<sub>dc</sub>；三相橋則有六顆開關與三組橋臂。拓樸決定可用電壓範圍，脈衝的排列才決定基波與諧波。</p>
+
+<h2>白話直覺：每一小段先配平均值，再讓平均值沿弦波移動</h2>
+<p>可以暫時把每個切換週期想成一格像素：單格只有亮或暗，拉遠後才看出漸層；比喻到此為止。精確機制是弦波脈寬調變（sinusoidal pulse width modulation, SPWM）把低頻弦波調變訊號與高頻三角載波逐點比較，產生隨時間改變的工作週期 D(t)，使每個短區間的局部平均依弦波變化。</p>
+<p>沿物理因果走一次：電源是 V<sub>dc</sub> 相對直流負端的匯流排；全橋左、右橋臂交替導通，負載回路經不同對角開關閉合；能量在正半波由直流端送進負載，負半波改變端點極性，感性負載也可能短暫把能量送回匯流排。橋臂電壓快速跳動，負載電感與 LC 濾波器抑制高頻電流，只留下低頻基波。示波器在橋臂端量到脈衝，在濾波後量到接近弦波的電壓；快速傅立葉轉換（fast Fourier transform, FFT）則把基波與載波旁波帶分開。</p>
+<p><strong>這件事在你的程式裡長什麼樣：</strong>SPWM 是每個切換週期查一次 sin 表並更新比較暫存值；m<sub>f</sub> 就是每個基波週期使用的表格步數。這只描述控制更新，真正的電流仍由橋臂、負載與濾波器決定。</p>
+<p class="warning"><strong>安全警語：</strong>逆變器直流匯流排 400 V 致命且電容儲能大；同一橋臂上下管必須留死區時間，否則直通短路；輸出交流與市電並聯前必須同步與防孤島，本章只算基波幅值。</p>
+<p class="note">來源：P2-電力電子（上）§4.1、§4.2；（下）§6.2、§6.3。</p>
+
+<h2>推導：從局部平均走到三種橋與諧波落點</h2>
+<p><strong>半橋。</strong>04 章已得到每個短區間的平均值。令 D(t) ＝ ½ ＋ ½ m<sub>a</sub> sin(2πf<sub>1</sub>t)，相對中點的局部平均為 (D(t) − ½) × V<sub>dc</sub> ＝ (V<sub>dc</sub>/2) × m<sub>a</sub> sin(2πf<sub>1</sub>t)，所以 V<sub>1,pk</sub> ＝ m<sub>a</sub> × V<sub>dc</sub>/2。V<sub>1,pk</sub> 是基波峰值，單位 V；m<sub>a</sub> 是幅值調變比，無單位；V<sub>dc</sub> 是直流匯流排電壓，單位 V。</p>
+<p><strong>全橋與三相橋。</strong>全橋兩臂反相，相減後 V<sub>1,pk</sub> ＝ m<sub>a</sub> × V<sub>dc</sub>。三相每相峰值是 m<sub>a</sub> × V<sub>dc</sub>/2，線電壓乘 √3，再由峰值除 √2，得到 V<sub>1,LL,rms</sub> ＝ m<sub>a</sub> × (√3 / (2√2)) × V<sub>dc</sub> ＝ 0.612372 × m<sub>a</sub> × V<sub>dc</sub>。既有電路學已說明 √3 與 √2 的來源，本章只套用。</p>
+<p><strong>頻率與極限。</strong>m<sub>f</sub> ＝ f<sub>sw</sub> / f<sub>1</sub>，所以 f<sub>sw</sub> ＝ m<sub>f</sub> × f<sub>1</sub>；第一群旁波帶約在 (m<sub>f</sub> − 2)f<sub>1</sub> 與 (m<sub>f</sub> ＋ 2)f<sub>1</sub>，第二群中心在 2m<sub>f</sub>f<sub>1</sub>。既有課已證明方波基波等於幅值的 4/π，全橋方波極限因此為 4 × V<sub>dc</sub>/π。直流匯流排利用率是目前基波有效值除以方波極限有效值。三相空間向量脈寬調變（space vector pulse width modulation, SVPWM）的線性上限為 0.707107 × V<sub>dc</sub>，相對 SPWM 的 0.612372 × V<sub>dc</sub> 提升 0.707107 / 0.612372 − 1 ＝ 15.470054 %；其等價作法是注入三次諧波共模，三相線電壓相減後看不到共模，因而能多用一段匯流排電壓。</p>
+<p><strong>模型假設與適用範圍。</strong>本課用的是一階教學模型，真實電路不是這樣。本章只算 m<sub>a</sub> ≤ 1 的線性區基波，假設開關理想、沒有死區、直流電壓固定，且載波遠高於基波；m<sub>f</sub> ≥ 9 才採用非同步近似。過調變只指出基波不再線性、會出現 5 與 7 次諧波，並給方波極限；載波旁波帶只列位置，不推導其幅值。m<sub>f</sub> 小於 21 時宜讓載波與基波鎖相，單相宜取奇數以維持半波對稱；三相則宜選 3 的奇數倍，使載波群在線電壓中抵消。LC 截止頻率要放在 f<sub>1</sub> 與 f<sub>sw</sub> 之間，才能保留基波並壓低載波群。</p>
+
+<h2>數值實例：400 V 全橋如何得到 226.274170 V</h2>
+<p>單相全橋取 V<sub>dc</sub> ＝ 400 V、m<sub>a</sub> ＝ 0.80、m<sub>f</sub> ＝ 21、f<sub>1</sub> ＝ 50 Hz，與自由實驗預設值相同。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>切換頻率 f<sub>sw</sub></td><td>21 × 50</td><td><strong>1050 Hz</strong></td></tr>
+<tr><td>基波峰值 V<sub>1,pk</sub></td><td>0.8 × 400</td><td><strong>320.000000 V</strong></td></tr>
+<tr><td>基波有效值</td><td>320 / √2</td><td><strong>226.274170 V</strong></td></tr>
+<tr><td>方波極限峰值</td><td>4 × 400 / π</td><td><strong>509.295818 V</strong></td></tr>
+<tr><td>方波極限有效值</td><td>509.295818 / √2</td><td><strong>360.126526 V</strong></td></tr>
+<tr><td>直流匯流排利用率</td><td>320 / 509.295818</td><td><strong>62.831853 %</strong></td></tr>
+<tr><td>第一群諧波旁波帶</td><td>(21 ± 2) × 50</td><td><strong>950 Hz、1150 Hz</strong></td></tr>
+<tr><td>第二群中心</td><td>2 × 21 × 50</td><td><strong>2100 Hz</strong></td></tr>
+</tbody></table>
+<p>同條件改為半橋，基波峰值為 160.000000 V、有效值 113.137085 V、極限 254.647909 V。改為三相橋，線電壓基波有效值 195.959179 V、峰值 277.128129 V，六步波極限有效值 311.878720 V；SPWM 線性上限 244.948974 V，SVPWM 上限 282.842712 V，高 15.470054 %。</p>
+<p>把 m<sub>a</sub> 拉到 1.0，全橋基波峰值是 400.000000 V，利用率 78.539816 %，再增加便離開線性區。反向極端取 m<sub>a</sub> ＝ 0.05、m<sub>f</sub> ＝ 3，基波只有 20.000000 V，切換頻率 150 Hz，旁波帶 50／250 Hz，已與基波貼在一起。若 m<sub>f</sub> ＝ 99、f<sub>1</sub> ＝ 60 Hz，切換頻率是 5940 Hz；濾波較容易，但切換代價同步上升。三相 m<sub>f</sub> ＝ 15 且 60 Hz 時得到 900 Hz，符合 3 的奇數倍；m<sub>f</sub> ＝ 20 則不符合。</p>
+
+<section class="workspace"><h2>自由實驗：拓樸、調變比與匯流排利用率</h2>
+<p>選一種橋式拓樸，調整直流電壓、兩個調變比與基波頻率。觀察基波幅值由哪個旋鈕決定，以及旁波帶能否與基波拉開；輸出會同步提醒線性區、三相對稱與極端值。</p>
+<div class="controls">
+<label for="sp-topo">拓樸<select id="sp-topo"><option value="full">單相全橋（輸出 ±V_dc）</option><option value="half">單相半橋（輸出 ±V_dc/2）</option><option value="three">三相橋（看線電壓）</option></select></label>
+<label for="sp-vdc">直流匯流排電壓 V_dc（V）<input id="sp-vdc" type="range" min="50" max="800" step="10" value="400"></label>
+<label for="sp-ma">幅值調變比 m_a<input id="sp-ma" type="range" min="0.05" max="1" step="0.05" value="0.8"></label>
+<label for="sp-mf">頻率調變比 m_f<input id="sp-mf" type="range" min="3" max="99" step="1" value="21"></label>
+<label for="sp-f1">基波頻率 f_1<select id="sp-f1"><option value="50">50 Hz</option><option value="60">60 Hz</option></select></label>
+</div>
+<div id="spwm-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>m<sub>a</sub> 是幅值比，不是固定工作週期；弦波輸出要求 D 隨時間改變，m<sub>a</sub> 只控制變動幅度。</li>
+<li>m<sub>f</sub> 是載波與基波的頻率比，不是某一個諧波次數；能量群落在 m<sub>f</sub> ± 2 等位置附近。</li>
+<li>利用率 62.831853 % 是基波使用匯流排電壓能力的比例，不是效率；它完全沒有計入熱與元件損耗。</li>
+<li>SVPWM 的 15.470054 % 是三相線電壓利用率提升，不是效率或功率增加；負載決定實際輸出功率。</li>
+<li>死區時間可避免同一橋臂直通，卻會依電流方向改變平均電壓；理想 SPWM 公式沒有包含這個誤差。</li>
+</ul>
+
+<h2>可觀察證據：橋臂脈衝、基波與旁波帶各用什麼看</h2>
+<p>用具足夠耐壓與隔離額定的差動探棒接示波器，可看橋臂輸出的 PWM 波與濾波後弦波；用 FFT 看 50 Hz 基波與 950／1150 Hz 旁波帶；電力分析儀則直接讀基波有效值。量測時必須依設備額定與高壓安全程序，瀏覽器裡的計算不構成實作授權。</p>
+<p><strong>能證明</strong>基波幅值在 m<sub>a</sub> ≤ 1 時近似線性，也能證明諧波群跟著 m<sub>f</sub> 移動。<strong>不能證明</strong>死區造成多少失真，因為那還要知道電流方向並放大零交越附近細節；FFT 頻率解析度不足時，旁波帶也會糊在一起，不能據此斷言它不存在。</p>
+
+<h2>連到哪門課</h2>
+<p>下一章會把各次諧波以平方和累加成 THD。馬達變頻器與磁場導向控制留給 P3 馬達驅動與控制；太陽能併網逆變器、UPS 與 VSC 型 HVDC 則把這套橋臂擴充到電網。三相線電壓的來源見<a href="../../02-電機核心/電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>；這裡只使用其 √3 關係，不重推。</p>
+<nav class="pager" aria-label="章節導覽"><a href="07-濾波與漣波設計.html">← 上一頁：濾波與漣波設計</a><a href="09-諧波與THD.html">下一頁：諧波與 THD →</a></nav>
+</main>
+<footer class="site-footer"><span>08 逆變器與 SPWM：調變比與基波</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

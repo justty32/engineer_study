@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 OFDM 與循環字首｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">12・把寬通道切成窄子載波，再用循環字首處理拖尾</p>
+<h1>OFDM 與循環字首：讓每條子載波只做一次複數除法</h1>
+<p class="lead">正交分頻多工把一條寬通道切成許多條窄子載波，IFFT 與 FFT 負責在頻域資料與時域樣本間轉換。循環字首把自己的尾端複製到前面，使多徑造成的線性摺積在有效視窗內成為圓形摺積。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="06-等化器ZF與MMSE.html">06 等化器 ZF 與 MMSE</a>的通道拖尾與等化，以及<a href="11-展頻與CDMA.html">11 展頻與 CDMA</a>的頻寬代價。<strong>前置：</strong>見〈DFT 與圓形摺積〉<a href="../../02-電機核心/信號與系統-互動課程/13-離散頻譜分析.html">信號與系統的離散頻譜分析</a>，以及〈頻譜效率與 Shannon 極限〉<a href="../通訊系統-互動課程/10-頻譜效率與Shannon極限.html">通訊系統的頻譜效率與 Shannon 極限</a>；本章直接使用兩頁結論。</p>
+
+<h2>痛點：高速單載波怕多徑，切成很多條之後為什麼反而容易等化</h2>
+<p>通道中的反射路徑會把前一個符元拖進下一個符元。單載波速率越高，每個符元越短，相同的延遲便佔更大比例；等化器需要同時處理許多抽頭。OFDM 的核心問題是：能否把高速資料拆成 N 路低速資料，讓每路看到的通道在狹窄頻率範圍內近似固定？</p>
+<p>光把頻帶切窄仍不夠。子載波彼此重疊，只有在正確時間視窗內保持正交，FFT 才能分開它們；多徑拖尾或頻率偏移都會打破這個條件。循環字首（cyclic prefix, CP）正是用時間負擔換回正交與簡單等化。</p>
+
+<h2>白話直覺：把一本厚帳拆成很多薄頁，每頁只改一個係數</h2>
+<p>可以暫時把寬通道想成一本各頁變化不同的帳，切成窄子載波後，每頁只需一個係數。比喻到此為止，精確模型是正交分頻多工（orthogonal frequency-division multiplexing, OFDM）：N 個頻域星座點經 IFFT 變成 N 個時域樣本，接收端 FFT 後，每個子載波滿足 Y<sub>k</sub> ＝ H<sub>k</sub>X<sub>k</sub>，因此只需除以 H<sub>k</sub>。</p>
+<p>資料位元先分配到 N 個子載波；設計者選擇間距 Δf ＝ B/N 與有效符元時間 T<sub>u</sub> ＝ 1/Δf ＝ N/B。買到的是每條子載波內近似平坦、等化成本低，付出的是 CP 不載資料、峰均功率比（peak-to-average power ratio, PAPR）高，以及更嚴格的載波同步。N 太大會讓 Δf 太小，頻率偏移與都卜勒佔比升高；N 太小則 T<sub>u</sub> 短，CP 負擔變重。頻譜分析儀可看子載波梳，向量訊號分析儀可逐載波檢查星座。</p>
+<p>接收端的動作順序不能顛倒：先依同步結果切出完整 OFDM 符元，丟掉前面的 CP，再把剩餘 N 個樣本送進 FFT。若切窗太早或太晚，即使 CP 原本足夠，FFT 仍可能吃到相鄰符元；若殘餘 CFO 讓每個樣本持續轉相位，原本整數格點上的子載波也會向鄰格洩漏。</p>
+<p class="note">來源：15-數位通訊-上 §7；15-數位通訊-下 §13。</p>
+
+<h2>推導：正交、循環延拓與效率如何接在一起</h2>
+<p><strong>間距與時間。</strong>N 個子載波塞進頻寬 B，所以 Δf ＝ B/N。兩個相差 Δf 的弦波，在 T<sub>u</sub> ＝ 1/Δf 期間剛好累積一整個相對週期，乘積積分為 0，因此相鄰子載波雖然頻譜重疊，仍能由 FFT 正交分離。B 在本章是一階近似下的取樣率與佔用頻寬。</p>
+<p><strong>CP 為何把摺積變圓形。</strong>線性摺積開頭的 τ<sub>max</sub> 時間會混入上一個符元尾端。發射端把目前符元自己的最後 T<sub>cp</sub> 複製到前面；只要 T<sub>cp</sub> ≥ τ<sub>max</sub>，接收端丟掉 CP 後，FFT 視窗裡看到的是目前符元的週期延拓。這符合圓形摺積定義，而圓形摺積在 DFT 域變成逐點相乘。</p>
+<p><strong>效率與位元率。</strong>一個 OFDM 符元佔 T<sub>u</sub> ＋ T<sub>cp</sub>，真正承載新資料的只有 T<sub>u</sub>，故效率為 T<sub>u</sub>/(T<sub>u</sub> ＋ T<sub>cp</sub>)。若全部 N 個子載波各載 k 位元，原始位元率上限為 N × k/(T<sub>u</sub> ＋ T<sub>cp</sub>)；實際系統還要扣除導頻、保護子載波與編碼冗餘。</p>
+<p><strong>PAPR 與頻率偏移。</strong>N 個等幅子載波最壞同相時，峰值功率為 N² 倍單載波、平均功率為 N 倍，比值為 N，所以最壞 PAPR ＝ 10 log<sub>10</sub> N。殘餘載波頻率偏移（carrier frequency offset, CFO）以 Δf<sub>offset</sub>/Δf 衡量；比例越大，子載波間干擾越嚴重，工程上常希望壓在 1–2 % 內。</p>
+<p>本課用通道在一個符元內不變、全部子載波載資料、B ＝ 取樣率的一階教學模型；真實系統另有保護子載波、導頻、視窗化與時變效應。單一子載波內平坦還要求 Δf × τ<sub>max</sub> ≪ 1，CP 足夠只解決跨符元拖尾，不能替代這項條件。</p>
+<p><strong>設計取捨。</strong>先由最大延遲選足以覆蓋的 T<sub>cp</sub>，再調 N 讓 T<sub>cp</sub>/T<sub>u</sub> 的負擔可接受，同時檢查 Δf × τ<sub>max</sub> 與 CFO 佔比。這幾項無法各自最佳：加大 N 會降低平坦度乘積並提高效率，卻讓頻率偏移佔比與最壞 PAPR 上升；縮小 N 的方向則相反。</p>
+<p><strong>CP 過長也會失敗。</strong>只要覆蓋最大延遲，再加長的部分不會進一步改善正交，只會降低有效資料比例。反過來，CP 太短時，上一個符元的拖尾進入 FFT 視窗，接收端看見的便不再是單一符元的圓形摺積；此時每子載波只除一個係數的模型失效。</p>
+<p><strong>功率放大器的代價。</strong>高 PAPR 代表平均功率看似安全時，少數同相疊加的峰值仍可能進入壓縮區。若放大器預留不足，峰值削平會同時造成子載波內失真與頻帶外洩漏；若預留太多，平均輸出功率與能源效率又會降低。因此實務會搭配削峰、編碼或其他降峰方法。</p>
+
+<h2>數值實例：20 MHz、64 子載波與四分之一循環字首</h2>
+<p>取 B ＝ 20 MHz、N ＝ 64、CP ＝ 1/4、τ<sub>max</sub> ＝ 0.5 µs、64-QAM（k ＝ 6），就是 802.11a/g 的參數，與自由實驗預設值一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>Δf</td><td>20 MHz / 64</td><td><strong>312.500000 kHz</strong></td></tr>
+<tr><td>T<sub>u</sub></td><td>64 / 20 MHz</td><td><strong>3.200000 µs</strong></td></tr>
+<tr><td>T<sub>cp</sub></td><td>3.2 × 1/4</td><td><strong>0.800000 µs</strong></td></tr>
+<tr><td>T<sub>u</sub> ＋ T<sub>cp</sub></td><td></td><td><strong>4.000000 µs</strong></td></tr>
+<tr><td>無 ISI？</td><td>0.5 ≤ 0.8</td><td><strong>是</strong></td></tr>
+<tr><td>效率</td><td>3.2/4</td><td><strong>80.000000 %</strong></td></tr>
+<tr><td>原始位元率上限</td><td>64 × 6 / 4 µs</td><td><strong>96.000000 Mbit/s</strong></td></tr>
+<tr><td>最壞 PAPR</td><td>10 log<sub>10</sub> 64</td><td><strong>18.061800 dB</strong></td></tr>
+<tr><td>Δf × τ<sub>max</sub></td><td>312.5 kHz × 0.5 µs</td><td><strong>0.156250</strong></td></tr>
+<tr><td>1 kHz CFO 佔 Δf</td><td>1/312.5</td><td><strong>0.320000 %</strong></td></tr>
+</tbody></table>
+<p><strong>Wi-Fi 的 54 Mbit/s：</strong>48 個資料子載波 × 6 × 3/4 / 4 µs ＝ 54.000000 Mbit/s。原始上限使用 64 條，實際規格只用 48 條載資料，再乘率 3/4 的編碼，因此正好對上規格書。</p>
+<p><strong>LTE 對照：</strong>B ＝ 30.72 MHz、N ＝ 2048、CP ＝ 144/2048 → Δf 15.000000 kHz、T<sub>u</sub> 66.666667 µs、T<sub>cp</sub> 4.687500 µs、效率 93.430657 %、PAPR 33.113300 dB、1 kHz CFO 佔 6.666667 %。自由實驗沒有 144/2048 選項；選 LTE 的 B 與 N 時仍會套用所選的 1/4、1/8、1/16 或 1/32，不能把結果誤當成這行 LTE 標準設定。</p>
+<p><strong>邊界對照。</strong>CP ＝ 1/16 時 T<sub>cp</sub> ＝ 0.200000 µs，小於 0.5，會有 ISI，效率 94.117647 %；τ<sub>max</sub> ＝ 0.8 µs 時剛好等於 T<sub>cp</sub>，處於無 ISI 臨界。N ＝ 4096、CP ＝ 1/32、τ<sub>max</sub> ＝ 5 µs 時，Δf 4.882812 kHz、T<sub>u</sub> 204.800000 µs、T<sub>cp</sub> 6.400000 µs、效率 96.969697 %、PAPR 36.123599 dB，但 1 kHz CFO 已佔 20.480000 %。</p>
+<p>N ＝ 256、CP ＝ 1/4 時，Δf 78.125000 kHz、T<sub>u</sub> 12.800000 µs、T<sub>cp</sub> 3.200000 µs、PAPR 24.082400 dB。B ＝ 80 MHz、N ＝ 256、k ＝ 8 時原始上限是 512.000000 Mbit/s；B ＝ 1.25 MHz、N ＝ 64、k ＝ 1 時，Δf 19.531250 kHz、原始上限 1.000000 Mbit/s。這些比較顯示位元率、CP 與 CFO 敏感度會隨同一組旋鈕一起移動。</p>
+<p>τ<sub>max</sub> ＝ 10 µs、N ＝ 4096、CP ＝ 1/4 時，T<sub>cp</sub> ＝ 51.200000 µs，仍可無 ISI，效率為 80 %。若 τ<sub>max</sub> ＝ 0，任何 CP 都只剩負擔；這兩端提醒設計者，保護時間必須跟實際環境的延遲尺度配對。</p>
+
+<section class="workspace"><h2>自由實驗：在 CP 負擔、拖尾與頻率偏移間取捨</h2>
+<p>選取樣頻寬、子載波數、CP 比例與每子載波位元數，再調最大多徑延遲。輸出會檢查 CP 是否足夠、每條子載波是否仍近似平坦，以及原始位元率、PAPR 與 1 kHz 偏移佔比。</p>
+<div class="controls">
+<label for="of-bw">頻寬 B（= 取樣率）<select id="of-bw"><option value="1.25">1.25 MHz</option><option value="5">5 MHz</option><option value="10">10 MHz</option><option value="20" selected>20 MHz（Wi-Fi）</option><option value="30.72">30.72 MHz（LTE 20 MHz 取樣率）</option><option value="80">80 MHz</option></select></label>
+<label for="of-n">子載波數 N<select id="of-n"><option value="64" selected>64</option><option value="128">128</option><option value="256">256</option><option value="512">512</option><option value="1024">1024</option><option value="2048">2048</option><option value="4096">4096</option></select></label>
+<label for="of-cp">循環字首比例 T_cp/T_u<select id="of-cp"><option value="0.25" selected>1/4</option><option value="0.125">1/8</option><option value="0.0625">1/16</option><option value="0.03125">1/32</option></select></label>
+<label for="of-tau">最大多徑延遲 τ_max（µs）<input id="of-tau" type="range" min="0" max="10" step="0.1" value="0.5"></label>
+<label for="of-k">每子載波位元數 k<select id="of-k"><option value="1">BPSK（1）</option><option value="2">QPSK（2）</option><option value="4">16-QAM（4）</option><option value="6" selected>64-QAM（6）</option><option value="8">256-QAM（8）</option></select></label>
+</div><div id="ofdm-output" class="output" aria-live="polite"></div></section>
+
+<h2>不要混淆</h2>
+<ul><li>OFDM 的正交是子載波之間的積分關係，不是星座 I／Q 兩軸的正交。</li><li>循環字首不只是空白保護間隔；複製自己的尾端，才會讓有效視窗呈現圓形摺積，空白只隔開拖尾。</li><li>CP 足夠只代表上一符元拖尾不進 FFT 視窗；若 Δf × τ<sub>max</sub> 不夠小，單一子載波內仍可能不平坦。</li><li>PAPR 高是許多子載波同相疊加的結果，還要再與 02 章星座本身的振幅起伏一起考量。</li><li>Δf 越小並非越好；符元變長雖減輕 CP 負擔，卻放大 CFO 與時變效應的相對影響。</li></ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>頻譜分析儀觀察方形頻譜與子載波梳，向量訊號分析儀逐子載波讀星座與誤差；示波器或軟體樣本統計以互補累積分布圖量 PAPR。</p>
+<p><strong>能證明什麼。</strong>比較 CP 內外的延遲能判斷保護是否足夠；逐載波星座與子載波間洩漏能檢查 CFO 校正，長時間功率統計能證明 PAPR 分布。</p>
+<p><strong>不能證明什麼。</strong>星座糊掉不能單獨分辨 CP 太短或 FFT 視窗位置錯誤，兩者都會破壞正交；還需掃描視窗起點或直接量脈衝響應。</p>
+
+<h2>連到哪門課</h2>
+<p>DFT 與圓形摺積見<a href="../../02-電機核心/信號與系統-互動課程/13-離散頻譜分析.html">信號與系統的離散頻譜分析</a>；頻譜效率與 Shannon 極限見<a href="../通訊系統-互動課程/10-頻譜效率與Shannon極限.html">通訊系統對應章</a>；每子載波等化可回看<a href="06-等化器ZF與MMSE.html">本課 06 章</a>。FFT 蝶形運算留給數位訊號處理課；都卜勒、時變通道與 MIMO-OFDM 留給無線與行動通訊課。軟體那一端，IFFT 後把尾端 N<sub>cp</sub> 個樣本接到前面，就是 OFDM 發射端的主要骨架。</p>
+<nav class="pager" aria-label="章節導覽"><a href="11-展頻與CDMA.html">← 上一頁：展頻與 CDMA</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>12 OFDM 與循環字首</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

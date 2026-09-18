@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 三相與相控整流：觸發角與反流｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・延後觸發就能改變平均電壓方向</p>
+<h1>03 三相與相控整流：觸發角與反流</h1>
+<p class="lead">三相全橋接 220 V 線電壓，在觸發角 30° 時平均輸出是 257.299944 V；把角度推過 90°，高電感負載會進入反流（inversion）。這章要分清楚何時只是少取電，何時真的把能量送回交流側。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-單相整流與電容濾波的代價.html">02 單相整流與電容濾波的代價</a>的漣波與導通角。<strong>前置：</strong>見〈14 變壓器與三相〉<a href="../../02-電機核心/電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>；線電壓與相電壓的 √3 關係已在那裡證明。</p>
+
+<h2>痛點：同一座整流橋，為什麼延後一個角度就能送電回去</h2>
+<p>二極體何時導通由電源電壓決定，輸出平均值幾乎沒有可調空間。把二極體換成閘流體（thyristor, SCR）後，控制器可以延後送出閘極脈衝，選擇從波形哪個位置開始導通。真正容易卡住的是：觸發角（firing angle, α）只是在「晚一點開」，平均值為什麼能越過零而成為負值？</p>
+<p>答案取決於負載是否維持電流。高電感負載會把電流延續到電源電壓反向之後，負電壓面積因此能進入平均；純電阻負載一到電壓過零，電流也歸零，負面積根本不會出現。只看 cos α 而不先辨認負載，會把調壓與能量回送混成一件事。</p>
+
+<h2>白話直覺：觸發角決定從波形哪裡接手</h2>
+<p>可暫時把 α 想成延遲觸發的計時器，能量回送像程式中交換生產者與消費者；比喻到此為止，實際機制是半控元件與電感電流。三相電源以中性點與線間電壓為參考，控制器每隔 60° 觸發下一顆 SCR。兩顆適當的元件導通時，交流線、整流橋、直流電感與直流側形成閉合回路；SCR 一旦導通，控制端無法命令它立即關斷，只能等電流自然過零並進行換相（commutation），把電流交給下一對元件。</p>
+<p>α 小於 90° 時，正電壓面積較多，能量由交流側流向直流側；α 超過 90° 且電流連續、直流側另有能量來源時，負電壓面積較多，電流方向仍不變，但 V<sub>dc</sub> 變負，所以功率方向反轉。示波器差動探棒會看見六段線電壓包絡與觸發點，電流探棒則告訴你直流電流是否真的連續。</p>
+<p>這件事在你的程式裡長什麼樣：α 是事件延遲量，負載型別決定要走連續公式或分段公式；不能只算 cos α 後就宣告反流。</p>
+<p class="note">來源：P2-電力電子（上）§2.2；P2-電力電子（下）§9.4。</p>
+
+<h2>推導：一段一段平均，cos α 就從面積裡出現</h2>
+<p><strong>單相全波。</strong>電流連續時，一個輸出週期的平均為 V<sub>dc</sub> ＝ (1 / π) ∫ V<sub>pk</sub> sin(ωt) d(ωt)，積分界線從 α 到 π ＋ α，結果是 (2 V<sub>pk</sub> / π) cos α。α ＝ 0 時，V<sub>pk</sub> ＝ √2 V<sub>rms</sub>，故 V<sub>dc0</sub> ＝ 2√2 V<sub>rms</sub> / π。V 的單位為 V，α 是 °，ωt 是角度。</p>
+<p><strong>三相全橋。</strong>輸出取線電壓包絡，每 60° 換一段。V<sub>dc</sub> ＝ (3 / π) ∫ √2 V<sub>LL</sub> cos(ωt) d(ωt)，界線從 −π / 6 ＋ α 到 π / 6 ＋ α，得到 V<sub>dc0</sub> cos α，其中 V<sub>dc0</sub> ＝ (3√2 / π) × V<sub>LL</sub> ≈ 1.350000 × V<sub>LL</sub>。V<sub>LL</sub> 是線電壓有效值 V。</p>
+<p><strong>三相半波。</strong>它每 120° 換一段，先由既有課結論 V<sub>ph</sub> ＝ V<sub>LL</sub> / √3 取得相電壓，再得 V<sub>dc0</sub> ＝ 3√6 V<sub>ph</sub> / (2π)，輸出仍乘 cos α。脈波數分別為三相橋 6、三相半波 3、單相全波 2，漣波頻率就是脈波數乘電源頻率。</p>
+<p><strong>電阻負載要分段。</strong>電流在電壓過零時斷掉，積分上限提前。單相全波改為 V<sub>dc</sub> ＝ (√2 V / π) × (1 ＋ cos α)；三相半波在 α ≤ 30° 沿用連續式，30° &lt; α &lt; 150° 用 (3√2 V<sub>ph</sub> / (2π)) × (1 ＋ cos(α ＋ 30°))，其後為 0；三相橋在 α ≤ 60° 沿用連續式，60° &lt; α &lt; 120° 用 (3√2 V<sub>LL</sub> / π) × (1 ＋ cos(α ＋ 60°))，其後為 0。</p>
+<p><strong>簡化假設與模型邊界。</strong>本課用的是一階教學模型，真實電路不是這樣：假設理想 SCR、沒有換相重疊，且高電感負載的電流完全平直。交流側電感會造成重疊角與額外壓降；電阻負載必須用上述斷續公式。實務還要保留 20°–30° 換相裕度，不能把 α 推到 180°。</p>
+
+<h2>數值實例：220 V 三相全橋在 30° 觸發</h2>
+<p>取線電壓 V<sub>LL</sub> ＝ 220 V、60 Hz、α ＝ 30° 與高電感負載，這也是自由實驗的預設狀態。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>V<sub>dc0</sub></td><td>3√2 × 220 / π</td><td><strong>297.104384 V</strong></td></tr>
+<tr><td>V<sub>dc</sub></td><td>297.104384 × cos 30°</td><td><strong>257.299944 V</strong></td></tr>
+<tr><td>V<sub>dc</sub> / V<sub>dc0</sub></td><td>cos 30°</td><td><strong>86.602540 %</strong></td></tr>
+<tr><td>脈波數</td><td>6</td><td><strong>6</strong></td></tr>
+<tr><td>漣波頻率</td><td>6 × 60</td><td><strong>360 Hz</strong></td></tr>
+<tr><td>位移功因</td><td>cos 30°</td><td><strong>0.866025</strong></td></tr>
+</tbody></table>
+<p>邊界能把物理方向說得更清楚：α ＝ 0 時是 <strong>297.104384 V</strong>；90° 時是 <strong>0.000000 V</strong>；120° 的電感負載得到 <strong>−148.552192 V</strong>，電阻負載卻是 <strong>0.000000 V</strong>。同為 220 V、30°，單相全波的 V<sub>dc0</sub> 是 <strong>198.069590 V</strong>、V<sub>dc</sub> 是 <strong>171.533296 V</strong>，電阻負載為 <strong>184.801443 V</strong>；三相半波的 V<sub>dc0</sub> 是 <strong>148.552192 V</strong>、V<sub>dc</sub> 是 <strong>128.649972 V</strong>。若改成 380 V／50 Hz 三相橋，V<sub>dc0</sub> 為 <strong>513.180300 V</strong>、V<sub>dc</sub> 為 <strong>444.427177 V</strong>、漣波頻率為 300 Hz。</p>
+<p>再看分段點：三相半波電阻負載在 α ＝ 60° 時輸出 <strong>85.766648 V</strong>；三相橋電阻負載在 α ＝ 90° 時仍有 <strong>39.804440 V</strong>，因為它只保留過零前的正面積。電感負載把 α 推到 160° 則算得 <strong>−279.186798 V</strong>，但這個角度已碰到換相裕度警戒。數學能列出平均值，工程上仍須確認下一顆 SCR 有足夠時間接手，否則公式成立也不代表硬體能安全運作。</p>
+<p>功率方向要用電壓與電流一起判讀。反流區的直流電流仍朝整流橋原先定義的正方向，V<sub>dc</sub> 卻為負，所以直流側乘積 V<sub>dc</sub> × I<sub>dc</sub> 為負，表示直流源正在輸出能量。交流端則接收這份能量；若沒有可吸收功率的電網、同步條件或直流側能量來源，負平均電壓本身不會憑空建立穩定回送。</p>
+<p class="warning">相控整流器直接接市電與感性負載，關斷瞬間電感的能量會找路徑釋放；沒有續流路徑或緩衝電路就會擊穿閘流體；反流時能量回送電網，必須有同步與保護；本章只算平均值，不要據此接線。</p>
+
+<section class="workspace"><h2>自由實驗：改變觸發角，看調壓何時成為反流</h2>
+<p>選擇拓樸、電源、觸發角、頻率與負載。輸出會列出全開平均值、實際平均值、脈波與位移功因；把負載來回切換，觀察相同 α 為何可能得到負電壓或零電壓。</p>
+<div class="controls">
+<label for="r3-topo">拓樸<select id="r3-topo"><option value="t3b">三相全橋（6 顆 SCR，脈波數 6）</option><option value="t3h">三相半波（3 顆 SCR，脈波數 3）</option><option value="s1">單相全波（4 顆 SCR，脈波數 2）</option></select></label>
+<label for="r3-v">電源有效值 V（V；三相取線電壓，單相取相電壓）<input id="r3-v" type="range" min="100" max="480" step="10" value="220"></label>
+<label for="r3-alpha">觸發角 α（°）<input id="r3-alpha" type="range" min="0" max="180" step="5" value="30"></label>
+<label for="r3-f">市電頻率<select id="r3-f"><option value="60">60 Hz</option><option value="50">50 Hz</option></select></label>
+<label for="r3-load">負載<select id="r3-load"><option value="ind">高電感負載（電流連續）</option><option value="res">純電阻負載（電流可斷續）</option></select></label>
+</div>
+<div id="rect3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>α 是觸發角，不是導通角；SCR 可能持續導通 180° 或 120°，α 只決定從哪裡開始。</li>
+<li>「可控」其實是半控：控制端能觸發，不能主動關斷，關斷要靠電流過零與自然換相。</li>
+<li>V<sub>dc</sub> 為負不代表電流反向；SCR 仍讓電流維持原方向，反向的是 V × I 所代表的功率流向。</li>
+<li>三相半波的 V<sub>dc0</sub> 使用相電壓，三相橋使用線電壓；係數 1.169 與 1.350 不能直接互換。</li>
+<li>負平均電壓只是反流必要條件之一；直流側沒有馬達反電動勢或另一端電源，就沒有能量可送回。</li>
+</ul>
+
+<h2>可觀察證據：同時量觸發點、包絡與連續電流</h2>
+<p>用示波器差動探棒看輸出電壓的六脈波包絡與每次觸發點，以電流探棒確認直流側電流是否跨越換相點仍連續，再讓電力分析儀讀交流側位移功因。這些量測<strong>能證明</strong> α 與平均電壓的關係，也能數出脈波數並核對漣波頻率。</p>
+<p>上述讀值<strong>不能證明</strong>換相重疊角的大小，因為那還需要交流側電感與更細的換相波形；平均電壓為負也不能單獨證明系統穩定反流，還要量直流側電源、功率方向與保護動作。</p>
+
+<h2>連到哪門課</h2>
+<p>三相功率與功因改善的系統觀見<a href="../P1-電力系統-互動網站/index.html#threephase-title">電力系統站的三相段</a>。本章的 SCR 反流是線換式高壓直流輸電（line-commutated converter high-voltage direct current, LCC HVDC）、直流馬達再生、電解與電鍍電源的基礎；系統穩定、同步與保護屬於後續電力系統內容，諧波與功因則在 09 章處理。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-單相整流與電容濾波的代價.html">← 上一頁：單相整流與電容濾波的代價</a><a href="04-PWM與工作週期.html">下一頁：PWM 與工作週期 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 三相與相控整流：觸發角與反流</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

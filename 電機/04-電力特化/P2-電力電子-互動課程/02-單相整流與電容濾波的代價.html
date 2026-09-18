@@ -1,0 +1,77 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 單相整流：電容濾波的代價｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">02・小漣波背後有大電流</p>
+<h1>02 單相整流：電容濾波的代價</h1>
+<p class="lead">二極體橋與電容確實能把 110 V 交流變成約 150 V 直流，但預設例的漣波（ripple）之外，導通比例只有 10.513801 %，平均 1 A 的負載會抽出 9.511308 A 的窄脈衝。本章要算的正是這筆看不見的代價。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-電力電子世界觀與切換不耗能.html">00 電力電子世界觀</a>的兩種開關狀態，也知道二極體只讓電流往一個方向通。<strong>前置：</strong>見〈04 整流與濾波〉<a href="../../02-電機核心/電子學-互動課程/04-整流與濾波.html">電子學的整流與濾波</a>；半波、全波與 ΔV 公式已在那裡推導，本章只算代價。</p>
+
+<h2>痛點：電容越大，輸出越平，為什麼插座端反而更難受</h2>
+<p>如果只看直流輸出，加大電容似乎永遠有利：電壓下降得慢，漣波變小。然而二極體只有在交流瞬時電壓高於電容電壓時才會導通；電容撐得越久，允許補充電荷的時間就越短。負載一整段時間拿走的電荷，最後被擠進峰值附近的一小段，輸入端因此承受窄而高的脈衝。</p>
+<p>這不只是元件會不會燙的問題。輸入電流有效值上升後，導線、保險絲與二極體都要按較大的電流選型，視在功率也增加。中大功率電源因此加入功率因數修正（power factor correction, PFC），用主動級把取電攤開，而非只把輸出端修得漂亮。</p>
+
+<h2>白話直覺：電容只在峰值附近補貨</h2>
+<p>可以暫時把電容想成每秒只集中寫入幾次的大緩衝區，每次都塞滿通道；比喻到此為止，真實機制是電壓比較與閉合回路。以全波橋為例，交流源以中性點為參考；接近正、負半週峰值時，各有一對二極體導通，形成交流源、二極體、電容與負載的閉合回路。交流源同時供應負載並替電容補回電荷；離開峰值後，源電壓低於電容電壓，二極體反向截止，回路改由電容單獨向負載放電。</p>
+<p>能量於是先從交流源集中進入電容，再於兩個峰值之間流向負載。輸出電壓只緩慢下降，輸入電流卻集中成脈衝；電流探棒會看到尖峰，示波器交流耦合會看到直流上的鋸齒狀變化。半波每個交流週期補一次，全波橋式每半週期補一次，所以全波的漣波頻率是 2f，但導通時還要扣掉兩顆二極體的壓降。</p>
+<p>這件事在你的程式裡長什麼樣：先累積整段負載需求，再在很窄的可用時間窗內集中處理，平均吞吐量不變，峰值資源卻暴增。</p>
+<p class="note">來源：P2-電力電子（上）§2.1、§2.3。</p>
+
+<h2>推導：從峰值、放電量一路算到功因</h2>
+<p><strong>第一步是峰值。</strong>有效值 V<sub>rms</sub> 的弦波峰值為 √2 × V<sub>rms</sub>。若每顆二極體採固定壓降 V<sub>d</sub>，便有 V<sub>pk</sub> ＝ √2 × V<sub>rms</sub> − n<sub>d</sub> × V<sub>d</sub>；n<sub>d</sub> 是導通路徑上的二極體數，全波為 2、半波為 1，V<sub>pk</sub> 與 V<sub>rms</sub> 的單位都是 V。</p>
+<p><strong>第二步引用既有課的放電結論。</strong>ΔV ＝ I<sub>o</sub> / (f<sub>r</sub> × C)，I<sub>o</sub> 是負載電流 A，f<sub>r</sub> 是補充頻率 Hz，C 是電容量 F，ΔV 是 V。這裡把放電時間取成整個漣波週期，因此會略高估下降量；當 ΔV ≥ V<sub>pk</sub>，電容會在下一個峰值前放光，公式失效。</p>
+<p><strong>第三步找導通時間。</strong>放電末端電容約為 V<sub>pk</sub> − ΔV；電源重新追上它時滿足 V<sub>pk</sub> sin(ωt) ＝ V<sub>pk</sub> − ΔV。從交點到 90° 峰值的導通角（conduction angle）為 θ<sub>c</sub> ＝ arccos(1 − ΔV / V<sub>pk</sub>)。θ<sub>c</sub> 的單位是 °；全波導通比例 k ＝ θ<sub>c</sub> / 180°，半波則除以 360°。</p>
+<p><strong>第四步守住電荷。</strong>負載每段時間拿走的電荷必須在導通窗補回，故脈衝期間平均電流 I<sub>p</sub> ＝ I<sub>o</sub> / k。把脈衝近似為矩形，可得 I<sub>rms</sub> ＝ I<sub>o</sub> / √k，功因約為 (V<sub>dc</sub> × I<sub>o</sub>) / (V<sub>rms</sub> × I<sub>rms</sub>)，電容漣波電流 I<sub>C,rms</sub> ＝ √(I<sub>rms</sub>² − I<sub>o</sub>²)。電流單位都是 A，功因與 k 無單位。</p>
+<p><strong>簡化假設與模型邊界。</strong>本課用的是一階教學模型，真實電路不是這樣：線性放電忽略弦波斜率，矩形脈衝會高估尖峰、低估功因，真實脈衝是圓弧狀，功因多落在 0.5–0.7。本模型算出的功因是偏低估計，不是實機保證值。</p>
+
+<h2>數值實例：110 V 全波橋與 1000 µF 電容</h2>
+<p>固定 V<sub>rms</sub> ＝ 110 V、60 Hz、C ＝ 1000 µF、I<sub>o</sub> ＝ 1 A、V<sub>d</sub> ＝ 0.7 V，與自由實驗預設值完全相同。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>峰值 V<sub>pk</sub></td><td>√2 × 110 − 2 × 0.7</td><td><strong>154.163492 V</strong></td></tr>
+<tr><td>漣波頻率 f<sub>r</sub></td><td>2 × 60</td><td><strong>120 Hz</strong></td></tr>
+<tr><td>漣波 ΔV</td><td>1 / (120 × 0.001)</td><td><strong>8.333333 V</strong></td></tr>
+<tr><td>直流平均 V<sub>dc</sub></td><td>154.163492 − 8.333333 / 2</td><td><strong>149.996825 V</strong></td></tr>
+<tr><td>漣波百分比</td><td>8.333333 / 154.163492</td><td><strong>5.405517 %</strong></td></tr>
+<tr><td>導通角 θ<sub>c</sub></td><td>arccos(1 − 8.333333 / 154.163492)</td><td><strong>18.924841°</strong></td></tr>
+<tr><td>導通比例 k</td><td>18.924841 / 180</td><td><strong>10.513801 %</strong></td></tr>
+<tr><td>脈衝平均電流 I<sub>p</sub></td><td>1 / 0.105138</td><td><strong>9.511308 A</strong></td></tr>
+<tr><td>輸入電流有效值</td><td>1 / √0.105138</td><td><strong>3.084041 A</strong></td></tr>
+<tr><td>功因估計</td><td>(149.996825 × 1) / (110 × 3.084041)</td><td><strong>0.442150</strong></td></tr>
+<tr><td>電容漣波電流</td><td>√(3.084041² − 1²)</td><td><strong>2.917415 A</strong></td></tr>
+</tbody></table>
+<p>把 C 提到 4700 µF，ΔV 變成 <strong>1.773050 V</strong>，漣波降到 <strong>1.150110 %</strong>，但導通角縮為 <strong>8.698101°</strong>、脈衝電流升至 <strong>20.694173 A</strong>，功因估計只剩 <strong>0.306309</strong>。反過來用 100 µF，ΔV 是 <strong>83.333333 V</strong>、漣波 <strong>54.055167 %</strong>、導通角 <strong>62.648485°</strong>、功因估計 <strong>0.603346</strong>。若 100 µF 還要供 5 A，ΔV 會是 <strong>416.666667 V</strong>，已超過 V<sub>pk</sub>，模型失效。</p>
+<p>拓樸與頻率也會移動結果。相同元件改成半波後，ΔV 為 <strong>16.666667 V</strong>、V<sub>dc</sub> 為 <strong>146.530159 V</strong>、導通角 <strong>26.826354°</strong>、導通比例 <strong>7.451765 %</strong>；全波若從 60 Hz 改為 50 Hz，ΔV 變成 <strong>10.000000 V</strong>。負載提高到 5 A 時，ΔV 是 <strong>41.666667 V</strong>、脈衝電流 <strong>20.863893 A</strong>。這些對照顯示 C、f<sub>r</sub> 與 I<sub>o</sub> 都先改變放電量，再透過交點改變導通窗，不能只看其中一個旋鈕。</p>
+<p class="warning">市電整流後的電容儲存 ½ C V² 的能量（1000 µF 在 150 V 是 11.25 J），斷電後仍可致命；量測前先確認放電，示波器探棒接地端不可直接接在市電整流電路上（會短路），要用隔離變壓器或差動探棒。</p>
+
+<section class="workspace"><h2>自由實驗：漣波變小時，輸入脈衝付出多少代價</h2>
+<p>設定單相整流型式、電壓、頻率、電容、負載與二極體壓降。輸出會比較電壓品質、導通時間、電流與功因；請特別把電容推到兩端，觀察「更平」是否等於「整體更好」。</p>
+<div class="controls">
+<label for="r1-topo">整流型式<select id="r1-topo"><option value="full">全波橋式（4 顆二極體，漣波 2f）</option><option value="half">半波（1 顆二極體，漣波 f）</option></select></label>
+<label for="r1-vrms">交流有效值 V_rms（V）<input id="r1-vrms" type="range" min="6" max="240" step="1" value="110"></label>
+<label for="r1-f">市電頻率<select id="r1-f"><option value="60">60 Hz</option><option value="50">50 Hz</option></select></label>
+<label for="r1-c">濾波電容 C（µF）<input id="r1-c" type="range" min="100" max="4700" step="100" value="1000"></label>
+<label for="r1-io">負載電流 I_o（A）<input id="r1-io" type="range" min="0.1" max="5" step="0.1" value="1"></label>
+<label for="r1-vd">每顆二極體壓降 V_d（V）<input id="r1-vd" type="range" min="0" max="1" step="0.1" value="0.7"></label>
+</div>
+<div id="rect1-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>漣波小不等於好電源；輸出端變平的代價可能是導通角更窄、尖峰更高、功因更低。</li>
+<li>這裡功因低的主因不是基波相位差，而是諧波把視在功率撐大；09 章會拆開位移功因與真功因。</li>
+<li>電容漣波電流是電容的額定項，描述元件承受的交流電流，不是輸出漣波電壓。</li>
+<li>半波與全波不只差在補充頻率；前者導通路徑一顆二極體，後者同時經過兩顆，峰值扣除量不同。</li>
+<li>矩形近似給的是教學量級，不能拿 9.511308 A 當成實機的精確尖峰規格。</li>
+</ul>
+
+<h2>可觀察證據：用三種儀器分別看電壓、電流與功因</h2>
+<p>以電流探棒看交流輸入，可直接量脈衝的寬度與尖峰；示波器用交流耦合看輸出，可量到峰值間的漣波；電力分析儀則可讀功因與總諧波失真（total harmonic distortion, THD）。這些量測<strong>能證明</strong>取電確實集中於峰值附近，也能確認功因的量級。</p>
+<p>它們<strong>不能證明</strong>本章矩形近似算出的 0.442150 就是實機精確值，因為真實源阻抗、二極體動態與波形曲率都被省略；只看總功因也不能分辨問題來自相位還是諧波，必須做 09 章的分解。</p>
+
+<h2>連到哪門課</h2>
+<p>二極體 0.7 V 定壓模型的由來見<a href="../../02-電機核心/電子學-互動課程/03-二極體工作點與模型.html">電子學的二極體工作點與模型</a>；本章不重推二極體方程。PFC 常用的 Boost 升壓級在 06 章，THD 與真功因在 09 章。這套前級可見於筆電電源與家電變頻器，但市電端的安規、突入電流限制與電磁相容仍需另行設計。</p>
+<nav class="pager" aria-label="章節導覽"><a href="01-功率開關與兩種損耗.html">← 上一頁：功率開關與兩種損耗</a><a href="03-三相與相控整流.html">下一頁：三相與相控整流 →</a></nav>
+</main>
+<footer class="site-footer"><span>02 單相整流：電容濾波的代價</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

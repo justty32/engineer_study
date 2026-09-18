@@ -1,0 +1,266 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜馬達驅動與控制</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">檢・12 章各 3 題，共 36 題</p>
+<h1>自我檢核：把每一章的關鍵數字與判斷各檢查一次</h1>
+<p class="lead">每一題都取自對應章節出現過的數字或結論，沒有新的題型，也不設陷阱。填完按「對答案」，回饋會說明原因，並指出可以回去複習的章節。</p>
+<p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯不會擋住後續內容，所有題目都可以無限重做。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 驅動器世界觀與轉矩夾角</h2>
+<p>回去看：<a href="00-驅動器世界觀與轉矩夾角.html">00 驅動器世界觀與轉矩夾角</a></p>
+<section class="card">
+<p><strong>q00-1｜</strong>K<sub>t</sub> = 0.500000、I = 10.000000 A、γ = 60.000000°，轉矩是多少？</p>
+<label for="q00-1">你的答案（N·m）<input id="q00-1" type="number" step="any"></label>
+<button type="button" id="q00-1-check">對答案</button>
+<div id="q00-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q00-2｜</strong>六步換相的平均轉矩係數 3 / π 是多少？</p>
+<label for="q00-2">你的答案（無單位）<input id="q00-2" type="number" step="any"></label>
+<button type="button" id="q00-2-check">對答案</button>
+<div id="q00-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q00-3｜</strong>γ = 0° 時為什麼沒有轉矩？</p>
+<label for="q00-3">你的答案<select id="q00-3"><option value="">請選擇</option><option value="a">電壓只會決定轉矩，與電流無關</option><option value="b">兩磁場對齊，只剩徑向拉力</option><option value="c">γ 是機械角，所以要先乘極對數</option><option value="d">六步換相的理想平均係數此時仍是 95.493 %</option></select></label>
+<button type="button" id="q00-3-check">對答案</button>
+<div id="q00-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>01 H 橋與平均電壓</h2>
+<p>回去看：<a href="01-H橋與平均電壓.html">01 H 橋與平均電壓</a></p>
+<section class="card">
+<p><strong>q01-1｜</strong>V<sub>dc</sub> = 24.000000 V、D = 0.750000，使用單極性切換時 V<sub>avg</sub> 是多少？</p>
+<label for="q01-1">你的答案（V）<input id="q01-1" type="number" step="any"></label>
+<button type="button" id="q01-1-check">對答案</button>
+<div id="q01-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q01-2｜</strong>V<sub>avg</sub> = 18.000000 V、E = 10.471976 V、R = 1.000000 Ω，電流 I 是多少？</p>
+<label for="q01-2">你的答案（A）<input id="q01-2" type="number" step="any"></label>
+<button type="button" id="q01-2-check">對答案</button>
+<div id="q01-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q01-3｜</strong>轉速升到 2500 rpm 後電流變負，代表什麼？</p>
+<label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">工作週期只決定電流，與平均電壓無關</option><option value="b">動態煞車，能量全燒在繞組電阻</option><option value="c">再生煞車，能量回直流鏈</option><option value="d">漣波方向改變，所以平均電流必定為零</option></select></label>
+<button type="button" id="q01-3-check">對答案</button>
+<div id="q01-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>02 電流迴路 PI 設計</h2>
+<p>回去看：<a href="02-電流迴路PI設計.html">02 電流迴路 PI 設計</a></p>
+<section class="card">
+<p><strong>q02-1｜</strong>L = 2.000000 mH、f<sub>c</sub> = 500.000000 Hz，K<sub>p</sub> 是多少？</p>
+<label for="q02-1">你的答案（V/A）<input id="q02-1" type="number" step="any"></label>
+<button type="button" id="q02-1-check">對答案</button>
+<div id="q02-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q02-2｜</strong>f<sub>pwm</sub> = 20.000000 kHz、f<sub>c</sub> = 500.000000 Hz，延遲造成的相位是多少？</p>
+<label for="q02-2">你的答案（°）<input id="q02-2" type="number" step="any"></label>
+<button type="button" id="q02-2-check">對答案</button>
+<div id="q02-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q02-3｜</strong>PI 零點放在 R / L 的目的是什麼？</p>
+<label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">抵消受控體極點，閉迴路成一階</option><option value="b">抵消取樣延遲，讓延遲完全消失</option><option value="c">讓 K_p 與 K_i 成為同一個旋鈕</option><option value="d">把頻寬推得越高，效果必定越好</option></select></label>
+<button type="button" id="q02-3-check">對答案</button>
+<div id="q02-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>03 速度與位置迴路串級</h2>
+<p>回去看：<a href="03-速度與位置迴路串級.html">03 速度與位置迴路串級</a></p>
+<section class="card">
+<p><strong>q03-1｜</strong>ω<sub>c</sub> = 3141.592654 rad/s、N = 10.000000，ω<sub>s</sub> 是多少？</p>
+<label for="q03-1">你的答案（rad/s）<input id="q03-1" type="number" step="any"></label>
+<button type="button" id="q03-1-check">對答案</button>
+<div id="q03-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q03-2｜</strong>J = 0.010000、ω<sub>s</sub> = 314.159265 rad/s，速度 K<sub>p</sub> 是多少？</p>
+<label for="q03-2">你的答案（無單位）<input id="q03-2" type="number" step="any"></label>
+<button type="button" id="q03-2-check">對答案</button>
+<div id="q03-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q03-3｜</strong>N = 1 時超越量為 24.622 %，原因是什麼？</p>
+<label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">頻寬分離只看絕對值，與倍數無關</option><option value="b">超越量是固定的物理定律</option><option value="c">掉速深淺只看超越量，與 J × ω_s 無關</option><option value="d">內迴路落後滲入外迴路，是結構問題不是 PI 調錯</option></select></label>
+<button type="button" id="q03-3-check">對答案</button>
+<div id="q03-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>04 步進馬達與微步</h2>
+<p>回去看：<a href="04-步進馬達與微步.html">04 步進馬達與微步</a></p>
+<section class="card">
+<p><strong>q04-1｜</strong>每圈 200.000000 步、m = 16.000000，微步角是多少？</p>
+<label for="q04-1">你的答案（°）<input id="q04-1" type="number" step="any"></label>
+<button type="button" id="q04-1-check">對答案</button>
+<div id="q04-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q04-2｜</strong>T<sub>h</sub> = 0.400000 N·m、m = 16.000000，微步增量轉矩是多少？</p>
+<label for="q04-2">你的答案（N·m）<input id="q04-2" type="number" step="any"></label>
+<button type="button" id="q04-2-check">對答案</button>
+<div id="q04-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q04-3｜</strong>負載 0.1 N·m 下把 m 從 16 改為 256，靜態偏移怎麼變？</p>
+<label for="q04-3">你的答案<select id="q04-3"><option value="">請選擇</option><option value="a">微步解析度提高，定位精度就等比例提高</option><option value="b">偏移的微步數變多、機械角不變</option><option value="c">保持轉矩在轉動時仍固定不變</option><option value="d">轉折速度只由反電動勢等於電源決定</option></select></label>
+<button type="button" id="q04-3-check">對答案</button>
+<div id="q04-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>05 BLDC 六步換相與霍爾</h2>
+<p>回去看：<a href="05-BLDC六步換相與霍爾.html">05 BLDC 六步換相與霍爾</a></p>
+<section class="card">
+<p><strong>q05-1｜</strong>θ = 100.000000° 時，霍爾碼是哪一個？</p>
+<label for="q05-1">你的答案<select id="q05-1"><option value="">請選擇</option><option value="a">100，把機械角直接當成電氣角</option><option value="b">011，把六步扇區當成連續旋轉向量</option><option value="c">010</option><option value="d">110，把霍爾碼當成速度讀值</option></select></label>
+<button type="button" id="q05-1-check">對答案</button>
+<div id="q05-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q05-2｜</strong>霍爾偏移 30.000000° 時，平均轉矩係數是多少？</p>
+<label for="q05-2">你的答案（無單位）<input id="q05-2" type="number" step="any"></label>
+<button type="button" id="q05-2-check">對答案</button>
+<div id="q05-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q05-3｜</strong>霍爾碼從 100 直接跳到 011，代表什麼？</p>
+<label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">兩個位元同時變，接線或感測器錯</option><option value="b">這是每 60° 一格的正常位置量化</option><option value="c">霍爾碼本來就是精密速度讀值</option><option value="d">方波與正弦驅動必須使用不同馬達本體</option></select></label>
+<button type="button" id="q05-3-check">對答案</button>
+<div id="q05-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>06 感應機 V/f 純量控制</h2>
+<p>回去看：<a href="06-感應機Vf純量控制.html">06 感應機 V/f 純量控制</a></p>
+<section class="card">
+<p><strong>q06-1｜</strong>f = 30.000000 Hz、V<sub>0</sub> = 3.000000 V，端電壓是多少？</p>
+<label for="q06-1">你的答案（V）<input id="q06-1" type="number" step="any"></label>
+<button type="button" id="q06-1-check">對答案</button>
+<div id="q06-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q06-2｜</strong>Φ<sub>r</sub>² = 1.028102、負載 = 0.500000，滑差轉速是多少？</p>
+<label for="q06-2">你的答案（rpm）<input id="q06-2" type="number" step="any"></label>
+<button type="button" id="q06-2-check">對答案</button>
+<div id="q06-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q06-3｜</strong>f = 90 Hz 時拉出轉矩降到 1.137 倍，原因是什麼？</p>
+<label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">V/f 定值本身就是控制目的，不必考慮磁通</option><option value="b">補償電壓不受負載影響，任何負載都同樣正確</option><option value="c">弱磁區轉矩下降表示驅動器已故障</option><option value="d">電壓封頂，磁通 ∝ 1/f，轉矩 ∝ 1/f²</option></select></label>
+<button type="button" id="q06-3-check">對答案</button>
+<div id="q06-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>07 Clarke 與 Park 轉換</h2>
+<p>回去看：<a href="07-Clarke與Park轉換.html">07 Clarke 與 Park 轉換</a></p>
+<section class="card">
+<p><strong>q07-1｜</strong>I<sub>m</sub> = 10.000000 A、φ = 90.000000°、δ = 10.000000°，i<sub>q</sub> 是多少？</p>
+<label for="q07-1">你的答案（A）<input id="q07-1" type="number" step="any"></label>
+<button type="button" id="q07-1-check">對答案</button>
+<div id="q07-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q07-2｜</strong>δ = 45.000000° 時，轉矩損失是多少？</p>
+<label for="q07-2">你的答案（%）<input id="q07-2" type="number" step="any"></label>
+<button type="button" id="q07-2-check">對答案</button>
+<div id="q07-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q07-3｜</strong>拉動 θ 時三相數值在變、dq 數值卻不變，原因是什麼？</p>
+<label for="q07-3">你的答案<select id="q07-3"><option value="">請選擇</option><option value="a">Clarke 與 Park 都完全不需要角度</option><option value="b">Park 用同一個 θ 把座標一起轉，θ 消掉</option><option value="c">馬達裡真的有 d 相與 q 相兩組繞組</option><option value="d">所有 Clarke 寫法的振幅係數都相同</option></select></label>
+<button type="button" id="q07-3-check">對答案</button>
+<div id="q07-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>08 dq 電壓方程與弱磁</h2>
+<p>回去看：<a href="08-dq電壓方程與弱磁.html">08 dq 電壓方程與弱磁</a></p>
+<section class="card">
+<p><strong>q08-1｜</strong>V<sub>dc</sub> = 300.000000 V 時，線性區相電壓上限是多少？</p>
+<label for="q08-1">你的答案（V）<input id="q08-1" type="number" step="any"></label>
+<button type="button" id="q08-1-check">對答案</button>
+<div id="q08-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q08-2｜</strong>ω<sub>e</sub> = 1256.637061 rad/s、ψ<sub>f</sub> = 0.100000，反電動勢是多少？</p>
+<label for="q08-2">你的答案（V）<input id="q08-2" type="number" step="any"></label>
+<button type="button" id="q08-2-check">對答案</button>
+<div id="q08-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q08-3｜</strong>注入負 i<sub>d</sub> 為什麼能提高基速？</p>
+<label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">負 i_d 會直接把永磁體完全消磁</option><option value="b">基速只由馬達決定，與直流鏈及電流無關</option><option value="c">d 軸磁鏈變小，v_q 的 ω_e(L_d i_d + ψ_f) 變小</option><option value="d">表面式與內藏式馬達的 MTPA 永遠都是 i_d = 0</option></select></label>
+<button type="button" id="q08-3-check">對答案</button>
+<div id="q08-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>09 SVPWM 扇區與作用時間</h2>
+<p>回去看：<a href="09-SVPWM扇區與作用時間.html">09 SVPWM 扇區與作用時間</a></p>
+<section class="card">
+<p><strong>q09-1｜</strong>V<sub>ref</sub> = 100.000000 V、α = 20.000000°、V<sub>dc</sub> = 300.000000 V、T<sub>s</sub> = 100.000000 µs，T<sub>1</sub> 是多少？</p>
+<label for="q09-1">你的答案（µs）<input id="q09-1" type="number" step="any"></label>
+<button type="button" id="q09-1-check">對答案</button>
+<div id="q09-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q09-2｜</strong>α = 200.000000° 時，扇區號是多少？</p>
+<label for="q09-2">你的答案（無單位）<input id="q09-2" type="number" step="any"></label>
+<button type="button" id="q09-2-check">對答案</button>
+<div id="q09-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q09-3｜</strong>SVPWM 比 SPWM 多 15.47 % 的來源是什麼？</p>
+<label for="q09-3">你的答案<select id="q09-3"><option value="">請選擇</option><option value="a">線性區上限 V_dc/√3 對 V_dc/2</option><option value="b">V_dc / √3 是線電壓上限</option><option value="c">工作週期 0.5 就代表一半相電壓</option><option value="d">這 15.47 % 是整台驅動器的效率增幅</option></select></label>
+<button type="button" id="q09-3-check">對答案</button>
+<div id="q09-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>10 編碼器與速度估測</h2>
+<p>回去看：<a href="10-編碼器與速度估測.html">10 編碼器與速度估測</a></p>
+<section class="card">
+<p><strong>q10-1｜</strong>N = 1000.000000 線、T<sub>s</sub> = 1.000000 ms，M 法量化步距是多少？</p>
+<label for="q10-1">你的答案（rpm）<input id="q10-1" type="number" step="any"></label>
+<button type="button" id="q10-1-check">對答案</button>
+<div id="q10-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q10-2｜</strong>N = 1000.000000 線、轉速 300.000000 rpm、f<sub>clk</sub> = 10.000000 MHz，T 法得到多少個 tick？</p>
+<label for="q10-2">你的答案（tick）<input id="q10-2" type="number" step="any"></label>
+<button type="button" id="q10-2-check">對答案</button>
+<div id="q10-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q10-3｜</strong>轉速 300 rpm 時該用哪一法？</p>
+<label for="q10-3">你的答案<select id="q10-3"><option value="">請選擇</option><option value="a">M 法，因為 M 法在慢速時量化誤差最小</option><option value="b">T 法，因為低於交叉速度 1500 rpm</option><option value="c">任選一法，因為線數 N 與計數 4N 相同</option><option value="d">霍爾法，因為 60° 一格等同高線數編碼器</option></select></label>
+<button type="button" id="q10-3-check">對答案</button>
+<div id="q10-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>11 再生煞車與能量</h2>
+<p>回去看：<a href="11-再生煞車與能量.html">11 再生煞車與能量</a></p>
+<section class="card">
+<p><strong>q11-1｜</strong>J = 0.050000、從 3000.000000 rpm 煞停，動能是多少？</p>
+<label for="q11-1">你的答案（J）<input id="q11-1" type="number" step="any"></label>
+<button type="button" id="q11-1-check">對答案</button>
+<div id="q11-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q11-2｜</strong>C = 1000.000000 µF，電壓從 300.000000 V 升到 380.000000 V，電容能吸收多少能量？</p>
+<label for="q11-2">你的答案（J）<input id="q11-2" type="number" step="any"></label>
+<button type="button" id="q11-2-check">對答案</button>
+<div id="q11-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q11-3｜</strong>電阻 20 Ω 在 380 V 時為 7220 W，且大於或等於峰值 2220.66 W，代表什麼？</p>
+<label for="q11-3">你的答案<select id="q11-3"><option value="">請選擇</option><option value="a">所有再生能量都會長期儲存在電容</option><option value="b">煞車方式會直接決定所需煞車轉矩</option><option value="c">回收效率 η 就等於馬達本身的效率</option><option value="d">斬波器撐得住峰值功率</option></select></label>
+<button type="button" id="q11-3-check">對答案</button>
+<div id="q11-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

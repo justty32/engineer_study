@@ -1,0 +1,78 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 PWM 與工作週期｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・兩種電壓狀態做出可調平均值</p>
+<h1>04 PWM 與工作週期</h1>
+<p class="lead">12 V 開關節點只會是 0 V 或 12 V，卻能用 0.420000 的工作週期（duty cycle, D）得到 5.040000 V 平均值。若計數時脈為 100 MHz、切換頻率為 200 kHz，每週期只有 500 步，最小電壓步階是 24.000000 mV。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-電力電子世界觀與切換不耗能.html">00 電力電子世界觀</a>的開關導通與關斷兩種狀態。<strong>前置：</strong>見〈07 一階暫態 RC 與 RL〉<a href="../../02-電機核心/電路學-互動課程/07-一階暫態RC與RL.html">電路學的一階暫態 RC 與 RL</a>；為什麼時間常數遠大於切換週期時只剩平均值已在那裡推導。</p>
+
+<h2>痛點：開關只有開與關，怎麼輸出介於兩者之間的電壓</h2>
+<p>功率開關不適合長時間停在半開狀態，因為同時承受明顯電壓與電流會發熱；它最擅長的是快速切到全開或全關。問題是負載往往需要 5 V、6 V，甚至隨時間變動的目標，不會剛好等於輸入或零。</p>
+<p>解法不是要求開關製造中間電壓，而是控制每個切換週期裡「開多久」。負載端的電感與電容把快速矩形波的高頻變化壓低，只留下由面積決定的慢速平均。這也帶來另一個問題：控制器只能按時脈格點安排導通時間，所以平均值不是完全連續，而是一階一階地跳。</p>
+
+<h2>白話直覺：工作週期控制每一週期的電壓面積</h2>
+<p>可以暫時把每個切換週期想成固定大小的格子，導通只是把其中一部分塗滿；比喻到此為止，精確機制是比較器、功率回路與濾波。脈寬調變（pulse-width modulation, PWM）將高頻三角載波（carrier）與調變訊號（modulating signal）v<sub>m</sub> 比較；當 v<sub>m</sub> 大於載波，驅動開關導通，反之關斷。載波峰值取 1 時，導通時間比例就是 D ＝ v<sub>m</sub>。</p>
+<p>以輸入負端為參考，開關導通時電源經開關把能量送進濾波器與負載，節點為 V<sub>in</sub>；關斷時主開關路徑中止，續流路徑維持電感電流，節點回到 0。電感與電容的時間常數遠大於 T<sub>sw</sub> 時，電流與輸出電壓只在一週期內小幅變化。示波器在開關節點量到 0 與 V<sub>in</sub> 的矩形波，濾波後才量到接近 D × V<sub>in</sub> 的電壓。</p>
+<p>這件事在你的程式裡長什麼樣：週期暫存器決定一輪有幾個時脈，比較暫存器決定前幾格輸出導通；兩者的比值就是可達的 D。</p>
+<p class="note">來源：P2-電力電子（下）§6.1、§8.4。</p>
+
+<h2>推導：從三角波比較走到數位解析度</h2>
+<p><strong>比較器先決定 D。</strong>對稱三角波從 1 線性降到 0，再升回 1。水平的 v<sub>m</sub> 與兩條斜邊相交；由相似三角形可知，v<sub>m</sub> 大於載波的總時間佔比恰為 v<sub>m</sub>。因此載波峰值為 1 時 D ＝ v<sub>m</sub>，D 沒有單位，範圍為 0 到 1。</p>
+<p><strong>面積給出平均值。</strong>切換週期 T<sub>sw</sub> ＝ 1 / f<sub>sw</sub>，導通時間 t<sub>on</sub> ＝ D × T<sub>sw</sub>。一週期的平均 V<sub>avg</sub> ＝ (1 / T<sub>sw</sub>) × (V<sub>in</sub> × t<sub>on</sub> ＋ 0 × (T<sub>sw</sub> − t<sub>on</sub>)) ＝ D × V<sub>in</sub>。f<sub>sw</sub> 單位為 Hz，時間可用 s 或 µs，電壓單位為 V。</p>
+<p><strong>八格取樣顯示粗解析度。</strong>一週期取 c<sub>k</sub> ＝ [1, 0.75, 0.5, 0.25, 0, 0.25, 0.5, 0.75]，逐格檢查 v<sub>m</sub> &gt; c<sub>k</sub>。導通格數除以 8 得粗略 D；八格只能以 0.125 為單位變動，因此它是解析度示範，不是連續波形的精確積分。</p>
+<p><strong>數位計數器也有同樣限制。</strong>N ＝ ⌊f<sub>clk</sub> / f<sub>sw</sub>⌋ 是每週期可用步數，ΔD ＝ 1 / N，ΔV ＝ V<sub>in</sub> / N，等效位元數為 log₂ N。要求的 D 先乘 N、四捨五入成整數，再除以 N，才是可達值。f<sub>clk</sub> 與 f<sub>sw</sub> 都用 Hz，N 與位元數無單位，ΔV 用 V。</p>
+<p><strong>簡化假設與模型邊界。</strong>本課用的是一階教學模型，真實電路不是這樣：假設比較器與驅動沒有延遲、開關瞬間切換、載波峰值固定為 1，也假設後級濾波器足夠慢。真實系統還有死區、傳播延遲、導通壓降與有限漣波；直接把矩形波接到電阻上，只會得到脈衝功率，不能把每一瞬間都當作平均電壓。</p>
+
+<h2>數值實例：12 V、0.42 與 500 個計數步階</h2>
+<p>令 V<sub>in</sub> ＝ 12 V、v<sub>m</sub> ＝ 0.42、f<sub>sw</sub> ＝ 200 kHz、f<sub>clk</sub> ＝ 100 MHz，與自由實驗預設完全一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>工作週期 D</td><td>0.42 / 1</td><td><strong>0.420000</strong></td></tr>
+<tr><td>切換週期 T<sub>sw</sub></td><td>1 / 200 kHz</td><td><strong>5.000000 µs</strong></td></tr>
+<tr><td>導通時間 t<sub>on</sub></td><td>0.42 × 5 µs</td><td><strong>2.100000 µs</strong></td></tr>
+<tr><td>平均電壓</td><td>0.42 × 12</td><td><strong>5.040000 V</strong></td></tr>
+<tr><td>八格取樣導通格數</td><td>v<sub>m</sub> &gt; c<sub>k</sub> 於 k ＝ 3、4、5</td><td><strong>3 格（D ≈ 0.375000）</strong></td></tr>
+<tr><td>步數 N</td><td>100 MHz / 200 kHz</td><td><strong>500</strong></td></tr>
+<tr><td>位元數</td><td>log₂ 500</td><td><strong>8.965784</strong></td></tr>
+<tr><td>最小 D 步階</td><td>1 / 500</td><td><strong>0.200000 %</strong></td></tr>
+<tr><td>最小電壓步階</td><td>12 / 500</td><td><strong>24.000000 mV</strong></td></tr>
+<tr><td>可達 D</td><td>round(0.42 × 500) / 500</td><td><strong>0.420000（誤差 0.000000 mV）</strong></td></tr>
+</tbody></table>
+<table><thead><tr><th>格 k</th><th>載波 c_k</th><th>開關</th></tr></thead><tbody>
+<tr><td>0</td><td>1</td><td>關斷</td></tr><tr><td>1</td><td>0.75</td><td>關斷</td></tr><tr><td>2</td><td>0.5</td><td>關斷</td></tr><tr><td>3</td><td>0.25</td><td>導通</td></tr><tr><td>4</td><td>0</td><td>導通</td></tr><tr><td>5</td><td>0.25</td><td>導通</td></tr><tr><td>6</td><td>0.5</td><td>關斷</td></tr><tr><td>7</td><td>0.75</td><td>關斷</td></tr>
+</tbody></table>
+<p>當 f<sub>clk</sub> ＝ 48 MHz、f<sub>sw</sub> ＝ 1 MHz 時，N 只有 <strong>48</strong>，位元數 <strong>5.584963</strong>，電壓步階 <strong>250.000000 mV</strong>，可達 D 為 <strong>0.416667</strong>，誤差 <strong>−40.000000 mV</strong>。改用 1 GHz 時脈則有 <strong>5000</strong> 步，步階縮到 <strong>2.400000 mV</strong>。v<sub>m</sub> ＝ 0.333 時，可達 D 為 <strong>0.332000</strong>，誤差 <strong>−12.000000 mV</strong>。</p>
+<p>命令的兩端也要單獨看。v<sub>m</sub> ＝ 0 時，開關永遠關斷，平均為 0；v<sub>m</sub> ＝ 1 時，連續時間模型是永遠導通、平均 12 V，但八格表只有 7 格導通，因為 c<sub>0</sub> ＝ 1 不滿足嚴格的「大於」。這不是物理矛盾，而是有限取樣點與比較規則造成的離散誤差。</p>
+<p>另一個設計點是 48 V、500 kHz、48 MHz。此時只有 <strong>96</strong> 步，最小電壓步階達 <strong>500.000000 mV</strong>，在同樣比例命令下誤差可到 <strong>−160.000000 mV</strong>。這說明提高切換頻率會縮短磁性元件可反應的時間，卻同時犧牲控制解析度；若負載要求很細的低電壓調整，設計者必須提高 f<sub>clk</sub>、採高解析 PWM 模組，或接受極限循環。</p>
+<p>解析度不足時，控制迴路算出的理想 D 常落在兩個可達值之間。控制器這一拍選低一步、下一拍又修正到高一步，輸出便在兩個相鄰電壓階間往返。這種行為稱為極限循環；它不是計算公式錯誤，而是致動器只能輸出離散時間格點。觀察時要同時記錄比較值與濾波後電壓，才能把量化與負載擾動分開。</p>
+
+<section class="workspace"><h2>自由實驗：切換頻率與解析度共用同一份時脈預算</h2>
+<p>調整輸入電壓、比例命令、切換頻率與計數時脈。輸出會同時列出八格比較結果與實際計數解析度；把切換頻率拉高，再看可用步數如何下降。</p>
+<div class="controls">
+<label for="pw-vin">輸入電壓 V_in（V）<input id="pw-vin" type="range" min="5" max="48" step="1" value="12"></label>
+<label for="pw-vm">調變訊號 v_m（載波峰值 ＝ 1）<input id="pw-vm" type="range" min="0" max="1" step="0.01" value="0.42"></label>
+<label for="pw-fsw">切換頻率 f_sw（kHz）<input id="pw-fsw" type="range" min="10" max="1000" step="10" value="200"></label>
+<label for="pw-fclk">PWM 計數時脈 f_clk<select id="pw-fclk"><option value="100">100 MHz</option><option value="48">48 MHz</option><option value="250">250 MHz</option><option value="1000">1 GHz（高解析 PWM 模組）</option></select></label>
+</div>
+<div id="pwm-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>D 不是電壓，而是 0 到 1 的時間比例；只有乘上 V<sub>in</sub> 後才得到平均電壓。</li>
+<li>V<sub>avg</sub> ＝ D × V<sub>in</sub> 描述週期平均；後面要有夠慢的濾波，負載端才接近這個值。</li>
+<li>解析度與頻率使用同一份計數時脈預算；提高 f<sub>sw</sub> 會減少 N，不能假設兩者可同時任意增加。</li>
+<li>v<sub>m</sub> 在本章是固定比例；08 章把它改成弦波後，D 會隨時間改變，產生低頻基波。</li>
+<li>八格表的 0.375000 是粗取樣結果，不是 0.42 命令在連續時間下的真正工作週期。</li>
+</ul>
+
+<h2>可觀察證據：看矩形波，再把比較值只加一格</h2>
+<p>示波器可同時看開關節點、載波與比較器輸出，並以量測功能讀 duty 與頻率；邏輯分析儀可看微控制器（microcontroller unit, MCU）的 PWM 腳位。把比較暫存器加 1，量到 t<sub>on</sub> 只跳一個時脈，便<strong>能證明</strong> D 與 t<sub>on</sub> 的關係以及量化步階。</p>
+<p>只看未濾波節點的示波器平均功能<strong>不能證明</strong>負載實際得到精確的 D × V<sub>in</sub>，因為頻寬、取樣、探棒與負載動態都會影響讀值；應在真正濾波後以電壓表量測，並同時檢查漣波。</p>
+
+<h2>連到哪門課</h2>
+<p>05 章會直接把 D 帶入 Buck 降壓轉換器，08 章則把 v<sub>m</sub> 換成弦波。PWM 也用於 MCU 計時器周邊、LED 調光與馬達驅動；底層時間常數與濾波依據仍回到<a href="../../02-電機核心/電路學-互動課程/07-一階暫態RC與RL.html">電路學的一階暫態 RC 與 RL</a>。本章只建立波形、平均與解析度，不展開控制補償器。</p>
+<nav class="pager" aria-label="章節導覽"><a href="03-三相與相控整流.html">← 上一頁：三相與相控整流</a><a href="05-Buck降壓轉換器.html">下一頁：Buck 降壓轉換器 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 PWM 與工作週期</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

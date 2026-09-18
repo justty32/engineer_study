@@ -1,0 +1,82 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 電流迴路 PI 設計｜馬達驅動與控制</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">02・用馬達的 R 與 L 直接算出兩個 PI 增益</p>
+<h1>電流迴路 PI 設計：抵消 RL 極點後，再把頻寬壓在延遲與電壓邊界內</h1>
+<p class="lead">比例—積分控制器（proportional-integral controller, PI）處理 R = 1 Ω、L = 2 mH 的繞組；若要 500 Hz 頻寬，可直接得 K<sub>p</sub> = 6.283185 V/A、K<sub>i</sub> = 3141.592654 V/(A·s)。20 kHz 取樣與 PWM 更新帶來 75.000000 µs 延遲，吃掉 13.500000° 相位裕度（phase margin, PM）；10 A 步階第一拍卻要 62.831853 V，已超過 24 V 直流鏈。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-H橋與平均電壓.html">01 H 橋與平均電壓</a>的 RL 繞組方程、工作週期與平均電壓。<strong>前置：</strong>見〈PID 控制器設計〉<a href="../../02-電機核心/控制系統-互動課程/09-PID控制器設計.html">比例與積分作用</a>及〈增益裕度相位裕度與奈奎斯特〉<a href="../../02-電機核心/控制系統-互動課程/08-增益裕度相位裕度與奈奎斯特.html">相位裕度</a>。</p>
+
+<h2>痛點：PI 兩個增益到底怎麼選，為什麼調快又會振</h2>
+<p>「讓 K<sub>p</sub> 大一點就會快，那不是一路加大就好嗎？」這個直覺漏了兩道硬邊界。第一道是取樣、運算與 PWM 更新都花時間，迴路看到的電流永遠稍早於新電壓真正生效的時刻；頻寬越高，同一段延遲對應的相位落後越大。</p>
+<p>第二道是直流鏈電壓。PI 可以算出 62.831853 V，H 橋卻只能交出 24 V。當命令被限在上限，原本的線性閉迴路方程已不成立，積分器若還一直累積誤差，電流接近目標後也無法立即收手。所以增益不只是追求速度，還要同時通過延遲與飽和兩個檢查。</p>
+
+<h2>白話直覺：比例項立即出力，積分項清掉長期誤差</h2>
+<p>可以暫時把比例項想成看見誤差就立刻出力的手，積分項則把沒有被清掉的誤差累計起來。比喻到此為止；真實機制是 PI 依 C(s) = K<sub>p</sub> + K<sub>i</sub> / s 將電流誤差轉成電壓命令。K<sub>p</sub> 決定瞬間命令，K<sub>i</sub> 決定誤差積累速率。</p>
+<p>因果鏈從直流鏈開始：H 橋依 PI 的電壓命令選擇開關實體路徑，繞組上的電壓讓電流以 dI/dt = (V − I × R − E) / L 變化；電流建立磁場並產生轉矩。電流感測器在每個 PWM 週期取樣，數位控制器把實測值與命令相減，再更新比較暫存器。電流探棒與示波器會看到命令步階之後的指數上升，同時在 PWM 工作週期上看到電壓命令是否卡住。</p>
+<p>受控體 I / V = 1 / (L × s + R) 有一個由 R / L 決定的極點。PI 把自己的零點 K<sub>i</sub> / K<sub>p</sub> 放在同一位置，線性模型裡兩者抵消，剩下的迴路增益只是 ω<sub>c</sub> / s。如此一來，設計者選一個目標頻寬，就能得到兩個增益，不用無限嘗試。</p>
+<p class="note">來源：P3 上 §5.3、P3 下 §9.1、§9.2。</p>
+
+<h2>推導：抵消極點得到一階響應，延遲再扣掉相位裕度</h2>
+<p><strong>（a）增益。</strong>C(s) = K<sub>p</sub> × (s + K<sub>i</sub> / K<sub>p</sub>) / s，G(s) = 1 / [L × (s + R / L)]。令 K<sub>i</sub> / K<sub>p</sub> = R / L，則迴路增益 L(s) = K<sub>p</sub> / (L × s)。再令 K<sub>p</sub> / L = ω<sub>c</sub>，得 K<sub>p</sub> = L × ω<sub>c</sub>、K<sub>i</sub> = R × ω<sub>c</sub>。K<sub>p</sub> 的單位是 V/A，K<sub>i</sub> 是 V/(A·s)，ω<sub>c</sub> 是 rad/s。</p>
+<p><strong>（b）時域響應。</strong>閉迴路 I / I* = ω<sub>c</sub> / (s + ω<sub>c</sub>) = 1 / (s / ω<sub>c</sub> + 1)，是時間常數 τ = 1 / ω<sub>c</sub> 的一階模型。10–90 % 上升時間是 ln 9 × τ = 2.197225 τ，2 % 整定時間是 ln 50 × τ = 3.912023 τ。理想一階模型沒有超越量。</p>
+<p><strong>（c）取樣延遲。</strong>T<sub>s</sub> = 1 / f<sub>pwm</sub>，取樣一拍加 PWM 零階保持半拍，用 T<sub>d</sub> = 1.5 × T<sub>s</sub> 近似。在 ω<sub>c</sub> 的延遲相位是 ω<sub>c</sub> × T<sub>d</sub> × 180° / π，因此 PM = 90° − ω<sub>c</sub> × 1.5 × T<sub>s</sub> × 180° / π。</p>
+<p><strong>（d）電壓飽和。</strong>步階 ΔI 剛出現時積分值還是零，第一拍命令 V<sub>0</sub> = K<sub>p</sub> × ΔI。堵轉且 E = 0 時，不飽和最大步階 ΔI<sub>max</sub> = V<sub>dc</sub> / K<sub>p</sub>。飽和時要用反積分飽和（anti-windup）停止累積積分。本課用的是線性教學模型，真實驅動器不完全如此：R、L 會隨溫度與電流變化，延遲也不是理想的純延遲。</p>
+<p><strong>設計順序。</strong>先由 R 與 L 放好 PI 零點，再用所需頻寬決定兩個增益，最後才拿取樣延遲與可用電壓檢查這組設計。前兩步回答理想模型能有多快，後一步回答硬體是否真的做得到。若檢查失敗，不能只靠提高增益補救，因為更大的 K<sub>p</sub> 會要求更高的第一拍電壓，也會讓交越點承受更多延遲相位。反積分飽和只處理限幅後的積分狀態，並不改變直流鏈能提供的電壓上限；因此它是必要保護，卻不是放寬頻寬限制的方法。</p>
+
+<h2>數值實例：500 Hz 頻寬在 20 kHz PWM 下的代價</h2>
+<p>取 R = 1 Ω、L = 2 mH、f<sub>c</sub> = 500 Hz、f<sub>pwm</sub> = 20 kHz、步階 ΔI = 10 A、V<sub>dc</sub> = 24 V，也就是下面實驗的預設值。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>頻寬 ω<sub>c</sub></td><td>2π × 500</td><td><strong>3141.592654 rad/s</strong></td></tr>
+<tr><td>K<sub>p</sub></td><td>0.002 × 3141.592654</td><td><strong>6.283185 V/A</strong></td></tr>
+<tr><td>K<sub>i</sub></td><td>1 × 3141.592654</td><td><strong>3141.592654 V/(A·s)</strong></td></tr>
+<tr><td>PI 零點</td><td>K<sub>i</sub> / K<sub>p</sub> = 1 / 0.002</td><td><strong>500.000000 rad/s</strong></td></tr>
+<tr><td>受控體時間常數</td><td>2 / 1</td><td><strong>2.000000 ms</strong></td></tr>
+<tr><td>閉迴路時間常數</td><td>1 / 3141.592654</td><td><strong>0.318310 ms</strong></td></tr>
+<tr><td>10–90 % 上升時間</td><td>2.197225 × 0.318310</td><td><strong>0.699398 ms</strong></td></tr>
+<tr><td>2 % 整定時間</td><td>3.912023 × 0.318310</td><td><strong>1.245236 ms</strong></td></tr>
+<tr><td>1 ms 時達到</td><td>1 − e<sup>−3.141593</sup></td><td><strong>95.678608 %</strong></td></tr>
+<tr><td>取樣週期 T<sub>s</sub></td><td>1 / 20000</td><td><strong>50.000000 µs</strong></td></tr>
+<tr><td>延遲 1.5 T<sub>s</sub></td><td>1.5 × 50</td><td><strong>75.000000 µs</strong></td></tr>
+<tr><td>延遲相位</td><td>3141.592654 × 75 × 10<sup>−6</sup> × 180 / π</td><td><strong>13.500000°</strong></td></tr>
+<tr><td>相位裕度</td><td>90 − 13.5</td><td><strong>76.500000°</strong></td></tr>
+<tr><td>f<sub>pwm</sub> / f<sub>c</sub></td><td>20000 / 500</td><td><strong>40.000000</strong></td></tr>
+<tr><td>第一拍要求電壓</td><td>6.283185 × 10</td><td><strong>62.831853 V（超過 24 V，飽和）</strong></td></tr>
+<tr><td>不飽和最大步階</td><td>24 / 6.283185</td><td><strong>3.819719 A</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>20 kHz 取樣的一拍是 50.000000 µs，500 Hz 迴路的時間常數是 0.318310 ms，數個取樣點後才接近目標。f<sub>c</sub> = 1000 Hz 時 K<sub>p</sub> = 12.566371、延遲相位 27.000000°、PM = 63.000000°、ΔI<sub>max</sub> = 1.909859 A；f<sub>c</sub> = 2000 Hz 時 PM = 36.000000°，f<sub>pwm</sub> / f<sub>c</sub> = 10。</p>
+<p>邊界對照：f<sub>c</sub> = 100 Hz 時 PM = 87.300000°，但上升時間 3.496992 ms，1 ms 只到 46.651191 %；f<sub>pwm</sub> = 10 kHz、f<sub>c</sub> = 500 Hz 時 PM = 63.000000°。f<sub>c</sub> = 3000 Hz、f<sub>pwm</sub> = 4 kHz 時延遲相位 405°，PM 為負。R = 0.2 Ω 時 K<sub>i</sub> = 628.318531；L = 10 mH 時 K<sub>p</sub> = 31.415927，第一拍要 314.159265 V，ΔI<sub>max</sub> = 0.763944 A。</p>
+
+<section class="workspace"><h2>自由實驗：把 PI 頻寬推到延遲與飽和邊界</h2>
+<p>場景是一顆 RL 參數已知的馬達，電流 PI 在每個 PWM 中斷重新計算。你可以改電阻、電感、目標頻寬、取樣率、命令步階與直流鏈，觀察極點抵消、速度、相位裕度與電壓飽和如何互相牽制。</p>
+<div class="controls">
+<label for="cl-r">繞組電阻 R（Ω）<input id="cl-r" type="range" min="0.2" max="5" step="0.1" value="1"></label>
+<label for="cl-l">繞組電感 L（mH）<input id="cl-l" type="range" min="0.5" max="10" step="0.5" value="2"></label>
+<label for="cl-fc">目標頻寬 f_c（Hz）<input id="cl-fc" type="range" min="50" max="3000" step="50" value="500"></label>
+<label for="cl-fpwm">PWM 與取樣頻率 f_pwm（kHz）<input id="cl-fpwm" type="range" min="4" max="40" step="1" value="20"></label>
+<label for="cl-step">電流命令步階 ΔI（A）<input id="cl-step" type="range" min="0.5" max="20" step="0.5" value="10"></label>
+<label for="cl-vdc">直流鏈電壓 V_dc（V）<input id="cl-vdc" type="range" min="12" max="400" step="1" value="24"></label>
+</div>
+<div id="currentloop-output" class="output" aria-live="polite"><table><thead><tr><th>量</th><th>預設值</th></tr></thead><tbody><tr><td>ω_c</td><td><strong>3141.592654 rad/s</strong></td></tr><tr><td>K_p</td><td><strong>6.283185 V/A</strong></td></tr><tr><td>K_i</td><td><strong>3141.592654 V/(A·s)</strong></td></tr><tr><td>PI 零點</td><td><strong>500.000000 rad/s</strong></td></tr><tr><td>受控體時間常數</td><td><strong>2.000000 ms</strong></td></tr><tr><td>閉迴路時間常數</td><td><strong>0.318310 ms</strong></td></tr><tr><td>10–90 % 上升時間</td><td><strong>0.699398 ms</strong></td></tr><tr><td>2 % 整定時間</td><td><strong>1.245236 ms</strong></td></tr><tr><td>1 ms 時達到</td><td><strong>95.678608 %</strong></td></tr><tr><td>取樣週期</td><td><strong>50.000000 µs</strong></td></tr><tr><td>1.5 T_s 延遲</td><td><strong>75.000000 µs</strong></td></tr><tr><td>延遲相位</td><td><strong>13.500000°</strong></td></tr><tr><td>相位裕度</td><td><strong>76.500000°</strong></td></tr><tr><td>f_pwm / f_c</td><td><strong>40.000000</strong></td></tr><tr><td>第一拍要求電壓</td><td><strong>62.831853 V</strong></td></tr><tr><td>不飽和最大步階</td><td><strong>3.819719 A</strong></td></tr></tbody></table><p><strong>判讀：相位裕度充足；第一拍要 62.831853 V 但只有 24.000000 V，電壓飽和，迴路暫時開路，必須有反積分飽和。</strong></p><p>為什麼：零點 K_i / K_p = R / L = 500.000000 rad/s，剛好抵消受控體極點，閉迴路是一階；f_pwm / f_c = 40.000000 ≥ 20，經驗法則滿足。</p><p>邊界提醒：PM 低於 45° 時頻寬要壓低，PM 為負時這個取樣率根本做不到；f_c 不高於 100 Hz 會拖慢第 03 章的速度迴路；命令步階不高於 3.819719 A 時，第一拍不飽和。</p></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>零極點抵消的是 RL 受控體極點，不是數位延遲；純延遲無法用這個 PI 零點抵消。</li>
+<li>K<sub>p</sub> 隨 L 變化，K<sub>i</sub> 隨 R 變化；只用同一個倍率同時改兩者，未必能保持零點在 R / L。</li>
+<li>頻寬越高，理想上升越快，但延遲相位與第一拍電壓也同時增加；速度不能脫離這兩個邊界談好壞。</li>
+<li>76.500000° 是線性延遲模型下的相位裕度；電壓一旦飽和，閉迴路不再是原本的一階系統。</li>
+<li>反積分飽和防止積分值繼續累積，不會讓 24 V 硬體突然交出 62.831853 V；它縮短的是離開飽和後的恢復過程。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>用電流探棒量電流回應，同時用除錯器擷取電流命令、實測電流、PI 輸出與 PWM 工作週期暫存器。對 10 A 命令做小幅度步階測試，查找回應到 63.2 % 的時刻，理想上應接近 0.318310 ms；再看工作週期是否一開始就卡在上限。</p>
+<p><strong>能證明什麼。</strong>63.2 % 時刻可驗證閉迴路時間常數，命令卡在電壓上限可證明步階已使輸出飽和。<strong>不能證明什麼。</strong>一次大步階不能精確證明相位裕度，因為飽和已將系統推離線性工作點；要用小訊號掃頻或振鈴證據來估相位裕度。</p>
+
+<h2>連到哪門課</h2>
+<p>第 03 章會把本章的一階閉迴路視為最內層受控體，再向外疊上速度與位置迴路。比例、積分與飽和處理見<a href="../../02-電機核心/控制系統-互動課程/09-PID控制器設計.html">控制系統的 PID 控制器設計</a>；相位裕度與頻率回應見<a href="../../02-電機核心/控制系統-互動課程/08-增益裕度相位裕度與奈奎斯特.html">增益裕度相位裕度與奈奎斯特</a>。</p>
+<p><strong>韌體那一端。</strong>PI 在 PWM 中斷裡每 50 µs 跑一次：讀取電流、算誤差、更新比例與積分狀態，最後寫入比較暫存器。當電壓命令被限幅，積分器在那一拍不累積，否則之後會花額外時間清掉已累積的值。</p>
+<nav class="pager" aria-label="章節導覽"><a href="01-H橋與平均電壓.html">← 上一頁：H 橋與平均電壓</a><a href="03-速度與位置迴路串級.html">下一頁：速度與位置迴路串級 →</a></nav>
+</main>
+<footer class="site-footer"><span>02 電流迴路 PI 設計</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

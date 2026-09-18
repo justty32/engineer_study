@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 自適應等化 LMS｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・不知道通道，就用已知序列一步步學</p>
+<h1>自適應等化 LMS：每次沿誤差小走一步</h1>
+<p class="lead">真實接收機不會先拿到完整通道公式，它靠雙方都知道的訓練序列邊收邊調抽頭。LMS 的一行更新式很短，但步長 μ 太小會來不及、太大會震盪甚至發散。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="06-等化器ZF與MMSE.html">06 等化器 ZF 與 MMSE</a>的通道反轉與抽頭。<strong>前置：</strong>見〈<a href="../../02-電機核心/控制系統-互動課程/00-回授的價值.html">控制系統的回授價值</a>〉；本章只借「看誤差再修正」的直覺。</p>
+
+<h2>痛點：反函數寫得出來，但接收機根本不知道通道</h2>
+<p>前一章可以直接用 a 寫出零強制抽頭，好像通道參數早就放在桌上。實際開機時，線纜長度、反射與無線路徑都未知，還會緩慢改變。接收機要從「這次輸出與應有答案差多少」反推抽頭應往哪裡移。</p>
+<p>難點不只是有沒有移動，而是一步跨多大。步長大可以快速追上變動，卻容易跨過誤差最低點；步長小很平穩，但訓練欄位結束時可能還沒學會。所以「公式上低於上界」不等於這串固定資料一定平穩。</p>
+
+<h2>白話直覺：蒙眼走下坡，每步只用眼前的斜率</h2>
+<p>可以暫時想成蒙眼下山：只摸當前地面往哪邊降，再走一小步。比喻到此為止；精確地說，最小均方演算法（least mean squares, LMS）用當下的 e u<sub>i</sub> 估計平均誤差曲面的梯度，再以 μ 縮放更新量。</p>
+<p>因果鏈從發送端已知的訓練符元 x 開始。通道輸出最近 L 個值組成輸入向量 u，L 個抽頭組成 w；等化輸出 y ＝ Σ w<sub>i</sub>u<sub>i</sub>，已知答案 d ＝ x，誤差 e ＝ d − y。演算法決定 w<sub>i</sub> ← w<sub>i</sub> ＋ μ × e × u<sub>i</sub>，買到的是不需先求通道反矩陣、可以線上追蹤；付出訓練時間、頻寬與每次 L 個乘加。邊界是 μ 過大發散，或 L 太短而就算數字穩定也留下 ISI。SDR 或數據機診斷頁可以量學習曲線與抽頭。</p>
+<p>本頁的 31 碼片 m 序列固定為 <code>+1 +1 +1 +1 +1 −1 −1 +1 +1 −1 +1 −1 −1 +1 −1 −1 −1 −1 +1 −1 +1 −1 +1 +1 +1 −1 +1 +1 −1 −1 −1</code>，以週期重複取代亂數，因此每次操作都可重現。訓練後可切到判決導引（decision-directed）模式，把自己的判決當作 d，但判錯時會帶著抽頭往錯的方向走。</p>
+<p class="note">來源：15-數位通訊-下 §10（自適應部分由本課補充）。</p>
+
+<h2>推導：為什麼更新量是 μ × e × u</h2>
+<p><strong>從均方誤差出發。</strong>MSE ＝ E[e²]，e ＝ d − Σw<sub>i</sub>u<sub>i</sub>。對 w<sub>i</sub> 做偏導得 −2E[e u<sub>i</sub>]；梯度下降要朝負梯度方向，所以應「加上」與 e u<sub>i</sub> 同向的量。LMS 不等長期期望值，直接用當下 e u<sub>i</sub> 取代 E[e u<sub>i</sub>]，所以是隨機梯度下降；常數 2 可以併入步長 μ。</p>
+<p><strong>上界從哪裡來。</strong>把更新式取期望，抽頭誤差向量每次會乘 (I − μR)，R 是輸入自相關矩陣。每個特徵模態都要滿足 |1 − μλ| &lt; 1，所以 μ &lt; 2/λ<sub>max</sub>。因為 λ<sub>max</sub> 不大於 tr(R) ＝ L × P<sub>u</sub>，而本頁的 P<sub>u</sub> ＝ 1 ＋ a²，便得保守估計 0 &lt; μ &lt; 2/(L × P<sub>u</sub>)。<strong>上界不是保證</strong>：這是用功率與跡迹壓出的粗略條件，固定序列的相關結構會讓接近上界的 μ 先劇烈震盪，甚至發散。</p>
+<p><strong>太小為什麼慢。</strong>特徵值為 λ 的誤差模態每次約乘 (1 − μλ)；μ 小時這個數貼近 1，衰減需要很多次。無雜訊且抽頭足夠長時，最小 MSE 對應 ISI 被消掉，所以抽頭趨近零強制的 (−a)<sup>n</sup>；抽頭太短時，只能逼近被截斷的解。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：固定 31 碼片訓練序列週期重複、沒有雜訊、實數兩抽頭通道。真實系統不是這樣：輸入自相關、有限精度、雜訊與通道時變都會改變穩態誤差與穩定範圍。</p>
+
+<h2>數值實例：μ ＝ 0.05、a ＝ 0.5、L ＝ 5、迭代 200 次</h2>
+<table><thead><tr><th>量</th><th>算式或來源</th><th>結果</th></tr></thead><tbody>
+<tr><td>P<sub>u</sub>、上界</td><td>1 ＋ 0.25、2/(5 × 1.25)</td><td><strong>1.250000、0.320000</strong></td></tr>
+<tr><td>e² 第 1、10、20、50、100、200 次</td><td>固定序列演算法</td><td><strong>1.000000、0.557469、0.569555、0.055261、0.001459、0.001922</strong></td></tr>
+<tr><td>前 31 次平均 e²</td><td>學習曲線</td><td><strong>0.432494</strong></td></tr>
+<tr><td>最後 31 次平均 e²</td><td>學習曲線</td><td><strong>0.001041</strong></td></tr>
+<tr><td>收斂後 w<sub>0</sub>–w<sub>4</sub></td><td>LMS</td><td><strong>0.997251、−0.491870、0.243964、−0.112095、0.043377</strong></td></tr>
+<tr><td>零強制理想抽頭</td><td>(−0.5)<sup>n</sup></td><td><strong>1.000000、−0.500000、0.250000、−0.125000、0.062500</strong></td></tr>
+<tr><td>判定</td><td>最後 31 次平均 e² &lt; 0.01</td><td><strong>已收斂</strong></td></tr>
+</tbody></table>
+<p><strong>邊界對照。</strong>μ ＝ 0.005 時，200 次後最後 31 次平均 e² 為 0.228615，抽頭為 0.590166、−0.135342、…，太慢而未收斂；500 次仍是 0.043255。μ ＝ 0.2 的 e² 依次為 1.000000、0.016456、0.073403、0.000805、0.002989、0.004483，最後 31 次為 0.002469，快但殘餘震盪大。μ ＝ 0.3 雖小於 0.32，第 50、100 次卻衝到 4.131711、7.113465，最後 31 次平均 1.793240，抽頭 0.374915、−0.268157、…，未收斂；這正是上界不是保證的實例。</p>
+<p><strong>量級對照。</strong>μ ＝ 0.35 在第 99 次 e² 超過 10<sup>6</sup>，μ ＝ 0.4 在第 49 次發散，μ ＝ 0.5 在第 31 次發散。a ＝ 0.9、μ ＝ 0.05、L ＝ 5 時，上界 0.220994、最後 31 次 0.137087，因理想尾端 0.9<sup>4</sup> ＝ 0.656100 仍太大；L ＝ 7、500 次時，上界 0.157853、最後 31 次 0.095340。a ＝ 0 時上界 0.400000，200 次後最後平均顯示 0.000000，w<sub>0</sub> ＝ 0.999986。L ＝ 3、a ＝ 0.5 時上界 0.533333、最後平均 0.013694；L ＝ 7 時上界 0.228571、最後平均 0.000172。</p>
+<p>更極端的組合也吻合同一因果：μ ＝ 0.3、a ＝ 0.9、L ＝ 7 時第 18 次發散；μ ＝ 0.5、a ＝ 0.9、L ＝ 7、500 次的設定下，第 9 次就發散。通道尾巴越長、步子越大，單次更新就越容易跨過誤差谷底。</p>
+
+<section class="workspace"><h2>自由實驗：看步長、抽頭與訓練長度的拉扯</h2>
+<p>場景是固定 31 碼片序列週期通過 [1, a] 通道，等化器從零抽頭開始學。調整 μ、a、L 與迭代次數，比較學習曲線、最後平均誤差與理想零強制抽頭。</p>
+<div class="controls">
+<label for="lm-mu">步長 μ<input id="lm-mu" type="range" min="0.005" max="0.5" step="0.005" value="0.05"></label>
+<label for="lm-a">回音係數 a<input id="lm-a" type="range" min="0" max="0.9" step="0.05" value="0.5"></label>
+<label for="lm-taps">等化器抽頭數 L<select id="lm-taps"><option value="3">3 個抽頭</option><option value="5" selected>5 個抽頭</option><option value="7">7 個抽頭</option></select></label>
+<label for="lm-iter">迭代次數 N<select id="lm-iter"><option value="50">50 次</option><option value="100">100 次</option><option value="200" selected>200 次</option><option value="500">500 次</option></select></label>
+</div>
+<div id="lms-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>LMS 不是「最佳」等化器；它是運算極簡單、用反複更新逼近 MMSE 解的方法。</li>
+<li>μ &lt; 2/(L × P<sub>u</sub>) 是保守估計，不是這組固定訓練序列的收斂保證；μ ＝ 0.3 是直接反例。</li>
+<li>學習曲線的橫軸是迭代次數，不自動等於秒；每秒處理幾個樣本才能換成時間。</li>
+<li>訓練序列要收發雙方都知道，並佔用傳送時間與頻寬；Wi-Fi 的長訓練欄位就是這類代價。</li>
+<li>抽頭值看似穩定不代表 ISI 已清乾淨；L 太短時，演算法只是在不足的自由度裡找到最小誤差。</li>
+</ul>
+
+<h2>可觀察證據：抽頭與 MSE 曲線要一起看</h2>
+<p><strong>用什麼量。</strong>用 SDR 或數據機診斷頁連續記錄各抽頭、瞬時 e² 與滑動平均 MSE；DSL 數據機的「訓練中」狀態，就是接收機尚在迭代的外部徵象。</p>
+<p><strong>能證明什麼。</strong>MSE 長期降到穩定平臺，且抽頭不再無界增長，能證明這次訓練已收斂；調大 μ 後曲線更快下降但震盪變大，能驗證步長取捨。</p>
+<p><strong>不能證明什麼。</strong>收斂不能證明抽頭就是通道的真實反函數；有雜訊時 MMSE 解原本就會偏離 1/H，而且抽頭太短也可以收斂到不完整的解。</p>
+
+<h2>連到哪門課</h2>
+<p>誤差回授的直覺見<a href="../../02-電機核心/控制系統-互動課程/00-回授的價值.html">控制系統的回授價值</a>，要追的零強制與 MMSE 解見<a href="06-等化器ZF與MMSE.html">本課 06 章</a>。RLS、頻域 LMS 與 FIR 實作留給數位訊號處理課；RLS 通常收斂更快，但每次更新的運算量更大。軟體那一端，<code>w += mu × e × u</code> 就是核心更新，<code>np.convolve</code> 可產生通道輸出。</p>
+<nav class="pager" aria-label="章節導覽"><a href="06-等化器ZF與MMSE.html">← 上一頁：等化器 ZF 與 MMSE</a><a href="08-漢明碼與症狀解碼.html">下一頁：漢明碼與症狀解碼 →</a></nav>
+</main>
+<footer class="site-footer"><span>07 自適應等化 LMS</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

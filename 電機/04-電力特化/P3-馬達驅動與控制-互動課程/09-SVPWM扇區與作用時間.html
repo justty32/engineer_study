@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 SVPWM 扇區與作用時間｜馬達驅動與控制</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・把一支電壓向量排成三相開關時間</p>
+<h1>SVPWM 扇區與作用時間：找出兩個相鄰向量，排出一個切換週期</h1>
+<p class="lead">空間向量脈寬調變（space-vector PWM, SVPWM）把 100.000000 V、20° 的參考向量，換成 37.111360 µs、19.746542 µs 與 43.142098 µs 三段時間。這章從扇區、伏秒平衡一路算到三相工作週期，並辨認 173.205081 V 的線性上限。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-dq電壓方程與弱磁.html">08 dq 電壓方程與弱磁</a>的電壓極限。<strong>前置：</strong>見〈Clarke 與 Park 轉換〉<a href="07-Clarke與Park轉換.html">07 Clarke 與 Park 轉換</a>，先知道反 Park 如何把 dq 命令轉回 αβ 平面。</p>
+
+<h2>痛點：控制器只算出一支箭頭，六個開關狀態怎麼接手</h2>
+<p>反 Park 的結果是一支可任意轉動的參考向量 V<sub>ref</sub>，三相逆變器卻只有六個非零向量與兩個零向量。它既不能直接產生任意方向，也不能在一拍內停在任意長度；真正可做的是決定哪個開關狀態維持多久。若只背 T<sub>1</sub>、T<sub>2</sub> 公式，遇到跨越 60° 邊界或 T<sub>0</sub> 變負，很容易不知道數字代表什麼。</p>
+<p>核心問題因此很具體：參考向量位於哪個扇區？本拍要用哪兩個相鄰向量？零向量還剩多少時間？最後三個 PWM 比較值是否都落在可實現範圍？</p>
+
+<h2>白話直覺：用兩個固定方向在一拍內拼出平均方向</h2>
+<p>可以暫時把它想成兩個人沿相鄰方向拉車，誰拉得久，平均方向就偏向誰；比喻到此為止。真實機制是逆變器的上開關把某相接到直流鏈正端，下開關則讓電流經另一側返回。開關以 f<sub>sw</sub> 反覆通斷，馬達繞組的電感把它濾成平均電壓 V<sub>avg</sub> = D × V<sub>dc</sub>。</p>
+<p>直流鏈提供 300.000000 V 並以負端為參考點；狀態 100 與 110 依序建立兩條導通路徑，繞組電流形成定子磁場，再與轉子磁場作用而產生轉矩。電流迴路回授的是 dq 電流，示波器則能量到每相對負直流鏈的脈波寬度。控制器靠一拍內的伏秒平均逼近命令，不是把開關瞬間電壓變成 100.000000 V。</p>
+<p>六個基本向量的長度都是 (2 / 3) × V<sub>dc</sub>，方向依序為 0°、60°、120°、180°、240°、300°，開關碼為 100、110、010、011、001、101。零向量 000 與 111 不建立線間電壓，用來填滿剩餘時間。</p>
+<p>從電流的角度看，切換狀態改變的是各相端點電位，繞組電感讓電流無法隨方波瞬間跳動，所以一拍內不同狀態的電壓時間積分才是電流真正回應的量。這也解釋了為何排序會影響切換次數與共模電壓，卻不改變理想模型中的平均參考向量。</p>
+<p class="note">來源：P3 上 §5.2；扇區、作用時間與七段對稱式由本課補充。</p>
+
+<h2>推導：伏秒平衡決定三段時間</h2>
+<p>先把 α 限在 0° 至 359°。扇區 k = floor(α / 60°) + 1，扇區內角 θ = α − (k − 1) × 60°。第一個作用向量是 V<sub>k</sub>，第二個是 V<sub>k+1</sub>；第六扇區的下一支回到 V<sub>1</sub>。</p>
+<p>一個切換週期內要求伏秒平衡：V<sub>ref</sub> × T<sub>s</sub> = V<sub>k</sub> × T<sub>1</sub> + V<sub>k+1</sub> × T<sub>2</sub>。把參考向量分解到相隔 60° 的兩軸，以正弦定理得到 T<sub>1</sub> = √3 × T<sub>s</sub> × (V<sub>ref</sub> / V<sub>dc</sub>) × sin(60° − θ)，T<sub>2</sub> = √3 × T<sub>s</sub> × (V<sub>ref</sub> / V<sub>dc</sub>) × sin θ，再由 T<sub>0</sub> = T<sub>s</sub> − T<sub>1</sub> − T<sub>2</sub> 補滿一拍。</p>
+<p>線性區邊界是六邊形內切圓，V<sub>ref,max</sub> = (2 / 3) × V<sub>dc</sub> × cos 30° = V<sub>dc</sub> / √3。調變指數 m = V<sub>ref</sub> / (V<sub>dc</sub> / √3)；m ≤ 1 時 T<sub>0</sub> 不小於零，m &gt; 1 就進入過調變（overmodulation）。相較 SPWM 的 V<sub>dc</sub> / 2，上限增加 (1 / √3) / (1 / 2) − 1 = 15.470054 %，原因是共模三次諧波重新分配三相工作週期。</p>
+<p>七段對稱式把零向量拆在頭尾與中央，使每相每拍只切換兩次。以第一扇區為例，T<sub>a</sub> = T<sub>1</sub> + T<sub>2</sub> + T<sub>0</sub> / 2，T<sub>b</sub> = T<sub>2</sub> + T<sub>0</sub> / 2，T<sub>c</sub> = T<sub>0</sub> / 2，再各除以 T<sub>s</sub> 得工作週期。本課用的是線性教學模型，真實驅動器不完全如此；假設理想開關、沒有死區，而且 V<sub>dc</sub> 恆定。</p>
+<p>三相結果可用共同中點驗算：v<sub>x</sub> = d<sub>x</sub> × V<sub>dc</sub> − (d<sub>a</sub> + d<sub>b</sub> + d<sub>c</sub>) × V<sub>dc</sub> / 3。三相工作週期都加上相同份量時，線電壓不變；這個可自由移動的共模份量，正是七段式能把三相命令放進可用範圍的關鍵。驗算若對不上參考餘弦，通常是扇區表、相序或角度基準用錯。</p>
+<p>從幾何角度看，T<sub>1</sub> 與 T<sub>2</sub> 是參考向量在扇區兩邊的投影權重；角度靠近哪一邊，那一邊的作用時間就較長。T<sub>0</sub> 則是合成完後剩下的時間預算。因此 T<sub>0</sub> 變成負值時，問題不在零向量排序，而是參考向量已超出六邊形可合成區域；單純拿掉零向量也無法補足欠缺的伏秒。</p>
+
+<h2>數值實例：300.000000 V、10.000000 kHz、20°</h2>
+<p>令 V<sub>ref</sub> = 100.000000 V、α = 20°、V<sub>dc</sub> = 300.000000 V、f<sub>sw</sub> = 10.000000 kHz，因此 T<sub>s</sub> = 100.000000 µs，與下方實驗預設值完全一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>線性上限</td><td>300 / 1.732051</td><td><strong>173.205081 V</strong></td></tr>
+<tr><td>調變指數 m</td><td>100 / 173.205081</td><td><strong>0.577350</strong></td></tr>
+<tr><td>扇區與 θ</td><td>floor(20 / 60) + 1</td><td><strong>1；20°</strong></td></tr>
+<tr><td>T<sub>1</sub></td><td>1.732051 × 100 × (100 / 300) × sin 40°</td><td><strong>37.111360 µs</strong></td></tr>
+<tr><td>T<sub>2</sub></td><td>1.732051 × 100 × (100 / 300) × sin 20°</td><td><strong>19.746542 µs</strong></td></tr>
+<tr><td>T<sub>0</sub></td><td>100 − 37.111360 − 19.746542</td><td><strong>43.142098 µs</strong></td></tr>
+<tr><td>d<sub>a</sub>、d<sub>b</sub>、d<sub>c</sub></td><td>T<sub>a</sub>、T<sub>b</sub>、T<sub>c</sub> 各除以 100</td><td><strong>0.784290、0.413176、0.215710</strong></td></tr>
+<tr><td>v<sub>a</sub>、v<sub>b</sub>、v<sub>c</sub></td><td>扣除三相平均值</td><td><strong>93.969262、−17.364818、−76.604444 V</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>10.000000 kHz 的一拍是 100.000000 µs；若改成 20.000000 kHz，三段時間全部減半，工作週期不變。V<sub>ref</sub> 拉到 173.000000 V 時 T<sub>0</sub> 只剩 1.635829 µs；拉到 180.000000 V 時 m = 1.039230、T<sub>0</sub> = −2.344224 µs，命令已不可由線性七段式實現。</p>
+
+<section class="workspace"><h2>自由實驗：轉動參考向量並檢查零向量</h2>
+<p>固定理想三相逆變器，改變參考向量、角度、直流鏈電壓與切換頻率。觀察扇區、三段作用時間、三相工作週期及平均相電壓是否仍可實現。</p>
+<div class="controls">
+<label for="sv-vref">參考向量長度 V_ref（V）<input id="sv-vref" type="range" min="0" max="200" step="1" value="100"></label>
+<label for="sv-alpha">參考向量角 α（°）<input id="sv-alpha" type="range" min="0" max="359" step="1" value="20"></label>
+<label for="sv-vdc">直流鏈電壓 V_dc（V）<input id="sv-vdc" type="range" min="48" max="400" step="1" value="300"></label>
+<label for="sv-fsw">切換頻率 f_sw（kHz）<input id="sv-fsw" type="range" min="2" max="40" step="1" value="10"></label>
+</div>
+<div id="svpwm-output" class="output" aria-live="polite"><table><thead><tr><th>輸出</th><th>預設值</th></tr></thead><tbody><tr><td>上限 V_dc / √3</td><td>173.205081 V</td></tr><tr><td>調變指數 m</td><td>0.577350</td></tr><tr><td>扇區</td><td>1</td></tr><tr><td>扇區內角 θ</td><td>20°</td></tr><tr><td>T_1</td><td>37.111360 µs</td></tr><tr><td>T_2</td><td>19.746542 µs</td></tr><tr><td>T_0</td><td>43.142098 µs</td></tr><tr><td>d_a</td><td>0.784290</td></tr><tr><td>d_b</td><td>0.413176</td></tr><tr><td>d_c</td><td>0.215710</td></tr><tr><td>v_a</td><td>93.969262 V</td></tr><tr><td>v_b</td><td>−17.364818 V</td></tr><tr><td>v_c</td><td>−76.604444 V</td></tr><tr><td>比 SPWM 多</td><td>15.470054 %</td></tr><tr><td>相鄰向量與開關碼</td><td>V_1（100）、V_2（110）</td></tr></tbody></table><strong>判讀：線性區，T_0 = 43.142098 µs ≥ 0，三相工作週期都在 0–1 之間。</strong>驗證：三相平均電壓 v_a = 93.969262 V 等於 V_ref cos α = 93.969262 V，伏秒平衡成立。扇區 1、θ = 20°，使用 V_1（100）與 V_2（110）。為什麼：兩支相鄰向量的伏秒和正好等於參考向量一拍所需的伏秒。邊界提醒：V_ref = 0 時零向量佔滿，三相都是 50 %，馬達看到 0 V；θ = 0 時 T_2 = 0，只用一支非零向量；m &gt; 1 時 T_0 為負，工作週期可能超界且不可實現；T_0 / 2 小於 1.000000 µs 時，零向量半段已比典型死區 1.000000 µs 短。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>V<sub>dc</sub> / √3 是相電壓振幅上限，不是線電壓上限；量測端點不同，數字也不同。</li>
+<li>這裡與第 05 章都有六個扇區；本章的參考向量連續旋轉，第 05 章的通電狀態每 60° 跳一次。</li>
+<li>工作週期 0.500000 代表相對中點的平均電壓為 0 V，不代表馬達端得到一半的有效相電壓。</li>
+<li>15.470054 % 是直流鏈電壓利用率的增加，不是能量效率，也不表示損耗降低。</li>
+<li>理想作用時間忽略死區與開關延遲；接近線性邊界時，極短零向量在實機可能無法忠實產生。</li>
+<li>扇區判定只選相鄰向量，七段排序才決定開關先後；兩者分屬幾何與切換安排，不應混成同一步。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>用差動示波器量一相相對負直流鏈的電壓，可看到每個切換週期內寬度隨 α 改變的方波；低通後，相電壓呈正弦疊加三次諧波的馬鞍形。再量兩相之間的線電壓，共模成分會互相抵消。</p>
+<p><strong>能證明什麼。</strong>把閘極命令與相電壓對齊，可核對七段順序、T<sub>1</sub>、T<sub>2</sub> 與零向量拆分，也能證明共模注入確實提高電壓利用範圍。</p>
+<p>若同步擷取三相工作週期命令，還可先在軟體記錄中重建平均相電壓，再與示波器的線電壓對照。前者用來查扇區表與數學命令，後者用來查實際開關是否跟上，可把計算錯誤與硬體延遲分開。</p>
+<p><strong>不能證明什麼。</strong>電壓波形本身不能證明馬達電流的總諧波失真；那需要電流探棒與頻譜分析。它也不能單獨證明死區補償正確，因為負載電流方向會改變誤差符號。</p>
+
+<h2>連到哪門課</h2>
+<p>dq 到 αβ 的反 Park 是<a href="07-Clarke與Park轉換.html">第 07 章 Clarke 與 Park 轉換</a>倒過來；電壓上限如何限制高速運轉見<a href="08-dq電壓方程與弱磁.html">第 08 章 dq 電壓方程與弱磁</a>。開關波形生成與死區屬電力電子課，本章不展開也不連結。</p>
+<p><strong>韌體那一端：</strong>三個工作週期寫入三個 PWM 比較暫存器，每次控制中斷更新一次；扇區判定可以用六個條件分支完成。</p>
+<nav class="pager" aria-label="章節導覽"><a href="08-dq電壓方程與弱磁.html">← 上一頁：dq 電壓方程與弱磁</a><a href="10-編碼器與速度估測.html">下一頁：編碼器與速度估測 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 SVPWM 扇區與作用時間</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

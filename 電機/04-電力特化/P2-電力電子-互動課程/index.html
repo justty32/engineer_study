@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>電力電子（零基礎互動課）</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html" aria-current="page">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">從「切換不耗能」一路算到結溫</p>
+<h1>電力電子（零基礎互動課）</h1>
+<p class="lead">這門課只問一件事——怎麼用開關把電能換成另一種形式，而且盡量不把能量燒成熱。每章一個量化實驗，同一個負載換一種開關方式或一個設計參數，看功率、電壓、電流與溫度怎麼動。</p>
+<div class="flow"><span>切換不耗能</span><span>兩種損耗</span><span>單相整流</span><span>相控整流</span><span>PWM</span><span>Buck</span><span>Boost</span><span>濾波設計</span><span>SPWM</span><span>THD</span><span>散熱</span><span>頻率取捨</span></div>
+<p class="note">每章只有一個自由實驗，改控制就立即看到結果與原因；沒有計分，練習題集中在自我檢核頁，答錯不擋路。</p>
+<p class="warning">本課所有數字都是教學用的一階模型，元件與市電的真實行為更複雜；市電整流與 400 V 直流匯流排會致命，本課的實驗只在瀏覽器裡做。</p>
+<section class="chapter-list">
+<a class="chapter-card" href="00-電力電子世界觀與切換不耗能.html"><h2><span class="number">00</span> 電力電子世界觀：為什麼切換不耗能</h2><p>同樣把 12 V 變成 5 V／2 A，線性方案燒掉 14.000000 W，切換式只損失 0.869565 W。</p></a>
+<a class="chapter-card" href="01-功率開關與兩種損耗.html"><h2><span class="number">01</span> 功率開關與兩種損耗</h2><p>10 A 的 MOSFET 在 100 kHz 時共損失 2.200000 W，兩筆損耗各有不同解法。</p></a>
+<a class="chapter-card" href="02-單相整流與電容濾波的代價.html"><h2><span class="number">02</span> 單相整流：電容濾波的代價</h2><p>110 V 全波整流接 1000 µF 電容，估計脈衝電流會達 9.511308 A。</p></a>
+<a class="chapter-card" href="03-三相與相控整流.html"><h2><span class="number">03</span> 三相與相控整流：觸發角與反流</h2><p>220 V 三相線電壓在 α ＝ 30° 時得到 257.299944 V 直流平均值。</p></a>
+<a class="chapter-card" href="04-PWM與工作週期.html"><h2><span class="number">04</span> PWM 與工作週期</h2><p>100 MHz 計時時脈配 200 kHz 切換，只有 500 個可用步階。</p></a>
+<a class="chapter-card" href="05-Buck降壓轉換器.html"><h2><span class="number">05</span> Buck 降壓轉換器：伏秒平衡與 CCM／DCM</h2><p>12 V、工作週期 0.5 的 Buck 在連續導通時輸出 6.000000 V。</p></a>
+<a class="chapter-card" href="06-Boost與BuckBoost.html"><h2><span class="number">06</span> Boost 與 Buck-Boost：增益曲線與寄生電阻上限</h2><p>理想值 24 V 加入 0.1 Ω 電感電阻後只剩 23.076923 V。</p></a>
+<a class="chapter-card" href="07-濾波與漣波設計.html"><h2><span class="number">07</span> 濾波與漣波設計：L、C 與 ESR</h2><p>20 mV 目標遇上 50 mΩ ESR，光是電阻項就產生 30.000000 mV。</p></a>
+<a class="chapter-card" href="08-逆變器與SPWM.html"><h2><span class="number">08</span> 逆變器與 SPWM：調變比與基波</h2><p>400 V 匯流排與 0.8 振幅比，產生 320.000000 V 的基波峰值。</p></a>
+<a class="chapter-card" href="09-諧波與THD.html"><h2><span class="number">09</span> 諧波與 THD：逐次累加與真功因</h2><p>方波算到第 13 次諧波時，總諧波失真為 44.502424 %。</p></a>
+<a class="chapter-card" href="10-散熱與效率.html"><h2><span class="number">10</span> 散熱與效率：熱阻鏈算結溫</h2><p>10 W 損耗通過 4.800000 °C/W 熱阻鏈，結溫會升到 88.000000 °C。</p></a>
+<a class="chapter-card" href="11-切換頻率取捨與設計總整合.html"><h2><span class="number">11</span> 切換頻率取捨：損耗、體積與溫度的總整合</h2><p>同步 Buck 從 200 kHz 拉到 1 MHz，結溫由 50.850000 °C 升至 89.250000 °C。</p></a>
+<a class="chapter-card" href="名詞與概念字典.html"><h2><span class="number">查</span> 名詞與概念字典</h2><p>50 張卡片集中整理繁中、英文、物理機制與容易踩到的用語邊界。</p></a>
+<a class="chapter-card" href="自我檢核.html"><h2><span class="number">檢</span> 自我檢核</h2><p>每章 3 題、共 36 題，不計分且可重做，每題都解釋原因。</p></a>
+</section>
+<h2>先修與去向</h2>
+<p>元件面的前置是<a href="../../02-電機核心/電子學-互動課程/index.html">電子學</a>，電路與交流功率是<a href="../../02-電機核心/電路學-互動課程/index.html">電路學</a>，諧波的數學是<a href="../../02-電機核心/信號與系統-互動課程/index.html">信號與系統</a>，系統面接<a href="../P1-電力系統-互動網站/index.html">電力系統站</a>。</p>
+<h2>來源</h2>
+<ul><li>P2-電力電子-上.md</li><li>P2-電力電子-下.md</li><li>中英名詞對照表-3.md</li></ul>
+<h2>用語說明</h2>
+<p>本課用台灣慣用語——工作週期、漣波、閘流體、逆變器、閘極、汲極、電晶體、功率因數、脈寬調變（其他教材的另一套譯法只在字典頁對應卡片的「不要混淆」欄列出，本頁不得引述）；乘號 ×、負號 −、微符號 µ；「切換」指動作與損耗、「開關」指元件。</p>
+<nav class="pager" aria-label="章節導覽"><a href="自我檢核.html">← 自我檢核</a><a href="00-電力電子世界觀與切換不耗能.html">開始：切換不耗能 →</a></nav>
+</main>
+<footer class="site-footer"><span>電力電子（零基礎互動課）</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

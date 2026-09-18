@@ -1,0 +1,84 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 M 進制星座與最小距離｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">02・點數、點距、峰值與位元標籤一起結帳</p>
+<h1>M 進制星座與最小距離：同樣 16 點，方陣為什麼更省功率</h1>
+<p class="lead">每個符元多帶幾個位元，頻譜效率會上升，固定平均能量下的星座點卻會更擠。本章用最小距離、最近鄰數、峰均功率比與 Gray 映射，拆開「符元判錯」和「判錯後壞幾個位元」兩件事。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-訊號空間與正交基底.html">01 訊號空間與正交基底</a>的能量、距離與雜訊標準差。<strong>前置：</strong>見〈五種星座的最小距離〉<a href="../通訊系統-互動課程/09-數位調變與星座圖.html">通訊系統的數位調變與星座圖</a>；本章不重講五種星座的座標與最近鄰近似。</p>
+
+<h2>痛點：星座點越多效率越高，為什麼不能永遠往上加</h2>
+<p>M 進制（M-ary）每符元帶 k ＝ log<sub>2</sub>M 個位元。看起來 M 越大越划算，但平均符元能量固定時，新增的點只能塞進相同能量範圍，最近兩點的距離便縮小；同樣的雜訊位移更容易跨過判決邊界。</p>
+<p>即使 M 相同，佈局也會改變代價。16-PSK 把點全擠在圓周，16-QAM 則使用方陣內部；後者最近點較遠，卻有不同的峰值能量。位元標籤又是另一層：它不改任何座標，卻會決定一次點判錯時平均損失幾個位元。</p>
+
+<h2>白話直覺：固定活動範圍裡，座位越多安全間隔越小</h2>
+<p>可以暫時把星座想成固定場地裡的座位；塞入更多座位會縮短最近間隔。比喻到此為止。精確地說，先把平均符元能量歸一化為 E<sub>s</sub> ＝ 1，再量任兩個合法點的最小歐氏距離 d<sub>min</sub>；雜訊每維標準差為 σ，越界主要由 d<sub>min</sub> / (2σ) 控制。</p>
+<p>因果鏈從位元分組開始：每 k 個位元選一個座標，PSK 把點排在單位圓，方形 QAM 把點排成兩軸位準的組合。較大的 M 買到每符元更多位元與較高頻譜效率；付出較小 d<sub>min</sub>、較高所需功率，以及 QAM 的峰值餘裕。邊界在低 E<sub>b</sub>/N<sub>0</sub>：最近鄰近似可能算出大於 1 的符元錯誤率，必須夾成 1 並承認近似失效。向量訊號分析儀能量到點雲、理想標籤與誤差向量幅度，但仍要用已知位元逐筆比對才能直接驗證誤碼率。</p>
+<p>Gray 映射（Gray mapping）讓相鄰點的標籤只差一個位元；自然二進位映射（natural binary mapping）則可能一次翻動多位。它們改變 P<sub>b</sub>，不改星座座標、d<sub>min</sub> 或 P<sub>s</sub>。峰均功率比（peak-to-average power ratio, PAPR）＝ E<sub>peak</sub> / E<sub>avg</sub>，反映功率放大器需要保留多少線性餘裕。</p>
+<p class="note">來源：15-數位通訊-下 §8.2；15-數位通訊-上 §5.2、§5.3、§6。</p>
+
+<h2>推導：由方陣能量走到 Gray 位元錯誤近似</h2>
+<p><strong>方形 QAM 的平均能量。</strong>令 m ＝ √M，一維位準為 {±1, ±3, …, ±(m − 1)}。這些奇數位準的平均平方是 (m² − 1) / 3；I、Q 兩維相加，得到 E<sub>avg</sub> ＝ 2(m² − 1) / 3 ＝ 2(M − 1) / 3。16-QAM 因此是 2 × 15 / 3 ＝ 10。未歸一化相鄰距離為 2，全部座標除以 √E<sub>avg</sub> 後，d<sub>min</sub> ＝ 2 / √E<sub>avg</sub>。</p>
+<p><strong>PSK 與 QAM 的 16 點差距。</strong>PSK 相鄰點夾角為 2π / M，單位圓弦長是 d<sub>min</sub> ＝ 2 sin(π / M)。16-PSK 得 0.390181；16-QAM 得 2 / √10 ＝ 0.632456。距離比 0.632456 / 0.390181 ＝ 1.620930，換成功率尺度為 20 log<sub>10</sub>1.620930 ＝ 4.195285 dB。兩者每符元同為 4 位元，差別來自點佈局使用圓盤面積的效率。</p>
+<p><strong>平均最近鄰數。</strong>16-QAM 有 4 個角點各 2 鄰、8 個邊點各 3 鄰、4 個內點各 4 鄰，所以 N<sub>avg</sub> ＝ (8 ＋ 24 ＋ 16) / 16 ＝ 3。256-QAM 則為 (4 × 2 ＋ 56 × 3 ＋ 196 × 4) / 256 ＝ 3.75。高能量比時多數誤判落到最近鄰，因此 P<sub>s</sub> ≈ N<sub>avg</sub>Q(d<sub>min</sub> / (2σ))。</p>
+<p><strong>Gray 標籤與位元錯數。</strong>一維 Gray 碼由 g ＝ n ⊕ (n ≫ 1) 產生，相鄰整數只差一位；QAM 在兩軸各自編碼再串接，相鄰點仍只差一位。自然二進位 8-PSK 的八對相鄰標籤漢明距離依序為 1、2、1、3、1、2、1、3，平均 H ＝ 14 / 8 ＝ 1.75。若一次符元錯誤幾乎都落到最近鄰，平均錯 H 個位元，而一個符元有 k 個位元，故 P<sub>b</sub> ≈ P<sub>s</sub> × H / k；Gray 時 H ＝ 1。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：AWGN、理想同步、平均符元能量為 1、高 E<sub>b</sub>/N<sub>0</sub> 的最近鄰近似。真實系統不是這樣；放大器壓縮、相位誤差、多徑與錯誤事件分布都可能改變結果。8-PSK 以上採近似 Gray 的環狀標籤，本課只使用相鄰皆差一位的性質。</p>
+
+<h2>數值實例：16-QAM、Gray、E<sub>b</sub>/N<sub>0</sub> ＝ 12 dB</h2>
+<p>預設選 16-QAM、Gray 映射、E<sub>b</sub>/N<sub>0</sub> ＝ 12 dB，線性值為 15.848932。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>M、k</td><td>16、log<sub>2</sub>16</td><td><strong>16、4</strong></td></tr>
+<tr><td>未歸一化 E<sub>avg</sub>、E<sub>peak</sub></td><td>2 × 15 / 3、3² ＋ 3²</td><td><strong>10.000000、18.000000</strong></td></tr>
+<tr><td>PAPR</td><td>18 / 10</td><td><strong>1.800000（2.552725 dB）</strong></td></tr>
+<tr><td>d<sub>min</sub>（E<sub>s</sub> ＝ 1）</td><td>2 / √10</td><td><strong>0.632456</strong></td></tr>
+<tr><td>最近鄰對數、N<sub>avg</sub></td><td>24 對、2 × 24 / 16</td><td><strong>24、3.000000</strong></td></tr>
+<tr><td>每次最近鄰錯誤的平均位元錯數 H</td><td>Gray／自然二進位</td><td><strong>1.000000／1.333333</strong></td></tr>
+<tr><td>E<sub>s</sub>/N<sub>0</sub>、σ</td><td>4 × 15.848932、√(1 / (2 × 63.395728))</td><td><strong>63.395728、0.088809</strong></td></tr>
+<tr><td>d<sub>min</sub> / (2σ)、Q</td><td>0.632456 / 0.177617</td><td><strong>3.560779、1.848783 × 10<sup>−4</sup></strong></td></tr>
+<tr><td>P<sub>s</sub> ≈ N<sub>avg</sub>Q</td><td>3 × Q</td><td><strong>5.546348 × 10<sup>−4</sup></strong></td></tr>
+<tr><td>P<sub>b</sub> ≈ P<sub>s</sub> × H / k</td><td>Gray：×1 / 4；自然：×1.333333 / 4</td><td><strong>1.386587 × 10<sup>−4</sup>／1.848783 × 10<sup>−4</sup></strong></td></tr>
+</tbody></table>
+<p><strong>七種星座常數。</strong>下表所有距離都以 E<sub>s</sub> ＝ 1 歸一化，數值與互動程式的常數逐字相同。</p>
+<table><thead><tr><th>鍵</th><th>M</th><th>k</th><th>E<sub>avg</sub></th><th>E<sub>peak</sub></th><th>d<sub>min</sub></th><th>N<sub>avg</sub></th><th>H<sub>nat</sub></th><th>H<sub>gray</sub></th><th>PAPR（dB）</th></tr></thead><tbody>
+<tr><td><code>bpsk</code></td><td>2</td><td>1</td><td>1</td><td>1</td><td>2.000000</td><td>1.000000</td><td>1.000000</td><td>1.000000</td><td>0.000000</td></tr>
+<tr><td><code>qpsk</code></td><td>4</td><td>2</td><td>1</td><td>1</td><td>1.414214</td><td>2.000000</td><td>1.500000</td><td>1.000000</td><td>0.000000</td></tr>
+<tr><td><code>psk8</code></td><td>8</td><td>3</td><td>1</td><td>1</td><td>0.765367</td><td>2.000000</td><td>1.750000</td><td>1.000000</td><td>0.000000</td></tr>
+<tr><td><code>psk16</code></td><td>16</td><td>4</td><td>1</td><td>1</td><td>0.390181</td><td>2.000000</td><td>1.875000</td><td>1.000000</td><td>0.000000</td></tr>
+<tr><td><code>qam16</code></td><td>16</td><td>4</td><td>10</td><td>18</td><td>0.632456</td><td>3.000000</td><td>1.333333</td><td>1.000000</td><td>2.552725</td></tr>
+<tr><td><code>qam64</code></td><td>64</td><td>6</td><td>42</td><td>98</td><td>0.308607</td><td>3.500000</td><td>1.571429</td><td>1.000000</td><td>3.679768</td></tr>
+<tr><td><code>qam256</code></td><td>256</td><td>8</td><td>170</td><td>450</td><td>0.153393</td><td>3.750000</td><td>1.733333</td><td>1.000000</td><td>4.227636</td></tr>
+</tbody></table>
+<p><strong>量級與邊界對照。</strong>16-PSK 在 12 dB 時 P<sub>b</sub> ＝ 7.009569 × 10<sup>−3</sup>，比 16-QAM 差 50 倍。256-QAM 在 12 dB 時 N<sub>avg</sub>Q ＝ 0.416172、P<sub>b</sub> ＝ 5.202151 × 10<sup>−2</sup>；到 24 dB 才降為 2.720401 × 10<sup>−7</sup>。在 0 dB 時 N<sub>avg</sub>Q ＝ 1.423137，大於 1，因此 P<sub>s</sub> 夾成 1、P<sub>b</sub> ＝ 0.125000。</p>
+<p>64-QAM 在 24 dB 時為 7.059014 × 10<sup>−18</sup>；BPSK 在 0 dB 時為 7.864960 × 10<sup>−2</sup>；QPSK 自然二進位在 12 dB 時為 1.350902 × 10<sup>−8</sup>，是 Gray 的 1.5 倍。64-QAM 的 d<sub>min</sub> 只有 BPSK 的 0.154303 倍，距離差為 16.232493 dB，但每符元多帶 5 位元。</p>
+<p>這些對照把取捨拆得很清楚：點數提升的是每次判決承載量，距離與峰值則決定接收可靠度和硬體餘裕，不能只憑 M 的大小選方案。</p>
+
+<section class="workspace"><h2>自由實驗：七種星座、兩種映射與能量比</h2>
+<p>選星座與位元映射，再調整 E_b/N_0。輸出會列出所選星座的完整帳，並用相同條件比較七種星座。</p>
+<div class="controls">
+<label for="ma-scheme">星座<select id="ma-scheme"><option value="bpsk">BPSK（2 點）</option><option value="qpsk">QPSK（4 點）</option><option value="psk8">8-PSK</option><option value="psk16">16-PSK</option><option value="qam16" selected>16-QAM</option><option value="qam64">64-QAM</option><option value="qam256">256-QAM</option></select></label>
+<label for="ma-map">位元映射<select id="ma-map"><option value="gray" selected>Gray 映射</option><option value="natural">自然二進位映射</option></select></label>
+<label for="ma-ebn0">E_b/N_0（dB）<input id="ma-ebn0" type="range" min="0" max="24" step="0.5" value="12"></label>
+</div>
+<div id="mary-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>d<sub>min</sub> 必須先把 E<sub>s</sub> 歸一化為 1，才能跨星座公平比較；未歸一化座標的數字大小沒有共同基準。</li>
+<li>本章 PAPR 是單一星座的峰值與平均值之比；OFDM 的 PAPR 是多個子載波相加的另一件事，留到第 12 章。</li>
+<li>Gray 映射改的是 P<sub>b</sub>，不是 P<sub>s</sub>；標籤不移動任何星座點，因此符元錯誤率不變。</li>
+<li>16-PSK 與 16-QAM 的頻譜效率相同，都是 4 bit/符元；兩者差在功率效率、最小距離與峰值特性。</li>
+<li>最近鄰近似不是所有能量比都準；算出 P<sub>s</sub> 大於 1 是模型越界的警告，不是實際機率。</li>
+</ul>
+
+<h2>可觀察證據：打開星座標籤，再量點雲尺度</h2>
+<p><strong>用什麼量。</strong>向量訊號分析儀顯示解調後星座與每個點的位元標籤；誤差向量幅度（error vector magnitude, EVM）可估計點雲的 σ，功率量測則可比較峰值與平均值。</p>
+<p><strong>能證明什麼。</strong>能確認實際星座、座標映射是否符合 Gray、點距尺度與 PAPR 的量級。</p>
+<p><strong>不能證明什麼。</strong>單靠星座截圖不能證明誤碼率一定符合最近鄰近似；必須送入已知位元，再由誤碼率測試儀逐筆計數。</p>
+
+<h2>連到哪門課</h2>
+<p>五種星座的座標與最近鄰近似見<a href="../通訊系統-互動課程/09-數位調變與星座圖.html">通訊系統的數位調變與星座圖</a>。軟體那一端，<code>np.argmin</code> 找最近點時，星座表順序就是位元映射；LTE 的 QAM 映射表寫在 3GPP TS 36.211，每列就是本章使用的 Gray 標籤。</p>
+<nav class="pager" aria-label="章節導覽"><a href="01-訊號空間與正交基底.html">← 上一頁：訊號空間與正交基底</a><a href="03-最佳接收機與ML判決.html">下一頁：最佳接收機與 ML 判決 →</a></nav>
+</main>
+<footer class="site-footer"><span>02 M 進制星座與最小距離</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

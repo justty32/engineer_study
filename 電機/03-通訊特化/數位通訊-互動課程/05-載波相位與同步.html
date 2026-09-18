@@ -1,0 +1,56 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 載波相位與同步｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・接收機要對準角度、時刻與訊框起點</p>
+<h1>載波相位與同步：星座一旋轉，判決距離就縮短</h1>
+<p class="lead">同步不只是一個鎖定燈號，而是載波、符元時序與訊框三件不同工作。這章把固定相位誤差與頻率偏移量化到底，再用 Costas 模糊與 Barker 前導碼說明接收機如何找回方向和起點。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-M進制星座與最小距離.html">02 M 進制星座與最小距離</a>的 IQ 座標、<a href="04-誤碼率公式與Q函數.html">04 誤碼率公式與 Q 函數</a>的距離尺。<strong>前置：</strong>見〈同相／正交載波〉<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統的調變與頻譜搬移</a>；PLL 的迴路設計見<a href="../../02-電機核心/控制系統-互動課程/index.html">控制系統</a>，本章只用鎖定後的殘餘誤差。</p>
+
+<h2>痛點：明明 E<sub>b</sub>/N<sub>0</sub> 沒變，為什麼星座轉一下就錯很多</h2>
+<p>接收端本地載波若與發射端差一個相位，整群星座點會一起旋轉。點到原點的距離沒有改變，判決器看到的安全距離卻變短；QPSK 的邊界只有 45°，因此同樣 10° 誤差比 BPSK 嚴重得多。</p>
+<p>固定相位偏差還不是全部。只要兩端頻率差 Δf，每經過一個符元，相位就再累積一點；符元取值時刻若沒對準，讀到的也不是眼開最大處；不知道訊框從哪開始，後面每一組位元都會切錯。三種同步解的是三個不同座標軸。</p>
+
+<h2>白話直覺：尺沒有變短，是整張座標紙轉向邊界</h2>
+<p>可以暫時把判決區域想成地板上的固定分格，星座像一張會轉的透明片；點一靠近格線就容易被雜訊推過去。比喻到此為止，精確地說，相位誤差 φ 以旋轉矩陣把 (I, Q) 變成 (I cos φ − Q sin φ, I sin φ ＋ Q cos φ)，雜訊變異數不變，變的是投影到判決軸的距離。</p>
+<p>因果鏈從位元開始：映射器形成 IQ 點，本地載波負責把接收波形投影回兩軸，時序器選定每個符元的判決時刻，相關器再用前導碼找到訊框邊界。對準後買到完整判決距離；代價是迴路、估測器與已知前導碼佔用硬體、功率與傳送時間。固定 φ 是本章可算的簡化邊界；真實振盪器還有相位雜訊與都卜勒。向量訊號分析儀量整體轉角與旋轉速度，示波器可看迴路誤差電壓，相關尖峰則標出訊框起點。</p>
+<p>載波同步（carrier synchronization）處理頻率與相位，常見工具是 PLL 與 Costas 迴路；符元時序同步（symbol timing synchronization）可用早晚閘或 Gardner；訊框同步（frame synchronization）以固定前導碼做相關。三者會互相影響，但不能互相取代。</p>
+<p class="note">來源：15-數位通訊-下 §13。</p>
+
+<h2>推導：從旋轉矩陣算到跨越判決邊界</h2>
+<p><strong>旋轉來源。</strong>本地載波與發射載波相差 φ，混頻後 I′ ＝ I cos φ − Q sin φ，Q′ ＝ I sin φ ＋ Q cos φ；複數寫法就是乘上 e<sup>jφ</sup>。BPSK 的 (±1, 0) 變成 (±cos φ, ±sin φ)，判決只看 I′，所以 P<sub>b</sub> ＝ Q(√(2γ<sub>b</sub>)cos φ)。</p>
+<p><strong>QPSK 的最壞軸。</strong>代表點 (1/√2)(1, 1) 旋轉後，I′ ＝ (cos φ − sin φ)/√2，Q′ ＝ (cos φ ＋ sin φ)/√2。一軸縮短、另一軸拉長，因此 P<sub>b</sub> ＝ ½[Q(√(2γ<sub>b</sub>)(cos φ − sin φ)) ＋ Q(√(2γ<sub>b</sub>)(cos φ ＋ sin φ))]。φ ＝ 45° 時一軸距離歸零，P<sub>b</sub> 趨近 2.500000 × 10<sup>−1</sup>。</p>
+<p><strong>dB 損失與頻率偏移。</strong>BPSK 的損失為 −20 log<sub>10</sub>(cos φ)，QPSK 以最壞軸算 −20 log<sub>10</sub>(cos φ − |sin φ|)。每符元相位增量是 360° × Δf/R<sub>s</sub>；以目前 |φ| 到邊界的角度除以增量並向下取整，可估跨界前的完整符元數。BPSK 邊界為 90°，QPSK 為 45°。</p>
+<p><strong>Costas 為何留下方向模糊。</strong>BPSK 資料相位只可能相差 180°，平方後兩者都變成相同的載波相位，迴路能鎖住頻率與軸線，卻無從判定正向或反向。QPSK 用四次方消去四種資料相位，也會留下相差 90° 的四個等價鎖定方向。已知前導碼可測出落在哪個方向，再把整批座標轉回；差分編碼則讓相鄰符元的變化承載位元，避開絕對方向未知。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：φ 固定、AWGN、理想符元時序；真實系統不是這樣，相位雜訊會隨時間改變，載波迴路也有有限追蹤頻寬。迴路穩定度與鎖定範圍留給控制系統課。</p>
+
+<h2>數值實例：QPSK、10 dB、10° 與每符元 1.800000°</h2>
+<p>取 QPSK、E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB、φ ＝ 10°、Δf/R<sub>s</sub> ＝ 5 ‰。√(2γ<sub>b</sub>) ＝ <strong>4.472136</strong>，無相位誤差的 P<sub>b</sub> 是 <strong>3.872108 × 10<sup>−6</sup></strong>；原點 (0.707107, 0.707107) 轉成 <strong>(0.573576, 0.819152)</strong>。最壞軸有效距離是 0.984808 − 0.173648 ＝ <strong>0.811160</strong>，故 P<sub>b</sub> ＝ ½[Q(3.627569) ＋ Q(5.180783)] ＝ <strong>7.156784 × 10<sup>−5</sup></strong>，等效損失 <strong>1.817874 dB</strong>。</p>
+<p>頻率偏移讓每符元增加 <strong>1.800000°</strong>，⌊(45 − 10)/1.8⌋ ＝ <strong>19</strong>，也就是 19 個完整符元後逼近跨界。相同條件的 BPSK 代表點為 <strong>(0.984808, 0.173648)</strong>，P<sub>b</sub> 為 <strong>5.308891 × 10<sup>−6</sup></strong>，損失 <strong>0.132971 dB</strong>，需 <strong>44</strong> 個符元才跨過 90°；QPSK 的 dB 損失約為其 14 倍。</p>
+<p><strong>邊界對照。</strong>QPSK 在 φ ＝ 0° 時為 <strong>3.872108 × 10<sup>−6</sup></strong>、損失 0；φ ＝ 20° 時為 <strong>1.880123 × 10<sup>−3</sup></strong>、損失 <strong>4.470735 dB</strong>；φ ＝ 45° 時為 <strong>2.500000 × 10<sup>−1</sup></strong>，因距離為 0，損失寫作<strong>不適用</strong>。若 Δf/R<sub>s</sub> ＝ 0，相位不漂移。</p>
+<p><strong>Barker−13 前導碼。</strong>序列為 +1 +1 +1 +1 +1 −1 −1 +1 +1 −1 +1 −1 +1；非週期自相關由位移 0 到 12 依序是 <strong>13、0、1、0、1、0、1、0、1、0、1、0、1</strong>。主峰 13、最大旁瓣 1，接收端因此容易把真正邊界與錯誤位移分開。</p>
+<p>早晚閘用最佳時刻前後兩個讀值比較能量；兩側相等表示落在中央，一側較大就往該側修正。它處理的是符元時序，並不修正星座角度。Barker 相關也只回答「已知序列在哪裡」，不能代替載波迴路。把三種誤差拆開量，才不會把相關峰偏低誤判成單一同步器故障。</p>
+
+<section class="workspace"><h2>自由實驗：旋轉星座並累積頻率偏移</h2>
+<p>場景是鎖定後仍留下固定相位誤差與殘餘頻率偏移的接收機。選 BPSK 或 QPSK，再改 E_b/N_0、φ 與 Δf/R_s，觀察座標、誤碼率、最壞軸損失和跨界時間。</p>
+<div class="controls">
+<label for="ph-scheme">調變<select id="ph-scheme"><option value="bpsk">BPSK（邊界 ±90°）</option><option value="qpsk" selected>QPSK（邊界 ±45°）</option></select></label>
+<label for="ph-ebn0">E_b/N_0（dB）<input id="ph-ebn0" type="range" min="0" max="16" step="0.5" value="10"></label>
+<label for="ph-phi">載波相位誤差 φ（度）<input id="ph-phi" type="range" min="-45" max="45" step="1" value="10"></label>
+<label for="ph-df">歸一化頻率偏移 Δf/R_s（千分之一）<input id="ph-df" type="range" min="0" max="50" step="1" value="5"></label>
+</div>
+<div id="phase-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>固定相位誤差是常數偏差，相位雜訊則隨時間隨機變；本章公式只算前者。</li><li>頻率偏移是固定 Δf，結果是相位線性累積；它不等於短時間的頻率抖動。</li><li>Costas 迴路的 <strong>180° 模糊</strong>不是故障。BPSK 平方後把相差 180° 的兩種方向合併，迴路無法知道鎖在哪一向，必須靠差分編碼或前導碼解開；QPSK 對應 90° 模糊。</li><li>符元時序誤差改變取值時刻與眼開度，載波相位誤差旋轉 IQ 座標，兩者需要不同迴路。</li><li>Barker 相關峰只能標出前導碼最可能對齊處，不能保證後續內容沒有錯誤。</li></ul>
+
+<h2>可觀察證據：看星座旋轉、迴路誤差與相關尖峰</h2>
+<p><strong>用什麼量。</strong>向量訊號分析儀量星座整體角度與每秒旋轉速度，示波器觀察 Costas 迴路誤差電壓，相關器輸出則顯示前導碼尖峰。<strong>能證明什麼。</strong>可估殘餘 φ、Δf，以及 Barker 前導碼是否對齊。<strong>不能證明什麼。</strong>星座旋轉本身無法區分本地振盪器偏差與通道都卜勒，兩者在 IQ 平面上可呈現相同軌跡。</p>
+
+<h2>連到哪門課</h2>
+<p>同相與正交載波見<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統</a>；PLL 的迴路濾波器與鎖定範圍見<a href="../../02-電機核心/控制系統-互動課程/index.html">控制系統</a>；時序誤差對眼圖的影響見<a href="../通訊系統-互動課程/07-基頻傳輸ISI與升餘弦.html">通訊系統的基頻傳輸</a>。軟體那一端，SDR 的 Costas 迴路、符元同步與存取碼相關三個處理方塊，正好對應這三種同步。</p>
+<nav class="pager" aria-label="章節導覽"><a href="04-誤碼率公式與Q函數.html">← 上一頁：誤碼率公式與 Q 函數</a><a href="06-等化器ZF與MMSE.html">下一頁：等化器 ZF 與 MMSE →</a></nav>
+</main>
+<footer class="site-footer"><span>05 載波相位與同步</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

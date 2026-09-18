@@ -1,0 +1,93 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 切換頻率取捨：損耗、體積與溫度的總整合｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">11・用一個頻率串起體積、效率與結溫</p>
+<h1>11 切換頻率取捨：損耗、體積與溫度的總整合</h1>
+<p class="lead">同一個 48 V 轉 12 V、10 A 的同步降壓轉換器（synchronous buck），把切換頻率由 200 kHz 拉到 1 MHz，電感由 15.000000 µH 縮到 3.000000 µH，效率卻由 97.624471 % 降到 91.883614 %。本章把各章公式接成可比較的設計鏈。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-功率開關與兩種損耗.html">01 功率開關與兩種損耗</a>、<a href="05-Buck降壓轉換器.html">05 Buck 降壓轉換器</a>、<a href="07-濾波與漣波設計.html">07 濾波與漣波設計</a>、<a href="10-散熱與效率.html">10 散熱與效率</a>。</p>
+
+<h2>痛點：頻率拉高能縮小元件，為什麼不能一路拉到底</h2>
+<p>「既然 L 與 C 都跟切換頻率成反比，直接選最高頻率不就能做出最小電源？」這個問法只看見被動元件，漏掉每秒切換次數。每次過渡都讓開關上的電壓與電流短暫重疊；單次能量不變時，每秒多做幾次，切換損便按比例增加，最後透過熱阻推高結溫。</p>
+<p>反過來一味降頻也不完整。頻率太低，為了守住相同的電感電流變化量與輸出電壓變化量，L、C 必須變大；電感要儲存的磁能增加，體積與成本跟著上升。設計者真正選的是一組可接受的效率、體積、溫度與動態表現，不是單一數字的最大值。</p>
+<p>這種拓樸把原本的續流二極體換成受控的低側 MOSFET，目的在低電壓、大電流時降低導通壓降。高側負責把輸入能量送進電感，低側在高側關斷後提供續流路徑；兩顆元件分攤一個週期，卻不代表損耗平均分配，因為工作週期、電阻、過渡方式與散熱條件都會改變各自溫度。</p>
+
+<h2>白話直覺：同一個旋鈕同時推動兩個相反方向</h2>
+<p>可以暫時把 f<sub>sw</sub> 想成同時連著兩個反向刻度的旋鈕；比喻到此為止，精確關係是 L、C 與電感儲能約按 1 / f<sub>sw</sub> 下降，而切換損按 f<sub>sw</sub> 上升。導通損在本章固定電流與 R<sub>on</sub> 的模型裡不隨頻率變。</p>
+<p>沿因果鏈走一次：48 V 電源以負端為參考，高側 MOSFET 導通時回路由輸入經電感與負載閉合，電感吸收能量；高側關斷、低側 MOSFET 導通時，電感電流沿低側回路續流並把能量送給負載。切換加快後，每一段允許電流改變的時間縮短，因此相同 Δi<sub>L</sub> 只需更小 L；但高側每秒經過更多次電壓與電流交越，損耗和結溫上升。示波器看 Δi<sub>L</sub> 與開關節點，電力分析儀看效率，熱像儀看殼溫。</p>
+<p>這件事在你的程式裡長什麼樣：這是多目標最佳化，效率、體積與溫度三個目標函數共用 f<sub>sw</sub>；程式可以掃描參數並列出取捨前沿，卻不能在沒有需求權重時宣告唯一最佳解。</p>
+<p>掃描時必須固定比較條件。本章維持相同輸入、輸出、負載、Δi<sub>L</sub> 比例與 ΔV<sub>o</sub> 目標，再依頻率重新求 L、C；若只換頻率卻保留原電感，電流變化量也會改變，得到的損耗與體積就不是同一個設計目標下的比較。固定條件是讀懂掃描表的必要前提。</p>
+<p>頻率提高也會讓可用控制頻寬增加、動態反應變快，但切換邊緣的 EMI 頻譜往高頻移動，佈局與濾波要求更嚴格；降頻則以較大的被動元件換取較低切換損。這些影響必須和熱結果一起比較。</p>
+<p class="note">來源：P2-電力電子（上）§1.2、§1.3；（下）§7.1、§8.3。</p>
+
+<h2>推導：把電氣、磁能、損耗與熱接成一條鏈</h2>
+<p><strong>（一）電壓與濾波元件。</strong>引用第 05、07 章：D ＝ V<sub>o</sub> / V<sub>in</sub>；Δi<sub>L</sub> ＝ 比例 × I<sub>o</sub>；L ＝ (V<sub>in</sub> − V<sub>o</sub>) × D / (f<sub>sw</sub> × Δi<sub>L</sub>)；C ＝ Δi<sub>L</sub> / (8 × f<sub>sw</sub> × ΔV<sub>o</sub>)。D 與比例無單位，電壓用 V、電流用 A、頻率用 Hz，L 用 H、C 用 F。兩式都直接顯示 L、C ∝ 1 / f<sub>sw</sub>。</p>
+<p><strong>（二）體積指標。</strong>峰值電流 I<sub>pk</sub> ＝ I<sub>o</sub> ＋ Δi<sub>L</sub> / 2，電感儲能 E<sub>L</sub> ＝ ½ × L × I<sub>pk</sub>²，單位 J。若磁性材料允許的磁能密度固定，所需體積便與 E<sub>L</sub> 成正比；固定 I<sub>pk</sub> 時，L ∝ 1 / f<sub>sw</sub> 使儲能也按 1 / f<sub>sw</sub> 下降。</p>
+<p><strong>（三）三種損耗。</strong>同步 Buck（synchronous buck）以低側 MOSFET 取代續流二極體。引用第 01 章，高側導通損 P<sub>CH</sub> ＝ I<sub>o</sub>² × R<sub>on</sub> × D，低側導通損 P<sub>CL</sub> ＝ I<sub>o</sub>² × R<sub>on</sub> × (1 − D)；切換損只算高側，P<sub>sw</sub> ＝ ½ × V<sub>in</sub> × I<sub>o</sub> × t<sub>sw</sub> × f<sub>sw</sub>。三者單位都是 W，總損耗為其相加。前兩式不含頻率，第三式與頻率成正比。</p>
+<p><strong>（四）效率與溫度。</strong>P<sub>o</sub> ＝ V<sub>o</sub> × I<sub>o</sub>；η ＝ P<sub>o</sub> / (P<sub>o</sub> ＋ P<sub>loss</sub>) × 100 %。高側結溫 T<sub>J</sub> ＝ 40 °C ＋ (P<sub>CH</sub> ＋ P<sub>sw</sub>) × θ<sub>JA</sub>。低側的熱未放入高側結溫，但仍算入整機效率。</p>
+<p><strong>（五）頻率關係的來源。</strong>在 V<sub>in</sub>、V<sub>o</sub>、I<sub>o</sub> 與允許 Δi<sub>L</sub> 固定時，L 的分子不變，分母只有 f<sub>sw</sub> 改變，所以 L ∝ 1 / f<sub>sw</sub>。I<sub>pk</sub> 也固定，代入 E<sub>L</sub> ＝ ½ × L × I<sub>pk</sub>² 後便有 E<sub>L</sub> ∝ 1 / f<sub>sw</sub>。另一方面，每次切換能量 ½ × V<sub>in</sub> × I<sub>o</sub> × t<sub>sw</sub> 固定，每秒事件數是 f<sub>sw</sub>，故 P<sub>sw</sub> ∝ f<sub>sw</sub>。兩條相反關係正是取捨的數學核心。</p>
+<p><strong>模型假設與適用範圍。</strong>本課用的是一階教學模型，真實電路不是這樣：兩顆 R<sub>on</sub> 相同且不隨溫度改變，低側近似零電壓切換，忽略閘極驅動損、反向恢復、輸出電容與電感鐵損，θ<sub>JA</sub> 固定，且只看穩態。t<sub>sw</sub> × f<sub>sw</sub> 達 20 % 時，線性交越模型失效；磁性元件的鐵損也會讓高頻端比本模型更差。</p>
+
+<h2>數值實例：200 kHz 的同步 Buck 與四點掃描</h2>
+<p>預設 f<sub>sw</sub> ＝ 200 kHz、V<sub>in</sub> ＝ 48 V、V<sub>o</sub> ＝ 12 V、I<sub>o</sub> ＝ 10 A、R<sub>on</sub> ＝ 10 mΩ、t<sub>sw</sub> ＝ 40 ns、Δi<sub>L</sub> 30 %、ΔV<sub>o</sub> 50 mV、θ<sub>JA</sub> ＝ 5 °C/W、T<sub>a</sub> ＝ 40 °C。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>D</td><td>12 / 48</td><td><strong>0.250000</strong></td></tr>
+<tr><td>Δi<sub>L</sub></td><td>0.3 × 10</td><td><strong>3.000000 A</strong></td></tr>
+<tr><td>L</td><td>36 × 0.25 / (200 kHz × 3)</td><td><strong>15.000000 µH</strong></td></tr>
+<tr><td>C</td><td>3 / (8 × 200 kHz × 0.05)</td><td><strong>37.500000 µF</strong></td></tr>
+<tr><td>峰值電流</td><td>10 ＋ 1.5</td><td><strong>11.500000 A</strong></td></tr>
+<tr><td>電感儲能</td><td>½ × 15 µH × 11.5²</td><td><strong>991.875000 µJ</strong></td></tr>
+<tr><td>高側導通損</td><td>100 × 0.01 × 0.25</td><td><strong>0.250000 W</strong></td></tr>
+<tr><td>低側導通損</td><td>100 × 0.01 × 0.75</td><td><strong>0.750000 W</strong></td></tr>
+<tr><td>切換損</td><td>½ × 48 × 10 × 40 ns × 200 kHz</td><td><strong>1.920000 W</strong></td></tr>
+<tr><td>總損耗</td><td>0.25 ＋ 0.75 ＋ 1.92</td><td><strong>2.920000 W</strong></td></tr>
+<tr><td>輸出功率</td><td>12 × 10</td><td><strong>120.000000 W</strong></td></tr>
+<tr><td>效率</td><td>120 / 122.92</td><td><strong>97.624471 %</strong></td></tr>
+<tr><td>高側結溫</td><td>40 ＋ (0.25 ＋ 1.92) × 5</td><td><strong>50.850000 °C</strong></td></tr>
+<tr><td>切換過渡佔週期</td><td>40 ns × 200 kHz</td><td><strong>0.800000 %</strong></td></tr>
+</tbody></table>
+<table><thead><tr><th>f<sub>sw</sub></th><th>L（µH）</th><th>C（µF）</th><th>儲能（µJ）</th><th>切換損（W）</th><th>總損耗（W）</th><th>效率（%）</th><th>結溫（°C）</th></tr></thead><tbody>
+<tr><td>100 kHz</td><td>30.000000</td><td>75.000000</td><td>1983.750000</td><td>0.960000</td><td>1.960000</td><td>98.392916</td><td>46.050000</td></tr>
+<tr><td>200 kHz</td><td>15.000000</td><td>37.500000</td><td>991.875000</td><td>1.920000</td><td>2.920000</td><td>97.624471</td><td>50.850000</td></tr>
+<tr><td>500 kHz</td><td>6.000000</td><td>15.000000</td><td>396.750000</td><td>4.800000</td><td>5.800000</td><td>95.389507</td><td>65.250000</td></tr>
+<tr><td>1000 kHz</td><td>3.000000</td><td>7.500000</td><td>198.375000</td><td>9.600000</td><td>10.600000</td><td>91.883614</td><td>89.250000</td></tr>
+</tbody></table>
+<p>邊界可校準判斷：50 kHz 時 L 為 <strong>60.000000 µH</strong>、儲能 <strong>3967.500000 µJ</strong>、效率 <strong>98.781692 %</strong>；1 MHz 且 t<sub>sw</sub> ＝ 200 ns 時，切換損 <strong>48.000000 W</strong>、效率 <strong>71.005917 %</strong>、結溫 <strong>281.250000 °C</strong>，過渡佔 <strong>20.000000 %</strong>，此時模型已失效。把 R<sub>on</sub> 降為 2 mΩ，效率為 <strong>98.264003 %</strong>；把 I<sub>o</sub> 提到 20 A 且 θ<sub>JA</sub> 設 30，結溫為 <strong>185.200000 °C</strong>。</p>
+<p>低電壓大電流是另一個角落。60 V 降到 3 V 時 D 為 <strong>0.050000</strong>，效率只有 <strong>89.820359 %</strong>；高側導通很短，低側幾乎整個週期都承擔電流，導通損轉由低側主導。這也是處理器電壓調節模組常採多相並聯的原因之一：把大電流分到多條相位，可降低每顆元件與每顆電感的電流負擔。</p>
+<p>寬能隙元件能縮短 t<sub>sw</sub>。當 t<sub>sw</sub> 不超過 10 ns，同一頻率下的交越能量可顯著下降，設計者能在相近損耗下選更高頻率與更小的 L、C；但封裝寄生、驅動回路與 EMI 會變得更敏感。材料優勢只是移動可行範圍，並未移除佈局與量測工作。</p>
+
+<section class="workspace"><h2>自由實驗：掃描頻率看體積、效率與結溫</h2>
+<p>場景是同一顆同步 Buck，在指定輸入、輸出與負載下重新選頻率及元件參數。主表呈現目前設定，固定四列掃描表讓你直接比較趨勢；若輸出電壓不低於輸入，Buck 模型便不適用。</p>
+<div class="controls">
+<label for="to-f">切換頻率 f_sw（kHz）<input id="to-f" type="range" min="50" max="1000" step="50" value="200"></label>
+<label for="to-vin">輸入電壓 V_in（V）<input id="to-vin" type="range" min="12" max="60" step="1" value="48"></label>
+<label for="to-vo">輸出電壓 V_o（V）<input id="to-vo" type="range" min="3" max="24" step="0.5" value="12"></label>
+<label for="to-io">負載電流 I_o（A）<input id="to-io" type="range" min="1" max="20" step="1" value="10"></label>
+<label for="to-ron">R_on（mΩ，高低側相同）<input id="to-ron" type="range" min="2" max="50" step="1" value="10"></label>
+<label for="to-tsw">切換過渡時間 t_sw（ns）<input id="to-tsw" type="range" min="5" max="200" step="5" value="40"></label>
+<label for="to-rip">Δi_L / I_o（%）<input id="to-rip" type="range" min="10" max="60" step="5" value="30"></label>
+<label for="to-dv">ΔV_o 目標（mV）<input id="to-dv" type="range" min="10" max="200" step="10" value="50"></label>
+<label for="to-theta">高側 θ_JA（°C/W）<input id="to-theta" type="range" min="1" max="30" step="1" value="5"></label>
+</div>
+<div id="trade-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>效率最高與體積最小通常不在同一個頻率；先定需求邊界，才有可比較的設計。</li>
+<li>電感儲能是本章的體積指標，不是損耗；理想電感可以反覆收回儲存的能量。</li>
+<li>結溫超標不等於效率一定很差；即使效率 95 %，絕對損耗與熱阻仍可能使元件過熱。</li>
+<li>換用 GaN 不會自動消除所有損耗；較短 t<sub>sw</sub> 把可接受的取捨範圍推向較高頻率，同樣效率下才有機會縮小電感。</li>
+<li>控制迴路交越頻率常放在 f<sub>sw</sub> / 10 以下，但這只是起點；穩定度仍要由控制系統模型驗證。</li>
+</ul>
+
+<h2>可觀察證據：逐頻率量效率、電流變化與殼溫</h2>
+<p>在相同輸入、輸出與負載下逐步改頻率，用電力分析儀量輸入與輸出功率，示波器搭配電流探棒量 Δi<sub>L</sub>，並看開關節點的過渡時間；待溫度穩定後，用熱像儀記錄高側 MOSFET 殼溫。把每個頻率的數值排成與本章相同的掃描表。</p>
+<p><strong>能證明</strong>的是效率與溫度隨頻率變動的實際趨勢，以及更換 L 後 Δi<sub>L</sub> 是否守住設計值。<strong>不能證明</strong>的是單靠熱像儀得到晶片結溫；在 98 % 以上，儀器誤差也可能大於損耗差異，應改用熱量法量損耗。EMI 的變化則要由頻譜分析儀另外量。</p>
+
+<h2>連到哪門課</h2>
+<p>伺服器 48 V 匯流排、車用 DC-DC 與 GaN 快充都在做這組取捨。數位控制（digital control）要處理取樣、運算延遲與 PWM 解析度；補償器設計留給控制系統課，EMI 對策留給 IoT 知識群「04-天線RF與EMC」，可靠度承接第 10 章。需要重排學習路線時，回到<a href="index.html">課程地圖</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="10-散熱與效率.html">← 上一頁：散熱與效率</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>11 切換頻率取捨：損耗、體積與溫度的總整合</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

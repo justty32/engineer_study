@@ -1,0 +1,83 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 漢明碼與症狀解碼｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・三個冗餘位元，讓一個錯誤現出位置</p>
+<h1>漢明碼與症狀解碼：七個非零行向量就是七個位置標籤</h1>
+<p class="lead">(7,4) 漢明碼把 4 個資訊位元寫成 7 個傳送位元。接收端不必窮舉所有錯法；三位症狀可直接指出單一錯誤，但兩個錯誤會假裝成另一個位置。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-數位通訊世界觀與收發鏈.html">00 數位通訊世界觀與收發鏈</a>的編碼位置、<a href="04-誤碼率公式與Q函數.html">04 誤碼率公式與 Q 函數</a>的 BPSK 誤碼率。<strong>前置：</strong>見〈<a href="../../../共通基礎/數學/互動課程/04-向量與矩陣.html">工程數學先修的向量與矩陣</a>〉；本章只把乘加改成模 2 運算。</p>
+
+<h2>痛點：多傳三位，怎麼可以知道錯在哪一位</h2>
+<p>冗餘常被誤解為「多傳幾份備份」，但 (7,4) 漢明碼沒有複製整段訊息。它選三組不同的奇偶關係，讓每個傳送位置在這三組檢查中擁有唯一的三位標籤。只錯一位時，哪些關係被破壞，就把那個標籤顯出來。</p>
+<p>真正的邊界是這套標籤只預算一個錯誤。兩位同時錯時，兩個標籤的模 2 和又是第三個合法標籤，解碼器便會自信地翻錯第三位。因此「有檢查結果」不等於「任意錯誤都能精確修正」。</p>
+
+<h2>白話直覺：每個位置都領一張三位數身分證</h2>
+<p>可以暫時把 H 的七個行向量想成位置身分證：某位翻轉，三個檢查燈亮暗組合就是它的編號。比喻到此為止；精確地說，症狀（syndrome）s ＝ H rᵀ（模 2），單一錯誤向量只有一個 1，所以乘積剛好挑出 H 的對應行。</p>
+<p>因果鏈從 4 個資訊位元 m 開始。編碼器依三條奇偶式產生 p<sub>1</sub>、p<sub>2</sub>、p<sub>3</sub>，組成 7 位碼字 c；通道錯誤 e 讓 r ＝ c ⊕ e；解碼器以 s 查位置並翻一位。買到的是單一錯誤更正與編碼增益，付出的是編碼率 R ＝ 4/7，也就是更多傳送位元、頻寬與運算。邊界是兩位錯誤會誤糾，低 E<sub>b</sub>/N<sub>0</sub> 時每個編碼位元分到的能量變少，短碼甚至倒賠。誤碼率測試儀可在解碼前後各數一次。</p>
+<p>這個碼的碼字重量分布為 0 × 1、3 × 7、4 × 7、7 × 1，所以最小漢明距離（Hamming distance）d<sub>min</sub> ＝ 3，糾錯能力 t ＝ ⌊(d<sub>min</sub> − 1)/2⌋ ＝ 1。它還是完美碼（perfect code）：以每個碼字為中心、半徑 1 的二進位球恰好填滿全部 7 位字串，沒有空隙也沒有重疊。</p>
+<p class="note">來源：15-數位通訊-下 §11.1、§11.2。</p>
+
+<h2>推導：從生成矩陣到三條症狀式</h2>
+<p><strong>編碼。</strong>系統式生成矩陣 G ＝ [I<sub>4</sub> | P]，所以碼字前四位保留 m<sub>1</sub>m<sub>2</sub>m<sub>3</sub>m<sub>4</sub>，後三位為 p<sub>1</sub>p<sub>2</sub>p<sub>3</sub>。逐位元寫出：p<sub>1</sub> ＝ m<sub>1</sub> ⊕ m<sub>2</sub> ⊕ m<sub>4</sub>；p<sub>2</sub> ＝ m<sub>1</sub> ⊕ m<sub>3</sub> ⊕ m<sub>4</sub>；p<sub>3</sub> ＝ m<sub>2</sub> ⊕ m<sub>3</sub> ⊕ m<sub>4</sub>。校驗矩陣 H ＝ [Pᵀ | I<sub>3</sub>]，而 G Hᵀ ＝ [I | P][P ; I] ＝ P ⊕ P ＝ 0，因此所有合法碼字都滿足 H cᵀ ＝ 0。</p>
+<p><strong>H 的七個行向量。</strong>七個非零三位組合各出現一次，因此單一錯誤的症狀不會重複。</p>
+<table><thead><tr><th>位置 i</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr></thead><tbody><tr><th>H 的第 i 行</th><td>110</td><td>101</td><td>011</td><td>111</td><td>100</td><td>010</td><td>001</td></tr></tbody></table>
+<p><strong>症狀三條式逐位元展開。</strong>s<sub>1</sub> ＝ r<sub>1</sub> ⊕ r<sub>2</sub> ⊕ r<sub>4</sub> ⊕ r<sub>5</sub>；s<sub>2</sub> ＝ r<sub>1</sub> ⊕ r<sub>3</sub> ⊕ r<sub>4</sub> ⊕ r<sub>6</sub>；s<sub>3</sub> ＝ r<sub>2</sub> ⊕ r<sub>3</sub> ⊕ r<sub>4</sub> ⊕ r<sub>7</sub>。因 r ＝ c ⊕ e，所以 H rᵀ ＝ H cᵀ ⊕ H eᵀ ＝ H eᵀ，症狀只由錯誤決定。s ＝ 000 時不翻；其餘組合就查上表並翻轉對應位。</p>
+<p><strong>兩個錯誤為什麼誤糾。</strong>位置 3 的 011 ⊕ 位置 6 的 010 ＝ 001，而 001 是位置 7 的行。解碼器不知道前面已錯兩位，會再翻第 7 位，結果與原碼字差 3 位，剛好落到另一個合法碼字。</p>
+<p><strong>把能量成本算進來。</strong>硬判決（hard decision）先把每位判為 0 或 1，等效成二元對稱通道（binary symmetric channel, BSC）。每個資訊位元的能量被攤到 1/R 個編碼位元，故 E<sub>c</sub> ＝ R E<sub>b</sub>，p ＝ Q(√(2R E<sub>b</sub>/N<sub>0</sub>))。字錯誤率 P<sub>w</sub> ＝ Σ<sub>j≥2</sub> C(7,j)p<sup>j</sup>(1 − p)<sup>7−j</sup>；位元誤碼率教學近似 P<sub>b</sub> ≈ (1/7)Σ<sub>j＝2</sub><sup>7</sup>(j ＋ 1)C(7,j)p<sup>j</sup>(1 − p)<sup>7−j</sup>，因超過能力時常再多翻 1 位。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：BSC、硬判決與完美碼的位元誤碼率近似。真實系統不是這樣：軟判決會保留可靠度，漸近可再多賺約 2 dB，且通道錯誤可能相關而非獨立。</p>
+
+<h2>數值實例：m ＝ 1011、第 3 位錯、E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB</h2>
+<table><thead><tr><th>步驟</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>p<sub>1</sub>、p<sub>2</sub>、p<sub>3</sub></td><td>1⊕0⊕1、1⊕1⊕1、0⊕1⊕1</td><td><strong>0、1、0</strong></td></tr>
+<tr><td>碼字 c</td><td>m ‖ p</td><td><strong>1011 010</strong></td></tr>
+<tr><td>接收 r</td><td>第 3 位翻轉</td><td><strong>1001 010</strong></td></tr>
+<tr><td>症狀 s<sub>1</sub>s<sub>2</sub>s<sub>3</sub></td><td>1⊕0⊕1⊕0、1⊕0⊕1⊕1、0⊕0⊕1⊕0</td><td><strong>011</strong></td></tr>
+<tr><td>指向位置</td><td>查 H 的行</td><td><strong>3</strong></td></tr>
+<tr><td>糾正後、解碼訊息</td><td>翻第 3 位</td><td><strong>1011 010、1011（正確）</strong></td></tr>
+<tr><td>E<sub>c</sub>/N<sub>0</sub></td><td>10 ＋ 10 log<sub>10</sub>(4/7)</td><td><strong>7.569620 dB</strong></td></tr>
+<tr><td>BSC 交叉機率 p</td><td>Q(√(2 × 4/7 × 10)) ＝ Q(3.380617)</td><td><strong>3.616164 × 10<sup>−4</sup></strong></td></tr>
+<tr><td>P<sub>w</sub></td><td>Σ<sub>j≥2</sub></td><td><strong>2.742786 × 10<sup>−6</sup></strong></td></tr>
+<tr><td>解碼後 P<sub>b</sub></td><td>教學近似</td><td><strong>1.175716 × 10<sup>−6</sup></strong></td></tr>
+<tr><td>未編碼 P<sub>b</sub></td><td>BPSK 10 dB</td><td><strong>3.872108 × 10<sup>−6</sup>（編碼好 3.293405 倍）</strong></td></tr>
+</tbody></table>
+<p><strong>編碼增益表。</strong>這裡比的是達到同一誤碼率時，兩者所需 E<sub>b</sub>/N<sub>0</sub> 的水平差。</p>
+<table><thead><tr><th>目標誤碼率</th><th>未編碼所需</th><th>編碼所需</th><th>增益</th></tr></thead><tbody>
+<tr><td>10<sup>−3</sup></td><td>6.789523 dB</td><td>6.658027 dB</td><td><strong>0.131495 dB</strong></td></tr>
+<tr><td>10<sup>−5</sup></td><td>9.587858 dB</td><td>9.174484 dB</td><td><strong>0.413375 dB</strong></td></tr>
+<tr><td>10<sup>−6</sup></td><td>10.529832 dB</td><td>10.056825 dB</td><td><strong>0.473007 dB</strong></td></tr>
+</tbody></table>
+<p><strong>量級與邊界對照。</strong>漸近硬判決增益 10 log<sub>10</sub>(R(t ＋ 1)) ＝ 0.579919 dB，軟判決漸近 10 log<sub>10</sub>(R d<sub>min</sub>) ＝ 2.340832 dB。E<sub>b</sub>/N<sub>0</sub> ＝ 4 dB 時，編碼後 1.615397 × 10<sup>−2</sup> 比未編碼 1.250082 × 10<sup>−2</sup> 更差，倍率 0.773854；6 dB 時幾乎打平，倍率 1.025105；8 dB 為 1.632334 倍；12 dB 為 9.237060 倍。兩位錯誤例如第 3 與第 6 位，接收 1001 000、症狀 001，解碼器翻第 7 位得 1001 001，解出 1001，是誤糾。</p>
+<p>其他錯誤組合可用來檢查邊界：無錯時症狀 000；第 7 位單錯時症狀 001，指向 7 並正確糾回。第 1 與第 2 位錯時症狀 011，解碼器翻第 3 位後解出 0101；第 1 與第 7 位錯時症狀 111，翻第 4 位後解出 0010，兩者都錯。同一位翻兩次會抵消；m ＝ 0000 的碼字是 0000 000，m ＝ 1111 的碼字是 1111 111，第 4 位錯時症狀 111 並可正確糾回；m ＝ 0101、第 5 位錯時症狀 100，也可正確糾回。</p>
+<p>E<sub>b</sub>/N<sub>0</sub> ＝ 0 dB 時，p ＝ 1.425247 × 10<sup>−1</sup>，編碼後遠差於未編碼；調到 12 dB 時，編碼好 9.237060 倍。這兩端說明漢明碼的冗餘能量成本先出現，要等交叉機率降低後，糾單錯的收益才會超過成本。</p>
+
+<section class="workspace"><h2>自由實驗：編碼、翻位、查症狀</h2>
+<p>先選 4 位訊息，再指定零、一或兩個翻轉位置。輸出會逐式列出編碼與症狀，並以同一 E_b/N_0 比較編碼前後的誤碼率。</p>
+<div class="controls">
+<label for="hm-msg">4 位元訊息 m<select id="hm-msg"><option value="0000">0000</option><option value="0001">0001</option><option value="0010">0010</option><option value="0011">0011</option><option value="0100">0100</option><option value="0101">0101</option><option value="0110">0110</option><option value="0111">0111</option><option value="1000">1000</option><option value="1001">1001</option><option value="1010">1010</option><option value="1011" selected>1011</option><option value="1100">1100</option><option value="1101">1101</option><option value="1110">1110</option><option value="1111">1111</option></select></label>
+<label for="hm-e1">錯誤位置 1<select id="hm-e1"><option value="0">無</option><option value="1">第 1 位</option><option value="2">第 2 位</option><option value="3" selected>第 3 位</option><option value="4">第 4 位</option><option value="5">第 5 位</option><option value="6">第 6 位</option><option value="7">第 7 位</option></select></label>
+<label for="hm-e2">錯誤位置 2<select id="hm-e2"><option value="0" selected>無</option><option value="1">第 1 位</option><option value="2">第 2 位</option><option value="3">第 3 位</option><option value="4">第 4 位</option><option value="5">第 5 位</option><option value="6">第 6 位</option><option value="7">第 7 位</option></select></label>
+<label for="hm-ebn0">E_b/N_0（dB，算編碼增益用）<input id="hm-ebn0" type="range" min="0" max="12" step="0.5" value="10"></label>
+</div>
+<div id="hamming-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>症狀不是錯誤圖樣本身，而是錯誤圖樣乘 H 的結果；多個不同錯誤圖樣可以共用同一症狀。</li>
+<li>d<sub>min</sub> ＝ 3 可以保證糾 1 個錯，或在不嘗試糾正時偵測 2 個錯；不能同時承諾兩件事。</li>
+<li>編碼增益是在相同誤碼率下比 E<sub>b</sub>/N<sub>0</sub>，不是在相同 E<sub>b</sub>/N<sub>0</sub> 下直接比誤碼率倍數。</li>
+<li>E<sub>b</sub> 是每個資訊位元的能量；代入每個編碼位元的 Q 函數前，要先乘編碼率 R 得 E<sub>c</sub>。</li>
+<li>CRC 的主要任務是偵測錯誤，這裡的漢明解碼則會翻轉某一位；不能把「有檢查」一律當成會糾錯。</li>
+</ul>
+
+<h2>可觀察證據：解碼前後各數一次錯誤</h2>
+<p><strong>用什麼量。</strong>用誤碼率測試儀送長期已知序列，在漢明解碼前與後分別計數錯誤；再把 E<sub>b</sub>/N<sub>0</sub> 從低到高掃過一次，得到未編碼與編碼後兩條瀑布曲線。</p>
+<p><strong>能證明什麼。</strong>同一誤碼率的水平差可證明編碼增益是幾 dB；解碼前後的錯誤數比可顯示當前工作點賺幾倍，並找到編碼由倒賠轉為受益的交叉區。</p>
+<p><strong>不能證明什麼。</strong>只看兩條誤碼率曲線，不能證明解碼器使用硬判決或軟判決；必須檢查解碼器輸入是 0／1，還是含對數似然比（LLR）的可靠度。</p>
+
+<h2>連到哪門課</h2>
+<p>模 2 矩陣乘法的前置見<a href="../../../共通基礎/數學/互動課程/04-向量與矩陣.html">工程數學先修的向量與矩陣</a>，未編碼誤碼率見<a href="04-誤碼率公式與Q函數.html">本課 04 章</a>，Shannon 容量與增益天花板見<a href="../通訊系統-互動課程/10-頻譜效率與Shannon極限.html">通訊系統的頻譜效率與 Shannon 極限</a>。BCH、Reed–Solomon、循環碼、LDPC、Turbo、Polar 留給資訊理論與編碼課。軟體那一端，CRC 校驗、RAID 的同位與 ECC 記憶體都用到模 2 線性代數；<code>(m @ G) % 2</code> 就能編碼。</p>
+<nav class="pager" aria-label="章節導覽"><a href="07-自適應等化LMS.html">← 上一頁：自適應等化 LMS</a><a href="09-摺積碼與Viterbi解碼.html">下一頁：摺積碼與 Viterbi 解碼 →</a></nav>
+</main>
+<footer class="site-footer"><span>08 漢明碼與症狀解碼</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,83 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 Boost 與 Buck-Boost：增益曲線與寄生電阻上限｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・升壓增益有峰值，超過後控制方向會反轉</p>
+<h1>06 Boost 與 Buck-Boost：增益曲線與寄生電阻上限</h1>
+<p class="lead">12 V、10 Ω 與 0.1 Ω 的 Boost，在 D ＝ 0.90 時到達 60.000000 V；把 D 推到 0.95，輸出反而掉到 48.000000 V，效率只剩 20.000000 %。這章用能量守恆找出「升不上去」的原因。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-Buck降壓轉換器.html">05 Buck 降壓轉換器</a>的伏秒平衡與 CCM。<strong>前置：</strong>見〈06 電容與電感〉<a href="../../02-電機核心/電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>；v ＝ L di/dt 已在那裡證明，本章直接用一週期積分為零。</p>
+
+<h2>痛點：Boost 為什麼把 D 加大後反而升不上去</h2>
+<p>理想公式 1 / (1 − D) 在 D 接近 1 時無限增大：12 V 在 D ＝ 0.95 應為 240 V；實際輸出卻可能先升後降。關鍵是電感電流增加多少，以及它在電阻上耗掉多少能量。</p>
+<p>升壓轉換器（Boost）把輸入電感儲存的能量與輸入電源串接後送到輸出。升降壓轉換器（Buck-Boost）也先存能再放能，但輸出參考極性相反。兩者在理想條件下都會隨 D 快速增益；加入一個很小的串聯電阻，曲線便有明確上限。</p>
+<p>D 越大，關斷送能越短，電感平均電流越高；電阻損耗又隨電流平方成長。因此小電阻在高 D 才會吞掉大量輸入功率。</p>
+
+<h2>白話直覺：每次多抬一點電壓，也會搬動更大的電流</h2>
+<p>開關切換電感電壓，使磁場先儲能再送能；串聯電阻則把 I² × r<sub>L</sub> 變成熱。升壓來自關斷時輸入與電感電壓串接，並非開關產生能量。</p>
+<p>Boost 以輸入負端為參考點。導通時，輸入、電感與開關形成回路，二極體切斷輸出路徑；電感承受 V<sub>in</sub>，電流上升，電容供應負載。關斷時，輸入與電感經二極體向輸出送能；電感電壓 V<sub>in</sub> − V<sub>o</sub> 為負，電流下降。因此 V<sub>o</sub> 高於 V<sub>in</sub>，電感平均電流也高於輸出電流。</p>
+<p>Buck-Boost 的導通段同樣讓電感接輸入充能；關斷段把電感以相反極性接到輸出，所以 V<sub>o</sub> 相對共同參考點為負。負號描述極性，不代表效率。這件事在你的程式裡長什麼樣：Boost 增益曲線像一個有最大值的函數，控制迴路在最大值右邊的梯度反號，等於梯度下降走錯方向。比喻到此為止，實際機制是電感電流增大，使 r<sub>L</sub> 的 I² 損耗超過理想增益的收益。</p>
+<p>D 太小時儲能不足；D 太大時送能時間過短，平均電流與熱快速增加。損耗增速超過理想增益後，輸出便到頂。</p>
+<p class="note">來源：P2-電力電子（上）§3.1、§3.3、§3.4。</p>
+
+<h2>推導：從伏秒平衡走到有限增益</h2>
+<p><strong>（a）Boost 電壓比。</strong>連續導通模式（continuous conduction mode, CCM）下，導通段電感電壓為 V<sub>in</sub>，維持 D × T<sub>sw</sub>；關斷段是 V<sub>in</sub> − V<sub>o</sub>，維持 (1 − D) × T<sub>sw</sub>。伏秒平衡給 V<sub>in</sub> × D ＝ (V<sub>o</sub> − V<sub>in</sub>) × (1 − D)，所以理想增益 V<sub>o</sub> / V<sub>in</sub> ＝ 1 / (1 − D)。V 以伏特計、T<sub>sw</sub> 以秒計，D 無單位。</p>
+<p><strong>（b）電感電流。</strong>只有關斷段的二極體電流流進輸出，因此一週期平均值滿足 I<sub>o</sub> ＝ I<sub>L</sub> × (1 − D)，得到 I<sub>L</sub> ＝ I<sub>o</sub> / (1 − D)。I<sub>L</sub> 與 I<sub>o</sub> 都以 A 計。D 越接近 1，電感必須用更大的平均電流，在更短的關斷時間內補足輸出所需電荷。</p>
+<p><strong>（c）加入寄生電阻。</strong>把電感等效串聯電阻（equivalent series resistance）記為 r<sub>L</sub>，單位 Ω。能量守恆寫成 P<sub>in</sub> ＝ P<sub>o</sub> ＋ I<sub>L</sub>² × r<sub>L</sub>；代入 I<sub>L</sub> ＝ I<sub>o</sub> / (1 − D)、I<sub>o</sub> ＝ V<sub>o</sub> / R，關鍵一步是 V<sub>in</sub> × I<sub>L</sub> ＝ V<sub>o</sub>² / R ＋ I<sub>L</sub>² × r<sub>L</sub>。整理後，實際增益等於理想增益乘 F，其中 F ＝ 1 / (1 ＋ r<sub>L</sub> / ((1 − D)² × R))，而本模型效率 η ＝ F。</p>
+<p><strong>（d）最大值與 Buck-Boost。</strong>對 Boost 的增益對 D 微分並令斜率為零，得到 D<sub>opt</sub> ＝ 1 − √(r<sub>L</sub> / R)，M<sub>max</sub> ＝ ½ × √(R / r<sub>L</sub>)。Buck-Boost 的理想帶符號增益是 −D / (1 − D)，損耗因子 F 相同，因為 I<sub>L</sub> 仍是 I<sub>o</sub> / (1 − D)；它的最佳 D 沒有本課所用的簡單解析式，因此以 D ＝ 0.001 到 0.999、步長 0.001 掃描最大值。</p>
+<p>兩個極端可檢查式子的方向。若 r<sub>L</sub> 趨近 0，D<sub>opt</sub> 趨近 1、M<sub>max</sub> 上升，逐漸接近理想結果；若 r<sub>L</sub> 相對 R 增大，最佳 D 往左移、最大增益降低。這裡的 R 是輸出負載電阻，不是電感電阻；重載使 R 變小，允許的增益也跟著降低。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型，真實電路不是這樣。本章假設 CCM 與小漣波，只計 r<sub>L</sub>，忽略開關與二極體壓降、其他導通損耗、磁芯損耗及切換損耗。因而 η ＝ F 只代表這一項電阻造成的效率，不是整機效率；單級 Boost 實務增益多限制在約 4–6 倍。</p>
+<p>若電感電流在輕載時碰到零，就進入 DCM，本章電壓比與平均電流式都要更換；若元件升溫使 r<sub>L</sub> 改變，峰值位置也會移動。因此自由實驗適合用來理解方向與量級，不能拿它直接設定實機控制器的極限。</p>
+
+<h2>數值實例：0.1 Ω 如何把無限增益壓成 5 倍</h2>
+<p>取 Boost、V<sub>in</sub> ＝ 12 V、D ＝ 0.50、R ＝ 10 Ω、r<sub>L</sub> ＝ 0.10 Ω，與自由實驗的預設狀態一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>理想增益</td><td>1 / (1 − 0.5)</td><td><strong>2.000000</strong></td></tr>
+<tr><td>理想 V<sub>o</sub></td><td>2 × 12</td><td><strong>24.000000 V</strong></td></tr>
+<tr><td>損耗因子 F</td><td>1 / (1 ＋ 0.1 / (0.25 × 10))</td><td><strong>0.961538</strong></td></tr>
+<tr><td>實際 V<sub>o</sub></td><td>24 × 0.961538</td><td><strong>23.076923 V</strong></td></tr>
+<tr><td>I<sub>o</sub></td><td>23.076923 / 10</td><td><strong>2.307692 A</strong></td></tr>
+<tr><td>電感平均電流</td><td>2.307692 / 0.5</td><td><strong>4.615385 A</strong></td></tr>
+<tr><td>r<sub>L</sub> 損耗</td><td>4.615385² × 0.1</td><td><strong>2.130178 W</strong></td></tr>
+<tr><td>輸出功率</td><td>23.076923 × 2.307692</td><td><strong>53.254438 W</strong></td></tr>
+<tr><td>效率</td><td>F</td><td><strong>96.153846 %</strong></td></tr>
+<tr><td>D<sub>opt</sub></td><td>1 − √(0.1 / 10)</td><td><strong>0.900000</strong></td></tr>
+<tr><td>M<sub>max</sub></td><td>½ × √(10 / 0.1)</td><td><strong>5.000000（60.000000 V）</strong></td></tr>
+</tbody></table>
+<p><strong>峰值驗證。</strong>D ＝ 0.90 時，理想輸出 120 V，實際 60.000000 V、效率 50.000000 %、電感電流 60.000000 A。D ＝ 0.85 的輸出低於 60.000000 V；D ＝ 0.95 時理想輸出 240 V，實際卻降為 48.000000 V、效率 20.000000 %、電感電流 96.000000 A。D ＝ 0.80 時是 48.000000 V、效率 80.000000 %。峰值左右的電壓都較低，符合微分結果。</p>
+<p><strong>電阻與負載邊界。</strong>r<sub>L</sub> ＝ 0.01 Ω 時，預設 D 的輸出 23.904382 V、D<sub>opt</sub> ＝ 0.968377、M<sub>max</sub> ＝ 15.811388；r<sub>L</sub> ＝ 2 Ω 時，輸出 13.333333 V、效率 55.555556 %、D<sub>opt</sub> ＝ 0.552786。R ＝ 100 Ω 且 D ＝ 0.90 時輸出 109.090909 V、效率 90.909091 %，因為同樣電壓所需電流較小。</p>
+<p>負載變輕時峰值可以更高，不等於任何負載都能維持那個電壓。控制器若依空載曲線設定 D，接上較重負載後，峰頂會左移且輸出下跌；正確規格應同時註明輸入範圍、輸出電流與允許溫升，而不是只寫一個最高輸出電壓。</p>
+<p><strong>Buck-Boost 對照。</strong>預設值的理想增益是 1.000000，實際 V<sub>o</sub> ＝ −11.538462 V、效率 96.153846 %、D<sub>opt</sub> ＝ 0.909000、M<sub>max</sub> ＝ 4.524862。D ＝ 0.30 時為 −5.040000 V；D ＝ 0.70 時為 −25.200000 V、效率 90.000000 %；D ＝ 0.90 時為 −54.000000 V、效率 50.000000 %。</p>
+<p>這些數字提醒你先看電流，再談電壓。預設點的電感平均電流已是 4.615385 A，而峰值點會增到 60.000000 A；即使輸出看似達標，電感、開關、二極體與導線也未必能承受。D ＝ 0.95 時的 96.000000 A 更顯示，越過峰頂不是一個可用的穩態操作點。</p>
+
+<section class="workspace"><h2>自由實驗：找出升壓曲線的峰頂</h2>
+<p>選擇 Boost 或 Buck-Boost，改變輸入、D、負載與電感電阻。觀察理想與實際增益、電感平均電流、效率和最佳 D；把 D 推過最佳點，確認輸出如何反向變化。</p>
+<div class="controls">
+<label for="bs-topo">拓樸<select id="bs-topo"><option value="boost">Boost（升壓）</option><option value="bb">Buck-Boost（升降壓，輸出反相）</option></select></label>
+<label for="bs-vin">輸入電壓 V_in（V）<input id="bs-vin" type="range" min="3" max="48" step="1" value="12"></label>
+<label for="bs-d">工作週期 D<input id="bs-d" type="range" min="0.05" max="0.95" step="0.01" value="0.5"></label>
+<label for="bs-r">負載電阻 R（Ω）<input id="bs-r" type="range" min="1" max="100" step="1" value="10"></label>
+<label for="bs-rl">電感等效串聯電阻 r_L（Ω）<input id="bs-rl" type="range" min="0.01" max="2" step="0.01" value="0.1"></label>
+</div>
+<div id="boost-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>Boost 的 D 增大時，理想電壓比與電感電流 1 / (1 − D) 都會增加。</li>
+<li>本章的效率 ＝ F 只計 r<sub>L</sub>。真實效率還會扣除 01 章介紹的導通與切換損耗，以及磁芯等損耗。</li>
+<li>Buck-Boost 輸出的負號代表參考極性反向，不是電壓消失或能量為負。</li>
+<li>升壓不能靠「更用力切」。超過 D<sub>opt</sub> 後，增加 D 反而降低輸出，控制方向已經反轉。</li>
+</ul>
+
+<h2>可觀察證據：掃 D 才看得到完整增益曲線</h2>
+<p>同時量 V<sub>in</sub>、V<sub>o</sub>、電感平均電流與溫升。固定負載後掃 D，逐點記錄輸出與輸入功率；輸出先升後降而電流仍急增，即跨過可用區域。</p>
+<p><strong>能證明：</strong>掃描資料能證明增益隨 D 的實際曲線、峰值位置及效率量級，也能檢查高增益時電感電流是否照 1 / (1 − D) 放大。<strong>不能證明：</strong>這些讀值不能單獨證明 r<sub>L</sub> 的數值；直流電阻可用電感電容電阻量測表（inductance-capacitance-resistance meter, LCR meter）量得，但高頻交流電阻、磁芯損耗與溫度效應仍混在總損耗裡。</p>
+<p>效率量測須同步取樣輸入與輸出的電壓、電流。冷機電阻會漏掉升溫後的阻值變化；熱像儀只能定位發熱，兩種證據須對照。</p>
+
+<h2>連到哪門課</h2>
+<p>Boost 用於功率因數修正（power factor correction, PFC）、太陽能最大功率點追蹤、發光二極體驅動與電動車直流鏈路。更高增益或隔離可用返馳式（flyback）或 LLC 諧振式（LLC resonant converter, LLC）；雙向需求可用同步開關。伏秒平衡見<a href="../../02-電機核心/電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>。</p>
+<p>控制課關注增益曲線斜率；電源設計課還要納入磁芯、半導體額定值、散熱與隔離。本章模型不能替代完整選型。</p>
+<nav class="pager" aria-label="章節導覽"><a href="05-Buck降壓轉換器.html">← 上一頁：Buck 降壓轉換器</a><a href="07-濾波與漣波設計.html">下一頁：濾波與漣波設計 →</a></nav>
+</main>
+<footer class="site-footer"><span>06 Boost 與 Buck-Boost：增益曲線與寄生電阻上限</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

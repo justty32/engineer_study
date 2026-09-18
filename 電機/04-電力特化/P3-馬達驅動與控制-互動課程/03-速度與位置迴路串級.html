@@ -1,0 +1,84 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 速度與位置迴路串級｜馬達驅動與控制</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-驅動器世界觀與轉矩夾角.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・內快外慢，三層才不會互相絆腳</p>
+<h1>速度與位置迴路串級：用頻寬分離讓內層先完成工作</h1>
+<p class="lead">電流迴路比速度迴路快 10 倍時，速度步階的超越量是 4.352513 %，已很接近理想二階的 4.321392 %。若兩層同頻寬，超越量會跳到 24.621566 %；這章要找的就是三層控制之間的頻寬分離（bandwidth separation）。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-電流迴路PI設計.html">02 電流迴路 PI 設計</a>的閉迴路一階模型。<strong>前置：</strong>見〈二階閉迴路與極點位置〉<a href="../../02-電機核心/控制系統-互動課程/04-二階閉迴路與極點位置.html">控制系統的二階響應</a>。</p>
+
+<h2>痛點：每層 PI 都各自設好，為什麼合起來還會振</h2>
+<p>單看每一層，電流能跟命令，速度也能回到設定值，但是串在一起後，速度卻可能衝過頭。原因是外層以為內層立刻完成指令，內層實際上還在追。當兩層反應時間太接近，內層的落後就進入外層動態，原本以二階設計的參數，會在三階系統裡呈現另一種結果。</p>
+<p>第二個痛點是負載突然增加。積分器最後能把穩態誤差消掉，卻不表示速度過程不會掉。掉多深取決於轉動慣量 J 與速度迴路頻寬的乘積，因此步階跟得好和擾動擋得住是兩件需分開觀察的事。</p>
+
+<h2>白話直覺：裡層先站穩，外層才有可靠的基礎</h2>
+<p>可以暂時把三層想成三個速度不同的工作者：最裡面的人先完成快指令，外面的人才據此修正較慢的目標；比喻到此為止。真實機制是串級控制（cascade control）：位置 P 產生速度命令，速度 PI 產生電流命令，電流 PI 再產生電壓命令。</p>
+<p>從物理因果走一遍：直流鏈供應相對參考點的電壓；逆變器開關決定哪條實體回路導通，電流流進繞組建立定子磁場；磁場與轉子作用產生轉矩，慣量把轉矩累積成速度與位置。電流、速度、位置各自回授到對應層，示波器最後看到的是速度命令、速度回授與負載加入時的瞬態。</p>
+<p>串級系統的核心量是頻寬分離倍數 N = ω<sub>c</sub> / ω<sub>s</sub>。N 夠大，外層所看到的內層就接近即時；N 變小，電流動態就不能從速度模型裡省略。</p>
+<p class="note">來源：P3 上 §4.1；P3 下 §9.1。</p>
+
+<h2>推導：由二階設計看見第三個極點</h2>
+<p>機械受控體為 ω<sub>m</sub> / T = 1 / (J × s)，J 的單位是 kg·m²。選 K<sub>p</sub> = J × ω<sub>s</sub>、K<sub>i</sub> = J × ω<sub>s</sub><sup>2</sup> / 2，若電流迴路理想，特徵式為 J × s<sup>2</sup> + K<sub>p</sub> × s + K<sub>i</sub>。因此 ω<sub>n</sub> = ω<sub>s</sub> / √2，而 ζ = K<sub>p</sub> / (2 × √(K<sub>i</sub> × J)) = 1 / √2 = 0.707107。前置濾波器（reference prefilter）取 τ<sub>f</sub> = K<sub>p</sub> / K<sub>i</sub> = 2 / ω<sub>s</sub>，用來抵消 PI 零點造成的額外超越量。</p>
+<p>電流迴路實際是 1 / (s / ω<sub>c</sub> + 1)，特徵式因而變成 (s / ω<sub>c</sub> + 1) × J × s<sup>2</sup> + K<sub>p</sub> × s + K<sub>i</sub>。N 越小，第三個極點越靠近原來的二階極點，超越量便上升。位置迴路取 K<sub>p,pos</sub> = ω<sub>p</sub> = ω<sub>s</sub> / 10，近似為時間常數 1 / ω<sub>p</sub> 的一階系統。</p>
+<p>三層時間尺度分別是電流 50 µs 中斷、速度 1 ms、位置 10 ms。這些是取樣時間，控制頻寬還要更低。本課用的是線性教學模型，真實驅動器不完全如此：模型忽略電流限幅、摩擦與取樣，數值結果以固定步長的四階 Runge Kutta 法（fourth order Runge Kutta, RK4）積分得到。負載轉矩 T<sub>L</sub> 加入後，穩態誤差為 0，但最大掉速約與 T<sub>L</sub> / (J × ω<sub>s</sub>) 同量級。</p>
+<p>把前置濾波器放在命令端，只改命令到輸出的分子，不會移動閉迴路極點。因此它能消除零點帶來的額外峰值，卻不能補救內層太慢。若第三個極點已靠近主要極點，真正要做的是拉開頻寬分離，而不是靠濾波器修飾波形。負載則從機械端直接進入，前置濾波器對它沒有作用；這也解釋了命令追蹤漂亮時，受擾恢復仍可能很差。調機時應分開做命令步階與負載步階，前者檢查極點配置，後者檢查慣量與速度迴路剛性。</p>
+
+<h2>數值實例：500 Hz 內層與 10 倍頻寬分離</h2>
+<p>預設 J = 0.01 kg·m²、f<sub>c</sub> = 500 Hz、N = 10、T<sub>L</sub> = 1 N·m，速度命令正規化為 1。一拍 50 µs 的電流中斷對應 20 kHz；電流迴路頻寬 500 Hz、速度迴路 50.000000 Hz、位置迴路 5.000000 Hz，這是取樣與三層動態的量級對照。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>電流迴路 ω<sub>c</sub></td><td>2π × 500</td><td><strong>3141.592654 rad/s</strong></td></tr>
+<tr><td>速度迴路 ω<sub>s</sub></td><td>3141.592654 / 10</td><td><strong>314.159265 rad/s（50.000000 Hz）</strong></td></tr>
+<tr><td>速度 K<sub>p</sub></td><td>0.01 × 314.159265</td><td><strong>3.141593 N·m·s/rad</strong></td></tr>
+<tr><td>速度 K<sub>i</sub></td><td>0.01 × 314.159265² / 2</td><td><strong>493.480220 N·m/rad</strong></td></tr>
+<tr><td>前置濾波 τ<sub>f</sub></td><td>2 / 314.159265</td><td><strong>6.366198 ms</strong></td></tr>
+<tr><td>理想 ω<sub>n</sub>、ζ</td><td>ω<sub>s</sub> / √2、1 / √2</td><td><strong>222.144147 rad/s、0.707107</strong></td></tr>
+<tr><td>超越量</td><td>模擬</td><td><strong>4.352513 %（理想 4.321392 %）</strong></td></tr>
+<tr><td>峰值時刻</td><td>模擬</td><td><strong>19.257748 ms</strong></td></tr>
+<tr><td>10–90 % 上升時間</td><td>模擬</td><td><strong>9.151409 ms</strong></td></tr>
+<tr><td>2 % 整定時間</td><td>模擬</td><td><strong>25.751270 ms</strong></td></tr>
+<tr><td>負載最大掉速</td><td>模擬</td><td><strong>21.706381 %（於加入後 4.774648 ms）</strong></td></tr>
+<tr><td>負載後回到 2 % 內</td><td>模擬</td><td><strong>16.201973 ms</strong></td></tr>
+<tr><td>位置迴路 ω<sub>p</sub></td><td>314.159265 / 10</td><td><strong>31.415927 rad/s（5.000000 Hz）</strong></td></tr>
+<tr><td>位置閉迴路時間常數</td><td>1 / 31.415927</td><td><strong>31.830989 ms</strong></td></tr>
+</tbody></table>
+<p>邊界對照：N = 1 時超越量 24.621566 %，N = 2 時為 8.146510 %，N = 20 時為 4.328051 %。但 N = 20 同時把速度迴路降慢，掉速會變成 42.149969 %、整定時間 52.616624 ms，所以 N 不是越大越好。</p>
+<p>再從另一方向檢查：J = 0.05 時，增益隨慣量放大 5 倍，命令步階形狀不變，負載掉速卻縮到 4.341269 %；J = 0.001 時掉速擴大到 217.063887 %。f<sub>c</sub> = 2000 Hz、N = 10 時，整定時間縮到 6.437817 ms，掉速為 5.426588 %。這些對照說明：頻寬分離決定模型近似能不能用，慣量與速度頻寬則決定擾動來時的剛性。</p>
+
+<section class="workspace"><h2>自由實驗：拉開三層迴路的時間尺度</h2>
+<p>固定速度命令步階，先看內外頻寬比如何改變超越量，再加入負載看掉速。這裡不加電流限幅，所以結果是線性模型的對照，不是實機保護能力。</p>
+<div class="controls">
+<label for="cs-j">轉動慣量 J（kg·m²）<input id="cs-j" type="range" min="0.001" max="0.1" step="0.001" value="0.01"></label>
+<label for="cs-fc">電流迴路頻寬 f_c（Hz）<input id="cs-fc" type="range" min="100" max="2000" step="50" value="500"></label>
+<label for="cs-n">頻寬分離倍數 N = ω_c / ω_s<input id="cs-n" type="range" min="1" max="50" step="1" value="10"></label>
+<label for="cs-tl">負載轉矩步階 T_L（N·m）<input id="cs-tl" type="range" min="0" max="5" step="0.5" value="1"></label>
+</div>
+<div id="cascade-output" class="output" aria-live="polite">
+<table><thead><tr><th>量</th><th>預設值</th></tr></thead><tbody>
+<tr><td>電流迴路 ω<sub>c</sub></td><td>3141.592654 rad/s</td></tr><tr><td>速度迴路 ω<sub>s</sub></td><td>314.159265 rad/s（50.000000 Hz）</td></tr><tr><td>速度 K<sub>p</sub></td><td>3.141593 N·m·s/rad</td></tr><tr><td>速度 K<sub>i</sub></td><td>493.480220 N·m/rad</td></tr><tr><td>前置濾波 τ<sub>f</sub></td><td>6.366198 ms</td></tr><tr><td>理想 ω<sub>n</sub>、ζ</td><td>222.144147 rad/s、0.707107</td></tr><tr><td>超越量</td><td>4.352513 %（理想 4.321392 %）</td></tr><tr><td>峰值時刻</td><td>19.257748 ms</td></tr><tr><td>10–90 % 上升時間</td><td>9.151409 ms</td></tr><tr><td>2 % 整定時間</td><td>25.751270 ms</td></tr><tr><td>負載最大掉速</td><td>21.706381 %（於加入後 4.774648 ms）</td></tr><tr><td>負載後回到 2 % 內</td><td>16.201973 ms</td></tr><tr><td>位置迴路 ω<sub>p</sub></td><td>31.415927 rad/s（5.000000 Hz）</td></tr><tr><td>位置閉迴路時間常數</td><td>31.830989 ms</td></tr>
+</tbody></table>
+<table><thead><tr><th>N</th><th>超越量</th></tr></thead><tbody><tr><td>1</td><td>24.621566 %</td></tr><tr><td>2</td><td>8.146510 %</td></tr><tr><td>5</td><td>4.500801 %</td></tr><tr><td>10</td><td>4.352513 %</td></tr><tr><td>20</td><td>4.328051 %</td></tr></tbody></table>
+<p><strong>判讀：分離足夠，超越量 4.352513 % 與理想二階 4.321 % 相差不到 0.1 個百分點，內迴路可視為理想。</strong></p>
+<p>穩態誤差 0：積分器把負載扛起來。位置迴路 ω<sub>p</sub> = ω<sub>s</sub> / 10 = 31.415927 rad/s，時間常數 31.830989 ms。為什麼：N = 10 讓電流的一階落後遠快於速度動態，因此三階結果幾乎重合理想二階。邊界提醒：N = 1 時內外迴路同頻寬，超越量 24.622 %，這不是 PI 調錯，是結構錯；T<sub>L</sub> = 0 時沒有負載擾動，掉速 0；J = 0.001 時同樣負載使掉速超過 200 %。</p>
+</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>頻寬分離是倍數，不是某個固定頻率。f<sub>c</sub> 提高後，ω<sub>s</sub> 也可在保留倍數下提高。</li>
+<li>4.321392 % 是 ζ = 0.707107 的設計結果，不是馬達的物理定律；改設計目標就會改變。</li>
+<li>掉速深淺看 J × ω<sub>s</sub>，不看超越量。相同步階形狀不代表負載剛性相同。</li>
+<li>位置迴路用 P 就夠，邊界是內層速度迴路已含積分器，使整體為型式 1。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>用示波器或驅動器的內建示波功能，同時記錄速度命令、速度回授與電流命令。對速度下步階命令，峰值高度就給出超越量；速度穩定後突然掛上負載，谷底就是最大掉速。</p>
+<p><strong>能證明什麼。</strong>步階峰值能驗證頻寬分離是否足夠，負載谷底與恢復時間能驗證負載剛性。</p>
+<p><strong>不能證明什麼。</strong>單看速度波形不能確認電流限幅是否介入；必須同時查看電流命令或電流回授有沒有貼住上限。</p>
+
+<h2>連到哪門課</h2>
+<p>這套串級架構用在伺服驅動器、機器人關節與數值控制機床。二階極點與 ζ 的意義見<a href="../../02-電機核心/控制系統-互動課程/04-二階閉迴路與極點位置.html">二階閉迴路與極點位置</a>；J 與摩擦的模型見<a href="../../02-電機核心/控制系統-互動課程/01-建模從微分方程到轉移函數.html">建模從微分方程到轉移函數</a>；積分器為何消除穩態誤差見<a href="../../02-電機核心/控制系統-互動課程/03-穩態誤差與系統型式.html">穩態誤差與系統型式</a>。</p>
+<p><strong>韌體那一端：</strong>速度 PI 跑在 1 ms 中斷，位置 P 跑在 10 ms 中斷；三個增益是三個獨立參數，調機順序由內而外。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-電流迴路PI設計.html">← 上一頁：電流迴路 PI 設計</a><a href="04-步進馬達與微步.html">下一頁：步進馬達與微步 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 速度與位置迴路串級</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

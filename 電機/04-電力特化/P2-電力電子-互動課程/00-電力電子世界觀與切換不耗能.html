@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 電力電子世界觀：為什麼切換不耗能｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html" aria-current="page">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">00・用開關搬能量，別用元件硬吞壓差</p>
+<h1>00 電力電子世界觀：為什麼切換不耗能</h1>
+<p class="lead">同樣把 12 V 變成 5 V、供應 2 A，線性穩壓器要把 14.000000 W 變成熱，切換式轉換器在 92 % 效率模型下只損失 0.869565 W。先看懂這個 16.100000 倍差距，後面所有拓樸才有共同起點。</p>
+<p class="prereq"><strong>這章假設已懂：</strong>歐姆定律與 P ＝ V × I，不要求任何電力電子背景。<strong>前置：</strong>見〈01 電阻與歐姆定律〉<a href="../../02-電機核心/電路學-互動課程/01-電阻與歐姆定律.html">電路學的電阻與歐姆定律</a>；P ＝ V × I 與串聯回路電流相同是那邊的結論。</p>
+
+<h2>痛點：降掉的 7 V 到底去了哪裡</h2>
+<p>負載只要 5 V，手上卻有 12 V，直覺會說「把多的電壓消掉」。問題是電壓不會憑空消失：串聯元件承受 7 V，而同一條閉合回路流著 2 A，它就必須處理 14 W。這筆功率最後變成熱，使散熱片變大、外殼溫度升高、電池續航縮短。</p>
+<p>電力電子（power electronics）研究的核心，就是以半導體開關改變電能形式，包括交流轉直流、直流轉直流、直流轉交流，也能處理交流轉交流。真正的問題不是能不能得到 5 V，而是能否在滿足負載時，少讓能量停在功率元件裡變熱。</p>
+<p>這裡先守住能量帳：輸入功率只可能成為輸出功率、元件熱與暫存在電感或電容中的能量。穩態下儲能元件每個切換週期收回原有能量，長時間平均不會無限累積；因此輸入與輸出的差額就是必須散掉的損耗。效率只是輸出功率除以輸入功率，不能把沒有送到負載的瓦數藏起來。</p>
+
+<h2>白話直覺：兩種供電方式把能量送到不同地方</h2>
+<p>這件事在你的程式裡長什麼樣：線性穩壓像 busy-wait 把多餘時間耗在空迴圈，切換式像用計時器中斷，只在需要時醒來；比喻到此為止。精確機制是線性穩壓器（linear regulator）把控制元件串在電源與負載之間，以連續壓降維持輸出；常見一類是低壓差穩壓器（low-dropout regulator, LDO）。切換式轉換器（switching converter）讓開關在導通與關斷兩個端點工作，並靠電感與電容暫存、轉送能量。</p>
+<p>沿物理因果走一次：參考點取電源負端。線性穩壓時回路是 12 V 電源、串聯控制元件、負載再回負端；回路閉合後處處流 2 A，控制元件承受 7 V，能量在其中轉成熱，輸出保持 5 V。切換式在開關導通時把電感接到電源，電感接收能量；關斷時，電感電流沿續流路徑保持回路閉合，把能量送到負載與電容。示波器會看到開關節點交替，電流探棒會看到電感電流持續，電力分析儀則看到輸入功率更接近輸出功率。</p>
+<p>理想開關的關鍵很窄：導通時元件兩端 V ＝ 0，關斷時流過元件的 I ＝ 0，所以兩個狀態的 P ＝ V × I 都等於 0。這句話只談開關本身；電感、電容與負載仍在交換或消耗能量，真實開關也不會真的達到零損耗。</p>
+<p class="note">來源：P2-電力電子（上）§「這科在學什麼」。</p>
+
+<h2>推導：同一個輸出，兩筆損耗怎麼來</h2>
+<p><strong>線性穩壓。</strong>串聯回路電流相同，控制元件的電壓是 V<sub>in</sub> − V<sub>o</sub>，因此 P<sub>LDO</sub> ＝ (V<sub>in</sub> − V<sub>o</sub>) × I<sub>o</sub>。V<sub>in</sub> 與 V<sub>o</sub> 是輸入、輸出電壓，單位 V；I<sub>o</sub> 是負載電流，單位 A；P<sub>LDO</sub> 單位 W。輸出功率 P<sub>o</sub> ＝ V<sub>o</sub> × I<sub>o</sub>，輸入功率 P<sub>in</sub> ＝ V<sub>in</sub> × I<sub>o</sub>，所以效率 η<sub>LDO</sub> ＝ P<sub>o</sub> / P<sub>in</sub> ＝ V<sub>o</sub> / V<sub>in</sub>；電流約掉後可看出效率上限只由電壓比決定。</p>
+<p><strong>理想切換。</strong>導通時 P ＝ 0 × I ＝ 0，關斷時 P ＝ V × 0 ＝ 0；若元件只停在兩個端點，理想效率就是 100 %。真實切換式先用固定效率 η<sub>sw</sub> 描述，輸入功率為 P<sub>o</sub> / η<sub>sw</sub>，所以損耗 P<sub>sw,loss</sub> ＝ P<sub>o</sub> × (1 / η<sub>sw</sub> − 1)。η<sub>sw</sub> 無單位，P<sub>sw,loss</sub> 單位 W；兩者損耗倍數是 P<sub>LDO</sub> / P<sub>sw,loss</sub>。</p>
+<p><strong>模型的假設與邊界。</strong>本課用的是一階教學模型，真實電路不是這樣：這裡忽略 LDO 的靜態電流，也把切換式效率固定成與負載、輸入電壓、工作週期（duty cycle, D）和切換頻率（switching frequency, f<sub>sw</sub>）無關的常數。輸出等於或高於輸入時，這個線性穩壓模型不能升壓；真實切換式的導通與過渡損耗會在 01 章拆開，頻率取捨留到 11 章。</p>
+<p>還要留意時間尺度：開關節點在單次切換內只有高、低兩種主要狀態，負載看到的卻是電感與電容整理後的平均輸出。這裡只用固定效率結算長時間平均功率，不描述單次切換波形、輸出漣波或啟動暫態；那些量不能從本章三條功率式推出。</p>
+
+<h2>數值實例：12 V 變 5 V、供應 2 A</h2>
+<p>取 V<sub>in</sub> ＝ 12 V、V<sub>o</sub> ＝ 5 V、I<sub>o</sub> ＝ 2 A、η<sub>sw</sub> ＝ 92 %，與自由實驗的預設值完全相同。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>輸出功率 P<sub>o</sub></td><td>5 × 2</td><td><strong>10.000000 W</strong></td></tr>
+<tr><td>線性穩壓損耗</td><td>(12 − 5) × 2</td><td><strong>14.000000 W</strong></td></tr>
+<tr><td>線性穩壓效率</td><td>5 / 12</td><td><strong>41.666667 %</strong></td></tr>
+<tr><td>線性穩壓輸入功率</td><td>10 ＋ 14</td><td><strong>24.000000 W</strong></td></tr>
+<tr><td>切換式損耗</td><td>10 × (1 / 0.92 − 1)</td><td><strong>0.869565 W</strong></td></tr>
+<tr><td>切換式輸入功率</td><td>10 ＋ 0.869565</td><td><strong>10.869565 W</strong></td></tr>
+<tr><td>損耗倍數</td><td>14 / 0.869565</td><td><strong>16.100000 倍</strong></td></tr>
+</tbody></table>
+<p>這張表也揭示兩種方案的根本差別。線性穩壓的輸入是 24.000000 W，其中只有 10.000000 W 到負載，剩下 14.000000 W 連續留在串聯元件；切換式輸入只要 10.869565 W。兩者輸出完全相同，因此不能用「供電比較少」解釋溫差，差別確實來自功率轉換方法。</p>
+<p><strong>邊界一：</strong>輸入升到 48 V，線性損耗成為 86.000000 W、效率 10.416667 %、損耗倍數 98.900000。<strong>邊界二：</strong>輸入降到 5.5 V，壓差只有 0.5 V，線性損耗 1.000000 W、效率 90.909091 %、倍數只剩 1.150000，低雜訊與零件少可能更重要。<strong>邊界三：</strong>輸入只有 3.3 V 時無法用線性穩壓得到 5 V，必須換能升壓的 Boost。若電流增到 10 A，12 V 輸入下線性損耗會到 70.000000 W。</p>
+
+<section class="workspace"><h2>自由實驗：同一個負載，線性與切換式差多少</h2>
+<p>設定輸入、輸出與負載電流，比較串聯壓降和固定效率切換式的損耗。先維持預設值，再把輸入推高或把壓差縮到 0.5 V，觀察哪個條件改變工程判斷。</p>
+<div class="controls">
+<label for="lv-vin">輸入電壓 V_in（V）<input id="lv-vin" type="range" min="3" max="48" step="0.5" value="12"></label>
+<label for="lv-vout">輸出電壓 V_o（V）<input id="lv-vout" type="range" min="1" max="24" step="0.5" value="5"></label>
+<label for="lv-io">負載電流 I_o（A）<input id="lv-io" type="range" min="0.1" max="10" step="0.1" value="2"></label>
+<label for="lv-eta">切換式轉換器效率 η_sw（%）<input id="lv-eta" type="range" min="70" max="98" step="1" value="92"></label>
+</div>
+<div id="lvs-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>效率高不保證損耗瓦數小；很大的輸出功率即使有 92 % 效率，剩下的 8 % 仍可能需要大型散熱器。</li>
+<li>線性穩壓器不是錯誤設計；壓差小、電流小、要求低雜訊時，它的簡單與安靜常比效率更有價值。</li>
+<li>「切換不耗能」只描述理想開關的兩個端點；真實元件有導通電阻，也需要時間在兩個端點間移動。</li>
+<li>切換式效率不是固定常數；92 % 只讓本章先比較能量去向，不能拿來保證任何產品或其他工作點。</li>
+</ul>
+
+<h2>可觀察證據：同時量輸入、輸出與熱</h2>
+<p>用電壓探棒與電流探棒量輸入、輸出的 V 與 I，電力分析儀計算 P<sub>in</sub>、P<sub>o</sub> 與效率；再用熱像儀比較控制元件殼溫。相同 12 V、5 V、2 A 工作點下，能證明兩種方案的損耗差，也能找出熱集中在哪個元件。這些量測不能證明切換式在其他負載仍有 92 % 效率，也不能證明晶片內部結溫等於殼溫；98 % 附近還要把儀器誤差納入。</p>
+
+<h2>連到哪門課</h2>
+<p>手機快充的氮化鎵（gallium nitride, GaN）、桌機 ATX 電源與伺服器 48 V 匯流排，都用切換式方法提高功率密度；不同開關如何形成這些轉換器，接著在 01 章展開。若要先理解元件內部的通道、工作區與驅動端，見<a href="../../02-電機核心/電子學-互動課程/index.html">電子學互動課</a>。</p>
+<nav class="pager" aria-label="章節導覽"><a href="index.html">← 課程地圖</a><a href="01-功率開關與兩種損耗.html">下一頁：功率開關與兩種損耗 →</a></nav>
+</main>
+<footer class="site-footer"><span>00 電力電子世界觀：為什麼切換不耗能</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

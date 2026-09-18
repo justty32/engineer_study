@@ -1,0 +1,85 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 濾波與漣波設計：L、C 與 ESR｜電力電子</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電力電子世界觀與切換不耗能.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・先定電流漣波，再讓 ESR 接受電壓預算</p>
+<h1>07 濾波與漣波設計：L、C 與 ESR</h1>
+<p class="lead">12 V 降到 5 V、2 A、200 kHz 時，30 % 電流漣波需要 24.305556 µH 與 18.750000 µF；但 50 mΩ 的 ESR 自己就造成 30.000000 mV，已經超過原訂 20 mV 目標。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-Buck降壓轉換器.html">05 Buck 降壓轉換器</a>的 Δi<sub>L</sub> 與峰谷值。<strong>前置：</strong>見〈12 一階濾波器與頻率響應〉<a href="../../02-電機核心/電路學-互動課程/12-一階濾波器與頻率響應.html">電路學的一階濾波器與頻率響應</a>；截止頻率與頻率響應由既有課說明，本章只做電力級設計。</p>
+
+<h2>痛點：電容加大了，為什麼輸出還是跳 30 mV</h2>
+<p>容量加倍未必讓輸出漣波減半，換大容量電解電容後，高頻階梯甚至可能更明顯。輸出變化包含理想電容的電荷斜坡，以及同一電流通過內阻的瞬時壓降。</p>
+<p>應先規定電感電流擺幅，再決定 L、C、等效串聯電阻上限與電感飽和電流。沒有替電阻項留預算，計算的 20 mV 就不是總量。</p>
+<p>本章的 20 mV 是反推 C 的電容項，不含 ESR；若總量不得超過 20 mV，就須重分預算，不能再接受 30 mV 電阻項。</p>
+
+<h2>白話直覺：容量接住電荷，內阻直接把電流變電壓</h2>
+<p>電感限制電流變化率，電容以 ΔV ＝ ΔQ / C 轉換淨電荷，等效串聯電阻依 ΔV ＝ Δi × ESR 產生壓降；加大容量只改變電容項。</p>
+<p>理想降壓轉換器（Buck）共用負端參考點。導通時，輸入經開關與電感送能，高於負載所需的電流流進電容；關斷時，電感經二極體續流，低於平均值後由電容供電。示波器可見小幅週期變化，電流探棒則見以 I<sub>o</sub> 為中心的三角波。</p>
+<p>電容等效串聯電阻（equivalent series resistance, ESR）與理想電容量串聯。三角波電流一改變，ESR 壓降立刻跟著改變；增加 C 只能降低電荷項，不能消除 ESR 項。這件事在你的程式裡長什麼樣：L 與 C 是兩個 buffer 的大小，ESR 是 buffer 自己的 overhead。比喻到此為止，精確機制是前者控制狀態變化率，後者產生與瞬時電流成正比的電壓誤差。</p>
+<p>加大 L 會降低 Δi<sub>L</sub>、峰值與 ESR 壓降，但元件更大、瞬態較慢；加大 C 只降低電荷項；提高切換頻率可縮小 L、C，卻增加 01 章的切換損耗。設計須讓各限制同時過關。</p>
+<p class="note">來源：P2-電力電子（下）§7.1、§7.2、§6.5。</p>
+
+<h2>推導：把電流目標一路換成 L、C 與 ESR 上限</h2>
+<p><strong>（a）先求 L。</strong>05 章已得 Δi<sub>L</sub> ＝ (V<sub>in</sub> − V<sub>o</sub>) × D / (L × f<sub>sw</sub>)，移項就是 L ＝ (V<sub>in</sub> − V<sub>o</sub>) × D / (f<sub>sw</sub> × Δi<sub>L</sub>)。V<sub>in</sub>、V<sub>o</sub> 以 V 計，f<sub>sw</sub> 以 Hz 計，Δi<sub>L</sub> 以 A 計，L 得 H。通常先讓 Δi<sub>L</sub> 為 I<sub>o</sub> 的 20–40 %；比例小會需要更大電感，比例大則提高峰值與損耗。</p>
+<p><strong>（b）再求 C。</strong>電容電流等於電感電流減 I<sub>o</sub>，是一個峰值為 ±Δi<sub>L</sub> / 2 的三角波。正半週期長 T<sub>sw</sub> / 2，注入電容的電荷是三角形面積：ΔQ ＝ ½ × (T<sub>sw</sub> / 2) × (Δi<sub>L</sub> / 2) ＝ Δi<sub>L</sub> × T<sub>sw</sub> / 8。再用 ΔV<sub>o,C</sub> ＝ ΔQ / C，得到 C ＝ Δi<sub>L</sub> / (8 × f<sub>sw</sub> × ΔV<sub>o,C</sub>)。ΔV 以 V 計，C 得 F。</p>
+<p><strong>（c）加入 ESR。</strong>ESR 項為 ΔV<sub>o,ESR</sub> ＝ Δi<sub>L</sub> × ESR，故允許的 ESR 上限是 ΔV<sub>o</sub> / Δi<sub>L</sub>。本課把電容項與 ESR 項直接相加，作為保守上界；真實兩者相位不同，應是向量和，不一定同時抵達最大值。電解電容容量大但 ESR 高且會乾化；薄膜電容能承受較高漣波電流；陶瓷電容 ESR 低，但有效容量會受直流偏壓影響，工程上常並聯互補。</p>
+<p><strong>（d）檢查頻率距離。</strong>LC 截止頻率 f<sub>c</sub> ＝ 1 / (2π × √(L × C))。理想二階濾波在高於 f<sub>c</sub> 的區域每十倍頻衰減約 40 dB，所以切換頻率處的衰減估為 40 × log₁₀(f<sub>sw</sub> / f<sub>c</sub>)。f<sub>c</sub> 通常要比 f<sub>sw</sub> 低至少 10 倍，但過低會放大元件體積並限制控制頻寬。電感飽和電流則必須高於 I<sub>o</sub> ＋ Δi<sub>L</sub> / 2。</p>
+<p>兩個極端能快速查錯。ESR ＝ 0 時，總量應退回電容項，若計算仍保留電阻項就表示單位換算有誤；C 趨近很大時，電容項趨近 0，但 ESR 項仍不變。另一端若 f<sub>c</sub> 接近 f<sub>sw</sub>，高頻近似尚未成立，直接套每十倍頻 40 dB 會過度樂觀。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型，真實電路不是這樣。本章採小漣波近似、把 ESR 視為常數、忽略電容的等效串聯電感，也不計陶瓷電容的直流偏壓衰減；電容項與 ESR 項用相加而非相位向量和。LCL 濾波器還有共振峰，必須另加阻尼，不能直接套這個 LC 衰減估式。</p>
+<p>公式給的是最低需求，不是直接可買的料號。實作時還要把電感值與電容量的容差、溫度變化、直流偏壓、老化及額定電壓納入，並選擇高於計算峰值的飽和電流。若這些條件讓有效 L 或 C 降低，實際截止頻率與漣波都會偏離表格。</p>
+
+<h2>數值實例：20 mV 目標如何被 50 mΩ 蓋過</h2>
+<p>取 V<sub>in</sub> ＝ 12 V、V<sub>o</sub> ＝ 5 V、I<sub>o</sub> ＝ 2 A、f<sub>sw</sub> ＝ 200 kHz、Δi<sub>L</sub> 目標 30 %、ΔV<sub>o</sub> 目標 20 mV、ESR ＝ 50 mΩ。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>D</td><td>5 / 12</td><td><strong>0.416667</strong></td></tr>
+<tr><td>Δi<sub>L</sub></td><td>0.3 × 2</td><td><strong>0.600000 A</strong></td></tr>
+<tr><td>L</td><td>(12 − 5) × 0.416667 / (200 kHz × 0.6)</td><td><strong>24.305556 µH</strong></td></tr>
+<tr><td>C</td><td>0.6 / (8 × 200 kHz × 0.02)</td><td><strong>18.750000 µF</strong></td></tr>
+<tr><td>ESR 漣波</td><td>0.6 × 0.05</td><td><strong>30.000000 mV</strong></td></tr>
+<tr><td>總漣波（相加）</td><td>20 ＋ 30</td><td><strong>50.000000 mV</strong></td></tr>
+<tr><td>ESR 上限</td><td>0.02 / 0.6</td><td><strong>33.333333 mΩ</strong></td></tr>
+<tr><td>f<sub>c</sub></td><td>1 / (2π × √(24.305556 µH × 18.75 µF))</td><td><strong>7455.327388 Hz</strong></td></tr>
+<tr><td>f<sub>sw</sub> / f<sub>c</sub></td><td>200000 / 7455.327388</td><td><strong>26.826454</strong></td></tr>
+<tr><td>切換頻率衰減</td><td>40 × log₁₀ 26.826454</td><td><strong>57.142531 dB</strong></td></tr>
+<tr><td>電感峰值電流</td><td>2 ＋ 0.3</td><td><strong>2.300000 A</strong></td></tr>
+</tbody></table>
+<p><strong>ESR 邊界。</strong>ESR ＝ 0 時總漣波是 20.000000 mV；ESR ＝ 10 mΩ 時，電阻項為 6.000000 mV、總量為 26.000000 mV。預設 ESR ＝ 50 mΩ 已超過 33.333333 mΩ 上限，因此即使 C 繼續增加，30.000000 mV 的電阻項仍存在。</p>
+<p>若要在預設電流下讓總量回到 20.000000 mV，就不能同時把完整 20 mV 分給電容項。工程上會先分配較小的電容項，再以剩餘額度限制 ESR；或並聯多顆低 ESR 電容，同時降低等效電阻並增加有效容量。</p>
+<p><strong>頻率邊界。</strong>f<sub>sw</sub> ＝ 1 MHz 時，L ＝ 4.861111 µH、C ＝ 3.750000 µF、f<sub>c</sub> ＝ 37276.636938 Hz；兩個頻率一起放大五倍，所以比例 26.826454 不變。f<sub>sw</sub> ＝ 50 kHz 時，L ＝ 97.222222 µH、C ＝ 75.000000 µF。提高頻率能縮小元件，但這個理想比例並沒有改善。</p>
+<p><strong>電流比例邊界。</strong>目標 10 % 時，L ＝ 72.916667 µH、C ＝ 6.250000 µF、ESR 上限 100.000000 mΩ；目標 60 % 時，L ＝ 12.152778 µH、C ＝ 37.500000 µF、ESR 漣波 60.000000 mV。另一個 48 V 到 12 V、10 A、50 mV 案例需要 L ＝ 15.000000 µH、C ＝ 37.500000 µF；若是 20 A、5 mV、ESR ＝ 0，則 C ＝ 750.000000 µF、ESR 上限只有 0.833333 mΩ，通常需要多顆陶瓷並聯。</p>
+<p>比例降低時 C 的計算值反而變小，看起來可能違反直覺；原因是本例把允許的電容項電壓固定，流進電容的三角波電流變小，所需容量自然下降。但換來的是更大的 L。這再次說明 L 與 C 的結果必須成對閱讀，不能只挑其中一個數字比較方案。</p>
+
+<section class="workspace"><h2>自由實驗：把漣波預算拆給 L、C 與 ESR</h2>
+<p>場景是一個理想 Buck 輸出級。指定輸入、輸出、負載、切換頻率與兩個漣波目標，再加入電容 ESR；觀察所需 L、C、總漣波、截止頻率和電感峰值電流。</p>
+<div class="controls">
+<label for="fl-vin">輸入電壓 V_in（V）<input id="fl-vin" type="range" min="5" max="48" step="1" value="12"></label>
+<label for="fl-vo">輸出電壓 V_o（V）<input id="fl-vo" type="range" min="1" max="24" step="0.5" value="5"></label>
+<label for="fl-io">負載電流 I_o（A）<input id="fl-io" type="range" min="0.5" max="20" step="0.5" value="2"></label>
+<label for="fl-f">切換頻率 f_sw（kHz）<input id="fl-f" type="range" min="50" max="1000" step="10" value="200"></label>
+<label for="fl-rip">電感漣波目標 Δi_L / I_o（%）<input id="fl-rip" type="range" min="10" max="60" step="5" value="30"></label>
+<label for="fl-dv">輸出漣波目標 ΔV_o（mV，電容項）<input id="fl-dv" type="range" min="5" max="200" step="5" value="20"></label>
+<label for="fl-esr">電容 ESR（mΩ）<input id="fl-esr" type="range" min="0" max="200" step="5" value="50"></label>
+</div>
+<div id="filt-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>ΔV<sub>o,C</sub> 的分母是 8，不是 2；流入電容的是三角波，而且只取正半區的面積。</li>
+<li>電容標稱值不等於有效值；陶瓷電容受直流偏壓後，容量可能下降。</li>
+<li>f<sub>c</sub> 是 LC 濾波器的截止頻率，不是控制迴路的交越頻率；後者通常低於 f<sub>sw</sub> / 10，還要避開 LC 雙極點。</li>
+<li>57.142531 dB 是切換頻率處的理想二階衰減；ESR 會讓高頻區最後退化為每十倍頻 20 dB，寄生效應也會改變結果。</li>
+</ul>
+
+<h2>可觀察證據：先避免把量測假象當成漣波</h2>
+<p>示波器用交流耦合、20 MHz 頻寬與短接地彈簧；同時用電流探棒量電感電流，以電感電容電阻量測表（inductance-capacitance-resistance meter, LCR meter）在指定頻率量 ESR。三角形多對應電容項，同步於電流轉折的階梯則偏向 ESR 項。</p>
+<p><strong>能證明：</strong>正確探測能證明漣波的量級，以及電容項或 ESR 項哪一個主導；掃描負載與頻率還能檢查設計式的變化方向。<strong>不能證明：</strong>長接地線拾取的高頻尖峰不能證明輸出真的有同樣大小的漣波，它可能只是探棒接地環路的量測假象；單一頻率的 ESR 讀值也不能代表所有工作頻率。</p>
+<p>把電感電流與輸出電壓疊在同一時間軸：平滑三角形對應電荷積分，斜率換向處的跳變更接近 ESR；仍須排除探棒頻寬、接地與取樣假象。</p>
+
+<h2>連到哪門課</h2>
+<p>主機板常用多相並聯降低每相 Δi<sub>L</sub> 與 ESR 壓力；09 章用二階響應估算諧波衰減，11 章取捨元件大小與損耗。基礎見<a href="../../02-電機核心/電路學-互動課程/13-RLC共振與品質因數.html">電路學的 RLC 共振與品質因數</a>。</p>
+<p>完整設計還須檢查磁芯損耗、電容額定漣波電流、壽命與控制穩定度。LCL 濾波器需要阻尼；本章只建立由規格反推元件的一階流程。</p>
+<nav class="pager" aria-label="章節導覽"><a href="06-Boost與BuckBoost.html">← 上一頁：Boost 與 Buck-Boost</a><a href="08-逆變器與SPWM.html">下一頁：逆變器與 SPWM →</a></nav>
+</main>
+<footer class="site-footer"><span>07 濾波與漣波設計：L、C 與 ESR</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

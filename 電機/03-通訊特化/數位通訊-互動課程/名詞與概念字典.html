@@ -1,0 +1,458 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>名詞與概念字典｜數位通訊</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位通訊世界觀與收發鏈.html">00 起點</a><a href="名詞與概念字典.html" aria-current="page">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">查・60 個名詞，四段式：白話、位置、機制、邊界</p>
+<h1>名詞與概念字典：把可靠傳輸的六十個關鍵放在同一張桌上</h1>
+<p class="lead">每張卡都回答四件事：名詞用白話怎麼說、在收發流程扮演什麼角色、背後機制如何運作，以及最容易誤判的邊界。搜尋框可查繁體中文、英文、縮寫與符號；遇到陌生式子時，先找量的角色，再回章節看完整推導。</p>
+<p class="note">來源：15-數位通訊-上 §5–§7、15-數位通訊-下 §8–§14，以及 中英名詞對照表-2.md 的「數位通訊」「資訊理論與編碼」「無線與行動通訊」節。</p>
+<div class="dictionary-tools"><label for="term-search">搜尋名詞或概念</label><input id="term-search" type="search" placeholder="搜尋繁中、英文、符號或用途"><span id="term-count" aria-live="polite"></span></div>
+
+<h2>第一組｜收發鏈與訊號空間（第 00–02 章）</h2>
+<div class="term-list">
+<article class="term-card" data-search="transceiver chain 收發鏈 發射 接收">
+<h2>收發鏈（transceiver chain）</h2>
+<p><strong>白話：</strong>位元從來源出發，經過保護、映射與無線前端，再由接收端倒著還原的一整條加工線。它讓每一種演算法都有明確位置。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-數位通訊世界觀與收發鏈.html">00 章</a>建立全課地圖；數據機、基地臺與軟體無線電都能依這條鏈拆成可測模組。</p>
+<p><strong>機制：</strong>發射側依序完成來源處理、通道編碼、交錯、映射、脈衝整形與上變頻；接收側同步、等化、判決、解碼，最後交還資訊位元。每個方塊都可用已知輸入單獨驗證，出錯時便能沿鏈逐段定位，而不是只看終端結果猜原因。</p>
+<p><strong>不要混淆：</strong>這是功能順序，不保證硬體一定逐塊分開。實作可合併多步或平行運算，但每一步的輸入、輸出與責任仍可分辨。</p>
+</article>
+<article class="term-card" data-search="code rate r 編碼率 冗餘">
+<h2>編碼率（code rate, R）</h2>
+<p><strong>白話：</strong>送出的編碼位元中，真正承載原始資訊的比例；R 越小，加入的保護冗餘越多。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-數位通訊世界觀與收發鏈.html">00 章</a>先記位元帳，第 <a href="08-漢明碼與症狀解碼.html">08</a>、<a href="09-摺積碼與Viterbi解碼.html">09 章</a>用它換算能量與傳輸負擔。</p>
+<p><strong>機制：</strong>若每 k 個資訊位元編成 n 個位元，R ＝ k / n，編碼後位元率為 R<sub>c</sub> ＝ R<sub>b</sub> / R；率 1/2 代表線路要送兩倍位元。</p>
+<p><strong>不要混淆：</strong>它不是傳輸速度。相同 R 可搭配不同位元率；降低 R 可能提升保護力，也會增加頻寬或時間，不能只看冗餘判斷好壞。若比較兩套系統，還要固定資訊位元率與功率定義，否則表面收益可能只是多送了資源。</p>
+</article>
+<article class="term-card" data-search="symbol rate r_s 符元率 baud">
+<h2>符元率（symbol rate, R_s）</h2>
+<p><strong>白話：</strong>每秒送出多少個星座點，也就是接收器每秒必須做幾次符元判決。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-數位通訊世界觀與收發鏈.html">00 章</a>把它接到位元率與頻寬；發射器時脈、濾波器與示波器時間刻度都依它設定。</p>
+<p><strong>機制：</strong>M 進制每符元承載 k ＝ log<sub>2</sub>M 個編碼位元，因此 R<sub>s</sub> ＝ R<sub>c</sub> / k，單位 baud；提高 M 可用較少符元搬同量位元。</p>
+<p><strong>不要混淆：</strong>baud 不是 bit/s。只有每符元恰載一位元時數值才相等；改變 M 或編碼率後，兩者必須重新換算。</p>
+</article>
+<article class="term-card" data-search="spectral efficiency eta 頻譜效率 η">
+<h2>頻譜效率（spectral efficiency, η）</h2>
+<p><strong>白話：</strong>每一 Hz 頻寬每秒能搬多少資訊位元，是空中資源用得緊不緊的帳。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-數位通訊世界觀與收發鏈.html">00 章</a>比較編碼、星座與濾波的總效果；行動系統規劃頻段容量時會看此量。</p>
+<p><strong>機制：</strong>η ＝ R<sub>b</sub> / B，單位 bit/s/Hz。提高每符元位元數通常可提高 η，但點距縮短，為維持誤碼率就要付出更高 E<sub>b</sub>/N<sub>0</sub>。</p>
+<p><strong>不要混淆：</strong>效率高不代表總速率必然高，也不代表可靠；總速率還受可用頻寬影響，可靠度還要看距離、雜訊與編碼。</p>
+</article>
+<article class="term-card" data-search="signal space 訊號空間 基底 座標 向量">
+<h2>訊號空間（signal space）</h2>
+<p><strong>白話：</strong>把一段波形改寫成有限個座標，讓接收問題變成「哪個點離觀測點最近」。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-訊號空間與正交基底.html">01 章</a>的核心，也是星座圖、最大似然判決與錯誤率分析的共同語言。</p>
+<p><strong>機制：</strong>每個座標是波形與一個正交基底的內積；座標平方和等於能量，兩點座標差的平方和等於波形之間的距離。</p>
+<p><strong>不要混淆：</strong>維度是基底的個數，不是訊號的個數；換一組基底座標會變，距離與能量不變。圖上只畫兩維是方便閱讀，不代表真實波形都只有兩個自由度；維度由候選集合所張成的空間決定。</p>
+</article>
+<article class="term-card" data-search="orthonormal basis 正交基底 basis gram schmidt">
+<h2>正交基底（orthonormal basis）</h2>
+<p><strong>白話：</strong>一組彼此不重複計量、每支長度又都等於一的方向，用來量出波形座標。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-訊號空間與正交基底.html">01 章</a>把波形壓成向量；同相與正交支路的接收機就是用兩支基底量座標。</p>
+<p><strong>機制：</strong>⟨φ<sub>i</sub>, φ<sub>j</sub>⟩在 i ＝ j 時為 1，否則為 0。Gram–Schmidt 先歸一化第一支，再扣除第二支的投影後歸一化。</p>
+<p><strong>不要混淆：</strong>正交只說內積為零，不等於兩個波形在每個時刻都不重疊；歸一化則只固定長度，兩個條件缺一不可。</p>
+</article>
+<article class="term-card" data-search="inner product correlation coefficient rho 內積 相關係數 ρ">
+<h2>內積與相關係數（inner product &amp; correlation coefficient, ρ）</h2>
+<p><strong>白話：</strong>內積量兩個波形重疊得多像；相關係數再除去能量大小，只留下方向相似程度。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-訊號空間與正交基底.html">01 章</a>用來分類反極性與正交佈局；相關接收器也直接計算這個量。</p>
+<p><strong>機制：</strong>ρ ＝ ⟨s<sub>1</sub>, s<sub>2</sub>⟩ / √(E<sub>1</sub>E<sub>2</sub>)，範圍 −1 到 1；括號 ⟨ ⟩ 讀作內積。</p>
+<p><strong>不要混淆：</strong>相關高不表示能量大，因為正規化已移除尺度；ρ ＝ 0 只代表在選定觀察區間內正交，不代表兩波形毫無共同頻率。</p>
+</article>
+<article class="term-card" data-search="signal energy euclidean distance 訊號能量 距離 norm">
+<h2>訊號能量與距離（signal energy &amp; Euclidean distance）</h2>
+<p><strong>白話：</strong>能量是單一點離原點多遠的平方；距離是兩個候選點彼此隔多遠。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-訊號空間與正交基底.html">01 章</a>建立全課唯一尺度，後續判決、星座與編碼都問距離相對雜訊有多大。</p>
+<p><strong>機制：</strong>E ＝ ‖s‖²，雙線符號 ‖ ‖ 讀作範數；d² ＝ E<sub>1</sub> + E<sub>2</sub> − 2ρ√(E<sub>1</sub>E<sub>2</sub>)。</p>
+<p><strong>不要混淆：</strong>兩個點能量相等，彼此距離仍可不同；可靠度主要由候選間距離決定，不是只看每個點離原點的距離。</p>
+</article>
+<article class="term-card" data-search="antipodal orthogonal on-off signaling 反極性 正交 on-off 佈局">
+<h2>反極性／正交／ON-OFF 佈局（antipodal／orthogonal／on-off signaling）</h2>
+<p><strong>白話：</strong>這是兩個候選波形的三種幾何關係：方向相反、互成直角，或其中一個就是零。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-訊號空間與正交基底.html">01 章</a>用同樣能量比較距離；低功耗發射器與二元系統設計會依限制選擇。</p>
+<p><strong>機制：</strong>等能量 E 時，反極性 ρ ＝ −1 且 d² ＝ 4E；正交 ρ ＝ 0 且 d² ＝ 2E；ON-OFF 的 d² ＝ E。</p>
+<p><strong>不要混淆：</strong>ON-OFF 的平均發射能量可能較省，但同一非零能量下距離也較短；比較前要先說固定的是峰值、平均能量或資訊能量。</p>
+</article>
+<article class="term-card" data-search="m-ary modulation m 進制調變 constellation">
+<h2>M 進制調變（M-ary modulation）</h2>
+<p><strong>白話：</strong>一次不只在兩個候選中選一個，而是在 M 個星座點中選一個，每次帶走更多位元。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-M進制星座與最小距離.html">02 章</a>比較 PSK 與 QAM；Wi-Fi 與行動通訊會依通道品質切換 M。</p>
+<p><strong>機制：</strong>M 為二的整次方時，每符元承載 k ＝ log<sub>2</sub>M 位元。M 增加可降低相同位元率所需符元率，卻通常讓固定能量下的點更擠。</p>
+<p><strong>不要混淆：</strong>M 大只代表候選多，不自動代表資訊有效率更高；若誤碼迫使大量重傳，實際吞吐量反而可能下降。實務的自動選擇會同時考慮目前通道品質、編碼保護、封包錯誤與目標延遲。</p>
+</article>
+<article class="term-card" data-search="minimum distance d_min 最小距離 星座">
+<h2>最小距離（minimum distance, d_min）</h2>
+<p><strong>白話：</strong>星座中最靠近的任意兩點之間的距離，是雜訊最容易跨過的那道最窄防線。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-M進制星座與最小距離.html">02 章</a>比較星座，第 <a href="03-最佳接收機與ML判決.html">03 章</a>把它接到最近點判決。</p>
+<p><strong>機制：</strong>高訊雜比時，錯誤大多發生在最近鄰；固定雜訊標準差下，d<sub>min</sub> 越大，跨越判決邊界的機率越小。</p>
+<p><strong>不要混淆：</strong>要在 E<sub>s</sub> ＝ 1 歸一化後才能跨星座比較；它是能量平方根的單位，不能拿未歸一化座標直接下結論。</p>
+</article>
+</div>
+
+<h2>第二組｜星座與判決（第 02–04 章）</h2>
+<div class="term-list">
+<article class="term-card" data-search="average number nearest neighbours n_avg 平均最近鄰數">
+<h2>平均最近鄰數（average number of nearest neighbours, N_avg）</h2>
+<p><strong>白話：</strong>每個星座點平均有幾個同樣近的鄰居；防線一樣窄時，出口越多就越容易走錯。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-M進制星座與最小距離.html">02 章</a>補足只看最小距離的不足；星座設計與錯誤率近似都會用到。</p>
+<p><strong>機制：</strong>先數每一點在 d<sub>min</sub> 上的鄰居，再對所有點平均。高訊雜比近似把單一邊界錯誤機率乘上這個數。</p>
+<p><strong>不要混淆：</strong>它不是星座總點數，也不含較遠鄰居；低訊雜比時遠方錯誤不可忽略，最近鄰近似便會失準。</p>
+</article>
+<article class="term-card" data-search="peak-to-average power ratio papr 峰均功率比">
+<h2>峰均功率比（peak-to-average power ratio, PAPR）</h2>
+<p><strong>白話：</strong>波形最高瞬間功率與平均功率的比值，反映功率放大器要預留多少不失真的頭部空間。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-M進制星座與最小距離.html">02 章</a>比較星座，第 <a href="12-OFDM與循環字首.html">12 章</a>觀察多個子載波疊加的峰值。</p>
+<p><strong>機制：</strong>PAPR ＝ E<sub>peak</sub> / E<sub>avg</sub>；PSK 的包絡固定所以為 1，QAM 與 OFDM 可能出現遠高於平均值的瞬時峰。</p>
+<p><strong>不要混淆：</strong>它不是平均發射功率，也不直接等於誤碼率；但放大器若在峰值削波，星座會變形並產生額外頻譜外洩。</p>
+</article>
+<article class="term-card" data-search="gray mapping gray 映射 label hamming">
+<h2>Gray 映射（Gray mapping）</h2>
+<p><strong>白話：</strong>替星座點貼位元標籤時，讓每對最近鄰只差一個位元，把一次小失足限制成一個位元錯誤。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-M進制星座與最小距離.html">02 章</a>連接符元錯誤與誤碼率；幾乎所有實用 QAM 映射都採這個原則。</p>
+<p><strong>機制：</strong>高訊雜比時錯誤多落到最近鄰，Gray 標籤使每次這類錯誤的漢明距離為 1，所以 P<sub>b</sub> 約為 P<sub>s</sub> / k。</p>
+<p><strong>不要混淆：</strong>它不移動星座點，因此不改最小距離與符元錯誤率；改的是錯到鄰點後會連帶錯幾個位元。</p>
+</article>
+<article class="term-card" data-search="maximum a posteriori map 最大後驗 prior bayes">
+<h2>最大後驗（maximum a posteriori, MAP）</h2>
+<p><strong>白話：</strong>收到觀測後，把「這個觀測像誰」與「誰本來較常出現」一起算，選後驗機率最大的候選。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-最佳接收機與ML判決.html">03 章</a>處理不等先驗；軟式解碼與機器學習分類都能看到相同的貝氏判斷。</p>
+<p><strong>機制：</strong>P(s<sub>i</sub>|r) 與 p(r|s<sub>i</sub>)P(s<sub>i</sub>) 成比例；最大化此積可使平均判錯機率最小。</p>
+<p><strong>不要混淆：</strong>先驗相等時才與 ML 完全相同；若常見候選與罕見候選機率不同，MAP 的門檻會往罕見者一側移。</p>
+</article>
+<article class="term-card" data-search="maximum likelihood ml 最大似然 nearest distance">
+<h2>最大似然（maximum likelihood, ML）</h2>
+<p><strong>白話：</strong>先假設每個候選都可能送出，問眼前觀測由哪個候選產生最合理。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-最佳接收機與ML判決.html">03 章</a>把機率判斷化成最短距離；數位接收器的 slicer 與序列偵測都沿用它。</p>
+<p><strong>機制：</strong>選使 p(r|s<sub>i</sub>) 最大者；在白高斯雜訊下等價於讓 ‖r − s<sub>i</sub>‖² 最小，也等價於最大化相關度量。</p>
+<p><strong>不要混淆：</strong>不是任何情況都「最佳」，而是先驗相等時的最佳；先驗不等時，MAP 才能最小化整體錯誤率。</p>
+</article>
+<article class="term-card" data-search="decision region threshold 判決區域 門檻 boundary">
+<h2>判決區域與門檻（decision region &amp; threshold）</h2>
+<p><strong>白話：</strong>把觀測空間切成數塊；點落在哪一塊就判成哪個候選，分界位置就是門檻。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-最佳接收機與ML判決.html">03 章</a>比較 ML 與 MAP；接收器量測直方圖時也會檢查門檻是否偏移。</p>
+<p><strong>機制：</strong>等先驗且雜訊對稱時，兩點的邊界在垂直平分線；先驗不等或代價不同時，對數先驗項會推動門檻。</p>
+<p><strong>不要混淆：</strong>門檻不是固定等於零；只有反極性、對稱雜訊且先驗相等時才如此，換尺度或偏壓後必須重算。</p>
+</article>
+<article class="term-card" data-search="correlator 相關器 projection receiver">
+<h2>相關器（correlator）</h2>
+<p><strong>白話：</strong>把接收波形逐一拿去和候選模板比對，累加相似程度，再選度量最高者。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-最佳接收機與ML判決.html">03 章</a>呈現 ML 的硬體形式；GPS 搜碼與前導碼偵測也用相關峰定位。</p>
+<p><strong>機制：</strong>計算 ⟨r,s<sub>i</sub>⟩ − E<sub>i</sub>/2；等能量候選時只要比內積。取樣時刻的輸出可與匹配濾波結果等價。</p>
+<p><strong>不要混淆：</strong>相關值最大不一定是原始內積最大；候選能量不同時必須扣除 E<sub>i</sub>/2，否則會偏愛高能量模板。</p>
+</article>
+<article class="term-card" data-search="log-likelihood ratio llr 對數似然比 soft information">
+<h2>對數似然比（log-likelihood ratio, LLR）</h2>
+<p><strong>白話：</strong>不只說判成 0 或 1，還用正負與大小表示偏向哪邊、把握有多強。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-最佳接收機與ML判決.html">03 章</a>由兩個似然相除而來；軟判決解碼器把它當成輸入證據。</p>
+<p><strong>機制：</strong>LLR ＝ ln[p(r|1)P(1) / p(r|0)P(0)]；符號決定硬判決，絕對值表示可靠度，對數把連乘轉為相加。</p>
+<p><strong>不要混淆：</strong>它不是機率，數值也不限制在 0 到 1；不同定義可能把分子分母對調，因此使用前要確認正號代表哪一個位元。</p>
+</article>
+<article class="term-card" data-search="q function q 函數 gaussian tail probability">
+<h2>Q 函數（Q function）</h2>
+<p><strong>白話：</strong>標準高斯隨機量落在某門檻右側的尾端機率，把「距離除以雜訊尺度」直接翻成判錯機率。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-誤碼率公式與Q函數.html">04 章</a>用它統一多種星座公式；測試人員以理論曲線對照量測誤碼率。</p>
+<p><strong>機制：</strong>輸入 x 越大，Q(x) 越小；二元反極性的 P<sub>b</sub> ＝ Q(√(2E<sub>b</sub>/N<sub>0</sub>))。</p>
+<p><strong>不要混淆：</strong>Q 函數不是 QPSK 的 Q，也不是品質因數；它描述單側高斯尾端，兩側事件是否乘 2 要依幾何邊界判定。</p>
+</article>
+<article class="term-card" data-search="bit error rate ber 誤碼率 probability">
+<h2>誤碼率（bit error rate, BER）</h2>
+<p><strong>白話：</strong>長期送很多位元後，判錯位元所占的比例；它是可靠度最常見的終端指標。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-誤碼率公式與Q函數.html">04 章</a>比較九種公式；數據機與鏈路測試器會以已知序列實測 BER。</p>
+<p><strong>機制：</strong>理論上是單一位元判錯的機率 P<sub>b</sub>；例如 BPSK 在 10 dB 時為 3.872108 × 10<sup>−6</sup>，樣本夠長才接近此值。</p>
+<p><strong>不要混淆：</strong>本課依名詞對照表一律寫「誤碼率」；通訊系統課與部分教材寫「位元錯誤率」，是同一個 BER。</p>
+</article>
+<article class="term-card" data-search="symbol error rate ser 符元錯誤率">
+<h2>符元錯誤率（symbol error rate, SER）</h2>
+<p><strong>白話：</strong>接收器選錯星座點的比例，一個符元錯誤可能同時造成一個或多個位元錯誤。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-誤碼率公式與Q函數.html">04 章</a>先由幾何算 P<sub>s</sub>，再配合映射換成 P<sub>b</sub>。</p>
+<p><strong>機制：</strong>高訊雜比且使用 Gray 映射時，錯誤多落在最近鄰，常用 P<sub>b</sub> ≈ P<sub>s</sub> / k；其他映射要乘平均錯位元數。</p>
+<p><strong>不要混淆：</strong>SER 與 BER 分母不同，不能直接互換；同一個 SER 在不同標籤下可能對應不同 BER。</p>
+</article>
+</div>
+
+<h2>第三組｜調變家族與同步（第 04–05 章）</h2>
+<div class="term-list">
+<article class="term-card" data-search="differential phase shift keying dpsk 差分相位鍵控">
+<h2>差分相位鍵控（differential phase shift keying, DPSK）</h2>
+<p><strong>白話：</strong>資訊寫在相鄰符元的相位變化，而不是絕對相位，因此接收器可拿前一個符元當參考。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-誤碼率公式與Q函數.html">04 章</a>比較 DBPSK 代價，第 <a href="05-載波相位與同步.html">05 章</a>用它解除整體相位模糊。</p>
+<p><strong>機制：</strong>接收端比較相鄰符元；DBPSK 的 P<sub>b</sub> ＝ ½ exp(−γ<sub>b</sub>)，免去絕對相位判定，但參考符元本身也含雜訊。</p>
+<p><strong>不要混淆：</strong>差分編碼不等於完全不用同步；頻率偏移與時序仍須處理，而且一次錯誤可能影響相鄰兩次差分判決。</p>
+</article>
+<article class="term-card" data-search="noncoherent detection 非同調偵測 carrier phase">
+<h2>非同調偵測（noncoherent detection）</h2>
+<p><strong>白話：</strong>接收器不建立精確的載波相位參考，而用能量、包絡或相鄰符元關係作判斷。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-誤碼率公式與Q函數.html">04 章</a>比較 BFSK 與 DBPSK；低複雜度感測器常用此法。</p>
+<p><strong>機制：</strong>能量偵測把同相與正交支路平方相加，消除未知相位；少估一個參數換來較大的錯誤率或更高所需能量。</p>
+<p><strong>不要混淆：</strong>非同調不是沒有載波，也不是完全免同步；仍需知道頻帶與符元邊界，只是不要求精確絕對相位。</p>
+</article>
+<article class="term-card" data-search="waterfall curve 瀑布曲線 ber snr">
+<h2>瀑布曲線（waterfall curve）</h2>
+<p><strong>白話：</strong>把誤碼率用對數刻度對 E<sub>b</sub>/N<sub>0</sub> 作圖，常呈現先緩後陡降的形狀。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-誤碼率公式與Q函數.html">04 章</a>用來讀門檻與比較方案；接收器驗證報告會疊合理論與量測曲線。</p>
+<p><strong>機制：</strong>橫向差距代表達到同一目標錯誤率所需的 dB 差；斜率反映距離結構與編碼在該區間的改善速度。</p>
+<p><strong>不要混淆：</strong>曲線較低不表示所有條件都較好；比較必須固定資訊率、頻寬、功率定義與偵測方式，低端還可能出現錯誤地板。讀圖時要先選定同一目標誤碼率，再水平讀取所需能量差，不能在不同高度各挑一個好看的點。</p>
+</article>
+<article class="term-card" data-search="carrier synchronization 載波同步 phase frequency">
+<h2>載波同步（carrier synchronization）</h2>
+<p><strong>白話：</strong>接收器估出發射端載波的相位與頻率，使星座不再整體旋轉。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-載波相位與同步.html">05 章</a>的第一層同步；無線電前端混頻後，必須先穩住星座才能可靠判決。</p>
+<p><strong>機制：</strong>鎖相迴路或 Costas 迴路由相位誤差產生修正，反覆調整本地振盪器；頻率偏移則使相位隨時間持續累積。</p>
+<p><strong>不要混淆：</strong>載波鎖定不代表符元時序或訊框已對準；三者估的參數不同，通常分階段或聯合追蹤。</p>
+</article>
+<article class="term-card" data-search="costas loop phase ambiguity costas 迴路 相位模糊">
+<h2>Costas 迴路與相位模糊（Costas loop &amp; phase ambiguity）</h2>
+<p><strong>白話：</strong>Costas 迴路能把星座轉正，卻可能鎖在對稱旋轉的位置，外觀看似穩定但位元標籤全錯。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-載波相位與同步.html">05 章</a>說明 BPSK 的 180° 與 QPSK 的 90° 模糊；接收器靠前導碼或差分編碼排除。</p>
+<p><strong>機制：</strong>把 BPSK 平方或 QPSK 四次方會消去資料變化，也同時失去一半或四分之三的絕對相位資訊。</p>
+<p><strong>不要混淆：</strong>迴路鎖住只代表誤差量穩定，不保證落在正確象限；必須用已知資料驗證標籤方向。若只看星座形狀，旋轉後仍可能非常集中，因此一定要檢查前導碼內容或後續校驗結果。</p>
+</article>
+<article class="term-card" data-search="carrier frequency offset cfo 載波頻率偏移 delta f">
+<h2>載波頻率偏移（carrier frequency offset, CFO）</h2>
+<p><strong>白話：</strong>收發兩端的載波頻率略有差異，造成星座每經過一個符元又多轉一點。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-載波相位與同步.html">05 章</a>觀察累積旋轉，第 <a href="12-OFDM與循環字首.html">12 章</a>看它破壞子載波正交。</p>
+<p><strong>機制：</strong>偏移 Δf 在時間 t 造成相位 2πΔf t；每符元旋轉 360° × Δf / R<sub>s</sub>，因此小偏差也會隨時間累積。</p>
+<p><strong>不要混淆：</strong>CFO 不是固定相位誤差；固定誤差只把星座轉一次，頻率誤差會持續轉，需估斜率而非只減一個角度。</p>
+</article>
+<article class="term-card" data-search="symbol timing synchronization early-late gate 符元時序同步 早晚閘">
+<h2>符元時序同步與早晚閘（symbol timing synchronization &amp; early-late gate）</h2>
+<p><strong>白話：</strong>找出每個符元最該取樣的時刻；早晚閘比較稍早與稍晚的觀測，判斷時鐘該往哪邊推。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-載波相位與同步.html">05 章</a>區分三種同步；數位接收器的插值器與時鐘回復迴路執行此工作。</p>
+<p><strong>機制：</strong>取樣點偏早時，早側與晚側的能量或誤差不平衡；迴路用差值更新時序估計，直到平均誤差靠近零。</p>
+<p><strong>不要混淆：</strong>時序同步處理「何時量」，載波同步處理「座標軸朝哪裡」；其中一個正確不能補救另一個錯誤。</p>
+</article>
+<article class="term-card" data-search="frame synchronization preamble 訊框同步 前導碼 correlation">
+<h2>訊框同步與前導碼（frame synchronization &amp; preamble）</h2>
+<p><strong>白話：</strong>在連續樣本裡找出一包資料從哪裡開始；前導碼是發射端先放的一段已知標記。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-載波相位與同步.html">05 章</a>以相關峰定位；Wi-Fi 封包與基地臺同步程序都先搜尋已知序列。</p>
+<p><strong>機制：</strong>接收資料與已知前導碼逐位置做相關，峰值超過門檻便宣告起點；同一段也可協助估載波、時序與通道。</p>
+<p><strong>不要混淆：</strong>前導碼不是有效負載，也不保證找到的峰一定正確；門檻過低會誤警，過高則在弱訊號時漏失。</p>
+</article>
+<article class="term-card" data-search="barker code 碼 autocorrelation 13">
+<h2>Barker 碼（Barker code）</h2>
+<p><strong>白話：</strong>一種短的正負一序列，在正確對齊時相關峰很高，錯開時旁瓣很小，適合當同步標記。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-載波相位與同步.html">05 章</a>用 Barker-13 檢查訊框起點；短封包與雷達脈衝壓縮也會用類似序列。</p>
+<p><strong>機制：</strong>Barker-13 在零位移的非週期自相關峰為 13，其餘位移旁瓣絕對值不超過 1，因而峰值容易辨識。</p>
+<p><strong>不要混淆：</strong>它不是任意長度都有，且好自相關不等於多使用者間互相關也好；多使用者分離另需選碼族。</p>
+</article>
+</div>
+
+<h2>第四組｜等化（第 06–07 章）</h2>
+<div class="term-list">
+<article class="term-card" data-search="inter-symbol interference isi 符元間干擾 memory">
+<h2>符元間干擾（inter-symbol interference, ISI）</h2>
+<p><strong>白話：</strong>前後符元的波形拖尾疊到目前取樣點，使眼前數值不只由目前符元決定。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-等化器ZF與MMSE.html">06 章</a>用兩抽頭通道分析，第 <a href="07-自適應等化LMS.html">07 章</a>在線學習抵消。</p>
+<p><strong>機制：</strong>若 y[n] ＝ x[n] + a x[n−1] + 雜訊，第二項就是前一符元殘留；等化器估計反向濾波以縮短整體響應。</p>
+<p><strong>不要混淆：</strong>ISI 不是隨機雜訊；它由鄰近資料與通道記憶造成，若通道可知便能部分預測，但消除時可能放大雜訊。</p>
+</article>
+<article class="term-card" data-search="channel impulse response echo 通道脈衝響應 回音 multipath">
+<h2>通道脈衝響應與回音（channel impulse response &amp; echo）</h2>
+<p><strong>白話：</strong>送一個極短脈衝後，接收端看到的主路徑與延遲副本；它完整描述線性通道的記憶。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-等化器ZF與MMSE.html">06 章</a>使用 h ＝ [1,a]；纜線反射、室內多徑與聲學回音都以抽頭表示。</p>
+<p><strong>機制：</strong>輸入與 h 做摺積得到無雜訊輸出；h 的傅立葉表示 H 說明各頻率被放大、衰減與延遲多少。</p>
+<p><strong>不要混淆：</strong>回音係數 a 是簡化模型，不代表真實通道只有一條副路徑；實務會有多個、隨時間變化且可能含非線性。</p>
+</article>
+<article class="term-card" data-search="zero-forcing equalizer zf 零強制等化器 迫零 inverse">
+<h2>零強制等化器（zero-forcing equalizer, ZF）</h2>
+<p><strong>白話：</strong>直接用通道的倒數把失真反轉，目標是讓整體響應只剩一個尖點。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-等化器ZF與MMSE.html">06 章</a>作為最直接基準；有線接收器與 OFDM 每子載波修正都可見其形式。</p>
+<p><strong>機制：</strong>頻域 W ＝ 1 / H；兩抽頭模型的時域係數為 1, −a, a², −a³…，能把理想的 ISI 項逐次抵消。</p>
+<p><strong>不要混淆：</strong>本課一律寫「零強制」；部分教材寫「迫零」，是同一個 zero-forcing。</p>
+</article>
+<article class="term-card" data-search="noise enhancement 雜訊放大 zf fade">
+<h2>雜訊放大（noise enhancement）</h2>
+<p><strong>白話：</strong>等化器為補回通道凹陷而大幅增益，連同原本位於該頻段的雜訊一起拉高。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-等化器ZF與MMSE.html">06 章</a>說明 ZF 的代價；接收器會監看輸出訊雜比決定是否改用 MMSE。</p>
+<p><strong>機制：</strong>兩抽頭模型的平均放大倍數 NE<sub>ZF</sub> ＝ 1 / (1 − a²)；a ＝ 0.9 時為 5.263158，也就是 7.212464 dB。</p>
+<p><strong>不要混淆：</strong>放大的是等化後的雜訊功率，不是發射訊號功率；把 ISI 壓到零仍可能因雜訊變大而使判決更差。</p>
+</article>
+<article class="term-card" data-search="minimum mean square error equalizer mmse 最小均方誤差等化器">
+<h2>最小均方誤差等化器（MMSE equalizer）</h2>
+<p><strong>白話：</strong>不執著把 ISI 完全清零，而是在殘留失真與雜訊放大之間找總平方誤差最小的折衷。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-等化器ZF與MMSE.html">06 章</a>與 ZF 對照；無線接收器在低訊雜比或深衰落時常採用。</p>
+<p><strong>機制：</strong>W ＝ H 的共軛 / (|H|² + σ²)；當 |H|² 很小時，分母的 σ² 阻止增益無限上升，高訊雜比時則逐漸接近 ZF。這個分母把可靠的頻率成分多保留、把不可靠的凹陷少拉一些，折衷直接取決於雜訊功率估計。</p>
+<p><strong>不要混淆：</strong>MMSE 不保證 ISI 為零，也不是任何條件都優於所有方法；它依賴正確的通道與雜訊功率估計。</p>
+</article>
+<article class="term-card" data-search="decision-feedback equalizer dfe 判決回授等化器">
+<h2>判決回授等化器（decision-feedback equalizer, DFE）</h2>
+<p><strong>白話：</strong>先判出過去符元，再把它們預計造成的尾巴從目前觀測中扣掉。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-等化器ZF與MMSE.html">06 章</a>作為非線性等化選項；高速有線鏈路常用前饋加回授結構。</p>
+<p><strong>機制：</strong>前饋支路處理前游干擾，回授支路用已判符元重建後游 ISI；因不必在頻率凹陷硬拉，可減少雜訊放大。</p>
+<p><strong>不要混淆：</strong>回授的是判決結果，不是類比輸出；若早先判錯，錯誤會被當真並向後傳播，形成錯誤擴散。</p>
+</article>
+<article class="term-card" data-search="maximum-likelihood sequence estimation mlse 最大似然序列估測">
+<h2>最大似然序列估測（maximum-likelihood sequence estimation, MLSE）</h2>
+<p><strong>白話：</strong>不逐符元急著決定，而是比較整段可能路徑，挑出最能解釋接收序列的一條。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-等化器ZF與MMSE.html">06 章</a>點出最佳序列觀點，第 <a href="09-摺積碼與Viterbi解碼.html">09 章</a>用 Viterbi 搜尋路徑。</p>
+<p><strong>機制：</strong>通道記憶形成有限狀態；每收到一筆就累加分支距離，只保留到各狀態的最佳存活路徑，避免枚舉所有序列。</p>
+<p><strong>不要混淆：</strong>MLSE 與線性等化不同，它直接利用通道記憶做聯合判決；狀態數會隨記憶長度指數增加。</p>
+</article>
+<article class="term-card" data-search="adaptive equalizer least mean squares lms 自適應等化器 最小均方演算法">
+<h2>自適應等化器與最小均方演算法（adaptive equalizer &amp; least mean squares, LMS）</h2>
+<p><strong>白話：</strong>不知道精確通道時，讓等化抽頭根據每次預測錯多少而逐步自我修正。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-自適應等化LMS.html">07 章</a>用固定訓練序列觀察收斂；數據機啟動與行動接收器追蹤通道都會使用。</p>
+<p><strong>機制：</strong>輸出 y ＝ Σw<sub>i</sub>u<sub>i</sub>，誤差 e ＝ d − y，再更新 w<sub>i</sub> ← w<sub>i</sub> + μ × e × u<sub>i</sub>。</p>
+<p><strong>不要混淆：</strong>LMS 最小化的是長期均方誤差的近似，不保證每一步誤差都下降；步長、輸入功率與相關性共同決定穩定性。</p>
+</article>
+<article class="term-card" data-search="step size mu 步長 μ lms stability">
+<h2>步長（step size, μ）</h2>
+<p><strong>白話：</strong>LMS 每看到一次誤差後，抽頭往修正方向走多大一步；大步反應快，小步較穩。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-自適應等化LMS.html">07 章</a>的主要控制量；韌體會依訓練期與追蹤期切換大小。</p>
+<p><strong>機制：</strong>一階教材上界為 0 &lt; μ &lt; 2 / (L × P<sub>u</sub>)；L 是抽頭數，P<sub>u</sub> 是每個輸入樣本平均功率。</p>
+<p><strong>不要混淆：</strong>上界 2/(L × P<sub>u</sub>) 是估計不是保證；固定序列下接近上界會先震盪，真實相關輸入的安全範圍更窄。</p>
+</article>
+<article class="term-card" data-search="learning curve convergence 學習曲線 收斂 e squared">
+<h2>學習曲線與收斂（learning curve &amp; convergence）</h2>
+<p><strong>白話：</strong>把每次更新後的 e² 對迭代次數畫出來，看演算法是否由大錯逐步進入穩定的小錯區。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-自適應等化LMS.html">07 章</a>診斷步長；接收器測試會同時檢查收斂時間與穩態殘差。</p>
+<p><strong>機制：</strong>合理步長使平均 e² 下降後在雜訊地板附近波動；太小收斂慢，太大則震盪甚至讓抽頭與誤差發散。</p>
+<p><strong>不要混淆：</strong>單次 e² 上升不等於未收斂，應看滑動平均與抽頭是否穩定；收斂到穩定點也可能因模型不足而有偏差。通道若在訓練後改變，原本穩定的抽頭也會過時，所以追蹤能力與穩態抖動必須一起評估。</p>
+</article>
+</div>
+
+<h2>第五組｜通道編碼（第 08–09 章）</h2>
+<div class="term-list">
+<article class="term-card" data-search="linear block code 線性區塊碼 n k vector space">
+<h2>線性區塊碼（linear block code）</h2>
+<p><strong>白話：</strong>每次把固定 k 個資訊位元變成固定 n 個碼字位元，合法碼字彼此具有可利用的距離。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-漢明碼與症狀解碼.html">08 章</a>以 (7,4) 漢明碼入門；記憶體保護與儲存裝置都用區塊碼。</p>
+<p><strong>機制：</strong>線性表示兩個合法碼字做模 2 加仍是合法碼字；模 2 加用 ⊕ 表示並讀作 XOR，編碼可寫成 mG。</p>
+<p><strong>不要混淆：</strong>(n,k) 只說區塊長度與資訊長度，不唯一決定糾錯力；還要看生成規則與最小漢明距離。</p>
+</article>
+<article class="term-card" data-search="generator parity-check matrix g h 生成矩陣 校驗矩陣">
+<h2>生成矩陣與校驗矩陣（generator &amp; parity-check matrix）</h2>
+<p><strong>白話：</strong>G 把資訊組成合法碼字，H 則檢查收到的向量是否符合所有同位限制。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-漢明碼與症狀解碼.html">08 章</a>建立編碼與解碼的兩面；硬體 XOR 網路可直接實現矩陣乘法。</p>
+<p><strong>機制：</strong>系統式 G ＝ [I|P]，相配的 H ＝ [Pᵀ|I]，使 GHᵀ ＝ 0；碼字 c 滿足 Hcᵀ ＝ 0。</p>
+<p><strong>不要混淆：</strong>G 與 H 不是互逆矩陣；兩者列數、用途不同，關係是正交限制而不是一般實數乘法的反矩陣。</p>
+</article>
+<article class="term-card" data-search="hamming code 漢明碼 7 4 single error">
+<h2>漢明碼（Hamming code）</h2>
+<p><strong>白話：</strong>安排少量校驗位元，使每一個可能的單一錯誤位置都有獨特三位元指紋。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-漢明碼與症狀解碼.html">08 章</a>以 (7,4) 碼完整走一次；ECC 記憶體可使用擴充形式。</p>
+<p><strong>機制：</strong>(7,4) 碼的 d<sub>min</sub> ＝ 3，可修正 ⌊(3 − 1)/2⌋ ＝ 1 個錯；七個非零三位元組分別標記七個位置。</p>
+<p><strong>不要混淆：</strong>它能修正一錯，不表示兩錯一定能偵測後安全停下；基本解碼器可能把雙錯誤改成另一個合法碼字。</p>
+</article>
+<article class="term-card" data-search="syndrome 症狀 parity check error pattern">
+<h2>症狀（syndrome）</h2>
+<p><strong>白話：</strong>收到向量違反哪些校驗限制的短摘要；在漢明碼中，非零結果可直接指向一個位置。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-漢明碼與症狀解碼.html">08 章</a>的核心解碼量；記憶體控制器也會記錄症狀協助定位故障位元。</p>
+<p><strong>機制：</strong>s ＝ Hrᵀ；若 r ＝ c ⊕ e 且 Hcᵀ ＝ 0，便有 s ＝ Heᵀ，因此合法碼字內容被消去，只留下錯誤類別。</p>
+<p><strong>不要混淆：</strong>它是錯誤圖樣乘 H 的結果，不是錯誤圖樣本身；多個圖樣可共用同一個症狀，單錯才可唯一定位。</p>
+</article>
+<article class="term-card" data-search="hamming distance minimum distance 漢明距離 最小距離 codeword">
+<h2>漢明距離與最小距離（Hamming distance &amp; minimum distance）</h2>
+<p><strong>白話：</strong>漢明距離數兩個位元串有幾個位置不同；碼的最小距離是任意兩個合法碼字間最小的差異數。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-漢明碼與症狀解碼.html">08 章</a>由距離判斷可偵測與可修正數；編碼設計以拉開碼字為目標。</p>
+<p><strong>機制：</strong>d<sub>min</sub> 可偵測最多 d<sub>min</sub> − 1 個錯，並可修正 ⌊(d<sub>min</sub> − 1)/2⌋ 個錯。</p>
+<p><strong>不要混淆：</strong>這裡的距離是不同位元位置的個數，不是星座歐氏距離；軟判決時仍會把接收幅度帶入路徑度量。</p>
+</article>
+<article class="term-card" data-search="hard decision soft decision 硬判決 軟判決 reliability">
+<h2>硬判決與軟判決（hard decision &amp; soft decision）</h2>
+<p><strong>白話：</strong>硬判決先把每一觀測壓成 0 或 1；軟判決保留離門檻多遠，讓解碼器知道哪幾位較可疑。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-漢明碼與症狀解碼.html">08 章</a>比較資訊保留程度；現代通道解碼器通常接收 LLR。</p>
+<p><strong>機制：</strong>硬判決用漢明距離比較；軟判決使用歐氏距離或可靠度加權，能分辨「勉強判 1」與「非常確定是 1」。</p>
+<p><strong>不要混淆：</strong>軟判決不是改變接收樣本，而是延後丟資訊；它通常改善效能，也增加量化位數、記憶體與運算。若可靠度尺度估錯，解碼器會過度相信錯誤證據，因此數值校準與正負方向都要先驗證。</p>
+</article>
+<article class="term-card" data-search="coding gain 編碼增益 required eb n0">
+<h2>編碼增益（coding gain）</h2>
+<p><strong>白話：</strong>在相同目標誤碼率下，編碼系統比未編碼系統少需要多少 E<sub>b</sub>/N<sub>0</sub>。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-漢明碼與症狀解碼.html">08 章</a>量化保護收益；鏈路預算會把它視為可換取覆蓋或功率的餘裕。</p>
+<p><strong>機制：</strong>在瀑布曲線的同一垂直高度讀兩條曲線，其水平 dB 差就是增益；(7,4) 漢明碼硬判決在 10<sup>−5</sup> 只得 0.413375 dB。</p>
+<p><strong>不要混淆：</strong>不能只比相同接收功率，必須把編碼率造成的每編碼位元能量下降算進去；增益也會隨目標錯誤率改變。</p>
+</article>
+<article class="term-card" data-search="convolutional code 摺積碼 encoder memory">
+<h2>摺積碼（convolutional code）</h2>
+<p><strong>白話：</strong>編碼器保留最近幾個輸入位元的記憶，現在輸出由目前位元與過去狀態共同決定。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-摺積碼與Viterbi解碼.html">09 章</a>用 K ＝ 3、生成 (7,5) 的率 1/2 編碼器；衛星與舊式無線鏈路常見。</p>
+<p><strong>機制：</strong>移位暫存器配 XOR 生成多個輸出；相同輸入在不同狀態可產生不同輸出，所有轉移形成格狀圖。</p>
+<p><strong>不要混淆：</strong>本課跟隨信號與系統課的裁決寫「摺積碼」；名詞對照表寫「捲積碼」、部分台灣教材寫「迴旋碼」，都是同一個 convolutional code。</p>
+</article>
+<article class="term-card" data-search="trellis 格狀圖 state transition time">
+<h2>格狀圖（trellis）</h2>
+<p><strong>白話：</strong>把有限狀態機沿時間展開；每一欄是時間，每個節點是狀態，每條邊是一種輸入與輸出。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-摺積碼與Viterbi解碼.html">09 章</a>用它跑 Viterbi；有記憶通道的序列偵測也可建相同結構。</p>
+<p><strong>機制：</strong>K ＝ 3 時狀態數為 2<sup>K−1</sup> ＝ 4；每收到一組觀測，從前欄合法邊延伸並累加分支度量。</p>
+<p><strong>不要混淆：</strong>格狀圖不是一般流程圖；同一狀態會在每個時間欄重複出現，路徑才代表完整輸入序列。</p>
+</article>
+<article class="term-card" data-search="viterbi algorithm path metric 演算法 路徑度量 survivor">
+<h2>Viterbi 演算法與路徑度量（Viterbi algorithm &amp; path metric）</h2>
+<p><strong>白話：</strong>走格狀圖時，到每個狀態只留下目前代價最小的一條路，最後再回溯出整段最可能序列。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-摺積碼與Viterbi解碼.html">09 章</a>逐級示範；通訊晶片以加、比、選單元高速實作。</p>
+<p><strong>機制：</strong>硬判決分支度量可用漢明距離，路徑度量是沿途相加；合流到同一狀態的路徑未來可能性相同，所以只保留較佳者。</p>
+<p><strong>不要混淆：</strong>每一級的局部最小邊不一定組成全域最佳路徑；比較必須在相同終點狀態合流時進行。</p>
+</article>
+<article class="term-card" data-search="free distance d_free 自由距離 convolutional">
+<h2>自由距離（free distance, d_free）</h2>
+<p><strong>白話：</strong>兩條不同格狀路徑從同一狀態分開、再合回來時，輸出序列最少相差多少位元。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-摺積碼與Viterbi解碼.html">09 章</a>評估摺積碼；K ＝ 3、(7,5) 碼的 d<sub>free</sub> ＝ 5。</p>
+<p><strong>機制：</strong>從全零路徑找最短非零事件並累計輸出漢明重量；距離越大，Viterbi 把錯誤路徑當成正確路徑的機率越低。</p>
+<p><strong>不要混淆：</strong>它是序列之間的距離，不是單一碼字的重量；有限截斷長度還可能限制實際可見距離。</p>
+</article>
+</div>
+
+<h2>第六組｜交錯、展頻與多載波（第 10–12 章）</h2>
+<div class="term-list">
+<article class="term-card" data-search="interleaving 交錯 交織 block depth">
+<h2>交錯（interleaving）</h2>
+<p><strong>白話：</strong>先把多個碼字排成矩陣，再改變讀出次序，使空中連續錯誤回復後分散到不同碼字。</p>
+<p><strong>位置／角色：</strong>第 <a href="10-交錯與突發錯誤.html">10 章</a>搭配漢明碼；行動鏈路、衛星與儲存媒體常用來處理成串錯誤。</p>
+<p><strong>機制：</strong>D 列、碼長 n 的區塊需緩衝 D × n 個位元；突發長度 b 回復後每列最多約 ⌈b / D⌉ 個錯。</p>
+<p><strong>不要混淆：</strong>本課一律寫「交錯」；名詞對照表寫「交織」，是同一個 interleaving。</p>
+</article>
+<article class="term-card" data-search="burst error 突發錯誤 fading impulse scratch">
+<h2>突發錯誤（burst error）</h2>
+<p><strong>白話：</strong>錯誤不是零星獨立出現，而是在一小段時間內連續打壞多個位元。</p>
+<p><strong>位置／角色：</strong>第 <a href="10-交錯與突發錯誤.html">10 章</a>分析交錯深度；深衰落、脈衝干擾與媒體刮痕都會造成。</p>
+<p><strong>機制：</strong>長度 b 描述從第一個錯到最後一個錯所涵蓋區間；交錯把相鄰發射位置映回不同碼字，使每碼字承受較少錯誤。</p>
+<p><strong>不要混淆：</strong>長度 b 不一定代表其中每一位都錯；保證式分析常採最壞情況，實際錯誤密度可能較低。</p>
+</article>
+<article class="term-card" data-search="spread spectrum 展頻 擴頻 spreading factor jammer">
+<h2>展頻（spread spectrum）</h2>
+<p><strong>白話：</strong>把每個資料位元乘上一串較快碼片，刻意占用更寬頻譜，再於接收端用同碼壓回來。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-展頻與CDMA.html">11 章</a>處理窄頻干擾與多使用者；GPS 與部分無線系統使用。</p>
+<p><strong>機制：</strong>展頻因子 N 使碼片率成為 N R<sub>b</sub>；解展頻時目標訊號相干相加，非相干干擾被攤開，得到 N 倍處理增益。</p>
+<p><strong>不要混淆：</strong>本課一律寫「展頻」；中國教材寫「擴頻」，是同一個 spread spectrum。</p>
+</article>
+<article class="term-card" data-search="chip processing gain g_p 碼片 處理增益 spreading factor">
+<h2>碼片與處理增益（chip &amp; processing gain, G_p）</h2>
+<p><strong>白話：</strong>碼片是展頻序列的快速正負一單位；一個位元用了多少碼片，就有多大的理想處理增益。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-展頻與CDMA.html">11 章</a>以 N ＝ 64 得到 18.061800 dB；GPS 接收器靠大量碼片累積相關峰。</p>
+<p><strong>機制：</strong>G<sub>p</sub> ＝ N ＝ R<sub>c</sub> / R<sub>b</sub>，dB 值為 10 log<sub>10</sub>N；相同碼相乘後 c² ＝ 1，使資料恢復。</p>
+<p><strong>不要混淆：</strong>訊號功率沒變，變的是干擾被攤薄 N 倍；它不是天線或放大器的功率增益，也會受碼相關與同步誤差折損。</p>
+</article>
+<article class="term-card" data-search="code-division multiple access cdma 分碼多重接取 multiuser">
+<h2>分碼多重接取（code-division multiple access, CDMA）</h2>
+<p><strong>白話：</strong>多個使用者同時占同一時間與頻帶，靠不同展頻碼在接收端分離。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-展頻與CDMA.html">11 章</a>建立多使用者干擾模型；蜂巢系統與衛星導航可見其概念。</p>
+<p><strong>機制：</strong>接收器用目標碼相關，目標能量相加，其他碼若互相關低便大多互相抵消；隨機碼教學模型的干擾項為 (K − 1) / N。</p>
+<p><strong>不要混淆：</strong>不同碼不保證完全無干擾；非同步、功率不等與碼的互相關會造成近遠效應，需要功率控制。使用者數增加時，每一位使用者都把額外干擾帶給其他人，因此容量不是只看可分配碼數。</p>
+</article>
+<article class="term-card" data-search="walsh code 碼 hadamard orthogonal synchronous">
+<h2>Walsh 碼（Walsh code）</h2>
+<p><strong>白話：</strong>由 Hadamard 矩陣取得的一組正負一序列，完全對齊時任兩碼內積為零。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-展頻與CDMA.html">11 章</a>比較同步正交與非同步隨機碼；基地臺下行可共同控制時間而使用。</p>
+<p><strong>機制：</strong>同步時以目標碼做內積，其他 Walsh 碼貢獻為零，理想多使用者干擾消失；碼長 N 最多提供 N 個正交碼。</p>
+<p><strong>不要混淆：</strong>正交性依賴碼片邊界對齊；錯開一個碼片後互相關通常不為零，因此不能把同步結論搬到非同步上行。</p>
+</article>
+<article class="term-card" data-search="orthogonal frequency-division multiplexing ofdm 正交分頻多工 subcarrier fft">
+<h2>正交分頻多工（orthogonal frequency-division multiplexing, OFDM）</h2>
+<p><strong>白話：</strong>把一條寬頻通道切成許多彼此正交的窄子載波，各自慢慢送星座點。</p>
+<p><strong>位置／角色：</strong>第 <a href="12-OFDM與循環字首.html">12 章</a>收束多徑問題；Wi-Fi、LTE、5G NR、DVB-T 與 ADSL 都採用。</p>
+<p><strong>機制：</strong>IFFT 把 N 個頻域星座點合成時域樣本，FFT 在接收端拆回；Δf ＝ B / N，T<sub>u</sub> ＝ 1 / Δf。</p>
+<p><strong>不要混淆：</strong>子載波頻譜可互相重疊仍保持正交；但 CFO 與時窗錯位會破壞積分為零的條件，造成子載波間干擾。它也沒有憑空消除多徑，而是配合循環字首與逐子載波修正，把困難問題改寫成較簡單的形式。</p>
+</article>
+<article class="term-card" data-search="cyclic prefix cp 循環字首 guard interval circular convolution">
+<h2>循環字首（cyclic prefix, CP）</h2>
+<p><strong>白話：</strong>把 OFDM 符元尾端複製一段到前面，讓多徑拖尾先落在這段可丟棄的區域。</p>
+<p><strong>位置／角色：</strong>第 <a href="12-OFDM與循環字首.html">12 章</a>把頻率選擇性通道化成每子載波一個係數；Wi-Fi 可見 0.800000 µs 範例。</p>
+<p><strong>機制：</strong>當 T<sub>cp</sub> ≥ τ<sub>max</sub>，FFT 視窗內呈圓形摺積，故 Y<sub>k</sub> ＝ H<sub>k</sub>X<sub>k</sub>，只需逐子載波除以 H<sub>k</sub>。</p>
+<p><strong>不要混淆：</strong>它不是空白保護間隔；空白只避 ISI，複製尾巴才讓摺積變圓形。CP 太短失去保護，太長則浪費效率。</p>
+</article>
+</div>
+
+<nav class="pager" aria-label="章節導覽"><a href="12-OFDM與循環字首.html">← 上一頁：OFDM 與循環字首</a><a href="自我檢核.html">下一頁：自我檢核 →</a></nav>
+</main>
+<footer class="site-footer"><span>名詞與概念字典</span><a href="自我檢核.html">前往自我檢核</a></footer>
+</body></html>
