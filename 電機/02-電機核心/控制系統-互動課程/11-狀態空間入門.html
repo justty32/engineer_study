@@ -1,0 +1,86 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 狀態空間入門：可控、可觀與極點配置｜控制系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">11・從一條輸出追進系統內部</p>
+<h1>11 狀態空間入門：可控、可觀與極點配置</h1>
+<p class="lead">同一個二階模型不只可以寫成輸入到輸出的比例，也可以把內部兩個狀態直接列出。預設矩陣的特徵值（eigenvalue, λ）是 −1.000000、−2.000000，而狀態回授（state feedback, SF）能把它們配置成 −5.000000 ± j5.000000。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-方塊圖化簡與閉迴路轉移函數.html">02 方塊圖化簡與閉迴路轉移函數</a>的極點與特徵方程式、<a href="05-Routh穩定度判別.html">05 Routh 穩定度判別</a>的左半平面判斷。<strong>前置：</strong>見〈07 拉氏轉換與轉移函數〉<a href="../信號與系統-互動課程/07-拉氏轉換與轉移函數.html">信號與系統的極點與特徵值</a>。</p>
+
+<h2>痛點：只看輸入與輸出，為什麼還要追蹤內部狀態</h2>
+<p>輸入到輸出的關係適合算極點與響應，卻不直接告訴你控制量能否觸及每個內部方向，以及未量到的速度能否從位置歷程推回。單看 y 答不了這兩題。</p>
+<p>本章用二維狀態空間（state space, SS）把問題拆開：狀態（state, x）記住此刻繼續預測未來所需的最少變數，A 決定它們自行怎麼演變，B 決定控制量 u 從哪個方向進入，C 決定感測器把哪些狀態組成輸出 y。這些矩陣讓「推得到」與「看得到」成為兩個可以手算的判斷。</p>
+<p>狀態不是固定挑位置與速度，也不是納入所有感測值。知道當下 x 與之後的 u，就能預測未來而無須保存更早歷史。可逆座標轉換會改變矩陣數字，不會改變極點、可控與可觀的結論。</p>
+
+<h2>白話直覺：B 是推力入口，C 是觀察窗口</h2>
+<p>可以暫時把二維狀態想成平面上的一個點，B 是你能施力的方向，C 是你看出去的窗口；比喻到此為止。精確地說，可控性（controllability, C）檢查 B、AB 是否張成整個二維向量空間，可觀性（observability, O）檢查 C、CA 是否提供兩個獨立量測方向。行列式不為零就是兩個方向不共線。</p>
+<p>完整因果鏈如下：參考命令 r 送入控制器，量測與命令形成的誤差決定控制量 u；B 把 u 注入狀態方程，狀態回授 u ＝ −Kx ＋ r 使 A 變成 A − BK；新的矩陣特徵值就是新的極點；極點位置決定響應快慢與振盪程度；最後用感測器、示波器與紀錄器量到 y、u 及時間響應。每一環都能對回矩陣中的一個角色。</p>
+<p>這件事在你的程式裡長什麼樣：狀態就是物件的成員變數，A 是每個 dt 更新它們的規則，B 把本次輸入加入更新，C 則把內部欄位整理成外部可讀的輸出。</p>
+<p>B 與 AB 不共線時，先後作用可組合出平面上任意方向；共線就少一個方向。C 與 CA 對偶：當下與狀態演變後的輸出提供兩次觀察，兩列獨立才足以解出兩個狀態。這是秩的問題，與輸入大小或感測器解析度無關。</p>
+<p class="note">來源：13-控制系統 §2.3、§7.1–§7.5；Ackermann 公式為本課補充。</p>
+
+<h2>推導：從特徵值、兩個秩判據走到 K</h2>
+<p><strong>第一步，找原本的極點。</strong>二維模型寫成 ẋ ＝ Ax ＋ Bu、y ＝ Cx ＋ Du，本課取 D ＝ 0。對 A ＝ [[a<sub>11</sub>, a<sub>12</sub>], [a<sub>21</sub>, a<sub>22</sub>]]，特徵多項式是 s<sup>2</sup> − tr(A)s ＋ det(A)，其中 tr(A) ＝ a<sub>11</sub> ＋ a<sub>22</sub>，det(A) ＝ a<sub>11</sub>a<sub>22</sub> − a<sub>12</sub>a<sub>21</sub>。特徵值為 tr(A) / 2 ± √(tr(A)<sup>2</sup> / 4 − det(A))；根號內為負時寫成共軛複數。既有課已證明 G(s) ＝ C(sI − A)<sup>−1</sup>B 的極點與 A 的特徵值相同，本章只引用這個結論。</p>
+<p><strong>第二步，檢查能不能推與能不能看。</strong>可控矩陣 M<sub>c</sub> ＝ [B, AB]，可觀矩陣 M<sub>o</sub> ＝ [C; CA]。在二維模型中，det M<sub>c</sub> ≠ 0 才能任意配置兩個極點，det M<sub>o</sub> ≠ 0 才能由 y 的歷程估出兩個狀態。若 B 與 AB 共線，控制量不管怎麼變都推不到另一個方向，因此 M<sub>c</sub> 奇異，配置問題沒有解。</p>
+<p>預設 B ＝ [0, 1]<sup>T</sup>，所以 AB 是 A 的第二欄 [1, −3]<sup>T</sup>，M<sub>c</sub> ＝ [[0, 1], [1, −3]]，行列式為 −1。預設 C ＝ [1, 0]，所以 CA 是 A 的第一列 [0, 1]，M<sub>o</sub> ＝ [[1, 0], [0, 1]]，行列式為 1。兩個非零結果分別證明控制量能影響兩個方向，且單一輸出隨時間的變化足以還原兩個狀態。這項判據只回答存在性，尚未回答所需控制量是否過大或估測對雜訊是否敏感。</p>
+<p><strong>第三步，算狀態回授。</strong>極點配置（pole placement, PP）指定期望多項式 s<sup>2</sup> ＋ d<sub>1</sub>s ＋ d<sub>0</sub>。二維 Ackermann 公式是 K ＝ [0, 1]M<sub>c</sub><sup>−1</sup>φ(A)，其中 φ(A) ＝ A<sup>2</sup> ＋ d<sub>1</sub>A ＋ d<sub>0</sub>I。預設模型由 ÿ ＋ 3ẏ ＋ 2y ＝ u 取 x<sub>1</sub> ＝ y、x<sub>2</sub> ＝ ẏ 得到 A ＝ [[0, 1], [−2, −3]]、B ＝ [0, 1]<sup>T</sup>，這是可控標準式（controllable canonical form, CCF）。它的特徵多項式是 s<sup>2</sup> ＋ 3s ＋ 2，極點 −1、−2，與第 09 章受控體前兩個極點相同。</p>
+<p>指定 d<sub>1</sub> ＝ 10、d<sub>0</sub> ＝ 50 時，φ(A) ＝ A<sup>2</sup> ＋ 10A ＋ 50I ＝ [[48, 7], [−14, 27]]；M<sub>c</sub><sup>−1</sup> ＝ [[3, 1], [1, 0]]，所以 [0, 1]M<sub>c</sub><sup>−1</sup> ＝ [1, 0]，最後 K ＝ [48, 7]。代回 A − BK ＝ [[0, 1], [−50, −10]]，特徵多項式正是 s<sup>2</sup> ＋ 10s ＋ 50，極點為 −5 ± j5。</p>
+<p><strong>假設與單位。</strong>本例所有量都經歸一化，因此矩陣元素與增益視為無單位；真實模型的每列可能帶不同單位。配置推導假設系統線性、時不變且全部狀態可量。本課用的是教學用的簡化模型，真實系統不是這樣；未建模動態、感測雜訊與致動器飽和都會限制可用增益。</p>
+<p>若不能直接量到全部 x，可建立狀態估測值並以輸出誤差修正它，這就是 Luenberger 觀測器（Luenberger observer, LO）。可觀時才能選擇觀測器的誤差極點；分離原理（separation principle, SP）指出，觀測器誤差極點與 A − BK 的控制極點可以分開設計，再組成同一套控制程式。但「可以分開算」不等於實務影響互不相關：觀測器設得太快會放大量測雜訊，控制器增益太大會把估測抖動送進致動器。</p>
+
+<h2>數值實例：把 −1、−2 配置成 −5 ± j5</h2>
+<p>採用互動元件的預設值 A ＝ [[0, 1], [−2, −3]]、B ＝ [0, 1]<sup>T</sup>、C ＝ [1, 0]，期望特徵多項式 s<sup>2</sup> ＋ 10s ＋ 50。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>特徵多項式</td><td>s² − (0 − 3)s ＋ (0 × (−3) − 1 × (−2))</td><td><strong>s² ＋ 3s ＋ 2</strong></td></tr>
+<tr><td>特徵值</td><td>−1.5 ± √(2.25 − 2)</td><td><strong>−1.000000、−2.000000</strong></td></tr>
+<tr><td>M<sub>c</sub></td><td>[B, AB]</td><td><strong>[[0, 1], [1, −3]]</strong></td></tr>
+<tr><td>det M<sub>c</sub></td><td>0 × (−3) − 1 × 1</td><td><strong>−1.000000（可控）</strong></td></tr>
+<tr><td>M<sub>o</sub></td><td>[C; CA]</td><td><strong>[[1, 0], [0, 1]]</strong></td></tr>
+<tr><td>det M<sub>o</sub></td><td>1</td><td><strong>1.000000（可觀）</strong></td></tr>
+<tr><td>φ(A)</td><td>A² ＋ 10A ＋ 50I</td><td><strong>[[48, 7], [−14, 27]]</strong></td></tr>
+<tr><td>K</td><td>[0, 1] M<sub>c</sub><sup>−1</sup> φ(A)</td><td><strong>[48.000000, 7.000000]</strong></td></tr>
+<tr><td>閉迴路特徵值</td><td>A − BK 的特徵值</td><td><strong>−5.000000 ± j5.000000</strong></td></tr>
+</tbody></table>
+<p><strong>邊界對照。</strong>期望 s² ＋ 20s ＋ 200 時，K ＝ [198, 17]、閉迴路極點 −10 ± j10；極點放兩倍遠，第一個增益卻約放四倍，快不是免費的。若 A ＝ [[−1, 0], [0, −2]]、B ＝ [1, 0]<sup>T</sup>，則 det M<sub>c</sub> ＝ 0，第二個狀態碰不到 u，K 不存在。相同 A 改用 B ＝ [1, 1]<sup>T</sup>、C ＝ [1, 0]，det M<sub>c</sub> ＝ −1 而 det M<sub>o</sub> ＝ 0；K ＝ [41, −34] 算得出來，但 y 完全看不到第二個狀態。</p>
+<p>A ＝ [[0, 1], [2, 1]] 的開迴路特徵值是 2、−1，仍因可控而能用 K ＝ [52, 11] 配到 −5 ± j5。A ＝ [[0, 1], [−4, 0]] 的特徵值是 ±j2；期望 s² ＋ 4s ＋ 8 時，K ＝ [4, 4]，閉迴路極點是 −2 ± j2。這些對照分別測到不可控、不可觀、右半平面極點與無阻尼振盪的邊界。</p>
+
+<section class="workspace"><h2>自由實驗：改矩陣並配置兩個極點</h2>
+<p>場景是一個二維線性模型。先選五組預設之一，或選自訂後改 A、B、C 與期望多項式；輸出會檢查原本極點、可控、可觀及可用時的 K。非自訂模式會覆寫八個矩陣欄位，d1、d0 保留。</p>
+<div class="controls">
+<label for="ss-preset">模型預設<select id="ss-preset"><option value="motor" selected>預設：A = [[0, 1], [−2, −3]]、B = [0, 1]、C = [1, 0]</option><option value="unctrl">不可控：A = diag(−1, −2)、B = [1, 0]、C = [1, 1]</option><option value="unobs">不可觀：A = diag(−1, −2)、B = [1, 1]、C = [1, 0]</option><option value="unstable">開迴路不穩定：A = [[0, 1], [2, 1]]、B = [0, 1]、C = [1, 0]</option><option value="osc">無阻尼振盪器：A = [[0, 1], [−4, 0]]、B = [0, 1]、C = [1, 0]</option><option value="custom">自訂（用下面的欄位）</option></select></label>
+<label for="ss-a11">a11<input id="ss-a11" type="number" step="any" value="0"></label>
+<label for="ss-a12">a12<input id="ss-a12" type="number" step="any" value="1"></label>
+<label for="ss-a21">a21<input id="ss-a21" type="number" step="any" value="-2"></label>
+<label for="ss-a22">a22<input id="ss-a22" type="number" step="any" value="-3"></label>
+<label for="ss-b1">b1<input id="ss-b1" type="number" step="any" value="0"></label>
+<label for="ss-b2">b2<input id="ss-b2" type="number" step="any" value="1"></label>
+<label for="ss-c1">c1<input id="ss-c1" type="number" step="any" value="1"></label>
+<label for="ss-c2">c2<input id="ss-c2" type="number" step="any" value="0"></label>
+<label for="ss-d1">期望特徵多項式 s² + d1 s + d0 的 d1<input id="ss-d1" type="number" step="any" value="10"></label>
+<label for="ss-d0">d0<input id="ss-d0" type="number" step="any" value="50"></label>
+</div>
+<div id="state-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>可控性不是穩定度：右半平面極點仍可控，左半平面極點也可能不可控。</li>
+<li>可控不等於可觀。前者問 u 能不能推到全部狀態方向，後者問 y 能不能看出全部狀態方向。</li>
+<li>極點配置需要全部狀態；量不到時用 Luenberger 觀測器估測，再依分離原理分開設計。</li>
+<li>狀態模型看得見轉移函數可能約掉的不可控或不可觀隱藏模態。</li>
+<li>可控只表示數學上能配置；大 K 仍受致動器電壓、電流與行程限制。</li>
+<li>觀測器不是新感測器；它用模型、已知輸入與現有輸出估測狀態，模型誤差會使估測偏離。</li>
+</ul>
+
+<h2>可觀察證據：量輸出、控制量與估測誤差</h2>
+<p><strong>用什麼量。</strong>配置 K 後輸入命令，同步記錄 y 與 u；若有額外感測器，再逐點比較估測與實測狀態。時間紀錄可擬合衰減速度與振盪頻率，u 則顯示是否飽和。</p>
+<p><strong>能證明什麼。</strong>未飽和時，衰減與振盪接近期望數值，支持極點已搬到期望位置；估測誤差縮小則支持觀測器在此範圍有效。</p>
+<p><strong>不能證明什麼。</strong>單次實驗不能排除未建模的彈性、延遲與感測器動態，也不能涵蓋任意命令。K 很大時，飽和會使 A − BK 的線性推導失效。</p>
+<p>保持 K 不變而改變初始狀態；各次衰減率一致時，證據比單次命令強。若 u 削頂或衰減率隨初值改變，應先查飽和與非線性。同時保留命令、y 與 u，才能看出是否以過大控制量彌補模型誤差。</p>
+
+<h2>連到哪門課</h2>
+<p>極點與特徵值的關係見<a href="../信號與系統-互動課程/07-拉氏轉換與轉移函數.html">信號與系統的〈07 拉氏轉換與轉移函數〉</a>。觀測器、線性二次調節器（linear-quadratic regulator, LQR）的 Q、R 權重，以及卡爾曼濾波器（Kalman filter, KF）的最佳估測，屬於線性系統理論與最佳控制。下一頁可用字典回查概念。</p>
+<nav class="pager" aria-label="章節導覽"><a href="10-領先落後補償器.html">← 上一頁：領先／落後補償器</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>11 狀態空間入門：可控、可觀與極點配置</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

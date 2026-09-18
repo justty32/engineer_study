@@ -1,0 +1,54 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 AM 包絡與調變指數｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">01・包絡能否忠實跟上訊息</p>
+<h1>AM 包絡與調變指數：調得太深或 RC 選錯都會變形</h1>
+<p class="lead">預設 μ ＝ 0.5 時，包絡在 1.500000 V 與 0.500000 V 之間移動，單音功率效率是 11.111111 %。你要同時顧兩道邊界：μ 不能超過 1，RC 不能小到滿是漣波，也不能大到追不上包絡。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-通訊世界觀與分貝帳本.html">00 通訊世界觀與分貝帳本</a>的 dB 與「為什麼調變」。<strong>前置：</strong>見〈<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統 10 調變與頻譜搬移</a>〉的 AM 三根譜線與功率分配，以及〈<a href="../../02-電機核心/電子學-互動課程/04-整流與濾波.html">電子學 04 整流與濾波</a>〉的二極體與 RC 撐住峰值。</p>
+
+<h2>痛點：旋鈕轉大應該更清楚，為什麼反而變形</h2>
+<p>振幅調變（amplitude modulation, AM）最吸引人的地方是接收端很便宜：二極體與 RC 就能把外層輪廓拿出來。但發射端把調變深度拉高時，聲音並不會無限變大；超過某條線後，輪廓轉折，便宜檢波器就把錯的形狀當成訊息。</p>
+<p>另一個容易忽略的旋鈕是 RC。電容太小，每個載波週期都放掉太多電，輸出會有漣波；電容太大，它又抓著舊峰值不放，包絡往下掉時就出現對角線截波。所以問題不是「電容大不大」，而是這個 RC 能否同時忽略快載波又跟上慢包絡。</p>
+
+<h2>白話直覺：包絡是快速波峰排出來的輪廓</h2>
+<p>可以把載波想成密集的柵欄，訊息把每根柵欄的高度拉高或壓低，峰點連線就是包絡。比喻到此為止；精確地說，雙邊帶大載波（double-sideband large-carrier, DSB-LC）是 s(t) ＝ [A<sub>c</sub> + m(t)] cos(2π f<sub>c</sub> t)，括號內恰好是正峰所描出的輪廓。</p>
+<p>單音訊息可寫成 m(t) ＝ A<sub>c</sub> μ cos(2π f<sub>m</sub> t)，調變指數 μ ＝ m<sub>max</sub> / A<sub>c</sub>。只要 μ ≤ 1，1 + μ cos 恰好不會變負，包絡就是 A<sub>c</sub>[1 + μ cos(2π f<sub>m</sub> t)]；μ > 1 時發生過調變（overmodulation），括號變負使載波翻轉 180°，而檢波器只看到絕對值，因此形狀翻摺。</p>
+<p>因果鏈從麥克風的 m(t) 開始；發射端決定 μ，接收端決定 RC；這個選擇換到包絡深度、功率效率與便宜的接收機；邊界是 μ 太大就翻摺，RC 超出可用區間就漣波或截波；示波器量到包絡極值與檢波後波形。軟體那一端，SDR 的 AM 解調取 IQ 樣本的模長再低通，模長就是這裡的包絡。</p>
+<p class="note">來源：14-通訊系統-上 §3.1、§3.5。</p>
+
+<h2>推導：一條深度邊界與兩條 RC 邊界</h2>
+<p><strong>（a）由極值反推 μ。</strong>包絡恰好未翻摺時，E<sub>max</sub> ＝ A<sub>c</sub>(1 + μ)、E<sub>min</sub> ＝ A<sub>c</sub>(1 − μ)。兩式相減消去載波基準，相加留下兩倍基準，所以 μ ＝ (E<sub>max</sub> − E<sub>min</sub>) / (E<sub>max</sub> + E<sub>min</sub>)。這條反推式在 μ > 1 後不適用，因為示波器已把負值顯示成絕對值輪廓。</p>
+<p><strong>（b）RC 下限。</strong>二極體導通後，電容在一個載波週期 T<sub>c</sub> 內的放電比例是 1 − exp(−T<sub>c</sub>/RC)。本課把它定義為漣波比例，再乘 100 %，並用 RC ≥ 10 T<sub>c</sub> 當一階教學判準，使漣波低於 10 %。</p>
+<p><strong>（c）RC 上限。</strong>電容的放電斜率 −e/RC 必須追得上包絡最陡的下降斜率。在單音、理想二極體假設下，可得 RC ≤ √(1 − μ²) / (2π f<sub>m</sub> μ)。f<sub>m</sub> 的單位是 Hz，μ 無單位；當 μ 趨近 1，上限趨近 0，表示深調變的谷底必然有一點追不上。</p>
+<p><strong>（d）效率只引結論。</strong>既有課已經得到單音功率效率 η ＝ μ² / (2 + μ²)，μ ＝ 1 時上限是 33.333333 %；本章不重做頻譜與功率分配推導。本課用的是一階教學模型：單音、理想二極體，並忽略導通壓降與源阻抗。</p>
+<p><strong>（e）兩條 RC 邊界為什麼會互相逼近。</strong>提高 f<sub>c</sub> 會縮短 T<sub>c</sub>，因而降低下限；提高 f<sub>m</sub> 或 μ 會讓包絡下降更快，因而壓低上限。可用區間所以不只是元件問題，它還暴露載波與訊息的時間尺度是否分得夠開。當下限高於上限，再怎麼挑電容與電阻也沒有解，必須改載波頻率、限制訊息頻率，或改用別的解調方法。</p>
+<p>檢波器的設計也不是先挑一顆常見電容再看會不會動。工程順序是先由 f<sub>c</sub>、f<sub>m</sub> 與 μ 算出區間，再選 RC 落在區間內，最後才考慮實際電阻電容值、負載與容差。如果預期的語音振幅會變動，還要用最大 μ 與最高 f<sub>m</sub> 核對上限，不能只在平均狀態通過。</p>
+<p>下限、上限與元件容差都要留出餘裕；剛好壓在等號上，實機一變溫就可能失真。</p>
+
+<h2>數值實例：μ ＝ 0.5 與 RC ＝ 100 µs</h2>
+<p>取 μ ＝ 0.5、f<sub>m</sub> ＝ 1 kHz、f<sub>c</sub> ＝ 1000 kHz、RC ＝ 100 µs、A<sub>c</sub> ＝ 1 V，與下方自由實驗預設值一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody><tr><td>E<sub>max</sub></td><td>1 × (1 + 0.5)</td><td><strong>1.500000 V</strong></td></tr><tr><td>E<sub>min</sub></td><td>1 × (1 − 0.5)</td><td><strong>0.500000 V</strong></td></tr><tr><td>反推 μ</td><td>(1.5 − 0.5) / (1.5 + 0.5)</td><td><strong>0.500000</strong></td></tr><tr><td>單音功率效率</td><td>0.25 / 2.25</td><td><strong>11.111111 %</strong></td></tr><tr><td>傳輸頻寬</td><td>2 × 1 kHz</td><td><strong>2 kHz</strong></td></tr><tr><td>T<sub>c</sub></td><td>1 / 1000 kHz</td><td><strong>1.000000 µs</strong></td></tr><tr><td>RC 下限</td><td>10 × 1 µs</td><td><strong>10.000000 µs</strong></td></tr><tr><td>RC 上限</td><td>√(1 − 0.25) / (2π × 1000 × 0.5)</td><td><strong>275.664448 µs</strong></td></tr><tr><td>漣波比例</td><td>(1 − e<sup>−1/100</sup>) × 100</td><td><strong>0.995017 %</strong></td></tr></tbody></table>
+<p><strong>包絡取樣表。</strong>t/T<sub>m</sub> ＝ 0、1/8、2/8、3/8、4/8、5/8、6/8、7/8、1，μ ＝ 0.5 時依序是 <strong>1.500000、1.353553、1.000000、0.646447、0.500000、0.646447、1.000000、1.353553、1.500000</strong>。μ ＝ 1.5 時「1 + μ cos」是 <strong>2.500000、2.060660、1.000000、−0.060660、−0.500000、−0.060660、1.000000、2.060660、2.500000</strong>，示波器包絡卻取絕對值 <strong>0.060660、0.500000</strong>。</p>
+<p><strong>邊界對照。</strong>μ ＝ 1 時 E<sub>min</sub> ＝ 0、效率 33.333333 %、RC 上限 0；μ ＝ 0.05 時效率 0.124844 %。RC ＝ 1000 µs 超過 275.664448 µs，發生對角線截波；RC ＝ 1 µs 時漣波 63.212056 %。f<sub>m</sub> ＝ 5 kHz、μ ＝ 0.8 時上限 23.873241 µs。f<sub>c</sub> ＝ 540 kHz、f<sub>m</sub> ＝ 15 kHz、μ ＝ 0.5 時，下限 18.518519 µs、上限 18.377630 µs，區間反轉而無解，這是 AM 廣播只留 5 kHz 音頻的原因之一。</p>
+
+<section class="workspace"><h2>自由實驗：包絡深度與 RC 可用區間</h2><p>場景是 1 V 載波被一個單音訊息改變振幅，接收端用理想二極體與 RC 記住峰值。你要看包絡是否翻摺，並檢查 RC 是否同時高於下限、低於上限。</p><div class="controls">
+<label for="am-mu">調變指數 μ<input id="am-mu" type="range" min="0" max="1.5" step="0.05" value="0.5"></label>
+<label for="am-fm">訊息頻率 f_m（kHz）<input id="am-fm" type="range" min="0.1" max="15" step="0.1" value="1"></label>
+<label for="am-fc">載波頻率 f_c（kHz）<input id="am-fc" type="range" min="100" max="1600" step="10" value="1000"></label>
+<label for="am-rc">檢波器 RC 時間常數（µs）<input id="am-rc" type="range" min="1" max="1000" step="1" value="100"></label>
+</div><div id="amenv-output" class="output" aria-live="polite"></div></section>
+
+<h2>不要混淆</h2>
+<ul><li>μ 是 AM 的調變指數，β 是 FM 的調變指數，兩者定義與邊界都不同。</li><li>包絡是振幅輪廓，不是載波；示波器要看清輪廓，時基必須放慢到訊息週期的量級。</li><li>33.333333 % 是單音、μ ＝ 1 的效率上限；真實語音的平均 μ 較小，效率也更低。</li><li>包絡檢波器不等於整流器一味加大電容；RC 太大時放電斜率追不上包絡，反而截波。</li></ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>用示波器（oscilloscope）量 AM 波形的 E<sub>max</sub>、E<sub>min</sub> 與檢波後波形，再以頻譜分析儀讀取載波、兩側邊帶與佔用頻寬。</p>
+<p><strong>能證明什麼。</strong>極值能反推 μ，谷底翻摺能證明過調變，檢波後的快速漣波或斜著下降能對應 RC 太小或太大；頻譜可證明頻寬是 2 f<sub>m</sub>。</p>
+<p><strong>不能證明什麼。</strong>單看包絡失真無法證明它只來自對角線截波，二極體非線性也可能造成類似後果；要對檢波後訊號做總諧波失真量測才能分辨。</p>
+
+<h2>連到哪門課</h2>
+<p>AM 的三根譜線、頻寬與功率分配已在<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統的調變與頻譜搬移</a>推導，本章只用結論做檢波器取捨；二極體與電容的回路機制見<a href="../../02-電機核心/電子學-互動課程/04-整流與濾波.html">電子學的整流與濾波</a>。下一章會省掉載波，看功率節省如何變成同步代價。</p>
+<nav class="pager" aria-label="章節導覽"><a href="00-通訊世界觀與分貝帳本.html">← 上一頁：通訊世界觀與分貝帳本</a><a href="02-抑制載波單邊帶與同步解調.html">下一頁：抑制載波、單邊帶與同步解調 →</a></nav>
+</main><footer class="site-footer"><span>01 AM 包絡與調變指數</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,516 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>名詞與概念字典｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html" aria-current="page">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">查・60 個名詞，四段式：白話、位置、機制、邊界</p>
+<h1>名詞與概念字典：把全課的名詞放在同一張桌上比較</h1>
+<p class="lead">每張卡都先翻成日常語言，再交代它位於哪段收發流程、靠什麼機制工作，以及適用邊界。搜尋框接受繁體中文、英文、縮寫與符號，輸入 <code>qam</code>、<code>carson</code>、<code>friis</code> 都找得到。</p>
+<p class="note">來源：14-通訊系統-上 §1–§7、14-通訊系統-下 §8–§14，以及 中英名詞對照表-2.md 的「通訊系統」節（25 詞）與「數位通訊」節（借 9 詞）；其餘由各章正文補齊。</p>
+<div class="dictionary-tools">
+<label for="term-search">搜尋名詞或概念</label>
+<input id="term-search" type="search" placeholder="搜尋繁中、英文、符號或用途">
+<span id="term-count" aria-live="polite"></span>
+</div>
+
+<h2>第一組｜世界觀與分貝（第 00 章，8 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="communication system block diagram 通訊系統 方塊圖 訊源 發射 接收">
+<h2>通訊系統方塊圖（communication system block diagram）</h2>
+<p><strong>白話：</strong>把一次傳送拆成訊源、發射端、傳輸環境、接收端與目的地，先看每一段負責什麼，再追功率、頻寬與錯誤從哪裡來。</p>
+<p><strong>位置／角色：</strong><a href="00-通訊世界觀與分貝帳本.html">00 章</a>用它建立全課地圖；手機、廣播與衛星鏈路雖然零件不同，都能放進同一串角色。</p>
+<p><strong>機制：</strong>發射端把訊息變成適合傳送的訊號，接收端反向恢復；00 章以 100 mW 對 1 mW 得 20.000000 dB，示範每一段增益與損失如何記帳。</p>
+<p><strong>不要混淆：</strong>方塊代表功能，不一定對應一顆實體晶片；軟體無線電可能用一段程式同時完成多個方塊，但因果順序仍然存在。畫圖時還要標明觀察點，因為同一個 SNR 數字放在天線端、放大器後或解調後，物理意義並不相同。</p>
+</article>
+
+<article class="term-card" data-search="baseband passband 基頻 帶通 頻譜 搬移">
+<h2>基頻與帶通（baseband &amp; passband）</h2>
+<p><strong>白話：</strong>基頻是訊息原本靠近零頻率的範圍；帶通則是把同樣內容搬到某段較高頻率，方便天線發射與多台共存。</p>
+<p><strong>位置／角色：</strong><a href="00-通訊世界觀與分貝帳本.html">00 章</a>先分清兩者；音訊介面處理基頻，收音機與無線前端處理帶通。</p>
+<p><strong>機制：</strong>1000 kHz 的四分之一波長是 74.948115 m，2400 MHz 時只有 0.031228 m；搬到較高頻率後，實用天線才放得進裝置。</p>
+<p><strong>不要混淆：</strong>基頻不等於低速，帶通也不保證高速；前者描述頻譜位置，能送多快仍受可用頻寬、訊雜比與傳送方式限制。把帶通搬回零附近後，內容沒有因此變慢；改變的只是分析與處理所用的頻率座標。</p>
+</article>
+
+<article class="term-card" data-search="carrier 載波 fc high frequency sinusoid">
+<h2>載波（carrier）</h2>
+<p><strong>白話：</strong>一個規律的高頻正弦波，像可被改動的底座；訊息藉由改它的振幅、頻率或相位，進入指定的無線頻段。</p>
+<p><strong>位置／角色：</strong><a href="00-通訊世界觀與分貝帳本.html">00 章</a>說明搬移理由，<a href="01-AM包絡與調變指數.html">01 章</a>開始實際改動它；發射器與接收器都要有頻率基準。</p>
+<p><strong>機制：</strong>01 章取 f<sub>c</sub> ＝ 1000 kHz，週期是 1.000000 µs；相較 1 kHz 訊息的一個週期，載波在同一段時間內往返一千次。</p>
+<p><strong>不要混淆：</strong>載波本身可以完全沒有內容；只有某個參數隨訊息改變後才承載內容，且接收端仍須選頻與解調才能取回。抑制載波方案即使頻譜中心沒有尖峰，仍可用接收端的頻率基準恢復內容，所以「看不到載波線」不等於無法接收。</p>
+</article>
+
+<article class="term-card" data-search="modulation demodulation 調變 解調 搬頻 transmitter receiver">
+<h2>調變與解調（modulation &amp; demodulation）</h2>
+<p><strong>白話：</strong>調變把訊息寫進載波的某個可控參數，解調則從收到的波形讀回那個變化；兩者是一去一回的配對動作。</p>
+<p><strong>位置／角色：</strong><a href="00-通訊世界觀與分貝帳本.html">00 章</a>定位整體角色，01–03 與 09 章比較不同做法；數位收發機、廣播發射器與接收晶片都含這兩端。</p>
+<p><strong>機制：</strong>01 章 AM 用 μ ＝ 0.5 改振幅，頻寬是 2 kHz；03 章 FM 用 Δf ＝ 75 kHz 與 W ＝ 15 kHz，換成 180 kHz。</p>
+<p><strong>不要混淆：</strong>調變是表達與搬頻的方法，編碼則改變訊息表示或加入保護；兩者可以相接，但不能用其中一個名稱代替另一個。同一份位元序列能選 BPSK 或 QAM，同一種 QAM 也能承接不同編碼，表示兩層是可分開設計的。</p>
+</article>
+
+<article class="term-card" data-search="db dbm dbi decibel 分貝 功率比 絕對功率 天線增益">
+<h2>分貝、dBm 與 dBi（decibel, dBm &amp; dBi）</h2>
+<p><strong>白話：</strong>dB 記兩個功率的比值，dBm 記相對 1 mW 的絕對功率，dBi 記天線相對等向天線把能量集中多少。</p>
+<p><strong>位置／角色：</strong><a href="00-通訊世界觀與分貝帳本.html">00 章</a>建立帳本，<a href="11-鏈路預算.html">11 章</a>把發射、天線與路徑逐項相加減；射頻儀表幾乎都用這套單位。</p>
+<p><strong>機制：</strong>100 mW / 1 mW ＝ 100，10 log<sub>10</sub>(100) ＝ 20.000000 dB，因此 100 mW 也是 20.000000 dBm；log<sub>10</sub> 讀作以十為底的對數。</p>
+<p><strong>不要混淆：</strong>dBm 是一個功率點，兩個 dBm 不能直接相加；20 dBm 加 3.010300 dB 才是合法的增益帳，結果為 23.010300 dBm。dBi 也不是發射器憑空多出的功率，而是把相同能量重新集中到某些方向；離開指向角後，增益可能反而下降。</p>
+</article>
+
+<article class="term-card" data-search="message bandwidth w 訊息頻寬 頻率範圍 voice audio">
+<h2>訊息頻寬 W（message bandwidth）</h2>
+<p><strong>白話：</strong>訊息中必須保留的最高有效頻率範圍，是選取樣率、調變後佔用範圍與可排路數的共同起點。</p>
+<p><strong>位置／角色：</strong><a href="00-通訊世界觀與分貝帳本.html">00 章</a>定義量尺，<a href="02-抑制載波單邊帶與同步解調.html">02 章</a>拿它比較 DSB 與 SSB；電話與廣播規格都先限制 W。</p>
+<p><strong>機制：</strong>02 章令 W ＝ 4 kHz，DSB 佔 8 kHz，100 kHz 只能排 12 路；SSB 只佔 4 kHz，因此可排 25 路。</p>
+<p><strong>不要混淆：</strong>W 描述原訊息，不一定等於發射後的傳輸頻寬；實際佔用還要看雙邊帶、Carson 法則或脈衝整形。把聲音的最高頻率與無線頻道寬度寫成同一個數字，會直接算錯可排路數，也會挑錯接收濾波器。</p>
+</article>
+
+<article class="term-card" data-search="source coding channel coding 訊源編碼 通道編碼 compression redundancy">
+<h2>訊源編碼與通道編碼（source coding &amp; channel coding）</h2>
+<p><strong>白話：</strong>訊源編碼刪除可省的表示，通道編碼加入可供接收端查錯的冗餘；方向相反，目標分別是省資源與抗錯。</p>
+<p><strong>位置／角色：</strong><a href="00-通訊世界觀與分貝帳本.html">00 章</a>只標出它們在收發鏈的位置；壓縮格式與錯誤更正系統會用到，細節留給數位通訊課。</p>
+<p><strong>機制：</strong>06 章電話 PCM 原始位元率是 8 kHz × 8 位元 × 1 路 ＝ 64 kbit/s；這是後續壓縮或加冗餘前的基準。</p>
+<p><strong>不要混淆：</strong>前者追求較少位元，後者通常增加位元；兩者都叫編碼，卻不能互換，也不等於把基頻搬到載波。若只比較傳送前後位元數而不看目的，很容易把壓縮率與冗餘率當成同一個性能指標。</p>
+</article>
+
+<article class="term-card" data-search="wavelength antenna size 波長 天線 尺寸 lambda quarter wave">
+<h2>波長與天線尺寸（wavelength &amp; antenna size）</h2>
+<p><strong>白話：</strong>波長是電磁波走完一個週期的距離；天線常以它的某個比例起步設計，所以頻率越高，常見天線越短。</p>
+<p><strong>位置／角色：</strong><a href="00-通訊世界觀與分貝帳本.html">00 章</a>用它回答為何要搬到高頻，<a href="11-鏈路預算.html">11 章</a>再把波長放進路徑損失；實體設計接到電磁學與天線課。</p>
+<p><strong>機制：</strong>光速取 299792458 m/s，100 MHz 的 λ ＝ 2.997925 m，四分之一波長為 0.749481 m；2400 MHz 時縮成 0.031228 m。</p>
+<p><strong>不要混淆：</strong>四分之一波長只是理想起點，不是成品的精確長度；介質、外殼、接地與匹配網路都會改變最後尺寸與效率。尺寸合比例只表示可能共振，並不保證阻抗已匹配、方向圖合用或所有輸入功率都能有效輻射。</p>
+</article>
+</div>
+
+<h2>第二組｜類比調變（第 01–03 章，12 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="am dsb-lc amplitude modulation 振幅調變 雙邊帶 大載波">
+<h2>振幅調變 AM／DSB-LC（amplitude modulation, double-sideband large-carrier）</h2>
+<p><strong>白話：</strong>讓高頻載波的外輪廓跟著訊息高低變化，並保留夠大的載波，使簡單二極體與電容就能讀回內容。</p>
+<p><strong>位置／角色：</strong><a href="01-AM包絡與調變指數.html">01 章</a>的主角；AM 收音機與航空語音仍採用它，優點是接收端便宜且容易判讀。</p>
+<p><strong>機制：</strong>μ ＝ 0.5、f<sub>m</sub> ＝ 1 kHz 時，包絡在 1.500000 V 與 0.500000 V 間變化，傳輸頻寬為 2 kHz，功率效率 11.111111 %。</p>
+<p><strong>不要混淆：</strong>DSB-LC 保留大載波，DSB-SC 把載波壓掉；兩者頻寬同為 2W，但功率用途與接收端複雜度不同。AM 的「容易接收」不是免費優點，固定載波與兩份邊帶會持續占用功率和頻譜，即使那一刻訊息很小也一樣。</p>
+</article>
+
+<article class="term-card" data-search="am modulation index mu 調變指數 μ depth envelope">
+<h2>AM 調變指數 μ（modulation index）</h2>
+<p><strong>白話：</strong>μ 表示訊息把載波振幅推動得多深；0 沒有起伏，1 剛好碰到零，超過 1 就會讓包絡翻轉。</p>
+<p><strong>位置／角色：</strong><a href="01-AM包絡與調變指數.html">01 章</a>用示波器的最大與最小包絡反推它；AM 發射器的增益設定與檢波品質都受它控制。</p>
+<p><strong>機制：</strong>最大值 1.500000 V、最小值 0.500000 V 時，μ ＝ (1.5 − 0.5) / (1.5 + 0.5) ＝ 0.500000，效率為 11.111111 %。</p>
+<p><strong>不要混淆：</strong>μ 是 AM 的，β 是 FM 的；μ 不能超過 1 才能讓普通包絡檢波正常，β 則常見 5 或 10。μ ＝ 1 是包絡剛好碰零的幾何邊界，不表示所有語音時刻都能維持最高效率；平均內容較小時，大部分功率仍留在載波。</p>
+</article>
+
+<article class="term-card" data-search="envelope detector 包絡 檢波器 diode rc ripple diagonal clipping">
+<h2>包絡與包絡檢波器（envelope &amp; envelope detector）</h2>
+<p><strong>白話：</strong>包絡是快速載波外側的慢輪廓；檢波器整流後用 RC 留住峰值，再讓電容緩慢放電追蹤輪廓。</p>
+<p><strong>位置／角色：</strong><a href="01-AM包絡與調變指數.html">01 章</a>的自由實驗；傳統 AM 收音機用很少零件完成接收，示波器可直接觀察漣波與截波。</p>
+<p><strong>機制：</strong>f<sub>c</sub> ＝ 1000 kHz、f<sub>m</sub> ＝ 1 kHz、μ ＝ 0.5 時，RC 可用區約 10.000000–275.664448 µs；預設 100 µs 的漣波是 0.995017 %。</p>
+<p><strong>不要混淆：</strong>RC 越大不一定越平順；太小會有載波漣波，太大則放電追不上下降輪廓，形成對角線截波。可用區同時受載波週期、訊息頻率與 μ 限制，換台或換內容後，原本合適的時間常數未必仍合適。</p>
+</article>
+
+<article class="term-card" data-search="overmodulation 過調變 envelope fold distortion mu greater one">
+<h2>過調變（overmodulation）</h2>
+<p><strong>白話：</strong>AM 的 μ 超過 1 後，括號內的值在谷底變成負數，包絡檢波器只看到絕對值，原來的凹谷被翻上去。</p>
+<p><strong>位置／角色：</strong><a href="01-AM包絡與調變指數.html">01 章</a>把它當 AM 的明確失效邊界；發射端以示波器監看包絡，避免音訊峰值把 μ 推過頭。</p>
+<p><strong>機制：</strong>μ ＝ 1.5 時，內部值會出現 −0.060660 與 −0.500000，示波器外輪廓卻顯示 0.060660 與 0.500000，形狀因此失真。</p>
+<p><strong>不要混淆：</strong>這不是單純音量更大；即使接收器完全理想，普通包絡檢波也無法知道負號曾經存在，失去的形狀不能補回。把接收音量轉小只會縮放已經失真的波形，不會讓谷底重新取得原來的正負資訊。</p>
+</article>
+
+<article class="term-card" data-search="dsb-sc double sideband suppressed carrier 雙邊帶抑制載波 coherent">
+<h2>雙邊帶抑制載波 DSB-SC（double-sideband suppressed-carrier）</h2>
+<p><strong>白話：</strong>保留 AM 的上下兩個邊帶，卻不把固定載波功率送出去；省下的功率代價是接收端必須自己重建載波。</p>
+<p><strong>位置／角色：</strong><a href="02-抑制載波單邊帶與同步解調.html">02 章</a>用它說明同步解調；乘積檢波器、鎖相迴路與平衡混頻器都圍繞這種訊號工作。</p>
+<p><strong>機制：</strong>W ＝ 4 kHz 時仍佔 8 kHz，100 kHz 可排 12 路，但訊息功率比例是 100.000000 %；相位差 60° 時振幅損失 −6.020600 dB。</p>
+<p><strong>不要混淆：</strong>它的外輪廓是訊息絕對值，訊息過零時還伴隨相位翻轉，因此不能用普通包絡檢波器取代同步解調。省掉載波只省發射功率，沒有把兩個邊帶也省掉；若要再省一半頻寬，必須改用 SSB。</p>
+</article>
+
+<article class="term-card" data-search="ssb single sideband 單邊帶 upper lower usb lsb">
+<h2>單邊帶 SSB（single-sideband）</h2>
+<p><strong>白話：</strong>上下邊帶帶有重複內容，因此只送其中一邊，就能同時省一半頻寬與不必要的發射功率。</p>
+<p><strong>位置／角色：</strong><a href="02-抑制載波單邊帶與同步解調.html">02 章</a>比較四種方案；業餘無線電與遠距語音常用 SSB 在狹窄頻段排更多通話。</p>
+<p><strong>機制：</strong>W ＝ 4 kHz 時 SSB 只佔 4 kHz，100 kHz 可排 25 路；相同條件的雙邊帶佔 8 kHz，只能排 12 路。</p>
+<p><strong>不要混淆：</strong>相位誤差不會像 DSB-SC 那樣乘上 cos φ 使振幅下降，卻會改變波形；頻率誤差還會把所有成分整體平移。語音或許能容忍少量相位改變，資料判決卻可能很敏感，因此「聽得懂」不能當成所有用途都正確。</p>
+</article>
+
+<article class="term-card" data-search="vsb vestigial sideband 殘留邊帶 television low frequency">
+<h2>殘留邊帶 VSB（vestigial sideband）</h2>
+<p><strong>白話：</strong>保留一個完整邊帶，再故意留下另一邊靠近載波的一小段，讓含直流與低頻的訊息比較容易通過實際濾波器。</p>
+<p><strong>位置／角色：</strong><a href="02-抑制載波單邊帶與同步解調.html">02 章</a>作為 DSB 與 SSB 的折衷；類比電視影像曾用它保留亮度的低頻內容。</p>
+<p><strong>機制：</strong>本課用 VSB 頻寬 1.25W；W ＝ 4 kHz 時佔 5.000000 kHz，因此 100 kHz 可排 20 路，介於 12 與 25 路之間。</p>
+<p><strong>不要混淆：</strong>留下的一小段不是製作瑕疵；它用少量額外頻寬換取可實作的過渡帶，不能直接當成完整雙邊帶。接收濾波器還須配合殘留區的幅度斜率，否則上下成分相加後，低頻仍可能被放大或削弱。</p>
+</article>
+
+<article class="term-card" data-search="coherent demodulation phase error 同步解調 相位誤差 cos phi pll beat">
+<h2>同步解調與相位誤差（coherent demodulation &amp; phase error）</h2>
+<p><strong>白話：</strong>接收端拿自己重建的載波與收到的波相乘；頻率與相位對準時能還原訊息，沒對準就會衰減、失真或起伏。</p>
+<p><strong>位置／角色：</strong><a href="02-抑制載波單邊帶與同步解調.html">02 章</a>展示 DSB-SC 與 SSB 的代價；實際接收器靠 PLL 追蹤頻率與相位。</p>
+<p><strong>機制：</strong>DSB-SC 在 φ ＝ 30° 時 cos φ ＝ 0.866025，振幅損失 −1.249387 dB；60° 時剩一半，損失 −6.020600 dB。</p>
+<p><strong>不要混淆：</strong>相位誤差造成固定的 cos φ 衰減，頻率誤差造成隨時間起伏的拍頻；兩者都靠 PLL 修，但修的是不同的量。φ ＝ 90° 的 DSB-SC 會落在正交零點而完全消失，這是參考方向錯開，不是發射端突然沒有能量。</p>
+</article>
+
+<article class="term-card" data-search="angle modulation fm pm 角度調變 頻率調變 相位調變 constant envelope">
+<h2>角度調變：FM 與 PM（angle modulation）</h2>
+<p><strong>白話：</strong>不改載波振幅，而改它旋轉的角度進度；直接改瞬時頻率叫 FM，直接改相位叫 PM，兩者可互相用微分與積分連接。</p>
+<p><strong>位置／角色：</strong><a href="03-FM與Carson頻寬.html">03 章</a>主講 FM；廣播、雙向無線電與頻率合成器都利用恆定振幅帶來的放大便利。</p>
+<p><strong>機制：</strong>廣播例取 Δf ＝ 75 kHz、W ＝ 15 kHz，β ＝ 5.000000，Carson 頻寬為 180.000000 kHz，換得 18.750613 dB 的模型增益。</p>
+<p><strong>不要混淆：</strong>FM 與 PM 都是角度調變，但同一個訊息套入後的瞬時頻率不同；不能只看到恆定振幅就斷定是哪一種。恆定振幅也只是在理想表達式成立，通過實際通道後仍可能出現振幅起伏，接收器通常先限幅再解調。</p>
+</article>
+
+<article class="term-card" data-search="frequency deviation fm index beta 頻率偏移 Δf 調變指數 β">
+<h2>頻率偏移 Δf 與 FM 調變指數 β（frequency deviation &amp; modulation index）</h2>
+<p><strong>白話：</strong>Δf 是瞬時頻率離載波最遠多少，β 則把這段偏移除以訊息頻寬，衡量為抗干擾付了多大的頻譜代價。</p>
+<p><strong>位置／角色：</strong><a href="03-FM與Carson頻寬.html">03 章</a>用兩個旋鈕直接比較；FM 發射器的偏移校正與接收器的頻寬設定都要讀它們。</p>
+<p><strong>機制：</strong>Δf ＝ 75 kHz、W ＝ 15 kHz 時 β ＝ 75 / 15 ＝ 5.000000；若 Δf 降到 7.5 kHz，β 只有 0.500000。</p>
+<p><strong>不要混淆：</strong>Δf 有 Hz 單位，β 沒有單位；β 大不自動代表結果好，載波對雜訊比若低於門檻，理想增益公式就失效。把 Δf 與 W 同時加倍會維持相同 β，卻讓 Carson 頻寬也加倍，所以只報 β 仍不足以交代實際占用。</p>
+</article>
+
+<article class="term-card" data-search="carson rule carson 法則 fm transmission bandwidth bt">
+<h2>Carson 法則（Carson's rule）</h2>
+<p><strong>白話：</strong>用最大頻率偏移加訊息頻寬，再乘 2，估出 FM 大約涵蓋 98 % 功率所需的傳輸頻寬。</p>
+<p><strong>位置／角色：</strong><a href="03-FM與Carson頻寬.html">03 章</a>把抗干擾收益換成頻寬成本；廣播頻道配置與發射器濾波設定會先用它估算。</p>
+<p><strong>機制：</strong>B<sub>T</sub> ≈ 2 × (Δf + W)；75 kHz 與 15 kHz 代入得到 180.000000 kHz，是同一 W 的 AM 頻寬 30 kHz 的 6 倍；× 讀作乘以。</p>
+<p><strong>不要混淆：</strong>它是工程近似而非嚴格截止；FM 的理論頻譜向外無限延伸，因此 180 kHz 之外仍可能量到很小的成分。頻道規劃還要留保護間隔並遵守遮罩，不能只因計算結果小於配置間距，就斷言一定不干擾鄰台。</p>
+</article>
+
+<article class="term-card" data-search="fm threshold pre-emphasis 門檻效應 預加重 cnr high frequency">
+<h2>FM 門檻效應與預加重（threshold effect &amp; pre-emphasis）</h2>
+<p><strong>白話：</strong>FM 在載波夠強時很乾淨，一旦低到門檻下會突然冒出尖峰；預加重先抬高高頻內容，接收端再壓回來改善高頻表現。</p>
+<p><strong>位置／角色：</strong><a href="03-FM與Carson頻寬.html">03 章</a>界定理想 3β² 模型何時有效；FM 廣播接收器的限幅、解調與去加重電路都面對此現象。</p>
+<p><strong>機制：</strong>預設參考 SNR 30 dB 時 CNR 是 19.208188 dB，高於 10 dB 門檻；降到 15 dB 時 CNR 只剩 4.208188 dB，模型失效。</p>
+<p><strong>不要混淆：</strong>FM 並非任何情況都較乾淨；β 大且 CNR 過門檻才有增益，窄頻 β ＝ 0.5 時 3β² 只有 0.75。預加重也不是增加總發射音量，而是改變不同音頻的相對權重，接收端必須用相反曲線還原。</p>
+</article>
+</div>
+
+<h2>第三組｜接收機與雜訊（第 04–05 章，11 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="superheterodyne receiver 超外差接收機 rf if lo selectivity">
+<h2>超外差接收機（superheterodyne receiver）</h2>
+<p><strong>白話：</strong>先把想收的不同電台都搬到同一個固定中頻，再用固定濾波器與放大器處理，避免每轉一次台就重做整套精密電路。</p>
+<p><strong>位置／角色：</strong><a href="04-超外差接收機與影像頻率.html">04 章</a>的主架構；傳統廣播機、電視與許多射頻接收器都採用一次或多次變頻。</p>
+<p><strong>機制：</strong>收 1000 kHz、選 455 kHz IF 且高側注入時，LO 是 1455 kHz；混頻後保留 455 kHz，再交給固定 IF 濾波器。</p>
+<p><strong>不要混淆：</strong>超外差描述先變到固定 IF 的架構，不等於只有一個混頻器；雙轉換仍屬超外差，只是用兩個 IF 分攤選擇性與影像抑制。直接轉換把 IF 設在零附近，省掉傳統 IF 鏈，卻換來直流偏移與 IQ 不平衡等另一組問題。</p>
+</article>
+
+<article class="term-card" data-search="mixer local oscillator lo 混頻器 本地振盪器 sum difference frequency">
+<h2>混頻器與本地振盪器（mixer &amp; local oscillator, LO）</h2>
+<p><strong>白話：</strong>LO 提供可調的純頻率，混頻器把它與收到的波相乘，產生和頻與差頻；選出差頻，就把目標台搬到固定位置。</p>
+<p><strong>位置／角色：</strong><a href="04-超外差接收機與影像頻率.html">04 章</a>把兩者放在 RF 預選器之後；收音機轉台旋鈕實際改的是 LO 頻率。</p>
+<p><strong>機制：</strong>1000 kHz RF 配 1455 kHz LO，差頻是 455 kHz；但 1910 kHz 與同一 LO 的差也為 455 kHz，因此形成影像。</p>
+<p><strong>不要混淆：</strong>混頻器不是只做加法的線性元件，它利用乘法產生新頻率；也不能在混頻後才要求它分辨兩個已落在同一 IF 的來源。LO 本身不攜帶收到的內容，卻決定哪些輸入會搬到 IF，因此頻率誤差會整體移動接收頻譜。</p>
+</article>
+
+<article class="term-card" data-search="intermediate frequency if 中頻 filter selectivity fixed">
+<h2>中頻 IF（intermediate frequency）</h2>
+<p><strong>白話：</strong>接收器刻意選定的固定工作頻率；所有目標 RF 都先搬到這裡，後面的窄濾波與增益就不必跟著轉台。</p>
+<p><strong>位置／角色：</strong><a href="04-超外差接收機與影像頻率.html">04 章</a>用 455 kHz 作廣播接收例；陶瓷濾波器、IF 放大器與解調器都圍繞它設計。</p>
+<p><strong>機制：</strong>IF ＝ 455 kHz 時，目標與影像相隔 2 × 455 ＝ 910 kHz；若降成 100 kHz，影像只到 1200 kHz，抑制剩 25.277731 dB。</p>
+<p><strong>不要混淆：</strong>IF 不是隨便挑的中間值；提高它讓影像較遠，降低它則讓窄頻濾波較容易，設計必須在兩者間取捨。固定 IF 的價值在於後級只需最佳化一次，並非它天然比 RF 更乾淨；前端未壓掉的干擾也會一起搬過來。</p>
+</article>
+
+<article class="term-card" data-search="image frequency 影像頻率 image rejection preselector rf">
+<h2>影像頻率（image frequency）</h2>
+<p><strong>白話：</strong>另一個也能與 LO 產生相同 IF 的射頻；若它在混頻前沒被擋掉，目標台與影像台會重疊成同一份 IF。</p>
+<p><strong>位置／角色：</strong><a href="04-超外差接收機與影像頻率.html">04 章</a>用它檢查預選器；接收器前端的 RF 濾波器與品質因數直接決定影像抑制。</p>
+<p><strong>機制：</strong>1000 kHz RF、455 kHz IF、高側注入時，影像是 1000 + 2 × 455 ＝ 1910 kHz；Q ＝ 50 時抑制為 36.818324 dB。</p>
+<p><strong>不要混淆：</strong>影像不是鄰台；鄰台由 IF 濾波器擋，影像在混頻後已與目標重合，只能在混頻前由 RF 預選器擋。把 IF 設高會把影像推遠，卻同時提高固定濾波器做窄過渡帶的難度，因此不存在單靠拉高 IF 的無代價解法。</p>
+</article>
+
+<article class="term-card" data-search="multiplexing fdm tdm cdma ofdm 多工 分頻 分時 分碼 正交分頻">
+<h2>多工：FDM、TDM、CDMA 與 OFDM（multiplexing）</h2>
+<p><strong>白話：</strong>多工讓多路內容依頻率、時間、碼或正交子載波共享同一項傳輸資源。</p>
+<p><strong>位置／角色：</strong><a href="04-超外差接收機與影像頻率.html">04 章</a>只用 FDM 排電台；其餘方法留給數位通訊課。</p>
+<p><strong>機制：</strong>530–1700 kHz 依 10 kHz 間距可排 118 台，顯示 FDM 用間距交換同時存在的路數。</p>
+<p><strong>不要混淆：</strong>多工安排多路如何共享資源，超外差則在接收端選出一路並搬到 IF。</p>
+</article>
+
+<article class="term-card" data-search="phase locked loop pll 鎖相迴路 phase frequency tracking carrier recovery">
+<h2>鎖相迴路 PLL（phase-locked loop, PLL）</h2>
+<p><strong>白話：</strong>把本地週期基準持續拿去和輸入比較，再用誤差修正本地頻率與相位，讓兩者長期同步。</p>
+<p><strong>位置／角色：</strong><a href="04-超外差接收機與影像頻率.html">04 章</a>把它連到 LO 與載波恢復；頻率合成器、時脈恢復與同步解調都會用到。</p>
+<p><strong>機制：</strong>02 章顯示 DSB-SC 相位差 60° 會損失 −6.020600 dB；PLL 的任務是把殘餘誤差壓回例如 10°，此時只損失 −0.132971 dB。</p>
+<p><strong>不要混淆：</strong>PLL 能追的速度有限；迴路太慢跟不上快速漂移，太快又會把雜訊帶進控制端，鎖住也不代表完全零誤差。鎖定範圍與捕捉範圍也不是同一件事：已鎖後能跟住的偏移，未必能從任意初始狀態自動抓回。</p>
+</article>
+
+<article class="term-card" data-search="thermal noise ktb 熱雜訊 boltzmann temperature bandwidth noise floor">
+<h2>熱雜訊與 kTB（thermal noise）</h2>
+<p><strong>白話：</strong>導體中的載子因溫度隨機運動，即使沒有外來訊號也會形成底；溫度與接收頻寬越大，收進來的雜訊功率越多。</p>
+<p><strong>位置／角色：</strong><a href="05-雜訊訊雜比與雜訊指數.html">05 章</a>建立接收器起始底線；頻譜分析儀、低雜訊放大器與鏈路預算都以它為基準。</p>
+<p><strong>機制：</strong>290 K 時 kT<sub>0</sub> ＝ 4.003882 × 10<sup>−21</sup> W/Hz，即 −173.975187 dBm/Hz；乘上 1 MHz 後為 −113.975187 dBm。</p>
+<p><strong>不要混淆：</strong>常見 −174 dBm/Hz 是四捨五入，不是所有溫度與所有裝置的固定規格；實際接收器還會再加自己的 NF。功率密度是每 Hz 的基準，必須先乘入接收頻寬才能和訊號功率比較，不能直接把 dBm/Hz 當成整段頻寬的底。</p>
+</article>
+
+<article class="term-card" data-search="awgn additive white gaussian noise 加性白色高斯雜訊 random spectrum distribution">
+<h2>加性白色高斯雜訊 AWGN（additive white Gaussian noise）</h2>
+<p><strong>白話：</strong>一個常用的一階模型：雜訊直接加到訊號上，在所看頻段內平均功率密度平坦，瞬時值服從高斯分布。</p>
+<p><strong>位置／角色：</strong><a href="05-雜訊訊雜比與雜訊指數.html">05 章</a>定義來源，<a href="08-匹配濾波器與位元錯誤率.html">08 章</a>用它計算判決機率；接收器性能曲線多以此為基準。</p>
+<p><strong>機制：</strong>1 MHz、290 K 的理想底為 −113.975187 dBm；輸入 −100 dBm 時，輸入訊雜比是 13.975187 dB。</p>
+<p><strong>不要混淆：</strong>白色描述頻譜平坦，高斯描述振幅分布，加性描述相加方式；三個條件彼此獨立，窄帶干擾不符合這套模型。AWGN 是方便比較接收方案的基線，實際環境若有脈衝、漂移或多徑，量到的錯誤率會偏離理論曲線。</p>
+</article>
+
+<article class="term-card" data-search="snr signal to noise ratio 訊雜比 signal noise power">
+<h2>訊雜比 SNR（signal-to-noise ratio）</h2>
+<p><strong>白話：</strong>把有用訊號功率除以同一量測點、同一頻寬內的雜訊功率；數字越大，接收端越容易分辨內容。</p>
+<p><strong>位置／角色：</strong><a href="05-雜訊訊雜比與雜訊指數.html">05 章</a>追蹤接收鏈前後的品質，<a href="10-頻譜效率與Shannon極限.html">10 章</a>再把它連到容量。</p>
+<p><strong>機制：</strong>輸入 −100 dBm、1 MHz 雜訊底 −113.975187 dBm，相減得 13.975187 dB；經總 NF 1.908120 dB 後剩 12.067067 dB。</p>
+<p><strong>不要混淆：</strong>SNR 必須連同量測頻寬才完整；頻寬放大會收進更多雜訊，因此不能拿不同頻寬的數字直接比較。儀器顯示的單一頻點高度也不等於整段雜訊功率，還須知道解析頻寬並做積分或等效換算。</p>
+</article>
+
+<article class="term-card" data-search="noise figure friis nf 雜訊指數 級聯公式 cascade lna">
+<h2>雜訊指數 NF 與 Friis 級聯公式（noise figure &amp; Friis formula）</h2>
+<p><strong>白話：</strong>NF 記接收元件讓訊雜比惡化多少；Friis 公式把每級額外雜訊折回輸入端，顯示第一級增益最能遮住後級。</p>
+<p><strong>位置／角色：</strong><a href="05-雜訊訊雜比與雜訊指數.html">05 章</a>逐項計算；射頻前端排列 LNA、混頻器與 IF 放大器時，用它決定先後。</p>
+<p><strong>機制：</strong>LNA 20 dB／1.5 dB、混頻器 −6 dB／8 dB、IF 5 dB 時，總 F ＝ 1.551715，總 NF ＝ 1.908120 dB。</p>
+<p><strong>不要混淆：</strong>NF 是訊雜比變差幾倍，不是單獨加了多少雜訊；各級 dB 不能直接相加，必須先換成線性值再套 Friis。把 −6 dB 混頻器移到 LNA 前面，總 NF 會從 1.908120 dB 跳到 9.051478 dB，正好說明順序與前級增益不可省略。</p>
+</article>
+
+<article class="term-card" data-search="equivalent noise temperature low noise amplifier lna 等效雜訊溫度 低雜訊放大器 te">
+<h2>等效雜訊溫度與低雜訊放大器 LNA（equivalent noise temperature &amp; low-noise amplifier）</h2>
+<p><strong>白話：</strong>等效溫度把元件額外雜訊換成「輸入端好像多熱」；LNA 則在鏈路最前面用低 NF 與足夠增益保住微弱訊號。</p>
+<p><strong>位置／角色：</strong><a href="05-雜訊訊雜比與雜訊指數.html">05 章</a>連接兩種表示法；衛星、射電天文與天線後第一級放大器常用溫度評估。</p>
+<p><strong>機制：</strong>總 F ＝ 1.551715 時，T<sub>e</sub> ＝ (F − 1) × 290 ＝ 159.997380 K；LNA 增益升至 40 dB，總 NF 接近 1.504277 dB。</p>
+<p><strong>不要混淆：</strong>等效溫度不是元件外殼溫度；LNA 也不是增益越大越好，線性度、飽和、耗電與穩定度仍會限制可用值。強干擾先把 LNA 推入壓縮時，再低的 NF 也救不了失真，因此前端選擇性與動態範圍要一起看。</p>
+</article>
+</div>
+
+<h2>第四組｜數位化與基頻傳輸（第 06–07 章，9 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="sampling theorem nyquist rate 取樣定理 奈奎斯特率 fs twice bandwidth">
+<h2>取樣定理與奈奎斯特率（sampling theorem &amp; Nyquist rate）</h2>
+<p><strong>白話：</strong>若連續波形最高頻率是 W，理想重建至少要每秒取 2W 個樣本；實務還要多留一段給抗混疊濾波器過渡。</p>
+<p><strong>位置／角色：</strong><a href="06-取樣量化與PCM.html">06 章</a>把類比語音送進 ADC；聲卡、感測器與軟體無線電選 f<sub>s</sub> 前都先查此條件。</p>
+<p><strong>機制：</strong>電話 W ＝ 3.4 kHz，奈奎斯特率為 6.800000 kHz；用 8 kHz 取樣，f<sub>s</sub>/2 與 W 間留下 0.600000 kHz 防護頻帶。</p>
+<p><strong>不要混淆：</strong>2W 是理想下限，不是推薦的實作值；剛好 6.8 kHz 時防護頻帶為零，需要無限陡的濾波器，實際做不到。提高 f<sub>s</sub> 能放寬類比濾波器過渡區，卻會增加後端每秒樣本數與運算、儲存負擔。</p>
+</article>
+
+<article class="term-card" data-search="aliasing 混疊 nyquist fold apparent frequency">
+<h2>混疊（aliasing）</h2>
+<p><strong>白話：</strong>取樣太慢時，不同類比頻率產生相同樣本序列，高頻成分因而冒充低頻；樣本留下後就沒有足夠資訊分辨原身。</p>
+<p><strong>位置／角色：</strong><a href="06-取樣量化與PCM.html">06 章</a>把它設為取樣的失效邊界；ADC 前的抗混疊濾波器要先移除超過 f<sub>s</sub>/2 的成分。</p>
+<p><strong>機制：</strong>W ＝ 3.4 kHz 時至少需要 6.800000 kHz；若只用 6 kHz，因 6 &lt; 6.8 而發生混疊，事後演算法無法恢復。</p>
+<p><strong>不要混淆：</strong>本課一律寫「混疊」；對照表寫「摺疊」，是同一個 aliasing。它不是量化階距太粗造成的振幅誤差，也不是顯示器把頻譜畫錯；根因是不同連續頻率在離散樣本中已無法區分。</p>
+</article>
+
+<article class="term-card" data-search="quantization noise 量化 量化雜訊 step levels adc">
+<h2>量化與量化雜訊（quantization &amp; quantization noise）</h2>
+<p><strong>白話：</strong>量化把連續振幅歸到有限階級；真值與代表值的差形成量化誤差，在合適條件下可當成雜訊估算。</p>
+<p><strong>位置／角色：</strong><a href="06-取樣量化與PCM.html">06 章</a>接在取樣之後；ADC、音訊介面與感測器規格中的位元數直接決定階數。</p>
+<p><strong>機制：</strong>滿刻度範圍 2 V、n ＝ 8 時共有 2<sup>8</sup> ＝ 256 階，階距是 7.812500 mV；16 位元時階距降為 0.030518 mV。</p>
+<p><strong>不要混淆：</strong>提高取樣率不會增加振幅階數，提高位元數也不會提高可表示的最高頻率；時間與振幅是兩個獨立解析度。實際 ADC 標示 24 位元也不保證有 24 位元有效解析度，熱雜訊與非線性常使最低幾位只剩隨機變動。</p>
+</article>
+
+<article class="term-card" data-search="sqnr signal quantization noise ratio 訊號對量化雜訊比 bit depth adc">
+<h2>訊號對量化雜訊比 SQNR（signal-to-quantization-noise ratio）</h2>
+<p><strong>白話：</strong>只比較理想量化前的訊號功率與量化誤差功率，用來估計位元深度能提供的振幅品質上限。</p>
+<p><strong>位置／角色：</strong><a href="06-取樣量化與PCM.html">06 章</a>量化位元數的回報；音訊 ADC 與資料擷取卡常把實測結果拿來和此上限比較。</p>
+<p><strong>機制：</strong>滿刻度弦波下，n ＝ 8 得 49.925712 dB；每多一位元，階距減半、誤差功率除以 4，因此增加 6.020600 dB。</p>
+<p><strong>不要混淆：</strong>SQNR 只算量化誤差，不含熱雜訊、時序抖動與非線性；輸入若比滿刻度小 20 dB，實際 SQNR 也少約 20 dB。49.925712 dB 是滿刻度弦波的一階上限，不應直接當成任何音樂、語音或任意分布輸入的保證值。</p>
+</article>
+
+<article class="term-card" data-search="pcm pulse code modulation 脈衝編碼調變 sample quantize binary">
+<h2>脈衝編碼調變 PCM（pulse-code modulation, PCM）</h2>
+<p><strong>白話：</strong>PCM 依固定時間取樣，把每個樣本量化成整數，再以固定位元數送出；接收端按相同節奏重組樣本。</p>
+<p><strong>位置／角色：</strong><a href="06-取樣量化與PCM.html">06 章</a>串起取樣、量化與位元率；數位電話、無壓縮音訊與 ADC 串流都採這個骨架。</p>
+<p><strong>機制：</strong>8 kHz、每樣本 8 位元、1 路時位元率為 64 kbit/s，最小基頻頻寬 32.000000 kHz，是原 3.4 kHz 的 9.411765 倍。</p>
+<p><strong>不要混淆：</strong>PCM 本身不代表音訊壓縮；它把波形直接數位化，壓縮若要減少 64 kbit/s，屬於後續訊源編碼。實際 T1 與 E1 還會插入訊框與訊令位元，所以本課用樣本數算出的 1536 與 1920 kbit/s 只是有效內容基準。</p>
+</article>
+
+<article class="term-card" data-search="bit rate symbol rate 位元率 符元率 rb rs baud bits per symbol">
+<h2>位元率與符元率（bit rate &amp; symbol rate）</h2>
+<p><strong>白話：</strong>位元率數每秒送幾個二進位單位，符元率數每秒做幾次波形選擇；一個符元若有多種狀態，就能攜帶多個位元。</p>
+<p><strong>位置／角色：</strong><a href="06-取樣量化與PCM.html">06 章</a>先算 PCM 位元率，<a href="09-數位調變與星座圖.html">09 章</a>再用星座大小連到符元率；數位收發介面會同時標兩者。</p>
+<p><strong>機制：</strong>09 章 R<sub>s</sub> ＝ 100 kbaud；BPSK 每符元 1 位元得 100 kbit/s，64-QAM 每符元 6 位元得 600 kbit/s。</p>
+<p><strong>不要混淆：</strong>baud 是符元每秒，不必等於 bit/s；只有二元方案每符元恰好 1 位元時，兩個數字才相同。把 64-QAM 的 64 直接當作每符元位元數也不對，應取 log<sub>2</sub> 64 ＝ 6；這裡 log<sub>2</sub> 讀作以二為底的對數。</p>
+</article>
+
+<article class="term-card" data-search="isi inter symbol interference 符元間干擾 pulse tail timing neighbor">
+<h2>符元間干擾 ISI（inter-symbol interference）</h2>
+<p><strong>白話：</strong>一個脈衝的尾巴延伸到鄰近符元的取樣時刻，使接收值混入自己前後鄰居的貢獻。</p>
+<p><strong>位置／角色：</strong><a href="07-基頻傳輸ISI與升餘弦.html">07 章</a>用眼開度量它；高速有線介面與脈衝整形接收器會用示波器眼圖檢查。</p>
+<p><strong>機制：</strong>R<sub>s</sub> ＝ 100 kbaud、α ＝ 0.35、τ/T ＝ 10 %、每側算 20 個鄰居時，相對眼開度為 72.958020 %。</p>
+<p><strong>不要混淆：</strong>ISI 是確定性的、由自己的鄰居造成；雜訊是隨機的。眼圖上兩者可能都讓眼睛縮小，要關掉雜訊才分得開。即使理論取樣點的 ISI 為零，時脈偏移後仍會踩到尾巴，因此「符合奈奎斯特準則」不等於任何時刻都沒有干擾。</p>
+</article>
+
+<article class="term-card" data-search="raised cosine roll off alpha 升餘弦脈衝 滾降係數 α nyquist">
+<h2>升餘弦脈衝與滾降係數 α（raised-cosine pulse &amp; roll-off factor）</h2>
+<p><strong>白話：</strong>升餘弦是一種在正確取樣點讓鄰居恰好為零的脈衝；α 用額外頻寬換取較快衰減的時間尾巴。</p>
+<p><strong>位置／角色：</strong><a href="07-基頻傳輸ISI與升餘弦.html">07 章</a>用它連接頻譜與眼圖；數位收發器的脈衝整形濾波器以 α 作主要設定。</p>
+<p><strong>機制：</strong>R<sub>s</sub> ＝ 100 kbaud、α ＝ 0.35 時，B ＝ (1 + α) × R<sub>s</sub> / 2 ＝ 67.500000 kHz；α ＝ 1 時則為 100 kHz。</p>
+<p><strong>不要混淆：</strong>α 不是濾波器階數，也不是錯誤率；α ＝ 0 雖有最小頻寬，但尾巴只以 1/t 衰減，對時序偏移很敏感。α 增大改善的是尾巴衰減與時序容忍，不會憑空提高訊號能量；付出的明確代價就是 B 隨 1 + α 增加。</p>
+</article>
+
+<article class="term-card" data-search="eye diagram 眼圖 oscilloscope timing opening isi jitter">
+<h2>眼圖（eye diagram）</h2>
+<p><strong>白話：</strong>把許多符元週期按同一時脈重疊顯示，中央像眼睛的空白越大，代表取樣時間與振幅容許範圍越寬。</p>
+<p><strong>位置／角色：</strong><a href="07-基頻傳輸ISI與升餘弦.html">07 章</a>把公式變成可量測證據；示波器與高速串列分析儀用它找時序偏移與通道失真。</p>
+<p><strong>機制：</strong>α ＝ 0.35、τ/T ＝ 10 % 時相對開度 72.958020 %；偏到 40 % 時眼開度成 −0.208666，代表最壞情況已閉合。</p>
+<p><strong>不要混淆：</strong>眼圖是多次波形疊合的量測方式，不是調變方案；閉眼也不能單獨證明成因，ISI、雜訊與抖動都可能參與。垂直開度主要提示振幅裕度，水平開度主要提示時序裕度；只報「眼睛很大」仍缺少量測刻度與門檻。</p>
+</article>
+</div>
+
+<h2>第五組｜偵測與數位調變（第 08–09 章，11 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="matched filter correlator 匹配濾波器 相關器 energy detection maximum snr">
+<h2>匹配濾波器與相關器（matched filter &amp; correlator）</h2>
+<p><strong>白話：</strong>兩者都把一段收到的波形和已知模板做內積，在指定取樣時刻把有用能量集中，使雜訊下的判決最清楚。</p>
+<p><strong>位置／角色：</strong><a href="08-匹配濾波器與位元錯誤率.html">08 章</a>建立最佳接收器；雷達脈衝壓縮、數位接收機與封包同步都會用模板比對。</p>
+<p><strong>機制：</strong>E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB 即線性 10 時，最大取樣訊雜比為 2E<sub>b</sub>/N<sub>0</sub> ＝ 20.000000，也就是 13.010300 dB。</p>
+<p><strong>不要混淆：</strong>它不是把所有雜訊擋掉，而是在總雜訊仍存在時讓取樣點的訊雜比最大；模板對錯與取樣時刻同樣重要。相關器與匹配濾波器在此模型下可得到等價判決量，兩種方塊畫法不代表性能有先天高低。</p>
+</article>
+
+<article class="term-card" data-search="q function gaussian tail q函數 probability detection threshold">
+<h2>Q 函數（Q function）</h2>
+<p><strong>白話：</strong>Q(x) 是標準高斯隨機值超過 x 的尾端機率；判決邊界離平均值幾個標準差，就能直接換成跨界機率。</p>
+<p><strong>位置／角色：</strong><a href="08-匹配濾波器與位元錯誤率.html">08 章</a>把距離換成位元錯誤率；接收器理論曲線與統計門檻都會查它。</p>
+<p><strong>機制：</strong>Q(0) ＝ 0.5，Q(3) ＝ 1.349898 × 10<sup>−3</sup>，Q(5) ＝ 2.866516 × 10<sup>−7</sup>；距離多兩個標準差，尾端會縮小數千倍。</p>
+<p><strong>不要混淆：</strong>Q 的輸入不是 dB，必須先把能量比換成線性值再開根號；直接把 10 dB 當作 Q(10) 會得到完全不同的量級。Q 值是模型下的單次尾端機率，不是固定長度測試一定會看到的錯誤比例；短測試會有隨機起伏。</p>
+</article>
+
+<article class="term-card" data-search="ebn0 energy per bit noise density 能量 雜訊密度 bit snr">
+<h2>E<sub>b</sub>/N<sub>0</sub>（energy per bit to noise density ratio）</h2>
+<p><strong>白話：</strong>把每個位元獲得的能量與每 Hz 雜訊功率相比，抽離傳送速度與量測頻寬，方便跨系統比較偵測難度。</p>
+<p><strong>位置／角色：</strong><a href="08-匹配濾波器與位元錯誤率.html">08 章</a>把它送進 Q 函數，<a href="10-頻譜效率與Shannon極限.html">10 章</a>用它比較功率效率。</p>
+<p><strong>機制：</strong>E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB 時，BPSK 的 Q 引數是 √20 ＝ 4.472136，位元錯誤率為 3.872108 × 10<sup>−6</sup>；√ 讀作平方根。</p>
+<p><strong>不要混淆：</strong>它不是 SNR：兩者差一個 R<sub>b</sub>/B。同一鏈路把頻寬開大時 SNR 下降，E<sub>b</sub>/N<sub>0</sub> 可以不變。比較規格時還要確認 N<sub>0</sub> 採單邊或雙邊定義，本課固定採單邊，否則公式會無端差 3.010300 dB。</p>
+</article>
+
+<article class="term-card" data-search="ber bit error rate 位元錯誤率 probability measured errors">
+<h2>位元錯誤率 BER（bit error rate, BER）</h2>
+<p><strong>白話：</strong>接收後判錯的位元數除以總位元數，是長時間實測頻率；理論則先算單次判決出錯的機率。</p>
+<p><strong>位置／角色：</strong><a href="08-匹配濾波器與位元錯誤率.html">08 章</a>比較三種二元方案，<a href="09-數位調變與星座圖.html">09 章</a>再比較星座；測試儀會送已知序列計數。</p>
+<p><strong>機制：</strong>BPSK 在 E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB 時為 3.872108 × 10<sup>−6</sup>，傳 10<sup>6</sup> 位元的期望錯誤數為 3.872108。</p>
+<p><strong>不要混淆：</strong>本課一律寫「位元錯誤率」；中英名詞對照表-2.md 的數位通訊節與許多教材寫「誤碼率」，是同一個 BER。理論 P<sub>e</sub> 是機率，實測 BER 是有限樣本的頻率；傳 10<sup>6</sup> 位元看到 4 個錯，不代表真實機率必定剛好 4 × 10<sup>−6</sup>。</p>
+</article>
+
+<article class="term-card" data-search="ask amplitude shift keying 振幅鍵控 on off ook binary">
+<h2>振幅鍵控 ASK（amplitude shift keying, ASK）</h2>
+<p><strong>白話：</strong>用幾個離散振幅代表不同符元；最簡單的 ON-OFF 以有載波與無載波代表兩種狀態。</p>
+<p><strong>位置／角色：</strong><a href="09-數位調變與星座圖.html">09 章</a>把它與 FSK、PSK、QAM 並列；低成本遙控器與光強度鏈路常見這種選擇。</p>
+<p><strong>機制：</strong>08 章在 E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB 時，ON-OFF 的錯誤率為 1.267366 × 10<sup>−2</sup>，明顯高於 BPSK。</p>
+<p><strong>不要混淆：</strong>ASK 的離散振幅不是類比 AM 的連續包絡；同一 E<sub>b</sub> 比較時，ON-OFF 判決距離較短，要多付 6.020600 dB。若改用平均功率相同的比較基準，常會看到 3.010300 dB 的說法；兩者差異來自比較條件，不是公式互相矛盾。</p>
+</article>
+
+<article class="term-card" data-search="fsk frequency shift keying 頻率鍵控 tones coherent orthogonal">
+<h2>頻率鍵控 FSK（frequency shift keying, FSK）</h2>
+<p><strong>白話：</strong>用不同離散頻率代表符元，接收端檢查哪個頻率模板得到較大輸出；正交安排可降低彼此干擾。</p>
+<p><strong>位置／角色：</strong><a href="09-數位調變與星座圖.html">09 章</a>定位數位調變家族，<a href="08-匹配濾波器與位元錯誤率.html">08 章</a>提供同調二元 FSK 的曲線。</p>
+<p><strong>機制：</strong>E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB 時，同調 FSK 的 Q 引數 √10 ＝ 3.162278，錯誤率 7.827011 × 10<sup>−4</sup>。</p>
+<p><strong>不要混淆：</strong>FSK 改的是離散符元頻率，FM 則讓瞬時頻率連續跟著類比訊息變化；名稱都談頻率，判決模型不同。兩個 FSK 頻率若沒有依符元時間安排成正交，相關器輸出會互相滲入，不能直接套用本課的同調正交公式。</p>
+</article>
+
+<article class="term-card" data-search="psk bpsk qpsk phase shift keying 相位鍵控 iq binary quadrature">
+<h2>相位鍵控 PSK：BPSK 與 QPSK（phase shift keying）</h2>
+<p><strong>白話：</strong>PSK 用載波的離散相位代表符元；BPSK 用相反兩點，QPSK 用四個象限，一次可帶兩個位元。</p>
+<p><strong>位置／角色：</strong><a href="09-數位調變與星座圖.html">09 章</a>用 IQ 平面比較；衛星、無線網路與行動通訊的穩健模式都常從 PSK 起步。</p>
+<p><strong>機制：</strong>R<sub>s</sub> ＝ 100 kbaud 時，BPSK 是 100 kbit/s，QPSK 是 200 kbit/s；12 dB 時兩者位元錯誤率同為 9.006010 × 10<sup>−9</sup>。</p>
+<p><strong>不要混淆：</strong>QPSK 的符元錯誤率約是每一維的兩倍，不代表位元錯誤率也加倍；Gray 映射後每維仍像一個 BPSK。QPSK 的總符元能量分到 I、Q 兩維，不能把每一維都當成擁有完整 E<sub>s</sub>，否則會平白多算 3.010300 dB。</p>
+</article>
+
+<article class="term-card" data-search="qam quadrature amplitude modulation 正交振幅調變 iq amplitude phase constellation">
+<h2>正交振幅調變 QAM（quadrature amplitude modulation, QAM）</h2>
+<p><strong>白話：</strong>同時選 I 與 Q 兩軸的振幅，把多個相位與振幅組合成格狀星座；點越多，每個符元攜帶的位元越多。</p>
+<p><strong>位置／角色：</strong><a href="09-數位調變與星座圖.html">09 章</a>比較 16 與 64 點；纜線數位收發設備、Wi-Fi 與行動鏈路會依環境切換 QAM 階數。</p>
+<p><strong>機制：</strong>100 kbaud 時 16-QAM 每符元 4 位元，得 400 kbit/s；64-QAM 每符元 6 位元，得 600 kbit/s，但點距更小。</p>
+<p><strong>不要混淆：</strong>名稱中的「正交」指 I、Q 基底互不干擾，不表示星座點彼此都成直角；QAM 也不等於只有振幅變化。同樣叫 16-QAM 的系統仍可能採不同縮放與標籤，跨圖比較 d<sub>min</sub> 前要先確認是否都用 E<sub>s</sub> ＝ 1 歸一化。</p>
+</article>
+
+<article class="term-card" data-search="constellation iq plane 星座圖 iq 平面 in phase quadrature decision">
+<h2>星座圖與 IQ 平面（constellation diagram &amp; IQ plane）</h2>
+<p><strong>白話：</strong>把每個符元畫成 I、Q 兩個座標；接收點落在哪個判決區，就決定解成哪個符元。</p>
+<p><strong>位置／角色：</strong><a href="09-數位調變與星座圖.html">09 章</a>不用圖片而以座標表呈現；向量訊號分析儀與 SDR 軟體會用它觀察失真。</p>
+<p><strong>機制：</strong>E<sub>s</sub> ＝ 1 時，QPSK 座標為 (±0.707107, ±0.707107)；16-QAM 每軸用 ±0.316228 與 ±0.948683，共 4 × 4 ＝ 16 點。</p>
+<p><strong>不要混淆：</strong>理想星座只列中心位置，實測點雲還混入雜訊、增益、相位與頻率誤差；散開不一定只由一種原因造成。點雲整體旋轉常指向相位偏差，沿半徑拉長與均勻擴散又是不同線索，但單張圖仍需配合儀器量測才能定因。</p>
+</article>
+
+<article class="term-card" data-search="minimum distance gray mapping dmin 最小距離 gray 映射 nearest neighbor">
+<h2>最小距離 d<sub>min</sub> 與 Gray 映射（minimum distance &amp; Gray mapping）</h2>
+<p><strong>白話：</strong>最小距離是任兩個最近星座點的間隔，決定雜訊跨界要走多遠；Gray 映射讓相鄰點只差一個位元。</p>
+<p><strong>位置／角色：</strong><a href="09-數位調變與星座圖.html">09 章</a>用它把幾何連到錯誤率；數位收發器設計會同時調整點位與標籤。</p>
+<p><strong>機制：</strong>E<sub>s</sub> ＝ 1 時，BPSK 的 d<sub>min</sub> ＝ 2.000000，16-QAM 是 0.632456，64-QAM 只剩 0.308607，因此較容易跨界。</p>
+<p><strong>不要混淆：</strong>Gray 映射不會改星座距離或符元錯誤率，只讓一次常見的最近鄰誤判少錯幾個位元，降低位元錯誤率。低 SNR 時接收點可能一次跨過多個邊界，最近鄰近似會失準，Gray 映射的「通常只錯一位」也就不再可靠。</p>
+</article>
+
+<article class="term-card" data-search="coherent noncoherent differential detection dpsk 同調 非同調 差動偵測">
+<h2>同調、非同調與差動偵測 DPSK（coherent, noncoherent &amp; differential detection）</h2>
+<p><strong>白話：</strong>同調偵測需要準確載波參考，非同調只比能量或包絡，差動偵測則比較相鄰符元的相位變化。</p>
+<p><strong>位置／角色：</strong><a href="09-數位調變與星座圖.html">09 章</a>用它說明接收器複雜度與效能的交換；低成本接收器常犧牲一些靈敏度省去載波恢復。</p>
+<p><strong>機制：</strong>08 章同一 10 dB 下，BPSK 錯誤率 3.872108 × 10<sup>−6</sup>，同調 FSK 為 7.827011 × 10<sup>−4</sup>，顯示判決距離的差異。</p>
+<p><strong>不要混淆：</strong>DPSK 是利用相鄰差值的編碼與偵測方式，不等於完全沒有同步；仍需符元時脈，且前一個判錯可能影響下一個。非同調接收省下精確相位參考，通常要用較高 E<sub>b</sub>/N<sub>0</sub> 換回同樣可靠度，這是複雜度交換而非免費簡化。</p>
+</article>
+</div>
+
+<h2>第六組｜效率與鏈路（第 10–11 章，9 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="spectral efficiency eta 頻譜效率 bit per second per hz bandwidth">
+<h2>頻譜效率 η（spectral efficiency）</h2>
+<p><strong>白話：</strong>每 1 Hz 頻寬每秒能送幾個位元，用來比較方案利用稀缺頻譜的密度；數字高通常意味星座更密或編碼更激進。</p>
+<p><strong>位置／角色：</strong><a href="10-頻譜效率與Shannon極限.html">10 章</a>把它放在 Shannon 曲線橫軸；行動網路與無線區域網路用它選傳輸模式。</p>
+<p><strong>機制：</strong>1 MHz 下，64-QAM 取 η ＝ 6，可送 6.000000 Mbit/s；同一 SNR 20 dB 的容量是 6.658211 Mbit/s。</p>
+<p><strong>不要混淆：</strong>頻譜效率高不等於有效吞吐一定高；錯誤、重送與保護冗餘都會扣掉應用實得速度，還要看功率效率。η 也不是單看星座點數就能決定；升餘弦 α 增加後占用頻寬變大，實際 η 會比每符元位元數更低。</p>
+</article>
+
+<article class="term-card" data-search="power efficiency 功率效率 ebn0 energy per bit tradeoff">
+<h2>功率效率（power efficiency）</h2>
+<p><strong>白話：</strong>以達成指定可靠度所需的每位元能量衡量；需要的 E<sub>b</sub>/N<sub>0</sub> 越低，就越適合功率受限的鏈路。</p>
+<p><strong>位置／角色：</strong><a href="10-頻譜效率與Shannon極限.html">10 章</a>與頻譜效率並排；電池裝置、衛星與深空鏈路常願意用更多時間或頻寬換較低功率。</p>
+<p><strong>機制：</strong>η ＝ 6 的 Shannon 最低 E<sub>b</sub>/N<sub>0</sub> 為 10.211893 dB；η 趨近 0 時才逼近 −1.591745 dB。</p>
+<p><strong>不要混淆：</strong>發射功率小不代表功率效率高；若位元率也很低或錯誤很多，每個成功位元實際花掉的能量仍可能很大。比較時須固定目標錯誤率與接收模型，否則只是把不同可靠度的方案放在一起，得不到公平結論。</p>
+</article>
+
+<article class="term-card" data-search="shannon hartley capacity 通道容量 channel capacity bandwidth snr log2">
+<h2>Shannon–Hartley 容量（channel capacity）</h2>
+<p><strong>白話：</strong>它給定頻寬與 SNR 後，指出任何可靠通訊都不能長期超過的位元率天花板，並保證天花板下存在足夠好的編碼。</p>
+<p><strong>位置／角色：</strong><a href="10-頻譜效率與Shannon極限.html">10 章</a>判斷要求是否物理可行；系統規劃先用它排除做不到的組合。</p>
+<p><strong>機制：</strong>C ＝ B log<sub>2</sub>(1 + SNR)；B ＝ 1 MHz、SNR ＝ 20 dB 即線性 100 時，C ＝ 6.658211 Mbit/s；log<sub>2</sub> 讀作以二為底的對數。</p>
+<p><strong>不要混淆：</strong>容量是存在性上限，不是特定未編碼方案的保證；64-QAM 送 6 Mbit/s 雖低於容量，仍可能有 0.85 % 左右錯誤。反過來，要求若高於容量，換更複雜的接收器也不能做到任意低錯誤；必須增加頻寬、功率或降低速率。</p>
+</article>
+
+<article class="term-card" data-search="shannon limit minus 1.59 db shannon 極限 ebn0 ln2 wideband">
+<h2>Shannon 極限 −1.59 dB（Shannon limit）</h2>
+<p><strong>白話：</strong>當傳送速度相對頻寬趨近零時，可靠通訊所需 E<sub>b</sub>/N<sub>0</sub> 的理論最低點，再寬的頻寬也不能低於它。</p>
+<p><strong>位置／角色：</strong><a href="10-頻譜效率與Shannon極限.html">10 章</a>作為功率效率底線；低速長距離系統用它衡量距離理論界線還差多少。</p>
+<p><strong>機制：</strong>極限線性值為 ln 2 ＝ 0.693147，換成 −1.591745 dB；η ＝ 6 時則需要至少 10.500000，也就是 10.211893 dB。</p>
+<p><strong>不要混淆：</strong>−1.591745 dB 只在頻譜效率趨近 0 時成立；η ＝ 6 的門檻是 10.211893 dB，不能把極限套到任意高速模式。這個極限也不表示 −1.591745 dB 時任意有限長度都能零錯，逼近界線需要更長的區塊與更複雜的保護。</p>
+</article>
+
+<article class="term-card" data-search="link budget 鏈路預算 transmit receive gain loss margin db">
+<h2>鏈路預算（link budget）</h2>
+<p><strong>白話：</strong>把發射功率、兩端天線增益、路徑損失、接收雜訊與所需品質放進同一本 dB 帳，算出鏈路還剩多少餘裕。</p>
+<p><strong>位置／角色：</strong><a href="11-鏈路預算.html">11 章</a>收束全課；無線網路、微波回傳與衛星設計都先做這張表再選硬體。</p>
+<p><strong>機制：</strong>2400 MHz、100 m、20 dBm、兩端各 2 dBi 時，接收功率 −56.052008 dBm；扣除需求後鏈路裕度為 28.912879 dB。</p>
+<p><strong>不要混淆：</strong>預算是模型而非發射許可，也不會自動涵蓋遮蔽、多徑、饋線與連接器；沒列進表的損失不會憑空消失。帳面裕度為正只代表所列假設下可行，若距離、頻率或天線方向的輸入錯了，精確到六位小數也沒有工程意義。</p>
+</article>
+
+<article class="term-card" data-search="fspl free space path loss 自由空間路徑損失 distance frequency wavelength">
+<h2>自由空間路徑損失 FSPL（free-space path loss）</h2>
+<p><strong>白話：</strong>波離開天線後向空間擴散，同樣總能量攤在愈大的球面；接收天線只截到其中一小部分。</p>
+<p><strong>位置／角色：</strong><a href="11-鏈路預算.html">11 章</a>把它列為最大扣項；視距無線鏈路可先用它估距離與頻率的基本代價。</p>
+<p><strong>機制：</strong>2400 MHz、100 m 時 FSPL ＝ 80.052008 dB；距離加倍到 200 m 變 86.072608 dB，正好多 6.020600 dB。</p>
+<p><strong>不要混淆：</strong>FSPL 不是空氣吸收，真空也存在；公式也只適合自由空間與遠場，室內遮蔽和反射要另加模型。同樣 dBi 天線下頻率加倍也多損失 6.020600 dB，原因是接收天線的有效面積隨波長平方縮小。</p>
+</article>
+
+<article class="term-card" data-search="noise floor receiver sensitivity 雜訊底 接收靈敏度 bandwidth nf required snr">
+<h2>雜訊底與接收靈敏度（noise floor &amp; receiver sensitivity）</h2>
+<p><strong>白話：</strong>雜訊底是接收頻寬內不可避免的背景功率；靈敏度則在此底上加接收器 NF 與所需 SNR，得到可用的最小輸入。</p>
+<p><strong>位置／角色：</strong><a href="11-鏈路預算.html">11 章</a>把熱雜訊與接收規格合併；資料表標示的最低接收功率必須連同模式與頻寬閱讀。</p>
+<p><strong>機制：</strong>20 MHz 時熱底為 −100.964887 dBm，加 NF 6 dB 得 −94.964887 dBm；再要求 SNR 10 dB，靈敏度約 −84.964887 dBm。</p>
+<p><strong>不要混淆：</strong>靈敏度不是單一接收器永遠固定的數字；頻寬、NF、調變與目標錯誤率一改，門檻就跟著改。資料表若只寫一個 dBm 值而沒有測試模式、速率與判準，就不足以和另一台接收器公平比較。</p>
+</article>
+
+<article class="term-card" data-search="link margin fade margin 鏈路裕度 衰落裕度 reserve reliability">
+<h2>鏈路裕度與衰落裕度（link margin &amp; fade margin）</h2>
+<p><strong>白話：</strong>鏈路裕度是算完所有已知項後超過需求的餘量；衰落裕度則預先保留一部分，替天氣、遮蔽與環境變動買保險。</p>
+<p><strong>位置／角色：</strong><a href="11-鏈路預算.html">11 章</a>用它下最後的通或不通判斷；工程驗收會把實測接收功率與設計裕度核對。</p>
+<p><strong>機制：</strong>預設鏈路裕度是 28.912879 dB；若保留 20 dB 衰落裕度，剩 8.912879 dB，最遠距離由 2790.255411 m 降到 279.025541 m。</p>
+<p><strong>不要混淆：</strong>裕度是保險而不是損失；晴天視距時它看似白付，但環境惡化時正靠這段餘量維持連線。鏈路裕度是計算結果，衰落裕度是設計者先扣的要求；兩者同名帶「裕度」，在帳本中的方向不同。</p>
+</article>
+
+<article class="term-card" data-search="multipath fading rayleigh rician 多徑衰落 reflection wireless channel">
+<h2>多徑衰落：Rayleigh 與 Rician（multipath fading）</h2>
+<p><strong>白話：</strong>同一波經不同路徑抵達並互相加減，使接收強度隨位置與時間起伏。</p>
+<p><strong>位置／角色：</strong><a href="11-鏈路預算.html">11 章</a>只以衰落裕度保留影響；Rayleigh、Rician 與完整模型留給無線通訊課。</p>
+<p><strong>機制：</strong>預設 28.912879 dB 裕度若先保留 20 dB，帳面只剩 8.912879 dB 可承受其他誤差。</p>
+<p><strong>不要混淆：</strong>自由空間損失給平均幾何趨勢，多徑衰落描述其上的快速起伏，兩項不能互相取代。</p>
+</article>
+</div>
+
+<nav class="pager" aria-label="章節導覽"><a href="11-鏈路預算.html">← 上一頁：鏈路預算</a><a href="自我檢核.html">下一頁：自我檢核 →</a></nav>
+</main>
+<footer class="site-footer"><span>名詞與概念字典</span><a href="自我檢核.html">去自我檢核</a></footer>
+</body></html>

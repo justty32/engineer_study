@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 抑制載波、單邊帶與同步解調｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">02・省掉載波之後，時間與相位就必須對準</p>
+<h1>抑制載波、單邊帶與同步解調：用接收難度換功率與頻寬</h1>
+<p class="lead">訊息頻寬 W ＝ 4 kHz 時，DSB-SC 佔 8 kHz，100 kHz 可放 12 路；SSB 只佔 4 kHz，可放 25 路。省下的載波必須在接收端重建，若 DSB-SC 的相位差 30°，振幅就損失 −1.249387 dB。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-AM包絡與調變指數.html">01 AM 包絡與調變指數</a>的包絡與 μ。<strong>前置：</strong>見〈<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統 10 調變與頻譜搬移</a>〉的「相乘等於搬移」；本章直接使用那個結論，不重做 AM 三根譜線與功率分配推導。</p>
+
+<h2>痛點：明明省了功率，為什麼聲音會忽大忽小</h2>
+<p>一般 AM 發射很多功率來維持載波，包絡檢波器才有基準可跟。把這根載波拿掉，發射功率可全部服務訊息，但訊息變號時的 180° 相位翻轉不再能由包絡分辨。接收端必須自己產生一個頻率相同、相位對齊的載波才能還原。</p>
+<p>這就帶來一個看不見卻聽得到的問題。固定相位差會讓 DSB-SC 輸出乘上 cos φ；頻率差則讓這個相位持續滑動，輸出周期性地穿過零點。因此「發射更有效率」不是免費升級，它把價錢轉移到接收端的同步電路。</p>
+
+<h2>白話直覺：拿掉定位線，收件人就要自己重畫</h2>
+<p>可以把載波想成一條從頭到尾都存在的定位線：保留它很耗功率，卻讓接收者容易找到角度基準。比喻到此為止；精確說法是雙邊帶抑制載波（double-sideband suppressed-carrier, DSB-SC）為 s(t) ＝ m(t) cos(2π f<sub>c</sub> t)，載波不單獨發射，包絡因而變成 |m(t)| 而不是 m(t)。</p>
+<p>單邊帶（single-sideband, SSB）再利用兩個邊帶載著重複訊息的結論，只保留一邊：s(t) ＝ m(t) cos(2π f<sub>c</sub> t) ∓ m̂(t) sin(2π f<sub>c</sub> t)，m̂(t) 是希爾伯特轉換，把每個頻率成分移相 −90°。其結果是頻寬從 2W 減到 W。殘留邊帶（vestigial sideband, VSB）保留一邊加另一邊的小段，本課用 0.25 W 當教學參數，以讓直流與低頻成分通過。</p>
+<p>因果鏈是：訊號從 m(t) 而來；發射端決定保留載波與幾個邊帶；抑制載波換到訊息功率，SSB 再把頻寬減半；邊界是本地載波有相位與頻率誤差，而過於理想的邊帶切割也難以實現；頻譜分析儀看載波與邊帶，示波器量解調振幅。</p>
+<p>重建載波通常靠鎖相迴路（phase-locked loop, PLL）或導頻。PLL 的迴路設計留給控制系統課，本章只觀察「對不準會怎樣」。軟體那一端，SDR 的 SSB 模式是先乘複數載波再取實部，clarifier 或 RIT 旋鈕修的就是頻率誤差 Δf。</p>
+<p class="note">來源：14-通訊系統-上 §3.2–§3.5、下 §13.1。</p>
+
+<h2>推導：同步誤差怎麼變成振幅損失與拍頻</h2>
+<p><strong>（a）DSB-SC 同步解調。</strong>接收訊號乘本地載波：m(t) cos(2π f<sub>c</sub> t) × cos(2π f<sub>c</sub> t + φ) ＝ ½ m(t) cos φ + ½ m(t) cos(4π f<sub>c</sub> t + φ)。相乘會搬移頻譜是既有課的結論，這裡只接著處理：理想低通濾掉第二項，剩下 ½ m(t) cos φ。</p>
+<p><strong>（b）相位損失。</strong>cos φ 是振幅比，因此用 20 log<sub>10</sub>(cos φ) 換成 dB。φ ＝ 30° 時是 −1.249387 dB，60° 時是 −6.020600 dB，90° 時 cos φ ＝ 0，輸出完全消失，這是正交零點。</p>
+<p><strong>（c）SSB 的相位誤差。</strong>解調結果成為 m(t) cos φ ± m̂(t) sin φ，總振幅不因此乘上 cos φ，卻會出現相位失真。語音常能容忍，需要準確相位關係的資料則不能當作無事。</p>
+<p><strong>（d）頻率與容量帳。</strong>若本地載波差 Δf，DSB-SC 輸出會再乘 cos(2π Δf t)，因而以 Δf Hz 起伏、每秒歸零 2Δf 次；SSB 則是整段頻譜平移 Δf。DSB 佔 2W，SSB 佔 W，VSB 佔 (1 + 0.25)W，100 kHz 中的完整路數是 ⌊100 / B⌋。本課用的是一階教學模型：理想乘法器、理想低通、無雜訊。</p>
+<p><strong>（e）選方案就是選代價放在哪裡。</strong>DSB-LC 保留載波，發射端多付功率，接收端卻可以極度簡單；DSB-SC 收回這份功率，但必須追蹤相位；SSB 再收回一半頻寬，卻要付邊帶分離與頻率精度的成本；VSB 放寬單邊切割，用一點額外頻寬換低頻通過。這張取捨表比「哪一種最先進」更有意義，因為最佳選擇取決於發射電力、可用頻寬與接收器複雜度的限制。</p>
+
+<h2>數值實例：4 kHz 在 100 kHz 裡能放幾路</h2>
+<p>取 W ＝ 4 kHz、φ ＝ 30°、Δf ＝ 0 Hz，方案為 DSB-SC，與下方實驗預設值一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody><tr><td>DSB-SC 頻寬</td><td>2 × 4</td><td><strong>8 kHz</strong></td></tr><tr><td>100 kHz 可放路數</td><td>⌊100 / 8⌋</td><td><strong>12 路</strong></td></tr><tr><td>功率用於訊息</td><td>無載波</td><td><strong>100.000000 %</strong></td></tr><tr><td>cos φ</td><td>cos 30°</td><td><strong>0.866025</strong></td></tr><tr><td>輸出振幅損失</td><td>20 log<sub>10</sub>(0.866025)</td><td><strong>−1.249387 dB</strong></td></tr></tbody></table>
+<p><strong>四方案量級對照。</strong>W ＝ 4 kHz 時，DSB-LC 是 8 kHz、12 路、訊息功率最高 33.333333 %，包絡檢波不怕 φ；DSB-SC 是 8 kHz、12 路、100 %，會受 φ 影響；SSB 是 <strong>4 kHz、25 路</strong>、100 %，φ 變成相位失真；VSB 是 <strong>5.000000 kHz、20 路</strong>。</p>
+<p><strong>同步邊界。</strong>φ ＝ 60° 時是 <strong>−6.020600 dB</strong>，振幅剩一半；φ ＝ 90° 時<strong>輸出為零</strong>；φ ＝ 10° 時 <strong>−0.132971 dB</strong>；φ ＝ 45° 時 <strong>−3.010300 dB</strong>。W ＝ 20 kHz 的高保真音樂用 DSB 是 40 kHz，只放 <strong>2 路</strong>；W ＝ 3 kHz 的 SSB 可放 <strong>33 路</strong>。Δf ＝ 50 Hz 對 SSB 會讓每個語音成分平移 50 Hz，對 DSB-SC 會以 50 Hz 起伏、每秒消失 100 次。</p>
+
+<section class="workspace"><h2>自由實驗：方案、頻寬與同步代價</h2><p>場景是四種 AM 家族方案共用 100 kHz 空間，你可改每路訊息頻寬，再主動加入本地載波的相位與頻率誤差。輸出會先說明當前模式真正用到哪些控制，再比較可放路數與同步後果。</p><div class="controls">
+<label for="cd-scheme">調變方案<select id="cd-scheme"><option value="dsblc">DSB-LC（一般 AM，包絡檢波）</option><option value="dsbsc" selected>DSB-SC（抑制載波，同步解調）</option><option value="ssb">SSB（單邊帶，同步解調）</option><option value="vsb">VSB（殘留邊帶）</option></select></label>
+<label for="cd-w">訊息頻寬 W（kHz）<input id="cd-w" type="range" min="1" max="20" step="0.5" value="4"></label>
+<label for="cd-phi">本地載波相位誤差 φ（°）<input id="cd-phi" type="range" min="0" max="90" step="1" value="30"></label>
+<label for="cd-df">本地載波頻率誤差 Δf（Hz）<input id="cd-df" type="range" min="0" max="100" step="1" value="0"></label>
+</div><div id="cohdem-output" class="output" aria-live="polite"></div></section>
+
+<h2>不要混淆</h2>
+<ul><li>DSB-SC 的包絡是 |m(t)| 而不是訊息；m(t) 過零時的 180° 相位翻轉必須由同步解調保留。</li><li>SSB 不只是隨手把 DSB 濾掉一半；希爾伯特項讓一側相消，若靠濾波切割，過渡帶要求會很嚴苛。</li><li>VSB 的殘留不是單純浪費；它讓低頻與直流成分通過，所以早期類比電視會用在亮度訊號。</li><li>相位誤差是固定角度偏移，頻率誤差是角度隨時間持續漂移；它們在 DSB-SC 上分別造成固定衰減與拍頻起伏。</li></ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>頻譜分析儀能直接看載波譜線是否存在、邊帶是單側或雙側，並量佔用頻寬；示波器可看 DSB-SC 在 m(t) 過零處的「掐腰」，也可在轉動本地振盪器相位時量輸出振幅。</p>
+<p><strong>能證明什麼。</strong>譜線與頻寬能區分方案，固定角度下的振幅比能驗證 cos φ 損失，加入 Δf 後的歸零次數能驗證 DSB-SC 的拍頻關係。</p>
+<p><strong>不能證明什麼。</strong>只看輸出振幅不能證明 PLL 已經鎖住，還要看相位偵測器的誤差電壓；人耳聽不出 SSB 的小相位失真，也不等於對資料傳送沒影響，那要另看向量關係。</p>
+
+<h2>連到哪門課</h2>
+<p>同步解調借用的「相乘等於搬移」見<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統的調變與頻譜搬移</a>，本章只追蹤同步代價。PLL 怎麼選迴路頻寬與相位裕度留給控制系統課；SSB 的希爾伯特轉換實作留給數位訊號處理課。下一章會把訊息改放進頻率，比較另一種頻寬與抗雜訊取捨。</p>
+<nav class="pager" aria-label="章節導覽"><a href="01-AM包絡與調變指數.html">← 上一頁：AM 包絡與調變指數</a><a href="03-FM與Carson頻寬.html">下一頁：FM 與 Carson 頻寬 →</a></nav>
+</main><footer class="site-footer"><span>02 抑制載波、單邊帶與同步解調</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

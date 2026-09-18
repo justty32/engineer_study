@@ -1,0 +1,436 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>名詞與概念字典｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html" aria-current="page">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">查・50 個名詞，四段式：白話、位置、機制、邊界</p>
+<h1>名詞與概念字典：從能量流向查到機器選型</h1>
+<p class="lead">這一頁把全課容易互相牽動的名詞集中起來。每張卡先說白話意思，再指出它在哪一章、哪種真實裝置裡工作，接著用該章的鎖定數字說明機制，最後劃清最容易誤判的邊界。可搜尋繁中、英文、縮寫、符號或用途。</p>
+<p class="note">來源：12-電機機械 §1–§9、中英名詞對照表-2.md 的「電機機械」節，以及中英名詞對照表-3.md 的「馬達驅動」節。所有數值沿用各章數值實例。</p>
+<div class="dictionary-tools">
+<label for="term-search">搜尋名詞或概念</label>
+<input id="term-search" type="search" placeholder="搜尋繁中、英文、符號或用途">
+<span id="term-count" aria-live="polite"></span>
+</div>
+
+<h2>第一組｜能量轉換與磁路（第 00–01 章，8 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="electric machinery 電機機械 馬達 發電機 變壓器 能量">
+<h2>電機機械（electric machinery）</h2>
+<p><strong>白話：</strong>利用電、磁與運動之間的關係搬運能量的機器總稱；輸入與輸出可以是電能或機械能。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-線性直流機與能量轉換.html">00 章</a>建立共同起點。電梯驅動、電廠機組與配電變壓器雖然用途不同，都用磁場連接兩端的能量。</p>
+<p><strong>機制：</strong>第 00 章以 120 V、10 N 為例，穩態電流 10.000000 A，電池輸入 1200.000000 W，其中 1150.000000 W 轉成機械輸出、50.000000 W 成為銅損。</p>
+<p><strong>不要混淆：</strong>這是機器類別，不是只指旋轉設備；變壓器沒有轉動部分，仍屬電機機械，因為它也靠電磁作用轉移能量。</p>
+</article>
+
+<article class="term-card" data-search="electromechanical energy conversion 機電能量轉換 電能 機械能 功率">
+<h2>機電能量轉換（electromechanical energy conversion）</h2>
+<p><strong>白話：</strong>把電端的電壓與電流，轉成機械端的力與速度，或反方向把機械輸入送回電端。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-線性直流機與能量轉換.html">00 章</a>用滑動導桿示範；旋轉機只是把直線的力與速度換成轉矩與角速度。</p>
+<p><strong>機制：</strong>鎖定例中感應電壓 115.000000 V、電流 10.000000 A，因此 e × i = 1150.000000 W；同時力 10 N、速度 115.000000 m/s，所以 F × v 也是 1150.000000 W。</p>
+<p><strong>不要混淆：</strong>兩個乘積是同一股轉換功率在不同端的表示，不是兩份可以相加的功率；差額要由銅損、機械損等項目交代。</p>
+</article>
+
+<article class="term-card" data-search="motor generator 馬達 發電機 能量流向 發電">
+<h2>馬達與發電機（motor &amp; generator）</h2>
+<p><strong>白話：</strong>同一套電磁結構的兩個工作方向：馬達把電能送往軸端，發電機把軸端輸入送往電端。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-線性直流機與能量轉換.html">00 章</a>並排比較兩種模式；風機、泵浦用前者，電廠與再生煞車用後者。</p>
+<p><strong>機制：</strong>發電模式施力 10 N 時，鎖定例得到 125.000000 V、10.000000 A，機械輸入 1250.000000 W，電池收到 1200.000000 W，效率 96.000000 %。</p>
+<p><strong>不要混淆：</strong>本課一律寫「馬達」；正式文件常寫「電動機」，是同一個 motor。模式差別是能量流向與電流方向，不是機器外形。</p>
+</article>
+
+<article class="term-card" data-search="motional emf back-emf 動生電勢 反電動勢 感應電壓 eind ea">
+<h2>動生電勢與反電動勢（motional EMF &amp; back-EMF）</h2>
+<p><strong>白話：</strong>導體切過磁場時出現的感應電壓；它在馬達內會朝抵抗外加電壓的方向，因而限制工作電流。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-線性直流機與能量轉換.html">00 章</a>看直線導桿，第 <a href="06-直流機轉矩轉速線.html">06 章</a>看旋轉電樞；電動工具與牽引驅動都靠它隨速度建立自我平衡。</p>
+<p><strong>機制：</strong>第 00 章由 120 V 扣除 10.000000 A 在 0.5 Ω 上的壓降，得到感應電壓 115.000000 V；起動時速度為零，感應電壓也為零，電流會到 240.000000 A。</p>
+<p><strong>不要混淆：</strong>它不是損耗，也不是額外電源；它對應真正轉成機械功率的那一段電壓。銅損則由電阻壓降與電流決定。</p>
+</article>
+
+<article class="term-card" data-search="ampere force 安培力 b i l 導體 磁場 力">
+<h2>安培力（Ampère force, B i l）</h2>
+<p><strong>白話：</strong>有電流的導體放在磁場裡會受力；這股力是電能推動機械負載的直接接口。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-線性直流機與能量轉換.html">00 章</a>的導桿最容易看清楚；旋轉機把許多導體的力合成軸上的轉矩。</p>
+<p><strong>機制：</strong>鎖定例取 B = 1.0 T、導桿長 1.0 m、電流 10.000000 A，B × i × l 得 10 N，正好平衡 10 N 負載；失速時可達 240.000000 N。</p>
+<p><strong>不要混淆：</strong>磁場本身不保證有力，還要有電流與有效導體長度；方向要同時看磁場、電流與運動，不能只憑正負號猜。</p>
+</article>
+
+<article class="term-card" data-search="magnetomotive force reluctance 磁動勢 磁阻 fm rm 安匝 磁路">
+<h2>磁動勢與磁阻（magnetomotive force &amp; reluctance）</h2>
+<p><strong>白話：</strong>磁動勢是推動磁通的來源，磁阻是磁路對磁通的阻礙；兩者共同決定需要多少激磁電流。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-鐵心電壓與磁通.html">01 章</a>用鐵心與氣隙比較；變壓器希望磁阻低，旋轉機卻因轉子必須活動而避不開氣隙。</p>
+<p><strong>機制：</strong>鎖定例的鐵心磁阻是 39788.735773 A/Wb，所需磁動勢峰值 179.112240 A·匝；加入 1 mm 氣隙後，總磁阻升到 238732.414638 A/Wb。</p>
+<p><strong>不要混淆：</strong>磁阻不是耗散功率的電阻，也不是用 Ω 表示；磁路類比只幫助列關係，不能把磁通當成真的帶電粒子流。</p>
+</article>
+
+<article class="term-card" data-search="flux flux density magnetic saturation 磁通 磁通密度 phi b 飽和 wb tesla">
+<h2>磁通與磁通密度（flux &amp; flux density, Φ、B、飽和）</h2>
+<p><strong>白話：</strong>Φ（讀作 phi）描述整個截面穿過多少磁通，B 描述每單位面積有多密；材料過度擁擠時就進入飽和。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-鐵心電壓與磁通.html">01 章</a>用線圈、鐵心與氣隙建立量感；變壓器設計與 V/f 控制都要避免 B 過高。</p>
+<p><strong>機制：</strong>240 V、60 Hz、200 匝、40 cm² 的鎖定例得到 Φ 峰值 0.004502 Wb、B 峰值 1.125395 T，低於矽鋼片約 1.5 T 的參考值。</p>
+<p><strong>不要混淆：</strong>Φ 是總量，B 是面積密度；飽和不是磁通完全停止增加，而是再增加時需要遠多於線性模型預測的電流。</p>
+</article>
+
+<article class="term-card" data-search="magnetizing current 激磁電流 excitation current 磁阻 無功 氣隙">
+<h2>激磁電流（magnetizing current）</h2>
+<p><strong>白話：</strong>用來建立工作磁通、而不是直接供給負載實功的電流；磁路越難通過，它就越大。</p>
+<p><strong>位置／角色：</strong>第 <a href="01-鐵心電壓與磁通.html">01 章</a>比較無氣隙鐵心與旋轉機氣隙；它會出現在變壓器無載電流與馬達無功需求中。</p>
+<p><strong>機制：</strong>無氣隙鎖定例的有效值是 0.633257 A；加入 1 mm 氣隙後成為 3.799544 A，正好是 6.000000 倍，但磁通仍由 240 V、60 Hz 與 200 匝決定。</p>
+<p><strong>不要混淆：</strong>本課一律寫「激磁」；部分教材寫「勵磁」，是同一個 excitation。激磁電流由磁阻決定，磁通由電壓決定；氣隙讓前者暴增，不改後者。</p>
+</article>
+</div>
+
+<h2>第二組｜變壓器（第 02–04 章，10 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="transformer 變壓器 交流 升壓 降壓 隔離">
+<h2>變壓器（transformer）</h2>
+<p><strong>白話：</strong>用共同磁通把交流電壓與電流換到另一個尺度，頻率不變，也沒有旋轉部分。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-阻抗折算與自耦變壓器.html">02 章</a>從理想關係起步，第 <a href="03-變壓器等效電路與試驗.html">03 章</a>加入損耗；電網配電、電源供應器與量測隔離都會用到。</p>
+<p><strong>機制：</strong>第 02 章以 2400 V、1000 匝對 100 匝為例，匝比 10.000000，二次電壓 240.000000 V，一次電流 4.115966 A 對應二次電流 41.159660 A。</p>
+<p><strong>不要混淆：</strong>它改變電壓、電流與阻抗的呈現尺度，不會憑空放大功率；理想模型的功率守恆，實機輸出還會少掉銅損與鐵損。</p>
+</article>
+
+<article class="term-card" data-search="ideal transformer turns ratio 理想變壓器 匝比 a n1 n2 電壓比 電流比">
+<h2>理想變壓器與匝比（ideal transformer &amp; turns ratio）</h2>
+<p><strong>白話：</strong>先假設沒有漏磁與損耗，匝比 a 就是一次、二次電壓比例，電流比例則反過來。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-阻抗折算與自耦變壓器.html">02 章</a>用它統一兩側尺度；配電設備與阻抗匹配都先由這個基準估算。</p>
+<p><strong>機制：</strong>N<sub>1</sub> = 1000、N<sub>2</sub> = 100 時 a = 10.000000，2400 V 變成 240.000000 V；41.159660 A 的二次電流對到一次側為 4.115966 A。</p>
+<p><strong>不要混淆：</strong>電壓比與匝比同向，電流比反向；a 大不代表功率變大，因為電壓增加時電流會按相反比例減少。</p>
+</article>
+
+<article class="term-card" data-search="impedance referral 阻抗折算 referred impedance z prime a squared 座標">
+<h2>阻抗折算（impedance referral）</h2>
+<p><strong>白話：</strong>把另一側的負載換算成從本側看見的阻抗，讓整個問題能在同一電壓層級計算。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-阻抗折算與自耦變壓器.html">02 章</a>示範雙繞組變壓器；保護設定、電壓降與短路估算都要先選定折算側。</p>
+<p><strong>機制：</strong>a = 10.000000 時，5 + j3 Ω 折算為 500.000000 + j300.000000 Ω，大小 583.095189 Ω；2400 V 除以它得到 4.115966 A。</p>
+<p><strong>不要混淆：</strong>折算改的是阻抗看起來的數值，不是元件真的換掉；電壓與電流各縮放一次，所以阻抗乘 a²，而功率維持不變。</p>
+</article>
+
+<article class="term-card" data-search="autotransformer 自耦變壓器 common winding series winding 共用繞組 串聯繞組 隔離">
+<h2>自耦變壓器（autotransformer）</h2>
+<p><strong>白話：</strong>一次與二次共用部分繞組，靠較少的繞組容量傳送較大的通過功率，但兩側沒有電氣隔離。</p>
+<p><strong>位置／角色：</strong>第 <a href="02-阻抗折算與自耦變壓器.html">02 章</a>說明容量優勢，第 <a href="11-起動與速控.html">11 章</a>拿它降低感應機起動電流。</p>
+<p><strong>機制：</strong>1000 匝共同段加 100 匝串聯段，2400 V 升到 2640.000000 V；通過 10 kVA 時繞組只承擔 909.090909 VA，功率優勢為 11.000000。</p>
+<p><strong>不要混淆：</strong>它省的是繞組容量，不是通過容量，也不提供雙繞組設備的隔離；升壓比越大，省銅優勢反而越小。</p>
+</article>
+
+<article class="term-card" data-search="leakage reactance 漏電抗 leakage flux xeq 電壓降 短路試驗">
+<h2>漏電抗（leakage reactance）</h2>
+<p><strong>白話：</strong>沒有同時鏈結兩側繞組的漏磁，從端點看起來像串聯電抗，會造成負載電壓降並限制短路電流。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-變壓器等效電路與試驗.html">03 章</a>由短路試驗找出，第 <a href="04-電壓調整率與效率.html">04 章</a>用它算電壓調整率；配電變壓器銘牌的百分阻抗也受它主導。</p>
+<p><strong>機制：</strong>60 V、4.17 A、139 W 的鎖定短路試驗得到等效電抗 11.963733 Ω；折算到低壓側是 0.119637 Ω，基準下百分阻抗為 2.498002 %。</p>
+<p><strong>不要混淆：</strong>漏電抗主要儲放磁能，不等於銅損；短路試驗在低電壓下刻意進行，不能把試驗名稱當成故障狀態。</p>
+</article>
+
+<article class="term-card" data-search="core-loss resistance magnetizing reactance 鐵損電阻 激磁電抗 rc xm 並聯支路">
+<h2>鐵損電阻與激磁電抗（core-loss resistance &amp; magnetizing reactance）</h2>
+<p><strong>白話：</strong>把無載時的兩種電流拆開：一條代表鐵損實功，另一條代表建立磁通所需的無功。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-變壓器等效電路與試驗.html">03 章</a>由開路試驗辨識；它們位在變壓器輸入端的並聯支路，協助估算無載電流。</p>
+<p><strong>機制：</strong>低壓側 240 V、3.01 A、60 W 的讀值算得 R<sub>c</sub> = 960.000000 Ω、X<sub>m</sub> = 80.010669 Ω；折到高壓側為 96000.000000 Ω 與 8001.066880 Ω。</p>
+<p><strong>不要混淆：</strong>R<sub>c</sub> 是把鐵損等效成電阻，並非機器裡另藏一顆實體電阻；X<sub>m</sub> 描述激磁需求，也不同於串聯的漏電抗。</p>
+</article>
+
+<article class="term-card" data-search="open-circuit test 開路試驗 no-load test voc ioc poc 鐵損">
+<h2>開路試驗（open-circuit test）</h2>
+<p><strong>白話：</strong>讓二次側不接負載，從一次側量電壓、電流與功率，主要看並聯支路與鐵損。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-變壓器等效電路與試驗.html">03 章</a>使用低壓側量測；維修與出廠測試可用它檢查無載特性。</p>
+<p><strong>機制：</strong>鎖定讀值是 240 V、3.01 A、60 W，分解後鐵損電流 0.250000 A、激磁電流 2.999600 A，算得鐵損電阻 960.000000 Ω。</p>
+<p><strong>不要混淆：</strong>量到的 60 W 近似鐵損，不是所有空載損失的精確總和；一次側仍有很小的銅損，只是在這個試驗近似中忽略。</p>
+</article>
+
+<article class="term-card" data-search="short-circuit test 短路試驗 vsc isc psc copper loss series impedance">
+<h2>短路試驗（short-circuit test）</h2>
+<p><strong>白話：</strong>短接一側，再從另一側施加很低的電壓直到額定電流，用來辨識串聯阻抗與滿載銅損。</p>
+<p><strong>位置／角色：</strong>第 <a href="03-變壓器等效電路與試驗.html">03 章</a>使用高壓側量測；設備驗收與故障電流估算都需要這組參數。</p>
+<p><strong>機制：</strong>鎖定讀值 60 V、4.17 A、139 W 算得等效阻抗 14.388489 Ω、等效電阻 7.993605 Ω、等效電抗 11.963733 Ω。</p>
+<p><strong>不要混淆：</strong>這是受控試驗，不是把額定電壓直接加在短路端；施加電壓很低，所以鐵損可忽略，輸入功率主要代表銅損。</p>
+</article>
+
+<article class="term-card" data-search="voltage regulation 電壓調整率 vr leading lagging 負載 電壓降">
+<h2>電壓調整率（voltage regulation）</h2>
+<p><strong>白話：</strong>比較空載與帶載端電壓的變化幅度，用來描述變壓器把輸出電壓撐得多穩。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-電壓調整率與效率.html">04 章</a>把串聯阻抗與負載功率因數合在一起；配電端的壓降評估會直接看這個量。</p>
+<p><strong>機制：</strong>滿載、功率因數 0.8 落後時，240 V 端的鎖定例得到一次折算電壓 245.674808 V，電壓調整率 2.364503 %；改為 0.8 領前時成為 −0.107600 %。</p>
+<p><strong>不要混淆：</strong>數值小通常表示電壓穩，但負值不一定是錯誤；領前負載可能讓帶載端電壓升高。它也不能單獨代表效率。</p>
+</article>
+
+<article class="term-card" data-search="maximum-efficiency condition 最大效率條件 copper loss core loss loading x square root">
+<h2>最大效率條件（maximum-efficiency condition）</h2>
+<p><strong>白話：</strong>變壓器的負載增減時，效率最高的點出現在負載相關銅損剛好等於近似固定的鐵損。</p>
+<p><strong>位置／角色：</strong>第 <a href="04-電壓調整率與效率.html">04 章</a>用負載比例 x 尋找峰值；選容量與安排長時間負載時可用來判斷甜蜜點。</p>
+<p><strong>機制：</strong>鐵損 60 W、滿載銅損 138.888889 W 時，鎖定最大效率負載比例為 0.657267，也就是 65.7 % 負載，該點效率 97.768744 %。</p>
+<p><strong>不要混淆：</strong>最大效率不必發生在滿載，也不等於最高輸出功率；功率因數降低時，有用輸出變少，即使損耗相同，效率仍會下降。</p>
+</article>
+</div>
+
+<h2>第三組｜旋轉機共同語言（第 05 章，7 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="stator rotor 定子 轉子 stationary rotating 氣隙 旋轉機">
+<h2>定子與轉子（stator &amp; rotor）</h2>
+<p><strong>白話：</strong>定子是固定不動、承載繞組或磁場的部分；轉子是與軸一起轉動、在氣隙另一側互相作用的部分。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-旋轉機共同語言.html">05 章</a>統一各類旋轉機的位置名稱；風機、泵浦、發電機與伺服系統都用這組分界描述結構。</p>
+<p><strong>機制：</strong>第 05 章鎖定例在 60 Hz、4 極下建立 1800 rpm 的旋轉磁場；實際轉子為 1750 rpm，因此兩者相差 50 rpm，滑差為 2.777778 %。</p>
+<p><strong>不要混淆：</strong>「固定」與「轉動」是位置描述，不代表哪一側一定接交流或直流；不同機種把繞組、磁鐵與感應導體安排在不同側。</p>
+</article>
+
+<article class="term-card" data-search="air gap 氣隙 stator rotor reluctance magnetic gap 激磁電流">
+<h2>氣隙（air gap）</h2>
+<p><strong>白話：</strong>定子與轉子之間讓機械能夠旋轉的空間；它很薄，卻往往支配整條磁路的磁阻。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-旋轉機共同語言.html">05 章</a>把它列為共同結構，第 <a href="01-鐵心電壓與磁通.html">01 章</a>量化磁阻；所有旋轉機都必須留出機械間隙。</p>
+<p><strong>機制：</strong>第 01 章加入 1 mm 氣隙時，氣隙磁阻 198943.678865 A/Wb，是鐵心的 5.000000 倍，使激磁電流有效值從 0.633257 A 升到 3.799544 A。</p>
+<p><strong>不要混淆：</strong>氣隙不是製造瑕疵，也不是越大越安全；它提供轉動空間，代價是磁阻、激磁電流與無功需求上升。</p>
+</article>
+
+<article class="term-card" data-search="synchronous speed 同步速 synchronous speed ns rpm frequency poles 頻率 極數">
+<h2>同步速（synchronous speed）</h2>
+<p><strong>白話：</strong>定子旋轉磁場的速度，由電源頻率與極數決定，是比較轉子速度的基準線。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-旋轉機共同語言.html">05 章</a>定義，第 <a href="07-感應機滑差與功率流.html">07 章</a>用來算滑差；變頻器也靠改頻率移動這條速度基準。</p>
+<p><strong>機制：</strong>60 Hz、4 極的鎖定例得到 n<sub>s</sub> = 1800 rpm（每分鐘轉數），角速度 ω<sub>s</sub>（omega 下標 s）= 188.495559 rad/s；改成 50 Hz 則是 1500 rpm。</p>
+<p><strong>不要混淆：</strong>同步速是磁場速度，不必等於每種轉子的實際速度；公式中的 P 是極數，若資料用極對數 p，寫法會不同但物理相同。</p>
+</article>
+
+<article class="term-card" data-search="torque power 轉矩 功率 t omega nm rad per second rpm">
+<h2>轉矩與功率（torque &amp; power）</h2>
+<p><strong>白話：</strong>轉矩描述軸上扭動的力道，功率描述這股力道以多快的速度持續做功；兩者靠角速度相乘。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-旋轉機共同語言.html">05 章</a>建立 P = T × ω 的共同語言；馬達銘牌、負載選型與動力計量測都要同時看它們。</p>
+<p><strong>機制：</strong>鎖定例的轉矩 40 N·m、轉速 1750 rpm 對應角速度 183.259571 rad/s，軸輸出功率為 7330.382858 W，也就是 9.826250 hp。</p>
+<p><strong>不要混淆：</strong>高轉矩不保證高功率，還要看速度；rpm 也不是 rad/s，兩者相差換算因子 2π / 60，π 讀作圓周率。</p>
+</article>
+
+<article class="term-card" data-search="copper loss core loss 銅損 鐵損 i squared r hysteresis eddy current 損耗">
+<h2>銅損與鐵損（copper loss &amp; core loss）</h2>
+<p><strong>白話：</strong>銅損是繞組電阻被電流加熱的功率；鐵損是交變磁通在磁性材料中造成的磁滯與渦流損耗。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-旋轉機共同語言.html">05 章</a>把兩者放進共同功率流；變壓器、感應機與同步機的效率估算都不能漏掉。</p>
+<p><strong>機制：</strong>第 05 章鎖定例列出銅損 400 W、鐵損 200 W，連同機械損 150 W 與雜散損 50 W，總損耗是 800.000000 W。</p>
+<p><strong>不要混淆：</strong>銅損會隨電流平方明顯變動；鐵損主要跟電壓、頻率與材料有關，不能把兩者都當成固定損耗或都當成負載平方項。</p>
+</article>
+
+<article class="term-card" data-search="mechanical loss stray loss 機械損 雜散損 friction windage bearing 摩擦 風阻">
+<h2>機械損與雜散損（mechanical &amp; stray loss）</h2>
+<p><strong>白話：</strong>機械損包含軸承摩擦與風阻；雜散損收納難以單獨建模、卻確實存在的附加損耗。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-旋轉機共同語言.html">05 章</a>用它們補齊從電端到軸端的能量帳；效率測試與熱設計要把這些小項合併考慮。</p>
+<p><strong>機制：</strong>鎖定例的機械損 150 W、雜散損 50 W，兩者合計 200 W；與銅損 400 W、鐵損 200 W 合併後，輸入功率為 8130.382858 W。</p>
+<p><strong>不要混淆：</strong>機械損與電流不呈簡單平方關係，雜散損也不是可以任意塞入誤差的垃圾桶；兩者都要由約定試驗或標準方法估計。</p>
+</article>
+
+<article class="term-card" data-search="power-flow diagram 功率流圖 input loss air-gap conversion output 能量帳">
+<h2>功率流圖（power-flow diagram）</h2>
+<p><strong>白話：</strong>沿能量前進方向逐站記帳：每經過一個機制就扣掉相應損耗，最後得到可用輸出。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-旋轉機共同語言.html">05 章</a>先建立通用版本，第 <a href="07-感應機滑差與功率流.html">07 章</a>再細分氣隙功率；效率診斷常靠它定位哪一段過熱。</p>
+<p><strong>機制：</strong>第 05 章從輸出 7330.382858 W 加回總損耗 800.000000 W，得到輸入 8130.382858 W，效率 90.160365 %；每一項都必須只扣一次。</p>
+<p><strong>不要混淆：</strong>功率流圖是能量守恆的帳本，不是機械剖面位置圖；同一股轉換功率換了一種表示時不能重複相加。</p>
+</article>
+</div>
+
+<h2>第四組｜直流機（第 06、11 章，6 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="dc machine 直流機 dc motor generator armature field brush commutator">
+<h2>直流機（DC machine）</h2>
+<p><strong>白話：</strong>端點使用直流，靠換向結構讓轉子電流與轉矩方向持續配合的旋轉機；同一台也能在發電方向運作。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-直流機轉矩轉速線.html">06 章</a>建立轉矩與轉速關係，第 <a href="11-起動與速控.html">11 章</a>處理起動限流；電池供電設備與舊式可調速驅動常見。</p>
+<p><strong>機制：</strong>240 V、KΦ = 1.000000 V·s/rad、負載 20 N·m 的鎖定例得到電樞電流 20.000000 A、角速度 230.000000 rad/s、轉速 2196.338215 rpm。</p>
+<p><strong>不要混淆：</strong>「直流」描述端點與換向後的平均關係，不代表轉子每一導體永遠流同一方向；機內仍靠相對運動產生感應電壓。</p>
+</article>
+
+<article class="term-card" data-search="commutator brush 換向器 電刷 dc machine mechanical switching 碳刷">
+<h2>換向器與電刷（commutator &amp; brush）</h2>
+<p><strong>白話：</strong>換向器跟著轉子轉，電刷固定接觸它；兩者在適當位置切換線圈連接，使端點保持直流、轉矩方向不翻轉。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-直流機轉矩轉速線.html">06 章</a>說明直流機結構；有刷工具機與小型馬達可直接看到這組機械接點。</p>
+<p><strong>機制：</strong>鎖定例在 230.000000 rad/s 時建立 230.000000 V 反電動勢；換向器讓各轉子線圈雖經過不同磁極，外端仍維持可用的直流關係。</p>
+<p><strong>不要混淆：</strong>換向器負責機械換向，電刷只是固定端與旋轉端的接觸介面；磨耗、火花與維護需求也正是有刷結構的代價。</p>
+</article>
+
+<article class="term-card" data-search="armature 電樞 ia ra ea dc machine winding current torque">
+<h2>電樞（armature）</h2>
+<p><strong>白話：</strong>直流機中承擔主要感應電壓與負載電流的繞組部分；在本課模型裡以 E<sub>a</sub>、I<sub>a</sub>、R<sub>a</sub> 描述。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-直流機轉矩轉速線.html">06 章</a>把電樞放進端電壓平衡；電刷與換向器把它接到外部直流電源或負載。</p>
+<p><strong>機制：</strong>鎖定例的 I<sub>a</sub> = 20.000000 A、R<sub>a</sub> = 0.5 Ω，電阻壓降為 10.000000 V，所以 240 V 端電壓留下 E<sub>a</sub> = 230.000000 V。</p>
+<p><strong>不要混淆：</strong>電樞是按電磁角色命名，不是所有機器都必然放在轉子；在直流機語境裡才可直接把它視為接換向器的轉子繞組。</p>
+</article>
+
+<article class="term-card" data-search="excitation method 激磁方式 separately shunt series compound 他激 並激 串激 複激">
+<h2>激磁方式（excitation method：他激／並激／串激／複激）</h2>
+<p><strong>白話：</strong>描述建立主磁通的繞組怎麼取電；接法不同，磁通隨負載變化的方式也不同。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-直流機轉矩轉速線.html">06 章</a>比較四種接法；起重、工具機與定速驅動會依起動力道和速度穩定度選擇。</p>
+<p><strong>機制：</strong>鎖定例以 I<sub>f</sub> = 1.0 A 對應 KΦ = 1.000000 V·s/rad，得到 20 N·m 時 I<sub>a</sub> = 20.000000 A；磁通若改變，轉矩常數與速度常數會一起改變。</p>
+<p><strong>不要混淆：</strong>他激與並激可以讓磁通近似獨立於負載；串激會讓磁通跟電樞電流一起變。不能把四種接法只當成供電線路畫法差異。</p>
+</article>
+
+<article class="term-card" data-search="torque-speed characteristic 轉矩 轉速 特性 speed regulation dc machine straight line">
+<h2>轉矩–轉速特性（torque–speed characteristic）</h2>
+<p><strong>白話：</strong>把負載轉矩變大時速度如何下降畫成關係；直流機在線性模型下是一條由無載點往失速點下降的線。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-直流機轉矩轉速線.html">06 章</a>用它判讀調速與負載能力；輸送帶、捲揚與車輛牽引都要確認工作點不越界。</p>
+<p><strong>機制：</strong>鎖定例無負載速度為 2291.831181 rpm，負載 20 N·m 時降到 2196.338215 rpm；失速轉矩是 480.000000 N·m，該點速度為零。</p>
+<p><strong>不要混淆：</strong>工作點是機器特性與負載特性的交點，不是只看馬達線就能決定；失速轉矩也不是可長時間運轉的額定轉矩。</p>
+</article>
+
+<article class="term-card" data-search="field weakening 弱磁控制 flux speed constant power torque limit base speed">
+<h2>弱磁控制（field weakening）</h2>
+<p><strong>白話：</strong>在端電壓已到上限後降低磁通，使同一電壓能對應更高速度，但可用轉矩會下降。</p>
+<p><strong>位置／角色：</strong>第 <a href="06-直流機轉矩轉速線.html">06 章</a>說明斜率變化，第 <a href="11-起動與速控.html">11 章</a>把它放在額定速以上；牽引與主軸驅動常用。</p>
+<p><strong>機制：</strong>第 00 章的原型把 B 從 1.0 T 減到 0.5 T，在同樣 10 N 負載下，電流由 10.000000 A 升到 20.000000 A，速度則由 115.000000 m/s 升到 220.000000 m/s。</p>
+<p><strong>不要混淆：</strong>弱磁帶來的是升速範圍，不是免費增加輸出；同樣轉矩需要更大電流，受電流上限約束後會進入近似定功率區。</p>
+</article>
+</div>
+
+<h2>第五組｜感應機（第 07、08、11 章，9 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="induction motor im 感應馬達 asynchronous 三相 轉子 電流">
+<h2>感應馬達（induction motor, IM）</h2>
+<p><strong>白話：</strong>定子旋轉磁場靠相對速度在轉子感應出電流，再由電流與磁場作用產生轉矩，不需要把工作電流直接送進轉子。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-感應機滑差與功率流.html">07 章</a>建立能量帳，第 <a href="08-感應機轉矩曲線.html">08 章</a>看轉矩曲線；泵浦、風機與輸送設備大量使用。</p>
+<p><strong>機制：</strong>60 Hz、4 極、1740 rpm 的鎖定例相對 1800 rpm 同步速有 0.033333 滑差，轉子頻率 2.000000 Hz，氣隙功率 8000 W 對應轉矩 42.441318 N·m。</p>
+<p><strong>不要混淆：</strong>它在馬達模式必須略低於同步速才有感應；轉子落後磁場不是控制失準，而是建立轉子電流與轉矩的必要條件。</p>
+</article>
+
+<article class="term-card" data-search="rotating magnetic field 旋轉磁場 three phase 三相 y connected phase sequence synchronous speed">
+<h2>旋轉磁場（rotating magnetic field）</h2>
+<p><strong>白話：</strong>多相定子電流在空間錯開的繞組中合成一個大小近似固定、方向持續旋轉的磁場。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-感應機滑差與功率流.html">07 章</a>把它當成轉子的移動參考；三相感應機與同步機都靠它決定同步速。本課三相都以 Y 接每相量計算。</p>
+<p><strong>機制：</strong>60 Hz、4 極時磁場以 1800 rpm 旋轉；第 08 章 380 V 線電壓對應每相電壓 219.393102 V，後續戴維寧模型以此每相量計算轉矩。</p>
+<p><strong>不要混淆：</strong>旋轉的是合成磁場，不是定子導體本身；換相序會改方向，改頻率會改速度，單看電壓大小不能決定這兩件事。</p>
+</article>
+
+<article class="term-card" data-search="slip 滑差 s rotor synchronous speed induction 轉子 同步速">
+<h2>滑差（slip, s）</h2>
+<p><strong>白話：</strong>轉子比同步磁場慢多少的比例；它是感應機建立相對運動、轉子頻率與轉矩的核心狀態量。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-感應機滑差與功率流.html">07 章</a>定義並連到功率流，第 <a href="08-感應機轉矩曲線.html">08 章</a>把它當成曲線橫軸；驅動器可由轉速估算它。</p>
+<p><strong>機制：</strong>第 07 章 1740 rpm 對 1800 rpm，s = 0.033333，轉子頻率 2.000000 Hz；轉子銅損為 266.666667 W，正好是 8000 W 氣隙功率的同一比例。</p>
+<p><strong>不要混淆：</strong>本課一律用對照表的「滑差」；部分教材寫「轉差率」，是同一個 slip。滑差不是效率損失；同步機沒有滑差，負載變重是 δ 變大，不是轉速變慢。</p>
+</article>
+
+<article class="term-card" data-search="rotor frequency 轉子頻率 fr slip frequency induction rotor current">
+<h2>轉子頻率（rotor frequency）</h2>
+<p><strong>白話：</strong>轉子看到旋轉磁場掠過自己的頻率，等於滑差乘電源頻率；轉子越接近同步速，它越低。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-感應機滑差與功率流.html">07 章</a>由滑差直接求得；轉子參數、損耗與頻率相關效應都以它為基準。</p>
+<p><strong>機制：</strong>額定例 s = 0.033333、電源 60 Hz，得到 2.000000 Hz；堵轉時 s = 1，轉子頻率成為 60.000000 Hz；同步速時則降為 0。</p>
+<p><strong>不要混淆：</strong>轉子頻率不是定子電源頻率的固定副本；只有堵轉時兩者相等，正常額定運轉常只有 1–3 Hz。</p>
+</article>
+
+<article class="term-card" data-search="squirrel-cage wound rotor 鼠籠式 繞線式 induction rotor starting resistance slip ring">
+<h2>鼠籠式與繞線式（squirrel-cage &amp; wound rotor）</h2>
+<p><strong>白話：</strong>鼠籠式把導條在轉子兩端短接，堅固少維護；繞線式把轉子繞組引出，可外加電阻改變起動特性。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-感應機轉矩曲線.html">08 章</a>用轉子電阻解釋曲線移動，第 <a href="11-起動與速控.html">11 章</a>比較重載起動；一般泵浦多用前者，特殊起重負載可用後者。</p>
+<p><strong>機制：</strong>第 08 章取 R<sub>2</sub> = 0.4 Ω 時，崩潰滑差 0.197043、起動轉矩 61.626951 N·m；改變 R<sub>2</sub> 會移動崩潰滑差，但不改 143.556819 N·m 的崩潰轉矩。</p>
+<p><strong>不要混淆：</strong>兩者的定子與基本感應原理相同；可外接轉子電阻不表示繞線式永遠效率較高，它主要換來起動與調速彈性。</p>
+</article>
+
+<article class="term-card" data-search="air-gap power 氣隙功率 pag induction power flow rotor copper conversion power">
+<h2>氣隙功率（air-gap power）</h2>
+<p><strong>白話：</strong>從定子磁場跨過氣隙送進轉子的電磁功率，是轉子銅損與機械轉換功率的共同來源。</p>
+<p><strong>位置／角色：</strong>第 <a href="07-感應機滑差與功率流.html">07 章</a>把它放在定子損耗之後、轉子損耗之前；感應機效率與熱分布診斷要靠這一站。</p>
+<p><strong>機制：</strong>鎖定 P<sub>AG</sub> = 8000 W、s = 0.033333 時，轉子銅損 266.666667 W，轉換功率 7733.333333 W；再扣 150 W 機械損，輸出為 7583.333333 W。</p>
+<p><strong>不要混淆：</strong>氣隙功率不是軸輸出；它尚未扣轉子銅損與機械損。感應轉矩用它除以同步角速度，而軸轉矩要用軸輸出除以實際角速度。</p>
+</article>
+
+<article class="term-card" data-search="pull-out torque breakdown torque 崩潰轉矩 maximum torque induction r2 voltage squared">
+<h2>崩潰轉矩（pull-out torque）</h2>
+<p><strong>白話：</strong>穩態轉矩–滑差曲線的最高點；負載再要求更多轉矩，正常高速工作點便無法維持，轉速會快速下降。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-感應機轉矩曲線.html">08 章</a>用戴維寧參數計算；輸送帶瞬間過載與泵浦卡住時，這是重要安全餘裕。</p>
+<p><strong>機制：</strong>380 V 線電壓、60 Hz、R<sub>2</sub> = 0.4 Ω 的鎖定例得到崩潰滑差 0.197043、轉速 1445.321758 rpm、崩潰轉矩 143.556819 N·m。</p>
+<p><strong>不要混淆：</strong>崩潰轉矩與 R<sub>2</sub> 無關，與電壓平方成正比；R<sub>2</sub> 只移動崩潰滑差。額定點在低滑差近似直線段，不在最高點。</p>
+</article>
+
+<article class="term-card" data-search="starting torque starting current 起動轉矩 起動電流 locked rotor dol current multiple">
+<h2>起動轉矩與起動電流（starting torque &amp; starting current）</h2>
+<p><strong>白話：</strong>轉子尚未轉動時，機器能提供的轉矩與從電源取得的電流；前者要推得動負載，後者不能讓電網與設備承受不住。</p>
+<p><strong>位置／角色：</strong>第 <a href="08-感應機轉矩曲線.html">08 章</a>計算堵轉點，第 <a href="11-起動與速控.html">11 章</a>比較四種起動法；壓縮機與輸送設備尤其在意。</p>
+<p><strong>機制：</strong>第 08 章鎖定起動轉矩為 61.626951 N·m；第 11 章直接起動取 6.000000 倍額定線電流與 1.500000 倍額定轉矩，對 0.5 倍負載可起動。</p>
+<p><strong>不要混淆：</strong>起動電流大不表示起動轉矩也按同倍數變大；降壓可減少電流，但轉矩會按電壓平方下降，因此還要檢查負載需求。</p>
+</article>
+
+<article class="term-card" data-search="wye-delta autotransformer starting y delta 自耦起動 星三角 起動 降壓">
+<h2>Y–Δ 起動與自耦起動（wye–delta &amp; autotransformer starting）</h2>
+<p><strong>白話：</strong>兩種降壓起動法：Y–Δ 用接法把每相電壓降低，自耦起動用分接比例連續選擇馬達端電壓。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-起動與速控.html">11 章</a>並排比較；大型風機、泵浦與傳統工業配電常用來壓低起動線電流。</p>
+<p><strong>機制：</strong>直接起動 k = 6、t = 1.5 時，Y–Δ 得線電流 2.000000 倍、轉矩 0.500000 倍；65 % 自耦得線電流 2.535000 倍、轉矩 0.633750 倍。</p>
+<p><strong>不要混淆：</strong>Y–Δ 的線電流與轉矩都變成 1/3；自耦的線電流與轉矩都依分接比例平方縮放。兩者都不是把電流變小而保留原轉矩。</p>
+</article>
+</div>
+
+<h2>第六組｜同步機與驅動（第 09–12 章，10 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="synchronous machine 同步機 synchronous speed generator motor rotor field no slip">
+<h2>同步機（synchronous machine）</h2>
+<p><strong>白話：</strong>轉子磁場與定子旋轉磁場鎖在一起，以同步速運轉的機器；負載改變時主要改變兩磁場的角度。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-同步發電機功率角.html">09 章</a>看發電方向，第 <a href="10-同步馬達V曲線.html">10 章</a>看馬達方向；大型發電與高效率定速驅動常見。</p>
+<p><strong>機制：</strong>第 09 章取 E<sub>f</sub> = 300 V、V<sub>φ</sub> = 220 V、X<sub>s</sub> = 2.0 Ω、δ = 20°，得到實功 33859.994189 W 與最大實功 99000.000000 W。</p>
+<p><strong>不要混淆：</strong>同步機的穩態轉速不靠負載滑落來增加轉矩；負載變重時 δ（delta，功率角）增大，越過穩定界線才會失去同步。</p>
+</article>
+
+<article class="term-card" data-search="synchronous generator 同步發電機 alternator power plant grid real reactive power">
+<h2>同步發電機（synchronous generator）</h2>
+<p><strong>白話：</strong>由原動機帶動轉子磁場，在定子產生三相電壓並向電網送出實功與無功的同步機。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-同步發電機功率角.html">09 章</a>是主角；汽輪機、水輪機與大型備援機組通常以它把機械功率送入電網。</p>
+<p><strong>機制：</strong>本課三相都以 Y 接每相量計算。鎖定例每相端電壓 220 V、內電勢 300 V、功率角 20° 時，送出 33859.994189 W 實功與 20429.569458 var 無功。</p>
+<p><strong>不要混淆：</strong>原動機輸入主要推動功率角與實功，激磁主要調整無功與端電壓；增加激磁不等於增加原動機機械輸入。</p>
+</article>
+
+<article class="term-card" data-search="internal emf synchronous reactance 內電勢 同步電抗 ef xs armature reaction phasor">
+<h2>內電勢與同步電抗（internal EMF &amp; synchronous reactance）</h2>
+<p><strong>白話：</strong>內電勢代表轉子磁場在定子中建立的電壓；同步電抗把漏磁與電樞反應合併成端電壓模型的一個參數。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-同步發電機功率角.html">09 章</a>用 E<sub>f</sub> 與 X<sub>s</sub> 建立相量關係，第 <a href="10-同步馬達V曲線.html">10 章</a>再用它算電流；電網分析與激磁控制都依賴它們。</p>
+<p><strong>機制：</strong>E<sub>f</sub> = 300 V、δ = 20° 時，相量為 281.907786 + j102.606043 V；配合 220 V 端電壓與 X<sub>s</sub> = 2.0 Ω，電樞電流大小為 59.917806 A。</p>
+<p><strong>不要混淆：</strong>X<sub>s</sub> 不是機器裡一顆可單獨找到的實體電感；E<sub>f</sub> 也不是端點直接量到的電壓，兩者都是模型內部量。</p>
+</article>
+
+<article class="term-card" data-search="power angle 功率角 delta δ torque angle load angle synchronization stability">
+<h2>功率角（power angle, δ）</h2>
+<p><strong>白話：</strong>內電勢與端電壓之間的相角差，表示轉子磁場相對定子磁場被原動機或負載拉開多少。</p>
+<p><strong>位置／角色：</strong>第 <a href="09-同步發電機功率角.html">09 章</a>用它控制發電實功，第 <a href="10-同步馬達V曲線.html">10 章</a>用它維持固定負載；電網穩定分析會追蹤它。</p>
+<p><strong>機制：</strong>δ（讀作 delta）= 20° 時實功為 33859.994189 W；到 90° 達 99000.000000 W 靜態極限，超過後角度增加反而使實功下降。</p>
+<p><strong>不要混淆：</strong>δ 是 E<sub>f</sub> 與 V<sub>t</sub> 的夾角；功率因數角 θ（theta）是 I<sub>a</sub> 與 V<sub>t</sub> 的夾角，兩者無關。90° 是理論極限，不是建議工作點。</p>
+</article>
+
+<article class="term-card" data-search="v curve v 曲線 armature current excitation current unity power factor synchronous motor">
+<h2>V 曲線（V curve）</h2>
+<p><strong>白話：</strong>固定實功負載時，把電樞電流大小對激磁程度畫出來，會先下降再上升，形狀像英文字母 V。</p>
+<p><strong>位置／角色：</strong>第 <a href="10-同步馬達V曲線.html">10 章</a>用它找最小電流與單位功率因數點；工廠可藉同步馬達同時做功與調整無功。</p>
+<p><strong>機制：</strong>15 kW、X<sub>s</sub> = 2 Ω 時，單位功因激磁為 224.646646 V，電流最低 22.727273 A；E<sub>f</sub> = 300 V 時電流升為 44.508282 A。</p>
+<p><strong>不要混淆：</strong>橫軸是激磁，縱軸是電樞電流，不是轉矩與轉速；曲線兩側電流都大，但一側落後、另一側領前，原因相反。</p>
+</article>
+
+<article class="term-card" data-search="over-excitation under-excitation 超激磁 欠激磁 leading lagging reactive power power factor">
+<h2>超激磁與欠激磁（over- &amp; under-excitation）</h2>
+<p><strong>白話：</strong>相對於單位功率因數點，激磁較高稱超激磁，較低稱欠激磁；它們主要改變電流的無功分量與相位。</p>
+<p><strong>位置／角色：</strong>第 <a href="10-同步馬達V曲線.html">10 章</a>比較兩側狀態；工廠用超激磁同步馬達就地供應無功，減少電網線路電流。</p>
+<p><strong>機制：</strong>鎖定例 E<sub>f</sub> = 300 V 時，電流 44.508282 A、相角 +59.294184°，功率因數 0.510630 領前，馬達供給 25257.038582 var。</p>
+<p><strong>不要混淆：</strong>超激磁不會讓固定負載突然得到更多實功，只會改變無功方向與電流大小；欠激磁過低到 45.454545 V 以下則無法維持同步。</p>
+</article>
+
+<article class="term-card" data-search="permanent magnet synchronous motor pmsm 永磁同步馬達 motor drive servo ev high power density">
+<h2>永磁同步馬達（permanent magnet synchronous motor, PMSM）</h2>
+<p><strong>白話：</strong>用轉子永磁體建立磁場的同步馬達，省去轉子激磁繞組，通常有高效率與高功率密度。</p>
+<p><strong>位置／角色：</strong>第 <a href="12-馬達家族與選型.html">12 章</a>比較機種；電動車牽引、工業伺服與高效率壓縮機常採用。</p>
+<p><strong>機制：</strong>第 12 章鎖定評分給效率 5、低成本 2、控制簡單 2、定位能力 4、功率密度 5、可調激磁 1；電動車權重下總分 60，排名第一。</p>
+<p><strong>不要混淆：</strong>它的磁通主要由永磁體固定，不能套用繞線同步機可直接調 E<sub>f</sub> 的 V 曲線操作；實務上改的是變頻器電流角與電流大小。</p>
+</article>
+
+<article class="term-card" data-search="brushless dc motor bldc 無刷直流馬達 trapezoidal commutation inverter hall sensor">
+<h2>無刷直流馬達（brushless DC motor, BLDC）</h2>
+<p><strong>白話：</strong>以電子開關取代電刷與換向器，通常搭配梯形反電動勢與分段換相來產生近似定轉矩。</p>
+<p><strong>位置／角色：</strong>第 <a href="12-馬達家族與選型.html">12 章</a>與其他家族比較；無人機、散熱風扇與小型泵浦重視它的功率密度與免維護特性。</p>
+<p><strong>機制：</strong>鎖定評分為效率 4、低成本 3、控制簡單 3、定位能力 2、功率密度 5、可調激磁 1；無人機／風扇權重下總分 54，排名第一。</p>
+<p><strong>不要混淆：</strong>BLDC 與 PMSM 的轉子都可用永磁體，主要差在反電動勢波形與驅動換相方式；名稱不同不代表兩者磁性結構必然完全不同。</p>
+</article>
+
+<article class="term-card" data-search="stepper motor 步進馬達 open loop positioning steps holding torque missed step printer">
+<h2>步進馬達（stepper motor）</h2>
+<p><strong>白話：</strong>驅動器每送一組脈波，轉子便朝下一個離散穩定位置移動，適合低成本開迴路定位。</p>
+<p><strong>位置／角色：</strong>第 <a href="12-馬達家族與選型.html">12 章</a>比較定位能力；印表機、桌上型機構與小型平台常用它換取簡單控制。</p>
+<p><strong>機制：</strong>鎖定評分為效率 1、低成本 4、控制簡單 4、定位能力 5、功率密度 2、可調激磁 1；印表機權重下總分 53，排名第一。</p>
+<p><strong>不要混淆：</strong>命令了幾步不等於軸真的走了幾步；過載、加速過快或共振都可能失步，所以開迴路定位能力不等於實際精度有保證。</p>
+</article>
+
+<article class="term-card" data-search="variable frequency drive vfd v/f control 變頻器 標量控制 頻率 電壓 起動 調速">
+<h2>變頻器與 V/f 控制（variable frequency drive &amp; V/f control）</h2>
+<p><strong>白話：</strong>變頻器先把電源轉成可控制頻率與電壓的交流；V/f 控制讓電壓與頻率同比例變化，以維持近似固定磁通。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-起動與速控.html">11 章</a>用它柔和起動並調整同步速，第 <a href="12-馬達家族與選型.html">12 章</a>把驅動器成本納入選型；泵浦、風機與輸送帶常用。</p>
+<p><strong>機制：</strong>4 極機由 60 Hz 降到 30 Hz 時，同步速從 1800 rpm 降到 900 rpm；電壓由 380 V 同比降到 190.000000 V。起動模型用 1.500000 倍額定電流取得 1.000000 倍額定轉矩。</p>
+<p><strong>不要混淆：</strong>V/f 是較簡單的標量控制，不能等同所有高性能向量控制；變頻起動靠維持磁通取得轉矩，與單純降壓後轉矩按平方掉的方式不同。</p>
+</article>
+</div>
+
+<nav class="pager" aria-label="章節導覽"><a href="12-馬達家族與選型.html">← 上一頁：馬達家族與選型</a><a href="自我檢核.html">下一頁：自我檢核 →</a></nav>
+</main>
+<footer class="site-footer"><span>名詞與概念字典</span><a href="自我檢核.html">去自我檢核</a></footer>
+</body></html>

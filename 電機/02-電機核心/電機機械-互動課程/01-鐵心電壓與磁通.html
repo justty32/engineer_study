@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>01 鐵心電壓與磁通｜電機機械</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽">
+<a href="index.html">課程地圖</a>
+<a href="00-線性直流機與能量轉換.html">00 起點</a>
+<a href="名詞與概念字典.html">字典</a>
+<a href="自我檢核.html">自我檢核</a>
+</nav>
+<main>
+<p class="eyebrow">01・電壓定磁通，磁阻定電流</p>
+<h1>鐵心電壓與磁通：為什麼低頻更容易飽和</h1>
+<p class="lead">240 V、60 Hz、200 匝與 40 cm² 截面積，會形成 0.004502 Wb 與 1.125395 T。磁路再好也改不了這個磁通，只會改變維持它所需的 0.633257 A。</p>
+<p class="prereq">
+<strong>這章假設已懂：</strong>
+<a href="00-線性直流機與能量轉換.html">00 線性直流機與能量轉換</a>的感應電壓。<strong>前置：</strong>見〈10 磁性材料與磁路〉<a href="../電磁學-互動課程/10-磁性材料與磁路.html">磁路歐姆定律與氣隙儲能</a>，本章反過來由電壓求磁通。</p>
+<h2>痛點：磁通究竟由電壓還是電流決定</h2>
+<p>直流磁路常從電流算磁通，交流線圈卻是端電壓先把磁通波形逼出來。若把因果方向弄反，就無法回答 60 Hz 設備接 50 Hz 為何發熱、為何加入極薄氣隙便讓無載電流大增，也無法理解變頻控制為何要讓 V/f 固定。</p>
+<h2>白話直覺：電壓像規定磁通每天必須走完的路程</h2>
+<p>比喻到此為止。精確因果鏈從交流電源與線圈端點開始：端電壓使線圈中的磁通週期變化，磁通沿鐵心與氣隙閉合；材料磁阻決定建立該磁通要多少磁動勢，磁動勢再除以匝數得到激磁電流。穩態時端電壓與感應電壓平衡；電流表量到維持磁通的電流，示波器則能看出飽和造成的尖峰。</p>
+<p>磁通由 V、f、N 決定；截面積把磁通換成磁通密度，磁阻只決定電流。氣隙磁導率遠低於鐵心，因此很短也可能支配總磁阻。</p>
+<p class="note">來源：12-電機機械 §1.2、§2.1。</p>
+<h2>推導：從法拉第定律到 V/f</h2>
+<p>弦波下 E<sub>rms</sub> = 2π × f × N × Φ<sub>max</sub> / √2 = 4.442883 × f × N × Φ<sub>max</sub>，所以 Φ<sub>max</sub> = V / (4.442883 × f × N)。Φ 用 Wb、f 用 Hz、N 用匝。B<sub>max</sub> = Φ<sub>max</sub> / A；同電壓下頻率下降，磁通便反比例上升，60 Hz 設計接 50 Hz 會增加 20 %。</p>
+<p>鐵心磁阻 R<sub>c</sub> = l / (µ<sub>0</sub> × µ<sub>r</sub> × A)，氣隙磁阻 R<sub>g</sub> = g / (µ<sub>0</sub> × A)，兩者串聯。F<sub>m</sub> = Φ × (R<sub>c</sub> + R<sub>g</sub>)，I<sub>m,peak</sub> = F<sub>m</sub> / N，有效值再除以 √2。另有 L<sub>m</sub> = N² / R<sub>m,總</sub>、X<sub>m</sub> = 2π × f × L<sub>m</sub>，可用 V / X<sub>m</sub> 交叉檢查。</p>
+<p>要保持 Φ 不變，V 與 f 必須同比例改變，這就是 V/f 定值。假設線圈電阻、漏磁與鐵損可忽略，µ<sub>r</sub> 為常數。本課用的是線性穩態教學模型，真實機器不完全如此；超過約 1.5 T 後 µ<sub>r</sub> 急降，模型算出的電流只是下限。</p>
+<h2>數值實例：240 V、60 Hz 的磁路</h2>
+<p>取 V = 240 V、f = 60 Hz、N = 200 匝、A = 40 cm² = 4 × 10<sup>−3</sup> m²、l = 0.4 m、µ<sub>r</sub> = 2000、g = 0。</p>
+<table>
+<tbody>
+<tr>
+<th>Φ<sub>max</sub>
+</th>
+<td>0.004502 Wb</td>
+</tr>
+<tr>
+<th>B<sub>max</sub>
+</th>
+<td>1.125395 T（未飽和）</td>
+</tr>
+<tr>
+<th>鐵心磁阻</th>
+<td>39788.735773 A/Wb</td>
+</tr>
+<tr>
+<th>氣隙磁阻</th>
+<td>0.000000 A/Wb</td>
+</tr>
+<tr>
+<th>磁動勢峰值</th>
+<td>179.112240 A·匝</td>
+</tr>
+<tr>
+<th>激磁電流峰值／有效值</th>
+<td>0.895561 A／0.633257 A</td>
+</tr>
+<tr>
+<th>L<sub>m</sub>／X<sub>m</sub>
+</th>
+<td>1.005310 H／378.992809 Ω</td>
+</tr>
+<tr>
+<th>V / X<sub>m</sub>
+</th>
+<td>0.633257 A ✓</td>
+</tr>
+</tbody>
+</table>
+<p>
+<strong>量級對照。</strong>50 Hz 時 B<sub>max</sub> = 1.350474 T、電流 0.759909 A；480 V 或 A 減半時 B<sub>max</sub> = 2.250791 T，已越過 1.5 T。氣隙 1 mm 時其磁阻為鐵心的 5.000000 倍，總磁阻 238732.414638 A/Wb、電流 3.799544 A（6.000000 倍）、X<sub>m</sub> = 63.165468 Ω。氣隙 0.1 mm 時電流 0.949886 A；µ<sub>r</sub> = 500 時為 2.533030 A。</p>
+<p><strong>把改動分開看。</strong>只降低頻率而維持電壓，單一週期變長，磁通峰值必須增加才能形成相同有效電壓；只增加匝數，每一匝分攤的感應需求變小，磁通峰值下降；只改 µ<sub>r</sub> 或氣隙，電壓方程沒有改變，所以磁通不動，變的是建立磁通所需的電流。高導磁材料省下的是無功電流，不是讓既定電壓下的磁通增加。截面積不改變總磁通，卻直接改變 B<sub>max</sub>，相同繞組放進較細鐵心更容易飽和。</p>
+<p><strong>氣隙影響很大。</strong>預設鐵心長 0.4 m、相對磁導率 2000；1 mm 空氣的磁阻是整段鐵心的 5.000000 倍。串聯後總磁阻成為 6.000000 倍，電流也同比增加。當 B<sub>max</sub> 超過參考值，固定 µ<sub>r</sub> 模型失效；電流會在磁通峰值附近變尖，發熱與保護動作都可能出現。控制器必須限制 V/f，並以實測電流作第二道保護。</p>
+<p><strong>用兩條路交叉核對。</strong>第一條路由 Φ<sub>max</sub>、總磁阻與 N 求得 I<sub>m,rms</sub>；第二條路由 L<sub>m</sub>、X<sub>m</sub> 與 V 求得同一電流。預設點兩條路都給 0.633257 A，表示單位換算與峰值、有效值關係一致。若兩個答案差 √2 倍，通常是把峰值和有效值混用；若差一百或一千倍，先檢查 cm²、cm、mm 是否已換成 m²、m、m。</p><p><strong>50 Hz 的判讀不能只看未超過 1.5 T。</strong>1.350474 T 雖仍在參考線下，卻已比 60 Hz 高 20 %，材料的工作裕度變小，電流與溫升也增加。若原設備設計點已靠近彎曲區，實際波形可能比線性模型更早顯出畸變。因此額定頻率是設計條件，不是只要端電壓相同就能忽略的標籤。</p><p><strong>量測也有邊界。</strong>鉗形表顯示的是整體有效值，未必揭露尖峰形狀；示波器配合合適電流探棒才能看到波形。即使看到尖峰，也要排除電源諧波與負載電流，才可把原因歸到磁路飽和。這就是為何單一儀器讀值只能支持判斷，不能單獨給出材料參數。</p>
+<p>設計者還要保留製造公差與電源波動的裕度。截面積、氣隙、材料批次與端電壓都不會剛好等於名目值；若名目工作點已貼近 1.5 T，輕微過電壓或低頻就可能進入非線性區。安全的判讀不是「目前沒超過就沒事」，而是同時檢查最差條件、溫升與波形。</p>
+<section class="workspace">
+<h2>自由實驗：電壓、頻率與氣隙</h2>
+<p>這是一組弦波電源與磁路。先看電壓、頻率、匝數如何定磁通，再改材料與氣隙，看所需電流如何變化。</p>
+<div class="controls">
+<label for="cf-v">線圈電壓 V（V，有效值）<input id="cf-v" type="range" min="10" max="480" step="10" value="240">
+</label>
+<label for="cf-f">頻率 f<select id="cf-f">
+<option value="50">50 Hz</option>
+<option value="60" selected>60 Hz</option>
+</select>
+</label>
+<label for="cf-n">匝數 N<input id="cf-n" type="range" min="50" max="1000" step="10" value="200">
+</label>
+<label for="cf-a">鐵心截面積 A（cm²）<input id="cf-a" type="range" min="5" max="100" step="1" value="40">
+</label>
+<label for="cf-l">鐵心磁路長 l（cm）<input id="cf-l" type="range" min="10" max="100" step="5" value="40">
+</label>
+<label for="cf-mur">鐵心相對磁導率 µ_r<select id="cf-mur">
+<option value="500">500</option>
+<option value="1000">1000</option>
+<option value="2000" selected>2000</option>
+<option value="5000">5000</option>
+</select>
+</label>
+<label for="cf-gap">氣隙 g（mm）<input id="cf-gap" type="range" min="0" max="2" step="0.1" value="0">
+</label>
+</div>
+<div id="coreflux-output" class="output" aria-live="polite">
+<table>
+<tbody>
+<tr>
+<th>Φ_max／B_max</th>
+<td>0.004502 Wb／1.125395 T</td>
+</tr>
+<tr>
+<th>鐵心／氣隙／總磁阻</th>
+<td>39788.735773／0.000000／39788.735773 A/Wb</td>
+</tr>
+<tr>
+<th>磁動勢峰值</th>
+<td>179.112240 A·匝</td>
+</tr>
+<tr>
+<th>激磁電流峰值／有效值</th>
+<td>0.895561 A／0.633257 A</td>
+</tr>
+<tr>
+<th>L_m／X_m</th>
+<td>1.005310 H／378.992809 Ω</td>
+</tr>
+<tr>
+<th>V / X_m 檢查</th>
+<td>0.633257 A ✓</td>
+</tr>
+</tbody>
+</table>
+<strong>判讀：未飽和，線性模型成立。</strong>磁通由 V、f、N 決定，磁阻只決定電流。為什麼：端電壓先逼出磁通變化率，磁阻再決定所需磁動勢。邊界提醒：這是變壓器的情況，不留氣隙，激磁電流最小；B_max 超過 1.5 T 時，本模型的電流只是線性下限，實際會遠大於此且波形畸變。</div>
+</section>
+<h2>不要混淆</h2>
+<ul>
+<li>交流穩態的磁通由電壓決定，電流是磁阻作用後的結果。</li>
+<li>飽和不是磁通完全停止增加，而是再增加需付出劇增的電流。</li>
+<li>氣隙與鐵心磁阻沿同一路徑串聯，不是並聯。</li>
+<li>4.44 是近似值，本課計算固定使用 4.442883。</li>
+</ul>
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>用鉗形電流表量無載電流，用示波器看電流波形。讀值增加且波峰尖窄，能證明激磁電流增加並顯示飽和；沒有截面積與匝數便不能單靠電流讀值證明 B<sub>max</sub>，也不能獨立求得 µ<sub>r</sub>。</p>
+<h2>連到哪門課</h2>
+<p>磁路與氣隙的機制見<a href="../電磁學-互動課程/10-磁性材料與磁路.html">磁性材料與磁路</a>。控制程式那一端，V/f 定值會成為變頻器韌體的查表規則，低速時並配合電流限制。</p>
+<nav class="pager" aria-label="章節導覽">
+<a href="00-線性直流機與能量轉換.html">← 上一頁：線性直流機與能量轉換</a>
+<a href="02-阻抗折算與自耦變壓器.html">下一頁：阻抗折算與自耦變壓器 →</a>
+</nav>
+</main>
+<footer class="site-footer">
+<span>01 鐵心電壓與磁通</span>
+<a href="名詞與概念字典.html">查字典</a>
+</footer>
+</body>
+</html>

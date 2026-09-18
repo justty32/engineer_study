@@ -50,4 +50,11 @@
 - 帳號限制：以 ChatGPT 帳號登入時**不能用 `-m gpt-5-codex`**（回 400）；不指定 `-m`，用預設模型。
 - pipe 的 exit code 不可信、watchdog 門檻與 PowerShell 寫檔亂碼的處理，見 [ENRICH-EXISTING](../ENRICH-EXISTING.md)（同一套 codex 呼叫方式）。
 - codex 產出的內容層錯字（簡體字、形近字）比 Claude 子 agent 多，字元級錯字掃描不可省。
+
+### gpt-sol（`-m gpt-5.6-sol`）當作者的踩雷
+
+- stdin prompt 走 `-` 時**不可再加 `< /dev/null`**（會把 stdin 清空，codex 收到空 prompt）；一道 `< prompt檔` 就夠。
+- gpt-sol（`-m gpt-5.6-sol`）啟動時會先照 AGENTS.md 開場腳本跑 `grep`／`inbox_read` 與 `wf-lint`，log 前段一大堆與任務無關的輸出屬正常，不是卡住。
+- gpt-sol 會把「絕不輸出 NaN」之類的禁令**字面寫進頁面正文**（如「本欄絕不顯示 NaN」），字面掃描（NaN／Infinity／undefined）要連正文一起看，不只看 app.js 輸出。
+- gpt-sol 自報字數普遍偏低（少算全形標點或漏算表格外散文），一律以驗收計法（漢字＋全形標點）重數，不採信自報數字。
 - 以 Claude 子 agent 當作者時本節整段不適用；LF／CRLF 正規化與全部驗收關卡照舊。

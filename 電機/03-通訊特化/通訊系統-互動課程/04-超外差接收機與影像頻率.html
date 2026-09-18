@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 超外差接收機與影像頻率｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・所有電台搬到同一個中頻</p>
+<h1>超外差接收機與影像頻率：固定後級比較便宜，前級卻得先擋住另一台</h1>
+<p class="lead">想收 1000 kHz，配 455 kHz 中頻與高側注入，本地振盪器要在 1455 kHz，1910 kHz 也會落到同一個中頻。Q ＝ 50 的單調諧預選器提供 36.818324 dB 影像抑制。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-抑制載波單邊帶與同步解調.html">02 抑制載波、單邊帶與同步解調</a>的「相乘等於搬移」。<strong>前置：</strong>見〈濾波器與群延遲〉<a href="../../02-電機核心/信號與系統-互動課程/09-濾波器與群延遲.html">信號與系統 09</a>及〈RLC 共振與品質因數〉<a href="../../02-電機核心/電路學-互動課程/13-RLC共振與品質因數.html">電路學 13</a>——過渡範圍與 Q 的機制在既有課，本章只用其結論算影像抑制。</p>
+
+<h2>痛點：轉動選台鈕，為什麼後面的濾波器不用跟著換</h2>
+<p>AM 廣播從 530 到 1700 kHz，一台接收機若直接在每個載波頻率上完成窄頻選台，所有後級都得精準同步調整，成本高又難維持一致。超外差接收機（superheterodyne receiver）把任何想收的電台先搬到固定中頻（intermediate frequency, IF），後面的帶通與放大便能只做一套。</p>
+<p>便宜不是免費的。混頻器只認差頻的大小，不知道輸入位於本地振盪器上方或下方；兩個不同的射頻（radio frequency, RF）輸入可能產生同一個 IF。另一個會闖進來的頻率就是影像頻率（image frequency），它若已通過混頻器，後級再精密也拆不開。</p>
+
+<h2>白話直覺：先把不同樓層的人送到同一個櫃檯</h2>
+<p>可以把混頻想成電梯：不同樓層的電台都能被送到固定櫃檯處理；比喻到此為止。精確地說，本地振盪器（local oscillator, LO）與 RF 相乘產生和頻、差頻，IF 帶通只保留差頻。天線收到的訊號先經 RF 預選，再混頻，再由固定 IF 帶通選擇。</p>
+<p>因果鏈如下：空中同時有許多電台，分頻多工（frequency-division multiplexing, FDM）讓每一路占一段頻譜；接收機選定 f<sub>LO</sub>，把目標 f<sub>RF</sub> 搬到固定 f<sub>IF</sub>，換到便宜且高選擇性的後級；代價是 f<sub>RF</sub> 另一側的頻率也可能給出相同差頻，必須在混頻前由預選器壓掉；頻譜分析儀在混頻器輸出會看見差頻與和頻，訊號產生器打入影像則可直接量抑制 dB。</p>
+<p>分時多工（time-division multiplexing, TDM）讓各路占不同時間，分碼多工（code-division multiple access, CDMA）用正交碼共享，正交分頻多工（orthogonal frequency-division multiplexing, OFDM）把高速資料拆到多個子載波；OFDM 的 FFT 實作留給數位通訊課。軟體那一端，SDR 可把 IF 設為 0 直接轉換，原本的影像問題會改以 IQ 不平衡呈現。</p>
+<p>選台旋鈕實際上同時驅動 LO 與 RF 預選器：前者保證目標永遠落在固定 IF，後者則跟著目標移動、在影像位置提供衰減。若兩者沒有對準，即使 IF 帶通本身非常窄，也可能收不到目標或擋不住影像。這種「同調追蹤」是超外差機械調諧最難校正的部分，也是後來多級轉換與數位校正出現的原因。</p>
+<p class="note">來源：14-通訊系統-上 §5、§6。</p>
+
+<h2>推導：為什麼目標與影像會落到同一個 IF</h2>
+<p><strong>（a）混頻。</strong>信號與系統已證明相乘會搬移頻譜，因此 cos(2π f<sub>RF</sub>t) × cos(2π f<sub>LO</sub>t) ＝ ½ cos[2π(f<sub>RF</sub> − f<sub>LO</sub>)t] + ½ cos[2π(f<sub>RF</sub> + f<sub>LO</sub>)t]。IF 帶通只留 |f<sub>RF</sub> − f<sub>LO</sub>| ＝ f<sub>IF</sub>，頻率單位皆為 Hz。</p>
+<p><strong>（b）影像。</strong>高側注入令 f<sub>LO</sub> ＝ f<sub>RF</sub> + f<sub>IF</sub>。目標滿足 f<sub>LO</sub> − f<sub>RF</sub> ＝ f<sub>IF</sub>，而上方另一個頻率也可滿足 f<sub>image</sub> − f<sub>LO</sub> ＝ f<sub>IF</sub>，所以 f<sub>image</sub> ＝ f<sub>RF</sub> + 2f<sub>IF</sub>。低側注入則是 f<sub>LO</sub> ＝ f<sub>RF</sub> − f<sub>IF</sub>、f<sub>image</sub> ＝ |f<sub>RF</sub> − 2f<sub>IF</sub>|。兩者進入 IF 後完全重疊，只能事前濾除。</p>
+<p><strong>（c）預選器。</strong>單調諧電路偏離共振後的幅度 |H| ＝ 1 / √(1 + Q²ρ²)，其中 ρ ＝ f<sub>image</sub> / f<sub>RF</sub> − f<sub>RF</sub> / f<sub>image</sub> 是歸一化失諧，Q 是無單位品質因數。故影像抑制比 IRR ＝ √(1 + Q²ρ²)，dB 值為 20 log<sub>10</sub>(IRR)。IF 越高，影像相距 2f<sub>IF</sub> 而較好濾；但在較高 IF 做窄帶通又更困難，455 kHz 的 AM 中頻與 10.7 MHz 的 FM 中頻都是取捨。</p>
+<p><strong>模型邊界。</strong>本課用的是單一預選器、單級轉換、理想乘法混頻的一階教學模型。真實接收機還有振盪器相位雜訊、混頻雜散，並可能採雙轉換或直接轉換。</p>
+
+<h2>數值實例：1000 kHz 電台、455 kHz 中頻、高側注入</h2>
+<p>取 f<sub>RF</sub> ＝ 1000 kHz、f<sub>IF</sub> ＝ 455 kHz、高側注入、間距 10 kHz、預選器 Q ＝ 50，與互動元件預設值相同。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>f<sub>LO</sub></td><td>1000 + 455</td><td><strong>1455 kHz</strong></td></tr>
+<tr><td>影像頻率</td><td>1000 + 2 × 455</td><td><strong>1910 kHz</strong></td></tr>
+<tr><td>影像與 RF 的間隔</td><td>2 × 455</td><td><strong>910 kHz</strong></td></tr>
+<tr><td>影像是否在廣播頻段內</td><td>1910 &gt; 1700</td><td><strong>否（頻段外）</strong></td></tr>
+<tr><td>頻段可排電台數</td><td>⌊(1700 − 530) / 10⌋ + 1</td><td><strong>118 台</strong></td></tr>
+<tr><td>ρ</td><td>1910/1000 − 1000/1910</td><td><strong>1.386440</strong></td></tr>
+<tr><td>影像抑制比</td><td>√(1 + 50² × 1.386440²)</td><td><strong>69.329202（36.818324 dB）</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>10 kHz 間距可排 <strong>118 台</strong>；換成 9 kHz 為 <strong>131 台</strong>。固定 455 kHz IF 讓影像與目標相隔 910 kHz，遠大於相鄰電台間距，但兩種干擾仍由不同濾波器處理。</p>
+<p><strong>邊界對照。</strong>低側注入時 f<sub>LO</sub> ＝ <strong>545 kHz</strong>、影像 ＝ |1000 − 910| ＝ <strong>90 kHz</strong>、抑制 <strong>54.823922 dB</strong>；影像更遠，但 LO 要從 75 調到 1245 kHz，比例 16.6 倍，比高側的 985–2155 難做。若 f<sub>IF</sub> ＝ 100 kHz，影像為 <strong>1200 kHz、在頻段內</strong>，抑制只剩 <strong>25.277731 dB</strong>；Q ＝ 10 時為 <strong>22.860555 dB</strong>，Q ＝ 200 時為 <strong>48.858677 dB</strong>。f<sub>RF</sub> ＝ 530 高側時，影像 <strong>1440 kHz、在頻段內</strong>，抑制 41.397100 dB。低側且 f<sub>RF</sub> ＝ 910 時影像 <strong>0 kHz</strong>，這組參數不成立。</p>
+
+<section class="workspace"><h2>自由實驗：選台、注入側與影像抑制</h2>
+<p>場景是一台 530–1700 kHz AM 接收機。選擇目標台、中頻、注入側、頻道間距與預選器 Q，觀察 LO、影像位置、可排台數與影像抑制。</p>
+<div class="controls">
+<label for="sh-frf">想收的電台 f_RF（kHz）<input id="sh-frf" type="range" min="530" max="1700" step="10" value="1000"></label>
+<label for="sh-fif">中頻 f_IF（kHz）<input id="sh-fif" type="range" min="100" max="1000" step="5" value="455"></label>
+<label for="sh-side">本地振盪器注入側<select id="sh-side"><option value="high" selected>高側注入（f_LO ＝ f_RF + f_IF）</option><option value="low">低側注入（f_LO ＝ f_RF − f_IF）</option></select></label>
+<label for="sh-chan">頻道間距（kHz）<input id="sh-chan" type="range" min="5" max="20" step="1" value="10"></label>
+<label for="sh-q">RF 預選器品質因數 Q<input id="sh-q" type="range" min="10" max="200" step="5" value="50"></label>
+</div>
+<div id="superhet-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>影像頻率不是鄰台干擾。鄰台由 IF 帶通分開，影像要由混頻前的 RF 預選器擋住。</li>
+<li>IF 不是隨意挑一個中間數字；提高 IF 讓影像遠離，卻使窄帶 IF 濾波器更難製作。</li>
+<li>高側與低側只描述 LO 位於 RF 的哪一邊，兩者都能產生同一 IF，影像位置卻在相反方向。</li>
+<li>FDM 是把許多電台排進頻譜；超外差是從其中選一台搬到 IF，一個描述共享資源，一個描述接收架構。</li>
+<li>高 Q 可提高單點影像抑制，但很難在整個 530–1700 kHz 範圍保持同步調諧，不能只追求最大值。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>把頻譜分析儀接到混頻器輸出，可同時看見差頻與和頻；再用訊號產生器分別送入目標頻率及影像頻率，比較 IF 輸出功率差，就得到影像抑制 dB。掃動 LO 還可核對固定 f<sub>IF</sub> 與調諧範圍。</p>
+<p><strong>能證明什麼。</strong>量測能證明目標與影像確實落在同一 IF、預選器是否對準，以及 Q 與影像抑制的趨勢。</p>
+<p><strong>不能證明什麼。</strong>這組量測不能只靠單一讀值分離 LO 相位雜訊與其他混頻雜散；前者要看頻譜裙邊，後者要掃描更寬頻段。它也不能證明一階模型足以涵蓋真實多級接收機。</p>
+<p>測影像時要維持目標源與影像源的輸入功率相同，並讓預選器停在同一調諧位置；若每次重新調到峰值，量到的會是兩個不同工作點，不再是本章定義的影像抑制比。</p>
+
+<h2>連到哪門課</h2>
+<p>濾波器過渡範圍的來源見<a href="../../02-電機核心/信號與系統-互動課程/09-濾波器與群延遲.html">信號與系統的濾波器與群延遲</a>；品質因數的電路意義見<a href="../../02-電機核心/電路學-互動課程/13-RLC共振與品質因數.html">電路學的 RLC 共振與品質因數</a>。收音機、電視調諧器與頻譜分析儀都用到頻率轉換；鎖相迴路設計則接到控制系統課。</p>
+<nav class="pager" aria-label="章節導覽"><a href="03-FM與Carson頻寬.html">← 上一頁：FM 與 Carson 頻寬</a><a href="05-雜訊訊雜比與雜訊指數.html">下一頁：雜訊、訊雜比與雜訊指數 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 超外差接收機與影像頻率</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

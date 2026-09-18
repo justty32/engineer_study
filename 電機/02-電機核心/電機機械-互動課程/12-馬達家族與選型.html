@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 馬達家族與選型｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">12・選型是把需求換成權重，不是背唯一答案</p>
+<h1>馬達家族與選型：六項準則怎麼改變第一名</h1>
+<p class="lead">電動車牽引的預設權重讓永磁同步馬達得到 60 分；定速泵浦改重視成本後，三相感應機以 52 分勝出；印表機強調定位時，步進馬達得到 53 分。器件沒有抽象的最好，只有對需求較合適。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-旋轉機共同語言.html">05 旋轉機共同語言</a>的功率、轉矩與損耗，<a href="07-感應機滑差與功率流.html">07 感應機滑差與功率流</a>的轉子銅損，以及<a href="11-起動與速控.html">11 起動與速控</a>的驅動需求。</p>
+
+<h2>痛點：規格都寫得很好，為什麼不同設備仍選不同家族</h2>
+<p>看到效率高、控制簡單、成本低、定位準、功率密度高，每個條件都想要，最後卻無法選。真正的工程問題不是替所有馬達排一張永遠不變的名次，而是先說清楚應用在乎哪些準則、每項有多重要，再檢查候選者的硬限制。電動車看重效率與功率密度，泵浦看重成本與可靠度，印表機則把定位放到前面，所以答案自然不同。</p>
+<p>本章用六項準則和一個可重算的加權表建立第一層判斷。分數能把取捨說明白，卻不能取代資料表、熱設計、供應鏈、安規與實測；它的用途是幫你問對下一個問題，而不是自動替工程師採購。</p>
+
+<h2>白話直覺：同一份履歷，職缺不同就會換名次</h2>
+<p>可以暫時把六種家族想成六位專長不同的應徵者，職缺調整評分權重後，第一名就會改變；比喻到此為止。真實機制仍要回到能量鏈：電源與驅動器決定哪組定子回路導通，電流建立磁場並與轉子磁場作用形成轉矩，穩態時電磁轉矩平衡負載，儀表則量到電壓、電流、轉速、溫升與輸出轉矩。選型是在這條鏈上同時衡量損耗、材料、控制器與回授。</p>
+<p>驅動端常先用整流器把 AC 轉成 DC，再由逆變器（inverter）以脈寬調變產生可控 AC；變頻器（variable frequency drive, VFD）是含整流與逆變級的完整設備。磁場導向控制（field-oriented control, FOC）把三相電流轉到旋轉座標，分開控制磁通與轉矩。控制程式那一端，選型會變成馬達型別、極數、額定電流、位置感測、換向方式、電流限制與控制迴路參數。</p>
+<p class="note">來源：12-電機機械 §6.4、§7、§8。</p>
+
+<h2>推導：六個家族的物理差異怎麼進入分數</h2>
+<p><strong>永磁同步馬達（permanent magnet synchronous motor, PMSM）。</strong>轉子永磁、定子電流近似正弦，需要位置感測與變頻器。轉子沒有激磁繞組，也沒有靠感應形成的轉子電流，因此少掉第 07 章的 sP<sub>AG</sub> 轉子銅損，效率與功率密度高；代價是磁材成本、溫度風險與控制複雜度。</p>
+<p><strong>無刷直流馬達（brushless DC motor, BLDC）。</strong>它和 PMSM 都是永磁轉子加定子繞組，差別主要在設計出的反電動勢波形與換向方式：BLDC 常以梯形波配合分段電子換向，PMSM 常以正弦電流控制。兩者是同一大類機器的不同設計與驅動搭配，不宜只看名稱判斷。</p>
+<p><strong>步進馬達（stepper motor）。</strong>每個命令脈衝對應固定角度，只要負載沒有大到造成失步，就能開迴路定位；好處是控制介面直觀，代價是效率低、振動、發熱與高速轉矩下降。定位能力不等於最終精度，機構背隙、微步誤差和失步都要另查。</p>
+<p><strong>伺服馬達（servo motor）與線性馬達。</strong>伺服是馬達、編碼器、驅動器和閉迴路控制組成的系統名，可以採 PMSM 或其他機器；線性馬達則把旋轉幾何展開成直線，用在高速鐵路、磁浮與半導體平台。它們提醒我們，應用分類和電磁機器分類不是同一層。</p>
+<p><strong>其他比較基準。</strong>三相感應機便宜、堅固、工業用量最大；有刷直流機控制直接，但電刷與換向器需要維護；繞線激磁同步機能調整激磁，適合大型發電與無功控制。六者各有不能由單一效率數字取代的維護、供應與驅動代價。</p>
+<p><strong>加權模型。</strong>總分 = Σ 權重<sub>i</sub> × 分數<sub>i</sub>。權重從 0 到 5，家族分數從 1 到 5；同分時依永磁同步、三相感應、有刷直流、無刷直流、步進、繞線激磁同步的順序排列。本課用的是線性穩態教學模型，真實機器不完全如此；這張表只表達偏好，不處理額定轉矩、轉速範圍、冷卻、防護等級或價格的實際數值。</p>
+
+<h2>數值實例：同一張分數表換六種需求</h2>
+<p>六項準則依序為效率、低成本、控制簡單、定位能力、功率密度、可調激磁。家族固定分數如下，下面自由實驗會逐字採用。</p>
+<table><thead><tr><th>家族</th><th>效率</th><th>低成本</th><th>控制簡單</th><th>定位能力</th><th>功率密度</th><th>可調激磁</th></tr></thead><tbody>
+<tr><td>永磁同步馬達</td><td>5</td><td>2</td><td>2</td><td>4</td><td>5</td><td>1</td></tr>
+<tr><td>三相感應機</td><td>3</td><td>5</td><td>4</td><td>1</td><td>3</td><td>2</td></tr>
+<tr><td>有刷直流機</td><td>3</td><td>3</td><td>5</td><td>2</td><td>2</td><td>1</td></tr>
+<tr><td>無刷直流馬達</td><td>4</td><td>3</td><td>3</td><td>2</td><td>5</td><td>1</td></tr>
+<tr><td>步進馬達</td><td>1</td><td>4</td><td>4</td><td>5</td><td>2</td><td>1</td></tr>
+<tr><td>繞線激磁同步機</td><td>4</td><td>1</td><td>1</td><td>1</td><td>3</td><td>5</td></tr>
+</tbody></table>
+<p><strong>預設應用結果。</strong>電動車牽引權重 [5, 2, 1, 1, 5, 0]，永磁同步馬達 60 分，後續是無刷 56、感應 45、繞線同步 39、有刷 38、步進 32。定速泵浦／風機權重 [4, 5, 3, 0, 1, 0]，三相感應機 52 分；印表機開迴路定位權重 [0, 4, 3, 5, 0, 0]，步進馬達 53 分。</p>
+<p>無人機／風扇權重 [2, 3, 4, 0, 5, 0]，無刷直流馬達 54 分；工業伺服權重 [3, 1, 1, 4, 4, 0]，永磁同步馬達 55 分；發電廠發電機權重 [4, 1, 0, 0, 2, 5]，繞線激磁同步機 48 分。若全部權重都是 3，依序是永磁 57、感應 54、無刷 54、步進 51、有刷 48、繞線 45；同分規則讓感應排在無刷之前。</p>
+<p><strong>量級對照。</strong>大型感應機效率也可在 95 % 以上，所以表中的相對分數 3 絕不等於實際效率 3 %。權重與分數都只是 0–5 或 1–5 的序位尺度，總分沒有物理單位；任何候選者若不滿足額定轉矩、最高轉速或環境限制，即使分數第一也要淘汰。</p>
+
+<section class="workspace"><h2>自由實驗：用權重重排馬達家族</h2>
+<p>先選應用場景套入一組預設權重，再逐項調整你在乎的程度。表格會依總分排序；觀察第一名為何勝出，也要留意前兩名接近時，一個權重就可能讓結果翻盤。</p>
+<div class="controls">
+<label for="mp-app">應用場景（選了會套用預設權重）<select id="mp-app"><option value="ev" selected>電動車牽引</option><option value="pump">定速泵浦／風機</option><option value="printer">印表機開迴路定位</option><option value="drone">無人機／風扇</option><option value="servo">工業伺服</option><option value="plant">發電廠發電機</option></select></label>
+<label for="mp-w1">效率權重<input id="mp-w1" type="range" min="0" max="5" step="1" value="5"></label>
+<label for="mp-w2">低成本權重<input id="mp-w2" type="range" min="0" max="5" step="1" value="2"></label>
+<label for="mp-w3">控制簡單權重<input id="mp-w3" type="range" min="0" max="5" step="1" value="1"></label>
+<label for="mp-w4">定位能力權重<input id="mp-w4" type="range" min="0" max="5" step="1" value="1"></label>
+<label for="mp-w5">功率密度權重<input id="mp-w5" type="range" min="0" max="5" step="1" value="5"></label>
+<label for="mp-w6">可調激磁權重<input id="mp-w6" type="range" min="0" max="5" step="1" value="0"></label>
+</div>
+<div id="motorpick-output" class="output" aria-live="polite"><table><thead><tr><th>名次／家族</th><th>總分</th><th>效率</th><th>低成本</th><th>控制簡單</th><th>定位</th><th>功率密度</th><th>可調激磁</th></tr></thead><tbody><tr><td>1 永磁同步馬達</td><td>60</td><td>5</td><td>2</td><td>2</td><td>4</td><td>5</td><td>1</td></tr><tr><td>2 無刷直流馬達</td><td>56</td><td>4</td><td>3</td><td>3</td><td>2</td><td>5</td><td>1</td></tr><tr><td>3 三相感應機</td><td>45</td><td>3</td><td>5</td><td>4</td><td>1</td><td>3</td><td>2</td></tr><tr><td>4 繞線激磁同步機</td><td>39</td><td>4</td><td>1</td><td>1</td><td>1</td><td>3</td><td>5</td></tr><tr><td>5 有刷直流機</td><td>38</td><td>3</td><td>3</td><td>5</td><td>2</td><td>2</td><td>1</td></tr><tr><td>6 步進馬達</td><td>32</td><td>1</td><td>4</td><td>4</td><td>5</td><td>2</td><td>1</td></tr></tbody></table><strong>判讀：第一名永磁同步馬達（總分 60），因為權重最高的準則是效率，而永磁同步馬達在效率拿 5 分。</strong>為什麼：效率與功率密度各乘 5，放大了永磁同步馬達在這兩欄的優勢。這是一階加權模型，真正的選型還要看轉矩曲線、環境、供應鏈與驅動器成本。邊界提醒：若六個權重全為 0，全部都是 0 分；沒有準則就沒有取捨，先決定你在乎什麼。前兩名同分或只差 2 分時，換一個權重就會翻盤，這正是選型要看細部規格的地方。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>BLDC 與 PMSM 都屬永磁轉子、定子通電的家族，主要差在波形設計與驅動方式，不是完全無關的兩種物理機器。</li>
+<li>伺服馬達是含回授感測器與控制器的系統名，不是由某一種轉子材料定義的單一家族。</li>
+<li>步進馬達能依脈衝定位，不等於永遠準確；一旦負載過大而失步，開迴路控制不會自動知道位置已錯。</li>
+<li>感應機成本較低不代表效率必然差；大型機種效率可超過 95 %，必須看額定點資料而不是名稱。</li>
+<li>加權分數只比較偏好，不能讓未達額定轉矩、溫升或防護等級的候選者變成可用。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>先讀銘牌上的額定功率、電壓、電流、轉速、效率等級與防護等級；再用功率分析儀量輸入功率、動力計量轉矩與轉速，計算實際工作點效率。若要分辨永磁機型的驅動設計，可在安全隔離條件下用示波器觀察未通電轉動時的反電動勢波形。</p>
+<p><strong>能證明什麼。</strong>銘牌和製造商資料能確認機器種類與額定邊界；正弦或梯形的反電動勢可協助辨認 PMSM 或 BLDC 的設計取向；輸入與軸出力實測能驗證指定工作點效率。<strong>不能證明什麼。</strong>只讀額定效率不能推知整條負載曲線，也不能證明在你的冷卻、振動、粉塵與控制器條件下仍符合壽命要求。</p>
+
+<h2>連到哪門課</h2>
+<p>FOC、脈寬調變、電流迴路與驅動器熱設計留給後續馬達驅動課；大型同步發電機的電壓、無功與潮流則接到<a href="../../04-電力特化/P1-電力系統-互動網站/index.html">電力系統互動工作台</a>。本章完成第一輪選型後，應回到前面各章，用候選家族的轉矩曲線、效率、起動條件與實測資料做第二輪淘汰。</p>
+<nav class="pager" aria-label="章節導覽"><a href="11-起動與速控.html">← 上一頁：起動與速控</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>12 馬達家族與選型</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

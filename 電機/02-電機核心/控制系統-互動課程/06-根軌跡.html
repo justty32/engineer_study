@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 根軌跡｜控制系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・增益一轉，三個極點沿規則移動</p>
+<h1>06 根軌跡：從三個起點追到虛軸穿越</h1>
+<p class="lead">在 L(s) = K / (s(s + 2)(s + 4)) 中，K ＝ 10 時三個根是 −4.760818 與 −0.619591 ± j1.310186；K 增至 48.000000，共軛對正好抵達虛軸。本章不用畫圖，改用座標與階段表讀完整路徑。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-Routh穩定度判別.html">05 Routh 穩定度判別</a>的虛軸穿越，以及<a href="04-二階閉迴路與極點位置.html">04 二階閉迴路與極點位置</a>的 ζ。<strong>前置：</strong>見〈08 極零點與二階系統〉<a href="../信號與系統-互動課程/08-極零點與二階系統.html">信號與系統的極零點與二階系統</a>，ζ 與極點的公式已在該頁證明。</p>
+
+<h2>痛點：我只轉一個 K，三個根為什麼走不同方向</h2>
+<p>直接代入某一個增益，只能得到三個孤立座標；它沒有回答下一格增益會把哪一個根推向哪裡，也看不出「開始振盪」與「開始發散」其實是不同時刻。工程上真正關心的是整條參數路徑：哪裡分離、阻尼比 ζ 如何下降、何時碰到虛軸，以及還能把 K 加到多大。</p>
+<p>根軌跡（root locus）把特徵方程式 1 + KP(s) = 0 的根，依 K 從 0 增到 ∞ 排成軌跡。它的起點是 K ＝ 0 時的開迴路極點，終點是開迴路零點或無窮遠；因此它畫的是閉迴路極點的位置，不是輸出波形。</p>
+<p>只靠「增益越大、反應越快」這句話會漏掉最重要的代價。K 增加初期，靠近原點的實極點向左移，慢模態確實加快；兩個實根相遇後卻離開實軸，開始形成振盪。再繼續增加，這對根的實部向右移、ζ 下降，最後穿越虛軸。速度、振盪程度與穩定範圍不能各自獨立調整，必須放在同一條參數路徑上比較。</p>
+
+<h2>白話直覺：三名旅客沿固定出口離站</h2>
+<p>可以暫時把三個極點想成旅客：由 0、−a、−b 三個月台出發，最後沿三個出口離開；比喻到此為止。精確規則是軌跡必須同時滿足角度與增益條件；沒有零點時，三條分支都走向無窮遠，其漸近角固定為 ±60° 與 180°。</p>
+<p>因果鏈從參考命令開始：誤差由比例增益 K 放大，控制量 u 送入受控體，K 只改變特徵多項式常數項，三個閉迴路極點便沿軌跡移動。K 小時有三個實根，輸出不振盪；過了分離增益 K<sub>b</sub> 後出現共軛對，ζ 逐漸下降，超越程度增加；K 到 K<sub>crit</sub> 時實部成為 0，示波器量到等幅振盪；再加大便進入右半平面。</p>
+<p>這件事在你的程式裡長什麼樣：先用封閉公式算重心、分離點與臨界值，再用牛頓法找最左實根，將三次式降成二次式求共軛對，最後依 K 所在區間產生判讀。</p>
+<p class="note">來源：13-控制系統 §5.3；畫法規則為本課補上。</p>
+
+<h2>推導：從特徵式得到重心、分離點與臨界值</h2>
+<p><strong>特徵多項式。</strong>L(s) = K / (s(s + a)(s + b)) 配單位回授時，1 + L(s) = 0，整理為 s<sup>3</sup> + (a + b)s<sup>2</sup> + abs + K = 0。K ＝ 0 時根是 0、−a、−b。實軸上一點若位於軌跡，該點右側的實極點與實零點總數必為奇數；當 0 ＜ a ＜ b，區段 (−a, 0) 與 (−∞, −b) 在軌跡上，(−b, −a) 不在。</p>
+<p><strong>漸近線。</strong>極點數 n ＝ 3、零點數 m ＝ 0，所以有 n − m ＝ 3 條。重心 σ = (Σ極點 − Σ零點) / (n − m) = (0 − a − b) / 3；角度是 (2k + 1) × 180° / 3，整理為 ±60° 與 180°。兩條漸近線朝右，說明 K 持續變大後必有兩根進入右半平面。</p>
+<p><strong>分離點。</strong>沿實軸把 K 寫成 K = −s(s + a)(s + b)，對 s 微分得 dK / ds = −(3s<sup>2</sup> + 2(a + b)s + ab) = 0。兩個候選根中，只取落在 (−min(a, b), 0) 的根 s<sub>b</sub>；再代回原式得到 K<sub>b</sub>。</p>
+<p><strong>虛軸穿越。</strong>沿用上一章，三階 Routh 的 s<sup>1</sup> 列在 (a + b)ab − K = 0 時成為零，因此 K<sub>crit</sub> = ab(a + b)。輔助多項式是 (a + b)s<sup>2</sup> + K<sub>crit</sub> = 0，所以 ω<sub>crit</sub> = √(ab)。任一 K 的主導共軛對若寫成 Re ± jIm，阻尼比 ζ = −Re / √(Re² + Im²)。a、b 的單位為 1/s，K 為 1/s³，角度用度；假設 K ≥ 0 且沒有零點。本課用的是教學用的簡化模型，真實系統不是這樣：額外極點、零點、延遲與飽和都會改變路徑。</p>
+<p><strong>四段判讀。</strong>K ＜ K<sub>b</sub> 時有三個實根；K<sub>b</sub> ＜ K ＜ K<sub>crit</sub> 時是一個實根加一對共軛根；K ＝ K<sub>crit</sub> 時共軛對在虛軸；K ＞ K<sub>crit</sub> 時其實部為正。若 b 小於 a，名稱次序改變但數學不變，分離點仍取落在 (−min(a, b), 0) 的候選根，不能僵硬地只檢查 (−a, 0)。</p>
+<p><strong>任一 K 的座標。</strong>數值程式先在最左側搜尋三次式的實根，以牛頓法反覆修正到收斂；再用已知實根將三次式除成二次式，由判別式取得另外兩根。判別式大於或等於零時得到三個實根，小於零時得到共軛對。這個求根步驟只負責回報座標，軌跡規則仍由上述解析式決定。</p>
+
+<h2>數值實例：a ＝ 2、b ＝ 4、K ＝ 10</h2>
+<p>這組數字與下方三個滑桿的預設值完全一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>漸近線重心</td><td>(0 − 2 − 4) / 3</td><td><strong>−2.000000</strong></td></tr>
+<tr><td>漸近角</td><td>±180° / 3、180°</td><td><strong>±60.000000°、180.000000°</strong></td></tr>
+<tr><td>分離點</td><td>3s² ＋ 12s ＋ 8 ＝ 0，取 (−2, 0) 內的根</td><td><strong>−0.845299</strong></td></tr>
+<tr><td>分離點的 K</td><td>0.845299 × 1.154701 × 3.154701</td><td><strong>3.079201</strong></td></tr>
+<tr><td>K<sub>crit</sub></td><td>2 × 4 × 6</td><td><strong>48.000000</strong></td></tr>
+<tr><td>ω<sub>crit</sub></td><td>√8</td><td><strong>2.828427 rad/s</strong></td></tr>
+<tr><td>K ＝ 10 的實根</td><td>牛頓法</td><td><strong>−4.760818</strong></td></tr>
+<tr><td>K ＝ 10 的共軛對</td><td>降階二次式</td><td><strong>−0.619591 ± j1.310186</strong></td></tr>
+<tr><td>主導對的 ζ</td><td>0.619591 / 1.449303</td><td><strong>0.427510</strong></td></tr>
+</tbody></table>
+<p>四個階段可用數字固定：K ＝ 1 時三根為 <strong>−0.139194、−1.745898、−4.114908</strong>；K ＝ <strong>3.079201</strong> 時兩根在 <strong>−0.845299</strong> 附近重合；K ＝ 48 時共軛對為 <strong>0.000000 ± j2.828427</strong>；K ＝ 60 時成為 <strong>0.127332 ± j3.094613</strong>，實部已為正。推到 K ＝ 120，共軛對為 <strong>0.601244 ± j4.037253</strong>。反向推到 K ＝ 0，三根正好回到 <strong>0、−2、−4</strong>。</p>
+<p>改變極點間距也能檢查公式的邊界。a ＝ 1、b ＝ 3、K ＝ 10 時，K<sub>crit</sub> ＝ <strong>12</strong>，共軛對是 <strong>−0.055158 ± j1.602455</strong>，ζ ＝ <strong>0.034401</strong>，已非常接近虛軸；a ＝ 5、b ＝ 10、K ＝ 100 時，K<sub>crit</sub> ＝ <strong>750</strong>，共軛對是 <strong>−1.811000 ± j2.347162</strong>，ζ ＝ <strong>0.610874</strong>。較遠的第三極點會把可用增益範圍推大，但不代表所有暫態指標都一定更好。</p>
+
+<section class="workspace"><h2>自由實驗：用三個數字追蹤極點</h2>
+<p>受控體有三個開迴路極點 0、−a、−b，比例控制器只改 K。調整極點距離與增益，觀察重心、分離點、臨界值、三根座標及主導對 ζ 如何一起變。</p>
+<div class="controls">
+<label for="rl-a">第二個極點 a<input id="rl-a" type="range" min="1" max="5" step="0.5" value="2"></label>
+<label for="rl-b">第三個極點 b<input id="rl-b" type="range" min="3" max="10" step="0.5" value="4"></label>
+<label for="rl-k">迴路增益 K<input id="rl-k" type="range" min="0" max="120" step="1" value="10"></label>
+</div>
+<div id="rlocus-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>根軌跡是閉迴路極點隨 K 的路徑；只有 K ＝ 0 的起點等於開迴路極點。</li>
+<li>分離點表示兩個實根合併後成為共軛對，亦即開始振盪；它不是開始不穩定的點。</li>
+<li>漸近線重心是極點和與零點和之差除以分支數，不是物體的質心，也不一定有根停在那裡。</li>
+<li>K<sub>crit</sub> = ab(a + b) 與上一章 Routh 算出的臨界增益是同一件事；兩種方法若不一致，應先查公式或數值程式。</li>
+</ul>
+
+<h2>可觀察證據：逐步增益與方波測試</h2>
+<p><strong>用什麼量。</strong>把比例增益由小到大逐步增加，每一步輸入一次方波，以示波器記錄是否超越、振盪週期與是否衰減。先是不超越的三實根響應，再出現衰減振盪，最後於某個 K 形成等幅振盪。</p>
+<p><strong>能證明什麼。</strong>量測能確認分離與臨界兩個轉折存在，並取得 K<sub>crit</sub> 與 ω<sub>crit</sub> 的實際值。<strong>不能證明什麼。</strong>只看波形不能得到三個極點的精確座標；由 M<sub>p</sub> 與 t<sub>p</sub> 反推的也只是主導對，且不能證明受控體真的沒有零點。</p>
+
+<h2>連到哪門課</h2>
+<p>ζ 與極點座標的關係見<a href="../信號與系統-互動課程/08-極零點與二階系統.html">信號與系統的極零點與二階系統</a>。伺服機構調增益時，根軌跡可先圈出不振盪、衰減振盪與臨界三段；第 09 章 PID 使用的 K<sub>u</sub>，就是本頁的 K<sub>crit</sub>。下一章改用頻域讀值，觀察同一類多極點系統如何隨頻率累加衰減與相位。</p>
+<nav class="pager" aria-label="章節導覽"><a href="05-Routh穩定度判別.html">← 上一頁：Routh 穩定度判別</a><a href="07-頻率響應與波德圖.html">下一頁：頻率響應與波德圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>06 根軌跡</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,408 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>名詞與概念字典｜控制系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html" aria-current="page">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">查・54 個名詞，四段式：白話、位置、機制、邊界</p>
+<h1>名詞與概念字典：把全課的名詞放在同一張桌上比較</h1>
+<p class="lead">每張卡都從直覺、課內角色、數字機制與概念邊界四面解釋。搜尋框接受繁中、英文、縮寫與符號，例如 <code>routh</code>、<code>pid</code>、<code>ζ</code>；先找到詞，再沿章節連結回正文看完整脈絡。</p>
+<p class="note">來源：13-控制系統 §1–§7 與 中英名詞對照表-2.md 的「控制系統」節（21 詞）。本頁只整理定位、判讀與錨定數字，不取代各章的推導及實驗。</p>
+<div class="dictionary-tools"><label for="term-search">搜尋名詞或概念</label><input id="term-search" type="search" placeholder="搜尋繁中、英文、符號或用途"><span id="term-count" aria-live="polite"></span></div>
+
+<h2>第一組｜架構與建模（第 00–02 章，13 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="control system 控制系統 追蹤 干擾 輸出">
+<h2>控制系統（control system）</h2>
+<p><strong>白話：</strong>把會變動的裝置接上判斷與修正機制，使輸出依命令行動，遇到外界擾動仍能回到目標。重點不是讓裝置動起來，而是讓它照預期的速度、準確度與範圍行動。</p>
+<p><strong>位置／角色：</strong><a href="00-回授的價值.html">00 章</a>先用馬達轉速建立全課視角；恆溫器、無人機姿態、車輛定速與電源穩壓器都具備命令、受控體、量測與修正等角色。</p>
+<p><strong>機制：</strong>00 章令命令 r ＝ 1、增益漂移 +20 %、輸出干擾 d ＝ 0.2；開迴路誤差為 −0.400000，接上 K ＝ 50 的修正迴路後只剩 0.006612，顯示比較結果再修正的效果。</p>
+<p><strong>不要混淆：</strong>它不是單一控制器，也不是只有軟體；感測、致動、物理裝置與控制律合起來才是完整系統。輸出曾到達目標，也不等於面對參數變動時仍能維持相同性能。工程驗收還要逐項檢查追蹤、抗干擾、致動限制與安全邊界，不能只拿一條漂亮曲線代表全部使用情境。</p>
+</article>
+<article class="term-card" data-search="plant 受控體 馬達 裝置 動態">
+<h2>受控體（plant）</h2>
+<p><strong>白話：</strong>真正被施力、加熱、供電或轉動的物理對象。控制器只能送出控制量，受控體本身的慣性、阻尼與延遲才決定輸出如何隨時間改變。</p>
+<p><strong>位置／角色：</strong><a href="00-回授的價值.html">00 章</a>用靜態增益說明角色，後續各章再換成馬達與動態模型。真實裝置可以是機械手臂、爐溫、馬達、車體或電力轉換器。</p>
+<p><strong>機制：</strong>00 章標稱增益 G<sub>0</sub> ＝ 2，漂移後 G ＝ 2.400000；前饋增益仍是 0.5，因此輸出連同 0.2 干擾成為 1.400000。這說明物理參數一變，原先校準就會失準。</p>
+<p><strong>不要混淆：</strong>本課一律寫「受控體」；來源筆記與部分教材把 plant 寫成「工廠」。這裡指的是數學模型所代表的受控裝置，不是控制器、感測器或整套迴路。</p>
+</article>
+<article class="term-card" data-search="open-loop control 開迴路控制 前饋 不量輸出">
+<h2>開迴路控制（open-loop control）</h2>
+<p><strong>白話：</strong>命令送出去之後不回頭檢查結果，像依時間啟動灑水器。結構簡單、反應直接，但不知道輸出是否真的到位，也無法自行補償負載與環境變動。</p>
+<p><strong>位置／角色：</strong><a href="00-回授的價值.html">00 章</a>把它當作比較基準。定時烤箱、固定秒數的泵浦與沒有轉速量測的風扇驅動，都可能採用這種方式。</p>
+<p><strong>機制：</strong>以 F ＝ 0.5 配合標稱 G<sub>0</sub> ＝ 2 時，理想輸出恰為 1；當增益增加 20 % 且 d ＝ 0.2，輸出變成 1.400000、誤差 −0.400000，兩項偏差直接進入結果。</p>
+<p><strong>不要混淆：</strong>開迴路不等於沒有模型或沒有控制器，它可以有精密前饋；差別只在是否量回輸出修正誤差。理想參數下誤差為零，也不能證明它能抵抗未知干擾。若命令可預測且裝置重複度高，開迴路仍可能是成本最低的好方案；是否採用要看需求，不是依名稱判優劣。</p>
+</article>
+<article class="term-card" data-search="closed-loop control feedback 閉迴路 回授 負回授 誤差">
+<h2>閉迴路與回授（closed-loop control &amp; feedback）</h2>
+<p><strong>白話：</strong>把輸出量回來與命令比較，再用差值驅動控制器。輸出偏低就多推一點，偏高就收回一些，反覆修正直到誤差落進可接受範圍。</p>
+<p><strong>位置／角色：</strong><a href="00-回授的價值.html">00 章</a>建立核心觀念，後續所有極點、裕度與設計章都在研究這條閉合路徑。伺服馬達、定速巡航與穩壓電源都靠它修正。</p>
+<p><strong>機制：</strong>K ＝ 50、G ＝ 2.4 時迴路增益 L ＝ 120，干擾與模型偏差受 1 / 121 縮小；在 r ＝ 1、d ＝ 0.2 下，輸出 0.993388、誤差 0.006612。</p>
+<p><strong>不要混淆：</strong>本課一律寫台灣慣用語「回授」；中國教材寫「反饋」，是同一個 feedback。閉合路徑也不保證結果良好，方向接反或增益過大仍可能造成發散。</p>
+</article>
+<article class="term-card" data-search="reference error signal 參考命令 誤差訊號 r e 比較點">
+<h2>參考命令與誤差訊號（reference &amp; error signal）</h2>
+<p><strong>白話：</strong>參考命令 r 是希望輸出到哪裡，誤差 e 是希望值與量回值之差。控制器看的是差多少，而不是只看命令或只看輸出。</p>
+<p><strong>位置／角色：</strong><a href="00-回授的價值.html">00 章</a>定義 r 與 e，後續 PID、穩態誤差與內模原理都沿用。溫控器設定 25°C 是命令，室溫與設定的差就是誤差。</p>
+<p><strong>機制：</strong>00 章 r ＝ 1，閉迴路輸出 y ＝ 0.993388，所以 e ＝ r − y ＝ 0.006612；同條件的開迴路輸出 1.400000，誤差則為 −0.400000，負號表示超過命令。</p>
+<p><strong>不要混淆：</strong>誤差不是干擾，也不是感測器雜訊；前者是比較點算出的內部量，後兩者由不同位置進入迴路。誤差很小只代表追蹤接近，不代表控制量一定小。若感測器有固定偏移，控制器甚至可能把錯誤讀值追得非常準，因此命令、真實輸出與量測輸出要分開記號。</p>
+</article>
+<article class="term-card" data-search="sensor feedback gain h 感測器 回授增益 量測 校正">
+<h2>感測器與回授增益 H（sensor &amp; feedback gain, H）</h2>
+<p><strong>白話：</strong>感測器把物理輸出轉成可比較的量，H 描述轉換比例與回授路徑的增益。若刻度不準，控制器會把錯誤讀值當成真實結果。</p>
+<p><strong>位置／角色：</strong><a href="00-回授的價值.html">00 章</a>先採 H ＝ 1 的單位回授；編碼器、熱電偶、分流電阻與壓力感測元件，都要經校正後才能提供可信量測。</p>
+<p><strong>機制：</strong>本章 H ＝ 1，K ＝ 50、G ＝ 2.4，因此 L ＝ KGH ＝ 120；若 H 不再等於 1，比較點使用的是 Hy，理想追蹤尺度也會趨近 1 / H，而非固定等於 1。</p>
+<p><strong>不要混淆：</strong>H 是量測路徑，不是受控體 G，也不是控制器 C。增加 H 雖能改變迴路增益，卻同時改變輸出刻度，不能當作免費提高控制器增益的手段。實際感測器還有偏移、量化、截止頻率與延遲；若模型只留常數 H，表示這些效應在研究頻段內已小到可以忽略，並非它們真的不存在。</p>
+</article>
+<article class="term-card" data-search="loop gain l cgh 迴路增益 繞一圈">
+<h2>迴路增益（loop gain, L）</h2>
+<p><strong>白話：</strong>訊息沿控制器、受控體與感測器繞完整一圈後被放大多少。它統合三個區塊，是判斷誤差壓低程度與動態風險的核心量。</p>
+<p><strong>位置／角色：</strong><a href="00-回授的價值.html">00 章</a>先用靜態數字建立直覺；根軌跡、波德圖與奈奎斯特章再研究 L(s) 隨複數變數或頻率改變的結果。</p>
+<p><strong>機制：</strong>C ＝ K ＝ 50、G ＝ 2.4、H ＝ 1 時，L ＝ CGH ＝ 120，於是 S ＝ 1 / (1 + L) ＝ 0.008264。L 大能縮小低頻偏差，但也會推動閉迴路極點。</p>
+<p><strong>不要混淆：</strong>L ＝ CGH 是繞一圈的增益，不是控制器增益 K<sub>c</sub>；靈敏度看的是 L，不是 K<sub>c</sub>。只報一個靜態 L 也不能取代完整的 L(s)。</p>
+</article>
+<article class="term-card" data-search="sensitivity function s 靈敏度函數 模型誤差 干擾">
+<h2>靈敏度函數（sensitivity function, S）</h2>
+<p><strong>白話：</strong>衡量外界擾動或模型改變有多少會留在輸出。S 越小，迴路越能把同頻段的偏差壓住，但這種保護不可能在所有頻率無限延伸。</p>
+<p><strong>位置／角色：</strong><a href="00-回授的價值.html">00 章</a>用它量化回授價值；後續頻域設計會用相位與裕度限制可安全壓低的範圍，電源與伺服設計都會看這個量。</p>
+<p><strong>機制：</strong>K ＝ 50、L ＝ 120 時，S ＝ 1 / 121 ＝ 0.008264；原本 0.400000 的誤差被縮成 0.006612，相差 60.500000 倍。S 讀作靈敏度，數值無單位。</p>
+<p><strong>不要混淆：</strong>S 小代表對干擾與模型誤差不敏感，但 S + T ＝ 1，量測雜訊走的是 T；S 壓低的頻段 T 接近 1，雜訊可能直接進入輸出。</p>
+</article>
+<article class="term-card" data-search="disturbance measurement noise 干擾 量測雜訊 d 感測">
+<h2>干擾與量測雜訊（disturbance &amp; measurement noise）</h2>
+<p><strong>白話：</strong>干擾是真正推動受控體或輸出的外力，量測雜訊則只污染控制器看到的讀值。兩者看似都讓曲線抖動，進入位置與傳遞路徑卻不同。</p>
+<p><strong>位置／角色：</strong><a href="00-回授的價值.html">00 章</a>把 d 加在輸出端，09 章再說明微分動作會放大量測雜訊。負載扭矩、陣風是干擾；編碼器量化與電路熱雜訊屬量測問題。</p>
+<p><strong>機制：</strong>00 章 d ＝ 0.2，L ＝ 120，使干擾留在輸出的量約為 d / 121 ＝ 0.001653；若沒有閉合路徑，同一個 0.2 會完整加到輸出，無法自動消除。</p>
+<p><strong>不要混淆：</strong>不能用同一個濾波器觀念處理兩者：壓輸出干擾希望 S 小，避免量測雜訊進輸出則希望互補路徑在高頻變小。來源位置沒辨認清楚，設計方向可能相反。</p>
+</article>
+<article class="term-card" data-search="transfer function 轉移函數 g s 輸入輸出 拉氏">
+<h2>轉移函數（transfer function）</h2>
+<p><strong>白話：</strong>在線性、初始條件為零的前提下，用輸出與輸入的拉氏域比值濃縮動態關係。分母透露自然動態，分子則改變增益與各頻率的作用。</p>
+<p><strong>位置／角色：</strong><a href="01-建模從微分方程到轉移函數.html">01 章</a>由直流馬達方程得到 G(s)，之後所有方塊圖、根軌跡與頻域方法都以它作為共同語言。</p>
+<p><strong>機制：</strong>馬達參數 J ＝ 0.01、b ＝ 0.1、R ＝ 1、K<sub>t</sub> ＝ K<sub>e</sub> ＝ 0.01，得到 D ＝ 0.100100、直流增益 K ＝ 0.099900、極點 −10.010000。</p>
+<p><strong>不要混淆：</strong>本課一律寫「轉移函數」；中國教材寫「傳遞函數」。它是特定假設下的輸入輸出模型，不等於微分方程本身，也不直接保存每個內部狀態的物理意義。建立模型時還要寫清楚選了哪個輸入與輸出；同一顆馬達若改問電壓到電流或電壓到位置，所得式子、階數與零極點都可能不同。</p>
+</article>
+<article class="term-card" data-search="time constant tau 時間常數 τ 一階 63.2">
+<h2>時間常數（time constant, τ）</h2>
+<p><strong>白話：</strong>一階系統反應快慢的時間尺。經過一個 τ，步階響應完成約 63.2 %；經過四個 τ，已接近最後值，可用來快速估算等待時間。</p>
+<p><strong>位置／角色：</strong><a href="01-建模從微分方程到轉移函數.html">01 章</a>從馬達慣性與阻尼讀出 τ；馬達轉速、RC 電路與溫度模型都能用相同形式比較快慢。</p>
+<p><strong>機制：</strong>本章 τ ＝ JR / D ＝ 0.099900 s，τ 讀作 tau；12 V 步階的最終轉速為 1.198801 rad/s，在 t ＝ 0.1 s 時已到 0.758228 rad/s，四個 τ 為 0.399600 s。</p>
+<p><strong>不要混淆：</strong>τ 不是輸入延遲，也不是保證完全到達最終值的時刻；指數尾端理論上持續存在。多極點系統通常有多個時間尺度，不能隨意挑一個 τ 概括全部動態。</p>
+</article>
+<article class="term-card" data-search="block diagram reduction 方塊圖化簡 串聯 並聯 回授">
+<h2>方塊圖化簡（block diagram reduction）</h2>
+<p><strong>白話：</strong>把許多功能方塊與加減點，依串聯相乘、並聯相加及回授公式，整理成一個等效輸入輸出關係，方便直接讀極點與增益。</p>
+<p><strong>位置／角色：</strong><a href="02-方塊圖化簡與閉迴路轉移函數.html">02 章</a>處理 C、G、H 的連接。馬達驅動器、感測器比例與控制器分開建模後，常先用這方法合成。</p>
+<p><strong>機制：</strong>K<sub>c</sub> ＝ 10、K ＝ 2、τ ＝ 0.5 s、H ＝ 1 時，前向增益為 20，化簡後閉迴路極點 −42.000000、時間常數 0.023810 s，直流增益為 0.952381。</p>
+<p><strong>不要混淆：</strong>化簡只保留指定輸入到指定輸出的等效關係，不代表內部量消失。移動加總點或取樣點時必須補償路徑增益，不能只憑圖形看起來相近就搬動。同一張圖若改問干擾到輸出或命令到控制量，分子便會不同，不能把先前算好的式子直接套用。</p>
+</article>
+<article class="term-card" data-search="mason gain formula 梅森增益公式 訊號流圖 路徑 迴圈">
+<h2>梅森增益公式（Mason's gain formula）</h2>
+<p><strong>白話：</strong>面對交錯回路很多的訊號流圖，用所有前向路徑、迴圈及互不接觸迴圈的組合，一次寫出輸入到輸出的總增益。</p>
+<p><strong>位置／角色：</strong><a href="02-方塊圖化簡與閉迴路轉移函數.html">02 章</a>只建立它的定位，不展開複雜圖形運算。多迴路飛控、類比網路與狀態方程轉換時可能遇到。</p>
+<p><strong>機制：</strong>02 章的單一負回授例可直接得到分母 1 + K<sub>c</sub>KH ＝ 21，因而 T(0) ＝ 20 / 21 ＝ 0.952381；梅森公式在此會給出相同結果，只是步驟較一般化。</p>
+<p><strong>不要混淆：</strong>它不是另一套物理定律，而是線性聯立關係的圖形化消去法。簡單單迴路硬套公式反而容易漏掉符號；本課只要求知道用途，不要求背完整展開式。</p>
+</article>
+</div>
+
+<h2>第二組｜時域與穩定度（第 03–05 章，13 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="steady-state error 穩態誤差 ess 最後偏差">
+<h2>穩態誤差（steady-state error）</h2>
+<p><strong>白話：</strong>暫態消退後，輸出與命令仍留下的差。它回答最後準不準，不回答途中是否振盪、多久到達或峰值有多高。</p>
+<p><strong>位置／角色：</strong><a href="03-穩態誤差與系統型式.html">03 章</a>用步階、斜坡與拋物線命令分類；伺服定位、定速追蹤與加速度命令會對應不同要求。</p>
+<p><strong>機制：</strong>型式 1、K ＝ 10、a ＝ 2 時，K<sub>v</sub> ＝ 5，步階 e<sub>ss</sub> ＝ 0，斜坡 e<sub>ss</sub> ＝ 0.200000，拋物線則無限增大，顯示結果取決於命令類型。</p>
+<p><strong>不要混淆：</strong>穩態誤差不是某一瞬間的誤差，也不能在閉迴路發散時硬算。輸出最後很準仍可能有過大的暫態峰值；兩者要用不同指標分別檢查。實驗估計時還要等自然響應充分衰減，觀測窗太短會把尚未結束的緩慢變化誤當成最後偏差。</p>
+</article>
+<article class="term-card" data-search="system type 系統型式 原點極點 積分器">
+<h2>系統型式（system type）</h2>
+<p><strong>白話：</strong>計算迴路增益在原點有幾個極點，也就是路徑裡有幾個純積分器。型式越高，能零誤差追蹤的低階多項式命令越多。</p>
+<p><strong>位置／角色：</strong><a href="03-穩態誤差與系統型式.html">03 章</a>用它快速查誤差表；位置伺服常需型式 1，若要持續追蹤加速度則可能考慮更高型式。</p>
+<p><strong>機制：</strong>型式 1 的 L(s) ＝ 10 / (s(s + 2)) 含一個原點極點，所以步階誤差為 0、斜坡誤差為 1 / 5 ＝ 0.200000；型式 0 同參數的步階誤差是 0.166667。</p>
+<p><strong>不要混淆：</strong>看的是迴路增益 L 在原點的極點數，不是只看受控體；控制器加入積分器就能提高型式。型式提高也不保證閉迴路仍可接受，必須另做穩定度判別。</p>
+</article>
+<article class="term-card" data-search="error constants kpos kv ka 誤差常數 位置 速度 加速度">
+<h2>誤差常數 K<sub>pos</sub>、K<sub>v</sub>、K<sub>a</sub>（error constants）</h2>
+<p><strong>白話：</strong>三個常數分別把迴路的低頻能力換成步階、斜坡與拋物線命令的最後誤差，讓人不用求完整時間響應也能判斷追蹤精度。</p>
+<p><strong>位置／角色：</strong><a href="03-穩態誤差與系統型式.html">03 章</a>統一寫成 K<sub>pos</sub>、K<sub>v</sub>、K<sub>a</sub>；輸送帶定速與天線掃描常以 K<sub>v</sub> 評估斜坡追蹤。</p>
+<p><strong>機制：</strong>型式 1、K ＝ 10、a ＝ 2 時，K<sub>pos</sub> ＝ ∞、K<sub>v</sub> ＝ K / a ＝ 5、K<sub>a</sub> ＝ 0，因此三種誤差依序是 0、0.200000 與 ∞。</p>
+<p><strong>不要混淆：</strong>K<sub>pos</sub> 是位置誤差常數，不是 PID 的比例增益 K<sub>p</sub>；K<sub>v</sub> 也不是速度本身。它們是 s 趨近 0 時由 L(s) 取極限得到的量。</p>
+</article>
+<article class="term-card" data-search="final value theorem 終值定理 s 趨近零 極限">
+<h2>終值定理（final value theorem）</h2>
+<p><strong>白話：</strong>在條件成立時，不必把拉氏域式子完整反轉，就能從 s 趨近 0 的極限讀出時間走到無限久後的結果。</p>
+<p><strong>位置／角色：</strong><a href="03-穩態誤差與系統型式.html">03 章</a>用它求 e<sub>ss</sub>；電源穩壓、位置追蹤與速度控制都能先算最後偏差，再處理暫態。</p>
+<p><strong>機制：</strong>型式 1 斜坡輸入下，e<sub>ss</sub> ＝ lim<sub>s→0</sub> sE(s) ＝ 1 / K<sub>v</sub>；本例 K<sub>v</sub> ＝ 10 / 2 ＝ 5，所以得到 0.200000。</p>
+<p><strong>不要混淆：</strong>只有相關極點落在允許區域、時間響應確實收斂時才能使用。對發散或持續振盪的閉迴路直接代 s ＝ 0，可能算出看似有限卻沒有物理意義的答案。</p>
+</article>
+<article class="term-card" data-search="transient response 暫態響應 步階 峰值 上升">
+<h2>暫態響應（transient response）</h2>
+<p><strong>白話：</strong>命令改變後到進入長期狀態前的整段過程，包含爬升、振盪、峰值與衰減。它描述怎麼到達，不只描述最後到哪裡。</p>
+<p><strong>位置／角色：</strong><a href="04-二階閉迴路與極點位置.html">04 章</a>以二階模型整理四個時間指標；機械定位、電源啟動與飛行器姿態都必須限制途中行為。</p>
+<p><strong>機制：</strong>K ＝ 25、a ＝ 6 時，極點為 −3 ± j4；單位步階在 0.785398 s 到達峰值，超越量 9.478022 %，約 1.333333 s 進入 2 % 範圍。</p>
+<p><strong>不要混淆：</strong>本課一律寫「步階」；中國教材寫「階躍」。暫態並非干擾造成的偶發現象，即使模型與輸入完全確定，儲能元件仍會產生自然響應。</p>
+</article>
+<article class="term-card" data-search="damping ratio natural frequency 阻尼比 自然頻率 ζ omega n">
+<h2>阻尼比與自然頻率（damping ratio &amp; natural frequency）</h2>
+<p><strong>白話：</strong>自然頻率 ω<sub>n</sub> 設定二階動態的大致時間尺度，阻尼比 ζ 決定能量消散與振盪程度。兩者一起決定極點位置及響應形狀。</p>
+<p><strong>位置／角色：</strong><a href="04-二階閉迴路與極點位置.html">04 章</a>把特徵式對照標準二階式；懸吊、伺服、RLC 電路與結構振動都常用這對參數溝通。</p>
+<p><strong>機制：</strong>K ＝ 25、a ＝ 6 時，ω<sub>n</sub> ＝ √25 ＝ 5 rad/s，ω 讀作 omega；ζ ＝ 6 / (2 × 5) ＝ 0.600000，ζ 讀作 zeta，故極點為 −3 ± j4。</p>
+<p><strong>不要混淆：</strong>ω<sub>n</sub> 不是響應必然出現的實際振盪頻率；欠阻尼時觀察到的是 ω<sub>d</sub>。ζ 也不是摩擦係數，而是相對於臨界阻尼的無單位比例。兩套裝置即使 ζ 相同，若 ω<sub>n</sub> 不同，外形相似但時間尺度仍會完全不同。</p>
+</article>
+<article class="term-card" data-search="overshoot mp 超越量 峰值 百分比">
+<h2>超越量（overshoot, M<sub>p</sub>）</h2>
+<p><strong>白話：</strong>輸出第一次峰值超過最終值的比例。它直接回答定位會衝過多少、電壓會高出多少，常是安全限制與品質要求的一部分。</p>
+<p><strong>位置／角色：</strong><a href="04-二階閉迴路與極點位置.html">04 章</a>把它連到 ζ；機械平台避免撞限位、電源避免傷元件、溫控避免燒焦時都會指定上限。</p>
+<p><strong>機制：</strong>ζ ＝ 0.600000 時，M<sub>p</sub> ＝ 9.478022 %；把 K 從 25 增至 100 會使 ζ 降至 0.300000，M<sub>p</sub> 上升為 37.232610 %，雖較準卻更會振盪。</p>
+<p><strong>不要混淆：</strong>本課一律寫「超越量」；中國教材寫「超調」。它是相對最終值的百分比，不是峰值時間，也不是任意瞬間高於命令的絕對差。</p>
+</article>
+<article class="term-card" data-search="settling time ts 整定時間 2 percent 範圍">
+<h2>整定時間（settling time, t<sub>s</sub>）</h2>
+<p><strong>白話：</strong>輸出最後一次進入指定容許範圍，之後不再離開的時刻。它把衰減尾巴轉成可驗收的等待時間。</p>
+<p><strong>位置／角色：</strong><a href="04-二階閉迴路與極點位置.html">04 章</a>採 2 % 準則；產線定位要決定何時進下一工序，測試設備也要知道何時讀值可信。</p>
+<p><strong>機制：</strong>ζ ＝ 0.6、ω<sub>n</sub> ＝ 5 rad/s 時，t<sub>s</sub> ≈ 4 / (ζω<sub>n</sub>) ＝ 1.333333 s。此式以主導二階極點估算包絡衰減。</p>
+<p><strong>不要混淆：</strong>4 / (ζω<sub>n</sub>) 的 4 是 2 % 準則的工程近似，換 5 % 準則變成 3。它不是第一次進範圍的時刻，後續若再離開仍不能算完成。</p>
+</article>
+<article class="term-card" data-search="rise time peak time 上升時間 峰值時間 tr tp">
+<h2>上升時間與峰值時間（rise time &amp; peak time）</h2>
+<p><strong>白話：</strong>上升時間描述輸出從低比例跨到高比例要多久；峰值時間則是第一次最高點出現的時刻。一個看爬升速度，一個看振盪週期的四分之一附近。</p>
+<p><strong>位置／角色：</strong><a href="04-二階閉迴路與極點位置.html">04 章</a>並列兩項指標；伺服追蹤重視上升時間，會碰撞或飽和的裝置還必須關注峰值何時來。</p>
+<p><strong>機制：</strong>ω<sub>n</sub> ＝ 5 rad/s 時，本課粗估 t<sub>r</sub> ≈ 1.8 / 5 ＝ 0.360000 s；ω<sub>d</sub> ＝ 4 rad/s，故 t<sub>p</sub> ＝ π / 4 ＝ 0.785398 s。</p>
+<p><strong>不要混淆：</strong>兩者定義不同，數值不能互換。上升時間採 10 % 到 90 % 或其他門檻時會改變；過阻尼響應沒有振盪峰值，峰值時間公式便不適用。</p>
+</article>
+<article class="term-card" data-search="dominant poles 主導極點 慢極點 二階近似">
+<h2>主導極點（dominant poles）</h2>
+<p><strong>白話：</strong>離虛軸較近、衰減最慢，因而長時間最能塑造響應的極點。把很快消失的極點暫時忽略，可用低階模型估算主要指標。</p>
+<p><strong>位置／角色：</strong><a href="04-二階閉迴路與極點位置.html">04 章</a>用第三極點檢查二階近似；高階馬達、飛控與電源模型常先找主導對再做初步設計。</p>
+<p><strong>機制：</strong>共軛對實部為 −3，第三極點 p ＝ 30，因此快慢比 30 / 3 ＝ 10.000000，大於 5 的經驗門檻；第三模態衰減快很多，二階近似通常可用。</p>
+<p><strong>不要混淆：</strong>主導不是增益最大或頻率最高的極點，而是衰減最慢且殘值不能忽略者。若零點抵消、殘值很小或極點間距不足，只看位置比例仍可能判錯。二階近似是工程估算而非刪除真實模態，最後仍應用完整模型核對峰值、控制量與所有工作點。</p>
+</article>
+<article class="term-card" data-search="stability 穩定度 極點 左半平面 收斂">
+<h2>穩定度（stability）</h2>
+<p><strong>白話：</strong>系統受有限擾動後，輸出是否仍受限制並回到可接受狀態。連性能都談不上之前，必須先確認響應不會越走越遠。</p>
+<p><strong>位置／角色：</strong><a href="05-Routh穩定度判別.html">05 章</a>以閉迴路極點判斷；飛行器、化工製程與電網控制尤其不能只看短時間模擬貌似平順。</p>
+<p><strong>機制：</strong>多項式 s<sup>4</sup> + 2s<sup>3</sup> + 3s<sup>2</sup> + 4s + 5 的 Routh 第一欄為 1、2、1、−6、5，有 2 次符號變化，因此有 2 個右半平面極點。</p>
+<p><strong>不要混淆：</strong>輸出暫時不大不代表長期收斂；反過來，可收斂也不代表峰值、速度與誤差符合需求。穩定度是必要門檻，性能指標仍須另行檢查。</p>
+</article>
+<article class="term-card" data-search="characteristic equation 特徵方程式 1 plus l 極點 分母">
+<h2>特徵方程式（characteristic equation）</h2>
+<p><strong>白話：</strong>令閉迴路分母為零所得的方程式，其根就是閉迴路極點。控制器真正改動的是這些根，根的位置再決定自然響應。</p>
+<p><strong>位置／角色：</strong><a href="05-Routh穩定度判別.html">05 章</a>用係數直接判根在哪一側；根軌跡、PID 與狀態回授也都從期望特徵式出發。</p>
+<p><strong>機制：</strong>05 章分析 s<sup>3</sup> + 3s<sup>2</sup> + 3s + K；當 K ＝ 9 時出現 ±j1.732051 的虛軸根，K 小於 9 且大於 0 時才落在允許區域。</p>
+<p><strong>不要混淆：</strong>特徵方程式不是輸入方程式，也不包含參考命令的大小。分子零點能改變響應形狀，卻不會改變這個方程式所列的閉迴路自然模態。</p>
+</article>
+<article class="term-card" data-search="routh hurwitz criterion routh–hurwitz 準則 第一欄 符號變化">
+<h2>Routh–Hurwitz 準則（Routh–Hurwitz criterion）</h2>
+<p><strong>白話：</strong>不用逐一求高次方程根，只靠係數排成表格，就能數出右半平面有幾個極點，並求參數保持收斂的範圍。</p>
+<p><strong>位置／角色：</strong><a href="05-Routh穩定度判別.html">05 章</a>完整建表，06 章找虛軸穿越、09 章求 PID 參數範圍時都再使用。</p>
+<p><strong>機制：</strong>預設四階例第一欄 1、2、1、−6、5 出現 2 次變號，所以右半平面有 2 根；另一例 s<sup>3</sup> + 3s<sup>2</sup> + 3s + K 得 0 ＜ K ＜ 9。</p>
+<p><strong>不要混淆：</strong>它只告訴你右半平面有幾個極點，不告訴你在哪裡；係數全正只是必要條件。遇到首元為零或整列為零，還要依 ε 或輔助多項式規則處理。</p>
+</article>
+</div>
+
+<h2>第三組｜根軌跡與頻域（第 06–08 章，14 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="root locus 根軌跡 增益 k 極點 路徑">
+<h2>根軌跡（root locus）</h2>
+<p><strong>白話：</strong>把控制增益 K 從 0 慢慢增加，追蹤閉迴路極點在複數平面走過的路。它直接呈現增益如何同時改變速度、振盪與是否收斂。</p>
+<p><strong>位置／角色：</strong><a href="06-根軌跡.html">06 章</a>以三極點迴路建立規則；伺服增益選擇與補償器零極點配置常先用它看可達區域。</p>
+<p><strong>機制：</strong>L(s) ＝ K / (s(s + 2)(s + 4)) 在 K ＝ 10 時，根為 −4.760818 與 −0.619591 ± j1.310186，主導對 ζ ＝ 0.427510；K ＝ 48 時走到虛軸。</p>
+<p><strong>不要混淆：</strong>軌跡畫的是閉迴路極點，不是輸出隨時間走的曲線，也不是頻率響應。每一點對應一個 K，不能把不同增益下的根拼成同一次響應。圖上位置只能先推估自然模態，若要知道某個輸入下的峰值與最後值，仍須連同零點及輸入形式計算。</p>
+</article>
+<article class="term-card" data-search="asymptotes centroid 漸近線 重心 根軌跡 無窮遠">
+<h2>漸近線與重心（asymptotes &amp; centroid）</h2>
+<p><strong>白話：</strong>當零點比極點少，有些根會走向無窮遠；漸近線告訴它們遠處的方向，重心則是這些直線在實軸上的交會位置。</p>
+<p><strong>位置／角色：</strong><a href="06-根軌跡.html">06 章</a>用來勾勒不用逐點求根的整體幾何；設計者可先判斷高增益會把根帶往左側或右側。</p>
+<p><strong>機制：</strong>三個極點 0、−2、−4 且沒有零點，故有 3 條漸近線；重心為 (0 − 2 − 4) / 3 ＝ −2.000000，角度是 ±60.000000° 與 180.000000°。</p>
+<p><strong>不要混淆：</strong>漸近線只描述 K 很大時的方向，不是每段軌跡都完全貼在線上。重心也不是所有閉迴路極點的平均值，而由開迴路極點與零點計算。</p>
+</article>
+<article class="term-card" data-search="breakaway point 分離點 實軸 重根 d k ds">
+<h2>分離點（breakaway point）</h2>
+<p><strong>白話：</strong>兩條或更多實軸根軌跡相遇後離開實軸的地方。從此極點成為共軛複數對，響應開始帶有振盪成分。</p>
+<p><strong>位置／角色：</strong><a href="06-根軌跡.html">06 章</a>以 dK / ds ＝ 0 尋找候選點；調伺服增益時，它標出純指數響應轉為欠阻尼響應的界線。</p>
+<p><strong>機制：</strong>本例解 3s² + 12s + 8 ＝ 0，落在有效實軸區段的點是 s ＝ −0.845299；對應 K ＝ 3.079201，兩個實根在這附近重合再成為複數。</p>
+<p><strong>不要混淆：</strong>它不是開始不穩定的點，是開始振盪的點；不穩定要等虛軸穿越。由導數得到的每個根還要檢查是否真的位於根軌跡有效區段。</p>
+</article>
+<article class="term-card" data-search="critical gain j omega axis crossing 臨界增益 虛軸穿越 kcrit">
+<h2>臨界增益與虛軸穿越（critical gain &amp; jω-axis crossing）</h2>
+<p><strong>白話：</strong>增益升到某一值時，閉迴路極點恰好落在虛軸，既不衰減也不增長；這個邊界增益就是臨界增益。</p>
+<p><strong>位置／角色：</strong><a href="06-根軌跡.html">06 章</a>把幾何路徑與 Routh 結果接起來；09 章的 Ziegler–Nichols 方法也從等幅振盪找類似邊界。</p>
+<p><strong>機制：</strong>K<sub>crit</sub> ＝ 48.000000 時，穿越頻率 ω<sub>crit</sub> ＝ √8 ＝ 2.828427 rad/s；K ＝ 60 時根的實部變成 +0.127332，已越過邊界。</p>
+<p><strong>不要混淆：</strong>臨界只表示剛好在邊界，不是良好設計點；模型誤差或延遲都可能使它立即發散。jω 軸上的 ω 讀作 omega，是振盪角頻率，不是增益。</p>
+</article>
+<article class="term-card" data-search="frequency response 頻率響應 j omega 正弦 穩態">
+<h2>頻率響應（frequency response）</h2>
+<p><strong>白話：</strong>逐一用不同頻率的正弦輸入測試，記錄穩態輸出的振幅比例與相位差，便能知道系統對慢變與快變成分各如何處理。</p>
+<p><strong>位置／角色：</strong><a href="07-頻率響應與波德圖.html">07 章</a>把 s 換成 jω 並列表讀值；網路分析儀、伺服掃頻與音訊濾波器量測都使用這種描述。</p>
+<p><strong>機制：</strong>本章 L<sub>0</sub> 在 ω ＝ 10 rad/s 時，振幅為 0.703598，也就是 −3.053514 dB，相位為 −140.710593°；ω 讀作 omega，∠ 讀作角。</p>
+<p><strong>不要混淆：</strong>頻率響應是正弦穩態關係，不是時間響應曲線；相位落後也不是純時間延遲的同義詞。只有線性模型才能把各頻率分量分開處理後再相加。量測時每個頻率都要等暫態衰減，否則讀到的振幅與相位會混入啟動過程而失真。</p>
+</article>
+<article class="term-card" data-search="bode plot 波德圖 對數頻率 振幅 相位">
+<h2>波德圖（Bode plot）</h2>
+<p><strong>白話：</strong>用對數頻率當橫軸，分別整理振幅的 dB 值與相位角。乘法模型因此變成直線斜率與加法，方便快速估算轉角及裕度。</p>
+<p><strong>位置／角色：</strong><a href="07-頻率響應與波德圖.html">07 章</a>用數值表取代畫圖；濾波器、放大器、電源迴路與機械伺服都用它檢視跨頻段行為。</p>
+<p><strong>機制：</strong>K ＝ 10、τ<sub>1</sub> ＝ 0.1、τ<sub>2</sub> ＝ 0.01，在 ω ＝ 10 rad/s 的精確值是 −3.053514 dB、−140.710593°，而漸近振幅估成 0 dB。</p>
+<p><strong>不要混淆：</strong>本課一律寫「波德圖」；部分教材寫「伯德圖」。它包含振幅與相位兩部分，不能只看一條 dB 曲線，也不能由低頻斜率單獨保證閉迴路結果。</p>
+</article>
+<article class="term-card" data-search="decibel db 分貝 對數 比例 20 log">
+<h2>分貝（decibel, dB）</h2>
+<p><strong>白話：</strong>把很大範圍的振幅比壓縮成對數數字，使串聯系統的倍率相乘變成 dB 相加。0 dB 表示倍率 1，不表示沒有輸出。</p>
+<p><strong>位置／角色：</strong><a href="07-頻率響應與波德圖.html">07 章</a>用它整理頻率讀值，08 章再用 dB 表示增益裕度；放大器與感測鏈規格也普遍使用。</p>
+<p><strong>機制：</strong>振幅比 0.703598 經 20 log<sub>10</sub> 轉成 −3.053514 dB；若增益從 10 增成 100，整條振幅讀值上移 20 dB，而相位保持不變。</p>
+<p><strong>不要混淆：</strong>振幅比用 20 log，功率比才常用 10 log；負 dB 只是倍率小於 1，不是負能量。dB 是比值表示法，若要表絕對量必須另附參考基準。</p>
+</article>
+<article class="term-card" data-search="corner frequency 轉角頻率 omega c tau 斜率">
+<h2>轉角頻率（corner frequency）</h2>
+<p><strong>白話：</strong>一階極點或零點開始明顯改變振幅斜率與相位的頻率，是波德近似線分段的轉折位置。</p>
+<p><strong>位置／角色：</strong><a href="07-頻率響應與波德圖.html">07 章</a>由每個時間常數讀取；選濾波器元件或補償器零極點時，會先決定轉角放在哪個頻段。</p>
+<p><strong>機制：</strong>τ<sub>1</sub> ＝ 0.1 s 與 τ<sub>2</sub> ＝ 0.01 s 對應 10.000000 與 100.000000 rad/s；在第一轉角，單一極點貢獻約 −3.010300 dB 與 −45°。</p>
+<p><strong>不要混淆：</strong>轉角不是增益交越，也不是系統忽然停止通過的硬邊界；真實曲線平滑轉彎，相位甚至在轉角前一個十倍頻就開始改變。多個轉角靠得很近時，各項振幅與相位會疊加，不能把單一極點的規則分段套完就忽略其他項正在轉彎。</p>
+</article>
+<article class="term-card" data-search="gain crossover frequency omega gc 增益交越頻率 0 db">
+<h2>增益交越頻率（gain crossover frequency, ω<sub>gc</sub>）</h2>
+<p><strong>白話：</strong>開迴路振幅等於 1，也就是 0 dB 的頻率。此處還剩多少相位空間，直接形成相位裕度。</p>
+<p><strong>位置／角色：</strong><a href="08-增益裕度相位裕度與奈奎斯特.html">08 章</a>以二分搜尋找出交越；伺服與電源迴路常用它估計反應速度與可用的相位餘量。</p>
+<p><strong>機制：</strong>L<sub>0</sub>(s) ＝ 10 / (s(0.1s + 1)(0.01s + 1)) 的 ω<sub>gc</sub> ＝ 7.844079 rad/s，此處相位 −132.596060°，因此 PM ＝ 47.403940°。</p>
+<p><strong>不要混淆：</strong>它由振幅條件決定，不是相位等於 −180° 的位置；兩種交越通常不同。若有多次 0 dB 交越，不能只挑最順眼的一次計算。</p>
+</article>
+<article class="term-card" data-search="phase crossover frequency omega pc 相位交越頻率 minus 180">
+<h2>相位交越頻率（phase crossover frequency, ω<sub>pc</sub>）</h2>
+<p><strong>白話：</strong>開迴路相位到達 −180° 的頻率。此處振幅離 1 還有多少距離，決定增益還能增加多少才碰到臨界點。</p>
+<p><strong>位置／角色：</strong><a href="08-增益裕度相位裕度與奈奎斯特.html">08 章</a>用它求增益裕度，網路分析儀也會直接標示此頻率與對應振幅。</p>
+<p><strong>機制：</strong>τ<sub>1</sub> ＝ 0.1、τ<sub>2</sub> ＝ 0.01 時，ω<sub>pc</sub> ＝ 1 / √(0.1 × 0.01) ＝ 31.622777 rad/s；√ 讀作根號，此處振幅比為 0.090909。</p>
+<p><strong>不要混淆：</strong>它由相位條件決定，不是振幅 0 dB 的 ω<sub>gc</sub>。沒有 −180° 相位交越時，傳統增益裕度可能視為無限，仍須檢查延遲與模型有效範圍。</p>
+</article>
+<article class="term-card" data-search="gain margin gm 增益裕度 臨界增益 db">
+<h2>增益裕度（gain margin, GM）</h2>
+<p><strong>白話：</strong>在其他動態不變時，開迴路增益還能放大多少才到振盪邊界。它是距離危險點的其中一把尺。</p>
+<p><strong>位置／角色：</strong><a href="08-增益裕度相位裕度與奈奎斯特.html">08 章</a>由相位交越處讀取；量產設備面對元件公差時，常要求保留合理 GM。</p>
+<p><strong>機制：</strong>ω<sub>pc</sub> ＝ 31.622777 rad/s 時振幅比 0.090909，所以 GM ＝ 20.827854 dB；換算後臨界增益 K<sub>crit</sub> ＝ 110.000000。</p>
+<p><strong>不要混淆：</strong>GM 只測純增益變動的餘量，不涵蓋額外延遲造成的相位損失。正 GM 也不代表響應好看；還必須同時檢查 PM、速度與模型不確定性。若增益會隨負載及溫度改變，應拿最壞工作點的讀值比較規格，而不是只報標稱模型。</p>
+</article>
+<article class="term-card" data-search="phase margin pm 相位裕度 角度 omega gc">
+<h2>相位裕度（phase margin, PM）</h2>
+<p><strong>白話：</strong>在振幅剛好為 1 的頻率，距離 −180° 還剩多少角度。餘量小通常表示阻尼低、峰值高，額外延遲也更容易造成發散。</p>
+<p><strong>位置／角色：</strong><a href="08-增益裕度相位裕度與奈奎斯特.html">08 章</a>把 PM 與暫態直覺連起來，10 章再用領先補償提高它。</p>
+<p><strong>機制：</strong>ω<sub>gc</sub> ＝ 7.844079 rad/s 時相位 −132.596060°，所以 PM ＝ 47.403940°，落在本課 45°–60° 的設計目標內，近似 ζ 約 0.47。</p>
+<p><strong>不要混淆：</strong>PM 與 GM 是兩個獨立的裕度，K ＝ 50 時 GM 6.848454 dB 看似合格、PM 卻只有 13.570879°。不能用其中一項替另一項背書。</p>
+</article>
+<article class="term-card" data-search="nyquist criterion 奈奎斯特準則 環繞 minus one n p z">
+<h2>奈奎斯特準則（Nyquist criterion）</h2>
+<p><strong>白話：</strong>觀察開迴路頻率軌跡如何環繞複數平面的 −1 點，再結合開迴路右半平面極點數，判定閉迴路有多少危險極點。</p>
+<p><strong>位置／角色：</strong><a href="08-增益裕度相位裕度與奈奎斯特.html">08 章</a>用數字與判讀句取代繪圖；有延遲或開迴路本來就有危險極點時尤其重要。</p>
+<p><strong>機制：</strong>本例 P ＝ 0，ω<sub>pc</sub> 處振幅 0.090909，小於 1，因此穿越負實軸時仍在 −1 右側且不形成危險環繞；對應 GM 為 20.827854 dB。</p>
+<p><strong>不要混淆：</strong>它分析的是開迴路 L(jω) 軌跡，結論卻關於閉迴路；不能把兩者極點混算。環繞方向與符號約定也要一致，否則 N、P、Z 會整體判反。若開迴路在虛軸上有極點，輪廓還必須繞開該點並取極限；本課的文字判讀已包含假設，不能無條件搬到所有模型。</p>
+</article>
+<article class="term-card" data-search="bandwidth resonant peak 頻寬 共振峰 closed loop mr">
+<h2>頻寬與共振峰（bandwidth &amp; resonant peak）</h2>
+<p><strong>白話：</strong>頻寬描述閉迴路能有效跟隨到多快的命令，共振峰描述某段頻率被特別放大的程度；前者關乎速度，後者常透露低阻尼。</p>
+<p><strong>位置／角色：</strong><a href="08-增益裕度相位裕度與奈奎斯特.html">08 章</a>在裕度脈絡中定位，伺服規格、振動抑制與量測平台都會同時關注兩者。</p>
+<p><strong>機制：</strong>本課迴路的 ω<sub>gc</sub> ＝ 7.844079 rad/s、PM ＝ 47.403940°；這組數字顯示可用速度與阻尼的折衷。若增益升到 110，PM 變成 0° 且到達臨界。</p>
+<p><strong>不要混淆：</strong>閉迴路頻寬不一定等於開迴路增益交越頻率，只是常在相近量級。共振峰也不是超越量；一個在頻域由正弦穩態定義，一個在時域由步階峰值定義。驗收速度時要先說明採用哪個閉迴路振幅門檻，否則兩份測試即使都寫頻寬，也可能得到不同結果。</p>
+</article>
+</div>
+
+<h2>第四組｜設計與狀態空間（第 09–11 章，14 張）</h2>
+<div class="term-list">
+<article class="term-card" data-search="pid control proportional integral derivative pid 控制 比例 積分 微分">
+<h2>PID 控制（proportional–integral–derivative control, PID）</h2>
+<p><strong>白話：</strong>把現在誤差、過去累積與變化趨勢三種資訊加權相加，形成控制量。三項分工直觀，因而成為工業現場最常見的控制器骨架。</p>
+<p><strong>位置／角色：</strong><a href="09-PID控制器設計.html">09 章</a>比較參數對響應的影響；馬達轉速、爐溫、流量、壓力與無人機姿態迴路都常以它為起點。</p>
+<p><strong>機制：</strong>K<sub>p</sub> ＝ 20、K<sub>i</sub> ＝ 10、K<sub>d</sub> ＝ 5 時，模擬峰值 1.170189、M<sub>p</sub> ＝ 17.018937 %、t<sub>s</sub> ＝ 2.731000 s，最後 y(10) ＝ 1.000340。</p>
+<p><strong>不要混淆：</strong>PID 不是三個旋鈕各自獨立改一項指標；它們共同改變特徵方程式。參數越大也不一定越快更準，致動飽和、雜訊與未建模延遲都會限制增益。換了負載、感測器濾波或執行週期，原參數的效果也可能改變，調好後仍要跨工作點測試。</p>
+</article>
+<article class="term-card" data-search="integral action 積分項 ki 累積 零誤差">
+<h2>積分項（integral action）</h2>
+<p><strong>白話：</strong>把誤差隨時間累加；只要長期仍有同方向偏差，累積值就持續推動控制量，直到偏差被消除。</p>
+<p><strong>位置／角色：</strong><a href="09-PID控制器設計.html">09 章</a>用 K<sub>i</sub> 控制此作用。溫控與轉速控制面對固定負載時，常靠積分補足比例項留下的偏差。</p>
+<p><strong>機制：</strong>預設 K<sub>i</sub> ＝ 10，10 s 時 y ＝ 1.000340、模擬 e<sub>ss</sub> ＝ −0.000340，理論值為 0；積分器同時讓特徵式增加一階。</p>
+<p><strong>不要混淆：</strong>消除的是步階穩態誤差，斜坡仍有常數誤差；代價是多一個 −90° 相位。積分過強會增加振盪風險，且致動器受限時會累積過頭。</p>
+</article>
+<article class="term-card" data-search="derivative action 微分項 kd 趨勢 阻尼 雜訊">
+<h2>微分項（derivative action）</h2>
+<p><strong>白話：</strong>根據誤差或量測的變化速度提前反應，像看見輸出正快速逼近目標就先收力，可增加阻尼並壓低峰值。</p>
+<p><strong>位置／角色：</strong><a href="09-PID控制器設計.html">09 章</a>採用對量測微分，避免命令突變造成尖峰；高速伺服與姿態控制常需要適量微分。</p>
+<p><strong>機制：</strong>預設 K<sub>d</sub> ＝ 5，使特徵式 s² 項由 11 增至 16；配合 K<sub>p</sub> ＝ 20、K<sub>i</sub> ＝ 10，Routh 的 b<sub>1</sub> ＝ 11.666667。</p>
+<p><strong>不要混淆：</strong>微分不是預知未來，只是利用局部斜率；高頻量測雜訊也有很大斜率，會被同步放大。實作通常要加濾波，不能直接使用理想微分器。</p>
+</article>
+<article class="term-card" data-search="ziegler nichols tuning ziegler–nichols 調參 zn ku tu">
+<h2>Ziegler–Nichols 調參（Ziegler–Nichols tuning）</h2>
+<p><strong>白話：</strong>先只用比例增益把迴路推到等幅振盪，量出臨界增益與週期，再套經驗比例給出一組 PID 起始值。</p>
+<p><strong>位置／角色：</strong><a href="09-PID控制器設計.html">09 章</a>把它當初始調整法；設備模型不完整時可做實驗估參，但高風險製程不能任意逼近振盪。</p>
+<p><strong>機制：</strong>本例 K<sub>u</sub> ＝ 60、ω<sub>u</sub> ＝ 3.316625 rad/s、T<sub>u</sub> ＝ 1.894452 s，建議 K<sub>p</sub> ＝ 36、K<sub>i</sub> ＝ 38.005721、K<sub>d</sub> ＝ 8.525032。</p>
+<p><strong>不要混淆：</strong>這是經驗起點，不是任何設備都最佳的答案；所得響應常偏積極。無法安全製造持續振盪、存在明顯延遲或致動限制時，應改用模型與保守測試。套表後還要依超越量、整定時間、控制量與抗干擾需求逐步微調，不能把臨界實驗當成驗收。</p>
+</article>
+<article class="term-card" data-search="integrator windup anti windup 積分飽和 致動器 限幅">
+<h2>積分飽和（integrator windup）</h2>
+<p><strong>白話：</strong>致動器已到上限，積分器卻仍因誤差持續累加；等輸出接近目標時，過大的累積量還要慢慢退掉，造成長時間越界。</p>
+<p><strong>位置／角色：</strong><a href="09-PID控制器設計.html">09 章</a>點出實作風險；閥門全開、馬達電壓封頂與加熱器滿功率時都可能發生。</p>
+<p><strong>機制：</strong>本章線性基準以 h ＝ 0.001 s 積分至 T ＝ 10 s，未加入飽和時 t<sub>s</sub> ＝ 2.731000 s；真實控制量若被限住，累積狀態與此基準會分離。</p>
+<p><strong>不要混淆：</strong>它不是一般的輸出超越，也不是積分器數值太大就必然發生；關鍵在控制器命令與致動器實際輸出不一致。限制積分或回算差值才是針對性處理。</p>
+</article>
+<article class="term-card" data-search="internal model principle imp 內模原理 常值命令 積分器">
+<h2>內模原理（internal model principle, IMP）</h2>
+<p><strong>白話：</strong>若要對某類命令或擾動持續保持零誤差，控制器內部必須含有能產生那類訊號的模型。積分器正是常值訊號的內部模型。</p>
+<p><strong>位置／角色：</strong><a href="09-PID控制器設計.html">09 章</a>用它解釋積分為何能消除固定偏差；週期擾動抑制與重複控制則需要相應週期模型。</p>
+<p><strong>機制：</strong>預設 K<sub>i</sub> ＝ 10，把 1 / s 納入迴路，使步階理論 e<sub>ss</sub> ＝ 0；10 s 模擬值 −0.000340 是有限時間與數值積分留下的微小差。</p>
+<p><strong>不要混淆：</strong>IMP 是設計原理，不等於內模控制這個特定架構。控制器含模型也不自動保證閉迴路收斂；加入積分後仍要檢查相位、參數範圍與致動限制。</p>
+</article>
+<article class="term-card" data-search="lead compensator 領先補償器 phase lead 相位 裕度">
+<h2>領先補償器（lead compensator）</h2>
+<p><strong>白話：</strong>用零點在前、極點在後的頻率形狀，在一段頻率提供正相位，通常讓相位裕度增加並把可用速度推高。</p>
+<p><strong>位置／角色：</strong><a href="10-領先落後補償器.html">10 章</a>以既有頻域受控體設計；高速伺服、電源迴路與飛控在相位不足時常用它。</p>
+<p><strong>機制：</strong>α ＝ 4、ω<sub>m</sub> ＝ 10 rad/s 時，z ＝ 5、p ＝ 20、最大相位提升 φ<sub>max</sub> ＝ 36.869898°；新 ω<sub>gc</sub> ＝ 14.018490、PM ＝ 62.864479°。</p>
+<p><strong>不要混淆：</strong>領先並非只增加相位，它也在高頻提高增益，可能放大量測雜訊與控制負擔。最大相位發生處不必然等於補償後交越，設計後仍要重新求交越。</p>
+</article>
+<article class="term-card" data-search="lag compensator 落後補償器 phase lag 低頻增益 精度">
+<h2>落後補償器（lag compensator）</h2>
+<p><strong>白話：</strong>提高低頻迴路增益來改善長期追蹤，又盡量維持交越附近的高頻增益；代價是帶入少量負相位與較慢反應。</p>
+<p><strong>位置／角色：</strong><a href="10-領先落後補償器.html">10 章</a>用它降低斜坡誤差；需要提高定位精度但不想大改高頻交越時常採用。</p>
+<p><strong>機制：</strong>β ＝ 5、z ＝ 0.5 rad/s、p ＝ 0.1 rad/s，使 K<sub>v</sub> 從 10 增至 50、斜坡 e<sub>ss</sub> 降為 0.020000；PM 從 47.403940° 降到 44.445984°。</p>
+<p><strong>不要混淆：</strong>落後補償器不是時間延遲，也不是單純把總增益乘大；零點與極點的相對位置塑造頻段差異。放得太靠近交越會吃掉過多相位餘量。</p>
+</article>
+<article class="term-card" data-search="state-space model 狀態空間模型 a b c d x dot">
+<h2>狀態空間模型（state-space model）</h2>
+<p><strong>白話：</strong>選一組最少內部變數描述系統此刻，再用一階聯立方程預測下一刻。它能保留內部資訊，也自然處理多輸入多輸出。</p>
+<p><strong>位置／角色：</strong><a href="11-狀態空間入門.html">11 章</a>由 A、B、C 建模；飛行器、機器人、電池與多變數製程通常比單一轉移函數更適合此表示。</p>
+<p><strong>機制：</strong>A ＝ [[0, 1], [−2, −3]]、B ＝ [0, 1]<sup>T</sup>、C ＝ [1, 0]，代表 ÿ + 3ẏ + 2y ＝ u；A 的特徵值為 −1.000000、−2.000000。</p>
+<p><strong>不要混淆：</strong>狀態不必全是感測器可直接量到的物理量，但必須足以預測未來。不同座標可描述同一系統，因此矩陣元素不同不一定代表物理系統不同。狀態向量維度是模型所需記憶的數量，不是輸入、輸出或感測器數量，四者不可混為一談。</p>
+</article>
+<article class="term-card" data-search="controllability 可控性 mc controllability matrix b ab">
+<h2>可控性（controllability）</h2>
+<p><strong>白話：</strong>檢查輸入 u 是否能在有限時間把所有狀態方向推到想要的位置。若某方向完全碰不到，再聰明的狀態回授也搬不動相關極點。</p>
+<p><strong>位置／角色：</strong><a href="11-狀態空間入門.html">11 章</a>在極點配置前先檢查；致動器配置、衛星姿態與機器人關節設計都要避免不可推動的模態。</p>
+<p><strong>機制：</strong>預設 M<sub>c</sub> ＝ [B, AB] ＝ [[0, 1], [1, −3]]，det M<sub>c</sub> ＝ −1.000000，不等於 0，所以兩個狀態方向都可由輸入影響。</p>
+<p><strong>不要混淆：</strong>與穩定度無關，不穩定的系統可以可控；與可觀性也無關，一個講 u 推不推得到，一個講 y 看不看得到。可控也不代表所需控制量符合硬體限制。</p>
+</article>
+<article class="term-card" data-search="observability 可觀性 mo observability matrix c ca">
+<h2>可觀性（observability）</h2>
+<p><strong>白話：</strong>只看已量到的輸出與已知輸入，是否能在有限時間反推出全部內部狀態。若某模態不會出現在輸出中，觀測器便無從估計。</p>
+<p><strong>位置／角色：</strong><a href="11-狀態空間入門.html">11 章</a>在設計觀測器前檢查；感測器選點、故障診斷與導航狀態估測都依賴此性質。</p>
+<p><strong>機制：</strong>預設 M<sub>o</sub> ＝ [C; CA] ＝ [[1, 0], [0, 1]]，det M<sub>o</sub> ＝ 1.000000，所以量測 y 隨時間的資料足以重建兩個狀態。</p>
+<p><strong>不要混淆：</strong>可觀不表示每個狀態都有獨立感測器，也不表示估測沒有雜訊。它是模型結構上的資訊條件；數值接近奇異時，即使理論可觀也可能非常敏感。更換量測位置會改變 C，也可能讓原先看不到的模態顯現，因此感測器配置本身就是設計問題。</p>
+</article>
+<article class="term-card" data-search="pole placement 極點配置 state feedback k ackermann">
+<h2>極點配置（pole placement）</h2>
+<p><strong>白話：</strong>選擇狀態回授增益 K，使 A − BK 的特徵值落到指定位置，直接塑造閉迴路自然響應的快慢與阻尼。</p>
+<p><strong>位置／角色：</strong><a href="11-狀態空間入門.html">11 章</a>用二階 Ackermann 公式實作；多狀態伺服與飛行器姿態控制常用它把設計規格轉成極點。</p>
+<p><strong>機制：</strong>期望 s² + 10s + 50，預設系統算得 K ＝ [48.000000, 7.000000]；A − BK 的極點成為 −5.000000 ± j5.000000，比原本 −1、−2 更快。</p>
+<p><strong>不要混淆：</strong>能任意配置的前提是系統可控；把極點放得很遠會要求更大增益，並放大模型誤差與致動負擔。極點位置也不能單獨決定所有零點效應。指定共軛複數極點時還要成對放置，才能讓實數系統得到實數增益；最後應核對 A − BK 的特徵值而非只相信手算。</p>
+</article>
+<article class="term-card" data-search="observer separation principle 觀測器 分離原理 luenberger estimate">
+<h2>觀測器與分離原理（observer &amp; separation principle）</h2>
+<p><strong>白話：</strong>觀測器用模型、輸入與輸出持續修正狀態估計；分離原理說，在條件成立時，可分別設計控制回授與估測誤差的極點再合併。</p>
+<p><strong>位置／角色：</strong><a href="11-狀態空間入門.html">11 章</a>連接全狀態理論與只有少數感測器的真實裝置；馬達無感測控制與導航都需要估測器。</p>
+<p><strong>機制：</strong>預設 det M<sub>o</sub> ＝ 1.000000，具備設計觀測器的結構條件；控制端則以 K ＝ [48, 7] 把極點放在 −5 ± j5，兩部分可各自選定收斂速度。</p>
+<p><strong>不要混淆：</strong>分開設計不代表彼此在實務上毫無影響；雜訊、飽和與模型誤差會經估計值進入控制量。觀測器也不是感測器替代品，仍需輸出資料校正模型。估測極點通常選得比控制極點快，但過快會放大量測雜訊並造成數值敏感，因此速度比例仍是工程折衷。</p>
+</article>
+<article class="term-card" data-search="lqr kalman filter linear quadratic regulator lqr 卡爾曼濾波器 最佳控制 估測">
+<h2>LQR 與卡爾曼濾波器（LQR &amp; Kalman filter，一窺）</h2>
+<p><strong>白話：</strong>LQR 在狀態偏差與控制力氣之間做加權折衷；卡爾曼濾波器則在模型預測與含雜訊量測之間，求最佳的狀態估測。</p>
+<p><strong>位置／角色：</strong><a href="11-狀態空間入門.html">11 章</a>只標出去向，不推導。LQR 常見於飛控與機器人；卡爾曼方法用於 GPS、慣性導航與 SLAM。</p>
+<p><strong>機制：</strong>LQR 定義 J ＝ ∫(x<sup>T</sup>Qx + u<sup>T</sup>Ru)dt，Q 與 R 是權重，解 Riccati 方程得最佳 K；預設章例的手動配置 K 為 [48, 7]，可作概念對照。</p>
+<p><strong>不要混淆：</strong>LQR 的最佳只針對指定線性模型、二次成本與權重，不是所有工程目標的絕對最佳；卡爾曼處理的是雜訊下估測，不是直接替系統選控制輸入。兩者可組合成估測加回授的架構，但控制權重與雜訊統計仍是不同設計資料，不能拿同一組矩陣互相代替。</p>
+</article>
+</div>
+
+<nav class="pager" aria-label="章節導覽"><a href="11-狀態空間入門.html">← 上一頁：狀態空間入門：可控、可觀與極點配置</a><a href="自我檢核.html">下一頁：自我檢核 →</a></nav>
+</main>
+<footer class="site-footer"><span>名詞與概念字典</span><a href="自我檢核.html">去自我檢核</a></footer>
+</body></html>

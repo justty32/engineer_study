@@ -1,0 +1,287 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">檢・13 章各 3 題，共 39 題</p>
+<h1>自我檢核：把每一章的關鍵數字與判斷各檢查一次</h1>
+<p class="lead">每一題都取自該章正文出現過的數字或結論，沒有新的題型也沒有陷阱。填完按「對答案」，回饋會告訴你為什麼，並附上該回去看的章節。</p>
+<p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯只會告訴你為什麼，並附上該回去看的章節。可以無限重做。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 線性直流機與能量轉換</h2>
+<p>回去看：<a href="00-線性直流機與能量轉換.html">00 線性直流機與能量轉換</a></p>
+<section class="card">
+<p><strong>q00-1｜</strong>線性直流機 V_B 120 V、R 0.5 Ω、B 1.0 T、l 1.0 m、負載力 10 N，穩態電流是多少安培？</p>
+<label for="q00-1">你的答案（A）<input id="q00-1" type="number" step="any"></label>
+<button type="button" id="q00-1-check">對答案</button>
+<div id="q00-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q00-2｜</strong>同一台機器的起動（失速）電流是多少安培？</p>
+<label for="q00-2">你的答案（A）<input id="q00-2" type="number" step="any"></label>
+<button type="button" id="q00-2-check">對答案</button>
+<div id="q00-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q00-3｜</strong>無負載時導桿為什麼不會越跑越快？</p>
+<label for="q00-3">你的答案<select id="q00-3"><option value="">請選擇</option><option value="a">e_ind 追上 V_B 後電流為零、力為零</option><option value="b">摩擦擋住</option><option value="c">磁場變弱</option><option value="d">電池沒電</option></select></label>
+<button type="button" id="q00-3-check">對答案</button>
+<div id="q00-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>01 鐵心電壓與磁通</h2>
+<p>回去看：<a href="01-鐵心電壓與磁通.html">01 鐵心電壓與磁通</a></p>
+<section class="card">
+<p><strong>q01-1｜</strong>240 V、60 Hz、200 匝、40 cm² 鐵心的 B_max 是多少特斯拉？</p>
+<label for="q01-1">你的答案（T）<input id="q01-1" type="number" step="any"></label>
+<button type="button" id="q01-1-check">對答案</button>
+<div id="q01-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q01-2｜</strong>同一鐵心加 1 mm 氣隙後，激磁電流有效值是多少安培？</p>
+<label for="q01-2">你的答案（A）<input id="q01-2" type="number" step="any"></label>
+<button type="button" id="q01-2-check">對答案</button>
+<div id="q01-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q01-3｜</strong>鐵心磁通峰值由什麼決定？</p>
+<label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">電壓、頻率與匝數</option><option value="b">鐵心磁導率</option><option value="c">激磁電流</option><option value="d">氣隙長度</option></select></label>
+<button type="button" id="q01-3-check">對答案</button>
+<div id="q01-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>02 阻抗折算與自耦變壓器</h2>
+<p>回去看：<a href="02-阻抗折算與自耦變壓器.html">02 阻抗折算與自耦變壓器</a></p>
+<section class="card">
+<p><strong>q02-1｜</strong>a = 10、負載 5 + j3 Ω，折算到一次側的阻抗大小是多少歐姆？</p>
+<label for="q02-1">你的答案（Ω）<input id="q02-1" type="number" step="any"></label>
+<button type="button" id="q02-1-check">對答案</button>
+<div id="q02-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q02-2｜</strong>N_C 1000、N_SE 100 的自耦變壓器，功率優勢 S_IO / S_W 是多少？</p>
+<label for="q02-2">你的答案（無單位）<input id="q02-2" type="number" step="any"></label>
+<button type="button" id="q02-2-check">對答案</button>
+<div id="q02-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q02-3｜</strong>折算阻抗為什麼乘 a² 而不是 a？</p>
+<label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">電壓乘 a、電流除 a，比值乘 a²</option><option value="b">因為功率變 a 倍</option><option value="c">因為有兩組繞組</option><option value="d">因為鐵損</option></select></label>
+<button type="button" id="q02-3-check">對答案</button>
+<div id="q02-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>03 變壓器等效電路與試驗</h2>
+<p>回去看：<a href="03-變壓器等效電路與試驗.html">03 變壓器等效電路與試驗</a></p>
+<section class="card">
+<p><strong>q03-1｜</strong>短路試驗 60 V、4.17 A、139 W，等效電阻 R_eq 是多少歐姆？</p>
+<label for="q03-1">你的答案（Ω）<input id="q03-1" type="number" step="any"></label>
+<button type="button" id="q03-1-check">對答案</button>
+<div id="q03-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q03-2｜</strong>2400 / 240 V、10 kVA，Z_eq 14.388489 Ω，百分阻抗是多少？</p>
+<label for="q03-2">你的答案（%）<input id="q03-2" type="number" step="any"></label>
+<button type="button" id="q03-2-check">對答案</button>
+<div id="q03-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q03-3｜</strong>開路試驗量到的是哪兩個參數？</p>
+<label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">鐵損電阻 R_c 與激磁電抗 X_m</option><option value="b">R_eq 與 X_eq</option><option value="c">R_1 與 R_2</option><option value="d">匝比與效率</option></select></label>
+<button type="button" id="q03-3-check">對答案</button>
+<div id="q03-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>04 電壓調整率與效率</h2>
+<p>回去看：<a href="04-電壓調整率與效率.html">04 電壓調整率與效率</a></p>
+<section class="card">
+<p><strong>q04-1｜</strong>滿載、功率因數 0.8 落後，R_eq 0.08 Ω、X_eq 0.12 Ω（低壓側），電壓調整率是多少？</p>
+<label for="q04-1">你的答案（%）<input id="q04-1" type="number" step="any"></label>
+<button type="button" id="q04-1-check">對答案</button>
+<div id="q04-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q04-2｜</strong>鐵損 60 W、滿載銅損 138.888889 W，最大效率的負載比例 x* 是多少？</p>
+<label for="q04-2">你的答案（無單位）<input id="q04-2" type="number" step="any"></label>
+<button type="button" id="q04-2-check">對答案</button>
+<div id="q04-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q04-3｜</strong>領前功率因數為什麼可能讓調整率變負？</p>
+<label for="q04-3">你的答案<select id="q04-3"><option value="">請選擇</option><option value="a">X sin θ 項變號，二次電壓反而升高</option><option value="b">因為銅損變小</option><option value="c">因為鐵損變小</option><option value="d">因為電流變小</option></select></label>
+<button type="button" id="q04-3-check">對答案</button>
+<div id="q04-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>05 旋轉機共同語言</h2>
+<p>回去看：<a href="05-旋轉機共同語言.html">05 旋轉機共同語言</a></p>
+<section class="card">
+<p><strong>q05-1｜</strong>60 Hz、4 極的同步速是多少 rpm？</p>
+<label for="q05-1">你的答案（rpm）<input id="q05-1" type="number" step="any"></label>
+<button type="button" id="q05-1-check">對答案</button>
+<div id="q05-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q05-2｜</strong>40 N·m、1750 rpm 的輸出功率是多少瓦？</p>
+<label for="q05-2">你的答案（W）<input id="q05-2" type="number" step="any"></label>
+<button type="button" id="q05-2-check">對答案</button>
+<div id="q05-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q05-3｜</strong>轉速 n 超過同步速 n_s 表示什麼？</p>
+<label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">感應機在發電，機械功率往電網送</option><option value="b">馬達過載</option><option value="c">極數設錯</option><option value="d">滑差為 1</option></select></label>
+<button type="button" id="q05-3-check">對答案</button>
+<div id="q05-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>06 直流機轉矩轉速線</h2>
+<p>回去看：<a href="06-直流機轉矩轉速線.html">06 直流機轉矩轉速線</a></p>
+<section class="card">
+<p><strong>q06-1｜</strong>直流機 KΦ = 1.0、負載 20 N·m，電樞電流是多少安培？</p>
+<label for="q06-1">你的答案（A）<input id="q06-1" type="number" step="any"></label>
+<button type="button" id="q06-1-check">對答案</button>
+<div id="q06-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q06-2｜</strong>V_t 240 V、R_a 0.5 Ω 時的轉速是多少 rpm？</p>
+<label for="q06-2">你的答案（rpm）<input id="q06-2" type="number" step="any"></label>
+<button type="button" id="q06-2-check">對答案</button>
+<div id="q06-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q06-3｜</strong>把電樞電壓從 240 V 降到 120 V，轉矩–轉速線怎麼變？</p>
+<label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">整條線平移，斜率不變，電流不變</option><option value="b">斜率變陡</option><option value="c">截距不變</option><option value="d">電流加倍</option></select></label>
+<button type="button" id="q06-3-check">對答案</button>
+<div id="q06-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>07 感應機滑差與功率流</h2>
+<p>回去看：<a href="07-感應機滑差與功率流.html">07 感應機滑差與功率流</a></p>
+<section class="card">
+<p><strong>q07-1｜</strong>1740 rpm 對 1800 rpm 同步速，轉子頻率是多少赫茲？</p>
+<label for="q07-1">你的答案（Hz）<input id="q07-1" type="number" step="any"></label>
+<button type="button" id="q07-1-check">對答案</button>
+<div id="q07-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q07-2｜</strong>氣隙功率 8000 W、s = 0.033333，轉子銅損是多少瓦？</p>
+<label for="q07-2">你的答案（W）<input id="q07-2" type="number" step="any"></label>
+<button type="button" id="q07-2-check">對答案</button>
+<div id="q07-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q07-3｜</strong>感應機為什麼在同步速沒有轉矩？</p>
+<label for="q07-3">你的答案<select id="q07-3"><option value="">請選擇</option><option value="a">轉子與磁場無相對運動，沒有感應電流</option><option value="b">轉子電阻太大</option><option value="c">氣隙太大</option><option value="d">電壓不夠</option></select></label>
+<button type="button" id="q07-3-check">對答案</button>
+<div id="q07-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>08 感應機轉矩曲線</h2>
+<p>回去看：<a href="08-感應機轉矩曲線.html">08 感應機轉矩曲線</a></p>
+<section class="card">
+<p><strong>q08-1｜</strong>380 V、60 Hz、R_2 0.4 Ω 的崩潰轉矩是多少 N·m？</p>
+<label for="q08-1">你的答案（N·m）<input id="q08-1" type="number" step="any"></label>
+<button type="button" id="q08-1-check">對答案</button>
+<div id="q08-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q08-2｜</strong>同一台機器的起動轉矩是多少 N·m？</p>
+<label for="q08-2">你的答案（N·m）<input id="q08-2" type="number" step="any"></label>
+<button type="button" id="q08-2-check">對答案</button>
+<div id="q08-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q08-3｜</strong>把 R_2 加倍到 0.8 Ω，崩潰轉矩與崩潰滑差各怎麼變？</p>
+<label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">崩潰轉矩不變、崩潰滑差加倍</option><option value="b">兩者都加倍</option><option value="c">兩者都不變</option><option value="d">崩潰轉矩加倍</option></select></label>
+<button type="button" id="q08-3-check">對答案</button>
+<div id="q08-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>09 同步發電機功率角</h2>
+<p>回去看：<a href="09-同步發電機功率角.html">09 同步發電機功率角</a></p>
+<section class="card">
+<p><strong>q09-1｜</strong>E_f 300 V、V_φ 220 V、X_s 2 Ω、δ 20°，三相實功是多少瓦？</p>
+<label for="q09-1">你的答案（W）<input id="q09-1" type="number" step="any"></label>
+<button type="button" id="q09-1-check">對答案</button>
+<div id="q09-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q09-2｜</strong>同一台機器的最大實功是多少瓦？</p>
+<label for="q09-2">你的答案（W）<input id="q09-2" type="number" step="any"></label>
+<button type="button" id="q09-2-check">對答案</button>
+<div id="q09-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q09-3｜</strong>功率角超過 90° 會怎樣？</p>
+<label for="q09-3">你的答案<select id="q09-3"><option value="">請選擇</option><option value="a">實功反而下降，原動機推不回來，脫步</option><option value="b">實功繼續上升</option><option value="c">無功變零</option><option value="d">轉速加倍</option></select></label>
+<button type="button" id="q09-3-check">對答案</button>
+<div id="q09-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>10 同步馬達V曲線</h2>
+<p>回去看：<a href="10-同步馬達V曲線.html">10 同步馬達V曲線</a></p>
+<section class="card">
+<p><strong>q10-1｜</strong>15 kW、V_φ 220 V、X_s 2 Ω 的同步馬達，單位功率因數時的 E_f 是多少伏特？</p>
+<label for="q10-1">你的答案（V）<input id="q10-1" type="number" step="any"></label>
+<button type="button" id="q10-1-check">對答案</button>
+<div id="q10-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q10-2｜</strong>同一條件下，電樞電流的最小值是多少安培？</p>
+<label for="q10-2">你的答案（A）<input id="q10-2" type="number" step="any"></label>
+<button type="button" id="q10-2-check">對答案</button>
+<div id="q10-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q10-3｜</strong>同步馬達超激磁時，電流與無功怎麼樣？</p>
+<label for="q10-3">你的答案<select id="q10-3"><option value="">請選擇</option><option value="a">電流領前，馬達供給無功，像電容</option><option value="b">電流落後，吸收無功</option><option value="c">實功增加</option><option value="d">轉速下降</option></select></label>
+<button type="button" id="q10-3-check">對答案</button>
+<div id="q10-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>11 起動與速控</h2>
+<p>回去看：<a href="11-起動與速控.html">11 起動與速控</a></p>
+<section class="card">
+<p><strong>q11-1｜</strong>直接起動電流 6 倍額定，改用 Y–Δ 起動的線電流倍數是多少？</p>
+<label for="q11-1">你的答案（倍）<input id="q11-1" type="number" step="any"></label>
+<button type="button" id="q11-1-check">對答案</button>
+<div id="q11-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q11-2｜</strong>直接起動轉矩 1.5 倍額定，自耦 65 % 分接頭的起動轉矩倍數是多少？</p>
+<label for="q11-2">你的答案（倍）<input id="q11-2" type="number" step="any"></label>
+<button type="button" id="q11-2-check">對答案</button>
+<div id="q11-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q11-3｜</strong>變頻起動為什麼能用小電流拿到額定轉矩？</p>
+<label for="q11-3">你的答案<select id="q11-3"><option value="">請選擇</option><option value="a">V / f 定值維持磁通，低頻時 R_2 / s 大、電流小</option><option value="b">因為電壓比較高</option><option value="c">因為轉子電阻變小</option><option value="d">因為滑差為零</option></select></label>
+<button type="button" id="q11-3-check">對答案</button>
+<div id="q11-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>12 馬達家族與選型</h2>
+<p>回去看：<a href="12-馬達家族與選型.html">12 馬達家族與選型</a></p>
+<section class="card">
+<p><strong>q12-1｜</strong>電動車預設權重 [5, 2, 1, 1, 5, 0] 下，永磁同步馬達的總分是多少？</p>
+<label for="q12-1">你的答案（分）<input id="q12-1" type="number" step="any"></label>
+<button type="button" id="q12-1-check">對答案</button>
+<div id="q12-1-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q12-2｜</strong>泵浦預設權重 [4, 5, 3, 0, 1, 0] 下，三相感應機的總分是多少？</p>
+<label for="q12-2">你的答案（分）<input id="q12-2" type="number" step="any"></label>
+<button type="button" id="q12-2-check">對答案</button>
+<div id="q12-2-output" class="output" aria-live="polite"></div>
+</section>
+<section class="card">
+<p><strong>q12-3｜</strong>BLDC 與 PMSM 的差別在哪裡？</p>
+<label for="q12-3">你的答案<select id="q12-3"><option value="">請選擇</option><option value="a">同一類永磁機器，差在反電動勢波形與換向方式</option><option value="b">BLDC 有電刷</option><option value="c">PMSM 沒有磁鐵</option><option value="d">BLDC 是感應機</option></select></label>
+<button type="button" id="q12-3-check">對答案</button>
+<div id="q12-3-output" class="output" aria-live="polite"></div>
+</section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

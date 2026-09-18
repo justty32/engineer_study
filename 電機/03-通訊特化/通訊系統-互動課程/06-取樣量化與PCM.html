@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 取樣、量化與 PCM｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・把連續聲音記成一筆位元率帳</p>
+<h1>取樣、量化與 PCM：一通電話為什麼是 64 kbit/s</h1>
+<p class="lead">語音最高頻率 3.4 kHz，選 8 kHz 取樣、每個樣本記 8 位元，一路便是 64 kbit/s。這章只算三個旋鈕怎麼決定可表示的頻率、振幅細度與傳輸成本。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-通訊世界觀與分貝帳本.html">00 通訊世界觀與分貝帳本</a>的頻寬 W。<strong>前置：</strong>見〈12 取樣與混疊〉<a href="../../02-電機核心/信號與系統-互動課程/12-取樣與混疊.html">信號與系統的取樣與混疊</a>——混疊機制在那一頁，本章只用判準整理 PCM 帳本。</p>
+
+<h2>痛點：多一個位元究竟買到什麼，又要多付多少</h2>
+<p>把麥克風電壓變成一串 0 與 1，看似只要選「高品質」即可，工程上卻要同時回答三題：每秒量幾次才夠、每次記多細才夠、許多路一起送時要準備多少位元率。取樣率太低會跨過判準；位元數太少會留下明顯的階梯誤差；兩者盲目拉高，又會讓儲存量、傳送率與基頻頻寬一起膨脹。</p>
+<p>最容易犯的錯，是把取樣率和位元數當成可以互相補償。提高位元數只能把每次量測的電壓格子切細，不能補回原本每秒沒量到的變化；提高取樣率能多記時間點，卻不會讓每一格振幅更細。本章的目的，就是把兩本帳分開再合成總成本。</p>
+
+<h2>白話直覺：先定拍照速度，再定每格刻度</h2>
+<p>可以把 PCM 暫時想成規律拍照：取樣率是每秒拍幾張，位元數是每張照片有幾級灰階；比喻到此為止，精確定義是<strong>脈衝編碼調變（pulse-code modulation, PCM）＝ 取樣 → 量化 → 編碼</strong>。脈衝幅度調變（pulse-amplitude modulation, PAM）把樣本放在振幅，脈衝寬度調變（pulse-width modulation, PWM）放在寬度，脈衝位置調變（pulse-position modulation, PPM）放在位置；PCM 則把量化索引寫成位元。</p>
+<p>因果鏈從最高頻率 W 的類比訊號開始。系統先決定 f<sub>s</sub> 至少為 2W，再以 n 位元把滿刻度 ±1 V 分成 2<sup>n</sup> 階；這換到可重複再生、加密與分時多工，代價是每路 R<sub>b</sub> ＝ n f<sub>s</sub>，而二元基頻至少占 R<sub>b</sub>/2。邊界在 f<sub>s</sub> ＝ 2W 時：防護頻帶為零，實體濾波器無法無限陡。示波器可量階距，邏輯分析儀可量串流時脈。</p>
+<p>軟體那一端，音訊檔頭的 44100 Hz／16 bit／2 ch 就是這三個旋鈕；未壓縮位元率 1411.2 kbit/s 是三數相乘，不是音質形容詞。分時多工（time-division multiplexing, TDM）則把各路樣本輪流排進同一串流。</p>
+<p class="note">來源：14-通訊系統-上 §7（PCM 帳本為本課補充的教科書共識）。</p>
+
+<h2>推導：從階距一路算到最小基頻頻寬</h2>
+<p><strong>（a）量化階距與誤差。</strong>滿刻度從 −1 V 到 1 V，共寬 2 V；n 位元有 2<sup>n</sup> 階，所以 Δ ＝ 2 / 2<sup>n</sup> V。假設誤差在 ±Δ/2 均勻分布，量化雜訊功率為 Δ²/12。此處 n 是位元數、無單位，Δ 是階距、單位 V；不削波且量化器均勻。</p>
+<p><strong>（b）每位元為何增加 6.020600 dB。</strong>滿刻度弦波功率為 1/2；量化雜訊功率是 (2/2<sup>n</sup>)²/12 ＝ 1/(3 × 4<sup>n</sup>)。兩者相除得到 1.5 × 4<sup>n</sup>，取 10 log<sub>10</sub> 後為 10 log<sub>10</sub>(1.5) + n × 10 log<sub>10</sub>(4) ＝ 1.760913 + 6.020600 n。這個訊號對量化雜訊比（signal-to-quantization-noise ratio, SQNR）只適用滿刻度弦波；輸入小 20 dB，SQNR 也少 20 dB。</p>
+<p><strong>（c）位元率為何三數相乘。</strong>每秒有 f<sub>s</sub> 個樣本，每個樣本寫 n 位元，多路資料再乘路數，故 R<sub>b</sub> ＝ n × f<sub>s</sub> × 路數。每秒送 R<sub>b</sub> 個二元符元時，Nyquist 結論給出最小基頻頻寬 R<sub>b</sub>/2；第 07 章會以 α ＝ 0 的情況接續。</p>
+<p><strong>（d）換到什麼。</strong>3.4 kHz 語音數位化後需要 32 kHz 最小基頻頻寬，是原來的 9.411765 倍，換到可再生、可加密、可多工與較容易維持判決。數位化不是免費壓縮。本課用的是一階教學模型：均勻量化、滿刻度弦波、理想時序；真實語音通常沒有一直貼滿刻度，實際 SQNR 較低。</p>
+<p><strong>（e）多一位元的雙面帳。</strong>把 n 增加一，階數加倍、Δ 減半，量化雜訊功率因平方關係變成四分之一，所以 SQNR 固定增加 6.020600 dB；同時，每個樣本多寫一位元，位元率增加 f<sub>s</sub> × 路數。這項成本與原本 n 多大無關，卻會被高取樣率與多路系統放大。若輸入先超過 ±1 V，量化器會削波，此時增加位元也修不好被截掉的峰值；公式成立的前提因此不只是位元數，還包括輸入確實留在滿刻度範圍內。</p>
+
+<h2>數值實例：3.4 kHz 電話語音的 64 kbit/s</h2>
+<p>取 W ＝ 3.4 kHz、f<sub>s</sub> ＝ 8 kHz、n ＝ 8、1 路，與下方自由實驗預設值完全相同。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>奈奎斯特率</td><td>2 × 3.4</td><td><strong>6.800000 kHz</strong></td></tr>
+<tr><td>是否滿足</td><td>8 ≥ 6.8</td><td><strong>是，防護頻帶 0.600000 kHz</strong></td></tr>
+<tr><td>量化階數</td><td>2<sup>8</sup></td><td><strong>256</strong></td></tr>
+<tr><td>階距 Δ</td><td>2 / 256</td><td><strong>7.812500 mV</strong></td></tr>
+<tr><td>SQNR</td><td>6.020600 × 8 + 1.760913</td><td><strong>49.925712 dB</strong></td></tr>
+<tr><td>位元率</td><td>8 × 8 × 1</td><td><strong>64 kbit/s</strong></td></tr>
+<tr><td>最小基頻頻寬</td><td>64 / 2</td><td><strong>32.000000 kHz</strong></td></tr>
+<tr><td>頻寬放大倍數</td><td>32 / 3.4</td><td><strong>9.411765 倍</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>CD 的 W ＝ 20 kHz、f<sub>s</sub> ＝ 44.1 kHz、n ＝ 16、2 路，得到 65536 階、階距 0.030518 mV、SQNR 98.090511 dB、位元率 1411.200000 kbit/s。相較電話語音，它同時提高頻率範圍、振幅細度與路數，因此原始資料率也大幅上升。</p>
+<p><strong>邊界對照。</strong>f<sub>s</sub> ＝ 6 kHz 時，6 &lt; 6.8，發生混疊；f<sub>s</sub> ＝ 6.8 kHz 恰好只有零防護頻帶。n ＝ 1 時 SQNR 7.781513 dB，只剩正負號；n ＝ 4 時 25.843312 dB，量化雜訊聽得見；n ＝ 12 時 74.008112 dB、96 kbit/s；n ＝ 24 時 146.255311 dB，早已超過任何 ADC 的熱雜訊底，多的位元是假的。E1 的 30 路是 1920 kbit/s，不含兩個訊令時槽，總計 2048；T1 的 24 路是 1536 kbit/s，不含訊框位元，總計 1544。</p>
+<p>增加位元數時，每一路、每一次取樣都要多寫一位元。這個量級觀念說明，單一路看似便宜的品質提升，在高取樣率、多路的設備裡會按取樣次數與路數逐筆累加，不能只看 SQNR 的收益。</p>
+
+<section class="workspace"><h2>自由實驗：PCM 位元率帳本</h2>
+<p>設定類比輸入的最高頻率、每秒取樣次數、每個樣本位元數與分時多工路數。回饋會同時計算判準、振幅階距、SQNR、位元率與最低基頻頻寬，讓品質收益和傳輸代價放在同一張表比較。</p>
+<div class="controls">
+<label for="pc-w">訊號最高頻率 W（kHz）<input id="pc-w" type="range" min="0.1" max="24" step="0.1" value="3.4"></label>
+<label for="pc-fs">取樣率 f_s（kHz）<input id="pc-fs" type="range" min="1" max="96" step="0.1" value="8"></label>
+<label for="pc-bits">每樣本位元數 n<input id="pc-bits" type="range" min="1" max="24" step="1" value="8"></label>
+<label for="pc-ch">分時多工路數<select id="pc-ch"><option value="1">1 路（電話）</option><option value="2">2 路（立體聲）</option><option value="24">24 路（T1 分時多工）</option><option value="30">30 路（E1 分時多工）</option></select></label>
+</div>
+<div id="pcm-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>取樣率決定能表示多高的頻率，位元數決定能表示多細的振幅；兩者獨立，不能彼此補救。</li>
+<li>SQNR 只計量化雜訊，不等於包含通道雜訊在內的 SNR；後者是第 05 章的帳。</li>
+<li>6.020600 n + 1.760913 dB 是滿刻度弦波的上限，小振幅語音不會自動得到同樣結果；壓伸留給數位通訊課。</li>
+<li>R<sub>b</sub>/2 是二元基頻的最小頻寬，搬到載波後的占用不能直接照搬這個數字。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>示波器看數位類比轉換器（digital-to-analog converter, DAC）輸出的階梯，相鄰平台差就是 Δ；頻譜分析儀量類比數位轉換器（analog-to-digital converter, ADC）輸出的底部與輸入峰之差；邏輯分析儀量 PCM 串流時脈。</p>
+<p><strong>能證明什麼。</strong>這三種量測可核對 f<sub>s</sub>、n、R<sub>b</sub> 與實測 SQNR，也能看到增加位元後階距減半。</p>
+<p><strong>不能證明什麼。</strong>實測 SQNR 比公式低，不能只憑這個差值判定是哪一種非理想因素；熱雜訊、失真與時序偏差要用 ENOB、THD 等量測拆開。</p>
+
+<h2>連到哪門課</h2>
+<p>混疊的視在頻率與 ZOH 見<a href="../../02-電機核心/信號與系統-互動課程/12-取樣與混疊.html">信號與系統的取樣與混疊</a>，本章不重述其機制。壓伸、DPCM、Delta 調變留給數位通訊課；音訊程式讀檔頭時，正是在取得 f<sub>s</sub>、n 與路數，再決定緩衝區每秒要吞下多少位元。</p>
+<nav class="pager" aria-label="章節導覽"><a href="05-雜訊訊雜比與雜訊指數.html">← 上一頁：雜訊、訊雜比與雜訊指數</a><a href="07-基頻傳輸ISI與升餘弦.html">下一頁：基頻傳輸、ISI 與升餘弦 →</a></nav>
+</main>
+<footer class="site-footer"><span>06 取樣、量化與 PCM</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

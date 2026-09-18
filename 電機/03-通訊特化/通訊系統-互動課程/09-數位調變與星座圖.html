@@ -1,0 +1,67 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 數位調變與星座圖｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・用距離讀懂星座點的代價</p>
+<h1>數位調變與星座圖：點排得越密，越容易跨線誤判</h1>
+<p class="lead">一個符元可以帶一到六個位元，但同樣能量下，點越多就越擠。以 E<sub>b</sub>/N<sub>0</sub> ＝ 12 dB 為錨，BPSK 的位元錯誤率是 9.006010 × 10<sup>−9</sup>，64-QAM 卻是 9.723985 × 10<sup>−3</sup>。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-匹配濾波器與位元錯誤率.html">08 匹配濾波器與位元錯誤率</a>的 Q 函數與 E<sub>b</sub>/N<sub>0</sub>。<strong>前置：</strong>見〈同相與正交兩路載波〉<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統的調變與頻譜搬移</a>；兩路為何正交是那一頁的結論，本章只用結論。</p>
+
+<h2>痛點：同樣是 12 dB，為什麼換星座就從可靠變成幾乎不可用</h2>
+<p>規格表常把 BPSK、QPSK、16-QAM 與 64-QAM 排在一起，旁邊再放一欄最高位元率。初學者很容易只看到「64」比「2」大，便以為選最大的總是最好；真正漏掉的是判決邊界。接收端不是讀到原本的點，而是看到被雜訊推移後的位置，再猜它最靠近哪個合法點。點距一縮，跨過邊界的機率就急升。</p>
+<p>另一個常見疑問是：QPSK 明明有四點，為什麼其位元錯誤率能與只有兩點的 BPSK 相同？答案不能只靠「兩路一起傳」帶過，必須同時追蹤每符元位元數、每位元能量、每一維的雜訊標準差，以及符元錯誤除回位元錯誤時的倍數。本章把這些量放進同一張帳。</p>
+
+<h2>白話直覺：固定桌面上擺越多杯子，留給每杯的安全距離越小</h2>
+<p>可以暫時把 IQ 平面想成一張固定大小的桌面，星座點像杯子；杯子擺得越多，碰撞前可容許的位移越小。比喻到此為止，精確定義是：歸一化平均符元能量 E<sub>s</sub> ＝ 1 後，最近兩個合法座標的歐氏距離是最小距離 d<sub>min</sub>，雜訊在每一維造成標準差 σ，兩者的比值 d<sub>min</sub>/(2σ) 決定越界機率。</p>
+<p>因果鏈從發射端走一次：位元先按每組 k 個分成符元；選定 M ＝ 2<sup>k</sup> 個座標後，產生同相 I 與正交 Q 兩個係數，帶通訊號寫成 s(t) ＝ I(t) cos(2π f<sub>c</sub> t) − Q(t) sin(2π f<sub>c</sub> t)。這個決定把位元率推到 R<sub>b</sub> ＝ k R<sub>s</sub>，在 α ＝ 0 的一階近似下，頻寬約為 R<sub>s</sub>，所以頻譜效率是 k bit/s/Hz；代價是 M 越大，固定能量裡的 d<sub>min</sub> 越小。邊界是低 E<sub>b</sub>/N<sub>0</sub> 時最近鄰近似可能大於 1，必須夾住並承認模型失效。向量訊號分析儀最後量到的是點雲，而不是理想的孤立座標。</p>
+<p>振幅鍵控（amplitude-shift keying, ASK）只改振幅，點可排在 I 軸；相位鍵控（phase-shift keying, PSK）把點排在圓上；正交振幅調變（quadrature amplitude modulation, QAM）同時改振幅與相位，形成方陣。頻率鍵控（frequency-shift keying, FSK）改的是頻率，要用兩個正交波形軸描述，不能硬塞成同一張 I、Q 座標圖。軟體那一端，SDR 收到 IQ 樣本後列出散點，Wi-Fi 驅動的 MCS 則是在多種點數間選工作檔位。</p>
+<p class="note">來源：14-通訊系統-下 §10.1–§10.3、§11.1–§11.3。</p>
+
+<h2>推導：把點距、雜訊與錯誤率接成一條式子</h2>
+<p><strong>第一步，從位元能量換到符元能量。</strong>每符元帶 k ＝ log<sub>2</sub> M 個位元，因此 E<sub>s</sub>/N<sub>0</sub> ＝ k E<sub>b</sub>/N<sub>0</sub>。在 E<sub>s</sub> ＝ 1 的歸一化下，N<sub>0</sub> ＝ 1/(E<sub>s</sub>/N<sub>0</sub>)；每一維雜訊變異數為 N<sub>0</sub>/2，所以 σ ＝ √(1/(2 E<sub>s</sub>/N<sub>0</sub>))。E 是能量，N<sub>0</sub> 是單邊雜訊功率譜密度，兩者比值無單位；σ 與座標同單位。</p>
+<p><strong>第二步，求方陣最小距離。</strong>16-QAM 未歸一化的兩軸位準都是 {±1, ±3}，每軸平均平方為 (1 + 9)/2 ＝ 5，兩軸合計平均能量為 10；全部座標除以 √10，相鄰距離便是 2/√10 ＝ 0.632456。64-QAM 的每軸位準是 {±1, ±3, ±5, ±7}，兩軸平均能量為 42，故 d<sub>min</sub> ＝ 2/√42 ＝ 0.308607。相同規則下，BPSK 為 2、QPSK 為 √2、8-PSK 為 2 sin(π/8)。</p>
+<p><strong>第三步，數最近鄰並換成位元錯誤。</strong>最近鄰近似為 P<sub>s</sub> ≈ N<sub>avg</sub> Q(d<sub>min</sub>/(2σ))。16-QAM 的 4 個角點各有 2 鄰居、8 個邊點各有 3 鄰居、4 個內點各有 4 鄰居，所以 N<sub>avg</sub> ＝ (8 + 24 + 16)/16 ＝ 3；64-QAM 則為 (4 × 2 + 24 × 3 + 36 × 4)/64 ＝ 3.5。採 Gray 映射時，一次最近鄰誤判通常只錯一個位元，故 P<sub>b</sub> ≈ P<sub>s</sub>/k。</p>
+<p><strong>第四步，解開 QPSK 的疑問。</strong>QPSK 等於 I、Q 各跑一個 BPSK；每維 E<sub>b</sub> 與 σ 不變，所以各維位元錯誤相同。其符元錯誤率約為兩倍，但一個符元帶兩個位元，除以 k ＝ 2 後回到 BPSK 的位元錯誤率。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：加性白色高斯雜訊（additive white Gaussian noise, AWGN）、理想同步、E<sub>s</sub> ＝ 1、Gray 映射與高 E<sub>b</sub>/N<sub>0</sub> 的最近鄰近似。低比值時若 N<sub>avg</sub>Q 大於 1，計算會先把 P<sub>s</sub> 夾成 1；這不是物理突然飽和，而是近似已離開適用區。</p>
+
+<h2>數值實例：12 dB 與 100 kbaud 的五星座比較</h2>
+<p>E<sub>b</sub>/N<sub>0</sub> ＝ 12 dB（線性 15.848932）、R<sub>s</sub> ＝ 100 kbaud。以下每個數字就是自由實驗的預設輸入與結果。</p>
+<table><thead><tr><th>方案</th><th>k</th><th>d<sub>min</sub></th><th>E<sub>s</sub>/N<sub>0</sub></th><th>σ</th><th>d<sub>min</sub>/(2σ)</th><th>Q</th><th>P<sub>s</sub></th><th>P<sub>b</sub></th><th>R<sub>b</sub></th></tr></thead><tbody>
+<tr><td>BPSK</td><td>1</td><td>2.000000</td><td>15.848932</td><td>0.177617</td><td>5.630086</td><td>9.006010 × 10<sup>−9</sup></td><td>9.006010 × 10<sup>−9</sup></td><td><strong>9.006010 × 10<sup>−9</sup></strong></td><td>100 kbit/s</td></tr>
+<tr><td>QPSK</td><td>2</td><td>1.414214</td><td>31.697864</td><td>0.125594</td><td>5.630086</td><td>9.006010 × 10<sup>−9</sup></td><td>1.801202 × 10<sup>−8</sup></td><td><strong>9.006010 × 10<sup>−9</sup></strong></td><td>200 kbit/s</td></tr>
+<tr><td>8-PSK</td><td>3</td><td>0.765367</td><td>47.546796</td><td>0.102547</td><td>3.731774</td><td>9.506818 × 10<sup>−5</sup></td><td>1.901364 × 10<sup>−4</sup></td><td><strong>6.337879 × 10<sup>−5</sup></strong></td><td>300 kbit/s</td></tr>
+<tr><td>16-QAM</td><td>4</td><td>0.632456</td><td>63.395728</td><td>0.088809</td><td>3.560779</td><td>1.848783 × 10<sup>−4</sup></td><td>5.546348 × 10<sup>−4</sup></td><td><strong>1.386587 × 10<sup>−4</sup></strong></td><td>400 kbit/s</td></tr>
+<tr><td>64-QAM</td><td>6</td><td>0.308607</td><td>95.093592</td><td>0.072512</td><td>2.127972</td><td>1.666969 × 10<sup>−2</sup></td><td>5.834391 × 10<sup>−2</sup></td><td><strong>9.723985 × 10<sup>−3</sup></strong></td><td>600 kbit/s</td></tr>
+</tbody></table>
+<p><strong>星座座標表。</strong>不用圖也能完整指定理想位置；所有座標都以 E<sub>s</sub> ＝ 1 歸一化。</p>
+<table><thead><tr><th>星座</th><th>I 座標</th><th>Q 座標</th><th>組合方式</th></tr></thead><tbody>
+<tr><td>BPSK</td><td>−1、1</td><td>0</td><td>2 點</td></tr><tr><td>QPSK</td><td>−0.707107、0.707107</td><td>−0.707107、0.707107</td><td>4 點 ＝ 2 × 2 組合</td></tr>
+<tr><td>8-PSK</td><td colspan="2">單位圓上角度 0°、45°、90°、135°、180°、225°、270°、315°</td><td>8 點</td></tr>
+<tr><td>16-QAM</td><td>±0.316228、±0.948683</td><td>±0.316228、±0.948683</td><td>16 點 ＝ 4 × 4 組合</td></tr>
+<tr><td>64-QAM</td><td>±0.154303、±0.462910、±0.771517、±1.080123</td><td>同左</td><td>64 點 ＝ 8 × 8 組合</td></tr></tbody></table>
+<p><strong>量級與邊界對照。</strong>64-QAM 在 20 dB → P<sub>b</sub> <strong>2.633893 × 10<sup>−8</sup></strong>，要多 8 dB 才追上 BPSK 在 12 dB 的水準；16-QAM 在 16 dB → <strong>6.250201 × 10<sup>−9</sup></strong>；8-PSK 在 16 dB → <strong>1.109870 × 10<sup>−9</sup></strong>；BPSK 在 0 dB → <strong>7.864960 × 10<sup>−2</sup></strong>。64-QAM 在 0 dB 時 N<sub>avg</sub>Q ＝ 1.037715 &gt; 1，夾成 P<sub>s</sub> ＝ 1、P<sub>b</sub> ＝ 0.166667；QPSK 在 9.6 dB → <strong>9.736176 × 10<sup>−6</sup></strong>，與第 08 章 BPSK 同；64-QAM 在 30 dB → 2.134855 × 10<sup>−64</sup> 量級，以科學記號顯示。</p>
+
+<section class="workspace"><h2>自由實驗：換星座，看點距換到多少位元率</h2>
+<p>場景是一條理想同步的 AWGN 鏈路，平均符元能量固定為 1。先選星座，再調每位元能量比與符元率；回饋會並排比較五種星座、列出所選座標，讓你同時看傳得快多少與錯多少。</p>
+<div class="controls">
+<label for="cs-scheme">星座<select id="cs-scheme"><option value="bpsk">BPSK（2 點）</option><option value="qpsk">QPSK（4 點）</option><option value="psk8">8-PSK（8 點）</option><option value="qam16" selected>16-QAM（16 點）</option><option value="qam64">64-QAM（64 點）</option></select></label>
+<label for="cs-ebn0">E_b/N_0（dB）<input id="cs-ebn0" type="range" min="0" max="30" step="0.5" value="12"></label>
+<label for="cs-rs">符元率 R_s（kbaud）<input id="cs-rs" type="range" min="1" max="1000" step="1" value="100"></label>
+</div>
+<div id="constel-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>星座距離是能量的平方根；只有先固定 E<sub>s</sub> ＝ 1，d<sub>min</sub> 才能跨星座公平比較。</li><li>符元錯誤率與位元錯誤率不是同一個數；Gray 映射與最近鄰條件下才近似差 k 倍。</li><li>8-PSK 與本課未教的 8-QAM 點法不同，點數相同不代表最小距離相同。</li><li>加入雜訊後的錯誤不是靠撒隨機點估計；本頁用 Q 函數算越過判決邊界的機率，結果可重現。</li><li>FSK 的兩個波形軸與 QAM 的 I、Q 平面不是同一組座標，不應畫成同一個圓或方陣。</li></ul>
+
+<h2>可觀察證據：拿向量訊號分析儀看點雲</h2>
+<p><strong>用什麼量。</strong>向量訊號分析儀（vector signal analyzer）解調後列出星座座標；理想點周圍的雲反映 σ，誤差向量幅度（error vector magnitude, EVM）則是誤差向量大小相對參考點大小的比值。</p>
+<p><strong>能證明什麼。</strong>它能證明星座有沒有整體旋轉、偏移或拉伸，也能估出點雲尺度、EVM 與 E<sub>b</sub>/N<sub>0</sub> 的量級；逐筆對照已知位元還能量實際位元錯誤率。</p>
+<p><strong>不能證明什麼。</strong>單靠一個 EVM 數字，不能判定點雲究竟來自熱雜訊、相位擾動、IQ 不平衡或放大器壓縮。不同原因可能得到接近的總 EVM，仍需看座標隨時間與功率如何變化。</p>
+
+<h2>連到哪門課</h2>
+<p>同相／正交兩路載波的數學前置見<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統的調變與頻譜搬移</a>。最佳偵測、Gray 映射的完整推導與 OFDM 實作留給數位通訊課。本章的座標帳直接用在 Wi-Fi、LTE 與 5G 收發機的 MCS 選擇。</p>
+<nav class="pager" aria-label="章節導覽"><a href="08-匹配濾波器與位元錯誤率.html">← 上一頁：匹配濾波器與位元錯誤率</a><a href="10-頻譜效率與Shannon極限.html">下一頁：頻譜效率與 Shannon 極限 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 數位調變與星座圖</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

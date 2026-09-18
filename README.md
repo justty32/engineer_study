@@ -46,7 +46,7 @@
 
 除了純文字筆記，部分主題另外改寫成**可操作的互動網頁課程**：把筆記內容重排成分章的零基礎主線，每章配一個可以自己調參數、即時看結果的自由實驗，並附名詞字典與自我檢核題。原始碼就放在各主題自己的目錄下（`互動課程/`、`互動網站/`），本地用瀏覽器直接開 `index.html` 即可。
 
-- **線上中央入口**：<https://justty32.github.io/engineer_study/>（GitHub Pages，目前 30 門）
+- **線上中央入口**：<https://justty32.github.io/engineer_study/>（GitHub Pages，目前 34 門）
 - **本地中央入口**：[`互動學習網站/index.html`](互動學習網站/index.html)——課程簡介與最新清單以此頁為準
 
 以下依所屬領域分組（每門：本地連結 · 線上 slug）：
@@ -64,6 +64,9 @@
 - [信號與系統（零基礎互動課）](電機/02-電機核心/信號與系統-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/signals-systems/)
 - [邏輯設計（零基礎互動課）](電機/02-電機核心/邏輯設計-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/logic-design/)
 - [微處理機與匯流排（零基礎互動課）](電機/02-電機核心/微處理機與匯流排-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/microprocessors/)
+- [控制系統（零基礎互動課）](電機/02-電機核心/控制系統-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/control-systems/)
+- [電機機械（零基礎互動課）](電機/02-電機核心/電機機械-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/electric-machines/)
+- [通訊系統（零基礎互動課）](電機/03-通訊特化/通訊系統-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/communication-systems/)
 - [電力系統](電機/04-電力特化/P1-電力系統-互動網站/index.html) · [線上](https://justty32.github.io/engineer_study/power-systems/)
 
 ### 專題 — IoT 聯網裝置

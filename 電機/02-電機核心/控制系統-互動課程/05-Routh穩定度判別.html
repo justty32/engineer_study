@@ -1,0 +1,71 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 Routh 穩定度判別｜控制系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・不解根也能數出危險極點</p>
+<h1>05 Routh 穩定度判別：把高階求根改成逐列交叉相乘</h1>
+<p class="lead">一個係數全為正的四階多項式，仍可能有 2 個右半平面極點。本章用固定規則填表，直接從第一欄的符號變化判斷結果，並處理首元為零與整列為零兩個邊界。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-方塊圖化簡與閉迴路轉移函數.html">02 方塊圖化簡與閉迴路轉移函數</a>的特徵方程式。<strong>前置：</strong>見〈07 拉氏轉換與轉移函數〉<a href="../信號與系統-互動課程/07-拉氏轉換與轉移函數.html">信號與系統的極點判準</a>，極點為何決定響應已在該頁證明，本章不重推。</p>
+
+<h2>痛點：係數都正，為什麼還可能越跑越遠</h2>
+<p>看到 s<sup>4</sup> + 2s<sup>3</sup> + 3s<sup>2</sup> + 4s + 5，每一項都沒有負係數，很容易直覺認定它安全。然而「係數全同號且沒有缺項」只是必要條件，不是完整保證。真正要判斷的是每一個根的實部是否小於零；四階以上若直接求根，手算既長又容易失去結構。</p>
+<p>另一個痛點是參數 K。設計時通常不是只問某一個 K 能不能用，而是要找出整段允許範圍。若每換一次 K 就重解全部根，既慢也看不出臨界點為何出現。Routh–Hurwitz 準則（Routh–Hurwitz criterion）正是把這兩個問題改寫成係數表格。</p>
+<p>判別結果還必須區分三種狀態：所有根都嚴格位於左半平面才是穩定；有根落在右半平面就是不穩定；根剛好落在虛軸則是臨界情形。最後一種雖然沒有立即增長，卻不會自行衰減，實際裝置受到雜訊、摩擦與限幅後也不會永遠維持理想弦波。因此「符號變化 0 次」之外，還要檢查是否出現全零列。</p>
+
+<h2>白話直覺：只看守門員換邊幾次</h2>
+<p>可以暫時把表格第一欄想成一排守門員：符號每換一次方向，就有一個根越過到右半平面；比喻到此為止。精確說法是，Routh 定理保證第一欄由上而下的符號變化次數，等於右半平面根的個數，這不是圖形猜測。</p>
+<p>因果鏈要完整看：參考命令進入回授迴路，誤差經控制器放大成控制量 u，控制量送進受控體；增益改變特徵多項式的係數，閉迴路極點因此被搬動。右半平面極點數若由 0 變成 2，輸出會由收斂轉成增長振盪，示波器最後常看到飽和或撞到限制。Routh 表告訴我們轉折發生在哪個係數組合，卻不提供極點座標。</p>
+<p>這件事在你的程式裡長什麼樣：建立一個確定性的二維陣列，先交錯放入係數，再用上一列與上上列交叉相乘，逐格填到常數列，最後只掃第一欄計數。</p>
+<p class="note">來源：13-控制系統 §3.1、§3.2。</p>
+
+<h2>推導：四階表、三階範圍與兩個特殊情形</h2>
+<p><strong>一般四階。</strong>令特徵多項式為 a<sub>4</sub>s<sup>4</sup> + a<sub>3</sub>s<sup>3</sup> + a<sub>2</sub>s<sup>2</sup> + a<sub>1</sub>s + a<sub>0</sub>。前兩列交錯填成 s<sup>4</sup> 列 [a<sub>4</sub>, a<sub>2</sub>, a<sub>0</sub>] 與 s<sup>3</sup> 列 [a<sub>3</sub>, a<sub>1</sub>, 0]。接著 b<sub>1</sub> = (a<sub>3</sub>a<sub>2</sub> − a<sub>4</sub>a<sub>1</sub>) / a<sub>3</sub>，b<sub>2</sub> = (a<sub>3</sub>a<sub>0</sub> − a<sub>4</sub> × 0) / a<sub>3</sub> = a<sub>0</sub>；下一列 c<sub>1</sub> = (b<sub>1</sub>a<sub>1</sub> − a<sub>3</sub>b<sub>2</sub>) / b<sub>1</sub>，最後 d<sub>1</sub> = b<sub>2</sub>。第一欄全同號才有 0 個右半平面根。</p>
+<p><strong>三階參數。</strong>對 s<sup>3</sup> + a<sub>2</sub>s<sup>2</sup> + a<sub>1</sub>s + a<sub>0</sub>，全部係數必須大於 0，且 a<sub>2</sub>a<sub>1</sub> ＞ a<sub>0</sub>。套進 s<sup>3</sup> + 3s<sup>2</sup> + 3s + K，s<sup>1</sup> 列是 (9 − K) / 3，因此允許範圍是 0 ＜ K ＜ 9。K ＝ 9 時整列為零，上一列形成輔助多項式 3s² ＋ 9 ＝ 0，得到 ±j√3。</p>
+<p><strong>首元為零。</strong>某列第一格是零、後面卻不是零時，用極小正數 ε 暫代首元。當 ε → 0<sup>+</sup>，下一列可能出現負的極大數，仍照其符號計數。若整列為零，則由上一列係數建立輔助多項式，對它微分後填回；這代表存在關於原點對稱的根。</p>
+<p><strong>讀表順序。</strong>先確認最高次係數非零；若全部係數皆負，可整個多項式同乘 −1，根的位置完全不變。接著檢查係數是否同號與有無缺項，這一步只會提前指出必要條件失敗，不能取代建表。表格完成後由上往下忽略數值大小，只記每次正負切換；遇到零首元或全零列，必須先依上述規則補正再計數。</p>
+<p>充分必要條件必須說完整：在沒有虛軸根的前提下，第一欄所有非零元素同號，才代表全部根都位於左半平面。若表中出現全零列，即使補列後沒有符號變化，也只能判為至多臨界，不能直接把它和會衰減的情形放在一起。</p>
+<p><strong>符號、單位與假設。</strong>a<sub>4</sub> 到 a<sub>0</sub> 是特徵多項式係數，依原物理模型可帶不同單位；本頁為判別方便視為已正規化。ε ＝ 10<sup>−6</sup> 是教學取值，根的數量不應依其精確大小改變。本課用的是教學用的簡化模型，真實系統不是這樣：飽和、延遲與未建模動態都可能讓實測提早偏離。</p>
+
+<h2>數值實例：第一欄有兩次符號變化</h2>
+<p>預設多項式是 s<sup>4</sup> + 2s<sup>3</sup> + 3s<sup>2</sup> + 4s + 5，與下方實驗預設欄位完全一致。</p>
+<table><thead><tr><th>列</th><th>第 1 欄</th><th>第 2 欄</th><th>第 3 欄</th></tr></thead><tbody>
+<tr><td>s<sup>4</sup></td><td>1</td><td>3</td><td>5</td></tr>
+<tr><td>s<sup>3</sup></td><td>2</td><td>4</td><td>0</td></tr>
+<tr><td>s<sup>2</sup></td><td>(2 × 3 − 1 × 4) / 2 ＝ <strong>1.000000</strong></td><td>(2 × 5 − 0) / 2 ＝ <strong>5.000000</strong></td><td>0</td></tr>
+<tr><td>s<sup>1</sup></td><td>(1 × 4 − 2 × 5) / 1 ＝ <strong>−6.000000</strong></td><td>0</td><td>0</td></tr>
+<tr><td>s<sup>0</sup></td><td><strong>5.000000</strong></td><td></td><td></td></tr>
+</tbody></table>
+<p>第一欄為 1、2、1、−6、5；從 1 轉成 −6，再由 −6 轉回 5，共 2 次，所以有 <strong>2 個右半平面極點，不穩定</strong>。係數全正仍不夠，正是痛點的答案。</p>
+<p>邊界對照：s<sup>3</sup> + 3s<sup>2</sup> + 3s + 10 的 s<sup>1</sup> 列是 <strong>−0.333333</strong>，有 2 次變化；常數改為 8 時該格為 <strong>0.333333</strong>，變化 0 次；改為 9 時以導數 6s 補列，第一格為 <strong>6.000000</strong>，並有虛軸極點 ±j1.732051。另取 s<sup>4</sup> + s<sup>3</sup> + 2s<sup>2</sup> + 2s + 3，ε 法得到 <strong>2 − 3 / ε ≈ −2.999998 × 10<sup>6</sup></strong>，仍是 2 次變化。</p>
+
+<section class="workspace"><h2>自由實驗：逐格建立 Routh 表</h2>
+<p>選三階或四階，再改各項係數。輸出會列出完整表格、第一欄、符號變化與特殊情形；這是係數判別器，不會顯示根的座標。</p>
+<div class="controls">
+<label for="rh-order">多項式階數<select id="rh-order"><option value="4" selected>四階：a4 s^4 + a3 s^3 + a2 s^2 + a1 s + a0</option><option value="3">三階：a3 s^3 + a2 s^2 + a1 s + a0（忽略 a4）</option></select></label>
+<label for="rh-a4">a4<input id="rh-a4" type="number" step="any" value="1"></label>
+<label for="rh-a3">a3<input id="rh-a3" type="number" step="any" value="2"></label>
+<label for="rh-a2">a2<input id="rh-a2" type="number" step="any" value="3"></label>
+<label for="rh-a1">a1<input id="rh-a1" type="number" step="any" value="4"></label>
+<label for="rh-a0">a0<input id="rh-a0" type="number" step="any" value="5"></label>
+</div>
+<div id="routh-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>Routh 表只告訴你右半平面有幾個極點，不告訴你它們的精確位置；要座標仍需數值求根。</li>
+<li>係數全正只是必要條件；本章預設多項式的係數全正，第一欄仍有 2 次符號變化。</li>
+<li>整列為零不必然等於發散；它指出有關於原點對稱的根，常見情形是一對純虛根與等幅振盪。</li>
+<li>ε 法是維持除法可算的極限技巧，不是替模型加入真的小係數；必須取 ε → 0<sup>+</sup> 來讀符號。</li>
+</ul>
+
+<h2>可觀察證據：示波器量臨界增益與頻率</h2>
+<p><strong>用什麼量。</strong>在具有安全限幅的實驗台上逐步增加比例增益，以示波器觀察輸出。當衰減振盪轉為等幅振盪，記下增益與振盪頻率；前者應對上表格算出的臨界增益，後者應對上輔助多項式的純虛根。</p>
+<p><strong>能證明什麼。</strong>它能驗證臨界增益與臨界頻率的實際值，也能揭露真實元件讓臨界點偏移多少。<strong>不能證明什麼。</strong>它不能從飽和波形分辨右半平面究竟有一個還是兩個極點，也不能證明所有未測增益都符合簡化模型。</p>
+
+<h2>連到哪門課</h2>
+<p>極點與連續系統判準見<a href="../信號與系統-互動課程/07-拉氏轉換與轉移函數.html">信號與系統的拉氏轉換與轉移函數</a>；離散系統改看單位圓，入口在<a href="../信號與系統-互動課程/14-Z轉換與單位圓.html">Z 轉換與單位圓</a>。馬達控制與電力轉換器設計常先用這張表圈出可用增益，再以時域量測縮小範圍。下一章會把 K 從 0 增加到臨界時，極點走過的整段路徑攤開來看。</p>
+<nav class="pager" aria-label="章節導覽"><a href="04-二階閉迴路與極點位置.html">← 上一頁：二階閉迴路與極點位置</a><a href="06-根軌跡.html">下一頁：根軌跡 →</a></nav>
+</main>
+<footer class="site-footer"><span>05 Routh 穩定度判別</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

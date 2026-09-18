@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 二階閉迴路與極點位置｜控制系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・一個增益同時改快慢、誤差與晃動</p>
+<h1>04 二階閉迴路與極點位置：看懂 K 的雙面代價</h1>
+<p class="lead">K ＝ 25、a ＝ 6 時，極點在 −3.000000 ± j4.000000，超越量是 9.478022 %；把 K 加到 100，斜坡誤差縮成四分之一，超越量卻升到 37.232610 %。這章把兩種變化放回同一對極點理解。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-穩態誤差與系統型式.html">03 穩態誤差與系統型式</a>的型式與<a href="02-方塊圖化簡與閉迴路轉移函數.html">02 方塊圖化簡與閉迴路轉移函數</a>的 T(s)。<strong>前置：</strong>見〈08 極零點與二階系統〉<a href="../信號與系統-互動課程/08-極零點與二階系統.html">信號與系統的四個二階指標</a>。</p>
+
+<h2>痛點：K 加大後誤差變小，為什麼輸出反而晃得更高</h2>
+<p>03 章告訴你，型式 1 的斜坡誤差是 a / K，因此提高 K 很有吸引力。但暫態並不只看終值；相同的 K 也進入特徵方程式，會同時改變自然頻率與阻尼比。若只盯著誤差，可能把系統推成長時間振盪。</p>
+<p>另一個常見誤判是看見一對複數極點，就直接使用二階指標。真實模型常有第三個、第四個極點；只有它們衰減得夠快，二階近似才可信。這章用主導極點比把「夠快」變成可檢查的數字。</p>
+
+<h2>白話直覺：極點像決定晃動節拍與消退速度的座標</h2>
+<p>可以暫時把複數極點想成平面上的兩枚定位釘；比喻到此為止，精確關係是極點實部決定指數包絡的衰減率，虛部決定振盪角頻率。命令 r 經誤差進入迴路，K 放大控制量 u，閉迴路特徵方程式把極點固定在實部 −a / 2 的垂直線上；K 增加時極點沿線向上移，自然頻率增加、阻尼比下降，示波器便量到更早的峰值與更高的超越量。</p>
+<p>自然頻率（natural frequency, ω<sub>n</sub>）描述極點離原點的尺度；阻尼比（damping ratio, ζ）描述實部相對於該尺度的比例；阻尼振盪頻率（damped natural frequency, ω<sub>d</sub>）才是欠阻尼輸出實際往返的角頻率。主導極點（dominant poles）則是最靠近虛軸、衰減最慢、因而最能左右觀察結果的極點。</p>
+<p>這件事在你的程式裡長什麼樣：由 K、a 先算 ω<sub>n</sub> 與 ζ，再依 ζ 分成欠阻尼、臨界阻尼、過阻尼三條計算路徑；最後獨立檢查第三極點比，避免輸出一個不可信的二階結論。</p>
+<p class="note">來源：13-控制系統 §4.2、§4.3。</p>
+
+<h2>推導：只推 K 如何搬極點，四個指標引用既有結論</h2>
+<p><strong>（a）對照標準二階式。</strong>單位回授 G(s) ＝ K / (s(s ＋ a))，特徵方程式 1 ＋ K / (s(s ＋ a)) ＝ 0。兩邊乘上 s(s ＋ a)，得到 s<sup>2</sup> ＋ as ＋ K ＝ 0。與 s<sup>2</sup> ＋ 2ζω<sub>n</sub>s ＋ ω<sub>n</sub><sup>2</sup> 對照，可得 ω<sub>n</sub> ＝ √K，以及 2ζω<sub>n</sub> ＝ a，所以 ζ ＝ a / (2√K)。</p>
+<p><strong>（b）K 的雙面作用。</strong>K 變成四倍時，ω<sub>n</sub> 變成兩倍、ζ 變成一半，斜坡 e<sub>ss</sub> ＝ a / K 則縮成四分之一。兩個複數極點的實部 −ζω<sub>n</sub> ＝ −a / 2 與 K 無關，因此改 K 只會讓它們沿 s ＝ −a / 2 上下移動。既有課已證明 M<sub>p</sub>、t<sub>p</sub>、t<sub>s</sub> 與 t<sub>r</sub> 的二階結論，本章只把 K、a 算出的 ζ、ω<sub>n</sub> 代入，不重推公式。</p>
+<p>若改的是 a，情況就不同：極點實部 −a / 2 會左右移動，ζ 也會跟著變化，而 ω<sub>n</sub> 在 K 固定時不變。因此 K 與 a 不是兩個等價旋鈕；前者沿垂直線改變振盪成分，後者移動那條垂直線並改變衰減率。</p>
+<p><strong>（c）三種阻尼。</strong>ζ ＜ 1 時是一對共軛複數極點，輸出會振盪；ζ ＝ 1 時是重根，屬臨界阻尼（critical damping）；ζ ＞ 1 時有兩個負實極點，較靠近原點的慢極點主導。這些分類來自二次方程根的型態，不等同於「快」或「慢」的單一評語。</p>
+<p><strong>（d）第三極點能否忽略。</strong>設額外實極點為 −p，共軛對的包絡衰減率是 ζω<sub>n</sub>，因此主導極點比為 p / (ζω<sub>n</sub>)。第三項的 e<sup>−pt</sup> 若至少快 5 倍衰減，二階近似通常只差幾個百分點；比值小於 5，就應保留高階模型。5 是工程經驗門檻，不是數學定理。</p>
+<p><strong>符號、單位與邊界。</strong>K 的單位為 1/s²，a 為 1/s，ω<sub>n</sub> 與 ω<sub>d</sub> 為 rad/s，ζ 無單位。本課用的是教學用的簡化模型，真實系統不是這樣；假設單位回授、沒有零點，而第三極點只拿來檢查近似條件。</p>
+
+<h2>數值實例：K ＝ 25、a ＝ 6、p ＝ 30、t ＝ 0.5 s</h2>
+<p>既有課已證明四個二階指標的公式；下表只列本章參數代入後的固定結果，不重做證明。</p>
+<table><thead><tr><th>量</th><th>算式或依據</th><th>結果</th></tr></thead><tbody>
+<tr><td>ω<sub>n</sub></td><td>√25</td><td><strong>5.000000 rad/s</strong></td></tr>
+<tr><td>ζ</td><td>6 / (2 × 5)</td><td><strong>0.600000</strong></td></tr>
+<tr><td>極點</td><td>二次方程的根</td><td><strong>−3.000000 ± j4.000000</strong></td></tr>
+<tr><td>M<sub>p</sub></td><td>引用既有課結論</td><td><strong>9.478022 %</strong></td></tr>
+<tr><td>t<sub>p</sub></td><td>引用既有課結論</td><td><strong>0.785398 s</strong></td></tr>
+<tr><td>t<sub>s</sub></td><td>引用既有課結論</td><td><strong>1.333333 s</strong></td></tr>
+<tr><td>t<sub>r</sub>（粗估）</td><td>ζ 接近 0.5 時的既有結論</td><td><strong>0.360000 s</strong></td></tr>
+<tr><td>斜坡 e<sub>ss</sub></td><td>6 / 25</td><td><strong>0.240000</strong></td></tr>
+<tr><td>主導極點比</td><td>30 / 3</td><td><strong>10.000000（≥ 5，二階近似成立）</strong></td></tr>
+<tr><td>y(0.5)</td><td>引用既有課響應式代值</td><td><strong>0.940686</strong></td></tr>
+</tbody></table>
+<p>K ＝ 100 時，ω<sub>n</sub> ＝ 10.000000、ζ ＝ 0.300000、M<sub>p</sub> ＝ 37.232610 %、e<sub>ss</sub> ＝ 0.060000、t<sub>s</sub> 仍為 1.333333 s，y(0.5) ＝ 1.057276。K ＝ 9 時 ζ ＝ 1.000000、重根 −3、y(0.5) ＝ 0.442175；K ＝ 4 時 ζ ＝ 1.500000，極點為 −0.763932 與 −5.236068，t<sub>s</sub> ＝ 5.236068 s。p ＝ 5 時比值只有 1.666667，近似不可信。K ＝ 25、a ＝ 1 時，ζ ＝ 0.100000、M<sub>p</sub> ＝ 72.924761 %；K ＝ 200、a ＝ 1 時，ζ ＝ 0.035355、M<sub>p</sub> ＝ 89.481207 %。t ＝ 0.785398 s 時 y ＝ 1.094780。</p>
+
+<section class="workspace"><h2>自由實驗：用 K 與 a 搬動二階極點</h2>
+<p>場景是單位回授的位置伺服，受控體有一個原點極點與一個位於 −a 的極點。調整 K、a、額外第三極點與觀測時刻，查看阻尼類型、二階指標、斜坡誤差與近似可信度。</p>
+<div class="controls">
+<label for="so-k">迴路增益 K<input id="so-k" type="range" min="1" max="200" step="1" value="25"></label>
+<label for="so-a">受控體極點 a<input id="so-a" type="range" min="1" max="20" step="0.5" value="6"></label>
+<label for="so-p">第三極點距離 p（只用來判主導）<input id="so-p" type="range" min="5" max="100" step="5" value="30"></label>
+<label for="so-t">觀測時刻 t（s）<input id="so-t" type="range" min="0" max="3" step="0.01" value="0.5"></label>
+</div>
+<div id="second-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>ω<sub>n</sub> 是極點離原點的尺度，ω<sub>d</sub> 是欠阻尼輸出的振盪角頻率；兩者只在阻尼很小時接近。</li>
+<li>本結構中 K 增加不會改變極點實部，所以不會縮短 t<sub>s</sub>；它只讓峰值與上升較早，同時提高超越量。</li>
+<li>t<sub>r</sub> 的 0.360000 s 是 ζ 接近 0.5 時的粗估；ζ 遠離該範圍時，不可把它當精確量測目標。</li>
+<li>主導極點比 5 是經驗門檻，不是保證。有零點或極點殘值很大時，即使比值達 5 也可能偏離二階近似。</li>
+<li>ζ 大於 1 代表不振盪，不代表一定比較快；慢實極點若靠近原點，整體反而需要更久才收斂。</li>
+</ul>
+
+<h2>可觀察證據：從峰高、峰值時刻與包絡估計極點</h2>
+<p><strong>用什麼量。</strong>對位置伺服輸入方波，以示波器讀第一個峰相對終值的高度、峰值發生時刻，以及輸出進入並持續留在終值 ±2 % 範圍內的時間；再以兩次相鄰峰的週期估計 ω<sub>d</sub>。</p>
+<p><strong>能證明什麼。</strong>峰高與峰值時刻可反推實際 ζ、ω<sub>d</sub>，兩者合起來估計 ω<sub>n</sub>；掃動 K 後若 M<sub>p</sub> 上升而 t<sub>s</sub> 大致維持 1.333333 s，就支持極點沿實部 −a / 2 的直線移動。</p>
+<p><strong>不能證明什麼。</strong>這些量不能單獨證明系統真的只有二階。未建模的高階極點與零點會改變峰高和時間；2 % 邊界也只是整定準則的選擇，無法由一次量測證明其中常數具有普遍性。</p>
+
+<h2>連到哪門課</h2>
+<p>四個二階指標的證明已在<a href="../信號與系統-互動課程/08-極零點與二階系統.html">信號與系統的極零點與二階系統</a>完成，本章只引用。RLC 電路中的 α ＝ ζω<sub>n</sub> 與三種暫態對照見<a href="../電路學-互動課程/08-二階RLC暫態.html">電路學的二階 RLC 暫態</a>。第 05 章會判斷增益範圍，第 06 章再把 K 改變時的完整極點路徑串起來。</p>
+<nav class="pager" aria-label="章節導覽"><a href="03-穩態誤差與系統型式.html">← 上一頁：穩態誤差與系統型式</a><a href="05-Routh穩定度判別.html">下一頁：Routh 穩定度判別 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 二階閉迴路與極點位置</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

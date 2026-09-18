@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 直流機轉矩轉速線｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">06・負載加重，電樞電流上升而轉速下降</p>
+<h1>直流機轉矩轉速線：從兩條轉換方程看懂調速與失速</h1>
+<p class="lead">一台 240 V 直流機帶動 20 N·m 負載時，電樞電流是 20.000000 A，轉速是 2196.338215 rpm。這章從電壓、磁通、電流與轉矩的因果關係，推得一條能直接判讀調速、起動與失速的直線。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-旋轉機共同語言.html">05 旋轉機共同語言</a>的同步速、角速度、功率與轉矩。<strong>前置：</strong>見〈11 電磁感應〉<a href="../電磁學-互動課程/11-電磁感應.html">電磁學的電磁感應</a>，了解導體切割磁場為何產生感應電壓。</p>
+
+<h2>痛點：負載一加上去，為什麼電流變大而轉速只掉一些</h2>
+<p>直流機接上固定電壓後，空載會轉到某個速度；把負載加重，電源沒有改，電流卻立刻增加，速度則稍微下降。這不是電源直接「命令」一個固定電流，也不是負載直接把速度設定好。真正的閉環藏在反電動勢、電樞電阻壓降與電磁轉矩之間。</p>
+<p>另一個常見疑問是調低端電壓與削弱磁通為何都能改變速度，結果卻很不一樣。前者讓整條轉矩–轉速線平移，後者同時改變截距與斜率；若只記「兩者都能調速」，就會漏掉弱磁區的電流與失速風險。</p>
+
+<h2>白話直覺：反電動勢是隨速度升高的內部電壓</h2>
+<p>可以暫時把電樞回路想成一個會隨轉速自動長高的門檻：速度越高，反電動勢越高，留給電阻推動電流的電壓越少。比喻到此為止；真實機制是電樞導體在磁場中運動而產生 E<sub>a</sub>，它的方向與外加電壓相反，數值為 KΦ × ω。</p>
+<p>沿物理因果走一遍：直流電源在 V<sub>t</sub> 與回路參考點之間建立電壓；電樞回路經電刷與換向器導通，激磁繞組或永磁來源建立磁通；電樞電流 I<sub>a</sub> 與磁通互動產生轉矩 T；轉子加速使 E<sub>a</sub> 上升，直到電磁轉矩、負載轉矩與損耗達成穩態平衡。電壓表量 V<sub>t</sub>，電流表量 I<sub>a</sub>，轉速計量 n；E<sub>a</sub> 要由回路壓降反推。</p>
+<p>直流機（DC machine）的定子建立磁場，轉子上的電樞（armature）承擔能量轉換，換向器讓外部端看到直流。激磁方式（excitation method）可分他激、並激、串激與複激；本章只採他激或並激的線性模型，讓 KΦ 由獨立的 I<sub>f</sub> 決定。串激時 KΦ 會隨 I<sub>a</sub> 改變，不能套用本章的固定斜率直線。</p>
+<p class="note">來源：12-電機機械 §4.1、§4.2、§4.3。</p>
+
+<h2>推導：由電流與反電動勢得到一條直線</h2>
+<p><strong>第一條是轉矩方程。</strong>T = KΦ × I<sub>a</sub>，所以穩態負載指定 T 時，I<sub>a</sub> = T / KΦ。T 的單位是 N·m，I<sub>a</sub> 是 A，KΦ 在這組單位下可同時寫成 N·m/A 與 V·s/rad。這一步說明電樞電流由負載轉矩決定；提高端電壓本身不會在同一負載、同一磁通下提高穩態電流。</p>
+<p><strong>第二條是電壓方程。</strong>反電動勢 E<sub>a</sub> = KΦ × ω，而電樞回路滿足 V<sub>t</sub> = E<sub>a</sub> + I<sub>a</sub> × R<sub>a</sub>。代入 I<sub>a</sub> = T / KΦ，可得 ω = (V<sub>t</sub> − I<sub>a</sub> × R<sub>a</sub>) / KΦ = V<sub>t</sub> / KΦ − R<sub>a</sub> × T / (KΦ)²。截距是無負載角速度 V<sub>t</sub> / KΦ，斜率是 −R<sub>a</sub> / (KΦ)²，因此轉矩增加時速度沿直線下降。</p>
+<p><strong>改端電壓與改磁通的差別。</strong>只改 V<sub>t</sub>，斜率不變而截距改變，整條線上下平移，這是電樞電壓控制。只改 I<sub>f</sub> 時，本課令 KΦ = 1.0 × I<sub>f</sub>；弱磁會讓截距升高，也讓負斜率的絕對值變大。同一負載轉矩所需電流增加，能提供的失速轉矩反而下降。</p>
+<p><strong>起動是最危險的端點。</strong>起動瞬間 ω = 0，所以 E<sub>a</sub> = 0，電流只剩 R<sub>a</sub> 限制：I<sub>start</sub> = V<sub>t</sub> / R<sub>a</sub>。失速轉矩為 T<sub>stall</sub> = KΦ × I<sub>start</sub>。本課用的是線性穩態教學模型，真實機器不完全如此；此處假設 KΦ 與 I<sub>f</sub> 成正比，並忽略磁性飽和、電樞反應、電刷壓降與機械損。</p>
+
+<h2>數值實例：240 V、1.0 A 激磁與 20 N·m 負載</h2>
+<p>取 V<sub>t</sub> = 240 V、I<sub>f</sub> = 1.0 A（KΦ = 1.000000 V·s/rad）、R<sub>a</sub> = 0.5 Ω、T<sub>load</sub> = 20 N·m，與下方自由實驗預設值完全相同。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>電樞電流</td><td>20 / 1.0</td><td><strong>20.000000 A</strong></td></tr>
+<tr><td>反電動勢</td><td>240 − 20 × 0.5</td><td><strong>230.000000 V</strong></td></tr>
+<tr><td>角速度</td><td>230 / 1.0</td><td><strong>230.000000 rad/s</strong></td></tr>
+<tr><td>轉速</td><td>230 × 60 / 2π</td><td><strong>2196.338215 rpm</strong></td></tr>
+<tr><td>無負載速度</td><td>240 / 1.0</td><td><strong>240.000000 rad/s ＝ 2291.831181 rpm</strong></td></tr>
+<tr><td>負載造成的速降</td><td>0.5 × 20 / 1.0²</td><td><strong>10.000000 rad/s</strong></td></tr>
+<tr><td>轉換功率</td><td>230 × 20</td><td><strong>4600.000000 W</strong></td></tr>
+<tr><td>電樞輸入功率</td><td>240 × 20</td><td><strong>4800.000000 W</strong></td></tr>
+<tr><td>電樞銅損</td><td>20² × 0.5</td><td><strong>200.000000 W</strong></td></tr>
+<tr><td>電樞效率</td><td>4600 / 4800</td><td><strong>95.833333 %</strong></td></tr>
+<tr><td>直接起動電流</td><td>240 / 0.5</td><td><strong>480.000000 A（額定 20 A 的 24 倍）</strong></td></tr>
+<tr><td>失速轉矩</td><td>1.0 × 480</td><td><strong>480.000000 N·m</strong></td></tr>
+</tbody></table>
+<p><strong>量級與邊界對照。</strong>端電壓改為 120 V 而負載仍為 20 N·m，I<sub>a</sub> 仍是 20.000000 A，ω = 110.000000 rad/s，n = 1050.422624 rpm，顯示線平移而電流不變。I<sub>f</sub> 改為 0.5 A 時，I<sub>a</sub> = 40.000000 A、ω = 440.000000 rad/s、n = 4201.690498 rpm，弱磁升速但電流加倍，失速轉矩掉到 240 N·m。I<sub>f</sub> 改為 2.0 A，I<sub>a</sub> = 10.000000 A、n = 1122.042349 rpm。</p>
+<p>R<sub>a</sub> 改為 2.0 Ω，速降是 40.000000 rad/s，效率是 83.333333 %，線變得更陡。T = 100 N·m 時，I<sub>a</sub> = 100.000000 A、n = 1814.366351 rpm、效率 = 79.166667 %。I<sub>f</sub> = 0.2 A 時，n = 9071.831756 rpm，磁通太弱而轉速失控。T = 480 N·m 時 ω = 0，正好失速；T = 500 N·m 時 ω 為負，表示負載超過可用轉矩。</p>
+
+<section class="workspace"><h2>自由實驗：拖動直流機的轉矩–轉速線</h2>
+<p>場景是一台他激直流機，固定線性磁通模型，讓你分別改端電壓、激磁電流、電樞電阻與負載轉矩。觀察目前工作點、無負載截距、失速端點與五個固定取樣點，分辨整條線平移和斜率改變。</p>
+<div class="controls">
+<label for="dc-vt">電樞端電壓 V_t（V）<input id="dc-vt" type="range" min="0" max="250" step="5" value="240"></label>
+<label for="dc-if">激磁電流 I_f（A；KΦ ＝ 1.0 × I_f）<input id="dc-if" type="range" min="0.2" max="2" step="0.1" value="1"></label>
+<label for="dc-ra">電樞電阻 R_a（Ω）<input id="dc-ra" type="range" min="0.1" max="2" step="0.05" value="0.5"></label>
+<label for="dc-t">負載轉矩 T（N·m）<input id="dc-t" type="range" min="0" max="500" step="5" value="20"></label>
+</div>
+<div id="dcmotor-output" class="output" aria-live="polite">目前設定：V_t ＝ 240 V、I_f ＝ 1.0 A、KΦ ＝ 1.000000 V·s/rad、R_a ＝ 0.5 Ω、T ＝ 20 N·m。<table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>電樞電流 I_a</td><td><strong>20.000000 A</strong></td></tr><tr><td>反電動勢 E_a</td><td><strong>230.000000 V</strong></td></tr><tr><td>角速度 ω</td><td><strong>230.000000 rad/s</strong></td></tr><tr><td>轉速 n</td><td><strong>2196.338215 rpm</strong></td></tr><tr><td>無負載速度</td><td><strong>240.000000 rad/s ＝ 2291.831181 rpm</strong></td></tr><tr><td>負載造成的速降</td><td><strong>10.000000 rad/s</strong></td></tr><tr><td>轉換功率</td><td><strong>4600.000000 W</strong></td></tr><tr><td>電樞輸入功率</td><td><strong>4800.000000 W</strong></td></tr><tr><td>電樞銅損</td><td><strong>200.000000 W</strong></td></tr><tr><td>電樞效率</td><td><strong>95.833333 %</strong></td></tr><tr><td>直接起動電流</td><td><strong>480.000000 A</strong></td></tr><tr><td>失速轉矩</td><td><strong>480.000000 N·m</strong></td></tr></tbody></table><table><thead><tr><th>取樣轉矩</th><th>0</th><th>0.25 T_stall</th><th>0.5 T_stall</th><th>0.75 T_stall</th><th>T_stall</th></tr></thead><tbody><tr><td>轉速（rpm）</td><td>2291.831181</td><td>1718.873385</td><td>1145.915590</td><td>572.957795</td><td>0.000000</td></tr></tbody></table><strong>判讀：目前是正常馬達工作點，負載使速度由無負載值下降 10.000000 rad/s。</strong>電樞電流由負載轉矩決定 I_a = T / KΦ；電壓決定的是無負載速度。為什麼：負載增加需要更多電磁轉矩，所以 I_a 上升，R_a 壓降增加，留給 E_a 的電壓下降，轉速便降低。直接起動電流 V_t / R_a ＝ 480.000000 A，是這個負載點電流的 24.000000 倍，見第 11 章。邊界提醒：E_a 小於 0 代表拉不動；E_a 等於 0 是失速；I_f 不大於 0.3 A 時磁通太弱，實機激磁回路斷線會飛車；T ＝ 0 時速度停在 V_t / KΦ，不會無限升；V_t ＝ 0 時沒有電樞電壓，馬達不轉。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>改電壓調速與改激磁調速不是同一件事：前者平移直線，後者同時改截距與斜率。</li>
+<li>弱磁帶來升速，不代表能加大負載；同一轉矩需要更高電流，失速轉矩也會下降。</li>
+<li>反電動勢不是損耗。E<sub>a</sub> × I<sub>a</sub> 是電磁轉換功率，R<sub>a</sub> 上的 I<sub>a</sub>² × R<sub>a</sub> 才是本模型的銅損。</li>
+<li>串激馬達輕載飛車源於負載電流下降連帶削弱磁通；並激馬達的危險情況則是激磁回路斷線，兩者機制不同。</li>
+<li>本章直線只適用於固定 KΦ 的他激或並激模型；磁性飽和、電樞反應與電刷壓降都會讓實測線偏離。</li>
+</ul>
+
+<h2>可觀察證據：電流表、電壓表與轉速計各自回答什麼</h2>
+<p><strong>拿什麼量。</strong>電流表串入電樞回路量 I<sub>a</sub>，電壓表跨接端點量 V<sub>t</sub>，非接觸式轉速計量 n。反電動勢不直接量，先量得 I<sub>a</sub> 與 V<sub>t</sub>，再用 E<sub>a</sub> = V<sub>t</sub> − I<sub>a</sub> × R<sub>a</sub> 反推。</p>
+<p><strong>能證明什麼。</strong>在不同負載下記錄成對的 T 與 n，可檢查轉矩–轉速線的截距與斜率；改 V<sub>t</sub> 後重測，可驗證近似平行的線移動。同步記錄 I<sub>a</sub> 則能檢查 T 與 I<sub>a</sub> 是否近似成正比。</p>
+<p><strong>不能證明什麼。</strong>這些外部量測無法單獨證明 KΦ 在整段 I<sub>f</sub> 範圍內都成正比，也不能分離電樞反應、機械損與電刷壓降各自造成多少偏差。要確認磁性飽和，還需另做磁化特性量測。</p>
+
+<h2>連到哪門課</h2>
+<p>這條直線會用在輸送帶、捲揚設備與舊式直流驅動的速度設定；第 11 章會接著比較起動電阻、端電壓控制與弱磁控制。把直導體的感應原理捲成旋轉電樞，見<a href="../電磁學-互動課程/11-電磁感應.html">電磁學的電磁感應</a>。永磁同步馬達與無刷直流馬達為何常被說成「像直流機」，會在第 12 章用換相方式重新說清楚。</p>
+<p><strong>控制程式那一端：</strong>V<sub>t</sub> 對應驅動器的電壓命令，I<sub>a</sub> 對應電流限制或轉矩命令，I<sub>f</sub> 對應弱磁區設定；程式若只追速度而沒有電流上限，起動與堵轉時就可能要求危險電流。</p>
+<nav class="pager" aria-label="章節導覽"><a href="05-旋轉機共同語言.html">← 上一頁：旋轉機共同語言</a><a href="07-感應機滑差與功率流.html">下一頁：感應機滑差與功率流 →</a></nav>
+</main>
+<footer class="site-footer"><span>06 直流機轉矩轉速線</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

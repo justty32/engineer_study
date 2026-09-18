@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 方塊圖化簡與閉迴路轉移函數｜控制系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">02・把互聯關係壓成一條閉迴路公式</p>
+<h1>02 方塊圖化簡與閉迴路轉移函數：從三個方塊讀出極點與代價</h1>
+<p class="lead">控制器、受控體與感測器接成回授後，原本在 −2.000000 的極點會搬到 −42.000000，速度快 21.000000 倍；同時直流增益只到 0.952381。這章用三條代數規則說清楚快慢與誤差如何一起產生。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-建模從微分方程到轉移函數.html">01 建模：從微分方程到轉移函數</a>的一階模型與轉移函數。<strong>前置：</strong>見〈04 線性非時變與摺積〉<a href="../信號與系統-互動課程/04-線性非時變與摺積.html">信號與系統的系統互聯</a>。</p>
+
+<h2>痛點：方塊一接成圈，為什麼不能照箭頭一路相乘</h2>
+<p>串聯時沿路相乘很直觀，但輸出一旦經感測器送回比較點，後面的量又改變前面的誤差，箭頭不再是單向計算。只看方塊數目，無法知道極點搬到哪裡，也無法回答增益加大後究竟買到快多少、留下多少穩態誤差。</p>
+<p>真正要解的是三個同時成立的關係：輸出由受控體決定，控制量由控制器決定，誤差又由命令與量測輸出的差決定。把內部變數消去，才會得到命令到輸出的閉迴路轉移函數（closed loop transfer function, T(s)）。</p>
+
+<h2>白話直覺：回授像一張會依結果改寫的訂單</h2>
+<p>可以暫時把命令想成訂單，輸出不夠時就補送差額；比喻到此為止，精確機制是誤差 e 進入控制器 C(s)，形成控制量 u，受控體（plant）G(s) 產生輸出 y，感測器 H(s) 再把量測值送回比較點。命令 r 從比較點來，e 被 C 放大，u 送入 G，特徵方程式（characteristic equation）決定極點往左搬到哪，時間常數因此縮短，最後由示波器量到較早的 63.2 % 時刻與仍存在的終值差。</p>
+<p>方塊圖（block diagram）的三條規則是：串聯相乘、並聯相加、負回授形成前向路徑除以一加迴路乘積。梅森增益公式（Mason's gain formula）是複雜訊號流圖的通用化簡法，本課只點名，不展開計算。</p>
+<p>這三條規則各有嚴格邊界。串聯相乘要求前一塊的輸出直接成為下一塊的輸入；並聯相加要求各支路接受同一輸入，而且輸出在同一比較點依正負號合併；回授化簡則要先辨認前向路徑與回授路徑。若比較點或分支點被跨越，必須先依等效關係搬移，不能只因版面上兩個方塊靠在一起就相乘。</p>
+<p>這件事在你的程式裡長什麼樣：先依配置建立分母係數，再從同一組係數輸出極點、時間常數、直流增益與誤差；不要分別寫四套彼此可能矛盾的判斷。</p>
+<p class="note">來源：13-控制系統 §1.1、§2.2。</p>
+
+<h2>推導：消去內部變數，讓極點自己出現</h2>
+<p><strong>（a）從三式開始。</strong>令 Y ＝ G × U、U ＝ C × E、E ＝ R − H × Y。把第二式代入第一式得 Y ＝ CGE，再把第三式代入得 Y ＝ CG(R − HY) ＝ CGR − CGHY。把含 Y 的項移到左側：Y(1 ＋ CGH) ＝ CGR，因此 T(s) ＝ Y / R ＝ CG / (1 ＋ CGH)。迴路增益（loop gain, L(s)）就是 C(s)G(s)H(s)，而 1 ＋ L(s) ＝ 0 的根是閉迴路極點。</p>
+<p><strong>（b）代入一階受控體。</strong>C ＝ K<sub>c</sub>、G(s) ＝ K / (τs ＋ 1)、H ＝ h，代入後 T(s) ＝ K<sub>c</sub>K / (τs ＋ 1 ＋ K<sub>c</sub>Kh)。分子與分母同除以 1 ＋ K<sub>c</sub>Kh，可讀出閉迴路時間常數 τ<sub>cl</sub> ＝ τ / (1 ＋ K<sub>c</sub>Kh)，直流增益 T(0) ＝ K<sub>c</sub>K / (1 ＋ K<sub>c</sub>Kh)，極點 s ＝ −(1 ＋ K<sub>c</sub>Kh) / τ。迴路增益每增加 1，極點就往左多移 1 / τ。</p>
+<p><strong>（c）誤差從哪來。</strong>單位命令的終值差為 1 / h − T(0)。當 h ＝ 1，就是 e<sub>ss</sub> ＝ 1 / (1 ＋ K<sub>c</sub>K)。比例控制器必須保留非零誤差才能產生非零控制量，所以有限增益下追不到理想值；03 章會把這件事整理成系統型式。</p>
+<p><strong>（d）並聯與串聯為何不搬出新規則。</strong>兩個串聯方塊的輸入輸出比依序相乘；兩條並聯支路的輸出相加，所以總比值直接相加。只有閉合路徑會讓 Y 同時出現在等式兩側，因而產生 1 ＋ CGH 這個新分母。也正因如此，控制器放在單純串聯路徑只改分子增益，接成回授後才會改寫特徵方程式與極點。</p>
+<p><strong>符號、單位與邊界。</strong>K<sub>c</sub>、K、h 都無單位，τ 與 τ<sub>cl</sub> 的單位為 s。本課用的是教學用的簡化模型，真實系統不是這樣；以上假設線性、C 與 H 為常數、沒有飽和，也忽略受控體更高頻的極點。</p>
+
+<h2>數值實例：K<sub>c</sub> ＝ 10、K ＝ 2、τ ＝ 0.5 s、H ＝ 1</h2>
+<p>以下數字就是自由實驗的預設狀態，採回授配置。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>前向增益 K<sub>c</sub>K</td><td>10 × 2</td><td><strong>20.000000</strong></td></tr>
+<tr><td>分母常數</td><td>1 ＋ 20 × 1</td><td><strong>21.000000</strong></td></tr>
+<tr><td>閉迴路極點</td><td>−21 / 0.5</td><td><strong>−42.000000</strong></td></tr>
+<tr><td>τ<sub>cl</sub></td><td>0.5 / 21</td><td><strong>0.023810 s</strong></td></tr>
+<tr><td>加速倍數</td><td>0.5 / 0.023810</td><td><strong>21.000000 倍</strong></td></tr>
+<tr><td>T(0)</td><td>20 / 21</td><td><strong>0.952381</strong></td></tr>
+<tr><td>理想直流增益</td><td>1 / 1</td><td><strong>1.000000</strong></td></tr>
+<tr><td>穩態誤差</td><td>1 − 0.952381</td><td><strong>0.047619</strong></td></tr>
+</tbody></table>
+<p>K<sub>c</sub> ＝ 0.5 時，極點為 −4.000000、τ<sub>cl</sub> ＝ 0.250000 s、T(0) ＝ 0.500000。h ＝ 2 時，極點為 −82.000000、T(0) ＝ 0.487805，而理想值是 0.500000。K<sub>c</sub> ＝ 50、K ＝ 5、τ ＝ 0.1、h ＝ 0.5 時，極點達 −1260.000000、T(0) ＝ 1.984127，這已暴露簡化模型忽略高頻動態的限制。若改成串聯配置，極點固定 −2.000000，直流增益為 20.000000，控制器只放大而不搬極點。</p>
+<p>比較這些邊界時要分開兩個基準：速度以原受控體的 τ 與 −1 / τ 為基準，追蹤則以 1 / h 為基準。h 變成 2 時，T(0) 雖接近 0.5，不能因此說輸出「只追到一半」而判定錯誤；感測器的刻度已把正確目標改成 r / 2。只有先寫清楚理想值，差值才具有控制意義。</p>
+
+<section class="workspace"><h2>自由實驗：切換串聯與回授配置</h2>
+<p>場景是一階受控體接上比例控制器；你可選擇是否把感測結果送回比較點。調整四個量，觀察極點、時間常數、直流增益與理想值的差如何同時改變。</p>
+<div class="controls">
+<label for="bk-config">配置<select id="bk-config"><option value="feedback">回授配置：C → G，H 回授</option><option value="series">串聯配置：C → G，不接回授</option></select></label>
+<label for="bk-kc">控制器增益 K_c<input id="bk-kc" type="range" min="0.5" max="50" step="0.5" value="10"></label>
+<label for="bk-k">受控體增益 K<input id="bk-k" type="range" min="0.5" max="5" step="0.1" value="2"></label>
+<label for="bk-tau">受控體時間常數 τ（s）<input id="bk-tau" type="range" min="0.1" max="2" step="0.1" value="0.5"></label>
+<label for="bk-h">感測器增益 H<input id="bk-h" type="range" min="0.5" max="2" step="0.1" value="1"></label>
+</div>
+<div id="block-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>1 ＋ L(s) ＝ 0 是特徵方程式，T(s) 是轉移函數；前者的根是後者的極點，但 T(s) 還有分子，兩者不能互換。</li>
+<li>一階模型中回授可乾淨地縮短時間常數；二階以上的極點會一起移動，增益過大可能先造成振盪。</li>
+<li>H 不等於 1 時，閉迴路追的是 r / H。感測器增益不只改快慢，也改變輸出的目標尺度。</li>
+<li>串聯的 K<sub>c</sub>K 可以很大，卻不會改變受控體極點；輸出放大不等於動態變快。</li>
+<li>理想式中的極點很靠左，不代表實機能任意快；飽和、延遲與被省略的極點會先限制結果。</li>
+</ul>
+
+<h2>可觀察證據：量 63.2 % 時刻與終值</h2>
+<p><strong>用什麼量。</strong>對 01 章的馬達接上比例控制器與轉速回授，以函數產生器給步階命令，再用示波器同時量命令與轉速。讀輸出到達自身終值 63.2 % 的時刻，並讀足夠久之後的終值差。</p>
+<p><strong>能證明什麼。</strong>63.2 % 時刻接近 τ / (1 ＋ K<sub>c</sub>Kh)，可支持閉迴路極點確實左移；終值接近 T(0) × r，可支持比例控制留下 1 / (1 ＋ K<sub>c</sub>Kh) 等級的誤差。</p>
+<p><strong>不能證明什麼。</strong>一次低增益量測不能證明 K<sub>c</sub> 任意加大都維持一階。電流飽和、電氣極點與延遲若尚未被激發，儀器看不到它們，不能據此宣稱簡化模型在所有操作範圍都成立。</p>
+
+<h2>連到哪門課</h2>
+<p>串聯、並聯與互聯的數學定義見<a href="../信號與系統-互動課程/04-線性非時變與摺積.html">信號與系統的線性非時變與摺積</a>。運算放大器的閉迴路增益 A / (1 ＋ Aβ) 也使用同一種代數結構；下一章則把 T(0) 沒有追到理想值的現象整理成可直接判讀的型式與誤差常數。</p>
+<nav class="pager" aria-label="章節導覽"><a href="01-建模從微分方程到轉移函數.html">← 上一頁：建模：從微分方程到轉移函數</a><a href="03-穩態誤差與系統型式.html">下一頁：穩態誤差與系統型式 →</a></nav>
+</main>
+<footer class="site-footer"><span>02 方塊圖化簡與閉迴路轉移函數</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

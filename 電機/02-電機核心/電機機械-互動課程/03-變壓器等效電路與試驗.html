@@ -1,0 +1,66 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 變壓器等效電路與試驗｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・兩次安全試驗拆出四個內部參數</p>
+<h1>變壓器等效電路與試驗：不用拆機也能知道損耗與漏磁有多大</h1>
+<p class="lead">同一台 10 kVA、2400/240 V、60 Hz 變壓器，只靠開路與短路兩次試驗，就能得到激磁分支與串聯支路。預設讀數算得百分阻抗 2.498002 %，也為下一章的效率與電壓下降準備資料。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-阻抗折算與自耦變壓器.html">02 阻抗折算與自耦變壓器</a>的匝比與阻抗折算。<strong>前置：</strong>見<a href="../電路學-互動課程/10-阻抗與交流穩態.html">電路學的阻抗與交流穩態</a>，先熟悉串聯阻抗與並聯導納。</p>
+
+<h2>痛點：看不到內部支路，怎麼知道電流花到哪裡</h2>
+<p>實際變壓器接上電源後，即使二次側沒有負載，功率計仍有讀數；負載加大後，端電壓又會下降。若只用理想匝比，這兩件事都解釋不了。問題是機器封著，難道要拆開逐段量嗎？工程上改用兩個刻意安排的工作狀態，讓某一半的效應很小，再由外部三個儀表反推參數。</p>
+<p>一次與二次線圈各有電阻 R<sub>1</sub>、R<sub>2</sub>，未共同鏈結兩側的磁通表現成漏電抗（leakage reactance）X<sub>1</sub>、X<sub>2</sub>。鐵損電阻（core-loss resistance）R<sub>c</sub>代表鐵損，激磁電抗（magnetizing reactance）X<sub>m</sub>代表建立磁通所需的無功電流。</p>
+
+<h2>白話直覺：一次只讓半邊說話</h2>
+<p>可把兩次試驗暫時想成訪談時先請另一組人安靜；比喻到此為止，真實機制是阻抗與端電壓讓某條回路的影響遠小於另一條。開路試驗（open-circuit test）在低壓側加額定電壓，高壓側斷開，串聯支路電流很小，因此功率主要進入鐵損，總電流則分成鐵損電流與激磁電流。短路試驗（short-circuit test）在低壓側短接，只在高壓側慢慢加低電壓直到額定電流；激磁分支承受的電壓很低，因此功率主要成為銅損。</p>
+<p>因果鏈是：電源以儀表共同參考點加到指定端子，開路或低壓短路回路決定電流路徑；電流建立磁通或流過線圈電阻，分別造成鐵損與銅損；穩態時端電壓、電流及輸入功率固定；電壓表、電流表與功率計就能提供反推資料。開路選低壓側，是因為額定電壓較小；短路由高壓側供電，是因為額定電流較小，兩者都讓儀表較安全。</p>
+<p class="note">來源：12-電機機械 §2.2、§2.3。</p>
+
+<h2>推導：開路求並聯支路，短路求串聯支路</h2>
+<p>開路讀數先化成 G<sub>c</sub> = P<sub>oc</sub> / V<sub>oc</sub>² 與 |Y| = I<sub>oc</sub> / V<sub>oc</sub>，單位都是 S。激磁電納 B<sub>m</sub> = √(|Y|² − G<sub>c</sub>²)，所以 R<sub>c</sub> = 1 / G<sub>c</sub>、X<sub>m</sub> = 1 / B<sub>m</sub>。這些先屬於低壓側，要乘 a² 才折算到高壓側。物理限制是 P<sub>oc</sub> ≤ V<sub>oc</sub> × I<sub>oc</sub>，而 I<sub>oc</sub> 不可小於鐵損電流。</p>
+<p>短路讀數給 |Z<sub>eq</sub>| = V<sub>sc</sub> / I<sub>sc</sub>、R<sub>eq</sub> = P<sub>sc</sub> / I<sub>sc</sub>²，再由 X<sub>eq</sub> = √(|Z<sub>eq</sub>|² − R<sub>eq</sub>²) 分離電抗。折算後可寫 R<sub>eq</sub> = R<sub>1</sub> + a² R<sub>2</sub>、X<sub>eq</sub> = X<sub>1</sub> + a² X<sub>2</sub>。百分阻抗為 %Z = Z<sub>eq</sub> / Z<sub>base</sub> × 100，且 Z<sub>base</sub> = V<sub>rated</sub>² / S<sub>rated</sub>。</p>
+<p>這套分離法的關鍵不是把某個元件真的關掉，而是讓它對儀表讀數的貢獻小到可忽略。開路時，串聯支路只流過很小的空載電流，壓降與銅損因而很小；短路時，外加電壓遠低於額定值，主磁通與鐵損因而很小。兩個近似互補，才能用簡單量測拼回整體模型。若忘了量測側別，數字即使算得順也會差一個 a²，這是現場整理試驗報告最常見的單位層級錯誤。</p>
+<p><strong>模型邊界。</strong>本課用的是線性穩態教學模型，真實機器不完全如此；這裡採近似等效電路，並忽略試驗期間的溫升與被壓小的支路損耗。讀數若使功率大於視在功率，或平方根內小於等於零，應判為讀數不可能，不能硬算。</p>
+
+<h2>數值實例：六個讀數算回四個參數</h2>
+<p>取 a = 10。開路試驗在低壓側量得 V<sub>oc</sub> = 240 V、I<sub>oc</sub> = 3.01 A、P<sub>oc</sub> = 60 W；短路試驗在高壓側量得 V<sub>sc</sub> = 60 V、I<sub>sc</sub> = 4.17 A、P<sub>sc</sub> = 139 W。讀數由設計值 R<sub>eq</sub> = 8 Ω、X<sub>eq</sub> = 12 Ω、R<sub>c</sub> = 96 kΩ、X<sub>m</sub> = 8 kΩ 四捨五入到儀表刻度，所以算回去有小差異。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>鐵損電導與低壓側電阻</td><td>60 / 240²</td><td>0.001042 S；960.000000 Ω</td></tr>
+<tr><td>導納大小與激磁電納</td><td>3.01 / 240；√(0.012542² − 0.001042²)</td><td>0.012542 S；0.012498 S</td></tr>
+<tr><td>低壓側激磁電抗</td><td>1 / 0.012498</td><td>80.010669 Ω</td></tr>
+<tr><td>高壓側 R<sub>c</sub>、X<sub>m</sub></td><td>低壓側值 × 10²</td><td>96000.000000 Ω；8001.066880 Ω</td></tr>
+<tr><td>鐵損電流、激磁電流</td><td>240 × G；240 × B</td><td>0.250000 A；2.999600 A</td></tr>
+<tr><td>|Z<sub>eq</sub>|、R<sub>eq</sub>、X<sub>eq</sub></td><td>60 / 4.17；139 / 4.17²；平方差</td><td>14.388489 Ω；7.993605 Ω；11.963733 Ω</td></tr>
+<tr><td>額定一次電流與滿載銅損</td><td>10000 / 2400；4.166667² × 7.993605</td><td>4.166667 A；138.777867 W</td></tr>
+<tr><td>基準阻抗與百分阻抗</td><td>2400² / 10000；14.388489 / 576</td><td>576.000000 Ω；2.498002 %</td></tr>
+<tr><td>低壓側 R<sub>eq</sub>、X<sub>eq</sub></td><td>高壓側值 / 10²</td><td>0.079936 Ω；0.119637 Ω</td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>百分阻抗只有 2.498002 %；若 P<sub>sc</sub> 改 260 W，已超過 60 × 4.17 = 250.2，功率因數會大於 1。若 a 改 20，R<sub>c</sub> = 384000.000000 Ω、Z<sub>base</sub> = 2304 Ω、%Z = 0.624500 %。控制程式那一端會把百分阻抗與額定資料寫入保護整定，作為短路電流量級的依據。</p>
+<p>讀表時也要保留有效位數的觀念。這組資料先在儀表刻度上取整，再反算參數，因此結果不會精準回到設計值。差異小且方向合理時，應把它解讀為解析度與取整影響；若違反功率因數上限或讓電抗平方成為負值，就不是取整可以解釋，而是接線、量程或抄錄需要重查。</p>
+
+<section class="workspace"><h2>自由實驗：用開路與短路讀數反推參數</h2>
+<p>固定額定容量 10 kVA 與低壓側 240 V，改變匝比及兩次試驗的六個讀數。觀察儀表資料是否物理可行，以及折算側別如何改變參數與百分阻抗。</p>
+<div class="controls">
+<label for="xt-a">匝比 a<select id="xt-a"><option value="5">5（1200/240 V）</option><option value="10" selected>10（2400/240 V）</option><option value="20">20（4800/240 V）</option></select></label>
+<label for="xt-voc">開路試驗電壓 V_oc（V，低壓側）<input id="xt-voc" type="range" min="100" max="300" step="1" value="240"></label>
+<label for="xt-ioc">開路試驗電流 I_oc（A）<input id="xt-ioc" type="range" min="0.1" max="8" step="0.01" value="3.01"></label>
+<label for="xt-poc">開路試驗功率 P_oc（W）<input id="xt-poc" type="range" min="10" max="300" step="1" value="60"></label>
+<label for="xt-vsc">短路試驗電壓 V_sc（V，高壓側）<input id="xt-vsc" type="range" min="10" max="150" step="1" value="60"></label>
+<label for="xt-isc">短路試驗電流 I_sc（A）<input id="xt-isc" type="range" min="1" max="8" step="0.01" value="4.17"></label>
+<label for="xt-psc">短路試驗功率 P_sc（W）<input id="xt-psc" type="range" min="10" max="300" step="1" value="139"></label>
+</div>
+<div id="xftest-output" class="output" aria-live="polite"><table><tbody><tr><th>G、|Y|、B</th><td>0.001042 S；0.012542 S；0.012498 S</td></tr><tr><th>R_c,LV、X_m,LV</th><td>960.000000 Ω；80.010669 Ω</td></tr><tr><th>R_c、X_m</th><td>96000.000000 Ω；8001.066880 Ω</td></tr><tr><th>鐵損電流、激磁電流</th><td>0.250000 A；2.999600 A</td></tr><tr><th>|Z_eq|、R_eq、X_eq</th><td>14.388489 Ω；7.993605 Ω；11.963733 Ω</td></tr><tr><th>額定一次電流、滿載銅損</th><td>4.166667 A；138.777867 W</td></tr><tr><th>Z_base、%Z</th><td>576.000000 Ω；2.498002 %</td></tr><tr><th>R_eq,LV、X_eq,LV</th><td>0.079936 Ω；0.119637 Ω</td></tr></tbody></table><strong>判讀：開路試驗給激磁分支（R_c、X_m），短路試驗給串聯支路（R_eq、X_eq），兩個試驗各關掉一半電路。</strong>滿載銅損 138.777867 W 對鐵損 60 W。為什麼：開路時串聯電流很小，短路試驗的低電壓又壓低激磁支路作用。邊界提醒：功率不得大於電壓與電流的乘積；平方根內若小於等於零就顯示不適用，絕不輸出非數值；百分阻抗低於 1 % 時短路電流很大，高於 8 % 時電壓調整率會差。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>開路試驗近似量到鐵損，但仍有極小的一次銅損；近似模型才把它忽略。</li><li>短路試驗是刻意用低電壓建立額定電流，不是讓額定電壓直接造成故障。</li><li>R<sub>c</sub> 是把鐵損表現成電阻的模型參數，不是藏在機器裡的一顆實體電阻。</li><li>參數屬於量測所在側；跨到另一側要依方向乘或除 a²，不能只改電壓名稱。</li></ul>
+
+<h2>可觀察證據：三表讀數能證明到哪裡</h2>
+<p><strong>用什麼量。</strong>以功率計、電壓表、電流表量兩次試驗的六個讀數，另用紅外線溫度計追蹤鐵心溫度，避免溫升悄悄改變條件。<strong>能證明什麼。</strong>在近似模型成立時，可求四個合併參數與百分阻抗，溫度趨勢也能支持確有損耗。<strong>不能證明什麼。</strong>兩次試驗只給合併值，不能分辨 R<sub>1</sub> 與 a² R<sub>2</sub> 各佔多少；要拆開還得另量直流電阻。</p>
+
+<h2>連到哪門課</h2>
+<p>這套方法用於變壓器出廠試驗、保護整定與負載評估。串聯阻抗和並聯導納的算法見<a href="../電路學-互動課程/10-阻抗與交流穩態.html">電路學的阻抗與交流穩態</a>；本章得到的 R<sub>eq</sub>、X<sub>eq</sub> 與損耗會在下一章直接算電壓調整率與效率。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-阻抗折算與自耦變壓器.html">← 上一頁：阻抗折算與自耦變壓器</a><a href="04-電壓調整率與效率.html">下一頁：電壓調整率與效率 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 變壓器等效電路與試驗</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

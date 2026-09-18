@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 匹配濾波器與位元錯誤率｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・把判決距離換成一條錯誤機率曲線</p>
+<h1>匹配濾波器與位元錯誤率：在雜訊裡判斷 0 或 1</h1>
+<p class="lead">E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB 時，BPSK 的 P<sub>e</sub> 是 3.872108 × 10<sup>−6</sup>，同調 FSK 是 7.827011 × 10<sup>−4</sup>，ON-OFF 則是 1.267366 × 10<sup>−2</sup>。差別不是波形好看與否，而是判決距離。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-雜訊訊雜比與雜訊指數.html">05 雜訊、訊雜比與雜訊指數</a>的 AWGN 與 N<sub>0</sub>，以及<a href="06-取樣量化與PCM.html">06 取樣、量化與 PCM</a>的位元。<strong>前置：</strong>見〈12 機率與隨機變數〉<a href="../../../共通基礎/數學/互動課程/12-機率與隨機變數.html">工程數學的高斯尾機率</a>與〈04 線性非時變與摺積〉<a href="../../02-電機核心/信號與系統-互動課程/04-線性非時變與摺積.html">信號與系統的相關觀念</a>。</p>
+
+<h2>痛點：同樣寫 0 與 1，為什麼錯誤機率能差上千倍</h2>
+<p>接收端看到的是送出波形加上一段隨機擾動。若只盯某個瞬間的振幅，可能丟掉整段波形裡其餘能量；若把所有樣本不分方向地相加，又會把無關擾動一起放大。真正的問題不是「哪一種濾波器最乾淨」，而是哪一個運算能在判決時刻把已知形狀的貢獻集中到最大。</p>
+<p>第二個痛點是 3 dB 與 6 dB 的說法看似衝突。雙極相對 ON-OFF 究竟好多少，取決於 E<sub>b</sub> 代表「1」脈衝的能量，還是雙方已先固定相同平均每位元能量。若不先寫清比較基準，兩個都正確的答案會被誤認為互相矛盾。</p>
+
+<h2>白話直覺：用已知形狀當尺，把整段能量收在一點</h2>
+<p>可以暫時想成拿一把形狀完全相合的尺去貼合收到的軌跡，相合的部分會累積、無規律部分較難同向累積；比喻到此為止，精確作法是匹配濾波器（matched filter）h(t) ＝ K s(T − t)，等價於相關器（correlator）把收到的波形與已知波形相乘積分。</p>
+<p>因果鏈從等機率送 s<sub>0</sub> 或 s<sub>1</sub> 開始，接收 r ＝ s<sub>i</sub> + n，n 是加性白色高斯雜訊（additive white Gaussian noise, AWGN）。匹配運算選擇讓取樣訊雜比最大的方向，換到 SNR<sub>max</sub> ＝ 2E/N<sub>0</sub>；再以門檻把兩側分開，Q 函數把距離除以標準差換成尾端機率。邊界是同步、機率與 AWGN 假設失效時，理論曲線不再完整描述實機。示波器可見取樣峰，位元錯誤率測試儀可數長序列中的錯誤。</p>
+<p>軟體那一端，軟體定義無線電（software-defined radio, SDR）程式把接收序列與已知前導碼做相關以尋找封包開頭，就是匹配濾波器；相關峰相對旁邊擾動的高度，反映 2E/N<sub>0</sub> 的量級。</p>
+<p>本章比較的名稱對應為：振幅鍵控（amplitude-shift keying, ASK）採 ON-OFF；二元相位鍵控（binary phase-shift keying, BPSK）採雙極；同調頻率鍵控（frequency-shift keying, FSK）採正交訊號。名稱不同，最後仍回到投影後的距離。</p>
+<p class="note">來源：14-通訊系統-下 §9.1–§9.4、§10.1–§10.5。</p>
+
+<h2>推導：最佳方向、判決距離與 Q 函數</h2>
+<p><strong>（a）為何只看能量。</strong>取樣時刻的訊號分量是 ∫s h，雜訊分量功率是 (N<sub>0</sub>/2)∫h²。Cauchy–Schwarz 不等式指出 h 與 s 成比例時，兩者比值最大，得到 2E/N<sub>0</sub>。波形細節不改變最大值，但接收端必須知道波形才能匹配。</p>
+<p><strong>（b）雙極方案。</strong>兩個訊號相距 2√E<sub>b</sub>，門檻在中點，因此擾動須越過 √E<sub>b</sub>。匹配後標準差為 √(N<sub>0</sub>/2)，相除得到 √(2E<sub>b</sub>/N<sub>0</sub>)，所以 P<sub>e</sub> ＝ Q(√(2E<sub>b</sub>/N<sub>0</sub>))。</p>
+<p><strong>（c）ON-OFF 的兩種基準。</strong>依筆記慣例，E<sub>b</sub> 是「1」脈衝能量，s<sub>0</sub> 為零；兩訊號相距 √E<sub>b</sub>，門檻距離 √E<sub>b</sub>/2，故 P<sub>e</sub> ＝ Q(√(E<sub>b</sub>/(2N<sub>0</sub>)))。與雙極使用同一個 E<sub>b</sub> 數值時，Q 引數相差 2 倍，要補 6.020600 dB 才追平。若先固定相同平均每位元能量，ON-OFF 因一半時間不送能量，帳面定義要換算，差距變成 3.010300 dB；這就是筆記寫「好 3 dB」的比較。本頁實驗採前一種，同一 E<sub>b</sub> 直接代入三式。</p>
+<p><strong>（d）同調 FSK。</strong>兩個正交訊號距離 √(2E<sub>b</sub>)，得到 Q(√(E<sub>b</sub>/N<sub>0</sub>))，相對 BPSK 差 3.010300 dB。同調需要載波相位資訊；非同調與 DPSK 不需相同的絕對相位條件，但效能略差。</p>
+<p><strong>（e）統一觀點。</strong>若判決距離為 d、投影擾動標準差為 σ，P<sub>e</sub> ＝ Q(d/(2σ))。三種方案的差別都收斂到 d。本課用的是一階教學模型：AWGN、理想同步、等機率、理想匹配；Q(x) ＝ Pr[N(0,1) &gt; x] ＝ ½ erfc(x/√2)。</p>
+<p><strong>（f）機率與計數。</strong>P<sub>e</sub> 是每次判決出錯的模型機率，傳 N 個位元時，期望錯誤數為 N × P<sub>e</sub>。期望值可以小於一，也可以不是整數；它描述大量重複實驗的平均，不承諾某一次恰好出現該數目。BER 則是實際錯誤數除以實際傳送數，樣本夠長才會逐漸靠近 P<sub>e</sub>。因此很低的錯誤機率需要非常長的測試，沒有觀察到錯誤不等於機率為零。</p>
+
+<h2>數值實例：10 dB 時三種方案差多少</h2>
+<p>令 E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB，線性值 10.000000，傳送 10<sup>6</sup> 位元；這就是自由實驗預設值。</p>
+<table><thead><tr><th>方案</th><th>Q 的引數</th><th>P<sub>e</sub></th><th>10<sup>6</sup> 位元的期望錯誤數</th></tr></thead><tbody>
+<tr><td>雙極／BPSK</td><td>√20 ＝ 4.472136</td><td><strong>3.872108 × 10<sup>−6</sup></strong></td><td><strong>3.872108</strong></td></tr>
+<tr><td>ON-OFF／ASK</td><td>√5 ＝ 2.236068</td><td><strong>1.267366 × 10<sup>−2</sup></strong></td><td><strong>12673.66</strong></td></tr>
+<tr><td>同調 FSK</td><td>√10 ＝ 3.162278</td><td><strong>7.827011 × 10<sup>−4</sup></strong></td><td><strong>782.7011</strong></td></tr>
+</tbody></table>
+<p>匹配濾波器最大取樣訊雜比 2E<sub>b</sub>/N<sub>0</sub> ＝ <strong>20.000000（13.010300 dB）</strong>。Q 函數參考值為：Q(0) ＝ 0.5、Q(1) ＝ 1.586553 × 10<sup>−1</sup>、Q(2) ＝ 2.275013 × 10<sup>−2</sup>、Q(3) ＝ 1.349898 × 10<sup>−3</sup>、Q(4) ＝ 3.167124 × 10<sup>−5</sup>、Q(5) ＝ 2.866516 × 10<sup>−7</sup>、Q(6) ＝ 9.865876 × 10<sup>−10</sup>。</p>
+<p><strong>量級與邊界對照。</strong>0 dB 時，BPSK 為 7.864960 × 10<sup>−2</sup>、ON-OFF 為 2.397501 × 10<sup>−1</sup>、FSK 為 1.586553 × 10<sup>−1</sup>，BPSK 約每 13 個位元錯 1 個。16 dB、10<sup>9</sup> 位元時，BPSK 為 2.267396 × 10<sup>−19</sup>，期望錯誤 2.267396 × 10<sup>−10</sup> 個，等於零；ON-OFF 為 4.068596 × 10<sup>−6</sup>，即 4068.596 個；FSK 為 1.399028 × 10<sup>−10</sup>。BPSK 在 9.6 dB 是 9.736176 × 10<sup>−6</sup>，約 10<sup>−5</sup>；6 dB 是 2.388291 × 10<sup>−3</sup>；13 dB 是 1.332931 × 10<sup>−10</sup>。</p>
+<p>在同一個 10 dB 橫切面，BPSK 的期望錯誤只有 3.872108 個，ON-OFF 卻是 12673.66 個，相差超過三個數量級。這不是匹配濾波器偏愛某個名稱，而是 ON-OFF 的判決距離較短；若要拿功率效率下結論，必須先聲明採同一脈衝能量或同一平均能量。</p>
+
+<section class="workspace"><h2>自由實驗：能量比如何變成錯誤機率</h2>
+<p>選定 E_b/N_0、二元方案與傳送位元數。回饋會先說明此模式採用的公式，再列出匹配濾波器上限、Q 引數、錯誤機率、期望錯誤數與三方案並排比較；其他方案只作同一能量比下的參照。</p>
+<div class="controls">
+<label for="be-ebn0">E_b/N_0（dB）<input id="be-ebn0" type="range" min="0" max="16" step="0.5" value="10"></label>
+<label for="be-scheme">訊號方案<select id="be-scheme"><option value="bipolar">雙極基頻／BPSK：Q(√(2E_b/N_0))</option><option value="onoff">ON-OFF 基頻／ASK：Q(√(E_b/2N_0))</option><option value="cfsk">同調 FSK：Q(√(E_b/N_0))</option></select></label>
+<label for="be-n">傳送位元數<select id="be-n"><option value="1000">10^3 位元</option><option value="1000000" selected>10^6 位元</option><option value="1000000000">10^9 位元</option></select></label>
+</div>
+<div id="ber-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>E<sub>b</sub>/N<sub>0</sub> 不是 SNR；前者是每位元能量除以每 Hz 雜訊功率，兩者關係為 SNR ＝ (E<sub>b</sub>/N<sub>0</sub>) × (R<sub>b</sub>/B)。</li>
+<li>「雙極比 ON-OFF 好 3 dB」是平均功率相同的比法；「好 6 dB」是同一 E<sub>b</sub> 值代入筆記兩式的比法。基準不同，兩者都對。</li>
+<li>匹配濾波器不是把雜訊完全擋掉，而是讓已知訊號在取樣時刻的訊雜比達到最大。</li>
+<li>BER 是有限次實驗量到的頻率，P<sub>e</sub> 是模型算出的機率；10<sup>6</sup> 位元量到 4 個錯，不代表 P<sub>e</sub> 必然等於 4 × 10<sup>−6</sup>。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>位元錯誤率測試儀送出已知的偽隨機序列並計數錯誤；示波器觀察匹配濾波器輸出在取樣時刻的峰值；掃動 E<sub>b</sub>/N<sub>0</sub> 後以對數尺度整理曲線。</p>
+<p><strong>能證明什麼。</strong>可得到實測 BER，並檢查它隨 E<sub>b</sub>/N<sub>0</sub> 下降的趨勢是否貼近 Q 曲線。</p>
+<p><strong>不能證明什麼。</strong>實測與理論的水平差距只告訴你實作損失幾 dB，不能單憑曲線判定錯誤來自雜訊、ISI 或同步偏差。</p>
+
+<h2>連到哪門課</h2>
+<p>Q 函數所用的高斯尾機率見<a href="../../../共通基礎/數學/互動課程/12-機率與隨機變數.html">工程數學的機率與隨機變數</a>；相關與線性非時變運算的關係見<a href="../../02-電機核心/信號與系統-互動課程/04-線性非時變與摺積.html">信號與系統的線性非時變與摺積</a>。最佳偵測理論、通道編碼留給數位通訊課。</p>
+<nav class="pager" aria-label="章節導覽"><a href="07-基頻傳輸ISI與升餘弦.html">← 上一頁：基頻傳輸、ISI 與升餘弦</a><a href="09-數位調變與星座圖.html">下一頁：數位調變與星座圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>08 匹配濾波器與位元錯誤率</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

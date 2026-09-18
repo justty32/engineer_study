@@ -1,0 +1,81 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 雜訊、訊雜比與雜訊指數｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・把看不見的雜訊做成一張功率帳</p>
+<h1>雜訊、訊雜比與雜訊指數：第一級放大器為什麼決定整台接收機</h1>
+<p class="lead">290 K 下每 1 Hz 的熱雜訊密度是 −173.975187 dBm/Hz，常見的 −174 dBm/Hz 只是四捨五入速記。1 MHz 接收頻寬給出 −113.975187 dBm 雜訊底，三級接收鏈的順序則可讓總 NF 從 1.908120 dB 惡化到 9.051478 dB。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="00-通訊世界觀與分貝帳本.html">00 通訊世界觀與分貝帳本</a>的 dB 與 dBm。<strong>前置：</strong>見〈機率與隨機變數〉<a href="../../../共通基礎/數學/互動課程/12-機率與隨機變數.html">工程數學先修 12</a>——高斯分布與標準差的機制在那一頁，本章只建立接收機的雜訊功率帳。</p>
+
+<h2>痛點：每級都有增益，為什麼弱訊號仍可能越放越糟</h2>
+<p>放大器把訊號放大，也把已有的雜訊一起放大，自己還會再添一份。只看輸出功率變大，不能知道內容是否更容易辨認；真正要追的是訊雜比（signal-to-noise ratio, SNR）在每一級之後掉了多少。</p>
+<p>另一個常見誤判是把每級 NF 的 dB 直接相加。第二級造成的影響，必須先除以前方增益再折回整機輸入端；所以相同三顆元件只換順序，接收結果就可能差 7.143358 dB。這不是小數誤差，而是架構選擇。</p>
+
+<h2>白話直覺：先把微弱內容抬高，後面的髒污就顯得小</h2>
+<p>可以把接收鏈想成傳話：第一個人若先把正確內容說得夠清楚，後面新增的小聲干擾影響較小；比喻到此為止。精確地說，每級新增的雜訊換算回輸入端時，要除以前面所有線性增益，第一級沒有任何前級可替它遮蔽，所以它的雜訊指數最關鍵。</p>
+<p>因果鏈如下：天線交來微弱訊號與環境雜訊；低雜訊放大器（low-noise amplifier, LNA）先以高增益、低 NF 把兩者抬高；後續混頻器與 IF 放大器新增的雜訊被前級增益折小，換到較低整機 NF；反例是把有損耗的混頻器放在最前面，後級貢獻反而被放大。雜訊指數分析儀能量到各級與整機 NF，頻譜分析儀接 50 Ω 終端能看到雜訊底。</p>
+<p>主要來源有五類：熱雜訊來自熱擾動，散粒雜訊來自載子離散，閃爍雜訊在低頻較顯著，量化雜訊由 ADC 產生，外部干擾則來自其他發射源或自然環境。加性白色高斯雜訊（additive white Gaussian noise, AWGN）以 y(t) ＝ s(t) + n(t) 表示，n(t) 具有雙邊功率譜密度 N<sub>0</sub>/2；它是最基本的通道模型。</p>
+<p>軟體那一端，SDR 前端增益若開得太小，ADC 量化雜訊會成為後段主導項，就像 Friis 第三項沒有被前級增益壓住。</p>
+<p>頻寬也是一個不能忽略的旋鈕。白雜訊密度固定時，把接收範圍放寬十倍，總雜訊功率便增加十倍，也就是上升 10 dB；訊號功率若不變，SNR 就同步下降 10 dB。因此濾波器不只是分開相鄰頻率，也是在決定接收機願意收進多少雜訊。窄頻接收較靈敏，代價是能容納的訊息變化較少。</p>
+<p class="note">來源：14-通訊系統-下 §8.1–§8.4。</p>
+
+<h2>推導：從每赫茲的 kT 到整機 Friis 帳</h2>
+<p><strong>（a）雜訊底。</strong>熱雜訊（Johnson–Nyquist noise）的單邊功率譜密度 N<sub>0</sub> ＝ kT。波茲曼常數 k ＝ 1.380649 × 10<sup>−23</sup> J/K，參考溫度 T<sub>0</sub> ＝ 290 K，因此 kT<sub>0</sub> ＝ 4.003882 × 10<sup>−21</sup> W/Hz ＝ <strong>−173.975187 dBm/Hz</strong>；<strong>−174 dBm/Hz 是四捨五入速記</strong>。白雜訊每 Hz 都帶同樣平均功率，B Hz 便是 kT<sub>0</sub>B；dB 形式為 N ＝ −173.975187 + 10 log<sub>10</sub>(B)，B 以 Hz 代入。</p>
+<p><strong>（b）單級指數。</strong>雜訊指數（noise figure, NF）的線性形式定義為 F ＝ SNR<sub>in</sub> / SNR<sub>out</sub> ≥ 1，NF ＝ 10 log<sub>10</sub>F。若放大器線性增益為 G、自己增加 N<sub>a</sub>，訊號與輸入雜訊都先乘 G，而輸出多了 N<sub>a</sub>，整理後 F ＝ 1 + N<sub>a</sub> / (GkT<sub>0</sub>B)。NF 描述訊雜比惡化倍數，不是單獨一份新增功率。</p>
+<p><strong>（c）級聯。</strong>三級的 Friis 公式為 F ＝ F<sub>1</sub> + (F<sub>2</sub> − 1) / G<sub>1</sub> + (F<sub>3</sub> − 1) / (G<sub>1</sub>G<sub>2</sub>)。第二、三級的新增雜訊折回輸入端，要分別除以前面一級、兩級增益。若混頻器先來，F ＝ F<sub>mixer</sub> + (F<sub>LNA</sub> − 1) / G<sub>mixer</sub>；損耗使 G<sub>mixer</sub> 小於 1，除完反而放大後級影響。等效雜訊溫度 T<sub>e</sub> ＝ (F − 1)T<sub>0</sub>。</p>
+<p><strong>模型邊界。</strong>本課用的是所有級皆在 290 K、頻寬相同、阻抗匹配的一階教學模型。實機的源阻抗、溫度、頻率與元件工作點都會使 NF 改變。</p>
+
+<h2>數值實例：1 MHz 頻寬與三級接收鏈</h2>
+<p>令 B ＝ 1 MHz、輸入訊號 −100 dBm、LNA 增益 20 dB／NF 1.5 dB、混頻器增益 −6 dB／NF 8 dB、IF 放大器 NF 5 dB，與互動元件預設值一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>雜訊底</td><td>−173.975187 + 60</td><td><strong>−113.975187 dBm</strong></td></tr>
+<tr><td>輸入訊雜比</td><td>−100 − (−113.975187)</td><td><strong>13.975187 dB</strong></td></tr>
+<tr><td>F<sub>1</sub>、G<sub>1</sub></td><td>10<sup>0.15</sup>、10<sup>2</sup></td><td><strong>1.412538、100</strong></td></tr>
+<tr><td>F<sub>2</sub>、G<sub>2</sub></td><td>10<sup>0.8</sup>、10<sup>−0.6</sup></td><td><strong>6.309573、0.251189</strong></td></tr>
+<tr><td>F<sub>3</sub></td><td>10<sup>0.5</sup></td><td><strong>3.162278</strong></td></tr>
+<tr><td>第一項</td><td>F<sub>1</sub></td><td><strong>1.412538</strong></td></tr>
+<tr><td>第二項</td><td>(6.309573 − 1) / 100</td><td><strong>0.053096</strong></td></tr>
+<tr><td>第三項</td><td>(3.162278 − 1) / (100 × 0.251189)</td><td><strong>0.086082</strong></td></tr>
+<tr><td>總 F</td><td>相加</td><td><strong>1.551715（1.908120 dB）</strong></td></tr>
+<tr><td>等效雜訊溫度</td><td>(1.551715 − 1) × 290</td><td><strong>159.997380 K</strong></td></tr>
+<tr><td>輸出訊雜比</td><td>13.975187 − 1.908120</td><td><strong>12.067067 dB</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>把混頻器放在 LNA 前面，第一項 6.309573、第二項 (1.412538 − 1)/0.251189 ＝ <strong>1.642342</strong>，總 F ＝ 8.037997 ＝ <strong>9.051478 dB</strong>，輸出訊雜比只剩 <strong>4.923709 dB</strong>；同樣元件只換順序就差 7.143358 dB。</p>
+<p><strong>邊界對照。</strong>LNA 增益 0 dB 時總 NF <strong>11.855505 dB</strong>，40 dB 時為 <strong>1.504277 dB</strong>；LNA NF 0.5 dB 時總值 <strong>1.007826 dB</strong>。B ＝ 20 MHz 時雜訊底 <strong>−100.964887 dBm</strong>、輸出訊雜比 <strong>−0.943233 dB</strong>；輸入 −120 dBm 時訊雜比 <strong>−7.932933 dB</strong>。混頻器 −15 dB、後級 NF 20 dB 時，總值 <strong>15.277470 dB</strong>，第三項 31.306549 主導。</p>
+
+<section class="workspace"><h2>自由實驗：級聯順序與雜訊底</h2>
+<p>場景是 LNA、混頻器與 IF 放大器組成的三級接收鏈。改變頻寬、輸入功率、各級增益與 NF，再交換前兩級，觀察三個 Friis 項、總 NF 與輸出訊雜比。</p>
+<div class="controls">
+<label for="nf-b">接收頻寬 B（MHz）<input id="nf-b" type="range" min="0.01" max="100" step="0.01" value="1"></label>
+<label for="nf-pin">輸入訊號功率（dBm）<input id="nf-pin" type="range" min="-130" max="-30" step="1" value="-100"></label>
+<label for="nf-g1">LNA 增益 G_1（dB）<input id="nf-g1" type="range" min="0" max="40" step="1" value="20"></label>
+<label for="nf-f1">LNA 雜訊指數 NF_1（dB）<input id="nf-f1" type="range" min="0.5" max="10" step="0.1" value="1.5"></label>
+<label for="nf-g2">混頻器增益 G_2（dB，負值是損耗）<input id="nf-g2" type="range" min="-15" max="20" step="1" value="-6"></label>
+<label for="nf-f2">混頻器雜訊指數 NF_2（dB）<input id="nf-f2" type="range" min="1" max="20" step="0.5" value="8"></label>
+<label for="nf-f3">IF 放大器雜訊指數 NF_3（dB）<input id="nf-f3" type="range" min="1" max="20" step="0.5" value="5"></label>
+<label for="nf-swap"><input id="nf-swap" type="checkbox">把混頻器放在 LNA 前面</label>
+</div>
+<div id="friis-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>雜訊指數是訊雜比變差的倍數，不是裝置單獨增加多少雜訊；線性 F 與 dB 形式 NF 必須分清。</li>
+<li>−173.975187 dBm/Hz 是 290 K 的熱雜訊密度，−174 只是速記，不是所有裝置與所有溫度都固定如此。</li>
+<li>各級 NF 的 dB 值不能直接相加；Friis 必須先換成線性 F 與 G，再依級聯位置計算。</li>
+<li>訊雜比與 E<sub>b</sub>/N<sub>0</sub> 不是同一個量，兩者還差頻寬對位元率的比例，第 08 章才使用後者。</li>
+<li>較大增益不會改善第一級本身的 NF；它只會把後面各級的等效輸入貢獻壓低。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>雜訊指數分析儀以 Y 因子法量各級增益與 NF；頻譜分析儀輸入端接 50 Ω 終端，讀到的底包含 kT<sub>0</sub>B 與分析儀自己的 NF。逐級加入元件並重測，可核對 Friis 三項。</p>
+<p><strong>能證明什麼。</strong>量測能證明各級增益、NF、級聯總 NF，以及雜訊底是否依 −173.975187 + 10 log<sub>10</sub>(B) 變動；交換 LNA 與混頻器還能直接驗證順序效果。</p>
+<p><strong>不能證明什麼。</strong>一條總雜訊功率讀值不能分辨熱雜訊與外部干擾，必須再看頻譜是否平坦；它也不能證明阻抗完全匹配，因為源阻抗改變時 NF 也會改變。</p>
+<p>量測報告還要記錄溫度與解析頻寬，因為兩者都直接改變底值。若儀器自身 NF 沒先校正，畫面上的底會比被測接收機真正產生的值更高，不能直接拿來代入 Friis 公式。</p>
+
+<h2>連到哪門課</h2>
+<p>高斯分布與標準差見<a href="../../../共通基礎/數學/互動課程/12-機率與隨機變數.html">工程數學先修的機率與隨機變數</a>，本章不重講其機制。雜訊底會在第 11 章鏈路預算再次使用；LNA、接收器前端、衛星地面站與射電望遠鏡則把 NF 或 T<sub>e</sub> 當成核心規格。</p>
+<nav class="pager" aria-label="章節導覽"><a href="04-超外差接收機與影像頻率.html">← 上一頁：超外差接收機與影像頻率</a><a href="06-取樣量化與PCM.html">下一頁：取樣、量化與 PCM →</a></nav>
+</main>
+<footer class="site-footer"><span>05 雜訊、訊雜比與雜訊指數</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

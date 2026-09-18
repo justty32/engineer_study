@@ -1,0 +1,65 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 旋轉機共同語言｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">05・先把轉速、轉矩與功率放進同一張帳</p>
+<h1>旋轉機共同語言：磁場轉多快，軸送出多少功率，損耗去了哪裡</h1>
+<p class="lead">60 Hz、4 極會建立 1800 rpm 的同步速；軸在 1750 rpm、轉矩 40 N·m 時，輸出為 7330.382858 W。加入 800.000000 W 損耗後，效率是 90.160365 %。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="04-電壓調整率與效率.html">04 電壓調整率與效率</a>的輸入、輸出、固定損耗與可變損耗。<strong>前置：</strong>見<a href="../電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>，先掌握三相來源；本課三相都以 Y 接每相量計算。</p>
+
+<h2>痛點：銘牌有 rpm、N·m、kW，三個數到底怎麼連起來</h2>
+<p>旋轉機的資料同時出現電源頻率、極數、軸轉速、轉矩與功率。只背名詞，很容易把磁場的同步速當成軸一定會到的速度，也會直接拿 rpm 乘 N·m 而得到錯誤單位。這章先建立後續各種機器共用的座標：哪一部分不動、哪一部分旋轉，磁場速度怎麼由電源決定，軸端機械量又怎麼換成功率。</p>
+<p>定子（stator）固定，轉子（rotor）旋轉，兩者間的氣隙（air gap）通常是磁路中磁阻最大的一段。換向器（commutator）與電刷（brush）屬於直流機；集電環（slip ring）則可把電流送入旋轉部分。這些結構不同，但都要遵守能量守恆。</p>
+
+<h2>白話直覺：兩支轉速表與一本能量帳</h2>
+<p>可暫時想成磁場與轉軸各有一支轉速表，另外用一本帳簿記錄輸入、損耗及輸出；比喻到此為止，真實機制是三相電流在定子建立旋轉磁場，轉子受到電磁轉矩後形成軸功率。電源與中性參考點確立每相電壓，三相回路導通後建立磁通；氣隙磁場與轉子電流互動產生轉矩，穩態時電磁轉矩和負載及損耗轉矩平衡，轉速計、轉矩計與功率計分別量到速度、力矩和能量流率。</p>
+<p>同步速（synchronous speed）是旋轉磁場的速度，不必等於轉子速度。滑差（slip, s）描述兩者相差比例：n 低於 n<sub>s</sub> 是感應馬達區，等於 n<sub>s</sub> 是同步機工作速度，高於 n<sub>s</sub> 則可進入感應發電。每分鐘轉數（rpm）必須先換成 rad/s，才可與 N·m 相乘得到 W。</p>
+<p class="note">來源：12-電機機械 §3.1、§3.2、§3.3。</p>
+
+<h2>推導：由電源週期走到軸端瓦特</h2>
+<p>若極數為 P，便有 P / 2 對極。三相電每個週期讓磁場走過一對極，每分鐘有 60 f 個週期，所以 n<sub>s</sub> = 60 f / (P / 2) = 120 × f / P，單位 rpm。筆記若用極對數 p，寫成 60f / p，兩式完全相同。角速度是 ω<sub>s</sub> = 2π × n<sub>s</sub> / 60。</p>
+<p>線性運動的功率是力乘速度，旋轉版本就是 P = T × ω；T 的單位 N·m，ω 的單位 rad/s，乘積為 W。滑差為 s = (n<sub>s</sub> − n) / n<sub>s</sub>。功率流依序記為 P<sub>in</sub> → 定子銅損 → 鐵損 → 氣隙 → 轉子銅損 → 機械損 → 雜散損 → P<sub>out</sub>；本章簡化成四項外加損耗，不再細分位置。</p>
+<p>效率 η = P<sub>out</sub> / (P<sub>out</sub> + Σ損耗)。鐵損與機械損近似固定，銅損大致隨負載平方變，因此最大效率也會靠近固定損耗等於可變損耗之處。<strong>模型邊界。</strong>本課用的是線性穩態教學模型，真實機器不完全如此；這裡把損耗當給定值，不讓它隨轉速、溫度或負載自動變化。</p>
+<p>功率流中的箭頭代表能量傳遞次序，不代表每種機器都能在外殼上找到一個對應端子。定子銅損先發生在供電繞組，氣隙功率跨過空氣間隙，之後才分成轉子相關損耗與軸端輸出。把所有損耗合併仍可算總效率，卻會失去故障診斷線索；例如軸承摩擦增加與繞組過熱都讓輸入上升，但修理方向完全不同。</p>
+
+<h2>數值實例：四極機的同步速與功率流</h2>
+<p>取 f = 60 Hz、P = 4 極、n = 1750 rpm、T = 40 N·m、銅損 400 W、鐵損 200 W、機械損 150 W、雜散損 50 W，與下方實驗預設值一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>同步速與角速度</td><td>120 × 60 / 4；2π × 1800 / 60</td><td>1800 rpm；188.495559 rad/s</td></tr>
+<tr><td>軸角速度</td><td>2π × 1750 / 60</td><td>183.259571 rad/s</td></tr>
+<tr><td>滑差</td><td>(1800 − 1750) / 1800</td><td>2.777778 %</td></tr>
+<tr><td>輸出功率</td><td>40 × 183.259571</td><td>7330.382858 W（9.826250 hp）</td></tr>
+<tr><td>總損耗</td><td>400 + 200 + 150 + 50</td><td>800.000000 W</td></tr>
+<tr><td>輸入功率</td><td>7330.382858 + 800</td><td>8130.382858 W</td></tr>
+<tr><td>效率</td><td>7330.382858 / 8130.382858</td><td>90.160365 %</td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>同步速 1800 rpm 與軸速 1750 rpm 只差 2.777778 %。若改 f = 50 Hz，n<sub>s</sub> = 1500 rpm，原軸速會形成 s = −16.666667 %；若 P = 2，n<sub>s</sub> = 3600 rpm、s = 51.388889 %，表示極數多半設錯。P = 8、n = 850 時，n<sub>s</sub> = 900 rpm、s = 5.555556 %，輸出 3560.471674 W、效率 81.653361 %。控制程式那一端會把頻率、極數與額定轉速用於速度估測、滑差補償及異常判斷。</p>
+<p>速度關係還提供很快的合理性檢查。頻率與極數一旦固定，同步速就固定；負載變化通常只讓軸速在其附近移動，而不會憑空跳到另一個同步速。若控制器顯示的差距極大，應先核對極數參數、頻率命令與速度感測比例，再討論機器本身是否失常。</p>
+
+<section class="workspace"><h2>自由實驗：由軸端反推輸入端</h2>
+<p>給定頻率、極數、軸轉速、轉矩與四項損耗，先算磁場同步速，再把軸端機械量換成輸出功率，最後沿功率流反推輸入與效率。</p>
+<div class="controls">
+<label for="pw-f">電源頻率 f<select id="pw-f"><option value="50">50 Hz</option><option value="60" selected>60 Hz</option></select></label>
+<label for="pw-poles">極數 P<select id="pw-poles"><option value="2">2 極</option><option value="4" selected>4 極</option><option value="6">6 極</option><option value="8">8 極</option></select></label>
+<label for="pw-n">軸轉速 n（rpm）<input id="pw-n" type="range" min="0" max="3700" step="10" value="1750"></label>
+<label for="pw-t">軸轉矩 T（N·m）<input id="pw-t" type="range" min="0" max="100" step="1" value="40"></label>
+<label for="pw-pcu">銅損（W）<input id="pw-pcu" type="range" min="0" max="1000" step="10" value="400"></label>
+<label for="pw-pcore">鐵損（W）<input id="pw-pcore" type="range" min="0" max="500" step="10" value="200"></label>
+<label for="pw-pmech">機械損（W）<input id="pw-pmech" type="range" min="0" max="500" step="10" value="150"></label>
+<label for="pw-pstray">雜散損（W）<input id="pw-pstray" type="range" min="0" max="200" step="10" value="50"></label>
+</div>
+<div id="powerflow-output" class="output" aria-live="polite"><table><tbody><tr><th>n_s、ω_s</th><td>1800 rpm；188.495559 rad/s</td></tr><tr><th>ω、s</th><td>183.259571 rad/s；2.777778 %</td></tr><tr><th>P_out</th><td>7330.382858 W；9.826250 hp</td></tr><tr><th>銅損、鐵損</th><td>400 W；200 W</td></tr><tr><th>機械損、雜散損</th><td>150 W；50 W</td></tr><tr><th>總損耗、P_in、η</th><td>800.000000 W；8130.382858 W；90.160365 %</td></tr></tbody></table>P_in 8130.382858 W → 損耗 800.000000 W → P_out 7330.382858 W。<strong>判讀：感應馬達區：轉子比旋轉磁場慢 2.777778 %。</strong>為什麼：P = T × ω，rpm 要先換成 rad/s 才能乘。效率判讀：固定損耗（鐵損、機械損）不隨負載變，銅損隨負載平方變。邊界提醒：n = 0 是堵轉，輸出為 0 且實際銅損會遠大於設定值；T = 0 是無負載，只剩損耗；滑差大於 20 % 通常表示極數或頻率設錯；任何狀態都不輸出非數值。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>同步速公式中的 P 是極數，筆記中的 p 是極對數；120f/P 與 60f/p 是同一件事。</li><li>rpm 是每分鐘轉數，rad/s 是每秒弧度；兩者差換算因子 2π/60，不能直接拿 rpm 乘轉矩。</li><li>銅損隨負載平方改變，鐵損主要跟電壓與頻率有關；本章控制項把它們獨立輸入只是教學簡化。</li><li>90.160365 % 只屬於這組額定附近條件；輕載、堵轉或損耗改變後，效率不會維持同一數字。</li></ul>
+
+<h2>可觀察證據：三種儀表共同核對能量帳</h2>
+<p><strong>用什麼量。</strong>以光學或磁性轉速計量 n，以轉矩計或動力計量 T，再由功率計量 P<sub>in</sub>。<strong>能證明什麼。</strong>n 與同步速可算實測滑差，T 與換算後的 ω 可算軸功率，再和輸入比較得到總效率。<strong>不能證明什麼。</strong>輸入輸出差只給總損耗，無法直接說四種損耗各佔多少；要分開仍需空載試驗與堵轉試驗。</p>
+
+<h2>連到哪門課</h2>
+<p>泵浦、風機、輸送帶與發電設備都用這套速度及功率語言。三相功率算法見<a href="../電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>；後續 06–10 章都沿用 n<sub>s</sub>、ω、P = T × ω 與功率流。</p>
+<nav class="pager" aria-label="章節導覽"><a href="04-電壓調整率與效率.html">← 上一頁：電壓調整率與效率</a><a href="06-直流機轉矩轉速線.html">下一頁：直流機轉矩轉速線 →</a></nav>
+</main>
+<footer class="site-footer"><span>05 旋轉機共同語言</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

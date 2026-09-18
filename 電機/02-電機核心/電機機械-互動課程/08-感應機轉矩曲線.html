@@ -1,0 +1,79 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 感應機轉矩曲線｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">08・最大轉矩有多高，和它出現在哪裡是兩件事</p>
+<h1>感應機轉矩曲線：用戴維寧等效找出起動點與崩潰點</h1>
+<p class="lead">380 V、60 Hz 的預設機器在 s = 0.03 時產生 49.198730 N·m，起動轉矩為 61.626951 N·m，崩潰轉矩則是 143.556819 N·m。這章把三個工作點放回同一條轉矩–滑差曲線，判斷馬達能否起動與穩定帶載。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="07-感應機滑差與功率流.html">07 感應機滑差與功率流</a>的滑差、氣隙功率與轉子銅損。<strong>前置：</strong>見〈05 戴維寧與最大功率〉<a href="../電路學-互動課程/05-戴維寧與最大功率.html">電路學的戴維寧與最大功率</a>，了解如何從端點把線性網路收成一個電壓源與串聯阻抗。</p>
+
+<h2>痛點：規格寫最大轉矩很高，為什麼負載仍可能起不來</h2>
+<p>一台感應馬達可能有很高的崩潰轉矩，卻在通電後停在原地發熱。原因是轉子起動時位於 s = 1，真正能用的是起動轉矩，不是曲線上稍後才出現的最大值。若起動轉矩不足以克服靜止負載，轉子就沒有機會加速到最大轉矩附近。</p>
+<p>另一個容易誤判的地方是轉子電阻。增加 R<sub>2</sub> 能改善起動轉矩，卻不會抬高崩潰轉矩；它只是把崩潰點移向較高滑差。至於供電電壓，曲線高度按電壓平方改變，輕微壓降就可能吃掉明顯的起動餘裕。</p>
+
+<h2>白話直覺：先把定子網路折成轉子端看到的電源</h2>
+<p>可以暫時把戴維寧等效想成把一整排供電元件裝進同一個黑盒，只留下轉子端看到的電壓與內阻抗。比喻到此為止；真實做法是從轉子支路的端點向定子側看，把線性定子阻抗與激磁分支化成 V<sub>TH</sub> 和 Z<sub>TH</sub>，再用單一迴路求轉子電流。</p>
+<p>本課三相都以 Y 接每相量計算，V<sub>LL</sub> = √3 × V<sub>φ</sub>。三相電源在每相與中性參考點間建立 V<sub>φ</sub>；定子 R<sub>1</sub>、X<sub>1</sub> 與激磁 X<sub>M</sub> 所成回路導通，建立旋轉磁場；磁場跨越氣隙，在轉子折算支路 R<sub>2</sub> / s + jX<sub>2</sub> 推動 I<sub>2</sub>；轉子電流與磁場互動產生轉矩。穩態工作點由電磁轉矩和負載轉矩相等決定，動力計量到 T，轉速計量到 n，再由 n 求 s。</p>
+<p>每相等效電路包含定子 R<sub>1</sub> + jX<sub>1</sub>、激磁 jX<sub>M</sub> 及折算後的轉子 R<sub>2</sub> / s + jX<sub>2</sub>。本章忽略鐵損電阻，目的是把轉矩曲線的主因留下，而不是重建所有輸入電流與損耗。</p>
+<p class="note">來源：12-電機機械 §5.2、§5.3。</p>
+
+<h2>推導：R<sub>2</sub> / s 如何形成峰值</h2>
+<p><strong>轉子電阻為什麼寫成 R<sub>2</sub> / s。</strong>轉子實際感應電壓與漏抗都隨 s 成正比。把整個轉子回路除以 s，可把電源與電抗換成定子頻率下的固定形式，代價是電阻成為 R<sub>2</sub> / s。拆開可得 R<sub>2</sub> / s = R<sub>2</sub> + R<sub>2</sub> × (1 − s) / s；第一項代表真正的轉子銅損，第二項代表轉換成機械的功率效果，正好接回第 07 章的 1 : (1 − s) : s。</p>
+<p><strong>戴維寧量。</strong>V<sub>TH</sub> = V<sub>φ</sub> × X<sub>M</sub> / √(R<sub>1</sub>² + (X<sub>1</sub> + X<sub>M</sub>)²)。Z<sub>TH</sub> = jX<sub>M</sub> × (R<sub>1</sub> + jX<sub>1</sub>) / (R<sub>1</sub> + j(X<sub>1</sub> + X<sub>M</sub>))，其實部為 R<sub>TH</sub>，虛部為 X<sub>TH</sub>。戴維寧等效讓轉矩只剩轉子端單一迴路的事。</p>
+<p><strong>轉矩方程。</strong>T = 3 × V<sub>TH</sub>² × (R<sub>2</sub> / s) / (ω<sub>s</sub> × [(R<sub>TH</sub> + R<sub>2</sub> / s)² + (X<sub>TH</sub> + X<sub>2</sub>)²])。分子含 V<sub>TH</sub>²，所以 T 與 V<sub>φ</sub>²成正比；電壓降到 90 %，轉矩降到 81 %。</p>
+<p><strong>崩潰點。</strong>當 R<sub>2</sub> / s = √(R<sub>TH</sub>² + (X<sub>TH</sub> + X<sub>2</sub>)²) 時轉矩達峰值，因此 s<sub>max</sub> = R<sub>2</sub> / √(R<sub>TH</sub>² + (X<sub>TH</sub> + X<sub>2</sub>)²)。代回後，T<sub>max</sub> = 3 × V<sub>TH</sub>² / (2 × ω<sub>s</sub> × [R<sub>TH</sub> + √(R<sub>TH</sub>² + (X<sub>TH</sub> + X<sub>2</sub>)²)])，R<sub>2</sub> 被消去。所以 R<sub>2</sub> 決定峰值位置，不決定峰值高度。</p>
+<p>起動轉矩就是 T(1)。本課用的是線性穩態教學模型，真實機器不完全如此；假設電抗只按頻率縮放，參數不隨溫度與轉子頻率改變，並忽略鐵損、機械損與磁性飽和。</p>
+
+<h2>數值實例：380 V、60 Hz 與 3 % 滑差</h2>
+<p>取 V<sub>LL</sub> = 380 V（V<sub>φ</sub> = 219.393102 V）、60 Hz、s = 0.03、R<sub>2</sub> = 0.4 Ω、負載轉矩 40 N·m。固定 R<sub>1</sub> = 0.5 Ω、X<sub>1</sub> = 1.0 Ω、X<sub>2</sub> = 1.0 Ω、X<sub>M</sub> = 30 Ω，極數為 4。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>V<sub>TH</sub></td><td>219.393102 × 30 / √(0.5² + 31²)</td><td><strong>212.288294 V</strong></td></tr>
+<tr><td>Z<sub>TH</sub></td><td>轉子端向定子側看</td><td>R<sub>TH</sub> = <strong>0.468140 Ω</strong>、X<sub>TH</sub> = <strong>0.975293 Ω</strong></td></tr>
+<tr><td>同步速</td><td>1800 rpm</td><td>ω<sub>s</sub> = <strong>188.495559 rad/s</strong></td></tr>
+<tr><td>崩潰滑差</td><td>0.4 / √(0.468140² + 1.975293²)</td><td><strong>0.197043</strong>（n = <strong>1445.321758 rpm</strong>）</td></tr>
+<tr><td>崩潰轉矩</td><td>3 × 212.288294² / (2 × 188.495559 × [0.468140 + 2.030009])</td><td><strong>143.556819 N·m</strong></td></tr>
+<tr><td>起動轉矩 T(1)</td><td>3 × 212.288294² × 0.4 / (188.495559 × [(0.868140)² + 1.975293²])</td><td><strong>61.626951 N·m</strong></td></tr>
+<tr><td>額定點轉矩 T(0.03)</td><td>R<sub>2</sub> / s = 13.333333</td><td><strong>49.198730 N·m</strong></td></tr>
+<tr><td>轉子電流 I<sub>2</sub></td><td>212.288294 / √(13.801473² + 1.975293²)</td><td><strong>15.226410 A</strong></td></tr>
+<tr><td>轉速</td><td>(1 − 0.03) × 1800</td><td><strong>1746 rpm</strong></td></tr>
+<tr><td>氣隙功率</td><td>49.198730 × 188.495559</td><td><strong>9273.742103 W</strong></td></tr>
+<tr><td>轉換功率</td><td>× (1 − 0.03)</td><td><strong>8995.529840 W</strong></td></tr>
+<tr><td>轉子銅損</td><td>× 0.03</td><td><strong>278.212263 W</strong></td></tr>
+</tbody></table>
+<table><thead><tr><th>s</th><th>1.0</th><th>0.5</th><th>0.3</th><th>0.2</th><th>0.1</th><th>0.05</th><th>0.03</th><th>0.01</th></tr></thead><tbody><tr><td>T（N·m）</td><td>61.626951</td><td>104.139069</td><td>133.807914</td><td>143.543883</td><td>120.213016</td><td>75.888537</td><td>49.198730</td><td>17.477215</td></tr></tbody></table>
+<p><strong>量級與邊界對照。</strong>R<sub>2</sub> 改為 0.8 Ω，s<sub>max</sub> = 0.394087、T<sub>max</sub> 仍是 143.556819 N·m、T<sub>start</sub> = 104.139069 N·m、T(0.03) = 25.839979 N·m，顯示起動改善但額定點變差。R<sub>2</sub> = 2.0 Ω 時，s<sub>max</sub> = 0.985217、T<sub>start</sub> = 143.543883 N·m，幾乎在起動點拿到崩潰轉矩。</p>
+<p>V<sub>LL</sub> 改為 342 V，也就是 90 %，T<sub>max</sub> = 116.281024 N·m，正好是 81 %，T<sub>start</sub> = 49.917830 N·m。V<sub>LL</sub> = 190 V 時，T<sub>max</sub> = 35.889205 N·m，為 25 %，而 T<sub>start</sub> = 15.406738 N·m，小於 1.1 × 40 N·m，因此起不動。50 Hz 且電壓不變時，n<sub>s</sub> = 1500 rpm、T<sub>max</sub> = 197.197703 N·m，但磁通變大，本模型沒有納入實機飽和。負載 70 N·m 時，61.626951 N·m 小於 77 N·m，也無法直接起動。s = 0.2 時，T = 143.543883 N·m、I<sub>2</sub> = 67.153288 A，崩潰點附近電流約是額定點的 4.4 倍。</p>
+
+<section class="workspace"><h2>自由實驗：改變電壓與轉子電阻，看曲線如何移動</h2>
+<p>場景是一台 4 極三相感應馬達，定子與激磁參數固定。你可以移動滑差、轉子電阻、線電壓、頻率與負載轉矩，觀察起動餘裕、工作點走向及崩潰點位置。</p>
+<div class="controls">
+<label for="it-s">滑差 s<input id="it-s" type="range" min="0.005" max="1" step="0.005" value="0.03"></label>
+<label for="it-r2">轉子電阻 R_2（Ω，折算到定子側）<input id="it-r2" type="range" min="0.1" max="2" step="0.05" value="0.4"></label>
+<label for="it-v">線電壓 V_LL（V）<input id="it-v" type="range" min="190" max="460" step="10" value="380"></label>
+<label for="it-f">電源頻率 f<select id="it-f"><option value="50">50 Hz</option><option value="60" selected>60 Hz</option></select></label>
+<label for="it-tload">負載轉矩 T_load（N·m）<input id="it-tload" type="range" min="0" max="150" step="5" value="40"></label>
+</div>
+<div id="imtorque-output" class="output" aria-live="polite">目前設定：s ＝ 0.03、R_2 ＝ 0.4 Ω、V_LL ＝ 380 V、f ＝ 60 Hz、T_load ＝ 40 N·m。<table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>V_TH</td><td><strong>212.288294 V</strong></td></tr><tr><td>R_TH</td><td><strong>0.468140 Ω</strong></td></tr><tr><td>X_TH</td><td><strong>0.975293 Ω</strong></td></tr><tr><td>崩潰滑差 s_max</td><td><strong>0.197043</strong></td></tr><tr><td>崩潰轉矩 T_max</td><td><strong>143.556819 N·m</strong></td></tr><tr><td>起動轉矩 T_start</td><td><strong>61.626951 N·m</strong></td></tr><tr><td>目前轉矩 T(s)</td><td><strong>49.198730 N·m</strong></td></tr><tr><td>轉子電流 I_2</td><td><strong>15.226410 A</strong></td></tr><tr><td>轉速 n</td><td><strong>1746 rpm</strong></td></tr><tr><td>氣隙功率 P_AG</td><td><strong>9273.742103 W</strong></td></tr><tr><td>轉換功率 P_conv</td><td><strong>8995.529840 W</strong></td></tr><tr><td>轉子銅損 P_RCL</td><td><strong>278.212263 W</strong></td></tr></tbody></table><table><thead><tr><th>s</th><th>1.0</th><th>0.5</th><th>0.3</th><th>0.2</th><th>0.1</th><th>0.05</th><th>0.03</th><th>0.01</th></tr></thead><tbody><tr><td>T（N·m）</td><td>61.626951</td><td>104.139069</td><td>133.807914</td><td>143.543883</td><td>120.213016</td><td>75.888537</td><td>49.198730</td><td>17.477215</td></tr></tbody></table><strong>判讀：直接起動起得動（起動轉矩 61.626951 N·m ≥ 1.1 × 負載 40 N·m）。目前 T(s) 大於負載，轉子會加速、s 變小。</strong>戴維寧把定子與激磁分支收成 V_TH 與 Z_TH，轉矩只剩一個迴路的事。為什麼：目前工作點在崩潰點左側，若轉矩大於負載，淨加速轉矩會讓速度上升、滑差下降，直到兩者平衡。邊界提醒：s 大於 s_max 且小於 1 時位於崩潰點右側的不穩定區，減速會讓轉矩更小；s ＝ 0.005 時接近同步速，轉矩趨近 0；s ＝ 1 是堵轉，轉子電流最大、全部氣隙功率變轉子銅損；50 Hz 且電壓不變時磁通變大，本模型不含飽和，實機會飽和，見第 01 章。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>崩潰轉矩與 R<sub>2</sub> 無關，崩潰滑差才與 R<sub>2</sub> 成正比；改電阻是平移峰值位置，不是抬高峰值。</li>
+<li>額定點位於低滑差的近似直線段，不在崩潰點；長期貼近峰值運轉沒有足夠的負載擾動餘裕。</li>
+<li>轉矩與電壓平方成正比，不是一次方；供電剩一半時，曲線高度只剩四分之一。</li>
+<li>戴維寧等效是為了簡化轉子電流與轉矩計算，它不保留完整定子輸入電流資訊。</li>
+<li>最大轉矩不等於可起動的負載。起動必須比較 T(1) 與靜止負載，還要保留 1.1 倍餘裕。</li>
+</ul>
+
+<h2>可觀察證據：動力計、堵轉試驗與空載試驗</h2>
+<p><strong>拿什麼量。</strong>用動力計施加可控負載，同步量轉矩 T 與轉速 n，換算各點滑差。堵轉試驗以降低的電壓限制電流，估計 R<sub>eq</sub> 與 X<sub>eq</sub>；空載試驗則用輸入電流與功率估計 X<sub>M</sub>。</p>
+<p><strong>能證明什麼。</strong>多組 (n, T) 量測點可以驗證曲線形狀、起動端趨勢、T<sub>max</sub> 與 s<sub>max</sub>。在不同電壓下重測，可檢查曲線高度是否近似按電壓平方縮放。</p>
+<p><strong>不能證明什麼。</strong>堵轉試驗只給 R<sub>1</sub> + R<sub>2</sub>，不能單獨證明 R<sub>2</sub> 的值。鼠籠式轉子的有效 R<sub>2</sub> 還會因轉子頻率與集膚效應改變，本章固定參數模型無法由一次試驗確認這種變化。</p>
+
+<h2>連到哪門課</h2>
+<p>轉矩曲線直接用於泵浦、壓縮機、輸送機的起動檢核，以及繞線式感應機外加轉子電阻的選擇。戴維寧化簡的詳細步驟見<a href="../電路學-互動課程/05-戴維寧與最大功率.html">電路學的戴維寧與最大功率</a>；第 11 章會比較直接起動、Y–Δ 起動與變頻起動如何改變起動電流和可用轉矩。</p>
+<p><strong>控制程式那一端：</strong>驅動器會使用馬達電阻、漏抗、激磁電抗與額定電壓建立內部模型；低壓保護、轉矩限制與加速斜坡都必須保留距離崩潰點的餘裕。</p>
+<nav class="pager" aria-label="章節導覽"><a href="07-感應機滑差與功率流.html">← 上一頁：感應機滑差與功率流</a><a href="09-同步發電機功率角.html">下一頁：同步發電機功率角 →</a></nav>
+</main>
+<footer class="site-footer"><span>08 感應機轉矩曲線</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

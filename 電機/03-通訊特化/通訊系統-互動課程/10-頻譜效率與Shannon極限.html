@@ -1,0 +1,62 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 頻譜效率與 Shannon 極限｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・頻譜與功率共同面對的天花板</p>
+<h1>頻譜效率與 Shannon 極限：容量不是建議值，而是不可跨越的上限</h1>
+<p class="lead">1 MHz、20 dB 的理想通道容量是 6.658211 Mbit/s。64-QAM 可送 6.000000 Mbit/s，看似很接近，卻仍有 8.486430 × 10<sup>−3</sup> 的位元錯誤率。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="09-數位調變與星座圖.html">09 數位調變與星座圖</a>的頻譜效率與<a href="08-匹配濾波器與位元錯誤率.html">08 匹配濾波器與位元錯誤率</a>的 E<sub>b</sub>/N<sub>0</sub>。</p>
+
+<h2>痛點：位元率低於容量，為什麼實際傳輸還是會錯</h2>
+<p>看到 R<sub>b</sub> 小於 C，常有人直接下結論：「既然沒超過容量，就一定可靠。」這把 Shannon–Hartley 容量與某個具體星座的表現混成一件事。容量只說存在一套足夠長、足夠理想的方法，可以讓錯誤機率任意小；它沒有保證未編碼的 64-QAM 自動獲得那種能力。</p>
+<p>另一個痛點是把頻寬與功率分成兩張互不相干的表。工程上它們其實由 η 接在一起：同一個 SNR，若每赫茲硬塞更多位元，每位元分到的能量就更少；反過來，把 η 壓得很低可以靠更寬頻寬省功率，但頻寬不是免費資源。這一章要找的不是單一最佳點，而是任何方案都必須待在其下方的天花板。</p>
+<p>這也解釋了為什麼只報峰值速度沒有意義。少了頻寬、接收 SNR 與容許錯誤率，速度數字既無法比較功率代價，也無法判斷是否可達；完整問題一定要把三者放在同一個工作點上。</p>
+
+<h2>白話直覺：容量像房間的消防上限，不代表每種排隊方式都順暢</h2>
+<p>可以暫時把容量想成房間的法定人數上限：低於上限只是「有可能安排得下」，不保證眼前的動線設計不塞車。比喻到此為止，精確說法是：在給定頻寬 B 與 SNR 的 AWGN 模型中，C ＝ B log<sub>2</sub>(1 + SNR) 是可達位元率上界；具體調變仍有自己的點距與錯誤率。</p>
+<p>沿因果鏈走一次。來源是平均訊號功率 S，接收頻寬 B 內累積雜訊功率 N；選定星座後，每符元攜帶 k 個位元，於是 η ＝ R<sub>b</sub>/B 在 α ＝ 0 時近似為 k。這個決定換到較高位元率，卻使 E<sub>b</sub>/N<sub>0</sub> ＝ SNR/η 下降。當 R<sub>b</sub> 超過 C，不論接收機多昂貴都不能把錯誤率壓到任意小；當它低於 C，也只是取得可能性，仍要看實際方案離天花板多遠。儀器可以量 SNR 與錯誤率，卻不能直接量出一個「容量粒子」。</p>
+<p>頻譜效率（spectral efficiency）η 的單位是 bit/s/Hz；功率效率（power efficiency）以達到目標錯誤率所需的 E<sub>b</sub>/N<sub>0</sub> 衡量。軟體那一端，Wi-Fi 的速率自適應會依量到的 SNR 選 MCS；每次升降檔，都是在這條取捨曲線上移動。</p>
+<p class="note">來源：14-通訊系統-下 §12。</p>
+
+<h2>推導：從功率帳反解每赫茲的最低能量</h2>
+<p><strong>第一步，連接 SNR 與 E<sub>b</sub>/N<sub>0</sub>。</strong>每位元能量乘每秒位元數得到訊號功率：S ＝ E<sub>b</sub> × R<sub>b</sub>；單邊雜訊功率譜密度乘接收頻寬得到雜訊功率：N ＝ N<sub>0</sub> × B。兩式相除，SNR ＝ S/N ＝ (E<sub>b</sub>/N<sub>0</sub>) × (R<sub>b</sub>/B) ＝ (E<sub>b</sub>/N<sub>0</sub>) × η。S、N 用 W，E<sub>b</sub> 用 J，R<sub>b</sub> 用 bit/s，B 用 Hz；兩個比值皆無單位。</p>
+<p><strong>第二步，把容量改寫成能量下界。</strong>在邊界 R<sub>b</sub> ＝ C，將 SNR ＝ η E<sub>b</sub>/N<sub>0</sub> 代入 C ＝ B log<sub>2</sub>(1 + SNR)，兩邊除以 B，得到 η ＝ log<sub>2</sub>(1 + η E<sub>b</sub>/N<sub>0</sub>)。移項後 2<sup>η</sup> ＝ 1 + η E<sub>b</sub>/N<sub>0</sub>，所以 E<sub>b</sub>/N<sub>0</sub> ≥ (2<sup>η</sup> − 1)/η。η 越高，最低能量比越快上升。</p>
+<p><strong>第三步，取得寬頻極限。</strong>當 η → 0，用 2<sup>η</sup> ＝ e<sup>η ln 2</sup> ≈ 1 + η ln 2，便得 (2<sup>η</sup> − 1)/η → ln 2 ＝ 0.693147，換成 dB 是 −1.591745 dB。這個 Shannon 極限只在頻寬趨於無限、頻譜效率趨於零時成立；它不是 η ＝ 6 的門檻。</p>
+<p><strong>第四步，看高 SNR 的代價。</strong>SNR 遠大於 1 時，C/B ＝ log<sub>2</sub>(1 + SNR) ≈ log<sub>2</sub> SNR。要讓 C/B 增加 1 bit/s/Hz，SNR 約要乘 2，也就是增加約 3 dB。因此高階星座並非免費把速度往上堆，而是持續付更高功率。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：AWGN、頻寬受限、α ＝ 0、平均功率固定。Shannon 結果是理論存在性上限，不包含延遲、封包開銷、同步誤差與硬體非線性。如何靠編碼逼近上限留給數位通訊課。</p>
+
+<h2>數值實例：1 MHz、20 dB 與 64-QAM</h2>
+<p>B ＝ 1 MHz、SNR ＝ 20 dB（線性 100）、比較 64-QAM（η ＝ 6）。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>容量 C</td><td>10<sup>6</sup> × log<sub>2</sub>(101)</td><td><strong>6.658211 Mbit/s</strong></td></tr><tr><td>容量的頻譜效率 C/B</td><td>log<sub>2</sub>(101)</td><td><strong>6.658211 bit/s/Hz</strong></td></tr>
+<tr><td>64-QAM 位元率</td><td>6 × 1</td><td><strong>6.000000 Mbit/s</strong></td></tr><tr><td>容量／位元率</td><td>6.658211 / 6</td><td><strong>1.109702</strong></td></tr>
+<tr><td>64-QAM 的 E<sub>b</sub>/N<sub>0</sub></td><td>100 / 6</td><td><strong>16.666667（12.218487 dB）</strong></td></tr><tr><td>64-QAM 位元錯誤率（第 09 章公式）</td><td>最近鄰近似</td><td><strong>8.486430 × 10<sup>−3</sup></strong></td></tr>
+<tr><td>η ＝ 6 的 Shannon 最低 E<sub>b</sub>/N<sub>0</sub></td><td>(64 − 1)/6</td><td><strong>10.500000（10.211893 dB）</strong></td></tr><tr><td>Shannon 極限（η → 0）</td><td>ln 2</td><td><strong>0.693147（−1.591745 dB）</strong></td></tr></tbody></table>
+<p>數字回答了痛點：6.000000 Mbit/s 的確低於 6.658211 Mbit/s，但未編碼 64-QAM 仍不是達成容量定理的理想方法。容量／位元率 1.109702 只代表尚未撞天花板，不代表位元錯誤率已合格。</p>
+<p><strong>量級與邊界對照。</strong>QPSK（η ＝ 2）同條件 → R<sub>b</sub> 2 Mbit/s、E<sub>b</sub>/N<sub>0</sub> <strong>16.989700 dB</strong>、P<sub>b</sub> 7.619853 × 10<sup>−24</sup>，浪費了 4.658211 Mbit/s 的容量換到極低錯誤率；η ＝ 2 的最低 E<sub>b</sub>/N<sub>0</sub> <strong>1.760913 dB</strong>。16-QAM → E<sub>b</sub>/N<sub>0</sub> <strong>13.979400 dB</strong>、P<sub>b</sub> <strong>2.904081 × 10<sup>−6</sup></strong>，不加編碼剛好可用；最低為 <strong>5.740313 dB</strong>。</p>
+<p>SNR ＝ 10 dB 選 16-QAM → C ＝ <strong>3.459432 Mbit/s</strong> &lt; 4 Mbit/s，超過容量，任何編碼都救不回；SNR ＝ 0 dB、BPSK → C ＝ 1.000000 Mbit/s ＝ R<sub>b</sub>，剛好碰到容量；SNR ＝ −10 dB → C ＝ <strong>0.137504 Mbit/s</strong>，BPSK 超過容量。SNR ＝ 40 dB → C/B ＝ <strong>13.287857</strong>，64-QAM 只用了 45 %；B ＝ 20 MHz、20 dB → C ＝ 133.164230 Mbit/s，是 Wi-Fi 一條 20 MHz 頻道的量級；SNR ＝ 17 dB 選 64-QAM → C ＝ 5.675780 &lt; 6，超過容量。</p>
+
+<section class="workspace"><h2>自由實驗：把方案放到 Shannon 天花板下</h2>
+<p>場景是一條頻寬與平均接收功率都受限的 AWGN 鏈路。調整頻寬、SNR 與星座，回饋會比較方案位元率和容量，並算出當前 η 的最低 E_b/N_0，判斷是撞上天花板，還是只因方案本身離天花板太遠。</p>
+<div class="controls">
+<label for="sc-b">頻寬 B（MHz）<input id="sc-b" type="range" min="0.1" max="100" step="0.1" value="1"></label>
+<label for="sc-snr">訊雜比 SNR（dB）<input id="sc-snr" type="range" min="-10" max="40" step="0.5" value="20"></label>
+<label for="sc-scheme">要比較的調變（α ＝ 0）<select id="sc-scheme"><option value="bpsk">BPSK（η ＝ 1）</option><option value="qpsk">QPSK（η ＝ 2）</option><option value="qam16">16-QAM（η ＝ 4）</option><option value="qam64" selected>64-QAM（η ＝ 6）</option></select></label>
+</div>
+<div id="shannon-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>容量是存在性上限，不是某個具體方案的錯誤率；未編碼 64-QAM 在容量內仍可錯 0.85 %。</li><li>頻譜效率與功率效率是一條曲線上的取捨，不能在固定資源下同時無限制改善。</li><li>−1.591745 dB 只屬於 η → 0 的極限；η ＝ 6 時的最低門檻是 10.211893 dB。</li><li>SNR 與 E<sub>b</sub>/N<sub>0</sub> 相差 η；同一 SNR 下，η 越大，每位元分到的能量比越小。</li><li>增加 B 會讓容量隨之增加，但若接收功率固定，實際 SNR 也會因累積更多雜訊而改變；自由實驗是把 B 與 SNR 當獨立教學參數。</li></ul>
+
+<h2>可觀察證據：量 SNR、錯誤率與最高可用檔位</h2>
+<p><strong>用什麼量。</strong>用向量訊號分析儀量實際鏈路的 SNR，再用位元錯誤率測試儀逐一測各個 MCS，記下仍達目標錯誤率的最高 η，最後與 log<sub>2</sub>(1 + SNR) 比較。</p>
+<p><strong>能證明什麼。</strong>量測能證明一個實作在指定條件下用了容量的多少比例，也能找出由硬體、同步與具體方案共同造成的實作缺口；若 R<sub>b</sub> 接近 C 而錯誤率仍高，就能看出「容量內」不等於「未編碼可用」。</p>
+<p><strong>不能證明什麼。</strong>有限次量測不能證明容量定理本身，也不能由某次成功傳輸宣稱已越過容量。儀器只能顯示實作沒有超過上限，以及工作點離上限多遠。</p>
+
+<h2>連到哪門課</h2>
+<p>本章往下連到資訊理論：那門課證明容量公式與可達條件；具體方案如何逼近容量留給數位通訊課。實務上，基地台與 Wi-Fi 存取點會以速率自適應把每個 MCS 放在合適的 SNR 區間，這正是把理論曲線變成軟體決策表。</p>
+<nav class="pager" aria-label="章節導覽"><a href="09-數位調變與星座圖.html">← 上一頁：數位調變與星座圖</a><a href="11-鏈路預算.html">下一頁：鏈路預算 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 頻譜效率與 Shannon 極限</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>控制系統（零基礎互動課）</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html" aria-current="page">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">從「回授買到什麼」一路設計到極點配置</p>
+<h1>控制系統（零基礎互動課）</h1>
+<p class="lead">這門課只問一件事——接上回授之後，閉迴路的極點被搬到哪裡、指標因此變成多少、代價是什麼；每章一個實驗，同一個受控體改一個控制器參數，看數字怎麼動。</p>
+<div class="flow"><span>回授的價值</span><span>建模</span><span>方塊圖</span><span>穩態誤差</span><span>二階閉迴路</span><span>Routh</span><span>根軌跡</span><span>波德圖</span><span>裕度與奈奎斯特</span><span>PID</span><span>領先／落後</span><span>狀態空間</span></div>
+<p class="note">每章只有一個自由實驗，改控制就立即看到結果與原因；沒有計分，練習題集中在自我檢核頁，答錯不擋路。</p>
+<p class="warning">本課的數學語言在既有課「信號與系統」，拉氏轉換、轉移函數與二階指標的推導在那邊，本課只引用結論；每章開頭會告訴你哪一頁是前置。</p>
+<section class="chapter-list">
+<a class="chapter-card" href="00-回授的價值.html"><h2><span class="number">00</span> 回授的價值</h2><p>同樣 20 % 的增益漂移與 0.2 干擾，閉迴路把誤差縮小 60.500000 倍。</p></a>
+<a class="chapter-card" href="01-建模從微分方程到轉移函數.html"><h2><span class="number">01</span> 建模：從微分方程到轉移函數</h2><p>12 V 馬達模型的時間常數是 0.099900 s，物理參數決定它跑多快。</p></a>
+<a class="chapter-card" href="02-方塊圖化簡與閉迴路轉移函數.html"><h2><span class="number">02</span> 方塊圖化簡與閉迴路轉移函數</h2><p>接上增益 10 的控制器後，時間常數縮成 0.023810 s，速度快 21 倍。</p></a>
+<a class="chapter-card" href="03-穩態誤差與系統型式.html"><h2><span class="number">03</span> 穩態誤差與系統型式</h2><p>型式 1、K ＝ 10 時，斜坡命令留下 0.200000 的穩態誤差。</p></a>
+<a class="chapter-card" href="04-二階閉迴路與極點位置.html"><h2><span class="number">04</span> 二階閉迴路與極點位置</h2><p>極點 −3 ± j4 對應 9.478022 % 超越量，位置直接落在時間指標上。</p></a>
+<a class="chapter-card" href="05-Routh穩定度判別.html"><h2><span class="number">05</span> Routh 穩定度判別</h2><p>不用解四次方程，首欄 2 次符號變化就指出 2 個右半平面極點。</p></a>
+<a class="chapter-card" href="06-根軌跡.html"><h2><span class="number">06</span> 根軌跡</h2><p>增益推到 48.000000 時，極點在 2.828427 rad/s 跨越虛軸。</p></a>
+<a class="chapter-card" href="07-頻率響應與波德圖.html"><h2><span class="number">07</span> 頻率響應與波德圖</h2><p>在 10 rad/s，漸近讀值與精確讀值相差 −3.053514 dB。</p></a>
+<a class="chapter-card" href="08-增益裕度相位裕度與奈奎斯特.html"><h2><span class="number">08</span> 增益裕度、相位裕度與奈奎斯特</h2><p>預設迴路有 20.827854 dB 增益裕度與 47.403940° 相位裕度。</p></a>
+<a class="chapter-card" href="09-PID控制器設計.html"><h2><span class="number">09</span> PID 控制器設計</h2><p>20／10／5 的三項增益得到 17.018937 % 超越量與 2.731000 s 整定時間。</p></a>
+<a class="chapter-card" href="10-領先落後補償器.html"><h2><span class="number">10</span> 領先／落後補償器</h2><p>領先補償把相位裕度推到 62.864479°，落後補償把速度常數放大 5 倍。</p></a>
+<a class="chapter-card" href="11-狀態空間入門.html"><h2><span class="number">11</span> 狀態空間入門：可控、可觀與極點配置</h2><p>用 K ＝ [48, 7]，把兩個極點配置成特徵多項式 s² ＋ 10s ＋ 50。</p></a>
+<a class="chapter-card" href="名詞與概念字典.html"><h2><span class="number">查</span> 名詞與概念字典</h2><p>54 張卡片整理繁中、英文、縮寫、機制與使用邊界。</p></a>
+<a class="chapter-card" href="自我檢核.html"><h2><span class="number">檢</span> 自我檢核</h2><p>12 章各 3 題，共 36 題即時解釋；不計分、可重做。</p></a>
+</section>
+<h2>先修與去向</h2>
+<p>數學語言的前置是<a href="../信號與系統-互動課程/index.html">信號與系統</a>，元件暫態那一側是<a href="../電路學-互動課程/index.html">電路學</a>；去向是控制特化的線性系統理論、最佳控制與馬達控制。</p>
+<h2>來源</h2>
+<ul><li>13-控制系統.md</li><li>中英名詞對照表-2.md</li></ul>
+<h2>用語說明</h2>
+<p>本課用台灣慣用語——回授、轉移函數、步階、超越量、整定時間、波德圖、受控體、穩定度、訊號（其他教材的另一套譯法只在字典頁對應卡片的「不要混淆」欄列出，本頁不得引述）；乘號 ×、負號 −、虛數單位 j、角度用度、角頻率 rad/s。</p>
+<nav class="pager" aria-label="章節導覽"><a href="自我檢核.html">← 自我檢核</a><a href="00-回授的價值.html">開始：回授的價值 →</a></nav>
+</main>
+<footer class="site-footer"><span>控制系統（零基礎互動課）</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,67 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 鏈路預算｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">11・把整條無線鏈路收進一張 dB 帳</p>
+<h1>鏈路預算：從發射功率一路加減到可用裕度</h1>
+<p class="lead">2400 MHz、100 m、20 dBm 與兩端各 2 dBi 的自由空間鏈路，接收功率是 −56.052008 dBm；扣掉雜訊與需求後，尚有 28.912879 dB 裕度。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-雜訊訊雜比與雜訊指數.html">05 雜訊、訊雜比與雜訊指數</a>的雜訊底，以及<a href="00-通訊世界觀與分貝帳本.html">00 通訊世界觀與分貝帳本</a>的 dB 與 λ。<strong>前置：</strong>見〈電磁波與平面波〉<a href="../../02-電機核心/電磁學-互動課程/13-電磁波與平面波.html">電磁學的電磁波與平面波</a>；λ ＝ c/f 與波怎麼傳是該頁機制，本章只做鏈路加減。</p>
+<p class="warning">發射功率與頻段受各國法規管制（台灣為 NCC），未經許可不得發射；本課的鏈路預算只是計算，不是發射授權。實驗請用衰減器接線或合法的低功率免執照頻段。</p>
+
+<h2>痛點：發射端有 20 dBm，接收端到底還剩多少</h2>
+<p>「功率明明是正的 20 dBm，為什麼手機收到只剩負的一百多 dBm？」因為 dBm 是相對 1 mW 的絕對功率刻度，負值不代表沒有能量；真正要追的是沿途每一項增益與損失。只看發射功率，完全無法回答距離能到多遠，也無法知道接收端是否高於雜訊底。</p>
+<p>另一個陷阱是算出接收功率便宣布鏈路可用。接收機還有頻寬與 NF，所選方案也要求最低 SNR，環境更會因遮蔽與多徑起伏。鏈路預算（link budget）的工作，就是把發射、天線、路徑、接收雜訊、方案需求與衰落保險全部放進同一張 dB 表，最後只問裕度是正還是負。</p>
+
+<h2>白話直覺：每一項都是銀行帳的存入或支出</h2>
+<p>可以暫時把 dB 表想成銀行流水帳：發射功率是期初餘額，天線增益是存入，路徑損失是支出，最後看餘額能不能支付接收需求。比喻到此為止，精確定義是：P<sub>r</sub>(dBm) ＝ P<sub>t</sub>(dBm) + G<sub>t</sub>(dBi) + G<sub>r</sub>(dBi) − L<sub>FS</sub>(dB)，再以接收功率減雜訊底得到 SNR。</p>
+<p>因果鏈從天線口走一次。發射機交出 P<sub>t</sub>，發射天線把能量集中到某方向而得到 G<sub>t</sub>；能量向外攤在球面上形成自由空間路徑損失（free-space path loss, FSPL），接收天線再以 G<sub>r</sub> 收集。頻率與距離決定 FSPL，頻寬與 NF 決定雜訊底，方案決定所需 SNR，環境風險以衰落裕度表示。全部相減後得到鏈路裕度：大於零才在模型內可通。邊界是非視距、地球曲率、饋線與極化損失都未納入；儀器真正量到的是 RSSI 與頻譜上的雜訊底。</p>
+<p>軟體那一端，手機工程模式顯示的 RSRP／RSSI 就對應接收功率 P<sub>r</sub>；約 −100 dBm 的讀值常被介面轉成「訊號一格」，但格數只是產品規則，不是新的物理量。</p>
+<p class="note">來源：14-通訊系統-下 §14.1–§14.3、§13。</p>
+
+<h2>推導：從球面攤薄走到最遠距離</h2>
+<p><strong>第一步，得到 FSPL。</strong>等向天線把發射功率均勻攤在半徑 d 的球面，單位面積功率隨 1/(4πd²) 下降；同樣 dBi 的接收天線有效面積為 λ²/(4π)。接收與發射功率比因此是 (λ/(4πd))²，反過來定義損失 L<sub>FS</sub> ＝ (4πd/λ)²；dB 形式為 L<sub>FS</sub> ＝ 20 log<sub>10</sub>(4πd/λ)。d 與 λ 都用 m，比例無單位。</p>
+<p>這個推導說明 FSPL 不是空氣吸收，而是能量攤薄，真空裡仍存在。距離加倍使 d² 增為四倍，所以損失多 6.020600 dB；頻率加倍使 λ 減半，同樣 dBi 的接收天線有效面積少四倍，損失也多 6.020600 dB。</p>
+<p><strong>第二步，算接收端的底線。</strong>參考溫度 T<sub>0</sub> ＝ 290 K、波茲曼常數 k ＝ 1.380649 × 10<sup>−23</sup> J/K，kT<sub>0</sub> ＝ 4.003882 × 10<sup>−21</sup> W/Hz ＝ −173.975187 dBm/Hz；常見速記 −174 dBm/Hz 是四捨五入。頻寬 B 內的雜訊底為 N ＝ −173.975187 + 10 log<sub>10</sub>(B) + NF，B 用 Hz，N 用 dBm。</p>
+<p><strong>第三步，逐項扣成裕度。</strong>SNR ＝ P<sub>r</sub> − N；鏈路裕度 ＝ SNR − SNR<sub>req</sub> − 衰落裕度。衰落裕度不是固定損失，而是為遮蔽與多徑的時間起伏預留的統計保險。PLL 在接收端協助載波與符元同步，本章只點名，不把迴路設計納入帳內。</p>
+<p><strong>第四步，反解距離。</strong>自由空間中損失隨 20 log<sub>10</sub>d 改變；若目前距離 d 尚有裕度 L，距離倍率便是 10<sup>L/20</sup>，所以 d<sub>max</sub> ＝ d × 10<sup>裕度/20</sup>。裕度每增加 6.020600 dB，最遠距離約加倍。</p>
+<p><strong>模型邊界。</strong>本課用的是一階教學模型：自由空間、視距、天線完全對準、沒有極化與饋線損失，且 NF、增益不隨頻率改變。算到數十公里時，地球曲率、地形與多徑會使結果失去可信度。</p>
+
+<h2>數值實例：2.4 GHz、100 m 的逐項預算</h2>
+<p>f ＝ 2400 MHz、d ＝ 100 m、P<sub>t</sub> ＝ 20 dBm、G<sub>t</sub> ＝ G<sub>r</sub> ＝ 2 dBi、B ＝ 20 MHz、NF ＝ 6 dB、所需 SNR ＝ 10 dB、衰落裕度 0 dB。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>波長</td><td>299792458 / 2.4 × 10<sup>9</sup></td><td><strong>0.124914 m</strong></td></tr><tr><td>FSPL</td><td>20 log<sub>10</sub>(4π × 100 / 0.124914)</td><td><strong>80.052008 dB</strong></td></tr>
+<tr><td>接收功率</td><td>20 + 2 + 2 − 80.052008</td><td><strong>−56.052008 dBm</strong></td></tr><tr><td>雜訊底</td><td>−173.975187 + 73.010300 + 6</td><td><strong>−94.964887 dBm</strong></td></tr>
+<tr><td>SNR</td><td>−56.052008 + 94.964887</td><td><strong>38.912879 dB</strong></td></tr><tr><td>鏈路裕度</td><td>38.912879 − 10 − 0</td><td><strong>28.912879 dB</strong></td></tr><tr><td>最遠距離</td><td>100 × 10<sup>28.912879/20</sup></td><td><strong>2790.255411 m</strong></td></tr></tbody></table>
+<p><strong>量級與邊界對照。</strong>d ＝ 200 m → FSPL <strong>86.072608 dB</strong>，多 6.020600 dB，裕度 22.892279 dB；f ＝ 5800 MHz → FSPL <strong>87.716343 dB</strong>、裕度 21.248544 dB、最遠 <strong>1154.588446 m</strong>，同樣功率下 5.8 GHz 走不到 2.4 GHz 的一半。衰落裕度 20 dB → 裕度 <strong>8.912879 dB</strong>、最遠 <strong>279.025541 m</strong>。</p>
+<p>d ＝ 5000 m → SNR 4.933479 dB、裕度 <strong>−5.066521 dB，鏈路不通</strong>；P<sub>t</sub> ＝ −10 dBm → 裕度 −5.087121 dB；B ＝ 0.1 MHz → 雜訊底 <strong>−117.975187 dBm</strong>、裕度 51.923179 dB，窄頻的代價是位元率低。915 MHz、1000 m、0.1 MHz → 裕度 40.298982 dB、最遠 103.502086 km，是 LoRa 類窄頻長距離的量級，但已超出自由空間模型的視距；d ＝ 2790 m → 裕度 <strong>0.000795 dB</strong>，剛好通；40 dBm 與 30 dBi × 2 天線、5000 m → 裕度 70.933479 dB，是點對點微波鏈路的量級。</p>
+
+<section class="workspace"><h2>自由實驗：九個旋鈕完成一張鏈路預算</h2>
+<p>場景是兩支對準、視距內的天線。依序設定發射功率、兩端增益、頻率、距離、接收頻寬、NF、所需 SNR 與衰落保險；結果會逐項列出加減帳，並告訴你鏈路是否可通、最多可拉到多遠。</p>
+<div class="controls">
+<label for="lb-pt">發射功率 P_t（dBm）<input id="lb-pt" type="range" min="-10" max="40" step="1" value="20"></label>
+<label for="lb-gt">發射天線增益 G_t（dBi）<input id="lb-gt" type="range" min="0" max="30" step="1" value="2"></label>
+<label for="lb-gr">接收天線增益 G_r（dBi）<input id="lb-gr" type="range" min="0" max="30" step="1" value="2"></label>
+<label for="lb-f">頻率 f（MHz）<input id="lb-f" type="range" min="100" max="6000" step="1" value="2400"></label>
+<label for="lb-d">距離 d（m）<input id="lb-d" type="range" min="10" max="5000" step="10" value="100"></label>
+<label for="lb-b">接收頻寬 B（MHz）<input id="lb-b" type="range" min="0.1" max="100" step="0.1" value="20"></label>
+<label for="lb-nf">接收機雜訊指數 NF（dB）<input id="lb-nf" type="range" min="1" max="15" step="0.5" value="6"></label>
+<label for="lb-req">所需 SNR（dB）<input id="lb-req" type="range" min="0" max="30" step="0.5" value="10"></label>
+<label for="lb-fade">衰落裕度（dB）<input id="lb-fade" type="range" min="0" max="30" step="1" value="0"></label>
+</div>
+<div id="link-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>FSPL 不是空氣把能量吸掉，而是能量在球面上攤薄；真空中一樣存在。</li><li>dBi 是相對等向天線的方向增益。天線不會產生功率，只把能量集中到某些方向。</li><li>雜訊底裡的 NF 屬於接收機，B 是接收頻寬；頻寬開大可容納較高位元率，也會累積更多雜訊。</li><li>衰落裕度是統計保險，不是每一刻都存在的固定損失；晴朗視距時可能暫時用不到。</li><li>接收功率高於靈敏度仍不等於一定可用；還要扣掉所需 SNR 與預留的衰落裕度。</li></ul>
+
+<h2>可觀察證據：量 RSSI、雜訊底與距離斜率</h2>
+<p><strong>用什麼量。</strong>接收機的 RSSI 對應 P<sub>r</sub>；用頻譜分析儀在接收端量訊號功率與雜訊底，相減得到實測 SNR。固定其他條件，把距離拉到兩倍，再看 RSSI 是否下降約 6 dB。</p>
+<p><strong>能證明什麼。</strong>量測能證明當下 P<sub>r</sub>、SNR 與裕度為正或為負，也能檢查一段視距範圍內是否接近自由空間的距離斜率。這些是對鏈路能否工作的直接證據。</p>
+<p><strong>不能證明什麼。</strong>單次 RSSI 不能把 FSPL、遮蔽與多徑分開；實測常比自由空間低 10–30 dB，那段差距只顯示模型外損失，不能自動指出原因。RSSI 也不能證明天線標示的 dBi，後者要在暗室量方向圖。</p>
+
+<h2>連到哪門課</h2>
+<p>λ ＝ c/f 與波的傳播機制見<a href="../../02-電機核心/電磁學-互動課程/13-電磁波與平面波.html">電磁學的電磁波與平面波</a>。Rayleigh／Rician 統計、分集與 MIMO 留給無線與行動通訊課；天線增益與有效面積的完整物理留給天線課。這張預算表則直接用在基地台覆蓋、點對點微波與物聯網節點規劃。</p>
+<nav class="pager" aria-label="章節導覽"><a href="10-頻譜效率與Shannon極限.html">← 上一頁：頻譜效率與 Shannon 極限</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
+</main>
+<footer class="site-footer"><span>11 鏈路預算</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

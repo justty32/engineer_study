@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 領先／落後補償器｜控制系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">10・零點與極點要放在真正需要改變的頻段</p>
+<h1>10 領先／落後補償器：把 PM 拉到 62.864479°，或把 K<sub>v</sub> 拉到 50.000000</h1>
+<p class="lead">領先補償把相位裕度從 47.403940° 提到 62.864479°；落後補償把速度誤差常數從 10.000000 提到 50.000000，而相位裕度只降到 44.445984°。兩者都用一個零點和一個極點，設計目的卻完全不同。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="08-增益裕度相位裕度與奈奎斯特.html">08 增益裕度、相位裕度與奈奎斯特</a>的交越頻率與裕度。<strong>前置：</strong>見〈09 濾波器與群延遲〉<a href="../信號與系統-互動課程/09-濾波器與群延遲.html">信號與系統的濾波器與群延遲</a>；既有課已建立頻率響應，本章只設計零點與極點的位置。</p>
+
+<h2>痛點：同樣是一個零點加一個極點，為什麼一種讓反應更快，另一種讓追蹤更準</h2>
+<p>前一章只告訴你 GM 與 PM 的餘量。直接增加整體增益雖可能縮小低頻誤差，卻會改變交越附近的相位餘量；補償器改在指定頻段調整，以控制代價。</p>
+<p>領先補償器（lead compensator）主要在交越頻率附近增加正相位；落後補償器（lag compensator）主要提高低頻增益。兩者不能只憑「都有一個零點和一個極點」視為可互換。</p>
+<p>先辨認需求：PM 不足且反應太慢選領先；PM 尚可但斜坡誤差過大選落後；兩者都不合格才串接。單一讀值改善不代表全部達標。</p>
+
+<h2>白話直覺：把修正放在需要的頻段</h2>
+<p>可暫時把補償器想成只調某一段音域的等化器：領先調交越附近，落後調低頻；比喻到此為止。精確地說，領先使用 C(s) ＝ (1 ＋ s/z) / (1 ＋ s/p)，其中 z ＜ p、α ＝ p / z；零點先開始提供正相位，較高頻的極點再停止增加。落後使用 C(s) ＝ β(1 ＋ s/z) / (1 ＋ s/p)，其中 z ＞ p、β ＝ z / p；低頻增益是 β，高頻增益回到 1。</p>
+<p>因果鏈如下：命令造成誤差後，補償器依頻率改變誤差的增益與相位，控制量 u 再進入受控體；領先把交越附近的相位抬高，也以 √α 抬高振幅，使閉迴路極點通常遠離虛軸並提高速度；落後提高低頻迴路增益，使斜坡穩態誤差縮小，但交越附近留下少量負相位；掃頻儀會量到新的 ω<sub>gc</sub>、PM 與 GM。</p>
+<p>這件事在你的程式裡長什麼樣：先由 α、ω<sub>m</sub> 或 β、z 算出零點與極點，再對 |L<sub>0</sub>C| − 1 及 ∠L<sub>0</sub>C ＋ 180° 分別做二分搜尋。設計時不能只算 φ<sub>max</sub>，還要在新的交越頻率重算實際 PM。</p>
+<p>領先由較低頻的零點先增加相位與振幅，高頻極點再使相位增量退回、振幅停在 α 倍。落後則由極點先作用，中間頻段呈負相位；前置 β 提高低頻總增益，高頻因子相抵。</p>
+<p>落後零點放低，可讓負相位區在交越前大致結束；但靠近原點的極點會形成慢暫態，短測試可能看不出最終誤差。因此要同時檢查頻域裕度與長時間響應。</p>
+<p class="note">來源：13-控制系統 §6.2；φ<sub>max</sub> 公式為本課補上（來源筆記缺口）。</p>
+
+<h2>推導：由零極點比求最大相位，再重找交越頻率</h2>
+<p>領先補償器的相位是 ∠C(jω) ＝ arctan(ω/z) − arctan(ω/p)。對 log ω 求極值，可得最大相位出現在 ω<sub>m</sub> ＝ √(zp)。令 α ＝ p / z，代回後得到 sin φ<sub>max</sub> ＝ (α − 1) / (α ＋ 1)。同一點的振幅是 |C(jω<sub>m</sub>)| ＝ √(1 ＋ α) / √(1 ＋ 1 / α) ＝ √α，因此相位增加的同時，交越頻率也會向高頻移動。</p>
+<p>補償後 L ＝ L<sub>0</sub>C。新 ω<sub>gc</sub> 由 |L<sub>0</sub>C| ＝ 1 二分搜尋，新 PM ＝ 180° ＋ ∠L<sub>0</sub> ＋ ∠C；新 ω<sub>pc</sub> 由總相位等於 −180° 搜尋，再於該點計算 GM。ω<sub>m</sub> 應放在預期的新 ω<sub>gc</sub> 附近；若只對準舊交越點，振幅抬升造成的右移可能把相位提升錯開。</p>
+<p>落後補償器取 C(s) ＝ β(1 ＋ s/z) / (1 ＋ s/p)，p ＝ z / β。原始 L<sub>0</sub> 的 K<sub>v</sub> ＝ 10，補償後 K<sub>v</sub> ＝ 10β，斜坡 e<sub>ss</sub> ＝ 1 / (10β)。交越頻率處付出的相位是 arctan(ω<sub>gc</sub> / z) − arctan(ω<sub>gc</sub> / p)，為負值；把 z 放到 ω<sub>gc</sub> / 10 以下，可把這項代價壓到幾度。z、p、ω 的單位是 rad/s，α、β 無單位，角度用度。假設 L<sub>0</sub> 固定為前兩章的參數且為最小相位。<strong>本課用的是教學用的簡化模型，真實系統不是這樣。</strong></p>
+<p>完整的領先設計順序是先由目標 PM 推估需要的相位增加，再留出交越右移的餘量以選 α，接著把 ω<sub>m</sub> 放在預期的新交越附近，最後重新求全部交越量。完整的落後設計則先由目標斜坡誤差選 β，再把 z 放到交越頻率以下，求 p ＝ z / β，最後確認 PM 的損失沒有超標。每一步都要回算，不能把局部公式當成最終答案。</p>
+
+<h2>數值實例：領先 α ＝ 4、中心頻率 10 rad/s</h2>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>z</td><td>10 / √4</td><td><strong>5.000000 rad/s</strong></td></tr>
+<tr><td>p</td><td>10 × √4</td><td><strong>20.000000 rad/s</strong></td></tr>
+<tr><td>φ<sub>max</sub></td><td>arcsin(3 / 5)</td><td><strong>36.869898°</strong></td></tr>
+<tr><td>|C(jω<sub>m</sub>)|</td><td>√4</td><td><strong>2.000000（6.020600 dB）</strong></td></tr>
+<tr><td>補償前 ω<sub>gc</sub>／PM</td><td>08 章</td><td><strong>7.844079 rad/s／47.403940°</strong></td></tr>
+<tr><td>補償後 ω<sub>gc</sub></td><td>二分搜尋</td><td><strong>14.018490 rad/s</strong></td></tr>
+<tr><td>補償後 PM</td><td>180 ＋ ∠L<sub>0</sub>C</td><td><strong>62.864479°</strong></td></tr>
+<tr><td>補償後 ω<sub>pc</sub>／GM</td><td>二分搜尋</td><td><strong>50.878586 rad/s／17.966877 dB</strong></td></tr>
+<tr><td>K<sub>v</sub></td><td>不變</td><td><strong>10.000000</strong></td></tr>
+</tbody></table>
+<p>落後預設 β ＝ 5、z ＝ 0.5 rad/s：p ＝ 0.100000、K<sub>v</sub> ＝ 50.000000、斜坡 e<sub>ss</sub> ＝ 0.020000、補償後 ω<sub>gc</sub> ＝ 7.855060、PM ＝ 44.445984°，比原值掉 2.96°，GM ＝ 20.436669 dB。</p>
+<p><strong>邊界對照。</strong>領先 α ＝ 4、ω<sub>m</sub> ＝ 5 時，PM ＝ 42.108054° 反而變差、ω<sub>gc</sub> ＝ 17.270582；把 ω<sub>m</sub> 改為 15，PM ＝ 71.224577°。α ＝ 10、ω<sub>m</sub> ＝ 15 時 φ<sub>max</sub> ＝ 54.903199°、PM ＝ 74.343204°；α ＝ 20、ω<sub>m</sub> ＝ 30 時 PM ＝ 87.143810°，但高頻增益達 20 倍。落後 z ＝ 2 時 PM ＝ 35.567282°；β ＝ 20、z ＝ 0.5 時 K<sub>v</sub> ＝ 200、PM ＝ 43.897388°；z ＝ 0.1 時 PM ＝ 46.817849°。</p>
+<p>較溫和的領先 α ＝ 2、ω<sub>m</sub> ＝ 10 時，φ<sub>max</sub> ＝ 19.471221°、PM ＝ 58.905678°，表示相位需求不大時無須使用很高的高頻增益。落後若同時取 β ＝ 20、z ＝ 0.1，則 p ＝ 0.005；低頻精度提高，但補償器暫態可能要幾百秒才消。兩個例子都提醒設計者，局部指標達標仍要檢查雜訊與等待時間。</p>
+<p>讀表時應分清「補償器自身能提供多少」與「整個迴路最後得到多少」。φ<sub>max</sub> 是補償器在單一頻率的峰值，不是 PM 必然增加的數量；K<sub>v</sub> 的倍數則只描述低頻斜坡追蹤，不直接等於時間響應加快。前者還受新交越位置影響，後者還要承受慢極點與負相位。把每個局部量接回總迴路重算，是避免錯用公式的核心步驟。</p>
+<p>若一級領先無法在雜訊限制內提供足夠相位，可以分成多級較溫和的領先；若落後所需 β 很大，也要檢查慢暫態是否可接受。這些延伸仍服從相同原則：每增加一級，都重新計算總振幅、總相位與全部交越點，而不是把各級的最佳數字直接相加。</p>
+
+<section class="workspace"><h2>自由實驗：選領先或落後，放置零點與極點</h2>
+<p>原始迴路固定為 K ＝ 10、τ<sub>1</sub> ＝ 0.1、τ<sub>2</sub> ＝ 0.01。先選補償類型，再改該模式使用的兩個參數，觀察補償前後交越頻率、兩個裕度、K<sub>v</sub> 與斜坡誤差。</p>
+<div class="controls">
+<label for="ld-type">補償類型<select id="ld-type"><option value="lead" selected>領先補償：加相位</option><option value="lag">落後補償：加低頻增益</option></select></label>
+<label for="ld-alpha">領先比 α = p / z<input id="ld-alpha" type="range" min="2" max="20" step="1" value="4"></label>
+<label for="ld-wm">領先中心頻率 ω_m（rad/s）<input id="ld-wm" type="range" min="1" max="100" step="1" value="10"></label>
+<label for="ld-beta">落後比 β = z / p<input id="ld-beta" type="range" min="2" max="20" step="1" value="5"></label>
+<label for="ld-z">落後零點 z（rad/s）<input id="ld-z" type="range" min="0.1" max="5" step="0.1" value="0.5"></label>
+</div>
+<div id="lead-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>領先補償器不是微分器；它的高頻增益有有限上限 α，不會隨頻率無限增加。</li>
+<li>落後補償器不是積分器；它的低頻增益是有限的 β，沒有在原點加入極點，系統型式不變。</li>
+<li>領先主要改善 PM 與速度，落後主要改善穩態精度。兩項都需要時應串接領先—落後補償，不能拿其中一種替代另一種。</li>
+<li>φ<sub>max</sub> 只在 ω<sub>m</sub> 達到；ω<sub>m</sub> 放錯頻率時，即使公式算出的最大相位很大，實際 PM 仍可能下降。</li>
+<li>PM 增加不保證雜訊更小。領先的高頻增益會放大量測雜訊，α 越大越要檢查控制量。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>工具與量測。</strong>裝上補償器後用頻率響應分析儀重新掃頻：領先模式檢查 PM 與 ω<sub>gc</sub> 是否提高，落後模式檢查低頻增益是否抬高而交越附近只損失少量相位。再輸入方波讀超越量與整定時間，輸入三角波讀斜坡追蹤誤差。</p>
+<p><strong>能證明什麼。</strong>掃頻與追蹤測試能證明補償器確實把裕度或 K<sub>v</sub> 改到設計值，也能抓出零點放得太靠近交越頻率所造成的額外相位損失。</p>
+<p><strong>不能證明什麼。</strong>只看輸出 y 不能證明雜訊放大程度；還要量控制量 u 的頻譜與致動器負擔。單一工作點的結果也不能證明補償器在負載與溫度改變後仍符合指標。</p>
+<p>補償前後要使用相同掃頻條件，並保存零點、極點與整體增益，否則無法辨別 PM 改善的來源。領先還要檢查高頻 u，落後則要觀察到慢極點的影響。</p>
+
+<h2>連到哪門課</h2>
+<p>頻率響應與群延遲的數學語言見<a href="../信號與系統-互動課程/09-濾波器與群延遲.html">信號與系統的濾波器與群延遲</a>。PID 的 PD 部分在有限頻段近似領先，PI 部分近似落後，可回看<a href="09-PID控制器設計.html">09 PID 控制器設計</a>比較時域與頻域設計。補償器常用於伺服馬達、電源轉換器與姿態迴路；下一章改用矩陣直接配置多個狀態的極點。</p>
+<p>類比電路以電阻、電容實現零極點，數位控制器則轉成差分方程式係數。驗收都看交越頻率、裕度與穩態誤差是否達標。</p>
+<nav class="pager" aria-label="章節導覽"><a href="09-PID控制器設計.html">← 上一頁：PID 控制器設計</a><a href="11-狀態空間入門.html">下一頁：狀態空間入門：可控、可觀與極點配置 →</a></nav>
+</main>
+<footer class="site-footer"><span>10 領先／落後補償器</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

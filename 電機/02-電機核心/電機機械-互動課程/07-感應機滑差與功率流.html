@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 感應機滑差與功率流｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">07・轉子必須落後旋轉磁場，才有感應與轉矩</p>
+<h1>感應機滑差與功率流：速度差如何決定頻率、銅損與轉換功率</h1>
+<p class="lead">60 Hz、4 極感應馬達的同步速是 1800 rpm；轉子跑在 1740 rpm 時，滑差為 3.333333 %，轉子頻率只有 2.000000 Hz。這一小段速度差，同時決定轉子能否產生轉矩，以及 8000 W 氣隙功率如何分配。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="06-直流機轉矩轉速線.html">06 直流機轉矩轉速線</a>的轉矩、角速度與功率關係，也要會<a href="05-旋轉機共同語言.html">05 旋轉機共同語言</a>的同步速。本章直接採用三相旋轉磁場的結論，不另設跨課前置頁。</p>
+
+<h2>痛點：轉子為什麼不能剛好追上磁場</h2>
+<p>直覺容易以為，旋轉磁場拖著轉子跑，最後應該兩者同速。可是感應馬達一旦追到同步速，轉子與磁場之間就沒有相對運動，轉子導體不再切割磁場，感應電壓、電流與轉矩全都消失。要持續帶負載，轉子反而必須永遠慢一點。</p>
+<p>這個「慢一點」也不只是速度誤差。它同時縮放轉子看到的電氣頻率，並決定穿過氣隙的功率有多少變成轉子銅損、多少變成機械功率。若把滑差只當成速度百分比，就看不出堵轉發熱與額定效率為何來自同一條比例。</p>
+
+<h2>白話直覺：滑差是轉子看見磁場掠過自己的速度比例</h2>
+<p>可以暫時把轉子想成追逐移動步道的人：人若和步道標記完全同速，就看不到標記從身旁通過。比喻到此為止；真實機制是定子三相電流建立旋轉磁場，轉子導體與該磁場有相對速度時才產生感應電壓與電流，兩者互動才形成電磁轉矩。</p>
+<p>本課三相都以 Y 接每相量計算。三相電源在定子各相與中性參考點間建立週期電壓，三組繞組回路導通後形成旋轉磁場；磁場以 n<sub>s</sub> 掠過未接外部電源的轉子，在鼠籠式（squirrel-cage）導條或繞線式（wound-rotor）轉子內感應電流；該電流與磁場互動產生轉矩。穩態時，電磁轉矩與負載及損耗平衡，轉子停在略低於同步速的位置。轉速計量 n，電力分析儀量輸入功率；氣隙功率要由輸入扣除定子端損耗後估算。</p>
+<p>三相感應馬達（induction motor, IM）因此又稱非同步機。單相感應馬達沒有天然的起動方向，需要起動繞組或電容建立起動轉矩；本章只處理三相機的穩態功率流。</p>
+<p class="note">來源：12-電機機械 §5.1、§5.2。</p>
+
+<h2>推導：一個速度比例串起頻率與三段功率</h2>
+<p><strong>同步速與滑差。</strong>同步速 n<sub>s</sub> = 120 × f / P，其中 f 是電源頻率 Hz，P 是極數，n<sub>s</sub> 的單位是 rpm。滑差（slip, s）定義為 s = (n<sub>s</sub> − n) / n<sub>s</sub>，沒有單位。馬達區的轉子比磁場慢，所以 0 &lt; s &lt; 1；堵轉時 n = 0、s = 1；超過同步速時 s 為負，機器進入感應發電狀態。</p>
+<p><strong>轉子頻率為什麼是 s × f。</strong>轉子看到磁場掠過的相對轉速是 n<sub>s</sub> − n = s × n<sub>s</sub>。相對轉速縮為同步速的 s 倍，感應電壓變化的頻率也縮為 s 倍，因此 f<sub>r</sub> = s × f。起動時 s = 1，轉子頻率就是 60 Hz；額定點 s = 0.033333 時，轉子頻率只剩 2 Hz。</p>
+<p><strong>氣隙功率怎麼分。</strong>氣隙功率（air-gap power）P<sub>AG</sub> 是由定子磁場傳入轉子的功率。轉子電阻上的銅損 P<sub>RCL</sub> = s × P<sub>AG</sub>，剩下 P<sub>conv</sub> = (1 − s) × P<sub>AG</sub> 轉換成機械功率，再扣機械損 P<sub>mech</sub> 得軸輸出 P<sub>out</sub>。所以比例可寫成 P<sub>AG</sub> : P<sub>conv</sub> : P<sub>RCL</sub> = 1 : (1 − s) : s。</p>
+<p>第 08 章會把轉子支路寫成 R<sub>2</sub> / s。當轉子電流為 I<sub>2</sub> 時，氣隙功率對應 I<sub>2</sub>² × (R<sub>2</sub> / s)，銅損是 I<sub>2</sub>² × R<sub>2</sub>，兩者相除就是 s。這也說明低滑差給出轉子效率的上限：s = 3 % 時，氣隙之後最多有 97 % 進入機械轉換。</p>
+<p><strong>兩種轉矩算法為何相同。</strong>感應轉矩 T<sub>ind</sub> = P<sub>AG</sub> / ω<sub>s</sub>，也等於 P<sub>conv</sub> / ω。因為 P<sub>conv</sub> / P<sub>AG</sub> = 1 − s，而且 ω / ω<sub>s</sub> = 1 − s，分子與分母同比縮小，所得轉矩一致。本課用的是線性穩態教學模型，真實機器不完全如此；本章忽略定子銅損與鐵損，只追蹤氣隙以後的功率。</p>
+
+<h2>數值實例：1800 rpm 的磁場與 1740 rpm 的轉子</h2>
+<p>取 f = 60 Hz、P = 4、n = 1740 rpm、P<sub>AG</sub> = 8000 W、機械損 150 W，與自由實驗預設值一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>同步速</td><td>120 × 60 / 4</td><td><strong>1800 rpm</strong>，ω<sub>s</sub> = <strong>188.495559 rad/s</strong></td></tr>
+<tr><td>滑差</td><td>(1800 − 1740) / 1800</td><td><strong>0.033333（3.333333 %）</strong></td></tr>
+<tr><td>轉子頻率</td><td>0.033333 × 60</td><td><strong>2.000000 Hz</strong></td></tr>
+<tr><td>轉子銅損</td><td>0.033333 × 8000</td><td><strong>266.666667 W</strong></td></tr>
+<tr><td>轉換功率</td><td>(1 − 0.033333) × 8000</td><td><strong>7733.333333 W</strong></td></tr>
+<tr><td>輸出功率</td><td>7733.333333 − 150</td><td><strong>7583.333333 W</strong></td></tr>
+<tr><td>感應轉矩</td><td>8000 / 188.495559</td><td><strong>42.441318 N·m</strong></td></tr>
+<tr><td>軸角速度</td><td>2π × 1740 / 60</td><td><strong>182.212374 rad/s</strong></td></tr>
+<tr><td>檢查 P<sub>conv</sub> / ω</td><td>7733.333333 / 182.212374</td><td><strong>42.441318 N·m ✓</strong></td></tr>
+<tr><td>軸轉矩</td><td>7583.333333 / 182.212374</td><td><strong>41.618103 N·m</strong></td></tr>
+</tbody></table>
+<p><strong>量級與邊界對照。</strong>1800 rpm 是本例旋轉磁場的速度，正常額定轉子僅慢 60 rpm。n = 0 時，s = 1、f<sub>r</sub> = 60.000000 Hz、轉子銅損 = 8000.000000 W、P<sub>conv</sub> = 0：堵轉時氣隙功率全部燒在轉子，轉矩仍是 42.441318 N·m。n = 1800 rpm 時 s = 0、f<sub>r</sub> = 0，同步速下沒有感應；若仍把固定 P<sub>AG</sub> 代入，得到的只是假設互相衝突的算式結果，實機不會維持該狀態。</p>
+<p>n = 1860 rpm 時 s = −3.333333 %，P<sub>conv</sub> = 8266.666667 W，大於 P<sub>AG</sub>，多出的能量來自機械輸入，機器正向電網送電。n = 1620 rpm 時 s = 10 %，轉子銅損 = 800.000000 W。頻率改為 50 Hz 而 n 仍為 1740 rpm，n<sub>s</sub> = 1500 rpm、s = −16 %，已在發電。改用 2 極且 n = 3480 rpm，滑差同為 3.333333 %，但 ω<sub>s</sub> 加倍，轉矩變為 21.220659 N·m。</p>
+
+<section class="workspace"><h2>自由實驗：沿速度軸追蹤滑差與功率流</h2>
+<p>場景是一台三相感應機，已知電源頻率、極數與氣隙功率。你可以拖動轉子速度跨過堵轉、馬達區、同步速與發電區，觀察轉子頻率及功率分配如何同步改變。</p>
+<div class="controls">
+<label for="sl-f">電源頻率 f<select id="sl-f"><option value="50">50 Hz</option><option value="60" selected>60 Hz</option></select></label>
+<label for="sl-poles">極數 P<select id="sl-poles"><option value="2">2 極</option><option value="4" selected>4 極</option><option value="6">6 極</option><option value="8">8 極</option></select></label>
+<label for="sl-n">轉子轉速 n（rpm）<input id="sl-n" type="range" min="0" max="3700" step="10" value="1740"></label>
+<label for="sl-pag">氣隙功率 P_AG（W）<input id="sl-pag" type="range" min="1000" max="20000" step="100" value="8000"></label>
+<label for="sl-pmech">機械損（W）<input id="sl-pmech" type="range" min="0" max="500" step="10" value="150"></label>
+</div>
+<div id="imslip-output" class="output" aria-live="polite">目前設定：f ＝ 60 Hz、P ＝ 4 極、n ＝ 1740 rpm、P_AG ＝ 8000 W、機械損 ＝ 150 W。<table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>同步速 n_s</td><td><strong>1800 rpm</strong></td></tr><tr><td>同步角速度 ω_s</td><td><strong>188.495559 rad/s</strong></td></tr><tr><td>滑差 s</td><td><strong>0.033333（3.333333 %）</strong></td></tr><tr><td>轉子頻率 f_r</td><td><strong>2.000000 Hz</strong></td></tr><tr><td>轉子銅損 P_RCL</td><td><strong>266.666667 W</strong></td></tr><tr><td>轉換功率 P_conv</td><td><strong>7733.333333 W</strong></td></tr><tr><td>輸出功率 P_out</td><td><strong>7583.333333 W</strong></td></tr><tr><td>感應轉矩 T_ind</td><td><strong>42.441318 N·m</strong></td></tr><tr><td>軸轉矩 T_out</td><td><strong>41.618103 N·m</strong></td></tr></tbody></table><p>P_AG → 轉子銅損 s × P_AG → P_conv (1 − s) × P_AG → 減機械損 → P_out</p><strong>判讀：目前位於馬達區，轉子落後旋轉磁場 3.333333 %。</strong>氣隙功率照 1 : (1 − s) : s 分：滑差就是轉子銅損的比例。轉子頻率 f_r = s × f ＝ 2.000000 Hz。為什麼：相對速度只剩同步速的 0.033333 倍，所以轉子電氣頻率與銅損占比也同時縮為這個比例。邊界提醒：s ＝ 1 是堵轉，全部氣隙功率變成轉子銅損；s ＝ 0 時沒有感應、沒有轉矩，數字只是照式子算，實機到不了；s 小於 0 是感應發電機，多出的轉換功率來自機械輸入；s 超過 10 % 且小於 1 時，轉子銅損占比太高，不是正常工作點；n ＝ 0 時軸轉矩不適用，若 P_out 小於 0，機械損比轉換功率還大，軸實際轉不動。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>滑差不是整台機器的效率損失；它只恰好等於氣隙功率中變成轉子銅損的比例，定子損耗與機械損另算。</li>
+<li>轉子頻率不是永遠等於電源頻率。只有堵轉時兩者相同，額定運轉時通常只剩約 1–3 Hz。</li>
+<li>用 P<sub>AG</sub> / ω<sub>s</sub> 與用 P<sub>conv</sub> / ω 算的是同一個感應轉矩；軸轉矩則還要先扣機械損。</li>
+<li>非同步不是缺點，而是感應作用持續存在的條件；若轉子與旋轉磁場完全同速，轉矩反而為零。</li>
+<li>負滑差不是算錯。只要外部原動機把轉子推過同步速，能量方向就會反過來，進入感應發電區。</li>
+</ul>
+
+<h2>可觀察證據：速度、低頻轉子電流與輸入功率</h2>
+<p><strong>拿什麼量。</strong>轉速計量 n，配合已知 f 與極數求出 n<sub>s</sub> 和 s。對繞線式轉子，可用鉗形表或電流探棒觀察轉子引線中的低頻電流；電力分析儀則量定子三相輸入功率。</p>
+<p><strong>能證明什麼。</strong>實測 n 與已知 n<sub>s</sub> 能直接證明實際滑差；轉子電流波形的頻率能驗證 f<sub>r</sub> = s × f。由不同負載點的速度與轉矩，也可觀察負載增加時滑差上升。</p>
+<p><strong>不能證明什麼。</strong>這些量測不能直接得到氣隙功率，因為儀器只能在端點量輸入；必須先估計並扣除定子銅損與鐵損。鼠籠式轉子也沒有外露引線，無法用一般鉗形表直接量它的電流。</p>
+
+<h2>連到哪門課</h2>
+<p>滑差模型用在泵浦、風機、輸送帶與感應發電設備的速度診斷。第 08 章會從轉子支路 R<sub>2</sub> / s 算出完整轉矩曲線，第 11 章則用頻率和同步速的關係說明 V/f 調速。三相旋轉磁場的空間分布屬於交流機繞組分析，本章只採用其結論。</p>
+<p><strong>控制程式那一端：</strong>驅動器裡的馬達極數與基頻參數決定同步速估計，速度回授再換算滑差；參數設錯會讓轉矩補償與保護判斷一起偏移。</p>
+<nav class="pager" aria-label="章節導覽"><a href="06-直流機轉矩轉速線.html">← 上一頁：直流機轉矩轉速線</a><a href="08-感應機轉矩曲線.html">下一頁：感應機轉矩曲線 →</a></nav>
+</main>
+<footer class="site-footer"><span>07 感應機滑差與功率流</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

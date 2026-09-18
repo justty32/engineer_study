@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 FM 與 Carson 頻寬｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・把訊息放進瞬時頻率</p>
+<h1>FM 與 Carson 頻寬：用六倍頻寬換到 18.750613 dB，前提是別跌破門檻</h1>
+<p class="lead">商用 FM 以 75 kHz 最大偏移承載 15 kHz 訊息，Carson 法則給出 180 kHz。較大的偏移確實能壓低雜訊影響，但只有載波對雜訊比至少 10 dB 時，3β² 的好處才算數。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="01-AM包絡與調變指數.html">01 AM 包絡與調變指數</a>的頻寬觀念，以及<a href="00-通訊世界觀與分貝帳本.html">00 通訊世界觀與分貝帳本</a>的 dB。<strong>前置：</strong>見〈傅立葉轉換〉<a href="../../02-電機核心/信號與系統-互動課程/06-傅立葉轉換.html">信號與系統 06</a>——頻譜的數學意義在那一頁，本章只算工程取捨。</p>
+
+<h2>痛點：FM 聽起來乾淨，為什麼一台卻要留 200 kHz</h2>
+<p>把頻率調變（frequency modulation, FM）說成「比較抗雜訊」還不夠，因為代價藏在頻寬裡。偏移做大，接收端比較容易辨認原訊息；偏移做得太小，FM 甚至輸給較簡單的雙邊帶抑制載波（double-sideband suppressed-carrier, DSB-SC）。更麻煩的是，接收功率一旦低到某個位置，原本漂亮的增益公式會突然失效，而不是緩慢變差。</p>
+<p>所以本章要回答三個可以量的問題：頻率最多擺多遠、整段傳輸要留多寬，以及接收端是否還在 10 dB 門檻之上。只看「FM」三個字，不能保證乾淨。</p>
+
+<h2>白話直覺：刻度不動，讓指針左右擺</h2>
+<p>可以暫時把載波想成一根等長指針：訊息不改它的長度，只改它旋轉的快慢；比喻到此為止。精確地說，角度調變（angle modulation）保持振幅 A<sub>c</sub> 不變，訊息決定相位或瞬時頻率。限幅器因此能先切掉大部分振幅擾動，再讓鑑頻器讀出頻率偏移。</p>
+<p>因果鏈是這樣：訊息 m(t) 從麥克風而來，最高有效頻率形成 W；發射端決定最大頻率偏移 Δf，把內容寫進 f<sub>i</sub>(t)；較大的 β ＝ Δf / W 換到較高的輸出訊雜比，卻同時拉大 B<sub>T</sub>；當較寬的接收範圍收進更多雜訊，使載波對雜訊比（carrier-to-noise ratio, CNR）跌破約 10 dB，輸出會冒出尖峰，增益公式便不能用。頻譜分析儀會看到約 180 kHz 的佔用範圍，調變分析儀則會讀到 75 kHz 峰值偏移。</p>
+<p>相位調變（phase modulation, PM）直接令 φ(t) ＝ k<sub>p</sub>m(t)；FM 則讓瞬時頻率跟著 m(t) 走。預加重在發射端先抬高較易受擾的高頻內容，去加重在接收端復原，鑑頻器或鎖相迴路負責解調。軟體那一端，SDR 由相鄰 IQ 樣本的相位差估計瞬時頻率偏移。</p>
+<p>這也說明設計不能只把 Δf 一路加大。Δf 增加時，想要的訊號項以平方變強，可是接收範圍也跟著擴張，收進來的總雜訊隨之增加；若發射功率沒有同時增加，CNR 反而會下降。工程師真正調的是三個彼此牽制的旋鈕：偏移、訊息頻寬與接收功率。先確認門檻，再談 3β²，順序倒過來就會得到不存在的巨大優勢。</p>
+<p class="note">來源：14-通訊系統-上 §4.1–§4.6。</p>
+
+<h2>推導：偏移、頻寬與 3β² 各從哪裡來</h2>
+<p><strong>（a）瞬時頻率。</strong>角度調變寫成 s(t) ＝ A<sub>c</sub> cos[2π f<sub>c</sub>t + φ(t)]。相位變化率就是頻率，因此 f<sub>i</sub> ＝ f<sub>c</sub> + (1 / 2π) dφ/dt。若 FM 定義為 f<sub>i</sub>(t) ＝ f<sub>c</sub> + k<sub>f</sub>m(t)，積分後 φ(t) ＝ 2π k<sub>f</sub> ∫m dt；PM 與 FM 只差這一步積分。最大偏移 Δf ＝ k<sub>f</sub>m<sub>max</sub>，β ＝ Δf / W，兩者皆為無單位比值中的頻率量。</p>
+<p><strong>（b）Carson 法則。</strong>中心頻率最多走到 f<sub>c</sub> ± Δf，而偏移又以最高 W 的速率變化，兩側各留一段 W，故 B<sub>T</sub> ≈ 2(Δf + W)。這是涵蓋約 98 % 功率的經驗法則，不是嚴格截止線。β ≤ 0.5 是本課的窄頻 FM 判準，頻譜近似 AM；β 大於 0.5 則進入寬頻情形。</p>
+<p><strong>（c）增益基準。</strong>高 CNR、單音、理想鑑頻器下，解調後雜訊功率譜隨 f² 增長，訊號功率則隨 Δf² 增長。定義同樣發射功率、同樣 N<sub>0</sub>、頻寬 W 的參考訊雜比 SNR<sub>ref</sub> ＝ P<sub>s</sub> / (N<sub>0</sub>W)，DSB-SC 同步解調的輸出訊雜比就等於 SNR<sub>ref</sub>；單音 FM 才是 3β² SNR<sub>ref</sub>。因此「3β²」的基準明確是 DSB-SC，不是一般含大載波 AM；若拿 μ ＝ 1 的 DSB-LC 比，還要再乘 3。</p>
+<p><strong>（d）門檻。</strong>CNR ＝ SNR<sub>ref</sub> × W / B<sub>T</sub>，用 dB 計算就是從 SNR<sub>ref</sub> 扣掉 10 log<sub>10</sub>(B<sub>T</sub> / W)。本課門檻固定取 10 dB；低於它會出現雜訊尖峰，3β² 立即失效。以上是單音、高 CNR、理想鑑頻器的一階教學模型，不能外推到門檻以下。</p>
+
+<h2>數值實例：75 kHz 偏移、15 kHz 訊息、30 dB 參考值</h2>
+<p>令 Δf ＝ 75 kHz、W ＝ 15 kHz、SNR<sub>ref</sub> ＝ 30 dB，與下方實驗預設值完全相同。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>β</td><td>75 / 15</td><td><strong>5.000000</strong></td></tr>
+<tr><td>Carson 頻寬 B<sub>T</sub></td><td>2 × (75 + 15)</td><td><strong>180.000000 kHz</strong></td></tr>
+<tr><td>相對 AM（2W ＝ 30 kHz）的頻寬倍數</td><td>180 / 30</td><td><strong>6.000000 倍</strong></td></tr>
+<tr><td>3β²</td><td>3 × 25</td><td><strong>75.000000</strong></td></tr>
+<tr><td>3β² 的 dB</td><td>10 log<sub>10</sub>(75)</td><td><strong>18.750613 dB</strong></td></tr>
+<tr><td>輸出訊雜比</td><td>30 + 18.750613</td><td><strong>48.750613 dB</strong></td></tr>
+<tr><td>B<sub>T</sub>/W</td><td>180 / 15</td><td><strong>12.000000（10.791812 dB）</strong></td></tr>
+<tr><td>CNR</td><td>30 − 10.791812</td><td><strong>19.208188 dB（高於門檻 10 dB）</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>這組 FM 用相對 AM 的 6.000000 倍頻寬，換到相對 DSB-SC 的 18.750613 dB；廣播系統再以 200 kHz 間距留餘裕。</p>
+<p><strong>邊界對照。</strong>SNR<sub>ref</sub> ＝ 15 dB 時，CNR 為 <strong>4.208188 dB</strong>，低於門檻，<strong>3β² 失效，輸出出現雜訊尖峰</strong>。Δf ＝ 150 kHz 時，β ＝ 10、B<sub>T</sub> ＝ <strong>330 kHz</strong>，超過 200 kHz 頻道間距；增益 <strong>24.771213 dB</strong>、CNR <strong>16.575773 dB</strong>，多 6 dB 抗噪要付 11 倍頻寬。Δf ＝ 7.5 kHz 時，β ＝ <strong>0.500000</strong>、B<sub>T</sub> ＝ 45 kHz、3β² ＝ 0.75 ＝ <strong>−1.249387 dB</strong>；Δf ＝ 1 kHz 時，β ＝ 0.066667、B<sub>T</sub> ＝ 32 kHz、<strong>−18.750613 dB</strong>。若 Δf ＝ 150、W ＝ 1，β ＝ 150、增益 48.293038 dB，但 B<sub>T</sub>/W ＝ 302，CNR 只剩 <strong>5.199931 dB</strong>，會先撞門檻。</p>
+
+<section class="workspace"><h2>自由實驗：偏移、訊息頻寬與門檻</h2>
+<p>場景是一個單音 FM 鏈路。調整最大偏移、訊息頻寬與參考訊雜比，觀察 Carson 頻寬、相對 DSB-SC 的增益，以及 CNR 是否仍足以支撐這個增益。</p>
+<div class="controls">
+<label for="fm-df">最大頻率偏移 Δf（kHz）<input id="fm-df" type="range" min="1" max="150" step="1" value="75"></label>
+<label for="fm-w">訊息頻寬 W（kHz）<input id="fm-w" type="range" min="1" max="20" step="0.5" value="15"></label>
+<label for="fm-snr">參考訊雜比 SNR_ref（dB，發射功率 / (N_0 W)）<input id="fm-snr" type="range" min="0" max="60" step="1" value="30"></label>
+</div>
+<div id="fmcar-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>β 是 FM 的調變指數，μ 是 AM 的；β 可以遠大於 1，μ 超過 1 卻會使包絡翻轉。</li>
+<li>Carson 頻寬涵蓋約 98 % 功率，是實用估計，不是嚴格上限；FM 頻譜理論上向兩側無限延伸。</li>
+<li>「FM 抗雜訊」只在 β 大而且 CNR 高於 10 dB 時成立；窄頻 FM 可能比 DSB-SC 更差。</li>
+<li>振幅恆定讓 FM 可先限幅，也容許高效率 C 類功率放大器；這不代表相位擾動也能被限幅器移除。</li>
+<li>3β² 比較的是同功率、同 N<sub>0</sub>、同 W 的 DSB-SC 參考輸出，不是把任意兩台收音機直接相比。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>以頻譜分析儀觀察 FM 電台，可見約 180 kHz 的佔用範圍與 200 kHz 間距；以調變分析儀或 SDR 解調器讀出頻率偏移峰值 Δf，再由輸入功率與量測頻寬估計 CNR。門檻以下的尖峰也能在解調輸出的示波器軌跡上看見。</p>
+<p><strong>能證明什麼。</strong>這些量測能核對 Δf、B<sub>T</sub> 與 CNR 是否高於 10 dB，也能看出偏移增大時佔用範圍隨之增加。</p>
+<p><strong>不能證明什麼。</strong>單看一套 FM 接收機不能證明 3β² 的絕對增益；必須另做同發射功率的 DSB-SC 同步接收機、保持 N<sub>0</sub> 與 W 相同才可比較。一般量測只能支持趨勢。</p>
+<p>實驗時還要把分析儀解析頻寬與接收器通帶記錄下來，否則兩次量測收進不同總雜訊，表面上的改善可能只是儀器設定造成。可重現的比較必須固定訊息、功率、N<sub>0</sub> 與 W，再只更換傳送與接收方式。</p>
+
+<h2>連到哪門課</h2>
+<p>頻譜的數學來源見<a href="../../02-電機核心/信號與系統-互動課程/06-傅立葉轉換.html">信號與系統的傅立葉轉換</a>，本章不重講；預加重與去加重使用一階高通、低通觀念，鑑頻器與鎖相迴路的迴路設計留給控制系統課。真實裝置包括 FM 廣播發射機、車用收音機與 SDR 接收器。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-抑制載波單邊帶與同步解調.html">← 上一頁：抑制載波、單邊帶與同步解調</a><a href="04-超外差接收機與影像頻率.html">下一頁：超外差接收機與影像頻率 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 FM 與 Carson 頻寬</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

@@ -1,0 +1,57 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 通訊世界觀與分貝帳本｜通訊系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-通訊世界觀與分貝帳本.html" aria-current="page">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">00・先拿到功率帳本與波長尺</p>
+<h1>通訊世界觀與分貝帳本：把連串乘除改寫成加減</h1>
+<p class="lead">100 mW 是 20.000000 dBm，功率 ×2 是 +3.010300 dB；100 MHz 的四分之一波長是 0.749481 m。後面十一章會一再用這兩把尺，先在這裡把單位與加減規則定住。</p>
+<p class="prereq"><strong>這章假設已懂：</strong>無，只假設會對數與四則運算。<strong>前置：</strong>見〈<a href="../../02-電機核心/信號與系統-互動課程/06-傅立葉轉換.html">信號與系統 06 傅立葉轉換</a>〉的頻譜定義，以及〈<a href="../../02-電機核心/電磁學-互動課程/13-電磁波與平面波.html">電磁學 13 電磁波與平面波</a>〉的 λ ＝ c / f 與波的傳播。</p>
+
+<h2>痛點：為什麼不把語音原封不動地送出去</h2>
+<p>一句話在麥克風端是幾 kHz 的低頻訊號，但振幅調變（amplitude modulation, AM）收音機播報的是 1000 kHz，頻率調變（frequency modulation, FM）廣播又在 100 MHz 左右。如果低頻明明已經裝了訊息，為什麼還要把它搬到高頻？第一個答案可以拿尺量：3 kHz 的四分之一波長是 24982.704833 m，這樣的天線根本放不進手機。</p>
+<p>第二個痛點是功率差異很大。發射器、線纜、空氣與放大器連起來，每一段都是乘上一個增益或衰減比。直接拿 100、10<sup>−8</sup>、1.58 這種數字連乘，很快就會把量級看錯。通訊工程因此把功率改記成 dB 與 dBm，讓整條路變成一本可以加減的帳。</p>
+
+<h2>白話直覺：搬家先選車道，再把每站收支記帳</h2>
+<p>可以暫時把調變（modulation）想成把訊息搬上不同車道：每位使用者佔一段頻率，就不會全擠在低頻。比喻到此為止；精確定義是用基頻（baseband）訊號改變高頻載波的振幅、頻率或相位，得到適合在帶通（passband）範圍傳送的訊號。</p>
+<p>整套系統從訊息源開始，依序通過訊源編碼、通道編碼、調變器、通道、解調器、通道解碼與訊源解碼，最後交給接收者。訊源編碼在減少冗餘，通道編碼在增加可用來抗干擾的冗餘；類比系統常只聚焦「調變→通道→解調」這一段。</p>
+<p>因果鏈可以走完一次。訊號從感測器或檔案而來；發射端決定載波位置與調變方式；這個決定換到可製作的天線、可分配的頻寬、適合媒介的頻段，也可能換到更好的抗雜訊能力；邊界是頻率越高不代表處處都更好，路徑損失與硬體難度也會增加；頻譜分析儀會量到頻率與 dBm，功率計會量到總功率。</p>
+<p>分貝（decibel, dB）是功率比的對數，dBm 是相對 1 mW 的絕對功率，dBi 是天線相對等向天線的增益。大數的組合用加減心算，需要還原成倍數時才取反對數。軟體那一端會看到同一本帳：Wi-Fi 驅動程式回報的 RSSI 常用 dBm，−50 dBm 很強，−90 dBm 接近斷線，相差 40 dB 就是 10000 倍功率。</p>
+<p class="note">來源：14-通訊系統-上 §1、§2。</p>
+
+<h2>推導：對數為什麼能把乘法拆成加法</h2>
+<p><strong>（a）功率比。</strong>定義 dB ＝ 10 log<sub>10</sub>(P<sub>1</sub> / P<sub>2</sub>)。若一段放大 A 倍、下一段只剩 B 倍，總比值是 A × B；對數後成為 10 log<sub>10</sub>A ＋ 10 log<sub>10</sub>B。因此功率 ×2 ＝ +3.010300 dB，×10 ＝ +10 dB，×1000 ＝ +30 dB，÷2 ＝ −3.010300 dB。電壓比要用 20 log<sub>10</sub>，因為在相同阻抗下功率正比於電壓平方。</p>
+<p><strong>（b）絕對功率。</strong>dBm ＝ 10 log<sub>10</sub>(P / 1 mW)，所以 1 mW ＝ 0 dBm、100 mW ＝ 20 dBm、1 W ＝ 30 dBm。dBm 減 dBm 得 dB，dBm 加 dB 得另一個 dBm；兩個絕對功率的 dBm 直接相加沒有物理意義。負 dB 表示比值小於一，不是功率變成負值。</p>
+<p><strong>（c）波長尺。</strong>λ ＝ c / f，c ＝ 299792458 m/s，四分之一波長天線約為 λ / 4。3 kHz 的直接發射長度是 24982.704833 m，搬到 100 MHz 後只要 0.749481 m。這是第一個工程理由；其餘理由是讓多人共用頻譜、適配媒介，以及藉某些調變方式提高抗雜訊能力。</p>
+<p><strong>（d）帳本的單位檢查。</strong>一條鏈路可寫成「發射功率 dBm ＋放大器增益 dB −線路損失 dB ＋天線增益 dBi」，最後仍是 dBm。這個排法的價值不在係數名稱，而在每一項都能對上實體元件。若結果少了 20 dB，工程師可沿著放大器、線纜與天線逐項核對，而不必面對一長串小數乘法。第 11 章會用完整鏈路預算重做這件事，本章先練單段轉換。</p>
+<p>先把比值、絕對值與天線量級分開，後面的取捨才不會混成一團。</p>
+<p><strong>模型假設與邊界。</strong>本課用的是一階教學模型：功率比只記穩態平均值，電壓比假設兩端阻抗相同，天線只用 λ / 4 做量級估計。真實天線還有縮短係數、匹配網路、材料與環境的影響，不能只憑長度就宣稱完成設計。</p>
+
+<h2>數值實例：100 mW 與 100 MHz 的兩本帳</h2>
+<p>取 P<sub>1</sub> ＝ 100 mW、P<sub>2</sub> ＝ 1 mW、f ＝ 100 MHz，也就是下面自由實驗的預設值。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>功率比</td><td>100 / 1</td><td><strong>100.000000</strong></td></tr><tr><td>比值的 dB</td><td>10 log<sub>10</sub>(100)</td><td><strong>20.000000 dB</strong></td></tr><tr><td>P<sub>1</sub> 的 dBm</td><td>10 log<sub>10</sub>(100)</td><td><strong>20.000000 dBm</strong></td></tr><tr><td>P<sub>2</sub> 的 dBm</td><td>10 log<sub>10</sub>(1)</td><td><strong>0.000000 dBm</strong></td></tr><tr><td>波長</td><td>299792458 / 10<sup>8</sup></td><td><strong>2.997925 m</strong></td></tr><tr><td>四分之一波長</td><td>2.997925 / 4</td><td><strong>0.749481 m</strong></td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>P<sub>1</sub> ＝ 2、P<sub>2</sub> ＝ 1 是 3.010300 dB；P<sub>1</sub> ＝ 1000 是 30.000000 dB，也是 30 dBm 與 1 W；P<sub>1</sub> ＝ 1、P<sub>2</sub> ＝ 1000 是 −30.000000 dB。P<sub>1</sub> ＝ 500、P<sub>2</sub> ＝ 250 仍是 3.010300 dB，因為 dB 只看比值。</p>
+<p><strong>頻率邊界。</strong>f ＝ 3 kHz 時 λ ＝ 99930.819333 m、λ/4 ＝ 24982.704833 m；f ＝ 1000 kHz 時 λ/4 ＝ 74.948115 m，所以 AM 電台用高塔；f ＝ 2400 MHz 時 λ/4 ＝ 0.031228 m，Wi-Fi 天線可藏在機殼內；f ＝ 28 GHz 時 λ/4 ＝ 0.002677 m。</p>
+
+<section class="workspace"><h2>自由實驗：同時操作分貝帳與波長尺</h2>
+<p>場景是一段只有輸入與輸出的鏈路：你選兩個功率看比值，再選載波頻率看四分之一波長。輸出會把同一組數同時寫成倍數、dB、dBm 與公尺，讓你看到單位在回答不同問題。</p>
+<div class="controls">
+<label for="db-p1">功率 P_1（mW）<input id="db-p1" type="range" min="1" max="1000" step="1" value="100"></label>
+<label for="db-p2">參考功率 P_2（mW）<input id="db-p2" type="range" min="1" max="1000" step="1" value="1"></label>
+<label for="db-f">載波頻率<select id="db-f"><option value="3">3 kHz（語音基頻）</option><option value="100">100 kHz（長波）</option><option value="1000">1000 kHz（AM 廣播）</option><option value="100000" selected>100 MHz（FM 廣播）</option><option value="900000">900 MHz（行動電話）</option><option value="2400000">2400 MHz（Wi-Fi）</option><option value="28000000">28 GHz（5G 毫米波）</option></select></label>
+</div><div id="dbcalc-output" class="output" aria-live="polite"></div></section>
+
+<h2>不要混淆</h2>
+<ul><li>dB 是比值，dBm 是絕對功率。你可以用 dBm 加上一段 dB 增益，但不能把兩個 dBm 相加當成總功率。</li><li>功率用 10 log<sub>10</sub>，電壓用 20 log<sub>10</sub>。同一個 3.010300 dB 對功率是 ×2，對電壓約是 ×1.414214。</li><li>負 dB 只是衰減。線性功率仍大於或等於零，不會因為帳面上有負號就倒著流。</li><li>λ/4 是天線長度的起點量級，不是製造尺寸的唯一答案；真實結構要交給電磁學與天線課處理。</li></ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>用功率計（power meter）直接讀 dBm；用頻譜分析儀（spectrum analyzer）讀出不同頻率上的 dBm，兩根譜線的高度差就是 dB。天線的實際共振點還要用網路分析儀掃頻。</p>
+<p><strong>能證明什麼。</strong>功率計能證明當下的總功率；頻譜分析儀能證明某頻率的絕對功率與兩者功率比；掃到的共振點能用來檢查 λ/4 估算是否落在正確量級。</p>
+<p><strong>不能證明什麼。</strong>這些功率數字不會告訴你訊號相位或時域波形，也不能單憑終點 dBm 判定損失來自哪一級；必須沿著鏈路逐級量測。</p>
+
+<h2>連到哪門課</h2>
+<p>頻譜的數學來自<a href="../../02-電機核心/信號與系統-互動課程/06-傅立葉轉換.html">信號與系統的傅立葉轉換</a>，這裡只用它判斷佔用頻寬；λ ＝ c / f 與波如何傳播見<a href="../../02-電機核心/電磁學-互動課程/13-電磁波與平面波.html">電磁學的電磁波與平面波</a>。本課後面會把 dB 帳用在雜訊指數、同步損失與鏈路預算。</p>
+<nav class="pager" aria-label="章節導覽"><a href="index.html">← 課程地圖</a><a href="01-AM包絡與調變指數.html">下一頁：AM 包絡與調變指數 →</a></nav>
+</main><footer class="site-footer"><span>00 通訊世界觀與分貝帳本</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

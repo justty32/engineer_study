@@ -127,6 +127,9 @@ jobs:
           電機/02-電機核心/信號與系統-互動課程|signals-systems
           電機/02-電機核心/邏輯設計-互動課程|logic-design
           電機/02-電機核心/微處理機與匯流排-互動課程|microprocessors
+          電機/02-電機核心/控制系統-互動課程|control-systems
+          電機/02-電機核心/電機機械-互動課程|electric-machines
+          電機/03-通訊特化/通訊系統-互動課程|communication-systems
           專題/論文速覽/互動網站|paper-briefs
           COURSES
 
@@ -206,6 +209,23 @@ jobs:
                   "../電子學-互動課程/": "../electronics/",
                   "../信號與系統-互動課程/": "../signals-systems/",
                   "../../../專題/計算機組織/互動課程/": "../computer-organization/",
+              },
+              "control-systems": {
+                  "../信號與系統-互動課程/": "../signals-systems/",
+                  "../電路學-互動課程/": "../circuit-analysis/",
+              },
+              "electric-machines": {
+                  "../電磁學-互動課程/": "../electromagnetics/",
+                  "../電路學-互動課程/": "../circuit-analysis/",
+                  "../電子學-互動課程/": "../electronics/",
+                  "../../04-電力特化/P1-電力系統-互動網站/": "../power-systems/",
+              },
+              "communication-systems": {
+                  "../../02-電機核心/信號與系統-互動課程/": "../signals-systems/",
+                  "../../02-電機核心/電磁學-互動課程/": "../electromagnetics/",
+                  "../../02-電機核心/電子學-互動課程/": "../electronics/",
+                  "../../02-電機核心/電路學-互動課程/": "../circuit-analysis/",
+                  "../../../共通基礎/數學/互動課程/": "../engineering-math/",
               },
           }
 

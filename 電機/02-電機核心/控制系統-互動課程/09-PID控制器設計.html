@@ -1,0 +1,81 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 PID 控制器設計｜控制系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・三個增益一起改寫同一條特徵多項式</p>
+<h1>09 PID 控制器設計：把 17.018937 % 超越量拆成 P、I、D 的取捨</h1>
+<p class="lead">預設 K<sub>p</sub> ＝ 20、K<sub>i</sub> ＝ 10、K<sub>d</sub> ＝ 5 時，模型的超越量是 17.018937 %，整定時間是 2.731000 s。這章不靠口訣，直接從方程式、Routh 判別與固定步長模擬看三項各改了什麼。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="04-二階閉迴路與極點位置.html">04 二階閉迴路與極點位置</a>的指標，以及<a href="05-Routh穩定度判別.html">05 Routh 穩定度判別</a>的首欄規則。<strong>前置：</strong>見〈07 一階暫態 RC 與 RL〉<a href="../電路學-互動課程/07-一階暫態RC與RL.html">電路學的一階暫態 RC 與 RL</a>；既有課已說明電容如何累積電荷，本章只借用累積概念理解積分器。</p>
+
+<h2>痛點：把比例增益加大後反應更快，為什麼誤差、振盪與雜訊不能一起消失</h2>
+<p>單調一個旋鈕時，常會看到某個指標改善、另一個指標惡化：比例項讓輸出更積極，卻未必消除穩態誤差；積分項會累積誤差，卻增加相位落後；微分項提供阻尼，卻會放大高頻雜訊。比例—積分—微分控制（proportional–integral–derivative control, PID）的工作不是讓三項各管一個互不相干的指標，而是讓三個係數共同配置閉迴路極點。</p>
+<p>本章的受控體是 G(s) ＝ 1 / ((s ＋ 1)(s ＋ 2)(s ＋ 3))。它是線性三階模型，目的在把參數與結果的因果算清楚，不代表任何特定馬達、加熱器或機械手臂。</p>
+<p>調參真正困難之處，是同一個輸出症狀可能有不同原因。上升慢可能是 K<sub>p</sub> 太小，也可能是 K<sub>d</sub> 太大；長時間偏離命令可能是缺少積分，也可能是致動器已經飽和。先用 Routh 排除不能收斂的參數，再看模擬指標與控制量，才能避免只憑一條輸出曲線猜旋鈕。</p>
+
+<h2>白話直覺：P 看現在、I 記過去、D 看趨勢</h2>
+<p>可以暫時把 P、I、D 想成三位同時拉同一支操縱桿的人：一位看當下差距，一位記住累積欠帳，一位注意變化速度；比喻到此為止。精確式是 u(t) ＝ K<sub>p</sub>e(t) ＋ K<sub>i</sub>∫e dt ＋ K<sub>d</sub> de/dt。本課為避免命令突變造成微分脈衝，讓 D 作用在輸出 y，而不是直接作用在誤差。</p>
+<p>因果鏈如下：命令 r 與輸出 y 相減得到 e；P 立即放大 e，I 把 e 累加成狀態 z，D 根據 y 的變化率修正 u；控制量進入受控體後移動四階特徵多項式的根；根的位置決定峰值、上升時間、整定時間與穩態誤差；資料擷取記錄器則量到 r、y、u 隨時間的數列。I 加入原點極點，可消除常值命令的穩態誤差，也多帶來 −90° 相位；D 加入零點提高阻尼，但高頻量測擾動也會被放大。</p>
+<p>內模原理（internal model principle, IMP）指出：若要對常值命令強健地達成零誤差，控制器必須含有常值的動態模型 1 / s；積分器正是這個模型。IMP 與內模控制（internal model control, IMC）是不同術語。這件事在你的程式裡長什麼樣：每個取樣週期算 e、累加、差分，再分別乘 K<sub>p</sub>、K<sub>i</sub>、K<sub>d</sub>。</p>
+<p>若輸出已接近命令，P 的貢獻會跟著縮小；I 保留過去累積，所以仍可提供維持零誤差所需的控制量；D 只在輸出正在變化時出力。這三種時間特性說明了為何積分可以修正長期偏差，微分卻不能，也說明了為何感測雜訊會特別干擾 D。真實程式通常還要限制積分狀態並對微分加低通處理，本章只點出邊界。</p>
+<p class="note">來源：13-控制系統 §6.1、§6.3、§8.3。</p>
+
+<h2>推導：由四個狀態得到 Routh 條件與臨界增益</h2>
+<p>受控體時域方程式為 y''' ＋ 6y'' ＋ 11y' ＋ 6y ＝ u。令 z' ＝ r − y，並採 u ＝ K<sub>p</sub>(r − y) ＋ K<sub>i</sub>z − K<sub>d</sub>y'，r ＝ 1；四個狀態 (y, y', y'', z) 都從 0 出發。代入並乘 s，得到 s<sup>4</sup> ＋ 6s<sup>3</sup> ＋ (11 ＋ K<sub>d</sub>)s<sup>2</sup> ＋ (6 ＋ K<sub>p</sub>)s ＋ K<sub>i</sub>。</p>
+<p>Routh 首欄的中間兩量是 b<sub>1</sub> ＝ (6(11 ＋ K<sub>d</sub>) − (6 ＋ K<sub>p</sub>)) / 6，以及 c<sub>1</sub> ＝ (b<sub>1</sub>(6 ＋ K<sub>p</sub>) − 6K<sub>i</sub>) / b<sub>1</sub>。四階情形要 b<sub>1</sub> ＞ 0、c<sub>1</sub> ＞ 0、K<sub>i</sub> ＞ 0 才穩定。K<sub>i</sub> ＝ 0 時退化為三階，條件是 6(11 ＋ K<sub>d</sub>) ＞ 6 ＋ K<sub>p</sub>，也就是 K<sub>p</sub> ＜ 60 ＋ 6K<sub>d</sub>。</p>
+<p>只保留 P 時，特徵多項式為 s<sup>3</sup> ＋ 6s<sup>2</sup> ＋ 11s ＋ 6 ＋ K<sub>p</sub>。臨界條件 6 × 11 ＝ 6 ＋ K<sub>u</sub>，所以 K<sub>u</sub> ＝ 60；輔助多項式 6s<sup>2</sup> ＋ 66 ＝ 0，故 ω<sub>u</sub> ＝ √11 ＝ 3.316625、T<sub>u</sub> ＝ 2π / ω<sub>u</sub> ＝ 1.894452 s。Ziegler–Nichols 建議 K<sub>p</sub> ＝ 0.6K<sub>u</sub>、T<sub>i</sub> ＝ T<sub>u</sub> / 2、T<sub>d</sub> ＝ T<sub>u</sub> / 8，因此 K<sub>p</sub> ＝ 36、T<sub>i</sub> ＝ 0.947226、T<sub>d</sub> ＝ 0.236806、K<sub>i</sub> ＝ 38.005721、K<sub>d</sub> ＝ 8.525032。</p>
+<p>模擬以 h ＝ 0.001 s 的四階 Runge–Kutta 法（Runge–Kutta method, RK4）走到 T ＝ 10 s。峰值為 max y；M<sub>p</sub> ＝ (峰值 − 1) × 100，負值記 0；t<sub>p</sub> 是峰值時刻；t<sub>r</sub> 是首次到 0.9 與 0.1 的時刻差；t<sub>s</sub> 是最後一次 |y − 1| ＞ 0.02 的時刻；e<sub>ss</sub> ＝ 1 − y(10)；IAE ＝ Σ|1 − y| × h。時間單位為 s，K<sub>i</sub> 單位為 1/s，K<sub>d</sub> 單位為 s。假設線性、無飽和、無雜訊，且 D 作用在 y。<strong>本課用的是教學用的簡化模型，真實系統不是這樣。</strong></p>
+<p>穩態誤差還有一個可直接核對的理論值：K<sub>i</sub> ＞ 0 時，積分狀態在可收斂且未飽和的條件下把常值誤差推到 0；K<sub>i</sub> ＝ 0 時，e<sub>ss</sub> ＝ 6 / (6 ＋ K<sub>p</sub>)。模擬的 y(10) 只是有限時間讀值，不應與無限時間極限混為一談。兩者接近可支持模擬時間已足夠，兩者不接近則要先看是否尚未進帶。</p>
+
+<h2>數值實例：K<sub>p</sub> ＝ 20、K<sub>i</sub> ＝ 10、K<sub>d</sub> ＝ 5</h2>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>特徵多項式</td><td>s<sup>4</sup> ＋ 6s<sup>3</sup> ＋ 16s<sup>2</sup> ＋ 26s ＋ 10</td><td>—</td></tr>
+<tr><td>Routh b<sub>1</sub></td><td>(6 × 16 − 26) / 6</td><td><strong>11.666667</strong></td></tr>
+<tr><td>Routh c<sub>1</sub></td><td>(11.666667 × 26 − 60) / 11.666667</td><td><strong>20.857143</strong></td></tr>
+<tr><td>判定</td><td>全正</td><td><strong>穩定</strong></td></tr>
+<tr><td>峰值</td><td>模擬</td><td><strong>1.170189</strong></td></tr>
+<tr><td>M<sub>p</sub></td><td>(1.170189 − 1) × 100</td><td><strong>17.018937 %</strong></td></tr>
+<tr><td>t<sub>p</sub></td><td>模擬</td><td><strong>1.812000 s</strong></td></tr>
+<tr><td>t<sub>r</sub></td><td>模擬</td><td><strong>0.782000 s</strong></td></tr>
+<tr><td>t<sub>s</sub>（2 %）</td><td>模擬</td><td><strong>2.731000 s</strong></td></tr>
+<tr><td>y(10)</td><td>模擬</td><td><strong>1.000340</strong></td></tr>
+<tr><td>e<sub>ss</sub>（模擬）</td><td>1 − 1.000340</td><td><strong>−0.000340</strong>（理論 0）</td></tr>
+<tr><td>IAE</td><td>模擬</td><td><strong>0.954804</strong></td></tr>
+</tbody></table>
+<p><strong>邊界對照。</strong>只用 P、K<sub>p</sub> ＝ 10 時峰值 0.744581、y(10) ＝ 0.625127，理論 e<sub>ss</sub> ＝ 0.375，10 s 內未進帶；PI、K<sub>p</sub> ＝ 10、K<sub>i</sub> ＝ 5 時 M<sub>p</sub> ＝ 7.887784 %、t<sub>s</sub> ＝ 5.742000 s、y(10) ＝ 0.996016。Z–N 取 36／38／8.5 時 M<sub>p</sub> ＝ 56.426223 %、t<sub>r</sub> ＝ 0.486000 s、t<sub>s</sub> ＝ 5.287000 s，速度快但超越量大。K<sub>i</sub> ＝ 60、K<sub>d</sub> ＝ 0 時 c<sub>1</sub> ＝ −28.000000，不執行模擬；K<sub>d</sub> ＝ 20 時 M<sub>p</sub> ＝ 13.010958 %，但 t<sub>p</sub> ＝ 4.187000 s、t<sub>s</sub> ＝ 8.246000 s。</p>
+<p>K<sub>p</sub> ＝ 20、K<sub>i</sub> ＝ 30、K<sub>d</sub> ＝ 5 時 c<sub>1</sub> ＝ 10.571429，雖仍穩定，M<sub>p</sub> ＝ 65.952969 % 且 10 s 內未進帶，說明「通過 Routh」只是必要條件，不是良好設計。只用 P 且 K<sub>p</sub> ＝ 59 時，b<sub>1</sub> ＝ 0.166667、M<sub>p</sub> ＝ 69.396583 %；加到 K<sub>p</sub> ＝ 60 就到臨界。若 K<sub>d</sub> ＝ 0 且其餘用預設值，M<sub>p</sub> ＝ 39.419837 %、t<sub>s</sub> ＝ 9.399000 s，顯示少了 D 時阻尼不足。</p>
+<p>實際調整可按可觀察問題分流：先讓參數通過 Routh 條件，再用 K<sub>p</sub> 建立基本速度，用 K<sub>i</sub> 修正殘留的長期誤差，最後用 K<sub>d</sub> 壓低不需要的振盪。每動一項都要重新查看全部指標與控制量，因為三項共同改寫同一條多項式。Z–N 給的是能開始測試的一組參考值，不是直接交付的答案；它刻意採較積極的衰減型態，超越量偏大正是預期結果。</p>
+<p>IAE 把整段誤差面積累加，因此能區分「短暫的大偏差」與「長時間的小偏差」，但單一總數看不出偏差發生在哪個時刻。設計者應把 IAE 與峰值、上升、整定及控制量一起保存，才能判斷改善是否只是把代價移到別的時段。</p>
+<p class="warning">把高增益或未驗證的 PID 參數直接下到真實馬達、加熱器或機械手臂，會撞到行程極限、燒毀繞組或傷人；本頁的模擬沒有飽和、沒有延遲、沒有雜訊，實機一律先加輸出限幅、積分限幅與急停，從小增益開始。</p>
+
+<section class="workspace"><h2>自由實驗：調整 P、I、D 並立即檢查四階條件</h2>
+<p>場景是同一個三階受控體追蹤常值命令。可選一組預設方案，也可手動改三個增益；先看 Routh 首欄，通過後才模擬 10 s，觀察速度、超越量、誤差與累積絕對誤差。</p>
+<div class="controls">
+<label for="pd-preset">參數組合<select id="pd-preset"><option value="manual" selected>手動（用下面三個滑桿）</option><option value="p">只用 P：K_p = 10</option><option value="pi">PI：K_p = 10、K_i = 5</option><option value="zn">Ziegler–Nichols：K_p = 36、K_i = 38、K_d = 8.5</option></select></label>
+<label for="pd-kp">比例增益 K_p<input id="pd-kp" type="range" min="0" max="60" step="0.5" value="20"></label>
+<label for="pd-ki">積分增益 K_i<input id="pd-ki" type="range" min="0" max="60" step="0.5" value="10"></label>
+<label for="pd-kd">微分增益 K_d<input id="pd-kd" type="range" min="0" max="20" step="0.5" value="5"></label>
+</div>
+<div id="pid-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>積分項消除的是步階穩態誤差；對斜坡仍有常數誤差，因為系統型式只增加 1。</li>
+<li>微分項作用在誤差或輸出時，命令突變的瞬間不同；前者產生微分脈衝，兩者的特徵多項式相同。</li>
+<li>Z–N 的 K<sub>u</sub>、06 章與 08 章的 K<sub>crit</sub> 是同一個臨界增益，由三種工具觀察同一件事。</li>
+<li>PID 的比例增益 K<sub>p</sub> 與 03 章的位置誤差常數 K<sub>pos</sub> 不是同一個量，符號相近不能互換。</li>
+<li>IMP 說的是控制器必須含有欲追蹤命令的模型；IMC 則是一種控制架構，兩者縮寫與用途都不同。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>工具與量測。</strong>用資料擷取記錄器同步記下命令 r、輸出 y 與控制量 u，從數列讀峰值、上升時間、整定時間與最後誤差；逐步加大 K<sub>i</sub> 時，再觀察 u 是否因積分累積而持續爬升。</p>
+<p><strong>能證明什麼。</strong>量測能證明這組參數在這台機器、這個工作點上的四個時域指標與穩態誤差，也能暴露輸出限幅或積分累積是否已介入。</p>
+<p><strong>不能證明什麼。</strong>曲線混合了飽和、摩擦與量測雜訊，不能單憑它反推出模型的三個極點；一次測試也不能證明同一組參數適用所有負載與溫度。</p>
+<p>測試時還應記錄控制量是否碰到上下限。若輸出看起來變慢，但 u 已長時間貼住限幅，問題不是線性模型裡的增益太小，而是可用致動能力不足。此時繼續增加 K<sub>i</sub> 只會累積更多積分狀態；必須先加入抗積分飽和，再重新量測。</p>
+
+<h2>連到哪門課</h2>
+<p>積分器的物理直覺回到<a href="../電路學-互動課程/07-一階暫態RC與RL.html">電路學的一階暫態 RC 與 RL</a>，ζ 與時域指標回到<a href="04-二階閉迴路與極點位置.html">04 二階閉迴路與極點位置</a>。數位 PID、離散極點與實作限制見<a href="../信號與系統-互動課程/14-Z轉換與單位圓.html">信號與系統的 Z 轉換與單位圓</a>；本課只點名積分飽和與微分濾波，不展開離散化。下一章改用頻域方法設計補償器。</p>
+<nav class="pager" aria-label="章節導覽"><a href="08-增益裕度相位裕度與奈奎斯特.html">← 上一頁：增益裕度、相位裕度與奈奎斯特</a><a href="10-領先落後補償器.html">下一頁：領先／落後補償器 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 PID 控制器設計</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

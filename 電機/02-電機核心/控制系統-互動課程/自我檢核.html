@@ -1,0 +1,86 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自我檢核｜控制系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html" aria-current="page">自我檢核</a></nav>
+<main>
+<p class="eyebrow">檢・12 章各 3 題，共 36 題</p>
+<h1>自我檢核：把每一章的關鍵數字與判斷各檢查一次</h1>
+<p class="lead">每題都取自章節正文的數值或判斷，不加入新公式。填完按「對答案」，回饋會解釋算式或常見錯因，並帶你回到對應章節。</p>
+<p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯只會告訴你為什麼，並附上該回去看的章節。可以無限重做。</p>
+<div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
+
+<h2>00 回授的價值</h2>
+<p>回去看：<a href="00-回授的價值.html">00 回授的價值</a></p>
+<section class="card"><p><strong>q00-1｜</strong>K ＝ 50、增益漂移 ＋20 %、干擾 0.2、r ＝ 1 時，閉迴路輸出 y 是多少？</p><label for="q00-1">你的答案（無單位）<input id="q00-1" type="number" step="any"></label><button type="button" id="q00-1-check">對答案</button><div id="q00-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-2｜</strong>迴路增益 L ＝ 120 時，靈敏度 S 是多少？</p><label for="q00-2">你的答案（無單位）<input id="q00-2" type="number" step="any"></label><button type="button" id="q00-2-check">對答案</button><div id="q00-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q00-3｜</strong>什麼情況下開迴路反而比閉迴路準？</p><label for="q00-3">你的答案<select id="q00-3"><option value="">請選擇</option><option value="a">模型準且沒有干擾時，閉迴路的 1 / (1 ＋ L) 誤差是純粹的代價</option><option value="b">增益越高越準所以永遠是閉迴路</option><option value="c">有干擾時</option><option value="d">感測器壞掉時</option></select></label><button type="button" id="q00-3-check">對答案</button><div id="q00-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>01 建模：從微分方程到轉移函數</h2>
+<p>回去看：<a href="01-建模從微分方程到轉移函數.html">01 建模：從微分方程到轉移函數</a></p>
+<section class="card"><p><strong>q01-1｜</strong>J ＝ 0.01、b ＝ 0.1、R ＝ 1、K<sub>t</sub> ＝ K<sub>e</sub> ＝ 0.01 時，馬達模型的時間常數 τ 是多少？</p><label for="q01-1">你的答案（s）<input id="q01-1" type="number" step="any"></label><button type="button" id="q01-1-check">對答案</button><div id="q01-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-2｜</strong>沿用上一題參數，輸入 12 V 步階時的穩態轉速是多少？</p><label for="q01-2">你的答案（rad/s）<input id="q01-2" type="number" step="any"></label><button type="button" id="q01-2-check">對答案</button><div id="q01-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-3｜</strong>把 J 加大五倍會怎樣？</p><label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">τ 變五倍、穩態轉速不變</option><option value="b">穩態轉速掉五倍</option><option value="c">τ 與穩態都變五倍</option><option value="d">極點不動</option></select></label><button type="button" id="q01-3-check">對答案</button><div id="q01-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>02 方塊圖化簡與閉迴路轉移函數</h2>
+<p>回去看：<a href="02-方塊圖化簡與閉迴路轉移函數.html">02 方塊圖化簡與閉迴路轉移函數</a></p>
+<section class="card"><p><strong>q02-1｜</strong>K<sub>c</sub> ＝ 10、K ＝ 2、τ ＝ 0.5、H ＝ 1 時，閉迴路極點是多少？</p><label for="q02-1">你的答案（1/s）<input id="q02-1" type="number" step="any"></label><button type="button" id="q02-1-check">對答案</button><div id="q02-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-2｜</strong>沿用上一題參數，直流增益 T(0) 是多少？</p><label for="q02-2">你的答案（無單位）<input id="q02-2" type="number" step="any"></label><button type="button" id="q02-2-check">對答案</button><div id="q02-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q02-3｜</strong>為什麼比例控制的 T(0) 追不到 1 / H？</p><label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">比例控制器要有誤差才有輸出，誤差 1 / (1 ＋ K_cKH) 永遠不為零</option><option value="b">因為 τ 太大</option><option value="c">因為感測器有延遲</option><option value="d">因為受控體不線性</option></select></label><button type="button" id="q02-3-check">對答案</button><div id="q02-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>03 穩態誤差與系統型式</h2>
+<p>回去看：<a href="03-穩態誤差與系統型式.html">03 穩態誤差與系統型式</a></p>
+<section class="card"><p><strong>q03-1｜</strong>型式 1、K ＝ 10、a ＝ 2 時，對斜坡命令的穩態誤差是多少？</p><label for="q03-1">你的答案（無單位）<input id="q03-1" type="number" step="any"></label><button type="button" id="q03-1-check">對答案</button><div id="q03-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-2｜</strong>型式 0、K ＝ 10、a ＝ 2 時，對步階命令的穩態誤差是多少？</p><label for="q03-2">你的答案（無單位）<input id="q03-2" type="number" step="any"></label><button type="button" id="q03-2-check">對答案</button><div id="q03-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q03-3｜</strong>型式 2 系統對拋物線命令的穩態誤差是哪一種？</p><label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">有限常數 1 / K_a</option><option value="b">零</option><option value="c">無限大</option><option value="d">看 K 才知道是零還是無限大</option></select></label><button type="button" id="q03-3-check">對答案</button><div id="q03-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>04 二階閉迴路與極點位置</h2>
+<p>回去看：<a href="04-二階閉迴路與極點位置.html">04 二階閉迴路與極點位置</a></p>
+<section class="card"><p><strong>q04-1｜</strong>單位回授 K / (s(s ＋ a)) 在 K ＝ 25、a ＝ 6 時，阻尼比 ζ 是多少？</p><label for="q04-1">你的答案（無單位）<input id="q04-1" type="number" step="any"></label><button type="button" id="q04-1-check">對答案</button><div id="q04-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-2｜</strong>阻尼比 ζ ＝ 0.6 時，超越量是多少百分比？</p><label for="q04-2">你的答案（%）<input id="q04-2" type="number" step="any"></label><button type="button" id="q04-2-check">對答案</button><div id="q04-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q04-3｜</strong>同一結構下 K 加 4 倍，整定時間 t_s 怎麼變？</p><label for="q04-3">你的答案<select id="q04-3"><option value="">請選擇</option><option value="a">不變，因為極點實部 −a / 2 與 K 無關</option><option value="b">變四分之一</option><option value="c">變一半</option><option value="d">變兩倍</option></select></label><button type="button" id="q04-3-check">對答案</button><div id="q04-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>05 Routh 穩定度判別</h2>
+<p>回去看：<a href="05-Routh穩定度判別.html">05 Routh 穩定度判別</a></p>
+<section class="card"><p><strong>q05-1｜</strong>s⁴ ＋ 2s³ ＋ 3s² ＋ 4s ＋ 5 的 Routh 表中，s¹ 列首元是多少？</p><label for="q05-1">你的答案（無單位）<input id="q05-1" type="number" step="any"></label><button type="button" id="q05-1-check">對答案</button><div id="q05-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-2｜</strong>s³ ＋ 3s² ＋ 3s ＋ K 保持穩定時，K 的上限是多少？</p><label for="q05-2">你的答案（無單位）<input id="q05-2" type="number" step="any"></label><button type="button" id="q05-2-check">對答案</button><div id="q05-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q05-3｜</strong>Routh 表出現全零列代表什麼？</p><label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">有對稱於原點的極點，常見是虛軸上一對純虛極點</option><option value="b">系統一定不穩定</option><option value="c">系統一定穩定</option><option value="d">表算錯了</option></select></label><button type="button" id="q05-3-check">對答案</button><div id="q05-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>06 根軌跡</h2>
+<p>回去看：<a href="06-根軌跡.html">06 根軌跡</a></p>
+<section class="card"><p><strong>q06-1｜</strong>K / (s(s ＋ 2)(s ＋ 4)) 的臨界增益 K_crit 是多少？</p><label for="q06-1">你的答案（無單位）<input id="q06-1" type="number" step="any"></label><button type="button" id="q06-1-check">對答案</button><div id="q06-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-2｜</strong>同一系統的漸近線重心是多少？</p><label for="q06-2">你的答案（1/s）<input id="q06-2" type="number" step="any"></label><button type="button" id="q06-2-check">對答案</button><div id="q06-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-3｜</strong>分離點的物理意義是什麼？</p><label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">兩個實極點在這裡相遇後變成共軛對，響應從不振盪變成振盪</option><option value="b">系統從穩定變不穩定</option><option value="c">增益在這裡最大</option><option value="d">極點在這裡消失</option></select></label><button type="button" id="q06-3-check">對答案</button><div id="q06-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>07 頻率響應與波德圖</h2>
+<p>回去看：<a href="07-頻率響應與波德圖.html">07 頻率響應與波德圖</a></p>
+<section class="card"><p><strong>q07-1｜</strong>L_0 在 ω ＝ 10 rad/s 時的精確振幅是多少 dB？</p><label for="q07-1">你的答案（dB）<input id="q07-1" type="number" step="any"></label><button type="button" id="q07-1-check">對答案</button><div id="q07-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-2｜</strong>L_0 在 ω ＝ 10 rad/s 時的相位是多少度？</p><label for="q07-2">你的答案（°）<input id="q07-2" type="number" step="any"></label><button type="button" id="q07-2-check">對答案</button><div id="q07-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q07-3｜</strong>每過一個一階極點的轉角頻率，振幅斜率多降多少？</p><label for="q07-3">你的答案<select id="q07-3"><option value="">請選擇</option><option value="a">20 dB/十倍頻，相位最終多 −90°</option><option value="b">6 dB/十倍頻</option><option value="c">40 dB/十倍頻</option><option value="d">不變，只有相位變</option></select></label><button type="button" id="q07-3-check">對答案</button><div id="q07-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>08 增益裕度、相位裕度與奈奎斯特</h2>
+<p>回去看：<a href="08-增益裕度相位裕度與奈奎斯特.html">08 增益裕度、相位裕度與奈奎斯特</a></p>
+<section class="card"><p><strong>q08-1｜</strong>τ_1 ＝ 0.1、τ_2 ＝ 0.01 時，相位交越頻率 ω_pc 是多少？</p><label for="q08-1">你的答案（rad/s）<input id="q08-1" type="number" step="any"></label><button type="button" id="q08-1-check">對答案</button><div id="q08-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-2｜</strong>K ＝ 10 時，增益裕度 GM 是多少？</p><label for="q08-2">你的答案（dB）<input id="q08-2" type="number" step="any"></label><button type="button" id="q08-2-check">對答案</button><div id="q08-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q08-3｜</strong>來源筆記給的相位裕度設計目標是多少？</p><label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">45° 到 60°</option><option value="b">0° 到 10°</option><option value="c">90° 以上</option><option value="d">越小越好</option></select></label><button type="button" id="q08-3-check">對答案</button><div id="q08-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>09 PID 控制器設計</h2>
+<p>回去看：<a href="09-PID控制器設計.html">09 PID 控制器設計</a></p>
+<section class="card"><p><strong>q09-1｜</strong>1 / ((s ＋ 1)(s ＋ 2)(s ＋ 3)) 只用 P 控制時，極限增益 K_u 是多少？</p><label for="q09-1">你的答案（無單位）<input id="q09-1" type="number" step="any"></label><button type="button" id="q09-1-check">對答案</button><div id="q09-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-2｜</strong>沿用上一題系統，極限週期 T_u 是多少？</p><label for="q09-2">你的答案（s）<input id="q09-2" type="number" step="any"></label><button type="button" id="q09-2-check">對答案</button><div id="q09-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q09-3｜</strong>積分項買到什麼、付出什麼？</p><label for="q09-3">你的答案<select id="q09-3"><option value="">請選擇</option><option value="a">消除步階穩態誤差，代價是多一個 −90° 相位滯後、更容易振盪</option><option value="b">加阻尼，代價是放大雜訊</option><option value="c">加快響應，沒有代價</option><option value="d">消除所有命令的誤差</option></select></label><button type="button" id="q09-3-check">對答案</button><div id="q09-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>10 領先／落後補償器</h2>
+<p>回去看：<a href="10-領先落後補償器.html">10 領先／落後補償器</a></p>
+<section class="card"><p><strong>q10-1｜</strong>α ＝ 4 的領先補償器，最大相位提升 φ_max 是多少度？</p><label for="q10-1">你的答案（°）<input id="q10-1" type="number" step="any"></label><button type="button" id="q10-1-check">對答案</button><div id="q10-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-2｜</strong>對 L_0 加 β ＝ 5 的落後補償器後，K_v 是多少？</p><label for="q10-2">你的答案（1/s）<input id="q10-2" type="number" step="any"></label><button type="button" id="q10-2-check">對答案</button><div id="q10-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q10-3｜</strong>領先與落後補償各改善什麼？</p><label for="q10-3">你的答案<select id="q10-3"><option value="">請選擇</option><option value="a">領先改善相位裕度與頻寬，落後改善低頻增益與穩態誤差</option><option value="b">兩者都改善相位裕度</option><option value="c">領先改善穩態誤差</option><option value="d">兩者可以互換</option></select></label><button type="button" id="q10-3-check">對答案</button><div id="q10-3-output" class="output" aria-live="polite"></div></section>
+
+<h2>11 狀態空間入門：可控、可觀與極點配置</h2>
+<p>回去看：<a href="11-狀態空間入門.html">11 狀態空間入門：可控、可觀與極點配置</a></p>
+<section class="card"><p><strong>q11-1｜</strong>A ＝ [[0, 1], [−2, −3]]、B ＝ [0, 1] 時，det M<sub>c</sub> 是多少？</p><label for="q11-1">你的答案（無單位）<input id="q11-1" type="number" step="any"></label><button type="button" id="q11-1-check">對答案</button><div id="q11-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-2｜</strong>沿用上一題模型，把極點配置到 s² ＋ 10s ＋ 50 時，K 的第一個元素是多少？</p><label for="q11-2">你的答案（無單位）<input id="q11-2" type="number" step="any"></label><button type="button" id="q11-2-check">對答案</button><div id="q11-2-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q11-3｜</strong>det M<sub>c</sub> ＝ 0 代表什麼？</p><label for="q11-3">你的答案<select id="q11-3"><option value="">請選擇</option><option value="a">[B, AB] 共線，輸入推不動某個方向，極點配置無解</option><option value="b">系統不穩定</option><option value="c">系統不可觀</option><option value="d">系統有兩個相同極點</option></select></label><button type="button" id="q11-3-check">對答案</button><div id="q11-3-output" class="output" aria-live="polite"></div></section>
+
+<nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
+</main>
+<footer class="site-footer"><span>自我檢核</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

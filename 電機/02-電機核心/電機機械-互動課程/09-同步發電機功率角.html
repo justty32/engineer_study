@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 同步發電機功率角｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">09・推大角度才送出更多實功，但不能越過峰頂</p>
+<h1>同步發電機功率角：原動機怎麼用相角差送出實功</h1>
+<p class="lead">內電勢 300 V、相電壓 220 V、同步電抗 2.0 Ω、功率角 20° 時，三相實功是 33859.994189 W。這章會把相量關係拆成實功、無功與穩定邊界，說清楚為何 90° 是峰頂而不是安全工作點。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-旋轉機共同語言.html">05 旋轉機共同語言</a>的同步速與三相功率，以及<a href="08-感應機轉矩曲線.html">08 感應機轉矩曲線</a>的穩定區判讀。<strong>前置：</strong>相量與複功率可回看<a href="../電路學-互動課程/11-交流功率與功因.html">電路學的交流功率與功因</a>。</p>
+
+<h2>痛點：原動機只是多推一點，為什麼電網收到的實功會改變</h2>
+<p>發電機已經跟著電網的固定頻率旋轉，看起來轉速不能再提高；那麼蒸汽輪機或水輪機多給的機械功到底去了哪裡？答案不是長期加速，而是讓轉子磁場相對端電壓向前挪一個角度。這個角度叫功率角 δ，它讓內電勢與端電壓之間出現可計算的相量差，因而驅動電樞電流並把實功送進電網。</p>
+<p>另一個痛點是：既然 sin δ 從 0 增到 1，為何不把角度一直加大？因為 90° 之後 sin δ 反而下降。機械端還在推，電磁轉矩卻變小，角度會繼續拉開而失去同步；所以理論峰值是危險邊界，不是日常目標。</p>
+
+<h2>白話直覺：兩個轉動磁場像隔著彈性聯結</h2>
+<p>可暫時把轉子磁場與電網磁場想成隔著一條彈性聯結：拉開一點就傳遞轉矩，拉到直角最有力，再拉反而變弱；比喻到此為止。真實機制是原動機使轉子上的直流激磁回路建立磁場，定子三相 Y 接繞組感應出內電勢 E<sub>f</sub>，電網把端電壓 V<sub>φ</sub> 當作參考點。兩個相量相減後除以 jX<sub>s</sub>，形成電樞電流；電流與端電壓的同相成分承擔實功，正交成分承擔無功。穩態時機械轉矩與電磁轉矩平衡，轉速仍等於同步速。功率計能讀到 P、Q，相位量測配合轉子位置才能估出 δ。</p>
+<p>同步機（synchronous machine）的轉子可以由直流激磁或永磁建立磁場。發電狀態下 E<sub>f</sub> 領前 V<sub>t</sub>；原動機主要推動 δ，所以主要改變實功。調整激磁主要改變 E<sub>f</sub>，所以主要改變無功與端電壓。兩個旋鈕不是完全互不影響，但這個分工是電網頻率與電壓控制的第一層模型。本課三相都以 Y 接每相量計算，V<sub>LL</sub> = √3 × V<sub>φ</sub>。</p>
+<p class="note">來源：12-電機機械 §6.1、§6.2。</p>
+
+<h2>推導：從端電壓關係走到功率角曲線</h2>
+<p><strong>第一步，寫每相電壓關係。</strong>圓柱轉子且忽略電樞電阻時，E<sub>f</sub>∠δ = V<sub>t</sub>∠0° + jX<sub>s</sub>I<sub>a</sub>，因此 I<sub>a</sub> = (E<sub>f</sub>∠δ − V<sub>φ</sub>) / (jX<sub>s</sub>)。E<sub>f</sub>、V<sub>φ</sub> 的單位是 V，X<sub>s</sub> 是 Ω，I<sub>a</sub> 是 A。同步電抗 X<sub>s</sub> 是把電樞反應與漏電抗合併表示的模型參數，不是一顆看得見的單獨元件。</p>
+<p><strong>第二步，取複功率的實部與虛部。</strong>把上式代入 S = 3 × V<sub>φ</sub> × I<sub>a</sub> 的共軛量，可得 P = 3 × V<sub>φ</sub> × E<sub>f</sub> × sin δ / X<sub>s</sub>，以及 Q = 3 × V<sub>φ</sub> × (E<sub>f</sub> × cos δ − V<sub>φ</sub>) / X<sub>s</sub>。P 的單位是 W，Q 的單位是 var；本頁用 Q 大於 0 表示發電機向外供給無功。</p>
+<p><strong>第三步，檢查穩定斜率。</strong>同步化功率係數 dP / dδ = 3 × V<sub>φ</sub> × E<sub>f</sub> × cos δ / X<sub>s</sub>，單位 W/rad。δ 小於 90° 時斜率為正，偏移後仍有拉回趨勢；到 90° 斜率為 0；超過後斜率為負，偏移會讓可傳實功下降而繼續失步。δ = 0 時 P = 0，若 E<sub>f</sub> 不等於 V<sub>φ</sub>，仍會有純無功流動。</p>
+<p><strong>模型邊界。</strong>本課用的是線性穩態教學模型，真實機器不完全如此。它假設圓柱轉子、忽略 R<sub>a</sub>、不計飽和與暫態，並把電網視為撐住端電壓與頻率的無限匯流排。控制程式那一端，原動機功率命令對應實功設定，激磁控制器的電流或電壓命令對應無功與端電壓設定；保護邏輯會把允許角度留在理論峰值之前。</p>
+
+<h2>數值實例：300 V、220 V、2.0 Ω、20°</h2>
+<p>取 E<sub>f</sub> = 300 V、V<sub>φ</sub> = 220 V、X<sub>s</sub> = 2.0 Ω、δ = 20°，與下面自由實驗的預設值一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>實功</td><td>3 × 220 × 300 × sin 20° / 2</td><td><strong>33859.994189 W</strong></td></tr>
+<tr><td>無功</td><td>3 × 220 × (300 cos 20° − 220) / 2</td><td><strong>20429.569458 var（供給）</strong></td></tr>
+<tr><td>最大實功</td><td>3 × 220 × 300 / 2</td><td><strong>99000.000000 W</strong>（目前 34.202014 %）</td></tr>
+<tr><td>E<sub>f</sub>∠20°</td><td>300 (cos 20° + j sin 20°)</td><td>281.907786 + j102.606043 V</td></tr>
+<tr><td>電樞電流</td><td>(61.907786 + j102.606043) / (j2)</td><td><strong>59.917806 A</strong>，相角 <strong>−31.104857°</strong></td></tr>
+<tr><td>視在功率／功率因數</td><td>3 × 220 × 59.917806</td><td><strong>39545.752170 VA</strong>／<strong>0.856223 落後</strong></td></tr>
+<tr><td>同步化功率係數</td><td>3 × 220 × 300 × cos 20° / 2</td><td><strong>93029.569458 W/rad</strong></td></tr>
+</tbody></table>
+<p><strong>量級與邊界對照。</strong>δ = 0 時 P = 0、Q = 26400.000000 var、I<sub>a</sub> = 40.000000 A；δ = 90° 時 P = 99000.000000 W、Q = −72600.000000 var、I<sub>a</sub> = 186.010752 A，係數為 0。δ = 120° 時 P 已降成 85736.514975 W、Q = −122100 var，屬脫步區；δ = 180° 時 P 回到 0。實機通常保守運轉在 30° 以下，和 90° 理論極限保有明顯距離。</p>
+<p>E<sub>f</sub> = 200 V 時，P = 22573.329459 W、Q = −10580.287028 var；E<sub>f</sub> = 220 V 時，Q = −4378.315731 var。X<sub>s</sub> = 4.0 Ω 時 P、Q 各減半。E<sub>f</sub> = 400 V 時，P = 45146.658919 W、Q = 51439.425944 var、I<sub>a</sub> = 103.699203 A；E<sub>f</sub> = 100 V 時，Q = −41590.143514 var、功率因數 0.261905。</p>
+
+<section class="workspace"><h2>自由實驗：功率角、實功與無功</h2>
+<p>場景是一台同步發電機接到足夠強的電網，所有控制量都採每相值。調整內電勢、端電壓、同步電抗與功率角，觀察實功何時到頂、無功何時換方向，以及電流為何在極限附近迅速增大。</p>
+<div class="controls">
+<label for="sp-ef">內電勢 E_f（V，每相）<input id="sp-ef" type="range" min="100" max="400" step="5" value="300"></label>
+<label for="sp-vt">端電壓 V_φ（V，每相）<input id="sp-vt" type="range" min="150" max="300" step="5" value="220"></label>
+<label for="sp-xs">同步電抗 X_s（Ω）<input id="sp-xs" type="range" min="0.5" max="10" step="0.5" value="2"></label>
+<label for="sp-delta">功率角 δ（°）<input id="sp-delta" type="range" min="0" max="180" step="1" value="20"></label>
+</div>
+<div id="syncpower-output" class="output" aria-live="polite"><table><thead><tr><th>量</th><th>預設結果</th></tr></thead><tbody><tr><td>P</td><td>33859.994189 W</td></tr><tr><td>Q</td><td>20429.569458 var</td></tr><tr><td>P_max／比例</td><td>99000.000000 W／34.202014 %</td></tr><tr><td>E_f 實部／虛部</td><td>281.907786 V／102.606043 V</td></tr><tr><td>I_a 大小／相角</td><td>59.917806 A／−31.104857°</td></tr><tr><td>S／功率因數</td><td>39545.752170 VA／0.856223 落後</td></tr><tr><td>同步化功率係數</td><td>93029.569458 W/rad</td></tr></tbody></table><table><thead><tr><th>δ</th><th>0°</th><th>30°</th><th>60°</th><th>90°</th><th>120°</th><th>150°</th><th>180°</th></tr></thead><tbody><tr><td>P（W）</td><td>0.000000</td><td>49500.000000</td><td>85736.514975</td><td>99000.000000</td><td>85736.514975</td><td>49500.000000</td><td>0.000000</td></tr></tbody></table><strong>判讀：穩定區：δ 再增加 P 還會上升。超激磁：E_f cos δ &gt; V_φ，發電機在供給無功。</strong>為什麼：原動機推的是 δ（實功），激磁推的是 E_f（無功與電壓）；目前 cos δ 為正，功率曲線仍向上。邊界提醒：δ = 90° 是靜態穩定極限，P 到頂且同步化功率係數為 0；再增加就進入脫步區。δ = 0 不送實功，只有無功流動；δ = 180° 時 P = 0 且 Q 極負，這是不可能維持的狀態。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>功率角 δ 是 E<sub>f</sub> 與 V<sub>t</sub> 的相角差；功率因數角 θ 是 I<sub>a</sub> 與 V<sub>t</sub> 的夾角，兩者邊界與用途不同。</li>
+<li>90° 是圓柱轉子穩態模型的理論極限，不是建議工作點；實機要保留暫態擾動與保護裕度。</li>
+<li>提高激磁而供給更多無功，不等於實功同步增加；實功的直接控制量仍是原動機所推的 δ。</li>
+<li>同步電抗是合併電樞反應與漏電抗的參數，不是一顆可直接用電表量出的獨立電感。</li>
+<li>Q 的正負要先說採哪一端的慣例；本頁固定以發電機向外供給為正，換成負載慣例會反號。</li>
+</ul>
+
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p><strong>用什麼量。</strong>三相功率計可同時量 P、Q 與功率因數；相位計可讀電流相對端電壓的角度。若要估 δ，還要把轉子位置感測器的標記與端電壓過零時刻比對；電力系統裡的相量量測單元（phasor measurement unit, PMU）能提供同步相角資料。</p>
+<p><strong>能證明什麼。</strong>P、Q 隨原動機與激磁命令的方向改變，可以驗證「機械端主控實功、激磁主控無功」的一階分工，也能由功率因數判斷電流領先或落後。<strong>不能證明什麼。</strong>一般盤面儀表不能單獨證明 δ 的數值，也不能直接證明 X<sub>s</sub>；後者需要空載與短路試驗配合額定資料。</p>
+
+<h2>連到哪門課</h2>
+<p>大型火力、水力與核能機組都靠這條功率角關係把軸上的機械功送進電網。接上電網後的頻率、端電壓、潮流與保護，見<a href="../../04-電力特化/P1-電力系統-互動網站/index.html">電力系統互動工作台</a>；同一台同步機改成馬達狀態、固定 P 再改激磁，會得到下一章的 V 曲線。</p>
+<nav class="pager" aria-label="章節導覽"><a href="08-感應機轉矩曲線.html">← 上一頁：感應機轉矩曲線</a><a href="10-同步馬達V曲線.html">下一頁：同步馬達 V 曲線 →</a></nav>
+</main>
+<footer class="site-footer"><span>09 同步發電機功率角</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

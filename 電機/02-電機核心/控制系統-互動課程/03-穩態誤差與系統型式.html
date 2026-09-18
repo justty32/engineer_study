@@ -1,0 +1,69 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 穩態誤差與系統型式｜控制系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">03・看原點極點數，就知道哪種命令追得上</p>
+<h1>03 穩態誤差與系統型式：從迴路增益直接判斷長時間後的差</h1>
+<p class="lead">型式 1、K ＝ 10、a ＝ 2 時，步階誤差是 0.000000，斜坡誤差是 0.200000，拋物線誤差則走向無限大。同一個系統面對不同命令，答案完全不同，關鍵是原點有幾個積分器。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="02-方塊圖化簡與閉迴路轉移函數.html">02 方塊圖化簡與閉迴路轉移函數</a>的迴路增益 L(s)。<strong>前置：</strong>見〈07 拉氏轉換與轉移函數〉<a href="../信號與系統-互動課程/07-拉氏轉換與轉移函數.html">信號與系統的終值定理</a>。</p>
+
+<h2>痛點：為什麼同一套控制器追得住常數，卻追不住一直加速的命令</h2>
+<p>只說「把增益加大，誤差就變小」不夠，因為命令可能固定不動、等速增加，也可能越走越快。系統對第一種命令沒有差，不代表對後兩種也沒有差；更不能在輸出持續發散時，硬算一個看似有限的終值。</p>
+<p>需要一套不用完整求時域響應的判讀法：先看迴路增益 L(s) 在原點有幾個極點，再配合命令含有幾次 1 / s，直接判斷穩態誤差（steady state error, e<sub>ss</sub>）是零、有限常數或無限大。</p>
+
+<h2>白話直覺：積分器像能記住過去欠帳的帳本</h2>
+<p>可以暫時把積分器想成持續累計差額的帳本；比喻到此為止，精確定義是 L(s) 每含一個原點極點 1 / s，低頻迴路增益就多一階發散，因而能消去命令多一階的低頻項。命令 r 從比較點進來，誤差 e 經 L 放大成控制作用，特徵方程式先決定閉迴路是否收斂，型式再決定收斂後留下多少差，最後由伺服位置的命令與輸出間距量到結果。</p>
+<p>系統型式（system type）N 就是 L(s) 在 s ＝ 0 的極點數。型式 0 沒有積分器，型式 1 有一個，型式 2 有兩個。它描述的是迴路整體，不只看受控體；控制器加入積分器，同樣會提高型式。</p>
+<p>型式判讀只回答低頻追蹤能力，不能越權回答暫態品質。每多一個原點極點，低頻增益雖更強，特徵多項式的階數與係數也一起改變；因此正確順序必須是先確認閉迴路會收斂，再談型式，最後才把對應誤差常數代入。把這三步倒過來，就可能對一條愈跑愈遠的曲線報出零誤差。</p>
+<p>這件事在你的程式裡長什麼樣：先依型式建立位置、速度、加速度三個誤差常數，再依命令選出對應終值；若閉迴路不收斂，程式應回報「不適用」，不能繼續顯示假終值。</p>
+<p class="note">來源：13-控制系統 §1.2；型式與誤差常數為本課補充。</p>
+
+<h2>推導：從 E ＝ R / (1 ＋ L) 長出整張誤差表</h2>
+<p><strong>（a）先求誤差關係。</strong>單位回授下，E ＝ R − Y，而 Y ＝ LE，所以 E ＝ R − LE，整理得 E(s) ＝ R(s) / (1 ＋ L(s))。既有課已證明終值定理；本章只引用 e<sub>ss</sub> ＝ lim<sub>s→0</sub> sE(s)，而且它只有在閉迴路收斂時才成立。</p>
+<p><strong>（b）三種命令。</strong>單位步階 R ＝ 1 / s，代入後 e<sub>ss</sub> ＝ 1 / (1 ＋ K<sub>pos</sub>)，其中位置誤差常數（position error constant, K<sub>pos</sub>）＝ lim<sub>s→0</sub> L(s)。單位斜坡 R ＝ 1 / s<sup>2</sup>，整理為 e<sub>ss</sub> ＝ 1 / K<sub>v</sub>，速度誤差常數（velocity error constant, K<sub>v</sub>）＝ lim<sub>s→0</sub> sL(s)。單位拋物線 R ＝ 1 / s<sup>3</sup>，得到 e<sub>ss</sub> ＝ 1 / K<sub>a</sub>，加速度誤差常數（acceleration error constant, K<sub>a</sub>）＝ lim<sub>s→0</sub> s<sup>2</sup>L(s)。</p>
+<p><strong>（c）把極限按型式分類。</strong>型式 0 的 K<sub>pos</sub> 有限，K<sub>v</sub> 與 K<sub>a</sub> 為 0；型式 1 的 K<sub>pos</sub> 為 ∞，K<sub>v</sub> 有限，K<sub>a</sub> 為 0；型式 2 的 K<sub>pos</sub> 與 K<sub>v</sub> 為 ∞，K<sub>a</sub> 有限。於是每提高一個型式，就多追上一階命令。</p>
+<p><strong>（d）代入本章模型。</strong>對 L ＝ K / (s<sup>N</sup>(s ＋ a))，型式 0 的 K<sub>pos</sub> ＝ K / a，型式 1 的 K<sub>v</sub> ＝ K / a；型式 2 固定加入零點，L ＝ K(s ＋ 1) / (s<sup>2</sup>(s ＋ a))，因此 K<sub>a</sub> ＝ K / a。型式 0 與 1 在 K、a ＞ 0 時閉迴路收斂；型式 2 的特徵多項式為 s<sup>3</sup> ＋ as<sup>2</sup> ＋ Ks ＋ K，05 章的判別會得到 a ＞ 1。</p>
+<p><strong>（e）把表讀成規則。</strong>命令比型式低一階時，對應誤差常數為 ∞，所以 e<sub>ss</sub> 為 0；命令階次剛好比型式高一階時，誤差是有限的 1 / K<sub>pos</sub>、1 / K<sub>v</sub> 或 1 / K<sub>a</sub>；再高一階時，對應常數為 0，誤差便為 ∞。這個規則只是在整理三個極限，沒有取代閉迴路收斂的前提。</p>
+<p><strong>符號、單位與邊界。</strong>K<sub>v</sub> 的單位是 1/s，K<sub>a</sub> 的單位是 1/s²；命令斜率取 1 單位/s，加速度取 1 單位/s²，e<sub>ss</sub> 與命令同單位。本課用的是教學用的簡化模型，真實系統不是這樣；假設單位回授、線性且閉迴路已收斂。</p>
+
+<h2>數值實例：型式 1、K ＝ 10、a ＝ 2</h2>
+<p>預設迴路 L(s) ＝ 10 / (s(s ＋ 2))，原點有一個極點。</p>
+<table><thead><tr><th>命令</th><th>誤差常數</th><th>e<sub>ss</sub></th></tr></thead><tbody>
+<tr><td>步階</td><td>K<sub>pos</sub> ＝ ∞</td><td><strong>0.000000</strong></td></tr>
+<tr><td>斜坡</td><td>K<sub>v</sub> ＝ 10 / 2 ＝ 5.000000</td><td><strong>0.200000</strong></td></tr>
+<tr><td>拋物線</td><td>K<sub>a</sub> ＝ 0</td><td><strong>∞（無限大）</strong></td></tr>
+</tbody></table>
+<p>型式 0、K ＝ 10、a ＝ 2 時，步階 e<sub>ss</sub> ＝ 0.166667，斜坡則為 ∞。型式 1 把 K 調到 100，K<sub>v</sub> ＝ 50.000000，斜坡 e<sub>ss</sub> 縮到 0.020000。型式 2 加上零點後，K ＝ 10、a ＝ 2 對拋物線的 K<sub>a</sub> ＝ 5.000000、e<sub>ss</sub> ＝ 0.200000，對斜坡則是 0.000000；但 a ＝ 0.5 時閉迴路不收斂，終值不適用。另把型式 0 的 K 調到 100，步階 e<sub>ss</sub> ＝ 0.019608。</p>
+<p>K 從 10 增到 100，只改有限誤差的大小，不會把型式 0 對斜坡的 ∞ 變成有限值，也不會把型式 1 對拋物線的 ∞ 變成有限值。若要跨越這種「零、常數、無限大」的類別邊界，必須改變原點極點數；但提高型式後還要重新檢查特徵方程式，不能只看誤差表。</p>
+
+<section class="workspace"><h2>自由實驗：型式與命令配對</h2>
+<p>場景是單位回授的位置伺服，迴路內含零到兩個積分器。選擇型式與命令，再調 K、a，觀察三個誤差常數、三種命令的終值，以及閉迴路是否容許使用終值定理。</p>
+<div class="controls">
+<label for="se-type">系統型式<select id="se-type"><option value="0">型式 0：L = K / (s + a)</option><option value="1" selected>型式 1：L = K / (s(s + a))</option><option value="2">型式 2：L = K(s + 1) / (s²(s + a))</option></select></label>
+<label for="se-input">命令種類<select id="se-input"><option value="step">步階命令 r = 1</option><option value="ramp" selected>斜坡命令 r = t</option><option value="para">拋物線命令 r = t² / 2</option></select></label>
+<label for="se-k">迴路增益 K<input id="se-k" type="range" min="1" max="100" step="1" value="10"></label>
+<label for="se-a">極點位置 a<input id="se-a" type="range" min="0.5" max="10" step="0.5" value="2"></label>
+</div>
+<div id="sserr-output" class="output" aria-live="polite"></div>
+</section>
+
+<h2>不要混淆</h2>
+<ul>
+<li>型式看的是迴路增益 L(s) 在原點的極點數，不是只看受控體 G(s)；控制器的積分器也要計入。</li>
+<li>穩態誤差為零只描述長時間後的差，不代表暫態平順。型式提高後，極點配置仍可能讓輸出劇烈振盪。</li>
+<li>終值定理要求閉迴路收斂。型式 2 且 a ≤ 1 時，任何有限的誤差計算都不具意義。</li>
+<li>K<sub>v</sub> 是速度誤差常數，不是物體速度；它的單位為 1/s，數值越大才表示單位斜坡的固定間距越小。</li>
+<li>K<sub>pos</sub> 是位置誤差常數，刻意不用 K<sub>p</sub>，避免與第 09 章的比例增益混為同一個量。</li>
+</ul>
+
+<h2>可觀察證據：量三角波兩條斜線的固定間距</h2>
+<p><strong>用什麼量。</strong>用函數產生器給位置伺服一個低頻三角波，三角波每一段就是固定斜率的命令；示波器同時顯示命令與輸出，在換向點之外讀兩條平行線的垂直間距。</p>
+<p><strong>能證明什麼。</strong>收斂後的固定間距接近 1 / K<sub>v</sub>，可支持型式 1 的速度誤差常數與實際斜坡誤差。加入一個積分器後間距趨近零，也能支持型式提高對低頻追蹤的作用。</p>
+<p><strong>不能證明什麼。</strong>這個量測不能證明拋物線命令的結果；真實致動器面對持續加速通常先碰到電壓、電流或行程限制，看到的偏差可能來自飽和，而不是理想模型的型式。</p>
+
+<h2>連到哪門課</h2>
+<p>極限與終值定理的證明見<a href="../信號與系統-互動課程/07-拉氏轉換與轉移函數.html">信號與系統的拉氏轉換與轉移函數</a>。第 09 章的積分項會把型式加 1，內模原理再把「模型內含命令的型態」推廣到更一般的追蹤問題；下一章則檢查單純加大 K 對二階暫態付出的代價。</p>
+<nav class="pager" aria-label="章節導覽"><a href="02-方塊圖化簡與閉迴路轉移函數.html">← 上一頁：方塊圖化簡與閉迴路轉移函數</a><a href="04-二階閉迴路與極點位置.html">下一頁：二階閉迴路與極點位置 →</a></nav>
+</main>
+<footer class="site-footer"><span>03 穩態誤差與系統型式</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>

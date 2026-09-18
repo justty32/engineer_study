@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>00 線性直流機與能量轉換｜電機機械</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽">
+<a href="index.html">課程地圖</a>
+<a href="00-線性直流機與能量轉換.html" aria-current="page">00 起點</a>
+<a href="名詞與概念字典.html">字典</a>
+<a href="自我檢核.html">自我檢核</a>
+</nav>
+<main>
+<p class="eyebrow">00・從一根導桿建立全課的能量觀</p>
+<h1>線性直流機與能量轉換：電流為何跟著負載走</h1>
+<p class="lead">一顆 120 V 電池推動導桿，在 10 N 負載下得到 10.000000 A、115.000000 m/s 與 95.833333 % 效率。這個小模型把感應電壓、安培力與能量平衡一次接起來。</p>
+<p class="prereq">
+<strong>這章假設已懂：</strong>四則運算與直流電路。<strong>前置：</strong>見〈08 磁場與羅倫茲力〉<a href="../電磁學-互動課程/08-磁場與羅倫茲力.html">力的方向</a>與〈11 電磁感應〉<a href="../電磁學-互動課程/11-電磁感應.html">導桿感應電壓</a>；本章只使用結論。</p>
+<h2>痛點：接上電池之後，為什麼不會一直加速</h2>
+<p>初學者常把電壓直接當成速度，也以為電池一接上，電流就永遠是 V<sub>B</sub> / R。真正的問題是：導桿動起來後，哪個量抵銷電池、哪個量回應外部負載，以及電能最後去了哪裡？若這三件事沒有接在同一條因果鏈，後面所有旋轉機公式都只剩背誦。</p>
+<h2>白話直覺：導桿像在磁場中推開一扇有回力的門</h2>
+<p>比喻只到這裡。精確地說，參考點是電池負端；電池、上導軌、導桿、下導軌形成閉合回路。靜止時感應電壓為零，電流最大，磁場對載流導桿產生向前的力。速度上升使 e<sub>ind</sub> = B × l × v 增加，回路淨電壓與電流因而下降。穩態時 F<sub>ind</sub> 與負載力相等，速度不再改變；串聯電流表會讀到負載所需電流，跨導桿電壓表會讀到感應電壓。</p>
+<p>同一裝置若由電池供能、導桿克服外力，就是馬達模式；若外力推動導桿，電流流回電池，就是發電機模式。名稱不是由零件決定，而是由能量流向決定。</p>
+<p class="note">來源：12-電機機械 §1.1、§1.3。</p>
+<h2>推導：由力平衡走到功率平衡</h2>
+<p>
+<strong>第一步，負載決定電流。</strong>穩態有 F<sub>ind</sub> = B × i × l = F<sub>load</sub>，所以 i = F<sub>load</sub> / (B × l)。i 的單位是 A，力用 N，B 用 T，l 用 m。電流不是電壓決定的，是負載決定的；電壓主要決定可達速度。</p>
+<p>
+<strong>第二步，回路決定速度。</strong>馬達模式的電壓平衡為 e<sub>ind</sub> = V<sub>B</sub> − i × R，再以 v = e<sub>ind</sub> / (B × l) 得速度。發電機模式則為 e<sub>ind</sub> = V<sub>B</sub> + i × R，外力必須提供更大的感應電壓，才能把電流送回電池。</p>
+<p>
+<strong>第三步，核對能量。</strong>P<sub>in</sub> = V<sub>B</sub> × i，P<sub>cu</sub> = i² × R，P<sub>conv</sub> = e<sub>ind</sub> × i = F<sub>ind</sub> × v。e × i 與 F × v 是同一份轉換功率，不是兩份。馬達效率 η = e<sub>ind</sub> / V<sub>B</sub>；發電機效率為 V<sub>B</sub> / e<sub>ind</sub>。</p>
+<p>
+<strong>失速邊界。</strong>令 e<sub>ind</sub> = 0，可得 I<sub>stall</sub> = V<sub>B</sub> / R 與 F<sub>stall</sub> = B × l × V<sub>B</sub> / R。假設磁場均勻、摩擦為零、除 R 外沒有損耗，且忽略導桿電感暫態。本課用的是線性穩態教學模型，真實機器不完全如此。</p>
+<h2>數值實例：120 V 導桿推 10 N</h2>
+<p>取 V<sub>B</sub> = 120 V、R = 0.5 Ω、B = 1.0 T、l = 1.0 m、F<sub>load</sub> = 10 N。</p>
+<table>
+<thead>
+<tr>
+<th>量</th>
+<th>算式</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>穩態電流</td>
+<td>10 / (1.0 × 1.0)</td>
+<td>10.000000 A</td>
+</tr>
+<tr>
+<td>感應電壓</td>
+<td>120 − 10 × 0.5</td>
+<td>115.000000 V</td>
+</tr>
+<tr>
+<td>穩態速度</td>
+<td>115 / (1.0 × 1.0)</td>
+<td>115.000000 m/s</td>
+</tr>
+<tr>
+<td>電池輸出功率</td>
+<td>120 × 10</td>
+<td>1200.000000 W</td>
+</tr>
+<tr>
+<td>轉換功率</td>
+<td>115 × 10</td>
+<td>1150.000000 W</td>
+</tr>
+<tr>
+<td>銅損</td>
+<td>10² × 0.5</td>
+<td>50.000000 W</td>
+</tr>
+<tr>
+<td>效率</td>
+<td>115 / 120</td>
+<td>95.833333 %</td>
+</tr>
+<tr>
+<td>無負載速度</td>
+<td>120 / 1.0</td>
+<td>120.000000 m/s</td>
+</tr>
+<tr>
+<td>起動電流</td>
+<td>120 / 0.5</td>
+<td>240.000000 A（穩態的 24 倍）</td>
+</tr>
+<tr>
+<td>失速力</td>
+<td>1.0 × 1.0 × 240</td>
+<td>240.000000 N</td>
+</tr>
+</tbody>
+</table>
+<p>
+<strong>量級對照。</strong>負載 100 N 時，電流 100.000000 A、速度 70.000000 m/s、效率 58.333333 %。B 減為 0.5 T 且力仍為 10 N 時，電流 20.000000 A、速度 220.000000 m/s。負載達 240 N 就失速；250 N 時 e = −5 V，導桿被倒拖。發電機模式以 10 N 推動時，e = 125.000000 V、機械輸入 1250.000000 W、電池收到 1200.000000 W、效率 96.000000 %。</p>
+<p><strong>沿時間順序檢查。</strong>剛接通時速度與感應電壓都是零，回路只剩電池與電阻，240.000000 A 是模型的最大起動電流。導桿受力加速後，感應電壓升高，淨電壓與電流下降，推力也下降，直到恰好等於 10 N。若負載突然增加，原有推力不足，速度先下降；感應電壓跟著下降，電流與推力上升，最後落在較慢的新穩態。這條負回授因果鏈，就是機器不會一直加速的答案。</p>
+<p><strong>方向與符號必須一致。</strong>本章先把電池推動方向定為正；若算得感應電壓為負，代表假設的正向穩態已不存在，不能把負速度當普通工作點。發電機模式由外力輸入機械能，感應電壓必須高過電池電壓，電流才會回送。兩種模式的銅損都非負，差別只在轉換功率與電池功率的流向。真實裝置另有摩擦、風阻與接觸壓降，實測效率會低於只保留銅損的結果。</p>
+<p><strong>功率表是最後的查錯工具。</strong>預設點的 1200.000000 W 必須剛好分成 1150.000000 W 與 50.000000 W；三者若對不起來，通常是電流方向、負號或平方項寫錯。負載加重時，機械輸出不一定持續增加，因為速度同時下降，而銅損會隨電流平方快速上升。工程上不會把可算出的失速點當作可長時間運轉點，保護器必須在溫升累積前切斷或限流。</p>
+<p>因此調參時要一次看電流、速度與功率，不能只追求單一數字。較強磁場可用較小電流產生同一力，卻也降低同電壓下的速度；較小電阻降低銅損，卻讓失速電流更大。設計永遠是在速度、推力、效率與保護能力之間取捨。</p>
+<section class="workspace">
+<h2>自由實驗：切換能量流向</h2>
+<p>固定一根均勻磁場中的導桿，選擇由電池推或由外力推，再改電壓、電阻、磁場、長度與力。觀察電流如何先由力決定，速度再由電壓餘額決定。</p>
+<div class="controls">
+<label for="lm-mode">模式<select id="lm-mode">
+<option value="motor" selected>馬達：電池推、負載拉</option>
+<option value="gen">發電機：外力推、電池吸</option>
+</select>
+</label>
+<label for="lm-vb">電池電壓 V_B（V）<input id="lm-vb" type="range" min="0" max="250" step="5" value="120">
+</label>
+<label for="lm-r">迴路電阻 R（Ω）<input id="lm-r" type="range" min="0.1" max="5" step="0.1" value="0.5">
+</label>
+<label for="lm-b">磁通密度 B（T）<input id="lm-b" type="range" min="0.1" max="1.5" step="0.05" value="1">
+</label>
+<label for="lm-l">導桿長度 l（m）<input id="lm-l" type="range" min="0.1" max="2" step="0.1" value="1">
+</label>
+<label for="lm-f">負載力 F_load 或外力 F_app（N）<input id="lm-f" type="range" min="0" max="300" step="1" value="10">
+</label>
+</div>
+<div id="linmach-output" class="output" aria-live="polite">這個模式只用到六個控制的同一組值，把 F 當成負載力（馬達）。<table>
+<tbody>
+<tr>
+<th>電流</th>
+<td>10.000000 A</td>
+</tr>
+<tr>
+<th>感應電壓</th>
+<td>115.000000 V</td>
+</tr>
+<tr>
+<th>速度</th>
+<td>115.000000 m/s</td>
+</tr>
+<tr>
+<th>電池輸出功率</th>
+<td>1200.000000 W</td>
+</tr>
+<tr>
+<th>轉換功率</th>
+<td>1150.000000 W</td>
+</tr>
+<tr>
+<th>銅損</th>
+<td>50.000000 W</td>
+</tr>
+<tr>
+<th>效率</th>
+<td>95.833333 %</td>
+</tr>
+<tr>
+<th>無負載速度</th>
+<td>120.000000 m/s</td>
+</tr>
+<tr>
+<th>失速電流</th>
+<td>240.000000 A</td>
+</tr>
+<tr>
+<th>失速力</th>
+<td>240.000000 N</td>
+</tr>
+</tbody>
+</table>
+<strong>判讀：目前負載低於失速力，導桿可維持正向穩態。</strong>電流由負載力決定：i = F / (B × l)，不是由電壓決定。效率 ＝ e / V_B（馬達）或 V_B / e（發電機），差的那一段全是 i² × R。為什麼：速度上升後的感應電壓抵銷大部分電池電壓，只留下推動所需電流。邊界提醒：力為 0 N 時是無負載；達 240 N 時失速，全部電功率變成銅損；超過後會被倒拖。</div>
+</section>
+<h2>不要混淆</h2>
+<ul>
+<li>電流由負載決定，不表示電壓沒有作用；電壓決定無負載速度與失速力。</li>
+<li>e × i 與 F × v 是同一份轉換功率，不是兩項可相加的輸出。</li>
+<li>馬達與發電機可由同一組零件實現，邊界在能量流向與電流方向。</li>
+<li>起動電流大是 v = 0、e<sub>ind</sub> = 0 的結果，不等同故障。</li>
+</ul>
+<h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p>用三用電表串聯量電流，另一只表跨導桿量電壓，並記錄穩態速度與外力。電流隨負載力近似線性上升、導桿電壓隨速度近似線性上升，能證明 B × l 的共同斜率與功率平衡；只靠這些讀值不能分別證明 B 與 l 各是多少，也不能證明摩擦為零。</p>
+<h2>連到哪門課</h2>
+<p>導桿關係的來源見<a href="../電磁學-互動課程/11-電磁感應.html">電磁感應</a>與<a href="../電磁學-互動課程/08-磁場與羅倫茲力.html">磁場與羅倫茲力</a>，捲成旋轉結構後會在第 06 章再用。控制程式那一端會把電流上限設成保護值，並用速度回授調整端電壓。</p>
+<nav class="pager" aria-label="章節導覽">
+<a href="index.html">← 課程地圖</a>
+<a href="01-鐵心電壓與磁通.html">下一頁：鐵心電壓與磁通 →</a>
+</nav>
+</main>
+<footer class="site-footer">
+<span>00 線性直流機與能量轉換</span>
+<a href="名詞與概念字典.html">查字典</a>
+</footer>
+</body>
+</html>

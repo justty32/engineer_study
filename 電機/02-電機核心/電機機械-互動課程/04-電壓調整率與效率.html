@@ -1,0 +1,65 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 電壓調整率與效率｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<main>
+<p class="eyebrow">04・電壓穩不穩與能量省不省是兩個問題</p>
+<h1>電壓調整率與效率：負載接上後電壓掉多少，哪個負載點最省損耗</h1>
+<p class="lead">沿用 10 kVA、240 V 低壓側與第 03 章參數，滿載、0.8 落後功率因數時，電壓調整率是 2.364503 %，效率是 97.574197 %。最大效率卻出現在 x* = 0.657267，而非滿載。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="03-變壓器等效電路與試驗.html">03 變壓器等效電路與試驗</a>的 R<sub>eq</sub>、X<sub>eq</sub>、鐵損與銅損。<strong>前置：</strong>見<a href="../電路學-互動課程/11-交流功率與功因.html">電路學的交流功率與功因</a>，先熟悉相量與功率因數。</p>
+
+<h2>痛點：效率很高，為什麼端電壓仍可能不合格</h2>
+<p>負載一接上，線圈阻抗造成壓降，二次端不再維持空載電壓；同時鐵損與銅損把一部分輸入變成熱。這兩個現象常被混成「品質好不好」，但它們回答不同問題：電壓調整率（voltage regulation, VR）看端電壓穩定度，效率看有用輸出占輸入的比例。一台機器可以效率高，卻因漏電抗偏大而有較差的調整率。</p>
+<p>更反直覺的是最大效率不必在滿載。鐵損近似固定，機器只要通電就存在；銅損卻跟電流平方變化。輕載時固定損耗占比大，過重時銅損竄升，中間自然有一個平衡點。</p>
+
+<h2>白話直覺：固定門票與隨負載增加的費用</h2>
+<p>可以暫時把鐵損想成開門就要付的門票，把銅損想成隨搬運量加速增加的費用；比喻到此為止，真實機制是交變磁通造成近似固定的鐵損，而電流流過線圈電阻造成 I²R 銅損。電源以低壓端為參考，負載回路導通後，電流流過 R<sub>eq</sub> 與 X<sub>eq</sub>；實部與虛部壓降改變所需的一次折算電壓，損耗則讓輸入大於輸出。穩態時相量與能量各自平衡，電壓表及功率計能分別看到結果。</p>
+<p>落後功率因數（lagging power factor）時，電抗壓降多半和電阻壓降一起拉高所需輸入；領前功率因數（leading power factor）會讓 X sin θ 項變號，二次端可能比空載折算值還高。這是相量方向造成的，不代表損耗消失。</p>
+<p class="note">來源：12-電機機械 §2.4。</p>
+
+<h2>推導：相量決定調整率，損耗平衡決定效率峰值</h2>
+<p>以低壓側為基準，V<sub>1</sub>′ = V<sub>2</sub> + I<sub>2</sub>∠−θ × (R<sub>eq</sub> + jX<sub>eq</sub>)。落後時展開為 V<sub>1</sub>′ = [V<sub>2</sub> + I(R cos θ + X sin θ)] + j[I(X cos θ − R sin θ)]。先取複數大小，再算 VR = (|V<sub>1</sub>′| − V<sub>2</sub>) / V<sub>2</sub> × 100 %。領前時 θ 為負，sin θ 變號，因此 X sin θ 會改為扣除。</p>
+<p>負載比例為 x、額定視在功率為 S、功率因數為 pf，則 P<sub>out</sub> = x × S × pf。銅損 P<sub>cu</sub> = x² × P<sub>cu,fl</sub>，效率 η = P<sub>out</sub> / (P<sub>out</sub> + P<sub>cu</sub> + P<sub>core</sub>)。對 x 微分並令導數為零，得到 x² P<sub>cu,fl</sub> = P<sub>core</sub>，所以 x* = √(P<sub>core</sub> / P<sub>cu,fl</sub>)。配電變壓器大部分時間輕載，因此常讓 x* 落在 0.5–0.7。</p>
+<p>調整率的分子使用一次電壓折算值與二次端電壓之差，不能直接把電阻壓降和電抗壓降當純量相加。兩項在複數平面上的方向由負載相角決定，先求實部、虛部，再取大小，才保留相量關係。效率的分母則是能量帳：有用輸出、銅損、鐵損都以 W 表示，可以直接相加。前者處理方向，後者處理守恆，兩套計算不可互換。</p>
+<p><strong>模型邊界。</strong>本課用的是線性穩態教學模型，真實機器不完全如此；假設近似等效電路成立、鐵損不隨負載改變，也忽略溫度升高後電阻增加。功率因數變低時，同樣電流送出的實功較少，銅損並未跟著少，效率自然下降。</p>
+
+<h2>數值實例：滿載、0.8 落後功率因數</h2>
+<p>取 x = 1.0、pf = 0.8 落後、R<sub>eq,LV</sub> = 0.08 Ω、X<sub>eq,LV</sub> = 0.12 Ω、P<sub>core</sub> = 60 W、V<sub>2</sub> = 240 V、S = 10 kVA，與下方預設值一致。</p>
+<table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
+<tr><td>二次電流</td><td>1.0 × 10000 / 240</td><td>41.666667 A</td></tr>
+<tr><td>實部</td><td>240 + 41.666667 × (0.08 × 0.8 + 0.12 × 0.6)</td><td>245.666667 V</td></tr>
+<tr><td>虛部</td><td>41.666667 × (0.12 × 0.8 − 0.08 × 0.6)</td><td>2.000000 V</td></tr>
+<tr><td>|V<sub>1</sub>′|</td><td>√(245.666667² + 2²)</td><td>245.674808 V</td></tr>
+<tr><td>電壓調整率</td><td>(245.674808 − 240) / 240</td><td>2.364503 %</td></tr>
+<tr><td>輸出、銅損、輸入</td><td>實功；I²R；三者相加</td><td>8000.000000 W；138.888889 W；8198.888889 W</td></tr>
+<tr><td>效率</td><td>8000 / 8198.888889</td><td>97.574197 %</td></tr>
+<tr><td>最大效率負載點</td><td>√(60 / 138.888889)</td><td>x* = 0.657267（65.7 % 負載）</td></tr>
+<tr><td>該點效率</td><td>6572.67 / (6572.67 + 120)</td><td>97.768744 %</td></tr>
+</tbody></table>
+<p><strong>量級對照。</strong>改成 pf 0.8 領前，|V<sub>1</sub>′| = 239.741759 V、VR = −0.107600 %；pf = 1 時 VR = 1.410291 %、η = 98.049897 %。x = 0.5 時 VR = 1.181413 %、η = 97.686724 %，反而高於滿載；x = 1.25 時 VR = 2.956659 %、η = 97.304529 %。控制程式那一端會用調整率設定允許電壓帶，並以負載與溫度限制避免長時間過載。</p>
+<p>判讀曲線時要分清「峰值位置」和「額定能力」。效率在峰值附近很平，實際設計不會只追求某一個數學點；還要顧及溫升、絕緣壽命及日常負載分布。額定容量說明可以長期承受的邊界，最大效率點則說明固定損耗和可變損耗在何處平衡，兩者用途不同。</p>
+
+<section class="workspace"><h2>自由實驗：同時看端電壓與損耗平衡</h2>
+<p>固定 240 V、10 kVA 額定資料，改變負載比例、功率因數性質與四個內部參數。觀察相量壓降如何改變調整率，以及固定鐵損和平方增加的銅損如何決定效率峰值。</p>
+<div class="controls">
+<label for="xr-load">負載比例 x（1 ＝ 額定 10 kVA）<input id="xr-load" type="range" min="0" max="1.25" step="0.05" value="1"></label>
+<label for="xr-pf">負載功率因數<input id="xr-pf" type="range" min="0.5" max="1" step="0.05" value="0.8"></label>
+<label for="xr-kind">功率因數性質<select id="xr-kind"><option value="lag" selected>落後（電感性）</option><option value="lead">領前（電容性）</option></select></label>
+<label for="xr-req">等效電阻 R_eq（Ω，低壓側）<input id="xr-req" type="range" min="0.01" max="0.2" step="0.01" value="0.08"></label>
+<label for="xr-xeq">等效電抗 X_eq（Ω，低壓側）<input id="xr-xeq" type="range" min="0.01" max="0.5" step="0.01" value="0.12"></label>
+<label for="xr-pcore">鐵損 P_core（W）<input id="xr-pcore" type="range" min="20" max="300" step="5" value="60"></label>
+</div>
+<div id="xfreg-output" class="output" aria-live="polite"><table><tbody><tr><th>I_2</th><td>41.666667 A</td></tr><tr><th>|V_1′|、VR</th><td>245.674808 V；2.364503 %</td></tr><tr><th>P_out</th><td>8000.000000 W</td></tr><tr><th>P_cu、P_core</th><td>138.888889 W；60 W</td></tr><tr><th>P_in、η</th><td>8198.888889 W；97.574197 %</td></tr><tr><th>x*、η*</th><td>0.657267；97.768744 %</td></tr></tbody></table><strong>判讀：超過最大效率點，銅損已大於鐵損。</strong>效率的分母裡鐵損固定、銅損隨 x² 變，所以最大效率在 x* = √(P_core / P_cu,fl)。為什麼：目前滿載銅損 138.888889 W 大於鐵損 60 W，繼續加重負載會讓平方項更快上升。邊界提醒：領前功因可使 VR 小於 0；空載效率為 0 但鐵損仍在；過載 25 % 時銅損變 1.5625 倍；若 x* 大於 1，代表鐵損做得太大；pf = 0.5 時同樣電流只送一半實功。任何狀態都不輸出非數值。</div>
+</section>
+
+<h2>不要混淆</h2>
+<ul><li>電壓調整率小通常表示電壓較穩；負值則表示領前負載使端電壓上升，不能只看絕對值喊好。</li><li>最大效率不固定在滿載，而在銅損等於鐵損的負載點；額定值是容量邊界，不是效率峰值的定義。</li><li>效率高不保證調整率小：前者由損耗決定，後者主要由串聯電阻、漏電抗與相角決定。</li><li>功率因數降低時，損耗不一定增加；在相同電流下，是有用實功減少而讓效率降低。</li></ul>
+
+<h2>可觀察證據：要量多個負載點才看得到峰值</h2>
+<p><strong>用什麼量。</strong>以電壓表分別量空載與負載二次電壓，再以輸入端、輸出端功率計量實功；逐步改變負載並記錄各點。<strong>能證明什麼。</strong>單一負載點可證明當下的 VR 與 η，多點資料可找出效率最高附近。<strong>不能證明什麼。</strong>只量輸入輸出不能拆出鐵損與銅損，也不能靠一個滿載點證明最大效率位置；損耗組成仍需前章試驗。</p>
+
+<h2>連到哪門課</h2>
+<p>配電設計會同時限制端電壓偏移與全年能量損耗。功率因數、複功率及相量方向見<a href="../電路學-互動課程/11-交流功率與功因.html">電路學的交流功率與功因</a>；固定損耗和可變損耗的平衡，也會在下一章的旋轉機功率流再次出現。</p>
+<nav class="pager" aria-label="章節導覽"><a href="03-變壓器等效電路與試驗.html">← 上一頁：變壓器等效電路與試驗</a><a href="05-旋轉機共同語言.html">下一頁：旋轉機共同語言 →</a></nav>
+</main>
+<footer class="site-footer"><span>04 電壓調整率與效率</span><a href="名詞與概念字典.html">查字典</a></footer>
+</body></html>
