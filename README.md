@@ -63,6 +63,7 @@
 - [電磁學（零基礎互動課）](電機/02-電機核心/電磁學-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/electromagnetics/)
 - [信號與系統（零基礎互動課）](電機/02-電機核心/信號與系統-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/signals-systems/)
 - [邏輯設計（零基礎互動課）](電機/02-電機核心/邏輯設計-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/logic-design/)
+- [微處理機與匯流排（零基礎互動課）](電機/02-電機核心/微處理機與匯流排-互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/microprocessors/)
 - [電力系統](電機/04-電力特化/P1-電力系統-互動網站/index.html) · [線上](https://justty32.github.io/engineer_study/power-systems/)
 
 ### 專題 — IoT 聯網裝置
