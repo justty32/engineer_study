@@ -1,7 +1,7 @@
 # PROJECT-BRIEF — 電力電子（零基礎互動課）
 
 ← 工作流：[interactive-study-site](../../../wf/workflows/interactive-study-site/README.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[principles-first 硬體原理子工作流](../../../wf/workflows/interactive-study-site/PRINCIPLES-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)｜[build-with-agents 產線](../../../wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md)
-← 建置契約：[BUILD-SPEC.md](BUILD-SPEC.md)｜驗收：[驗收紀錄.md](驗收紀錄.md)
+← 建置契約與驗收證據：已封存，見 `archive/`（BUILD-SPEC.md、驗收紀錄.md）
 
 ## 1. 一句話定位
 
@@ -291,7 +291,7 @@ HTML 正文以「來源：P2-電力電子（上）§1.3」形式標註，**不�
 ```text
 電機/04-電力特化/P2-電力電子-互動課程/
   PROJECT-BRIEF.md      ← 本檔
-  BUILD-SPEC.md         ← 建置契約（DOM、公式、詞表、題目、派工、行號表）
+  archive/BUILD-SPEC.md ← 建置契約（DOM、公式、詞表、題目、派工、行號表；已封存）
   index.html            ← 課程地圖
   00-電力電子世界觀與切換不耗能.html
   01-功率開關與兩種損耗.html
@@ -309,7 +309,7 @@ HTML 正文以「來源：P2-電力電子（上）§1.3」形式標註，**不�
   自我檢核.html
   app.js                ← 單一檔，所有頁面 hook
   styles.css            ← 由 專題/機器人運動學/互動課程/styles.css 複製（正本），位元組相同
-  驗收紀錄.md            ← verifier 產出
+  archive/驗收紀錄.md    ← verifier 產出（已封存）
 ```
 
 ## 11. 完成定義
