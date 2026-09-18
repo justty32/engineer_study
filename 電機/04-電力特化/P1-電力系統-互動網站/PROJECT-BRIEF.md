@@ -32,7 +32,7 @@
 ## 交付物
 
 - 執行期：`index.html`、`styles.css`、`app.js`。
-- 規格與驗收：`BUILD-SPEC.md`、`驗收紀錄.md`（已封存，見 `archive/`）、`派工計畫.md`、`README.md`。
+- 規格與驗收：`BUILD-SPEC.md`、`驗收紀錄.md`、派工計畫（已封存，見 `archive/`）、`README.md`。
 - GitHub Pages 路徑：`/power-systems/`；入口頁在完成驗收前維持「製作中」。
 
 ## 硬性限制
