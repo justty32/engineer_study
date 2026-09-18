@@ -80,6 +80,18 @@
    "decision": "筆記一律繁體中文、純文字不放圖、公式用 LaTeX、UTF-8",
    "rejected": "英文或簡中：擁有者明確要繁中；插圖或生成圖：目標是先建立初步認識而非完整參考，圖片維護成本高且 agent 產圖品質不穩",
    "premise": "擁有者的明確指示；改了要改 [PROJECT-GUIDE](../PROJECT-GUIDE.md) 硬性要求與 AGENTS 鐵律 1"
+  },
+  {
+   "date": "2026-09-18",
+   "decision": "lint 範圍：wf/＋根入口 strict，整庫只看 BROKEN；BIGLIST 於筆記正文與名詞對照表視為誤報",
+   "rejected": "整庫全開 --strict（會把筆記正文條列與名詞對照表誤報成 800+ 條 BIGLIST）；完全不掃整庫（會漏筆記間的死連結）",
+   "premise": "裁定實作為 project-owned wf/tools/lint.sh 包裝三段跑；kernel-owned wf/tools/wf-lint.sh 本身不改"
+  },
+  {
+   "date": "2026-09-18",
+   "decision": "inbox 一開始即採五通道",
+   "rejected": "照 PROTOCOL.md 的建議先用單通道（頂層＋done/）過渡，升級後才建五通道子資料夾",
+   "premise": "本專案是新建工作流，沒有既有單通道的歷史包袱，直接五通道可省一次日後遷移"
   }
  ]
 }

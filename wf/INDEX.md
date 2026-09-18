@@ -41,4 +41,5 @@
 | [workflows/TEMPLATE.workflow.md](workflows/TEMPLATE.workflow.md) | 新工作流入口檔的骨架。 |
 | `tools/` | kernel 工具＋inbox 腳本（實際路徑 `wf/tools/`）：`wf-lint.sh`、`tabledb.py`、`find_big_lists.py`、`fix_moved_links.py`、`check_anchors.py`；`inbox_send.sh`（原子投遞）、`inbox_read.sh`（唯讀輪詢）、`inbox_mail.sh`、`inbox_poll.sh`、`inbox_team.sh`、`notify_watch.sh`、`test_inbox.sh`、`hook-settings-snippet.json`（hook 範例，不自動啟用）。資料檔契約見 [workflows/common/data-files.md](workflows/common/data-files.md)。 |
 | `inbox/` | agent 之間的信件收件匣（實際路徑 `wf/inbox/`，留在 `wf/` 內的理由見 [UPSTREAM](UPSTREAM.md)）：頂層／`new/`＝未處理、`done/`＝已處理，另有 `mail/`、`teams/`、`topics/`、`orders/` 五通道；使用方式 [workflows/inbox/](workflows/inbox/README.md)，身份簿 [workflows/inbox/ROSTER.md](workflows/inbox/ROSTER.md)。 |
+| `skills/` | agent skill 包（實際路徑 `wf/skills/`）：effective-html 六支（`html` 為路由器，MIT，授權檔 `skills/LICENSES/`）＋ `markdown-html-slides`（CC0）；根 `.claude/skills/` 為逐支轉址檔，Claude Code 自動發現後跳回這裡。來源與授權見 [UPSTREAM](UPSTREAM.md)。 |
 <!-- wf-insert:INDEX -->

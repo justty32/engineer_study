@@ -2,9 +2,17 @@
 description: 跑 wf-lint 檢查文檔（壞連結 / 超標檔 / >1 KB 條列 / 資料檔壞連結 / 查詢指令殘留 / 佔位殘留 / inbox 堆積）
 ---
 
-> 本檔是 **Claude Code 的 slash 指令適配層（可選）**：其他 agent 工具沒有對應機制就忽略 `.claude/`，直接跑 `tools/wf-lint.sh`。
+> 本檔是 **Claude Code 的 slash 指令適配層（可選）**：其他 agent 工具沒有對應機制就忽略 `.claude/`，直接跑 `tools/lint.sh`。
 
-找到 `wf-lint.sh`（本專案為非侵入式佈局，路徑固定為 `wf/tools/wf-lint.sh`），對專案根執行：
+`wf-lint.sh` 是 kernel-owned（掃整庫對學習筆記正文條列與名詞對照表會誤報 800+ 條 `BIGLIST`，使用者已裁定視為誤報）。正式驗收改跑 project-owned 包裝 `wf/tools/lint.sh`（範圍裁定見 [decisions](../../wf/workflows/decisions.json)）：
+
+```
+bash wf/tools/lint.sh $ARGUMENTS
+```
+
+包裝分三段：**(1) `wf/` 跑 `--strict`**（連結／殘留／oversize／biglist／querycmd 全算失敗）；**(2) 根入口**（`AGENTS.md`、`CLAUDE.md`、`.claude/commands/*.md`）跑 `--strict` 並額外 grep 佔位殘留（雙大括號模板變數、模板說明段、導入判斷提示語三種，見 `lint.sh` 檔頭）；**(3) 整庫只看 `BROKEN`／`BROKEN-ANCHOR`／`TOTAL`**，`BIGLIST` 不印、不計入失敗。任一段失敗 exit 1；`--quiet` 只印總結行。
+
+若要直接呼叫底層工具本身（例如只想看某個子目錄的完整輸出），可跑：
 
 ```
 bash wf/tools/wf-lint.sh $ARGUMENTS .

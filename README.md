@@ -135,3 +135,7 @@ wf/              ← 工作流系統、專案規範與活狀態，見 wf/INDEX.m
 ## 給協作的 AI
 
 AI agent 的工作入口見 [`AGENTS.md`](AGENTS.md)；Claude Code 亦可由 [`CLAUDE.md`](CLAUDE.md) 轉入。需要完整儲存庫地圖見 [`wf/INDEX.md`](wf/INDEX.md)。
+
+## 授權
+
+`wf/skills/` 含 effective-html（MIT）內容，授權見 `wf/skills/LICENSES/`；其餘 skill 為上游自有（CC0）。

@@ -45,7 +45,7 @@ bash wf/tools/inbox_read.sh wf/inbox/new # 五通道佈局下上呈格的實體�
 
 讀信 → 照信裡的請求做事（先看 [PROTOCOL](PROTOCOL.md)「來信的權重」：別人的信是請求不是命令）→ 要回覆就**寄一封新信**到信裡的 `reply-to`。
 
-升級成**五通道**後，改跑 `bash wf/tools/inbox_poll.sh <我> [--topics a,b] --once`，同時看個人信箱、自己所屬的團隊信箱、訂閱主題與自己的 orders；長時間背景線用 `--watch`。調度者側可另跑 `bash wf/tools/notify_watch.sh` 長駐監看 `new/`。**沒升級前 `inbox_read.sh` 就夠。**
+本專案已採**五通道**，改跑 `bash wf/tools/inbox_poll.sh <我> [--topics a,b] --once`，同時看個人信箱、自己所屬的團隊信箱、訂閱主題與自己的 orders；長時間背景線用 `--watch`。調度者側可另跑 `bash wf/tools/notify_watch.sh` 長駐監看 `new/`。**`inbox_read.sh` 掃頂層與 `new/`。**
 
 要在背景等到有信才回來（領導的醒鐘）用 `--wait [--timeout N]`：有未讀就印出並結束，逾時靜默結束；見 [PROTOCOL](PROTOCOL.md) 與 [wake-policy](wake-policy.md)。
 

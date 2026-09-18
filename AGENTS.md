@@ -19,4 +19,4 @@ engineer_study = **以大學課綱為骨架的跨領域工程學習筆記庫（�
 4. **條列走資料檔、導航留 md**：給 AI 消化的表／清單 >1 KB 存 `.json`／`.csv`（契約 `wf-table/1`，見 [data-files](wf/workflows/common/data-files.md)），用 `wf/tools/tabledb.py` 讀寫、不整份讀進 context；給人點的導航連結留 md。
 5. **具體流程**在各工作流入口檔，不在頂層。
 
-<!-- wf-kernel v0.5 (2026-08-30) -->
+<!-- wf-kernel v0.6 (2026-09-02) -->

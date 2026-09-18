@@ -9,7 +9,7 @@
 
 ## Done when
 
-- 回了一句摘要，且（若有到期的間隔項）[routines](routines.md) 間隔登記表該列的「上次執行」已更新；到期的一次性項已從 [schedule](schedule.md) 時刻表刪列。
+- 有到期的間隔項 → [routines](routines.md) 間隔登記表該列的「上次執行」已更新；有到點的一次性行程 → [schedule](schedule.md) 該列已刪。兩邊都沒到期時這一輪不留痕跡（摘要回一句「無事」）。
 
 ## 流程
 
