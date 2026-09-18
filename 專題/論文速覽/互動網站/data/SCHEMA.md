@@ -37,7 +37,7 @@
 | `arxiv_id` | string | 是 | DOM id `card-<arxiv_id>`、已讀／深讀狀態鍵；非 arXiv 條目用穩定代號（訪談用 `ndea-01`～`ndea-14`） |
 | `title_zh` | string | 是 | 中文短題（≤ 18 字，可與 index 的長題不同，要白話） |
 | `title_en` | string | 是 | 英文原題（arXiv 題名；訪談用影片題名） |
-| `year` | string | 是 | `YYYY-MM`（arXiv id 前四碼即年月：`2505.22954` → `2025-05`）；非 arXiv 條目查不到日期就給空字串 `""`（頁面不渲染），**不得猜** |
+| `year` | string | 是 | `YYYY-MM`（arXiv id 前四碼即年月：`2505.22954` → `2025-05`）；非 arXiv 條目用發佈年月（Ndea 訪談卡取 YouTube 頁面 `publishDate`，查得的網址與日期記在 archive/驗收紀錄.md），查不到就給空字串 `""`（頁面不渲染），**不得猜** |
 | `role` | string | 是 | 這張卡在該線的角色標籤（≤ 8 字），例：原典、範式代表作、誠實冷水、定位入口 |
 | `one_liner` | string | 是 | 一句話（≤ 50 字）：誰做了什麼、得到什麼 |
 | `plain` | string | 否（本專案一律要給） | 「用你的話說，這篇等於……」（≤ 80 字）；給完全外行的人 |
@@ -61,7 +61,7 @@ GitHub 連結基底：`https://github.com/justty32/paper_readings/blob/main/`＋
 | `translate_file` | string\|null | 是 | `translate/` 檔名（頁面目前不用，留給資料完整性） |
 | `url` | string | 否 | 絕對網址，優先於 `summary_file`（非 arXiv 條目用） |
 
-不變式：每個 deck 內 `arxiv_id` 不重複；全站所有 deck 的 `all_papers` 聯集＝`paper_readings/index/` 全庫（597 條：A～J 583 ＋ 訪談 14），每條恰好出現在一個 deck。
+不變式：每個 deck 內 `arxiv_id` 不重複；全站所有 deck 的 `all_papers` 聯集＝`paper_readings/index/` 全庫（627 條：A～J 613 ＋ 訪談 14），每條恰好出現在一個 deck。
 
 ## thread（跨線索）
 

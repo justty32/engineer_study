@@ -104,7 +104,7 @@
 
 ### 專題 — 論文速覽
 
-- [論文速覽（paper_readings 全庫 597 條、五個 30 分鐘手機閱讀 deck）](專題/論文速覽/互動網站/index.html) · [線上](https://justty32.github.io/engineer_study/paper-briefs/)
+- [論文速覽（paper_readings 全庫 627 條、五個 30 分鐘手機閱讀 deck）](專題/論文速覽/互動網站/index.html) · [線上](https://justty32.github.io/engineer_study/paper-briefs/)
 
 ## 目錄結構
 

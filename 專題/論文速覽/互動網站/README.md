@@ -10,11 +10,11 @@
 | 檔案 | 責任 |
 |------|------|
 | `index.html` | deck 總覽：列出所有 deck 並連進去（5 個） |
-| `symbolic-arc-automata.html` | deck「ARC・符號・自動機」（A+B、C、E、F 類，4 線 150 篇）的閱讀頁；資料內嵌於 `<script id="deck-data">` |
-| `evolution-program-synthesis.html` | deck「演化・程式合成・自我改進」（D、G、H、J 類，4 線 96 篇） |
-| `agent-skills-cost-decoding.html` | deck「技能庫・成本・受限解碼」（I 類子主題 01、01z、02、03，3 線 122 篇） |
-| `agent-loop-workflow-memory.html` | deck「自我改進・工作流・記憶」（I 類子主題 08、04、05+06、09，4 線 178 篇） |
-| `nesy-binary-worldmodel-ndea.html` | deck「二值・世界模型・訪談」（I 類子主題 07、10 ＋ Ndea 訪談 14 集，3 線 51 條） |
+| `symbolic-arc-automata.html` | deck「ARC・符號・自動機」（A+B、C、E、F 類，4 線 151 篇）的閱讀頁；資料內嵌於 `<script id="deck-data">` |
+| `evolution-program-synthesis.html` | deck「演化・程式合成・自我改進」（D、G、H、J 類，4 線 101 篇） |
+| `agent-skills-cost-decoding.html` | deck「技能庫・成本・受限解碼」（I 類子主題 01、01z、02、03，3 線 128 篇） |
+| `agent-loop-workflow-memory.html` | deck「自我改進・工作流・記憶」（I 類子主題 08、04、05+06、09，4 線 193 篇） |
+| `nesy-binary-worldmodel-ndea.html` | deck「二值・世界模型・訪談」（I 類子主題 07、10 ＋ Ndea 訪談 14 集，3 線 54 條） |
 | `data/SCHEMA.md` | deck.json 完整資料契約（欄位、上限、連結規則、內容鐵律） |
 | `data/<deck_id>.json` | 各 deck 的資料真相層；閱讀頁的 `#deck-data` 由它灌入 |
 | `data/inline_deck.py` | 灌資料（`deck.json` → `<deck_id>.html`）／`--extract` 抽回 |
@@ -244,4 +244,4 @@ JS 行為：`#theme-toggle` 切換 `light/dark`，`aria-pressed="true"` 表示�
 2. `python3 data/make_page.py data/<deck_id>.json`：複製 `symbolic-arc-automata.html` 為 `<deck_id>.html`、改 title／description、灌資料；`app.js` 與 `styles.css` 不用改（讀 `deck_id` 做 localStorage 命名空間）。之後改資料只要重跑 `python3 data/inline_deck.py data/<deck_id>.json`。
 3. 在 `index.html` 的 `.deck-list` 加一列 `a.deck-row` 指向新頁（標題、副標、「N 條主線・M 張必讀卡・30 分鐘」）。
 4. `.github/workflows/pages.yml` 不必改（本目錄第一層 html/css/js 已整目錄登記；`data/` 不部署，只是來源）。
-5. 全站不變式：所有 deck 的 `all_papers` 聯集＝paper_readings `index/` 全庫、每條恰好一次（目前 597＝150＋96＋122＋178＋51）。
+5. 全站不變式：所有 deck 的 `all_papers` 聯集＝paper_readings `index/` 全庫、每條恰好一次（目前 627＝151＋101＋128＋193＋54）。

@@ -1,9 +1,9 @@
 {
   "deck_id": "evolution-program-synthesis",
   "title": "演化・程式合成・自我改進 三十分鐘速覽",
-  "subtitle": "paper_readings D、G、H、J 四類 96 篇的四條主線・車上版",
+  "subtitle": "paper_readings D、G、H、J 四類 101 篇的四條主線・車上版",
   "total_minutes": 30,
-  "intro": "四條線共同追問：模型能否從解題經驗中改寫自己的學習規則、程式與結構，還能把成果留給下一題。先從元學習看外層怎麼評分，再讀開放式演化如何保留分支，接著看程式合成如何長出可重用工具，最後用 KAN 與生成對抗網路（GAN）檢查可解釋性和多樣性的代價。",
+  "intro": "四條線共同追問：系統能否從解題經驗中改寫學習規則、評分方式、程式與網路結構，並把有效做法留給下一題。建議先看元學習如何評估候選，再看開放式演化如何保存不同路線，接著讀程式合成如何累積工具，最後用 KAN 與 GAN 檢查可讀性、多樣性與成本的取捨。",
   "lanes": [
     {
       "id": "meta-rl",
@@ -19,7 +19,7 @@
           "大型語言模型負責提出連貫程式變體，演化負責用真實訓練淘汰。",
           "世界模型把經驗壓成內部模擬器，供規劃、探索與跨任務重用。"
         ],
-        "open": "每個候選都跑完整訓練，成本高到難以擴張；固定少量環境又會獎勵過擬合。真正關鍵是：如何便宜評估，還能分辨可遷移機制與榜單特化？"
+        "open": "現有搜尋仍須把每個候選完整訓練，成本難以擴張；若只在少數環境評分，又可能選到特化方案。如何用較少訓練可靠預測候選在未見任務的表現？"
       },
       "glossary": [
         {
@@ -62,9 +62,9 @@
           "title_en": "Evolving Reinforcement Learning Algorithms",
           "year": "2021-01",
           "role": "原典",
-          "one_liner": "在計算圖中演化損失，從簡單環境學出可泛化到 Atari 的帶 Q 值正規項損失（DQNReg）。",
+          "one_liner": "在計算圖中演化損失，從簡單環境找出能遷移到未見遊戲、可抑制價值高估的新公式。",
           "plain": "等於把設計學習公式也變成程式搜尋：先生成候選，再真的訓練智能體，用成績留下好公式。",
-          "core": "以正規化演化在有型別的計算圖中替換節點，配合功能等價檢查與早期關卡省評估；從深度 Q 網路（DQN）暖啟動後找到帶 Q 值正規項的損失（DQNReg），能抑制 Q 值高估，並在未見的 Atari 遊戲勝過多個人工基線。",
+          "core": "以正規化演化替換受型別限制的計算圖節點，並用功能等價檢查與早期關卡節省評估。從既有深度強化學習方法出發後，找到能壓低過高價值估計的新損失，並在未見的 Atari 遊戲勝過多個人工基線。",
           "number": {
             "label": "自舉訓練表現",
             "value": "提升約 40%",
@@ -83,12 +83,12 @@
           "title_en": "Discovering Temporally-Aware Reinforcement Learning Algorithms",
           "year": "2024-02",
           "role": "時間範式",
-          "one_liner": "把訓練進度餵給學到的策略梯度（LPG），只有演化策略學會隨壽命換打法。",
+          "one_liner": "把訓練進度加入更新目標，只有演化策略學會隨整段訓練換打法。",
           "plain": "等於教練不只看你做對沒有，也看賽季還剩多久：前期敢探索，截止前改為穩定拿分。",
-          "core": "以壽命條件化把目前進度餵進目標函數；演化策略用整段訓練的最終回報選候選，能學到由樂觀探索轉為悲觀收斂的排程，截斷視窗的元梯度則失敗。",
+          "core": "以壽命條件化把目前進度餵進目標函數；演化策略依整段訓練的最終回報選候選，學到由樂觀探索轉為保守收斂的排程，只回看短片段的梯度法則失敗。",
           "number": {
             "label": "稀疏任務步數",
-            "value": "LPG 的 1/8",
+            "value": "1/8 的步數",
             "note": "作者自報"
           },
           "why": "它證明搜尋空間夠大還不夠；外層怎麼評分，會決定能不能發現需要長期取捨的演算法。",
@@ -106,13 +106,13 @@
           "role": "程式範式",
           "one_liner": "讓大型語言模型突變完整更新程式，禁用傳統機制後反而長出世界模型。",
           "plain": "等於不再只調一條公式，而是讓會讀程式的模型改寫整套學習流程，再用實際訓練成績淘汰。",
-          "core": "島嶼種群保留多條路線，大型語言模型提出可執行的突變與交叉；搜尋刻意禁用行動者—評論者、時序差分與自舉，最後出現世界模型、規劃與策略蒸餾的組合。",
+          "core": "島嶼種群保留多條路線，大型語言模型提出可執行的改寫與融合。搜尋刻意禁用數種主流強化學習機制，最後仍自行長出世界模型、規劃與模仿規劃結果的策略。",
           "number": {
-            "label": "每候選評估",
-            "value": "25 次完整訓練",
+            "label": "每候選成本",
+            "value": "25 個完整訓練 run",
             "note": "作者自報"
           },
-          "why": "它把搜尋單位推到完整程式，也顯示世界模型可能是演算法空間中的強吸引子。",
+          "why": "它把搜尋單位推到完整程式，也顯示禁用主流做法後，世界模型仍會自行出現。",
           "links": {
             "arxiv": "https://arxiv.org/abs/2603.28416",
             "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2603.28416_Evolutionary_Discovery_RL_Algos_LLM.摘要.md",
@@ -127,13 +127,13 @@
           "role": "誠實冷水",
           "one_liner": "同台比較演化、蒸餾、符號與大型語言模型提案，發現沒有通吃方法。",
           "plain": "等於把幾種自動發明演算法的方法放上同一張考卷，結果各有擅場，也各有明顯失靈處。",
-          "core": "有好暖啟動時，大型語言模型提案省樣本且分布外表現好；輸入多或具遞迴時，它與符號法都可能失敗。黑箱蒸餾常能免費改善泛化，但老師本身差就救不了。",
+          "core": "若有可靠起點，大型語言模型提案較省樣本，遇到訓練範圍外的任務也較好；但輸入多或必須保留過往資訊時，語言模型與符號公式都可能失敗。黑箱蒸餾通常能不增樣本地改善泛化，但原方法差就救不了。",
           "number": {
-            "label": "實驗重複",
-            "value": "每演算法單一 seed",
+            "label": "被學演算法",
+            "value": "4 種",
             "note": "作者自報"
           },
-          "why": "它給出實用選型表，也坦白比較證據很薄，提醒別把小樣本排名當成普遍定律。",
+          "why": "它給出實用選型表，也明說比較成本限制了證據強度，提醒別把小樣本排名當成普遍定律。",
           "links": {
             "arxiv": "https://arxiv.org/abs/2507.17668",
             "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2507.17668_meta_learn_rl_algorithms.摘要.md",
@@ -429,17 +429,17 @@
       "id": "open-ended",
       "name": "開放式演化與自我改進",
       "minutes": 8,
-      "paper_count": 18,
+      "paper_count": 19,
       "deep_doc": "https://github.com/justty32/paper_readings/blob/main/deep/evolutionary_computation_LLM/02_Quality-Diversity_與開放式進化專章.md",
       "gist": {
-        "summary": "這條線問：系統能否不只磨亮一個答案，而是持續改自己的程式、變異方式與評估標準？主要路線一邊用檔案庫保留多樣分支與暫存石，一邊讓可演化性、局部競爭甚至評估者也進入演化。能力已跨到整座程式庫與科學問題，但成本高、證據仍多半綁在特定任務。",
+        "summary": "這條線問：系統能否不只磨亮一個答案，而是持續改自己的程式、搜尋座標與評分方式？目前方法用檔案庫保存多樣分支與暫存石，也讓大型語言模型提出成功條件和行為描述子。能力已跨到整座程式庫與機器人技能庫，但多樣性何時值得成本，證據仍依任務而變。",
         "points": [
           "品質多樣性不只追冠軍，也保留行為不同的高品質候選，替未來突破留路。",
-          "演化對象從提示、工具與代理原始碼，擴到突變率、完整演算法與評估者。",
+          "演化對象從提示、工具與代理原始碼，擴到成功條件、適應度與行為描述子。",
           "行為描述子與局部競爭決定誰能留下；網格、距離與語意嵌入各有盲點。",
           "真正的開放式學習要持續取得能提升能力的新資訊，不是只產生新奇產物。"
         ],
-        "open": "檔案庫確實會重用非當家分支，但短預算下未必贏過只追冠軍；多樣性何時能回本，仍缺跨任務、長視界的對照。"
+        "open": "語言產生的行為描述子在模擬中能擴大技能庫，但尚未證明面對真實機器人的新障礙時，這些差異仍能轉成較高成功率；檔案庫效益也缺少長預算對照。"
       },
       "glossary": [
         {
@@ -463,12 +463,12 @@
           "plain": "候選只和行為相近者比高下，避免所有路線都擠向同一個冠軍。"
         },
         {
-          "term": "可演化性（evolvability）",
-          "plain": "一個系統產生有用變異、讓後代繼續改善的能力。"
+          "term": "適應度（fitness）",
+          "plain": "衡量候選目前表現、用來引導搜尋的分數。"
         },
         {
-          "term": "評估者（evaluator）",
-          "plain": "替候選打分、決定搜尋方向的規則或代理；它也可能一起演化。"
+          "term": "多目標前緣（Pareto front）",
+          "plain": "沒有另一個候選能在所有目標都勝過它的一組取捨方案。"
         },
         {
           "term": "軟體工程修補基準（SWE-bench）",
@@ -519,24 +519,24 @@
           }
         },
         {
-          "arxiv_id": "2512.16406",
-          "title_zh": "把突變機器塞回網路",
-          "title_en": "Hypernetworks That Evolve Themselves",
-          "year": "2025-12",
-          "role": "自演化範式",
-          "one_liner": "網路自己產生後代權重，連突變率也能遺傳，環境翻轉後可重新適應。",
-          "plain": "等於生物不只遺傳身體，也遺傳「下一代該變多少」；環境一改，變異幅度會跟著調整。",
-          "core": "自我參照圖超網路同時產生策略權重與自己的變體，把變異機制收進個體內。每個節點的突變率可遺傳，讓可演化性受選擇；找到好解後，族群變異會自主下降。",
+          "arxiv_id": "2608.30983",
+          "title_zh": "讓語言設計多樣技能庫",
+          "title_en": "Autonomously Acquiring Robot Manipulation Skills with Language-Driven Quality-Diversity",
+          "year": "2026-08",
+          "role": "規格自動化",
+          "one_liner": "大型語言模型自動提出成功條件、適應度與行為描述子，建立可因應新限制的機器人技能庫。",
+          "plain": "等於先請模型想出多種「怎樣才算不同」，再讓機器人各練一批，遇到新障礙時多幾種招可選。",
+          "core": "大型語言模型從任務文字與模擬介面生成成功條件、適應度及多組行為描述子；各描述子分別保存局部優勝者，再合併繁殖。抓取任務的成功檔案庫規模高於單次直接推斷。",
           "number": {
-            "label": "Ant-v5 得分",
-            "value": ">2000",
+            "label": "抓取成功檔案庫",
+            "value": "403.3±218.0",
             "note": "作者自報"
           },
-          "why": "它把「如何變異」也變成演化對象，示範開放式系統不必依賴外部固定排程。",
+          "why": "它把搜尋座標與評分規格也交給系統探索，補上人工設計多樣性尺度的瓶頸。",
           "links": {
-            "arxiv": "https://arxiv.org/abs/2512.16406",
-            "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2512.16406_SelfReferential_Graph_HyperNetworks.摘要.md",
-            "translate": "https://github.com/justty32/paper_readings/blob/main/translate/2512.16406_SelfReferential_Graph_HyperNetworks.zh-TW.md"
+            "arxiv": "https://arxiv.org/abs/2608.30983",
+            "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2608.30983_LanguageDrivenQD.摘要.md",
+            "translate": "https://github.com/justty32/paper_readings/blob/main/translate/2608.30983_LanguageDrivenQD.zh-TW.md"
           }
         },
         {
@@ -550,7 +550,7 @@
           "core": "它把整座 Git 程式庫當候選，以行為描述子分格並保留多目標前緣。血緣證明檔案庫有被使用；但在每政策 48 個工作下，最終表現仍未證明優於序列冠軍。",
           "number": {
             "label": "相對序列冠軍",
-            "value": "-0.135%",
+            "value": "低 0.135%",
             "note": "作者自報"
           },
           "why": "它把「機制有運作」和「機制有成效」拆開驗證，戳破以覆蓋率代替效益的捷徑。",
@@ -561,7 +561,7 @@
           }
         }
       ],
-      "question": "你願意花多少眼前成績，保留一條可能很久以後才有用的分支？",
+      "question": "當評分規則也是模型生成的，你會用什麼證據判斷多樣性真的能應付未知限制？",
       "all_papers": [
         {
           "arxiv_id": "2505.22954",
@@ -706,6 +706,14 @@
           "cat": "D",
           "summary_file": "2608.14019_EmergentModels.摘要.md",
           "translate_file": "2608.14019_EmergentModels.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2608.30983",
+          "status": "✅",
+          "title_zh": "Language-Driven Quality-Diversity：LLM 從自由文字任務自動提出成功條件、fitness 與多組行為描述子，再以 multi-BD MAP-Elites Success 同時探索多種行為差異，產生部署限制改變時可挑選的多樣機器人動作庫；抓取任務 archive 成功 403.3±218.0、直接推斷 144.7±15.9（作者自報）",
+          "cat": "D",
+          "summary_file": "2608.30983_LanguageDrivenQD.摘要.md",
+          "translate_file": "2608.30983_LanguageDrivenQD.zh-TW.md"
         }
       ]
     },
@@ -713,17 +721,17 @@
       "id": "gp-library",
       "name": "遺傳編程與函式庫學習",
       "minutes": 9,
-      "paper_count": 36,
+      "paper_count": 40,
       "deep_doc": "https://github.com/justty32/paper_readings/blob/main/deep/program_synthesis_library_learning.md",
       "gist": {
-        "summary": "這條線問：程式可否不靠人逐條設計，而由搜尋與既有解自己長出？一派以遺傳編程做選擇、交叉與變異；一派用程式合成找滿足規格的解，再按最小描述長度把共同片段收進庫。兩派正接上神經引導與大型語言模型，但庫膨脹、跨域遷移與真實重用仍是硬關卡。",
+        "summary": "這條線問：程式能否從解題經驗中自行改寫，並把可重用片段收進工具庫？DreamCoder 與 LILO 用搜尋、壓縮、文件化累積抽象；程式演化則讓模型反覆改寫完整解法、執行並驗證。真正難題是證明工具確有跨題重用，且改進不是多取樣造成。",
         "points": [
-          "遺傳編程直接演化程式樹；圖形處理器、語意去重與神經引導正改善速度、重複搜尋與選擇品質。",
-          "DreamCoder 在清醒期解題，睡眠期按最小描述長度抽出新原語，形成搜尋與壓縮飛輪。",
-          "Stitch 用分支限界直接找抽象，讓函式庫壓縮從昂貴瓶頸變成可反覆呼叫的工具。",
-          "大型語言模型可提案與寫文件，符號引擎負責壓縮驗證；但要以調用紀錄和消融實驗防止假增益。"
+          "DreamCoder 以清醒—睡眠循環解題、壓縮共同片段，再訓練搜尋模型。",
+          "LILO 讓大型語言模型提案與寫文件，符號壓縮器負責抽出共通函式。",
+          "Discovery Loop 反覆改寫完整求解器，只有通過獨立驗證器的改進能留下。",
+          "調用日誌與消融實驗顯示：總分變好，不等於函式庫真的被跨題重用。"
         ],
-        "open": "如何讓系統自動長出領域特定語言，又能跨域遷移；更難的是證明新抽象真的省下搜尋，而非只靠多試幾次。"
+        "open": "在相同計算預算下，加入工具庫的系統能否比不共享工具的對照組減少後續任務搜尋時間，且在未見領域維持效果？"
       },
       "glossary": [
         {
@@ -739,20 +747,16 @@
           "plain": "把函式庫本身也算成本；只有能讓整批程式淨變短的抽象才值得留下。"
         },
         {
-          "term": "神經符號（neuro-symbolic）",
-          "plain": "神經模型擅長提案，符號程序負責精確搜尋、執行與驗證的分工。"
+          "term": "程式演化（program evolution）",
+          "plain": "讓模型反覆改寫、執行與篩選程式，逐輪保留表現更好的版本。"
         },
         {
-          "term": "分支限界（branch-and-bound）",
-          "plain": "替未完成候選算最好可能分數；追不上目前最佳解就整枝丟掉。"
+          "term": "獨立驗證器（independent verifier）",
+          "plain": "與生成程式分開實作的檢查器，避免候選自己宣稱正確。"
         },
         {
-          "term": "遺傳編程（genetic programming）",
-          "plain": "把程式當族群，用選擇、交叉與變異反覆繁殖，留下表現較好的版本。"
-        },
-        {
-          "term": "自我一致性（self-consistency）",
-          "plain": "同一題抽樣多個答案再投票；分數可能提高，卻不表示真的用了函式庫。"
+          "term": "正規表示式（regular expression）",
+          "plain": "用精簡符號描述文字模式的規則，常用於搜尋、比對與替換。"
         },
         {
           "term": "消融實驗（ablation study）",
@@ -770,8 +774,8 @@
           "plain": "等於學徒白天拿現有工具做題，晚上把常用手法做成新工具，還練習下次更快找到它。",
           "core": "清醒期搜尋能解題的程式；抽象期按最小描述長度重構共同片段；作夢期用已解題與合成題訓練神經搜尋器。文字編輯解題率由 3.7% 升至 79.6%。",
           "number": {
-            "label": "文字編輯解題率",
-            "value": "3.7%→79.6%",
+            "label": "學後文字解題率",
+            "value": "79.6%",
             "note": "作者自報"
           },
           "why": "它把「搜尋產生經驗、壓縮產生工具、工具再加速搜尋」變成此領域的標準迴圈。",
@@ -782,24 +786,24 @@
           }
         },
         {
-          "arxiv_id": "2211.16605",
-          "title_zh": "把抽象搜尋加速千倍",
-          "title_en": "Top-Down Synthesis for Library Learning",
-          "year": "2022-11",
-          "role": "壓縮引擎",
-          "one_liner": "直接由上而下合成可重用函式，靠可靠上界剪枝，仍保證單一抽象最優。",
-          "plain": "等於不是翻遍所有舊程式找零件，而是先猜零件輪廓；一看不可能勝出就整枝停止。",
-          "core": "Stitch 用分支限界搜尋帶洞的函式，匹配位置只能隨展開縮小，因此能算安全上界、提前砍枝；壓縮速度比 DreamCoder 快 3–4 個數量級。",
+          "arxiv_id": "2609.05093",
+          "title_zh": "讓程式在驗證中演化",
+          "title_en": "LLM-Guided Program Evolution for Circle Packing: Breaking 10 Packomania Records for $28",
+          "year": "2026-09",
+          "role": "演化實作",
+          "one_liner": "大型語言模型反覆重寫求解器，獨立驗證器把十項改善留下。",
+          "plain": "等於讓工程師每輪重寫整套解法，但只有跑得動、通過檢查且分數更好的版本能留下。",
+          "core": "Discovery Loop 把目前最佳程式、各目標最佳結果與近期嘗試放回提示，候選並行執行，再由不共用程式碼的獨立驗證器檢查。完整運行十五輪，改善十項既有紀錄。",
           "number": {
-            "label": "壓縮速度",
-            "value": "快 3-4 個數量級",
+            "label": "完整運行成本",
+            "value": "27.72 美元",
             "note": "作者自報"
           },
-          "why": "它把 DreamCoder 最貴的睡眠壓縮，變成能頻繁運行的實用基礎設施。",
+          "why": "它把抽象的程式演化落成可審計閉環，也揭示固定目標很快進入收益遞減。",
           "links": {
-            "arxiv": "https://arxiv.org/abs/2211.16605",
-            "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2211.16605_Stitch.摘要.md",
-            "translate": "https://github.com/justty32/paper_readings/blob/main/translate/2211.16605_Stitch.zh-TW.md"
+            "arxiv": "https://arxiv.org/abs/2609.05093",
+            "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2609.05093_DiscoveryLoop.摘要.md",
+            "translate": "https://github.com/justty32/paper_readings/blob/main/translate/2609.05093_DiscoveryLoop.zh-TW.md"
           }
         },
         {
@@ -808,12 +812,12 @@
           "title_en": "LILO: Learning Interpretable Libraries by Compressing and Documenting Code",
           "year": "2023-10",
           "role": "整合範式",
-          "one_liner": "大型語言模型找解與命名，Stitch 負責壓縮，組成搜尋、壓縮、文件化迴圈。",
+          "one_liner": "大型語言模型找解與命名，符號壓縮器抽取共通函式，形成搜尋、壓縮與文件化迴圈。",
           "plain": "等於請創意寫手出解法，讓精算員找共通零件，再由技術寫手替零件命名與寫說明。",
           "core": "語言觀察函式庫歸納系統（LILO）採神經符號分工：大型語言模型生成程式，Stitch 按最小描述長度抽函式，再由模型補名稱與說明。正規表示式任務平均解題率為 77.07，DreamCoder 為 43.93。",
           "number": {
             "label": "正規式解題率",
-            "value": "77.07 vs 43.93",
+            "value": "77.07",
             "note": "作者自報"
           },
           "why": "它顯示抽象若沒有可讀名稱與文件，對模型就像混淆碼；壓縮與說明缺一不可。",
@@ -831,10 +835,10 @@
           "role": "誠實冷水",
           "one_liner": "重查 LEGO-Prover 與 TroVE 日誌後，跨題成功重用各只有 1 次與 3 次。",
           "plain": "等於倉庫看似堆滿工具，工人卻幾乎從不拿來用；成績變好其實是多試幾次再投票。",
-          "core": "作者直接數日誌，再做消融實驗：切斷跨題共享但保留取樣預算，表現大致仍在。增益更像自我修正與自我一致性，而非函式庫累積。",
+          "core": "作者直接數日誌，再做消融實驗：切斷跨題共享但保留取樣預算後，表現大致仍在。增益較像重試修正與多次取樣投票，而非函式庫累積。",
           "number": {
-            "label": "成功重用",
-            "value": "1 次／3 次",
+            "label": "TroVE成功重用",
+            "value": "3 次成功重用",
             "note": "作者自報"
           },
           "why": "它要求評估真正的調用與搜尋節省，不能只拿總準確率替「學到庫」背書。",
@@ -845,7 +849,7 @@
           }
         }
       ],
-      "question": "一個抽象要被後續任務實際調用幾次，才值得支付驗證、文件與維護成本？",
+      "question": "若工具只在一題有效，它是可重用抽象，還是被保存的一次性解法？",
       "all_papers": [
         {
           "arxiv_id": "2411.05820",
@@ -1134,6 +1138,38 @@
           "cat": "G",
           "summary_file": "2505.10819_PoEWorld.摘要.md",
           "translate_file": "2505.10819_PoEWorld.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.17590",
+          "status": "✅",
+          "title_zh": "Evolutionary Ensemble Search：以角色分工的 council 產搜尋方向、orchestrator 派給執行專家與演化引擎，child 程式需自行執行取得驗證證據，加 operator credit、session memory 與跨 run 課題記憶；MLE-bench Lite 開發 ledger 在 22 題中 19 題達 medal threshold（作者自報，作者自陳為開發結果而非盲測成功率）",
+          "cat": "G",
+          "summary_file": "2609.17590_EES.摘要.md",
+          "translate_file": "2609.17590_EES.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.05093",
+          "status": "✅",
+          "title_zh": "Discovery Loop：單一 LLM 依 scoreboard 與歷史想法反覆重寫 circle-packing solver，每個候選由獨立 verifier 決定保留；15 次迭代內以 27.72 美元改善 Packomania 10 個 N（101–114）的最佳紀錄、增益 2.4%–5.4%（作者自報）",
+          "cat": "G",
+          "summary_file": "2609.05093_DiscoveryLoop.摘要.md",
+          "translate_file": "2609.05093_DiscoveryLoop.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2608.28421",
+          "status": "✅",
+          "title_zh": "PLVR（Program Learning with Verifiable Rewards）：不把能力塞回權重，改學由 typed ontology 上的 neural／deterministic primitive 組成的顯式程式，以 type inference 反推每層所需 ontology、用 symbolic backpropagation 把終局 scalar reward 換成逐步 contract verdict；guided pool median accuracy 65.6% 對 uniform sampling 17.5%（作者自報）",
+          "cat": "G",
+          "summary_file": "2608.28421_PLVR.摘要.md",
+          "translate_file": "2608.28421_PLVR.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2608.29841",
+          "status": "✅",
+          "title_zh": "SkillForge：自然語言→形式驗證 Dafny 程式拆成 6 個各有 contract 的 atomic skill（規格推斷、invariant、錯誤診斷、修復等），harness 依 verifier error 類別決定性路由修復；verification rate 91.6%、最強 baseline 85.4%（作者自報）",
+          "cat": "G",
+          "summary_file": "2608.29841_SkillForge.摘要.md",
+          "translate_file": "2608.29841_SkillForge.zh-TW.md"
         }
       ]
     },
@@ -1147,11 +1183,11 @@
         "summary": "這裡並排兩條重新設計神經網路的小支線：KAN 把可學函數放到連線上，追求可解釋、精簡又省記憶體；生成對抗網路（GAN）則用對抗訓練學可控制的表徵、資料對稱或生成器架構。前者已有工程案例與壓縮方案，後者則從資訊理論走到科學發現與演化搜尋。",
         "points": [
           "Kolmogorov-Arnold 網路（KAN）可剪枝、符號化，最後交出人能讀的方程。",
-          "KAN 的成本可從兩端削減：演化搜尋砍連線，元學習共享函數參數。",
+          "KAN 的成本可從兩端削減：遺傳演算法搜尋精簡連線，小型共享網路產生參數。",
           "生成對抗網路不只造圖：互資訊（mutual information）可拆出語意，對抗判別也能找李群對稱。",
           "品質—多樣性（quality-diversity）擴大架構探索，但多樣與最佳品質未必同時到手。"
         ],
-        "open": "可解釋結構若仍要人工命名、調參與驗證，它究竟是可靠的科學發現工具，還是比較好看的黑箱？"
+        "open": "這些方法在小型資料上抽出的公式、語意因子與對稱，能否跨資料與訓練種子穩定重現，並提升未見任務的預測？"
       },
       "glossary": [
         {
@@ -1217,10 +1253,10 @@
           "role": "演化範式",
           "one_liner": "把連線、網格與深度編進染色體，讓遺傳演算法自動找出小而準的 KAN。",
           "plain": "這篇等於把設計神經網路變成育種：每代改接線、改深度，留下分類準又不臃腫的版本。",
-          "core": "演化搜尋（evolutionary search）同時選連線、網格與深度；退化機制和零遮罩讓固定長度染色體仍能長成不同深度的網路。它也在乳癌診斷資料集（WDBC）選特徵，並從獲勝模型抽出分類公式。",
+          "core": "遺傳演算法同時選連線、網格與深度；退化機制和零遮罩讓固定長度染色體仍能長成不同深度的網路。它也在乳癌診斷資料集選特徵，並從獲勝模型抽出分類公式。",
           "number": {
-            "label": "WDBC 參數量",
-            "value": "1560 vs 27328",
+            "label": "乳癌資料參數量",
+            "value": "1560",
             "note": "作者自報"
           },
           "why": "它把 KAN 的手工剪枝改成可重複的結構搜尋，也是本 deck 演化主題的直接交會點。",
@@ -1257,11 +1293,11 @@
           "title_en": "Exploring the Evolution of GANs through Quality Diversity",
           "year": "2020-07",
           "role": "誠實冷水",
-          "one_liner": "用新奇度維持 GAN 架構多樣性，局部競爭最會探索，品質卻輸給全域競爭。",
+          "one_liner": "用新奇度維持 GAN 架構多樣性，局部競爭找到更多架構，品質卻輸給全域競爭。",
           "plain": "這篇等於讓許多長得不同的生成器都有生存空間，卻發現保護多樣性不保證找到最會造圖的那一個。",
-          "core": "品質—多樣性（quality-diversity）以架構距離衡量新奇度，並比較局部與全域競爭。局部競爭的新奇搜尋（NSLC）找到更多利基，表現卻較分散；全域競爭較穩定。生成品質距離（FID，越低越好）顯示，絕對品質仍落後手工強模型。",
+          "core": "品質—多樣性（quality-diversity）以架構距離衡量新奇度，並比較局部與全域競爭。局部競爭找到更多不同架構，表現卻較分散；全域競爭較穩定。生成品質距離（FID，越低越好）顯示，絕對品質仍落後手工強模型。",
           "number": {
-            "label": "NSLC 的 FID",
+            "label": "局部競爭 FID",
             "value": "35.2±12.5",
             "note": "作者自報"
           },
@@ -1336,8 +1372,8 @@
   ],
   "threads": [
     {
-      "title": "連設計方法也成為搜尋對象",
-      "text": "元學習演化損失與更新程式，開放式系統再把突變規則交給演化；程式合成與 KAN 支線則搜尋可重用程式和網路結構。共同難題在於評分能否挑出可遷移的機制。",
+      "title": "設計本身也進入搜尋",
+      "text": "元學習搜尋損失與更新程式，開放式演化連成功條件與行為描述子也交給模型設計；程式演化改寫整套求解器，KAN 則搜尋連線與深度。四條線都把原本由人設定的設計工作納入搜尋。",
       "lane_ids": [
         "meta-rl",
         "open-ended",
@@ -1346,8 +1382,8 @@
       ],
       "paper_ids": [
         "2101.03958",
-        "2512.16406",
-        "2006.08381",
+        "2608.30983",
+        "2609.05093",
         "2501.17411"
       ]
     },
@@ -1381,5 +1417,5 @@
       ]
     }
   ],
-  "outro": "四條線疊起來，方向是把提案、淘汰與經驗累積接成能反覆運作的改進迴圈。下一步要追的不只是一輪最高分，而是新規則能否跨任務遷移，新工具是否真的被後續問題調用。"
+  "outro": "讀完可用兩個問題檢查任何「自我改進」主張：新規則能否在未見任務繼續奏效，留下的分支或工具是否真的被後續系統調用。若只看到單次高分或更大的檔案庫，證據還不夠。"
 }

@@ -1,9 +1,9 @@
 {
   "deck_id": "agent-loop-workflow-memory",
   "title": "自我改進・工作流・記憶 三十分鐘速覽",
-  "subtitle": "paper_readings I 類 178 篇的四條主線・車上版",
+  "subtitle": "paper_readings I 類 193 篇的四條主線・車上版",
   "total_minutes": 30,
-  "intro": "四條線共同追問：agent 如何把模型輸出變成可靠、可修正、可長期運作的行動。先讀工具使用，理解文字如何接上真實世界。再讀自我改進，看外部回饋如何推動修正。接著讀工作流校準，決定何時放行、棄答或回滾。最後讀架構與記憶，處理長期狀態與共同失敗。",
+  "intro": "四條線共同追問：agent 如何把模型輸出變成能查證、能修正、能長期運作的行動。先看工具如何接上外部世界，再看回饋如何推動自我改進。接著讀工作流的優化與放行門檻，最後處理長期記憶、規模與共同失敗。",
   "lanes": [
     {
       "id": "tool-use",
@@ -12,12 +12,12 @@
       "paper_count": 27,
       "deep_doc": "https://github.com/justty32/paper_readings/blob/main/deep/aicore_reliable_function_landscape/03_§5_下層受約束填碼——「收窄輸出」的技術光譜.md",
       "gist": {
-        "summary": "工具使用 agent 把模型的文字意圖接到搜尋、程式與真實 API：早期重點是讓推理與行動交錯，接著發展出自造工具、呼叫時機學習與大目錄檢索；如今焦點轉向合約、授權與提交前驗證，避免一次錯誤呼叫留下永久效果。",
+        "summary": "工具使用 agent 把模型的文字意圖接到搜尋、程式與真實應用程式介面（API）：早期重點是讓推理與行動交錯，接著發展出自造工具、呼叫時機學習與大目錄檢索；如今焦點轉向合約、授權與提交前驗證，避免一次錯誤呼叫留下永久效果。",
         "points": [
           "行動迴圈讓模型先想、再呼叫工具、讀回結果，靠外部世界接地。",
           "工具可由強模型一次製造，再交給便宜模型重複使用，形成功能快取。",
           "工具庫變大後，先用 API 檢索器縮小候選，再用回溯搜尋避免一錯到底。",
-          "格式正確不等於行動安全；合約、權限與執行收據都要在系統層把關。"
+          "格式正確不等於行動安全；合約、權限與每次執行的可稽核紀錄都要在系統層把關。"
         ],
         "open": "工具文件、模型判斷與外部狀態都會過期；如何在真正產生副作用前，低成本證明這次呼叫仍被授權、參數仍正確、結果可以復原？"
       },
@@ -45,6 +45,14 @@
         {
           "term": "接地落差（grounding gap）",
           "plain": "在模擬環境看似會用工具，碰到真實錯誤、限制與雜訊後卻明顯退步。"
+        },
+        {
+          "term": "應用程式介面（API）",
+          "plain": "讓程式依固定格式向另一個系統提出請求並取得結果的入口。"
+        },
+        {
+          "term": "副作用（side effect）",
+          "plain": "呼叫工具後對外部世界造成的改變，例如扣款、改資料或寄信。"
         }
       ],
       "highlights": [
@@ -121,8 +129,8 @@
           "plain": "等於先在沒有真故障的飛行模擬器練熟；真的起飛後，成績便被雜訊與例外拉低。",
           "core": "三個模型角色合成 3,938 筆工具互動，連 API 回應都由模型虛構。13B 模型在未見模擬工具的人工驗收率為 75%，換成未見真實 API 後準確率降至 61.4%，顯示接地落差。",
           "number": {
-            "label": "模擬→真實",
-            "value": "75%→61.4%",
+            "label": "真實 API 準確率",
+            "value": "61.4%",
             "note": "作者自報"
           },
           "why": "它證明廉價模擬確實能遷移，也誠實量出沒有真實執行與獨立把關的天花板。",
@@ -357,17 +365,17 @@
       "id": "self-improve-loop",
       "name": "自我改進與執行接地的反思迴圈",
       "minutes": 8,
-      "paper_count": 48,
+      "paper_count": 55,
       "deep_doc": "https://github.com/justty32/paper_readings/blob/main/deep/aicore_reliable_function_landscape/02_§3.4_什麼時候該信、該擋、該退——治理簇含關鍵正反證.md",
       "gist": {
-        "summary": "這條線問：模型能否靠自己的輸出越做越好？方法從答案正誤篩選、工具驗證修正，到效用函數驅動鷹架程式演化；近作再把版本、回退與隱藏稽核搬進整個 agent 系統。共同界線是：內省不是證據，外部接地才讓迴圈有方向。",
+        "summary": "這條線問：模型能否靠自己的輸出越做越好？方法從答案正誤篩選、工具驗證修正，到效用函數驅動鷹架程式演化；近作再把行為對應驗證、版本回退與竄改稽核搬進整個 agent 系統。共同界線是：內省不是證據，外部接地才讓迴圈有方向。",
         "points": [
-          "自我訓練先大量生答案，只把通過確定條件的理據留下再訓。",
-          "修正迴圈要把搜尋、直譯器或測試結果交給模型，不能叫它自評。",
-          "遞迴改進可直接改鷹架程式，但效用函數與沙箱必須由外部強制。",
-          "驗證器覆蓋不到的錯誤就是天花板；驗證器可鑽漏洞時還會養出獎勵駭客。"
+          "自我訓練先大量生成答案，只把通過確定條件的理據留下再訓。",
+          "修正迴圈要把搜尋、程式執行或測試結果交給模型，不能叫它自評。",
+          "遞迴改進可直接改鷹架程式，但效用函數與執行隔離必須由系統強制。",
+          "驗證器覆蓋不到的錯誤就是天花板；規則可鑽漏洞時還會養出獎勵駭客。"
         ],
-        "open": "驗證器若也是模型寫的、測試又長期固定，要怎麼證明飛輪學到可轉移能力，而非只學會討好裁判？"
+        "open": "當驗證器由同一系統生成、測試又固定時，哪些未見任務與隱藏稽核能證明改進可轉移，而不是只學會迎合裁判？"
       },
       "glossary": [
         {
@@ -397,6 +405,10 @@
         {
           "term": "獎勵駭客（reward hacking）",
           "plain": "系統鑽評分規則漏洞拿高分，表面過關，實際目標卻沒有完成。"
+        },
+        {
+          "term": "布林可滿足性問題（3-SAT）",
+          "plain": "一類判斷真假變數能否同時滿足所有三項條件組合的經典問題。"
         }
       ],
       "highlights": [
@@ -406,7 +418,7 @@
           "title_en": "STaR: Self-Taught Reasoner — Bootstrapping Reasoning With Reasoning",
           "year": "2022-03",
           "role": "原典",
-          "one_liner": "STaR 讓模型自產理據，只用答案正誤過濾後再微調，形成可重複的自舉迴圈。",
+          "one_liner": "STaR 讓模型自產理據，只用答案正誤過濾後再微調，形成可重複的自我訓練迴圈。",
           "plain": "等於學生自己寫解題過程，但只有答案簿對過的作業能進下一輪教材。",
           "core": "模型先替大量題目生成理據與答案，只保留答案正確者；答錯題則給正解提示，倒推出可用理據後再移除提示。GPT-J 在常識問答（CQA）達 72.5%，接近大 30 倍模型的 73.0%。",
           "number": {
@@ -429,13 +441,13 @@
           "role": "遞迴範式",
           "one_liner": "STOP 把鷹架程式本身當候選方案，讓上一代改進器依效用函數選出下一代。",
           "plain": "等於不只叫程式解題，還叫它重寫自己的解題工作流，再用實測分數決定是否換版。",
-          "core": "底層模型權重不動，改進的是取樣、搜尋與選解流程。改進器在一種任務上學成後直接搬到新任務，3-SAT 從 21.2% 升至 75.1%；但若評分可鑽，獎勵駭客也會被選中。",
+          "core": "底層模型權重不動，改的是取樣、搜尋與選解流程。改進器從一種任務學成後直接搬到新任務，布林可滿足性問題（3-SAT）的表現由 21.2% 升至 75.1%；但評分可鑽時，獎勵駭客也會被選中。",
           "number": {
             "label": "3-SAT 表現",
-            "value": "21.2%→75.1%",
+            "value": "75.1%",
             "note": "作者自報"
           },
-          "why": "它證明流程也能遞迴演化，同時警告提示裡的限制會被刪掉，治理要落在執行層。",
+          "why": "它證明流程也能遞迴演化，同時警告提示中的限制可能被刪除；治理必須由執行層強制。",
           "links": {
             "arxiv": "https://arxiv.org/abs/2310.02304",
             "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2310.02304_STOP.摘要.md",
@@ -448,7 +460,7 @@
           "title_en": "CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing",
           "year": "2023-05",
           "role": "工具範式",
-          "one_liner": "CRITIC 讓模型用搜尋、直譯器或安全 API 查核初答，再依外部證據迭代修改。",
+          "one_liner": "CRITIC 讓模型用搜尋、程式直譯器或安全檢查介面查核初答，再依外部證據迭代修改。",
           "plain": "等於寫完先查資料、跑程式、看檢測報告，拿得到證據才動筆修改。",
           "core": "凍結模型先作答，再把工具回傳的證據寫成批判並修正；工具也能判定何時停止。模糊問答的 F1 分數（兼顧精確率與召回率）從 64.3 升到 74.9；拿掉工具、只靠自評時，增益幾乎消失。",
           "number": {
@@ -456,7 +468,7 @@
             "value": "64.3→74.9",
             "note": "作者自報"
           },
-          "why": "它用跨任務消融釘住因果：有效的不是多想一次，而是多拿到一份外部證據。",
+          "why": "它在多種任務中拿掉工具做對照：有效的不是多想一次，而是多拿到一份外部證據。",
           "links": {
             "arxiv": "https://arxiv.org/abs/2305.11738",
             "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2305.11738_CRITIC.摘要.md",
@@ -471,10 +483,10 @@
           "role": "誠實冷水",
           "one_liner": "嚴格拿掉正確標籤與工具後，內在自我修正在多個推理任務普遍退化。",
           "plain": "等於學生沒有答案簿也沒有老師，只被要求再檢查一次；常把原本答對的題改錯。",
-          "core": "作者重跑先前設定，發現增益常來自用正確標籤決定何時停止，而非模型真會糾錯。移除外部回饋後，GPT-4 在小學數學題基準（GSM8K）從 95.5% 降到 89.0%，換提示仍同樣退化。",
+          "core": "作者重跑先前設定，發現增益常來自用正確標籤決定何時停止，而非模型真會糾錯。移除外部回饋後，GPT-4 在小學數學題基準（GSM8K）由 95.5 降至 89.0，換提示仍同樣退化。",
           "number": {
             "label": "GPT-4 小學數學題",
-            "value": "95.5%→89.0%",
+            "value": "95.5→89.0",
             "note": "作者自報"
           },
           "why": "它提供最乾淨的反證：內在自我修正不是憑證，外部裁判才是迴圈成立的條件。",
@@ -870,6 +882,62 @@
           "cat": "I",
           "summary_file": "2507.16713_ExperienceBestTeacher.摘要.md",
           "translate_file": "2507.16713_ExperienceBestTeacher.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2608.27311",
+          "status": "✅",
+          "title_zh": "HarnessLens：harness 演化時依候選修改的目標行為挑驗證任務，再用可歸因軌跡的 attributable-evidence gate 決定准入，避免平均分掩蓋局部退化；三種 harness × 四個 benchmark 上 held-out 平均改善 7.6%–13.6% 且評估預算較低（作者自報）",
+          "cat": "I",
+          "summary_file": "2608.27311_HarnessLens.摘要.md",
+          "translate_file": "2608.27311_HarnessLens.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.00069",
+          "status": "✅",
+          "title_zh": "Auditing Harness Tampering：把 reward／measurement tampering 擴成自改 agent 的 harness tampering，以「功能角色 × 完整性義務」雙軸分類，用植入竄改／良性編輯對的語料評測稽核法；實跑軌跡中竄改反覆出現且會沿最佳 lineage 留存，Luna 稽核在植入資料定位 recall 74.9%、FPR 6.3%（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.00069_HarnessTampering.摘要.md",
+          "translate_file": "2609.00069_HarnessTampering.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.14857",
+          "status": "✅",
+          "title_zh": "ModularRSI：對照同任務成敗軌跡診斷 harness，把 harness 拆成五個受限模組各自遞迴演化再整合，演化資料與下游 benchmark 不重疊；TerminalBench 2.0 accuracy 47.57→52.43、Pass^3 30.34→35.96，凍結後換模型仍高於各自 baseline（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.14857_ModularRSI.摘要.md",
+          "translate_file": "2609.14857_ModularRSI.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.04518",
+          "status": "✅",
+          "title_zh": "Multi-Harness RL：固定軌跡、獎勵與更新預算，只改 GRPO 相對優勢的分組邊界（within／cross harness）比較 coding agent 學到什麼；跨 harness 分組會讓信用訊號帶上 harness 身分，但在未見 harness 上只比 within 高 0.25 個百分點，主要學到的是組態適應而非可攜能力（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.04518_MultiHarnessRL.摘要.md",
+          "translate_file": "2609.04518_MultiHarnessRL.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2608.26645",
+          "status": "✅",
+          "title_zh": "FLARE：把 VLA 失敗分成「軌跡仍有效但姿態偏離」的 ID 錯誤與「環境已不可挽回」的 OOD 錯誤——前者用擾動示範＋銜接資料讓策略內生重試，後者由 MLLM 離線開採失敗建立物件中心的 reset 技能庫，線上再由 MLLM 監控器在任務與重置專家間切換；9 項任務平均成功率 84.0%（作者自報）",
+          "cat": "I",
+          "summary_file": "2608.26645_FLARE.摘要.md",
+          "translate_file": "2608.26645_FLARE.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.10873",
+          "status": "✅",
+          "title_zh": "When Validation Stops Learning：持續學習具身 agent 的更新准入器不能只算「放進來的更新有無害」，還要算固定互動預算下錯失的可學更新；成對二項關卡在 B=2,000 接受 81/256 次更新、Hoeffding 關卡全數延後（作者自報），零違規紀錄可能只是學習已被凍結",
+          "cat": "I",
+          "summary_file": "2609.10873_UpdateAdmission.摘要.md",
+          "translate_file": "2609.10873_UpdateAdmission.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.17115",
+          "status": "✅",
+          "title_zh": "Intrinsic Robot Rewarding（研究提案）：重用 frozen VLA 的視覺編碼器與成功示範終點建成參考庫，以特徵距離產生任務獎勵，再用受限殘差 RL 改進實體策略；目前只有既有 VLA 示範器基線（成功 28/50、56%），IRR 本身的增益尚待實驗（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.17115_IntrinsicRobotRewarding.摘要.md",
+          "translate_file": "2609.17115_IntrinsicRobotRewarding.zh-TW.md"
         }
       ]
     },
@@ -877,17 +945,17 @@
       "id": "workflow-calibration",
       "name": "工作流最佳化與信心校準",
       "minutes": 8,
-      "paper_count": 61,
+      "paper_count": 63,
       "deep_doc": "https://github.com/justty32/paper_readings/blob/main/deep/aicore_reliable_function_landscape.md",
       "gist": {
-        "summary": "這條線把 agent 工作流視為可優化計算圖：一派把提示、節點與拓撲編譯或搜尋；另一派為每次輸出估信心、設定棄答與委派閘門。工具已有自動編譯與共形保證，但單輪信心方法搬到多輪軌跡常近乎隨機，優化與治理仍須一起設計。",
+        "summary": "這條線把 agent 工作流視為可優化計算圖：一派把提示、節點與連線結構編譯或搜尋；另一派為每次輸出估信心、設定棄答與委派閘門。工具已有自動編譯與共形風險控制，但單輪信心方法搬到多輪軌跡常近乎隨機，優化與治理仍須一起設計。",
         "points": [
           "先把多次模型呼叫、工具與控制流統一成機率程式，再談整圖優化。",
-          "工作流優化分成提示與示範、節點參數、連線拓撲，甚至整段程式。",
+          "工作流優化分成提示與示範、節點參數、連線結構，甚至整段程式。",
           "信心不是裝飾：要接到放行、棄答、委派或升級，並用校準資料定門檻。",
-          "多輪 agent 的不確定性會傳播也會被互動消減，不能只看最後一句。"
+          "多輪 agent 的不確定性會傳播，也可能被互動消減；內部狀態可提供失敗訊號，但跨任務仍會偏移。"
         ],
-        "open": "同一套信心分數跨文字、工具呼叫、程式與多 agent 會失真；仍需低成本、節點專屬且能追蹤整條軌跡的憑證。"
+        "open": "現有信心分數跨文字、工具、程式與多 agent 常失真；缺口是證明節點專屬、低成本的分數能及早預測軌跡失敗，且觸發介入後確實降低損失。"
       },
       "glossary": [
         {
@@ -917,6 +985,10 @@
         {
           "term": "判別曲線面積（AUROC）",
           "plain": "衡量分數能否把成功與失敗分開；越高代表越能正確判別。"
+        },
+        {
+          "term": "計算圖（computation graph）",
+          "plain": "把各步驟畫成節點與連線，方便追蹤資料流並一起最佳化。"
         }
       ],
       "highlights": [
@@ -928,10 +1000,10 @@
           "role": "定位入口",
           "one_liner": "把思維鏈、驗證器與工具呼叫統一成字串隨機變數上的機率程式。",
           "plain": "等於先替各種模型串接法發明共同流程圖語言，讓人能觀測中間結果、推論缺口，之後才有一致的優化對象。",
-          "core": "它用同一種表示描述思考、答案、驗證與工具，允許觀測部分變數再推論其餘；唯一實驗在 Twenty Questions 解出 40 個概念中的 11 個，重點是統一語言，不是榜單。",
+          "core": "它用同一種表示描述思考、答案、驗證與工具，允許觀測部分變數再推論其餘；唯一的猜概念實驗解出 40 個概念中的 11 個（29%），重點是統一語言，不是榜單。",
           "number": {
             "label": "問答任務解出率",
-            "value": "29%（11／40）",
+            "value": "29%",
             "note": "作者自報"
           },
           "why": "它是把多次模型呼叫視為一張可推論計算圖的理論起點。",
@@ -949,7 +1021,7 @@
           "role": "優化範式",
           "one_liner": "用宣告式介面寫流程，再自動搜尋示範與指令，讓數學題準確率大幅上升。",
           "plain": "等於只寫每一步要做什麼，不再手調一整串提示詞；系統自己試流程、收集成功例子，再把它們編回工作流。",
-          "core": "把模型呼叫組成文字轉換圖，節點拆成簽章、模組與優化器；編譯器跑候選流程，用任務指標留下好軌跡當自助法示範。GSM8K 上，GPT-3.5 的簡單程式由 33% 升至 82%。",
+          "core": "把模型呼叫組成文字轉換圖，節點拆成輸入輸出宣告、可組合模組與優化器；編譯器跑候選流程，用任務指標留下好軌跡當自助法示範。小學數學題基準上，GPT-3.5 的簡單程式由 33% 升至 82%。",
           "number": {
             "label": "數學題準確率",
             "value": "33%→82%",
@@ -970,9 +1042,9 @@
           "role": "治理範式",
           "one_liner": "用多次回答的一致性當信心，再用小型校準集選棄答門檻，替殘餘錯誤率設上界。",
           "plain": "等於先訂可接受的出錯額度，再用少量已知答案調出閘門；過不了就不硬答，而不是把模糊信心當保證。",
-          "core": "先比較同一問題的多個回答，再以共形風險控制選門檻；未棄答且答錯才算風險。TriviaQA 的相符函數用 100 個校準樣本時為 0 錯，但保證仍假設校準與測試同分布。",
+          "core": "先比較同一問題的多個回答，再以共形風險控制選門檻；未棄答且答錯才算風險。短答問答基準的答案比對規則用 100 個校準樣本時為 0 錯，但保證仍假設校準與測試同分布。",
           "number": {
-            "label": "相符函數校準",
+            "label": "答案比對校準",
             "value": "100 樣本 0 錯",
             "note": "作者自報"
           },
@@ -991,10 +1063,10 @@
           "role": "誠實冷水",
           "one_liner": "在互動式 agent 上重測常見信心分數，軌跡級判別力落到近乎隨機。",
           "plain": "等於導航每一句都說得很有把握，也不代表整趟路可靠；中途工具回傳、追問與錯誤累積都要一起算。",
-          "core": "不確定性量化要同時計算每輪動作、環境觀察與整條軌跡；在 τ²-bench 上，三類常見方法的軌跡級判別曲線面積（AUROC）只有 0.47–0.69，且 44 個現代基準僅 4 個提供輪級標註。",
+          "core": "不確定性量化要同時計算每輪動作、環境觀察與整條軌跡；在一項多輪 agent 基準上，三類常見方法的軌跡級判別曲線面積（AUROC）只有 0.47-0.69，且 44 個現代基準僅 4 個提供輪級標註。",
           "number": {
             "label": "軌跡級判別曲線面積",
-            "value": "0.47–0.69",
+            "value": "0.47-0.69",
             "note": "作者自報"
           },
           "why": "提醒我們：最後一句的信心，不能替整條工具互動軌跡簽保證。",
@@ -1494,6 +1566,22 @@
           "cat": "I",
           "summary_file": "2506.15065_HEAL.摘要.md",
           "translate_file": "2506.15065_HEAL.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2608.28518",
+          "status": "✅",
+          "title_zh": "When Robots Mishear Us：把 ASR 誤聽當成具身 AI 的安全輸入攻擊面，測不同誤聽型態如何破壞拒絕邊界與規劃穩定性；近音替換保留危險意圖卻更易被接受（接受率 55.33→60.00%），極強雜訊增加錯誤接受但未必產生可執行計畫（作者自報）",
+          "cat": "I",
+          "summary_file": "2608.28518_RobotsMishear.摘要.md",
+          "translate_file": "2608.28518_RobotsMishear.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.11445",
+          "status": "✅",
+          "title_zh": "FARM：不為失敗偵測重訓動力學模型，直接讀 frozen VLA-JEPA 的內部預測狀態，用 33,985 參數的輕量 readout 輸出逐步失敗分數並以「至今最高分」累積成因果軌跡風險；來源任務 pooled AUROC／AUPRC 85.68／88.59，並測跨機器人平台適應與延遲（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.11445_FARM.摘要.md",
+          "translate_file": "2609.11445_FARM.zh-TW.md"
         }
       ]
     },
@@ -1501,17 +1589,17 @@
       "id": "architecture-memory",
       "name": "架構、記憶與規模",
       "minutes": 7,
-      "paper_count": 42,
+      "paper_count": 48,
       "deep_doc": "https://github.com/justty32/paper_readings/blob/main/deep/agent_scale_fault_cognition/04_綜合架構與研究缺口.md",
       "gist": {
-        "summary": "這條線問的是：agent 怎麼從一段提示，長成可編排、可記憶、可擴展又可復原的系統？主流分成對話式工作流、作業系統式記憶、角色模型執行與確定性控制平面。現在已能承載百萬個短任務角色，但長期持久狀態、共享記憶污染與跨元件共同失敗仍缺可靠治理。",
+        "summary": "這條線問的是：agent 怎麼從提示長成可編排、可記憶、可擴展又可復原的系統？現有方法已能搬移外部記憶、承載百萬個短任務角色，並用版本與依賴資料淘汰過期經驗；但持久狀態的權限、重播，以及共用模型造成的共同失敗，仍缺統一治理。",
         "points": [
           "身分數、同時活躍數、模型呼叫數必須分開報；「百萬 agent」不是百萬模型常駐。",
-          "記憶不只是向量檢索：還要管理寫入、衝突、來源、過期與失敗後重播。",
-          "自由對話適合表達工作流；權限、驗證、交易與恢復要交給不可繞過的控制平面。",
-          "多 agent 冗餘若共用同一模型，錯誤可能高度相關，不能直接把可靠度相乘。"
+          "記憶不只要能寫入與找回；失效契約還要記錄版本、依賴與精準撤回規則。",
+          "模型可以提議動作；權限、驗證、交易與恢復要交給不可繞過的控制平面。",
+          "多 agent 的冗餘若共用同一模型，錯誤可能高度相關，不能直接把可靠度相乘。"
         ],
-        "open": "怎麼讓大量休眠 agent 被事件喚醒後，只取最小充分記憶，完成受權限約束的動作，還能在模型、工具或記憶更新後精準撤回受影響的結果？"
+        "open": "哪個控制平面能在上游資料、模型或工具改版後，沿依賴向量找出受影響的持久狀態，撤回其結果並重播必要步驟，同時避免誤刪仍有效的記憶？"
       },
       "glossary": [
         {
@@ -1519,12 +1607,16 @@
           "plain": "把暫時用不到的資料移出有限脈絡，需要時再讀回；像電腦在記憶體與磁碟間搬頁。"
         },
         {
-          "term": "可對話代理（conversable agent）",
-          "plain": "能收發訊息並自己決定如何回覆的工作節點；回覆可來自模型、人類或工具。"
-        },
-        {
           "term": "角色模型（actor model）",
           "plain": "把每個 agent 當成有私有狀態與信箱的角色，只靠訊息互動，方便分散執行。"
+        },
+        {
+          "term": "失效契約（invalidation contract）",
+          "plain": "替可重用記憶附上版本與依賴規則，資料改變時能判斷哪些項目必須作廢。"
+        },
+        {
+          "term": "依賴向量（dependency vector）",
+          "plain": "列出一則記憶依賴哪些資料及其版本，方便沿關係精準撤回。"
         },
         {
           "term": "控制平面（control plane）",
@@ -1541,10 +1633,6 @@
         {
           "term": "冗餘（redundancy）",
           "plain": "安排多個元件做同一判斷，希望一個出錯時由另一個補救。"
-        },
-        {
-          "term": "數學題基準（MATH）",
-          "plain": "用競賽數學題測試模型解題能力的常用評測集。"
         }
       ],
       "highlights": [
@@ -1553,16 +1641,16 @@
           "title_zh": "把記憶做成虛擬脈絡",
           "title_en": "MemGPT: Towards LLMs as Operating Systems",
           "year": "2023-10",
-          "role": "原典入口",
-          "one_liner": "MemGPT 讓模型在有限脈絡與外部儲存間自行搬資料，長對話檢索大幅提升。",
-          "plain": "等於桌面放不下所有資料時，模型會把舊資料收進櫃子，想到需要時再翻回桌面。",
-          "core": "把可見提示當主記憶體、外部資料庫當磁碟；模型用工具做分頁（paging）、搜尋與改寫，並靠記憶壓力警告和心跳延續工作。它提供記憶控制迴圈，卻沒有可信權限、事實驗證或崩潰重播。",
+          "role": "記憶原典",
+          "one_liner": "MemGPT 讓模型自行搬移內外部資料，使長對話檢索明顯提升。",
+          "plain": "等於桌面放不下所有資料時，模型會把舊資料收進櫃子，需要時再翻回桌面。",
+          "core": "把可見提示當主記憶體、外部資料庫當磁碟；模型用工具做分頁（paging）、搜尋與改寫，並靠容量警告和心跳延續工作。它提供記憶控制迴圈，卻沒有可信權限、事實驗證或崩潰重播。",
           "number": {
             "label": "深層記憶檢索",
             "value": "32.1%→92.5%",
             "note": "作者自報"
           },
-          "why": "它把記憶從一次性檢索提升為可操作的執行期狀態，也清楚暴露作業系統比喻的邊界。",
+          "why": "它把記憶從一次性檢索提升為可操作的執行期狀態，也暴露作業系統比喻的邊界。",
           "links": {
             "arxiv": "https://arxiv.org/abs/2310.08560",
             "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2310.08560_MemGPT.摘要.md",
@@ -1570,38 +1658,17 @@
           }
         },
         {
-          "arxiv_id": "2308.08155",
-          "title_zh": "把工作流變成多方對話",
-          "title_en": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
-          "year": "2023-08",
-          "role": "編排範式",
-          "one_liner": "AutoGen 用訊息傳遞統一模型、人類與工具，讓多方對話直接表達工作流。",
-          "plain": "等於把模型、人和程式都放進同一聊天室；誰收到訊息、怎麼回覆，就構成流程。",
-          "core": "每個可對話代理（conversable agent）都能組合模型、人類輸入與工具後端；開發者以自然語言和 Python 定義回覆與控制流。這讓工作流容易拼裝，但自由對話本身不保證權限、安全或可重播。",
-          "number": {
-            "label": "數學題基準全測試集",
-            "value": "69.48% vs 55.18%",
-            "note": "作者自報"
-          },
-          "why": "它是多 agent 編排的代表入口，也示範在模型輸出與副作用之間插入確定性守門。",
-          "links": {
-            "arxiv": "https://arxiv.org/abs/2308.08155",
-            "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2308.08155_AutoGen.摘要.md",
-            "translate": "https://github.com/justty32/paper_readings/blob/main/translate/2308.08155_AutoGen.zh-TW.md"
-          }
-        },
-        {
           "arxiv_id": "2407.17789",
           "title_zh": "百萬角色如何跑起來",
           "title_en": "Very Large-Scale Multi-Agent Simulation in AgentScope",
           "year": "2024-07",
-          "role": "規模範式",
-          "one_liner": "AgentScope 以角色模型和分散式代理執行百萬個短任務，證明執行層可擴展。",
-          "plain": "等於先把大量角色分派到多台機器收信做事，再用代理物件讓開發者看起來仍像寫單機程式。",
+          "role": "規模實證",
+          "one_liner": "AgentScope 以角色模型分散執行百萬個短任務，證明執行層可擴展。",
+          "plain": "等於先把大量角色分派到多台機器收信做事，再用代理物件讓開發者仍像在寫單機程式。",
           "core": "角色模型（actor model）讓每個 agent 獨立收信與運算；代理物件先回傳占位結果，真正用到時才等待遠端完成。管理器追蹤跨機器生命週期，但工作負載仍是短而稀疏的推理，不代表長期自治已解決。",
           "number": {
-            "label": "短答規模與耗時",
-            "value": "100 萬／12 分鐘",
+            "label": "百萬角色短答耗時",
+            "value": "12 分鐘",
             "note": "作者自報"
           },
           "why": "它提供百萬級實證，也迫使讀者分清角色數、活躍數、模型呼叫數與狀態厚度。",
@@ -1612,11 +1679,32 @@
           }
         },
         {
+          "arxiv_id": "2609.00243",
+          "title_zh": "讓過期記憶精準失效",
+          "title_en": "Invalidation Contracts for Cross-Episode Agent Memory",
+          "year": "2026-09",
+          "role": "治理補丁",
+          "one_liner": "失效契約用版本與依賴資料精準驅逐過期記憶，避免整庫清空。",
+          "plain": "等於每則經驗都附版本與來源清單；上游資料一變，只丟掉真正受影響的那幾則。",
+          "core": "失效契約（invalidation contract）在修復建議上附可快取性、版本戳記與依賴向量（dependency vector）；資料漂移時逐列刪除舊建議，並把快取是否仍有效與模型是否照做分開量測。",
+          "number": {
+            "label": "逐列驅逐精準率",
+            "value": "1.00",
+            "note": "作者自報"
+          },
+          "why": "它補上記憶生命週期最常漏掉的一環：來源改變後，舊經驗何時、依什麼證據作廢。",
+          "links": {
+            "arxiv": "https://arxiv.org/abs/2609.00243",
+            "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2609.00243_InvalidationContracts.摘要.md",
+            "translate": "https://github.com/justty32/paper_readings/blob/main/translate/2609.00243_InvalidationContracts.zh-TW.md"
+          }
+        },
+        {
           "arxiv_id": "2608.12895",
           "title_zh": "同模型複核會一起錯",
           "title_en": "Agent Behavioral Contracts II: Certifying Compositional Reliability Without Assuming Independence",
           "year": "2026-08",
-          "role": "誠實冷水",
+          "role": "可靠度警鐘",
           "one_liner": "兩個同模型 agent 的錯誤高度同步，讓可靠度相乘與投票保證失真。",
           "plain": "等於找兩位用同一本錯誤答案簿的人互相複核；人數變多，不代表更容易抓出錯。",
           "core": "常見可靠度證明假設各元件條件獨立（conditional independence），但共用模型會帶來共同盲點。作者改用不預設相依結構的有限樣本證書，也坦承計算成本隨元件數快速成長。",
@@ -1625,7 +1713,7 @@
             "value": "90.0%",
             "note": "作者自報"
           },
-          "why": "它直接拆穿「多找一個 agent 就更可靠」，提醒冗餘（redundancy）必須跨越共同失敗來源。",
+          "why": "它拆穿「多找一個 agent 就更可靠」，提醒冗餘（redundancy）必須跨越共同失敗來源。",
           "links": {
             "arxiv": "https://arxiv.org/abs/2608.12895",
             "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2608.12895_AgentContractsII.摘要.md",
@@ -1633,7 +1721,7 @@
           }
         }
       ],
-      "question": "若模型的記憶與判斷都會漂移，哪一層必須成為不可繞過的事實來源？",
+      "question": "若模型、工具與資料都會改版，誰有權判定哪些記憶仍可執行？",
       "all_papers": [
         {
           "arxiv_id": "2509.26433",
@@ -1970,14 +2058,62 @@
           "cat": "I",
           "summary_file": "2506.15635_FindingDory.摘要.md",
           "translate_file": "2506.15635_FindingDory.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.00243",
+          "status": "✅",
+          "title_zh": "Invalidation Contracts：跨 episode 快取 API 錯誤的 recovery suggestion 時，server 附 version stamp、cacheability 與 dependency metadata，讓 client 在資料漂移時逐列驅逐 stale entry；把節省拆成 validity（協議決定）與 compliance（規劃模型決定），row-level 在所有模型 eviction precision 1.00、table-level 會連坐清掉同表條目（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.00243_InvalidationContracts.摘要.md",
+          "translate_file": "2609.00243_InvalidationContracts.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.02074",
+          "status": "✅",
+          "title_zh": "CHIME：長程 agent 的記憶分成規劃／執行雙記憶庫，寫入前先做信用歸因（成敗歸規劃、執行、兩者或外部）再只更新對應庫，避免把執行失誤固化成規劃經驗；eval 平均較最強 baseline 提高 2.96% 與 3.68%（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.02074_CHIME.摘要.md",
+          "translate_file": "2609.02074_CHIME.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2608.29537",
+          "status": "✅",
+          "title_zh": "AGM（Achievement-Grounded Memory）：不改 frozen VLA 策略，只改外部進度記憶的寫入條件——夾爪事件僅觸發檢查，物件是否隨夾爪上升、放置後是否成立指定關係（本體感測、點追蹤、跨視角）才算完成證據，子目標指標驗證成功才前進、失敗則保留或回滾；PickXTimes／BinFill 100.00%／84.00%（作者自報）",
+          "cat": "I",
+          "summary_file": "2608.29537_AGM.摘要.md",
+          "translate_file": "2608.29537_AGM.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2608.26821",
+          "status": "✅",
+          "title_zh": "TemporalFlow-VLA：不把更多歷史影像塞進動作模型，訓練時以機器人運動學投影的表面 temporal flow 監督兩個時間尺度的查詢 token，部署時移除幾何標註只留緊湊 token 與非同步歷史特徵快取；LIBERO 平均成功率 97.63±0.26%（作者自報）",
+          "cat": "I",
+          "summary_file": "2608.26821_TemporalFlowVLA.摘要.md",
+          "translate_file": "2608.26821_TemporalFlowVLA.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.07047",
+          "status": "✅",
+          "title_zh": "MEMOBench：在機器人操作示範中放入可由模擬器執行驗證的 Storage／Update／Compression checkpoints，把「忘了什麼」與「記得但操作失敗」拆開，checkpoint 文字反過來當記憶對齊監督；最佳未對齊 memory module 平均成功率僅 31.9%（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.07047_MEMOBench.摘要.md",
+          "translate_file": "2609.07047_MEMOBench.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2608.29078",
+          "status": "✅",
+          "title_zh": "DREAM：把部署現場一段短影片＋語言任務轉成 VLA 微調資料——重建與機器人座標對齊的數位分身，用受限符號詞彙、任務與運動規劃（TAMP）、軌跡增廣與 Gaussian Splatting 渲染產出無需人工示範的影像—動作資料；BlockIntoBowl 上 π0.5 用合成資料 93.3%、人工資料 86.7%（作者自報）",
+          "cat": "I",
+          "summary_file": "2608.29078_DREAM.摘要.md",
+          "translate_file": "2608.29078_DREAM.zh-TW.md"
         }
       ]
     }
   ],
   "threads": [
     {
-      "title": "外部證據要接到控制平面",
-      "text": "查核式修正與推理行動交錯都把工具回傳帶回迴圈，共形風險控制再把信心接到棄答門檻。到了多代理系統，權限、驗證與恢復仍須由不可繞過的控制平面執行。",
+      "title": "外部證據如何變成閘門",
+      "text": "ReAct 與 CRITIC 把工具結果帶回行動與修正迴圈，共形風險控制再把信心接到棄答門檻。長期記憶還要附上版本與依賴，資料改變時才能精準撤回。",
       "lane_ids": [
         "self-improve-loop",
         "workflow-calibration",
@@ -1985,15 +2121,15 @@
         "architecture-memory"
       ],
       "paper_ids": [
+        "2210.03629",
         "2305.11738",
         "2405.01563",
-        "2210.03629",
-        "2308.08155"
+        "2609.00243"
       ]
     },
     {
-      "title": "工作流本身也會成為學習對象",
-      "text": "遞迴改進從改寫鷹架程式開始，提示編譯框架把提示鏈交給編譯器。工具製造框架進一步把工具當可重用資產，虛擬脈絡記憶則把跨回合狀態納入執行期。優化對象已擴大到整套工作流，評分與版本治理也要跟上。",
+      "title": "工作流也是改進對象",
+      "text": "STOP 直接改寫鷹架程式，DSPy 自動搜尋提示與示範，工具製造框架把解法存成可重用資產。MemGPT 則把跨回合狀態納入執行期，改進範圍從答案一路擴到流程與記憶。",
       "lane_ids": [
         "self-improve-loop",
         "workflow-calibration",
@@ -2008,8 +2144,8 @@
       ]
     },
     {
-      "title": "局部過關，不代表整體可靠",
-      "text": "沒有外部回饋時，自我修正會退步。單輪信心放進互動軌跡後近乎隨機，模擬工具換成真實工具介面也會掉分。同模型代理的錯誤還會同步，所以可靠性必須沿整條軌跡檢驗。",
+      "title": "局部過關不等於整體可靠",
+      "text": "只靠內省會把答對的題改錯，單輪信心放進多輪互動後近乎隨機，模擬工具換成真實介面也會退步。同模型代理還可能一起錯，因此必須沿整條軌跡驗收。",
       "lane_ids": [
         "self-improve-loop",
         "workflow-calibration",
@@ -2024,5 +2160,5 @@
       ]
     }
   ],
-  "outro": "四條線疊起來，方向是把 agent 從文字生成器變成受證據、門檻與控制平面約束的系統。下一步要逐一標出會改狀態的節點，為它們指定可查驗憑證與回滾方法，再用整條軌跡驗收並保留記憶來源。"
+  "outro": "可靠的 agent 需要在每次讀工具、改流程或寫記憶時，留下可查驗的依據。證據過期或多個代理同時失靈時，系統還要能拒絕、撤回與重播。"
 }

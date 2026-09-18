@@ -1,25 +1,25 @@
 {
   "deck_id": "nesy-binary-worldmodel-ndea",
   "title": "二值・世界模型・訪談 三十分鐘速覽",
-  "subtitle": "paper_readings I、V 兩類 51 篇的三條主線・車上版",
+  "subtitle": "paper_readings I、V 兩類 54 篇的三條主線・車上版",
   "total_minutes": 30,
-  "intro": "三條線都在問：神經模型學到的模式，怎麼變成能重用、能查驗的規則與世界模型。先讀二值化與可解釋性，認識規則如何進入網路、結構如何被抽出；再看世界模型如何支援規劃；最後用 Ndea 訪談串起程式合成、約束解碼與消融反證。",
+  "intro": "三條線共同追問：神經模型如何與可執行規則、可查詢狀態分工，讓系統既能學習又能驗證。建議先讀二值化與可解釋性，看規則、控制與內部結構如何銜接。再讀世界模型的生成、規劃與驗收，最後用 Ndea 訪談補上程式合成、約束解碼與消融觀點。",
   "lanes": [
     {
       "id": "nesy-binary",
       "name": "神經符號二值化與可解釋",
       "minutes": 10,
-      "paper_count": 20,
+      "paper_count": 21,
       "deep_doc": "https://github.com/justty32/paper_readings/blob/main/index/cat_i/07_neurosymbolic_binary_interp.md",
       "gist": {
-        "summary": "這條線問：如何讓神經網路既能借規則推理、壓成低位元，又能把內部機制說清楚。三條路分別把符號規則接進學習與規劃、用二值化換取省記憶體與低能耗、從激活抽出自動機或概念電路。現在已有跨交通、機器人與大模型的原型，但效率、準確與可驗證性仍互相拉扯。",
+        "summary": "這條線問：怎麼把可查驗的規則接進神經網路、把計算壓到低位元，並把模型內部機制說清楚。神經符號系統已能用任務圖約束長程序，二值訓練也能降低推論成本，稀疏電路與概念階層則讓內部結構較可讀；但局部成功尚不能保證整體可靠。",
         "points": [
-          "規則可放在輸入、訓練或解碼階段。",
-          "二值網路把權重與激活壓到位元級，省推論成本，代價是梯度被截斷與訓練更難。",
-          "本線涵蓋自動機、稀疏電路及概念階層。",
-          "抽出的結構多半仍是代理；要分清依賴、因果與真正可移植的規則。"
+          "規則可轉成輸入特徵，也可在規劃時限制合法步驟。",
+          "二值網路省記憶體與能耗，卻因離散開關而更難訓練。",
+          "模型內部的激活可抽成稀疏電路或概念階層。",
+          "局部電路、注意力或任務成功率，都要用反事實與跨場景測試驗證。"
         ],
-        "open": "同一套系統若同時追求低位元、符號保證與可解釋電路，哪一層應保留連續計算，哪一層必須能被形式驗證？"
+        "open": "符號任務圖、二值控制器與可解釋電路接成同一系統後，誰能證明合法高層步驟在新場景仍會被低階動作正確執行？"
       },
       "glossary": [
         {
@@ -27,8 +27,12 @@
           "plain": "讓擅長從資料學模式的神經網路，和能照明確規則推理的符號系統分工。"
         },
         {
-          "term": "二元特徵（binary feature）",
-          "plain": "只取零或一的資料欄，像開關一樣表示某條規則是否成立。"
+          "term": "視覺—語言—動作模型（VLA）",
+          "plain": "同時讀取影像與文字指令，再直接產生機器人動作的模型。"
+        },
+        {
+          "term": "程序顯著性（procedural saliency）",
+          "plain": "依目前步驟標出最該看的位置，幫模型選對物件或目的地。"
         },
         {
           "term": "直通估計器（STE）",
@@ -37,10 +41,6 @@
         {
           "term": "漸進凍結（progressive freezing）",
           "plain": "從輸入端開始，一層層把連續參數鎖成不再更新的二值參數。"
-        },
-        {
-          "term": "機制可解釋性（MI）",
-          "plain": "不只看輸入輸出，而是追查模型內哪些元件如何接力完成計算。"
         },
         {
           "term": "稀疏自編碼器（sparse autoencoder）",
@@ -57,24 +57,24 @@
       ],
       "highlights": [
         {
-          "arxiv_id": "2502.01680",
-          "title_zh": "把決策樹規則餵進網路",
-          "title_en": "Neurosymbolic AI for Travel Demand Prediction: Integrating Decision Tree Rules into Neural Networks",
-          "year": "2025-02",
-          "role": "定位入口",
-          "one_liner": "把決策樹的 if-then 規則改成二元特徵，和原始資料一起餵神經網路，整體表現勝過各自單用。",
-          "plain": "等於先讓一棵可讀的決策樹寫規則，再把每條規則當開關，交給神經網路一起判斷。",
-          "core": "這是最輕量的神經符號接法：沿決策樹路徑產生規則，把是否符合編成二元特徵，再與原始特徵串接。樹深 15 時有 2628 條規則，需用變異數門檻控制粒度。",
+          "arxiv_id": "2609.05369",
+          "title_zh": "用任務圖約束長程機器操作",
+          "title_en": "Towards Neuro-Symbolic Procedural Reasoning for Long-Horizon Vision-Language-Action Manipulation",
+          "year": "2026-09",
+          "role": "跨層整合",
+          "one_liner": "以符號任務圖管合法步驟、視覺—語言—動作模型管連續控制，但完整管線尚未端到端驗證。",
+          "plain": "等於把工作流程交給可查的任務表，機器手只負責眼前動作；目前只驗過它能看對目的地。",
+          "core": "任務圖與事件記憶追蹤順序及外部事件，程序顯著性提示當前該看哪裡；兩種引導都達 25/25，但只驗證目的地選擇，未證明七步驟程序可靠。",
           "number": {
-            "label": "深度 15 規則",
-            "value": "2628 條",
+            "label": "兩種引導結果",
+            "value": "25/25",
             "note": "作者自報"
           },
-          "why": "它把抽象的神經符號融合，變成資料工程師能直接照著搭的輸入增強法。",
+          "why": "它補上神經符號系統如何分工長程規劃與低階控制，也把局部指標和整管線驗收分開。",
           "links": {
-            "arxiv": "https://arxiv.org/abs/2502.01680",
-            "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2502.01680_Travel_Demand_NeSy.摘要.md",
-            "translate": "https://github.com/justty32/paper_readings/blob/main/translate/2502.01680_Travel_Demand_NeSy.zh-TW.md"
+            "arxiv": "https://arxiv.org/abs/2609.05369",
+            "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2609.05369_NeSyProceduralVLA.摘要.md",
+            "translate": "https://github.com/justty32/paper_readings/blob/main/translate/2609.05369_NeSyProceduralVLA.zh-TW.md"
           }
         },
         {
@@ -85,10 +85,10 @@
           "role": "二值範式",
           "one_liner": "把網路由輸入端逐層凍成二值，避開直通估計器的假梯度，深層模型優勢更明顯。",
           "plain": "等於不把難以微分的開關硬說成能微分，而是一層學穩就鎖成開關，再訓下一層。",
-          "core": "逐層漸進凍結只讓尚未鎖定的連續分支接收真梯度，避免二值激活封鎖訊號；在 ResNet-50 的 CIFAR-10（影像分類資料集）上，相較基線提升 18.0 個百分點。",
+          "core": "漸進凍結只讓未鎖定的連續分支接收真梯度，避免二值激活封鎖訊號；在 50 層殘差網路的 10 類影像測試上，比直通估計器基線高 18.0 個百分點。",
           "number": {
-            "label": "CIFAR-10 增益",
-            "value": "+18.0 個百分點",
+            "label": "50 層影像增益",
+            "value": "+18.0",
             "note": "作者自報"
           },
           "why": "它直指二值網路最難的訓練問題，也顯示方法差距會隨網路加深而放大。",
@@ -100,16 +100,16 @@
         },
         {
           "arxiv_id": "2606.16939",
-          "title_zh": "用稀疏回歸找模型電路",
+          "title_zh": "快速找出模型內部電路",
           "title_en": "Scalable Circuit Learning for Interpreting Large Language Models",
           "year": "2026-06",
           "role": "電路代表",
-          "one_liner": "以 Lasso 取代逐邊干預，直接從模型激活找出稀疏電路，速度更快且結構準確度相當。",
+          "one_liner": "從模型運轉紀錄一次找出少量關鍵接線，速度比逐邊干預快，結構準確度相當。",
           "plain": "等於不再逐條拔線測模型，而是看大量運轉紀錄，一次推回最可能的重要接線圖。",
-          "core": "CircuitLasso 把機制可解釋性改寫成稀疏迴歸，在稀疏自編碼器的高維特徵上抽依賴骨架；基準平均每案 16.3 秒，比主要干預法快 3.0 倍。",
+          "core": "它把模型激活擬合成稀疏自編碼器特徵間的依賴骨架，不必逐邊拔線；基準平均每案 16.3 秒，比主要干預法快 3.0 倍，但只表示一起變動，不能當作因果證明。",
           "number": {
             "label": "平均執行時間",
-            "value": "16.3 秒／案",
+            "value": "16.3 s/案",
             "note": "作者自報"
           },
           "why": "它讓概念級電路能擴到更大模型，也提醒讀者依賴骨架不等於逐邊因果。",
@@ -127,10 +127,10 @@
           "role": "誠實冷水",
           "one_liner": "用三級需求驗收現有稀疏自編碼器，發現靜態概念圖看似合理，逐樣本激活卻常不一致。",
           "plain": "等於先訂出一棵好概念樹該通過的考卷，再發現漂亮樹圖不代表模型每次真的照樹運作。",
-          "core": "作者把好階層拆成概念、結構、共激活三層檢查；特徵吸收會讓子概念出現時父概念不出現，甚至子越強、父越弱，破壞階層語意。",
+          "core": "作者把好階層拆成概念、結構、共激活三級檢查；特徵吸收會讓子概念出現時父概念不出現，甚至子越強、父越弱，破壞階層語意。",
           "number": {
-            "label": "評估需求層級",
-            "value": "3 層",
+            "label": "評估需求",
+            "value": "三級",
             "note": "作者自報"
           },
           "why": "它是必要煞車：抽得出概念，不代表概念之間真有穩定、可用的階層關係。",
@@ -141,7 +141,7 @@
           }
         }
       ],
-      "question": "若模型更省電卻更難驗證，你願意用多少準確率或算力換一條可讀、可檢查的規則？",
+      "question": "一個系統若高層規則合法、低階動作卻失敗，責任該如何跨層追到可驗證的元件？",
       "all_papers": [
         {
           "arxiv_id": "2605.29652",
@@ -302,6 +302,14 @@
           "cat": "I",
           "summary_file": "2606.31260_PlanRightPlanTight.摘要.md",
           "translate_file": "2606.31260_PlanRightPlanTight.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.05369",
+          "status": "✅",
+          "title_zh": "Towards Neuro-Symbolic Procedural Reasoning for Long-Horizon VLA（短文）：符號任務圖與事件記憶管程序順序與合法轉移、VLA 管連續控制、稀疏 procedural saliency 管空間 grounding；初步實驗兩種 saliency 介面皆 25/25 修正目的地選擇，完整管線尚未端到端驗證（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.05369_NeSyProceduralVLA.摘要.md",
+          "translate_file": "2609.05369_NeSyProceduralVLA.zh-TW.md"
         }
       ]
     },
@@ -309,17 +317,17 @@
       "id": "world-models",
       "name": "世界模型：學習、生成與驗證",
       "minutes": 10,
-      "paper_count": 17,
+      "paper_count": 19,
       "deep_doc": "https://github.com/justty32/paper_readings/blob/main/index/cat_i/10_world_models.md",
       "gist": {
-        "summary": "世界模型不只要生成像真的未來，還要學會可控制的狀態轉移，供規劃與決策。主流一邊用符號或程式寫明規則，另一邊用生成模型直接想像觀測；如今已能解受限任務，驗證、可查詢狀態、長期穩定與物理一致性仍是硬門檻。",
+        "summary": "世界模型的重點不只生成像真的未來，而是把規則、可查詢狀態與動作後果做成可控制、可驗證的介面。研究已能用明寫程式維持世界事實、生成互動畫面並在想像中訓練代理；但長程一致、物理正確與部署查詢是否落在驗收範圍內，仍缺可靠證據。",
         "points": [
-          "符號路線把規則寫成可執行模型，容易搜尋與檢查，但語意未必正確。",
-          "生成路線從大量影像學動力學，能逼真互動，卻難保物理與長期一致。",
-          "世界模型要服務規劃，不能只看畫面或一步預測準確，還要驗收下游決策。",
-          "抽樣閘門只保證抽到的區域；規劃器偏愛的稀有邊界反而最危險。"
+          "明寫規則與狀態可供搜尋、修正與查詢，但仍要驗證它是否符合原意。",
+          "生成模型能產生互動畫面並支撐想像式強化學習，長程成功率仍有限。",
+          "混合式架構讓引擎決定世界事實、影片模型負責呈現，開始接起兩條路線。",
+          "抽樣閘門只認證測到的區域；規劃器偏好的稀有邊界可能正好漏測。"
         ],
-        "open": "怎麼讓可讀規則、逼真生成與可驗證物理共用同一份狀態介面，並證明部署時的查詢沒有離開驗收覆蓋範圍？"
+        "open": "系統應把哪些狀態與物理量交給可執行引擎明寫，才能讓規劃器的部署查詢全落在已驗證範圍內？"
       },
       "glossary": [
         {
@@ -327,20 +335,20 @@
           "plain": "學習環境如何隨狀態與動作改變，讓代理能先在模型裡預測或試走。"
         },
         {
-          "term": "符號世界模型（symbolic world model）",
-          "plain": "用謂詞、條件與規則明寫世界變化，比神經網路內部狀態更容易閱讀和檢查。"
-        },
-        {
-          "term": "規劃領域定義語言（PDDL）",
-          "plain": "把可做的動作、前提與結果寫成固定格式，讓傳統搜尋器據此找計畫。"
+          "term": "可查詢狀態（queryable state）",
+          "plain": "外部程式能直接讀取物件位置、生命值等欄位，不必從畫面重新猜。"
         },
         {
           "term": "想像式強化學習（imagination RL）",
           "plain": "代理不進真環境，而在世界模型生成的後果裡試動作、學策略。"
         },
         {
-          "term": "可查詢狀態（queryable state）",
-          "plain": "外部程式能直接讀取物件位置、質量等欄位，不必從畫面重新猜。"
+          "term": "可執行引擎（executable engine）",
+          "plain": "把狀態與規則寫成程式，收到動作後能確定地算出下一個狀態。"
+        },
+        {
+          "term": "三維有向邊界框（3D OBB）",
+          "plain": "用可旋轉的立體盒子標出物件的位置、大小與方向。"
         },
         {
           "term": "抽樣閘門（sampling gate）",
@@ -370,24 +378,24 @@
           }
         },
         {
-          "arxiv_id": "2502.04728",
-          "title_zh": "讓模型寫出可執行規則",
-          "title_en": "Generating Symbolic World Models via Test-time Scaling of Large Language Models",
-          "year": "2025-02",
-          "role": "符號範式",
-          "one_liner": "以多候選取樣加逐輪自我批評生成可執行規則，平均成功率達 88.6%。",
-          "plain": "等於先讓模型寫一份世界規則，自己挑錯重寫，再交給傳統搜尋器照規則找路。",
-          "core": "先用多候選取樣選出較好的規劃領域定義語言（PDDL），再讓模型對照原描述逐輪批評與修正；較大的指令模型在兩類任務平均達 88.6%。",
+          "arxiv_id": "2609.10540",
+          "title_zh": "讓規則與影片共用狀態",
+          "title_en": "Programmable World Model",
+          "year": "2026-09",
+          "role": "混合橋梁",
+          "one_liner": "以可執行引擎維持可查詢狀態，再把結果交給影片模型渲染。",
+          "plain": "等於由規則引擎記住誰在哪裡、發生了什麼；影片模型只負責把這些事實畫出來。",
+          "core": "程式代理把自然語言規則編成狀態轉移程式，輕量引擎維持畫面外實體，再用三維有向邊界框把狀態編成逐像素控制；戰鬥基準的狀態正確率達 98.00%。",
           "number": {
-            "label": "兩類任務平均",
-            "value": "88.6%",
+            "label": "狀態正確率",
+            "value": "98.00%",
             "note": "作者自報"
           },
-          "why": "代表可讀、可執行的符號世界模型路線，也暴露語法通過不等於語意正確。",
+          "why": "它示範可讀規則與逼真生成如何分工，正面回應模擬器的狀態介面缺口。",
           "links": {
-            "arxiv": "https://arxiv.org/abs/2502.04728",
-            "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2502.04728_SymbolicWMTestTimeScaling.摘要.md",
-            "translate": "https://github.com/justty32/paper_readings/blob/main/translate/2502.04728_SymbolicWMTestTimeScaling.zh-TW.md"
+            "arxiv": "https://arxiv.org/abs/2609.10540",
+            "summary": "https://github.com/justty32/paper_readings/blob/main/summarize/2609.10540_ProgrammableWorldModel.摘要.md",
+            "translate": "https://github.com/justty32/paper_readings/blob/main/translate/2609.10540_ProgrammableWorldModel.zh-TW.md"
           }
         },
         {
@@ -398,10 +406,10 @@
           "role": "生成式範式",
           "one_liner": "把即時影片生成與想像式強化學習接起來，純離線代理首次在 Minecraft 取得鑽石。",
           "plain": "等於先學一套會回應按鍵的 Minecraft，再讓代理在假世界裡反覆練習，不碰真遊戲。",
-          "core": "世界模型先從固定影片學動作後果，再凍結模型、只更新策略；評估中有 0.7% 回合取得鑽石，顯示生成式模擬能支撐長程學習，但成功率仍低。",
+          "core": "世界模型先從固定影片學動作後果，再凍結模型、只更新策略；評估中有 0.7％ 回合取得鑽石，顯示生成式模擬能支撐長程學習，但成功率仍低。",
           "number": {
             "label": "取得鑽石",
-            "value": "0.7%",
+            "value": "0.7％",
             "note": "作者自報"
           },
           "why": "它是從「預測畫面」跨到「在想像中訓練行為」的代表，也把規模與風險同時攤開。",
@@ -433,7 +441,7 @@
           }
         }
       ],
-      "question": "世界模型通過有限測試後，還要提供什麼證據，才值得讓規劃器依賴？",
+      "question": "若規劃器會主動鑽進罕見狀態，世界模型要交出哪些覆蓋證據才可上線？",
       "all_papers": [
         {
           "arxiv_id": "2608.17959",
@@ -570,6 +578,22 @@
           "cat": "I",
           "summary_file": "2506.14135_GAF.摘要.md",
           "translate_file": "2506.14135_GAF.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.10540",
+          "status": "✅",
+          "title_zh": "Programmable World Model：coding agent 把自然語言規則編譯成 entity state／transition program，由輕量 engine 維護持續可查詢的全域狀態（含畫面外實體），再以 state-augmented 3D OBB 加相機軌跡決定性編譯成畫素對齊的時空控制訊號交給影片模型渲染；CombatStateBench 上 Count／State Accuracy 94%／98%（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.10540_ProgrammableWorldModel.摘要.md",
+          "translate_file": "2609.10540_ProgrammableWorldModel.zh-TW.md"
+        },
+        {
+          "arxiv_id": "2609.19315",
+          "status": "✅",
+          "title_zh": "GAVEL：LLM 負責語意程序規劃，顯式圖世界模型（物件關係、前置條件、效果、未知位置 belief）先模擬、驗證並直接修掉規則可推的錯誤，只把語意缺口退回 LLM，執行中依新觀察線上重排多任務順序；Qwen3-8B 單任務成功率 41.2%→91.8%（作者自報）",
+          "cat": "I",
+          "summary_file": "2609.19315_GAVEL.摘要.md",
+          "translate_file": "2609.19315_GAVEL.zh-TW.md"
         }
       ]
     },
@@ -580,11 +604,11 @@
       "paper_count": 14,
       "deep_doc": "https://github.com/justty32/paper_readings/blob/main/index/video.md",
       "gist": {
-        "summary": "14 集訪談追問同一件事：神經模型擅長猜，符號程式擅長守規則，兩者怎麼合作才會學得少、推得準？路線從程式合成、約束解碼、可組合世界模型到視覺推理；目前已有能工作的混合系統，但成效常來自工程細節，不一定是論文主打的架構。",
+        "summary": "14 集訪談追問同一件事：神經模型擅長猜，符號程式擅長守規則，兩者怎麼合作才會學得少、推得準？路線從程式合成、約束解碼、可組合世界模型到視覺推理。目前已有能工作的混合系統，但成效常來自工程細節，不一定是論文主打的架構。",
         "points": [
           "程式合成把範例或規格變成可執行規則，還能把解過的題壓成可重用工具。",
           "約束解碼讓語言模型保留生成彈性，再由文法或檢查器擋下不合法輸出。",
-          "世界模型不必逐幀模擬；一群小型因果程式也能共同預測環境。",
+          "世界模型不必逐幀模擬，一群小型因果程式也能共同預測環境。",
           "消融實驗提醒：漂亮的架構故事，可能不如疊代精煉與資料擴增重要。"
         ],
         "open": "若符號詞彙、物體切分與任務識別仍靠人或既有模型提供，系統究竟學會了世界規則，還是只在預先畫好的邊界內搜尋？"
@@ -604,7 +628,7 @@
         },
         {
           "term": "程式化專家（programmatic expert）",
-          "plain": "只負責一小條因果規則的短程式；多個專家一起組成模型。"
+          "plain": "只負責一小條因果規則的短程式。多個專家一起組成模型。"
         },
         {
           "term": "世界模型（world model）",
@@ -624,17 +648,17 @@
           "arxiv_id": "ndea-03",
           "title_zh": "DreamCoder 學會造工具",
           "title_en": "DreamCoder's Wake-Sleep Library Learning",
-          "year": "",
+          "year": "2026-04",
           "role": "定位入口",
-          "one_liner": "DreamCoder 邊解題邊整理函式庫，還自行重現 map、fold 與 unfold。",
-          "plain": "等於學徒每做完一批題，就把常用解法做成新工具；下一批不必再從零開始。",
-          "core": "清醒-睡眠交替：清醒時用程式合成解真題；睡眠時壓縮答案成函式庫，並以真解回放與虛構程式訓練搜尋網路。只給遞迴原語與約 20 道練習，仍會長出常用高階函式。",
+          "one_liner": "DreamCoder 邊解題邊整理函式庫，還自行找出可重用的通用工具。",
+          "plain": "等於學徒每做完一批題，就把常用解法做成新工具。下一批不必再從零開始。",
+          "core": "清醒-睡眠交替：清醒時用程式合成解真題，睡眠時整理可重用工具，並以真解回放與虛構程式訓練搜尋網路。只給能反覆呼叫自身的基本操作與約 20 道練習，仍會學出處理列表的通用工具。",
           "number": {
             "label": "函式練習題",
             "value": "約 20 道",
             "note": "講者自述"
           },
-          "why": "它把神經搜尋、符號程式與累積學習接成一條完整管線，是理解整系列的入口。",
+          "why": "它把神經搜尋、符號程式與累積學習接成完整管線，是理解整系列的入口。",
           "links": {
             "summary": "https://github.com/justty32/paper_readings/blob/main/video/summarize/Ndea%20-%20DreamCoder%27s%20Wake-Sleep%20Library%20Learning%20-%20Kevin%20Ellis%20.%E6%91%98%E8%A6%81.md",
             "transcript": "https://github.com/justty32/paper_readings/blob/main/video/subtitles/Ndea%20-%20DreamCoder%27s%20Wake-Sleep%20Library%20Learning%20-%20Kevin%20Ellis%20.md"
@@ -644,11 +668,11 @@
           "arxiv_id": "ndea-02",
           "title_zh": "守規則又不扭曲分布",
           "title_en": "Constrained Adaptive Rejection Sampling",
-          "year": "",
+          "year": "2026-07",
           "role": "約束範式",
-          "one_liner": "CARS 記住每次撞上的違規區域，重抽時避開它，兼顧合法與自然。",
-          "plain": "等於導航碰到封路就回起點重算，但會記住路障；多試幾次後，仍能走到原本最合理的路。",
-          "core": "一般約束解碼會在生成途中硬轉彎，扭曲語言模型原本的偏好。CARS 每次失敗就重抽並累積路障，理論上收斂到合法輸出的正確條件分布；編譯器測試的千次有效樣本升到約 350 個。",
+          "one_liner": "約束適應性拒絕採樣會記住違規區域，重抽時避開它，兼顧合法與自然。",
+          "plain": "等於導航碰到封路就回起點重算，但會記住路障。多試幾次後，仍能走到原本最合理的路。",
+          "core": "一般約束解碼會在生成途中硬轉彎，扭曲語言模型原本的偏好。這個方法每次失敗就重抽並累積路障，理論上收斂到合法輸出的正確條件分布。編譯器測試的千次有效樣本升到約 350 個。",
           "number": {
             "label": "有效樣本數",
             "value": "約 350/1000",
@@ -664,11 +688,11 @@
           "arxiv_id": "ndea-11",
           "title_zh": "小程式拼成世界模型",
           "title_en": "Symbolic World Models",
-          "year": "",
+          "year": "2026-01",
           "role": "世界模型",
-          "one_liner": "PoE World 讓多個小型因果程式共同預測，把符號世界模型推進 Atari。",
-          "plain": "等於不找一位全知專家，而請許多只懂一條規則的小專家投票；沒用的意見會被降到近乎零。",
-          "core": "語言模型提出程式化專家，每個只描述一條環境規則；梯度學習其權重，錯誤專家自然失聲。專家乘積能合成隨機且可拆解的世界模型，成品逾 4,000 行，能在新關卡零樣本泛化。",
+          "one_liner": "多個小型因果程式共同預測，讓符號世界模型能處理 Atari 遊戲。",
+          "plain": "等於請許多只懂一條規則的小專家共同評分，沒用的意見會被降到近乎零。",
+          "core": "語言模型提出程式化專家，每個只描述一條環境規則，梯度學習其權重，錯誤專家自然失聲。把各專家的預測相乘，能合成隨機且可拆解的世界模型。成品逾 4,000 行，能在新關卡零樣本泛化。",
           "number": {
             "label": "合成程式規模",
             "value": "逾 4,000 行",
@@ -682,19 +706,19 @@
         },
         {
           "arxiv_id": "ndea-12",
-          "title_zh": "HRM 主角不是層級",
+          "title_zh": "層級推理的效能來源",
           "title_en": "The Surprising Performance Drivers of HRM",
-          "year": "",
+          "year": "2025-08",
           "role": "誠實冷水",
-          "one_liner": "Ndea 重做 HRM 消融，發現主打的層級架構只帶來小幅差距。",
+          "one_liner": "Ndea 重做層級推理模型的消融實驗，發現雙層架構只帶來小幅差距。",
           "plain": "等於拆開一台號稱靠雙引擎取勝的車，才發現真正拉開成績的是反覆修正與大量變形練習。",
-          "core": "消融實驗把快慢雙模型換成同參數量的單一模型，分數僅落後約 5% 以內；較大的收益來自外層疊代精煉與資料擴增。任務嵌入看似關鍵，但證據仍只是跨實驗推算。",
+          "core": "消融實驗把快慢雙模型換成同參數量的單一模型，分數僅落後約 5% 以內。較大的收益來自外層疊代精煉與資料擴增。任務嵌入看似關鍵，但證據仍只是跨實驗推算。",
           "number": {
             "label": "層級架構差距",
             "value": "約 5% 以內",
-            "note": "複現者自述"
+            "note": "講者自述"
           },
-          "why": "它示範如何拆穿架構敘事，也主動標出未做直接對照、只能暫時猜測的部分。",
+          "why": "它示範如何拆解架構敘事，也主動標出未做直接對照、只能暫時推測的部分。",
           "links": {
             "summary": "https://github.com/justty32/paper_readings/blob/main/video/summarize/Ndea%20-%20The%20Surprising%20Performance%20Drivers%20of%20HRM.%E6%91%98%E8%A6%81.md",
             "transcript": "https://github.com/justty32/paper_readings/blob/main/video/subtitles/Ndea%20-%20The%20Surprising%20Performance%20Drivers%20of%20HRM.md"
@@ -848,49 +872,46 @@
   ],
   "threads": [
     {
-      "title": "可執行規則是共同中介",
-      "text": "決策樹規則可變成二元特徵，PDDL 可交給搜尋器，DreamCoder 則把解法壓成函式庫。三者都把神經模型找到的線索落成可執行物，讓系統能重用、搜尋與檢查。",
+      "title": "可執行規則銜接神經模型",
+      "text": "任務圖約束機器人的合法步驟，可執行引擎維持世界狀態，DreamCoder 把解法收進函式庫。三條線都用程式或規則承接神經模型，讓結果可執行、重用與檢查。",
       "lane_ids": [
         "nesy-binary",
         "world-models",
         "ndea"
       ],
       "paper_ids": [
-        "2502.01680",
-        "2502.04728",
+        "2609.05369",
+        "2609.10540",
         "ndea-03"
       ]
     },
     {
-      "title": "抽出結構不等於通過驗證",
-      "text": "稀疏電路只給依賴骨架，概念階層可能逐樣本失靈，世界模型也會在抽樣未覆蓋處漏規則。Ndea 的消融再提醒，漂亮架構未必是成效來源，仍要靠因果測試、覆蓋證據與直接對照。",
+      "title": "局部成功不能替代整體驗收",
+      "text": "這些案例都顯示局部指標不能代替整體驗收：目的地選擇尚未證明完整程序可靠，抽樣會漏過部署時的錯誤區，消融則可能推翻主打架構。",
       "lane_ids": [
         "nesy-binary",
         "world-models",
         "ndea"
       ],
       "paper_ids": [
-        "2606.16939",
-        "2606.22994",
+        "2609.05369",
         "2608.17956",
         "ndea-12"
       ]
     },
     {
-      "title": "生成與約束需要清楚分工",
-      "text": "二元規則可放在輸入端或檢查端，CARS 在生成時排除違規，世界模型則讓生成負責觀測、符號模型負責狀態與規則。關鍵在介面：哪裡保留彈性，哪裡必須可查驗。",
+      "title": "世界狀態需要可查詢介面",
+      "text": "傳統模擬器量尺要求能讀取具名實體與物理參數。混合世界模型用引擎保存狀態，程式化專家則把環境規則拆成可組合模組。共同缺口是介面與規則邊界能否支援規劃。",
       "lane_ids": [
-        "nesy-binary",
         "world-models",
         "ndea"
       ],
       "paper_ids": [
-        "2502.01680",
-        "2502.04728",
-        "2509.24527",
-        "ndea-02"
+        "2608.23070",
+        "2609.10540",
+        "ndea-11"
       ]
     }
   ],
-  "outro": "三條線疊起來，方向是讓神經模型提出候選、吸收資料，再由符號結構保存狀態、重用規則並接受檢查。下一步是替每個混合系統補上可查詢介面、失敗案例與部署範圍，再決定它能否交給規劃器。"
+  "outro": "讀完後，可沿著介面追責：規則落在哪一層，狀態能否查詢，測試是否涵蓋規劃器會走到的區域。只靠局部指標或抽樣通過，還不足以證明系統能可靠支援長程決策。"
 }
