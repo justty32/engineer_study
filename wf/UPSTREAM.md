@@ -32,7 +32,7 @@
 
 另兩點裁定（2026-09-18，見 [decisions](workflows/decisions.json)）：
 
-- **lint 範圍另包一層 `wf/tools/lint.sh`（project-owned）**：`wf-lint.sh` 整庫 `--strict` 會誤報大量 `BIGLIST`（筆記正文與名詞對照表），已裁定視為誤報；正式驗收改跑 `lint.sh`（範圍：`wf/`＋根入口 strict，整庫只看 `BROKEN`）。`wf/inbox/done/`（外部投遞的歸檔信原文）不查 `BIGLIST`：kernel 沒有可用的路徑排除參數，`lint.sh` 的 `wf/` strict 段自行過濾該路徑的 BIGLIST 行並重算 pass/fail，BROKEN 仍照算；不在歸檔信裡加 `<!-- wf-nav -->` 之類的標記改動信件內容。
+- **lint 範圍另包一層 `wf/tools/lint.sh`（project-owned）**：`wf-lint.sh` 整庫 `--strict` 會誤報大量 `BIGLIST`（筆記正文與名詞對照表），已裁定視為誤報；正式驗收改跑 `lint.sh`（範圍：`wf/`＋根入口 strict，整庫只看 `BROKEN`）。kernel 自 upstream 2021d9b 起已把放信的 `inbox/`（頂層＋`done/`；`workflows/inbox/` 是工作流文件照掃）比照 `archive/` 豁免，BIGLIST／壞連結／錨點都不掃，`lint.sh` 不再另行過濾 `wf/inbox/done/` 的 BIGLIST 行。
 - **本專案一開始即採 inbox 五通道佈局**：`PROTOCOL.md`「未升級前不要預建五通道」的漸進式建議對本專案不適用，直接採五通道，不經過單通道過渡期。
 
 ## 同步政策

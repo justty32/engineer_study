@@ -27,6 +27,8 @@ SKIP_PARTS = {
     "reference",
     "references",
     "vendor",
+    "done",
+    "superseded",
 }
 
 
@@ -141,6 +143,11 @@ def submodule_paths(root: Path) -> set[tuple[str, ...]]:
     return paths
 
 
+def _is_mail_inbox(parent_parts: tuple[str, ...], directory: str) -> bool:
+    """放信的 inbox/（寄件原文不改，比照 archive）；workflows/inbox/ 是工作流文件，照掃。"""
+    return directory == "inbox" and parent_parts[-1:] != ("workflows",)
+
+
 def markdown_files(root: Path) -> list[Path]:
     submodules = submodule_paths(root)
     markdown: list[Path] = []
@@ -151,6 +158,7 @@ def markdown_files(root: Path) -> list[Path]:
             directory
             for directory in dirs
             if directory not in SKIP_PARTS
+            and not _is_mail_inbox(relative_parts, directory)
             and relative_parts + (directory,) not in submodules
         ]
         markdown.extend(

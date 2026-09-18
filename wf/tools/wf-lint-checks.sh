@@ -36,13 +36,16 @@ check_links() {
   checked_broken=$broken
 }
 
-# archive/reference/vendor 與 .gitmodules 宣告的 submodule 不下鑽。
+# archive/reference/vendor（含依協議分層的 done/superseded，如 dispatch 的 handoff）、放信的 inbox/（寄件原文不改；
+# workflows/inbox/ 是工作流文件，照掃）與 .gitmodules 宣告的 submodule 不下鑽。
 list_owned_files() {
   local root=${1%/} _ rel
   shift
   local -a prunes=(
     -path '*/.git' -o -path '*/node_modules' -o -path '*/__pycache__'
     -o -path '*/archive' -o -path '*/reference' -o -path '*/references' -o -path '*/vendor'
+    -o -path '*/done' -o -path '*/superseded'
+    -o \( -path '*/inbox' ! -path '*/workflows/inbox' \)
   )
   # .gitmodules 在 git 頂層，$root 可能是子目錄（例 skills/）；宣告過的 submodule 路徑不論落在哪一層都不下鑽。
   local top; top=$(git -C "$root" rev-parse --show-toplevel 2>/dev/null) || top=""
