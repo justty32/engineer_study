@@ -1,7 +1,7 @@
 # PROJECT-BRIEF — 通訊系統（零基礎互動課）
 
 ← 工作流：[interactive-study-site](../../../wf/workflows/interactive-study-site/README.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[principles-first 硬體原理子工作流](../../../wf/workflows/interactive-study-site/PRINCIPLES-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)｜[build-with-agents 產線](../../../wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md)
-← 建置契約：[BUILD-SPEC.md](BUILD-SPEC.md)｜驗收：[驗收紀錄.md](驗收紀錄.md)
+← 建置契約與驗收紀錄：已封存，見 `archive/`（BUILD-SPEC.md、驗收紀錄.md）
 
 ## 1. 一句話定位
 
@@ -299,7 +299,7 @@ HTML 正文以「來源：14-通訊系統-上 §3.1」形式標註，**不放 `.
 ```text
 電機/03-通訊特化/通訊系統-互動課程/
   PROJECT-BRIEF.md      ← 本檔
-  BUILD-SPEC.md         ← 建置契約（DOM、公式、詞表、題目、派工、行號表）
+  archive/BUILD-SPEC.md ← 建置契約（DOM、公式、詞表、題目、派工、行號表；已封存）
   index.html            ← 課程地圖
   00-通訊世界觀與分貝帳本.html
   01-AM包絡與調變指數.html
@@ -317,7 +317,7 @@ HTML 正文以「來源：14-通訊系統-上 §3.1」形式標註，**不放 `.
   自我檢核.html
   app.js                ← 單一檔，所有頁面 hook
   styles.css            ← 由 專題/機器人運動學/互動課程/styles.css 複製（正本），位元組相同
-  驗收紀錄.md            ← verifier 產出
+  archive/驗收紀錄.md    ← verifier 產出（已封存）
 ```
 
 ## 11. 完成定義

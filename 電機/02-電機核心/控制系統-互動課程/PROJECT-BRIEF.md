@@ -1,7 +1,7 @@
 # PROJECT-BRIEF — 控制系統（零基礎互動課）
 
 ← 工作流：[interactive-study-site](../../../wf/workflows/interactive-study-site/README.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[principles-first 硬體原理子工作流](../../../wf/workflows/interactive-study-site/PRINCIPLES-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)｜[build-with-agents 產線](../../../wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md)
-← 建置契約：[BUILD-SPEC.md](BUILD-SPEC.md)｜驗收證據：[驗收紀錄.md](驗收紀錄.md)
+← 建置契約與驗收證據：已封存，見 `archive/`（BUILD-SPEC.md、驗收紀錄.md）
 
 ## 1. 一句話定位
 
@@ -286,8 +286,8 @@ HTML 正文以「來源：13-控制系統 §4.2」形式標註，**不放 `.md` 
 ```text
 電機/02-電機核心/控制系統-互動課程/
   PROJECT-BRIEF.md      ← 本檔
-  BUILD-SPEC.md         ← 建置契約（DOM、公式、詞表、題目、派工、行號表）
-  驗收紀錄.md            ← verifier 產出
+  archive/BUILD-SPEC.md ← 建置契約（DOM、公式、詞表、題目、派工、行號表；已封存）
+  archive/驗收紀錄.md    ← verifier 產出（已封存）
   index.html            ← 課程地圖
   00-回授的價值.html
   01-建模從微分方程到轉移函數.html

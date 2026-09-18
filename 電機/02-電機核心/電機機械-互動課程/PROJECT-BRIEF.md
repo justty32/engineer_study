@@ -1,7 +1,7 @@
 # PROJECT-BRIEF — 電機機械（零基礎互動課）
 
 ← 工作流：[interactive-study-site](../../../wf/workflows/interactive-study-site/README.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[principles-first 硬體原理子工作流](../../../wf/workflows/interactive-study-site/PRINCIPLES-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)｜[build-with-agents 產線](../../../wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md)
-← 建置契約：[BUILD-SPEC.md](BUILD-SPEC.md)
+← 建置契約與驗收紀錄：已封存，見 `archive/`（BUILD-SPEC.md、驗收紀錄.md）
 
 ## 1. 一句話定位
 
