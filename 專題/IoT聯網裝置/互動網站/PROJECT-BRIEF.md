@@ -1,6 +1,6 @@
 # IoT 聯網裝置互動學習網站 — 專案簡報
 
-← [專題總覽](../index.md)｜[工作流](../../../wf/workflows/interactive-study-site/README.md)｜[建置規格](BUILD-SPEC.md)｜[派工計畫](派工計畫.md)
+← [專題總覽](../index.md)｜[工作流](../../../wf/workflows/interactive-study-site/README.md)｜建置規格（已封存，見 `archive/`）｜[派工計畫](派工計畫.md)
 
 ## 產品目標
 

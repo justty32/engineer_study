@@ -27,4 +27,4 @@
 - 純原生 HTML/CSS/JS，完全離線；沿用共用 `styles.css` 設計系統。
 - 公式純文字（Unicode + `<sub>/<sup>`），無數學渲染器依賴。
 - 互動採「每個 widget 一個 `if(!$('id'))return` 守衛函式、檔尾統一註冊」模式（比照機器人運動學課）。
-- 建置契約見 `BUILD-SPEC.md`；驗收證據見 `驗收紀錄.md`。
+- 建置契約見 `BUILD-SPEC.md`；驗收證據見 `驗收紀錄.md`（已封存，見 `archive/`）。

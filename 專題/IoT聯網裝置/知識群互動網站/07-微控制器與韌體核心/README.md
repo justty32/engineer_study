@@ -1,5 +1,7 @@
 # 微控制器與韌體核心
 
+← 建置契約與驗收紀錄：已封存，見 `archive/`（驗收紀錄.md）
+
 給熟悉 C／C++、但缺乏微控制器硬體心智模型的讀者。全課無計時、無計分，從 reset、記憶體、MMIO 與硬體事件開始，再接到韌體架構與現場除錯。
 
 線上版本：[GitHub Pages／微控制器與韌體核心](https://justty32.github.io/engineer_study/iot-mcu-firmware/)

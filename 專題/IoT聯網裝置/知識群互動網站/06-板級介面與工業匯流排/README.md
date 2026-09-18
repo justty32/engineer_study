@@ -1,5 +1,7 @@
 # 30 分鐘板級介面與工業匯流排
 
+← 建置契約與驗收紀錄：已封存，見 `archive/`（BUILD-SPEC.md、驗收紀錄.md）
+
 這是一個給熟悉 C／C++、但硬體基礎不穩的讀者使用的互動網站。主線用同一塊 IoT 控制板串起 I²C 感測器、SPI Flash，以及以 RS-485／Modbus RTU 連接的現場設備。
 
 線上版本：[GitHub Pages／板級介面與工業匯流排](https://justty32.github.io/engineer_study/iot-hardware-bus/)

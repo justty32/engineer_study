@@ -16,4 +16,4 @@
 
 ## 邊界與來源
 
-互動只展示小型數值模型，不訓練神經網路、不連接真實機器人、不保證收斂或實機安全。來源基礎包括本地七軸運動學與系統動態筆記、Sutton 與 Barto《Reinforcement Learning: An Introduction》（尤其模型式方法與規劃章節），以及 Ross 等人的 DAgger 論文；公式與簡化指標列於 `BUILD-SPEC.md`。
+互動只展示小型數值模型，不訓練神經網路、不連接真實機器人、不保證收斂或實機安全。來源基礎包括本地七軸運動學與系統動態筆記、Sutton 與 Barto《Reinforcement Learning: An Introduction》（尤其模型式方法與規劃章節），以及 Ross 等人的 DAgger 論文；公式與簡化指標列於 `BUILD-SPEC.md`（已封存，見 `archive/`）。

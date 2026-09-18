@@ -23,4 +23,4 @@
 python -m http.server 4180 --directory "專題/網路安全/互動課程"
 ```
 
-關鍵方法、來源與邊界見 `PROJECT-BRIEF.md`；互動契約見 `BUILD-SPEC.md`；實測結果見 `驗收紀錄.md`。
+關鍵方法、來源與邊界見 `PROJECT-BRIEF.md`；互動契約見 `BUILD-SPEC.md`；實測結果見 `驗收紀錄.md`（已封存，見 `archive/`）。
