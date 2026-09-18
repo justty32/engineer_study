@@ -11,7 +11,7 @@
 
 ## 最新進度
 
-（目前無 open 項）
+- [interactive-study-site] 第二批三課（電力電子／馬達驅動與控制／數位通訊）已上線；第三批候選 DSP／IC1／A2 待派 → 立案前先看 [workflows/interactive-study-site/README.md](workflows/interactive-study-site/README.md) 與 [decisions](workflows/decisions.md) 的譯名裁決。
 
 ## 各工作流 session-log
 

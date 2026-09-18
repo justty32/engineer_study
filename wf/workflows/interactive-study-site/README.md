@@ -73,7 +73,7 @@
 | [GITHUB-PAGES.md](GITHUB-PAGES.md) | 發布契約：只發成品、單一入口、slug 表在 `pages.yml`、驗 HTTP 200 |
 | [TEMPLATE.project-brief.md](TEMPLATE.project-brief.md)／[TEMPLATE.build-spec.md](TEMPLATE.build-spec.md) | 兩份產物的骨架，複製到產物目錄改寫 |
 | `tools/sync-styles.py` | `styles.css` 正本同步與閘門（`--check`／`--sync`） |
-| [archive/](archive/README.md) | 已封存：共用資產評估報告、舊版 gpt worker 編組 |
+| `archive/`（已封存，不連） | 已封存：共用資產評估報告、舊版 gpt worker 編組 |
 
 ## 交接
 

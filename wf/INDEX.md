@@ -32,7 +32,7 @@
 | [UPSTREAM.md](UPSTREAM.md) | 通用工作流模板的上游來源、版本、kernel／project-owned 政策與同步條款。 |
 | [SESSION-LOG.md](SESSION-LOG.md) | 我的 open 進度。 |
 | [WAIT_USER.md](WAIT_USER.md) | 等使用者親自做 / 驗證的事（hub）；分類清單在 `wait-user/`。 |
-| `wait-user/` | WAIT_USER 的分頁：[實機驗收](wait-user/實機驗收.md)、[對照表缺詞](wait-user/對照表缺詞.md)。 |
+| `wait-user/` | WAIT_USER 的分頁：實機驗收四頁（[電機核心](wait-user/實機驗收-電機核心.md)、[共通通訊電力](wait-user/實機驗收-共通通訊電力.md)、[專題IoT](wait-user/實機驗收-專題IoT.md)、[專題資安機器人AI](wait-user/實機驗收-專題資安機器人AI.md)）、[對照表缺詞](wait-user/對照表缺詞.md)。 |
 | `workflows/` | 各工作流入口（派發見 [WORKFLOWS.md](WORKFLOWS.md)；共享區 [workflows/common/](workflows/common/README.md)）。 |
 | [workflows/interactive-study-site/](workflows/interactive-study-site/README.md) | 互動課程產線：README／FOUNDATIONS-FIRST／PRINCIPLES-FIRST／QUALITY-GATES／BUILD-WITH-AGENTS（＋`build-with-agents/codex-notes.md`）／ENRICH-EXISTING／GITHUB-PAGES／TEMPLATE.*；`tools/sync-styles.py`；`archive/`（SHARED-ASSETS-EVAL、AGENT-TEAM 已封存）。 |
 | [workflows/tidy/](workflows/tidy/README.md) | 整理工作流：封存、拆檔、抽資料檔。 |

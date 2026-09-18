@@ -2,6 +2,29 @@
 
 一個 deck 一個 `data/<deck_id>.json`，用 `python3 data/inline_deck.py data/<deck_id>.json` 灌進 `<deck_id>.html` 的 `<script id="deck-data">`。頁面完全資料驅動：lane 數、卡數、all_papers 列數都由 JSON 決定。`app.js` 讀不到的欄位一律忽略；缺席的可選欄位不渲染、不報錯。本檔由既有 `symbolic-arc-automata.json` 與 `app.js` 反推而成，改欄位先改本檔再改 `app.js`。
 
+## 頁面依賴的欄位（摘要）
+
+頁面只依賴下列欄位（各欄細則見下方各表）：
+
+```text
+deck: deck_id, title, subtitle, total_minutes, intro, lanes[], threads[], outro
+lane: id, name, minutes, paper_count, deep_doc,
+      gist{summary, points[], open}, highlights[4], question, all_papers[]
+highlight: arxiv_id, title_zh, title_en, year, role, one_liner, plain?, core,
+           number{label, value, note}, why, links{arxiv?, summary, translate?, transcript?}
+lane 另有可選 glossary?: [{term: "中文（English）", plain: "≤60 字"}] × 4～8
+all_papers 列: arxiv_id, status, title_zh, cat, summary_file|null, translate_file|null, url?, label?
+thread: title, text, lane_ids[], paper_ids[]
+```
+
+- `all_papers` 各列連到 `https://github.com/justty32/paper_readings/blob/main/summarize/<summary_file>`；`summary_file` 為 `null` 時只放 arXiv 連結 `https://arxiv.org/abs/<arxiv_id>`。可選 `url`（絕對網址）優先於前兩者、`label` 取代第一欄顯示的 id——給非 arXiv 條目（Ndea 訪談 `ndea-01`～`ndea-14`）用。
+- `links.transcript`（可選）渲染成「逐字稿 ↗」；缺哪個連結就不渲染哪個按鈕。
+- `plain`（可選，≤80 字）：「用你的話說，這篇等於……」，渲染在 `one_liner` 之後、`core` 之前，視覺上是一句側註。
+- `glossary`（可選，4～8 條）：該線生僻名詞的白話解釋，渲染成全景卡之後的「名詞白話」`<details>`（標題顯示條數）；卡片正文中出現的 `term` 會被標成可點的行內按鈕，點了在原地展開該條白話。
+- 兩個欄位缺席時不渲染、不報錯（舊資料相容）。
+- 頁面完全資料驅動：lane 數、卡數、all_papers 列數皆由 JSON 決定，不寫死 4 或 16。
+- 灌資料：`python3 data/inline_deck.py data/<deck_id>.json [<html>]`（把 JSON 安全跳脫後寫進 `#deck-data`，可重複執行，回讀比對）；`python3 data/validate_deck.py data/*.json` 做契約檢查。
+
 ## 頂層 deck
 
 | 欄位 | 型別 | 必填 | 說明 |
