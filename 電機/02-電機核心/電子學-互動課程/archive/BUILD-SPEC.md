@@ -1,3 +1,5 @@
+> 封存 2026-09-18：課程已上線、規格／驗收已定案；活文件不再引用本檔。
+
 # BUILD-SPEC — 電子學（零基礎互動課）
 
 ← 立案文件：[PROJECT-BRIEF.md](PROJECT-BRIEF.md)｜工作流：[build-with-codex](../../../wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[principles-first](../../../wf/workflows/interactive-study-site/PRINCIPLES-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)

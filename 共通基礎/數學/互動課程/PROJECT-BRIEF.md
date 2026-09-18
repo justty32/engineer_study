@@ -1,7 +1,7 @@
 # PROJECT-BRIEF — 工程數學先修（零基礎互動課）
 
 ← 工作流：[interactive-study-site](../../../wf/workflows/interactive-study-site/README.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)
-← 建置契約：[BUILD-SPEC.md](BUILD-SPEC.md)
+← 建置契約與驗收紀錄：已封存，見 `archive/`（BUILD-SPEC.md、驗收紀錄.md）
 
 ## 1. 一句話定位
 
@@ -123,7 +123,7 @@
 
 ## 6. 章節與來源對應表（可追溯）
 
-檔名對應見 [BUILD-SPEC.md → 1. 檔案清單](BUILD-SPEC.md)。所有關鍵數值與公式的來源如下；HTML 正文以「來源：01-微積分 §2」形式標註，**不放 `.md` 相對連結**（GitHub Pages 只發布 HTML/CSS/JS，`.md` 連結會 404）。
+檔名對應見 BUILD-SPEC 第 1 節「檔案清單」（已封存，見 `archive/`）。所有關鍵數值與公式的來源如下；HTML 正文以「來源：01-微積分 §2」形式標註，**不放 `.md` 相對連結**（GitHub Pages 只發布 HTML/CSS/JS，`.md` 連結會 404）。
 
 | 章 | 主要來源檔 | 小節 | 取用的關鍵內容 |
 | --- | --- | --- | --- |
@@ -204,7 +204,7 @@
 ```text
 共通基礎/數學/互動課程/
   PROJECT-BRIEF.md      ← 本檔（範圍、讀者、依賴、來源對應）
-  BUILD-SPEC.md         ← 建置契約（DOM、公式、詞表、題目、派工）
+  archive/BUILD-SPEC.md ← 建置契約（DOM、公式、詞表、題目、派工；已封存）
   index.html            ← 課程地圖
   00-工程數學地圖.html
   01-極限與導數.html
@@ -224,7 +224,7 @@
   自我檢核.html
   app.js                ← 單一檔，所有頁面 hook
   styles.css            ← 由 專題/機器人數學基礎/互動課程/styles.css 複製，位元組相同
-  驗收紀錄.md            ← verifier 產出
+  archive/驗收紀錄.md    ← verifier 產出（已封存）
 ```
 
 ## 10. 完成定義

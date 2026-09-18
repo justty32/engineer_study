@@ -1,3 +1,5 @@
+> 封存 2026-09-18：課程已上線、規格／驗收已定案；活文件不再引用本檔。
+
 # BUILD-SPEC — 工程數學先修（零基礎互動課）
 
 ← 立案文件：[PROJECT-BRIEF.md](PROJECT-BRIEF.md)｜工作流：[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)
