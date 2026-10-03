@@ -12,7 +12,7 @@
 ## 最新進度
 
 - [interactive-study-site] 第二批三課（電力電子／馬達驅動與控制／數位通訊）已上線；第三批候選 DSP／IC1／A2 待派 → 立案前先看 [workflows/interactive-study-site/README.md](workflows/interactive-study-site/README.md) 與 [decisions](workflows/decisions.md) 的譯名裁決。
-- [審稿] 2026-09-26 全站審稿：已存 01–28、38、39、42、46、48、49、51（＋IoT 兩份 part，已併入 20／46）；缺 29–37、40、41、43–45、47、50、52 → 只派 opus、同時 ≤3，從 29 電機機械互動續派，報告存 [reviews/2026-09-26/](reviews/2026-09-26/README.md)。
+- [審稿] 2026-09-26 全站審稿：已存 01–46、48、49、51（＋IoT 兩份 part，已併入 20／46）；缺 47 論文速覽、50 wf 工作流入口、52 建站工作流 → 只派 opus、同時 ≤3，報告存 [reviews/2026-09-26/](reviews/2026-09-26/README.md)。
 
 ## 各工作流 session-log
 
