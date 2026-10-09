@@ -21,6 +21,10 @@
 <h2 id="三-巨集與自我修改-讓程式生成程式">三、巨集與自我修改：讓程式生成程式</h2>
 <p><strong>想解決什麼</strong>：如果每個新控制結構都要修改編譯器，語言很難隨問題成長。Lisp 想讓程式設計者直接用現有語言產生新語法，把重複的程式結構壓成可重用的生成規則。</p>
 <p><strong>核心想法</strong>：既然程式就是列表，寫一段程式去生成或改寫另一段程式便是日常操作。巨集可在求值前接收一棵語法樹，再回傳另一棵語法樹。連 <code>if/else</code>、迴圈或小型 DSL 的控制結構，都能以 S-表達式組合。「決策本身也是一種決策」「生產工廠的工廠」這類自我指涉點子，因此有直接的表示方式。</p>
+<pre><code class="lang-lisp">(defmacro unless (condition &amp;body body)
+  `(if (not ,condition)
+       (progn ,@body)))</code></pre>
+<p>這個最小巨集收到尚未求值的 <code>condition</code> 與 <code>body</code> 語法樹，用反引號組出新的 <code>if</code> 程式；逗號與 <code>,@</code> 分別把單一節點與整段本體插回新樹。</p>
 <p>2025 年的〈LLMs in a Persistent Lisp Metaprogramming Loop〉提出讓大型語言模型連上持久 Common Lisp REPL，跨回合保留函式、巨集與工具，再由模型檢視和改寫它們。這是<strong>概念性提案，作者自陳無實作與實測</strong>。它能當架構草圖，不能當成自我修改已被實驗證成有效的證據。</p>
 <p><strong>和相近理論差在哪</strong>：一般 function calling 只能從人先寫好的 API 清單選工具；持久 Lisp 環境想讓模型自己建立工具並累積狀態。差別不在括號，而在工具集合能否成為可讀、可改、可延續的程式資產。</p>
 <p><strong>常見誤解與限制</strong>：「自我修改」不是系統自動變聰明，也不是解除外部約束。修改規則本身仍須經過解析、測試、能力限制與回滾。完整 Common Lisp 的檔案、網路與行程能力太大，不適合直接交給未受信任的候選程式。</p>

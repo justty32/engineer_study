@@ -44,6 +44,15 @@
     topbar.appendChild(btn);
   }
 
+  // 手機頂列仍顯示當前章名，過長時由 CSS 截斷。
+  function currentChapterLabel() {
+    var current = document.querySelector('.topbar a[aria-current="page"][aria-label^="目前章節"]');
+    if (!current) return;
+    var full = current.getAttribute("title");
+    if (full) current.textContent = full;
+    current.classList.add("current-chapter");
+  }
+
   // 目錄使用原生 <details>；此段只處理當前段落高亮
   function tocHighlight() {
     var toc = document.querySelector(".toc");
@@ -76,12 +85,19 @@
     } catch (e) {}
   }
 
-  // 桌面預設展開、窄螢幕預設收合；使用者在同一 viewport 的選擇不會被覆寫。
+  // 桌面預設展開、窄螢幕預設收合；使用者操作後不再被 viewport 變化覆寫。
   function responsiveToc() {
     var details = document.querySelector(".toc details");
     if (!details || !window.matchMedia) return;
     var mq = window.matchMedia("(max-width: 900px)");
-    function applyDefault() { details.open = !mq.matches; }
+    var userChanged = false;
+    var summary = details.querySelector("summary");
+    if (summary) {
+      summary.addEventListener("click", function () { userChanged = true; });
+    }
+    function applyDefault() {
+      if (!userChanged) details.open = !mq.matches;
+    }
     applyDefault();
     if (typeof mq.addEventListener === "function") {
       mq.addEventListener("change", applyDefault);
@@ -107,7 +123,10 @@
       });
       document.querySelectorAll(".term-groups > h2").forEach(function (h) {
         var next = h.nextElementSibling;
-        if (!next) return;
+        if (!next || !next.classList || !next.classList.contains("term-list")) {
+          h.hidden = false;
+          return;
+        }
         var visible = Array.prototype.slice.call(next.querySelectorAll(".term-card")).some(function (c) { return !c.hidden; });
         h.hidden = !visible;
         next.hidden = !visible;
@@ -164,7 +183,7 @@
         var src = n.getAttribute("data-src");
         if (src != null) {
           n.removeAttribute("data-processed");
-          n.innerHTML = src;
+          n.textContent = src;
         }
       });
       runMermaid();
@@ -189,6 +208,7 @@
 
   function boot() {
     restoreMermaidSource();
+    currentChapterLabel();
     theme();
     responsiveToc();
     tocHighlight();
