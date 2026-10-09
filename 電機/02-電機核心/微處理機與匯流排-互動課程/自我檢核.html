@@ -23,8 +23,8 @@
 <div id="q00-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q00-3｜</strong>把時脈加 20 % 與把 CPI 減 20 %，為什麼前者拿到的收益比較小？</p>
-<label for="q00-3">你的答案<select id="q00-3"><option value="">請選擇</option><option value="a">兩者都讓時間乘 0.8，因為都是 20 %</option><option value="b">時間與時脈成反比，加 20 % 只等於乘 1/1.2，而 CPI 減 20 % 等於乘 0.8</option><option value="c">時脈加 20 % 會讓時間乘 1.2，因為公式是相乘</option><option value="d">只要指令數不變，兩種改法都不會影響時間</option></select></label>
+<p><strong>q00-3｜</strong>在本章模擬器改成 IC 120 百萬條、CPI 2.0、時脈 3.0 GHz。執行時間是多少毫秒？</p>
+<label for="q00-3">你的答案（ms）<input id="q00-3" type="number" step="any"></label>
 <button type="button" id="q00-3-check">對答案</button>
 <div id="q00-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -44,8 +44,8 @@
 <div id="q01-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q01-3｜</strong>現代 x86 處理器內部到底是 RISC 還是 CISC？</p>
-<label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">只要核心用 micro-op，ISA 就已經變成 RISC</option><option value="b">指令長度不固定就代表內部不能用固定格式運算</option><option value="c">外面是 CISC 編碼、裡面解碼成類 RISC 的 micro-op，兩件事同時成立</option><option value="d">CISC 與 RISC 只是作業系統選的執行模式</option></select></label>
+<p><strong>q01-3｜</strong>在本章模擬器選「索引加縮放」，設基底 2048、位移 −32、索引 7、縮放 4。有效位址是多少？</p>
+<label for="q01-3">你的答案（十進位）<input id="q01-3" type="number" step="any"></label>
 <button type="button" id="q01-3-check">對答案</button>
 <div id="q01-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -65,8 +65,8 @@
 <div id="q02-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q02-3｜</strong>把 0.1 存進 binary32 之後會怎樣？</p>
-<label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">精確等於 0.1，因為十進位輸入會原樣儲存</option><option value="b">變成 0，因為小數都是非正規數</option><option value="c">變成 0.100000001490116…，因為 0.1 在二進位是無限循環</option><option value="d">變成 NaN，因為格式無法表示小數</option></select></label>
+<p><strong>q02-3｜</strong>在本章模擬器把十進位 0.2 存成 binary32，得到的十六進位位元是哪一個？</p>
+<label for="q02-3">你的答案<select id="q02-3"><option value="">請選擇</option><option value="a">0x3DCCCCCD</option><option value="b">0x3E4CCCCD</option><option value="c">0x3ECCCCCD</option><option value="d">0x3F4CCCCD</option></select></label>
 <button type="button" id="q02-3-check">對答案</button>
 <div id="q02-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -86,8 +86,8 @@
 <div id="q03-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q03-3｜</strong>只跑 1 條指令時，為什麼管線反而比單週期慢？</p>
-<label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">級數越多，單條指令必然越快完成</option><option value="b">管線沒有縮短單條指令的延遲，還多付了每級暫存器的負擔</option><option value="c">只要沒有分支，單條指令就能獲得完整吞吐量收益</option><option value="d">管線的填充成本只影響快取失誤</option></select></label>
+<p><strong>q03-3｜</strong>在本章模擬器設 40 條指令、4 級管線、t<sub>comb</sub> ＝ 8 ns、t<sub>latch</sub> ＝ 0.25 ns。管線總時間是多少奈秒？</p>
+<label for="q03-3">你的答案（ns）<input id="q03-3" type="number" step="any"></label>
 <button type="button" id="q03-3-check">對答案</button>
 <div id="q03-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -107,8 +107,8 @@
 <div id="q04-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q04-3｜</strong>為什麼旁路全開之後，載入指令後面緊接的使用還是要插一拍泡？</p>
-<label for="q04-3">你的答案<select id="q04-3"><option value="">請選擇</option><option value="a">旁路必須等到 WB 後才能把值送回 EX</option><option value="b">載入與算術指令都在 EX 結束時產生結果，只是線路太長</option><option value="c">載入的資料要到 MEM 結束才拿得到，比下一條的 EX 需要的時間晚一拍</option><option value="d">旁路只能解決結構冒險，不能解決資料冒險</option></select></label>
+<p><strong>q04-3｜</strong>在本章模擬器設 6 條指令、相依距離 2、開啟旁路、使用分開的指令／資料記憶體。總拍數是多少？</p>
+<label for="q04-3">你的答案（拍）<input id="q04-3" type="number" step="any"></label>
 <button type="button" id="q04-3-check">對答案</button>
 <div id="q04-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -128,8 +128,8 @@
 <div id="q05-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q05-3｜</strong>初始猜不跳時，為什麼 T N 交替的樣式會讓 1 位元預測器全部猜錯？</p>
-<label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">因為初始值是不跳，之後不會再更新</option><option value="b">1 位元預測器會用全部歷史取多數決</option><option value="c">管線深度會把正確預測變成誤判</option><option value="d">它永遠猜上一次的結果，而每一次都跟上一次相反</option></select></label>
+<p><strong>q05-3｜</strong>在本章模擬器將樣式設為 <code>T T N N</code>、重複 3 次、初始狀態 <code>10</code>。哪種預測器的誤判最少？</p>
+<label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">2 位元飽和計數器，誤判 8 次</option><option value="b">永遠猜跳，誤判 6 次</option><option value="c">1 位元預測器，誤判 5 次</option><option value="d">永遠猜不跳，誤判 6 次</option></select></label>
 <button type="button" id="q05-3-check">對答案</button>
 <div id="q05-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -149,8 +149,8 @@
 <div id="q06-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q06-3｜</strong>暫存器重新命名解決的是哪一種相依？</p>
-<label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">RAW 真相依，因為生產者與消費者可以改用不同名字</option><option value="b">控制相依，因為重新命名會預測下一個 PC</option><option value="c">WAR 與 WAW 這種只是重複用同一個名字的假相依</option><option value="d">結構冒險，因為實體暫存器就是共用埠</option></select></label>
+<p><strong>q06-3｜</strong>在本章模擬器設發射寬度 6、視窗 48、平均停留 12 拍、ILP 5、實體／架構暫存器 64／32，並開啟重新命名與推測。有效 IPC 是多少？</p>
+<label for="q06-3">你的答案（無單位）<input id="q06-3" type="number" step="any"></label>
 <button type="button" id="q06-3-check">對答案</button>
 <div id="q06-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -170,7 +170,7 @@
 <div id="q07-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q07-3｜</strong>1000 個元素、向量寬度 16。向量迴圈要跑幾次？</p>
+<p><strong>q07-3｜</strong>在本章模擬器設資料元素 997 個、SIMD 向量寬度 12。向量迴圈要跑幾次？</p>
 <label for="q07-3">你的答案（次）<input id="q07-3" type="number" step="any"></label>
 <button type="button" id="q07-3-check">對答案</button>
 <div id="q07-3-output" class="output" aria-live="polite"></div>
@@ -191,8 +191,8 @@
 <div id="q08-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q08-3｜</strong>直接對映比同容量全相聯多出來的那 14 次失誤，屬於哪一類？</p>
-<label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">容量失誤，因為直接對映快取總共只有 256 位元組</option><option value="b">衝突失誤，因為同容量全相聯不會發生</option><option value="c">強制失誤，因為每次存取都是第一次碰到那個區塊</option><option value="d">一致性失誤，因為兩個陣列的內容不同</option></select></label>
+<p><strong>q08-3｜</strong>在本章模擬器選「順序掃描（步長 4，32 筆讀）」，使用 128 位元組、16 位元組行的直接對映快取。強制失誤有幾次？</p>
+<label for="q08-3">你的答案（次）<input id="q08-3" type="number" step="any"></label>
 <button type="button" id="q08-3-check">對答案</button>
 <div id="q08-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -212,8 +212,8 @@
 <div id="q09-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q09-3｜</strong>MESI 裡的 E（Exclusive 獨占）狀態存在的意義是什麼？</p>
-<label for="q09-3">你的答案<select id="q09-3"><option value="">請選擇</option><option value="a">表示多個核心可以同時修改這條行</option><option value="b">表示記憶體那份已經過時，所以必須先回寫</option><option value="c">表示資料是唯讀，任何核心都不能寫</option><option value="d">讓「只有我有而且沒改」的情形不必發匯流排交易就能升級成 M</option></select></label>
+<p><strong>q09-3｜</strong>在本章模擬器設交替寫同一行、重複 12 輪、遠端快取 30 拍、主記憶體 180 拍、BusUpgr 8 拍。含首輪冷啟動的總拍數是多少？</p>
+<label for="q09-3">你的答案（拍）<input id="q09-3" type="number" step="any"></label>
 <button type="button" id="q09-3-check">對答案</button>
 <div id="q09-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -233,8 +233,8 @@
 <div id="q10-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q10-3｜</strong>頁缺失率只有百萬分之一，為什麼還是要在意？</p>
-<label for="q10-3">你的答案<select id="q10-3"><option value="">請選擇</option><option value="a">百萬分之一可以直接當作零，除非 TLB 也同時失誤</option><option value="b">一次頁缺失是十萬拍，攤下來仍佔總成本 1 % 以上，率再高一點就會主導</option><option value="c">頁缺失的懲罰與 L1 失誤一樣，只是名字不同</option><option value="d">頁缺失只會影響轉譯，不會影響整體存取時間</option></select></label>
+<p><strong>q10-3｜</strong>在本章模擬器設 TLB 命中率 98 %、查詢 1 拍、走訪 80 拍、頁缺失每百萬次 2 次、壓縮記憶體 2 µs、時脈 2.5 GHz。平均轉譯成本是多少拍？</p>
+<label for="q10-3">你的答案（拍）<input id="q10-3" type="number" step="any"></label>
 <button type="button" id="q10-3-check">對答案</button>
 <div id="q10-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -254,8 +254,8 @@
 <div id="q11-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q11-3｜</strong>事件率很低的時候，輪詢為什麼反而比中斷貴？</p>
-<label for="q11-3">你的答案<select id="q11-3"><option value="">請選擇</option><option value="a">中斷在低事件率時會固定付出每秒數萬次進出成本</option><option value="b">輪詢的固定查詢成本照頻率支付，事件很少時大部分查詢都白做</option><option value="c">DMA 在低事件率時必須改由 CPU 搬每個位元組</option><option value="d">輪詢頻率不可能高於事件率，所以一定會漏資料</option></select></label>
+<p><strong>q11-3｜</strong>在本章模擬器設事件率 50000 次/秒、每次 64 位元組、輪詢 100000 次/秒，其餘成本保持 20／800／1200 拍、2 GHz、4 拍/位元組。哪種方式的 CPU 佔用率最低？</p>
+<label for="q11-3">你的答案<select id="q11-3"><option value="">請選擇</option><option value="a">輪詢，0.740000 %</option><option value="b">中斷，2.640000 %</option><option value="c">DMA，3.000000 %</option><option value="d">三者都是 3.000000 %</option></select></label>
 <button type="button" id="q11-3-check">對答案</button>
 <div id="q11-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -275,8 +275,8 @@
 <div id="q12-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q12-3｜</strong>CAN 的 500 kbit/s，為什麼只換到大約 36 KB/s 的資料率？</p>
-<label for="q12-3">你的答案<select id="q12-3"><option value="">請選擇</option><option value="a">因為差動線只有兩條，所以原始位元率必須先除以二</option><option value="b">因為線長會直接從每個訊框扣掉固定比例的資料</option><option value="c">一個標準訊框要 111 個位元才送 64 位元資料，仲裁、CRC 與確認都吃頻寬</option><option value="d">因為 500 kbit/s 是半雙工速率，全雙工才會到 1 Mbit/s</option></select></label>
+<p><strong>q12-3｜</strong>需求是 0.035 MB/s、24 個裝置、90 m，在本章六種介面的教學代表值中，哪一種可同時通過速率、裝置數與距離？</p>
+<label for="q12-3">你的答案<select id="q12-3"><option value="">請選擇</option><option value="a">I²C 400 kHz</option><option value="b">USB 3.2 Gen 1</option><option value="c">PCIe 4.0 ×4</option><option value="d">CAN 2.0B 500 kbit/s</option></select></label>
 <button type="button" id="q12-3-check">對答案</button>
 <div id="q12-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -296,8 +296,8 @@
 <div id="q13-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q13-3｜</strong>能效贏很多的 NPU，為什麼沒有被選上？</p>
-<label for="q13-3">你的答案<select id="q13-3"><option value="">請選擇</option><option value="a">NPU 的能效最高，所以只可能因運算量不夠而被排除</option><option value="b">兩者都滿足需求時比的是總成本，NPU 單價高、產量 10000 顆時總價較貴</option><option value="c">只要單顆晶片功耗不高於 DSP，總功耗就一定相同</option><option value="d">產量只影響 FPGA 的開發成本，不影響晶片總價</option></select></label>
+<p><strong>q13-3｜</strong>在本章模擬器設固定管線串流、需求 120 Gops/s、功耗預算 30 W、產量 200、可容忍延遲 5 µs。哪個可行方案的總成本最低？</p>
+<label for="q13-3">你的答案<select id="q13-3"><option value="">請選擇</option><option value="a">MCU：2400 顆、120 W、1440000 美元</option><option value="b">DSP：12 顆、24 W、36000 美元</option><option value="c">NPU：1 顆、5 W、8000 美元</option><option value="d">FPGA：1 顆、25 W、90000 美元</option></select></label>
 <button type="button" id="q13-3-check">對答案</button>
 <div id="q13-3-output" class="output" aria-live="polite"></div>
 </section>

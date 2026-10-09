@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 時脈與時序限制｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="10-時脈與時序限制.html" aria-current="page">目前章：10 時序限制</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">10・一個週期必須裝得下三段時間</p>
 <h1>時脈與時序限制：這個電路最快能跑幾 MHz，以及為什麼降頻救不了另一種病</h1>
@@ -63,9 +63,13 @@
 </ul>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p class="note"><strong>程式類比：</strong>可把每拍想成一次有 deadline 的迴圈：狀態輸出、組合邏輯與下一級建立都必須在下一拍前完成；保持違規卻是同一邊緣後太快到，降頻不會修好。量測共通限制見<a href="00-數位世界觀.html#measurement-limits">00 章集中說明</a>。</p>
 <p><strong>用什麼量。</strong>合成與佈局繞線跑完之後看 STA 報告，它會逐條列出關鍵路徑的 t<sub>cq</sub>、每一級邏輯延遲、繞線延遲、t<sub>su</sub> 與最終餘裕；在實體板子上則可以用可調時脈源逐步提高頻率，配合一個會檢查結果的測試向量，找出功能開始出錯的頻率。</p>
 <p><strong>量到什麼（能證明）。</strong>STA 報告能證明在工具的延遲模型與指定的角落條件下，這條路徑還剩多少餘裕、瓶頸在哪一級。升頻測試能證明這塊板子在當下的溫度與電壓下，功能大約在哪個頻率開始失效，也能反過來驗證餘裕估得合不合理。</p>
 <p><strong>不能證明什麼。</strong>單一條件下的報告或測試不能證明所有製程、電壓、溫度角落都通過，那要跑多角落分析。也證明不了「沒有亞穩態」：亞穩態是機率事件，只能算 MTBF，量不到「永遠不會」。此外升頻測試找到的邊界只反映當時那一顆晶片與那一塊板子，換一片就會不一樣。</p>
+
+<h2>本章帶走的三句話</h2>
+<p>建立限制管最長路徑，各段延遲與不確定性的總和決定最小時脈週期。保持限制管最短路徑，式子不含時脈週期，所以不能靠降頻修正。STA 的通過結論總是依賴延遲模型與指定角落，不是對所有晶片與環境的無條件保證。</p>
 
 <h2>連到哪門課</h2>
 <p>把太深的組合邏輯切成兩級以拉高頻率，就是管線的想法，見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>。t<sub>cq</sub> 與 t<sub>su</sub> 的物理來源在本課<a href="09-閂鎖與正反器.html">第 09 章</a>的主從結構，再往下是電晶體的充放電時間，見<a href="../電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學的 CMOS 反相器與數位功耗</a>。下一章把這套時序規則套到真正會記事情的電路上。</p>

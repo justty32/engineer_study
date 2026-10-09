@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 延遲、功耗與險境｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="08-延遲功耗與險境.html" aria-current="page">目前章：08 延遲與險境</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">08・閘要花時間、要驅動電容、要耗電</p>
 <h1>延遲、功耗與險境：兩條路徑延遲不一樣，就會生出一個假的脈衝</h1>
@@ -65,8 +65,12 @@
 <p class="warning"><strong>靜電放電（ESD）會打壞 CMOS 輸入。</strong>CMOS 的輸入是絕緣的閘極，人體累積的靜電可達數千伏特，直接碰到接腳就可能打穿閘極氧化層。取放晶片前先碰一下接地的金屬、用防靜電袋保存、不要在地毯上組裝。被 ESD 打過的晶片常常「還會動但參數變差」，比直接壞掉更難查。</p>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p class="note"><strong>程式類比：</strong>一般布林運算只保留穩態值，看不到路徑延遲造成的 ns 級突波；要模擬它必須使用離散事件與每個閘的延遲參數。探棒負載與頻寬限制見<a href="00-數位世界觀.html#measurement-limits">00 章集中說明</a>。</p>
 <p>用高頻寬示波器（至少 1–2 GHz）配低電容探棒，把探棒放在 F 的輸出節點，切換 A 就可以抓到那個 1 ns 的突波；換成邏輯分析儀在時脈邊緣取樣，同一個突波完全看不到。功耗那一側用電流探棒或電源供應器的電流讀值，把頻率加倍，可以看到電流大致跟著加倍。</p>
-<p><strong>能證明</strong>：突波真的存在、寬度大約多少、以及動態功耗隨頻率成長。<strong>不能證明</strong>：突波有沒有造成真正的錯誤——那要看它有沒有被抓進正反器；也證明不了「加了冗餘項就一定沒突波」，加冗餘項只保證消除<strong>這一種</strong>輸入變化造成的靜態險境，其他路徑要各自分析。探棒本身也帶電容，量到的寬度不完全是原來那個。</p>
+<p><strong>能證明</strong>：突波真的存在、寬度大約多少、以及動態功耗隨頻率成長。<strong>不能證明</strong>：突波有沒有造成真正的錯誤——那要看它有沒有被抓進正反器；也證明不了「加了冗餘項就一定沒突波」，加冗餘項只保證消除<strong>這一種</strong>輸入變化造成的靜態險境，其他路徑要各自分析。</p>
+
+<h2>本章帶走的三句話</h2>
+<p>布林等價只描述穩態值，不同路徑的傳播延遲可在切換時產生險境。共識項可撐住特定的靜態險境，但增加閘數而且不包治所有路徑。動態功耗近似隨頻率、負載電容與電壓平方增加。</p>
 
 <h2>連到哪門課</h2>
 <p>動態功耗的物理來源，也就是負載電容怎麼充放電，見<a href="../電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學的 CMOS 反相器與數位功耗</a>；電容充放電要多少電荷，見<a href="../電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>。至於為什麼同步設計能讓突波變成無害，要等到<a href="09-閂鎖與正反器.html">09 閂鎖與正反器</a>與<a href="10-時脈與時序限制.html">10 時脈與時序限制</a>：只要突波在下一個時脈邊緣之前平息，正反器根本看不到它。</p>

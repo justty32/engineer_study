@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 五階段管線與吞吐量｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="03-五階段管線與吞吐量.html" aria-current="page">目前：03 章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">03・管線買到的是吞吐量，不是延遲</p>
 <h1>五階段管線與吞吐量：為什麼切成五級不會快五倍，而且只跑一條指令時反而更慢</h1>
@@ -47,10 +47,10 @@
 <section class="workspace"><h2>自由實驗：四個旋鈕與管線的九個量</h2>
 <p>場景是同一批工作量跑在兩台機器上：一台單週期，一台 k 級管線，兩台的組合邏輯延遲總和一樣，管線那台每一級之間多付一組管線暫存器。你要看的是三件事：實際加速比、它與理想上限的差距，以及管線暫存器負擔在一拍裡佔掉多少。把指令數調小、把級數調大，就會看到管線由勝轉敗。</p>
 <div class="controls">
-<label for="pp-n">要跑的指令數 N<input id="pp-n" type="range" min="1" max="200" step="1" value="100"></label>
-<label for="pp-stages">管線級數 k<input id="pp-stages" type="range" min="1" max="12" step="1" value="5"></label>
-<label for="pp-tcomb">組合邏輯延遲總和 t_comb（ns）<input id="pp-tcomb" type="range" min="1" max="20" step="0.1" value="10"></label>
-<label for="pp-latch">每級管線暫存器負擔 t_latch（ns）<input id="pp-latch" type="range" min="0" max="1" step="0.01" value="0.2"></label>
+<label for="pp-n">要跑的指令數 N<input id="pp-n" type="range" min="1" max="200" step="1" value="100"><output id="pp-n-value" for="pp-n">100</output></label>
+<label for="pp-stages">管線級數 k<input id="pp-stages" type="range" min="1" max="12" step="1" value="5"><output id="pp-stages-value" for="pp-stages">5</output></label>
+<label for="pp-tcomb">組合邏輯延遲總和 t_comb（ns）<input id="pp-tcomb" type="range" min="1" max="20" step="0.1" value="10"><output id="pp-tcomb-value" for="pp-tcomb">10</output></label>
+<label for="pp-latch">每級管線暫存器負擔 t_latch（ns）<input id="pp-latch" type="range" min="0" max="1" step="0.01" value="0.2"><output id="pp-latch-value" for="pp-latch">0.2</output></label>
 </div>
 <div id="pipe5-output" class="output" aria-live="polite">目前設定：N ＝ 100 條、k ＝ 5 級、t_comb ＝ 10.0 ns、t_latch ＝ 0.2 ns。單週期時脈週期 T_1 ＝ <strong>10.200000 ns</strong>；管線時脈週期 T_p ＝ <strong>2.200000 ns</strong>；單週期總時間 <strong>1020.000000 ns</strong>；管線總時間 <strong>228.800000 ns</strong>；實際加速比 <strong>4.458042 倍</strong>；理想加速上限 <strong>4.636364 倍</strong>；填充損失 <strong>8.800000 ns</strong>；吞吐量 <strong>0.437063 指令/ns</strong>；暫存器負擔佔 T_p 的 <strong>9.090909 %</strong>。<strong>判讀：管線贏了 4.458042 倍，但追不上級數 5，也追不上理想上限 4.636364 倍。</strong>為什麼：加速比追不上級數，因為 t_latch 不會被切分，它原封不動地留在每一拍裡。邊界提醒：把指令數調到 1，加速比會掉到 0.927273 倍，管線反而慢，因為管線改善的是吞吐量不是單條指令的延遲；把級數調到 12，暫存器負擔會佔到 T_p 的 19.354839 %，此時再加級數只是多付功耗；級數 1 就是沒有管線，加速比必然是 1.000000；把 t_latch 調到 0 是理想化的零負擔，加速上限剛好等於級數，真實電路做不到。</div>
 </section>

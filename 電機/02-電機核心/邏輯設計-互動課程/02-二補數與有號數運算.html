@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 二補數與有號數運算｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="02-二補數與有號數運算.html" aria-current="page">目前章：02 二補數</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">02・同一組位元，兩種解讀，兩種「有沒有出錯」</p>
 <h1>二補數與有號數運算：為什麼減法可以用同一台加法器做完</h1>
@@ -55,8 +55,13 @@
 </ul>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p class="note">本章只列旗標與資料解讀的特有邊界；有限時間、取樣與儀器擾動的共通限制見<a href="00-數位世界觀.html#measurement-limits">00 章集中說明</a>。</p>
+<p class="note"><strong>程式類比：</strong>同一個 8 位元樣式可分別用 <code>uint8_t</code> 與 <code>int8_t</code> 轉型解讀；減法對應 <code>(a + (~b) + 1) &amp; 0xff</code>，而 C 與 V 必須分開判斷。</p>
 <p>在任何一顆處理器上寫一小段組合語言，把 100 與 45 放進 8 位元暫存器相加，用除錯器單步停在加法之後看旗標暫存器：C 與 V 會分別是 0 與 1，跟本章算出來的一致。更貼近日常的作法是在 C 語言裡宣告同一個位元組，分別用 signed char 與 unsigned char 印出來，會看到 −111 與 145 同時成立。也可以在 EDA 模擬器裡跑 8 位元加法器的 testbench，逐位檢查進位鏈。</p>
 <p>能證明的是：這顆處理器的旗標定義與本課一致、某個位元組在兩種解讀下分別是多少、溢位發生在哪一次運算。不能證明的是：這段程式「應該」用有號還是無號——那是設計者的意圖，硬體只提供兩種讀法，不會告訴你選錯了；也不能證明程式別處沒有把同一個位元組當成另一種編碼再讀一次。除錯器看到的旗標是那一瞬間的值，下一條指令就可能覆寫它。</p>
+
+<h2>本章帶走的三句話</h2>
+<p>n 位元運算本質是模 2<sup>n</sup>，有號與無號只是對同一樣式的不同解讀。二補數讓減法化成反相加一後的加法，所以硬體可共用加法器。C 判斷無號超界，V 判斷有號超界，不能拿其中一個代替另一個。</p>
 
 <h2>連到哪門課</h2>
 <p>A + ¬B + 1 在電路上怎麼實作、進位鏈為什麼是瓶頸、超前進位怎麼用面積換速度，都在本課第 07 章。旗標怎麼被條件分支指令拿去用，見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織的處理器資料路徑與指令週期</a>。下一章換一條線走，從真值表與布林代數開始蓋組合邏輯。</p>

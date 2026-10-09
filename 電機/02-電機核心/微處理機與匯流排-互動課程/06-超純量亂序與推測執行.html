@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 超純量、亂序與推測執行｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="06-超純量亂序與推測執行.html" aria-current="page">目前：06 章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">06・機器加寬很容易，讓程式餵得飽才是難的那一半</p>
 <h1>超純量、亂序與推測執行：三個上限取最小值，命名空間先折進視窗</h1>
@@ -41,14 +41,14 @@
 <section class="workspace"><h2>自由實驗：三個上限取最小值，找出真正的瓶頸</h2>
 <p>場景是一支固定的程式跑在一台規格可任意調整的超純量機器上。工作量是那支程式能取出的獨立工作，機器這一側可改發射寬度、指令視窗、實體與架構暫存器數，也可開關重新命名與推測執行。要看的是：三個候選限制各是多少、誰最小、以及把最小那一項改善之後 IPC 會變成多少。</p>
 <div class="controls">
-<label for="oo-width">發射寬度（每拍最多發射幾條）<input id="oo-width" type="range" min="1" max="8" step="1" value="4"></label>
-<label for="oo-window">指令視窗大小（條）<input id="oo-window" type="range" min="4" max="256" step="4" value="64"></label>
-<label for="oo-lat">每條指令平均停留拍數<input id="oo-lat" type="range" min="4" max="64" step="1" value="16"></label>
-<label for="oo-ilp">程式本身可取出的平行度 ILP<input id="oo-ilp" type="range" min="1" max="8" step="0.1" value="2.5"></label>
+<label for="oo-width">發射寬度（每拍最多發射幾條）<input id="oo-width" type="range" min="1" max="8" step="1" value="4"><output id="oo-width-value" for="oo-width">4</output></label>
+<label for="oo-window">指令視窗大小（條）<input id="oo-window" type="range" min="4" max="256" step="4" value="64"><output id="oo-window-value" for="oo-window">64</output></label>
+<label for="oo-lat">每條指令平均停留拍數<input id="oo-lat" type="range" min="4" max="64" step="1" value="16"><output id="oo-lat-value" for="oo-lat">16</output></label>
+<label for="oo-ilp">程式本身可取出的平行度 ILP<input id="oo-ilp" type="range" min="1" max="8" step="0.1" value="2.5"><output id="oo-ilp-value" for="oo-ilp">2.5</output></label>
 <label for="oo-rename"><input id="oo-rename" type="checkbox" checked>啟用暫存器重新命名</label>
 <label for="oo-spec"><input id="oo-spec" type="checkbox" checked>啟用推測執行</label>
-<label for="oo-phys">實體暫存器數<input id="oo-phys" type="range" min="32" max="256" step="8" value="128"></label>
-<label for="oo-arch">架構暫存器數<input id="oo-arch" type="range" min="8" max="32" step="8" value="16"></label>
+<label for="oo-phys">實體暫存器數<input id="oo-phys" type="range" min="32" max="256" step="8" value="128"><output id="oo-phys-value" for="oo-phys">128</output></label>
+<label for="oo-arch">架構暫存器數<input id="oo-arch" type="range" min="8" max="32" step="8" value="16"><output id="oo-arch-value" for="oo-arch">16</output></label>
 </div>
 <div id="ooo-output" class="output" aria-live="polite">可取平行度 2.500000；重新命名空間 128 − 16 = 112 個；有效視窗 min(64, 112) = 64；視窗上限 64 / 16 = 4.000000；有效 IPC min(4, 2.5, 4) = 2.500000；CPI 0.400000。瓶頸是<strong>可取平行度</strong>。<strong>加寬發射或加大視窗都不會有效果，瓶頸在程式本身。</strong>若把 ILP 改善到 4.000000，IPC 會變成 4.000000，屆時發射寬度與視窗上限會同時成為新的瓶頸。命名空間先限制有效視窗，再由發射寬度、程式 ILP 與視窗上限這三項取最小值。</div>
 </section>

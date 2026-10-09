@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 匯流排家族 PCIe 到 CAN｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="12-匯流排家族PCIe到CAN.html" aria-current="page">目前：12 章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">12・一條線也叫匯流排，一疊差動對也叫匯流排</p>
 <h1>匯流排家族：從 PCIe 到 CAN，同一筆 64 KiB 為什麼差六個數量級</h1>
@@ -34,7 +34,7 @@
 <tr><td>SPI（50 MHz）</td><td>50 Mbit/s</td><td>100 %</td><td><strong>6.250000 MB/s</strong></td><td>3 ＋ 從機數</td><td>單主多從</td><td>0.3 m</td><td>8</td></tr>
 <tr><td>I²C（400 kHz 快速模式）</td><td>400 kbit/s</td><td>8/9 ＝ 88.888889 %</td><td><strong>0.044444 MB/s</strong></td><td>2</td><td>多主多從共用</td><td>1 m</td><td>112</td></tr>
 <tr><td>UART（115200 8N1）</td><td>115.2 kbit/s</td><td>8/10 ＝ 80.000000 %</td><td><strong>0.011520 MB/s</strong></td><td>2</td><td>點對點</td><td>15 m</td><td>1</td></tr>
-<tr><td>CAN 2.0B（500 kbit/s）</td><td>500 kbit/s</td><td>64/111 ＝ 57.657658 %</td><td><strong>0.036036 MB/s</strong></td><td>2</td><td>多主匯流排＋仲裁</td><td>40 m</td><td>110</td></tr>
+<tr><td>CAN 2.0B（500 kbit/s）</td><td>500 kbit/s</td><td>64/111 ＝ 57.657658 %</td><td><strong>0.036036 MB/s</strong></td><td>2</td><td>多主匯流排＋仲裁</td><td>100 m</td><td>110</td></tr>
 </tbody></table>
 <p>拓樸不畫圖，用文字鏈讀。點對點 <code>主機 ── 一組差動對 ── 裝置</code>；階層星狀 <code>主控 ── hub ── hub ── 裝置</code>，每多一層多一段轉送延遲；單主多從 <code>主機 ── SCLK／MOSI／MISO 共用 ── 從機甲、從機乙</code>，從機再各拉一條 CS；多主共用 <code>節點 ── 同一對線 ── 節點 ── 節點</code>，兩端各接終端電阻。</p>
 <p>拿互動元件的預設值算一次：SPI、64 KiB（65536 位元組）、裝置 4、線長 0.2 m、需求速率 1 MB/s。</p>
@@ -53,9 +53,9 @@
 <p>場景是：你有一筆固定大小的資料要搬，手上有六種介面可選，板子上要掛幾個裝置、線拉多長、應用要求多快都由你決定。左邊選家族，右邊四支滑桿給條件。要看的是三件事：有效位元組率跟原始位元率差多少、這筆資料傳完要多久、以及速率、裝置數、距離三項判定有沒有全部通過。</p>
 <div class="controls">
 <label for="bs-family">介面家族<select id="bs-family"><option value="spi">SPI 50 MHz</option><option value="i2c">I²C 400 kHz</option><option value="uart">UART 115200</option><option value="can">CAN 500 kbit/s</option><option value="usb">USB 3.2 Gen 1</option><option value="pcie">PCIe 4.0 ×4</option></select></label>
-<label for="bs-payload">要傳的資料量（KiB）<input id="bs-payload" type="range" min="1" max="1024" step="1" value="64"></label>
-<label for="bs-nodes">要掛的裝置數<input id="bs-nodes" type="range" min="1" max="32" step="1" value="4"></label>
-<label for="bs-len">線路長度（公尺）<input id="bs-len" type="range" min="0.1" max="50" step="0.1" value="0.2"></label>
+<label for="bs-payload">要傳的資料量（KiB）<input id="bs-payload" type="range" min="1" max="1024" step="1" value="64"><output id="bs-payload-value" for="bs-payload">64</output></label>
+<label for="bs-nodes">要掛的裝置數<input id="bs-nodes" type="range" min="1" max="32" step="1" value="4"><output id="bs-nodes-value" for="bs-nodes">4</output></label>
+<label for="bs-len">線路長度（公尺）<input id="bs-len" type="range" min="0.1" max="100" step="0.1" value="0.2"><output id="bs-len-value" for="bs-len">0.2</output></label>
 <label for="bs-need">需求速率（MB/s）<input id="bs-need" type="number" min="0.01" max="1000" step="0.01" value="1"></label>
 </div>
 <div id="buspick-output" class="output" aria-live="polite">載入中…</div>
@@ -75,7 +75,7 @@
 <p class="warning">通電狀態下插拔 SPI 或 I²C 排線，訊號腳可能先於接地腳接觸，電流會灌進 I/O 保護二極體而燒毀輸入電路；把 5 V 匯流排直接接上 3.3 V 元件也會超過絕對最大額定。標準做法是接線前先斷電，接線後確認兩端邏輯位準是否相同，不同就加位準轉換電路，並確認上拉電阻接到正確的電源。</p>
 
 <h2>連到哪門課</h2>
-<p>非同步序列為什麼要起始位元與過取樣，接回<a href="../邏輯設計-互動課程/09-閂鎖與正反器.html">邏輯設計 09</a>；同步取樣的頻率上限見<a href="../邏輯設計-互動課程/10-時脈與時序限制.html">邏輯設計 10</a>；推高時脈的功耗代價見<a href="../電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學 09</a>。裝置怎麼被服務見<a href="11-輪詢中斷與DMA.html">本課第 11 章</a>；線一長冒出來的訊號完整性、阻抗匹配與電磁相容（EMC），本課只點名，留給電磁學第 15 章與 IoT 知識群「04-天線RF與EMC」。下一章比這些介面接的晶片。</p>
+<p>非同步序列為什麼要起始位元與過取樣，接回<a href="../邏輯設計-互動課程/09-閂鎖與正反器.html">邏輯設計 09</a>；同步取樣的頻率上限見<a href="../邏輯設計-互動課程/10-時脈與時序限制.html">邏輯設計 10</a>；推高時脈的功耗代價見<a href="../電子學-互動課程/09-CMOS反相器與數位功耗.html">電子學 09</a>。裝置怎麼被服務見<a href="11-輪詢中斷與DMA.html">本課第 11 章</a>；線一長冒出來的訊號完整性、阻抗匹配與電磁相容（EMC），本課只點名，留給電磁學第 17 章（傳輸線）與 IoT 知識群「04-天線RF與EMC」。下一章比這些介面接的晶片。</p>
 <nav class="pager" aria-label="章節導覽"><a href="11-輪詢中斷與DMA.html">← 上一頁：輪詢、中斷與 DMA</a><a href="13-處理器家族選型.html">下一頁：處理器家族選型 →</a></nav>
 </main>
 <footer class="site-footer"><span>12 匯流排家族 PCIe 到 CAN</span><a href="名詞與概念字典.html">查字典</a></footer>

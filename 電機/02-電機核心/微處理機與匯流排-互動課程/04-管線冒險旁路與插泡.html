@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 管線冒險、旁路與插泡｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="04-管線冒險旁路與插泡.html" aria-current="page">目前：04 章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">04・「每拍完成一條」是理想值，這章算它掉多少</p>
 <h1>管線冒險、旁路與插泡：硬體不是壞掉才停下來，是算過之後選擇等</h1>
@@ -57,7 +57,7 @@
 <section class="workspace"><h2>自由實驗：把泡數算到逐拍</h2>
 <p>場景是一台五階段管線機器跑上面那段序列：第一條是載入指令，後面每一條都可能用到前面某一條的結果。你可以改指令數、改相依距離、開關旁路、開關「只有一個記憶體埠」。要看的是三件事：泡插在第幾拍、泡數怎麼隨距離變化，以及 CPI 與穩態 CPI 為什麼是兩個不同的數。</p>
 <div class="controls">
-<label for="ph-n">指令數 N<input id="ph-n" type="range" min="2" max="12" step="1" value="5"></label>
+<label for="ph-n">指令數 N<input id="ph-n" type="range" min="2" max="12" step="1" value="5"><output id="ph-n-value" for="ph-n">5</output></label>
 <label for="ph-dep">相依距離<select id="ph-dep"><option value="1">距離 1（每條都用前一條的結果）</option><option value="2">距離 2（隔一條）</option><option value="3">距離 3（隔兩條，沒有冒險）</option></select></label>
 <label for="ph-forward"><input id="ph-forward" type="checkbox" checked>啟用旁路（forwarding）</label>
 <label for="ph-struct"><input id="ph-struct" type="checkbox">只有一個記憶體埠（結構冒險）</label>

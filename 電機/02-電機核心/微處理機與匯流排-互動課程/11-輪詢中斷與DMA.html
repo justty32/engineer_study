@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 輪詢、中斷與 DMA｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="11-輪詢中斷與DMA.html" aria-current="page">目前：11 章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">11・沒有哪一種永遠比較好，答案會隨事件率翻轉</p>
 <h1>輪詢、中斷與 DMA：同一把尺量出 CPU 各被吃掉多少</h1>
@@ -43,13 +43,13 @@
 <div class="controls">
 <label for="io-mode">要比較的方式<select id="io-mode"><option value="all">三種都比較</option><option value="poll">只看輪詢</option><option value="irq">只看中斷</option><option value="dma">只看 DMA</option></select></label>
 <label for="io-rate">裝置事件率（次/秒）<input id="io-rate" type="number" min="1" max="100000" step="1" value="1000"></label>
-<label for="io-bytes">每次事件搬移的位元組數<input id="io-bytes" type="range" min="1" max="4096" step="1" value="512"></label>
-<label for="io-pollc">每次輪詢查詢的拍數<input id="io-pollc" type="range" min="5" max="200" step="5" value="20"></label>
+<label for="io-bytes">每次事件搬移的位元組數<input id="io-bytes" type="range" min="1" max="4096" step="1" value="512"><output id="io-bytes-value" for="io-bytes">512</output></label>
+<label for="io-pollc">每次輪詢查詢的拍數<input id="io-pollc" type="range" min="5" max="200" step="5" value="20"><output id="io-pollc-value" for="io-pollc">20</output></label>
 <label for="io-pollf">輪詢頻率（次/秒）<input id="io-pollf" type="number" min="100" max="1000000" step="100" value="10000"></label>
-<label for="io-isr">中斷服務常式拍數（含進出）<input id="io-isr" type="range" min="100" max="5000" step="50" value="800"></label>
-<label for="io-dma">DMA 設定＋完成中斷拍數<input id="io-dma" type="range" min="200" max="5000" step="50" value="1200"></label>
-<label for="io-clock">時脈（GHz）<input id="io-clock" type="range" min="0.5" max="5" step="0.1" value="2"></label>
-<label for="io-perbyte">程式化搬移每位元組拍數<input id="io-perbyte" type="range" min="1" max="20" step="1" value="4"></label>
+<label for="io-isr">中斷服務常式拍數（含進出）<input id="io-isr" type="range" min="100" max="5000" step="50" value="800"><output id="io-isr-value" for="io-isr">800</output></label>
+<label for="io-dma">DMA 設定＋完成中斷拍數<input id="io-dma" type="range" min="200" max="5000" step="50" value="1200"><output id="io-dma-value" for="io-dma">1200</output></label>
+<label for="io-clock">時脈（GHz）<input id="io-clock" type="range" min="0.5" max="5" step="0.1" value="2"><output id="io-clock-value" for="io-clock">2</output></label>
+<label for="io-perbyte">程式化搬移每位元組拍數<input id="io-perbyte" type="range" min="1" max="20" step="1" value="4"><output id="io-perbyte-value" for="io-perbyte">4</output></label>
 </div>
 <div id="iomode-output" class="output" aria-live="polite">載入中…</div>
 </section>

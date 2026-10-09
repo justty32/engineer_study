@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 數值系統與編碼｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="01-數值系統與編碼.html" aria-current="page">目前章：01 數值與編碼</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">01・同一個量的很多種位元寫法，各解決一個不同的問題</p>
 <h1>數值系統與編碼：為什麼要有這麼多種寫法，每一種在買什麼</h1>
@@ -59,8 +59,12 @@
 </ul>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p class="note"><strong>程式類比：</strong><code>bin(n)</code>、<code>oct(n)</code> 與 <code>printf("%x", n)</code> 只改變顯示寫法；格雷碼則是 <code>g = n ^ (n &gt;&gt; 1)</code>，真的改變了位元編碼。</p>
 <p>把旋轉編碼器的輸出線接上邏輯分析儀，慢慢轉動軸，可以看到每次過渡只有一條線改變，其他線維持不動——這就是格雷碼在做的事。換一顆純二進位輸出的編碼器再轉一次，在過渡點會抓到一到兩個取樣週期的假值，例如 7 到 8 的過渡點上可能先出現 15 或 0，因為 4 條線不會同時到位。把取樣率調高，假值不會變少，只會被看得更清楚。</p>
-<p>能證明的是：這顆編碼器輸出的是哪一種編碼、過渡時有沒有出現不該存在的碼、假值持續了多少個取樣週期。不能證明的是：編碼器的絕對角度，那要另外校零；也不能證明「格雷碼永遠不會出錯」——線斷掉或雜訊夠大一樣會讀錯，格雷碼只消除了多個位元不同步這一種錯誤來源。另外邏輯分析儀只在取樣時刻判讀，兩次取樣之間發生的事它看不見。</p>
+<p>能證明的是：這顆編碼器輸出的是哪一種編碼、過渡時有沒有出現不該存在的碼、假值持續了多少個取樣週期。不能證明編碼器的絕對角度，那要另外校零；也不能證明「格雷碼永遠不會出錯」，因為線斷掉或大雜訊仍會讀錯，它只消除多位元不同步這一種錯誤來源。取樣的共通限制見<a href="00-數位世界觀.html#measurement-limits">00 章量測限制</a>。</p>
+
+<h2>本章帶走的三句話</h2>
+<p>進位制只改變同一個量的寫法，編碼則是為顯示、過渡或傳輸問題選擇位元樣式。格雷碼用相鄰值只差一位元來降低過渡假值，但不能消除所有錯誤。BCD 浪費 37.5 % 碼字，換來每個十進位可直接顯示。</p>
 
 <h2>連到哪門課</h2>
 <p>位元寬度與位元組的概念在整門計算機組織課裡到處都是，見<a href="../../../專題/計算機組織/互動課程/index.html">計算機組織互動課</a>。格雷碼會在本課第 11 章當狀態編碼再出現一次，那時要比較的是二進位編碼、格雷碼與 one-hot 各要幾個正反器、下一狀態邏輯各要幾個閘。下一章接著處理同一組位元最重要的一種再解讀：負數怎麼寫。</p>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 標準型 SOP 與 POS｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="04-標準型SOP與POS.html" aria-current="page">目前章：04 SOP 與 POS</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">04・任何真值表都能機械地翻成式子</p>
 <h1>標準型 SOP 與 POS：一定寫得出來的起點，通常不是最省的終點</h1>
@@ -77,8 +77,13 @@
 </ul>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p class="note">本章只列穹舉比對與實體成本的特有邊界；有限時間、取樣與儀器擾動的共通限制見<a href="00-數位世界觀.html#measurement-limits">00 章集中說明</a>。</p>
+<p class="note"><strong>程式類比：</strong>標準 SOP 像把每個輸出為 1 的 <code>if</code> 條件全用 <code>||</code> 連起來；標準 POS 則從輸出為 0 的列建立必須同時成立的條件。</p>
 <p>把這張真值表輸入任何一套 EDA 工具或線上邏輯化簡器，可以驗證它產生的標準 SOP 與這裡逐項相同；再把標準型與最簡型分別合成，用測試向量掃過全部 8 種輸入，在模擬器裡逐列比對兩個電路的輸出。實體上也可以做：把兩種接法各接一遍在麵包板上，指撥開關掃 8 種組合，用 LED 或邏輯分析儀對照。</p>
 <p><strong>能證明</strong>：兩個電路對全部 8 種輸入的輸出完全相同，也就是功能等價；以及各自用掉幾顆晶片、幾個閘——這是數得出來的。<strong>不能證明</strong>：哪一種在真實晶片上比較快。閘數少不代表延遲短，實際延遲還要看繞線長度、負載電容、每個閘的驅動能力與扇出；那要靠佈局後的靜態時序分析報告，不是靠數閘數。</p>
+
+<h2>本章帶走的三句話</h2>
+<p>標準 SOP 從輸出為 1 的列寫最小項，標準 POS 從輸出為 0 的列寫最大項。兩種標準型都能機械地由真值表產生，但通常還不是最省的實作。功能等價可由穹舉驗證，速度與面積則要看實際延遲和映射結果。</p>
 
 <h2>連到哪門課</h2>
 <p>標準型是起點，把它壓到最短是下一章的卡諾圖與 Quine–McCluskey；另一條完全不化簡的路，是拿一顆多工器把真值表當查表直接查，見本課<a href="06-多工器解碼器與編碼器.html">06 多工器、解碼器與編碼器</a>。這些組合邏輯在一台真實處理器裡的位置——控制訊號怎麼由指令欄位算出來、算術單元怎麼接——見<a href="../../../專題/計算機組織/互動課程/02-組合邏輯與算術.html">計算機組織的組合邏輯與算術</a>。</p>

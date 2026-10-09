@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 閂鎖與正反器｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="09-閂鎖與正反器.html" aria-current="page">目前章：09 閂鎖與正反器</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">09・輸出從只看現在變成還看過去</p>
 <h1>閂鎖與正反器：兩個閘首尾相接，就撐出一個位元的記憶</h1>
@@ -62,9 +62,13 @@
 <li>D 正反器讓資料延後一拍不是缺點。正因為輸出要等下一個邊緣才更新，中間整個週期都留給組合邏輯慢慢算。</li></ul>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p class="note"><strong>程式類比：</strong>D 正反器像在每個時脈邊緣執行一次 <code>q_next = d</code>，T 正反器是 <code>if (t) q = !q</code>；閂鎖則像致能期間持續同步，不是只執行一次。量測共通限制見<a href="00-數位世界觀.html#measurement-limits">00 章集中說明</a>。</p>
 <p><strong>用什麼量。</strong>拿一顆 7474（雙 D 正反器）與一顆 7475（D 閂鎖），把同一個會抖動的訊號源接到兩者的 D 腳，7474 的時脈接乾淨方波、7475 的 EN 接高位準，用雙通道示波器同時看 D 與 Q。</p>
 <p><strong>量到什麼（能證明）。</strong>7474 的 Q 在週期中間完全不動，只在時脈上升邊緣改變；同一個 D 接到 7475 時 Q 會跟著亂跳。把游標放在邊緣與 Q 的變化點之間可以量出 t<sub>cq</sub> 的實際大小，這證明邊緣觸發與位準觸發的行為差異是真的。</p>
 <p><strong>不能證明什麼。</strong>量不出正反器內部真的是主從結構，同樣的外部行為可以用別種實作做出來。也證明不了 Q 永遠不會出錯：若 D 剛好在邊緣附近變化，輸出可能停在中間電位一段不確定的時間，這叫亞穩態（metastability），是機率事件，量一萬次都正常不代表下一次不會出事。</p>
+
+<h2>本章帶走的三句話</h2>
+<p>閂鎖在致能位準內透通，正反器只在指定邊緣取樣。回授讓電路保留過去狀態，也引入禁止組合、建立與保持時間等邊界。將組合邏輯的下一值在邊緣寫入正反器，就是後續所有同步系統的基本形狀。</p>
 
 <h2>連到哪門課</h2>
 <p>正反器一排接起來就是暫存器與記憶體，見本課<a href="12-暫存器計數器與記憶體.html">第 12 章</a>；接上時脈之後最快能跑多少是下一章的主題。裡面那兩個 NOR 閘由 MOSFET 開關組成，見<a href="../電子學-互動課程/08-MOSFET原理與三個工作區.html">電子學的 MOSFET 原理</a>。暫存器、程式計數器這些時序邏輯在處理器裡的位置見<a href="../../../專題/計算機組織/互動課程/03-時序邏輯與記憶.html">計算機組織的時序邏輯與記憶</a>。</p>

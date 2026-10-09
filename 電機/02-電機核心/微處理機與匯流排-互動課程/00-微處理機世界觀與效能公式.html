@@ -43,9 +43,9 @@
 <section class="workspace"><h2>自由實驗：三因子與四種最佳化</h2>
 <p>下面三個滑桿就是效能公式的三個因子：指令數、平均每指令拍數、時脈頻率。選單決定要拿哪一種最佳化來跟目前這台機器比較——減少指令數、壓低 CPI、提高時脈，或三項同時各改兩成。改完之後看執行時間怎麼動、加速比是多少，特別注意「時脈加 20 %」與「CPI 減 20 %」這兩列的加速比並不相同。</p>
 <div class="controls">
-<label for="pf-ic">指令數 IC（百萬條）<input id="pf-ic" type="range" min="1" max="500" step="1" value="100"></label>
-<label for="pf-cpi">平均每指令拍數 CPI<input id="pf-cpi" type="range" min="0.25" max="6" step="0.05" value="1.5"></label>
-<label for="pf-freq">時脈頻率（GHz）<input id="pf-freq" type="range" min="0.1" max="5" step="0.1" value="2"></label>
+<label for="pf-ic">指令數 IC（百萬條）<input id="pf-ic" type="range" min="1" max="500" step="1" value="100"><output id="pf-ic-value" for="pf-ic">100</output></label>
+<label for="pf-cpi">平均每指令拍數 CPI<input id="pf-cpi" type="range" min="0.25" max="6" step="0.05" value="1.5"><output id="pf-cpi-value" for="pf-cpi">1.5</output></label>
+<label for="pf-freq">時脈頻率（GHz）<input id="pf-freq" type="range" min="0.1" max="5" step="0.1" value="2"><output id="pf-freq-value" for="pf-freq">2</output></label>
 <label for="pf-opt">要比較的最佳化<select id="pf-opt"><option value="none">不做最佳化</option><option value="ic">指令數減 20 %</option><option value="cpi">CPI 減 20 %</option><option value="clock">時脈加 20 %</option><option value="all">三項各改 20 %</option></select></label>
 </div>
 <div id="perfeq-output" class="output" aria-live="polite">載入中…</div>

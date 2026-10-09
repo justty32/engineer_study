@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 可程式邏輯與 HDL｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="13-可程式邏輯與HDL.html" aria-current="page">目前章：13 可程式邏輯</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">13・不再手畫閘：把前面十三章交給工具</p>
 <h1>可程式邏輯與 HDL：查找表吞掉真值表，以及該用 CPLD、FPGA 還是 ASIC</h1>
@@ -62,9 +62,13 @@
 </ul>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p class="note"><strong>程式類比：</strong>HDL 的 <code>always_ff</code> 描述同一拍並行更新的暫存器，不是照原始碼行號先後執行的一般程式；合成器把描述映射成 LUT、正反器與繞線。工具與內建分析器的共通限制見<a href="00-數位世界觀.html#measurement-limits">00 章集中說明</a>。</p>
 <p>第一種證據來自工具：把同一份 HDL 用面積優先與速度優先兩種設定各合成一次，比較資源報告的 LUT 數與 STA 報告的 f<sub>max</sub>。通常速度優先用掉更多 LUT 卻換到更高頻率，這就是把化簡與時序放在同一個天平上秤。第二種來自實機：把設計燒進 FPGA，用內建的邏輯分析儀抓晶片內部的波形。</p>
-<p><strong>能證明</strong>：工具在這組設定下用掉多少資源、估計的最高頻率、實際硬體在你給的激勵下的行為。<strong>不能證明</strong>：這是「最佳」實作——合成是啟發式搜尋，換個種子結果就不同；也不能證明 ASIC 流片後會長成什麼樣，FPGA 原型驗的是功能，不是最終的時序與功耗。內建邏輯分析儀會佔用 LUT 並改變繞線，量到的是「被觀測後的電路」。</p>
+<p><strong>能證明</strong>：工具在這組設定下用掉多少資源、估計的最高頻率、實際硬體在你給的激勵下的行為。<strong>不能證明</strong>：這是「最佳」實作——合成是啟發式搜尋，換個種子結果就不同；也不能證明 ASIC 流片後會長成什麼樣，FPGA 原型驗的是功能，不是最終的時序與功耗。</p>
 <p class="warning">FPGA 的輸入輸出接腳分成好幾組（bank），每一組的電壓由外部供電腳位決定，不是韌體說了算。把 3.3 V 的訊號接到設定成 1.8 V 的 bank，或把 bank 的電源接錯電壓，會在上電瞬間燒毀整排輸入輸出電路，嚴重時整顆晶片報廢。接任何外部電路之前，先確認該 bank 的電壓設定與資料手冊上的絕對最大額定。</p>
+
+<h2>本章帶走的三句話</h2>
+<p>LUT 用 2<sup>k</sup> 個組態位元存一張 k 輸入真值表，是 FPGA 實作組合邏輯的基本單元。HDL 描述電路結構與同步行為，合成工具再依目標元件與約束選擇實作。FPGA、CPLD 與 ASIC 的選擇同時受容量、速度、NRE 與產量影響，不能只看單顆價格。</p>
 
 <h2>連到哪門課</h2>
 <p>LUT 的前身就是本課<a href="06-多工器解碼器與編碼器.html">第 06 章</a>的多工器，合成工具內部的化簡演算法則是<a href="05-卡諾圖與不關心項.html">第 05 章</a>那套 Quine–McCluskey 的規模化版本；工具替你做的狀態編碼來自<a href="11-有限狀態機.html">第 11 章</a>，關鍵路徑報告來自<a href="10-時脈與時序限制.html">第 10 章</a>。把這些疊成一台完整的電腦，見<a href="../../../專題/計算機組織/互動課程/index.html">計算機組織互動課</a>。訊號完整性屬於 IoT 知識群裡天線 RF 與 EMC 的主題；FIR、FFT 留給信號與系統。這門課到此結束：下一頁的字典把名詞收成一張表。</p>

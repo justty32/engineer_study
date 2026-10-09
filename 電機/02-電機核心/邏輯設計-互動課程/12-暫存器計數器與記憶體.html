@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 暫存器、計數器與記憶體｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="12-暫存器計數器與記憶體.html" aria-current="page">目前章：12 暫存器與記憶體</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">12・把一個位元的記憶往寬、往深、往前推</p>
 <h1>暫存器、計數器與記憶體：從四個正反器長到三百萬顆電晶體</h1>
@@ -82,8 +82,12 @@
 </ul>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p class="note"><strong>程式類比：</strong>移位暫存器對應 <code>reg = ((serial &lt;&lt; 3) | (reg &gt;&gt; 1)) &amp; 0xf</code>，計數器是 <code>count = (count + 1) % modulus</code>，記憶體則是依位址存取的陣列。取樣與有限測試的限制見<a href="00-數位世界觀.html#measurement-limits">00 章集中說明</a>。</p>
 <p>用邏輯分析儀接上移位暫存器的四條輸出與時脈，設成時脈邊緣取樣，就能一拍一拍看到同一個位元往右挪一格。要量 DRAM，可在允許停用更新的控制器上把更新關掉，室溫下幾秒內就會出現位元錯誤，加熱之後來得更快。</p>
-<p><strong>能證明</strong>：移位的實際行為與方向、每一拍的內容等於預測值、DRAM 的資料保存時間隨溫度縮短。<strong>不能證明</strong>：這顆 SRAM 內部真的是 6T——它可能是 8T 或其他變體，外部行為一樣；也不能證明「這片記憶體沒有壞位元」，那要跑完整的測試圖樣，有些錯誤只在特定資料圖樣下才出現。邏輯分析儀只告訴你取樣時刻是 0 還是 1。</p>
+<p><strong>能證明</strong>：移位的實際行為與方向、每一拍的內容等於預測值、DRAM 的資料保存時間隨溫度縮短。<strong>不能證明</strong>：這顆 SRAM 內部真的是 6T——它可能是 8T 或其他變體，外部行為一樣；也不能由部分圖樣證明「這片記憶體沒有壞位元」，因為有些錯誤只在特定資料圖樣下才出現。</p>
+
+<h2>本章帶走的三句話</h2>
+<p>暫存器是一組共用時脈的正反器，配上組合邏輯就能移位或計數。漣波計數器的總穩定時間會累加，同步計數器用更多邏輯換一致更新。SRAM 用更多電晶體換速度，DRAM 用電容密度換取定期更新的代價。</p>
 
 <h2>連到哪門課</h2>
 <p>這章的東西就在你面前的機器裡：CPU 的通用暫存器是一排接了名字的正反器，快取是 SRAM，記憶體模組是 DRAM，韌體在 Flash 裡，交換器查轉發表用 CAM。快取與虛擬記憶體怎麼疊起來，見計算機組織的<a href="../../../專題/計算機組織/互動課程/08-記憶體階層與虛擬記憶體.html">記憶體階層與虛擬記憶體</a>；暫存器在資料路徑裡的角色，見同一課的<a href="../../../專題/計算機組織/互動課程/03-時序邏輯與記憶.html">時序邏輯與記憶</a>。下一章把前面的手工活全部交給工具。</p>

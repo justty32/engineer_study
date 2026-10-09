@@ -4,7 +4,7 @@
 <main>
 <p class="eyebrow">檢・14 章各 3 題，共 42 題</p>
 <h1>自我檢核：把每一章的關鍵數字與判斷各檢查一次</h1>
-<p class="lead">每一題都取自該章正文出現過的數字或結論，沒有新的題型也沒有陷阱。填完按「對答案」，回饋會告訴你為什麼，並附上該回去看的章節。</p>
+<p class="lead">每章至少有一題「遷移題」，會換一組正文不曾算過的數字或輸入，檢查你能不能重做判斷，而不是只記住錨定值。填完按「對答案」，回饋會告訴你為什麼，並附上該回去看的章節。</p>
 <p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯只會告訴你為什麼，並附上該回去看的章節。可以無限重做。</p>
 <div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
 
@@ -17,7 +17,7 @@
 <div id="q00-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q00-2｜</strong>3.3 V CMOS 家族的 V<sub>OH</sub> = 3.10 V、V<sub>IH</sub> = 2.31 V。它的高位雜訊裕度 NM<sub>H</sub> 是多少？</p>
+<p><strong>q00-2｜遷移題｜</strong>某邏輯家族保證 V<sub>OH</sub> = 2.95 V、要求 V<sub>IH</sub> = 2.15 V。它的高位雜訊裕度 NM<sub>H</sub> 是多少？</p>
 <label for="q00-2">你的答案（V）<input id="q00-2" type="number" step="any"></label>
 <button type="button" id="q00-2-check">對答案</button>
 <div id="q00-2-output" class="output" aria-live="polite"></div>
@@ -38,7 +38,7 @@
 <div id="q01-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q01-2｜</strong>十進位 7 的格雷碼是多少？請把格雷碼那組位元當成二進位讀出來，以十進位填。</p>
+<p><strong>q01-2｜遷移題｜</strong>十進位 10 的格雷碼是多少？請把格雷碼那組位元當成二進位讀出來，以十進位填。</p>
 <label for="q01-2">你的答案（無單位）<input id="q01-2" type="number" step="any"></label>
 <button type="button" id="q01-2-check">對答案</button>
 <div id="q01-2-output" class="output" aria-live="polite"></div>
@@ -59,7 +59,7 @@
 <div id="q02-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q02-2｜</strong>8 位元下 100 − 45 的結果是多少（十進位）？</p>
+<p><strong>q02-2｜遷移題｜</strong>8 位元下 73 − 29 的結果是多少（十進位）？</p>
 <label for="q02-2">你的答案（無單位）<input id="q02-2" type="number" step="any"></label>
 <button type="button" id="q02-2-check">對答案</button>
 <div id="q02-2-output" class="output" aria-live="polite"></div>
@@ -80,7 +80,7 @@
 <div id="q03-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q03-2｜</strong>兩輸入互斥或 A ⊕ B 的真值表中，輸出為 1 的有幾列？</p>
+<p><strong>q03-2｜遷移題｜</strong>三輸入奇偶函數 A ⊕ B ⊕ C 的真值表中，輸出為 1 的有幾列？</p>
 <label for="q03-2">你的答案（列）<input id="q03-2" type="number" step="any"></label>
 <button type="button" id="q03-2-check">對答案</button>
 <div id="q03-2-output" class="output" aria-live="polite"></div>
@@ -95,13 +95,13 @@
 <h2>04 標準型 SOP 與 POS</h2>
 <p>回去看：<a href="04-標準型SOP與POS.html">04 標準型 SOP 與 POS</a></p>
 <section class="card">
-<p><strong>q04-1｜</strong>三變數多數決 F = Σm(3, 5, 6, 7) 的標準 SOP 有幾個乘積項？</p>
+<p><strong>q04-1｜遷移題｜</strong>三變數函數 F = Σm(1, 2, 5) 的標準 SOP 有幾個乘積項？</p>
 <label for="q04-1">你的答案（項）<input id="q04-1" type="number" step="any"></label>
 <button type="button" id="q04-1-check">對答案</button>
 <div id="q04-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q04-2｜</strong>同一個函數的標準 POS 有幾個和項？</p>
+<p><strong>q04-2｜</strong>正文的三變數多數決 F = Σm(3, 5, 6, 7)，標準 POS 有幾個和項？</p>
 <label for="q04-2">你的答案（項）<input id="q04-2" type="number" step="any"></label>
 <button type="button" id="q04-2-check">對答案</button>
 <div id="q04-2-output" class="output" aria-live="polite"></div>
@@ -122,7 +122,7 @@
 <div id="q05-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q05-2｜</strong>同一題的最簡 SOP 有幾個字面？</p>
+<p><strong>q05-2｜遷移題｜</strong>化簡後得到 F = A + ¬B · C · D + B · E，這個 SOP 共有幾個字面？</p>
 <label for="q05-2">你的答案（個）<input id="q05-2" type="number" step="any"></label>
 <button type="button" id="q05-2-check">對答案</button>
 <div id="q05-2-output" class="output" aria-live="polite"></div>
@@ -143,7 +143,7 @@
 <div id="q06-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q06-2｜</strong>選擇線 S<sub>2</sub>S<sub>1</sub>S<sub>0</sub> = 101 的 8 對 1 多工器，選中的是第幾條資料輸入？請填 0 到 7。</p>
+<p><strong>q06-2｜遷移題｜</strong>選擇線 S<sub>2</sub>S<sub>1</sub>S<sub>0</sub> = 110 的 8 對 1 多工器，選中的是第幾條資料輸入？請填 0 到 7。</p>
 <label for="q06-2">你的答案（無單位）<input id="q06-2" type="number" step="any"></label>
 <button type="button" id="q06-2-check">對答案</button>
 <div id="q06-2-output" class="output" aria-live="polite"></div>
@@ -158,7 +158,7 @@
 <h2>07 加法器、比較器與 ALU</h2>
 <p>回去看：<a href="07-加法器比較器與ALU.html">07 加法器、比較器與 ALU</a></p>
 <section class="card">
-<p><strong>q07-1｜</strong>單閘延遲 1.0 ns 時，4 位元漣波進位加法器的最壞延遲是多少？</p>
+<p><strong>q07-1｜遷移題｜</strong>依本課模型，單閘延遲 1.0 ns 時，6 位元漣波進位加法器的最壞延遲是多少？</p>
 <label for="q07-1">你的答案（ns）<input id="q07-1" type="number" step="any"></label>
 <button type="button" id="q07-1-check">對答案</button>
 <div id="q07-1-output" class="output" aria-live="polite"></div>
@@ -185,7 +185,7 @@
 <div id="q08-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q08-2｜</strong>扇出 4、每個負載 0.05 pF、3.3 V、100 MHz 時的動態功耗是多少？</p>
+<p><strong>q08-2｜遷移題｜</strong>每次切換一次，扇出 3、每個負載 0.08 pF、2.5 V、80 MHz 時的動態功耗是多少？</p>
 <label for="q08-2">你的答案（µW）<input id="q08-2" type="number" step="any"></label>
 <button type="button" id="q08-2-check">對答案</button>
 <div id="q08-2-output" class="output" aria-live="polite"></div>
@@ -212,7 +212,7 @@
 <div id="q09-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q09-3｜</strong>初始 Q = 0 的 T 正反器，輸入序列 0, 1, 1, 0, 1, 0, 0, 1 走完 8 拍後 Q 是多少？請填 0 或 1。</p>
+<p><strong>q09-3｜遷移題｜</strong>初始 Q = 0 的 T 正反器，輸入序列 1, 0, 1, 1, 0, 1, 1, 0 走完 8 拍後 Q 是多少？請填 0 或 1。</p>
 <label for="q09-3">你的答案（無單位）<input id="q09-3" type="number" step="any"></label>
 <button type="button" id="q09-3-check">對答案</button>
 <div id="q09-3-output" class="output" aria-live="polite"></div>
@@ -221,13 +221,13 @@
 <h2>10 時脈與時序限制</h2>
 <p>回去看：<a href="10-時脈與時序限制.html">10 時脈與時序限制</a></p>
 <section class="card">
-<p><strong>q10-1｜</strong>t<sub>cq</sub> = 0.40 ns、t<sub>logic</sub> = 4.00 ns、t<sub>su</sub> = 0.20 ns、抖動 0.05 ns、偏斜 0 時，最小時脈週期 T<sub>clk</sub> 是多少？</p>
+<p><strong>q10-1｜遷移題｜</strong>t<sub>cq</sub> = 0.35 ns、t<sub>logic</sub> = 5.20 ns、t<sub>su</sub> = 0.25 ns、抖動 0.08 ns、偏斜 0.03 ns 時，最小時脈週期 T<sub>clk</sub> 是多少？</p>
 <label for="q10-1">你的答案（ns）<input id="q10-1" type="number" step="any"></label>
 <button type="button" id="q10-1-check">對答案</button>
 <div id="q10-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q10-2｜</strong>同一組條件下的最大時脈頻率 f<sub>max</sub> 是多少？</p>
+<p><strong>q10-2｜</strong>正文範例的最小週期 4.65 ns，對應的最大時脈頻率 f<sub>max</sub> 是多少？</p>
 <label for="q10-2">你的答案（MHz）<input id="q10-2" type="number" step="any"></label>
 <button type="button" id="q10-2-check">對答案</button>
 <div id="q10-2-output" class="output" aria-live="polite"></div>
@@ -254,7 +254,7 @@
 <div id="q11-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q11-3｜</strong>輸入 <code>110110101101</code> 送進這台 Mealy 偵測器，一共偵測到幾次 1101？</p>
+<p><strong>q11-3｜遷移題｜</strong>輸入 <code>11011101</code> 送進這台 Mealy 偵測器，一共偵測到幾次 1101？</p>
 <label for="q11-3">你的答案（次）<input id="q11-3" type="number" step="any"></label>
 <button type="button" id="q11-3-check">對答案</button>
 <div id="q11-3-output" class="output" aria-live="polite"></div>
@@ -263,7 +263,7 @@
 <h2>12 暫存器、計數器與記憶體</h2>
 <p>回去看：<a href="12-暫存器計數器與記憶體.html">12 暫存器、計數器與記憶體</a></p>
 <section class="card">
-<p><strong>q12-1｜</strong>模 10 計數器最少需要幾個正反器？</p>
+<p><strong>q12-1｜遷移題｜</strong>模 100 計數器最少需要幾個正反器？</p>
 <label for="q12-1">你的答案（個）<input id="q12-1" type="number" step="any"></label>
 <button type="button" id="q12-1-check">對答案</button>
 <div id="q12-1-output" class="output" aria-live="polite"></div>
@@ -284,7 +284,7 @@
 <h2>13 可程式邏輯與 HDL</h2>
 <p>回去看：<a href="13-可程式邏輯與HDL.html">13 可程式邏輯與 HDL</a></p>
 <section class="card">
-<p><strong>q13-1｜</strong>一個 4 輸入查找表（4-LUT）需要幾個組態位元？</p>
+<p><strong>q13-1｜遷移題｜</strong>一個 5 輸入查找表（5-LUT）需要幾個組態位元？</p>
 <label for="q13-1">你的答案（個）<input id="q13-1" type="number" step="any"></label>
 <button type="button" id="q13-1-check">對答案</button>
 <div id="q13-1-output" class="output" aria-live="polite"></div>

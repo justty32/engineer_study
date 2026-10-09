@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 多核一致性 MESI｜微處理機與匯流排</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="09-多核一致性MESI.html" aria-current="page">目前：09 章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">09・原始碼上看不出來的那筆帳單</p>
 <h1>多核一致性 MESI：把「兩個核心搶同一條快取行」換算成拍數</h1>
@@ -36,23 +36,23 @@
 <tr><td>7</td><td>P1 讀 X</td><td>BusRd（P0 供應並回寫）</td><td>M → S</td><td>I → S</td><td><strong>40 拍</strong></td></tr>
 <tr><td>8</td><td>P1 寫 X</td><td>BusUpgr</td><td>S → I</td><td>S → M</td><td><strong>10 拍</strong></td></tr>
 </tbody></table>
-<p>八步合計 <strong>351 拍 / 8 次存取 ＝ 43.875000 拍/存取</strong>。第 1、2 步是冷啟動只付一次，第 5 到第 8 步才是一直重複的穩態：<strong>100 拍 / 4 次存取 ＝ 25.000000 拍/存取</strong>。若兩個變數不在同一條行，穩態每輪是 <strong>4 拍 / 4 次存取 ＝ 1.000000 拍/存取</strong>，<strong>差 25.000000 倍</strong>。</p>
-<p>把穩態重複 20 輪：偽共享 200 ＋ 20 × 100 ＝ <strong>2200 拍</strong>，各自私有 200 ＋ 20 × 4 ＝ <strong>280 拍</strong>，多花 <strong>1920 拍</strong>，比值 <strong>7.857143 倍</strong>。比值小於 25.000000，是因為冷啟動的 200 拍兩邊都得付；輪數越多越往 25.000000 靠。</p>
+<p>八步合計 <strong>351 拍 / 8 次存取 ＝ 43.875000 拍/存取</strong>。第 1 到第 4 步是首輪，共 251 拍；第 5 到第 8 步才是一直重複的穩態：<strong>100 拍 / 4 次存取 ＝ 25.000000 拍/存取</strong>。若兩個變數不在同一條行，穩態每輪是 <strong>4 拍 / 4 次存取 ＝ 1.000000 拍/存取</strong>，<strong>差 25.000000 倍</strong>。</p>
+<p>總共執行 20 輪：偽共享 251 ＋ 19 × 100 ＝ <strong>2151 拍</strong>。私有對照組有兩條不同的快取行，兩核各付一次 200 拍冷啟動，其餘 78 次是本地命中，所以 2 × 200 ＋ 78 × 1 ＝ <strong>478 拍</strong>。偽共享多花 <strong>1673 拍</strong>，總時間比值 <strong>4.500000 倍</strong>；輪數越多，含冷啟動的比值才會逐漸接近穩態的 25.000000 倍。</p>
 <p>邊界對照。距離拉到 <strong>64 位元組</strong>（等於快取行）→ 落在不同行，穩態每輪回到 <strong>4 拍</strong>，這就是填充。<code>share</code>（都只讀不寫）＝ 200 ＋ 40 ＋ 6 × 1 ＝ <strong>246 拍 / 8 ＝ 30.750000 拍/存取</strong>，穩態每輪 <strong>4 拍</strong>——<strong>唯讀共享幾乎不要錢</strong>，因為 S 允許所有核心同時持有。<code>upgrade</code>（先共享，再由 P0 獨占寫）＝ <strong>303 拍 / 8 ＝ 37.875000 拍/存取</strong>。<code>private</code>（只有 P0 用）＝ 200 ＋ 7 × 1 ＝ <strong>207 拍 / 8 ＝ 25.875000 拍/存取</strong>，穩態每輪同樣 <strong>4 拍</strong>。貴的不是「多核心」，是「多核心同時寫同一條行」。</p>
 
 <section class="workspace"><h2>自由實驗：換一種存取樣式與資料佈局，看一致性的帳單怎麼變</h2>
 <p>場景是兩顆核心 P0 與 P1 共用一個一致性協定，工作量是對同一塊資料做 8 步存取，之後把第 5 到第 8 步那一輪重複若干次。你可以換存取樣式、換快取行大小、拉開兩個變數的距離，也可以直接改三種交易的價錢。要看的是：穩態每輪幾拍、整段總共幾拍、跟各自私有的情形差幾倍。</p>
 <div class="controls">
 <label for="me-seq">存取樣式<select id="me-seq"><option value="pingpong">兩核心交替寫同一行</option><option value="share">兩核心只讀同一行</option><option value="upgrade">先共享，再由 P0 獨占寫</option><option value="private">只有 P0 讀寫</option></select></label>
-<label for="me-step">走到第幾步<input id="me-step" type="range" min="0" max="8" step="1" value="8"></label>
+<label for="me-step">走到第幾步<input id="me-step" type="range" min="0" max="8" step="1" value="8"><output id="me-step-value" for="me-step">8</output></label>
 <label for="me-line">快取行大小<select id="me-line"><option value="32">32 位元組</option><option value="64" selected>64 位元組</option><option value="128">128 位元組</option></select></label>
-<label for="me-offset">兩個變數的位址距離（位元組）<input id="me-offset" type="range" min="0" max="256" step="4" value="8"></label>
-<label for="me-iter">穩態重複輪數<input id="me-iter" type="range" min="1" max="100" step="1" value="20"></label>
-<label for="me-remote">遠端快取供應（拍）<input id="me-remote" type="range" min="10" max="200" step="5" value="40"></label>
-<label for="me-mem">主記憶體供應（拍）<input id="me-mem" type="range" min="50" max="400" step="10" value="200"></label>
-<label for="me-upg">失效廣播 BusUpgr（拍）<input id="me-upg" type="range" min="1" max="50" step="1" value="10"></label>
+<label for="me-offset">兩個變數的位址距離（位元組）<input id="me-offset" type="range" min="0" max="256" step="4" value="8"><output id="me-offset-value" for="me-offset">8</output></label>
+<label for="me-iter">穩態重複輪數<input id="me-iter" type="range" min="1" max="100" step="1" value="20"><output id="me-iter-value" for="me-iter">20</output></label>
+<label for="me-remote">遠端快取供應（拍）<input id="me-remote" type="range" min="10" max="200" step="5" value="40"><output id="me-remote-value" for="me-remote">40</output></label>
+<label for="me-mem">主記憶體供應（拍）<input id="me-mem" type="range" min="50" max="400" step="10" value="200"><output id="me-mem-value" for="me-mem">200</output></label>
+<label for="me-upg">失效廣播 BusUpgr（拍）<input id="me-upg" type="range" min="1" max="50" step="1" value="10"><output id="me-upg-value" for="me-upg">10</output></label>
 </div>
-<div id="mesi-output" class="output" aria-live="polite">這個模式只用到存取樣式、走到第幾步、快取行大小、位址距離、重複輪數與三個成本滑桿，其餘控制不影響結果。存取樣式 pingpong，走到第 8 步：狀態轉移依序是 P0 讀 X（BusRd，主記憶體供應，P0 I → E）200 拍、P0 寫 X（無交易，P0 E → M）1 拍、P1 讀 X（BusRd，P0 供應並回寫，P0 M → S、P1 I → S）40 拍、P1 寫 X（BusUpgr，P0 S → I、P1 S → M）10 拍、P0 讀 X 40 拍、P0 寫 X 10 拍、P1 讀 X 40 拍、P1 寫 X 10 拍。<strong>八步合計 351 拍，每次存取平均 43.875000 拍；穩態每輪 100 拍（25.000000 拍/存取）。</strong>位址距離 8 位元組小於快取行 64 位元組：<strong>這是偽共享——兩個核心寫的是不同變數，但硬體以整行為單位。</strong>20 輪總拍數 ＝ 200 ＋ 20 × 100 ＝ <strong>2200 拍</strong>，各自私有只要 280 拍，比值 <strong>7.857143 倍</strong>。為什麼：一致性的單位是快取行不是變數，所以問題出在資料佈局而不是演算法。邊界提醒：把距離拉到 64 位元組以上，兩個變數落在不同行，各自維持 M，穩態回到 4 拍；把距離調成 0 表示兩個核心寫的根本是同一個變數，那是真共享不是偽共享，要靠演算法解決而不是填充；重複輪數調到 1 時冷啟動的 200 拍佔絕大部分，比值會被稀釋。</div>
+<div id="mesi-output" class="output" aria-live="polite">載入中…</div>
 </section>
 
 <h2>不要混淆</h2>

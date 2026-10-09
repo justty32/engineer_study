@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 加法器、比較器與 ALU｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="07-加法器比較器與ALU.html" aria-current="page">目前章：07 加法器與 ALU</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">07・同一個功能，用面積換速度</p>
 <h1>加法器、比較器與 ALU：進位鏈是瓶頸，超前進位用閘數把它買掉</h1>
@@ -69,8 +69,12 @@
 </ul>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p class="note"><strong>程式類比：</strong>4 位元加法可寫成 <code>sum = (a + b + cin) &amp; 0xf</code>，進位是原始結果是否大於 15；這只模擬功能，程式運算符看不出漣波與超前進位的延遲差。量測的共通限制見<a href="00-數位世界觀.html#measurement-limits">00 章集中說明</a>。</p>
 <p>把 4 位元漣波加法器與 CLA 分別合成到 FPGA，用內建邏輯分析儀抓輸入到輸出的對應關係，再看合成報告裡的關鍵路徑延遲與資源使用量（LUT 數）。兩份報告放在一起比，就能看到閘數與延遲的交換。</p>
-<p><strong>能證明</strong>：兩者功能相同（同一組輸入給同一組和與旗標）、關鍵路徑延遲不同、佔用的 LUT 數不同。<strong>不能證明</strong>：實際能跑到多少 MHz——那還要看繞線延遲、時脈品質與溫度電壓角落。合成報告給的是估計值，真正的答案在靜態時序分析報告（見第 10 章）。內建邏輯分析儀本身也會佔資源、改變繞線，量到的不完全是原來那顆電路。</p>
+<p><strong>能證明</strong>：兩者功能相同（同一組輸入給同一組和與旗標）、關鍵路徑延遲不同、佔用的 LUT 數不同。<strong>不能證明</strong>：實際能跑到多少 MHz——那還要看繞線延遲、時脈品質與溫度電壓角落。合成報告給的是估計值，真正的答案在靜態時序分析報告（見第 10 章）。</p>
+
+<h2>本章帶走的三句話</h2>
+<p>漣波進位的功能簡單，最壞延遲卻會隨位元數線性增加。超前進位把進位式展開並行計算，用更多閘換更短路徑。C 與 V 分別描述無號與有號溢位，ALU 要連同操作類型才能正確解讀旗標。</p>
 
 <h2>連到哪門課</h2>
 <p>ALU 怎麼接進處理器的資料路徑、運算碼從哪來，見<a href="../../../專題/計算機組織/互動課程/02-組合邏輯與算術.html">計算機組織的組合邏輯與算術</a>。加法器的延遲怎麼變成整個 CPU 的頻率上限，是本課第 10 章的主題；而延遲本身從哪來、扇出與功耗要付多少，就是下一章。</p>

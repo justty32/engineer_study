@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 布林代數與邏輯閘｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="03-布林代數與邏輯閘.html" aria-current="page">目前章：03 布林代數</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">03・真值表與代數式是同一個函數的兩種寫法</p>
 <h1>布林代數與邏輯閘：把「窮舉所有情況」寫成可以化簡的式子</h1>
@@ -68,8 +68,13 @@
 </ul>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
+<p class="note">本章只列功能等價與延遲的特有邊界；有限時間、取樣與儀器擾動的共通限制見<a href="00-數位世界觀.html#measurement-limits">00 章集中說明</a>。</p>
+<p class="note"><strong>程式類比：</strong>真值表是把所有輸入穹舉的單元測試，布林式是同一規格的條件式實作；化簡前後要逐列相等，就像重構前後測試全數通過。</p>
 <p>最便宜的驗證方式是在麵包板上插一顆 7400（內含四個 2 輸入反及閘），把兩隻輸入接到指撥開關、輸出接一顆 LED，把 4 種輸入組合逐一撥過，用萬用電表量輸出電壓確認落在高位準或低位準區間。接著用其中兩顆反及閘接成 <code>(A NAND B) NAND (A NAND B)</code>，與一顆現成的及閘晶片對照。</p>
 <p><strong>能證明</strong>：這顆晶片的真值表確實是 ¬(A · B)；以及用兩顆反及閘組出來的 AND，其四列輸出與單顆及閘晶片完全相同——功能等價這件事被量出來了。<strong>不能證明</strong>：兩者的延遲相同。反及閘構造與 7408 內部的 NAND ＋反相器都是 2 級路徑，延遲屬同量級；實際差異還受驅動力與封裝影響，萬用電表與 LED 看不到，要換示波器抓輸入邊緣到輸出邊緣的時間差才量得到。也證明不了「布林代數對所有情況都成立」——你只驗了 4 列；只是這次輸入組合恰好只有 4 種，窮舉正好等於完整證明。</p>
+
+<h2>本章帶走的三句話</h2>
+<p>布林代數的目標是在不改真值表的前提下改寫電路。NAND 與 NOR 各自都是通用閘，但功能可做不代表成本或延遲必然最低。消去律用來化簡兩變數型式，共識定理則要保留第三個共識項的語意。</p>
 
 <h2>連到哪門課</h2>
 <p>本章結論在真實裝置上的落點，是任何一顆數位晶片的標準元件庫：合成工具拿到你的式子後，會把它對映成庫裡實際存在的閘。只用反及閘造出整套邏輯的完整過程，見<a href="../../../專題/計算機組織/互動課程/01-只用反及閘造邏輯.html">計算機組織的「只用反及閘造邏輯」</a>；為什麼 CMOS 天生做出來的就是反及閘與反或閘，見<a href="../電子學-互動課程/08-MOSFET原理與三個工作區.html">電子學的 MOSFET 原理與三個工作區</a>。下一章把真值表機械地翻成兩種標準型。</p>
