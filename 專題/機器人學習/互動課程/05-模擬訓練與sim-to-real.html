@@ -18,7 +18,7 @@
 <main>
 <p class="eyebrow">05 · 從模擬訓練轉移到真實機器</p>
 <h1>在模擬器學會，為什麼真機還是失敗？</h1>
-<p class="lead">一句話答案：模擬器只依人寫下的模型演化；真實世界的摩擦、接觸、感測雜訊、延遲和物件差異不可能完全相同，策略可能利用了模擬器才有的規律。</p>
+<p class="lead">白話問題：為什麼在模擬器裡表現很好的策略，搬到真機仍可能失敗？一句話答案：模擬器只依人寫下的模型演化；真實世界的摩擦、接觸、感測雜訊、延遲和物件差異不可能完全相同，策略可能利用了模擬器才有的規律。</p>
 <div class="prereq">
 <strong>最小前置：</strong>
 <a href="04-策略改善探索與穩定性.html">探索、策略更新與評估</a>。</div>
@@ -40,7 +40,7 @@
 <div class="controls">
 <label>參數隨機化 ± 範圍<input id="sim-range" type="range" min="0" max="1" step="0.01" value="0.3">
 </label>
-<label>真實相對偏差<input id="sim-real" type="range" min="-1.5" max="1.5" step="0.01" value="0.2">
+<label>真實相對偏差<input id="sim-real" type="range" min="-0.9" max="1.5" step="0.01" value="0.2">
 </label>
 </div>
 <div id="sim-output" class="output" aria-live="polite">

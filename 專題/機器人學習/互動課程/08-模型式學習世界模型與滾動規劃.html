@@ -29,7 +29,7 @@
 <p>模型式規劃的因果鏈是：量測目前狀態 → 在模型內展開候選動作序列 → 依預測成本與限制排序 → 執行第一個安全命令 → 取得新量測 → 重規劃。模型 rollout log 能證明規劃器「以為」會發生什麼；真機回授才顯示實際發生什麼。兩條時間軸必須保存才能定位模型漏洞。</p>
 
 <h2>多步 rollout 會累積與放大誤差</h2>
-<p>滾動預測（rollout）把模型輸出當下一步輸入，反覆 H 步。若每步新誤差上界為 <code>ε</code>，而動態對既有狀態誤差最多放大 <code>L</code> 倍，粗略上界為 <code>εΣₖ₌₀ᴴ⁻¹Lᵏ</code>。當 <code>L=1</code> 時是 <code>Hε</code>；<code>L&gt;1</code> 時可能快速放大；<code>L&lt;1</code> 時則趨於有限值。這只是敏感度上界，不是隨機誤差的機率保證。</p>
+<p>滾動預測（rollout）把模型輸出當下一步輸入，反覆 H 步。若每步新誤差上界為 <code>ε</code>，而動態對既有狀態誤差最多放大 <code>L</code> 倍，粗略上界為 <code>εΣₖ₌₀ᴴ⁻¹Lᵏ</code>。這裡的 L 可視為 Lipschitz 型敏感度界：輸入狀態差一點時，下一步狀態差最多被放大多少倍。當 <code>L=1</code> 時是 <code>Hε</code>；<code>L&gt;1</code> 時可能快速放大；<code>L&lt;1</code> 時則趨於有限值。這只是敏感度上界，不是隨機誤差的機率保證。</p>
 <p>例如單步誤差尺度 2 mm、H=20、L=1 時累積上界 40 mm；若 L=1.1，上界約 115 mm。這解釋為何較短預測地平線配合頻繁重規劃常較穩健：每執行一小段就取得真實新觀測，重新初始化模型，而不是一次相信很長的開迴路幻想。</p>
 <h3>把幾何級數逐步算一次</h3>
 <p>誤差上界 E<sub>H</sub> = εΣ<sub>k=0</sub><sup>H−1</sup>L<sup>k</sup>。當 L ≠ 1，可化成 E<sub>H</sub> = ε(L<sup>H</sup>−1)÷(L−1)。取 ε = 2 mm、L = 1.1、H = 3，E<sub>3</sub> = 2×(1 + 1.1 + 1.1<sup>2</sup>) = 2×3.31 = 6.62 mm。ε 與 E 是長度，L 與 H 無單位。此推導假設每步新增誤差不超過同一 ε、舊誤差最多乘固定 L，並把最壞方向相加；真實誤差可能抵消，也可能在接觸切換時超過假設。</p>
@@ -38,10 +38,10 @@
 <h2>讀完再操作：模型誤差如何隨地平線累積</h2>
 <section class="workspace">
 <div class="controls">
-<label for="model-error">每步新誤差 ε（mm）<input id="model-error" type="range" min="0" max="20" step="0.5" value="2"></label>
+<label for="model-error">每步新誤差 ε（mm）<input id="model-error" type="range" min="0" max="20" step="0.5" value="2" data-unit="mm"></label>
 <label for="model-lipschitz">誤差放大係數 L<input id="model-lipschitz" type="range" min="0.5" max="1.5" step="0.05" value="1.05"></label>
-<label for="model-horizon">預測地平線 H（步）<input id="model-horizon" type="range" min="1" max="60" step="1" value="20"></label>
-<label for="model-replan">每幾步取得真值並重規劃<input id="model-replan" type="range" min="1" max="30" step="1" value="5"></label>
+<label for="model-horizon">預測地平線 H（步）<input id="model-horizon" type="range" min="1" max="60" step="1" value="20" data-unit="步"></label>
+<label for="model-replan">每幾步取得真值並重規劃<input id="model-replan" type="range" min="1" max="30" step="1" value="5" data-unit="步"></label>
 </div>
 <div id="model-output" class="output" aria-live="polite"></div>
 </section>

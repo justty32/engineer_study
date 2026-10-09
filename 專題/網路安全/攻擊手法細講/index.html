@@ -2,10 +2,10 @@
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>進階網路攻擊手法細講</title><link rel="stylesheet" href="../互動課程/styles.css"></head>
 <body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><header class="site-header"><p class="eyebrow">進階分支 / 防禦導向</p><h1>進階網路攻擊手法細講</h1><p class="lede">從第一個立足點一路追到瀏覽器、身分聯合、企業目錄、原生程式、密碼協定、雲端控制平面、網路基礎設施與供應鏈。每頁都回答：需要什麼前置、濫用哪個機制、狀態如何改變、如何控制，以及哪些證據能支持或反駁假設。</p></header>
-<nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a aria-current="page" href="index.html">課程地圖</a><a href="01-身分與工作階段.html">01–04 因果核心</a><a href="05-瀏覽器與Web邊界.html">05 Web</a><a href="06-聯合身分與權杖.html">06–07 身分</a><a href="08-原生程式利用概念.html">08 原生程式</a><a href="09-密碼協定與側通道.html">09 密碼</a><a href="10-雲端容器與控制平面.html">10 雲端</a><a href="11-網路基礎設施.html">11 網路</a><a href="12-供應鏈與失陷後活動.html">12 供應鏈</a><a href="進階名詞字典.html">進階字典</a></div></nav>
+<nav class="top-nav" aria-label="課程導覽"><div class="top-nav-inner"><a aria-current="page" href="index.html">課程地圖</a><a href="01-身分與工作階段.html">01 身分</a><a href="02-輸入解譯器與記憶體.html">02 輸入與記憶體</a><a href="03-網路與通訊路徑.html">03 網路路徑</a><a href="04-權限可用性與供應鏈.html">04 權限與供應鏈</a><a href="05-瀏覽器與Web邊界.html">05 Web</a><a href="06-聯合身分與權杖.html">06 聯合身分</a><a href="07-企業身分與委派.html">07 企業身分</a><a href="08-原生程式利用概念.html">08 原生程式</a><a href="09-密碼協定與側通道.html">09 密碼協定</a><a href="10-雲端容器與控制平面.html">10 雲端</a><a href="11-網路基礎設施.html">11 網路</a><a href="12-供應鏈與失陷後活動.html">12 供應鏈</a><a href="../互動課程/名詞與概念字典.html">主課基礎字典</a><a href="進階名詞字典.html">進階字典</a></div></nav>
 <main class="page-shell">
 
-<p class="assumes"><strong>先修：</strong><a href="../互動課程/index.html">網路安全零基礎互動課程</a>。這裡不提供利用碼、逐步入侵、持久化、規避偵測或資料外傳操作；所有案例的落點是威脅建模、控制設計和證據判讀。</p>
+<p class="assumes"><strong>先修：</strong><a href="../互動課程/index.html">網路安全零基礎互動課程</a>；進入 08 前先讀<a href="../../逆向工程/互動課程/index.html">逆向工程 00–05</a>，進入 11 前先讀<a href="../../網路協定/互動課程/index.html">網路協定課</a>。這裡不提供利用碼、逐步入侵、持久化、規避偵測或資料外傳操作；所有案例的落點是威脅建模、控制設計和證據判讀。</p>
 
 
 <section class="section"><h2>建議讀法</h2><p>第一次閱讀依 01 → 12 建立完整因果鏈；之後遇到事件，可直接從字典查名詞並跳回對應章節。每個互動選單都用同一套問題：攻擊者需要什麼前置、濫用哪個正常機制、哪個安全狀態改變、結果在哪裡留下證據，以及證據不能推出什麼。</p><div class="grid"><div class="card"><h3>讀機制</h3><p>先說出正常資料流，再指出哪個信任綁定、解析邊界或生命週期失守。不要從攻擊名稱反推一定成功。</p></div><div class="card"><h3>讀證據</h3><p>至少關聯兩個獨立觀測面，例如封包與應用日誌、身分與資源稽核、程序與檔案事件。時間相近是線索，不自動等於因果。</p></div></div></section>

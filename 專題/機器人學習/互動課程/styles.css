@@ -13,3 +13,4 @@
   text-decoration: none;
 }
 .main-site-link:hover { text-decoration: underline; }
+.range-value{display:inline-block;min-width:5.5rem;margin:.25rem 0 0 .5rem;padding:.15rem .45rem;border-radius:.35rem;background:var(--soft);font-weight:800;text-align:center}button{padding:.55rem .8rem;border:1px solid var(--accent);border-radius:.4rem;color:var(--ink);background:var(--panel);font-weight:800;cursor:pointer}button:hover{background:var(--soft)}

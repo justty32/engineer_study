@@ -87,7 +87,7 @@ workspace 互動區塊統一格式：
 主題：多執行緒同時改同一份資料會出錯（競態 race condition）；臨界區 critical section 要用鎖 lock/互斥 mutex 保護；號誌 semaphore；死結預告（下移到第 10 章）。經典例：兩執行緒各對共用計數器 +1 共 n 次。
 - Widget `race`：輸入每條執行緒加的次數 `race-n`（number，min 1，整數）與 `<select id="race-mode">`（value: lock=有鎖、nolock=無鎖最壞交錯）。輸出 `race-output`：
   - lock：最終值 = 2×n（正確）。
-  - nolock 最壞情況：最終值 = n+1（兩執行緒最大重疊時，經典最少結果），並解釋「讀-改-寫非原子造成更新遺失 lost update」。確定性（用公式，不用亂數）。
+  - nolock 最壞情況：n=1 時最終值為 1；n≥2 時最終值為 2。可讓 A 讀到 0 後暫停，B 完成前 n−1 次；A 寫回 1；B 讀到 1 後暫停；A 完成剩餘 n−1 次；最後 B 寫回 2。並解釋「讀-改-寫非原子造成更新遺失 lost update」。確定性（用公式，不用亂數）。
 
 ### 05-記憶體與位址空間.html（Memory & Address Space）
 主題：每個行程看到自己**連續的虛擬位址空間**，實際散在實體記憶體；以**分頁 paging** 對應。虛擬位址拆成「分頁號 page number + 頁內偏移 offset」。
@@ -103,7 +103,7 @@ workspace 互動區塊統一格式：
 
 ### 08-輸入輸出與中斷.html（I/O & Interrupts）
 主題：CPU 快、裝置慢；**輪詢 polling** 一直問很浪費、**中斷 interrupt** 讓裝置好了才通知；大量搬資料用 **DMA** 讓裝置直接寫記憶體。緩衝 buffering。
-- Widget `iocost`：輸入資料量 `io-data`（number KB）、傳輸率 `io-rate`（number MB/s）、每次中斷處理成本 `io-irq`（number μs）、每個封包/區塊大小 `io-chunk`（number KB）。輸出 `io-output`：純傳輸時間 ≈ data ÷ rate（換算單位，用 1MB=1024KB）；中斷次數 ≈ ⌈data ÷ chunk⌉；中斷總開銷 = 次數 × io-irq；比較「中斷開銷相對傳輸時間的比例」，並說明 chunk 越大中斷越少但延遲越高。確定性。
+- Widget `iocost`：輸入資料量 `io-data`（number KB）、傳輸率 `io-rate`（number MB/s）、每次中斷處理成本 `io-irq`（number μs）、每個封包/區塊大小 `io-chunk`（number KB）。輸出 `io-output`：純傳輸時間 ≈ data ÷ rate（換算單位，本課為和 KB 一致，固定用 1 MB=1024 KB；裝置廠商標示的十進位 MB/s 需另行換算）；中斷次數 ≈ ⌈data ÷ chunk⌉；中斷總開銷 = 次數 × io-irq；比較「中斷開銷相對傳輸時間的比例」，並說明 chunk 越大中斷越少但延遲越高。確定性。
 
 ### 09-系統呼叫與核心邊界.html（System Call & User/Kernel Boundary）
 主題：一般程式跑在**使用者模式 user mode**，不能直接碰硬體；要請 OS 幫忙就走**系統呼叫 syscall** 進**核心模式 kernel mode**；模式切換有成本，所以頻繁小 syscall 很貴（例：一次讀 1 byte vs 一次讀一大塊）。可觀察證據：`strace`。

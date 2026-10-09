@@ -78,6 +78,16 @@
 <li><strong>訓練誤差：</strong>看過的資料上有多合；<strong>泛化誤差：</strong>新資料上有多合。前者接近零也可能只是記住資料。</li>
 </ul>
 </details>
+<h2>讀完再操作：一步一步做梯度下降</h2>
+<section class="workspace">
+<div class="controls">
+<label for="gd-theta">初始 θ<input id="gd-theta" type="range" min="-3" max="9" step="0.1" value="5"></label>
+<label for="gd-rate">學習率 η<input id="gd-rate" type="range" min="0.05" max="1.2" step="0.05" value="0.1"></label>
+</div>
+<p><button id="gd-step" type="button">更新一步</button> <button id="gd-reset" type="button">重設 θ</button></p>
+<div id="gd-output" class="output" aria-live="polite"></div>
+</section>
+<p class="note"><strong>怎麼玩：</strong>以 θ=5、η=0.1 逐步觀察損失下降；再試 η=0.5，會一步到最小值 θ=3。最後把 η 調到 1.1，觀察參數跨過最小值後振盪且逐步遠離。這只示範一維二次函數，不代表所有模型的穩定門檻相同。</p>
 <div class="pager">
 <a href="00-從控制程式到可學習策略.html">← 上一頁</a>
 <a href="01-資料觀測動作與切分.html">下一頁：資料 →</a>

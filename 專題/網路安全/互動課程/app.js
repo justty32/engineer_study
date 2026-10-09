@@ -67,10 +67,17 @@ const initAccess = () => {
   const resource = $("#access-resource");
   if (!subject || !authenticated || !role || !resource) return;
   const update = () => {
+    if (subject.value === "unknown") {
+      authenticated.checked = false;
+      authenticated.disabled = true;
+    } else {
+      authenticated.disabled = false;
+    }
     let allow = authenticated.checked;
     let reason = allow ? "已建立主體身分，接著評估它是否有此動作的權限。" : "尚未驗證，系統不能把聲稱的名稱當成可信主體。";
     if (allow && resource.value === "admin" && role.value !== "administrator") { allow = false; reason = "已驗證不等於已授權；目前角色沒有管理設定的修改權。"; }
-    if (allow && resource.value === "profile" && role.value === "service") { allow = false; reason = "服務角色不應讀取任意個人資料；這是最小權限與目的限制。"; }
+    if (allow && resource.value === "own-profile" && role.value === "service") { allow = false; reason = "服務角色沒有『自己的個人資料』；這是最小權限與目的限制。"; }
+    if (allow && resource.value === "other-profile") { allow = false; reason = role.value === "administrator" ? "管理角色仍須提出業務目的或取得核准，不能僅憑角色讀取他人資料。" : "角色允許讀取個人資料仍不等於通過物件擁有者檢查。"; }
     setResult("access-result", { tone: allow ? "normal" : "warn", title: allow ? "允許這次動作" : "拒絕這次動作", why: reason, fields: {
       principal: `${subject.value}／${role.options[role.selectedIndex].text}`,
       decision: allow ? "允許並記錄" : "拒絕並記錄原因",
@@ -101,13 +108,16 @@ const initThreat = () => {
     const assets = { account: "帳號控制權", data: "敏感資料", service: "服務可用性" };
     const entries = { login: "公開登入入口", dependency: "第三方相依元件", internal: "內部服務介面" };
     const caps = { internet: "只能由網際網路送請求", credential: "持有一組遭竊憑證", foothold: "已控制一台內部主機" };
-    const controls = { none: "尚無針對性控制", mfa: "多因素驗證與速率限制", segment: "網路分段與服務身分", monitor: "集中日誌與異常偵測" };
+    const controls = { none: "尚無針對性控制", mfa: "多因素驗證與速率限制", segment: "網路分段與服務身分", supply: "簽章驗證與來源鎖定", monitor: "集中日誌與異常偵測" };
+    const aligned = control.value === "none" || control.value === "monitor" || (entry.value === "login" && control.value === "mfa") || (entry.value === "internal" && control.value === "segment") || (entry.value === "dependency" && control.value === "supply");
     const high = (asset.value === "data" && capability.value === "foothold") || (asset.value === "account" && capability.value === "credential");
-    setResult("threat-result", { tone: control.value === "none" ? "danger" : high ? "warn" : "normal", title: `${high ? "高影響情境" : "需驗證的威脅情境"}`, why: `若攻擊者${caps[capability.value]}，可經${entries[entry.value]}嘗試影響${assets[asset.value]}。控制只能降低可能性或影響，不會讓威脅憑空消失。`, fields: {
+    const availabilityExposure = asset.value === "service" && capability.value === "internet";
+    const tone = control.value === "none" ? "danger" : (!aligned || high || availabilityExposure) ? "warn" : "normal";
+    setResult("threat-result", { tone, title: `${high ? "高影響情境" : availabilityExposure ? "可用性暴露需驗證" : "需驗證的威脅情境"}`, why: `若攻擊者${caps[capability.value]}，可經${entries[entry.value]}嘗試影響${assets[asset.value]}。控制只能降低可能性或影響，不會讓威脅憑空消失。`, fields: {
       boundary: `${entries[entry.value]}跨入受信任系統的位置`,
       control: controls[control.value],
       evidence: "入口請求、身分驗證、授權、程序、網路流量與資料存取的關聯紀錄",
-      residual: control.value === "none" ? "缺少預防與偵測；事件可能直到使用者回報才被發現" : "仍需測試控制是否涵蓋繞過、失效、撤銷與復原"
+      residual: control.value === "none" ? "缺少預防與偵測；事件可能直到使用者回報才被發現" : !aligned ? "此控制不在此路徑上；相依元件需簽章／來源鎖定等控制，監測只能協助偵測" : control.value === "monitor" ? "監測只能協助偵測，仍需對準入口的預防控制" : "仍需測試控制是否涵蓋繞過、失效、撤銷與復原"
     }});
   };
   [asset, entry, capability, control].forEach(x => x.addEventListener("change", update)); update();
@@ -129,8 +139,8 @@ const initAttack = () => {
 const initDefense = () => {
   const stage = $("#defense-stage"); if (!stage) return;
   const checks = $$('[data-defense-check]');
-  const order = ["inventory", "protect", "detect", "respond", "recover"];
-  const labels = { inventory: "資產與資料流清冊", protect: "最小權限與安全設定", detect: "集中且可關聯的遙測", respond: "隔離、撤銷與溝通程序", recover: "備份、重建與復原驗證" };
+  const order = ["govern", "inventory", "protect", "detect", "respond", "recover"];
+  const labels = { govern: "治理：責任人與風險接受", inventory: "資產與資料流清冊", protect: "最小權限與安全設定", detect: "集中且可關聯的遙測", respond: "隔離、撤銷與溝通程序", recover: "備份、重建與復原驗證" };
   const update = () => {
     const present = new Set(checks.filter(x => x.checked).map(x => x.value));
     const missing = order.find(x => !present.has(x));
@@ -149,7 +159,7 @@ const initEvidence = () => {
   const checks = $$('[data-evidence-check]');
   const update = () => {
     const chosen = new Set(checks.filter(x => x.checked).map(x => x.value));
-    const needs = incident.value === "account" ? ["identity", "app", "network"] : incident.value === "injection" ? ["app", "process", "data"] : ["network", "app", "process"];
+    const needs = incident.value === "account" ? ["identity", "app", "network", "data"] : incident.value === "injection" ? ["app", "process", "data"] : ["network", "app", "process"];
     const missing = needs.filter(x => !chosen.has(x));
     const names = { identity: "身分日誌", network: "網路封包／流量", app: "應用程式日誌", process: "程序與主機遙測", data: "資料存取稽核" };
     setResult("evidence-result", { tone: missing.length ? "warn" : "normal", title: missing.length ? "時間線仍有證據缺口" : "已具備最小交叉驗證來源", why: "單一日誌只能說明某元件聲稱看見什麼；跨來源以時間、主體、端點與關聯識別碼對齊，才較能區分事實與推論。", fields: {

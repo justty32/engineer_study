@@ -66,6 +66,8 @@ fieldset { margin: 0 0 16px; padding: 12px; border: 1px solid #9eaaa7; border-ra
 .causal li { position: relative; padding: 11px 14px 11px 48px; border: 1px solid var(--line); background: #fff; }
 .causal li::before { counter-increment: causal; content: counter(causal); position: absolute; left: 14px; top: 10px; width: 24px; height: 24px; border-radius: 50%; color: #fff; background: var(--accent); text-align: center; line-height: 24px; font-weight: 800; }
 .note { padding: 13px 16px; border-left: 4px solid var(--warn); background: var(--warn-soft); }
+.warning { padding: 13px 16px; border-left: 4px solid var(--danger); background: var(--danger-soft); }
+.formula { margin: 14px 0; padding: 8px 12px; border: 1px solid var(--line); background: var(--panel); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; text-align: center; }
 .assumes { padding: 12px 16px; border: 1px dashed var(--accent); background: #edf8f5; }
 .chapter-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .chapter-card { display: block; color: inherit; text-decoration: none; }
@@ -97,6 +99,30 @@ code { overflow-wrap: anywhere; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #e4ecef;
+    --muted: #b7c4c9;
+    --paper: #11181b;
+    --panel: #182226;
+    --line: #46565c;
+    --accent: #6ed8ce;
+    --accent-soft: #173d3a;
+    --warn: #f1b968;
+    --warn-soft: #49341b;
+    --danger: #ff9b96;
+    --danger-soft: #4c2525;
+    --ok: #80d29d;
+    --shadow: 0 10px 24px rgb(0 0 0 / 28%);
+  }
+  .top-nav { background: rgb(17 24 27 / 94%); }
+  .top-nav a:hover, .top-nav a[aria-current="page"] { color: #071614; }
+  .controls { background: #1d2b2d; }
+  .causal li { background: var(--panel); }
+  select, input[type="search"] { background: #101719; }
+  .result-grid div { border-color: rgb(255 255 255 / 18%); background: rgb(255 255 255 / 6%); }
 }
 .main-site-link {
   display: block;

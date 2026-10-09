@@ -198,7 +198,7 @@
 <strong>不要混淆：</strong>離線模仿準確不保證閉迴路長序列成功。</p>
 </article>
 <article class="term-card">
-<h2>協變量偏移（Covariate Shift）</h2>
+<h2>共變量偏移（Covariate Shift，亦譯協變量偏移）</h2>
 <p>
 <strong>白話：</strong>部署時看到的情況和訓練時不同。</p>
 <p>
@@ -458,7 +458,7 @@
 <p>
 <strong>如何生效：</strong>縮放梯度；太大可能震盪，太小可能進展緩慢。</p>
 <p>
-<strong>具體例子：</strong>梯度 4 配學習率 0.01，基本更新量為 0.04。</p>
+<strong>具體例子：</strong>梯度 4 配學習率 0.01，更新量 −η·g = −0.04。</p>
 <p><strong>可觀察證據：</strong>設定檔與每步有效學習率 log 可確認實際尺度；單看名義值無法跨批次大小或最佳化器比較。</p>
 <p>
 <strong>不要混淆：</strong>它不是控制器增益，也不是模型自動學出的權重。</p>
@@ -573,6 +573,114 @@
 <p><strong>可觀察證據：</strong>每輪初始狀態、候選序列、求解時間、第一段命令與回授能重建滾動規劃；重規劃無法修復不可觀測偏差。</p>
 <p><strong>不要混淆：</strong>MPC 不會自動修正錯模型，也不能取代獨立安全限制與逾時回退。</p>
 </article>
+<article class="term-card">
+<h2>優勢（Advantage）</h2>
+<p><strong>白話：</strong>某動作比該狀態下平常表現好或差多少。</p>
+<p><strong>位置／角色：</strong>連接價值估計與策略更新，常寫成 A(s,a)=Q(s,a)−V(s)。</p>
+<p><strong>如何生效：</strong>正優勢提高該動作傾向，負優勢降低；常先正規化以控制尺度。</p>
+<p><strong>具體例子：</strong>Q=6、V=5.4，優勢為 0.6 分。</p>
+<p><strong>可觀察證據：</strong>優勢分布與更新前後動作機率可查方向；估計值仍受評論者誤差影響。</p>
+<p><strong>不要混淆：</strong>優勢不是單步獎勵，也不是安全裕度。</p>
+</article>
+<article class="term-card">
+<h2>策略梯度（Policy Gradient）</h2>
+<p><strong>白話：</strong>用回報或優勢直接調整策略參數，使較好動作更常被選。</p>
+<p><strong>位置／角色：</strong>位於採樣資料與策略最佳化之間。</p>
+<p><strong>如何生效：</strong>以 A∇logπ 的樣本估計更新方向，再乘學習率。</p>
+<p><strong>具體例子：</strong>動作優勢為正時，提高同狀態下該動作的對數機率。</p>
+<p><strong>可觀察證據：</strong>梯度、策略損失、KL 距離與動作分布能顯示更新幅度；不能單獨證明回報改善。</p>
+<p><strong>不要混淆：</strong>它不是機械臂在笛卡兒空間的移動方向。</p>
+</article>
+<article class="term-card">
+<h2>時間差分（Temporal-Difference, TD）</h2>
+<p><strong>白話：</strong>用「當步獎勵加下一步估值」修正目前估值。</p>
+<p><strong>位置／角色：</strong>是價值學習中的一步自舉方法。</p>
+<p><strong>如何生效：</strong>比較目標 r+γV(s′) 與目前 V(s)，以差值更新。</p>
+<p><strong>具體例子：</strong>r=0、γ=0.9、V(s′)=6、V(s)=5，TD 誤差為 0.4。</p>
+<p><strong>可觀察證據：</strong>轉移、目標值與 TD 誤差 log 可逐筆重算；目標本身含估計誤差。</p>
+<p><strong>不要混淆：</strong>TD 誤差不是環境動力學的時間離散誤差。</p>
+</article>
+<article class="term-card">
+<h2>部分可觀測馬可夫決策過程（POMDP）</h2>
+<p><strong>白話：</strong>策略看不到完整狀態，只收到含雜訊或缺資訊的觀測。</p>
+<p><strong>位置／角色：</strong>描述相機單張畫面看不出速度等不完全資訊問題。</p>
+<p><strong>如何生效：</strong>策略利用觀測歷史、記憶或估測器形成對隱藏狀態的信念。</p>
+<p><strong>具體例子：</strong>同一杯子位置可能正在滑動或靜止，需前後影格判斷。</p>
+<p><strong>可觀察證據：</strong>歷史窗消融、估測殘差與遮擋測試能檢查資訊需求；不能證明信念是完整真值。</p>
+<p><strong>不要混淆：</strong>增加歷史不保證恢復馬可夫性，還可能增加延遲。</p>
+</article>
+<article class="term-card">
+<h2>離線策略評估／重要性抽樣（OPE / Importance Sampling）</h2>
+<p><strong>白話：</strong>不讓新策略接管環境，先用舊資料估它可能有多好。</p>
+<p><strong>位置／角色：</strong>位於離線訓練與受控部署之間的證據關卡。</p>
+<p><strong>如何生效：</strong>重要性抽樣以新舊策略選到資料動作的機率比重加權既有軌跡。</p>
+<p><strong>具體例子：</strong>兩步機率比 1.5 與 0.5 相乘，軌跡權重為 0.75。</p>
+<p><strong>可觀察證據：</strong>有效樣本量、最大權重與多估計器差異揭露不穩定；估計仍依賴支撐與機率紀錄。</p>
+<p><strong>不要混淆：</strong>OPE 是帶假設的估計，不是新策略上線後的實測結果。</p>
+</article>
+<article class="term-card">
+<h2>滾動預測／世界模型（Rollout / World Model）</h2>
+<p><strong>白話：</strong>世界模型猜動作後會發生什麼；rollout 把預測反覆餵回模型看多步未來。</p>
+<p><strong>位置／角色：</strong>位於模型式學習、規劃與合成經驗產生之間。</p>
+<p><strong>如何生效：</strong>從目前狀態依候選動作預測下一狀態、獎勵與終止，再展開數步。</p>
+<p><strong>具體例子：</strong>比較三組五步速度命令的預測碰撞與位置成本。</p>
+<p><strong>可觀察證據：</strong>逐步預測與真實後果殘差可定位模型漂移；模型內軌跡不是實機軌跡。</p>
+<p><strong>不要混淆：</strong>單步誤差小不保證長 rollout 準確。</p>
+</article>
+<article class="term-card">
+<h2>模型集成（Model Ensemble）</h2>
+<p><strong>白話：</strong>同時訓練多個模型，用彼此預測分歧當成不確定線索。</p>
+<p><strong>位置／角色：</strong>用於世界模型、價值估計與 OOD 風險判讀。</p>
+<p><strong>如何生效：</strong>改變初始化或訓練資料，使多個模型對同一候選未來各自預測。</p>
+<p><strong>具體例子：</strong>五個模型對接觸後位置預測差很大，規劃器便縮短地平線。</p>
+<p><strong>可觀察證據：</strong>預測均值與分歧可畫出敏感區；共同資料偏差可能讓所有模型一致地錯。</p>
+<p><strong>不要混淆：</strong>模型彼此同意不等於它們與真實世界一致。</p>
+</article>
+<article class="term-card">
+<h2>獎勵投機（Reward Hacking）</h2>
+<p><strong>白話：</strong>策略找到讓分數變高、卻不符合真正任務意圖的捷徑。</p>
+<p><strong>位置／角色：</strong>出現在獎勵設計、訓練與外部任務評估的落差。</p>
+<p><strong>如何生效：</strong>最佳化器忠實放大可得分漏洞，而不理解人真正想要什麼。</p>
+<p><strong>具體例子：</strong>只獎勵靠近杯子，策略停在旁邊反覆刷分卻不夾取。</p>
+<p><strong>可觀察證據：</strong>獎勵分項、影片、力感測與獨立成功判準可交叉揭露漏洞。</p>
+<p><strong>不要混淆：</strong>高訓練回報不等於任務成功，更不等於安全。</p>
+</article>
+<article class="term-card">
+<h2>期望值／條件機率（Expected Value / Conditional Probability）</h2>
+<p><strong>白話：</strong>條件機率描述已知情況下各結果多常發生；期望值是依那些機率加權的平均。</p>
+<p><strong>位置／角色：</strong>是隨機策略、價值函數與風險判讀的數學基礎。</p>
+<p><strong>如何生效：</strong>π(a|s) 依狀態給動作機率，E[R|s] 再對可能回報加權。</p>
+<p><strong>具體例子：</strong>成功 10 分機率 0.8、失敗 −20 分機率 0.2，期望為 4 分。</p>
+<p><strong>可觀察證據：</strong>分層計數與校準圖能檢查估計；有限樣本平均不是母體真值。</p>
+<p><strong>不要混淆：</strong>期望為正仍可能包含不可接受的低機率災難。</p>
+</article>
+<article class="term-card">
+<h2>訓練週期／小批次（Epoch / Mini-batch）</h2>
+<p><strong>白話：</strong>小批次是一次更新使用的一小組資料；epoch 是大致看完訓練集一輪。</p>
+<p><strong>位置／角色：</strong>用於安排訓練資料讀取與參數更新次數。</p>
+<p><strong>如何生效：</strong>每個小批次估一次梯度，多個小批次組成一個 epoch。</p>
+<p><strong>具體例子：</strong>1,000 筆資料、批次 100，一個 epoch 約有 10 次更新。</p>
+<p><strong>可觀察證據：</strong>樣本索引、批次計數與更新步數可重建訓練進度；epoch 數不代表新資料量。</p>
+<p><strong>不要混淆：</strong>多跑 epoch 是重看資料，不是增加獨立證據。</p>
+</article>
+<article class="term-card">
+<h2>終止／截斷（Termination / Truncation）</h2>
+<p><strong>白話：</strong>終止表示任務本身結束；截斷表示因外部時限或記錄限制提早停下。</p>
+<p><strong>位置／角色：</strong>決定回合邊界與價值目標是否還要接續估值。</p>
+<p><strong>如何生效：</strong>真正終止通常不再 bootstrap；時間截斷可能仍需保留下一狀態價值。</p>
+<p><strong>具體例子：</strong>杯子成功放下是終止，錄製到 30 秒被切掉是截斷。</p>
+<p><strong>可觀察證據：</strong>分開的旗標與原因碼能重算目標；單一 done 欄位會掩蓋差異。</p>
+<p><strong>不要混淆：</strong>逾時不一定代表任務失敗，也不一定代表環境進入吸收狀態。</p>
+</article>
+<article class="term-card">
+<h2>硬體在迴路（Hardware-in-the-Loop, HIL）</h2>
+<p><strong>白話：</strong>讓部分真實硬體接入模擬或測試迴路，在有限風險下驗介面與時序。</p>
+<p><strong>位置／角色：</strong>位於純模擬與完整真機接管之間的部署證據階梯。</p>
+<p><strong>如何生效：</strong>保留真實控制器、感測器或通訊鏈，其他環境由模擬器提供。</p>
+<p><strong>具體例子：</strong>真實控制電腦接收模擬關節狀態並輸出命令，但馬達不帶負載運動。</p>
+<p><strong>可觀察證據：</strong>封包時間戳、延遲、逾時與命令 log 可驗整合；未接入的物理接觸仍未被測試。</p>
+<p><strong>不要混淆：</strong>HIL 比純模擬接近部署，但不等於完整真機安全驗證。</p>
+</article>
 </section>
 
 <h2>把名詞串回同一條機器人因果鏈</h2>
@@ -590,9 +698,9 @@
 <p>訓練 log 的損失、梯度大小、學習率與 checkpoint 可證明哪次更新實際發生；它們不能證明標籤正確、資料涵蓋部署場景或損失代表真正安全。梯度概念需要補課時，見<a href="../../機器人數學基礎/互動課程/11-變化率導數與梯度.html">機器人數學基礎第 11 章：變化率、導數與梯度</a>。</p>
 </details>
 
-<details><summary>情境三：從回合、模仿學習到協變量偏移</summary>
+<details><summary>情境三：從回合、模仿學習到共變量偏移</summary>
 <p>一次從重設、接近杯子、夾取到成功或失敗叫一個<strong>回合</strong>。<strong>行為複製</strong>把專家在各觀測下的動作當標籤做監督學習。若 1,000 張相鄰影格來自同一回合，它們不是 1,000 種獨立情境；隨機把影格切到訓練與測試會造成<strong>資料洩漏</strong>。</p>
-<p>模型單步方向若偏 2°，長 0.5 m 的手臂末端側偏約 0.5 sin 2°≈17.5 mm。下一步影像因此離開專家常走的路線，模型又在陌生觀測上預測，形成<strong>協變量偏移</strong>。<strong>資料集聚合</strong>讓目前策略走到自己的偏離狀態，再請專家補上恢復標籤，針對問題分布增加證據。</p>
+<p>模型單步方向若偏 2°，長 0.5 m 的手臂末端側偏約 0.5 sin 2°≈17.5 mm。下一步影像因此離開專家常走的路線，模型又在陌生觀測上預測，形成<strong>共變量偏移（亦譯協變量偏移）</strong>。<strong>資料集聚合</strong>讓目前策略走到自己的偏離狀態，再請專家補上恢復標籤，針對問題分布增加證據。</p>
 <p>單步 MSE 下降是模仿標籤較好的證據；完整回合的最大偏差、成功、碰撞與接管才是閉迴路證據。資料聚合增加涵蓋，不代表專家永不犯錯，也不取代安全過濾器。</p>
 </details>
 
