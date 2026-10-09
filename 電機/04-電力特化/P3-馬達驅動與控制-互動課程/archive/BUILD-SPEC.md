@@ -2,6 +2,8 @@
 
 # BUILD-SPEC — 馬達驅動與控制（零基礎互動課）
 
+> 勘誤（2026-10-09）：第 05 章換相表的扇區 2、3 通電相曾對調。正確為 `110 → B+ A−（C 浮接）→ 150°`、`010 → C+ A−（B 浮接）→ 210°`；本檔後文的舊表與舊範例僅留作封存建置記錄，不得當成現行接線依據。
+
 ← 立案文件：[PROJECT-BRIEF.md](PROJECT-BRIEF.md)｜工作流：[build-with-agents](../../../wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)
 
 本檔的存在意義是「照抄即可實作」：冷啟動的章節作者與 verifier 只讀本檔＋PROJECT-BRIEF＋指定來源就能開工。任何留白，下游都會自己發明一個。
@@ -869,7 +871,7 @@ index → 00 → 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 → 
 
 依 [QUALITY-GATES](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md) 全數執行；本課另加：
 
-1. **抽章重算**：第 03 章（RK4 超越量 N = 10 → 4.352513 %、N = 1 → 24.621566 %）、第 08 章（基速二次式 3939.828277 rpm）、第 09 章（T<sub>1</sub>／T<sub>2</sub>／工作週期與相電壓驗證）三章親手重算；`calc.py` 在 scratchpad `team-motor-drives/`，verifier 須獨立寫稿，不得只跑它。
+1. **抽章重算**：第 03 章（RK4 超越量 N = 10 → 4.352513 %、N = 1 → 24.621566 %）、第 08 章（基速二次式 3939.828277 rpm）、第 09 章（T<sub>1</sub>／T<sub>2</sub>／工作週期與相電壓驗證）三章親手重算；`calc.py` 在 scratchpad `team-motor-drives/`，verifier 須獨立寫稿，不得只跑它。簡體字掃描表必須包含「暂」。
 2. **字元級掃描**（`html.unescape` 後）：配額詞「標量」「轉差」「占空比」各恰好 1（只在字典）；「轉差率」「勵磁」「電動機」「責任週期」「電流環」「速度環」「位置環」「採樣」「抽樣」「帶寬」「超調」「過衝」「調節時間」「安定時間」「抗積分」「換流器」「變流器」「母線」「反電勢」「扭矩」「磁通鏈」「鐵芯」「傳感器」「步進角」「換向」（除「換向器」外）0；「信號」只在「信號與系統」；簡體字表 0；U+03BC 0、U+2126 0；`*` 當乘號 0；「絕不輸出 NaN」「NaN」在 HTML 正文 0。
 3. **高頻術語形近錯字**：轉矩／轉距、迴路／回路（控制語境）、霍爾／霍耳、換相／換向、扇區／煽區、編碼器／解碼器（語境）、漣波／連波、頻寬／頻寛。
 4. **id 契約**：第 4 節所有控制 id 與 output id、字典 `term-search`／`term-count`、自我檢核 36 × 3 個 id 全部存在且唯一。

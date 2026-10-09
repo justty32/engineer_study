@@ -82,9 +82,9 @@
 <article class="term-card" data-search="four quadrant operation Q1 Q2 Q3 Q4 motoring generating 四象限 電動 再生 正轉 反轉">
 <h2>四象限運轉（four-quadrant operation）</h2>
 <p><strong>白話：</strong>用轉速正負與轉矩正負分成四種狀態，說清楚馬達往哪轉、是在輸出機械能還是把能量送回電源側。</p>
-<p><strong>位置／角色：</strong><a href="01-H橋與平均電壓.html">第 01 章</a>由 H 橋電壓與電流判象限，<a href="11-再生煞車與能量.html">第 11 章</a>接著追查回流能量。</p>
+<p><strong>位置／角色：</strong><a href="01-H橋與平均電壓.html">第 01 章</a>由轉速（反電動勢）與電流判象限，<a href="11-再生煞車與能量.html">第 11 章</a>接著追查回流能量。</p>
 <p><strong>機制：</strong>預設點 V ≥ 0、I ≥ 0 是 Q1 正轉電動；轉速升到 2500.000000 rpm 時，電流成為 −8.179939 A，機械功率 −214.150296 W，進入 Q2。</p>
-<p><strong>不要混淆：</strong>反轉不等於煞車。轉速與轉矩同號是電動、異號才是再生；只看電壓極性不足以判定能量方向。</p>
+<p><strong>不要混淆：</strong>反轉不等於煞車。轉速與轉矩同號是電動、異號是煞車象限；是再生還是反接煞車，要再看 P<sub>elec</sub> 是否為負。</p>
 </article>
 
 <article class="term-card" data-search="electrical time constant tau_e τ_e L R RL 電氣時間常數 暫態">
@@ -119,7 +119,7 @@
 <p><strong>白話：</strong>控制器還能有效追上命令變化的速度範圍；頻寬越高，反應通常越快，但更接近取樣、電壓與雜訊限制。</p>
 <p><strong>位置／角色：</strong><a href="02-電流迴路PI設計.html">第 02 章</a>選電流頻寬，<a href="03-速度與位置迴路串級.html">第 03 章</a>用倍數安排內外層。</p>
 <p><strong>機制：</strong>f<sub>c</sub> = 500.000000 Hz 對應 ω<sub>c</sub> = 3141.592654 rad/s；與 20.000000 kHz PWM 相差 40.000000 倍，延遲相位是 13.500000°。</p>
-<p><strong>不要混淆：</strong>頻寬不是切換頻率，也不是單一命令的轉速；把它提高會縮短反應時間，卻同時降低相位餘裕並增加輸出飽和機會。</p>
+<p><strong>不要混淆：</strong>頻寬不是切換頻率，也不是單一命令的轉速；把它提高會縮短反應時間，卻同時降低相位裕度並增加輸出飽和機會。</p>
 </article>
 
 <article class="term-card" data-search="sampling delay phase margin PM T_s 取樣延遲 相位裕度 stability">
@@ -166,7 +166,7 @@
 <h2>負載擾動與剛性（load disturbance, stiffness）</h2>
 <p><strong>白話：</strong>負載突然加重是從系統外插進來的擾動；剛性描述轉軸面對這股額外轉矩時，速度或位置能維持得多緊。</p>
 <p><strong>位置／角色：</strong><a href="03-速度與位置迴路串級.html">第 03 章</a>在速度穩定後加入負載，分別量最大掉速與恢復時間。</p>
-<p><strong>機制：</strong>J = 0.010000 kg·m²、50.000000 Hz 速度迴路加入 1.000000 N·m 時，最大掉速 21.706381 %，16.201973 ms 後回到 2 % 內。</p>
+<p><strong>機制：</strong>J = 0.010000 kg·m²、50.000000 Hz 速度迴路在 1 rad/s 命令下加入 1.000000 N·m 時，最大掉速 0.217064 rad/s（21.706381 %），16.201973 ms 後回到 2 % 內。</p>
 <p><strong>不要混淆：</strong>命令超越量小不代表抗擾一定強；掉速深度受慣量與速度頻寬影響，必須用負載步階另外檢查。</p>
 </article>
 </div>
@@ -217,7 +217,7 @@
 <h2>霍爾感測器（Hall sensor）</h2>
 <p><strong>白話：</strong>三個開關型位置感測器把一圈電氣角切成六格，以三位元碼告訴控制器轉子目前落在哪一格。</p>
 <p><strong>位置／角色：</strong><a href="05-BLDC六步換相與霍爾.html">第 05 章</a>用霍爾碼查扇區與通電相；它也是低成本電子換相的時間基準。</p>
-<p><strong>機制：</strong>θ = 15° 時讀到 100，落在扇區 1，驅動 B+ C−；θ 到 30° 時切成 110 與 C+ A−。正常序列每次只改一個位元。</p>
+<p><strong>機制：</strong>θ = 15° 時讀到 100，落在扇區 1，驅動 B+ C−；θ 到 30° 時切成 110 與 B+ A−。正常序列每次只改一個位元。</p>
 <p><strong>不要混淆：</strong>霍爾碼提供的是每 60° 一格的粗位置，不是連續精密角度；速度可由邊緣間隔估算，但解析度仍受六格限制。</p>
 </article>
 
@@ -312,7 +312,7 @@
 <p><strong>白話：</strong>把 αβ 座標跟著轉子角一起旋轉，使原本持續轉動的電流向量，在 d、q 軸上看成固定數值。</p>
 <p><strong>位置／角色：</strong><a href="07-Clarke與Park轉換.html">第 07 章</a>用它把交流量改寫成 PI 容易控制的直流量，角度則來自感測或估測。</p>
 <p><strong>機制：</strong>θ = 30°、電流向量領先 90° 時，i<sub>d</sub> = 0.000000 A、i<sub>q</sub> = 10.000000 A；θ 改成 0° 或 90°，這兩值仍不變。</p>
-<p><strong>不要混淆：</strong>Park 需要正確轉子電氣角；角度錯 45° 時 i<sub>q</sub> 降為 7.071068 A，並出現 7.071068 A 的假 i<sub>d</sub>。因此角度來源是整個方法的必要輸入。</p>
+<p><strong>不要混淆：</strong>Park 需要正確轉子電氣角。開迴路只把同一物理電流投影到錯誤座標，轉矩不會因換座標而改變；閉迴路把估測值調到 (0, 10) A 後，角度錯 45° 才使真實 i<sub>q</sub> 降為 7.071068 A。</p>
 </article>
 
 <article class="term-card" data-search="dq reference frame direct quadrature d axis q axis dq 座標 直軸 交軸">
@@ -434,7 +434,7 @@
 <h2>無感測控制與直接轉矩控制（sensorless control, direct torque control, DTC）</h2>
 <p><strong>白話：</strong>無感測控制從電壓與電流估轉子狀態；DTC 則直接依磁通與轉矩誤差選擇電壓向量，屬於本課主線之外的兩條進階路徑。</p>
 <p><strong>位置／角色：</strong><a href="11-再生煞車與能量.html">第 11 章</a>只列概念與去向；前者延伸第 07、10 章的角度來源，後者對照第 07–09 章的 FOC 鏈。</p>
-<p><strong>機制：</strong>本課數值模型仍以可知角度運作：角度誤差 45° 時，i<sub>q</sub> 由 10.000000 A 降到 7.071068 A，轉矩少 29.289322 %，顯示估測品質會直接影響輸出。</p>
+<p><strong>機制：</strong>閉迴路把估測的 (i<sub>d</sub>, i<sub>q</sub>) 調到 (0, 10) A 時，45° 角度誤差會使真實 i<sub>q</sub> 降到 7.071068 A，轉矩少 29.289322 %，顯示估測品質會直接影響輸出。</p>
 <p><strong>不要混淆：</strong>無感測不表示完全沒有量測，仍要量電壓或電流；DTC 也不是 FOC 的一個調參選項，而是不同的控制結構。本卡不提供互動。</p>
 </article>
 </div>

@@ -26,9 +26,6 @@ var int0 = function (x) {
   if (!isFinite(v)) { return "不適用"; }
   return minus(String(Math.round(zc(v))));
 };
-var esc = function (s) {
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-};
 var put = function (id, html) { var n = $(id); if (n) { n.innerHTML = html; } };
 var row = function (cells, th) {
   var t = th ? "th" : "td";
@@ -46,8 +43,8 @@ var table = function (caption, rows) {
 /* ---------- 2. 常數 ---------- */
 var BLDC_TABLE = [
   { start: 330, code: "100", phase: "B+ C−（A 浮接）", stator: 90, range: "330° ≤ θ < 30°" },
-  { start: 30, code: "110", phase: "C+ A−（B 浮接）", stator: 150, range: "30° ≤ θ < 90°" },
-  { start: 90, code: "010", phase: "B+ A−（C 浮接）", stator: 210, range: "90° ≤ θ < 150°" },
+  { start: 30, code: "110", phase: "B+ A−（C 浮接）", stator: 150, range: "30° ≤ θ < 90°" },
+  { start: 90, code: "010", phase: "C+ A−（B 浮接）", stator: 210, range: "90° ≤ θ < 150°" },
   { start: 150, code: "011", phase: "C+ B−（A 浮接）", stator: 270, range: "150° ≤ θ < 210°" },
   { start: 210, code: "001", phase: "A+ B−（C 浮接）", stator: 330, range: "210° ≤ θ < 270°" },
   { start: 270, code: "101", phase: "A+ C−（B 浮接）", stator: 30, range: "270° ≤ θ < 330°" }
@@ -73,33 +70,33 @@ var QUIZ_CH = {
   "11": ["11-再生煞車與能量.html", "11 再生煞車與能量"]
 };
 var quizWhy = {
-  "00": ["T = K_t × I × sin 60°。", "六步窗的正弦平均為 3 / π。", "夾角為 0° 時兩磁場對齊，只有徑向拉力。"],
-  "01": ["單極性平均電壓為 D × V_dc。", "穩態電流為 (V_avg − E) / R。", "電流反向代表機械能回到直流鏈。"],
-  "02": ["K_p = L × 2πf_c。", "延遲相位為 ω_c × 1.5T_s。", "PI 零點抵消 RL 受控體極點。"],
-  "03": ["ω_s = ω_c / N。", "速度 K_p = J × ω_s。", "內外迴路同頻寬時，內迴路落後不能忽略。"],
-  "04": ["微步角為 360° / N_spr / m。", "增量轉矩為 T_h × sin(90° / m)。", "細分增加只改每格大小，不改同一負載下的機械偏移。"],
-  "05": ["100° 落在第 3 扇區，霍爾碼為 010。", "平均係數為 (3 / π) × cos 30°。", "合法六步序列每次只變一個位元。"],
-  "06": ["端電壓為 3 + (220 − 3) × 30 / 60。", "滑差轉速為 54 × 0.5 / 1.028102。", "電壓封頂後磁通與頻率成反比，拉出轉矩與頻率平方成反比。"],
-  "07": ["i_q = 10 × cos 10°。", "轉矩損失為 1 − cos 45°。", "Park 使用同一轉子角旋轉座標，角度項因而消去。"],
-  "08": ["線性區相電壓上限為 V_dc / √3。", "反電動勢為 ω_e × ψ_f。", "負 i_d 降低 d 軸總磁鏈，使相同電壓可容許更高速度。"],
-  "09": ["T_1 由扇區內角 20° 的伏秒平衡求得。", "200° 位於第 4 扇區。", "兩個線性區上限相比為 (1/√3) / (1/2)。"],
-  "10": ["M 法每一計數對應 60 / (4N × T_s) rpm。", "邊緣間隔 50 µs 乘 10 MHz 得 500 tick。", "300 rpm 低於 1500 rpm 交叉速度，T 法較準。"],
-  "11": ["動能為 0.5 × J × ω²。", "電容增量能量為 0.5 × C × (V_trip² − V_dc²)。", "電阻可承受功率高於峰值再生功率，斬波器可撐住。"]
+  "00": ["T = 0.4 × 12 × sin 30°。", "六步窗的正弦平均為 3 / π。", "夾角為 0° 時兩磁場對齊，只有徑向拉力。"],
+  "01": ["單臂切換的平均電壓為 D × V_dc。", "穩態電流為 (V_avg − E) / R。", "電流反向且電輸入功率為負，代表機械能回到直流鏈。"],
+  "02": ["K_p = 0.003 × 2π × 400。", "延遲相位為 ω_c × 1.5T_s。", "PI 零點抵消 RL 受控體極點。"],
+  "03": ["ω_s = 2513.274123 / 5。", "速度 K_p = J × ω_s。", "內外迴路同頻寬時，內迴路落後不能忽略。"],
+  "04": ["微步角為 360° / 200 / 32。", "增量轉矩為 T_h × sin(90° / m)。", "細分增加只改每格大小，不改同一負載下的機械偏移。"],
+  "05": ["200° 落在第 4 扇區，霍爾碼為 011。", "平均係數為 (3 / π) × cos 30°。", "合法六步序列每次只變一個位元。"],
+  "06": ["端電壓為 5 + (220 − 5) × 45 / 60。", "滑差轉速為 54 × 0.5 / 1.028102。", "電壓封頂後磁通與頻率成反比，拉出轉矩與頻率平方成反比。"],
+  "07": ["開迴路量測時，控制器看到的 i_q = 12 × cos 20°。", "閉迴路調到命令後，真實轉矩損失為 1 − cos 45°。", "Park 使用同一轉子角旋轉座標，角度項因而消去。"],
+  "08": ["線性區相電壓上限為 240 / √3。", "反電動勢為 ω_e × ψ_f。", "負 i_d 降低 d 軸總磁鏈，使相同電壓可容許更高速度。"],
+  "09": ["T_1 由扇區內角 20° 的伏秒平衡求得。", "250° 位於第 5 扇區。", "兩個線性區上限相比為 (1/√3) / (1/2)。"],
+  "10": ["M 法每一計數對應 60 / (4 × 2000 × 0.002) rpm。", "邊緣間隔 50 µs 乘 10 MHz 得 500 tick。", "300 rpm 低於 1500 rpm 交叉速度，T 法較準。"],
+  "11": ["動能為 0.5 × 0.02 × (2400 × 2π / 60)²。", "電容增量能量為 0.5 × C × (V_trip² − V_dc²)。", "電阻可承受功率高於峰值再生功率，斬波器可撐住。"]
 };
 var QUIZ = (function () {
   var raw = [
-    ["q00-1","num",4.330127,0.01],["q00-2","num",0.954930,0.001],["q00-3","sel","b",0],
-    ["q01-1","num",18,0.01],["q01-2","num",7.528024,0.01],["q01-3","sel","c",0],
-    ["q02-1","num",6.283185,0.01],["q02-2","num",13.5,0.1],["q02-3","sel","a",0],
-    ["q03-1","num",314.159265,0.1],["q03-2","num",3.141593,0.01],["q03-3","sel","d",0],
-    ["q04-1","num",0.1125,0.0001],["q04-2","num",0.039207,0.001],["q04-3","sel","b",0],
-    ["q05-1","sel","c",0],["q05-2","num",0.826993,0.001],["q05-3","sel","a",0],
-    ["q06-1","num",111.5,0.01],["q06-2","num",26.261994,0.01],["q06-3","sel","d",0],
-    ["q07-1","num",9.848078,0.01],["q07-2","num",29.289322,0.01],["q07-3","sel","b",0],
-    ["q08-1","num",173.205081,0.01],["q08-2","num",125.663706,0.01],["q08-3","sel","c",0],
-    ["q09-1","num",37.11136,0.01],["q09-2","num",4,0],["q09-3","sel","a",0],
-    ["q10-1","num",15,0.01],["q10-2","num",500,0.5],["q10-3","sel","b",0],
-    ["q11-1","num",2467.4011,0.1],["q11-2","num",27.2,0.01],["q11-3","sel","d",0]
+    ["q00-1","num",2.4,0.01],["q00-2","num",0.954930,0.001],["q00-3","sel","b",0],
+    ["q01-1","num",28.8,0.01],["q01-2","num",7.528024,0.01],["q01-3","sel","c",0],
+    ["q02-1","num",7.539822,0.01],["q02-2","num",13.5,0.1],["q02-3","sel","a",0],
+    ["q03-1","num",502.654825,0.1],["q03-2","num",3.141593,0.01],["q03-3","sel","d",0],
+    ["q04-1","num",0.05625,0.0001],["q04-2","num",0.039207,0.001],["q04-3","sel","b",0],
+    ["q05-1","sel","b",0],["q05-2","num",0.826993,0.001],["q05-3","sel","a",0],
+    ["q06-1","num",166.25,0.01],["q06-2","num",26.261994,0.01],["q06-3","sel","d",0],
+    ["q07-1","num",11.276311,0.01],["q07-2","num",29.289322,0.01],["q07-3","sel","b",0],
+    ["q08-1","num",138.564065,0.01],["q08-2","num",125.663706,0.01],["q08-3","sel","c",0],
+    ["q09-1","num",37.11136,0.01],["q09-2","num",5,0],["q09-3","sel","a",0],
+    ["q10-1","num",3.75,0.01],["q10-2","num",500,0.5],["q10-3","sel","b",0],
+    ["q11-1","num",631.654682,0.1],["q11-2","num",27.2,0.01],["q11-3","sel","d",0]
   ];
   return raw.map(function (x) {
     var ch = x[0].slice(1, 3), k = Number(x[0].slice(4)) - 1;
@@ -141,20 +138,22 @@ function hbridge() {
     var v=bi?(2*d-1)*vdc:d*vdc, w=n*2*Math.PI/60, e=ke*w, i=v-e, tq=ke*i;
     var rip=vdc*d*(1-d)/(fs*1000*l/1000)*(bi?2:1), rp=i===0?null:Math.abs(rip/i)*100;
     var ts=1000/fs, ratio=l/(ts/1000), pe=v*i, pm=e*i, pcu=i*i;
-    var q=(v>=0&&i>=0)?'Q1 正轉電動':(v>=0&&i<0)?'Q2 正轉再生煞車':(v<0&&i<=0)?'Q3 反轉電動':'Q4 反轉再生煞車';
+    var q=(n>=0&&i>=0)?'Q1 正轉電動':(n>=0&&i<0)?'Q2 正轉煞車':(n<0&&i<=0)?'Q3 反轉電動':'Q4 反轉煞車';
+    var plugging=n!==0&&v*e<0,regenerating=pe<0;
     var h='<p><strong>目前模式：'+(bi?'雙極性':'單極性')+'</strong></p>'+table('H 橋平均值模型',[
-      ['平均電壓',num6(v)+' V'],['反電動勢',num6(e)+' V'],['穩態電流',num6(i)+' A'],['轉矩',num6(tq)+' N·m'],
+      ['平均電壓',num6(v)+' V'],['反電動勢',num6(e)+' V'],['穩態電流（(V<sub>avg</sub> − E) / 1 Ω）',num6(i)+' A'],['轉矩',num6(tq)+' N·m'],
       ['漣波（峰對峰）',num6(rip)+' A'],['漣波佔電流',rp===null?'不適用':num6(rp)+' %'],
       ['電氣時間常數',num6(l)+' ms（切換週期 '+num6(ts)+' µs 的 '+num6(ratio)+' 倍）'],
       ['電輸入功率',num6(pe)+' W'],['機械功率',num6(pm)+' W'],['銅損',num6(pcu)+' W'],['象限',q]
     ]);
-    h+='<p><strong>判讀：'+q+'。</strong>電流方向由 V_avg 與 E 誰大決定，不是由開關決定。</p>';
-    if(i<0){h+='<p>再生煞車：機械功率 '+num6(pm)+' W 流回直流鏈，見第 11 章。</p>';}
+    h+='<p><strong>判讀：'+q+'。</strong>象限依轉速（反電動勢）與電流的正負判斷；電流大小則由 V<sub>avg</sub> 與 E 之差決定。</p>';
+    if(plugging){h+='<p>反接煞車：平均電壓與反電動勢異號，直流鏈與機械兩邊都在送能量進電阻，銅損為 '+num6(pcu)+' W。</p>';}
+    else if(regenerating){h+='<p>再生煞車：電輸入功率 '+num6(pe)+' W，能量流回直流鏈，見第 11 章。</p>';}
     h+='<p>為什麼：繞組電感濾掉快速通斷，穩態電流由平均電壓與反電動勢之差決定。</p>';
     if(rp!==null){h+='<p>'+(rp<=5?'平均值模型成立，漣波可忽略。':rp<=20?'漣波已影響轉矩平順度。':'漣波過大，平均值模型只剩示意。')+'</p>';}
     if(ratio<10){h+='<p>邊界：τ_e 不到切換週期 10 倍，電流呈三角波。</p>';}
     if(n===0){h+='<p>邊界：堵轉時反電動勢為 0，全部電輸入成為銅損。</p>';}
-    if(d===0&&!bi){h+='<p>邊界：繞組被短路，反電動勢驅動負電流，形成動態煞車。</p>';}
+    if(d===0&&!bi&&n!==0){h+='<p>邊界：繞組被短路，反電動勢驅動電流，形成短路煞車。</p>';}
     if(d===0.5&&bi){h+='<p>邊界：平均電壓為 0，馬達只剩煞車。</p>';}
     if(Math.abs(i)>20){h+='<p>邊界：超過本課 20 A 等級，實機會觸發過電流保護。</p>';}
     put('hbridge-output',h);
@@ -219,21 +218,25 @@ var cascadeSim=function(j,fc,nsep,tl){
     tpeak:tpeak*1000,tr:(t90-t10)*1000,settle:lastPre*1000,dip:(1-wmin)*100,
     tdip:(tmin-loadAt)*1000,rec:(lastPost-loadAt)*1000};
 };
+var cascadeTableCache={};
 function cascade() {
   if (!$('cascade-output')) { return; }
   var ids=['cs-j','cs-fc','cs-n','cs-tl'];
   var draw=function(){
     var j=val('cs-j'),fc=val('cs-fc'),n=val('cs-n'),tl=val('cs-tl'),r=cascadeSim(j,fc,n,tl);
+    var dipText=tl===0?'0.000000 rad/s（0.000000 %）':num6(r.dip/100)+' rad/s（'+num6(r.dip)+' %）';
     var h=table('串級響應',[
       ['電流迴路 ω_c',num6(r.wc)+' rad/s'],['速度迴路 ω_s',num6(r.ws)+' rad/s（'+num6(r.ws/(2*Math.PI))+' Hz）'],
       ['速度 K_p',num6(r.kp)+' N·m·s/rad'],['速度 K_i',num6(r.ki)+' N·m/rad'],['前置濾波 τ_f',num6(r.tf*1000)+' ms'],
       ['理想 ω_n、ζ',num6(r.ws/Math.SQRT2)+' rad/s、0.707107'],['超越量（模擬）',num6(r.os)+' %'],
       ['峰值時刻',num6(r.tpeak)+' ms'],['10–90 % 上升時間',num6(r.tr)+' ms'],['2 % 整定時間',num6(r.settle)+' ms'],
-      ['負載最大掉速',num6(r.dip)+' %'],['掉速時刻',num6(r.tdip)+' ms'],['負載後回到 2 % 內',num6(r.rec)+' ms'],
+      ['負載最大掉速',dipText],['掉速時刻',tl===0?'不適用':num6(r.tdip)+' ms'],['負載後回到 2 % 內',tl===0?'不適用':num6(r.rec)+' ms'],
       ['位置迴路 ω_p',num6(r.wp)+' rad/s（'+num6(r.wp/(2*Math.PI))+' Hz）'],['位置閉迴路時間常數',num6(1000/r.wp)+' ms']
     ]);
+    var cacheKey=[j,fc,tl].join('|'),comparison=cascadeTableCache[cacheKey];
+    if(!comparison){comparison=[1,2,5,10,20].map(function(x){return cascadeSim(j,fc,x,tl).os;});cascadeTableCache[cacheKey]=comparison;}
     h+='<table><caption>超越量對照表</caption>'+row(['N','超越量'],true);
-    [1,2,5,10,20].forEach(function(x){h+=row([int0(x),num6(cascadeSim(j,fc,x,tl).os)+' %']);}); h+='</table>';
+    [1,2,5,10,20].forEach(function(x,k){h+=row([int0(x),num6(comparison[k])+' %']);}); h+='</table>';
     h+='<p><strong>判讀：'+(n>=10?'分離足夠，內迴路可視為理想。':n>=5?'分離勉強，超越量開始偏離理想。':'分離不足，內迴路的落後滲進外迴路。')+'</strong></p>';
     h+='<p>穩態誤差 0：積分器把負載扛起來。位置迴路 ω_p = ω_s / 10 = '+num6(r.wp)+' rad/s，時間常數 '+num6(1000/r.wp)+' ms。</p>';
     h+='<p>為什麼：第三個內迴路極點越靠近速度迴路，外迴路越不能把它當成立即完成。</p>';
@@ -253,22 +256,23 @@ function stepper() {
     var full=360/spr,micro=full/m,mspr=spr*m,rps=f/mspr,n=rps*60,w=rps*2*Math.PI,fe=rps*spr/4,e=0.05*w;
     var corner=v*60/(spr*lm/1000*i+2*Math.PI*0.05),nmax=v/0.05*60/(2*Math.PI);
     var trise=e>=v?null:lm/1000*i/(v-e),tfull=m/f,frac=trise===null?0:Math.min(1,tfull/trise),avail=0.4*frac;
-    var inc=0.4*sinD(90/m),errE=tl>=avail?90:Math.asin(tl/avail)*180/Math.PI,errM=errE*full/90,errU=errM/micro;
+    var stalled=tl>=avail,inc=0.4*sinD(90/m),errE=stalled?null:Math.asin(tl/avail)*180/Math.PI;
+    var errM=stalled?null:errE*full/90,errU=stalled?null:errM/micro;
     var h='<p><strong>目前模式：N_spr = '+int0(spr)+'、m = '+int0(m)+'</strong></p>'+table('步進與微步',[
       ['全步步距角',num6(full)+'°'],['微步角',num6(micro)+'°'],['每圈微步數',int0(mspr)],
       ['轉速',num6(n)+' rpm（'+num6(w)+' rad/s）'],['電氣頻率',num6(fe)+' Hz'],['反電動勢',num6(e)+' V'],
       ['電流上升時間',trise===null?'不適用':num6(trise*1000)+' ms'],['全步週期',num6(tfull*1000)+' ms'],
       ['可用轉矩比例',num6(frac*100)+' %（T_avail = '+num6(avail)+' N·m）'],['轉折速度',num6(corner)+' rpm'],
       ['反電動勢 = V 的速度',num6(nmax)+' rpm'],['微步增量轉矩',num6(inc)+' N·m（'+num6(inc/0.4*100)+' %）'],
-      ['負載造成的靜態誤差',num6(errE)+'°（電氣）= '+num6(errM)+'°（機械）= '+num6(errU)+' 個微步']
+      ['負載造成的靜態誤差',stalled?'失步，不適用':num6(errE)+'°（電氣）= '+num6(errM)+'°（機械）= '+num6(errU)+' 個微步']
     ]);
     h+='<p><strong>判讀：'+(n<corner?'在轉折速度以下，電流每步都爬得到額定值，轉矩滿。':'已過轉折速度，可用轉矩只剩 '+num6(frac*100)+' %。')+'</strong></p>';
-    if(tl>=avail){h+='<p>失步：負載超過可用轉矩，轉子跟不上脈衝，控制器完全不知道。</p>';}
+    if(stalled){h+='<p>失步：負載超過可用轉矩，轉子跟不上脈衝，控制器完全不知道。</p>';}
     h+='<p>微步增量轉矩只有保持轉矩的 '+num6(inc/0.4*100)+' %：微步提高的是解析度，不是剛性。</p>';
     h+='<p>為什麼：高速時每步時間縮短，繞組電流來不及爬到命令值。</p>';
-    if(errU>1){h+='<p>邊界：負載造成的偏移已超過 1 個微步，此時再提高細分沒有意義。</p>';}
+    if(!stalled&&errU>1){h+='<p>邊界：負載造成的偏移已超過 1 個微步，此時再提高細分沒有意義。</p>';}
     if(e>=v||n>nmax){h+='<p>邊界：反電動勢已等於電源電壓，電流推不進去，必然失步。</p>';}
-    if(tl===0){h+='<p>邊界：無負載，靜態誤差為 0。</p>';}
+    if(tl===0&&!stalled){h+='<p>邊界：無負載，靜態誤差為 0。</p>';}
     put('stepper-output',h);
   };
   bind(ids,draw); draw();
@@ -282,7 +286,7 @@ function bldc() {
     var th=val('bl-theta'),i=val('bl-i'),off=val('bl-offset'),kt=val('bl-kt'),th2=(th+off+360)%360;
     var sec=bldcSector(th2),d=BLDC_TABLE[sec-1],g=(d.stator-th+360)%360;if(g>180){g=360-g;}
     var tq=kt*i*sinD(g),ideal=kt*i,avg=3/Math.PI*cosD(off),tavg=avg*ideal;
-    var upper=(sec*60-30-off+720)%360,next=upper;
+    var next=(sec*60-30-off+720)%360;
     var h=table('六步換相',[
       ['霍爾碼',d.code],['扇區',int0(sec)],['通電相',d.phase],['定子磁場方向',int0(d.stator)+'°'],
       ['夾角 γ',num6(g)+'°'],['sin γ',num6(sinD(g))],['轉矩',num6(tq)+' N·m'],
@@ -336,27 +340,34 @@ var cpCalc=function(im,theta,phi,delta){
   var ia=im*cosD(theta+phi),ib=im*cosD(theta+phi-120),ic=im*cosD(theta+phi-240);
   var al=2/3*(ia-ib/2-ic/2),be=(ib-ic)/Math.sqrt(3),hat=theta+delta;
   var id=al*cosD(hat)+be*sinD(hat),iq=-al*sinD(hat)+be*cosD(hat);
-  return {ia:ia,ib:ib,ic:ic,al:al,be:be,id:id,iq:iq,mag:Math.sqrt(al*al+be*be),t:0.6*iq};
+  var trueId=al*cosD(theta)+be*sinD(theta),trueIq=-al*sinD(theta)+be*cosD(theta);
+  return {ia:ia,ib:ib,ic:ic,al:al,be:be,id:id,iq:iq,trueId:trueId,trueIq:trueIq,
+    mag:Math.sqrt(al*al+be*be),t:0.6*trueIq};
 };
 function clarkepark() {
   if (!$('clarkepark-output')) { return; }
   var ids=['cp-im','cp-theta','cp-phi','cp-delta'];
   var draw=function(){
     var im=val('cp-im'),th=val('cp-theta'),phi=val('cp-phi'),delta=val('cp-delta'),r=cpCalc(im,th,phi,delta);
-    var loss=(1-cosD(delta))*100;
+    var closedId=-im*sinD(delta),closedIq=im*cosD(delta),closedT=0.6*closedIq,loss=(1-cosD(delta))*100;
     var h=table('Clarke–Park 結果',[
-      ['i_a',num6(r.ia)+' A'],['i_b',num6(r.ib)+' A'],['i_c',num6(r.ic)+' A'],['i_α',num6(r.al)+' A'],
-      ['i_β',num6(r.be)+' A'],['向量長度',num6(r.mag)+' A'],['i_d',num6(r.id)+' A'],['i_q',num6(r.iq)+' A'],['轉矩',num6(r.t)+' N·m']
+      ['i<sub>a</sub>',num6(r.ia)+' A'],['i<sub>b</sub>',num6(r.ib)+' A'],['i<sub>c</sub>',num6(r.ic)+' A'],['i<sub>α</sub>',num6(r.al)+' A'],
+      ['i<sub>β</sub>',num6(r.be)+' A'],['向量長度',num6(r.mag)+' A'],
+      ['開迴路：真實 i<sub>d</sub>、i<sub>q</sub>',num6(r.trueId)+' A、'+num6(r.trueIq)+' A'],
+      ['開迴路：控制器看到 i<sub>d</sub>、i<sub>q</sub>',num6(r.id)+' A、'+num6(r.iq)+' A'],
+      ['開迴路：真實轉矩',num6(r.t)+' N·m'],
+      ['閉迴路調到命令後：真實 i<sub>d</sub>、i<sub>q</sub>',num6(closedId)+' A、'+num6(closedIq)+' A'],
+      ['閉迴路調到命令後：真實轉矩',num6(closedT)+' N·m']
     ]);
-    h+='<table><caption>θ 取樣表</caption>'+row(['θ','i_a','i_b','i_c','i_d','i_q'],true);
+    h+='<table><caption>θ 取樣表（開迴路、控制器看到的值）</caption>'+row(['θ','i<sub>a</sub>','i<sub>b</sub>','i<sub>c</sub>','i<sub>d</sub>','i<sub>q</sub>'],true);
     [0,60,120,180,240,300].forEach(function(x){var q=cpCalc(im,x,phi,delta);h+=row([int0(x)+'°',num6(q.ia),num6(q.ib),num6(q.ic),num6(q.id),num6(q.iq)]);});h+='</table>';
-    h+='<p>三相與 αβ 隨 θ 變，i_d、i_q 不隨 θ 變：這就是把交流變直流。</p>';
+    h+='<p>三相與 αβ 隨 θ 變，dq 分量不隨 θ 變：這就是把交流變直流。</p>';
     if(im===0){h+='<p><strong>判讀：沒有電流，任何座標都是 0。</strong></p>';}
-    else if(Math.abs(r.id)<0.001*im){h+='<p><strong>判讀：i_d = 0，全部電流都在產生轉矩。</strong></p>';}
-    else if(r.id>0){h+='<p><strong>判讀：正的 i_d 在加強永磁磁場，白白發熱。</strong></p>';}
-    else{h+='<p><strong>判讀：負的 i_d 在削弱磁場，這是弱磁。</strong></p>';}
-    if(delta!==0){h+='<p>角度錯 δ：i_q 少了 '+num6(loss)+' %，還多出假的 i_d = '+num6(r.id)+' A。</p>';}
-    h+='<p>向量長度 '+num6(r.mag)+' A 不變；為什麼：轉換只改座標，不改電流向量本身。</p>';
+    else if(Math.abs(r.trueId)<0.001*im){h+='<p><strong>開迴路判讀：真實 i<sub>d</sub> = 0，物理電流向量與轉矩都沒有因座標角錯而改變。</strong></p>';}
+    else if(r.trueId>0){h+='<p><strong>開迴路判讀：真實正 i<sub>d</sub> 在加強永磁磁場。</strong></p>';}
+    else{h+='<p><strong>開迴路判讀：真實負 i<sub>d</sub> 在削弱磁場，這是弱磁。</strong></p>';}
+    if(delta!==0){h+='<p>開迴路量測：控制器看到假 i<sub>d</sub> = '+num6(r.id)+' A，但真實轉矩仍由 '+num6(r.trueIq)+' A 的 i<sub>q</sub> 決定。閉迴路若把估測的 (i<sub>d</sub>, i<sub>q</sub>) 調到 (0, '+num6(im)+') A，真實 i<sub>q</sub> 才會因角度錯少 '+num6(loss)+' %。</p>';}
+    h+='<p>向量長度 '+num6(r.mag)+' A 不變；為什麼：開迴路的轉換只改座標，閉迴路控制器才會依錯誤投影改變物理電流向量。</p>';
     if(phi===0||phi===180){h+='<p>邊界：轉矩為 0，電流與磁場平行。</p>';}
     if(phi<0){h+='<p>邊界：負轉矩，代表再生煞車或反轉。</p>';}
     put('clarkepark-output',h);
@@ -375,7 +386,7 @@ function focvolt() {
   var ids=['fv-n','fv-iq','fv-id','fv-vdc'];
   var draw=function(){
     var n=val('fv-n'),iq=val('fv-iq'),id=val('fv-id'),vdc=val('fv-vdc'),wm=n*2*Math.PI/60,we=4*wm;
-    var emf=we*0.1,xq=we*0.002*iq,xd=we*0.002*id,vd=0.5*id-xq,vq=0.5*iq+we*(0.002*id+0.1);
+    var emf=we*0.1,xq=we*0.002*iq,vd=0.5*id-xq,vq=0.5*iq+we*(0.002*id+0.1);
     var vm=Math.sqrt(vd*vd+vq*vq),vmax=vdc/Math.sqrt(3),use=vm/vmax*100,tq=0.6*iq,pm=tq*wm;
     var pcu=0.75*(id*id+iq*iq),im=Math.sqrt(id*id+iq*iq),base=baseSpeed(id,iq,vdc),flux=0.002*id+0.1;
     var h=table('dq 電壓與弱磁',[
@@ -409,15 +420,16 @@ function svpwm() {
   var draw=function(){
     var vr=val('sv-vref'),a=val('sv-alpha'),vdc=val('sv-vdc'),fs=val('sv-fsw'),r=svTimes(vr,a,vdc,fs);
     var v1=SV_VEC[r.k-1],v2=SV_VEC[r.k%6],expect=vr*cosD(a);
+    var dutyText=function(x){return r.m<=1?num6(x):'不可實現（計算值 '+num6(x)+'）';};
     var h=table('SVPWM 作用時間',[
       ['上限 V_dc / √3',num6(r.vmax)+' V'],['調變指數 m',num6(r.m)],['扇區',int0(r.k)+'（V_1 = '+v1+'、V_2 = '+v2+'）'],
       ['扇區內角 θ',num6(r.th)+'°'],['T_1',num6(r.t1)+' µs'],['T_2',num6(r.t2)+' µs'],['T_0',num6(r.t0)+' µs'],
-      ['d_a',num6(r.da)],['d_b',num6(r.db)],['d_c',num6(r.dc)],['v_a（驗證）',num6(r.va)+' V'],
+      ['d<sub>a</sub>',dutyText(r.da)],['d<sub>b</sub>',dutyText(r.db)],['d<sub>c</sub>',dutyText(r.dc)],['v<sub>a</sub>（驗證）',num6(r.va)+' V'],
       ['v_b（驗證）',num6(r.vb)+' V'],['v_c（驗證）',num6(r.vc)+' V'],['SVPWM 比 SPWM 多','15.470054 %']
     ]);
     h+='<p>本扇區的兩個向量與開關碼：'+v1+'、'+v2+'；扇區 '+int0(r.k)+'，θ = '+num6(r.th)+'°。</p>';
     h+='<p><strong>判讀：'+(r.m<=1?'線性區，T_0 = '+num6(r.t0)+' µs ≥ 0，工作週期可實現。':'過調變，T_0 = '+num6(r.t0)+' µs < 0，工作週期不可實現。')+'</strong></p>';
-    h+='<p>驗證：三相平均電壓 v_a = '+num6(r.va)+' V 等於 V_ref cos α = '+num6(expect)+' V，伏秒平衡成立。</p>';
+    h+='<p>驗證：三相平均電壓 v<sub>a</sub> = '+num6(r.va)+' V 等於 V<sub>ref</sub> cos α = '+num6(expect)+' V；'+(r.m<=1?'工作週期可實現，伏秒平衡成立。':'數學上仍平衡，但工作週期超出 0–1，實體開關無法實現。')+'</p>';
     h+='<p>為什麼：兩個相鄰基本向量的作用時間加權平均，正好重建參考向量。</p>';
     if(r.t0/2<1&&r.m<=1){h+='<p>邊界：半段零向量只剩 '+num6(r.t0/2)+' µs，已在線性區邊緣。</p>';}
     if(vr===0){h+='<p>邊界：零向量佔滿，三相都是 50 %，馬達看到 0 V。</p>';}
@@ -443,6 +455,7 @@ function encoder() {
     ]);
     h+='<p><strong>判讀：'+(low?'低於交叉速度，T 法誤差 '+num6(trel)+' % 比 M 法 '+num6(mrel)+' % 小。':'高於交叉速度，M 法誤差 '+num6(mrel)+' % 比 T 法 '+num6(trel)+' % 小。')+'</strong></p>';
     if(counts<1){h+='<p>邊界：取樣週期內平均不到 1 個脈衝，M 法會在 0 與 1 間交替。</p>';}
+    if(tedge>ts){h+='<p>邊界：T 法的新邊緣延遲 '+num6(tedge*1000)+' ms，已大於取樣週期 '+num6(tsm)+' ms；多數取樣拍不會有新速度值。</p>';}
     h+='<p>1 個計數的量化經速度迴路 K_p = 3.141593 變成 '+num6(chatter)+' N·m 的轉矩命令跳動。</p>';
     h+='<p>為什麼：M 法量固定時間裡有幾格，T 法量相鄰兩格隔多久。</p>';
     if(chatter>1){h+='<p>邊界：抖動超過 1 N·m，要加濾波或觀測器，代價是延遲。</p>';}
@@ -461,20 +474,22 @@ function regen() {
     var j=val('rg-j'),n1=val('rg-n1'),n2=val('rg-n2'),tm=val('rg-t'),cu=val('rg-c'),vdc=val('rg-vdc');
     var vt=val('rg-vtrip'),eta=val('rg-eta'),rb=val('rg-rb'),w1=n1*2*Math.PI/60,w2=n2*2*Math.PI/60;
     var ek=0.5*j*(w1*w1-w2*w2),pavg=ek/tm,tb=j*Math.abs(w1-w2)/tm,eb=eta*ek,wh=eb/3600;
-    var ppeak=eta*tb*Math.max(w1,w2),c=cu/1e6,ecap=vt<=vdc?0:0.5*c*(vt*vt-vdc*vdc);
-    var cap=eb>0?ecap/eb*100:null,vfree=eb>0?Math.sqrt(vdc*vdc+2*eb/c):vdc,ttrip=ppeak>0?ecap/ppeak:null,pr=vt*vt/rb;
+    var ppeak=ek>0?eta*tb*Math.max(w1,w2):null,c=cu/1e6,ecap=vt<=vdc?0:0.5*c*(vt*vt-vdc*vdc);
+    var cap=eb>0?ecap/eb*100:null,vfree=eb>0?Math.sqrt(vdc*vdc+2*eb/c):null,ttrip=ppeak>0?ecap/ppeak:null,pr=vt*vt/rb;
     var h=table('再生能量',[
       ['ω_1',num6(w1)+' rad/s'],['動能',num6(ek)+' J'],['平均再生功率',num6(pavg)+' W'],['煞車轉矩',num6(tb)+' N·m'],
-      ['回直流鏈的能量',num6(eb)+' J（'+num6(wh)+' Wh）'],['峰值再生功率',num6(ppeak)+' W'],
+      ['回直流鏈的能量',ek>0?num6(eb)+' J（'+num6(wh)+' Wh）':'不適用'],['峰值再生功率',ppeak===null?'不適用':num6(ppeak)+' W'],
       ['電容能吸',num6(ecap)+' J（'+(cap===null?'不適用':num6(cap)+' %')+'）'],
-      ['到跳脫的時間',ttrip===null?'不適用':num6(ttrip*1000)+' ms'],['沒有斬波器的終電壓',num6(vfree)+' V'],
-      ['電阻在跳脫電壓的功率',num6(pr)+' W']
+      ['到跳脫的時間',ttrip===null?'不適用':num6(ttrip*1000)+' ms'],['沒有斬波器的終電壓',vfree===null?'不適用':num6(vfree)+' V'],
+      ['電阻在跳脫電壓的功率',ek>0?num6(pr)+' W':'不適用']
     ]);
     h+='<p><strong>判讀：'+(ek>0?'減速，'+num6(ek)+' J 動能有 '+num6(eb)+' J 回到直流鏈。':ek<0?'加速，能量從直流鏈流向馬達，這一段不是再生。':'等速，沒有能量交換。')+'</strong></p>';
     if(ek>0&&eb>ecap){h+='<p>電容只吃得下 '+num6(cap)+' %，'+num6(ttrip*1000)+' ms 後到跳脫值；沒有斬波器時會衝到 '+num6(vfree)+' V。</p>';}
     else if(eb>0){h+='<p>電容吃得下全部，不會到跳脫值。</p>';}
-    h+='<p>'+(pr>=ppeak?'電阻 '+num6(pr)+' W ≥ 峰值 '+num6(ppeak)+' W，斬波器撐得住。':'電阻功率不足，需要更小的 R_b 或更長煞車時間。')+'</p>';
-    h+='<p>若直流鏈是電池，這 '+num6(wh)+' Wh 可以真正回收。為什麼：電容只能接住電壓上升那一小段能量。</p>';
+    if(ek>0){
+      h+='<p>'+(pr>=ppeak?'電阻 '+num6(pr)+' W ≥ 峰值 '+num6(ppeak)+' W，斬波器撐得住。':'電阻功率不足，需要更小的 R<sub>b</sub> 或更長煞車時間。')+'</p>';
+      h+='<p>若直流鏈是電池，這 '+num6(wh)+' Wh 可以真正回收。為什麼：電容只能接住電壓上升那一小段能量。</p>';
+    }else{h+='<p>再生峰值、跳脫時間、電阻承受與電池回收在這段加速／等速過程中不適用。</p>';}
     if(n1===n2){h+='<p>邊界：起終速度相同，沒有動能交換。</p>';}
     if(vt<=vdc){h+='<p>邊界：跳脫電壓不高於直流鏈電壓，斬波器會一直導通。</p>';}
     put('regen-output',h);
@@ -499,7 +514,7 @@ function dictionary() {
 function selfcheck() {
   if (!$('quiz-reset')) { return; }
   var answered={},correct={};
-  var progress=function(){var a=0,c=0,k;for(k in answered){if(answered.hasOwnProperty(k)&&answered[k]){a+=1;if(correct[k]){c+=1;}}}put('quiz-progress','已作答 '+int0(a)+' / 36 題，答對 '+int0(c)+' 題');};
+  var progress=function(){var a=0,k;for(k in answered){if(answered.hasOwnProperty(k)&&answered[k]){a+=1;}}put('quiz-progress','已作答 '+int0(a)+' / 36 題');};
   var link=function(id){var ch=id.slice(1,3),x=QUIZ_CH[ch];return x?'<p>回去看：<a href="'+x[0]+'">'+x[1]+'</a></p>':'';};
   var check=function(q){return function(){
     var n=$(q.id),raw=n?String(n.value):'';

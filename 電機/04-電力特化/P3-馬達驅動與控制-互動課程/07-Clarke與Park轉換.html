@@ -4,7 +4,7 @@
 <main>
 <p class="eyebrow">07・轉動座標，讓三相交流成為兩個固定數</p>
 <h1>Clarke 與 Park 轉換：把三相正弦改寫成可直接控制的 dq 直流量</h1>
-<p class="lead">Clarke 變換（Clarke transform）與 Park 變換（Park transform）把 10 A 三相電流由 −5.000000、10.000000、−5.000000 A 改寫成固定的 0.000000、10.000000 A；比例積分（proportional-integral, PI）控制器因此能追固定命令。若控制器的角度錯 45°，轉矩會由 6.000000 N·m 掉到 4.242641 N·m，少 29.289322 %。</p>
+<p class="lead">Clarke 變換（Clarke transform）與 Park 變換（Park transform）把 10 A 三相電流改寫成固定的 dq 分量，比例積分（proportional-integral, PI）控制器因此能追固定命令。開迴路量測時，角度錯只會讓控制器看到錯誤投影；閉迴路若再把這些投影調到命令，45° 錯角才會使真實轉矩少 29.289322 %。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="06-感應機Vf純量控制.html">06 感應機 V/f 純量控制</a>的旋轉磁場，以及<a href="00-驅動器世界觀與轉矩夾角.html">00 驅動器世界觀與轉矩夾角</a>的 γ。<strong>前置：</strong>見〈變壓器與三相〉<a href="../../02-電機核心/電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>，先知道平衡三相彼此相隔 120°。</p>
 
 <h2>痛點：三支電流一直變，PI 到底該追哪一個數</h2>
@@ -21,8 +21,8 @@
 <p><strong>（a）三相只有兩個自由度。</strong>平衡時 i<sub>a</sub> + i<sub>b</sub> + i<sub>c</sub> = 0，知道任兩相就能推出第三相。振幅不變式 Clarke 定義 i<sub>α</sub> = (2/3) × (i<sub>a</sub> − i<sub>b</sub> / 2 − i<sub>c</sub> / 2)，i<sub>β</sub> = (i<sub>b</sub> − i<sub>c</sub>) / √3，單位均為 A。</p>
 <p><strong>（b）αβ 是一支旋轉向量。</strong>令 i<sub>a</sub> = I<sub>m</sub> × cos(θ + φ)，i<sub>b</sub> = I<sub>m</sub> × cos(θ + φ − 120°)，i<sub>c</sub> = I<sub>m</sub> × cos(θ + φ − 240°)。代入後得 i<sub>α</sub> = I<sub>m</sub> × cos(θ + φ)，i<sub>β</sub> = I<sub>m</sub> × sin(θ + φ)，所以向量長度始終為 I<sub>m</sub>。</p>
 <p><strong>（c）Park 消掉 θ。</strong>控制器使用 θ̂ = θ + δ，並算 i<sub>d</sub> = i<sub>α</sub> × cos θ̂ + i<sub>β</sub> × sin θ̂、i<sub>q</sub> = −i<sub>α</sub> × sin θ̂ + i<sub>β</sub> × cos θ̂。化簡為 i<sub>d</sub> = I<sub>m</sub> × cos(φ − δ)、i<sub>q</sub> = I<sub>m</sub> × sin(φ − δ)；θ 完全消失，交流因此變成直流。</p>
-<p><strong>（d）角度錯的代價。</strong>表面式永磁同步馬達（permanent-magnet synchronous motor, PMSM）的 T = 1.5 × p × ψ<sub>f</sub> × i<sub>q</sub>。本章 p = 4、ψ<sub>f</sub> = 0.1 Wb，所以 T = 0.6 × i<sub>q</sub>；φ = 90° 時，角度誤差 δ 使轉矩比例成 cos δ，損失為 (1 − cos δ) × 100 %。本課用的是線性教學模型，真實驅動器不完全如此；假設三相平衡，且不計感測偏移與諧波。</p>
-<p><strong>角度之間的角色要分開。</strong>θ 描述轉子當下轉到哪裡，φ 描述電流向量相對 d 軸領先多少，δ 則描述控制器使用的 θ̂ 與真 θ 相差多少。只改 θ，三相數值會依序輪替，但 dq 不變；改 φ，dq 的分配真的改變；改 δ，物理電流向量沒變，卻被控制器投影到錯誤座標。這三種操作表面上都在改角度，工程後果完全不同。</p>
+<p><strong>（d）角度錯的代價。</strong>表面式永磁同步馬達（permanent-magnet synchronous motor, PMSM）的真實轉矩 T = 1.5 × p × ψ<sub>f</sub> × i<sub>q,true</sub>。開迴路時，只改變估測角度 θ̂ 不會改變物理電流，轉矩仍由真實 i<sub>q</sub> 決定。閉迴路若把估測座標的 (i<sub>d</sub>, i<sub>q</sub>) 調到 (0, I<sub>m</sub>)，角度誤差 δ 會使真實 i<sub>q</sub> = I<sub>m</sub> × cos δ，並出現真實 i<sub>d</sub> = −I<sub>m</sub> × sin δ；轉矩損失才是 (1 − cos δ) × 100 %。</p>
+<p><strong>角度之間的角色要分開。</strong>θ 描述轉子當下轉到哪裡，φ 描述開迴路中物理電流向量相對 d 軸領先多少，δ 則描述控制器使用的 θ̂ 與真 θ 相差多少。自由實驗同時列出兩個情境：「開迴路量測」保持物理向量不變，比較真實分量與控制器看到的分量；「閉迴路調到命令後」則顯示錯誤座標如何使真實電流向量偏轉。</p>
 <p><strong>為何 PI 因此變簡單。</strong>abc 中的命令每個電氣週期都跨過正、負峰值，誤差也不停改變；dq 中的穩態命令是固定的 i<sub>d</sub>、i<sub>q</sub>，積分項才可用固定方向消除穩態誤差。當轉速改變，只要 θ̂ 仍緊跟 θ，這兩個目標不必跟著提高振盪頻率。</p>
 <p><strong>轉換保留的是同一個物理狀態。</strong>abc、αβ 與 dq 不是三套不同電流，而是同一向量在不同基底的座標。只要轉換係數與角度定義一致，就能由 dq 反轉回 αβ，再回到三相命令。這也解釋向量長度不隨 θ 改變：旋轉座標只改投影方向，不憑空增加能量。</p>
 
@@ -40,11 +40,11 @@
 <tr><td>轉矩</td><td>1.5 × 4 × 0.1 × 10</td><td><strong>6.000000 N·m</strong></td></tr>
 </tbody></table>
 <p><strong>量級對照。</strong>θ 從 0° 拉到 90°，i<sub>a</sub> 由 0 變成 −10 A，i<sub>β</sub> 由 10 變成 0 A，但 i<sub>d</sub>、i<sub>q</sub> 仍是 0、10 A。若 PWM 中斷為 20 kHz，每 50 µs 都要用新角度完成一次轉換，否則 δ 會隨速度累積。</p>
-<p><strong>邊界對照。</strong>δ = 10° 時 i<sub>d</sub> = 1.736482 A、i<sub>q</sub> = 9.848078 A，轉矩少 1.519225 %；δ = 45° 時兩者都是 7.071068 A，轉矩少 29.289322 %。φ = 0° 時電流全落在 d 軸，轉矩為 0；φ = −90° 時 i<sub>q</sub> = −10 A，轉矩為 −6 N·m。</p>
+<p><strong>邊界對照。</strong>開迴路中 φ = 90°、δ = 10° 時，控制器看到 i<sub>d</sub> = 1.736482 A、i<sub>q</sub> = 9.848078 A，但真實轉矩仍是 6.000000 N·m。閉迴路把估測值調到 (0, 10) A 後，δ = 45° 時真實 i<sub>d</sub> = −7.071068 A、i<sub>q</sub> = 7.071068 A，轉矩才少 29.289322 %。φ = 0° 時電流全落在 d 軸，轉矩為 0。</p>
 <p>再把 θ 拉到 200°，三相成為 3.420201、−9.848078、6.427876 A，dq 仍是 0、10 A；把 I<sub>m</sub> 拉到 20 A，所有電流與轉矩一起加倍，座標轉換本身不會放大或縮小向量。這兩個檢查分別驗證旋轉不變性與線性。</p>
 
 <section class="workspace"><h2>自由實驗：拉轉子角，看 dq 是否真的不動</h2>
-<p>固定表面式馬達 p = 4、ψ<sub>f</sub> = 0.1 Wb。改變電流振幅、真角度、電流向量角與控制器角度誤差，觀察 abc、αβ、dq、向量長度與轉矩。</p>
+<p>固定表面式馬達 p = 4、ψ<sub>f</sub> = 0.1 Wb。改變電流振幅、真角度、電流向量角與控制器角度誤差；輸出上半先顯示開迴路的「真實值／控制器看到的值」，下半再顯示閉迴路調到命令後的真實分量與轉矩。</p>
 <div class="controls">
 <label for="cp-im">電流振幅 I_m（A）<input id="cp-im" type="range" min="0" max="20" step="0.5" value="10"></label>
 <label for="cp-theta">轉子電氣角 θ（°）——拉它看 dq 不動<input id="cp-theta" type="range" min="0" max="360" step="5" value="30"></label>

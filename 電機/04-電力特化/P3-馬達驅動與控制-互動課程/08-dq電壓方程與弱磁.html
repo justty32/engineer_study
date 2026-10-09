@@ -15,7 +15,7 @@
 <p>可以暫時把 173.205081 V 想成固定大小的行李箱，電阻壓降、交叉耦合與反電動勢都要塞進去；比喻到此為止，真實機制是 dq 電壓向量必須落在 SVPWM 線性區的圓內，圓半徑由 V<sub>dc</sub> / √3 決定。</p>
 <p>沿實體因果走一次。直流鏈相對負端供電，逆變器切換導通路徑，使三相電流流經定子繞組並建立磁場；i<sub>q</sub> 與永磁磁場作用產生轉矩，旋轉磁場同時形成反電動勢。電流感測器把三相值回授，控制器轉成 dq 後，PI 輸出 v<sub>d</sub>、v<sub>q</sub>，再受電壓極限夾住。示波輸出可看到 |v| 是否貼住上限，直流電壓表則確認 V<sub>dc</sub>。</p>
 <p>去耦（decoupling）以前饋方式抵銷 ±ω<sub>e</sub> L i 的交叉項；弱磁（field weakening）則用負 i<sub>d</sub> 降低 L<sub>d</sub> i<sub>d</sub> + ψ<sub>f</sub>。兩者都修改 dq 電壓需求，但前者為了讓兩軸互不干擾，後者為了在高速留出電壓。</p>
-<p class="note">來源：P3 上 §2.3–2.5、§5.2；P3 下 §7、§9.2、§9.3。</p>
+<p class="note">來源：P3 上 §2.3–2.5、§5.2；P3 下 §7、§9.3。</p>
 
 <h2>推導：旋轉座標多出的耦合項，如何決定基速</h2>
 <p><strong>（a）穩態方程。</strong>把 v = R i + L di/dt + E 寫進旋轉座標，座標本身旋轉會多出 ω<sub>e</sub> 乘磁鏈的項。穩態令電流導數為 0，得到 v<sub>d</sub> = R × i<sub>d</sub> − ω<sub>e</sub> × L<sub>q</sub> × i<sub>q</sub>，v<sub>q</sub> = R × i<sub>q</sub> + ω<sub>e</sub> × (L<sub>d</sub> × i<sub>d</sub> + ψ<sub>f</sub>)，電壓單位 V。</p>
