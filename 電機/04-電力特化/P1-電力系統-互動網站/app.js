@@ -504,7 +504,7 @@
   function setState(doc, id, state) {
     var element = safeGet(doc, id);
     if (!element) return;
-    var colors = { ok: "#26734d", warn: "#9a6700", error: "#a33a3a", neutral: "#56616b" };
+    var colors = { ok: "var(--green)", warn: "var(--amber)", error: "var(--red)", neutral: "var(--muted)" };
     if (element.dataset) element.dataset.state = state;
     if (element.classList && element.classList.contains("status-box")) {
       ["status-ok", "status-warn", "status-error"].forEach(function (name) {

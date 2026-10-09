@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light dark;
   --ink:#172128;
   --muted:#53636b;
   --paper:#eef3f4;
@@ -6,7 +7,15 @@
   --line:#bfced2;
   --accent:#185f78;
   --soft:#dff0f4;
+  --ok:#236448;
   --warn:#8b3a22;
+  --link:#0b5973;
+  --focus:#ba6816;
+  --on-accent:#fff;
+  --topbar-bg:rgb(238 243 244/.96);
+  --warning-bg:#fbe7df;
+  --shadow:rgb(23 33 40/.07);
+  --code-bg:#e8edef;
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   color:var(--ink);
   background:var(--paper);
@@ -19,7 +28,7 @@ body {
   margin:0
 }
 a {
-  color:#0b5973;
+  color:var(--link);
   text-underline-offset:.18em
 }
 button,input,select {
@@ -29,7 +38,7 @@ button,input[type=number],input[type=search],input[type=range],select {
   min-height:44px
 }
 :focus-visible {
-  outline:3px solid #ba6816;
+  outline:3px solid var(--focus);
   outline-offset:3px
 }
 .topbar {
@@ -41,7 +50,7 @@ button,input[type=number],input[type=search],input[type=range],select {
   overflow-x:auto;
   padding:.6rem max(1rem,calc((100% - 1050px)/2));
   border-bottom:1px solid var(--line);
-  background:rgb(238 243 244/.96)
+  background:var(--topbar-bg)
 }
 .topbar a {
   flex:0 0 auto;
@@ -51,7 +60,7 @@ button,input[type=number],input[type=search],input[type=range],select {
   font-weight:800
 }
 .topbar a[aria-current=page] {
-  color:#fff;
+  color:var(--on-accent);
   background:var(--accent)
 }
 main {
@@ -88,7 +97,7 @@ h2 {
 }
 .warning {
   border-color:var(--warn);
-  background:#fbe7df
+  background:var(--warning-bg)
 }
 .flow {
   display:flex;
@@ -134,7 +143,7 @@ h2 {
 .workspace {
   margin:1.5rem 0;
   padding:clamp(1rem,4vw,2rem);
-  box-shadow:0 7px 20px rgb(23 33 40/.07)
+  box-shadow:0 7px 20px var(--shadow)
 }
 .controls {
   display:grid;
@@ -178,7 +187,7 @@ pre {
   padding:1rem;
   overflow:auto;
   border:1px solid var(--line);
-  background:#e8edef
+  background:var(--code-bg)
 }
 details {
   margin:.7rem 0;
@@ -219,8 +228,31 @@ summary {
   width:100%;
   padding:.55rem
 }
+.course-hero,.course-section {
+  margin-bottom:2.25rem
+}
+.course-section>h2 {
+  margin-bottom:.85rem
+}
+.method-list,.support-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:1rem
+}
+.dictionary-entry {
+  padding:1.1rem;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--panel)
+}
+.dictionary-entry h2 {
+  margin-top:0
+}
+.site-footer {
+  margin-top:3rem
+}
 @media(max-width:720px) {
-  .grid,.chapter-list,.term-list,.controls {
+  .grid,.chapter-list,.term-list,.controls,.method-list,.support-grid {
     grid-template-columns:1fr
   }
   .pager {
@@ -257,4 +289,24 @@ summary {
 }
 .main-site-link:hover {
    text-decoration: underline;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink:#edf4f5;
+    --muted:#b7c7cc;
+    --paper:#11181b;
+    --panel:#182227;
+    --line:#52636a;
+    --accent:#71cce8;
+    --soft:#18303a;
+    --ok:#75d6a7;
+    --warn:#ffad95;
+    --link:#7dd3ee;
+    --focus:#ffb760;
+    --on-accent:#172128;
+    --topbar-bg:rgb(17 24 27/.96);
+    --warning-bg:#3b211c;
+    --shadow:rgb(0 0 0/.3);
+    --code-bg:#202b30
+  }
 }
