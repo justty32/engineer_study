@@ -12,7 +12,7 @@
 ## 最新進度
 
 - [interactive-study-site] 第二批三課（電力電子／馬達驅動與控制／數位通訊）已上線；第三批候選 DSP／IC1／A2 待派 → 立案前先看 [workflows/interactive-study-site/README.md](workflows/interactive-study-site/README.md) 與 [decisions](workflows/decisions.md) 的譯名裁決。
-- [審稿] 2026-09-26 全站審稿：已存 01–46、48、49、51（＋IoT 兩份 part，已併入 20／46）；缺 47 論文速覽、50 wf 工作流入口、52 建站工作流 → 只派 opus、同時 ≤3，報告存 [reviews/2026-09-26/](reviews/2026-09-26/README.md)。
+- [審稿] 2026-09-26 全站審稿：缺的 47／50／52 已派 codex astra（gpt-6-astra）補審；**修整進行中**（2026-10-09，限電機 01–05、23–35＋專題 20–22、38–47），7 隊 opus 依 [fixes/HANDOFF](reviews/2026-09-26/fixes/HANDOFF.md) 修，處置紀錄與續行點在 [fixes/](reviews/2026-09-26/fixes/) → 收齊後調度者 push 觸發 Pages 佈署。
 
 ## 各工作流 session-log
 
