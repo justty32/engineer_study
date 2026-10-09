@@ -1,5 +1,5 @@
 # T1 續行點
 - 負責：01-電機核心-md-A、02-電機核心-md-B（領地：電機/02-電機核心/*.md，不含互動課程目錄）
-- 開工前 wf-lint：broken=2 querycmd=3 residue={{=1 biglist=268
+- 開工前 wf-lint：broken=2 querycmd=3 殘留雙大括號=1 biglist=268
 - 01：完成（64/2/1），已驗錨點
 - 02：完成（71/2/2），已驗錨點；T1 全部完成
