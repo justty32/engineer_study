@@ -164,4 +164,21 @@ sensor@48 {
 - 作業系統（軟體本科）：行程 / 排程 / 記憶體 / 檔案系統理論基礎。
 - IoT 與邊緣運算（E5）：Linux 常是邊緣閘道 / AI 裝置的底座。
 
+## 碩士層級延伸（簡短）
+
+- **Linux 核心與驅動開發（Linux Kernel and Driver Development）**：深入排程、記憶體管理、中斷下半部與電源管理，學習如何把新硬體整合進既有子系統。
+- **即時 Linux 工程（Real-Time Linux Engineering）**：用追蹤與延遲量測找出尖峰來源，再透過核心隔離、中斷綁定與排程策略壓低最壞延遲。
+- **嵌入式虛擬化（Embedded Virtualization）**：以 hypervisor 隔離 Linux、RTOS 與安全領域，在整合硬體的同時保留時間與空間邊界。
+- **安全強化 Linux（Hardened Linux）**：從強制存取控制、唯讀且可驗證的根檔案系統，到最小化使用者空間攻擊面。
+- **產品級 Linux 建構與維護（Production Linux Builds and Maintenance）**：管理 Yocto layer、授權、軟體物料清單與長期漏洞修補，讓映像可重現且可持續更新。
+
+## 博士研究方向（列表）
+
+- 即時虛擬化（Real-Time Virtualization）：降低 hypervisor 與共用 I/O 對延遲上界的干擾
+- 核心可觀測性（Kernel Observability）：利用 eBPF 等機制在低額外負擔下分析線上系統
+- 資源分割（Resource Partitioning）：為 CPU、快取、記憶體頻寬與 I/O 建立可驗證的隔離
+- 機密邊緣運算（Confidential Edge Computing）：在可信執行環境中保護運算中的資料與模型
+- Linux 核心形式化驗證（Formal Verification of the Linux Kernel）：針對關鍵子系統建立可機械檢查的正確性證明
+- 自律邊緣裝置的無人維運（Autonomous Edge Operations）：在斷網與資源波動下自我診斷、更新與復原
+
 下一科：[IoT 與邊緣運算 →](E5-IoT與邊緣運算.md)

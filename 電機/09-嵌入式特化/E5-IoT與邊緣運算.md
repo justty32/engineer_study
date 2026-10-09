@@ -148,6 +148,25 @@ IoT 是大型攻擊面（Mirai 殭屍網路即由弱密碼 IoT 組成）。
 - **可持續 IoT**：免電池、能量採集、低碳。
 - **標準收斂**：Matter、統一資安法規。
 
+## 碩士層級延伸（簡短）
+
+宏觀技術演進見[第 10 章　趨勢](#第-10-章-趨勢)；本節改從分析與設計方法延伸。
+
+- **邊緣系統架構（Edge Systems Architecture）**：以延遲、頻寬、能耗與可用性為約束，決定功能應放在端、邊或雲。
+- **分散式與聯邦學習（Distributed and Federated Learning）**：在資料不集中的條件下協同訓練，需處理非獨立同分布資料、通訊成本與隱私洩漏。
+- **IoT 語意互通（Semantic Interoperability for IoT）**：用共通資料模型與本體論表達裝置能力，讓不同廠牌與垂直領域能正確交換意義。
+- **大規模裝置管理（Large-Scale Device Fleet Management）**：研究分批更新、狀態一致性、遠端診斷與分階段回滾，限制單一錯誤擴散成全群事故。
+- **隱私保護邊緣分析（Privacy-Preserving Edge Analytics）**：結合差分隱私、安全聚合與可信執行環境，降低原始資料離開現場的需求。
+
+## 博士研究方向（列表）
+
+- 聯邦邊緣學習（Federated Edge Learning）：在不穩定連線與異質裝置上收斂全域模型
+- 切割推論（Split Inference）：動態選擇神經網路在端與邊之間的切分點
+- 無電池運算（Batteryless Computing）：在間歇能量供應下保留程式進度與資料正確性
+- 邊緣服務編排（Edge Service Orchestration）：依延遲、負載與網路狀態移動服務
+- 自律 IoT 資安（Autonomous IoT Security）：在裝置群中即時偵測、隔離並修復攻擊影響
+- 數位分身可信同步（Trustworthy Digital-Twin Synchronization）：量化實體狀態與雲端模型間的不確定性與時效性
+
 ---
 
 ## 第九階段　嵌入式特化　完成

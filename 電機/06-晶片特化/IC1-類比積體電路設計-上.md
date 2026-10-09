@@ -43,6 +43,11 @@
 
 EDA 工具：Cadence Virtuoso、Synopsys Custom Compiler、SPECTRE / FineSim。
 
+**例：從規格到佈局後模擬**
+- 題目：某放大器的 schematic simulation 已通過，能否直接下線（tape-out）？
+- 步驟：依設計流程檢查，尚須做版圖、DRC / LVS、寄生抽取、post-layout simulation 與 PVT / Monte Carlo 驗證。
+- 答案：不能；schematic 通過只是佈局前模擬節點，還未納入版圖寄生與製程變異。
+
 ## 第 2 章　MOSFET 模型回顧（從電子學深入）
 
 ### 2.1 飽和區 $I_D$（強反轉 / Strong Inversion）
@@ -73,9 +78,13 @@ $$I_D=I_0\,e^{V_{GS}/(nV_T)}\,(1-e^{-V_{DS}/V_T})$$
 
 ### 2.5 製程變異與失配（Mismatch）
 - **Pelgrom 失配定律**：$\sigma(\Delta V_{th})=\dfrac{A_{V_{th}}}{\sqrt{WL}}$。
-- 小算例：若 $A_{V_{th}}=3\ \mathrm{mV\cdot \mu m}$、$WL=10\ \mathrm{\mu m^2}$，則 $\sigma(\Delta V_{th})=3/\sqrt{10}\approx0.95\ \mathrm{mV}$，約為 $1\ \mathrm{mV}$。
 - 設計上「要匹配的元件」要做大 + 緊鄰版圖 + interdigitated / common-centroid。
 - 統計分析：Monte Carlo + Corner（FF / SS / TT 等）。
+
+**例：MOSFET 跨導與本徵增益**
+- 題目：強反轉 MOSFET 的 $I_D=100\ \mathrm{\mu A}$、$V_{OV}=0.2\ \mathrm{V}$、$\lambda=0.1\ \mathrm{V}^{-1}$，求 $g_m$、$r_o$ 與 $g_mr_o$。
+- 步驟：用 $g_m=2I_D/V_{OV}$ 與 $r_o=1/(\lambda I_D)$，得 $g_m=1\ \mathrm{mS}$、$r_o=100\ \mathrm{k\Omega}$。
+- 答案：本徵增益 $g_mr_o=100\ \mathrm{V/V}$，約 $40\ \mathrm{dB}$。另依 Pelgrom 定律，$A_{V_{th}}=3\ \mathrm{mV\cdot \mu m}$、$WL=10\ \mathrm{\mu m^2}$ 時，$\sigma(\Delta V_{th})\approx0.95\ \mathrm{mV}$。
 
 ## 第 3 章　偏壓電路
 
@@ -106,6 +115,11 @@ $$I_\text{out}\approx I_\text{ref}\cdot\dfrac{(W/L)_\text{out}}{(W/L)_\text{ref}
 - **CTAT**：與絕對溫度成反比。
 - 兩者組合 → BGR、溫度感測器、控制邏輯。
 
+**例：電流鏡的通道長度調變誤差**
+- 題目：兩管的 $\lambda=0.1\ \mathrm{V}^{-1}$，$V_{DS}$ 相差 $0.5\ \mathrm{V}$，估算鏡像電流誤差。
+- 步驟：一階近似為 $\Delta I/I\approx\lambda\Delta V_{DS}=0.1\times0.5=0.05$。
+- 答案：電流誤差約 $5\%$；若規格更嚴，可用疊接電流鏡提高輸出阻抗。
+
 ## 第 4 章　單級放大器（共源 / 共閘 / 共汲）
 
 ### 4.1 共源（CS, Common-Source）—— 主力
@@ -123,6 +137,11 @@ $$I_\text{out}\approx I_\text{ref}\cdot\dfrac{(W/L)_\text{out}}{(W/L)_\text{ref}
 在源加電阻 $R_S$：
 - 提高線性度、降低增益、提高輸出阻抗。
 - 是 LNA 線性化常用技巧。
+
+**例：共源放大器增益**
+- 題目：若 $g_m=2\ \mathrm{mS}$，NMOS 與 PMOS 的 $r_o$ 均為 $50\ \mathrm{k\Omega}$，求電流源負載的小訊號增益。
+- 步驟：$r_{on}\parallel r_{op}=25\ \mathrm{k\Omega}$，代入 $A_v=-g_m(r_{on}\parallel r_{op})$。
+- 答案：$A_v=-50\ \mathrm{V/V}$，負號表示輸出反相。
 
 ## 第 5 章　差動對（Diff-Pair）—— 類比 IC 的心臟
 
@@ -152,6 +171,11 @@ $$I_{d1}-I_{d2}=\dfrac{\mu_n C_{ox}(W/L)}{2}V_d\sqrt{\dfrac{4I_\text{bias}}{\mu_
 - 大 W、L 改善；版圖 common-centroid。
 - 進階：自動歸零（auto-zero）、chopper、digital trimming。
 
+**例：差動增益與 CMRR**
+- 題目：差動對每支 $g_m=1\ \mathrm{mS}$，$r_o=R_L=20\ \mathrm{k\Omega}$，尾電流源 $r_{o,\text{tail}}=1\ \mathrm{M\Omega}$，求 $A_d$ 與 CMRR。
+- 步驟：$A_d=g_m(r_o\parallel R_L)=10$；$\mathrm{CMRR}\approx2g_mr_{o,\text{tail}}=2000$。
+- 答案：$A_d=10\ \mathrm{V/V}$，CMRR 約 $2000$，即 $66.0\ \mathrm{dB}$。
+
 ## 第 6 章　雜訊（Noise）
 
 ### 6.1 三種主要源
@@ -173,6 +197,11 @@ $$\overline{v_{n,\text{in}}^2}=\dfrac{4kT\gamma}{g_m}+\dfrac{K_f}{WL C_{ox}f}$$
 - **Chopper**：用方波調變把訊號搬到 1/f 雜訊之上的頻段放大，再解調回來。
 - **Auto-Zero**：周期性「記住」失調 + 雜訊 → 下半週期減掉。
 兩者都是低頻精密類比的必備技巧（生醫前端、感測讀出）。
+
+**例：MOSFET 等效輸入熱雜訊**
+- 題目：300 K、$\gamma=2/3$、$g_m=1\ \mathrm{mS}$ 時，估算輸入熱雜訊電壓密度。
+- 步驟：以 $e_n=\sqrt{4kT\gamma/g_m}$ 代入 $k=1.380649\times10^{-23}\ \mathrm{J/K}$。
+- 答案：$e_n\approx3.32\ \mathrm{nV}/\sqrt{\mathrm{Hz}}$；提高 $g_m$ 可降低此熱雜訊。
 
 下一部進入多級放大器、迴授、頻率補償，以及完整類比模組（運算放大器、轉換器前端等）。
 

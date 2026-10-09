@@ -33,6 +33,11 @@
   - **p 型**：III 族（B、Ga、In），多電洞。
 - 載子運動：漂移（drift, $J=\sigma E$）+ 擴散（diffusion, $J=qD dn/dx$）。
 
+**例：n 型矽的導電率**
+- 題目：忽略電洞貢獻，若 $n=10^{16}\ \mathrm{cm^{-3}}$、$\mu_n=1350\ \mathrm{cm^2/(V\,s)}$，求 $\sigma=qn\mu_n$。
+- 步驟：代入 $q=1.602\times10^{-19}\ \mathrm{C}$，並保留 cm 單位系統。
+- 答案：$\sigma\approx2.16\ \mathrm{S/cm}$，對應電阻率約 $0.462\ \Omega\cdot\mathrm{cm}$。
+
 ## 第 2 章　PN 接面（複習[電子學上](../02-電機核心/07-電子學-上.md)）
 
 - 平衡：空乏區、內建電位通常約 $0.6$ 至 $0.9$ V（Si，視摻雜濃度而定）。這是熱平衡時空乏區內的內部電勢差，不等於工程近似中特定電流下的「0.7 V 導通壓降」。
@@ -40,6 +45,11 @@
 - 反偏：飽和電流 + 崩潰（Zener / Avalanche）。
 - 動態：空乏電容 $C_j$ + 擴散電容 $C_d$。
 - 應用：二極體、Schottky、光二極體（PD）、太陽能電池、LED、雷射二極體。
+
+**例：理想 PN 二極體順向電流**
+- 題目：300 K 下取 $I_S=1\ \mathrm{pA}$、理想因子 $n=1$，在 $V_D=0.42\ \mathrm{V}$ 時估算電流。
+- 步驟：代入 $I=I_S(e^{V_D/V_T}-1)$ 與 $V_T=25.85\ \mathrm{mV}$。
+- 答案：$I\approx11.4\ \mathrm{\mu A}$；這是未納入串聯電阻與高注入效應的理想值。
 
 ## 第 3 章　MOSFET 元件物理（更深入）
 
@@ -73,6 +83,11 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 - **GAA（Gate-All-Around）/ Nanosheet**：閘極包四面。3 nm 起主流。
 - **CFET / 3D stacking**：N + P 垂直堆疊，下一代候選。
 
+**例：體偏壓對 MOSFET 臨界電壓的影響**
+- 題目：取 $V_{FB}=-0.2\ \mathrm{V}$、$\phi_F=0.35\ \mathrm{V}$、$N_A=10^{17}\ \mathrm{cm^{-3}}$、$C_{ox}=17.3\ \mathrm{mF/m^2}$，比較 $V_{SB}=0$ 與 $0.5\ \mathrm{V}$ 的 $V_{th}$。
+- 步驟：將 $N_A$ 轉為 $10^{23}\ \mathrm{m^{-3}}$，代入本章 $V_{th}$ 公式。
+- 答案：$V_{th}$ 約由 $0.588\ \mathrm{V}$ 升至 $0.615\ \mathrm{V}$，增加 $27.3\ \mathrm{mV}$，顯示體效應會抬高臨界電壓。
+
 ## 第 4 章　雙極性電晶體（BJT）
 
 ### 4.1 結構與運作
@@ -83,6 +98,11 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 - 主流 CMOS 製程中仍有 PNP / NPN 寄生 BJT（用於 BGR、ESD）。
 - BiCMOS 製程：高速類比 / RF 結合 BJT 的低雜訊與高 $g_m$。
 - SiGe HBT：射頻、毫米波應用（5G、衛星）。
+
+**例：BJT 的跨導**
+- 題目：300 K 下 BJT 的 $I_C=1\ \mathrm{mA}$，以 $g_m=I_C/V_T$ 估算跨導。
+- 步驟：代入 $V_T=25.85\ \mathrm{mV}$。
+- 答案：$g_m\approx38.7\ \mathrm{mS}$；在同電流下，此高跨導是 BJT 適合低雜訊類比前端的原因之一。
 
 ## 第 5 章　光電與感測元件
 
@@ -107,6 +127,11 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 ### 5.5 太陽能電池
 - 大面積 PN（多晶矽、單晶矽、薄膜、鈣鈦礦）。
 - 結構與整流二極體類似但反向使用（光 → 電）。
+
+**例：光二極體的光電流**
+- 題目：光二極體響應度為 $0.6\ \mathrm{A/W}$，入射光功率為 $50\ \mathrm{\mu W}$，求理想光電流。
+- 步驟：用 $I_{ph}=\mathcal{R}P_{opt}$。
+- 答案：$I_{ph}=30\ \mathrm{\mu A}$；讀出電路還要納入暗電流與散粒雜訊。
 
 ## 第 6 章　矽製程基本步驟
 
@@ -156,8 +181,12 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 ### 6.9 缺陷與良率
 - 顆粒、刮傷、晶格缺陷。
 - **良率公式（Murphy）**：$Y=\left(\dfrac{1-e^{-DA}}{DA}\right)^2$，$D$ 為缺陷密度、$A$ 為晶片面積。
-- 小算例：若 $D=0.1\ \mathrm{cm}^{-2}$，$A=1\ \mathrm{cm}^2$ 時 $Y\approx90.6\%$；$A=8\ \mathrm{cm}^2$ 時 $Y\approx47.4\%$。單顆晶片越大，良率下降越明顯，這也是採用 chiplet 的動機之一。
 - 大晶片良率更難 → chiplet 動機之一。
+
+**例：晶片面積對良率的影響**
+- 題目：缺陷密度 $D=0.1\ \mathrm{cm}^{-2}$，用 Murphy 模型比較 $A=1$ 與 $8\ \mathrm{cm^2}$ 的良率，並給出後者的 Poisson 模型結果。
+- 步驟：分別代入 $Y_M=[(1-e^{-DA})/(DA)]^2$；Poisson 模型用 $Y_P=e^{-DA}$。
+- 答案：Murphy 良率約為 $90.6\%$ 與 $47.4\%$；$8\ \mathrm{cm^2}$ 的 Poisson 良率約 $44.9\%$。單顆晶片越大，良率對缺陷越敏感。
 
 ## 第 7 章　可靠度（Reliability）
 
@@ -178,6 +207,11 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 - **FIT（Failure In Time）**：每 $10^9$ 小時失效次數。
 - 汽車 ASIL D 要求極低 FIT。
 
+**例：由 FIT 估算部署群體的年失效數**
+- 題目：某元件失效率為 100 FIT，部署 $10^6$ 顆且每顆全年運作，求一年預期失效數。
+- 步驟：100 FIT 代表每 $10^9$ 元件小時 100 次失效；總運作量為 $10^6\times8760$ 元件小時。
+- 答案：預期約 876 次/年。這是群體期望值，不表示單一元件會固定在某時失效。
+
 ## 第 8 章　封裝（Packaging）
 
 ### 8.1 傳統封裝
@@ -195,6 +229,11 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 - 高功耗 chiplet 散熱：金屬蓋 + TIM + 冷板 / 水冷。
 - CTE（熱膨脹係數）失配造成翹曲與裂縫。
 
+**例：封裝熱阻與接面溫升**
+- 題目：晶片功耗 $50\ \mathrm{W}$，接面至環境熱阻 $\theta_{JA}=0.4\ ^\circ\mathrm{C/W}$，求穩態溫升。
+- 步驟：$\Delta T=P\theta_{JA}=50\times0.4$。
+- 答案：$\Delta T=20\ ^\circ\mathrm{C}$；環境若為 $45\ ^\circ\mathrm{C}$，簡化估算的接面溫度為 $65\ ^\circ\mathrm{C}$。
+
 ## 第 9 章　PDK 與設計者的關聯
 
 代工廠（TSMC、Samsung、Intel Foundry、UMC、GF…）提供 PDK：
@@ -206,6 +245,11 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 
 設計者要熟讀 PDK 才能避免「合成模擬都過但流片不過」。
 
+**例：PVT 模擬組合數**
+- 題目：若 PDK 要求 5 個 process corners、3 種供電電壓與 4 個溫度點的全組合掃描，需要多少組模擬？
+- 步驟：將三個獨立維度的點數相乘：$5\times3\times4$。
+- 答案：共 60 組；若再有 6 種操作模式，總數會擴為 360 組。
+
 ## 第 10 章　趨勢
 
 - **GAA / nanosheet → CFET**：3D 整合電晶體本身。
@@ -215,11 +259,33 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 - **2D 材料**：MoS₂、WSe₂ 通道。
 - **量子點 / 自旋元件**：未來量子計算與感測。
 
+**例：幾何尺寸縮放的理想密度增益**
+- 題目：假設元件的橫向與縱向尺寸都縮為原來的 $0.7$，不考慮配線與設計規則開銷，面積密度理想增加多少？
+- 步驟：單元面積變為 $0.7^2=0.49$，密度與面積成反比。
+- 答案：理想密度增為 $1/0.49\approx2.04$ 倍；真實製程不會所有間距同比縮放。
+
 ## 與其他科目的銜接
 
 - 物理 / 化學基礎。
 - 類比 IC / 數位 IC：元件規則、模型。
 - 電子學：PN 接面、MOSFET、BJT 基礎。
 - 封裝 / 系統：與 PCB / 機構整合。
+
+## 碩士層級延伸（簡短）
+
+- **半導體元件物理（Semiconductor Device Physics）**：從 Poisson 方程、載子傳輸與能帶結構解釋元件 I–V 特性。
+- **積體電路製程整合（IC Process Integration）**：將微影、蝕刻、沉積、離子佈植與 CMP 組合成可製造流程。
+- **製程量測與統計管制（Process Metrology and Statistical Control）**：用線寬、膜厚、缺陷與關鍵參數分佈監控製程偏移。
+- **半導體可靠度（Semiconductor Reliability）**：以加速實驗、壽命模型與失效分析處理 TDDB、BTI、HCI 與 EM。
+- **先進封裝與異質整合（Advanced Packaging and Heterogeneous Integration）**：研究 chiplet、TSV、矽中介層與熱機應力。
+
+## 博士研究方向（列表）
+
+- 低溫 CMOS 元件（cryogenic CMOS devices）：建模低溫載子傳輸與量子控制電路的元件偏差
+- 寬能隙元件異質整合（wide-bandgap device integration）：將 GaN 或 SiC 與矽邏輯整合
+- 矽光子製程整合（silicon photonics process integration）：兼顧光波導、調變器與 CMOS 製程限制
+- 製程變異與緊緻模型（process variability and compact modeling）：把統計變異映射到電路可用的元件模型
+- 原子層級製程控制（atomic-scale process control）：處理 ALD、原子層蝕刻與界面反應
+- 先進封裝的多物理可靠度（multiphysics reliability of advanced packaging）：考慮熱、機械、電與材料老化耦合
 
 下一科：[晶片驗證與 EDA 工具 →](IC5-晶片驗證與EDA工具.md)

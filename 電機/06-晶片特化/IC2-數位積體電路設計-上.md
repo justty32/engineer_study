@@ -43,6 +43,11 @@ $$t_p\approx 0.69\,R_\text{eq}C_L$$
 ### 1.5 功耗
 數位 CMOS 功耗由動態切換、漏電與短路電流構成；定量公式與降功耗手段見第 6 章。
 
+**例：CMOS 反相器的傳播延遲**
+- 題目：反相器等效導通電阻 $R_\text{eq}=2\ \mathrm{k\Omega}$，負載電容 $C_L=20\ \mathrm{fF}$，估算 $t_p$。
+- 步驟：代入 $t_p\approx0.69R_\text{eq}C_L$。
+- 答案：$t_p\approx27.6\ \mathrm{ps}$；若負載電容加倍，此一階模型的延遲也加倍。
+
 ## 第 2 章　組合邏輯
 
 ### 2.1 靜態 CMOS（Static CMOS）
@@ -63,6 +68,11 @@ $$t_p\approx 0.69\,R_\text{eq}C_L$$
 - 用 MOSFET 當開關傳遞訊號。
 - 可做 MUX、XOR、加法器等緊湊結構。
 - 缺點：訊號電平退化（NMOS 傳「1」時掉 $V_{th}$，PMOS 傳「0」掉 $|V_{tp}|$）→ 用 Transmission Gate（N+P 並聯）解決。
+
+**例：實作四輸入 NAND**
+- 題目：用靜態 CMOS 實作四輸入 NAND，需多少顆 MOSFET，上拉與下拉如何連接？
+- 步驟：下拉網路要在四輸入全為 1 時導通，故串聯 4 顆 NMOS；上拉網路取對偶，並聯 4 顆 PMOS。
+- 答案：共 8 顆 MOSFET；高扇入的串聯 NMOS 會增加延遲，實務常拆成多級邏輯。
 
 ## 第 3 章　序向邏輯：正反器與時序
 
@@ -85,7 +95,6 @@ $$t_\text{cq,min}+t_\text{logic,min}\ge t_\text{hold}+t_\text{skew}$$
 - 正偏斜（捕捉時脈較晚到）放寬 setup，卻壓縮 hold 餘裕；負偏斜的作用相反。
 - 違反 setup → 資料還沒準備好 → 錯誤。
 - 違反 hold → 資料太快變動 → 錯誤。
-- 小算例：若 $t_\text{cq}=100\ \mathrm{ps}$、$t_\text{logic}=600\ \mathrm{ps}$、$t_\text{setup}=50\ \mathrm{ps}$，再保守加入 $50\ \mathrm{ps}$ 的不利時脈偏斜預算，則 $T_\text{clk,min}=800\ \mathrm{ps}$、$f_\text{max}=1.25\ \mathrm{GHz}$。
 
 ### 3.4 時脈偏斜（Clock Skew）與抖動（Jitter）
 - **Skew**：不同地方時脈到達時間不一致。源於走線長度、緩衝器差異。
@@ -96,6 +105,11 @@ $$t_\text{cq,min}+t_\text{logic,min}\ge t_\text{hold}+t_\text{skew}$$
 - 違反 setup / hold 時 FF 進入「不確定狀態」，需有限時間才會穩到 0 或 1。
 - 跨時脈域同步要用**多級同步器**（2 級以上 FF 串接）。
 - MTBF（mean time between failures）由時脈頻率 / 訊號頻率 / FF 解析時間決定。
+
+**例：含不利偏斜預算的最高時脈**
+- 題目：$t_\text{cq}=100\ \mathrm{ps}$、$t_\text{logic}=600\ \mathrm{ps}$、$t_\text{setup}=50\ \mathrm{ps}$，並保守加入 $50\ \mathrm{ps}$ 不利時脈偏斜預算，求最小週期。
+- 步驟：$T_\text{clk,min}=100+600+50+50=800\ \mathrm{ps}$，再取倒數求頻率。
+- 答案：$f_\text{max}=1/800\ \mathrm{ps}=1.25\ \mathrm{GHz}$。
 
 ## 第 4 章　時脈、重設、I/O
 
@@ -113,6 +127,11 @@ $$t_\text{cq,min}+t_\text{logic,min}\ge t_\text{hold}+t_\text{skew}$$
 - pad cell：含 ESD、level shifter、impedance control。
 - 高速介面：DDR、SerDes、PCIe、USB；要與 PLL、CDR 結合。
 
+**例：非同步重設解除的 recovery 餘裕**
+- 題目：reset 在下一個時脈邊緣前 $300\ \mathrm{ps}$ 解除，元件的 recovery 要求為 $80\ \mathrm{ps}$，求餘裕。
+- 步驟：將可用間隔減去 recovery 要求：$300-80\ \mathrm{ps}$。
+- 答案：recovery slack 為 $220\ \mathrm{ps}$，本次檢查通過；實際 sign-off 還要包含時脈不確定性。
+
 ## 第 5 章　高速數位電路
 
 ### 5.1 邏輯努力（Logical Effort）方法
@@ -122,7 +141,11 @@ $$t_\text{cq,min}+t_\text{logic,min}\ge t_\text{hold}+t_\text{skew}$$
 - 階段努力 $f=gh$，最佳每階段 $f\approx 4$。
 - 完整路徑還要納入分支努力 $B$ 與寄生延遲 $P$：$F=GBH$、$D\approx NF^{1/N}+P$。
 
-小算例：三級路徑為 NAND2 後接兩級反相器，若 $G=4/3$、$B=1$、$H=48$，則 $F=64$、每級最佳努力 $F^{1/3}=4$；取 $P=2+1+1=4$，估計延遲 $D\approx3\times4+4=16\tau$。
+
+**例：邏輯努力路徑估算**
+- 題目：三級路徑為 NAND2 後接兩級反相器，$G=4/3$、$B=1$、$H=48$、$P=4$，求每級最佳努力與延遲。
+- 步驟：$F=GBH=64$，故 $F^{1/3}=4$；$D\approx NF^{1/N}+P$。
+- 答案：每級最佳努力為 4，估計延遲 $D\approx3\times4+4=16\tau$。
 
 工程上：把 fan-out 維持在 3–4，級聯緩衝器才能達最佳延遲。
 
@@ -171,6 +194,11 @@ $P_\text{dyn}=\alpha C V_{DD}^2 f$
 極低 $V_{DD}$（< 0.4 V）工作，能效大幅提升，但速度常慢約 10–1000 倍，實際差異取決於製程、電壓與負載。
 IoT、醫療植入用。
 
+**例：動態功耗預算**
+- 題目：$\alpha=0.2$、$C=20\ \mathrm{pF}$、$V_{DD}=0.8\ \mathrm{V}$、$f=500\ \mathrm{MHz}$，求動態功耗。
+- 步驟：代入 $P_\text{dyn}=\alpha CV_{DD}^2f$。
+- 答案：$P_\text{dyn}=1.28\ \mathrm{mW}$；在其他條件不變時，電壓降為原來的 $90\%$ 會使動態功耗降為 $81\%$。
+
 ## 第 7 章　訊號完整性與電源完整性
 
 ### 7.1 串擾（Crosstalk）
@@ -189,6 +217,11 @@ IoT、醫療植入用。
 
 ### 7.4 EM / 自加熱
 電流密度過高 → **電遷移**（electromigration）造成金屬線斷裂。要遵守 EM rule。
+
+**例：電源網路 IR drop**
+- 題目：某電源路徑等效電阻為 $80\ \mathrm{m\Omega}$，模組峰值電流為 $0.6\ \mathrm{A}$，求電壓下降。
+- 步驟：用 $\Delta V=IR=0.6\times0.08\ \mathrm{V}$。
+- 答案：$\Delta V=48\ \mathrm{mV}$；若供電為 $0.8\ \mathrm{V}$，即損失 $6\%$ 供電電壓。
 
 下一部進入流程、低功耗 / DFT、物理實現。
 
