@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 電位與電位梯度｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><span aria-current="page">目前章：04 電位與電位梯度</span><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">04・把難加的向量場先改寫成好加的純量</p>
 <h1>電位與電位梯度：先算高度，再找最陡的下坡</h1>
@@ -15,6 +15,7 @@
 <p>可暫時把 V 想成地形高度，<b>E</b> 像最陡下坡箭頭；比喻到此為止，精確定義仍是線積分與梯度。源在帶電物體：正點電荷使周圍電位為正，電場向外；負點電荷使電位為負，電場向內。點電荷的 V 隨距離以 1/r 下降，而 E 以 1/r² 下降，所以同樣把距離加倍，電位減半，場卻只剩四分之一。</p>
 <p>能量存在整個電場所在空間；正試驗電荷若可自由移動，會沿 <b>E</b> 朝較低 V 前進並把電位能轉成動能。導體或材料邊界會重新分配表面電荷，使靜電平衡導體內 <b>E</b> = <b>0</b>，整塊導體成為等位體。高阻抗靜電計最後量到的是探頭與接地參考之間的電位差，不是宇宙中的絕對高度。這條鏈因此是：電荷是源，場沿電位下降最快處指向，能量在場中，導體邊界改寫電位分布，儀器讀出兩點之差。</p>
 <p>電偶極（electric dipole）由 +Q 與 −Q 相隔 d 組成，偶極矩 <b>p</b> = Q<b>d</b>，方向由負電荷指向正電荷，單位 C⋅m。遠處同時看見一正一負，兩者大部分抵消，所以偶極電位以 1/r²、電場以 1/r³ 更快衰減。空氣約在 3 MV/m 崩潰；本章預設點電荷在 10 cm 處的 8987.551792 V/m 只有它的約千分之三，量級遠未到打火。</p>
+<ul><li><strong>源：</strong>電荷建立電位與電場。</li><li><strong>場與距離：</strong>電場指向電位下降最快處；點電荷 V 隨 1/r、E 隨 1/r² 下降。</li><li><strong>能量：</strong>自由正電荷沿 E 移動時，電位能轉成動能。</li><li><strong>材料與邊界：</strong>靜電平衡導體內 E = 0，整塊導體是等位體。</li><li><strong>儀器：</strong>高輸入阻抗靜電計量探頭與參考點之間的電位差。</li></ul>
 <p class="note">來源：08-電磁學-上 §4.1–§4.5。</p>
 
 <h2>推導：從路徑無關到梯度與偶極遠場</h2>
@@ -46,7 +47,7 @@
 <label for="pot-d">偶極間距 d（mm，只有偶極模式用）<input id="pot-d" type="range" min="1" max="50" step="1" value="10"></label>
 <label for="pot-theta">與偶極軸的夾角 θ（°，只有偶極模式用）<input id="pot-theta" type="range" min="0" max="180" step="1" value="0"></label>
 </div>
-<div id="potential-output" class="output" aria-live="polite"></div>
+<div id="potential-output" class="output" aria-live="polite">互動載入後會顯示計算結果、因果判讀與模型邊界；若這段文字沒有更新，請確認瀏覽器已允許執行本地 JavaScript。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -66,6 +67,7 @@
 
 <h2>連到哪門課</h2>
 <p>求梯度、拉普拉斯方程與邊界值問題會在<a href="../../../共通基礎/數學/互動課程/11-PDE與向量分析.html">工程數學先修的偏微分方程與向量分析</a>正式練習；節點電壓則是電路語言中的同一個電位概念，可接到<a href="../電路學-互動課程/02-KCL與KVL.html">電路學的 KCL 與 KVL</a>。下一章會把介電質看成大量可被外場轉向或拉伸的微小偶極，天線課也會用時變偶極作為最基本的輻射模型。</p>
+<p><a href="自我檢核.html#ch04">做本章 3 題</a></p>
 <nav class="pager" aria-label="章節導覽"><a href="03-高斯定律.html">← 上一頁：高斯定律</a><a href="05-介電質與邊界條件.html">下一頁：介電質與邊界條件 →</a></nav>
 </main>
 <footer class="site-footer"><span>04 電位與電位梯度</span><a href="名詞與概念字典.html">查字典</a></footer>

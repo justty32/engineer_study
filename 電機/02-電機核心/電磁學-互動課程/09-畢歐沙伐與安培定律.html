@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 畢歐沙伐與安培定律｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><span aria-current="page">目前章：09 畢歐沙伐與安培定律</span><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">09・由電流形狀算出磁場分佈</p>
 <h1>畢歐沙伐與安培定律：逐段累加或靠對稱性一步解場</h1>
@@ -14,7 +14,8 @@
 <h2>白話直覺：每段電流都投一票，對稱性替你先把票數加好</h2>
 <p>可暫時把畢歐—沙伐視為每小段導線對觀測點投一張帶方向的票；比喻到此為止，精確內容是向量積分。源位於載流導線，電流方向決定 <b>B</b> 繞行方向，右手大拇指指電流，四指彎曲就是場方向。直導線的 B 隨垂直距離 ρ 以 1/ρ 衰減；圓迴圈遠離中心後趨近磁偶極的 1/z³；理想無限長螺線管內部則近似均勻、外部近似為零。</p>
 <p>建立磁場的能量來自使電流上升的電源，儲存在電流周圍的磁場；後續切斷電流時，這份場能會以感應電壓返回電路。加入高磁導率材料會集中磁通，有限長度與氣隙則使場外漏，這些邊界讓真實結果偏離真空理想式。霍爾高斯計量到觀測點的局部 B，羅氏線圈則利用環流關係讀取穿過圈內的總電流。</p>
-<p>完整因果鏈是：穩態電流分佈在導線或繞組中，磁場按右手定則繞源並依幾何隨距離衰減；能量存在整個磁場區域；磁性材料、導線粗細、有限端點與漏磁改變分佈；儀器只量局部 B 或由整圈感應訊號反推總電流。量級上，10 A 直線電流在 5 cm 外僅有 40 µT，與地磁 50 µT 同級，量測時若不扣背景就可能把方向與大小都判錯。</p>
+<p>量級上，10 A 直線電流在 5 cm 外僅有 40 µT，與地磁 50 µT 同級，量測時若不扣背景就可能把方向與大小都判錯。</p>
+<ul><li><strong>源：</strong>穩態電流分佈是靜磁場的源。</li><li><strong>場與距離：</strong>右手定則給方向，直線、迴圈與螺線管各有不同距離律。</li><li><strong>能量：</strong>電源建場的功儲在電流周圍的磁場。</li><li><strong>材料與邊界：</strong>高磁導率材料集中磁通，端點、氣隙與漏磁使理想式失準。</li><li><strong>儀器：</strong>高斯計量局部 B，羅氏線圈由環流反推總電流。</li></ul>
 <p class="note">來源：08-電磁學-中 §9.1–§9.2、第 11 章。</p>
 
 <h2>推導：何時可把環流積分拆成 B 乘路徑長</h2>
@@ -45,7 +46,7 @@
 <label for="amp-z">軸向距離 z（cm，只有迴圈用）<input id="amp-z" type="range" min="0" max="50" step="1" value="0"></label>
 <label for="amp-n">匝密度 n（匝/cm，只有螺線管用）<input id="amp-n" type="range" min="1" max="50" step="1" value="10"></label>
 </div>
-<div id="ampere-output" class="output" aria-live="polite">這個模式只用到 I、ρ 兩個滑桿，其餘不影響結果。目前的積分方式：半徑 ρ 的同心圓安培路徑。B = 0.000040 T ＝ 40.000000 µT，是地磁 50 µT 的 0.800000 倍。B ∝ 1/ρ，因圓周上 B 處處等大且沿切向。右手大拇指指電流方向，四指彎曲就是 <b>B</b> 繞行方向；距離滑到接近導線半徑時，無限細線模型便失效。</div>
+<div id="ampere-output" class="output" aria-live="polite">互動載入後會顯示計算結果、因果判讀與模型邊界；若這段文字沒有更新，請確認瀏覽器已允許執行本地 JavaScript。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -63,6 +64,7 @@
 
 <h2>連到哪門課</h2>
 <p>逐段累加的積分技巧見<a href="../../../共通基礎/數學/互動課程/02-積分.html">工程數學先修的積分</a>；直導線、線圈與電磁鐵的現象面見<a href="../../../共通基礎/物理/互動課程/10-磁場與電磁感應.html">普通物理的磁場與電磁感應</a>。這些公式直接用於電磁鐵、感測線圈與電流探棒；下一章會加入材料磁化與氣隙，把場計算改寫成磁路。</p>
+<p><a href="自我檢核.html#ch09">做本章 3 題</a></p>
 <nav class="pager" aria-label="章節導覽"><a href="08-磁場與羅倫茲力.html">← 上一頁：磁場與羅倫茲力</a><a href="10-磁性材料與磁路.html">下一頁：磁性材料與磁路 →</a></nav>
 </main>
 <footer class="site-footer"><span>09 畢歐沙伐與安培定律</span><a href="名詞與概念字典.html">查字典</a></footer>

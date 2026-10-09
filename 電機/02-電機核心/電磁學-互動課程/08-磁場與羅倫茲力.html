@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 磁場與羅倫茲力｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><span aria-current="page">目前章：08 磁場與羅倫茲力</span><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">08・磁場不替粒子加速，只替運動轉彎</p>
 <h1>磁場與羅倫茲力：從受力方向讀懂帶電粒子的軌跡</h1>
@@ -15,7 +15,10 @@
 <h2>白話直覺：源在運動，力便往側面偏</h2>
 <p>可以暫時把磁場想成只會轉動方向盤、不踩油門的操作者；比喻到此為止，精確定義仍是 q<b>v</b>×<b>B</b>。源可以是後一章要研究的電流，也可以是磁性材料中的微觀磁偶極；在已知均勻 <b>B</b> 的區域，正電荷的受力方向由右手定則決定，負電荷則相反。力的大小 qvB sin θ 取決於速度與場的夾角，平行時為零，垂直時最大。</p>
 <p>若粒子垂直射入均勻場，磁力始終朝圓心，場的大小不因粒子在圓上的位置而變，軌跡因此封閉成圓；若另有平行速度分量，它保持不變，圓周運動與前進疊成螺旋。磁場能量存於場及建立場的電源系統，不會在理想磁力中傳給粒子。加入材料會改變 <b>B</b>，鐵磁材料還可能飽和；跨越材料邊界時，法向 B 的連續條件也會改變分佈。霍爾高斯計只能量探頭所在位置、敏感軸方向的 B 分量。</p>
-<p>完整因果鏈是：電流或磁化是磁場的源，場繞著電流並依幾何與距離改變；運動電荷受垂直於 <b>v</b> 與 <b>B</b> 的力，動能不變而方向改變；能量仍在場與供電系統中；材料磁導率與邊界重新分配 B；儀器最後只讀到局部方向分量與受力結果。量級上，地磁約 50 µT、冰箱磁鐵約 5 mT、喇叭磁鐵約 1 T、醫用 MRI 約 1.5–3 T，相差超過四個數量級。</p>
+<p>量級上，地磁約 50 µT、冰箱磁鐵約 5 mT、喇叭磁鐵約 1 T、醫用 MRI 約 1.5–3 T，相差超過四個數量級。</p>
+<ul><li><strong>源：</strong>電流與材料磁化建立磁場。</li><li><strong>場與距離：</strong><b>B</b> 繞電流，幾何決定距離律；q<b>v</b>×<b>B</b> 決定側向力。</li><li><strong>能量：</strong>理想磁力只改變粒子方向，不改變動能。</li><li><strong>材料與邊界：</strong>磁導率、飽和與法向 B 連續條件重分配場。</li><li><strong>儀器：</strong>霍爾高斯計量探頭位置、敏感軸方向的 B 分量。</li></ul>
+<p><strong>方向圖說明：</strong>→ 是 +x，↑ 是 +y，⊙ 是從螢幕向外的 +z，⊗ 是向內的 −z。</p>
+<table><thead><tr><th>粒子</th><th><b>v</b></th><th><b>B</b></th><th><b>v</b>×<b>B</b></th><th><b>F</b></th></tr></thead><tbody><tr><td>質子</td><td>→ +x</td><td>↑ +y</td><td>⊙ +z</td><td>⊙ +z</td></tr><tr><td>電子</td><td>→ +x</td><td>↑ +y</td><td>⊙ +z</td><td>⊗ −z</td></tr></tbody></table>
 <p class="note">來源：08-電磁學-中 §8.1–§8.2。</p>
 
 <h2>推導：垂直力如何導出半徑與固定迴旋頻率</h2>
@@ -48,7 +51,7 @@
 <label for="lor-v">粒子速率 v（× 10⁶ m/s，只有粒子模式用）<input id="lor-v" type="range" min="0.1" max="10" step="0.1" value="1"></label>
 <label for="lor-i">導線電流 I（A，只有導線模式用）<input id="lor-i" type="range" min="0.05" max="5" step="0.05" value="0.15"></label>
 </div>
-<div id="lorentz-output" class="output" aria-live="polite">這個模式只用到 B、θ、v 三個滑桿，導線電流不影響結果。F = 8.010883 × 10<sup>−14</sup> N；r = 0.020879 m；f<sub>c</sub> = 7.622593 MHz；T = 1.311889 × 10<sup>−7</sup> s；K = 5.219842 keV。θ = 90°，力最大且軌跡是完整的圓。磁力垂直速度，動能不變；若把角度拉到 0°，沒有橫向分量，也就沒有圓周運動。</div>
+<div id="lorentz-output" class="output" aria-live="polite">互動載入後會顯示計算結果、因果判讀與模型邊界；若這段文字沒有更新，請確認瀏覽器已允許執行本地 JavaScript。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -66,6 +69,7 @@
 
 <h2>連到哪門課</h2>
 <p>向量外積與右手定則的數學操作見<a href="../../../共通基礎/數學/互動課程/04-向量與矩陣.html">工程數學先修的向量與矩陣</a>；磁力、導線與馬達的現象直觀見<a href="../../../共通基礎/物理/互動課程/10-磁場與電磁感應.html">普通物理的磁場與電磁感應</a>。粒子束偏轉用於質譜儀與加速器，導線受力則進入電機機械與馬達設計；下一章會從電流幾何反算產生的 <b>B</b>。</p>
+<p><a href="自我檢核.html#ch08">做本章 3 題</a></p>
 <nav class="pager" aria-label="章節導覽"><a href="07-電流密度與焦耳熱.html">← 上一頁：電流密度與焦耳熱</a><a href="09-畢歐沙伐與安培定律.html">下一頁：畢歐沙伐與安培定律 →</a></nav>
 </main>
 <footer class="site-footer"><span>08 磁場與羅倫茲力</span><a href="名詞與概念字典.html">查字典</a></footer>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 電容與電場儲能｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><span aria-current="page">目前章：06 電容與電場儲能</span><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">06・從幾何與材料算出元件值與場能量</p>
 <h1>電容與電場儲能：能量其實在兩導體之間</h1>
@@ -14,7 +14,8 @@
 <h2>白話直覺：電源搬開電荷，場替它保存做過的功</h2>
 <p>可暫把兩導體想成把正負電荷分居兩岸；比喻到此為止，精確狀態是兩導體間的電位差與場。源是電源搬運的自由電荷，正板到負板之間的 <b>E</b> 由正指向負；平行板遠離邊緣時近似均勻，同軸與球形的場則隨半徑變小，最大值都在內導體表面。</p>
 <p>電源做的功存於電場覆蓋的空間，能量密度為 w<sub>e</sub> = (1/2)<b>E</b>⋅<b>D</b>。加入高 ε 材料會極化並改變邊界電荷，因此相同幾何與 V 下能容納更多 Q；縮小間距也使 C 增大，但局部 E 上升，崩潰餘裕下降。LCR 表量到端口的交流電壓與電流相位，再回報該頻率的等效 C；它沒有直接看見場能。</p>
-<p>空氣約在 3 MV/m 崩潰，FR−4 約 20 MV/m。本章預設 100 kV/m 是空氣門檻的 3.33 %；滑到 0.1 mm 與 1000 V 時則達 10 MV/m，真實空氣會先打火。常見 100 nF 多層陶瓷電容靠 ε<sub>r</sub> 上千的陶瓷，再把幾百層極薄介質疊起來，共同疊出 εA/d；不是只靠把 A/d 放大。</p>
+<p>空氣約在 3 MV/m 崩潰，FR-4 約 20 MV/m。本章預設 100 kV/m 是空氣門檻的 3.33 %；滑到 0.1 mm 與 1000 V 時則達 10 MV/m，真實空氣會先打火。常見 100 nF 多層陶瓷電容靠 ε<sub>r</sub> 上千的陶瓷，再把幾百層極薄介質疊起來，共同疊出 εA/d；不是只靠把 A/d 放大。</p>
+<ul><li><strong>源：</strong>電源把正負電荷搬到兩導體，建立板間場。</li><li><strong>場與距離：</strong>理想平行板場 E = V/d，邊緣才會彎曲。</li><li><strong>能量：</strong>電源做的功以 W = CV²/2 存在電場中。</li><li><strong>材料與邊界：</strong>ε、面積與間距決定 C，崩潰場限制最小間距。</li><li><strong>儀器：</strong>LCR 表量 C 與損耗，電位計與探棒量電壓或局部場。</li></ul>
 <p class="note">來源：08-電磁學-上 §6.1–§6.3。</p>
 
 <h2>推導：把高斯定律、電位差與充電做功接起來</h2>
@@ -39,7 +40,7 @@
 <tr><td>檢查</td><td>W = w<sub>e</sub> × (A × d) = 0.044271 × 10<sup>−5</sup></td><td><strong>442.709391 nJ ✓（三種算法一致）</strong></td></tr>
 <tr><td>崩潰餘裕</td><td>100 kV/m ÷ 3000 kV/m</td><td><strong>3.33 %（安全）</strong></td></tr>
 </tbody></table>
-<p>邊界對照：同軸 a = 1 mm、b = 3.5 mm、ε<sub>r</sub> = 1 → ln(b/a) = <strong>1.252763</strong>、C = <strong>44.407844 pF/m</strong>；同一組尺寸換成 PTFE（ε<sub>r</sub> = 2.1）→ <strong>93.256473 pF/m</strong>。球形 a = 1 mm、b = 3.5 mm、ε<sub>r</sub> = 1 → <strong>0.155771 pF</strong>；<strong>尺寸只有毫米時，電容自然只有約 0.16 pF</strong>，球形結構在實務上也難以做到多層疊積，體積效率不如商用多層電容。把 ε<sub>r</sub> 從 1 拉到 4.4（FR−4）→ 平行板 C 變成 <strong>389.584264 pF</strong>。把 V 拉到 <strong>1000 V</strong> → E = 10<sup>6</sup> V/m，仍在空氣崩潰的 1/3。</p>
+<p>邊界對照：同軸 a = 1 mm、b = 3.5 mm、ε<sub>r</sub> = 1 → ln(b/a) = <strong>1.252763</strong>、C = <strong>44.407844 pF/m</strong>；同一組尺寸換成 PTFE（ε<sub>r</sub> = 2.1）→ <strong>93.256473 pF/m</strong>。球形 a = 1 mm、b = 3.5 mm、ε<sub>r</sub> = 1 → <strong>0.155771 pF</strong>；<strong>尺寸只有毫米時，電容自然只有約 0.16 pF</strong>，球形結構在實務上也難以做到多層疊積，體積效率不如商用多層電容。把 ε<sub>r</sub> 從 1 拉到 4.4（FR-4）→ 平行板 C 變成 <strong>389.584264 pF</strong>。把 V 拉到 <strong>1000 V</strong> → E = 10<sup>6</sup> V/m，仍在空氣崩潰的 1/3。</p>
 
 <section class="workspace"><h2>自由實驗：幾何、材料與電壓</h2>
 <p>兩導體之間填入均勻線性介質。切換平行板、同軸或球形構型，觀察幾何與 ε 如何決定 C，以及電壓如何決定 Q、W 與最大場。</p>
@@ -52,7 +53,7 @@
 <label for="cap-er">相對介電常數 ε<sub>r</sub><input id="cap-er" type="range" min="1" max="12" step="0.1" value="1"></label>
 <label for="cap-v">外加電壓 V（V）<input id="cap-v" type="range" min="10" max="1000" step="10" value="100"></label>
 </div>
-<div id="capacitor-output" class="output" aria-live="polite"></div>
+<div id="capacitor-output" class="output" aria-live="polite">互動載入後會顯示計算結果、因果判讀與模型邊界；若這段文字沒有更新，請確認瀏覽器已允許執行本地 JavaScript。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -71,6 +72,7 @@
 
 <h2>連到哪門課</h2>
 <p><a href="../電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>把 C 當集總元件並研究充放電；本章說明這個元件值從何而來。同軸每單位長度電容會與第 15 章的每單位長度電感共同決定 Z<sub>0</sub> = √(L/C)，也是高速數位與射頻走線設計的入口。</p>
+<p><a href="自我檢核.html#ch06">做本章 3 題</a></p>
 <nav class="pager" aria-label="章節導覽"><a href="05-介電質與邊界條件.html">← 上一頁：介電質與邊界條件</a><a href="07-電流密度與焦耳熱.html">下一頁：電流密度與焦耳熱 →</a></nav>
 </main>
 <footer class="site-footer"><span>06 電容與電場儲能</span><a href="名詞與概念字典.html">查字典</a></footer>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 庫侖定律與電場｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><span aria-current="page">目前章：02 庫侖定律與電場</span><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">02・把電荷間的力拆成空間中的可重用狀態</p>
 <h1>庫侖定律與電場：先建立場，再放入要受力的電荷</h1>
@@ -14,7 +14,10 @@
 <h2>白話直覺：來源先把空間標上箭頭，試驗電荷再讀取箭頭</h2>
 <p>可以暫時把電場想成來源預先寫好的查詢表，放入電荷時只讀取當地值；比喻到此為止，精確定義是電場（electric field, <b>E</b>）等於單位正試驗電荷受到的力，<b>E</b> = <b>F</b>/q，單位 V/m = N/C。方向永遠定成正試驗電荷會被推動的方向，負電荷實際受力則與 <b>E</b> 反向。</p>
 <p>源若是正電荷，場由源向外；源若是負電荷，場指向源。點源場大小 E = k|Q|/r²，距離加倍便剩四分之一，因為固定通量攤在面積隨 r² 增大的球面上。靜電能量存於電場；加入介質後，分子極化會產生反向貢獻，使宏觀場與力依線性介質模型除以 ε<sub>r</sub>。導體邊界則讓自由電荷重新排列，直到靜電平衡時內部電場為零。靜電計或場強計讀到局部電位差或場強，扭秤才能直接把極小庫侖力換成轉角。</p>
-<p>完整因果鏈是：電荷位於源點，正源場向外、負源場向內且點源大小隨 1/r² 下降；能量存在兩電荷配置及其電場中；介質極化與導體表面電荷重新分布會改變場；儀器在有限位置讀到電位或場強。場一旦建立，任何小電荷 q 放入便受 <b>F</b> = q<b>E</b>，正負號只決定受力沿場或逆場。</p>
+<p>場一旦建立，任何小電荷 q 放入便受 <b>F</b> = q<b>E</b>；正電荷沿場、負電荷逆場受力。</p>
+<ul><li><strong>源：</strong>正、負電荷是電場的源與匯。</li><li><strong>場與距離：</strong>場由正電荷向外、指向負電荷，大小隨 1/r² 下降。</li><li><strong>能量：</strong>兩電荷的配置能與能量存於電場。</li><li><strong>材料與邊界：</strong>介質極化削弱場，導體表面電荷會重新分布。</li><li><strong>儀器：</strong>靜電計與場強計量電位或場強，扭秤量微小力。</li></ul>
+<p><strong>方向圖說明：</strong>把源放在左、觀測點放在右；箭頭顯示該點的電場與試驗電荷受力方向。</p>
+<table><thead><tr><th>左側電荷</th><th>觀測點</th><th><b>E</b></th><th>正試驗電荷 <b>F</b></th><th>電子 <b>F</b></th></tr></thead><tbody><tr><td>+Q</td><td>•</td><td>→</td><td>→</td><td>←</td></tr><tr><td>−Q</td><td>•</td><td>←</td><td>←</td><td>→</td></tr></tbody></table>
 <p class="note">來源：08-電磁學-上 §2.1–§2.3。</p>
 
 <h2>推導：從成對作用力走到場、幾何衰減與疊加</h2>
@@ -44,7 +47,7 @@
 <label for="cou-r">兩電荷距離 r（cm）<input id="cou-r" type="range" min="1" max="100" step="1" value="30"></label>
 <label for="cou-er">相對介電常數 ε<sub>r</sub><input id="cou-er" type="range" min="1" max="80" step="0.1" value="1"></label>
 </div>
-<div id="coulomb-output" class="output" aria-live="polite">F = 1.497925 × 10<sup>−6</sup> N，異號所以互相吸引；E<sub>1</sub> = 1997.233732 V/m、E<sub>2</sub> = 1198.340239 V/m，合成 E = 3195.573971 V/m，指向 +x；V<sub>中點</sub> = 119.834024 V。力與場隨 1/r² 下降，介質極化會使它們除以 ε<sub>r</sub>。距離、零電荷或高 ε<sub>r</sub> 到極端時，應檢查點源與連續介質假設。</div>
+<div id="coulomb-output" class="output" aria-live="polite">互動載入後會顯示計算結果、因果判讀與模型邊界；若這段文字沒有更新，請確認瀏覽器已允許執行本地 JavaScript。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -63,6 +66,7 @@
 
 <h2>連到哪門課</h2>
 <p><a href="../../../共通基礎/物理/互動課程/08-靜電學.html">普通物理的靜電學</a>從可見的吸引與排斥建立現象；本課把同一現象改寫成場與連續分布。把微小電荷貢獻累積成線、面、體分布所需技巧見<a href="../../../共通基礎/數學/互動課程/02-積分.html">工程數學先修的積分</a>。下一章利用球、柱、面的對稱性，直接從封閉面通量求場，不再逐顆做向量積分。</p>
+<p><a href="自我檢核.html#ch02">做本章 3 題</a></p>
 <nav class="pager" aria-label="章節導覽"><a href="01-向量場語言.html">← 上一頁：向量場語言</a><a href="03-高斯定律.html">下一頁：高斯定律 →</a></nav>
 </main>
 <footer class="site-footer"><span>02 庫侖定律與電場</span><a href="名詞與概念字典.html">查字典</a></footer>

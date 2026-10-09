@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 電磁波與平面波｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><span aria-current="page">目前章：13 電磁波與平面波</span><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">13・從四條場方程推出光速、方向與功率</p>
 <h1>電磁波與平面波：變化的電場與磁場可以自己向前傳</h1>
@@ -13,7 +13,8 @@
 
 <h2>白話直覺：每一小區域把變化傳給隔壁，能量沿兩個場的外積前進</h2>
 <p>可暫時把空間看成相鄰格點彼此更新；比喻到此為止，真實機制是連續場滿足偏微分方程。源最初在天線內加速的電荷與時變電流，離開源的無電荷區後，變化的 <b>E</b> 與 <b>H</b> 互為旋渦源。遠場近似中，場不再按靜電點源的 1/r² 規律解讀；球面波振幅約按 1/r 減弱，而理想無限平面波則在橫向與傳播方向上以固定振幅延伸。</p>
-<p>令波沿正 z 方向，<b>E</b> 指 x、<b>H</b> 指 y，兩者都與傳播方向垂直。電能與磁能在場中同步交換，總能量沿坡印廷向量（Poynting vector）<b>S</b> = <b>E</b>×<b>H</b> 指向正 z。材料的 ε、µ 改變波速、波長及 E/H 比，界面會在下一章造成反射與透射；校正天線和場強計量到 E，頻譜分析儀量到特定頻率的接收功率。因果鏈是：加速電荷啟動變化場，兩場橫向且彼此垂直，能量沿外積方向流；材料與邊界改變速度和幅度，儀器最後讀到場強、頻率與功率。</p>
+<p>令波沿正 z 方向，<b>E</b> 指 x、<b>H</b> 指 y，兩者都與傳播方向垂直。電能與磁能在場中同步交換，總能量沿坡印廷向量（Poynting vector）<b>S</b> = <b>E</b>×<b>H</b> 指向正 z。</p>
+<ul><li><strong>源：</strong>加速電荷與時變電流啟動變化場。</li><li><strong>場與距離：</strong><b>E</b>、<b>H</b> 與傳播方向互相垂直，材料決定波速與波長。</li><li><strong>能量：</strong>坡印廷向量 <b>S</b> = <b>E</b>×<b>H</b> 指向能量流動方向。</li><li><strong>材料與邊界：</strong>ε、µ 改變波速與 E/H，界面另產生反射與透射。</li><li><strong>儀器：</strong>校正天線與場強計量 E，頻譜分析儀量接收功率。</li></ul>
 <p class="note">來源：08-電磁學-下 §14.1–§14.4。</p>
 
 <h2>推導：對旋度再取旋度，光速就出現在係數裡</h2>
@@ -41,7 +42,7 @@
 <tr><td>平均功率密度</td><td>⟨S⟩ = E<sub>0</sub>²/(2η)</td><td>1.327209 × 10<sup>−3</sup> W/m²</td></tr>
 <tr><td>週期</td><td>T = 1/f</td><td>1.000000 × 10<sup>−9</sup> s</td></tr>
 </tbody></table>
-<p>B<sub>0</sub> 只有 3.34 nT，比地磁 50 µT 小 15000 倍；⟨S⟩ = 1.33 mW/m²，而正午陽光約 1000 W/m²，差約六個數量級。換到 FR&#45;4（ε<sub>r</sub> = 4.4）會得到 n = 2.097618、v = 1.429204 × 10<sup>8</sup> m/s、λ = 0.142920 m、η = 179.599130 Ω、⟨S⟩ = 2.783978 × 10<sup>−3</sup> W/m²。真空頻率拉到 2400 MHz 時 λ = 0.124914 m，正好對照 Wi&#45;Fi 2.4 GHz 約 12.5 cm 的波長；E<sub>0</sub> 拉到 10 V/m 時，⟨S⟩ = 1.327209 × 10<sup>−1</sup> W/m²，振幅十倍使功率百倍。</p>
+<p>B<sub>0</sub> 只有 3.34 nT，比地磁 50 µT 小 15000 倍；⟨S⟩ = 1.33 mW/m²，而正午陽光約 1000 W/m²，差約六個數量級。換到 FR-4（ε<sub>r</sub> = 4.4）會得到 n = 2.097618、v = 1.429204 × 10<sup>8</sup> m/s、λ = 0.142920 m、η = 179.599130 Ω、⟨S⟩ = 2.783978 × 10<sup>−3</sup> W/m²。真空頻率拉到 2400 MHz 時 λ = 0.124914 m，正好對照 Wi&#45;Fi 2.4 GHz 約 12.5 cm 的波長；E<sub>0</sub> 拉到 10 V/m 時，⟨S⟩ = 1.327209 × 10<sup>−1</sup> W/m²，振幅十倍使功率百倍。</p>
 
 <section class="workspace"><h2>自由實驗：從頻率、材料與場強重建一個平面波</h2>
 <p>設定無損均質介質中的遠場平面波，傳播方向固定為正 z，電場沿 x、磁場沿 y。改變四個參數，觀察速度、波長、兩場比例與能流如何一起變。</p>
@@ -51,7 +52,7 @@
 <label for="pwv-er">相對介電常數 ε<sub>r</sub><input id="pwv-er" type="range" min="1" max="12" step="0.1" value="1"></label>
 <label for="pwv-mur">相對磁導率 µ<sub>r</sub><input id="pwv-mur" type="range" min="1" max="10" step="0.1" value="1"></label>
 </div>
-<div id="planewave-output" class="output" aria-live="polite">n = 1.000000；v = 2.997925 × 10<sup>8</sup> m/s；λ = 0.299792 m；k = 20.958450 rad/m；η = 376.730314 Ω；H<sub>0</sub> = 2.654419 × 10<sup>−3</sup> A/m；B<sub>0</sub> = 3.335641 × 10<sup>−9</sup> T；⟨S⟩ = 1.327209 × 10<sup>−3</sup> W/m²；T = 1.000000 × 10<sup>−9</sup> s。⟨S⟩ = E<sub>0</sub>²/(2η) 與 ⟨S⟩ = E<sub>0</sub>⋅H<sub>0</sub>/2 都得到相同值，殘差小於 10<sup>−18</sup>；<b>E</b>⊥<b>H</b>⊥傳播方向，<b>S</b> 指向能量前進方向。這是真空平面波；磁場比地磁小約 15000 倍，極端高折射率時波長會大幅壓縮。</div>
+<div id="planewave-output" class="output" aria-live="polite">互動載入後會顯示計算結果、因果判讀與模型邊界；若這段文字沒有更新，請確認瀏覽器已允許執行本地 JavaScript。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -69,6 +70,7 @@
 
 <h2>連到哪門課</h2>
 <p><a href="../../../共通基礎/數學/互動課程/10-傅立葉分析.html">工程數學先修的傅立葉分析</a>說明任意訊號如何拆成不同頻率的弦波，使本章單頻解可以疊加成實際波形；旋度與波動方程的數學細節見<a href="../../../共通基礎/數學/互動課程/11-PDE與向量分析.html">偏微分方程與向量分析</a>。<a href="../../../共通基礎/物理/互動課程/11-馬克士威與電磁波.html">普通物理</a>負責現象圖像。本章結果直接服務天線、雷達、光通訊與無線鏈路；下一章加入 σ 與界面，處理衰減、趨膚及反射。</p>
+<p><a href="自我檢核.html#ch13">做本章 3 題</a></p>
 <nav class="pager" aria-label="章節導覽"><a href="12-位移電流與馬克士威方程式.html">← 上一頁：位移電流與馬克士威方程式</a><a href="14-介質中的波與界面.html">下一頁：介質中的波與界面 →</a></nav>
 </main>
 <footer class="site-footer"><span>13 電磁波與平面波</span><a href="名詞與概念字典.html">查字典</a></footer>

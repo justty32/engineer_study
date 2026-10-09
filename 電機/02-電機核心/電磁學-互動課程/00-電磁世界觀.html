@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 電磁世界觀｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html" aria-current="page">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><span aria-current="page">目前章：00 電磁世界觀</span><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">00・先判斷何時必須從電路走進場</p>
 <h1>電磁世界觀：同一塊板子為什麼會突然變成傳輸線</h1>
@@ -14,8 +14,9 @@
 
 <h2>白話直覺：源先改變附近的場，改變再以有限速度傳出去</h2>
 <p>可以暫時把整個空間想成一張每點都存四個欄位的資料表；比喻到此為止，真實定義仍是隨位置與時間變化的物理場。電荷位在哪裡，附近 <b>E</b> 就由正電荷向外、朝負電荷向內；穩定電流所在處，周圍 <b>B</b> 繞著電流方向。點源的靜電場隨距離平方減弱，而傳播中的平面波在理想無損空間可維持局部振幅，兩者幾何條件不同，不能混套衰減律。</p>
-<p>能量不是藏在電路圖的符號裡，而是存於電場與磁場，或由兩者共同決定的方向向外傳送。導線、介電質與磁性材料會因自由電荷移動、分子極化或磁矩排列，改變場的大小、速度與邊界條件。儀器最後量到的是端點電壓、局部場強、相位或傳播延遲；這些讀值讓我們反推場模型是否足夠。完整因果因此是：電荷／電流／變化的場成為源，場取得方向並依幾何隨距離改變，能量存於場或隨波流動，邊界與材料重新分配場，探棒與反射量測再把結果變成數字。</p>
+<p>能量不是藏在電路圖的符號裡，而是存於電場與磁場，或由兩者共同決定的方向向外傳送。儀器最後量到的是端點電壓、局部場強、相位或傳播延遲；這些讀值讓我們反推場模型是否足夠。</p>
 <p>整門課依此走五階段：先處理不隨時間變的靜電，再處理穩定電流造成的靜磁；接著允許磁場變化而產生電場，補上電場變化造成磁場，最後得到會自行向外傳播的電磁波。傳輸線、波導、輻射與天線不是另起爐灶，而是同一組馬克士威方程式在不同邊界下的解。</p>
+<ul><li><strong>源：</strong>電荷、電流或變化的場啟動電磁現象。</li><li><strong>場與距離：</strong>靜態點源場隨距離衰減，波則以有限速度傳播。</li><li><strong>能量：</strong>能量存於電場與磁場，也可隨波流動。</li><li><strong>材料與邊界：</strong>ε、µ、σ 與幾何邊界重新分配場。</li><li><strong>儀器：</strong>探棒、TDR 與反射量測把場轉成電壓、相位與延遲。</li></ul>
 <p class="note">來源：08-電磁學-上「這科在學什麼」；08-電磁學-下 §14.1–§14.2。</p>
 
 <h2>推導：兩個靜態常數如何給出光速與集總門檻</h2>
@@ -43,7 +44,7 @@
 <label for="scl-d">電路或結構最長尺寸 d（m）<input id="scl-d" type="range" min="0.01" max="2" step="0.01" value="0.1"></label>
 <label for="scl-er">相對介電常數 ε<sub>r</sub><input id="scl-er" type="range" min="1" max="12" step="0.1" value="1"></label>
 </div>
-<div id="emscale-output" class="output" aria-live="polite">相速 2.997925 × 10<sup>8</sup> m/s；波長 2.997925 m；d/λ = 0.033356；相位差 12.008307°；傳播時間 3.335641 × 10<sup>−10</sup> s。集總成立，因為尺寸小於波長的二十分之一；若頻率、尺寸或 ε<sub>r</sub> 升到極端，應改用分布模型。2.4 GHz 在真空的波長是 0.124914 m，大約一個手掌長。</div>
+<div id="emscale-output" class="output" aria-live="polite">互動載入後會顯示計算結果、因果判讀與模型邊界；若這段文字沒有更新，請確認瀏覽器已允許執行本地 JavaScript。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -62,6 +63,7 @@
 
 <h2>連到哪門課</h2>
 <p>本章把課程邊界畫出來：尺寸遠小於波長時，回到<a href="../電路學-互動課程/00-電路世界觀.html">電路學的電路世界觀</a>使用集總節點；尺寸不可忽略時，本課一路追到傳輸線、微波、天線與 EMC。光與波的現象入口見<a href="../../../共通基礎/物理/互動課程/11-馬克士威與電磁波.html">普通物理的馬克士威與電磁波</a>；那裡先看波的現象，這裡則逐章說明四條場方程如何導出它。</p>
+<p><a href="自我檢核.html#ch00">做本章 3 題</a></p>
 <nav class="pager" aria-label="章節導覽"><a href="index.html">← 課程地圖</a><a href="01-向量場語言.html">下一頁：向量場語言 →</a></nav>
 </main>
 <footer class="site-footer"><span>00 電磁世界觀</span><a href="名詞與概念字典.html">查字典</a></footer>

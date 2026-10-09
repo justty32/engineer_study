@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 位移電流與馬克士威方程式｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><span aria-current="page">目前章：12 位移電流與馬克士威方程式</span><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">12・補上會變動的電場，讓電流與磁場的帳一致</p>
 <h1>位移電流與馬克士威方程式：電容板間沒有導電路徑，磁場卻不能中斷</h1>
@@ -13,7 +13,8 @@
 
 <h2>白話直覺：導線的電荷流停在板上，變大的電場把磁效應接續下去</h2>
 <p>可暫時把位移電流想成接力棒；比喻到此為止，真正被接續的是安培環流方程中的源項，而不是電子穿越真空。源在外部導線的傳導電流與兩板間隨時間增加的電場。導線周圍的磁場依右手定則繞著電流，對理想圓對稱路徑其大小隨半徑約按 1/r 變小；進入板間後，變化的 <b>D</b> 仍繞出同方向磁場。</p>
-<p>能量先由電源沿周圍電磁場流向電容，最後存進板間電場；介電材料會以 ε 改變 <b>D</b>、電容與位移電流，導電性 σ 又增加真正的傳導損耗，板緣則使理想均勻場失真。電流探棒量到兩端導線電流連續，LCR 表量到頻率相關的電容與損耗，磁感測器原理上可量板緣磁場。因果鏈因此完整：自由電荷在導線流動並堆到板面，場從正板指向負板且在理想板中央近似均勻，能量存於場中；材料與邊緣改變場分布，儀器最後讀到電流、相位與微小磁場。</p>
+<p>電流探棒量到兩端導線電流連續，LCR 表量到頻率相關的電容與損耗，磁感測器原理上可量板緣磁場。</p>
+<ul><li><strong>源：</strong>導線傳導電流與板間變化的 D 共同產生磁場。</li><li><strong>場與距離：</strong>磁場繞電流方向，理想圓對稱下約隨 1/r 下降。</li><li><strong>能量：</strong>電源把能量沿場送入電容，最後存在板間電場。</li><li><strong>材料與邊界：</strong>ε 改變位移電流，σ 增加傳導損耗，板緣場使理想模型失準。</li><li><strong>儀器：</strong>電流探頭、LCR 表與磁感測器量電流、相位與板緣磁場。</li></ul>
 <p class="note">來源：08-電磁學-中 §13.1–§13.3。</p>
 
 <h2>推導：同一條迴路只能有一個答案，缺項由電荷守恆決定</h2>
@@ -37,18 +38,18 @@
 <tr><td>傳導電流</td><td>I<sub>c</sub> = σE<sub>0</sub>A</td><td>0 A</td></tr>
 <tr><td>板緣磁場</td><td>B = µ<sub>0</sub>I<sub>d</sub>/(2πR)，R = √(A/π) = 0.056419 m</td><td>1.972121 × 10<sup>−10</sup> T</td></tr>
 </tbody></table>
-<p>這個 B 只有 0.197 nT，比地磁 50 µT 小 25 萬倍。換成 FR&#45;4（ε<sub>r</sub> = 4.4）時，C = 389.584264 pF、I<sub>d</sub> = 244.783012 µA。換成水（ε<sub>r</sub> = 80、σ = 5.5 × 10<sup>−6</sup> S/m）時，I<sub>d</sub> = 4.450600 mA、I<sub>c</sub> = 5.500000 mA、σ/(ωε) = 1.235788，兩種電流在 1 kHz 同量級。海水（ε<sub>r</sub> = 81、σ = 4 S/m）給 σ/(ωε) = 8.876594 × 10<sup>5</sup>，形式上 I<sub>c</sub> = 4000 A，但真實電源不可能維持該電壓。若把真空頻率拉到 10<sup>9</sup> Hz，I<sub>d</sub> = 55.632503 A；此時尺寸已接近分布系統，結果只供量級判讀。</p>
+<p>這個 B 只有 0.197 nT，比地磁 50 µT 小 25 萬倍。換成 FR-4（ε<sub>r</sub> = 4.4）時，C = 389.584264 pF、I<sub>d</sub> = 244.783012 µA。換成水（ε<sub>r</sub> = 80、σ = 5.5 × 10<sup>−6</sup> S/m）時，I<sub>d</sub> = 4.450600 mA、I<sub>c</sub> = 5.500000 mA、σ/(ωε) = 1.235788，兩種電流在 1 kHz 同量級。海水（ε<sub>r</sub> = 81、σ = 4 S/m）給 σ/(ωε) = 8.876594 × 10<sup>5</sup>，形式上 I<sub>c</sub> = 4000 A，但真實電源不可能維持該電壓。若把真空頻率拉到 10<sup>9</sup> Hz，I<sub>d</sub> = 55.632503 A；此時尺寸已接近分布系統，結果只供量級判讀。</p>
 
 <section class="workspace"><h2>自由實驗：比較傳導電流與位移電流</h2>
 <p>外部正弦電源替平行板充放電；觀測點在板間中央與等效圓板邊緣。切換材料與幾何，觀察哪一種電流主導，以及兩種算法是否接上。</p>
 <div class="controls">
-<label for="dsp-mat">材料<select id="dsp-mat"><option value="vacuum">真空／空氣（ε_r = 1、σ = 0）</option><option value="fr4">FR&#45;4（ε_r = 4.4、σ ≈ 0）</option><option value="water">純水（ε_r = 80、σ = 5.5 × 10⁻⁶ S/m）</option><option value="seawater">海水（ε_r = 81、σ = 4 S/m）</option></select></label>
+<label for="dsp-mat">材料<select id="dsp-mat"><option value="vacuum">真空／空氣（ε_r = 1、σ = 0）</option><option value="fr4">FR-4（ε_r = 4.4、σ ≈ 0）</option><option value="water">純水（ε_r = 80、σ = 5.5 × 10⁻⁶ S/m）</option><option value="seawater">海水（ε_r = 81、σ = 4 S/m）</option></select></label>
 <label for="dsp-a">板面積 A（cm²）<input id="dsp-a" type="range" min="10" max="400" step="10" value="100"></label>
 <label for="dsp-d">板間距 d（mm）<input id="dsp-d" type="range" min="0.1" max="10" step="0.1" value="1"></label>
 <label for="dsp-v">電壓峰值 V<sub>0</sub>（V）<input id="dsp-v" type="range" min="10" max="500" step="10" value="100"></label>
 <label for="dsp-fexp">頻率指數 n（f = 10ⁿ Hz）<input id="dsp-fexp" type="range" min="0" max="9" step="1" value="3"></label>
 </div>
-<div id="displacement-output" class="output" aria-live="polite">f = 10<sup>3</sup> Hz；C = 88.541878 pF；E<sub>0</sub> = 100000.000000 V/m；J<sub>d</sub> = 0.005563 A/m²；I<sub>d</sub> = 55.632503 µA；I<sub>c</sub> = 0 A；σ/(ωε) = 0；板緣 B = 1.972121 × 10<sup>−10</sup> T。場的算法 I<sub>d</sub> = ε A ω E<sub>0</sub> 與元件的算法 I = C V<sub>0</sub> ω 都得到 55.632503 µA，殘差小於 10<sup>−15</sup>；位移電流主導，因變化電場接續了導線電流。B 比地磁小約 25 萬倍；拉到極高頻或極高電場時，集總與不放電假設會失效。</div>
+<div id="displacement-output" class="output" aria-live="polite">互動載入後會顯示計算結果、因果判讀與模型邊界；若這段文字沒有更新，請確認瀏覽器已允許執行本地 JavaScript。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -66,6 +67,7 @@
 
 <h2>連到哪門課</h2>
 <p>這一章把場論與元件語言接起來：<a href="../電路學-互動課程/10-阻抗與交流穩態.html">電路學的阻抗與交流穩態</a>用 1/(jωC) 描述同一現象；<a href="../../../共通基礎/物理/互動課程/11-馬克士威與電磁波.html">普通物理的馬克士威與電磁波</a>從可見現象介紹四式。下一章會在無源區把兩條旋度方程互相代入，讓電場與磁場不靠導線也能彼此再生並向外傳播。</p>
+<p><a href="自我檢核.html#ch12">做本章 3 題</a></p>
 <nav class="pager" aria-label="章節導覽"><a href="11-電磁感應.html">← 上一頁：電磁感應</a><a href="13-電磁波與平面波.html">下一頁：電磁波與平面波 →</a></nav>
 </main>
 <footer class="site-footer"><span>12 位移電流與馬克士威方程式</span><a href="名詞與概念字典.html">查字典</a></footer>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 電流密度與焦耳熱｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><span aria-current="page">目前章：07 電流密度與焦耳熱</span><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">07・把電阻還原成材料、幾何與場</p>
 <h1>電流密度與焦耳熱：電荷守恆如何長成 KCL</h1>
@@ -15,6 +15,7 @@
 <p>可暫把 <b>J</b> 想成每一小塊截面的交通密度；比喻到此為止，精確定義是單位面積的電荷流率與方向。源是電源在導線兩端建立的電位差，導線內 <b>E</b> 由高電位指向低電位；均勻直導線中場約為 V/ℓ，不靠離電源多遠的平方律，而由整個邊界值問題決定。</p>
 <p>電場推動大量自由載子形成 <b>J</b>，能量由場交給晶格，轉為焦耳熱；局部功率密度 p = <b>J</b>⋅<b>E</b>，所以細處與接點特別熱。材料以電導率 σ 改變關係：σ 大時，同樣 J 只需很小 E。介面若 σ 不同，表面自由電荷會自行累積並調整法向場，直到穩態 J<sub>n</sub> 連續。四線式電阻計量端到端壓降，熱像儀量表面溫升，兩者把場模型投影成可見證據。</p>
 <p>預設銅線內 E = 0.0168 V/m，遠小於空氣崩潰的 3 MV/m；小不是沒有，它乘十公尺仍形成 0.168 V 壓降。銅中 1 A、1 mm² 的漂移速度約 7.342952 × 10<sup>−5</sup> m/s，也就是每秒約 0.07 mm；訊號場卻以接近光速的量級建立。</p>
+<ul><li><strong>源：</strong>電源建立導線內電場。</li><li><strong>場與距離：</strong>場沿導線推動載子，均勻導線有 V = Eℓ。</li><li><strong>能量：</strong>載子與晶格碰撞，把場能轉成焦耳熱。</li><li><strong>材料與邊界：</strong>導電率與截面積決定同一電流需要多大的 E。</li><li><strong>儀器：</strong>伏特計、安培計與熱像量電壓、電流與發熱。</li></ul>
 <p class="note">來源：08-電磁學-上 §7.1–§7.4。</p>
 
 <h2>推導：從局部材料定律積成整段導線</h2>
@@ -48,7 +49,7 @@
 <label for="con-area">截面積 A（mm²）<input id="con-area" type="range" min="0.1" max="10" step="0.1" value="1"></label>
 <label for="con-len">長度 ℓ（m）<input id="con-len" type="range" min="1" max="100" step="1" value="10"></label>
 </div>
-<div id="conduction-output" class="output" aria-live="polite"></div>
+<div id="conduction-output" class="output" aria-live="polite">互動載入後會顯示計算結果、因果判讀與模型邊界；若這段文字沒有更新，請確認瀏覽器已允許執行本地 JavaScript。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -67,6 +68,7 @@
 
 <h2>連到哪門課</h2>
 <p><a href="../電路學-互動課程/01-電阻與歐姆定律.html">電路學的電阻與歐姆定律</a>從端口使用 v = iR；本章揭示 R 是材料定律對幾何的積分。連續性方程還會在第 12 章迫使馬克士威加入位移電流，修補電容器間隙中的電荷守恆；PCB 與電力課則用 J 與熱限制決定銅箔寬度和導線尺寸。</p>
+<p><a href="自我檢核.html#ch07">做本章 3 題</a></p>
 <nav class="pager" aria-label="章節導覽"><a href="06-電容與電場儲能.html">← 上一頁：電容與電場儲能</a><a href="08-磁場與羅倫茲力.html">下一頁：磁場與羅倫茲力 →</a></nav>
 </main>
 <footer class="site-footer"><span>07 電流密度與焦耳熱</span><a href="名詞與概念字典.html">查字典</a></footer>

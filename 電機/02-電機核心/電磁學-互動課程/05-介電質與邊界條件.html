@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 介電質與邊界條件｜電磁學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電磁世界觀.html">00 起點</a><span aria-current="page">目前章：05 介電質與邊界條件</span><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">05・看懂材料如何改寫電場的大小與方向</p>
 <h1>介電質與邊界條件：連續的量不是同一個</h1>
@@ -14,7 +14,10 @@
 <h2>白話直覺：材料內的小偶極排隊，界面替場重新分配分量</h2>
 <p>可暫把介質想成會被拉歪、卻被束縛在原位的小彈簧；比喻到此為止，精確機制是束縛電荷的微小位移。源可能是電極上的自由電荷，原先的 <b>E</b> 由正指向負；距離與幾何決定真空場大小。材料加入後，外場使分子極化，材料兩端出現束縛面電荷，其反向場削弱內部 <b>E</b>，能量仍存在電場與被極化材料的狀態中。</p>
 <p>界面不允許靜電場憑空產生環流，所以 E 的切向分量相同；界面若沒有自由面電荷，高斯定律又要求 D 的法向分量相同。由於 <b>D</b> = ε<b>E</b>，高 ε 一側的 E 法向分量會縮小，而切向不變，合成方向遂更貼近界面。LCR 表最後不是直接看見分子，而是量已知幾何電容器的 C，再由 C = εA/d 反推材料反應。</p>
-<p>量級上，真空 ε<sub>r</sub> = 1，空氣約 1.0006，聚四氟乙烯約 2.1，FR−4 約 4.4，玻璃約 5 至 7，水在低頻約 80。相較空氣約 3 MV/m 的崩潰場，本章預設 1000 V/m 很小；但「ε 大」不代表一定耐高壓，介電常數與介電強度是兩種不同材料參數。</p>
+<p>量級上，真空 ε<sub>r</sub> = 1，空氣約 1.0006，聚四氟乙烯約 2.1，FR-4 約 4.4，玻璃約 5 至 7，水在低頻約 80。相較空氣約 3 MV/m 的崩潰場，本章預設 1000 V/m 很小；但「ε 大」不代表一定耐高壓，介電常數與介電強度是兩種不同材料參數。</p>
+<ul><li><strong>源：</strong>電極自由電荷建立外場。</li><li><strong>場與距離：</strong>幾何決定距離律，界面分別約束切向 E 與法向 D。</li><li><strong>能量：</strong>能量存於電場與被極化材料的狀態中。</li><li><strong>材料與邊界：</strong>束縛電荷產生反向場，高 ε 側的法向 E 較小。</li><li><strong>儀器：</strong>LCR 表先量 C，再由已知幾何反推 ε<sub>r</sub>。</li></ul>
+<p><strong>方向圖說明：</strong>把界面畫成水平線，→ 是切向、↑ 是由介質 1 指向介質 2 的法向。</p>
+<table><thead><tr><th>分量</th><th>介質 1</th><th>介質 2</th><th>無自由面電荷時</th></tr></thead><tbody><tr><td>E<sub>t</sub></td><td>→ E<sub>1t</sub></td><td>→ E<sub>2t</sub></td><td>E<sub>1t</sub> = E<sub>2t</sub></td></tr><tr><td>D<sub>n</sub></td><td>↑ D<sub>1n</sub></td><td>↑ D<sub>2n</sub></td><td>D<sub>1n</sub> = D<sub>2n</sub></td></tr><tr><td>E<sub>n</sub></td><td>↑ D<sub>n</sub>/ε<sub>1</sub></td><td>↑ D<sub>n</sub>/ε<sub>2</sub></td><td>ε 越大，E<sub>n</sub> 越小</td></tr></tbody></table>
 <p class="note">來源：08-電磁學-上 §5.1–§5.4。</p>
 
 <h2>推導：一個扁長方形與一個扁藥盒</h2>
@@ -47,7 +50,7 @@
 <label for="die-theta">入射角 θ<sub>1</sub>（°，從法線量起）<input id="die-theta" type="range" min="0" max="89" step="1" value="60"></label>
 <label for="die-e1">介質 1 側的場大小（V/m）<input id="die-e1" type="range" min="100" max="5000" step="100" value="1000"></label>
 </div>
-<div id="dielectric-output" class="output" aria-live="polite"></div>
+<div id="dielectric-output" class="output" aria-live="polite">互動載入後會顯示計算結果、因果判讀與模型邊界；若這段文字沒有更新，請確認瀏覽器已允許執行本地 JavaScript。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -65,7 +68,8 @@
 <p>它不能直接證明分子偶極如何排列，不能直接讀出 <b>P</b> 或束縛面電荷，也不能量到數學上緊貼界面兩側的 E 法向跳變，因為任何探頭都有有限尺寸並擾動場。測得 C 也可能含邊緣場、電極接觸與損耗，故與理想平行板模型的差異不能全歸因於 ε。</p>
 
 <h2>連到哪門課</h2>
-<p>波動光學會把界面條件擴展成反射與折射，可先看<a href="../../../共通基礎/物理/互動課程/14-幾何光學與波動光學.html">普通物理的幾何光學與波動光學</a>。PCB 的 FR−4 介電常數會改變傳播速度與走線特性阻抗，第 15 章再接回傳輸線；下一章則用 ε 直接算幾何構型的電容與場能量。</p>
+<p>波動光學會把界面條件擴展成反射與折射，可先看<a href="../../../共通基礎/物理/互動課程/14-幾何光學與波動光學.html">普通物理的幾何光學與波動光學</a>。PCB 的 FR-4 介電常數會改變傳播速度與走線特性阻抗，第 15 章再接回傳輸線；下一章則用 ε 直接算幾何構型的電容與場能量。</p>
+<p><a href="自我檢核.html#ch05">做本章 3 題</a></p>
 <nav class="pager" aria-label="章節導覽"><a href="04-電位與電位梯度.html">← 上一頁：電位與電位梯度</a><a href="06-電容與電場儲能.html">下一頁：電容與電場儲能 →</a></nav>
 </main>
 <footer class="site-footer"><span>05 介電質與邊界條件</span><a href="名詞與概念字典.html">查字典</a></footer>
