@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 戴維寧與最大功率｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="05-戴維寧與最大功率.html" aria-current="page">目前章 05／15</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">05・從兩個端點濃縮整個線性電路</p>
 <h1>戴維寧與最大功率：先看來源有多硬，再選負載</h1>
@@ -50,6 +50,7 @@
 
 <section class="workspace"><h2>自由實驗：掃描負載倍率</h2>
 <p>V<sub>s</sub> 正端經 R<sub>1</sub> 到端點 A，A 經 R<sub>2</sub> 回地，V<sub>s</sub> 負端接地；負載 R<sub>L</sub> 接在 A 與地之間。調整來源與負載倍率，觀察端口等效、負載功率和效率如何一起改變。</p>
+<h3>試試看</h3><ul><li>把負載倍率從小於 1 掃到大於 1；預期負載功率在 k = 1 達最大值，之後反而下降。</li><li>把 k 拉到上限；預期效率提高、端電壓接近開路電壓，但負載取得的功率低於峰值。</li></ul>
 <div class="controls">
 <label for="thv-vs">電源電壓 V<sub>s</sub>（V）<input id="thv-vs" type="range" min="1" max="24" step="1" value="12"></label>
 <label for="thv-r1">R<sub>1</sub>（Ω，源到端點 A）<input id="thv-r1" type="range" min="100" max="10000" step="100" value="1000"></label>
@@ -74,6 +75,8 @@
 <p><strong>能證明什麼：</strong>這些量測能證明指定端口在量測範圍內具有某組 V<sub>th</sub> 與 R<sub>th</sub>，也能以負載功率掃描看見最大值落在 R<sub>L</sub> 接近 R<sub>th</sub>。<strong>不能證明什麼：</strong>它們不能辨識內部拓樸，因為無限多種內部電路可有同一組端口參數；也不能證明更大電流下仍線性。不要直接短路量 I<sub>N</sub>，真實電源可能限流、過熱或損壞。</p>
 <p>若電表輸入阻抗已知，也可把它視為第一個已知負載並校正讀值；若來源會限流或溫升，應從小電流開始逐步掃描，並比較端口直線是否彎曲。一旦 V 與 I 不再呈線性關係，單一常數 R<sub>th</sub> 只能描述局部工作範圍，不能外推到保護動作之後。</p>
 <p>選負載前還要先寫清楚任務。若目標是從高阻感測器讀出準確電壓，量測電路的輸入阻抗應遠大於 R<sub>th</sub>，避免負載效應；若目標是從微弱通訊源取得最多可用訊號功率，匹配才有意義；若目標是供電，則希望來源等效內阻遠小於負載，使壓降、發熱與能量損失都小。相同的戴維寧參數沒有唯一「最佳」負載，最佳值永遠附著在功率、效率、電壓準確度或雜訊等明確指標上。</p>
+
+<section class="note"><h2>本章帶走</h2><ul><li>任何線性兩端網路都可在指定工作條件下濃縮成 V<sub>th</sub> 串聯 R<sub>th</sub>。</li><li>最大功率出現在 R<sub>L</sub> = R<sub>th</sub>，此時效率只有 50 %。</li><li>量測、通訊與供電的最佳負載目標不同，不能只追求同一個指標。</li></ul><p><strong>最常見錯誤：</strong>把「最大負載功率」誤當成「最高效率」，忽略來源內阻也在耗能。</p></section>
 
 <h2>連到哪門課</h2>
 <p>電子學會用戴維寧模型描述偏壓網路與放大器輸出阻抗；射頻、天線與通訊系統關心匹配，因為微弱訊號需要盡可能送入下一級；電力工程與電源供應器則通常追求高效率與低壓降，不會把一半功率燒在來源內阻。感測器介面也會用端口模型估算負載效應與量測誤差。</p>

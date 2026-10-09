@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 小訊號模型｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="10-小訊號模型.html" aria-current="page">10 本章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">10・把非線性元件編譯成 Q 點附近的線性模型</p>
 <h1>小訊號模型：先求工作點，再用局部斜率算增益</h1>
@@ -63,6 +63,11 @@
 
 <h2>可觀察證據：由受控小擾動反推局部參數</h2>
 <p>把放大器偏在固定 Q 點，用訊號產生器輸入 5 mV 小弦波，示波器量輸入與輸出振幅及相位；已知 R<sub>C</sub> 時，可由 A<sub>v</sub> = −g<sub>m</sub>R<sub>C</sub> 間接反推 g<sub>m</sub>，並與 I<sub>C</sub>/V<sub>T</sub> 比較。逐步把輸入增到 50 mV，若增益下降且頻譜分析儀看到諧波增加，就能證明小訊號近似開始失效。改變負載再看增益飽和，可估 r<sub>o</sub>。這些量測不能用單一增益值分離 g<sub>m</sub>、r<sub>π</sub> 與所有負載效應，也不能直接看見等效相依源；必須改變源阻抗與負載做多組量測。</p>
+
+<section class="workspace"><h2>章末練習：參數只屬於這個 Q 點</h2><p>電流改成 2 mA，不沿用正文的 1 mA。</p><div class="grid">
+<div class="card"><label for="c10-1">1. 同一顆 BJT 換了直流偏壓後，原本的 g<sub>m</sub> 能否直接沿用？</label><select id="c10-1"><option value="">請選擇</option><option value="a">可以，g<sub>m</sub> 是型號常數</option><option value="b">不可以，g<sub>m</sub> 是指定 Q 點的局部參數</option></select><button id="c10-1-check" type="button">對答案</button><div id="c10-1-output" class="output" aria-live="polite"></div></div>
+<div class="card"><label for="c10-2">2. 300 K、I<sub>C</sub> = 2 mA 時，BJT 的 g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub> 是多少 mA/V？</label><input id="c10-2" type="number" step="any"><button id="c10-2-check" type="button">對答案</button><div id="c10-2-output" class="output" aria-live="polite"></div></div>
+</div></section>
 
 <h2>連到哪門課</h2>
 <p>小訊號模型是類比積體電路、射頻前端與感測器讀出電路的共同語言。一次線性化可銜接<a href="../../../共通基礎/數學/互動課程/03-級數與泰勒.html">工程數學的級數與泰勒展開</a>，等效相依源與疊加則銜接<a href="../電路學-互動課程/04-疊加原理與相依源.html">電路學的疊加原理與相依源</a>。下一章把模型接上外部電阻，算三種單級放大器。</p>

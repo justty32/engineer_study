@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 極零點與二階系統｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="08-極零點與二階系統.html" aria-current="page">本章 08</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">08・兩個參數綁死四個工程指標</p>
 <h1>極零點與二階系統：看到 ζ 就知道波形會怎麼晃</h1>
@@ -44,6 +44,7 @@
 <p>量級對照：ω<sub>n</sub> = 10 rad/s 換成頻率只有 1.591549 Hz，比市電的 50 Hz 慢得多，是機構伺服或電源軟啟動那個量級；t<sub>s</sub> = 0.8 s 是用眼睛就看得出來的晃動。同一個 ζ 若把 ω<sub>n</sub> 拉到 6283.185307 rad/s（1000 Hz），波形長得一模一樣，只是整條時間軸壓縮了 628 倍，整定時間變成 1.273240 ms。</p>
 
 <section class="workspace"><h2>自由實驗：把 ζ 與 ω<sub>n</sub> 的分工看清楚</h2>
+<p class="note">探索順序：先固定 ω<sub>n</sub> 比較三種阻尼，再固定 ζ 改變快慢；下方取樣文字圖呈現完整步階響應。</p>
 <p>系統是標準二階式 H(s) = ω<sub>n</sub>² / (s² + 2ζω<sub>n</sub>s + ω<sub>n</sub>²)，輸入是單位步階。前兩個滑桿決定系統本身，後兩個滑桿決定你站在哪個頻率、哪個時刻觀測。要看的是：只動 ω<sub>n</sub> 時超越量一格都不動，只有時間軸被拉伸或壓縮；ζ 跨過 0.707107 時共振峰整個消失，但步階響應還在超越。</p>
 <div class="controls">
 <label for="sec-zeta">阻尼比 ζ<input id="sec-zeta" type="range" min="0.05" max="2" step="0.05" value="0.5"></label>
@@ -51,7 +52,7 @@
 <label for="sec-w">觀測角頻率 ω（rad/s）<input id="sec-w" type="range" min="0" max="100" step="1" value="10"></label>
 <label for="sec-t">步階響應的觀測時刻 t（s）<input id="sec-t" type="range" min="0" max="3" step="0.05" value="0.5"></label>
 </div>
-<div id="secondorder-output" class="output" aria-live="polite"><strong>欠阻尼</strong>：極點 −5.000000 ± j8.660254、ω<sub>d</sub> = 8.660254 rad/s、Q = 1.000000。會超越 16.303353 %，第一個峰在 t<sub>p</sub> = 0.362760 s，大約 t<sub>s</sub> = 0.800000 s 後穩定下來。共振頻率 ω<sub>r</sub> = 7.071068 rad/s、共振峰 M<sub>r</sub> = 1.154701。目前 |H(jω)| = 1.000000（0.000000 dB）、∠H = −90.000000°、y(0.500000) = 1.074591。<strong>現在剛好站在 ω<sub>n</sub> 上</strong>：|H| = 1/(2ζ) = 1.000000，相位一定是 −90.000000°——這是實驗室量 ω<sub>n</sub> 最可靠的方法，因為相位比振幅好認。<strong>M<sub>p</sub> 只由 ζ 決定，ω<sub>n</sub> 只決定快慢</strong>：把 ω<sub>n</sub> 加倍，波形形狀一模一樣，只是時間軸壓縮一半。Q = 1/(2ζ)，所以 ζ = 0.5 就是 Q = 1；電路學的 RLC 共振講的是同一件事。把 ζ 滑到 0.05 會逼近振盪器，滑到 1 是臨界阻尼、不超越且最快，滑過 1 之後變成兩個實極點、由慢的那個主導；ζ 一旦到達 0.707107 以上就不再有共振峰。t 滑到 0 時 y 一定是 0.000000。</div>
+<div id="secondorder-output" class="output" aria-live="polite">載入互動結果…</div>
 </section>
 
 <h2>不要混淆</h2>

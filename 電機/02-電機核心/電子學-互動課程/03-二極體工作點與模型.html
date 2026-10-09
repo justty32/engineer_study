@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 二極體工作點與模型｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="03-二極體工作點與模型.html" aria-current="page">03 本章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">03・讓元件方程與外部回路在同一點相遇</p>
 <h1>二極體工作點與模型：精度不夠時再多算</h1>
@@ -63,6 +63,11 @@
 
 <h2>可觀察證據：同時量二極體壓降與電阻壓降</h2>
 <p>用可調電源供應器接 R 與二極體串聯，三用電表以電壓檔量二極體兩端 V<sub>D</sub>，再量電阻兩端 V<sub>R</sub>，用 I<sub>D</sub> = V<sub>R</sub>/R 換算電流，通常比把電流檔直接串入更少改變回路。改變 V<sub>s</sub> 並記錄多組 (V<sub>D</sub>, I<sub>D</sub>)，能證明每個外部條件對應一個工作點、量出恆壓降模型在該點的實際誤差，也能觀察 V<sub>D</sub> 隨電流緩慢上升。它不能只靠直流資料直接量到 r<sub>d</sub>，要在 Q 點疊加小訊號並量 ΔV/ΔI；也不能由單一工作點分離 I<sub>S</sub> 與 n，需對多點資料擬合。三用電表二極體檔顯示的是儀器固定測試電流下的順向壓降，通常測試電流約 0.1–1 mA；它不能證明所有回路都固定為 0.7 V，換儀器或元件便可能換數字。</p>
+
+<section class="workspace"><h2>章末練習：先解再驗證</h2><p>這裡改用 6.2 V 與 1.5 kΩ，避免照抄正文例題。</p><div class="grid">
+<div class="card"><label for="c03-1">1. 分段模型的可靠使用順序是哪一個？</label><select id="c03-1"><option value="">請選擇</option><option value="a">先假設工作區、解回路，再檢查不等式</option><option value="b">只看電源大於 0.7 V 就宣告導通</option></select><button id="c03-1-check" type="button">對答案</button><div id="c03-1-output" class="output" aria-live="polite"></div></div>
+<div class="card"><label for="c03-2">2. V<sub>s</sub> = 6.2 V、R = 1.5 kΩ，以 0.7 V 恆壓降模型估算電流多少 mA？</label><input id="c03-2" type="number" step="any"><button id="c03-2-check" type="button">對答案</button><div id="c03-2-output" class="output" aria-live="polite"></div></div>
+</div></section>
 
 <h2>連到哪門課</h2>
 <p>負載線就是 KVL 的數值版本，分壓與歐姆定律見<a href="../電路學-互動課程/01-電阻與歐姆定律.html">電路學 01</a>，完整回路約束見<a href="../電路學-互動課程/02-KCL與KVL.html">電路學 02</a>。以切線反覆修正猜值的牛頓法見<a href="../../../共通基礎/數學/互動課程/01-極限與導數.html">工程數學先修的極限與導數</a>。後續 BJT 與 MOSFET 仍會以「外部負載線與元件曲線交點」求工作區與 Q 點，只是未知數增加。</p>

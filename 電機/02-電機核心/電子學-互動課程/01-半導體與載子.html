@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 半導體與載子｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="01-半導體與載子.html" aria-current="page">01 本章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">01・從能量位置算到一塊矽的電阻率</p>
 <h1>半導體與載子：用少量摻雜改寫導電性</h1>
@@ -59,6 +59,11 @@
 
 <h2>可觀察證據：電阻率、型別與濃度要分開量</h2>
 <p>四點探針（four point probe）讓外側探針送電流、內側探針量電壓，可降低接觸電阻影響並得到薄片電阻 R<sub>s</sub>，配合厚度換算電阻率。霍爾效應量測（Hall measurement）在已知電流與磁場下量橫向霍爾電壓，其正負可判斷主要載子是電洞或電子，大小可推算載子濃度，再與導電率合併求遷移率。這些儀器能證明樣品在量測條件下的電阻率、主要載子型別、濃度與遷移率，並檢查「載子多使 σ 增大」的數值關係。它們不能直接證明能隙；能隙要靠光吸收邊緣或溫度相依性。它們也不能只憑載子型別辨認雜質究竟是磷還是砷，更不能證明微觀每個原子的位置。探針量到的是有限區域的平均，摻雜若不均勻，單一讀值不能代表整片晶圓。</p>
+
+<section class="workspace"><h2>章末練習：載子與導電率</h2><p>用新濃度檢查型別與電阻率，不沿用正文的 10<sup>16</sup> cm<sup>−3</sup>。</p><div class="grid">
+<div class="card"><label for="c01-1">1. n 型矽在熱平衡時是否整體帶負電？</label><select id="c01-1"><option value="">請選擇</option><option value="a">否；電子與固定施體離子的電荷巨觀上抵銷</option><option value="b">是；只要電子是多數載子就必定帶負電</option></select><button id="c01-1-check" type="button">對答案</button><div id="c01-1-output" class="output" aria-live="polite"></div></div>
+<div class="card"><label for="c01-2">2. 假設 N<sub>D</sub> = 10<sup>17</sup> cm<sup>−3</sup>、µ<sub>n</sub> = 1350 cm²/(V⋅s)，ρ = 1/(qµN) 是多少 Ω⋅cm？</label><input id="c01-2" type="number" step="any"><button id="c01-2-check" type="button">對答案</button><div id="c01-2-output" class="output" aria-live="polite"></div></div>
+</div></section>
 
 <h2>連到哪門課</h2>
 <p>能帶、能隙與半導體的量子圖像見<a href="../../../共通基礎/物理/互動課程/15-量子與半導體.html">普通物理的量子與半導體</a>；熱激發與濃度梯度造成擴散的巨觀圖像見<a href="../../../共通基礎/物理/互動課程/07-熱學與流體.html">普通物理的熱學與流體</a>。本章的 σ 與 ρ 會直接用於積體電路走線、接觸及寄生電阻估算；下一章則把 n 型與 p 型接在一起，讓擴散與漂移自行建立一個單向元件。</p>

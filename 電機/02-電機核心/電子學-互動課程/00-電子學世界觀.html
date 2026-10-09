@@ -62,6 +62,11 @@
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
 <p>用電源供應器與串聯電阻先把二極體偏在指定電流，再以訊號產生器疊加 10 mV 小弦波，並用示波器同時量二極體兩端電壓與由電阻壓降換算的電流。振幅小時，輸出仍接近乾淨弦波；把振幅加到 100 mV，會看到上半部拉尖、下半部壓扁。這能證明局部線性化只在有限振幅內成立，也能由相鄰兩點的 ΔI/ΔV 推算 g，觀察失真隨振幅增加。它不能直接證明 r<sub>d</sub> 是一個可獨立量到的實體電阻，因為 r<sub>d</sub> 是兩個量的比值；也不能證明 I<sub>S</sub> 的真值，因為飛安培級電流通常被儀器偏移、表面漏電與環境雜訊淹沒。單次量測只支持該溫度與該工作點，不能外推整條曲線。</p>
 
+<section class="workspace"><h2>章末練習：先辨認是哪一種斜率</h2><p>數值刻意改用正文沒有算過的工作點；作答後會顯示容差與解析。</p><div class="grid">
+<div class="card"><label for="c00-1">1. 二極體在某工作點的 V/I，能否直接當成該點的小訊號電阻？</label><select id="c00-1"><option value="">請選擇</option><option value="a">可以，兩者都是電阻單位</option><option value="b">不可以；小訊號電阻是局部斜率倒數</option></select><button id="c00-1-check" type="button">對答案</button><div id="c00-1-output" class="output" aria-live="polite"></div></div>
+<div class="card"><label for="c00-2">2. 300 K、二極體工作電流 0.8 mA 時，r<sub>d</sub> = V<sub>T</sub>/I 約為多少 Ω？</label><input id="c00-2" type="number" step="any"><button id="c00-2-check" type="button">對答案</button><div id="c00-2-output" class="output" aria-live="polite"></div></div>
+</div></section>
+
 <h2>連到哪門課</h2>
 <p>整門電子學的偏壓、放大器與回授分析都重複這套兩段式方法。線性元件、歐姆定律與功率帳回到<a href="../電路學-互動課程/01-電阻與歐姆定律.html">電路學 01</a>；小訊號背後的泰勒一次近似見<a href="../../../共通基礎/數學/互動課程/03-級數與泰勒.html">工程數學先修的級數與泰勒</a>。下一章先下探元件物理，回答可移動載子從哪裡來，再回頭建構二極體與電晶體。</p>
 <nav class="pager" aria-label="章節導覽"><a href="index.html">← 課程地圖</a><a href="01-半導體與載子.html">下一頁：半導體與載子 →</a></nav>

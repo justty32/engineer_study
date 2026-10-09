@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 交流功率與功因｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="11-交流功率與功因.html" aria-current="page">目前章 11／15</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">11・分清做功、來回搬運與設備容量</p>
 <h1>交流功率與功因：為什麼瓦特、var 與 VA 都不能少</h1>
@@ -56,6 +56,7 @@
 
 <section class="workspace"><h2>自由實驗：調整負載與目標功因</h2>
 <p>有效值交流源經上游配線到負載，負載以 R + jX 表示並回到電源；補償元件並聯在負載兩端而共用同一電壓。調整負載與目標，觀察三種功率、校正元件及線損比例。</p>
+<h3>試試看</h3><ul><li>把目標功因逐步提高到 1；預期所需補償量增加、線電流與線損下降，但實功不變。</li><li>把 X 調到接近零；預期目前功因接近 1，工具會指出不需要再補償。</li></ul>
 <div class="controls">
 <label for="pw-v">電源電壓（V，有效值）<input id="pw-v" type="range" min="100" max="400" step="10" value="220"></label>
 <label for="pw-r">負載電阻 R（Ω）<input id="pw-r" type="range" min="1" max="50" step="0.5" value="10"></label>
@@ -80,6 +81,8 @@
 <p>功率計或瓦特表同時取樣電壓與電流，可直接顯示 P、S 與 pf；具四象限或落後／超前標示的機型也能顯示 Q 的符號。<strong>能證明什麼：</strong>它能驗證實際實功、視在功率、功因，以及接入補償元件後 P 近似不變而 S、I 下降。<strong>不能證明什麼：</strong>沒有方向標示時，單一 pf 大小不能判斷負載感性或容性；儀表讀值也不能單獨證明內部是哪一顆 L 或 C 造成相位。</p>
 <p>普通三用電表只能分別量有效值電壓與電流，兩者相乘得到 S，不是 P，因此完全量不到功因。夾式電流勾表可在不斷線下量同一條上游導線；在本例校正前後會由 17.6 A 降到約 14.8 A，直接支持上游電流下降，但單獨這個讀值仍不能證明 P 未變，必須與功率計的 P 讀值交叉核對。</p>
 <p>也可用示波器量電壓與取樣電阻所代表的電流，再由時間差估 θ；然而波形若含諧波，單一過零相位不足以給真功因。實務電容櫃還可能與系統電感形成共振並放大諧波，因此「50 Hz 或 60 Hz 算對電容量」不能證明所有頻率都安全，需用電能品質分析儀檢查諧波與四象限功率。</p>
+
+<section class="note"><h2>本章帶走</h2><ul><li>實功 P 做淨功，無效功率 Q 往返儲能，視在功率 S 決定設備容量。</li><li>功率因數是 P/S；同樣實功下，功因愈低所需線電流愈大。</li><li>並聯補償要先確認目前功因低於目標，且不能忽略諧波與共振。</li></ul><p><strong>最常見錯誤：</strong>以為提高功因會降低負載實功；理想補償改的是 Q、S 與上游電流。</p></section>
 
 <h2>連到哪門課</h2>
 <p>電力系統用 P、Q 調度電壓與容量；電機機械中的馬達是典型感性負載；變頻器、UPS、發電機與變壓器都以 VA 額定而不只看 W。第 14 章會把功率公式擴展到平衡三相，仍保留實功、無效功率與功因的區分。</p>

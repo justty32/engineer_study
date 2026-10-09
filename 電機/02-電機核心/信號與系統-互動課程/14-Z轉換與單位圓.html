@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>14 Z 轉換與單位圓｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="14-Z轉換與單位圓.html" aria-current="page">本章 14</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">14・s 平面的無限長虛軸被捲成一個圓</p>
 <h1>Z 轉換與單位圓：看極點的半徑與角度就說得出穩定性、近似共振位置與衰減速度</h1>
@@ -41,6 +41,7 @@
 <p>量級對照：f<sub>s</sub> = 8000 Hz 是電話品質的取樣率，θ = 45° 對應的 1000 Hz 正是本課的參考轉角頻率。r = 0.9 的拖尾是 9.49 個樣本、約 1.19 ms；換成 CD 的 44.1 kHz，拖尾仍是 9.49 個樣本，卻只剩 0.215 ms——<strong>同一組係數在不同 f<sub>s</sub> 下，濾的頻率與拖的時間全部跟著變</strong>。</p>
 
 <section class="workspace"><h2>自由實驗：拉動極點的半徑與角度</h2>
+<p class="note">探索順序：先固定角度把 r 推近單位圓，再固定 r 改角度；下方取樣文字圖呈現脈衝響應的振盪與拖尾。</p>
 <p>系統是一對共軛極點 p = r·exp(±jθ) 組成的二階共振器，輸入打一個 δ[n]，輸出是 h[n] = r<sup>n</sup>·sin((n + 1)θ)/sin θ。半徑 r 決定衰減、角度 θ 決定振盪頻率、f<sub>s</sub> 把角度換算成 Hz、n 決定看第幾個樣本。要看的是四件事同時變化：穩定判定、極點角對應頻率、拖尾長度，以及頻率響應在極點角、直流與 f<sub>s</sub>/2 三處的高低差。</p>
 <div class="controls">
 <label for="zpl-r">極點半徑 r<input id="zpl-r" type="range" min="0" max="1.2" step="0.01" value="0.9"></label>
@@ -48,7 +49,7 @@
 <label for="zpl-n">觀測樣本 n<input id="zpl-n" type="range" min="0" max="40" step="1" value="5"></label>
 <label for="zpl-fs">取樣頻率 f<sub>s</sub>（Hz）<input id="zpl-fs" type="range" min="1000" max="48000" step="1000" value="8000"></label>
 </div>
-<div id="zplane-output" class="output" aria-live="polite">極點 z = 0.900000·exp(±j45.000000°)，h[5] = −0.835079。<strong>穩定</strong>：極點在單位圓內，h[n] 以 r<sup>n</sup> 衰減，大約 n<sub>τ</sub> = 9.491222 個樣本（1.186403 ms）後掉到 36.8 %。極點角對應頻率 f<sub>θ</sub> = 1000.000000 Hz（r 接近 1 時才近似峰值位置）。差分方程：y[n] = 1.272792·y[n−1] − 0.810000·y[n−2] + x[n]。|H| 在極點角為 7.432941、在直流為 1.861477、在 f<sub>s</sub>/2（4000.000000 Hz）為 0.324381，極點角／直流比 3.993034 倍。|H| 的分母就是「單位圓上的觀測點到極點的距離」——<strong>距離愈近值愈大</strong>，所以 r 愈接近 1，響應通常愈高愈尖，代價是拖尾愈長。連續時間看「在不在左半平面」，離散時間看「在不在單位圓內」——z = exp(sT<sub>s</sub>) 把無限長的虛軸捲成一個圓，這就是離散頻譜為什麼是週期的幾何理由。把 r 滑到 1 會看到非 BIBO 穩定，滑過 1 會看到指數成長，滑到 0 則退化成沒有記憶的系統。</div>
+<div id="zplane-output" class="output" aria-live="polite">載入互動結果…</div>
 </section>
 
 <h2>不要混淆</h2>

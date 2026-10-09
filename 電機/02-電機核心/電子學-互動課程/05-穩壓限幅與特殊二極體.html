@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 穩壓限幅與特殊二極體｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="05-穩壓限幅與特殊二極體.html" aria-current="page">05 本章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">05・讓二極體決定電壓邊界與能量出口</p>
 <h1>穩壓、限幅與特殊二極體：先假設導通，再驗證電流</h1>
@@ -68,6 +68,11 @@
 
 <h2>可觀察證據：掃輸入與負載，找出穩壓窗口</h2>
 <p>用可調直流電源供電，三用電表量齊納兩端 V<sub>out</sub>，再量 R<sub>s</sub> 壓降並除以阻值求 I<sub>s</sub>。改變輸入時輸出幾乎不動，能證明目前落在穩壓區；逐步減小負載電阻，若輸出開始隨輸入與負載變動，就能定位脫出穩壓的邊界。示波器以 AC 耦合比較輸入與輸出漣波，可量抑制程度。這些結果不能直接證明動態電阻 r<sub>z</sub>，那需要疊加小訊號並量 ΔV/ΔI；也不能判定崩潰來自穿隧或雪崩，必須量溫度係數的方向。</p>
+
+<section class="workspace"><h2>章末練習：先做電流分帳</h2><p>數值改用 18 V、560 Ω、6.2 V 與 2.2 kΩ。</p><div class="grid">
+<div class="card"><label for="c05-1">1. 判斷齊納是否仍在穩壓區，應先檢查哪個量？</label><select id="c05-1"><option value="">請選擇</option><option value="a">I<sub>Z</sub> = I<sub>s</sub> − I<sub>L</sub> 是否仍為正且未超額定</option><option value="b">只要輸入電壓高於 V<sub>Z</sub> 就一定穩壓</option></select><button id="c05-1-check" type="button">對答案</button><div id="c05-1-output" class="output" aria-live="polite"></div></div>
+<div class="card"><label for="c05-2">2. V<sub>in</sub> = 18 V、R<sub>s</sub> = 560 Ω、V<sub>Z</sub> = 6.2 V、R<sub>L</sub> = 2.2 kΩ 時，I<sub>Z</sub> 是多少 mA？</label><input id="c05-2" type="number" step="any"><button id="c05-2-check" type="button">對答案</button><div id="c05-2-output" class="output" aria-live="polite"></div></div>
+</div></section>
 
 <h2>連到哪門課</h2>
 <p>齊納穩壓器是電源、過壓保護與參考電壓的最小模型，其先假設再檢查流程會直接沿用到電晶體工作區。分壓與來源等效可回到<a href="../電路學-互動課程/05-戴維寧與最大功率.html">電路學的戴維寧等效</a>；LED 的能隙、光子能量與波長 λ = hc/E<sub>g</sub> 可銜接<a href="../../../共通基礎/物理/互動課程/15-量子與半導體.html">普通物理的量子與半導體</a>。光二極體用於光纖接收，變容二極體（varactor diode）以反偏改變空乏區寬度與電容，蕭特基二極體（Schottky diode）則以金屬與半導體接面換得較低壓降與快速切換。</p>

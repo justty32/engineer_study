@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 拉氏轉換與轉移函數｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="07-拉氏轉換與轉移函數.html" aria-current="page">本章 07</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">07・多給一個實部 σ，暫態與發散就都算得動了</p>
 <h1>拉氏轉換與轉移函數：極點的位置就是系統的個性</h1>
@@ -39,6 +39,7 @@
 <p>量級對照：這對極點的振盪頻率只有 1.591549 Hz，比市電的 50 Hz 還慢三十倍，是機構或電源迴路那種肉眼看得見的晃動，而且要 2.5 秒才安頓下來。把 ω<sub>d</sub> 換成 6283.185307 rad/s，振盪就落在本課的參考轉角頻率 1000 Hz，那已經是喇叭聽得見的音高。</p>
 
 <section class="workspace"><h2>自由實驗：把極點在 s 平面上拖來拖去</h2>
+<p class="note">探索順序：先只改實部看包絡，再只改虛部看振動速度；下方取樣文字圖呈現自然響應隨時間的變化。</p>
 <p>系統只有一對共軛極點 s = σ ± jω<sub>d</sub>，增益是 K，自然響應是 h(t) = K·e<sup>σt</sup>·cos(ω<sub>d</sub>t)。滑桿直接決定極點的位置與觀測時刻，程式算出響應值、包絡、時間常數、5τ 與振盪頻率。要看的是：把 σ 往左推只會讓包絡掉得更快，振盪頻率一動也不動；把 ω<sub>d</sub> 拉高只會振得更密，衰減速度完全不變。</p>
 <div class="controls">
 <label for="spl-k">增益 K<input id="spl-k" type="range" min="0.5" max="3" step="0.1" value="1"></label>
@@ -46,7 +47,7 @@
 <label for="spl-omega">極點虛部 ω<sub>d</sub>（rad/s）<input id="spl-omega" type="range" min="0" max="30" step="0.5" value="10"></label>
 <label for="spl-t">觀測時刻 t（s）<input id="spl-t" type="range" min="0" max="5" step="0.1" value="0.5"></label>
 </div>
-<div id="splane-output" class="output" aria-live="polite">極點 s = −2.000000 ± j10.000000；h(0.500000) = 0.104353、包絡 0.367879、時間常數 τ = 0.500000 s、5τ = 2.500000 s、振盪頻率 1.591549 Hz（週期 0.628319 s）。<strong>穩定</strong>：極點在左半平面，自然響應以 e<sup>σt</sup> 衰減，時間常數 τ = 0.500000 s，大約 5τ ＝ 2.500000 s 後就看不到了。極點的<strong>實部管衰減有多快、虛部管振多快</strong>，這兩件事完全獨立——這就是為什麼工程師看到零極點圖就知道系統會怎麼動。H(jω) 是 H(s) 在虛軸上的切片：把 s 換成 jω 就從「這個系統會怎麼自己動」變成「它對每個頻率怎麼反應」。把 σ 滑到 0 會停在虛軸上，振幅永遠不變；滑到正值就進入右半平面，響應指數成長，真實系統會撞到飽和或燒掉；把 ω<sub>d</sub> 滑到 0 則變成實極點，純指數而沒有振盪。t 滑到 0 時，不管其他滑桿怎麼放，h 一定等於 K。</div>
+<div id="splane-output" class="output" aria-live="polite">載入互動結果…</div>
 </section>
 
 <h2>不要混淆</h2>

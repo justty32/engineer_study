@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 系統的六個性質｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="03-系統的六個性質.html" aria-current="page">本章 03</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">03・六個性質，逐條測給你看</p>
 <h1>系統的六個性質：把定義背誦換成一張測得出殘差的判定表</h1>
@@ -46,6 +46,7 @@
 <p>量級對照：一台放大器從開機到熱平衡要好幾分鐘，而一路電話語音的取樣週期是 1/8000 秒，也就是 125.000000 µs。在一次取樣的尺度上把系統當成時不變很安全，在一小時的尺度上就未必——時不變是相對於你關心的時間尺度而言的。</p>
 
 <section class="workspace"><h2>自由實驗：對六個系統各做一次疊加測試</h2>
+<p class="note">探索順序：先比較平方與固定增益，再看延遲與時間壓縮；下方取樣文字圖會列出有限序列的實際輸出，不只顯示查表結論。</p>
 <p>選一個系統，再選兩個常數測試輸入 x<sub>1</sub>、x<sub>2</sub> 與兩個疊加係數 a、b。程式會把「先疊加再進系統」與「先進系統再疊加」各算一次，列出兩式與殘差，同時把六個性質的判定一起顯示。要看的是：殘差是否為零、以及殘差怎麼隨輸入變化。</p>
 <div class="controls">
 <label for="chk-sys">受測系統<select id="chk-sys"><option value="gain">y(t) = 2·x(t)</option><option value="square" selected>y(t) = x(t)²</option><option value="bias">y(t) = x(t) + 3</option><option value="delay">y(t) = x(t − 1) 延遲一秒</option><option value="scale">y(t) = x(2t) 時間壓縮</option><option value="integ">y(t) = x 的積分</option></select></label>
@@ -54,7 +55,7 @@
 <label for="chk-x1">測試輸入 x<sub>1</sub> 的值<input id="chk-x1" type="range" min="-3" max="3" step="1" value="1"></label>
 <label for="chk-x2">測試輸入 x<sub>2</sub> 的值<input id="chk-x2" type="range" min="-3" max="3" step="1" value="1"></label>
 </div>
-<div id="syscheck-output" class="output" aria-live="polite">這個模式四個滑桿都會用到，切換系統只是換一個受測對象，不會讓任何滑桿失效。目前系統：平方 y(t) = x(t)²。六個性質：線性 否、時不變 是、因果 是、BIBO 穩定 是、無記憶 是、可逆 否。疊加測試：左式 25.000000、右式 5.000000、殘差 20.000000。<strong>線性被推翻</strong>：一個反例就夠了。殘差來自交叉項 2ab·x<sub>1</sub>x<sub>2</sub>，<strong>振幅愈大殘差愈大</strong>；平方也不可逆，因為 +1 與 −1 給出同一個輸出。六個性質裡只有<strong>線性＋時不變</strong>能換來「一個 h 就描述整個系統」的特權，這就是下一章只談 LTI 的原因。把 a 與 b 都拉到 0 時測試訊號整個消失，殘差會失去鑑別力，那時要換一組測試輸入。</div>
+<div id="syscheck-output" class="output" aria-live="polite">載入互動結果…</div>
 </section>
 
 <h2>不要混淆</h2>

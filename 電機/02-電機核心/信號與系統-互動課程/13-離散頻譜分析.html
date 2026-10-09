@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 離散頻譜分析｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="13-離散頻譜分析.html" aria-current="page">本章 13</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">13・DTFT 是理論、DFT 是取樣版、FFT 只是快速演算法</p>
 <h1>離散頻譜分析：頻點間距由窗長決定，其餘都是交換條件</h1>
@@ -48,6 +48,7 @@
 <p>量級對照：N = 1024 配 f<sub>s</sub> = 8000 Hz 就是 0.128 秒的窗，Δf = 7.8125 Hz；要達到 1 Hz 的解析度就得量滿 1 秒，要分辨市電 50 Hz 與 51 Hz 也是同一個代價。CD 的 44100 Hz 配 1024 點則是 0.023 秒的窗、Δf 約 43 Hz——同樣的點數，取樣率愈高解析度反而愈粗。</p>
 
 <section class="workspace"><h2>自由實驗：把窗長、訊號頻率與窗形分開調整</h2>
+<p class="note">探索順序：先讓頻率對準與偏離 bin，再切換窗函數；下方取樣文字圖列出訊號附近各 bin 的相對大小。</p>
 <p>取一段長度 N ＝ 2 的某個次方的樣本，取樣率 f<sub>s</sub>，裡面有一個頻率 f 的弦波，再選一種窗。要看三件事：這個 f 有沒有落在 bin 中心（決定會不會洩漏）、窗長換來多少解析度、以及選的窗把旁瓣壓低了多少、主瓣又賠掉多寬。</p>
 <div class="controls">
 <label for="dft-nexp">點數指數（N ＝ 2 的這個次方）<input id="dft-nexp" type="range" min="4" max="14" step="1" value="10"></label>
@@ -55,7 +56,7 @@
 <label for="dft-f">訊號頻率 f（Hz）<input id="dft-f" type="range" min="10" max="20000" step="1" value="1000"></label>
 <label for="dft-win">窗函數<select id="dft-win"><option value="rect">矩形（不加窗）</option><option value="hann" selected>Hann</option><option value="hamming">Hamming</option><option value="blackman">Blackman</option></select></label>
 </div>
-<div id="dftlab-output" class="output" aria-live="polite">N = 1024，Δf = 7.812500 Hz，窗長 0.128000 s；精確 bin 位置 128.000000，最近 bin k = 128（中心 1000.000000 Hz），誤差 0.000000 Hz。N² = 1048576 次複數乘法，(N/2)log<sub>2</sub>N = 5120 次，加速 204.800000 倍。<strong>整數週期，但 Hann 窗會展寬譜峰</strong>：訊號頻率正好落在第 128 根 bin 的中心；乘上 Hann 窗後，能量會分布到鄰近 bin，不能沿用矩形窗的單一譜線結論。<strong>頻點間距由窗長決定</strong>：Δf = 1/T<sub>win</sub>。若需 1 Hz 的頻點間距，量測窗需 1 秒；實際分辨能力還取決於窗函數與訊號。選了 Hann 窗：主瓣 4 個 bin（＝31.250000 Hz，解析度變差），最高旁瓣 −31.5 dB（洩漏被壓低）。<strong>沒有一個窗兩邊都贏。</strong>把 N 補 0 到兩倍只會讓譜線看起來更密（內插），T<sub>win</sub> 沒變，<strong>真正能分辨的最小頻率差完全不變</strong>。量級對照：N = 1024、f<sub>s</sub> = 8000 就是 0.128 秒的窗，Δf = 7.8125 Hz；若需 1 Hz 的頻點間距，量測窗需 1 秒；實際分辨能力還取決於窗函數與訊號。把點數指數滑到 4 會看到加速只剩 8.000000 倍，N 小的時候 FFT 沒什麼好處；把 f 推過 f<sub>s</sub>/2 則要先回第 12 章處理混疊。</div>
+<div id="dftlab-output" class="output" aria-live="polite">載入互動結果…</div>
 </section>
 
 <h2>不要混淆</h2>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 節點與網目分析｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="03-節點與網目分析.html" aria-current="page">目前章 03／15</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">03・把連接關係翻成一組可重複求解的方程</p>
 <h1>節點與網目分析：不靠眼力也能解線性電路</h1>
@@ -44,6 +44,7 @@
 
 <section class="workspace"><h2>自由實驗：組合並求解二節點矩陣</h2>
 <p>節點 1 經 R<sub>1</sub> 接地，節點 2 經 R<sub>3</sub> 接地，R<sub>2</sub> 連接兩節點；I<sub>s1</sub>、I<sub>s2</sub> 分別注入兩節點，回流皆經電阻到地。調整五個參數，觀察 G 矩陣、行列式、節點電壓、跨接電流與代回殘差。</p>
+<h3>試試看</h3><ul><li>令兩個注入電流相等，並把 R<sub>1</sub>、R<sub>3</sub> 調成相等；預期兩節點同電位，跨接電流接近零。</li><li>逐步減小 R<sub>2</sub>；預期兩節點電壓愈接近，而兩條節點方程的殘差仍接近零。</li></ul>
 <div class="controls">
 <label for="nod-r1">R<sub>1</sub>（Ω，節點 1 到地）<input id="nod-r1" type="range" min="100" max="10000" step="100" value="1000"></label>
 <label for="nod-r2">R<sub>2</sub>（Ω，節點 1 到節點 2）<input id="nod-r2" type="range" min="100" max="10000" step="100" value="2000"></label>
@@ -67,6 +68,8 @@
 <h2>可觀察證據：先量節點，再用跨接支路核對方向</h2>
 <p>把電路搭好後，以三用電表直流電壓檔的黑棒固定在同一參考地，紅棒依序量節點 1 與節點 2，就能取得 v<sub>1</sub>、v<sub>2</sub>。這能證明求得的節點電壓在電表精度及其輸入阻抗造成的負載誤差內是否符合實物；不能證明原先列式一定正確，因為拓樸抄錯與參數抄錯可能剛好互相抵消，也不能由兩個讀值證明矩陣對所有輸入都正確。</p>
 <p>電流勾表若對小電流解析度足夠，或將電流表串入 R<sub>2</sub>，可量跨接支路的大小與方向；也可直接量 R<sub>2</sub> 兩端電壓，再除以已知阻值。當 v<sub>2</sub> &gt; v<sub>1</sub> 時，能驗證電流由節點 2 流向節點 1；兩者相等時，能驗證在解析度內近似無跨接電流。這不能證明 R<sub>2</sub> 完全沒有寄生效應，也不能取代把解代回兩條方程的殘差檢查。量測、拓樸核對與代回驗算是三種互補證據。</p>
+
+<section class="note"><h2>本章帶走</h2><ul><li>節點法以非參考節點電壓為未知數，對各節點寫 KCL。</li><li>網目法以平面電路的網孔電流為未知數，對各網孔寫 KVL。</li><li>矩陣的對角項收集相連電導，非對角項反映節點間耦合。</li></ul><p><strong>最常見錯誤：</strong>把節點電壓與網孔電流混成同一組未知數，或漏掉跨接支路的負電導項。</p></section>
 
 <h2>連到哪門課</h2>
 <p>SPICE 類電路模擬器的核心正是讀取元件與節點清單、自動蓋出矩陣，再交給線性代數求解器；遇到電壓源與動態元件時會擴充成修正節點分析。完整的矩陣、行列式與線性方程求解可回到<a href="../../../共通基礎/數學/互動課程/05-線性方程組與逆.html">工程數學先修 05</a>。電子學用相同方法解小訊號電路，電力系統把規模擴到大型網路，控制與數值方法則關心矩陣條件與求解穩定性。下一章加入多個源與相依源，但仍只是在這套線性框架內組合響應。</p>

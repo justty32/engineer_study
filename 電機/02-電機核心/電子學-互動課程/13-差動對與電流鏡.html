@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>13 差動對與電流鏡｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="13-差動對與電流鏡.html" aria-current="page">13 本章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">13・讓兩顆電晶體只回應輸入差值</p>
 <h1>差動對與電流鏡：把共同擾動拒於輸出之外</h1>
@@ -61,6 +61,11 @@
 
 <h2>可觀察證據：分別注入差模與共模訊號</h2>
 <p>用雙通道訊號產生器先送等幅反相訊號，示波器量單端輸出與 v<sub>id</sub> 得 A<sub>d</sub>；再把兩輸入短接送同相訊號，量 A<sub>cm</sub>，相除並取 20log<sub>10</sub> 得實測 CMRR。掃大 v<sub>id</sub> 可量輸出開始壓縮的線性範圍；把尾電阻換成高輸出阻抗電流鏡，CMRR 應提升。這些量測能證明端口的 A<sub>d</sub>、A<sub>cm</sub>、CMRR 與線性範圍，不能單獨證明兩顆電晶體的失配量，也不能唯一反推出 R<sub>oc</sub>，因為輸入失調與負載不對稱也會汙染結果。</p>
+
+<section class="workspace"><h2>章末練習：單端定義與主動負載</h2><p>尾電流與負載電阻都不同於正文錨定值。</p><div class="grid">
+<div class="card"><label for="c13-1">1. 電流鏡主動負載為何可提高 CMRR？</label><select id="c13-1"><option value="">請選擇</option><option value="a">它讓差模電流相加、共模電流抵銷</option><option value="b">因為任何負載都會在 A<sub>d</sub>/A<sub>cm</sub> 中完全約掉</option></select><button id="c13-1-check" type="button">對答案</button><div id="c13-1-output" class="output" aria-live="polite"></div></div>
+<div class="card"><label for="c13-2">2. I<sub>tail</sub> = 1.6 mA、R<sub>C</sub> = 8.2 kΩ 時，電阻負載的單端 A<sub>d</sub> = g<sub>m</sub>R<sub>C</sub>/2 約多少？</label><input id="c13-2" type="number" step="any"><button id="c13-2-check" type="button">對答案</button><div id="c13-2-output" class="output" aria-live="polite"></div></div>
+</div></section>
 
 <h2>連到哪門課</h2>
 <p>差動對是運算放大器、ADC 比較器與通訊接收器前端的輸入核心。對稱半電路的節點推導可回到<a href="../電路學-互動課程/03-節點與網目分析.html">電路學的節點分析</a>；本章的差動對與電流鏡會在第 15 章組成運算放大器輸入級。多級串接時，前級重視高輸入阻抗與低雜訊，中段取得增益，末級才負責低輸出阻抗與驅動負載。</p>

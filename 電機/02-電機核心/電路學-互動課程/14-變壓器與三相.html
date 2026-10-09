@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>14 變壓器與三相｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="14-變壓器與三相.html" aria-current="page">目前章 14／15</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">14・用共同磁通換電壓，再用三個相位穩定送能量</p>
 <h1>變壓器與三相：從線圈耦合走到工業供電</h1>
@@ -50,6 +50,7 @@
 
 <section class="workspace"><h2>自由實驗：切換匝比與三相接法</h2>
 <p>變壓器模式中，一次側電源與線圈成一個閉合回路，二次線圈與負載成另一個回路，兩者以共同磁通耦合。三相模式則把三個等幅、相差 120° 的相源接成 Y 或 Δ，觀察線量、相量與總功率的差別。</p>
+<h3>試試看</h3><ul><li>在變壓器模式把一次匝數加倍；預期二次電壓減半，而反射到一次側的阻抗變成四倍。</li><li>固定線電壓與每相負載，切換 Y 與 Δ；預期 Δ 的每相電壓較高，總功率為 Y 的三倍。</li></ul>
 <div class="controls">
 <label for="tr-mode">觀察模式<select id="tr-mode"><option value="xfmr">理想變壓器（匝比與阻抗轉換）</option><option value="wye">三相 Y 接（星型）</option><option value="delta">三相 Δ 接（三角）</option></select></label>
 <label for="tr-n1">一次側匝數 N<sub>1</sub>（只在變壓器模式使用）<input id="tr-n1" type="range" min="100" max="2000" step="10" value="1000"></label>
@@ -75,6 +76,8 @@
 <p>在安全低電壓交流源上，用三用電表量變壓器一次、二次側空載有效值電壓，比值應接近匝比；以電阻檔量繞線可檢查直流電阻與斷線。帶上已知負載後再量 V<sub>2</sub>，通常會小於 V<sub>1</sub>/n，差額反映繞線壓降與漏感。這些量測<strong>能證明</strong>空載匝比是否合理、繞線是否導通、帶載電壓調整情形；卻<strong>不能證明</strong>耦合係數 k、漏感或鐵損各是多少，後者需要短路試驗、空載電流與功率量測。</p>
 <p>三相系統可用鉤表分別量三條線電流；接近相等支持負載平衡的判斷，兩瓦特表法可取得三相總實功。這些讀值<strong>能證明</strong>指定操作點的線電流平衡與總功率，卻<strong>不能證明</strong>所有時刻都平衡，也不能單靠電流相等排除電壓不平衡或諧波。<strong>警告：市電三相是危險電壓，本段僅為知識性說明；實際接線與量測必須由合格人員使用額定量測設備、個人防護與正確隔離程序執行，學習者不可自行操作帶電配電盤。</strong></p>
 <p><strong>更具體的安全邊界：</strong>量測前由合格人員依工作許可確認電壓類別、表筆與電表額定值，先斷電、上鎖掛牌、驗證測試器，再驗證確已無電；需要帶電診斷時，不得由學習者執行。鉤表只夾單一導線，夾住整條多芯電纜會讓各相磁場互相抵消。這能取得該線電流，不能取得相電壓、相序或絕緣狀態；相序與線間電壓須由具相應額定等級的專用儀器依程序量測。</p>
+
+<section class="note"><h2>本章帶走</h2><ul><li>理想變壓器的電壓按匝比、電流按反匝比、阻抗按匝比平方轉換。</li><li>平衡三相的 √3 來自相差 120° 的相量相減，不是任意倍率。</li><li>Y 與 Δ 的線量、相量關係不同，套公式前要先辨認接法。</li></ul><p><strong>最常見錯誤：</strong>阻抗只乘一次匝比，或在 Y、Δ 之間混用線電壓與相電壓。</p></section>
 
 <h2>連到哪門課</h2>
 <p>電機機械用變壓器模型理解感應馬達，電力系統用升降壓與 Y–Δ 配電控制電流與線損，通訊以射頻變壓器與巴倫做阻抗及平衡轉換，電源設計以耦合電感實作隔離式轉換器。磁通與法拉第定律留待電磁學深入；120° 複數相位可回看<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學 09 複變入門</a>。</p>

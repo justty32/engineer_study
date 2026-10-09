@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 電容與電感｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="06-電容與電感.html" aria-current="page">目前章 06／15</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">06・用變化率看兩種儲能元件</p>
 <h1>電容與電感：狀態不能無代價地瞬間改變</h1>
@@ -43,6 +43,7 @@
 
 <section class="workspace"><h2>自由實驗：比較儲能元件與跳變代價</h2>
 <p>選電容時，來源經限流路徑向電容搬移電荷，電容另一端接地；選電感時，來源、線圈與回路電阻串聯後回地。切換元件並調整狀態與變化率，觀察響應、能量、串並聯值與強迫跳變所需代價。</p>
+<h3>試試看</h3><ul><li>在電容模式把電壓加倍而變化率不變；預期儲能變四倍，但電流不變。</li><li>切到電感模式並把 di/dt 加倍；預期線圈電壓加倍，而由目前電流決定的儲能不變。</li></ul>
 <div class="controls">
 <label for="sto-type">元件類型<select id="sto-type"><option value="cap">電容 C（存電場，怕電壓跳變）</option><option value="ind">電感 L（存磁場，怕電流跳變）</option></select></label>
 <label for="sto-c">電容 C（µF）<input id="sto-c" type="range" min="1" max="500" step="1" value="100"></label>
@@ -67,6 +68,8 @@
 <p>LCR 表可在指定測試頻率與振幅下量電容值、電感值及等效串聯電阻。示波器則可量電容兩端電壓；在串聯小取樣電阻後，以其壓降除以阻值間接得到電流。對 RC 輸入方波時，電容電壓會呈連續斜率而非理想垂直跳變；對線圈切斷電流時，可觀察到反向高電壓，裝上續流二極體後尖峰會被限制而衰減時間變長。</p>
 <p><strong>能證明什麼：</strong>LCR 表能證明元件在那個頻率、偏壓與溫度下的等效 C、L 與損耗；示波器能證明實際切換中狀態連續，並用斜率配合 i = C ⋅ dv/dt 或 v = L ⋅ di/dt 交叉驗證。<strong>不能證明什麼：</strong>單一頻率讀值不能證明所有頻率下都相同，低電流量到的電感也不能證明大電流時不會飽和。示波器只量電壓；若沒有電流探棒或取樣電阻，不能聲稱直接看見電流。</p>
 <p>還可以做能量帳本。先由量到的狀態算出 (1/2)Cv² 或 (1/2)Li²，再觀察放電後電阻的電壓與電流並對功率隨時間累積。理想模型預期儲能最後轉成電阻熱；若帳目對不上，差額可能落在等效串聯電阻、二極體壓降、磁芯損耗或儀器負載。這能檢查能量守恆，卻仍不能直接告訴你電場或磁場在元件內部的空間分布。</p>
+
+<section class="note"><h2>本章帶走</h2><ul><li>電容以電場儲能，電流由電壓變化率決定。</li><li>電感以磁場儲能，電壓由電流變化率決定。</li><li>有限激勵下，電容電壓與電感電流在切換瞬間連續。</li></ul><p><strong>最常見錯誤：</strong>把不能跳變的狀態量記反；能跳的是電容電流與電感電壓。</p></section>
 
 <h2>連到哪門課</h2>
 <p>下一章把 C、L 的變化率關係放進 KCL 或 KVL，得到 RC 與 RL 的一階暫態；再下一章加入第二個獨立儲能元件，便可能出現振盪。交流穩態會把微分轉成頻率相依的阻抗，電子學則用旁路電容、耦合電容與線圈抑制或通過特定頻率。電源設計中的續流二極體、緩衝器與去耦網路，都是在管理本章的能量與連續性。</p>

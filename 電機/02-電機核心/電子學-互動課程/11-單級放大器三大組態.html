@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 單級放大器三大組態｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="11-單級放大器三大組態.html" aria-current="page">11 本章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">11・從輸入、輸出與共同端選出放大級性格</p>
 <h1>單級放大器三大組態：增益、驅動力與頻寬各有代價</h1>
@@ -61,6 +61,11 @@
 
 <h2>可觀察證據：同時量增益、相位與兩個端口</h2>
 <p>用訊號產生器串一顆已知 R<sub>s</sub> 驅動輸入，示波器量 R<sub>s</sub> 前後的電壓，可由分壓反推 R<sub>in</sub>；再量輸入與輸出的振幅比及零交越方向，能證明 A<sub>v</sub> 大小與同相或反相。輸出端切換已知負載，觀察有負載與無負載振幅差，可由戴維寧分壓反推 R<sub>out</sub>。更換 R<sub>E</sub> 後重測，能證明退化對增益的壓抑量。這些量測不能由單一 A<sub>v</sub> 分離 g<sub>m</sub>、R<sub>C</sub>、r<sub>o</sub> 與負載各自貢獻，也不能由 CE 電壓增益直接證明 β；必須配合直流工作點及多組端口量測。</p>
+
+<section class="workspace"><h2>章末練習：依端口需求選組態</h2><p>先判斷組態，再用另一組 R<sub>C</sub>、R<sub>E</sub> 與電流算退化增益。</p><div class="grid">
+<div class="card"><label for="c11-1">1. 高阻抗感測器要驅動較重負載，且不需電壓放大，優先選哪個 BJT 組態？</label><select id="c11-1"><option value="">請選擇</option><option value="a">共集極（射極隨耦器）</option><option value="b">共基極</option></select><button id="c11-1-check" type="button">對答案</button><div id="c11-1-output" class="output" aria-live="polite"></div></div>
+<div class="card"><label for="c11-2">2. I<sub>C</sub> = 1.5 mA、R<sub>C</sub> = 4.7 kΩ、R<sub>E</sub> = 220 Ω，以 β ≫ 1 近似算 |A<sub>v</sub>|。</label><input id="c11-2" type="number" step="any"><button id="c11-2-check" type="button">對答案</button><div id="c11-2-output" class="output" aria-live="polite"></div></div>
+</div></section>
 
 <h2>連到哪門課</h2>
 <p>三大組態用在感測器前級、音訊、射頻與驅動緩衝。端口等效與負載效應可銜接<a href="../電路學-互動課程/05-戴維寧與最大功率.html">電路學的戴維寧與最大功率</a>，相依電流源的列式可回到<a href="../電路學-互動課程/04-疊加原理與相依源.html">疊加原理與相依源</a>。第 12 章會說明共基與疊接為何能減少米勒效應，第 14 章再把退化推廣成負回授通式。</p>

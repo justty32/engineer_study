@@ -1,11 +1,26 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>15 運算放大器與電子系統｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="15-運算放大器與電子系統.html" aria-current="page">15 本章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">15・把電晶體積木組成可量化的真實系統</p>
 <h1>運算放大器與電子系統：從增益核心走到電源與資料</h1>
 <p class="lead">運算放大器把差動對、電流鏡、增益級、輸出緩衝與補償裝進同一顆晶片；振盪器、穩壓器與資料轉換器再利用回授與頻率選擇完成系統功能。本章用四條可算的判準串起整門課。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="13-差動對與電流鏡.html">13 的差動對</a>、<a href="14-回授與穩定性.html">14 的回授</a>，以及<a href="../電路學-互動課程/13-RLC共振與品質因數.html">電路學的共振與 Q</a>。</p>
+
+<h2 id="ideal-op-amp">14.5 理想運放與負回授電路</h2>
+<p>第 14 章已得到 A<sub>f</sub> = A/(1 + Aβ<sub>f</sub>)。理想運算放大器再把開迴路增益 A 視為無限大、輸入阻抗視為無限大、輸出阻抗視為零；但這些近似只有在<strong>負回授已閉合，而且輸出沒有碰到電源軌或頻寬、轉換速率限制</strong>時才能用。分析時最常用兩條約束：輸入端不取電流，i<sub>+</sub> = i<sub>−</sub> = 0，稱為<strong>虛斷</strong>；放大器會調整輸出使 v<sub>+</sub> ≈ v<sub>−</sub>，稱為<strong>虛短</strong>。虛短不是拿導線把兩端接起來，兩輸入端之間仍近似沒有電流。</p>
+<p><strong>反相放大器：</strong>非反相端接地，故反相端是 0 V 的虛地。對反相節點套 KCL，輸入電流 (v<sub>in</sub> − 0)/R<sub>1</sub> 全部流過回授電阻 (0 − v<sub>out</sub>)/R<sub>f</sub>，得到 v<sub>out</sub>/v<sub>in</sub> = −R<sub>f</sub>/R<sub>1</sub>。例如 R<sub>1</sub> = 2.2 kΩ、R<sub>f</sub> = 15 kΩ、v<sub>in</sub> = 0.24 V，v<sub>out</sub> = <strong>−1.636364 V</strong>。負號表示反相，不表示輸出能超過電源軌。</p>
+<p><strong>非反相放大器：</strong>輸入直接接 v<sub>+</sub>，反相端由 R<sub>f</sub> 與 R<sub>1</sub> 對輸出分壓，所以 β<sub>f</sub> = R<sub>1</sub>/(R<sub>1</sub> + R<sub>f</sub>)。把 A 很大時 A<sub>f</sub> ≈ 1/β<sub>f</sub> 代入，得到 v<sub>out</sub>/v<sub>in</sub> = 1 + R<sub>f</sub>/R<sub>1</sub>。例如 R<sub>1</sub> = 4.7 kΩ、R<sub>f</sub> = 22 kΩ，增益是 <strong>5.680851</strong>。若令 R<sub>f</sub> = 0、移除接地的 R<sub>1</sub>，便成為<strong>電壓隨耦器</strong>：增益近似一，用高輸入阻抗與低輸出阻抗隔離前後級。</p>
+<p><strong>加法器：</strong>把多個輸入各經一顆電阻接到同一個反相節點，KCL 給 v<sub>out</sub> = −R<sub>f</sub>(v<sub>1</sub>/R<sub>1</sub> + v<sub>2</sub>/R<sub>2</sub> + …)。R<sub>f</sub> = 12 kΩ、R<sub>1</sub> = 4 kΩ、v<sub>1</sub> = 0.15 V、R<sub>2</sub> = 6 kΩ、v<sub>2</sub> = −0.10 V 時，v<sub>out</sub> = <strong>−0.25 V</strong>。每一路權重由 R<sub>f</sub>/R<sub>i</sub> 決定，這是混音與數位類比轉換的基本積木。</p>
+<p><strong>積分器：</strong>把反相放大器的 R<sub>f</sub> 換成電容 C，電容電流 i = C dv/dt 與輸入電阻電流相等，得到 v<sub>out</sub>(t) = v<sub>out</sub>(0) − [1/(R<sub>1</sub>C)]∫v<sub>in</sub>(t)dt。R<sub>1</sub> = 10 kΩ、C = 100 nF，施加 0.2 V 常值 0.5 ms，輸出變化是 <strong>−0.1 V</strong>。真實積分器會並聯一顆回授電阻限制直流增益，否則微小失調也會把輸出慢慢推到飽和。</p>
+<table><thead><tr><th>電路</th><th>閉迴路關係</th><th>最常見用途</th></tr></thead><tbody>
+<tr><td>反相放大器</td><td>A<sub>v</sub> = −R<sub>f</sub>/R<sub>1</sub></td><td>縮放並反相</td></tr>
+<tr><td>非反相放大器</td><td>A<sub>v</sub> = 1 + R<sub>f</sub>/R<sub>1</sub></td><td>高輸入阻抗感測前端</td></tr>
+<tr><td>電壓隨耦器</td><td>A<sub>v</sub> ≈ 1</td><td>隔離訊號源與負載</td></tr>
+<tr><td>反相加法器</td><td>v<sub>out</sub> = −R<sub>f</sub>Σ(v<sub>i</sub>/R<sub>i</sub>)</td><td>加權相加</td></tr>
+<tr><td>積分器</td><td>v<sub>out</sub> = −(1/RC)∫v<sub>in</sub>dt</td><td>斜坡、主動濾波與控制</td></tr>
+</tbody></table>
+<p class="note">分析順序固定是：先確認負回授路徑閉合與輸出未飽和，再用虛短、虛斷寫 KCL，最後檢查所需輸出擺幅、GBW 與轉換速率是否超出真實運放能力。比較器沒有負回授，不能套 v<sub>+</sub> ≈ v<sub>−</sub>。</p>
 
 <h2>痛點：元件公式都會了，為什麼仍選不出整個系統</h2>
 <p>「我會算差動對、回授與 RC，拿到感測器、電源和 ADC 規格時卻不知道先看哪一條？」因為系統設計不是把最大數字湊在一起，而是辨認瓶頸：小訊號可能卡在 GBW，大訊號卡在轉換速率；電源可能卡在熱；ADC 標稱位元數可能被雜訊與取樣率吃掉。每個方塊都要用端口、能量與時間尺度檢查。</p>
@@ -68,6 +83,11 @@
 <h2>可觀察證據：每個瓶頸都要用對儀器</h2>
 <p>以網路分析儀量運算放大器閉迴路增益與 −3 dB 頻寬，能證明 GBW；以示波器送大幅方波量最大 dv/dt，能證明 SR，卻不能據此分解內部各級增益。頻譜分析儀量振盪器主頻與相位雜訊裙擺，能證明振盪頻率及穩定度，不能單靠裙擺直接得到晶體內部參數。</p>
 <p>用電流探棒、示波器與功率計量 LDO、Buck 的輸入輸出電壓及平均電流，能算效率與總損耗；熱像儀能定位發熱，但不能只靠溫度把導通損、切換損與磁性損耗逐項分開。把已知滿刻度弦波送進 ADC，擷取數位碼做 FFT，可量 SNR、ENOB 與無雜散動態範圍；這能證明整體轉換表現，不能證明某一顆比較器或電容陣列單獨造成多少誤差。</p>
+
+<section class="workspace"><h2>章末練習：理想運放的兩條約束</h2><p>反相放大器改用 3.3 kΩ 與 18 kΩ，不重複本章的新例題。</p><div class="grid">
+<div class="card"><label for="c15-1">1. 理想運放在負回授且未飽和時，「虛短、虛斷」代表什麼？</label><select id="c15-1"><option value="">請選擇</option><option value="a">v<sub>+</sub> ≈ v<sub>−</sub> 且兩輸入端電流近似零</option><option value="b">兩輸入端真的用導線短接，且有大電流流過</option></select><button id="c15-1-check" type="button">對答案</button><div id="c15-1-output" class="output" aria-live="polite"></div></div>
+<div class="card"><label for="c15-2">2. 反相放大器 R<sub>1</sub> = 3.3 kΩ、R<sub>f</sub> = 18 kΩ，理想電壓增益是多少？（含正負號）</label><input id="c15-2" type="number" step="any"><button id="c15-2-check" type="button">對答案</button><div id="c15-2-output" class="output" aria-live="polite"></div></div>
+</div></section>
 
 <h2>連到哪門課</h2>
 <p>LC 與 Q 見<a href="../電路學-互動課程/13-RLC共振與品質因數.html">電路學的 RLC 共振</a>；效率與功率見<a href="../電路學-互動課程/11-交流功率與功因.html">交流功率</a>；Buck 濾波見<a href="../電路學-互動課程/07-一階暫態RC與RL.html">RC 與 RL 暫態</a>；振盪的物理見<a href="../../../共通基礎/物理/互動課程/06-簡諧運動與共振.html">普通物理的共振</a>；取樣與頻譜見<a href="../../../共通基礎/數學/互動課程/10-傅立葉分析.html">工程數學先修的傅立葉分析</a>。濾波器多項式、電源補償與鎖相迴路分別留給訊號與系統、電力電子及通訊系統課。</p>

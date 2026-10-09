@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 線性非時變與摺積｜信號與系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="04-線性非時變與摺積.html" aria-current="page">本章 04</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">04・一條脈衝響應決定整個系統</p>
 <h1>線性非時變與摺積：把輸入切成無限多根脈衝，各自延遲加權再疊起來</h1>
@@ -42,6 +42,7 @@
 <p>量級對照：本例的 τ = 0.5 s 慢到肉眼可見。把它縮小四個數量級到 20.000000 µs，對應的轉角頻率 1/(2πτ) 大約是 7957.747155 Hz，正好落在一路電話語音 8 kHz 的量級上；同一條指數曲線，換個時間刻度就從「看得見的充放電」變成「聽得見的頻寬」。</p>
 
 <section class="workspace"><h2>自由實驗：把脈衝與系統的快慢分開調整</h2>
+<p class="note">探索順序：先比較 τ 遠小於、接近與遠大於 T<sub>1</sub> 的情況；下方取樣文字圖會列出完整充電與放電輪廓。</p>
 <p>輸入是高 A、寬 T<sub>1</sub>、從 t = 0 開始的矩形脈衝，系統是時間常數 τ 的一階系統，觀測時刻 t 可以滑到脈衝結束之後。要看三件事：目前落在充電段還是放電段、輸出值與峰值差多少、以及三個面積是否始終滿足相乘關係。</p>
 <div class="controls">
 <label for="cnv-a">脈衝高度 A（V）<input id="cnv-a" type="range" min="0.5" max="3" step="0.1" value="1"></label>
@@ -49,7 +50,7 @@
 <label for="cnv-tau">系統時間常數 τ（s）<input id="cnv-tau" type="range" min="0.1" max="3" step="0.1" value="0.5"></label>
 <label for="cnv-t">觀測時刻 t（s）<input id="cnv-t" type="range" min="0" max="6" step="0.1" value="1"></label>
 </div>
-<div id="convolve-output" class="output" aria-live="polite">y(1.000000) = 0.432332 V·s，目前在<strong>充電段</strong>：輸入還在，輸出朝 A·τ 爬升，每過一個 τ 走完剩餘距離的 63.2 %。峰值 0.432332 V·s，發生在 t = 1.000000 s。輸入面積 1.000000 V·s、脈衝響應面積 0.500000 s、輸出面積 0.500000 V·s²，<strong>輸入面積 × 脈衝響應面積 ＝ 輸出面積</strong>。摺積把兩條曲線的面積相乘，這是最好用的驗算：如果你算出來的 y 面積不等於 A·T<sub>1</sub>·τ，一定有地方錯了。目前 τ 與 T<sub>1</sub> 同量級，輸出既保留了脈衝的輪廓也被明顯抹圓；把 τ 拉到遠小於 T<sub>1</sub> 時輸出幾乎複製輸入的形狀，把 τ 拉到遠大於 T<sub>1</sub> 時形狀會被抹平到只剩總面積，那就是低通濾波在時間域的樣子。把 t 滑到 0 會看到輸出 0.000000 V·s，因果系統不會提前反應。</div>
+<div id="convolve-output" class="output" aria-live="polite">載入互動結果…</div>
 </section>
 
 <h2>不要混淆</h2>

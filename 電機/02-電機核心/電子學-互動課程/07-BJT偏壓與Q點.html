@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 BJT 偏壓與 Q 點｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="07-BJT偏壓與Q點.html" aria-current="page">07 本章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">07・用外部電阻把不可靠的 β 壓成小誤差</p>
 <h1>BJT 偏壓與 Q 點：讓射極電阻自動拉回工作電流</h1>
@@ -72,6 +72,11 @@
 
 <h2>可觀察證據：用兩個節點電壓重建 Q 點</h2>
 <p>用三用電表量射極對地 V<sub>E</sub>，除以已知 R<sub>E</sub> 可得 I<sub>E</sub>，這比把電流表串入微小支路更方便；再量集極對地 V<sub>C</sub>，相減得到 V<sub>CE</sub>。換另一顆同型號電晶體後重新量一次，能證明實際 Q 點及元件散布造成的漂移；加熱後觀察方向，也能驗證回授是否把變化壓小。這些量測不能直接證明 β 的精確值，因為還要準確取得僅數 µA 的 I<sub>B</sub>；也不能證明 V<sub>BE</sub> 恰為 0.7 V，電表量到的真實值通常落在 0.6 V 至 0.75 V。</p>
+
+<section class="workspace"><h2>章末練習：偏壓網路的穩健性</h2><p>分壓值與正文不同；先做戴維寧化，再把基極電流負載算進去。</p><div class="grid">
+<div class="card"><label for="c07-1">1. 射極電阻為何能減少 β 或溫度造成的 Q 點漂移？</label><select id="c07-1"><option value="">請選擇</option><option value="a">電流增加會抬高 V<sub>E</sub>，進而拉低 V<sub>BE</sub></option><option value="b">它讓 β 變成固定常數</option></select><button id="c07-1-check" type="button">對答案</button><div id="c07-1-output" class="output" aria-live="polite"></div></div>
+<div class="card"><label for="c07-2">2. V<sub>CC</sub> = 15 V、R<sub>1</sub> = 68 kΩ、R<sub>2</sub> = 15 kΩ、R<sub>E</sub> = 1.2 kΩ、β = 120、V<sub>BE</sub> = 0.7 V 時，I<sub>C</sub> 約多少 mA？</label><input id="c07-2" type="number" step="any"><button id="c07-2-check" type="button">對答案</button><div id="c07-2-output" class="output" aria-live="polite"></div></div>
+</div></section>
 
 <h2>連到哪門課</h2>
 <p>分壓加射極退化是離散放大器與類比積體電路偏壓的基本模板。化簡方法直接使用<a href="../電路學-互動課程/05-戴維寧與最大功率.html">戴維寧等效</a>，若要從原電路逐節點驗算，可回到<a href="../電路學-互動課程/03-節點與網目分析.html">節點與網目分析</a>。射極電阻以增益換穩定度，是第 14 章一般負回授理論的具體案例；下一步則先比較 MOSFET 的控制機制與工作區。</p>

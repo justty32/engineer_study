@@ -70,6 +70,99 @@ const hzFmt=x=>{
 const say=t=>"<p>"+t+"</p>";
 const rows=arr=>"<ul>"+arr.map(x=>"<li>"+x+"</li>").join("")+"</ul>";
 
+// 每章章末即時檢核。數值答案保留為公式運算結果，讓 Node 可直接載入重算。
+const chapterItem=(type,ans,tol,why)=>({type:type,ans:ans,tol:tol,why:why});
+const CHAPTER_Q={
+  'c00-1':chapterItem('sel','b',0,'小訊號電阻是工作點處的局部斜率倒數；直流比值 V/I 回答的是另一個問題。'),
+  'c00-2':chapterItem('num',VT/0.0008,0.05,'r<sub>d</sub> = V<sub>T</sub>/I = 0.025851999786/0.0008 = 32.314999733 Ω。'),
+  'c01-1':chapterItem('sel','a',0,'n 型只表示電子是多數載子；可動電子與固定施體離子的電荷仍使材料巨觀中性。'),
+  'c01-2':chapterItem('num',1/(QE*1350*1e17),0.0001,'ρ = 1/(qµ<sub>n</sub>N<sub>D</sub>) = 0.046233 Ω⋅cm；此題沿用完全游離與固定遷移率近似。'),
+  'c02-1':chapterItem('sel','b',0,'順向電流是連續的指數關係；0.7 V 只是指定電流範圍常用的模型值，不是突然導通的物理門檻。'),
+  'c02-2':chapterItem('num',Math.exp(0.020/VT),0.005,'同一顆理想二極體的電流倍率為 exp(ΔV/V<sub>T</sub>) = exp(0.020/0.025851999786) = 2.167…。'),
+  'c03-1':chapterItem('sel','a',0,'先假設模型、解回路，再檢查所得偏壓是否落在模型適用區；只看電源大小不能完成驗證。'),
+  'c03-2':chapterItem('num',(6.2-0.7)/1500*1000,0.01,'恆壓降模型給 I = (6.2 − 0.7)/1500 = 3.666667 mA。'),
+  'c04-1':chapterItem('sel','b',0,'全波整流每半週補能一次，所以漣波頻率是輸入頻率的兩倍；半波才與輸入頻率相同。'),
+  'c04-2':chapterItem('num',0.018/(2*50*680e-6),0.002,'全波電容濾波近似 ΔV = I/(2fC) = 0.018/(100 × 680 µF) = 0.264706 V。'),
+  'c05-1':chapterItem('sel','a',0,'先由串聯支路電流扣掉負載電流，餘額才是齊納電流；餘額小於零就已脫離穩壓區。'),
+  'c05-2':chapterItem('num',((18-6.2)/560-6.2/2200)*1000,0.02,'I<sub>Z</sub> = (18 − 6.2)/560 − 6.2/2200 = 18.253247 mA，且為正所以穩壓假設成立。'),
+  'c06-1':chapterItem('sel','b',0,'BJT 飽和區是開關全開、集極電流受外部負載限制；MOSFET 飽和區才是常用的放大區。'),
+  'c06-2':chapterItem('num',140*35e-6*1000,0.01,'作用區候選值 I<sub>C</sub> = βI<sub>B</sub> = 140 × 35 µA = 4.9 mA；再與外部負載上限比較可知仍在作用區。'),
+  'c07-1':chapterItem('sel','a',0,'射極電阻讓電流增加時 V<sub>E</sub> 上升、V<sub>BE</sub> 被拉回，形成抑制 Q 點漂移的直流負回授。'),
+  'c07-2':chapterItem('num',120*((15*15/(68+15))-0.7)/(((68*15)/(68+15))*1000+121*1200)*1000,0.01,'先化成 V<sub>TH</sub> = 2.710843 V、R<sub>TH</sub> = 12.289157 kΩ，再用 I<sub>C</sub> = β(V<sub>TH</sub>−0.7)/[R<sub>TH</sub>+(β+1)R<sub>E</sub>]。'),
+  'c08-1':chapterItem('sel','b',0,'V<sub>GS</sub> > V<sub>th</sub> 且 V<sub>DS</sub> < V<sub>OV</sub> 時是三極區；這才是 MOSFET 作為低阻開關的全通狀態。'),
+  'c08-2':chapterItem('num',800*((2.4-0.8)*0.6-0.5*0.6*0.6),0.5,'三極區 I<sub>D</sub> = k[V<sub>OV</sub>V<sub>DS</sub> − V<sub>DS</sub>²/2] = 624 µA。'),
+  'c09-1':chapterItem('sel','a',0,'若 V<sub>DD</sub> < 2V<sub>th</sub>，中間會出現 NMOS 與 PMOS 都截止的死區，輸出由節點電容暫時保持。'),
+  'c09-2':chapterItem('num',35e-15*2.5*2.5*80e6*1e6,0.02,'P = C<sub>L</sub>V<sub>DD</sub>²f = 35 fF × 2.5² × 80 MHz = 17.5 µW。'),
+  'c10-1':chapterItem('sel','b',0,'小訊號參數只屬於指定 Q 點；換偏壓後局部斜率改變，g<sub>m</sub> 與 r<sub>o</sub> 都要重算。'),
+  'c10-2':chapterItem('num',0.002/VT*1000,0.02,'BJT 的 g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub> = 2 mA/25.851999786 mV = 77.363454 mA/V。'),
+  'c11-1':chapterItem('sel','a',0,'高源阻抗、重負載且不需電壓放大時，射極隨耦器的高輸入阻抗與低輸出阻抗最合適。'),
+  'c11-2':chapterItem('num',(0.0015/VT)*4700/(1+(0.0015/VT)*220),0.1,'用 β ≫ 1 近似，|A<sub>v</sub>| = g<sub>m</sub>R<sub>C</sub>/(1+g<sub>m</sub>R<sub>E</sub>) = 19.811607。'),
+  'c12-1':chapterItem('sel','b',0,'反相增益使跨接電容的輸入端等效值約乘上 1+|A<sub>v</sub>|；實體電容本身沒有變大。'),
+  'c12-2':chapterItem('num',4+(1+75)*1.5,0.1,'C<sub>in</sub> = C<sub>gs</sub> + (1+|A<sub>v</sub>|)C<sub>gd</sub> = 4 + 76 × 1.5 = 118 pF。'),
+  'c13-1':chapterItem('sel','a',0,'電流鏡使差模支路電流在單端輸出相加，並使相同方向的共模電流互相抵銷，因此同時提升差模增益與 CMRR。'),
+  'c13-2':chapterItem('num',(0.0016/2/VT)*8200/2,0.2,'每邊 Q 點電流是 0.8 mA；電阻負載單端 A<sub>d</sub> = g<sub>m</sub>R<sub>C</sub>/2 = 126.876065。'),
+  'c14-1':chapterItem('sel','b',0,'高頻相位累積到 −180° 時，原本相減的負回授等效變成相加；此時若迴路增益仍不小於一，就可能振盪。'),
+  'c14-2':chapterItem('num',10000/(1+10000*0.02),0.02,'80 dB 對應 A = 10<sup>4</sup>；A<sub>f</sub> = A/(1+Aβ<sub>f</sub>) = 10000/201 = 49.751244。'),
+  'c15-1':chapterItem('sel','a',0,'理想負回授且未飽和時，輸入電流近似零（虛斷），兩輸入端電壓近似相等（虛短）；兩端不是實際短路。'),
+  'c15-2':chapterItem('num',-18000/3300,0.01,'反相放大器 A<sub>v</sub> = −R<sub>f</sub>/R<sub>1</sub> = −18 kΩ/3.3 kΩ = −5.454545。')
+};
+
+const RANGE_META={
+  'nl-v':'mV','nl-dv':'mV','nl-r':'Ω','car-dope':'cm⁻³','car-field':'V/cm',
+  'pn-na':'cm⁻³','pn-nd':'cm⁻³','pn-v':'mV','dl-vs':'V','dl-r':'Ω',
+  'rec-vm':'V','rec-f':'Hz','rec-r':'Ω','rec-c':'µF','zn-vin':'V','zn-rs':'Ω','zn-vz':'V','zn-rl':'Ω',
+  'bj-ib':'µA','bj-beta':'無因次','bj-vcc':'V','bj-rc':'Ω','bb-vcc':'V','bb-r1':'kΩ','bb-r2':'kΩ','bb-re':'Ω','bb-rc':'Ω','bb-beta':'無因次',
+  'mo-vgs':'V','mo-vds':'V','mo-vth':'V','mo-k':'µA/V²','cm-vdd':'V','cm-vin':'V','cm-vthn':'V','cm-f':'MHz','cm-cl':'fF',
+  'ss-i':'mA','ss-beta':'無因次','ss-va':'V','ss-kn':'µA/V²','st-ic':'mA','st-beta':'無因次','st-rc':'Ω','st-re':'Ω',
+  'fq-av':'倍','fq-rs':'Ω','fq-cgd':'pF','fq-cgs':'pF','dp-itail':'mA','dp-rc':'Ω','dp-roc':'kΩ','dp-vid':'mV',
+  'fb-a':'dB','fb-beta':'無因次','fb-f1':'Hz','fb-dist':'%','sy-l':'µH','sy-c':'pF','sy-vin':'V','sy-vout':'V','sy-vref':'V','sy-bits':'位元','sy-fs':'kHz'
+};
+
+function rangeReadouts(){
+  if(typeof document==='undefined')return;
+  const concentration=new Set(['car-dope','pn-na','pn-nd']);
+  document.querySelectorAll('input[type="range"]').forEach(input=>{
+    let out=document.querySelector('output[data-range-value="'+input.id+'"]');
+    if(!out){
+      out=document.createElement('output');
+      out.setAttribute('for',input.id);
+      out.setAttribute('data-range-value',input.id);
+      input.insertAdjacentElement('afterend',out);
+    }
+    const render=()=>{
+      const text=concentration.has(input.id)
+        ? ('10^'+input.value+' '+RANGE_META[input.id])
+        : (input.value+(RANGE_META[input.id]?' '+RANGE_META[input.id]:''));
+      out.textContent='目前：'+text;
+      input.setAttribute('aria-valuetext',text);
+    };
+    input.addEventListener('input',render);
+    render();
+  });
+}
+
+function chapterChecks(){
+  if(typeof document==='undefined')return;
+  Object.keys(CHAPTER_Q).forEach(id=>{
+    const input=$(id),button=$(id+'-check'),out=$(id+'-output'),item=CHAPTER_Q[id];
+    if(!input||!button||!out)return;
+    button.addEventListener('click',()=>{
+      const raw=String(input.value).trim();
+      if(raw===''){
+        out.innerHTML='<p>請先作答，再按「對答案」。</p>';
+        return;
+      }
+      const ok=item.type==='sel' ? raw===item.ans : isFinite(Number(raw))&&Math.abs(Number(raw)-item.ans)<=item.tol;
+      if(ok){
+        out.innerHTML='<p><strong>答對。</strong> '+item.why+'</p>';
+      }else{
+        const answer=item.type==='sel' ? ('選項 '+item.ans.toUpperCase()) : (sfmt(item.ans,6)+'（容許誤差 ±'+sfmt(item.tol,6)+'）');
+        out.innerHTML='<p><strong>再看一次。</strong>正確答案是 '+answer+'。'+item.why+'</p>';
+      }
+    });
+  });
+}
+
 // ---------------------------------------------------------------------------
 // 4. 每章一個守衛函式
 // ---------------------------------------------------------------------------
@@ -1296,7 +1389,7 @@ function selfcheck(){
 // 7. 註冊
 // ---------------------------------------------------------------------------
 if(typeof document!=="undefined"){
-  [nonlinear,carrier,pnjunc,dload,rect,zener,bjt,bjtbias,mosfet,cmos,smallsig,stage,freq,diffpair,feedback,syscap,dictionary,selfcheck].forEach(f=>f());
+  [rangeReadouts,chapterChecks,nonlinear,carrier,pnjunc,dload,rect,zener,bjt,bjtbias,mosfet,cmos,smallsig,stage,freq,diffpair,feedback,syscap,dictionary,selfcheck].forEach(f=>f());
 }
 
 // ---------------------------------------------------------------------------
@@ -1308,5 +1401,6 @@ if(typeof module!=="undefined")module.exports={
   nonlinear:nonlinear,carrier:carrier,pnjunc:pnjunc,dload:dload,rect:rect,zener:zener,
   bjt:bjt,bjtbias:bjtbias,mosfet:mosfet,cmos:cmos,smallsig:smallsig,stage:stage,
   freq:freq,diffpair:diffpair,feedback:feedback,syscap:syscap,
-  dictionary:dictionary,selfcheck:selfcheck
+  dictionary:dictionary,selfcheck:selfcheck,rangeReadouts:rangeReadouts,chapterChecks:chapterChecks,
+  CHAPTER_Q:CHAPTER_Q,RANGE_META:RANGE_META
 };

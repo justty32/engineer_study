@@ -17,13 +17,13 @@
 <div id="q00-1-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q00-2｜</strong>一階系統的頻率響應是 H(jf) = (1) / (1 + j f/f<sub>c</sub>)，轉角頻率 f<sub>c</sub> = 1000 Hz。當訊號頻率 f = 1000 Hz（也就是 f 剛好等於 f<sub>c</sub>）時，增益 |H| 是多少？</p>
+<p><strong>q00-2｜</strong>一階系統的頻率響應是 H(jf) = 1 / (1 + j f/f<sub>c</sub>)，轉角頻率 f<sub>c</sub> = 1000 Hz。當訊號頻率 f = 2000 Hz 時，增益 |H| 是多少？</p>
 <label for="q00-2">你的答案（無單位）<input id="q00-2" type="number" step="any"></label>
 <button type="button" id="q00-2-check">對答案</button>
 <div id="q00-2-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q00-3｜</strong>承上題，同一個一階系統在 f = f<sub>c</sub> = 1000 Hz 的相位 ∠H 是多少？（一階低通會讓輸出落後輸入，答案是負的。）</p>
+<p><strong>q00-3｜</strong>承上題，同一個一階系統在 f = 2000 Hz、f<sub>c</sub> = 1000 Hz 時的相位 ∠H 是多少？（答案是負的。）</p>
 <label for="q00-3">你的答案（°）<input id="q00-3" type="number" step="any"></label>
 <button type="button" id="q00-3-check">對答案</button>
 <div id="q00-3-output" class="output" aria-live="polite" hidden></div>
@@ -32,13 +32,13 @@
 <h2>01 訊號的分類</h2>
 <p>回去看：<a href="01-訊號的分類.html">01 訊號的分類</a></p>
 <section class="card">
-<p><strong>q01-1｜</strong>衰減指數訊號 x(t) = A·e<sup>−t/τ</sup>·u(t)，取 A = 2 V、τ = 0.5 s。它的總能量 E = ∫<sub>−∞</sub><sup>∞</sup> |x(t)|² dt 是多少？</p>
+<p><strong>q01-1｜</strong>衰減指數訊號 x(t) = A·e<sup>−t/τ</sup>·u(t)，取 A = 3 V、τ = 0.4 s。它的總能量 E = ∫<sub>−∞</sub><sup>∞</sup> |x(t)|² dt 是多少？</p>
 <label for="q01-1">你的答案（V²·s）<input id="q01-1" type="number" step="any"></label>
 <button type="button" id="q01-1-check">對答案</button>
 <div id="q01-1-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q01-2｜</strong>弦波 x(t) = A·cos(2πft)，振幅 A = 1 V。它的 rms 值是多少？</p>
+<p><strong>q01-2｜</strong>弦波 x(t) = A·cos(2πft)，振幅 A = 2 V。它的 rms 值是多少？</p>
 <label for="q01-2">你的答案（V）<input id="q01-2" type="number" step="any"></label>
 <button type="button" id="q01-2-check">對答案</button>
 <div id="q01-2-output" class="output" aria-live="polite" hidden></div>
@@ -53,13 +53,13 @@
 <h2>02 基本訊號與訊號運算</h2>
 <p>回去看：<a href="02-基本訊號與訊號運算.html">02 基本訊號與訊號運算</a></p>
 <section class="card">
-<p><strong>q02-1｜</strong>設 x(t) = exp(−t)·u(t)，對它做複合變換 y(t) = x(a(t − t<sub>0</sub>))，其中 a = 1、t<sub>0</sub> = 1 s。y(2) 的值是多少？</p>
+<p><strong>q02-1｜</strong>設 x(t) = exp(−t)·u(t)，令 y(t) = x(a(t − t<sub>0</sub>))，其中 a = 2、t<sub>0</sub> = 0.5 s。y(1.5) 的值是多少？</p>
 <label for="q02-1">你的答案（無單位）<input id="q02-1" type="number" step="any"></label>
 <button type="button" id="q02-1-check">對答案</button>
 <div id="q02-1-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q02-2｜</strong>用 δ 的篩選性算出 ∫<sub>−∞</sub><sup>∞</sup> x(τ)·δ(τ − 1) dτ，其中 x(t) = exp(−t)·u(t)。結果是多少？</p>
+<p><strong>q02-2｜</strong>用 δ 的篩選性算出 ∫<sub>−∞</sub><sup>∞</sup> x(τ)·δ(τ − 0.7) dτ，其中 x(t) = exp(−t)·u(t)。結果是多少？</p>
 <label for="q02-2">你的答案（無單位）<input id="q02-2" type="number" step="any"></label>
 <button type="button" id="q02-2-check">對答案</button>
 <div id="q02-2-output" class="output" aria-live="polite" hidden></div>
@@ -74,13 +74,13 @@
 <h2>03 系統的六個性質</h2>
 <p>回去看：<a href="03-系統的六個性質.html">03 系統的六個性質</a></p>
 <section class="card">
-<p><strong>q03-1｜</strong>對系統 y = x² 做疊加測試：取 a = 2、b = 3、x<sub>1</sub> = x<sub>2</sub> = 1。「先加權相加再送進系統」的結果減去「先各自送進系統再加權相加」的結果（左式減右式），疊加殘差是多少？</p>
+<p><strong>q03-1｜</strong>對系統 y = x² 做疊加測試：取 a = −1、b = 3、x<sub>1</sub> = 2、x<sub>2</sub> = 1。左式減右式的疊加殘差是多少？</p>
 <label for="q03-1">你的答案（無單位）<input id="q03-1" type="number" step="any"></label>
 <button type="button" id="q03-1-check">對答案</button>
 <div id="q03-1-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q03-2｜</strong>換成系統 y = x + 3，在同一組參數（a = 2、b = 3、x<sub>1</sub> = x<sub>2</sub> = 1）下的疊加殘差是多少？（答案是負的，輸入框可以直接打半形減號。）</p>
+<p><strong>q03-2｜</strong>換成系統 y = x + 3，在同一組參數（a = −1、b = 3、x<sub>1</sub> = 2、x<sub>2</sub> = 1）下的疊加殘差是多少？（答案是負的。）</p>
 <label for="q03-2">你的答案（無單位）<input id="q03-2" type="number" step="any"></label>
 <button type="button" id="q03-2-check">對答案</button>
 <div id="q03-2-output" class="output" aria-live="polite" hidden></div>
@@ -95,7 +95,7 @@
 <h2>04 線性非時變與摺積</h2>
 <p>回去看：<a href="04-線性非時變與摺積.html">04 線性非時變與摺積</a></p>
 <section class="card">
-<p><strong>q04-1｜</strong>振幅 A = 1、寬度 T<sub>1</sub> = 1 s 的矩形脈衝，通過脈衝響應 h(t) = e<sup>−t/τ</sup>·u(t)、τ = 0.5 s 的一階系統。輸出 y(t) = x(t) ∗ h(t) 在 t = 1 s 的值是多少？</p>
+<p><strong>q04-1｜</strong>振幅 A = 1.5、寬度 T<sub>1</sub> = 0.8 s 的矩形脈衝，通過 h(t) = e<sup>−t/τ</sup>·u(t)、τ = 0.4 s 的系統。輸出 y(t) 在 t = 0.5 s 的值是多少？</p>
 <label for="q04-1">你的答案（無單位）<input id="q04-1" type="number" step="any"></label>
 <button type="button" id="q04-1-check">對答案</button>
 <div id="q04-1-output" class="output" aria-live="polite" hidden></div>
@@ -116,13 +116,13 @@
 <h2>05 傅立葉級數</h2>
 <p>回去看：<a href="05-傅立葉級數.html">05 傅立葉級數</a></p>
 <section class="card">
-<p><strong>q05-1｜</strong>振幅 A = 1 的方波，其傅立葉級數基波（第 1 諧波）的振幅是 4A/π。這個值是多少？</p>
+<p><strong>q05-1｜</strong>振幅 A = 1.5 的方波，其傅立葉級數基波振幅是 4A/π。這個值是多少？</p>
 <label for="q05-1">你的答案（無單位）<input id="q05-1" type="number" step="any"></label>
 <button type="button" id="q05-1-check">對答案</button>
 <div id="q05-1-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q05-2｜</strong>承上，方波只留到第 5 諧波（也就是 n = 1、3、5 三項）時，這幾項佔總功率的百分比是多少？</p>
+<p><strong>q05-2｜</strong>承上，方波只留到第 7 諧波（n = 1、3、5、7 四項）時，這幾項佔總功率的百分比是多少？</p>
 <label for="q05-2">你的答案（%）<input id="q05-2" type="number" step="any"></label>
 <button type="button" id="q05-2-check">對答案</button>
 <div id="q05-2-output" class="output" aria-live="polite" hidden></div>
@@ -137,13 +137,13 @@
 <h2>06 傅立葉轉換</h2>
 <p>回去看：<a href="06-傅立葉轉換.html">06 傅立葉轉換</a></p>
 <section class="card">
-<p><strong>q06-1｜</strong>寬度 T = 1 ms 的矩形脈衝，其傅立葉轉換是 A·T·sinc(fT)（本課一律用歸一化 sinc(x) = sin(πx) / (πx)）。頻譜第一個零點落在哪個頻率？</p>
+<p><strong>q06-1｜</strong>寬度 T = 2 ms 的矩形脈衝，其傅立葉轉換是 A·T·sinc(fT)。頻譜第一個零點落在哪個頻率？</p>
 <label for="q06-1">你的答案（Hz）<input id="q06-1" type="number" step="any"></label>
 <button type="button" id="q06-1-check">對答案</button>
 <div id="q06-1-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q06-2｜</strong>承上題，在 f = 500 Hz 時 sinc(fT) 的值是多少？</p>
+<p><strong>q06-2｜</strong>承上題，在 f = 125 Hz 時 sinc(fT) 的值是多少？（使用歸一化 sinc。）</p>
 <label for="q06-2">你的答案（無單位）<input id="q06-2" type="number" step="any"></label>
 <button type="button" id="q06-2-check">對答案</button>
 <div id="q06-2-output" class="output" aria-live="polite" hidden></div>
@@ -158,7 +158,7 @@
 <h2>07 拉氏轉換與轉移函數</h2>
 <p>回去看：<a href="07-拉氏轉換與轉移函數.html">07 拉氏轉換與轉移函數</a></p>
 <section class="card">
-<p><strong>q07-1｜</strong>一對共軛極點 s = −2 ± j10、增益 K = 1，對應的自然響應是 h(t) = K·e<sup>σt</sup>·cos(ω<sub>d</sub>t)。h(0.5) 的值是多少？（cos 的引數用弧度。）</p>
+<p><strong>q07-1｜</strong>一對共軛極點 s = −3 ± j8、增益 K = 1.2，對應 h(t) = K·e<sup>σt</sup>·cos(ω<sub>d</sub>t)。h(0.4) 是多少？</p>
 <label for="q07-1">你的答案（無單位）<input id="q07-1" type="number" step="any"></label>
 <button type="button" id="q07-1-check">對答案</button>
 <div id="q07-1-output" class="output" aria-live="polite" hidden></div>
@@ -179,13 +179,13 @@
 <h2>08 極零點與二階系統</h2>
 <p>回去看：<a href="08-極零點與二階系統.html">08 極零點與二階系統</a></p>
 <section class="card">
-<p><strong>q08-1｜</strong>標準二階系統在阻尼比 ζ = 0.5 時，步階響應的超越量 M<sub>p</sub> 是多少？</p>
+<p><strong>q08-1｜</strong>標準二階系統在阻尼比 ζ = 0.3 時，步階響應的超越量 M<sub>p</sub> 是多少？</p>
 <label for="q08-1">你的答案（%）<input id="q08-1" type="number" step="any"></label>
 <button type="button" id="q08-1-check">對答案</button>
 <div id="q08-1-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q08-2｜</strong>承上，ζ = 0.5、ω<sub>n</sub> = 10 rad/s 時，實際振盪的阻尼振盪頻率 ω<sub>d</sub> 是多少？</p>
+<p><strong>q08-2｜</strong>承上，ζ = 0.3、ω<sub>n</sub> = 12 rad/s 時，阻尼振盪頻率 ω<sub>d</sub> 是多少？</p>
 <label for="q08-2">你的答案（rad/s）<input id="q08-2" type="number" step="any"></label>
 <button type="button" id="q08-2-check">對答案</button>
 <div id="q08-2-output" class="output" aria-live="polite" hidden></div>
@@ -200,13 +200,13 @@
 <h2>09 濾波器與群延遲</h2>
 <p>回去看：<a href="09-濾波器與群延遲.html">09 濾波器與群延遲</a></p>
 <section class="card">
-<p><strong>q09-1｜</strong>巴特沃斯低通規格：通帶轉角 f<sub>c</sub> = 1000 Hz、阻帶起點 f<sub>s</sub> = 3000 Hz、阻帶衰減要求 A<sub>s</sub> = 40 dB。算出來的最小階數（取上整之前的那個實數值）是多少？</p>
+<p><strong>q09-1｜</strong>巴特沃斯低通規格：f<sub>c</sub> = 800 Hz、f<sub>s</sub> = 2400 Hz、A<sub>s</sub> = 50 dB。最小階數（取上整前）是多少？</p>
 <label for="q09-1">你的答案（無單位）<input id="q09-1" type="number" step="any"></label>
 <button type="button" id="q09-1-check">對答案</button>
 <div id="q09-1-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q09-2｜</strong>承上，改做成 5 階巴特沃斯之後，它在 3000 Hz 的衰減是多少？</p>
+<p><strong>q09-2｜</strong>承上，改做成 6 階巴特沃斯之後，它在 2400 Hz 的衰減是多少？</p>
 <label for="q09-2">你的答案（dB）<input id="q09-2" type="number" step="any"></label>
 <button type="button" id="q09-2-check">對答案</button>
 <div id="q09-2-output" class="output" aria-live="polite" hidden></div>
@@ -221,7 +221,7 @@
 <h2>10 調變與頻譜搬移</h2>
 <p>回去看：<a href="10-調變與頻譜搬移.html">10 調變與頻譜搬移</a></p>
 <section class="card">
-<p><strong>q10-1｜</strong>AM 調變：載波功率 P<sub>c</sub> = 100 W、調變指數 m = 0.5。總發射功率 P<sub>t</sub> 是多少？</p>
+<p><strong>q10-1｜</strong>AM 調變：載波功率 P<sub>c</sub> = 80 W、調變指數 m = 0.8。總發射功率 P<sub>t</sub> 是多少？</p>
 <label for="q10-1">你的答案（W）<input id="q10-1" type="number" step="any"></label>
 <button type="button" id="q10-1-check">對答案</button>
 <div id="q10-1-output" class="output" aria-live="polite" hidden></div>
@@ -242,7 +242,7 @@
 <h2>11 離散時間訊號與差分方程</h2>
 <p>回去看：<a href="11-離散時間訊號與差分方程.html">11 離散時間訊號與差分方程</a></p>
 <section class="card">
-<p><strong>q11-1｜</strong>一階遞迴系統 y[n] = 0.8·y[n − 1] + x[n]，輸入是單位步階 u[n]、系統初始靜止。y[5] 的值是多少？</p>
+<p><strong>q11-1｜</strong>一階遞迴系統 y[n] = 0.6·y[n − 1] + x[n]，輸入是單位步階 u[n]、初始靜止。y[4] 是多少？</p>
 <label for="q11-1">你的答案（無單位）<input id="q11-1" type="number" step="any"></label>
 <button type="button" id="q11-1-check">對答案</button>
 <div id="q11-1-output" class="output" aria-live="polite" hidden></div>
@@ -263,13 +263,13 @@
 <h2>12 取樣與混疊</h2>
 <p>回去看：<a href="12-取樣與混疊.html">12 取樣與混疊</a></p>
 <section class="card">
-<p><strong>q12-1｜</strong>頻率 f = 5000 Hz 的弦波，用取樣頻率 f<sub>s</sub> = 8000 Hz 取樣。混疊之後看到的視在頻率是多少？</p>
+<p><strong>q12-1｜</strong>頻率 f = 7000 Hz 的弦波，用取樣頻率 f<sub>s</sub> = 8000 Hz 取樣。混疊後的視在頻率是多少？</p>
 <label for="q12-1">你的答案（Hz）<input id="q12-1" type="number" step="any"></label>
 <button type="button" id="q12-1-check">對答案</button>
 <div id="q12-1-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q12-2｜</strong>同一條鏈裡（f<sub>s</sub> = 8000 Hz），f = 3000 Hz 的成分經過零階保持之後，振幅剩下原來的幾倍？</p>
+<p><strong>q12-2｜</strong>同一條鏈裡（f<sub>s</sub> = 8000 Hz），f = 2500 Hz 的成分經過零階保持之後，振幅剩下原來的幾倍？</p>
 <label for="q12-2">你的答案（無單位）<input id="q12-2" type="number" step="any"></label>
 <button type="button" id="q12-2-check">對答案</button>
 <div id="q12-2-output" class="output" aria-live="polite" hidden></div>
@@ -284,7 +284,7 @@
 <h2>13 離散頻譜分析</h2>
 <p>回去看：<a href="13-離散頻譜分析.html">13 離散頻譜分析</a></p>
 <section class="card">
-<p><strong>q13-1｜</strong>N = 1024 點的 DFT，取樣頻率 f<sub>s</sub> = 8000 Hz。頻率解析度 Δf 是多少？</p>
+<p><strong>q13-1｜</strong>N = 2048 點的 DFT，取樣頻率 f<sub>s</sub> = 48000 Hz。頻率解析度 Δf 是多少？</p>
 <label for="q13-1">你的答案（Hz）<input id="q13-1" type="number" step="any"></label>
 <button type="button" id="q13-1-check">對答案</button>
 <div id="q13-1-output" class="output" aria-live="polite" hidden></div>
@@ -305,7 +305,7 @@
 <h2>14 Z 轉換與單位圓</h2>
 <p>回去看：<a href="14-Z轉換與單位圓.html">14 Z 轉換與單位圓</a></p>
 <section class="card">
-<p><strong>q14-1｜</strong>z 平面上一對共軛極點，半徑 r = 0.9、角度 θ = 45°，對應的脈衝響應是 h[n] = r<sup>n</sup>·sin((n + 1)θ)/sin θ。h[5] 的值是多少？（答案是負的。）</p>
+<p><strong>q14-1｜</strong>z 平面上一對共軛極點，r = 0.8、θ = 60°，且 h[n] = r<sup>n</sup>·sin((n + 1)θ)/sin θ。h[4] 是多少？</p>
 <label for="q14-1">你的答案（無單位）<input id="q14-1" type="number" step="any"></label>
 <button type="button" id="q14-1-check">對答案</button>
 <div id="q14-1-output" class="output" aria-live="polite" hidden></div>
@@ -326,13 +326,13 @@
 <h2>15 數位濾波器與多速率</h2>
 <p>回去看：<a href="15-數位濾波器與多速率.html">15 數位濾波器與多速率</a></p>
 <section class="card">
-<p><strong>q15-1｜</strong>M = 8 的移動平均濾波器，取樣頻率 f<sub>s</sub> = 8000 Hz。它在 f = 500 Hz 的增益 |H| 是多少？</p>
+<p><strong>q15-1｜</strong>M = 5 的移動平均濾波器，取樣頻率 f<sub>s</sub> = 10000 Hz。它在 f = 500 Hz 的增益 |H| 是多少？</p>
 <label for="q15-1">你的答案（無單位）<input id="q15-1" type="number" step="any"></label>
 <button type="button" id="q15-1-check">對答案</button>
 <div id="q15-1-output" class="output" aria-live="polite" hidden></div>
 </section>
 <section class="card">
-<p><strong>q15-2｜</strong>正規化一階 IIR 濾波器 y[n] = a·y[n − 1] + (1 − a)x[n]，取 a = 0.8、取樣頻率 f<sub>s</sub> = 8000 Hz。它的 −3 dB 頻率是多少？</p>
+<p><strong>q15-2｜</strong>正規化一階 IIR 濾波器 y[n] = a·y[n − 1] + (1 − a)x[n]，取 a = 0.7、f<sub>s</sub> = 12000 Hz。它的 −3 dB 頻率是多少？</p>
 <label for="q15-2">你的答案（Hz）<input id="q15-2" type="number" step="any"></label>
 <button type="button" id="q15-2-check">對答案</button>
 <div id="q15-2-output" class="output" aria-live="polite" hidden></div>

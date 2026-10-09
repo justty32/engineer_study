@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 一階濾波器與頻率響應｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="12-一階濾波器與頻率響應.html" aria-current="page">目前章 12／15</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">12・用頻率逐點詢問電路</p>
 <h1>一階濾波器與頻率響應：算出哪些頻率通過、衰減與延遲</h1>
@@ -44,6 +44,7 @@
 
 <section class="workspace"><h2>自由實驗：移動 RC 截止頻率</h2>
 <p>V<sub>s</sub> 正端 → R → 輸出節點；輸出節點 → C → 地；V<sub>s</sub> 負端 → 地。選低通時輸出取電容兩端，選高通時輸出取電阻兩端；改變元件與相對截止位置，觀察同一個分壓回路如何改變增益與相位。</p>
+<h3>試試看</h3><ul><li>固定 R、C，把頻率位置從 −2 掃到 +2；預期低通由接近 0 dB 走向衰減，高通則相反。</li><li>把 R 加倍並保持相對截止位置不變；預期截止頻率減半，但正規化增益與相位不變。</li></ul>
 <div class="controls">
 <label for="flt-type">濾波器類型<select id="flt-type"><option value="lp">低通（輸出取自電容）</option><option value="hp">高通（輸出取自電阻）</option></select></label>
 <label for="flt-r">R（Ω）<input id="flt-r" type="range" min="100" max="10000" step="100" value="1000"></label>
@@ -70,6 +71,8 @@
 <p>示波器探棒的輸入電容會並到被測節點；對 0.1 µF 影響通常很小，對 100 pF 級電路卻可能直接改變被測物。一般三用電表量不到相位，交流檔頻寬也不足以驗證高頻響應。若輸入不是弦波，還要逐一考慮其頻率成分，不能把單一頻率的 H 當成整段波形的直接讀值。</p>
 <p>量測時還應先把訊號源設定為同一輸入振幅，並記錄源的 50 Ω 輸出阻抗是否與 R 串聯。若每個頻點的輸入本身都在變，只看 V<sub>out</sub> 會把源的變化誤認為濾波器特性；應使用 V<sub>out</sub>/V<sub>in</sub> 的比值。反過來，即使比值吻合理論，也只支持小訊號線性範圍內的模型，不能證明元件在大振幅、溫度漂移或超過額定值時仍維持相同參數。</p>
 <p>若要驗證拖尾，可把輸入改成週期足夠長的方波，觸發在上升緣並量輸出距終值的差如何逐次縮小；低通會呈充放電曲線，高通則在邊緣後回到基準。這能支持同一時間常數控制暫態，卻不能用單次方波證明整段頻率響應，也不能把示波器看似貼住終值的有限解析度誤認為數學上已完全到達。</p>
+
+<section class="note"><h2>本章帶走</h2><ul><li>RC 的時間常數與截止頻率互為尺度：f<sub>c</sub> = 1/(2πRC)。</li><li>截止點的振幅是 1/√2，功率為一半，因此是約 −3.01 dB。</li><li>一階濾波器遠離截止點後，每十倍頻的漸近斜率為 20 dB。</li></ul><p><strong>最常見錯誤：</strong>把半功率誤認成半振幅，因而把截止點寫成 −6.02 dB。</p></section>
 
 <h2>連到哪門課</h2>
 <p><a href="../信號與系統-互動課程/index.html">信號與系統</a>把 H(jω) 擴充成系統頻率響應；控制系統用波德圖判斷增益裕度與相位裕度；通訊系統用濾波器限制頻道與雜訊頻帶。主動濾波器的緩衝、增益與高階近似留給<a href="../電子學-互動課程/index.html">電子學</a>。轉移函數與極點的數學前置可回看<a href="../../../共通基礎/數學/互動課程/08-拉氏轉換.html">工程數學 08 拉氏轉換</a>；下一章則加入電感，觀察二階電路如何集中選取一段窄頻率。</p>

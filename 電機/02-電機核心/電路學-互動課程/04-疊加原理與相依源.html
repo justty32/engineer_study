@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 疊加原理與相依源｜電路學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電路世界觀.html">00 起點</a><a href="04-疊加原理與相依源.html" aria-current="page">目前章 04／15</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">04・把多個來源拆開算，再看清不能拆的量</p>
 <h1>疊加原理與相依源：線性讓多源問題可以分工處理</h1>
@@ -48,6 +48,7 @@
 
 <section class="workspace"><h2>自由實驗：拆開兩個源並比較功率</h2>
 <p>V<sub>s</sub> 正端經 R<sub>1</sub> 到節點 A，I<sub>s</sub> 向 A 注入電流，A 經 R<sub>2</sub> 回到地，V<sub>s</sub> 負端接地。調整四個量，觀察兩個分項電壓如何相加，以及功率為何還多一個交叉項。</p>
+<h3>試試看</h3><ul><li>把電流源調成零；預期總電壓等於電壓源單獨貢獻，另一分項為零。</li><li>保持兩個源不變並改動 R<sub>2</sub>；預期兩個電壓分項仍可相加，但分項功率的和不等於總功率。</li></ul>
 <div class="controls">
 <label for="sup-vs">電壓源 V<sub>s</sub>（V）<input id="sup-vs" type="range" min="1" max="24" step="1" value="12"></label>
 <label for="sup-r1">R<sub>1</sub>（Ω，源到節點 A）<input id="sup-r1" type="range" min="100" max="10000" step="100" value="1000"></label>
@@ -71,6 +72,8 @@
 <p>可用高輸入阻抗三用電表量 A 對地電壓。先把電流源支路開路，量得 V<sub>A,V</sub>；再恢復電流源並把電壓源以低阻短路替代，量得 V<sub>A,I</sub>；最後接回兩個源，量總 V<sub>A</sub>。三次量測中，接線前都要先斷電，且不能把真實電源輸出端在通電時直接短路。</p>
 <p><strong>能證明什麼：</strong>若前兩次讀值的代數和與第三次在儀器誤差內一致，就能證明這個電路在當下電壓、電流與溫度範圍內呈線性，也能驗證源歸零後的拓樸判斷。<strong>不能證明什麼：</strong>這不能證明元件在更高電壓或更大電流時仍線性，也不能證明功率可疊加。要驗證功率，必須同時量 R<sub>2</sub> 兩端電壓與流過它的電流再相乘，不能把兩個單源功率表讀值直接相加。</p>
 <p>量測誤差也要用同一種相加方式評估。三次讀值各有電表解析度、來源內阻與接線接觸電阻造成的不確定度，不能要求末位數完全相等；應先估計容許差，再看殘差是否明顯超出。若殘差會隨來源幅度系統性變大，可能是電阻自熱、電流源順從電壓不足或來源進入限流，而不是疊加定理本身失效。這些現象正好指出理想線性模型的適用邊界。</p>
+
+<section class="note"><h2>本章帶走</h2><ul><li>線性電路的電壓與電流可依各獨立源的貢獻相加。</li><li>相依源由電路變數控制，使用疊加時不能把它關掉。</li><li>功率是二次量，不能直接把各來源單獨造成的功率相加。</li></ul><p><strong>最常見錯誤：</strong>把相依源也歸零，或誤把功率當成可直接疊加的線性變數。</p></section>
 
 <h2>連到哪門課</h2>
 <p><a href="../電子學-互動課程/index.html">電子學</a>用 VCCS 等相依源表示電晶體的小訊號增益，運算放大器也可先以 VCVS 建模；這章只教模型如何參與線性方程，不處理工作點、飽和與元件物理。<a href="../信號與系統-互動課程/index.html">信號與系統</a>則把疊加提升為線性系統的共同語言，卷積可視為把輸入拆成許多微小成分後累加響應。控制系統的小訊號模型、交流分析與雜訊分析也會重用相同觀念。</p>

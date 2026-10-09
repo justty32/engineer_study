@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 PN 接面與二極體方程｜電子學</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
+<nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-電子學世界觀.html">00 起點</a><a href="02-PN接面與二極體方程.html" aria-current="page">02 本章</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">02・讓擴散與漂移在接面上互相拉鋸</p>
 <h1>PN 接面與二極體方程：單向導通從哪裡來</h1>
@@ -61,6 +61,11 @@
 
 <h2>可觀察證據：掃描端口只能看見外部 I–V</h2>
 <p>用曲線追蹤儀（curve tracer），或用電源供應器、限流電阻與電流表逐點掃描 V<sub>D</sub>，記錄每一組端口電壓與電流。順偏資料放到半對數座標後，指數主導區應近似直線；每 59.526429 mV 增加十倍支持 n ≈ 1，若每 decade 需要 90–120 mV，則支持 n 約為 1.5–2。大電流時偏離直線可顯示串聯電阻影響，反向急升可量崩潰電壓。這能證明端口方程在某範圍內的斜率、理想因子、串聯電阻效應與崩潰位置。它不能直接證明 I<sub>S</sub> 真值，因為通常靠外插且受表面漏電汙染；不能量出 V<sub>0</sub>，也不能僅由直流 I–V 得到空乏區寬度，後者需用電容—電壓量測反推。儀器讀到的是端口總效應，不是接面內每一股微觀電流。</p>
+
+<section class="workspace"><h2>章末練習：指數關係與門檻迷思</h2><p>倍率題只比較同一顆理想二極體的兩個偏壓，I<sub>S</sub> 會約掉。</p><div class="grid">
+<div class="card"><label for="c02-1">1. 「矽二極體到 0.7 V 才突然開始有電流」是否正確？</label><select id="c02-1"><option value="">請選擇</option><option value="a">正確，0.7 V 是材料常數</option><option value="b">不正確，順向電流是連續的指數關係</option></select><button id="c02-1-check" type="button">對答案</button><div id="c02-1-output" class="output" aria-live="polite"></div></div>
+<div class="card"><label for="c02-2">2. 300 K 時順向偏壓增加 20 mV，理想二極體電流約變成原來幾倍？</label><input id="c02-2" type="number" step="any"><button id="c02-2-check" type="button">對答案</button><div id="c02-2-output" class="output" aria-live="polite"></div></div>
+</div></section>
 
 <h2>連到哪門課</h2>
 <p>空乏區內建電場與電位的物理見<a href="../../../共通基礎/物理/互動課程/08-靜電學.html">普通物理的靜電學</a>；能帶與載子統計見<a href="../../../共通基礎/物理/互動課程/15-量子與半導體.html">普通物理的量子與半導體</a>。PN 接面不只構成二極體，也是 BJT 的兩個接面與 MOSFET 源極、汲極隔離接面的共同基礎。下一章把這條元件方程放進外部回路，求出真正可量的工作點。</p>
