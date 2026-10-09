@@ -378,7 +378,7 @@
 <p><strong>白話：</strong>內電勢與端電壓之間的相角差，表示轉子磁場相對定子磁場被原動機或負載拉開多少。</p>
 <p><strong>位置／角色：</strong>第 <a href="09-同步發電機功率角.html">09 章</a>用它控制發電實功，第 <a href="10-同步馬達V曲線.html">10 章</a>用它維持固定負載；電網穩定分析會追蹤它。</p>
 <p><strong>機制：</strong>δ（讀作 delta）= 20° 時實功為 33859.994189 W；到 90° 達 99000.000000 W 靜態極限，超過後角度增加反而使實功下降。</p>
-<p><strong>不要混淆：</strong>δ 是 E<sub>f</sub> 與 V<sub>t</sub> 的夾角；功率因數角 θ（theta）是 I<sub>a</sub> 與 V<sub>t</sub> 的夾角，兩者無關。90° 是理論極限，不是建議工作點。</p>
+<p><strong>不要混淆：</strong>δ 是 E<sub>f</sub> 與 V<sub>t</sub> 的夾角；功率因數角 θ（theta）是 I<sub>a</sub> 與 V<sub>t</sub> 的夾角，兩者不是同一個角，但 θ 可由 δ、E<sub>f</sub>、V<sub>t</sub> 與 X<sub>s</sub> 的相量關係算出。90° 是理論極限，不是建議工作點。</p>
 </article>
 
 <article class="term-card" data-search="v curve v 曲線 armature current excitation current unity power factor synchronous motor">
@@ -393,7 +393,7 @@
 <h2>超激磁與欠激磁（over- &amp; under-excitation）</h2>
 <p><strong>白話：</strong>相對於單位功率因數點，激磁較高稱超激磁，較低稱欠激磁；它們主要改變電流的無功分量與相位。</p>
 <p><strong>位置／角色：</strong>第 <a href="10-同步馬達V曲線.html">10 章</a>比較兩側狀態；工廠用超激磁同步馬達就地供應無功，減少電網線路電流。</p>
-<p><strong>機制：</strong>鎖定例 E<sub>f</sub> = 300 V 時，電流 44.508282 A、相角 +59.294184°，功率因數 0.510630 領前，馬達供給 25257.038582 var。</p>
+<p><strong>機制：</strong>鎖定例 E<sub>f</sub> = 300 V 時，電流 44.508282 A、相角 +59.294184°，功率因數 0.510630 領前；依第 10 章的負載慣例 Q = −25257.038582 var，表示馬達向外供給 25257.038582 var。</p>
 <p><strong>不要混淆：</strong>超激磁不會讓固定負載突然得到更多實功，只會改變無功方向與電流大小；欠激磁過低到 45.454545 V 以下則無法維持同步。</p>
 </article>
 
@@ -425,7 +425,7 @@
 <h2>變頻器與 V/f 控制（variable frequency drive &amp; V/f control）</h2>
 <p><strong>白話：</strong>變頻器先把電源轉成可控制頻率與電壓的交流；V/f 控制讓電壓與頻率同比例變化，以維持近似固定磁通。</p>
 <p><strong>位置／角色：</strong>第 <a href="11-起動與速控.html">11 章</a>用它柔和起動並調整同步速，第 <a href="12-馬達家族與選型.html">12 章</a>把驅動器成本納入選型；泵浦、風機與輸送帶常用。</p>
-<p><strong>機制：</strong>4 極機由 60 Hz 降到 30 Hz 時，同步速從 1800 rpm 降到 900 rpm；電壓由 380 V 同比降到 190.000000 V。起動模型用 1.500000 倍額定電流取得 1.000000 倍額定轉矩。</p>
+<p><strong>機制：</strong>4 極機由 60 Hz 降到 30 Hz 時，同步速從 1800 rpm 降到 900 rpm；電壓由 380 V 同比降到 190.000000 V。約 1.000000 倍額定電流可得約 1.000000 倍額定轉矩；本課起動模型用短時 1.500000 倍電流對應 1.500000 倍轉矩，受驅動器電流限制。</p>
 <p><strong>不要混淆：</strong>V/f 是較簡單的標量控制，不能等同所有高性能向量控制；變頻起動靠維持磁通取得轉矩，與單純降壓後轉矩按平方掉的方式不同。</p>
 </article>
 </div>

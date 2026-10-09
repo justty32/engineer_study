@@ -6,10 +6,49 @@ var $ = function (id) {
   if (typeof document === "undefined") { return null; }
   return document.getElementById(id);
 };
+var RANGE_UNIT = {
+  "lv-vin": "V", "lv-vout": "V", "lv-io": "A", "lv-eta": "%", "sl-i": "A", "sl-ron": "mΩ",
+  "sl-vce": "V", "sl-v": "V", "sl-tsw": "ns", "sl-f": "kHz", "sl-d": "", "r1-vrms": "V",
+  "r1-c": "µF", "r1-io": "A", "r1-vd": "V", "r3-v": "V", "r3-alpha": "°", "pw-vin": "V",
+  "pw-vm": "", "pw-fsw": "kHz", "bk-vin": "V", "bk-d": "", "bk-l": "µH", "bk-f": "kHz",
+  "bk-r": "Ω", "bs-vin": "V", "bs-d": "", "bs-r": "Ω", "bs-rl": "Ω", "fl-vin": "V",
+  "fl-vo": "V", "fl-io": "A", "fl-f": "kHz", "fl-rip": "%", "fl-dv": "mV", "fl-esr": "mΩ",
+  "sp-vdc": "V", "sp-ma": "", "sp-mf": "", "th-n": "", "th-fc": " × f_1", "th-dpf": "",
+  "tm-p": "W", "tm-po": "W", "tm-ta": "°C", "tm-jc": "°C/W", "tm-cs": "°C/W",
+  "to-f": "kHz", "to-vin": "V", "to-vo": "V", "to-io": "A", "to-ron": "mΩ", "to-tsw": "ns",
+  "to-rip": "%", "to-dv": "mV", "to-theta": "°C/W"
+};
+var syncRange = function (n) {
+  var out, unit;
+  if (!n || n.type !== "range") { return; }
+  out = n.nextElementSibling;
+  if (!out || out.tagName.toLowerCase() !== "output" || out.getAttribute("for") !== n.id) {
+    out = document.createElement("output");
+    out.setAttribute("for", n.id);
+    out.className = "range-value";
+    n.insertAdjacentElement("afterend", out);
+  }
+  unit = RANGE_UNIT[n.id] || "";
+  out.textContent = n.value + (unit ? " " + unit : "");
+  n.setAttribute("aria-valuetext", out.textContent);
+};
 var bind = function (ids, f) {
   ids.forEach(function (x) {
     var n = $(x);
-    if (n) { n.addEventListener(n.type === "checkbox" ? "change" : "input", f); }
+    if (!n) { return; }
+    syncRange(n);
+    if (n.type === "range") {
+      n.addEventListener("input", function () {
+        var live = document.querySelectorAll('.output[aria-live="polite"]'), i;
+        for (i = 0; i < live.length; i += 1) { live[i].setAttribute("aria-live", "off"); }
+        syncRange(n); f();
+      });
+      n.addEventListener("change", function () {
+        var live = document.querySelectorAll('.output[aria-live="off"]'), i;
+        for (i = 0; i < live.length; i += 1) { live[i].setAttribute("aria-live", "polite"); }
+        f();
+      });
+    } else { n.addEventListener(n.type === "checkbox" ? "change" : "input", f); }
   });
 };
 var val = function (id) { var n = $(id); return n ? Number(n.value) : 0; };
@@ -18,9 +57,11 @@ var zc = function (x) { return (Math.abs(x) < 1e-12) ? 0 : x; };
 /* 負號一律 U+2212，半形 - 不得出現在數值輸出 */
 var minus = function (s) { return String(s).replace(/^-/, "−"); };
 var num6 = function (x) {
-  var v = Number(x);
+  var v = Number(x), a, digits;
   if (!isFinite(v)) { return "不適用"; }
-  return minus(zc(v).toFixed(6));
+  v = zc(v); a = Math.abs(v);
+  digits = a >= 1000 ? 0 : a >= 100 ? 1 : a >= 10 ? 2 : a >= 1 ? 3 : a >= 0.1 ? 4 : 6;
+  return minus(v.toFixed(digits).replace(/(\.[0-9]*[1-9])0+$/, "$1").replace(/\.0+$/, ""));
 };
 var int0 = function (x) {
   var v = Number(x);
@@ -55,40 +96,40 @@ var QUIZ_CH = {
 };
 
 var QUIZ = [
-  { id: "q00-1", t: "num", ans: 14, tol: 0.1, why: "壓差 × 電流 ＝ (12 − 5) × 2 ＝ 14.000000 W。", err: "常見錯因：用了輸出功率而不是壓差 × 電流。" },
+  { id: "q00-1", t: "num", ans: 20, tol: 0.1, why: "新工作點的壓差 × 電流 ＝ (15 − 5) × 2 ＝ 20 W。", err: "常見錯因：用了輸出功率而不是壓差 × 電流。" },
   { id: "q00-2", t: "num", ans: 41.666667, tol: 0.5, why: "效率 ＝ 5 / 12 × 100 % ＝ 41.666667 %。", err: "常見錯因：把效率算成 (V_in − V_o) / V_in。" },
   { id: "q00-3", t: "sel", ans: "b", why: "導通時電壓為 0、關斷時電流為 0，所以 V × I 恆為 0。", err: "常見錯因：把「快」當成原因；快只是讓過渡損耗小。" },
   { id: "q01-1", t: "num", ans: 1, tol: 0.05, why: "I²R_onD ＝ 10² × 0.020 × 0.5 ＝ 1.000000 W。", err: "常見錯因：忘了乘 D，或把 mΩ 當 Ω。" },
-  { id: "q01-2", t: "num", ans: 83.333333, tol: 1, why: "f ＝ 1 W / (0.5 × 48 × 10 × 50 ns) ＝ 83.333333 kHz。", err: "常見錯因：E_sw 少乘 ½ 或 ns 單位沒換。" },
+  { id: "q01-2", t: "num", ans: 69.444444, tol: 1, why: "新工作點 f ＝ 1 W / (0.5 × 48 × 10 × 60 ns) ＝ 69.444444 kHz。", err: "常見錯因：E_sw 少乘 ½ 或 ns 單位沒換。" },
   { id: "q01-3", t: "sel", ans: "c", why: "每次過渡能量固定，頻率加倍時每秒過渡次數加倍。", err: "常見錯因：導通損只看導通那段的 I²R，與每秒切幾次無關。" },
-  { id: "q02-1", t: "num", ans: 8.333333, tol: 0.05, why: "全波漣波頻率為 120 Hz，ΔV ＝ 1 / (120 × 0.001) ＝ 8.333333 V。", err: "常見錯因：漣波頻率用 60 而不是 120。" },
+  { id: "q02-1", t: "num", ans: 4.166667, tol: 0.05, why: "全波漣波頻率為 120 Hz，新工作點 ΔV ＝ 1 / (120 × 0.002) ＝ 4.166667 V。", err: "常見錯因：漣波頻率用 60 而不是 120。" },
   { id: "q02-2", t: "num", ans: 10.513801, tol: 0.2, why: "導通比例 ＝ 18.924841° / 180° ＝ 10.513801 %。", err: "常見錯因：導通角除以 360 而不是 180（全波）。" },
   { id: "q02-3", t: "sel", ans: "d", why: "電流只在峰值附近短時間流動，窄脈衝的諧波很大。", err: "常見錯因：以為功因低一定是相位差。" },
-  { id: "q03-1", t: "num", ans: 257.299944, tol: 0.5, why: "V_dc ＝ 297.104384 × cos 30° ＝ 257.299944 V。", err: "常見錯因：用相電壓算三相橋，或忘了 cos α。" },
+  { id: "q03-1", t: "num", ans: 210.084525, tol: 0.5, why: "新工作點 V_dc ＝ 297.104384 × cos 45° ＝ 210.084525 V。", err: "常見錯因：用相電壓算三相橋，或忘了 cos α。" },
   { id: "q03-2", t: "num", ans: 297.104384, tol: 0.5, why: "V_dc0 ＝ 3√2 × 220 / π ＝ 297.104384 V。", err: "常見錯因：係數用 0.9 而不是 1.35。" },
-  { id: "q03-3", t: "sel", ans: "a", why: "反流需要電流連續，且直流側必須有能量來源。", err: "常見錯因：電阻負載電壓不能為負。" },
-  { id: "q04-1", t: "num", ans: 5.04, tol: 0.01, why: "平均電壓 ＝ 0.42 × 12 ＝ 5.040000 V。", err: "常見錯因：拿峰值或 1 − D 來算。" },
+  { id: "q03-3", t: "sel", ans: "a", why: "反流需要電流連續，且直流側必須有能量來源。", err: "常見錯因：以為只要 α > 90° 就會自動回送能量，忽略負載型別與直流側能量來源。" },
+  { id: "q04-1", t: "num", ans: 4.44, tol: 0.01, why: "新工作點平均電壓 ＝ 0.37 × 12 ＝ 4.44 V。", err: "常見錯因：拿峰值或 1 − D 來算。" },
   { id: "q04-2", t: "num", ans: 500, tol: 0.5, why: "N ＝ 100 MHz / 200 kHz ＝ 500 步。", err: "常見錯因：把 kHz 與 MHz 換算錯。" },
   { id: "q04-3", t: "sel", ans: "c", why: "開關節點只有 0 與 V_in 兩種瞬時值，平均才是 D × V_in。", err: "常見錯因：把平均值當成瞬時值。" },
-  { id: "q05-1", t: "num", ans: 0.681818, tol: 0.005, why: "Δi_L ＝ (12 − 6) × 0.5 / (22 µH × 200 kHz) ＝ 0.681818 A。", err: "常見錯因：忘了乘 D，或 µH／kHz 單位錯。" },
+  { id: "q05-1", t: "num", ans: 0.454545, tol: 0.005, why: "新工作點 Δi_L ＝ (12 − 6) × 0.5 / (33 µH × 200 kHz) ＝ 0.454545 A。", err: "常見錯因：忘了乘 D，或 µH／kHz 單位錯。" },
   { id: "q05-2", t: "num", ans: 17.6, tol: 0.1, why: "R_crit ＝ 2 × 22 µH × 200 kHz / (1 − 0.5) ＝ 17.600000 Ω。", err: "常見錯因：用 1 − D 乘而不是除。" },
   { id: "q05-3", t: "sel", ans: "b", why: "輕載進入 DCM 時，V_o 高於 D × V_in，電壓比會隨負載改變。", err: "常見錯因：把 DCM 當成故障。" },
-  { id: "q06-1", t: "num", ans: 23.076923, tol: 0.05, why: "V_o ＝ 24 × 0.961538 ＝ 23.076923 V。", err: "常見錯因：忘了乘損耗因子 F，答 24。" },
+  { id: "q06-1", t: "num", ans: 22.222222, tol: 0.05, why: "新工作點 r_L ＝ 0.2 Ω 時，V_o ＝ 24 × 0.925926 ＝ 22.222222 V。", err: "常見錯因：忘了乘損耗因子 F，答 24。" },
   { id: "q06-2", t: "num", ans: 0.9, tol: 0.005, why: "D_opt ＝ 1 − √(0.1 / 10) ＝ 0.900000。", err: "常見錯因：用 √(R/r_L) 而不是 √(r_L/R)。" },
   { id: "q06-3", t: "sel", ans: "d", why: "越過 D_opt 後輸出反而下降，控制方向也反轉。", err: "常見錯因：相信理想式 1 / (1 − D)。" },
-  { id: "q07-1", t: "num", ans: 24.305556, tol: 0.05, why: "L ＝ (12 − 5) × (5/12) / (200 kHz × 0.6 A) ＝ 24.305556 µH。", err: "常見錯因：用 V_in 而不是 V_in − V_o。" },
+  { id: "q07-1", t: "num", ans: 16.203704, tol: 0.05, why: "新工作點 3 A 的漣波電流是 0.9 A，L ＝ (12 − 5) × (5/12) / (200 kHz × 0.9 A) ＝ 16.203704 µH。", err: "常見錯因：用 V_in 而不是 V_in − V_o。" },
   { id: "q07-2", t: "num", ans: 18.75, tol: 0.05, why: "C ＝ 0.6 / (8 × 200 kHz × 0.02) ＝ 18.750000 µF。", err: "常見錯因：分母的 8 寫成 2。" },
   { id: "q07-3", t: "sel", ans: "a", why: "當 Δi_L × ESR 大於目標 ΔV_o，就是 ESR 項主導。", err: "常見錯因：以為加大電容能壓掉 ESR 項。" },
-  { id: "q08-1", t: "num", ans: 320, tol: 0.5, why: "全橋基波峰值 ＝ 0.8 × 400 ＝ 320.000000 V。", err: "常見錯因：用半橋公式除了 2。" },
+  { id: "q08-1", t: "num", ans: 280, tol: 0.5, why: "新工作點的全橋基波峰值 ＝ 0.7 × 400 ＝ 280 V。", err: "常見錯因：用半橋公式除了 2。" },
   { id: "q08-2", t: "num", ans: 1050, tol: 1, why: "f_sw ＝ 21 × 50 ＝ 1050 Hz。", err: "常見錯因：把 m_f 當成諧波次數。" },
   { id: "q08-3", t: "sel", ans: "c", why: "m_a 超過 1 後基波增加變慢，出現 5、7 次低次諧波，極限是方波。", err: "常見錯因：以為線性區可以無限延伸。" },
-  { id: "q09-1", t: "num", ans: 44.502424, tol: 0.05, why: "方波的 3、5、7、9、11、13 次分量平方相加後開根號為 44.502424 %。", err: "常見錯因：把幅值相加而不是平方和開根號。" },
+  { id: "q09-1", t: "num", ans: 43.83257, tol: 0.05, why: "新工作點只累加到第 11 次，3、5、7、9、11 次分量平方相加後開根號為 43.832570 %。", err: "常見錯因：把幅值相加而不是平方和開根號。" },
   { id: "q09-2", t: "num", ans: 0.913615, tol: 0.001, why: "真功因 ＝ 1 / √(1 ＋ 0.445024²) ＝ 0.913615。", err: "常見錯因：THD 用百分比數值沒換成 0.445。" },
   { id: "q09-3", t: "sel", ans: "b", why: "諧波電流增加視在功率卻不做功，因此真功因下降。", err: "常見錯因：把位移功因與真功因混為一談。" },
-  { id: "q10-1", t: "num", ans: 88, tol: 0.5, why: "T_J ＝ 40 ＋ 10 × (0.5 ＋ 0.3 ＋ 4.0) ＝ 88.000000 °C。", err: "常見錯因：忘了加環境溫度。" },
+  { id: "q10-1", t: "num", ans: 63, tol: 0.5, why: "改用 1.5 °C/W 強制風冷後，T_J ＝ 40 ＋ 10 × (0.5 ＋ 0.3 ＋ 1.5) ＝ 63 °C。", err: "常見錯因：忘了加環境溫度，或仍套用中型散熱片的 4.0。" },
   { id: "q10-2", t: "num", ans: 7.7, tol: 0.05, why: "θ_SA ＝ (125 − 40) / 10 − 0.5 − 0.3 ＝ 7.700000 °C/W。", err: "常見錯因：忘了扣 θ_JC ＋ θ_CS。" },
   { id: "q10-3", t: "sel", ans: "d", why: "散熱片與風扇都動不了 θ_JC，只能降損耗、換封裝或並聯元件。", err: "常見錯因：以為散熱片能解決一切。" },
-  { id: "q11-1", t: "num", ans: 1.92, tol: 0.01, why: "P_sw ＝ 0.5 × 48 × 10 × 40 ns × 200 kHz ＝ 1.920000 W。", err: "常見錯因：少乘 ½。" },
+  { id: "q11-1", t: "num", ans: 2.4, tol: 0.01, why: "新工作點 P_sw ＝ 0.5 × 48 × 10 × 40 ns × 250 kHz ＝ 2.4 W。", err: "常見錯因：少乘 ½，或仍使用正文預設的 200 kHz。" },
   { id: "q11-2", t: "num", ans: 3, tol: 0.05, why: "L 與 f 成反比，200 kHz 的 15 µH 到 1 MHz 變成 3.000000 µH。", err: "常見錯因：忘了 L 與 f 成反比。" },
   { id: "q11-3", t: "sel", ans: "a", why: "頻率提高讓電感與電容變小，卻讓切換損與結溫上升。", err: "常見錯因：以為頻率只影響 EMI。" }
 ];
@@ -119,7 +160,7 @@ function buckCalc(vin, d, lUH, fkHz, r) {
   var dil = (vin - vo) * d / (L * f), ipk = io + dil / 2, ivl = io - dil / 2;
   var up = (vin - vo) / L / 1e6, dn = -vo / L / 1e6;
   var K = 2 * L * f / r, Kc = 1 - d, rcrit = 2 * L * f / (1 - d), T = 1e6 / f;
-  var mode = K >= Kc ? "CCM" : "DCM", M = null, vo2 = null, io2 = null;
+  var mode = K >= Kc - 1e-9 ? "CCM" : "DCM", M = null, vo2 = null, io2 = null;
   var ipk2 = null, d2 = null, idle = null, rise = null;
   if (mode === "DCM") {
     M = 2 / (1 + Math.sqrt(1 + 4 * K / (d * d)));
@@ -198,6 +239,12 @@ var table2 = function (rows) {
 var endText = function (judge, why, edge) {
   return "<p><strong>" + judge + "</strong></p><p>" + why + "</p><p>邊界提醒：" + edge + "</p>";
 };
+var polishLayout = function () {
+  var footer = document.querySelector(".site-footer");
+  if (footer) {
+    footer.style.cssText = "width:min(1080px,calc(100% - 32px));margin:auto;padding:1rem 0 2rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:1rem;color:var(--muted)";
+  }
+};
 
 /* ---------- 4. 各章互動 ---------- */
 function lvs() {
@@ -216,7 +263,7 @@ function lvs() {
       ["切換式輸入功率", num6(pins) + " W"], ["損耗倍數", valid ? num6(ratio) + " 倍" : na]
     ]);
     var judge;
-    if (!valid) { judge = "判讀：輸出高於輸入，線性穩壓做不到，只能用切換式（Boost）。"; }
+    if (!valid) { judge = "判讀：輸出不低於輸入，這個線性穩壓模型做不到；要升壓必須用切換式 Boost。"; }
     else if (vin - vo <= 0.5) { judge = "判讀：壓差只有 " + num6(vin - vo) + " V，線性穩壓效率 " + num6(el) + " %，與切換式差不多——這種場合線性穩壓反而更好：沒有切換雜訊、零件少。"; }
     else if (el < 60) { judge = "判讀：線性穩壓把 " + num6(100 - el) + " % 的能量燒成熱，切換式損耗只有它的 1/" + num6(ratio) + "。"; }
     else { judge = "判讀：線性穩壓效率 " + num6(el) + " %，損耗是切換式的 " + num6(ratio) + " 倍。"; }
@@ -253,8 +300,8 @@ function swloss() {
     var edge = "切換過渡佔週期達 20 % 時，線性交越模型失效。";
     if (i > icross && dev === "mosfet") { edge += " 電流已超過交叉電流 " + num6(icross) + " A，同樣導通損 IGBT 會更低。"; }
     if (i < icross && dev === "igbt") { edge += " 電流低於交叉電流，MOSFET 的導通損會更低。"; }
-    if (val("sl-f") === 1000) { edge += " 1 MHz 是 GaN 的地盤，Si MOSFET 的 t_sw 通常做不到 50 ns 以下。"; }
-    if (val("sl-tsw") >= 300 && dev === "mosfet") { edge += " 300 ns 以上是 IGBT 的典型過渡時間，Si MOSFET 通常 20–100 ns。"; }
+    if (val("sl-f") === 1000) { edge += " 1 MHz 以上多改用 GaN；低壓 Si MOSFET 約 10–50 ns，高壓 Si MOSFET 較慢。"; }
+    if (val("sl-tsw") >= 300 && dev === "mosfet") { edge += " 300 ns 以上是 IGBT 的典型過渡時間；低壓 Si MOSFET 約 10–50 ns，高壓型則較慢。"; }
     h += endText(judge, "為什麼：導通損只看導通那段的 V × I，切換損是每次過渡 V 與 I 同時非零的能量乘以每秒切幾次，所以它與 f_sw 成正比。", edge);
     put("swloss-output", h);
   };
@@ -290,7 +337,7 @@ function rect1() {
     else if (k * 100 < 15) { judge = "判讀：導通比例只有 " + num6(k * 100) + " %，輸入電流是尖峰 " + num6(ip) + " A 的窄脈衝，功因估計只有 " + num6(pf) + "——這就是中大功率電源必須加 PFC 的原因。"; }
     else { judge = "判讀：漣波 " + num6(rip) + " %、導通比例 " + num6(k * 100) + " %，功因估計 " + num6(pf) + "。"; }
     var edge = "ΔV 不得接近或超過峰值，否則線性放電近似失效。";
-    if (c === 4700) { edge += " 電容越大漣波越小，但導通角越窄、尖峰越高、功因越差；矩形近似在導通角很小時明顯低估功因，真實值多在 0.5–0.7。"; }
+    if (c === 4700) { edge += " 電容越大漣波越小，但導通角越窄、尖峰越高、功因越差；理想電源下的矩形近似會低估尖峰、高估功因（上界），實機的源阻抗會把脈衝拉寬。"; }
     if (io === 0.1) { edge += " 輕載時導通角極窄，開機瞬間的湧入電流是另一個問題。"; }
     if (vd === 0) { edge += " 理想二極體，峰值就是 √2 × V_rms。"; }
     h += endText(judge, "為什麼：電容只在電源電壓超過它的那一小段導通角內補充電荷，一整個週期的負載電荷都要在這一小段塞進來，所以電流是窄而高的脈衝；窄脈衝的有效值遠大於平均值，視在功率因此變大而功因變低。", edge);
@@ -307,7 +354,7 @@ function rect3() {
     var x = rect3Calc(topo, v, alpha, f, load), cont = x.vdc0 * Math.cos(alpha * Math.PI / 180), judge;
     var h = table2([["V<sub>dc0</sub>", num6(x.vdc0) + " V"], ["V<sub>dc</sub>", num6(x.vdc) + " V"],
       ["V<sub>dc</sub> / V<sub>dc0</sub>", num6(x.ratio) + " %"], ["脈波數", int0(x.pulses)],
-      ["漣波頻率", int0(x.fr) + " Hz"], ["位移功因估計 cos α", num6(x.dpf)]]);
+      ["漣波頻率", int0(x.fr) + " Hz"], ["位移功因估計 cos α", load === "res" ? "不適用（電流斷續，cos α 不是位移功因）" : num6(x.dpf)]]);
     if (load === "ind" && alpha >= 160) { judge = "判讀：α 已到 " + num6(alpha) + "°，平均電壓 " + num6(x.vdc) + " V；實務上 α 不能到 180°，要留 20°–30° 換相裕度，否則換相失敗、閘流體無法關斷。"; }
     else if (load === "ind" && alpha > 90) { judge = "判讀：反流區——平均電壓為負，能量從直流側送回交流側；前提是電流連續且直流側有能量來源（馬達再生、HVDC 另一端）。"; }
     else if (load === "res" && alpha > 90) { judge = "判讀：電阻負載電壓不能為負，α 超過 90° 只是把輸出調小；平均 " + num6(x.vdc) + " V。"; }
@@ -339,7 +386,7 @@ function pwm() {
       ["步數 N", int0(N)], ["位元數", num6(bits)], ["最小 D 步階", num6(dd) + " %"],
       ["最小電壓步階", num6(dvo) + " mV"], ["可達 D", num6(dq)], ["量化誤差", num6(err) + " mV"]]);
     var judge;
-    if (d === 0 || d === 1) { judge = "判讀：v_m ＝ " + num6(d) + "，開關永遠" + (d === 0 ? "關斷，平均就是 0。" : "導通，平均就是 V_in。") + "這不是調變。"; }
+    if (d === 0 || d === 1) { judge = "判讀：v_m ＝ " + num6(d) + "，開關" + (d === 0 ? "永遠關斷，平均就是 0。" : "平均接近全導通、平均就是 V_in；八格表 k ＝ 0 因採「嚴格大於」比較而顯示關斷，見正文。") + "這不是調變。"; }
     else if (N < 256) { judge = "判讀：只有 " + int0(N) + " 步（" + num6(bits) + " 位元），不到 8 位元；最小電壓步階 " + num6(dvo) + " mV，控制迴路會在相鄰步階間來回跳（極限循環）。"; }
     else if (N < 1000) { judge = "判讀：" + int0(N) + " 步（" + num6(bits) + " 位元），夠一般用途；步階 " + num6(dvo) + " mV。"; }
     else { judge = "判讀：" + int0(N) + " 步（" + num6(bits) + " 位元），高解析度；步階 " + num6(dvo) + " mV。"; }
@@ -380,7 +427,7 @@ function buck() {
     else if (x.dil / x.io > 0.6) { judge = "判讀：CCM，但漣波比例 " + num6(x.dil / x.io * 100) + " %（Δi_L / I_o）太大，電感峰值電流 " + num6(x.ipk) + " A 遠高於平均，電感要選更大的飽和電流。"; }
     else { judge = "判讀：CCM，V_o ＝ D × V_in ＝ " + num6(x.vo) + " V，與負載無關；漣波 Δi_L ＝ " + num6(x.dil) + " A。"; }
     var edge = "谷值電流一旦碰到 0，就必須改用 DCM 式子。";
-    if (l === 1) { edge += " 1 µH 讓漣波電流 " + num6(x.dil) + " A，這在 200 kHz 幾乎一定進 DCM。"; }
+    if (l === 1) { edge += " 1 µH 在 " + num6(fk) + " kHz 下" + (x.mode === "DCM" ? "進入 DCM，實際峰值電流 " + num6(x.ipk2) + " A。" : "的 CCM 漣波電流為 " + num6(x.dil) + " A。"); }
     if (d === 0.05 || d === 0.95) { edge += " D(1 − D) 在 0.05 與 0.95 一樣小，漣波最小；D ＝ 0.5 漣波最大。"; }
     if (fk === 1000) { edge += " 1 MHz 讓漣波縮到 1/5，代價是 01 章的切換損乘 5。"; }
     h += endText(judge, "為什麼：穩態下電感一週期的伏秒必須抵銷——(V_in − V_o) × D ＝ V_o × (1 − D)——所以 V_o 只由 D 決定；電流碰到 0 之後二極體關斷，多出一段電感電壓為 0 的時間，伏秒平衡的式子換了，V_o 才與負載有關。", edge);
@@ -404,8 +451,10 @@ function boost() {
     else if (x.eta < 80) { judge = "判讀：效率 " + num6(x.eta) + " %，r_L 損耗 " + num6(x.prl) + " W 已吃掉太多；降 r_L、降增益或改隔離式。"; }
     else { judge = "判讀：增益 " + num6(x.M) + "（理想 " + num6(x.mi) + "），效率 " + num6(x.eta) + " %，電感電流是輸出電流的 1/(1 − D) ＝ " + num6(1 / (1 - d)) + " 倍。"; }
     var edge = "超過 D_opt 後，增益下降且控制方向反轉。";
-    if (d === 0.95) { edge += " 理想式給 20 倍，實際做不到；實務 Boost 單級增益多在 4–6 倍以內。"; }
-    if (rl === 0.01) { edge += " r_L 越小峰值越高（M_max ＝ ½√(R/r_L)），但永遠有限。"; }
+    if (d === 0.95 && topo === "boost") { edge += " Boost 理想式給 20 倍，實際做不到；實務 Boost 單級增益多在 4–6 倍以內。"; }
+    if (d === 0.95 && topo === "bb") { edge += " Buck-Boost 理想增益為 19 倍，但寄生電阻會使實際增益在掃描到的 D_opt 後回落。"; }
+    if (rl === 0.01 && topo === "boost") { edge += " r_L 越小峰值越高（M_max ＝ ½√(R/r_L)），但永遠有限。"; }
+    if (rl === 0.01 && topo === "bb") { edge += " r_L 越小時 Buck-Boost 的最大增益越高，數值以工作週期掃描所得的 M_max 為準。"; }
     if (topo === "bb") { edge += " 輸出電壓為負是拓樸本身的結果，不是接錯線；D ＝ 0.5 時增益剛好 1。"; }
     h += endText(judge, "為什麼：Boost 的電感電流是 I_o / (1 − D)，增益越高電感電流越大，r_L 上的 I² r 損耗以平方成長，最後吃掉所有增益；伏秒平衡給的 1 / (1 − D) 只在 r_L ＝ 0 時成立。", edge);
     put("boost-output", h);
@@ -459,13 +508,14 @@ function spwm() {
     var util = v1rms / limrms * 100, sblo = (mf - 2) * f1, sbhi = (mf + 2) * f1, c2 = 2 * mf * f1;
     var rows = [["切換頻率", int0(fsw) + " Hz"], ["基波峰值", num6(v1pk) + " V"], ["基波有效值", num6(v1rms) + " V"],
       ["方波極限峰值", num6(limpk) + " V"], ["方波極限有效值", num6(limrms) + " V"], ["直流匯流排利用率", num6(util) + " %"],
-      ["第一群諧波旁波帶", int0(sblo) + "／" + int0(sbhi) + " Hz"], ["第二群中心", int0(c2) + " Hz"]];
+      [topo === "three" ? "第一群線電壓旁波帶" : "第一群載波中心（最大）", topo === "three" ? int0(sblo) + "／" + int0(sbhi) + " Hz" : int0(fsw) + " Hz"],
+      [topo === "three" ? "m_f 群中心" : "m_f ± 2 旁波帶", topo === "three" ? "在線電壓中抵消" : int0(sblo) + "／" + int0(sbhi) + " Hz"], ["第二群中心", int0(c2) + " Hz"]];
     if (topo === "three") { rows.push(["SPWM 線性上限", num6(spmax) + " V"]); rows.push(["SVPWM 上限", num6(svmax) + " V"]); rows.push(["SVPWM 高出", num6(svgain) + " %"]); }
     var h = table2(rows), judge;
     if (mf < 9) { judge = "判讀：m_f ＝ " + num6(mf) + " 太小，載波諧波（" + int0(sblo) + "–" + int0(sbhi) + " Hz）離基波太近、LC 濾不掉，而且必須用同步調變（載波與基波鎖相）。"; }
     else if (ma >= 0.95) { judge = "判讀：m_a ＝ " + num6(ma) + " 已到線性區天花板；再往上進入過調變，基波增加變慢、出現 5、7 次低次諧波，極限是方波（利用率 100 %，現在 " + num6(util) + " %）。"; }
     else if (topo === "three" && (mf % 2 === 0 || mf % 3 !== 0)) { judge = "判讀：三相建議 m_f 為 3 的奇數倍（9、15、21、27…），現在 m_f ＝ " + int0(mf) + "：載波諧波不會在線電壓中抵消。"; }
-    else { judge = "判讀：線性區，基波有效值 " + num6(v1rms) + " V，利用率 " + num6(util) + " %，第一群諧波在 " + int0(sblo) + "–" + int0(sbhi) + " Hz、LC 濾波器的 f_c 要落在 f1 與 fsw 之間。"; }
+    else { judge = "判讀：線性區，基波有效值 " + num6(v1rms) + " V，利用率 " + num6(util) + " %；" + (topo === "three" ? "m_f 中心在線電壓中抵消，主要旁波帶為 " + int0(sblo) + "–" + int0(sbhi) + " Hz。" : "第一群最大成分在 " + int0(fsw) + " Hz，旁波帶在 " + int0(sblo) + "–" + int0(sbhi) + " Hz。") + " LC 濾波器的 f_c 要落在 f1 與 fsw 之間。"; }
     var edge = "m_a 接近 1 時即將離開線性區，m_f 太小則諧波靠近基波。";
     if (topo === "three") { edge += " 三相注入三次諧波共模可以把線性上限拉高 " + num6(svgain) + " %，因為線電壓看不到共模。"; }
     if (mf === 99) { edge += " m_f 99 讓濾波容易，但 01 章的切換損乘 99/21。"; }
@@ -488,14 +538,16 @@ function thd() {
     h += table2([["THD（到 N 次）", num6(x.thd) + " %"], ["解析極限", lim], ["基波增益 H(1)", nc > 0 ? num6(x.h1) : "不適用（無濾波）"],
       ["位移功因", num6(dpf)], ["真功因", num6(x.pf)], ["失真因數", num6(1 / Math.sqrt(1 + Math.pow(x.thd / 100, 2)))] ]);
     var judge;
-    if (nc >= 1 && nc <= 2) { judge = "判讀：濾波器截止只有 " + num6(nc) + " 倍基波，基波本身被改成 " + num6(x.h1) + " 倍——濾波器不該切在基波附近。"; }
+    if (nc === 1) { judge = "判讀：截止落在基波時，Q ＝ 1 的幅值雖仍為 1，相位卻移了 90°，且元件容差或負載變化會讓基波落在響應陡峭處。"; }
+    else if (nc === 2) { judge = "判讀：截止只有 2 倍基波，基波反被放大為 " + num6(x.h1) + " 倍，濾波器不該切在基波附近。"; }
     else if (x.thd > 100) { judge = "判讀：THD " + num6(x.thd) + " %，諧波的能量比基波還多；這就是電容濾波整流輸入電流的長相，真功因只剩 " + num6(x.pf) + "。"; }
+    else if (x.thd > 8 && wave === "pulse") { judge = "判讀：電流 THD " + num6(x.thd) + " %；電流諧波要依設備類別對照 IEC 61000-3-2 的逐次限值，不能套用 IEEE 519 的電壓 THD 數字。"; }
     else if (x.thd > 8) { judge = "判讀：THD " + num6(x.thd) + " %，超過典型電壓限值（IEEE 519 約 5–8 %）；真功因 " + num6(x.pf) + "（位移功因 " + num6(dpf) + "）。"; }
     else { judge = "判讀：THD " + num6(x.thd) + " %，在典型限值內；真功因 " + num6(x.pf) + "。"; }
     var edge = "截止頻率落在基波或諧波附近時，濾波器可能不衰減。";
-    if (nc > 0 && nc >= 3 && nc <= N && nc % 2 === 1) { edge += " 第 " + int0(nc) + " 次剛好在濾波器共振點，Q ＝ 1 時不衰減也不放大；真實 LC 若無阻尼，這一次可能被放大。"; }
+    if (nc > 0 && nc >= 3 && nc <= N && nc % 2 === 1 && !(wave === "six" && nc % 3 === 0)) { edge += " 第 " + int0(nc) + " 次剛好在濾波器共振點，Q ＝ 1 時不衰減也不放大；真實 LC 若無阻尼，這一次可能被放大。"; }
     if (N === 49 && nc === 0) { edge += " 累加到 49 次仍未到極限，因為 1/n 收斂很慢；三角波的 1/n² 早就收斂。"; }
-    if (wave === "pulse") { edge += " 這就是 02 章那個導通比例 10 % 的脈衝，主動 PFC 就是為了把它整成正弦。"; }
+    if (wave === "pulse") { edge += " 這是與 02 章同類的窄脈衝教學模型；36° 佔半週期 20 %，約為 02 章 10.5 % 導通比例的兩倍，且不代表實際整流脈衝的不對稱形狀。"; }
     h += endText(judge, "為什麼：THD 是各次諧波相對基波的均方根和，越低次的諧波幅值越大、貢獻越多；只有基波做功，諧波電流卻照樣佔用有效值，所以視在功率變大、真功因 ＝ 位移功因 / √(1 ＋ THD²)。", edge);
     put("thd-output", h);
   };
@@ -515,9 +567,9 @@ function thermal() {
       ["結溫", num6(tj) + " °C"], ["殼溫", none ? na : num6(tc) + " °C"], ["散熱片溫度", none ? na : num6(ts) + " °C"],
       ["裕度", num6(margin) + " °C"], ["所需 θ<sub>SA</sub>（降額 25 °C）", num6(req) + " °C/W"], ["效率", num6(eta) + " %"]]);
     var judge, safeP = (tjmax - ta) / th;
-    if (tj > tjmax) { judge = "判讀：結溫 " + num6(tj) + " °C 超過上限 " + num6(tjmax) + " °C，元件會燒毀；要把散熱片熱阻降到 " + num6(req) + " °C/W 以下，或把損耗降到 " + num6(safeP) + " W。"; }
+    if (req < 0) { judge = "判讀：即使散熱片熱阻為 0，θ_JC ＋ θ_CS ＝ " + num6(jc + cs) + " °C/W 也已讓結溫超過降額目標——散熱片救不了，只能降損耗、換封裝或並聯元件。"; }
+    else if (tj > tjmax) { judge = "判讀：結溫 " + num6(tj) + " °C 超過上限 " + num6(tjmax) + " °C，元件會燒毀；要把散熱片熱阻降到 " + num6(req) + " °C/W 以下，或把損耗降到 " + num6(safeP) + " W。"; }
     else if (margin < 25) { judge = "判讀：結溫 " + num6(tj) + " °C，離上限只剩 " + num6(margin) + " °C，沒有降額裕度；長期可靠度會很差。"; }
-    else if (req < 0) { judge = "判讀：即使散熱片熱阻為 0，θ_JC ＋ θ_CS ＝ " + num6(jc + cs) + " °C/W 也已讓結溫超過目標——散熱片救不了，只能降損耗、換封裝或並聯元件。"; }
     else { judge = "判讀：結溫 " + num6(tj) + " °C，裕度 " + num6(margin) + " °C；散熱片熱阻最多 " + num6(req) + " °C/W 就夠。"; }
     var edge = "設計目標要比元件上限低 25 °C，並保留降額裕度。";
     if (none && p > 2) { edge += " TO-220 不裝散熱片只能撐 1–2 W。"; }
@@ -559,7 +611,7 @@ function trade() {
     var edge = "V_o 必須小於 V_in；過渡佔週期達 20 % 時模型失效。";
     if (tsw <= 10) { edge += " t_sw 10 ns 以下是 GaN 的地盤，同樣頻率切換損只剩 Si 的 1/4。"; }
     if (io === 20) { edge += " 電流加倍導通損乘 4、切換損乘 2，這時降 R_on 比降頻有效。"; }
-    if (vo <= 3 && vin >= 48) { edge += " D 很小時高側導通極短、低側幾乎全程導通，損耗落在低側；這就是 VRM 要用多相並聯的原因之一。"; }
+    if (vo <= 3 && vin >= 48) { edge += " D 很小時導通損轉由低側承擔，但這組條件的總損耗仍以高側切換損為主；這就是 VRM 要用多相並聯的原因之一。"; }
     h += endText(judge, "為什麼：L 與 C 都反比於 f_sw，儲能（體積）跟著縮；切換損卻正比於 f_sw、導通損不變，所以總損耗與結溫線性上升——同一個 f_sw 同時決定體積與熱，只能取捨。", edge);
     put("trade-output", h);
   };
@@ -569,6 +621,12 @@ function trade() {
 /* ---------- 5. 字典 ---------- */
 function dictionary() {
   if (!$("term-search")) { return; }
+  var headings = document.querySelectorAll(".term-card h2"), hi, h3;
+  for (hi = 0; hi < headings.length; hi += 1) {
+    h3 = document.createElement("h3");
+    while (headings[hi].firstChild) { h3.appendChild(headings[hi].firstChild); }
+    headings[hi].parentNode.replaceChild(h3, headings[hi]);
+  }
   var draw = function () {
     var q = String(pick("term-search")).toLowerCase().trim();
     var cards = document.getElementsByClassName("term-card");
@@ -600,7 +658,7 @@ function selfcheck() {
   };
   var makeCheck = function (q) {
     return function () {
-      var node = $(q.id), raw, ok, v, right;
+      var node = $(q.id), raw, ok, v, right, option, j;
       if (!node) { return; }
       raw = node.value;
       if (raw === "" || raw === null) { put(q.id + "-output", "<p>" + (q.t === "num" ? "先填一個數字。" : "先選一個選項。") + "</p>"); answered[q.id] = false; progress(); return; }
@@ -611,7 +669,15 @@ function selfcheck() {
       } else { ok = String(raw) === q.ans; }
       answered[q.id] = true;
       if (ok) { put(q.id + "-output", "<p><strong>答對</strong>　" + q.why + "</p>" + link(q.id)); }
-      else { right = q.t === "num" ? "正確答案是 " + num6(q.ans).replace(/\.?0+$/, "") + "。" : "正確答案是選項 " + q.ans + "。"; put(q.id + "-output", "<p><strong>再看一次</strong>　" + right + q.why + "　" + q.err + "</p>" + link(q.id)); }
+      else {
+        if (q.t === "num") { right = "正確答案是 " + num6(q.ans) + "。"; }
+        else {
+          option = "";
+          for (j = 0; j < node.options.length; j += 1) { if (node.options[j].value === q.ans) { option = node.options[j].text; } }
+          right = "正確答案是 (" + q.ans + ") " + option + "。";
+        }
+        put(q.id + "-output", "<p><strong>再看一次</strong>　" + right + q.why + "　" + q.err + "</p>" + link(q.id));
+      }
       progress();
     };
   };
@@ -624,6 +690,7 @@ function selfcheck() {
 
 /* ---------- 7. 註冊 ---------- */
 if (typeof document !== "undefined") {
+  polishLayout();
   [lvs, swloss, rect1, rect3, pwm, buck, boost, filt, spwm, thd, thermal, trade, dictionary, selfcheck].forEach(function (f) { f(); });
 }
 

@@ -22,7 +22,7 @@
 <p><strong>第二步引用既有課的放電結論。</strong>ΔV ＝ I<sub>o</sub> / (f<sub>r</sub> × C)，I<sub>o</sub> 是負載電流 A，f<sub>r</sub> 是補充頻率 Hz，C 是電容量 F，ΔV 是 V。這裡把放電時間取成整個漣波週期，因此會略高估下降量；當 ΔV ≥ V<sub>pk</sub>，電容會在下一個峰值前放光，公式失效。</p>
 <p><strong>第三步找導通時間。</strong>放電末端電容約為 V<sub>pk</sub> − ΔV；電源重新追上它時滿足 V<sub>pk</sub> sin(ωt) ＝ V<sub>pk</sub> − ΔV。從交點到 90° 峰值的導通角（conduction angle）為 θ<sub>c</sub> ＝ arccos(1 − ΔV / V<sub>pk</sub>)。θ<sub>c</sub> 的單位是 °；全波導通比例 k ＝ θ<sub>c</sub> / 180°，半波則除以 360°。</p>
 <p><strong>第四步守住電荷。</strong>負載每段時間拿走的電荷必須在導通窗補回，故脈衝期間平均電流 I<sub>p</sub> ＝ I<sub>o</sub> / k。把脈衝近似為矩形，可得 I<sub>rms</sub> ＝ I<sub>o</sub> / √k，功因約為 (V<sub>dc</sub> × I<sub>o</sub>) / (V<sub>rms</sub> × I<sub>rms</sub>)，電容漣波電流 I<sub>C,rms</sub> ＝ √(I<sub>rms</sub>² − I<sub>o</sub>²)。電流單位都是 A，功因與 k 無單位。</p>
-<p><strong>簡化假設與模型邊界。</strong>本課用的是一階教學模型，真實電路不是這樣：線性放電忽略弦波斜率，矩形脈衝會高估尖峰、低估功因，真實脈衝是圓弧狀，功因多落在 0.5–0.7。本模型算出的功因是偏低估計，不是實機保證值。</p>
+<p><strong>簡化假設與模型邊界。</strong>本課用的是一階教學模型，真實電路不是這樣：線性放電忽略弦波斜率。在理想電源假設下，實際脈衝近似三角形，導通起點電流約 19.9 A，高於矩形平均 9.51 A；因此矩形近似會低估尖峰與有效值、高估功因，功因數值是上界。實機的源阻抗會把脈衝拉寬，功因常落在 0.5–0.7；與本模型的差距方向取決於實際源阻抗，不是實機保證值。</p>
 
 <h2>數值實例：110 V 全波橋與 1000 µF 電容</h2>
 <p>固定 V<sub>rms</sub> ＝ 110 V、60 Hz、C ＝ 1000 µF、I<sub>o</sub> ＝ 1 A、V<sub>d</sub> ＝ 0.7 V，與自由實驗預設值完全相同。</p>

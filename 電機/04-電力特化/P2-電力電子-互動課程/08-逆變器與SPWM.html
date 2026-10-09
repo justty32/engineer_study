@@ -21,7 +21,7 @@
 <h2>推導：從局部平均走到三種橋與諧波落點</h2>
 <p><strong>半橋。</strong>04 章已得到每個短區間的平均值。令 D(t) ＝ ½ ＋ ½ m<sub>a</sub> sin(2πf<sub>1</sub>t)，相對中點的局部平均為 (D(t) − ½) × V<sub>dc</sub> ＝ (V<sub>dc</sub>/2) × m<sub>a</sub> sin(2πf<sub>1</sub>t)，所以 V<sub>1,pk</sub> ＝ m<sub>a</sub> × V<sub>dc</sub>/2。V<sub>1,pk</sub> 是基波峰值，單位 V；m<sub>a</sub> 是幅值調變比，無單位；V<sub>dc</sub> 是直流匯流排電壓，單位 V。</p>
 <p><strong>全橋與三相橋。</strong>全橋兩臂反相，相減後 V<sub>1,pk</sub> ＝ m<sub>a</sub> × V<sub>dc</sub>。三相每相峰值是 m<sub>a</sub> × V<sub>dc</sub>/2，線電壓乘 √3，再由峰值除 √2，得到 V<sub>1,LL,rms</sub> ＝ m<sub>a</sub> × (√3 / (2√2)) × V<sub>dc</sub> ＝ 0.612372 × m<sub>a</sub> × V<sub>dc</sub>。既有電路學已說明 √3 與 √2 的來源，本章只套用。</p>
-<p><strong>頻率與極限。</strong>m<sub>f</sub> ＝ f<sub>sw</sub> / f<sub>1</sub>，所以 f<sub>sw</sub> ＝ m<sub>f</sub> × f<sub>1</sub>；第一群旁波帶約在 (m<sub>f</sub> − 2)f<sub>1</sub> 與 (m<sub>f</sub> ＋ 2)f<sub>1</sub>，第二群中心在 2m<sub>f</sub>f<sub>1</sub>。既有課已證明方波基波等於幅值的 4/π，全橋方波極限因此為 4 × V<sub>dc</sub>/π。直流匯流排利用率是目前基波有效值除以方波極限有效值。三相空間向量脈寬調變（space vector pulse width modulation, SVPWM）的線性上限為 0.707107 × V<sub>dc</sub>，相對 SPWM 的 0.612372 × V<sub>dc</sub> 提升 0.707107 / 0.612372 − 1 ＝ 15.470054 %；其等價作法是注入三次諧波共模，三相線電壓相減後看不到共模，因而能多用一段匯流排電壓。</p>
+<p><strong>頻率與極限。</strong>m<sub>f</sub> ＝ f<sub>sw</sub> / f<sub>1</sub>，所以 f<sub>sw</sub> ＝ m<sub>f</sub> × f<sub>1</sub>。單相雙極性 SPWM 的第一群最大諧波在 m<sub>f</sub>f<sub>1</sub> 本身，旁波帶約在 (m<sub>f</sub> − 2)f<sub>1</sub> 與 (m<sub>f</sub> ＋ 2)f<sub>1</sub>；三相線電壓中，m<sub>f</sub> 中心成分抵消，主要留下 m<sub>f</sub> ± 2 旁波帶。第二群中心在 2m<sub>f</sub>f<sub>1</sub>。既有課已證明方波基波等於幅值的 4/π，全橋方波極限因此為 4 × V<sub>dc</sub>/π。直流匯流排利用率是目前基波有效值除以方波極限有效值。三相空間向量脈寬調變（space vector pulse width modulation, SVPWM）的線性上限為 0.707107 × V<sub>dc</sub>，相對 SPWM 的 0.612372 × V<sub>dc</sub> 提升 0.707107 / 0.612372 − 1 ＝ 15.470054 %；其等價作法是注入三次諧波共模，三相線電壓相減後看不到共模，因而能多用一段匯流排電壓。</p>
 <p><strong>模型假設與適用範圍。</strong>本課用的是一階教學模型，真實電路不是這樣。本章只算 m<sub>a</sub> ≤ 1 的線性區基波，假設開關理想、沒有死區、直流電壓固定，且載波遠高於基波；m<sub>f</sub> ≥ 9 才採用非同步近似。過調變只指出基波不再線性、會出現 5 與 7 次諧波，並給方波極限；載波旁波帶只列位置，不推導其幅值。m<sub>f</sub> 小於 21 時宜讓載波與基波鎖相，單相宜取奇數以維持半波對稱；三相則宜選 3 的奇數倍，使載波群在線電壓中抵消。LC 截止頻率要放在 f<sub>1</sub> 與 f<sub>sw</sub> 之間，才能保留基波並壓低載波群。</p>
 
 <h2>數值實例：400 V 全橋如何得到 226.274170 V</h2>
@@ -33,7 +33,8 @@
 <tr><td>方波極限峰值</td><td>4 × 400 / π</td><td><strong>509.295818 V</strong></td></tr>
 <tr><td>方波極限有效值</td><td>509.295818 / √2</td><td><strong>360.126526 V</strong></td></tr>
 <tr><td>直流匯流排利用率</td><td>320 / 509.295818</td><td><strong>62.831853 %</strong></td></tr>
-<tr><td>第一群諧波旁波帶</td><td>(21 ± 2) × 50</td><td><strong>950 Hz、1150 Hz</strong></td></tr>
+<tr><td>第一群載波中心（最大）</td><td>21 × 50</td><td><strong>1050 Hz</strong></td></tr>
+<tr><td>第一群旁波帶</td><td>(21 ± 2) × 50</td><td><strong>950 Hz、1150 Hz</strong></td></tr>
 <tr><td>第二群中心</td><td>2 × 21 × 50</td><td><strong>2100 Hz</strong></td></tr>
 </tbody></table>
 <p>同條件改為半橋，基波峰值為 160.000000 V、有效值 113.137085 V、極限 254.647909 V。改為三相橋，線電壓基波有效值 195.959179 V、峰值 277.128129 V，六步波極限有效值 311.878720 V；SPWM 線性上限 244.948974 V，SVPWM 上限 282.842712 V，高 15.470054 %。</p>
@@ -61,7 +62,7 @@
 </ul>
 
 <h2>可觀察證據：橋臂脈衝、基波與旁波帶各用什麼看</h2>
-<p>用具足夠耐壓與隔離額定的差動探棒接示波器，可看橋臂輸出的 PWM 波與濾波後弦波；用 FFT 看 50 Hz 基波與 950／1150 Hz 旁波帶；電力分析儀則直接讀基波有效值。量測時必須依設備額定與高壓安全程序，瀏覽器裡的計算不構成實作授權。</p>
+<p>用具足夠耐壓與隔離額定的差動探棒接示波器，可看橋臂輸出的 PWM 波與濾波後弦波；單相全橋用 FFT 看 50 Hz 基波、1050 Hz 載波中心以及 950／1150 Hz 旁波帶；三相線電壓則應看到 1050 Hz 中心成分抵消。電力分析儀則直接讀基波有效值。量測時必須依設備額定與高壓安全程序，瀏覽器裡的計算不構成實作授權。</p>
 <p><strong>能證明</strong>基波幅值在 m<sub>a</sub> ≤ 1 時近似線性，也能證明諧波群跟著 m<sub>f</sub> 移動。<strong>不能證明</strong>死區造成多少失真，因為那還要知道電流方向並放大零交越附近細節；FFT 頻率解析度不足時，旁波帶也會糊在一起，不能據此斷言它不存在。</p>
 
 <h2>連到哪門課</h2>

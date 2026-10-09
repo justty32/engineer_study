@@ -13,3 +13,4 @@
   text-decoration: none;
 }
 .main-site-link:hover { text-decoration: underline; }
+input[type=range] { min-height: 44px; }

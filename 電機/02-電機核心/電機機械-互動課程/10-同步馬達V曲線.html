@@ -19,7 +19,7 @@
 <h2>推導：V 字來自固定實部與可變虛部</h2>
 <p><strong>先由實功求角度。</strong>P = 3 × V<sub>φ</sub> × E<sub>f</sub> × sin δ / X<sub>s</sub>，固定 P 後有 sin δ = P × X<sub>s</sub> / (3 × V<sub>φ</sub> × E<sub>f</sub>)。E<sub>f</sub> 越大，所需 δ 越小。若右式大於 1，代表在 90° 內也傳不了指定實功，機器便脫步；因此 E<sub>f,min</sub> = P × X<sub>s</sub> / (3 × V<sub>φ</sub>)。</p>
 <p><strong>再把電流拆開。</strong>I<sub>a</sub> = [V<sub>φ</sub> − E<sub>f</sub>(cos δ − j sin δ)] / (jX<sub>s</sub>)。實部為 E<sub>f</sub> × sin δ / X<sub>s</sub>，代回前式後恆等於 P / (3 × V<sub>φ</sub>)；虛部為 (E<sub>f</sub> × cos δ − V<sub>φ</sub>) / X<sub>s</sub>，會隨激磁由負穿過零再變正。電流大小是兩分量平方和的平方根，所以在虛部為零時最小。</p>
-<p><strong>最低點與無功。</strong>I<sub>a,min</sub> = P / (3 × V<sub>φ</sub>)，E<sub>f,unity</sub> = √(V<sub>φ</sub>² + (X<sub>s</sub> × I<sub>a,min</sub>)²)。在這一點電流和端電壓同相，功率因數為 1。馬達慣例下 Q = −3 × V<sub>φ</sub> × I<sub>im</sub>；I<sub>im</sub> 為正時 Q 為負，代表向外供給無功。</p>
+<p><strong>最低點與無功。</strong>I<sub>a,min</sub> = P / (3 × V<sub>φ</sub>)，E<sub>f,unity</sub> = √(V<sub>φ</sub>² + (X<sub>s</sub> × I<sub>a,min</sub>)²)。在這一點電流和端電壓同相，功率因數為 1。本頁改用負載慣例，Q = −3 × V<sub>φ</sub> × I<sub>im</sub>，所以 Q 大於 0 表示馬達吸收無功，Q 小於 0 表示馬達向外供給無功；與第 09 章的發電機供給為正慣例相反。</p>
 <p><strong>模型邊界。</strong>本課用的是線性穩態教學模型，真實機器不完全如此。假設圓柱轉子、忽略電樞電阻與損耗、端電壓固定，而且軸上實功不變。永磁同步馬達（permanent magnet synchronous motor, PMSM）的 E<sub>f</sub> 由磁鐵決定，不能靠轉子激磁電流連續調整；它改由變頻器控制電流角。控制程式那一端，本章旋鈕對應激磁電流命令、無功命令或功率因數設定，而不是轉速命令。</p>
 
 <h2>數值實例：15 kW 固定負載下找最低點</h2>

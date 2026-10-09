@@ -20,7 +20,7 @@
 <h2>推導：從瞬時功率拆出導通與過渡</h2>
 <p><strong>MOSFET 導通損。</strong>導通通道等效為 R<sub>on</sub>，瞬時功率是 I² × R<sub>on</sub>；只於工作週期（duty cycle, D）的導通期間發生，所以 P<sub>cond</sub> ＝ I² × R<sub>on</sub> × D。I 單位 A，R<sub>on</sub> 單位 Ω，D 無單位，結果是 W。若電流不是常數，應用均方根電流，這裡先固定 I。</p>
 <p><strong>絕緣閘雙極電晶體（insulated-gate bipolar transistor, IGBT）導通損。</strong>以近似定值的飽和壓降 V<sub>ce(sat)</sub> 描述，P<sub>cond</sub> ＝ I × V<sub>ce(sat)</sub> × D。令 MOSFET 與 IGBT 的導通損相等，約去 I 與 D，得到 I × R<sub>on</sub> ＝ V<sub>ce(sat)</sub>，所以交叉電流 I<sub>cross</sub> ＝ V<sub>ce(sat)</sub> / R<sub>on</sub>。V<sub>ce(sat)</sub> 單位 V，I<sub>cross</sub> 單位 A。</p>
-<p><strong>切換過渡。</strong>在時間 t 內令 v(t) 從 V 線性降到 0，i(t) 從 0 線性升到 I，瞬時 v × i 是拋物線，積分一個半交越得到 ⅙ × V × I × t。本課採較保守的常見教學式 E<sub>sw</sub> ＝ ½ × V × I × t<sub>sw</sub>，把一個週期的兩次過渡以及未細分效應概括成量級估計；E<sub>sw</sub> 單位 J，t<sub>sw</sub> 是上升加下降時間，單位 s。切換頻率（switching frequency, f<sub>sw</sub>）表示每秒發生幾次，P<sub>sw</sub> ＝ E<sub>sw</sub> × f<sub>sw</sub>，交越頻率 f<sub>×</sub> ＝ P<sub>cond</sub> / E<sub>sw</sub>。</p>
+<p><strong>切換過渡。</strong>電阻性負載中，v(t) 與 i(t) 可能同時線性交越，瞬時 v × i 的積分為 ⅙ × V × I × t；這個 ⅙ 不能直接套到 Buck 等電感負載。電感箝位負載的電流與電壓先後轉換，每次過渡約為 ½ × V × I × t，才是 Buck 等拓樸的典型。本課因此用 E<sub>sw</sub> ＝ ½ × V × I × t<sub>sw</sub> 估算每個切換週期的過渡能量；t<sub>sw</sub> 是上升與下降時間合計，單位 s，E<sub>sw</sub> 單位 J。切換頻率（switching frequency, f<sub>sw</sub>）表示每秒發生幾個切換週期，P<sub>sw</sub> ＝ E<sub>sw</sub> × f<sub>sw</sub>，交越頻率 f<sub>×</sub> ＝ P<sub>cond</sub> / E<sub>sw</sub>。</p>
 <p><strong>模型的假設與邊界。</strong>本課用的是一階教學模型，真實電路不是這樣：線性交越式忽略閘極驅動、輸出電容 C<sub>oss</sub>、二極體反向恢復、IGBT 拖尾電流與溫度造成的 R<sub>on</sub> 上升；125 °C 的 R<sub>on</sub> 約為 25 °C 的 1.5–2 倍。當 t<sub>sw</sub> × f<sub>sw</sub> ≥ 20 %，過渡不再是週期中的短事件，模型失效。</p>
 
 <h2>數值實例：100 kHz 時哪筆損耗主導</h2>
@@ -44,7 +44,7 @@
 <tr><td>GTO／IGCT</td><td>全控</td><td>低於 kHz</td><td>kV／kA</td></tr>
 <tr><td>IGBT</td><td>全控</td><td>1–50 kHz</td><td>6.5 kV／kA 級</td></tr>
 <tr><td>Si MOSFET</td><td>全控</td><td>數百 kHz–MHz</td><td>低於 1 kV／100 A</td></tr>
-<tr><td>SiC MOSFET</td><td>全控</td><td>數百 kHz–MHz</td><td>1.2–3.3 kV</td></tr>
+<tr><td>SiC MOSFET</td><td>全控</td><td>數十–數百 kHz</td><td>1.2–3.3 kV</td></tr>
 <tr><td>GaN HEMT</td><td>全控</td><td>MHz–10 MHz</td><td>低於 1 kV</td></tr>
 </tbody></table>
 <p>表中的可控性是在問控制端能否命令導通與關斷。閘流體只能由控制端觸發導通，關斷仍依賴回路電流自然降到零；全控元件則可由控制端決定兩個方向的狀態轉換。頻率範圍是量級導覽，不是每顆元件都能在上限同時承受表列最高電壓與電流。</p>
