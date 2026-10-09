@@ -62,6 +62,7 @@
 <label for="bk-r">負載電阻 R（Ω）<input id="bk-r" type="range" min="0.5" max="50" step="0.5" value="3"></label>
 </div>
 <div id="buck-output" class="output" aria-live="polite"></div>
+<figure style="margin:1rem 0"><svg id="buck-wave" viewBox="0 0 640 230" role="img" aria-label="Buck 電感電流的 CCM 或 DCM 分段波形" style="display:block;width:100%;height:auto;color:var(--accent);border:1px solid var(--line);border-radius:.75rem;background:var(--panel)"></svg><figcaption>這張圖把逐段表變成電感電流軌跡：CCM 的谷值高於零，DCM 則會降到零並出現零電流的第三段。</figcaption></figure>
 </section>
 
 <h2>不要混淆</h2>
@@ -80,6 +81,8 @@
 <h2>連到哪門課</h2>
 <p>主機板會把 12 V 降至處理器低電壓，車用電源常把 12 V 降成 5 V。下一章沿用伏秒平衡分析 Boost；07 章用 Δi<sub>L</sub> 設計 L 與 C。基礎見<a href="../../02-電機核心/電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>。</p>
 <p>控制課會為 CCM、DCM 建立不同模型；磁性元件課則用峰值、平均值與頻率分析飽和、銅損和溫升。</p>
+<h2>本章帶走的 3 件事</h2>
+<ol><li>穩態 CCM 的伏秒平衡給出 V<sub>o</sub> ＝ D × V<sub>in</sub>，而非靠負載電阻分壓。</li><li>電感漣波決定峰值與谷值；選飽和電流額定時要看峰值，不只看平均。</li><li>谷值碰到零就進入 DCM，多出零電流第三段，輸出電壓也開始依負載變化。</li></ol>
 <nav class="pager" aria-label="章節導覽"><a href="04-PWM與工作週期.html">← 上一頁：PWM 與工作週期</a><a href="06-Boost與BuckBoost.html">下一頁：Boost 與 Buck-Boost →</a></nav>
 </main>
 <footer class="site-footer"><span>05 Buck 降壓轉換器：伏秒平衡與 CCM／DCM</span><a href="名詞與概念字典.html">查字典</a></footer>

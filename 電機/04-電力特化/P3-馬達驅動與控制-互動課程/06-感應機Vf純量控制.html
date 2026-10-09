@@ -4,7 +4,7 @@
 <main>
 <p class="eyebrow">06・電壓跟著頻率走，磁通才不會先掉隊</p>
 <h1>感應機 V/f 純量控制：不量轉子角，也能用電壓與頻率控制轉速</h1>
-<p class="lead">感應馬達最便宜的調速法，是讓 V / f 大致固定；但在 3 Hz 不補償時，磁通比只剩 0.790698，滑差已超出本章的線性模型，只能說明轉速會大幅下降。這章用 30 Hz、3 V 補償與 0.5 倍額定負載，算出 873.738006 rpm，並看清開迴路為何一定留有滑差。</p>
+<p class="lead">感應馬達最便宜的調速法，是讓 V / f 大致固定；但在 3 Hz 不補償時，磁通比只剩 0.7907，滑差已超出本章的線性模型，只能說明轉速會大幅下降。這章用 30 Hz、3 V 補償與 0.5 倍額定負載，算出約 873.7 rpm，並看清開迴路為何一定留有滑差。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="05-BLDC六步換相與霍爾.html">05 BLDC 六步換相與霍爾</a>所示的通電相與旋轉磁場。<strong>前置：</strong>見〈感應機滑差與功率流〉<a href="../../02-電機核心/電機機械-互動課程/07-感應機滑差與功率流.html">電機機械的感應機滑差與功率流</a>，先掌握同步速與滑差的物理意義。</p>
 
 <h2>痛點：V / f 明明固定，低速為什麼還是無力又不準</h2>
@@ -45,12 +45,12 @@
 <section class="workspace"><h2>自由實驗：補償電壓能救低速到哪裡</h2>
 <p>固定相電壓額定 220 V、基頻 60 Hz、4 極、額定電流 10 A，改變命令頻率、低頻補償、負載與定子電阻。觀察磁通比、滑差轉速與拉出轉矩如何一起移動。</p>
 <div class="controls">
-<label for="vf-f">命令頻率 f（Hz）<input id="vf-f" type="range" min="1" max="120" step="1" value="30"></label>
-<label for="vf-boost">低頻補償電壓 V_0（V）<input id="vf-boost" type="range" min="0" max="20" step="0.5" value="3"></label>
-<label for="vf-tl">負載（倍額定轉矩）<input id="vf-tl" type="range" min="0" max="1.5" step="0.1" value="0.5"></label>
-<label for="vf-rs">定子電阻 R_s（Ω）<input id="vf-rs" type="range" min="0.1" max="2" step="0.1" value="0.5"></label>
+<label for="vf-f">命令頻率 f（Hz）<input id="vf-f" type="range" min="1" max="120" step="1" value="30" aria-valuetext="30 Hz" data-unit="Hz"></label><output id="vf-f-value" for="vf-f" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">30 Hz</output>
+<label for="vf-boost">低頻補償電壓 V<sub>0</sub>（V）<input id="vf-boost" type="range" min="0" max="20" step="0.5" value="3" aria-valuetext="3 V" data-unit="V"></label><output id="vf-boost-value" for="vf-boost" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">3 V</output>
+<label for="vf-tl">負載（倍額定轉矩）<input id="vf-tl" type="range" min="0" max="1.5" step="0.1" value="0.5" aria-valuetext="0.5"></label><output id="vf-tl-value" for="vf-tl" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0.5</output>
+<label for="vf-rs">定子電阻 R<sub>s</sub>（Ω）<input id="vf-rs" type="range" min="0.1" max="2" step="0.1" value="0.5" aria-valuetext="0.5 Ω" data-unit="Ω"></label><output id="vf-rs-value" for="vf-rs" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0.5 Ω</output>
 </div>
-<div id="vf-output" class="output" aria-live="polite"><table><thead><tr><th>量</th><th>預設值</th></tr></thead><tbody><tr><td>端電壓</td><td>111.500000 V</td></tr><tr><td>V / f</td><td>3.716667 V/Hz</td></tr><tr><td>電流</td><td>5.000000 A</td></tr><tr><td>感應電勢</td><td>109.000000 V</td></tr><tr><td>E / f</td><td>3.633333 V/Hz</td></tr><tr><td>磁通比</td><td>1.013953（Φ² = 1.028102）</td></tr><tr><td>同步速</td><td>900.000000 rpm</td></tr><tr><td>滑差轉速</td><td>26.261994 rpm</td></tr><tr><td>實際轉速</td><td>873.738006 rpm</td></tr><tr><td>滑差</td><td>0.029180（速度誤差 2.917999 %）</td></tr><tr><td>拉出轉矩</td><td>2.570254 倍額定</td></tr></tbody></table><strong>判讀：磁通維持在額定 ±5 % 內，V/f 目標達成。</strong>開迴路：滑差轉速 26.261994 rpm 沒人補，速度誤差 2.917999 %。為什麼：補償電壓抵回部分 I × R<sub>s</sub> 壓降，E / f 因而接近額定值。邊界提醒：頻率降到 1 Hz 時，極低頻誤差可到 68.190759 %；負載超過拉出轉矩會失速，滑差超過 0.2 時線性模型只剩示意；無負載時轉速等於同步速。</div>
+<div id="vf-output" class="output"><table><caption>V/f 純量控制</caption><tr><th>量</th><th>結果</th></tr><tr><td>端電壓</td><td>111.500000 V</td></tr><tr><td>V / f</td><td>3.716667 V/Hz</td></tr><tr><td>電流</td><td>5.000000 A</td></tr><tr><td>感應電勢</td><td>109.000000 V</td></tr><tr><td>E / f</td><td>3.633333 V/Hz</td></tr><tr><td>磁通比</td><td>1.013953（Φ² = 1.028102）</td></tr><tr><td>同步速</td><td>900.000000 rpm</td></tr><tr><td>滑差轉速</td><td>26.261994 rpm</td></tr><tr><td>實際轉速</td><td>873.738006 rpm</td></tr><tr><td>滑差</td><td>0.029180（速度誤差 2.917999 %）</td></tr><tr><td>拉出轉矩</td><td>2.570254 倍額定</td></tr></table><p><strong aria-live="polite" aria-atomic="true">判讀：磁通維持在額定 ±5 % 內，V/f 目標達成。</strong></p><p>開迴路：滑差轉速 26.261994 rpm 沒人補，速度誤差 2.917999 %。</p><p>為什麼：真正維持磁通的是扣除定子電阻壓降後的 E / f。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -69,6 +69,9 @@
 
 <h2>連到哪門課</h2>
 <p>滑差與轉子功率去向見<a href="../../02-電機核心/電機機械-互動課程/07-感應機滑差與功率流.html">電機機械的感應機滑差與功率流</a>；拉出轉矩隨磁通平方變化的背景見<a href="../../02-電機核心/電機機械-互動課程/08-感應機轉矩曲線.html">感應機轉矩曲線</a>；與其他起動及速控方法的取捨見<a href="../../02-電機核心/電機機械-互動課程/11-起動與速控.html">起動與速控</a>。泵與風扇常用這種低成本方法；需要精準轉矩時，下一章開始改用旋轉座標。<strong>韌體那一端：</strong>V/f 是一張「頻率 → 電壓」查表加一個 V<sub>0</sub> 參數，面板通常把它稱為「轉矩提升」。</p>
+<section aria-labelledby="takeaway-06"><h2 id="takeaway-06">本章帶走</h2>
+<ul><li>V/f 控制真正想維持的是扣除定子壓降後的 E/f，也就是磁通。</li><li>開迴路感應馬達必須保留滑差才能產生轉矩，因此軸速不等於同步速。</li><li>低頻補償、弱磁與小滑差近似各有適用邊界，超出後數字只可作示意。</li></ul>
+<p><a href="自我檢核.html#check-06">前往自我檢核：第 06 章題目</a></p></section>
 <nav class="pager" aria-label="章節導覽"><a href="05-BLDC六步換相與霍爾.html">← 上一頁：BLDC 六步換相與霍爾</a><a href="07-Clarke與Park轉換.html">下一頁：Clarke 與 Park 轉換 →</a></nav>
 </main>
 <footer class="site-footer"><span>06 感應機 V/f 純量控制</span><a href="名詞與概念字典.html">查字典</a></footer>

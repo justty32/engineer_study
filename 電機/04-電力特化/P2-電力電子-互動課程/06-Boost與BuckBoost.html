@@ -77,6 +77,8 @@
 <h2>連到哪門課</h2>
 <p>Boost 用於功率因數修正（power factor correction, PFC）、太陽能最大功率點追蹤、發光二極體驅動與電動車直流鏈路。更高增益或隔離可用返馳式（flyback）或 LLC 諧振式（LLC resonant converter, LLC）；雙向需求可用同步開關。伏秒平衡見<a href="../../02-電機核心/電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>。</p>
 <p>控制課關注增益曲線斜率；電源設計課還要納入磁芯、半導體額定值、散熱與隔離。本章模型不能替代完整選型。</p>
+<h2>本章帶走的 3 件事</h2>
+<ol><li>理想 Boost 的增益是 1/(1 − D)，Buck-Boost 則是 −D/(1 − D)，負號表示參考極性反轉。</li><li>D 接近 1 時電感電流急增，寄生電阻的 I²r 損耗會吃掉理想增益。</li><li>超過 D<sub>opt</sub> 後，再增加工作週期反而讓輸出下降，這是不可繼續控制的反轉區。</li></ol>
 <nav class="pager" aria-label="章節導覽"><a href="05-Buck降壓轉換器.html">← 上一頁：Buck 降壓轉換器</a><a href="07-濾波與漣波設計.html">下一頁：濾波與漣波設計 →</a></nav>
 </main>
 <footer class="site-footer"><span>06 Boost 與 Buck-Boost：增益曲線與寄生電阻上限</span><a href="名詞與概念字典.html">查字典</a></footer>

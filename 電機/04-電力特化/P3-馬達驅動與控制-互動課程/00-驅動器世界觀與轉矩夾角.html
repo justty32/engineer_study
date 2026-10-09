@@ -39,11 +39,11 @@
 <section class="workspace"><h2>自由實驗：拉動夾角看轉矩</h2>
 <p>場景是一顆轉子磁場固定的小型伺服馬達。你可以改夾角、定子電流與 K_t，觀察同一電流有多少真正變成轉矩，並把單一角度與六步平均放在一起比較。</p>
 <div class="controls">
-<label for="ta-gamma">定子磁場與轉子磁場夾角 γ（°）<input id="ta-gamma" type="range" min="0" max="180" step="5" value="90"></label>
-<label for="ta-i">定子電流 I（A）<input id="ta-i" type="range" min="0" max="20" step="0.5" value="10"></label>
-<label for="ta-kt">轉矩常數 K_t（N·m/A）<input id="ta-kt" type="range" min="0.1" max="2" step="0.05" value="0.5"></label>
+<label for="ta-gamma">定子磁場與轉子磁場夾角 γ（°）<input id="ta-gamma" type="range" min="0" max="180" step="5" value="90" aria-valuetext="90 °" data-unit="°"></label><output id="ta-gamma-value" for="ta-gamma" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">90 °</output>
+<label for="ta-i">定子電流 I（A）<input id="ta-i" type="range" min="0" max="20" step="0.5" value="10" aria-valuetext="10 A" data-unit="A"></label><output id="ta-i-value" for="ta-i" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">10 A</output>
+<label for="ta-kt">轉矩常數 K<sub>t</sub>（N·m/A）<input id="ta-kt" type="range" min="0.1" max="2" step="0.05" value="0.5" aria-valuetext="0.5 N·m/A" data-unit="N·m/A"></label><output id="ta-kt-value" for="ta-kt" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0.5 N·m/A</output>
 </div>
-<div id="torqueangle-output" class="output" aria-live="polite"><table><thead><tr><th>量</th><th>預設值</th></tr></thead><tbody><tr><td>轉矩</td><td><strong>5.000000 N·m</strong></td></tr><tr><td>每安培轉矩</td><td><strong>0.500000 N·m/A</strong></td></tr><tr><td>佔最大值</td><td><strong>100.000000 %</strong></td></tr><tr><td>六步平均</td><td><strong>4.774648 N·m</strong></td></tr><tr><td>六步最低</td><td><strong>4.330127 N·m</strong></td></tr><tr><td>六步漣波</td><td><strong>14.029787 %</strong></td></tr></tbody></table><p><strong>判讀：夾角 90°，這個電流能給的轉矩全部拿到。</strong></p><p>六步平均 = 3 / π = 95.493 % 的最大值。為什麼：轉矩比例是 sin γ，90° 時為 1，所以 K_t 與 I 的乘積全部用在轉矩。</p><p>邊界提醒：把 γ 拉到 0° 或 180°，兩磁場對齊或反向，轉矩為零，只剩把轉子往定子拉的徑向力；I = 0 A 時沒有定子磁場；I = 20 A 已到本課上限，正比關係只在鐵心不飽和時成立。</p></div>
+<div id="torqueangle-output" class="output"><table><caption>夾角與轉矩</caption><tr><th>量</th><th>結果</th></tr><tr><td>轉矩</td><td>5.000000 N·m</td></tr><tr><td>每安培轉矩</td><td>0.500000 N·m/A</td></tr><tr><td>佔最大值</td><td>100.000000 %</td></tr><tr><td>六步平均</td><td>4.774648 N·m</td></tr><tr><td>六步最低</td><td>4.330127 N·m</td></tr><tr><td>六步漣波</td><td>14.029787 %</td></tr></table><p><strong aria-live="polite" aria-atomic="true">判讀：夾角 90°，這個電流能給的轉矩全部拿到。</strong></p><p>六步平均 = 3 / π = 95.493 % 的最大值。為什麼：轉矩取決於兩磁場向量外積的 sin γ。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -62,6 +62,9 @@
 <h2>連到哪門課</h2>
 <p>這個夾角模型會一路用到第 05 章六步換相與第 07 章 FOC。旋轉機的轉矩、功率與轉速語言見<a href="../../02-電機核心/電機機械-互動課程/05-旋轉機共同語言.html">電機機械的旋轉機共同語言</a>；各家族如何換相、適合哪種負載，見<a href="../../02-電機核心/電機機械-互動課程/12-馬達家族與選型.html">馬達家族與選型</a>。</p>
 <p><strong>韌體那一端。</strong>三層迴路對應三個不同週期的中斷：本課用 50 µs、1 ms、10 ms，電流迴路掛在脈寬調變（pulse-width modulation, PWM）中斷裡，讀回電流後立即更新開關命令。</p>
+<section aria-labelledby="takeaway-00"><h2 id="takeaway-00">本章帶走</h2>
+<ul><li>轉矩由磁場大小與夾角共同決定，夾角 90° 時每安培轉矩最大。</li><li>六步換相讓夾角留在 60° 至 120°，因此轉矩會有可預期的漣波。</li><li>驅動器的核心工作是量測、決策與切換，不只是把電壓接上馬達。</li></ul>
+<p><a href="自我檢核.html#check-00">前往自我檢核：第 00 章題目</a></p></section>
 <nav class="pager" aria-label="章節導覽"><a href="index.html">← 課程地圖</a><a href="01-H橋與平均電壓.html">下一頁：H 橋與平均電壓 →</a></nav>
 </main>
 <footer class="site-footer"><span>00 驅動器世界觀與轉矩夾角</span><a href="名詞與概念字典.html">查字典</a></footer>

@@ -54,6 +54,7 @@
 <label for="r1-vd">每顆二極體壓降 V_d（V）<input id="r1-vd" type="range" min="0" max="1" step="0.1" value="0.7"></label>
 </div>
 <div id="rect1-output" class="output" aria-live="polite"></div>
+<figure style="margin:1rem 0"><svg id="rect-wave" viewBox="0 0 640 230" role="img" aria-label="整流輸入電流脈衝的矩形近似" style="display:block;width:100%;height:auto;color:var(--accent);border:1px solid var(--line);border-radius:.75rem;background:var(--panel)"></svg><figcaption>這張圖把一整個週期要補入的電荷擠在峰值附近；拖曳電容或負載電流時，脈衝寬度與矩形近似高度會同步改變。</figcaption></figure>
 </section>
 
 <h2>不要混淆</h2>
@@ -71,6 +72,8 @@
 
 <h2>連到哪門課</h2>
 <p>二極體 0.7 V 定壓模型的由來見<a href="../../02-電機核心/電子學-互動課程/03-二極體工作點與模型.html">電子學的二極體工作點與模型</a>；本章不重推二極體方程。PFC 常用的 Boost 升壓級在 06 章，THD 與真功因在 09 章。這套前級可見於筆電電源與家電變頻器，但市電端的安規、突入電流限制與電磁相容仍需另行設計。</p>
+<h2>本章帶走的 3 件事</h2>
+<ol><li>電容濾波以 ΔV ≈ I<sub>o</sub>/(f<sub>r</sub>C) 降低漣波，但不會免費改善所有指標。</li><li>電荷集中在峰值附近補入，會形成窄而高的輸入電流脈衝，使真功因下降。</li><li>矩形近似是教學上界：理想電源下它會低估尖峰、高估功因，不可直接當元件額定值。</li></ol>
 <nav class="pager" aria-label="章節導覽"><a href="01-功率開關與兩種損耗.html">← 上一頁：功率開關與兩種損耗</a><a href="03-三相與相控整流.html">下一頁：三相與相控整流 →</a></nav>
 </main>
 <footer class="site-footer"><span>02 單相整流：電容濾波的代價</span><a href="名詞與概念字典.html">查字典</a></footer>

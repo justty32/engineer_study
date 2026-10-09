@@ -4,7 +4,7 @@
 <main>
 <p class="eyebrow">07・轉動座標，讓三相交流成為兩個固定數</p>
 <h1>Clarke 與 Park 轉換：把三相正弦改寫成可直接控制的 dq 直流量</h1>
-<p class="lead">Clarke 變換（Clarke transform）與 Park 變換（Park transform）把 10 A 三相電流改寫成固定的 dq 分量，比例積分（proportional-integral, PI）控制器因此能追固定命令。開迴路量測時，角度錯只會讓控制器看到錯誤投影；閉迴路若再把這些投影調到命令，45° 錯角才會使真實轉矩少 29.289322 %。</p>
+<p class="lead">Clarke 變換（Clarke transform）與 Park 變換（Park transform）把 10 A 三相電流改寫成固定的 dq 分量，比例積分（proportional-integral, PI）控制器因此能追固定命令。開迴路量測時，角度錯只會讓控制器看到錯誤投影；閉迴路若再把這些投影調到命令，45° 錯角才會使真實轉矩少 29.29 %。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="06-感應機Vf純量控制.html">06 感應機 V/f 純量控制</a>的旋轉磁場，以及<a href="00-驅動器世界觀與轉矩夾角.html">00 驅動器世界觀與轉矩夾角</a>的 γ。<strong>前置：</strong>見〈變壓器與三相〉<a href="../../02-電機核心/電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>，先知道平衡三相彼此相隔 120°。</p>
 
 <h2>痛點：三支電流一直變，PI 到底該追哪一個數</h2>
@@ -46,12 +46,12 @@
 <section class="workspace"><h2>自由實驗：拉轉子角，看 dq 是否真的不動</h2>
 <p>固定表面式馬達 p = 4、ψ<sub>f</sub> = 0.1 Wb。改變電流振幅、真角度、電流向量角與控制器角度誤差；輸出上半先顯示開迴路的「真實值／控制器看到的值」，下半再顯示閉迴路調到命令後的真實分量與轉矩。</p>
 <div class="controls">
-<label for="cp-im">電流振幅 I_m（A）<input id="cp-im" type="range" min="0" max="20" step="0.5" value="10"></label>
-<label for="cp-theta">轉子電氣角 θ（°）——拉它看 dq 不動<input id="cp-theta" type="range" min="0" max="360" step="5" value="30"></label>
-<label for="cp-phi">電流向量領先 d 軸的角度 φ（°）<input id="cp-phi" type="range" min="-90" max="180" step="5" value="90"></label>
-<label for="cp-delta">控制器的角度誤差 δ（°）<input id="cp-delta" type="range" min="-45" max="45" step="5" value="0"></label>
+<label for="cp-im">電流振幅 I<sub>m</sub>（A）<input id="cp-im" type="range" min="0" max="20" step="0.5" value="10" aria-valuetext="10 A" data-unit="A"></label><output id="cp-im-value" for="cp-im" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">10 A</output>
+<label for="cp-theta">轉子電氣角 θ（°）——拉它看 dq 不動<input id="cp-theta" type="range" min="0" max="360" step="5" value="30" aria-valuetext="30 °" data-unit="°"></label><output id="cp-theta-value" for="cp-theta" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">30 °</output>
+<label for="cp-phi">電流向量領先 d 軸的角度 φ（°）<input id="cp-phi" type="range" min="-90" max="180" step="5" value="90" aria-valuetext="90 °" data-unit="°"></label><output id="cp-phi-value" for="cp-phi" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">90 °</output>
+<label for="cp-delta">控制器的角度誤差 δ（°）<input id="cp-delta" type="range" min="-45" max="45" step="5" value="0" aria-valuetext="0 °" data-unit="°"></label><output id="cp-delta-value" for="cp-delta" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0 °</output>
 </div>
-<div id="clarkepark-output" class="output" aria-live="polite"><table><thead><tr><th>量</th><th>預設值</th></tr></thead><tbody><tr><td>i<sub>a</sub></td><td>−5.000000 A</td></tr><tr><td>i<sub>b</sub></td><td>10.000000 A</td></tr><tr><td>i<sub>c</sub></td><td>−5.000000 A</td></tr><tr><td>i<sub>α</sub></td><td>−5.000000 A</td></tr><tr><td>i<sub>β</sub></td><td>8.660254 A</td></tr><tr><td>向量長度</td><td>10.000000 A</td></tr><tr><td>i<sub>d</sub></td><td>0.000000 A</td></tr><tr><td>i<sub>q</sub></td><td>10.000000 A</td></tr><tr><td>轉矩</td><td>6.000000 N·m</td></tr></tbody></table><table><thead><tr><th>θ</th><th>i<sub>a</sub></th><th>i<sub>b</sub></th><th>i<sub>c</sub></th><th>i<sub>d</sub></th><th>i<sub>q</sub></th></tr></thead><tbody><tr><td>0°</td><td>0.000000 A</td><td>8.660254 A</td><td>−8.660254 A</td><td>0.000000 A</td><td>10.000000 A</td></tr><tr><td>60°</td><td>−8.660254 A</td><td>8.660254 A</td><td>0.000000 A</td><td>0.000000 A</td><td>10.000000 A</td></tr><tr><td>120°</td><td>−8.660254 A</td><td>0.000000 A</td><td>8.660254 A</td><td>0.000000 A</td><td>10.000000 A</td></tr><tr><td>180°</td><td>0.000000 A</td><td>−8.660254 A</td><td>8.660254 A</td><td>0.000000 A</td><td>10.000000 A</td></tr><tr><td>240°</td><td>8.660254 A</td><td>−8.660254 A</td><td>0.000000 A</td><td>0.000000 A</td><td>10.000000 A</td></tr><tr><td>300°</td><td>8.660254 A</td><td>0.000000 A</td><td>−8.660254 A</td><td>0.000000 A</td><td>10.000000 A</td></tr></tbody></table><strong>判讀：i<sub>d</sub> = 0，全部電流都在產生轉矩（每安培最大轉矩，表面式的最佳點）。</strong>三相與 αβ 隨 θ 變，i<sub>d</sub>、i<sub>q</sub> 不隨 θ 變：這就是把交流變直流。向量長度 10.000000 A 不變：轉換不改變電流大小，只改變描述它的座標。為什麼：Park 使用與轉子相同的角度，把共同的 θ 從投影式消掉。邊界提醒：振幅為 0 時任何座標都是 0；φ = 0° 或 180° 時轉矩為 0；φ &lt; 0° 時是負轉矩；δ 不為 0° 會讓 i<sub>q</sub> 變少並產生假的 i<sub>d</sub>。</div>
+<div id="clarkepark-output" class="output"><table><caption>Clarke–Park 結果</caption><tr><th>量</th><th>結果</th></tr><tr><td>i<sub>a</sub></td><td>−5.000000 A</td></tr><tr><td>i<sub>b</sub></td><td>10.000000 A</td></tr><tr><td>i<sub>c</sub></td><td>−5.000000 A</td></tr><tr><td>i<sub>α</sub></td><td>−5.000000 A</td></tr><tr><td>i<sub>β</sub></td><td>8.660254 A</td></tr><tr><td>向量長度</td><td>10.000000 A</td></tr><tr><td>開迴路：真實 i<sub>d</sub>、i<sub>q</sub></td><td>0.000000 A、10.000000 A</td></tr><tr><td>開迴路：控制器看到 i<sub>d</sub>、i<sub>q</sub></td><td>0.000000 A、10.000000 A</td></tr><tr><td>開迴路：真實轉矩</td><td>6.000000 N·m</td></tr><tr><td>閉迴路調到命令後：真實 i<sub>d</sub>、i<sub>q</sub></td><td>0.000000 A、10.000000 A</td></tr><tr><td>閉迴路調到命令後：真實轉矩</td><td>6.000000 N·m</td></tr></table><table><caption>θ 取樣表（開迴路、控制器看到的值）</caption><tr><th>θ</th><th>i<sub>a</sub></th><th>i<sub>b</sub></th><th>i<sub>c</sub></th><th>i<sub>d</sub></th><th>i<sub>q</sub></th></tr><tr><td>0°</td><td>0.000000</td><td>8.660254</td><td>−8.660254</td><td>0.000000</td><td>10.000000</td></tr><tr><td>60°</td><td>−8.660254</td><td>8.660254</td><td>0.000000</td><td>0.000000</td><td>10.000000</td></tr><tr><td>120°</td><td>−8.660254</td><td>0.000000</td><td>8.660254</td><td>0.000000</td><td>10.000000</td></tr><tr><td>180°</td><td>0.000000</td><td>−8.660254</td><td>8.660254</td><td>0.000000</td><td>10.000000</td></tr><tr><td>240°</td><td>8.660254</td><td>−8.660254</td><td>0.000000</td><td>0.000000</td><td>10.000000</td></tr><tr><td>300°</td><td>8.660254</td><td>0.000000</td><td>−8.660254</td><td>0.000000</td><td>10.000000</td></tr></table><p>三相與 αβ 隨 θ 變，dq 分量不隨 θ 變：這就是把交流變直流。</p><p><strong aria-live="polite" aria-atomic="true">開迴路判讀：真實 i<sub>d</sub> = 0，物理電流向量與轉矩都沒有因座標角錯而改變。</strong></p><p>向量長度 10.000000 A 不變；為什麼：開迴路的轉換只改座標，閉迴路控制器才會依錯誤投影改變物理電流向量。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -70,6 +70,9 @@
 
 <h2>連到哪門課</h2>
 <p>平衡三相、相量與 120° 關係見<a href="../../02-電機核心/電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>；γ 與轉矩的起點見本課第 00 章。此轉換用在伺服、電動車壓縮機與各種 FOC 驅動器，下一章會把固定的 i<sub>d</sub>、i<sub>q</sub> 接進 dq 電壓方程。<strong>韌體那一端：</strong>Clarke／Park 是每個 PWM 中斷裡的六次乘法加兩次三角函數查表，角度來自編碼器計數（第 10 章）。</p>
+<section aria-labelledby="takeaway-07"><h2 id="takeaway-07">本章帶走</h2>
+<ul><li>Clarke 把三相轉為平面向量，Park 再用轉子角把旋轉量轉成固定 dq 分量。</li><li>開迴路角度錯只改變控制器看到的投影；閉迴路才會把物理電流調錯。</li><li>表面式 PMSM 在 i<sub>d</sub> = 0 時每安培轉矩最大，i<sub>q</sub> 決定轉矩方向。</li></ul>
+<p><a href="自我檢核.html#check-07">前往自我檢核：第 07 章題目</a></p></section>
 <nav class="pager" aria-label="章節導覽"><a href="06-感應機Vf純量控制.html">← 上一頁：感應機 V/f 純量控制</a><a href="08-dq電壓方程與弱磁.html">下一頁：dq 電壓方程與弱磁 →</a></nav>
 </main>
 <footer class="site-footer"><span>07 Clarke 與 Park 轉換</span><a href="名詞與概念字典.html">查字典</a></footer>

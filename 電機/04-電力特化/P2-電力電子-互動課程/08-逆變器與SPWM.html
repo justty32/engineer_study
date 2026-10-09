@@ -50,6 +50,7 @@
 <label for="sp-f1">基波頻率 f_1<select id="sp-f1"><option value="50">50 Hz</option><option value="60">60 Hz</option></select></label>
 </div>
 <div id="spwm-output" class="output" aria-live="polite"></div>
+<figure style="margin:1rem 0"><svg id="spwm-wave" viewBox="0 0 640 230" role="img" aria-label="脈寬跟隨弦波參考改變的 SPWM 波形" style="display:block;width:100%;height:auto;color:var(--accent);border:1px solid var(--line);border-radius:.75rem;background:var(--panel)"></svg><figcaption>這張圖顯示 SPWM 的脈寬如何跟隨弦波參考改變；拖曳 m<sub>a</sub> 會改變寬度包絡，拖曳 m<sub>f</sub> 會改變每個基波週期的脈衝數。</figcaption></figure>
 </section>
 
 <h2>不要混淆</h2>
@@ -67,6 +68,8 @@
 
 <h2>連到哪門課</h2>
 <p>下一章會把各次諧波以平方和累加成 THD。馬達變頻器與磁場導向控制留給 P3 馬達驅動與控制；太陽能併網逆變器、UPS 與 VSC 型 HVDC 則把這套橋臂擴充到電網。三相線電壓的來源見<a href="../../02-電機核心/電路學-互動課程/14-變壓器與三相.html">電路學的變壓器與三相</a>；這裡只使用其 √3 關係，不重推。</p>
+<h2>本章帶走的 3 件事</h2>
+<ol><li>SPWM 以隨弦波改變的工作週期，讓橋臂的短區間平均值組成低頻基波。</li><li>m<sub>a</sub> 控制線性區的基波幅值，m<sub>f</sub> 控制脈衝密度與載波諧波落點。</li><li>單相雙極性 SPWM 的第一群含載波中心與旁波帶；三相線電壓才會抵銷中心成分。</li></ol>
 <nav class="pager" aria-label="章節導覽"><a href="07-濾波與漣波設計.html">← 上一頁：濾波與漣波設計</a><a href="09-諧波與THD.html">下一頁：諧波與 THD →</a></nav>
 </main>
 <footer class="site-footer"><span>08 逆變器與 SPWM：調變比與基波</span><a href="名詞與概念字典.html">查字典</a></footer>

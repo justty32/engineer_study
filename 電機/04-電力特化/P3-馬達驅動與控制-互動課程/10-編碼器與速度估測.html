@@ -4,7 +4,7 @@
 <main>
 <p class="eyebrow">10・位置是數到的，速度是兩次位置算出的</p>
 <h1>編碼器與速度估測：低速數時間，高速數脈衝</h1>
-<p class="lead">1000 線編碼器在 300.000000 rpm、1.000000 ms 內只有 20.000000 個計數；M 法因此有 5.000000 % 誤差，並形成 4.934802 N·m 的轉矩命令跳動。這章比較 M 法與 T 法，找到 1500.000000 rpm 的交叉速度。</p>
+<p class="lead">1000 線編碼器在 300.0 rpm、1.000 ms 內只有 20.00 個計數；M 法因此有 5.000 % 誤差，並形成 4.935 N·m 的轉矩命令跳動。這章比較 M 法與 T 法，找到約 1500 rpm 的交叉速度。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="09-SVPWM扇區與作用時間.html">09 SVPWM 扇區與作用時間</a>如何更新開關命令。<strong>前置：</strong>見〈暫存器、計數器與記憶體〉<a href="../../02-電機核心/邏輯設計-互動課程/12-暫存器計數器與記憶體.html">邏輯設計的計數器</a>，先認得邊緣與計數器。</p>
 
 <h2>痛點：編碼器只回報格子，控制器怎麼知道轉得多快</h2>
@@ -46,11 +46,11 @@
 <p>選一顆增量編碼器，調整速度取樣週期、實際轉速與計時器時脈。比較固定視窗的計數誤差與相鄰邊緣的計時誤差，再看一格速度如何進入轉矩命令。</p>
 <div class="controls">
 <label for="en-n">編碼器線數 N<select id="en-n"><option value="100">100 線</option><option value="500">500 線</option><option value="1000" selected>1000 線</option><option value="2500">2500 線</option><option value="5000">5000 線</option><option value="10000">10000 線</option></select></label>
-<label for="en-ts">速度取樣週期 T_s（ms）<input id="en-ts" type="range" min="0.1" max="10" step="0.1" value="1"></label>
-<label for="en-rpm">實際轉速 n（rpm）<input id="en-rpm" type="range" min="1" max="6000" step="1" value="300"></label>
-<label for="en-fclk">計時器時脈 f_clk（MHz）<input id="en-fclk" type="range" min="1" max="100" step="1" value="10"></label>
+<label for="en-ts">速度取樣週期 T<sub>s</sub>（ms）<input id="en-ts" type="range" min="0.1" max="10" step="0.1" value="1" aria-valuetext="1 ms" data-unit="ms"></label><output id="en-ts-value" for="en-ts" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">1 ms</output>
+<label for="en-rpm">實際轉速 n（rpm）<input id="en-rpm" type="range" min="1" max="6000" step="1" value="300" aria-valuetext="300 rpm" data-unit="rpm"></label><output id="en-rpm-value" for="en-rpm" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">300 rpm</output>
+<label for="en-fclk">計時器時脈 f<sub>clk</sub>（MHz）<input id="en-fclk" type="range" min="1" max="100" step="1" value="10" aria-valuetext="10 MHz" data-unit="MHz"></label><output id="en-fclk-value" for="en-fclk" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">10 MHz</output>
 </div>
-<div id="encoder-output" class="output" aria-live="polite">目前模式：N = 1000 線。<table><thead><tr><th>輸出</th><th>預設值</th></tr></thead><tbody><tr><td>計數/圈</td><td>4000</td></tr><tr><td>角度解析度</td><td>0.090000°</td></tr><tr><td>取樣週期內計數</td><td>20.000000</td></tr><tr><td>M 法量化步距</td><td>15.000000 rpm</td></tr><tr><td>M 法相對誤差</td><td>5.000000 %</td></tr><tr><td>邊緣間隔</td><td>50.000000 µs</td></tr><tr><td>T 法 tick 數</td><td>500.000000</td></tr><tr><td>T 法相對誤差</td><td>0.200000 %</td></tr><tr><td>交叉速度</td><td>1500.000000 rpm</td></tr><tr><td>建議</td><td>T 法</td></tr><tr><td>轉矩命令跳動</td><td>4.934802 N·m</td></tr></tbody></table><strong>判讀：低於交叉速度 1500.000000 rpm，T 法（量邊緣間隔）誤差 0.200000 % 比 M 法 5.000000 % 小。</strong>1 個計數的量化經速度迴路 K_p = 3.141593 變成 4.934802 N·m 的轉矩命令跳動；抖動已超過 1.000000 N·m，要加濾波或觀測器，代價是延遲。為什麼：低速時固定視窗只有少量整數計數，但兩個邊緣之間反而累積很多計時器刻度。邊界提醒：取樣週期內平均不到 1 個脈衝時，M 法會讀到 0 與 1 交替；n = 1 rpm 是極低速，應優先看 T 法；N = 100 線時線數太少，M 法在任何實用速度下都不夠；T_s ≥ 5.000000 ms 時，延遲已接近速度迴路週期的量級，會吃掉相位裕度。</div>
+<div id="encoder-output" class="output"><p><strong>目前模式：N = 1000 線</strong></p><table><caption>編碼器速度估測</caption><tr><th>量</th><th>結果</th></tr><tr><td>計數/圈</td><td>4000</td></tr><tr><td>角度解析度</td><td>0.090000°</td></tr><tr><td>T<sub>s</sub> 內計數</td><td>20.000000</td></tr><tr><td>M 法量化步距</td><td>15.000000 rpm</td></tr><tr><td>M 法相對誤差</td><td>5.000000 %</td></tr><tr><td>邊緣間隔</td><td>50.000000 µs</td></tr><tr><td>T 法 tick 數</td><td>500.000000</td></tr><tr><td>T 法相對誤差</td><td>0.200000 %</td></tr><tr><td>交叉速度</td><td>1500.000000 rpm</td></tr><tr><td>建議</td><td>T 法</td></tr><tr><td>轉矩抖動</td><td>4.934802 N·m</td></tr></table><p><strong aria-live="polite" aria-atomic="true">判讀：低於交叉速度，T 法誤差 0.200000 % 比 M 法 5.000000 % 小。</strong></p><p>1 個計數的量化經速度迴路 K<sub>p</sub> = 3.141593 變成 4.934802 N·m 的轉矩命令跳動。</p><p>為什麼：M 法量固定時間裡有幾格，T 法量相鄰兩格隔多久。</p><p>邊界：抖動超過 1 N·m，要加濾波或觀測器，代價是延遲。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -72,6 +72,9 @@
 <h2>連到哪門課</h2>
 <p>四倍頻計數器與方向判定見<a href="../../02-電機核心/邏輯設計-互動課程/12-暫存器計數器與記憶體.html">邏輯設計的暫存器、計數器與記憶體</a>；取樣週期為何限制可見變化見<a href="../../02-電機核心/信號與系統-互動課程/12-取樣與混疊.html">信號與系統的取樣與混疊</a>。絕對編碼器（absolute encoder）與解角器（resolver）能提供不同形式的位置資訊，本章不展開。</p>
 <p><strong>韌體那一端：</strong>MCU 的正交解碼硬體（quadrature encoder interface, QEI）自動完成四倍頻與方向判定；M 法讀計數差，T 法讀輸入捕捉暫存器。</p>
+<section aria-labelledby="takeaway-10"><h2 id="takeaway-10">本章帶走</h2>
+<ul><li>M 法量固定視窗內的計數，低速時量化粗；T 法量邊緣間隔，高速時較吃計時器解析度。</li><li>交叉速度由線數、取樣週期與計時器時脈共同決定。</li><li>速度解析度改善仍會帶來取樣延遲取捨，不能只追求更長視窗。</li></ul>
+<p><a href="自我檢核.html#check-10">前往自我檢核：第 10 章題目</a></p></section>
 <nav class="pager" aria-label="章節導覽"><a href="09-SVPWM扇區與作用時間.html">← 上一頁：SVPWM 扇區與作用時間</a><a href="11-再生煞車與能量.html">下一頁：再生煞車與能量 →</a></nav>
 </main>
 <footer class="site-footer"><span>10 編碼器與速度估測</span><a href="名詞與概念字典.html">查字典</a></footer>

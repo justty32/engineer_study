@@ -815,20 +815,23 @@
 
   function readProgress(root) {
     var store = storage(root);
-    if (!store) return {};
+    if (!store) return { completed: {}, quizPassed: {} };
     try {
       var parsed = JSON.parse(store.getItem(STORAGE_KEY) || "{}");
-      return parsed && parsed.completed && typeof parsed.completed === "object" ? parsed.completed : {};
-    } catch (error) { return {}; }
+      return {
+        completed: parsed && parsed.completed && typeof parsed.completed === "object" ? parsed.completed : {},
+        quizPassed: parsed && parsed.quizPassed && typeof parsed.quizPassed === "object" ? parsed.quizPassed : {}
+      };
+    } catch (error) { return { completed: {}, quizPassed: {} }; }
   }
 
-  function saveProgress(root, completed) {
+  function saveProgress(root, completed, quizPassed) {
     var store = storage(root);
     if (!store) return;
-    try { store.setItem(STORAGE_KEY, JSON.stringify({ completed: completed })); } catch (error) { /* 儲存失敗不阻斷操作 */ }
+    try { store.setItem(STORAGE_KEY, JSON.stringify({ completed: completed, quizPassed: quizPassed })); } catch (error) { /* 儲存失敗不阻斷操作 */ }
   }
 
-  function updateProgress(doc, root, completed) {
+  function updateProgress(doc, root, completed, quizPassed) {
     var count = MODULE_KEYS.filter(function (key) { return completed[key] === true; }).length;
     var total = MODULE_KEYS.length;
     var fill = safeGet(doc, "progress-fill");
@@ -847,10 +850,12 @@
     safeAll(doc, "[data-complete]").forEach(function (button) {
       var key = button.getAttribute("data-complete");
       var done = completed[key] === true;
+      var unlocked = quizPassed[key] === true;
+      button.disabled = !unlocked;
       if (typeof button.setAttribute === "function") button.setAttribute("aria-pressed", done ? "true" : "false");
       if (button.dataset) button.dataset.state = done ? "complete" : "incomplete";
       if (button.classList) button.classList.toggle("is-complete", done);
-      button.textContent = done ? "已完成" : "標記完成";
+      button.textContent = done ? "已完成" : unlocked ? "標記完成" : "先完成自測";
     });
     safeAll(doc, "[data-nav]").forEach(function (button) {
       var done = completed[button.getAttribute("data-nav")] === true;
@@ -859,6 +864,32 @@
       if (mark) mark.textContent = done ? "●" : "○";
     });
     return completed;
+  }
+
+  function checkQuiz(doc, key, quizPassed) {
+    var quiz = safeAll(doc, '[data-quiz-module="' + key + '"]')[0];
+    if (!quiz) return false;
+    var allCorrect = true;
+    safeAll(quiz, ".quiz-question").forEach(function (question) {
+      var answer = Number(question.getAttribute("data-answer"));
+      var tolerance = Number(question.getAttribute("data-tolerance"));
+      var select = safeAll(question, "[data-quiz-answer]")[0];
+      var feedback = safeAll(question, "[data-quiz-feedback]")[0];
+      var chosen = select && select.value !== "" ? Number(select.value) : NaN;
+      var correct = finite(chosen) && finite(answer) && finite(tolerance) && Math.abs(chosen - answer) <= tolerance;
+      allCorrect = allCorrect && correct;
+      if (feedback) {
+        feedback.textContent = correct ? "✓ 正確。" + question.getAttribute("data-explanation") : !finite(chosen) ? "請先選一個答案。" : "尚未答對；回到案例參數重算後再試。";
+        feedback.setAttribute("data-state", correct ? "ok" : "error");
+      }
+    });
+    var summary = safeAll(quiz, "[data-quiz-summary]")[0];
+    if (allCorrect) quizPassed[key] = true;
+    if (summary) {
+      summary.textContent = allCorrect ? "兩題皆正確，已解鎖「標記完成」。" : "尚未解鎖：兩題都答對才算完成自測。";
+      summary.setAttribute("data-state", allCorrect ? "ok" : "error");
+    }
+    return allCorrect;
   }
 
   function activateModule(doc, key, moveFocus) {
@@ -925,7 +956,12 @@
 
   function init(doc, root) {
     if (!doc) return;
-    var completed = readProgress(root || (typeof window !== "undefined" ? window : null));
+    var state = readProgress(root || (typeof window !== "undefined" ? window : null));
+    var completed = state.completed;
+    var quizPassed = state.quizPassed;
+    MODULE_KEYS.forEach(function (key) {
+      if (quizPassed[key] !== true) completed[key] = false;
+    });
     var activeModule = safeAll(doc, "[data-module]").map(function (section) { return section.getAttribute("data-module"); }).filter(function (key) { return MODULE_KEYS.indexOf(key) >= 0; })[0];
     if (activeModule) activateModule(doc, activeModule);
     safeAll(doc, "[data-nav]").forEach(function (button) {
@@ -936,18 +972,33 @@
       if (String(button.tagName || "").toLowerCase() === "button") button.setAttribute("type", "button");
       bindActivatable(button, function () {
         var key = button.getAttribute("data-complete");
-        if (MODULE_KEYS.indexOf(key) < 0) return;
+        if (MODULE_KEYS.indexOf(key) < 0 || quizPassed[key] !== true) return;
         completed[key] = completed[key] !== true;
-        saveProgress(root || (typeof window !== "undefined" ? window : null), completed);
-        updateProgress(doc, root, completed);
+        saveProgress(root || (typeof window !== "undefined" ? window : null), completed, quizPassed);
+        updateProgress(doc, root, completed, quizPassed);
+      });
+    });
+    safeAll(doc, "[data-check-quiz]").forEach(function (button) {
+      bindActivatable(button, function () {
+        var key = button.getAttribute("data-check-quiz");
+        if (MODULE_KEYS.indexOf(key) < 0) return;
+        checkQuiz(doc, key, quizPassed);
+        saveProgress(root || (typeof window !== "undefined" ? window : null), completed, quizPassed);
+        updateProgress(doc, root, completed, quizPassed);
       });
     });
     var resetProgress = safeGet(doc, "reset-progress");
     if (resetProgress) {
       bindActivatable(resetProgress, function () {
         completed = {};
-        saveProgress(root || (typeof window !== "undefined" ? window : null), completed);
-        updateProgress(doc, root, completed);
+        quizPassed = {};
+        saveProgress(root || (typeof window !== "undefined" ? window : null), completed, quizPassed);
+        safeAll(doc, "[data-quiz-answer]").forEach(function (select) { select.value = ""; });
+        safeAll(doc, "[data-quiz-summary], [data-quiz-feedback]").forEach(function (element) {
+          element.textContent = "";
+          element.removeAttribute("data-state");
+        });
+        updateProgress(doc, root, completed, quizPassed);
       });
     }
     safeAll(doc, "[data-reset-module]").forEach(function (button) {
@@ -988,7 +1039,7 @@
         });
       });
     });
-    updateProgress(doc, root || (typeof window !== "undefined" ? window : null), completed);
+    updateProgress(doc, root || (typeof window !== "undefined" ? window : null), completed, quizPassed);
     MODULE_KEYS.forEach(function (key) {
       if (key === "stability") runStability(doc); else runModule(doc, key);
     });

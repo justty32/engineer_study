@@ -37,12 +37,12 @@
 <section class="workspace"><h2>自由實驗：轉子角度、霍爾偏移與六步查表</h2>
 <p>轉動轉子電氣角，觀察霍爾碼、扇區、通電相與轉矩同步變化。再調整霍爾安裝偏移，看查表時刻移動後，夾角窗如何跑出原本的 60°–120°。</p>
 <div class="controls">
-<label for="bl-theta">轉子電氣角 θ（°）<input id="bl-theta" type="range" min="0" max="359" step="1" value="15"></label>
-<label for="bl-i">相電流 I（A）<input id="bl-i" type="range" min="0" max="20" step="0.5" value="10"></label>
-<label for="bl-offset">霍爾安裝偏移 δ（°）<input id="bl-offset" type="range" min="-30" max="30" step="5" value="0"></label>
-<label for="bl-kt">轉矩常數 K_t（N·m/A）<input id="bl-kt" type="range" min="0.05" max="1" step="0.05" value="0.5"></label>
+<label for="bl-theta">轉子電氣角 θ（°）<input id="bl-theta" type="range" min="0" max="359" step="1" value="15" aria-valuetext="15 °" data-unit="°"></label><output id="bl-theta-value" for="bl-theta" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">15 °</output>
+<label for="bl-i">相電流 I（A）<input id="bl-i" type="range" min="0" max="20" step="0.5" value="10" aria-valuetext="10 A" data-unit="A"></label><output id="bl-i-value" for="bl-i" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">10 A</output>
+<label for="bl-offset">霍爾安裝偏移 δ（°）<input id="bl-offset" type="range" min="-30" max="30" step="5" value="0" aria-valuetext="0 °" data-unit="°"></label><output id="bl-offset-value" for="bl-offset" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0 °</output>
+<label for="bl-kt">轉矩常數 K<sub>t</sub>（N·m/A）<input id="bl-kt" type="range" min="0.05" max="1" step="0.05" value="0.5" aria-valuetext="0.5 N·m/A" data-unit="N·m/A"></label><output id="bl-kt-value" for="bl-kt" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0.5 N·m/A</output>
 </div>
-<div id="bldc-output" class="output" aria-live="polite">
+<div id="bldc-output" class="output"><table><caption>六步換相</caption><tr><th>量</th><th>結果</th></tr><tr><td>霍爾碼</td><td>100</td></tr><tr><td>扇區</td><td>1</td></tr><tr><td>通電相</td><td>B+ C−（A 浮接）</td></tr><tr><td>定子磁場方向</td><td>90°</td></tr><tr><td>夾角 γ</td><td>75.000000°</td></tr><tr><td>sin γ</td><td>0.965926</td></tr><tr><td>轉矩</td><td>4.829629 N·m</td></tr><tr><td>90° 時的轉矩</td><td>5.000000 N·m</td></tr><tr><td>六步平均係數</td><td>0.954930（平均 4.774648 N·m）</td></tr><tr><td>下一次換相</td><td>θ 到 30.000000°</td></tr></table><table><caption>鎖定換相表</caption><tr><th>扇區</th><th>範圍</th><th>霍爾碼</th><th>通電相</th><th>定子方向</th></tr><tr><td><strong>1</strong></td><td>330° ≤ θ < 30°</td><td>100</td><td>B+ C−（A 浮接）</td><td>90°</td></tr><tr><td>2</td><td>30° ≤ θ < 90°</td><td>110</td><td>B+ A−（C 浮接）</td><td>150°</td></tr><tr><td>3</td><td>90° ≤ θ < 150°</td><td>010</td><td>C+ A−（B 浮接）</td><td>210°</td></tr><tr><td>4</td><td>150° ≤ θ < 210°</td><td>011</td><td>C+ B−（A 浮接）</td><td>270°</td></tr><tr><td>5</td><td>210° ≤ θ < 270°</td><td>001</td><td>A+ B−（C 浮接）</td><td>330°</td></tr><tr><td>6</td><td>270° ≤ θ < 330°</td><td>101</td><td>A+ C−（B 浮接）</td><td>30°</td></tr></table><p><strong aria-live="polite" aria-atomic="true">判讀：霍爾碼 100 → 扇區 1 → 通電 B+ C−（A 浮接）。</strong></p><p>γ 在六步窗內，轉矩是 90° 時的 96.592583 %。</p><p>平均 95.493 %、最低 86.603 %。 每步只變一個位元；若兩個位元同時變，就是接線錯。</p><p>為什麼：霍爾碼只負責選出一組固定定子方向，轉矩仍由真實夾角決定。</p></div>
 <table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>霍爾碼</td><td>100</td></tr><tr><td>扇區</td><td>1</td></tr><tr><td>通電相</td><td>B+ C−（A 浮接）</td></tr><tr><td>定子磁場方向</td><td>90°</td></tr><tr><td>夾角 γ</td><td>75°</td></tr><tr><td>sin γ</td><td>0.965926</td></tr><tr><td>轉矩</td><td>4.829629 N·m</td></tr><tr><td>90° 時的轉矩</td><td>5.000000 N·m</td></tr><tr><td>六步平均係數</td><td>0.954930（平均 4.774648 N·m）</td></tr><tr><td>下一次換相</td><td>切到 110、B+ A−</td></tr></tbody></table>
 <table><thead><tr><th>扇區</th><th>θ 範圍</th><th>霍爾碼</th><th>通電相</th><th>定子磁場</th></tr></thead><tbody><tr><td><strong>1</strong></td><td><strong>330° ≤ θ &lt; 30°</strong></td><td><strong>100</strong></td><td><strong>B+ C−</strong></td><td><strong>90°</strong></td></tr><tr><td>2</td><td>30° ≤ θ &lt; 90°</td><td>110</td><td>B+ A−</td><td>150°</td></tr><tr><td>3</td><td>90° ≤ θ &lt; 150°</td><td>010</td><td>C+ A−</td><td>210°</td></tr><tr><td>4</td><td>150° ≤ θ &lt; 210°</td><td>011</td><td>C+ B−</td><td>270°</td></tr><tr><td>5</td><td>210° ≤ θ &lt; 270°</td><td>001</td><td>A+ B−</td><td>330°</td></tr><tr><td>6</td><td>270° ≤ θ &lt; 330°</td><td>101</td><td>A+ C−</td><td>30°</td></tr></tbody></table>
 <p><strong>判讀：霍爾碼 100 → 扇區 1 → 通電 B+ C−：這就是驅動器查表的全部。γ 在六步窗內，轉矩是 90° 時的 96.592583 %。</strong></p>
@@ -61,6 +61,9 @@
 <h2>連到哪門課</h2>
 <p>六步驅動用在風扇、無人機與電動工具。它在韌體裡就是一台六狀態的有限狀態機，轉移規則見<a href="../../02-電機核心/邏輯設計-互動課程/11-有限狀態機.html">邏輯設計的有限狀態機</a>；夾角 γ 如何決定轉矩，則回到<a href="00-驅動器世界觀與轉矩夾角.html">本課第 00 章</a>。</p>
 <p><strong>韌體那一端：</strong>霍爾三線接外部中斷，每次邊緣讀 3 位元，查一張 8 項的表；000 與 111 是錯誤碼，其餘六項改寫六個脈寬調變（pulse width modulation, PWM）通道的致能位元。</p>
+<section aria-labelledby="takeaway-05"><h2 id="takeaway-05">本章帶走</h2>
+<ul><li>六步換相每次只換一相，合法霍爾序列相鄰狀態只改一個位元。</li><li>電氣角等於機械角乘極對數，不能把兩者直接混用。</li><li>霍爾偏移會改變定子與轉子磁場夾角，直接反映在轉矩上。</li></ul>
+<p><a href="自我檢核.html#check-05">前往自我檢核：第 05 章題目</a></p></section>
 <nav class="pager" aria-label="章節導覽"><a href="04-步進馬達與微步.html">← 上一頁：步進馬達與微步</a><a href="06-感應機Vf純量控制.html">下一頁：感應機 V/f 純量控制 →</a></nav>
 </main>
 <footer class="site-footer"><span>05 BLDC 六步換相與霍爾</span><a href="名詞與概念字典.html">查字典</a></footer>

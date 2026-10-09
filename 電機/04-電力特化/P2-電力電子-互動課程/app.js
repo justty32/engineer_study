@@ -239,6 +239,88 @@ var table2 = function (rows) {
 var endText = function (judge, why, edge) {
   return "<p><strong>" + judge + "</strong></p><p>" + why + "</p><p>邊界提醒：" + edge + "</p>";
 };
+var svgLine = function (points) {
+  return points.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+};
+var setWave = function (id, label, body) {
+  var n = $(id);
+  if (!n) { return; }
+  n.setAttribute("aria-label", label);
+  n.innerHTML = body;
+};
+var drawRectWave = function (topo, k, ip, bad) {
+  var base = '<path d="M42 178H618" stroke="currentColor" opacity=".45"/><text x="8" y="34" fill="currentColor">i_in</text><text x="596" y="202" fill="currentColor">t</text>';
+  var body, count, span, width, i, x0, x1, path = "";
+  if (bad) {
+    body = base + '<text x="320" y="112" text-anchor="middle" fill="currentColor">模型失效，無法畫出導通脈衝</text>';
+    setWave("rect-wave", "漣波過大，目前參數不適用線性放電模型。", body);
+    return;
+  }
+  count = topo === "full" ? 2 : 1;
+  span = 560 / count;
+  width = Math.max(3, span * (topo === "full" ? k : 2 * k));
+  for (i = 0; i < count; i += 1) {
+    x1 = 50 + (i + 1) * span;
+    x0 = x1 - width;
+    path += "M" + (50 + i * span).toFixed(1) + " 178H" + x0.toFixed(1) + "V48H" + x1.toFixed(1) + "V178";
+  }
+  body = base + '<path d="' + path + '" fill="none" stroke="currentColor" stroke-width="3"/>'
+    + '<text x="52" y="28" fill="currentColor">矩形近似峰值 ' + num6(ip) + ' A</text>'
+    + '<text x="320" y="214" text-anchor="middle" fill="currentColor">導通比例 ' + num6(k * 100) + ' %</text>';
+  setWave("rect-wave", "整流輸入電流的矩形近似：導通比例 " + num6(k * 100) + " %，脈衝峰值 " + num6(ip) + " A。", body);
+};
+var drawPwmWave = function (d, vin) {
+  var tri = [], pulse = "", refY = 142 - d * 104, i, x0, w = 280, edge;
+  for (i = 0; i < 2; i += 1) {
+    x0 = 48 + i * w;
+    tri.push([x0, 142], [x0 + w / 2, 38], [x0 + w, 142]);
+    edge = d * w / 2;
+    pulse += "M" + x0 + " 198V166H" + (x0 + edge).toFixed(1) + "V198H" + (x0 + w - edge).toFixed(1) + "V166H" + (x0 + w) + "V198";
+  }
+  setWave("pwm-wave", "三角載波與比較值產生工作週期 " + num6(d) + " 的 PWM，週期平均電壓為 " + num6(d * vin) + " V。",
+    '<path d="' + svgLine(tri) + '" fill="none" stroke="currentColor" stroke-width="2"/>'
+    + '<path d="M48 ' + refY.toFixed(1) + 'H608" fill="none" stroke="currentColor" stroke-dasharray="7 5"/>'
+    + '<path d="' + pulse + '" fill="none" stroke="currentColor" stroke-width="3"/>'
+    + '<text x="8" y="42" fill="currentColor">載波</text><text x="8" y="' + (refY - 5).toFixed(1) + '" fill="currentColor">v_m</text>'
+    + '<text x="8" y="174" fill="currentColor">PWM</text><text x="608" y="216" text-anchor="end" fill="currentColor">D = ' + num6(d) + '，V_avg = ' + num6(d * vin) + ' V</text>');
+};
+var drawBuckWave = function (x, d) {
+  var maxI = Math.max(x.mode === "CCM" ? x.ipk : x.ipk2, 0.001), y = function (i) { return 178 - i / maxI * 124; };
+  var points, marks, label;
+  if (x.mode === "CCM") {
+    points = [[48, y(x.ivl)], [48 + 560 * d, y(x.ipk)], [608, y(x.ivl)]];
+    marks = '<path d="M' + (48 + 560 * d).toFixed(1) + ' 34V184" stroke="currentColor" opacity=".3" stroke-dasharray="5 5"/>';
+    label = "CCM：電感電流由 " + num6(x.ivl) + " A 上升到 " + num6(x.ipk) + " A，再回到谷值，全程未碰到零。";
+  } else {
+    points = [[48, 178], [48 + 560 * d, y(x.ipk2)], [48 + 560 * (d + x.d2), 178], [608, 178]];
+    marks = '<path d="M' + (48 + 560 * d).toFixed(1) + ' 34V184M' + (48 + 560 * (d + x.d2)).toFixed(1) + ' 34V184" stroke="currentColor" opacity=".3" stroke-dasharray="5 5"/>';
+    label = "DCM：電感電流由零上升到 " + num6(x.ipk2) + " A，再降到零，第三段維持零電流。";
+  }
+  setWave("buck-wave", label,
+    '<path d="M48 178H608" stroke="currentColor" opacity=".45"/>' + marks
+    + '<path d="' + svgLine(points) + '" fill="none" stroke="currentColor" stroke-width="3"/>'
+    + '<text x="8" y="38" fill="currentColor">i_L</text><text x="608" y="202" text-anchor="end" fill="currentColor">t / T</text>'
+    + '<text x="48" y="218" fill="currentColor">模式：' + x.mode + '</text>');
+};
+var drawSpwmWave = function (ma, mf, topo) {
+  var sine = [], pulse = "", n = Math.max(3, Math.round(mf)), i, x, x0, period = 560 / n, duty, high, yHigh = 154, yLow = 202;
+  for (i = 0; i <= 160; i += 1) {
+    x = 48 + 560 * i / 160;
+    sine.push([x, 86 - ma * 48 * Math.sin(2 * Math.PI * i / 160)]);
+  }
+  for (i = 0; i < n; i += 1) {
+    x0 = 48 + i * period;
+    duty = 0.5 + 0.5 * ma * Math.sin(2 * Math.PI * (i + 0.5) / n);
+    high = period * duty;
+    pulse += "M" + x0.toFixed(1) + " " + yLow + "V" + yHigh + "H" + (x0 + high).toFixed(1) + "V" + yLow + "H" + (x0 + period).toFixed(1);
+  }
+  setWave("spwm-wave", "SPWM 波形：幅值調變比 " + num6(ma) + "，每個基波週期 " + int0(n) + " 個載波週期，脈寬跟隨弦波參考改變。",
+    '<path d="M48 86H608M48 202H608" stroke="currentColor" opacity=".35"/>'
+    + '<path d="' + svgLine(sine) + '" fill="none" stroke="currentColor" stroke-width="2"/>'
+    + '<path d="' + pulse + '" fill="none" stroke="currentColor" stroke-width="2"/>'
+    + '<text x="8" y="42" fill="currentColor">弦波參考</text><text x="8" y="164" fill="currentColor">脈衝</text>'
+    + '<text x="608" y="222" text-anchor="end" fill="currentColor">' + (topo === "three" ? "三相橋" : topo === "half" ? "單相半橋" : "單相全橋") + '，m_f = ' + int0(n) + '</text>');
+};
 var polishLayout = function () {
   var footer = document.querySelector(".site-footer");
   if (footer) {
@@ -341,6 +423,7 @@ function rect1() {
     if (io === 0.1) { edge += " 輕載時導通角極窄，開機瞬間的湧入電流是另一個問題。"; }
     if (vd === 0) { edge += " 理想二極體，峰值就是 √2 × V_rms。"; }
     h += endText(judge, "為什麼：電容只在電源電壓超過它的那一小段導通角內補充電荷，一整個週期的負載電荷都要在這一小段塞進來，所以電流是窄而高的脈衝；窄脈衝的有效值遠大於平均值，視在功率因此變大而功因變低。", edge);
+    drawRectWave(topo, k, ip, bad);
     put("rect1-output", h);
   };
   bind(ids, draw); draw();
@@ -394,6 +477,7 @@ function pwm() {
     if (fsw >= 500 && fclk === 48) { edge += " 高頻切換吃掉解析度：想同時要高頻與高解析，只能升時脈或用高解析 PWM 模組。"; }
     if (Math.abs(d8 - d) >= 0.05) { edge += " 8 格表算出 " + num6(d8) + "，與 v_m 差了 " + num6(Math.abs(d8 - d)) + "，這就是只有 8 步的解析度。"; }
     h += endText(judge, "為什麼：開關節點任何瞬間只有 0 或 V_in，負載看到的是面積除以週期；數位 PWM 的導通時間只能是時脈週期的整數倍，所以 D 的解析度是 f_sw / f_clk。", edge);
+    drawPwmWave(d, vin);
     put("pwm-output", h);
   };
   bind(ids, draw); draw();
@@ -431,6 +515,7 @@ function buck() {
     if (d === 0.05 || d === 0.95) { edge += " D(1 − D) 在 0.05 與 0.95 一樣小，漣波最小；D ＝ 0.5 漣波最大。"; }
     if (fk === 1000) { edge += " 1 MHz 讓漣波縮到 1/5，代價是 01 章的切換損乘 5。"; }
     h += endText(judge, "為什麼：穩態下電感一週期的伏秒必須抵銷——(V_in − V_o) × D ＝ V_o × (1 − D)——所以 V_o 只由 D 決定；電流碰到 0 之後二極體關斷，多出一段電感電壓為 0 的時間，伏秒平衡的式子換了，V_o 才與負載有關。", edge);
+    drawBuckWave(x, d);
     put("buck-output", h);
   };
   bind(ids, draw); draw();
@@ -521,6 +606,7 @@ function spwm() {
     if (mf === 99) { edge += " m_f 99 讓濾波容易，但 01 章的切換損乘 99/21。"; }
     if (ma === 0.05) { edge += " m_a 很小時脈衝極窄，死區時間的比例失真最嚴重。"; }
     h += endText(judge, "為什麼：每個切換週期的局部平均等於 D(t) × V_dc，讓 D(t) 跟著弦波走，平均就是弦波，基波峰值正比於 m_a；切換動作本身的諧波集中在載波頻率附近，m_f 越大它們離基波越遠、越容易濾掉。", edge);
+    drawSpwmWave(ma, mf, topo);
     put("spwm-output", h);
   };
   bind(ids, draw); draw();

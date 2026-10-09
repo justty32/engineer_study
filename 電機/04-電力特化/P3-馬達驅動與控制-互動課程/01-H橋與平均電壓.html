@@ -4,7 +4,7 @@
 <main>
 <p class="eyebrow">01・快速開關交給電感後，得到可控的平均電壓</p>
 <h1>H 橋與平均電壓：用工作週期同時決定電壓大小與方向</h1>
-<p class="lead">H 橋（H-bridge）將 24 V 直流鏈以 20 kHz 切換，單極性工作週期（duty cycle, D）= 0.75 時，繞組的平均電壓是 18.000000 V。在 1000 rpm 下，電流是 7.528024 A，而 2 mH 電感把峰對峰漣波壓到 0.112500 A，只佔 1.494416 %。</p>
+<p class="lead">H 橋（H-bridge）將 24 V 直流鏈以 20 kHz 切換，單極性工作週期（duty cycle, D）= 0.75 時，繞組的平均電壓是 18.0 V。在 1000 rpm 下，電流是 7.528 A，而 2 mH 電感把峰對峰漣波壓到 0.1125 A，只佔 1.494 %。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="00-驅動器世界觀與轉矩夾角.html">00 驅動器世界觀與轉矩夾角</a>的電流如何變成轉矩。<strong>前置：</strong>見〈直流機轉矩轉速線〉<a href="../../02-電機核心/電機機械-互動課程/06-直流機轉矩轉速線.html">反電動勢與轉速</a>及〈一階暫態 RC 與 RL〉<a href="../../02-電機核心/電路學-互動課程/07-一階暫態RC與RL.html">RL 暫態</a>。</p>
 
 <h2>痛點：開關只有全開與全關，馬達為什麼會感受到 18 V</h2>
@@ -45,15 +45,15 @@
 <section class="workspace"><h2>自由實驗：操作 H 橋的工作週期與轉速</h2>
 <p>場景是 R = 1 Ω 的有刷直流馬達接上 H 橋。你可以改直流鏈、工作週期、切換方式、頻率、電感、常數與轉速，同時看平均電壓、電流、漣波、功率與象限。</p>
 <div class="controls">
-<label for="hb-vdc">直流鏈電壓 V_dc（V）<input id="hb-vdc" type="range" min="12" max="400" step="1" value="24"></label>
-<label for="hb-d">工作週期 D<input id="hb-d" type="range" min="0" max="1" step="0.01" value="0.75"></label>
-<label for="hb-mode">切換方式<select id="hb-mode"><option value="unipolar" selected>單臂切換（0 到 +V_dc）</option><option value="bipolar">雙極性（−V_dc 到 +V_dc）</option></select></label>
-<label for="hb-fsw">切換頻率 f_sw（kHz）<input id="hb-fsw" type="range" min="1" max="40" step="1" value="20"></label>
-<label for="hb-l">繞組電感 L（mH）<input id="hb-l" type="range" min="0.1" max="10" step="0.1" value="2"></label>
-<label for="hb-ke">反電動勢常數 K_e（V·s/rad，等於 K_t）<input id="hb-ke" type="range" min="0.01" max="0.5" step="0.01" value="0.1"></label>
-<label for="hb-n">轉速 n（rpm，負值為反轉）<input id="hb-n" type="range" min="-3000" max="3000" step="50" value="1000"></label>
+<label for="hb-vdc">直流鏈電壓 V<sub>dc</sub>（V）<input id="hb-vdc" type="range" min="12" max="400" step="1" value="24" aria-valuetext="24 V" data-unit="V"></label><output id="hb-vdc-value" for="hb-vdc" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">24 V</output>
+<label for="hb-d">工作週期 D<input id="hb-d" type="range" min="0" max="1" step="0.01" value="0.75" aria-valuetext="0.75"></label><output id="hb-d-value" for="hb-d" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0.75</output>
+<label for="hb-mode">切換方式（電壓基準 V<sub>dc</sub>）<select id="hb-mode"><option value="unipolar" selected>單臂切換（零到正電壓）</option><option value="bipolar">雙極性（負到正電壓）</option></select></label>
+<label for="hb-fsw">切換頻率 f<sub>sw</sub>（kHz）<input id="hb-fsw" type="range" min="1" max="40" step="1" value="20" aria-valuetext="20 kHz" data-unit="kHz"></label><output id="hb-fsw-value" for="hb-fsw" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">20 kHz</output>
+<label for="hb-l">繞組電感 L（mH）<input id="hb-l" type="range" min="0.1" max="10" step="0.1" value="2" aria-valuetext="2 mH" data-unit="mH"></label><output id="hb-l-value" for="hb-l" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">2 mH</output>
+<label for="hb-ke">反電動勢常數 K<sub>e</sub>（V·s/rad，等於 K<sub>t</sub>）<input id="hb-ke" type="range" min="0.01" max="0.5" step="0.01" value="0.1" aria-valuetext="0.1 V·s/rad" data-unit="V·s/rad"></label><output id="hb-ke-value" for="hb-ke" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0.1 V·s/rad</output>
+<label for="hb-n">轉速 n（rpm，負值為反轉）<input id="hb-n" type="range" min="-3000" max="3000" step="50" value="1000" aria-valuetext="1000 rpm" data-unit="rpm"></label><output id="hb-n-value" for="hb-n" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">1000 rpm</output>
 </div>
-<div id="hbridge-output" class="output" aria-live="polite"><p>目前模式：單臂切換</p><table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>平均電壓</td><td><strong>18.000000 V</strong></td></tr><tr><td>反電動勢</td><td><strong>10.471976 V</strong></td></tr><tr><td>穩態電流（(V<sub>avg</sub> − E) / 1 Ω）</td><td><strong>7.528024 A</strong></td></tr><tr><td>轉矩</td><td><strong>0.752802 N·m</strong></td></tr><tr><td>漣波</td><td><strong>0.112500 A（1.494416 %）</strong></td></tr><tr><td>電氣時間常數</td><td><strong>2.000000 ms（40.000000 倍切換週期）</strong></td></tr><tr><td>電輸入功率</td><td><strong>135.504441 W</strong></td></tr><tr><td>機械功率</td><td><strong>78.833288 W</strong></td></tr><tr><td>銅損</td><td><strong>56.671153 W</strong></td></tr><tr><td>象限</td><td><strong>Q1 正轉電動</strong></td></tr><tr><td>切換週期</td><td><strong>50.000000 µs</strong></td></tr></tbody></table><p><strong>判讀：Q1 正轉電動；平均值模型成立，漣波可忽略。</strong></p><p>為什麼：象限依轉速與電流正負判斷；18.000000 V 高於 10.471976 V，所以正電流產生正轉轉矩。</p><p>邊界提醒：n = 0 rpm 時是堵轉，反電動勢為零，電流 = V<sub>avg</sub> / R，全部變銅損；單臂切換 D = 0 且轉子正在旋轉時，繞組被短路，會短路煦車；雙極性 D = 0.5 時平均電壓為零；電流絕對值超過 20 A 已超出本課電流等級。</p></div>
+<div id="hbridge-output" class="output"><p><strong>目前模式：單極性</strong></p><table><caption>H 橋平均值模型</caption><tr><th>量</th><th>結果</th></tr><tr><td>平均電壓</td><td>18.000000 V</td></tr><tr><td>反電動勢</td><td>10.471976 V</td></tr><tr><td>穩態電流（(V<sub>avg</sub> − E) / 1 Ω）</td><td>7.528024 A</td></tr><tr><td>轉矩</td><td>0.752802 N·m</td></tr><tr><td>漣波（峰對峰）</td><td>0.112500 A</td></tr><tr><td>漣波佔電流</td><td>1.494416 %</td></tr><tr><td>電氣時間常數</td><td>2.000000 ms（切換週期 50.000000 µs 的 40.000000 倍）</td></tr><tr><td>電輸入功率</td><td>135.504441 W</td></tr><tr><td>機械功率</td><td>78.833288 W</td></tr><tr><td>銅損</td><td>56.671153 W</td></tr><tr><td>象限</td><td>Q1 正轉電動</td></tr></table><p><strong aria-live="polite" aria-atomic="true">判讀：Q1 正轉電動。</strong>象限依轉速（反電動勢）與電流的正負判斷；電流大小則由 V<sub>avg</sub> 與 E 之差決定。</p><p>為什麼：繞組電感濾掉快速通斷，穩態電流由平均電壓與反電動勢之差決定。</p><p>平均值模型成立，漣波可忽略。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -72,6 +72,9 @@
 <h2>連到哪門課</h2>
 <p>第 02 章會把這條 RL 方程當成受控體，用 PI 把電流拉到命令值；第 11 章則追蹤倒流能量。反電動勢與轉矩–轉速線見<a href="../../02-電機核心/電機機械-互動課程/06-直流機轉矩轉速線.html">電機機械課</a>；RL 指數暫態見<a href="../../02-電機核心/電路學-互動課程/07-一階暫態RC與RL.html">電路學課</a>；開關元件見<a href="../../02-電機核心/電子學-互動課程/08-MOSFET原理與三個工作區.html">電子學的 MOSFET 原理</a>。</p>
 <p><strong>韌體那一端。</strong>D 就是 PWM 比較暫存器的值除以週期暫存器，20 kHz 對應 50 µs 的週期。使用單臂切換時，韌體依方向決定哪一臂做 PWM、哪一臂固定；單臂與雙極性是調變方式，不是由方向選擇。</p>
+<section aria-labelledby="takeaway-01"><h2 id="takeaway-01">本章帶走</h2>
+<ul><li>H 橋以工作週期決定平均電壓，電感則抑制切換造成的電流漣波。</li><li>四象限應以轉速與電流的正負判斷；平均電壓與反電動勢異號時是反接煞車。</li><li>再生、短路煞車與反接煞車的差別，在於能量最後流向直流鏈還是電阻。</li></ul>
+<p><a href="自我檢核.html#check-01">前往自我檢核：第 01 章題目</a></p></section>
 <nav class="pager" aria-label="章節導覽"><a href="00-驅動器世界觀與轉矩夾角.html">← 上一頁：驅動器世界觀與轉矩夾角</a><a href="02-電流迴路PI設計.html">下一頁：電流迴路 PI 設計 →</a></nav>
 </main>
 <footer class="site-footer"><span>01 H 橋與平均電壓</span><a href="名詞與概念字典.html">查字典</a></footer>

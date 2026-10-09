@@ -55,6 +55,7 @@
 <label for="pw-fclk">PWM 計數時脈 f_clk<select id="pw-fclk"><option value="100">100 MHz</option><option value="48">48 MHz</option><option value="250">250 MHz</option><option value="1000">1 GHz（高解析 PWM 模組）</option></select></label>
 </div>
 <div id="pwm-output" class="output" aria-live="polite"></div>
+<figure style="margin:1rem 0"><svg id="pwm-wave" viewBox="0 0 640 230" role="img" aria-label="三角載波、比較值與 PWM 輸出波形" style="display:block;width:100%;height:auto;color:var(--accent);border:1px solid var(--line);border-radius:.75rem;background:var(--panel)"></svg><figcaption>這張圖顯示比較值 v<sub>m</sub> 高於三角載波時開關導通；拖曳 v<sub>m</sub> 會直接改變脈寬與週期平均電壓。</figcaption></figure>
 </section>
 
 <h2>不要混淆</h2>
@@ -72,6 +73,8 @@
 
 <h2>連到哪門課</h2>
 <p>05 章會直接把 D 帶入 Buck 降壓轉換器，08 章則把 v<sub>m</sub> 換成弦波。PWM 也用於 MCU 計時器周邊、LED 調光與馬達驅動；底層時間常數與濾波依據仍回到<a href="../../02-電機核心/電路學-互動課程/07-一階暫態RC與RL.html">電路學的一階暫態 RC 與 RL</a>。本章只建立波形、平均與解析度，不展開控制補償器。</p>
+<h2>本章帶走的 3 件事</h2>
+<ol><li>PWM 節點的瞬時值只有高、低兩態，週期平均值才是 D × V<sub>in</sub>。</li><li>比較值越高，導通時間越長；動態圖中的脈寬就是這個面積關係。</li><li>固定時脈下，切換頻率與解析度共用同一份計數預算，不能同時無限提高。</li></ol>
 <nav class="pager" aria-label="章節導覽"><a href="03-三相與相控整流.html">← 上一頁：三相與相控整流</a><a href="05-Buck降壓轉換器.html">下一頁：Buck 降壓轉換器 →</a></nav>
 </main>
 <footer class="site-footer"><span>04 PWM 與工作週期</span><a href="名詞與概念字典.html">查字典</a></footer>

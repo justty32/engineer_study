@@ -4,7 +4,7 @@
 <main>
 <p class="eyebrow">11・減速不是把能量消失，而是替它找出口</p>
 <h1>再生煞車與能量：直流鏈電容撐不住時，能量要去哪裡</h1>
-<p class="lead">0.050000 kg·m² 的負載從 3000.000000 rpm 煞停會釋出 2467.401100 J；1000.000000 µF 電容從 300.000000 V 升到 380.000000 V 只能吸收 27.200000 J。這章追蹤能量、電壓與功率，判斷煞車電阻或電池能否接住。</p>
+<p class="lead">0.05000 kg·m² 的負載從 3000 rpm 煞停會釋出約 2467 J；1000 µF 電容從 300.0 V 升到 380.0 V 只能吸收 27.20 J。這章追蹤能量、電壓與功率，判斷煞車電阻或電池能否接住。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="10-編碼器與速度估測.html">10 編碼器與速度估測</a>如何取得轉速。<strong>前置：</strong>見〈電容與電感〉<a href="../../02-電機核心/電路學-互動課程/06-電容與電感.html">電路學的電容儲能</a>，先知道電容電壓改變代表儲能改變。</p>
 
 <h2>痛點：馬達停下來了，原本的動能不會憑空不見</h2>
@@ -45,17 +45,17 @@
 <section class="workspace"><h2>自由實驗：替一次減速安排能量出口</h2>
 <p>設定負載慣量、起終速度與煞車時間，再選直流鏈電容、保護門檻、效率與電阻。觀察電容多久滿、無斬波器時電壓多高，以及電阻是否能吃下峰值。</p>
 <div class="controls">
-<label for="rg-j">轉動慣量 J（kg·m²）<input id="rg-j" type="range" min="0.001" max="0.5" step="0.001" value="0.05"></label>
-<label for="rg-n1">起始轉速 n_1（rpm）<input id="rg-n1" type="range" min="0" max="6000" step="100" value="3000"></label>
-<label for="rg-n2">終止轉速 n_2（rpm）<input id="rg-n2" type="range" min="0" max="6000" step="100" value="0"></label>
-<label for="rg-t">煞車時間 t（s）<input id="rg-t" type="range" min="0.1" max="10" step="0.1" value="2"></label>
-<label for="rg-c">直流鏈電容 C（µF）<input id="rg-c" type="range" min="100" max="10000" step="100" value="1000"></label>
-<label for="rg-vdc">直流鏈電壓 V_dc（V）<input id="rg-vdc" type="range" min="48" max="400" step="1" value="300"></label>
-<label for="rg-vtrip">斬波器跳脫電壓 V_trip（V）<input id="rg-vtrip" type="range" min="60" max="450" step="5" value="380"></label>
-<label for="rg-eta">回收效率 η<input id="rg-eta" type="range" min="0.5" max="1" step="0.05" value="0.9"></label>
-<label for="rg-rb">煞車電阻 R_b（Ω）<input id="rg-rb" type="range" min="5" max="100" step="1" value="20"></label>
+<label for="rg-j">轉動慣量 J（kg·m²）<input id="rg-j" type="range" min="0.001" max="0.5" step="0.001" value="0.05" aria-valuetext="0.05 kg·m²" data-unit="kg·m²"></label><output id="rg-j-value" for="rg-j" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0.05 kg·m²</output>
+<label for="rg-n1">起始轉速 n<sub>1</sub>（rpm）<input id="rg-n1" type="range" min="0" max="6000" step="100" value="3000" aria-valuetext="3000 rpm" data-unit="rpm"></label><output id="rg-n1-value" for="rg-n1" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">3000 rpm</output>
+<label for="rg-n2">終止轉速 n<sub>2</sub>（rpm）<input id="rg-n2" type="range" min="0" max="6000" step="100" value="0" aria-valuetext="0 rpm" data-unit="rpm"></label><output id="rg-n2-value" for="rg-n2" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0 rpm</output>
+<label for="rg-t">煞車時間 t（s）<input id="rg-t" type="range" min="0.1" max="10" step="0.1" value="2" aria-valuetext="2 s" data-unit="s"></label><output id="rg-t-value" for="rg-t" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">2 s</output>
+<label for="rg-c">直流鏈電容 C（µF）<input id="rg-c" type="range" min="100" max="10000" step="100" value="1000" aria-valuetext="1000 µF" data-unit="µF"></label><output id="rg-c-value" for="rg-c" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">1000 µF</output>
+<label for="rg-vdc">直流鏈電壓 V<sub>dc</sub>（V）<input id="rg-vdc" type="range" min="48" max="400" step="1" value="300" aria-valuetext="300 V" data-unit="V"></label><output id="rg-vdc-value" for="rg-vdc" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">300 V</output>
+<label for="rg-vtrip">斬波器跳脫電壓 V<sub>trip</sub>（V）<input id="rg-vtrip" type="range" min="60" max="450" step="5" value="380" aria-valuetext="380 V" data-unit="V"></label><output id="rg-vtrip-value" for="rg-vtrip" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">380 V</output>
+<label for="rg-eta">回收效率 η<input id="rg-eta" type="range" min="0.5" max="1" step="0.05" value="0.9" aria-valuetext="0.9"></label><output id="rg-eta-value" for="rg-eta" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0.9</output>
+<label for="rg-rb">煞車電阻 R<sub>b</sub>（Ω）<input id="rg-rb" type="range" min="5" max="100" step="1" value="20" aria-valuetext="20 Ω" data-unit="Ω"></label><output id="rg-rb-value" for="rg-rb" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">20 Ω</output>
 </div>
-<div id="regen-output" class="output" aria-live="polite"><table><thead><tr><th>輸出</th><th>預設值</th></tr></thead><tbody><tr><td>ω_1</td><td>314.159265 rad/s</td></tr><tr><td>動能</td><td>2467.401100 J</td></tr><tr><td>平均再生功率</td><td>1233.700550 W</td></tr><tr><td>煞車轉矩</td><td>7.853982 N·m</td></tr><tr><td>回直流鏈能量</td><td>2220.660990 J（0.616850 Wh）</td></tr><tr><td>峰值再生功率</td><td>2220.660990 W</td></tr><tr><td>電容能吸</td><td>27.200000 J（1.224861 %）</td></tr><tr><td>到跳脫時間</td><td>12.248605 ms</td></tr><tr><td>無斬波器終電壓</td><td>2128.690203 V</td></tr><tr><td>電阻功率</td><td>7220.000000 W</td></tr></tbody></table><strong>判讀：減速，2467.401100 J 動能有 2220.660990 J 回到直流鏈。</strong>電容只吃得下 1.224861 %，12.248605 ms 後電壓到跳脫值，剩下的必須進電阻或電池；沒有斬波器時電壓會衝到 2128.690203 V。電阻 7220.000000 W ≥ 峰值 2220.660990 W，斬波器撐得住。若直流鏈是電池，這 0.616850 Wh 可以真正回收。為什麼：轉軸減少的動能經效率折減後回充電容，而電容允許的電壓區間只能容納很小一部分。邊界提醒：n_1 = n_2 時等速，沒有能量交換；V_trip ≤ V_dc 時斬波器會一直導通；極短煞車時間配上大 J 會產生極高峰值功率，電阻可能不足；若終速高於起速則是加速，能量從直流鏈流向馬達。</div>
+<div id="regen-output" class="output"><table><caption>再生能量</caption><tr><th>量</th><th>結果</th></tr><tr><td>ω<sub>1</sub></td><td>314.159265 rad/s</td></tr><tr><td>動能</td><td>2467.401100 J</td></tr><tr><td>平均再生功率</td><td>1233.700550 W</td></tr><tr><td>煞車轉矩</td><td>7.853982 N·m</td></tr><tr><td>回直流鏈的能量</td><td>2220.660990 J（0.616850 Wh）</td></tr><tr><td>峰值再生功率</td><td>2220.660990 W</td></tr><tr><td>電容能吸</td><td>27.200000 J（1.224861 %）</td></tr><tr><td>到跳脫的時間</td><td>12.248605 ms</td></tr><tr><td>沒有斬波器的終電壓</td><td>2128.690203 V</td></tr><tr><td>電阻在跳脫電壓的功率</td><td>7220.000000 W</td></tr></table><p><strong aria-live="polite" aria-atomic="true">判讀：減速，2467.401100 J 動能有 2220.660990 J 回到直流鏈。</strong></p><p>電容只吃得下 1.224861 %，12.248605 ms 後到跳脫值；沒有斬波器時會衝到 2128.690203 V。</p><p>電阻 7220.000000 W ≥ 峰值 2220.660990 W，斬波器撐得住。</p><p>若直流鏈是電池，這 0.616850 Wh 可以真正回收。為什麼：電容只能接住電壓上升那一小段能量。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -77,6 +77,9 @@
 <p>電容的 0.5 × C × V² 儲能見<a href="../../02-電機核心/電路學-互動課程/06-電容與電感.html">電路學的電容與電感</a>；四象限與負電流見<a href="01-H橋與平均電壓.html">第 01 章 H 橋與平均電壓</a>。</p>
 <p>後續去向只作定位：直接轉矩控制（direct torque control, DTC）直接用轉矩與磁鏈誤差查表選向量；無感測控制（sensorless control）用反電動勢或高頻注入估角度；高 dv/dt 會帶來電磁干擾（electromagnetic interference, EMI）與長纜反射；共模電壓可能造成軸承電蝕；功能安全的安全轉矩關閉（safe torque off, STO）要求可靠切斷轉矩。</p>
 <p><strong>韌體那一端：</strong>斬波器常由硬體比較器搭配一個 PWM 通道，門檻存成參數；再生限制可做成「直流鏈電壓到允許的負 i<sub>q</sub>」外層迴路。</p>
+<section aria-labelledby="takeaway-11"><h2 id="takeaway-11">本章帶走</h2>
+<ul><li>減速釋出的動能必須流向直流鏈、電阻或電池，不會憑空消失。</li><li>直流鏈電容只適合短暫緩衝；斬波電阻要同時核對峰值功率與累積熱量。</li><li>終速高於起速時是加速，峰值再生功率與回收能量均不適用。</li></ul>
+<p><a href="自我檢核.html#check-11">前往自我檢核：第 11 章題目</a></p></section>
 <nav class="pager" aria-label="章節導覽"><a href="10-編碼器與速度估測.html">← 上一頁：編碼器與速度估測</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
 </main>
 <footer class="site-footer"><span>11 再生煞車與能量</span><a href="名詞與概念字典.html">查字典</a></footer>

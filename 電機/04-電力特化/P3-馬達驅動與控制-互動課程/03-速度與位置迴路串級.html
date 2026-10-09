@@ -4,7 +4,7 @@
 <main>
 <p class="eyebrow">03・內快外慢，三層才不會互相絆腳</p>
 <h1>速度與位置迴路串級：用頻寬分離讓內層先完成工作</h1>
-<p class="lead">電流迴路比速度迴路快 10 倍時，速度步階的超越量是 4.352513 %，已很接近理想二階的 4.321392 %。若兩層同頻寬，超越量會跳到 24.621566 %；這章要找的就是三層控制之間的頻寬分離（bandwidth separation）。</p>
+<p class="lead">電流迴路比速度迴路快 10 倍時，速度步階的超越量是 4.353 %，已很接近理想二階的 4.321 %。若兩層同頻寬，超越量會跳到 24.62 %；這章要找的就是三層控制之間的頻寬分離（bandwidth separation）。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="02-電流迴路PI設計.html">02 電流迴路 PI 設計</a>的閉迴路一階模型。<strong>前置：</strong>見〈二階閉迴路與極點位置〉<a href="../../02-電機核心/控制系統-互動課程/04-二階閉迴路與極點位置.html">控制系統的二階響應</a>。</p>
 
 <h2>痛點：每層 PI 都各自設好，為什麼合起來還會振</h2>
@@ -47,12 +47,12 @@
 <section class="workspace"><h2>自由實驗：拉開三層迴路的時間尺度</h2>
 <p>固定速度命令步階，先看內外頻寬比如何改變超越量，再加入負載看掉速。這裡不加電流限幅，所以結果是線性模型的對照，不是實機保護能力。</p>
 <div class="controls">
-<label for="cs-j">轉動慣量 J（kg·m²）<input id="cs-j" type="range" min="0.001" max="0.1" step="0.001" value="0.01"></label>
-<label for="cs-fc">電流迴路頻寬 f_c（Hz）<input id="cs-fc" type="range" min="100" max="2000" step="50" value="500"></label>
-<label for="cs-n">頻寬分離倍數 N = ω_c / ω_s<input id="cs-n" type="range" min="1" max="50" step="1" value="10"></label>
-<label for="cs-tl">負載轉矩步階 T_L（N·m）<input id="cs-tl" type="range" min="0" max="5" step="0.5" value="1"></label>
+<label for="cs-j">轉動慣量 J（kg·m²）<input id="cs-j" type="range" min="0.001" max="0.1" step="0.001" value="0.01" aria-valuetext="0.01 kg·m²" data-unit="kg·m²"></label><output id="cs-j-value" for="cs-j" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">0.01 kg·m²</output>
+<label for="cs-fc">電流迴路頻寬 f<sub>c</sub>（Hz）<input id="cs-fc" type="range" min="100" max="2000" step="50" value="500" aria-valuetext="500 Hz" data-unit="Hz"></label><output id="cs-fc-value" for="cs-fc" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">500 Hz</output>
+<label for="cs-n">頻寬分離倍數 N = ω<sub>c</sub> / ω<sub>s</sub><input id="cs-n" type="range" min="1" max="50" step="1" value="10" aria-valuetext="10"></label><output id="cs-n-value" for="cs-n" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">10</output>
+<label for="cs-tl">負載轉矩步階 T<sub>L</sub>（N·m）<input id="cs-tl" type="range" min="0" max="5" step="0.5" value="1" aria-valuetext="1 N·m" data-unit="N·m"></label><output id="cs-tl-value" for="cs-tl" style="display:block;margin:-0.4rem 0 0.8rem;font-variant-numeric:tabular-nums">1 N·m</output>
 </div>
-<div id="cascade-output" class="output" aria-live="polite">
+<div id="cascade-output" class="output"><table><caption>串級響應</caption><tr><th>量</th><th>結果</th></tr><tr><td>電流迴路 ω<sub>c</sub></td><td>3141.592654 rad/s</td></tr><tr><td>速度迴路 ω<sub>s</sub></td><td>314.159265 rad/s（50.000000 Hz）</td></tr><tr><td>速度 K<sub>p</sub></td><td>3.141593 N·m·s/rad</td></tr><tr><td>速度 K<sub>i</sub></td><td>493.480220 N·m/rad</td></tr><tr><td>前置濾波 τ<sub>f</sub></td><td>6.366198 ms</td></tr><tr><td>理想 ω<sub>n</sub>、ζ</td><td>222.144147 rad/s、0.707107</td></tr><tr><td>超越量（模擬）</td><td>4.352513 %</td></tr><tr><td>峰值時刻</td><td>19.257748 ms</td></tr><tr><td>10–90 % 上升時間</td><td>9.151409 ms</td></tr><tr><td>2 % 整定時間</td><td>25.751270 ms</td></tr><tr><td>負載最大掉速</td><td>0.217064 rad/s（21.706381 %）</td></tr><tr><td>掉速時刻</td><td>4.774648 ms</td></tr><tr><td>負載後回到 2 % 內</td><td>16.201973 ms</td></tr><tr><td>位置迴路 ω<sub>p</sub></td><td>31.415927 rad/s（5.000000 Hz）</td></tr><tr><td>位置閉迴路時間常數</td><td>31.830989 ms</td></tr></table><table><caption>超越量對照表</caption><tr><th>N</th><th>超越量</th></tr><tr><td>1</td><td>24.621566 %</td></tr><tr><td>2</td><td>8.146510 %</td></tr><tr><td>5</td><td>4.500801 %</td></tr><tr><td>10</td><td>4.352513 %</td></tr><tr><td>20</td><td>4.328051 %</td></tr></table><p><strong aria-live="polite" aria-atomic="true">判讀：分離足夠，內迴路可視為理想。</strong></p><p>穩態誤差 0：積分器把負載扛起來。位置迴路 ω<sub>p</sub> = ω<sub>s</sub> / 10 = 31.415927 rad/s，時間常數 31.830989 ms。</p><p>為什麼：第三個內迴路極點越靠近速度迴路，外迴路越不能把它當成立即完成。</p></div>
 <table><thead><tr><th>量</th><th>預設值</th></tr></thead><tbody>
 <tr><td>電流迴路 ω<sub>c</sub></td><td>3141.592654 rad/s</td></tr><tr><td>速度迴路 ω<sub>s</sub></td><td>314.159265 rad/s（50.000000 Hz）</td></tr><tr><td>速度 K<sub>p</sub></td><td>3.141593 N·m·s/rad</td></tr><tr><td>速度 K<sub>i</sub></td><td>493.480220 N·m/rad</td></tr><tr><td>前置濾波 τ<sub>f</sub></td><td>6.366198 ms</td></tr><tr><td>理想 ω<sub>n</sub>、ζ</td><td>222.144147 rad/s、0.707107</td></tr><tr><td>超越量</td><td>4.352513 %（理想 4.321392 %）</td></tr><tr><td>峰值時刻</td><td>19.257748 ms</td></tr><tr><td>10–90 % 上升時間</td><td>9.151409 ms</td></tr><tr><td>2 % 整定時間</td><td>25.751270 ms</td></tr><tr><td>負載最大掉速</td><td>21.706381 %（於加入後 4.774648 ms）</td></tr><tr><td>負載後回到 2 % 內</td><td>16.201973 ms</td></tr><tr><td>位置迴路 ω<sub>p</sub></td><td>31.415927 rad/s（5.000000 Hz）</td></tr><tr><td>位置閉迴路時間常數</td><td>31.830989 ms</td></tr>
 </tbody></table>
@@ -78,6 +78,9 @@
 <h2>連到哪門課</h2>
 <p>這套串級架構用在伺服驅動器、機器人關節與數值控制機床。二階極點與 ζ 的意義見<a href="../../02-電機核心/控制系統-互動課程/04-二階閉迴路與極點位置.html">二階閉迴路與極點位置</a>；J 與摩擦的模型見<a href="../../02-電機核心/控制系統-互動課程/01-建模從微分方程到轉移函數.html">建模從微分方程到轉移函數</a>；積分器為何消除穩態誤差見<a href="../../02-電機核心/控制系統-互動課程/03-穩態誤差與系統型式.html">穩態誤差與系統型式</a>。</p>
 <p><strong>韌體那一端：</strong>速度 PI 跑在 1 ms 中斷，位置 P 跑在 10 ms 中斷；三個增益是三個獨立參數，調機順序由內而外。</p>
+<section aria-labelledby="takeaway-03"><h2 id="takeaway-03">本章帶走</h2>
+<ul><li>串級控制必須由內而外變慢，內迴路通常至少比外迴路快 5 至 10 倍。</li><li>速度 PI 的積分負責抵抗負載；位置到速度的運動關係本身提供積分。</li><li>只看理想二階公式不夠，內迴路延遲會改變超越量與恢復時間。</li></ul>
+<p><a href="自我檢核.html#check-03">前往自我檢核：第 03 章題目</a></p></section>
 <nav class="pager" aria-label="章節導覽"><a href="02-電流迴路PI設計.html">← 上一頁：電流迴路 PI 設計</a><a href="04-步進馬達與微步.html">下一頁：步進馬達與微步 →</a></nav>
 </main>
 <footer class="site-footer"><span>03 速度與位置迴路串級</span><a href="名詞與概念字典.html">查字典</a></footer>

@@ -85,8 +85,22 @@
 <p>在相同輸入、輸出與負載下逐步改頻率，用電力分析儀量輸入與輸出功率，示波器搭配電流探棒量 Δi<sub>L</sub>，並看開關節點的過渡時間；待溫度穩定後，用熱像儀記錄高側 MOSFET 殼溫。把每個頻率的數值排成與本章相同的掃描表。</p>
 <p><strong>能證明</strong>的是效率與溫度隨頻率變動的實際趨勢，以及更換 L 後 Δi<sub>L</sub> 是否守住設計值。<strong>不能證明</strong>的是單靠熱像儀得到晶片結溫；在 98 % 以上，儀器誤差也可能大於損耗差異，應改用熱量法量損耗。EMI 的變化則要由頻譜分析儀另外量。</p>
 
+<h2>全課公式鏈：從需求一路算到結溫</h2>
+<table><thead><tr><th>步驟</th><th>核心式</th><th>它把什麼交給下一步</th></tr></thead><tbody>
+<tr><td>1. 工作週期</td><td>D ＝ V<sub>o</sub> / V<sub>in</sub></td><td>由 Buck 目標電壓得到開關導通比例。</td></tr>
+<tr><td>2. 電感漣波</td><td>Δi<sub>L</sub> ＝ (V<sub>in</sub> − V<sub>o</sub>)D / (Lf<sub>sw</sub>)</td><td>把 D、L 與頻率連成峰對峰電流。</td></tr>
+<tr><td>3. 反推電感</td><td>L ＝ (V<sub>in</sub> − V<sub>o</sub>)D / (f<sub>sw</sub>Δi<sub>L</sub>)</td><td>用允許漣波與切換頻率決定電感值。</td></tr>
+<tr><td>4. 反推電容</td><td>C ＝ Δi<sub>L</sub> / (8f<sub>sw</sub>ΔV<sub>o</sub>)</td><td>由輸出漣波預算得到電容下限。</td></tr>
+<tr><td>5. 導通與切換損</td><td>P<sub>cond</sub> ≈ I²R<sub>on</sub>D；P<sub>sw</sub> ＝ ½VIt<sub>sw</sub>f<sub>sw</sub></td><td>把電流、元件與頻率轉成熱源。</td></tr>
+<tr><td>6. 效率</td><td>η ＝ P<sub>o</sub> / (P<sub>o</sub> ＋ P<sub>loss</sub>)</td><td>檢查電源損耗是否在預算內。</td></tr>
+<tr><td>7. 結溫</td><td>T<sub>J</sub> ＝ T<sub>a</sub> ＋ P<sub>loss</sub>θ<sub>total</sub></td><td>把損耗放進熱阻鏈，最後檢查溫度與降額裕度。</td></tr>
+</tbody></table>
+<p>這條鏈不是單向照抄：若結溫超標，就往回調整 f<sub>sw</sub>、t<sub>sw</sub>、R<sub>on</sub> 或熱阻；若 L、C 過大，提頻又會推高切換損。設計是在這條鏈上往返收旂，不是只把一個式子算完。</p>
+
 <h2>連到哪門課</h2>
 <p>伺服器 48 V 匯流排、車用 DC-DC 與 GaN 快充都在做這組取捨。數位控制（digital control）要處理取樣、運算延遲與 PWM 解析度；補償器設計留給控制系統課，EMI 對策留給 IoT 知識群「04-天線RF與EMC」，可靠度承接第 10 章。需要重排學習路線時，回到<a href="index.html">課程地圖</a>。</p>
+<h2>本章帶走的 3 件事</h2>
+<ol><li>提高 f<sub>sw</sub> 可縮小 L、C 與儲能體積，卻會線性推高切換損與結溫。</li><li>公式鏈把 D、Δi<sub>L</sub>、L、C、損耗與 T<sub>J</sub> 連在一起，任一處改動都會往後傳遞。</li><li>最佳頻率不是單一答案；必須先訂漣波、效率、溫度、體積與 EMI 邊界，再在可行區間取捨。</li></ol>
 <nav class="pager" aria-label="章節導覽"><a href="10-散熱與效率.html">← 上一頁：散熱與效率</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
 </main>
 <footer class="site-footer"><span>11 切換頻率取捨：損耗、體積與溫度的總整合</span><a href="名詞與概念字典.html">查字典</a></footer>

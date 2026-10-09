@@ -26,7 +26,41 @@ var int0 = function (x) {
   if (!isFinite(v)) { return "不適用"; }
   return minus(String(Math.round(zc(v))));
 };
-var put = function (id, html) { var n = $(id); if (n) { n.innerHTML = html; } };
+var formatSymbols = function (html) {
+  return String(html).replace(/([A-Za-zα-ωΑ-Ω])_([A-Za-z0-9]+)/g, "$1<sub>$2</sub>");
+};
+var put = function (id, html) {
+  var n = $(id), marks, i, label;
+  if (!n) { return; }
+  n.innerHTML = formatSymbols(html);
+  if (/-output$/.test(id) && n.classList && n.classList.contains("output") && n.querySelectorAll) {
+    marks = n.querySelectorAll("strong");
+    for (i = 0; i < marks.length; i += 1) {
+      label = marks[i].textContent || "";
+      if (/^(?:開迴路)?判讀：/.test(label)) {
+        marks[i].setAttribute("aria-live", "polite");
+        marks[i].setAttribute("aria-atomic", "true");
+      }
+    }
+  }
+};
+var rangeValues = function () {
+  if (typeof document === "undefined" || !document.querySelectorAll) { return; }
+  var sliders = document.querySelectorAll('input[type="range"]'), i;
+  var update = function (control) {
+    return function () {
+      var unit = control.getAttribute("data-unit") || "";
+      var spoken = control.value + (unit ? " " + unit : "");
+      var display = $(control.id + "-value");
+      if (display) { display.textContent = spoken; }
+      control.setAttribute("aria-valuetext", spoken);
+    };
+  };
+  for (i = 0; i < sliders.length; i += 1) {
+    sliders[i].addEventListener("input", update(sliders[i]));
+    update(sliders[i])();
+  }
+};
 var row = function (cells, th) {
   var t = th ? "th" : "td";
   return "<tr><" + t + ">" + cells.join("</" + t + "><" + t + ">") + "</" + t + "></tr>";
@@ -425,7 +459,7 @@ function svpwm() {
       ['上限 V_dc / √3',num6(r.vmax)+' V'],['調變指數 m',num6(r.m)],['扇區',int0(r.k)+'（V_1 = '+v1+'、V_2 = '+v2+'）'],
       ['扇區內角 θ',num6(r.th)+'°'],['T_1',num6(r.t1)+' µs'],['T_2',num6(r.t2)+' µs'],['T_0',num6(r.t0)+' µs'],
       ['d<sub>a</sub>',dutyText(r.da)],['d<sub>b</sub>',dutyText(r.db)],['d<sub>c</sub>',dutyText(r.dc)],['v<sub>a</sub>（驗證）',num6(r.va)+' V'],
-      ['v_b（驗證）',num6(r.vb)+' V'],['v_c（驗證）',num6(r.vc)+' V'],['SVPWM 比 SPWM 多','15.470054 %']
+      ['v<sub>b</sub>（驗證）',num6(r.vb)+' V'],['v<sub>c</sub>（驗證）',num6(r.vc)+' V'],['SVPWM 比 SPWM 多','15.470054 %']
     ]);
     h+='<p>本扇區的兩個向量與開關碼：'+v1+'、'+v2+'；扇區 '+int0(r.k)+'，θ = '+num6(r.th)+'°。</p>';
     h+='<p><strong>判讀：'+(r.m<=1?'線性區，T_0 = '+num6(r.t0)+' µs ≥ 0，工作週期可實現。':'過調變，T_0 = '+num6(r.t0)+' µs < 0，工作週期不可實現。')+'</strong></p>';
@@ -534,7 +568,7 @@ function selfcheck() {
 
 /* ---------- 6. 註冊 ---------- */
 if (typeof document !== 'undefined') {
-  [torqueangle,hbridge,currentloop,cascade,stepper,bldc,vf,clarkepark,focvolt,svpwm,encoder,regen,dictionary,selfcheck].forEach(function(f){f();});
+  [rangeValues,torqueangle,hbridge,currentloop,cascade,stepper,bldc,vf,clarkepark,focvolt,svpwm,encoder,regen,dictionary,selfcheck].forEach(function(f){f();});
 }
 
 /* ---------- 7. Node 驗算介面 ---------- */
