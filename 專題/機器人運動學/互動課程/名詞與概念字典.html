@@ -278,7 +278,7 @@
 <strong>不要混淆：</strong>不要把變換方向看反，也不要用同一規則處理末項為 0 的方向向量和末項為 1 的點。</p>
 </article>
 <article class="term-card">
-<h2>特殊歐幾里得群</h2>
+<h2>特殊歐氏群</h2>
 <p>
 <strong>英文：</strong>Special Euclidean Group, SE(3)</p>
 <p>
@@ -598,25 +598,8 @@
 <strong>不要混淆：</strong>它是近似證據，不是解析式；ε 太大或太小都會錯。</p>
 </article>
 <article class="term-card">
-<h2>特殊歐氏群（Special Euclidean Group, SE(3)）</h2>
-<p><strong>白話：</strong>所有合法三維剛體位姿形成的集合與連乘規則。</p>
-<p><strong>位置／角色：</strong>位於旋轉、平移與座標變換的數學底層。</p>
-<p><strong>如何生效：</strong>以 4×4 齊次變換表示，連乘與取逆後仍是合法剛體變換。</p>
-<p><strong>具體例子：</strong>基座到腕部、腕部到工具的兩個 SE(3) 元素相乘，得到基座到工具位姿。</p>
-<p><strong>可觀察證據：</strong>連乘後 R<sup>T</sup>R≈I、det(R)≈1 且底列固定；這驗證結構，不驗證 frame 方向填寫正確。</p>
-<p><strong>不要混淆：</strong>它不是普通十二維向量空間，矩陣逐格平均可能破壞旋轉正交性。</p>
-</article>
-<article class="term-card">
-<h2>扭量（Twist）</h2>
-<p><strong>白話：</strong>把剛體某一瞬間的角速度與線速度合成六維運動量。</p>
-<p><strong>位置／角色：</strong>連接雅可比、剛體速度、指數映射與座標轉換。</p>
-<p><strong>如何生效：</strong>經矩陣表示與指數映射，可生成一小段或固定速度的有限運動。</p>
-<p><strong>具體例子：</strong>工具同時前進 0.1 m/s 並繞 z 軸轉 20 deg/s，形成一個扭量。</p>
-<p><strong>可觀察證據：</strong>短時間積分的 exp 結果可與位姿差分比較；比較前須統一角速度為 rad/s、參考點與 frame。</p>
-<p><strong>不要混淆：</strong><code>[v;ω]</code> 與 <code>[ω;v]</code> 都有人使用，不能省略順序契約。</p>
-</article>
-<article class="term-card">
-<h2>伴隨表示（Adjoint Representation）</h2>
+<h2>伴隨表示</h2>
+<p><strong>英文：</strong>Adjoint Representation</p>
 <p><strong>白話：</strong>讓同一個六維速度或螺旋軸改用另一座標系表示的 6×6 變換。</p>
 <p><strong>位置／角色：</strong>位於 space／body 扭量與雅可比之間。</p>
 <p><strong>如何生效：</strong>由位姿 T 的旋轉和平移區塊組成 <code>Ad(T)</code>，同時轉換角速度與線速度。</p>
@@ -625,7 +608,8 @@
 <p><strong>不要混淆：</strong>它只改表示座標，不是讓實體再動一次，也不是直接拿 4×4 T 乘六維向量。</p>
 </article>
 <article class="term-card">
-<h2>運動學校正（Kinematic Calibration）</h2>
+<h2>運動學校正</h2>
+<p><strong>英文：</strong>Kinematic Calibration</p>
 <p><strong>白話：</strong>用外部量測修正連桿、零點、軸線與工具安裝等幾何參數。</p>
 <p><strong>位置／角色：</strong>位於名目模型與真實機械之間，目標是減少系統性位姿偏差。</p>
 <p><strong>如何生效：</strong>跨多個姿態比較量測與 FK 預測，以參數敏感度求出可驗證的修正。</p>
@@ -634,13 +618,95 @@
 <p><strong>不要混淆：</strong>不是控制器調參，也不能用剛體幾何吸收背隙、彈性與熱漂移的一切影響。</p>
 </article>
 <article class="term-card">
-<h2>可辨識性（Identifiability）</h2>
+<h2>可辨識性</h2>
+<p><strong>英文：</strong>Identifiability</p>
 <p><strong>白話：</strong>目前資料是否真的能把不同未知參數的效果分開。</p>
 <p><strong>位置／角色：</strong>位於校正實驗設計與參數雅可比分析。</p>
 <p><strong>如何生效：</strong>姿態覆蓋使敏感度欄具有獨立資訊；欄相依時多組參數可產生相同預測。</p>
 <p><strong>具體例子：</strong>只量單一姿態時，工具平移與連桿長度偏差可能互相替代。</p>
 <p><strong>可觀察證據：</strong>參數雅可比的秩、奇異值與高度相關欄可揭露不可辨識方向；訓練殘差很小本身不是證據。</p>
 <p><strong>不要混淆：</strong>樣本數多不代表可辨識；重複同姿態可能只增加相同資訊。</p>
+</article>
+<article class="term-card">
+<h2>條件數</h2>
+<p><strong>英文：</strong>Condition Number</p>
+<p><strong>白話：</strong>比較矩陣最容易與最困難方向的增益差距。</p>
+<p><strong>位置／角色：</strong>用於診斷雅可比反解對誤差的敏感度。</p>
+<p><strong>如何生效：</strong>常取 κ=σ<sub>max</sub>/σ<sub>min</sub>；最小奇異值趨近零時 κ 變大。</p>
+<p><strong>具體例子：</strong>σ<sub>max</sub>=1、σ<sub>min</sub>=0.001 時 κ=1000。</p>
+<p><strong>不要混淆：</strong>條件數只看比例；所有奇異值都小時，κ 仍可能不大。</p>
+</article>
+<article class="term-card">
+<h2>萬向節鎖</h2>
+<p><strong>英文：</strong>Gimbal Lock</p>
+<p><strong>白話：</strong>某些歐拉角姿態讓兩根旋轉軸重合，角度表示失去一個獨立方向。</p>
+<p><strong>位置／角色：</strong>是姿態參數化的表示奇異。</p>
+<p><strong>如何生效：</strong>特定中間角使歐拉角速率到角速度的映射失秩。</p>
+<p><strong>具體例子：</strong>某些 ZYX 慣例在 pitch=±90° 時發生。</p>
+<p><strong>不要混淆：</strong>它不等於機械手臂雅可比因構型而失秩。</p>
+</article>
+<article class="term-card">
+<h2>螺旋軸</h2>
+<p><strong>英文：</strong>Screw Axis</p>
+<p><strong>白話：</strong>用六維方向描述剛體繞哪條軸轉，以及是否同時沿軸平移。</p>
+<p><strong>位置／角色：</strong>是指數積正運動學中每個關節的固定運動方向。</p>
+<p><strong>如何生效：</strong>與關節量相乘後取矩陣指數，形成單關節有限變換。</p>
+<p><strong>具體例子：</strong>旋轉關節的節距為零；移動關節的角速度部分為零。</p>
+<p><strong>不要混淆：</strong>軸必須連同零位、frame 與六維排列一起定義。</p>
+</article>
+<article class="term-card">
+<h2>指數映射／矩陣對數</h2>
+<p><strong>英文：</strong>Exponential Map / Matrix Logarithm</p>
+<p><strong>白話：</strong>在瞬時速度與有限剛體位姿之間往返的橋。</p>
+<p><strong>位置／角色：</strong>連接 se(3) 切空間與 SE(3) 位姿。</p>
+<p><strong>如何生效：</strong>exp 把扭量積分成合法變換；log 從相對變換取局部運動。</p>
+<p><strong>具體例子：</strong>固定角速度乘時間後經 exp 得到旋轉矩陣。</p>
+<p><strong>不要混淆：</strong>矩陣 exp 不是逐格取指數；log 在旋轉接近 π 時有分支。</p>
+</article>
+<article class="term-card">
+<h2>球面線性插值</h2>
+<p><strong>英文：</strong>Spherical Linear Interpolation, SLERP</p>
+<p><strong>白話：</strong>沿單位四元數球面，以穩定角速度在兩個姿態間插值。</p>
+<p><strong>位置／角色：</strong>用於姿態插值與平滑過渡。</p>
+<p><strong>如何生效：</strong>先處理四元數正負等價，再沿較短球面弧線插值並保持單位長度。</p>
+<p><strong>具體例子：</strong>在 0° 與 90° 姿態中點得到約 45° 姿態。</p>
+<p><strong>不要混淆：</strong>它不是把四元數四個分量直接線性平均後就結束。</p>
+</article>
+<article class="term-card">
+<h2>參數雅可比</h2>
+<p><strong>英文：</strong>Parameter Jacobian</p>
+<p><strong>白話：</strong>模型參數各改一點時，預測輸出會如何改變。</p>
+<p><strong>位置／角色：</strong>用於運動學校正的敏感度與可辨識性分析。</p>
+<p><strong>如何生效：</strong>以 J<sub>θ</sub>=∂f/∂θ 將小參數偏差映到量測殘差。</p>
+<p><strong>具體例子：</strong>連桿長度欄可用 mm/mm，零點角欄可用 mm/rad。</p>
+<p><strong>不要混淆：</strong>它的輸入是模型參數，不是關節速度 q̇。</p>
+</article>
+<article class="term-card">
+<h2>規範自由度</h2>
+<p><strong>英文：</strong>Gauge Freedom</p>
+<p><strong>白話：</strong>不同參數寫法能描述完全相同的可觀察幾何，因此資料無法決定唯一參數值。</p>
+<p><strong>位置／角色：</strong>出現在座標基準與校正參數的不可辨識方向。</p>
+<p><strong>如何生效：</strong>固定一個參考 frame 或加明確約束，才能移除等價解。</p>
+<p><strong>具體例子：</strong>同時平移基座定義與所有量測外參，可能不改變相對預測。</p>
+<p><strong>不要混淆：</strong>最佳化器回傳一組數字，不代表規範自由度已由資料辨識。</p>
+</article>
+<article class="term-card">
+<h2>幾何／解析雅可比</h2>
+<p><strong>英文：</strong>Geometric / Analytic Jacobian</p>
+<p><strong>白話：</strong>前者輸出物理線速度與角速度；後者輸出所選姿態參數的變化率。</p>
+<p><strong>位置／角色：</strong>兩者都連接關節速度與末端變化，但輸出座標不同。</p>
+<p><strong>如何生效：</strong>解析雅可比需用姿態參數速率到角速度的映射與幾何雅可比轉換。</p>
+<p><strong>具體例子：</strong>歐拉角速率通常不等於角速度向量。</p>
+<p><strong>不要混淆：</strong>解析雅可比可能因姿態表示奇異而失秩，即使機構本身未奇異。</p>
+</article>
+<article class="term-card">
+<h2>空間／本體雅可比</h2>
+<p><strong>英文：</strong>Space / Body Jacobian</p>
+<p><strong>白話：</strong>同一剛體速度分別用固定空間 frame 或末端 body frame 表示。</p>
+<p><strong>位置／角色：</strong>用於 POE、扭量與座標轉換一致性。</p>
+<p><strong>如何生效：</strong>兩者以位姿的 Adjoint 互換，且須固定六維排列與參考點。</p>
+<p><strong>具體例子：</strong>J<sub>s</sub>=Ad(T)J<sub>b</sub>。</p>
+<p><strong>不要混淆：</strong>06 章的末端點幾何雅可比是混合表示，不能直接稱為 J<sub>s</sub>。</p>
 </article>
 </section>
 <section class="note">

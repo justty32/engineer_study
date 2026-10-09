@@ -29,6 +29,7 @@
 <h2>讀完再操作：積分一段平面扭量</h2>
 <p><strong>怎麼玩：</strong>先令 ω=0，確認 x=vΔt、y=0；再令 v=0，確認位置不變而姿態旋轉；最後設 v=0.6 m/s、ω=45°/s、Δt=1 s。此時 ω≈0.7854 rad/s、圓弧半徑 v/ω≈0.764 m，預期 x≈0.540 m、y≈0.224 m、轉角 45°。這組數字可用來手算核對輸出。</p>
 <section class="workspace">
+<h2>積分一段平面扭量</h2>
 <div class="controls">
 <label for="lie-v">車體前向速度 v（m/s）<input id="lie-v" type="range" min="0" max="1" step="0.05" value="0.6"></label>
 <label for="lie-w">角速度 ω（deg/s）<input id="lie-w" type="range" min="-120" max="120" step="5" value="45"></label>
@@ -38,7 +39,8 @@
 </section>
 <h2>螺旋軸、POE 與 Adjoint 各做什麼</h2>
 <p>螺旋軸（screw axis）把一個關節的旋轉軸、軸線位置與可能的沿軸平移包成六維運動方向。旋轉關節是節距為零的螺旋；移動關節則沒有角速度。指數積形式（Product of Exponentials, POE）把每個關節在零位時的螺旋軸依序指數化，再乘上工具零位姿。它與 Denavit–Hartenberg 表都能建正運動學，重點是選一套一致的座標契約，不要把兩套參數慣例拼接。</p>
-<p>伴隨表示（adjoint representation）<code>Ad(T)</code> 是由 4×4 變換建立的 6×6 矩陣，用來把同一個扭量或螺旋軸改用另一座標系表示。它不是再做一次物理運動。空間雅可比（space Jacobian）把末端扭量表示在固定空間框架；本體雅可比（body Jacobian）把它表示在末端框架。兩者描述同一真實速度，可由 Adjoint 轉換；混用會讓數值看似合理但方向錯誤。</p>
+<p>伴隨表示（adjoint representation）<code>Ad(T)</code> 是由 4×4 變換建立的 6×6 矩陣，用來把同一個扭量或螺旋軸改用另一座標系表示。它不是再做一次物理運動。空間雅可比 <code>J<sub>s</sub></code> 的線速度分量以空間原點為參考點，並在固定空間框架表示；本體雅可比 <code>J<sub>b</sub></code> 以末端原點為參考點，並在末端框架表示，兩者滿足 <code>J<sub>s</sub>=Ad(T)J<sub>b</sub></code>。</p>
+<p>06 章使用的幾何雅可比 <code>J<sub>g</sub></code> 則是「末端點線速度＋角速度，都用基座座標表示」的混合表示；它既不是 <code>J<sub>s</sub></code>，也不是 <code>J<sub>b</sub></code>。依本課的 <code>[v;ω]</code> 排列，<code>J<sub>g</sub>=diag(R,R)J<sub>b</sub></code>；由 <code>J<sub>g</sub></code> 換成 <code>J<sub>s</sub></code> 還須加入參考點平移造成的 <code>p×ω</code> 項，不能只做完整 Adjoint 名稱上的類比。</p>
 <h2>因果鏈：固定扭量如何變成有限位姿</h2>
 <p>選定扭量的參考 frame 與參考點 → 把角速度由 deg/s 轉為 rad/s → 乘上 Δt 得無因次轉角與 m 的線位移尺度 → 以 exp 映射成合法相對 T → 依 space 或 body 慣例左乘／右乘目前位姿 → 檢查新 R 仍正交。若左右乘用反，矩陣通常仍合法，因此只能靠 frame 標籤、手算案例與有限差分抓出語意錯。</p>
 <h2>證據、誤解與適用邊界</h2>
@@ -61,6 +63,14 @@
 <h2>小寫 se(3) 不是另一種位姿格式</h2><p>SE(3) 元素 T 是有限位姿；se(3) 元素是單位位姿附近的瞬時生成方向。六個數可相加是因它們位於線性切空間，不表示兩個有限位姿也能逐項相加。exp 把有限時間的切向運動帶到群上，log 則選一條局部生成運動。</p><p>例如純平移 v=[0.1,0,0] m/s 維持 2 s，得到 0.2 m 平移；純旋轉 ω=[0,0,0.5] rad/s 維持 2 s，得到 1 rad。兩者同時發生時，平移方向會隨 body 旋轉，不能總把結果寫成 [0.2,0,0] 加一個旋轉。</p><h2>分支與連續性</h2><p>同一旋轉可寫成 θ 與 θ+2π。log 通常選主值，但軌跡跨過分支切線時輸出可能跳。控制與插值需利用上一時刻選連續分支；exp(log(T)) 往返接近仍不代表整段時間序列連續。</p><p><strong>能教別人的檢核：</strong>說明 T、twist、exp、log、Adjoint 各自的輸入輸出，並指出哪個動作是實體運動、哪個只是換座標表示。</p>
 <h2>從純旋轉看矩陣指數，而不是逐格指數</h2><p>繞 z 軸角速度 ω 的反對稱矩陣可寫成 [[0,−ω,0],[ω,0,0],[0,0,0]]。乘時間後做矩陣指數，會得到熟悉的 R<sub>z</sub>(ωt)：[[cosωt,−sinωt,0],[sinωt,cosωt,0],[0,0,1]]。因此 exp 並沒有創造另一套旋轉，它把瞬時生成矩陣沿時間累積成合法有限旋轉。</p><p>若逐格取 exp，零格會變成 1，矩陣充滿不該出現的 1，也不再正交。驗證時取 ω=π/2 rad/s、t=1 s，應得到 90° 旋轉，把 [1,0,0] 送到 [0,1,0]，而不是檢查每格是否為正數。</p>
 <h2>space 與 body 更新為何左右不同？</h2><p>若速度以固定世界 frame 表示，小變換作用在目前位姿左側；若以隨工具轉動的 body frame 表示，作用在右側。直覺上，左乘是在世界座標先描述「往世界 x」，右乘是在工具當下局部座標描述「往工具 x」。</p><p>設工具已繞 z 90°。body 前進 [0.1,0,0] m 會在世界中往 +y；space 前進世界 [0.1,0,0] m 則仍往 +x。兩個結果都是合法 T，只有明確 frame 與這組特殊角案例能抓出左右乘用反。</p>
+<section class="workspace">
+<h2>比較 body 右乘與 space 左乘</h2>
+<div class="controls">
+<label for="lie-frame-angle">工具先繞 z 旋轉（度）<input id="lie-frame-angle" type="range" min="-180" max="180" step="5" value="90"></label>
+<label for="lie-frame-distance">沿 x 前進距離（m）<input id="lie-frame-distance" type="range" min="0" max="0.5" step="0.01" value="0.1"></label>
+</div>
+<div id="lie-frame-output" class="output" aria-live="polite"></div>
+</section>
 <h2>螺旋運動包含兩個可觀察極端</h2><p>旋轉關節的節距為 0，繞固定軸轉而不沿軸前進；移動關節可視為純平移極端，角速度為 0。一般螺旋則每轉一圈同時沿軸移固定距離。這是剛體瞬時運動的幾何描述，不表示機械結構真的一定有螺紋。</p><p>POE 中每個關節螺旋軸必須在共同零位與指定 frame 表示。若零位工具 M 正確、單軸指數也各自合法，軸卻混用 space 與 body 表示，連乘仍會產生合法但錯誤的位姿。逐關節有限差分與零位手算仍不可少。</p>
 <details><summary>數值上接近 ω=0 時怎麼辦？</summary><p>圓弧公式含 v/ω，直接在極小 ω 相除會造成數值不穩；極限其實平滑回到直線 x=vΔt、y=0。實作可在 |ωΔt| 很小時使用級數或穩定函式，而不是硬算兩個大數再相消。測試應掃 ω=0、10<sup>−8</sup>、10<sup>−4</sup> rad/s，確認輸出連續且沒有 NaN。</p></details>
 <div class="pager"><a href="10-C++實作與驗證.html">← 10 C++</a><a href="12-運動學校正敏感度與可辨識性.html">12 校正與敏感度 →</a></div>

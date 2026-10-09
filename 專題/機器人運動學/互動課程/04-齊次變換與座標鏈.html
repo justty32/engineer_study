@@ -17,7 +17,7 @@
 <main>
 <p class="eyebrow">04 · 把旋轉和平移放進同一條鏈</p>
 <h1>齊次變換與座標鏈</h1>
-<p>齊次變換矩陣（Homogeneous Transformation Matrix）是特殊歐幾里得群（Special Euclidean Group, SE(3)）的矩陣表示：<code>T=[[R,p],[0,1]]</code>，逆矩陣為 <code>T⁻¹=[[Rᵀ,−Rᵀp],[0,1]]</code>。</p>
+<p>齊次變換矩陣（Homogeneous Transformation Matrix）是特殊歐氏群（Special Euclidean Group, SE(3)）的矩陣表示：<code>T=[[R,p],[0,1]]</code>，逆矩陣為 <code>T⁻¹=[[Rᵀ,−Rᵀp],[0,1]]</code>。</p>
 <p>
 <code>⁰T₁</code> 的欄向量描述座標系 1 的軸如何用座標系 0 表示，最右欄是座標系 1 原點在 0 中的位置。完整上下標比變數名 <code>T</code> 更重要。</p>
 <p><strong>把 frame 名稱想成泛型型別：</strong><code><sup>A</sup>T<sub>B</sub></code> 接受 B 表示的點，輸出 A 表示的點。只有相鄰型別能接上的變換才能組合；4×4 尺寸相同只是記憶體形狀相容，並不保證幾何語意相容。</p>
