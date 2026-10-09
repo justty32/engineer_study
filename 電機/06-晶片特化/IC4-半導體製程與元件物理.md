@@ -243,7 +243,7 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 - 雜訊 / 失配 / 變異模型。
 - ESD 模型與 cell。
 
-設計者要熟讀 PDK 才能避免「合成模擬都過但流片不過」。
+設計者要熟讀 PDK 才能避免「合成模擬都過但下線（tape-out）不過」。
 
 **例：PVT 模擬組合數**
 - 題目：若 PDK 要求 5 個 process corners、3 種供電電壓與 4 個溫度點的全組合掃描，需要多少組模擬？

@@ -136,7 +136,7 @@ PD + LF + VCO（複習通訊系統 [14 下](../03-通訊特化/14-通訊系統-�
 
 ### 10.2 差動對的偶次諧波抵消
 
-理想對稱的全差動電路對正負輸入有反對稱輸出，因此二階、四階等偶次非線性項會在差動取差時抵消。實際的元件失配、共模變動與負載不對稱會破壞抵消，所以電路與版圖都要保持對稱。
+理想對稱的全差動電路對正負輸入有反對稱輸出，因此二階、四階等偶次非線性項會在差動取差時抵消。實際的元件失配、共模變動與負載不對稱會破壞抵消，所以電路與佈局都要保持對稱。
 
 ### 10.3 交越失真
 
@@ -157,9 +157,9 @@ Class B / AB 推挽輸出級在訊號過零時，若 NMOS 與 PMOS 一度都未�
 
 RF PA 系統常使用**預失真（predistortion）**在發射端加入反向非線性、以**包絡追蹤（envelope tracking）**動態調整 PA 供電，或以 **Doherty PA** 的載波與峰值放大路徑兼顧回退功率時的效率與線性。這些是系統層技術，與本章的電路層負回授、退化與對稱化方法互補；射頻前端的系統脈絡可銜接 [A4 雷達系統與射頻前端](../08-天線特化/A4-雷達系統與射頻前端.md)。
 
-## 第 11 章　版圖與寄生
+## 第 11 章　佈局（layout）與寄生
 
-### 11.1 版圖規則
+### 11.1 佈局規則
 - DRC（design rule check）：間距、寬度、層數規則。
 - LVS（layout vs schematic）。
 - ERC（electrical rule check）。
@@ -170,7 +170,7 @@ RF PA 系統常使用**預失真（predistortion）**在發射端加入反向非
 - **互感**：高頻 / RF 重要。
 - post-layout sim 必做。
 
-### 11.3 匹配版圖
+### 11.3 匹配佈局
 - Common-centroid（共中心）、interdigitated（交錯）。
 - Dummy 元件包邊。
 - 全圖對稱（差動結構）。
@@ -224,7 +224,7 @@ RF PA 系統常使用**預失真（predistortion）**在發射端加入反向非
 - Monte Carlo（5000 點 +）。
 - PVT（process、voltage、temperature）全掃。
 
-### 13.2 流片後（Silicon Bring-up）
+### 13.2 下線後（Silicon Bring-up）
 - 量測站架構：示波器、頻譜分析、訊號源、source meter、ATE。
 - DC 工作點 → AC 響應 → 雜訊 → 線性 → 系統規格。
 - 失效分析（FA）：FIB、TEM、emission microscopy。
@@ -248,7 +248,7 @@ RF PA 系統常使用**預失真（predistortion）**在發射端加入反向非
 - **資料轉換器類比前端（Data-Converter Analog Front End）**：深入取樣開關、放大器沉降、比較器再生與參考電壓緩衝。
 - **射頻積體電路（RF Integrated Circuits）**：將雜訊係數、阻抗匹配、IIP3 與相位雜訊納入 LNA、mixer 與 VCO 設計。
 - **電源管理積體電路（Power-Management Integrated Circuits）**：研究 LDO、切換式轉換器的穩定性、效率與負載暫態。
-- **類比版圖與統計設計（Analog Layout and Statistical Design）**：以共中心版圖、寄生抽取與 Monte Carlo 分析收斂佈局後模擬規格。
+- **類比佈局與統計設計（Analog Layout and Statistical Design）**：以共中心佈局、寄生抽取與 Monte Carlo 分析收斂佈局後模擬規格。
 
 ## 博士研究方向（列表）
 

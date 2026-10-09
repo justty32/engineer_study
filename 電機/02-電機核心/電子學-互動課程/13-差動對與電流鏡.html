@@ -24,7 +24,7 @@
 <p><strong>電阻負載時，增大 R<sub>C</sub> 會同時放大 A<sub>d</sub> 與 A<sub>cm</sub>，所以負載因子會約掉；電流鏡主動負載則多了共模抵銷機制，不能沿用前一條結論。</strong>實務 CMRR 還會被鏡像誤差、基極電流、元件失配與有限順從範圍限制。</p>
 <p>主動負載若由兩顆相同電晶體輸出阻抗構成，R<sub>L,eff</sub> = r<sub>o</sub>‖r<sub>o</sub> = r<sub>o</sub>/2；‖ 讀作「並聯」，不是絕對值也不是範數。以 r<sub>o</sub> = V<sub>A</sub>/I<sub>C</sub> 計算，V<sub>A</sub> 單位 V，r<sub>o</sub> 單位 Ω。這裡忽略鏡像誤差、基極電流、有限順從範圍與元件失配。</p>
 <p>大訊號時，電流重新分配遵循 ΔI = I<sub>tail</sub> ⋅ tanh[v<sub>id</sub>/(2V<sub>T</sub>)]。在零點線性化才有 ΔI ≈ g<sub>m</sub>v<sub>id</sub>；條件是 |v<sub>id</sub>| ≪ 2V<sub>T</sub> = 51.704000 mV。當 |v<sub>id</sub>| 超過 4V<sub>T</sub> = 103.407999 mV，電流幾乎全倒向一邊，差動對由放大器轉成比較器。</p>
-<p>若把分析寫成程式，可先用共模與差模座標取代兩個原始輸入：v<sub>icm</sub> = (v<sub>1</sub> + v<sub>2</sub>)/2，v<sub>id</sub> = v<sub>1</sub> − v<sub>2</sub>。線性小訊號模型中，這兩個模式因對稱性互不混合，輸出可分別計算再疊加；真實元件一旦失配，模式便會耦合，共模的一部分轉成差模輸出。這也解釋為何晶片版圖要求兩顆輸入電晶體尺寸、方向與周圍環境對稱。</p>
+<p>若把分析寫成程式，可先用共模與差模座標取代兩個原始輸入：v<sub>icm</sub> = (v<sub>1</sub> + v<sub>2</sub>)/2，v<sub>id</sub> = v<sub>1</sub> − v<sub>2</sub>。線性小訊號模型中，這兩個模式因對稱性互不混合，輸出可分別計算再疊加；真實元件一旦失配，模式便會耦合，共模的一部分轉成差模輸出。這也解釋為何晶片佈局要求兩顆輸入電晶體尺寸、方向與周圍環境對稱。</p>
 
 <h2>數值實例：主動負載合成差模電流並抵銷共模</h2>
 <p>I<sub>tail</sub> = 1 mA、R<sub>C</sub> = 10 kΩ、R<sub>oc</sub> = 500 kΩ、V<sub>A</sub> = 100 V、v<sub>id</sub> = 10 mV。每邊 I<sub>C</sub> = <strong>0.500000 mA</strong>，g<sub>m</sub> = <strong>19.340864 mA/V</strong>。</p>

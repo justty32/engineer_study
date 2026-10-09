@@ -16,7 +16,7 @@ DFT 插入 → 邏輯等效檢查（LEC）→
 平面規劃（floorplan）→ 擺置（placement）→
 時脈樹合成（CTS）→ 繞線（routing）→
 寄生抽取（RC extraction）→ 簽核（STA / Power / EMIR / Noise）→
-DRC / LVS → GDSII → 流片
+DRC / LVS → GDSII → 下線（tape-out）
 ```
 
 ### 8.2 各階段工具與檢查
@@ -33,7 +33,7 @@ DRC / LVS → GDSII → 流片
 **例：RTL 通過模擬後的下一步**
 - 題目：RTL regression 全數通過，是否可直接輸出 GDSII？
 - 步驟：對照 RTL-to-GDS 流程，尚需邏輯合成、DFT、LEC、PnR、寄生抽取與多項 sign-off。
-- 答案：不可；功能模擬只驗證 RTL 行為，並未驗證實體時序、供電網路與版圖規則。
+- 答案：不可；功能模擬只驗證 RTL 行為，並未驗證實體時序、供電網路與佈局規則。
 
 ## 第 9 章　RTL 與合成
 

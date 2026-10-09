@@ -37,16 +37,16 @@
 ### 1.3 設計流程
 ```
 規格 → 拓樸選擇 → 手算估計 → 模擬（SPICE/Spectre）→
-版圖（layout）→ DRC / LVS → 寄生抽取 → post-layout sim →
-矽前驗證（Monte Carlo / Corner）→ 流片 → 量測
+佈局（layout）→ DRC / LVS → 寄生抽取 → post-layout sim →
+矽前驗證（Monte Carlo / Corner）→ 下線（tape-out）→ 量測
 ```
 
 EDA 工具：Cadence Virtuoso、Synopsys Custom Compiler、SPECTRE / FineSim。
 
 **例：從規格到佈局後模擬**
 - 題目：某放大器的 schematic simulation 已通過，能否直接下線（tape-out）？
-- 步驟：依設計流程檢查，尚須做版圖、DRC / LVS、寄生抽取、post-layout simulation 與 PVT / Monte Carlo 驗證。
-- 答案：不能；schematic 通過只是佈局前模擬節點，還未納入版圖寄生與製程變異。
+- 步驟：依設計流程檢查，尚須做佈局、DRC / LVS、寄生抽取、post-layout simulation 與 PVT / Monte Carlo 驗證。
+- 答案：不能；schematic 通過只是佈局前模擬節點，還未納入佈局寄生與製程變異。
 
 ## 第 2 章　MOSFET 模型回顧（從電子學深入）
 
@@ -78,7 +78,7 @@ $$I_D=I_0\,e^{V_{GS}/(nV_T)}\,(1-e^{-V_{DS}/V_T})$$
 
 ### 2.5 製程變異與失配（Mismatch）
 - **Pelgrom 失配定律**：$\sigma(\Delta V_{th})=\dfrac{A_{V_{th}}}{\sqrt{WL}}$。
-- 設計上「要匹配的元件」要做大 + 緊鄰版圖 + interdigitated / common-centroid。
+- 設計上「要匹配的元件」要做大 + 緊鄰佈局 + interdigitated / common-centroid。
 - 統計分析：Monte Carlo + Corner（FF / SS / TT 等）。
 
 **例：MOSFET 跨導與本徵增益**
@@ -168,7 +168,7 @@ $$I_{d1}-I_{d2}=\dfrac{\mu_n C_{ox}(W/L)}{2}V_d\sqrt{\dfrac{4I_\text{bias}}{\mu_
 ### 5.5 失調（Offset）
 差動對兩邊不完美匹配 → 輸入零時輸出非零。
 - 隨機失調 $\sigma_{V_{OS}}\propto 1/\sqrt{WL}$。
-- 大 W、L 改善；版圖 common-centroid。
+- 大 W、L 改善；佈局 common-centroid。
 - 進階：自動歸零（auto-zero）、chopper、digital trimming。
 
 **例：差動增益與 CMRR**

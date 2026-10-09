@@ -13,7 +13,7 @@
 ## 第 1 章　驗證的全景
 
 ### 1.1 為什麼驗證重要
-- **流片成本**：先進節點的光罩組可達數千萬美元，若連同設計、驗證與工程晶圓，整案開發成本可達上億美元；發現 bug 後重做極貴。
+- **下線（tape-out）成本**：先進節點的光罩組可達數千萬美元，若連同設計、驗證與工程晶圓，整案開發成本可達上億美元；發現 bug 後重做極貴。
 - **bug 影響**：晶片問世後修不太了，往往要 software workaround 或 stepping 重流。
 - **覆蓋全部行為**：硬體並發、不可控外部、長啟動序列；測試不可窮舉。
 
@@ -228,8 +228,8 @@ class req_driver extends uvm_driver #(req_t); /* get_next_item 後驅動 DUT */ 
 - **Yosys**：Verilog 合成。
 - **OpenROAD**：開源 PnR 流程。
 - **ngspice / Xyce**：SPICE 模擬。
-- **KLayout / Magic**：版圖編輯。
-- **OpenLane**：整合腳本 + SkyWater 130 PDK，做出可流片的全開源流程。
+- **KLayout / Magic**：佈局編輯。
+- **OpenLane**：整合腳本 + SkyWater 130 PDK，做出可下線的全開源流程。
 
 **例：開源 RTL-to-GDS 流程時間**
 - 題目：合成、floorplan / placement、CTS / routing、sign-off 與 DRC / LVS 分別花 3、12、18、25、15 分鐘，串行流程總時間為何？
@@ -300,7 +300,7 @@ class req_driver extends uvm_driver #(req_t); /* get_next_item 後驅動 DUT */ 
 - 處理器與記憶體一致性驗證（processor and memory-consistency verification）：證明並行執行序列與一致性協定
 - 安全屬性的資訊流驗證（information-flow security verification）：偵測跨權資料流與側通道
 - 自動測試生成與規格挖掘（automatic test generation and specification mining）：由軌跡與文件建立可檢查屬性
-- 晶片感知故障診斷（silicon-aware diagnosis）：結合 scan data、版圖特徵與製程資料找系統性缺陷
+- 晶片感知故障診斷（silicon-aware diagnosis）：結合 scan data、佈局特徵與製程資料找系統性缺陷
 - 硬體模擬加速分割與排程（emulation partitioning and scheduling）：降低跨晶片連線與多使用者工作負載的執行成本
 - 覆蓋率收斂度量（coverage-closure metrics）：研究覆蓋率與殘餘 bug 風險間的可解釋關係
 
