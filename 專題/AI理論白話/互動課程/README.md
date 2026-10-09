@@ -20,7 +20,7 @@
 | `13-Lisp程式即資料.html` | 13 Lisp 程式即資料 |
 | `14-元胞自動機與發育式成長.html` | 14 元胞自動機與發育式成長 |
 | `15-Solomonoff與最短程式.html` | 15 Solomonoff 與最短程式 |
-| `16-ARC-AGI泛化量尺.html` | 16 ARC-AGI |
+| `16-ARC-AGI泛化量尺.html` | 16 ARC-AGI 泛化量尺 |
 | `17-巢狀學習HOPE與圖神經網路.html` | 17 巢狀學習 HOPE 與圖神經網路 |
 | `18-自我改進與驗證器上限.html` | 18 自我改進 agent 與驗證器上限 |
 | `19-技能庫的生老病死.html` | 19 技能庫的生老病死 |

@@ -4,7 +4,7 @@
 
 本網站用八個互動模組串起架構選擇、非阻塞迴圈、ISR、驅動 I/O、RTOS 排程與同步、低功耗及故障復原。執行期只有 `index.html`、`styles.css`、`app.js`，不需安裝套件。
 
-預定 GitHub Pages：<https://justty32.github.io/engineer_study/iot-firmware-rtos/>
+GitHub Pages：<https://justty32.github.io/engineer_study/iot-firmware-rtos/>
 
 ## 本機啟動
 

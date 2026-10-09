@@ -235,6 +235,7 @@ jobs:
                   "../../02-電機核心/電路學-互動課程/": "../circuit-analysis/",
                   "../../02-電機核心/信號與系統-互動課程/": "../signals-systems/",
                   "../P1-電力系統-互動網站/": "../power-systems/",
+                  "../../../互動學習網站/index.html": "../index.html",
               },
               "motor-drives": {
                   "../../02-電機核心/電機機械-互動課程/": "../electric-machines/",
@@ -243,6 +244,7 @@ jobs:
                   "../../02-電機核心/邏輯設計-互動課程/": "../logic-design/",
                   "../../02-電機核心/電子學-互動課程/": "../electronics/",
                   "../../02-電機核心/信號與系統-互動課程/": "../signals-systems/",
+                  "../../../互動學習網站/index.html": "../index.html",
               },
               "digital-communications": {
                   "../通訊系統-互動課程/": "../communication-systems/",

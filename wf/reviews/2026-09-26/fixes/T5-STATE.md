@@ -1,6 +1,6 @@
 # T5 STATE（互動課程隊：29–35）
 
-- 基線 wf-lint：broken=2 biglist=268 querycmd=3 residue={{=1
+- 基線 wf-lint：broken=2 biglist=268 querycmd=3 residue 雙大括號=1
 - 工人：7 條 gpt-sol 線並行（一門課一條）
 - 進行中：（無）
 - 已完成：29–35 全部
