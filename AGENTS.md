@@ -13,7 +13,7 @@ engineer_study = **以大學課綱為骨架的跨領域工程學習筆記庫（�
 
 ## 鐵律（always-on，隨時適用）
 
-1. 筆記一律**繁體中文、UTF-8**、純文字為主：不抓取或生成圖片；公式可用 LaTeX。
+1. 筆記一律**繁體中文、UTF-8**、純文字為主：不抓取外部圖片、不加點陣圖檔；互動課程可用程式繪製的 inline SVG／canvas（2026-10-09 使用者授權）；公式可用 LaTeX。
 2. 整理或改寫**不改原意**；驗收＝`bash wf/tools/wf-lint.sh wf`（Claude Code 可用 `/wf-lint`）＋內容／連結／UTF-8 檢查，並對照該工作流的 `Done when:`。
 3. **不可逆或對外的動作**（push、刪除、大規模搬移或重命名、新增依賴）要有**授權來源**：使用者當場確認，或他親自登記在清單裡。都沒有就先問；未經明確要求不 push、不開範圍外的新工作。
 4. **條列走資料檔、導航留 md**：給 AI 消化的表／清單 >1 KB 存 `.json`／`.csv`（契約 `wf-table/1`，見 [data-files](wf/workflows/common/data-files.md)），用 `wf/tools/tabledb.py` 讀寫、不整份讀進 context；給人點的導航連結留 md。
