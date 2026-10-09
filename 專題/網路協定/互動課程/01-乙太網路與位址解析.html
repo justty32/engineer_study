@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 乙太網路與位址解析</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 乙太網路與位址解析｜網路協定細講</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head>
 <body data-page="arp">
 <a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-封包與分層.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">01・本地鏈路</p><h1>乙太網路與位址解析：下一個訊框交給誰？</h1><p class="lead">乙太網路（Ethernet）用訊框承載本地鏈路資料；介質存取控制位址（Media Access Control address, MAC address）辨認鏈路介面。若只知道下一站的網際網路協定位址，就先用位址解析協定（Address Resolution Protocol, ARP）詢問其硬體位址。</p>
@@ -13,4 +13,5 @@
 <p>主機的鄰居／ARP 快取能證明作業系統目前相信哪個對應；封包擷取能證明詢問與回覆是否經過該介面；交換器的 MAC 位址表能證明它把來源位址學在哪個埠。三份證據各自只涵蓋一個觀察點：有 ARP 回覆仍不能證明後續遠端路由或應用服務正常。</p><h3>在本機取得證據</h3><pre><code>ip addr show
 ip neigh show</code></pre><p><strong>預期輸出樣貌：</strong>前者可見 <code>inet 192.0.2.10/24 … eth0</code>，後者可見 <code>192.0.2.1 dev eth0 lladdr 02:00:5e:10:00:01 REACHABLE</code>；位址與 MAC 均為文件示意，實機介面名與鄰居狀態會不同。把兩份輸出對在一起，可檢查「本機介面擁有哪個 IP」以及「下一跳 IP 目前對應哪個鏈路位址」，但快取條目本身不證明遠端服務可用。</p>
 <h2>不要混淆</h2><p>硬體位址回答「目前鏈路的下一個介面是誰」；網際網路協定位址回答「跨網的最終端點與前綴在哪裡」。交換器主要依硬體位址轉送訊框，路由器主要依網路前綴選下一跳，兩者不是只差名稱。</p>
-<nav class="pager" aria-label="章節導覽"><a href="00-封包與分層.html">← 上一頁：封包與分層</a><a href="02-網際網路協定與路由.html">下一頁：網際網路協定與路由 →</a></nav></main></body></html>
+<nav class="pager" aria-label="章節導覽"><a href="00-封包與分層.html">← 上一頁：封包與分層</a><a href="02-網際網路協定與路由.html">下一頁：網際網路協定與路由 →</a></nav></main>
+<footer class="site-footer"><span>網路協定細講 · 純靜態、可離線</span><a href="名詞與概念字典.html">查字典</a></footer></body></html>

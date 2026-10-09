@@ -88,3 +88,4 @@ th, td { text-align: left; vertical-align: top; border: 1px solid var(--line); p
   text-decoration: none;
 }
 .main-site-link:hover { text-decoration: underline; }
+.site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1rem; width: min(72rem, calc(100% - 2rem)); margin: 0 auto; padding: 1rem 0 2.5rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
