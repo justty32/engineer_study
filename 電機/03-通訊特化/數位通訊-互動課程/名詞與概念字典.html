@@ -13,7 +13,7 @@
 <article class="term-card" data-search="transceiver chain 收發鏈 發射 接收">
 <h2>收發鏈（transceiver chain）</h2>
 <p><strong>白話：</strong>位元從來源出發，經過保護、映射與無線前端，再由接收端倒著還原的一整條加工線。它讓每一種演算法都有明確位置。</p>
-<p><strong>位置／角色：</strong>第 <a href="00-數位通訊世界觀與收發鏈.html">00 章</a>建立全課地圖；數據機、基地臺與軟體無線電都能依這條鏈拆成可測模組。</p>
+<p><strong>位置／角色：</strong>第 <a href="00-數位通訊世界觀與收發鏈.html">00 章</a>建立全課地圖；數據機、基地台與軟體無線電都能依這條鏈拆成可測模組。</p>
 <p><strong>機制：</strong>發射側依序完成來源處理、通道編碼、交錯、映射、脈衝整形與上變頻；接收側同步、等化、判決、解碼，最後交還資訊位元。每個方塊都可用已知輸入單獨驗證，出錯時便能沿鏈逐段定位，而不是只看終端結果猜原因。</p>
 <p><strong>不要混淆：</strong>這是功能順序，不保證硬體一定逐塊分開。實作可合併多步或平行運算，但每一步的輸入、輸出與責任仍可分辨。</p>
 </article>
@@ -224,7 +224,7 @@
 <article class="term-card" data-search="frame synchronization preamble 訊框同步 前導碼 correlation">
 <h2>訊框同步與前導碼（frame synchronization &amp; preamble）</h2>
 <p><strong>白話：</strong>在連續樣本裡找出一包資料從哪裡開始；前導碼是發射端先放的一段已知標記。</p>
-<p><strong>位置／角色：</strong>第 <a href="05-載波相位與同步.html">05 章</a>以相關峰定位；Wi-Fi 封包與基地臺同步程序都先搜尋已知序列。</p>
+<p><strong>位置／角色：</strong>第 <a href="05-載波相位與同步.html">05 章</a>以相關峰定位；Wi-Fi 封包與基地台同步程序都先搜尋已知序列。</p>
 <p><strong>機制：</strong>接收資料與已知前導碼逐位置做相關，峰值超過門檻便宣告起點；同一段也可協助估載波、時序與通道。</p>
 <p><strong>不要混淆：</strong>前導碼不是有效負載，也不保證找到的峰一定正確；門檻過低會誤警，過高則在弱訊號時漏失。</p>
 </article>
@@ -432,9 +432,9 @@
 <article class="term-card" data-search="walsh code 碼 hadamard orthogonal synchronous">
 <h2>Walsh 碼（Walsh code）</h2>
 <p><strong>白話：</strong>由 Hadamard 矩陣取得的一組正負一序列，完全對齊時任兩碼內積為零。</p>
-<p><strong>位置／角色：</strong>第 <a href="11-展頻與CDMA.html">11 章</a>比較同步正交與非同步隨機碼；基地臺下行可共同控制時間而使用。</p>
+<p><strong>位置／角色：</strong>第 <a href="11-展頻與CDMA.html">11 章</a>比較同步正交與非同步隨機碼；基地台下行可共同控制時間而使用。</p>
 <p><strong>機制：</strong>同步時以目標碼做內積，其他 Walsh 碼貢獻為零，理想多使用者干擾消失；碼長 N 最多提供 N 個正交碼。</p>
-<p><strong>不要混淆：</strong>正交性依賴碼片邊界對齊；錯開一個碼片後互相關通常不為零，因此不能把同步結論搬到非同步上行。</p>
+<p><strong>不要混淆：</strong>正交性依賴每段碼的起點（符元邊界）對齊；錯開一個碼片後互相關通常不為零，因此不能把同步結論搬到非同步上行。</p>
 </article>
 <article class="term-card" data-search="orthogonal frequency-division multiplexing ofdm 正交分頻多工 subcarrier fft">
 <h2>正交分頻多工（orthogonal frequency-division multiplexing, OFDM）</h2>

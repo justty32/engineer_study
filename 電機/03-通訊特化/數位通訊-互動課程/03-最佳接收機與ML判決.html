@@ -43,6 +43,8 @@
 <label for="ml-p1">先驗機率 P(s_1 = +1)<input id="ml-p1" type="range" min="0.05" max="0.95" step="0.05" value="0.8"></label>
 <label for="ml-ebn0">E_b/N_0（dB）<input id="ml-ebn0" type="range" min="-2" max="12" step="0.5" value="4"></label>
 <label for="ml-rule">判決規則<select id="ml-rule"><option value="ml">ML：忽略先驗，門檻在 0</option><option value="map" selected>MAP：用先驗，門檻移到 γ</option></select></label>
+<label for="ml-ri">QPSK 接收點 r<sub>I</sub><input id="ml-ri" type="number" min="-2" max="2" step="0.1" value="0.9"></label>
+<label for="ml-rq">QPSK 接收點 r<sub>Q</sub><input id="ml-rq" type="number" min="-2" max="2" step="0.1" value="-0.2"></label>
 </div>
 <div id="mapml-output" class="output" aria-live="polite"></div>
 </section>

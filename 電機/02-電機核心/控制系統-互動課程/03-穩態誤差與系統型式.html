@@ -23,7 +23,7 @@
 <p><strong>（b）三種命令。</strong>單位步階 R ＝ 1 / s，代入後 e<sub>ss</sub> ＝ 1 / (1 ＋ K<sub>pos</sub>)，其中位置誤差常數（position error constant, K<sub>pos</sub>）＝ lim<sub>s→0</sub> L(s)。單位斜坡 R ＝ 1 / s<sup>2</sup>，整理為 e<sub>ss</sub> ＝ 1 / K<sub>v</sub>，速度誤差常數（velocity error constant, K<sub>v</sub>）＝ lim<sub>s→0</sub> sL(s)。單位拋物線 R ＝ 1 / s<sup>3</sup>，得到 e<sub>ss</sub> ＝ 1 / K<sub>a</sub>，加速度誤差常數（acceleration error constant, K<sub>a</sub>）＝ lim<sub>s→0</sub> s<sup>2</sup>L(s)。</p>
 <p><strong>（c）把極限按型式分類。</strong>型式 0 的 K<sub>pos</sub> 有限，K<sub>v</sub> 與 K<sub>a</sub> 為 0；型式 1 的 K<sub>pos</sub> 為 ∞，K<sub>v</sub> 有限，K<sub>a</sub> 為 0；型式 2 的 K<sub>pos</sub> 與 K<sub>v</sub> 為 ∞，K<sub>a</sub> 有限。於是每提高一個型式，就多追上一階命令。</p>
 <p><strong>（d）代入本章模型。</strong>對 L ＝ K / (s<sup>N</sup>(s ＋ a))，型式 0 的 K<sub>pos</sub> ＝ K / a，型式 1 的 K<sub>v</sub> ＝ K / a；型式 2 固定加入零點，L ＝ K(s ＋ 1) / (s<sup>2</sup>(s ＋ a))，因此 K<sub>a</sub> ＝ K / a。型式 0 與 1 在 K、a ＞ 0 時閉迴路收斂；型式 2 的特徵多項式為 s<sup>3</sup> ＋ as<sup>2</sup> ＋ Ks ＋ K，05 章的判別會得到 a ＞ 1。</p>
-<p><strong>（e）把表讀成規則。</strong>命令比型式低一階時，對應誤差常數為 ∞，所以 e<sub>ss</sub> 為 0；命令階次剛好比型式高一階時，誤差是有限的 1 / K<sub>pos</sub>、1 / K<sub>v</sub> 或 1 / K<sub>a</sub>；再高一階時，對應常數為 0，誤差便為 ∞。這個規則只是在整理三個極限，沒有取代閉迴路收斂的前提。</p>
+<p><strong>（e）把表讀成規則。</strong>把命令中 1 / s 的次數當作命令階次：步階是一階、斜坡是二階、拋物線是三階。命令階次 ≤ 系統型式時，e<sub>ss</sub> ＝ 0；命令階次 ＝ 系統型式 ＋ 1 時，誤差是有限的 1 / K<sub>pos</sub>、1 / K<sub>v</sub> 或 1 / K<sub>a</sub>；命令階次 ≥ 系統型式 ＋ 2 時，誤差為 ∞。這個規則只是在整理三個極限，沒有取代閉迴路收斂的前提。</p>
 <p><strong>符號、單位與邊界。</strong>K<sub>v</sub> 的單位是 1/s，K<sub>a</sub> 的單位是 1/s²；命令斜率取 1 單位/s，加速度取 1 單位/s²，e<sub>ss</sub> 與命令同單位。本課用的是教學用的簡化模型，真實系統不是這樣；假設單位回授、線性且閉迴路已收斂。</p>
 
 <h2>數值實例：型式 1、K ＝ 10、a ＝ 2</h2>

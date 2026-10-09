@@ -1,4 +1,4 @@
-# PROJECT-BRIEF — 數位通訊（零基礎互動課）
+# PROJECT-BRIEF — 數位通訊（進階銜接互動課）
 
 ← 工作流：[interactive-study-site](../../../wf/workflows/interactive-study-site/README.md)｜[foundations-first](../../../wf/workflows/interactive-study-site/FOUNDATIONS-FIRST.md)｜[principles-first 硬體原理子工作流](../../../wf/workflows/interactive-study-site/PRINCIPLES-FIRST.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)｜[build-with-agents 產線](../../../wf/workflows/interactive-study-site/BUILD-WITH-AGENTS.md)
 ← 建置契約與驗收證據：已封存，見 `archive/`（BUILD-SPEC.md、驗收紀錄.md）
@@ -7,7 +7,7 @@
 
 把 `電機/03-通訊特化/15-數位通訊-上.md`（135 行）與 `15-數位通訊-下.md`（167 行）做成一門**從「位元怎麼變成波形、再怎麼在雜訊裡被判回位元」開始蓋、每章一個可即時回饋自由實驗**的進階銜接互動課：訊號空間與正交基底、M 進制星座與最小距離、最佳接收機與 ML／MAP 判決、各調變的誤碼率公式、載波相位與同步、零強制與 MMSE 等化、LMS 自適應等化、(7,4) 漢明碼與症狀解碼、摺積碼與 Viterbi、交錯與突發錯誤、展頻與 CDMA、OFDM 與循環字首。全程繁體中文、純文字公式、完全離線、**不用亂數**。
 
-課名（顯示於 index 的 `h1`）：**數位通訊（零基礎互動課）**
+課名（顯示於 index 的 `h1`）：**數位通訊（進階銜接互動課）**
 
 部署 slug：`digital-communications`（`.github/workflows/pages.yml` 課程表的目標目錄；掛站接線不屬本隊，由收尾 agent 處理）。
 
@@ -48,11 +48,11 @@
 | 訊框 | 幀、資料框 | frame 一律「訊框」。配額 **0** |
 | 濾波器、載波、頻譜、鎖相迴路、暫存器（簡體形：滤波器、载波、频谱、锁相环、寄存器） | — | 簡體形全部配額 **0** |
 
-**配額詞的規則（踩過的雷，不得偏離）**：上表「恰好 1 處」的詞**只允許出現在 `名詞與概念字典.html` 對應卡片的「不要混淆」欄位**，作為「你在對照表或別的書會看到這個寫法」的對照，且**必須以明碼 UTF-8 字元寫出，嚴禁用 `&#NNNNN;` 之類的 HTML 實體或任何轉義規避掃描**。verifier 的掃描一律先 `html.unescape` 再計數。
+**配額詞的規則（踩過的雷，不得偏離）**：上表「恰好 1 處」的詞**只允許出現在 `名詞與概念字典.html` 對應卡片的「不要混淆」欄位**，作為「你在對照表或別的書會看到這個寫法」的對照，且**必須以明碼 UTF-8 字元寫出，嚴禁用 `&#NNNNN;` 之類的 HTML 實體或任何轉義規避掃描**。verifier 的掃描一律先 `html.unescape` 再計數；`data-search` 屬性值只供搜尋，**不計入可見文字配額**。
 
 其餘用語裁決：
 
-1. **減號與負號一律 U+2212 `−`**；半形 `-` 只出現在檔名、CSS class、`<input>` 屬性值、`data-search` 與使用者輸入。dB 值為負時同樣用 `−`：`−1.249387 dB`。
+1. **減號與負號一律 U+2212 `−`**；半形 `-` 只出現在檔名、CSS class、`<input>` 屬性值、`data-search`、使用者輸入，以及 `8-PSK`、`16-QAM`、`M-PSK` 這類調變名稱的連字號（不視為減號）。dB 值為負時同樣用 `−`：`−1.249387 dB`。
 2. **乘號一律 `×`（U+00D7）**，前後各一個半形空格。**全課 0 個 ASCII `*` 當乘號。**
 3. **微符號一律 U+00B5 `µ`**，且只出現在 `µs` 這類單位前；希臘 mu（U+03BC `μ`）**只當 LMS 步長符號**用。機械判準：全課 `μs`（U+03BC 接 s）0 個；`µ`（U+00B5）後面一律緊接單位字母。
 4. **希臘字母與符號固定**：α（滾降係數）、σ（每維雜訊標準差）、φ（相位誤差）、μ（LMS 步長）、ρ（相關係數）、τ（延遲）、γ（判決門檻）、Δf（子載波間距或頻率偏移）、π、Σ。ω 不出現，正文一律用 f（Hz）。

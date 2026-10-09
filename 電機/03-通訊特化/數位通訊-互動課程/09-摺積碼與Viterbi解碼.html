@@ -57,7 +57,7 @@
 <p><strong>不能證明什麼。</strong>解碼器選錯時，最終度量不能指出原始錯誤位置，也不能單獨證明干擾來源；它只描述接收序列與所選路徑的距離。</p>
 
 <h2>連到哪門課</h2>
-<p>Viterbi 作為有符元間干擾通道的最佳序列偵測可回看<a href="06-等化器ZF與MMSE.html">本課 06 章</a>。Turbo、LDPC、Polar、軟判決 Viterbi 與截斷回溯留給資訊理論與編碼課。軟體那一端，GNU Radio 的 <code>fec.cc_decoder</code> 實作同一種狀態搜尋；NASA 標準設定 <code>k=7, rate=2, polys=[79,109]</code> 對應 64 個狀態。</p>
+<p>Viterbi 作為有符元間干擾通道的最佳序列偵測可回看<a href="06-等化器ZF與MMSE.html">本課 06 章</a>。Turbo、LDPC、Polar、軟判決 Viterbi 與截斷回溯留給資訊理論與編碼課。軟體那一端，GNU Radio 的 <code>fec.cc_decoder</code> 實作同一種狀態搜尋；K ＝ 7、生成多項式 (171, 133)<sub>8</sub> 的 NASA 標準碼對應 64 個狀態。</p>
 <nav class="pager" aria-label="章節導覽"><a href="08-漢明碼與症狀解碼.html">← 上一頁：漢明碼與症狀解碼</a><a href="10-交錯與突發錯誤.html">下一頁：交錯與突發錯誤 →</a></nav>
 </main>
 <footer class="site-footer"><span>09 摺積碼與 Viterbi 解碼</span><a href="名詞與概念字典.html">查字典</a></footer>

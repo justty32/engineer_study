@@ -1,5 +1,5 @@
 "use strict";
-/* 數位通訊（零基礎互動課）——全站互動邏輯 */
+/* 數位通訊（進階銜接互動課）——全站互動邏輯 */
 
 /* ---------- 1. helper ---------- */
 var $ = function (id) {
@@ -121,7 +121,7 @@ var QUIZ = [
   {id:"q01-3",t:"sel",ans:"a",tol:0,why:"反極性的 d² ＝ 4E 最大。",err:"常見錯因：把正交當成最佳。"},
   {id:"q02-1",t:"num",ans:10,tol:0.01,why:"一維平均平方為 5，兩維相加為 10。",err:"常見錯因：只算一個軸。"},
   {id:"q02-2",t:"num",ans:4.195285,tol:0.01,why:"20 log<sub>10</sub>(0.632456 / 0.390181) ＝ 4.195285 dB。",err:"常見錯因：功率比誤用 10 log。"},
-  {id:"q02-3",t:"sel",ans:"b",tol:0,why:"Gray 讓相鄰點只差 1 位元，符元錯誤率不變。",err:"常見錯因：以為星座距離也改變。"},
+  {id:"q02-3",t:"sel",ans:"b",tol:0,why:"最近鄰錯誤時，Gray 讓相鄰點只差 1 位元，符元錯誤率不變。",err:"常見錯因：以為星座距離也改變。"},
   {id:"q03-1",t:"num",ans:-0.137973,tol:0.001,why:"γ ＝ 0.099527 × (−1.386294)。",err:"常見錯因：先驗比值放反。"},
   {id:"q03-2",t:"num",ans:1.297365,tol:0.01,why:"用 ML 錯誤率除以 MAP 錯誤率。",err:"常見錯因：倍率上下顛倒。"},
   {id:"q03-3",t:"sel",ans:"d",tol:0,why:"該點距離平方最小，相關度量最大。",err:"常見錯因：只看一個座標。"},
@@ -130,12 +130,12 @@ var QUIZ = [
   {id:"q04-3",t:"sel",ans:"b",tol:0,why:"差分判讀的結果是 ½ exp(−γ<sub>b</sub>)。",err:"常見錯因：與非同調 BFSK 混在一起。"},
   {id:"q05-1",t:"num",ans:1.817874,tol:0.01,why:"−20 log<sub>10</sub>(cos 10° − sin 10°)。",err:"常見錯因：忽略 QPSK 的最壞軸。"},
   {id:"q05-2",t:"num",ans:1.8,tol:0.01,why:"360° × 0.005 ＝ 1.8°。",err:"常見錯因：千分之一沒有除以 1000。"},
-  {id:"q05-3",t:"sel",ans:"b",tol:0,why:"平方後 (±1)² ＝ 1，相位資訊少一半。",err:"常見錯因：把模糊歸咎於雜訊。"},
+  {id:"q05-3",t:"sel",ans:"b",tol:0,why:"平方後 θ 與 θ ＋ 180° 都變成 2θ，迴路分不出兩個方向。",err:"常見錯因：把模糊歸咎於雜訊。"},
   {id:"q06-1",t:"num",ans:5.263158,tol:0.01,why:"1 / (1 − 0.81) ＝ 5.263158。",err:"常見錯因：忘了把 0.9 平方。"},
   {id:"q06-2",t:"num",ans:13.750613,tol:0.01,why:"15 − 1.249387 ＝ 13.750613 dB。",err:"常見錯因：線性倍數直接減 dB。"},
   {id:"q06-3",t:"sel",ans:"b",tol:0,why:"MMSE 不在通道壓低的頻率硬拉，因此少放大雜訊。",err:"常見錯因：以為 MMSE 會完全清掉 ISI。"},
   {id:"q07-1",t:"num",ans:0.32,tol:0.001,why:"2 / (5 × 1.25) ＝ 0.32。",err:"常見錯因：漏掉輸入功率。"},
-  {id:"q07-2",t:"num",ans:0.25,tol:0.001,why:"(−0.5)² ＝ 0.25。",err:"常見錯因：抽頭位置從 0 起算。"},
+  {id:"q07-2",t:"num",ans:0.25,tol:0.001,why:"(−0.5)² ＝ 0.25。",err:"常見錯因：把第 3 個當成 n ＝ 3（−0.125）。"},
   {id:"q07-3",t:"sel",ans:"b",tol:0,why:"一步跨過谷底，誤差會越推越大。",err:"常見錯因：把大步長只理解成更快。"},
   {id:"q08-1",t:"sel",ans:"a",tol:0,why:"三個校驗位元依序為 0、1、0。",err:"常見錯因：校驗式代錯訊息位置。"},
   {id:"q08-2",t:"num",ans:7.569620,tol:0.01,why:"10 + 10 log<sub>10</sub>(4 / 7) ＝ 7.569620。",err:"常見錯因：忘了編碼率小於 1。"},
@@ -148,7 +148,7 @@ var QUIZ = [
   {id:"q10-3",t:"sel",ans:"a",tol:0,why:"突發長度不超過深度時，每列最多挨 1 個。",err:"常見錯因：把碼長當深度。"},
   {id:"q11-1",t:"num",ans:18.0618,tol:0.01,why:"10 log<sub>10</sub> 64 ＝ 18.0618 dB。",err:"常見錯因：誤用 20 log。"},
   {id:"q11-2",t:"num",ans:0.109375,tol:0.001,why:"(8 − 1) / 64 ＝ 0.109375。",err:"常見錯因：沒有扣掉自己。"},
-  {id:"q11-3",t:"sel",ans:"b",tol:0,why:"碼片邊界對齊時，Walsh 碼內積才為 0。",err:"常見錯因：以為正交不需要同步。"},
+  {id:"q11-3",t:"sel",ans:"b",tol:0,why:"各用戶碼的起點（符元邊界）完全對齊時，Walsh 碼內積才為 0。",err:"常見錯因：以為正交不需要同步。"},
   {id:"q12-1",t:"num",ans:312.5,tol:0.01,why:"20000 / 64 ＝ 312.5 kHz。",err:"常見錯因：MHz 沒換成 kHz。"},
   {id:"q12-2",t:"num",ans:0.8,tol:0.001,why:"3.2 µs × 1 / 4 ＝ 0.8 µs。",err:"常見錯因：把比例乘到總時間。"},
   {id:"q12-3",t:"sel",ans:"b",tol:0,why:"複製尾端到前面，FFT 後每個子載波只需一個係數。",err:"常見錯因：把循環字首當成只補空白。"}
@@ -246,7 +246,7 @@ function chain() {
   var draw = function () {
     var rb = val("ch-rb"), key = pick("ch-rate"), k = val("ch-k"), alpha = val("ch-alpha");
     var rates = { "1": 1, "4/7": 4 / 7, "1/2": 0.5, "3/4": 0.75, "5/6": 5 / 6 };
-    var R = rates[key], rc, rs, B, eta, kr, krdb, h, flow, i;
+    var R = rates[key], rc, rs, B, eta, kr, krdb, h;
     if (!(R > 0) || !(k > 0)) { put("chain-output", "<p>參數不適用。</p>"); return; }
     rc = rb / R; rs = rc / k; B = (1 + alpha) * rs;
     if (!(B > 0)) { put("chain-output", "<p>頻寬分母必須大於 0。</p>"); return; }
@@ -256,14 +256,7 @@ function chain() {
       ["頻寬 B", num6(B) + " kHz"], ["頻譜效率 η", num6(eta) + " bit/s/Hz"],
       ["kR", num6(kr) + "（" + num6(krdb) + " dB）"]
     ]);
-    flow = [["訊源編碼","壓縮資訊","資訊理論"],["通道編碼","加入冗餘","08–09"],["交錯","打散突發錯誤","10"],
-      ["調變","位元變成星座點","01–04"],["脈衝整形","限制頻譜","通訊系統 07"],["上變頻","搬到載波","射頻"],
-      ["天線","電訊號變電磁波","天線課"],["通道","加入衰減、多徑與干擾","06–07"],["下變頻","搬回基頻","射頻"],
-      ["匹配濾波","集中位元能量","通訊系統 08"],["同步","對準載波與時序","05"],["等化","抵消拖尾","06–07"],
-      ["解調與判決","選最近的合法點","03"],["解交錯","還原位元順序","10"],["通道解碼","利用冗餘救錯","08–09"],["訊源解碼","還原資訊","資訊理論"]];
-    h += "<table><caption>收發鏈</caption>" + row(["方塊", "工作", "去處"], true);
-    for (i = 0; i < flow.length; i += 1) { h += row(flow[i]); }
-    h += "</table><p><strong>判讀</strong>：目前頻譜效率是 " + num6(eta) + " bit/s/Hz。</p>";
+    h += "<p><strong>判讀</strong>：目前頻譜效率是 " + num6(eta) + " bit/s/Hz。</p>";
     if (alpha === 0) { h += "<p><strong>邊界</strong>：α ＝ 0 是理想 sinc 脈衝，頻寬最小但不可實現（時域無限長）。</p>"; }
     if (eta >= 4) { h += "<p>頻譜效率這麼高要靠高階星座，第 04 章會看到它要多付幾 dB。</p>"; }
     if (R < 1) { h += "<p>編碼讓符元率乘 1 / R，頻寬跟著變寬：編碼增益是用頻寬換來的。</p>"; }
@@ -294,7 +287,7 @@ function sigspace() {
     else if (rho > 0) { h += "<p><strong>判讀</strong>：正相關把兩點拉近，這是浪費能量。</p>"; }
     else { h += "<p><strong>判讀</strong>：負相關把兩點拉遠，誤判機率隨之降低。</p>"; }
     if (d === 0) { h += "<p><strong>邊界</strong>：兩點重合，P<sub>e</sub> ＝ " + sci(0.5) + "。</p>"; }
-    if (n0 === 2 && e1 === 1 && e2 === 1) { h += "<p><strong>邊界</strong>：E<sub>b</sub>/N<sub>0</sub> ＝ −3.010300 dB，約每 6 個位元錯 1 個。</p>"; }
+    if (n0 === 2 && e1 === 1 && e2 === 1 && rho === -1) { h += "<p><strong>邊界</strong>：E<sub>b</sub>/N<sub>0</sub> ＝ −3.010300 dB，約每 6 個位元錯 1 個。</p>"; }
     if (e1 !== e2 && rho === -1) { h += "<p><strong>邊界</strong>：兩點不在原點兩側對稱，但距離仍是 √E<sub>1</sub> + √E<sub>2</sub>。</p>"; }
     h += "<p><strong>為什麼</strong>：誤判機率只由兩點距離除以雜訊標準差決定；能量與相關係數都是透過 d 起作用。</p>";
     put("sigspace-output", h);
@@ -338,15 +331,23 @@ function mary() {
 
 function mapml() {
   if (!$("ml-p1")) { return; }
-  var ids = ["ml-p1", "ml-ebn0", "ml-rule"];
+  var ids = ["ml-p1", "ml-ebn0", "ml-rule", "ml-ri", "ml-rq"];
   var draw = function () {
-    var p1 = val("ml-p1"), ebn0 = val("ml-ebn0"), rule = pick("ml-rule"), p0 = 1 - p1, g = undb(ebn0), n0, s2, s, lr, gm, gamma, peml, pemap, pe, guess, gain, h;
+    var p1 = val("ml-p1"), ebn0 = val("ml-ebn0"), rule = pick("ml-rule"), ri = val("ml-ri"), rq = val("ml-rq"), p0 = 1 - p1, g = undb(ebn0), n0, s2, s, lr, gm, gamma, peml, pemap, pe, guess, gain, h, q = Math.SQRT1_2, pts, i, dot, d2, best = 0, bestD = Infinity;
     if (!(p1 > 0 && p1 < 1) || !(g > 0)) { put("mapml-output", "<p>先驗機率與能量比不適用。</p>"); return; }
     n0 = 1 / g; s2 = n0 / 2; s = Math.sqrt(s2); lr = Math.log(p0 / p1); gm = s2 / 2 * lr; gamma = rule === "ml" ? 0 : gm;
     peml = Q(1 / s); pemap = p1 * Q((1 - gm) / s) + p0 * Q((1 + gm) / s); pe = rule === "ml" ? peml : pemap; guess = Math.min(p0, p1); gain = pemap > 0 ? peml / pemap : 0;
     h = "<p>目前用的是 " + (rule === "ml" ? "ML" : "MAP") + " 規則。</p>" + table2("ML 與 MAP", [["N<sub>0</sub>", num6(n0)], ["σ", num6(s)],
       ["ln(P<sub>0</sub> / P<sub>1</sub>)", num6(lr)], ["γ<sub>MAP</sub>", num6(gm)], ["實際門檻", num6(gamma)], ["本規則 P<sub>e</sub>", sci(pe)],
       ["P<sub>e</sub>(ML)", sci(peml)], ["P<sub>e</sub>(MAP)", sci(pemap)], ["ML / MAP", num6(gain) + " 倍"], ["只猜先驗大的錯誤率", sci(guess)]]);
+    pts = [[q, q], [-q, q], [-q, -q], [q, -q]];
+    h += "<table><caption>QPSK 相關度量與距離</caption>" + row(["點", "座標", "相關度量", "距離平方"], true);
+    for (i = 0; i < pts.length; i += 1) {
+      dot = ri * pts[i][0] + rq * pts[i][1]; d2 = (ri - pts[i][0]) * (ri - pts[i][0]) + (rq - pts[i][1]) * (rq - pts[i][1]);
+      if (d2 < bestD) { bestD = d2; best = i; }
+      h += row(["s<sub>" + int0(i) + "</sub>", "(" + num6(pts[i][0]) + ", " + num6(pts[i][1]) + ")", num6(dot - 0.5), num6(d2)]);
+    }
+    h += "</table><p>QPSK 最小距離判決：s<sub>" + int0(best) + "</sub>。</p>";
     if (p1 === 0.5) { h += "<p><strong>判讀</strong>：先驗相等，MAP 與 ML 完全一樣。</p>"; }
     else if (rule === "ml") { h += "<p><strong>判讀</strong>：你忽略了先驗，錯誤率是 MAP 的 " + num6(gain) + " 倍。</p>"; }
     else { h += "<p><strong>判讀</strong>：MAP 把門檻移到 " + num6(gm) + "，錯誤率比 ML 低。</p>"; }
@@ -384,7 +385,7 @@ function berfam() {
     else if (pb < 1e-3) { h += "<p><strong>判讀</strong>：需要通道編碼（08–09 章）。</p>"; }
     else { h += "<p><strong>判讀</strong>：這個 E<sub>b</sub>/N<sub>0</sub> 下 " + SCHEME_NAME[scheme] + " 幾乎不可用。</p>"; }
     if (ebn0 < req) { h += "<p>離目標還差 " + num6(req - ebn0) + " dB。</p>"; } else { h += "<p>已超過目標 " + num6(ebn0 - req) + " dB。</p>"; }
-    if (scheme === "dpsk") { h += "<p>差分判讀拿帶雜訊的前一個符元當參考，高能量比只差 0.754325 dB，低能量比差更多。</p>"; }
+    if (scheme === "dpsk") { h += "<p>差分判讀拿帶雜訊的前一個符元當參考，在目標誤碼率下比 BPSK 多付 " + num6(req - reqb) + " dB。</p>"; }
     if (scheme === "ncfsk") { h += "<p>不用相位就要付引數減半的代價。</p>"; }
     if (ebn0 === 0) { h += "<p><strong>邊界</strong>：BPSK 約每 13 個位元錯 1 個。</p>"; }
     if (ebn0 === 20 && scheme === "bpsk") { h += "<p><strong>邊界</strong>：P<sub>b</sub> 在 10<sup>−45</sup> 量級，實務上量不到。</p>"; }
@@ -408,7 +409,8 @@ function phase() {
     h += table2("相位誤差", [["√(2γ<sub>b</sub>)", num6(a)], ["無誤差 P<sub>b</sub>", sci(pb0)], ["旋轉後代表點", "(" + num6(px) + ", " + num6(py) + ")"],
       ["最壞軸有效距離", num6(Math.max(eff, 0))], ["P<sub>b</sub>", sci(pb)], ["等效損失", eff > 1e-9 ? num6(loss) + " dB" : "不適用（距離為 0）"],
       ["每符元相位增量", num6(rot) + "°"], ["跨界所需符元數", rot > 0 ? int0(cross) : "不漂移"]]);
-    if (Math.abs(deg) >= boundary) { h += "<p><strong>判讀</strong>：相位誤差已到判決邊界，一軸距離歸零，P<sub>b</sub> 掉到 " + (scheme === "qpsk" ? "0.25" : "0.5") + "。</p>"; }
+    if (Math.abs(deg) === boundary) { h += "<p><strong>判讀</strong>：相位誤差正好到判決邊界，一軸距離歸零，P<sub>b</sub> ＝ " + (scheme === "qpsk" ? "0.25" : "0.5") + "。</p>"; }
+    else if (Math.abs(deg) > boundary) { h += "<p><strong>判讀</strong>：相位誤差已跨過判決邊界，目前 P<sub>b</sub> 為 " + sci(pb) + "；QPSK 公式在 45° 以上仍會繼續計入跨界後的錯誤。</p>"; }
     else if (scheme === "qpsk" && Math.abs(deg) > 0) { h += "<p><strong>判讀</strong>：同樣的 φ，QPSK 的損失是 BPSK 的好幾倍，因為它的邊界只有 45°。</p>"; }
     else { h += "<p><strong>判讀</strong>：目前仍在判決邊界內。</p>"; }
     if (loss > 1 && eff > 1e-9) { h += "<p>損失超過 1 dB，載波迴路必須把殘餘相位壓到 5° 以內。</p>"; }
@@ -425,21 +427,22 @@ function eq() {
   if (!$("eq-a")) { return; }
   var ids = ["eq-a", "eq-snr"];
   var draw = function () {
-    var a = val("eq-a"), snr = val("eq-snr"), s2 = Math.pow(10, -snr / 10), den = 1 - a * a, sinr0, ne, zf, c, b, root, mse, mmse, taps, sum = 0, i, h;
+    var a = val("eq-a"), snr = val("eq-snr"), s2 = Math.pow(10, -snr / 10), den = 1 - a * a, sinr0, ne, zf, c, b, root, mse, mmse, gap, taps, sum = 0, i, h;
     if (!(den > 0) || !(s2 > 0)) { put("eq-output", "<p>計算分母必須大於 0。</p>"); return; }
     sinr0 = 1 / (a * a + s2); ne = 1 / den; zf = 1 / (s2 * ne); c = 1 + a * a + s2; b = 2 * a; root = c * c - b * b;
     if (!(root > 0)) { put("eq-output", "<p>MMSE 根號內必須大於 0。</p>"); return; }
-    mse = s2 / Math.sqrt(root); mmse = 1 / mse - 1; taps = [1, -a, a * a, -a * a * a, a * a * a * a];
+    mse = s2 / Math.sqrt(root); mmse = 1 / mse - 1; gap = db10(mmse) - db10(zf); taps = [1, -a, a * a, -a * a * a, a * a * a * a];
     for (i = 0; i < taps.length; i += 1) { sum += taps[i] * taps[i]; }
     h = table2("ZF 與 MMSE", [["σ²", num6(s2)], ["不等化 SINR", num6(sinr0) + "（" + num6(db10(sinr0)) + " dB）"],
       ["NE<sub>ZF</sub>", num6(ne) + "（" + num6(db10(ne)) + " dB）"], ["ZF 輸出 SNR", num6(zf) + "（" + num6(db10(zf)) + " dB）"],
       ["前 5 個抽頭", taps.map(num6).join("、")], ["抽頭平方和", num6(sum)], ["MMSE 的 MSE", num6(mse)],
-      ["MMSE 輸出 SNR", num6(mmse) + "（" + num6(db10(mmse)) + " dB）"], ["MMSE 比 ZF 多", num6(db10(mmse) - db10(zf)) + " dB"]]);
+      ["MMSE 輸出 SNR", num6(mmse) + "（" + num6(db10(mmse)) + " dB）"], ["MMSE 比 ZF 多", num6(gap) + " dB"]]);
     if (a >= 0.9) { h += "<p><strong>判讀</strong>：通道在 θ ＝ π 附近幾乎是零，ZF 把那裡的雜訊放大 " + num6(ne) + " 倍，MMSE 選擇不硬拉。</p>"; }
     else if (a === 0) { h += "<p><strong>判讀</strong>：沒有 ISI，三種數字相同。</p>"; }
     else { h += "<p><strong>判讀</strong>：MMSE 比 ZF 多保留 " + num6(db10(mmse) - db10(zf)) + " dB。</p>"; }
     if (snr <= 3) { h += "<p><strong>邊界</strong>：低 SNR 時 ZF 可能比不等化還差，因為放大的雜訊比消掉的 ISI 多。</p>"; }
-    if (snr >= 25) { h += "<p><strong>邊界</strong>：高 SNR 時 MMSE 趨近 ZF，兩者只差不到 0.1 dB。</p>"; }
+    if (snr >= 25 && gap < 0.1) { h += "<p><strong>邊界</strong>：高 SNR 時 MMSE 趨近 ZF，兩者只差 " + num6(gap) + " dB。</p>"; }
+    else if (snr >= 25) { h += "<p><strong>邊界</strong>：通道洞太深，高 SNR 仍差 " + num6(gap) + " dB。</p>"; }
     h += "<p><strong>為什麼</strong>：等化器把通道反轉；哪個頻率壓得越低，反轉時就拉得越高，雜訊也一起被拉高。</p>";
     put("eq-output", h);
   };
@@ -489,7 +492,7 @@ function hamming() {
     dec = cor.slice(0, 4); ok = bits(dec) === ms; p = Q(Math.sqrt(2 * rate * g));
     for (i = 2; i <= 7; i += 1) { term = comb(7, i) * Math.pow(p, i) * Math.pow(1 - p, 7 - i); pw += term; pbc += (i + 1) / 7 * term; }
     pbu = Q(Math.sqrt(2 * g)); ratio = pbc > 0 ? pbu / pbc : 0;
-    status = ok ? "正確" : (syn !== "000" ? "誤糾" : "偵測到但無法糾");
+    status = ok ? "正確" : (syn !== "000" ? "誤糾" : "未偵測（錯誤圖樣恰為碼字）");
     h = table2("編碼與症狀", [["p<sub>1</sub>", int0(c[4])], ["p<sub>2</sub>", int0(c[5])], ["p<sub>3</sub>", int0(c[6])], ["碼字", grouped(c)],
       ["接收字", grouped(r)], ["症狀", syn], ["指向位置", int0(pos)], ["糾正後", grouped(cor)], ["解碼訊息", bits(dec)], ["判定", status]]);
     h += table2("硬判讀效能", [["E<sub>c</sub>/N<sub>0</sub>", num6(ebn0 + db10(rate)) + " dB"], ["交叉機率 p", sci(p)], ["字錯誤率 P<sub>w</sub>", sci(pw)],
@@ -537,7 +540,7 @@ function interleave() {
   if (!$("il-depth")) { return; }
   var ids = ["il-depth", "il-burst", "il-start"];
   var draw = function () {
-    var D = val("il-depth"), b = val("il-burst"), start = val("il-start"), r = interleaveRun(D, b, start), h, i, j, t, hit, maxPer = Math.ceil(b / D);
+    var D = val("il-depth"), b = val("il-burst"), start = val("il-start"), r = interleaveRun(D, b, start), h, i, j, t, hit, maxPer = Math.max.apply(null, r.errs);
     h = table2("交錯摘要", [["發射串長 L", int0(r.L) + " 位元"], ["實際命中", int0(r.hits) + " 位元"], ["單端延遲", int0(r.L) + " 位元"], ["b ≤ D", b <= D ? "成立" : "不成立"], ["各碼字錯誤數", r.errs.map(int0).join("、")]]);
     h += "<table><caption>每個碼字的錯誤數</caption>" + row(["碼字", "交錯後", "可救回", "未交錯", "可救回"], true);
     for (i = 0; i < D; i += 1) { h += row([int0(i + 1), int0(r.errs[i]), r.errs[i] <= 1 ? "是" : "否", int0(r.errs0[i]), r.errs0[i] <= 1 ? "是" : "否"]); }
@@ -563,23 +566,24 @@ function cdma() {
   var draw = function () {
     var N = val("cd-sf"), K = val("cd-users"), jsdb = val("cd-js"), ebn0 = val("cd-ebn0"), code = pick("cd-code"), g = undb(ebn0), js = undb(jsdb), heat, mai, jam, inv, geff, pb, otherMai, otherInv, other, otherPb, req = undb(7), kmax, gp, h, largest;
     if (!(N > 0) || !(g > 0) || !(req > 0)) { put("cdma-output", "<p>計算分母必須大於 0。</p>"); return; }
+    if (code === "sync" && K > N) { put("cdma-output", "<p><strong>無法計算</strong>：長度 N ＝ " + int0(N) + " 的 Walsh 碼最多只有 " + int0(N) + " 個正交碼；K ＝ " + int0(K) + " 時，超出的用戶無正交碼可分配。</p>"); return; }
     heat = 1 / g; mai = code === "async" ? (K - 1) / N : 0; jam = js / N; inv = heat + mai + jam;
     if (!(inv > 0)) { put("cdma-output", "<p>倒數項總和必須大於 0。</p>"); return; }
     geff = 1 / inv; pb = Q(Math.sqrt(2 * geff)); otherMai = code === "async" ? 0 : (K - 1) / N; otherInv = heat + otherMai + jam; other = 1 / otherInv; otherPb = Q(Math.sqrt(2 * other));
-    kmax = Math.max(0, Math.floor(1 + N * (1 / req - heat - jam))); gp = db10(N);
+    kmax = code === "sync" ? (heat + jam <= 1 / req ? N : 0) : Math.max(0, Math.floor(1 + N * (1 / req - heat - jam))); gp = db10(N);
     h = code === "sync" ? "<p>這個模式只用到 N、J/S、E<sub>b</sub>/N<sub>0</sub>；用戶數不影響結果，因為同步 Walsh 碼互不干擾。</p>" : "<p>這個模式會用到全部控制；用戶數透過 MAI 改變結果。</p>";
     h += table2("CDMA 功率帳本", [["處理增益 G<sub>p</sub>", num6(gp) + " dB"], ["熱雜訊倒數項", num6(heat)], ["MAI 項", num6(mai)], ["干擾項", num6(jam)],
       ["γ<sub>eff</sub>", num6(geff) + "（" + num6(db10(geff)) + " dB）"], ["P<sub>b</sub>", sci(pb)], ["另一碼型 γ<sub>eff</sub>", num6(other) + "（" + num6(db10(other)) + " dB）"],
-      ["另一碼型 P<sub>b</sub>", sci(otherPb)], ["K<sub>max</sub>（要求 7 dB）", int0(kmax)]]);
+      ["另一碼型 P<sub>b</sub>", sci(otherPb)], [code === "sync" ? "K<sub>max</sub>（正交碼數／要求 7 dB）" : "K<sub>max</sub>（要求 7 dB）", int0(kmax)]]);
     largest = Math.max(heat, mai, jam);
     if (largest === jam) { h += "<p><strong>判讀</strong>：干擾主導；處理增益 " + num6(gp) + " dB 壓不住 J/S " + num6(jsdb) + " dB，要加展頻因子或濾波。</p>"; }
     else if (largest === mai) { h += "<p><strong>判讀</strong>：多用戶干擾主導；這是 CDMA 的容量極限，要靠功率控制與更長的碼。</p>"; }
     else { h += "<p><strong>判讀</strong>：熱雜訊主導，展頻沒有幫助也沒有損失。</p>"; }
-    if (code === "sync") { h += "<p>同步正交碼把 MAI 歸零，但只有基地台下行做得到同步。</p>"; }
+    if (code === "sync") { h += "<p>同步正交碼把 MAI 歸零，但只有基地台下行做得到同步；K<sub>max</sub> 同時受 N 個可用正交碼與 7 dB 門檻限制。</p>"; }
     if (kmax === 0) { h += "<p><strong>邊界</strong>：連單一用戶都達不到 7 dB。</p>"; }
     if (K === 1) { h += "<p><strong>邊界</strong>：只有一個用戶，兩種碼型結果相同。</p>"; }
     if (jsdb === 40 && N === 128) { h += "<p><strong>邊界</strong>：即使 N ＝ 128，40 dB 干擾仍壓不住。</p>"; }
-    if (N === 4 && K === 64) { h += "<p><strong>邊界</strong>：MAI 高達 15.750000，判讀幾乎靠猜。</p>"; }
+    if (code === "async" && N === 4 && K === 64) { h += "<p><strong>邊界</strong>：MAI 高達 15.750000，判讀幾乎靠猜。</p>"; }
     h += "<p><strong>為什麼</strong>：展頻不省功率也不省頻寬，它把干擾攤薄 N 倍，用頻寬換抗干擾與多用戶。</p>";
     put("cdma-output", h);
   };
@@ -605,7 +609,7 @@ function ofdm() {
     if (papr >= 30) { h += "<p>最壞 PAPR 超過 30 dB，功率放大器不可能留這麼多餘裕，實務靠削峰與編碼。</p>"; }
     if (flat >= 0.5) { h += "<p>Δf × τ<sub>max</sub> 不遠小於 1，單一子載波內的通道已不平坦，OFDM 的前提失效。</p>"; }
     if (tau === 0) { h += "<p><strong>邊界</strong>：無多徑，CP 純粹是負擔。</p>"; }
-    if (tau === 10 && N === 64) { h += "<p><strong>邊界</strong>：N ＝ 64 時任何可選 CP 都不夠。</p>"; }
+    if (tau === 10 && N === 64 && !free) { h += "<p><strong>邊界</strong>：這組頻寬與 CP 設定下，N ＝ 64 的保護時間不夠。</p>"; }
     if (B === 30.72 && N === 2048) { h += "<p><strong>邊界</strong>：Δf 是 15.000000 kHz；這裡 CP 選項不是 LTE 的 144 / 2048。</p>"; }
     h += "<p><strong>為什麼</strong>：循環字首把線性摺積變成圓形摺積，所以每個子載波只要除以一個複數；代價是 T<sub>cp</sub> 那段不載資料。</p>";
     put("ofdm-output", h);

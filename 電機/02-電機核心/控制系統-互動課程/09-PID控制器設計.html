@@ -3,8 +3,8 @@
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">09・三個增益一起改寫同一條特徵多項式</p>
-<h1>09 PID 控制器設計：把 17.018937 % 超越量拆成 P、I、D 的取捨</h1>
-<p class="lead">預設 K<sub>p</sub> ＝ 20、K<sub>i</sub> ＝ 10、K<sub>d</sub> ＝ 5 時，模型的超越量是 17.018937 %，整定時間是 2.731000 s。這章不靠口訣，直接從方程式、Routh 判別與固定步長模擬看三項各改了什麼。</p>
+<h1>09 PID 控制器設計：把 17.018937 % 相對命令超出量拆成 P、I、D 的取捨</h1>
+<p class="lead">預設 K<sub>p</sub> ＝ 20、K<sub>i</sub> ＝ 10、K<sub>d</sub> ＝ 5 時，模型相對命令的超出量是 17.018937 %，最後離開命令 ±2 % 帶的時刻是 2.731000 s。這章不靠口訣，直接從方程式、Routh 判別與固定步長模擬看三項各改了什麼。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="04-二階閉迴路與極點位置.html">04 二階閉迴路與極點位置</a>的指標，以及<a href="05-Routh穩定度判別.html">05 Routh 穩定度判別</a>的首欄規則。<strong>前置：</strong>見〈07 一階暫態 RC 與 RL〉<a href="../電路學-互動課程/07-一階暫態RC與RL.html">電路學的一階暫態 RC 與 RL</a>；既有課已說明電容如何累積電荷，本章只借用累積概念理解積分器。</p>
 
 <h2>痛點：把比例增益加大後反應更快，為什麼誤差、振盪與雜訊不能一起消失</h2>
@@ -23,7 +23,7 @@
 <p>受控體時域方程式為 y''' ＋ 6y'' ＋ 11y' ＋ 6y ＝ u。令 z' ＝ r − y，並採 u ＝ K<sub>p</sub>(r − y) ＋ K<sub>i</sub>z − K<sub>d</sub>y'，r ＝ 1；四個狀態 (y, y', y'', z) 都從 0 出發。代入並乘 s，得到 s<sup>4</sup> ＋ 6s<sup>3</sup> ＋ (11 ＋ K<sub>d</sub>)s<sup>2</sup> ＋ (6 ＋ K<sub>p</sub>)s ＋ K<sub>i</sub>。</p>
 <p>Routh 首欄的中間兩量是 b<sub>1</sub> ＝ (6(11 ＋ K<sub>d</sub>) − (6 ＋ K<sub>p</sub>)) / 6，以及 c<sub>1</sub> ＝ (b<sub>1</sub>(6 ＋ K<sub>p</sub>) − 6K<sub>i</sub>) / b<sub>1</sub>。四階情形要 b<sub>1</sub> ＞ 0、c<sub>1</sub> ＞ 0、K<sub>i</sub> ＞ 0 才穩定。K<sub>i</sub> ＝ 0 時退化為三階，條件是 6(11 ＋ K<sub>d</sub>) ＞ 6 ＋ K<sub>p</sub>，也就是 K<sub>p</sub> ＜ 60 ＋ 6K<sub>d</sub>。</p>
 <p>只保留 P 時，特徵多項式為 s<sup>3</sup> ＋ 6s<sup>2</sup> ＋ 11s ＋ 6 ＋ K<sub>p</sub>。臨界條件 6 × 11 ＝ 6 ＋ K<sub>u</sub>，所以 K<sub>u</sub> ＝ 60；輔助多項式 6s<sup>2</sup> ＋ 66 ＝ 0，故 ω<sub>u</sub> ＝ √11 ＝ 3.316625、T<sub>u</sub> ＝ 2π / ω<sub>u</sub> ＝ 1.894452 s。Ziegler–Nichols 建議 K<sub>p</sub> ＝ 0.6K<sub>u</sub>、T<sub>i</sub> ＝ T<sub>u</sub> / 2、T<sub>d</sub> ＝ T<sub>u</sub> / 8，因此 K<sub>p</sub> ＝ 36、T<sub>i</sub> ＝ 0.947226、T<sub>d</sub> ＝ 0.236806、K<sub>i</sub> ＝ 38.005721、K<sub>d</sub> ＝ 8.525032。</p>
-<p>模擬以 h ＝ 0.001 s 的四階 Runge–Kutta 法（Runge–Kutta method, RK4）走到 T ＝ 10 s。峰值為 max y；M<sub>p</sub> ＝ (峰值 − 1) × 100，負值記 0；t<sub>p</sub> 是峰值時刻；t<sub>r</sub> 是首次到 0.9 與 0.1 的時刻差；t<sub>s</sub> 是最後一次 |y − 1| ＞ 0.02 的時刻；e<sub>ss</sub> ＝ 1 − y(10)；IAE ＝ Σ|1 − y| × h。時間單位為 s，K<sub>i</sub> 單位為 1/s，K<sub>d</sub> 單位為 s。假設線性、無飽和、無雜訊，且 D 作用在 y。<strong>本課用的是教學用的簡化模型，真實系統不是這樣。</strong></p>
+<p>模擬以 h ＝ 0.001 s 的四階 Runge–Kutta 法（Runge–Kutta method, RK4）走到 T ＝ 10 s。峰值為 max y；「相對命令的超出量」＝ (峰值 − 1) × 100，負值記 0，這不是相對終值定義的標準超越量 M<sub>p</sub>；t<sub>p</sub> 是峰值時刻；t<sub>r</sub> 是首次到 0.9 與 0.1 的時刻差；表中的整定讀值是最後一次離開命令 ±2 % 帶、也就是 |y − 1| ＞ 0.02 的時刻，不是相對終值的標準 t<sub>s</sub>；e<sub>ss</sub> ＝ 1 − y(10)；IAE ＝ Σ|1 − y| × h。時間單位為 s，K<sub>i</sub> 單位為 1/s，K<sub>d</sub> 單位為 s。假設線性、無飽和、無雜訊，且 D 作用在 y。<strong>本課用的是教學用的簡化模型，真實系統不是這樣。</strong></p>
 <p>穩態誤差還有一個可直接核對的理論值：K<sub>i</sub> ＞ 0 時，積分狀態在可收斂且未飽和的條件下把常值誤差推到 0；K<sub>i</sub> ＝ 0 時，e<sub>ss</sub> ＝ 6 / (6 ＋ K<sub>p</sub>)。模擬的 y(10) 只是有限時間讀值，不應與無限時間極限混為一談。兩者接近可支持模擬時間已足夠，兩者不接近則要先看是否尚未進帶。</p>
 
 <h2>數值實例：K<sub>p</sub> ＝ 20、K<sub>i</sub> ＝ 10、K<sub>d</sub> ＝ 5</h2>
@@ -33,22 +33,22 @@
 <tr><td>Routh c<sub>1</sub></td><td>(11.666667 × 26 − 60) / 11.666667</td><td><strong>20.857143</strong></td></tr>
 <tr><td>判定</td><td>全正</td><td><strong>穩定</strong></td></tr>
 <tr><td>峰值</td><td>模擬</td><td><strong>1.170189</strong></td></tr>
-<tr><td>M<sub>p</sub></td><td>(1.170189 − 1) × 100</td><td><strong>17.018937 %</strong></td></tr>
+<tr><td>相對命令的超出量</td><td>(1.170189 − 1) × 100</td><td><strong>17.018937 %</strong></td></tr>
 <tr><td>t<sub>p</sub></td><td>模擬</td><td><strong>1.812000 s</strong></td></tr>
 <tr><td>t<sub>r</sub></td><td>模擬</td><td><strong>0.782000 s</strong></td></tr>
-<tr><td>t<sub>s</sub>（2 %）</td><td>模擬</td><td><strong>2.731000 s</strong></td></tr>
+<tr><td>命令 ±2 % 帶的最後越界時刻</td><td>模擬</td><td><strong>2.731000 s</strong></td></tr>
 <tr><td>y(10)</td><td>模擬</td><td><strong>1.000340</strong></td></tr>
 <tr><td>e<sub>ss</sub>（模擬）</td><td>1 − 1.000340</td><td><strong>−0.000340</strong>（理論 0）</td></tr>
 <tr><td>IAE</td><td>模擬</td><td><strong>0.954804</strong></td></tr>
 </tbody></table>
-<p><strong>邊界對照。</strong>只用 P、K<sub>p</sub> ＝ 10 時峰值 0.744581、y(10) ＝ 0.625127，理論 e<sub>ss</sub> ＝ 0.375，10 s 內未進帶；PI、K<sub>p</sub> ＝ 10、K<sub>i</sub> ＝ 5 時 M<sub>p</sub> ＝ 7.887784 %、t<sub>s</sub> ＝ 5.742000 s、y(10) ＝ 0.996016。Z–N 取 36／38／8.5 時 M<sub>p</sub> ＝ 56.426223 %、t<sub>r</sub> ＝ 0.486000 s、t<sub>s</sub> ＝ 5.287000 s，速度快但超越量大。K<sub>i</sub> ＝ 60、K<sub>d</sub> ＝ 0 時 c<sub>1</sub> ＝ −28.000000，不執行模擬；K<sub>d</sub> ＝ 20 時 M<sub>p</sub> ＝ 13.010958 %，但 t<sub>p</sub> ＝ 4.187000 s、t<sub>s</sub> ＝ 8.246000 s。</p>
-<p>K<sub>p</sub> ＝ 20、K<sub>i</sub> ＝ 30、K<sub>d</sub> ＝ 5 時 c<sub>1</sub> ＝ 10.571429，雖仍穩定，M<sub>p</sub> ＝ 65.952969 % 且 10 s 內未進帶，說明「通過 Routh」只是必要條件，不是良好設計。只用 P 且 K<sub>p</sub> ＝ 59 時，b<sub>1</sub> ＝ 0.166667、M<sub>p</sub> ＝ 69.396583 %；加到 K<sub>p</sub> ＝ 60 就到臨界。若 K<sub>d</sub> ＝ 0 且其餘用預設值，M<sub>p</sub> ＝ 39.419837 %、t<sub>s</sub> ＝ 9.399000 s，顯示少了 D 時阻尼不足。</p>
-<p>實際調整可按可觀察問題分流：先讓參數通過 Routh 條件，再用 K<sub>p</sub> 建立基本速度，用 K<sub>i</sub> 修正殘留的長期誤差，最後用 K<sub>d</sub> 壓低不需要的振盪。每動一項都要重新查看全部指標與控制量，因為三項共同改寫同一條多項式。Z–N 給的是能開始測試的一組參考值，不是直接交付的答案；它刻意採較積極的衰減型態，超越量偏大正是預期結果。</p>
+<p><strong>邊界對照。</strong>只用 P、K<sub>p</sub> ＝ 10 時峰值 0.744581、y(10) ＝ 0.625127，理論 e<sub>ss</sub> ＝ 0.375，10 s 內未進命令 ±2 % 帶；PI、K<sub>p</sub> ＝ 10、K<sub>i</sub> ＝ 5 時相對命令的超出量為 7.887784 %、最後越界時刻 5.742000 s、y(10) ＝ 0.996016。Z–N 取 36／38／8.5 時相對命令的超出量為 56.426223 %、t<sub>r</sub> ＝ 0.486000 s、最後越界時刻 5.287000 s，速度快但超出量大。K<sub>i</sub> ＝ 60、K<sub>d</sub> ＝ 0 時 c<sub>1</sub> ＝ −28.000000，不執行模擬；K<sub>d</sub> ＝ 20 時相對命令的超出量為 13.010958 %，但 t<sub>p</sub> ＝ 4.187000 s、最後越界時刻 8.246000 s。D 太大時，閉迴路會出現靠近原點的慢模態；峰值雖被壓低，整體收斂反而可能拖長。</p>
+<p>K<sub>p</sub> ＝ 20、K<sub>i</sub> ＝ 30、K<sub>d</sub> ＝ 5 時 c<sub>1</sub> ＝ 10.571429，雖仍穩定，相對命令的超出量為 65.952969 % 且 10 s 內未進帶，說明「通過 Routh」只是必要條件，不是良好設計。只用 P 且 K<sub>p</sub> ＝ 59 時，b<sub>1</sub> ＝ 0.166667、相對命令的超出量為 69.396583 %；加到 K<sub>p</sub> ＝ 60 就到臨界。若 K<sub>d</sub> ＝ 0 且其餘用預設值，相對命令的超出量為 39.419837 %、最後越界時刻為 9.399000 s，顯示少了 D 時阻尼不足。</p>
+<p>實際調整可按可觀察問題分流：先讓參數通過 Routh 條件，再用 K<sub>p</sub> 建立基本速度，用 K<sub>i</sub> 修正殘留的長期誤差，最後用 K<sub>d</sub> 壓低不需要的振盪。每動一項都要重新查看全部指標與控制量，因為三項共同改寫同一條多項式。Z–N 給的是能開始測試的一組參考值，不是直接交付的答案；它刻意採較積極的衰減型態，相對命令的超出量偏大正是預期結果。</p>
 <p>IAE 把整段誤差面積累加，因此能區分「短暫的大偏差」與「長時間的小偏差」，但單一總數看不出偏差發生在哪個時刻。設計者應把 IAE 與峰值、上升、整定及控制量一起保存，才能判斷改善是否只是把代價移到別的時段。</p>
 <p class="warning">把高增益或未驗證的 PID 參數直接下到真實馬達、加熱器或機械手臂，會撞到行程極限、燒毀繞組或傷人；本頁的模擬沒有飽和、沒有延遲、沒有雜訊，實機一律先加輸出限幅、積分限幅與急停，從小增益開始。</p>
 
 <section class="workspace"><h2>自由實驗：調整 P、I、D 並立即檢查四階條件</h2>
-<p>場景是同一個三階受控體追蹤常值命令。可選一組預設方案，也可手動改三個增益；先看 Routh 首欄，通過後才模擬 10 s，觀察速度、超越量、誤差與累積絕對誤差。</p>
+<p>場景是同一個三階受控體追蹤常值命令。可選一組預設方案，也可手動改三個增益；先看 Routh 首欄，通過後才模擬 10 s，觀察速度、相對命令的超出量、誤差與累積絕對誤差。</p>
 <div class="controls">
 <label for="pd-preset">參數組合<select id="pd-preset"><option value="manual" selected>手動（用下面三個滑桿）</option><option value="p">只用 P：K_p = 10</option><option value="pi">PI：K_p = 10、K_i = 5</option><option value="zn">Ziegler–Nichols：K_p = 36、K_i = 38、K_d = 8.5</option></select></label>
 <label for="pd-kp">比例增益 K_p<input id="pd-kp" type="range" min="0" max="60" step="0.5" value="20"></label>
@@ -62,7 +62,7 @@
 <ul>
 <li>積分項消除的是步階穩態誤差；對斜坡仍有常數誤差，因為系統型式只增加 1。</li>
 <li>微分項作用在誤差或輸出時，命令突變的瞬間不同；前者產生微分脈衝，兩者的特徵多項式相同。</li>
-<li>Z–N 的 K<sub>u</sub>、06 章與 08 章的 K<sub>crit</sub> 是同一個臨界增益，由三種工具觀察同一件事。</li>
+<li>Z–N 的 K<sub>u</sub>、06 章與 08 章的 K<sub>crit</sub> 是同一個「虛軸穿越臨界增益」概念；三章受控體不同，數值分別是 60、48、110，不能互相代用。</li>
 <li>PID 的比例增益 K<sub>p</sub> 與 03 章的位置誤差常數 K<sub>pos</sub> 不是同一個量，符號相近不能互換。</li>
 <li>IMP 說的是控制器必須含有欲追蹤命令的模型；IMC 則是一種控制架構，兩者縮寫與用途都不同。</li>
 </ul>

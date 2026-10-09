@@ -64,49 +64,49 @@ var QUIZ_CH = {
   "04": ["04-二階閉迴路與極點位置.html", "04 二階閉迴路與極點位置"],
   "05": ["05-Routh穩定度判別.html", "05 Routh 穩定度判別"],
   "06": ["06-根軌跡.html", "06 根軌跡"],
-  "07": ["07-頻率響應與波德圖.html", "07 頻率響應與對數頻率圖"],
+  "07": ["07-頻率響應與波德圖.html", "07 頻率響應與波德圖"],
   "08": ["08-增益裕度相位裕度與奈奎斯特.html", "08 增益裕度、相位裕度與奈奎斯特"],
   "09": ["09-PID控制器設計.html", "09 PID 控制器設計"],
-  "10": ["10-領先落後補償器.html", "10 領先與落後補償器"],
+  "10": ["10-領先落後補償器.html", "10 領先／落後補償器"],
   "11": ["11-狀態空間入門.html", "11 狀態空間入門"]
 };
 var QUIZ = [
   {id:"q00-1",t:"num",ans:0.993388,tol:0.001,why:"y ＝ 120 / 121 ＋ 0.2 / 121 ＝ 0.993388。",err:"常見錯因：忘了干擾也要除以 1 ＋ L。"},
   {id:"q00-2",t:"num",ans:0.008264,tol:0.0001,why:"S ＝ 1 / (1 ＋ 120) ＝ 0.008264。",err:"常見錯因：算成 1 / L 而不是 1 / (1 ＋ L)。"},
-  {id:"q00-3",t:"sel",ans:"a",why:"模型準且沒有干擾時，開迴路誤差為零。",err:"常見錯因：以為回授永遠更準。"},
+  {id:"q00-3",t:"sel",ans:"b",why:"模型準且沒有干擾時，開迴路誤差為零。",err:"常見錯因：以為回授永遠更準。"},
   {id:"q01-1",t:"num",ans:0.0999,tol:0.0005,why:"τ ＝ JR / (bR ＋ K_tK_e) ＝ 0.01 / 0.1001 ＝ 0.099900 s。",err:"常見錯因：忘了分母的 K_tK_e 項或算成 J / b。"},
   {id:"q01-2",t:"num",ans:1.198801,tol:0.005,why:"穩態轉速 ＝ 12 × 0.01 / 0.1001 ＝ 1.198801 rad/s。",err:"常見錯因：忘了乘電壓。"},
-  {id:"q01-3",t:"sel",ans:"a",why:"J 只出現在 τ 的分子，不在直流增益裡。",err:"常見錯因：以為慣性會改變穩態。"},
+  {id:"q01-3",t:"sel",ans:"c",why:"J 只出現在 τ 的分子，不在直流增益裡。",err:"常見錯因：以為慣性會改變穩態。"},
   {id:"q02-1",t:"num",ans:-42,tol:0.5,why:"極點 ＝ −(1 ＋ 10 × 2 × 1) / 0.5 ＝ −42。",err:"常見錯因：忘了分母裡的 1，或忘了除以 τ。"},
   {id:"q02-2",t:"num",ans:0.952381,tol:0.001,why:"T(0) ＝ 20 / 21 ＝ 0.952381。",err:"常見錯因：把分母的 1 漏掉。"},
-  {id:"q02-3",t:"sel",ans:"a",why:"比例控制器需要非零誤差才能維持非零控制量。",err:"常見錯因：把穩態誤差歸咎於動態。"},
+  {id:"q02-3",t:"sel",ans:"d",why:"比例控制器需要非零誤差才能維持非零控制量；H ＝ 1 時誤差為 1 / (1 ＋ K_cK)。",err:"常見錯因：把穩態誤差歸咎於動態。"},
   {id:"q03-1",t:"num",ans:0.2,tol:0.005,why:"K_v ＝ K / a ＝ 5，所以斜坡誤差 ＝ 1 / K_v ＝ 0.2。",err:"常見錯因：算成 1 / K。"},
   {id:"q03-2",t:"num",ans:0.166667,tol:0.001,why:"K_pos ＝ K / a ＝ 5，步階誤差 ＝ 1 / 6 ＝ 0.166667。",err:"常見錯因：算成 1 / K_pos。"},
-  {id:"q03-3",t:"sel",ans:"a",why:"型式 2 對拋物線命令留下有限常數 1 / K_a。",err:"常見錯因：把型式數與命令階數對錯。"},
+  {id:"q03-3",t:"sel",ans:"b",why:"型式 2 對拋物線命令留下有限常數 1 / K_a。",err:"常見錯因：把型式數與命令階數對錯。"},
   {id:"q04-1",t:"num",ans:0.6,tol:0.005,why:"ζ ＝ a / (2√K) ＝ 6 / 10 ＝ 0.6。",err:"常見錯因：忘了分母的 2。"},
   {id:"q04-2",t:"num",ans:9.478022,tol:0.05,why:"M_p ＝ e<sup>−π × 0.6 / 0.8</sup> × 100 ＝ 9.478022 %。",err:"常見錯因：把 ζ 與 √(1 − ζ²) 放反。"},
-  {id:"q04-3",t:"sel",ans:"a",why:"極點實部 −a / 2 與 K 無關，所以整定時間不變。",err:"常見錯因：以為加 K 一定會縮短整定。"},
+  {id:"q04-3",t:"sel",ans:"c",why:"極點實部 −a / 2 與 K 無關，所以整定時間不變。",err:"常見錯因：以為 ω_n 加倍就會讓整定時間減半。"},
   {id:"q05-1",t:"num",ans:-6,tol:0.01,why:"依 Routh 交叉相乘，s¹ 列首元是 −6。",err:"常見錯因：交叉相乘的順序反了。"},
   {id:"q05-2",t:"num",ans:9,tol:0.01,why:"三階穩定條件是 3 × 3 ＞ K，所以 K 上限是 9。",err:"常見錯因：算成係數相加。"},
-  {id:"q05-3",t:"sel",ans:"a",why:"全零列表示有對稱於原點的根，常見情形是一對純虛根。",err:"常見錯因：把全零列當成計算錯誤。"},
+  {id:"q05-3",t:"sel",ans:"d",why:"全零列表示有對稱於原點的根，常見情形是一對純虛根。",err:"常見錯因：把全零列當成首元為零，直接用 ε 取代。"},
   {id:"q06-1",t:"num",ans:48,tol:0.01,why:"K_crit ＝ ab(a ＋ b) ＝ 2 × 4 × 6 ＝ 48。",err:"常見錯因：只算 ab。"},
   {id:"q06-2",t:"num",ans:-2,tol:0.01,why:"重心 ＝ −(0 ＋ 2 ＋ 4) / 3 ＝ −2。",err:"常見錯因：忘了除以極點數減零點數。"},
-  {id:"q06-3",t:"sel",ans:"a",why:"分離點是兩個實根相遇並離開實軸的位置。",err:"常見錯因：把分離點與虛軸穿越混為一談。"},
+  {id:"q06-3",t:"sel",ans:"b",why:"分離點是兩個實根相遇並離開實軸的位置。",err:"常見錯因：把分離點與虛軸穿越混為一談。"},
   {id:"q07-1",t:"num",ans:-3.053514,tol:0.01,why:"將 ω ＝ 10 代入精確振幅式，再取 20 log10 得 −3.053514 dB。",err:"常見錯因：用了漸近線的 0 dB。"},
   {id:"q07-2",t:"num",ans:-140.710593,tol:0.05,why:"相位 ＝ −90° − arctan(1) − arctan(0.1) ＝ −140.710593°。",err:"常見錯因：漏掉積分器或第二個極點。"},
-  {id:"q07-3",t:"sel",ans:"a",why:"每個一階極點最終多帶來 −20 dB/十倍頻與 −90°。",err:"常見錯因：與轉角處的 −3 dB 混淆。"},
+  {id:"q07-3",t:"sel",ans:"c",why:"每個一階極點最終多帶來 −20 dB/十倍頻與 −90°。",err:"常見錯因：把單一極點的斜率變化誤算成兩個極點。"},
   {id:"q08-1",t:"num",ans:31.622777,tol:0.01,why:"ω_pc ＝ 1 / √(0.1 × 0.01) ＝ 31.622777 rad/s。",err:"常見錯因：算成 1 / (τ_1 ＋ τ_2)。"},
   {id:"q08-2",t:"num",ans:20.827854,tol:0.05,why:"相位交越處振幅為 0.090909，GM ＝ −20 log10(0.090909) ＝ 20.827854 dB。",err:"常見錯因：忘了負號或用了自然對數。"},
-  {id:"q08-3",t:"sel",ans:"a",why:"本課的相位裕度設計目標是 45° 到 60°。",err:"常見錯因：把增益裕度的範圍記成相位裕度。"},
+  {id:"q08-3",t:"sel",ans:"d",why:"PM 只有 30° 仍可能穩定，但離 −180° 的餘量小，通常會有較明顯的振盪與超越。",err:"常見錯因：把正相位裕度理解成響應一定平順，或把 PM 當成只影響穩態誤差。"},
   {id:"q09-1",t:"num",ans:60,tol:0.01,why:"臨界條件 6 × 11 ＝ 6 ＋ K_p，得 K_u ＝ 60。",err:"常見錯因：忘了減掉常數項 6。"},
   {id:"q09-2",t:"num",ans:1.894452,tol:0.005,why:"ω_u ＝ √11，T_u ＝ 2π / √11 ＝ 1.894452 s。",err:"常見錯因：用了 ω_u 卻沒換成週期。"},
-  {id:"q09-3",t:"sel",ans:"a",why:"積分消除步階穩態誤差，但多帶來 −90° 相位。",err:"常見錯因：把積分與微分的角色對調。"},
+  {id:"q09-3",t:"sel",ans:"b",why:"積分消除步階穩態誤差，但多帶來 −90° 相位。",err:"常見錯因：把積分與微分的角色對調。"},
   {id:"q10-1",t:"num",ans:36.869898,tol:0.05,why:"φ_max ＝ asin((4 − 1) / (4 ＋ 1)) ＝ 36.869898°。",err:"常見錯因：算成 arctan。"},
   {id:"q10-2",t:"num",ans:50,tol:0.01,why:"K_v ＝ 10β ＝ 50。",err:"常見錯因：以為落後補償不改 K_v。"},
-  {id:"q10-3",t:"sel",ans:"a",why:"領先主要加相位，落後主要加低頻增益，角色不同。",err:"常見錯因：以為兩者可以互換。"},
+  {id:"q10-3",t:"sel",ans:"c",why:"領先主要加相位，落後主要加低頻增益，角色不同。",err:"常見錯因：只看兩者都有一個極點與零點，就以為可以互換。"},
   {id:"q11-1",t:"num",ans:-1,tol:0.01,why:"M_c ＝ [[0, 1], [1, −3]]，行列式為 −1。",err:"常見錯因：AB 算錯。"},
   {id:"q11-2",t:"num",ans:48,tol:0.01,why:"Ackermann 公式得到 K ＝ [48, 7]。",err:"常見錯因：忘了減掉開迴路的常數係數 2。"},
-  {id:"q11-3",t:"sel",ans:"a",why:"det M_c ＝ 0 表示 B 與 AB 共線，輸入推不動某個方向。",err:"常見錯因：把可控性與穩定度混為一談。"}
+  {id:"q11-3",t:"sel",ans:"d",why:"det M_c ＝ 0 表示 B 與 AB 共線，輸入推不動某個方向。",err:"常見錯因：把可控性與穩定度或可觀性混為一談。"}
 ];
 
 /* ---------- 3. 純函式演算法 ---------- */
@@ -223,6 +223,20 @@ function pidSim(Kp, Ki, Kd) {
   };
 }
 
+function thirdOrderStep(K, a, p, t) {
+  if (!(K > 0) || !(p > 0) || !(t > 0)) { return 0; }
+  var n = Math.max(1, Math.ceil(t / 0.001)), h = t / n, x = [0, 0, 0], i, j;
+  var f = function (v) {
+    return [v[1], v[2], K * p - (a + p) * v[2] - (K + a * p) * v[1] - K * p * v[0]];
+  };
+  var add = function (v, k, scale) { return [v[0] + scale * k[0], v[1] + scale * k[1], v[2] + scale * k[2]]; };
+  for (i = 0; i < n; i += 1) {
+    var k1 = f(x), k2 = f(add(x, k1, h / 2)), k3 = f(add(x, k2, h / 2)), k4 = f(add(x, k3, h));
+    for (j = 0; j < 3; j += 1) { x[j] += h * (k1[j] + 2 * k2[j] + 2 * k3[j] + k4[j]) / 6; }
+  }
+  return x[0];
+}
+
 function stateSpace(A, B, C, d1, d0) {
   var a11 = A[0], a12 = A[1], a21 = A[2], a22 = A[3], b1 = B[0], b2 = B[1], c1 = C[0], c2 = C[1];
   var tr = a11 + a22, det = a11 * a22 - a12 * a21;
@@ -310,7 +324,7 @@ function block() {
     h += "<p>為什麼：特徵方程式 1 ＋ L(s) ＝ 0 的根就是閉迴路極點，L 每加 1，根就往左多搬 1 / τ；比例控制器要有誤差才有輸出，所以 T(0) 永遠追不到 1 / H。</p>";
     if (kc === 0.5 && k === 0.5) { h += "<p>邊界提醒：迴路增益 0.25，回授幾乎沒有作用。</p>"; }
     if (hs === 2) { h += "<p>邊界提醒：感測器增益 2 讓系統追的是 r / 2，不是 r；H 不只改快慢，還改目標。</p>"; }
-    if (kc === 50 && k === 5) { h += "<p>邊界提醒：極點已在 −1260 以外，真實受控體的第二個極點會先影響結果。</p>"; }
+    if (kc === 50 && k === 5) { h += "<p>邊界提醒：極點已在 " + num6(pole) + "，真實受控體的第二個極點可能先影響結果。</p>"; }
     put("block-output", h);
   };
   bind(ids, draw); draw();
@@ -338,7 +352,7 @@ function sserr() {
     else { h += "<p><strong>判讀：穩態誤差 " + num6(errs[idx]) + "，要再縮小只能加大 K 或提高型式，前者會動到穩定度</strong></p>"; }
     h += "<p>為什麼：e ＝ r / (1 ＋ L)，s → 0 時 L 有幾個 1 / s，就能把命令的幾階次消掉。</p>";
     if (type === "2" && a === 0.5) { h += "<p>邊界提醒：a ＝ 0.5 時閉迴路不穩定，不能套用終值定理。</p>"; }
-    if (K === 100) { h += "<p>邊界提醒：K 已到 100，型式 1 的斜坡誤差只剩 " + num6(a / K) + "，但阻尼也會下降。</p>"; }
+    if (type === "1" && K === 100) { h += "<p>邊界提醒：K 已到 100，型式 1 的斜坡誤差只剩 " + num6(a / K) + "，但阻尼也會下降。</p>"; }
     if (type === "0" && a === 10) { h += "<p>邊界提醒：K_pos ＝ K / a 變小，步階誤差反而變大；極點離原點越遠，低頻增益越小。</p>"; }
     put("sserr-output", h);
   };
@@ -357,7 +371,7 @@ function second() {
       Mp = Math.exp(-Math.PI * zeta / root) * 100; tp = wd !== 0 ? Math.PI / wd : null; ts = zeta * wn !== 0 ? 4 / (zeta * wn) : 0;
       y = 1 - Math.exp(-zeta * wn * t) * (Math.cos(wd * t) + zeta / root * Math.sin(wd * t));
     } else if (Math.abs(zeta - 1) <= 1e-12) {
-      kind = "臨界阻尼"; ts = wn !== 0 ? 4 / wn : 0; y = 1 - (1 + wn * t) * Math.exp(-wn * t);
+      kind = "臨界阻尼"; ts = wn !== 0 ? 5.83392170191739 / wn : 0; y = 1 - (1 + wn * t) * Math.exp(-wn * t);
     } else {
       kind = "過阻尼"; root = Math.sqrt(zeta * zeta - 1); s1 = -zeta * wn + wn * root; s2 = -zeta * wn - wn * root;
       ts = s1 !== 0 ? 4 / (-s1) : 0; y = s2 !== s1 ? 1 - (s2 * Math.exp(s1 * t) - s1 * Math.exp(s2 * t)) / (s2 - s1) : 0;
@@ -366,7 +380,9 @@ function second() {
     var h = "<table>" + row(["量", "結果"], true) + row(["自然頻率 ω_n", num6(wn)]) + row(["阻尼比 ζ", num6(zeta)]) + row(["阻尼類型", kind])
       + row(["阻尼振盪頻率 ω_d", wd === null ? "不適用" : num6(wd)]) + row(["超越量", num6(Mp) + " %"])
       + row(["峰值時刻", tp === null ? "不適用" : num6(tp) + " s"]) + row(["整定時間", num6(ts) + " s"])
-      + row(["上升時間粗估", num6(tr) + " s"]) + row(["穩態誤差", num6(ess)]) + row(["y(t)", num6(y)]) + row(["第三極點比", num6(ratio)]) + "</table>";
+      + row(["上升時間粗估", num6(tr) + " s"]) + row(["斜坡穩態誤差", num6(ess)]) + row(["二階近似 y(t)", num6(y)]);
+    if (ratio < 5) { h += row(["三階精確 y(t)", num6(thirdOrderStep(K, a, p, t))]); }
+    h += row(["第三極點比", num6(ratio)]) + "</table>";
     if (zeta >= 1) { h += "<p><strong>判讀：不振盪，慢極點 " + num6(s1 === null ? -wn : s1) + " 主導，整定 " + num6(ts) + " s</strong></p>"; }
     else if (zeta < 0.4) { h += "<p><strong>判讀：ζ 太小，超越量 " + num6(Mp) + " %，K 太大了</strong></p>"; }
     else if (zeta <= 0.8) { h += "<p><strong>判讀：ζ 在設計帶 0.4–0.8 內，超越量 " + num6(Mp) + " % 可接受</strong></p>"; }
@@ -405,7 +421,9 @@ function routh() {
       h += row(cells);
     }
     h += row(["第一欄", result.first.map(fmtRouth).join("、"), "符號變化", int0(result.changes)]) + "</table>";
-    if (result.changes === 0 && result.aux.length === 0) { h += "<p><strong>判讀：第一欄全同號，0 個右半平面極點，穩定</strong></p>"; }
+    var originPole = Math.abs(coefs[coefs.length - 1]) < 1e-12;
+    if (result.changes === 0 && originPole) { h += "<p><strong>判讀：常數項為 0，原點有極點，0 個右半平面極點但至多臨界穩定</strong></p>"; }
+    else if (result.changes === 0 && result.aux.length === 0) { h += "<p><strong>判讀：第一欄全同號，0 個右半平面極點，穩定</strong></p>"; }
     else if (result.changes > 0) { h += "<p><strong>判讀：第一欄符號變化 " + int0(result.changes) + " 次 → " + int0(result.changes) + " 個右半平面極點，不穩定</strong></p>"; }
     else { h += "<p><strong>判讀：第一欄沒有符號變化，但全零列表示系統至多臨界穩定</strong></p>"; }
     var necessary = false;
@@ -413,9 +431,14 @@ function routh() {
     if (necessary) { h += "<p>必要條件已失敗：係數不全同號或有缺項。</p>"; }
     for (i = 0; i < result.notes.length; i += 1) { h += "<p>特殊情形：" + esc(result.notes[i]) + "。</p>"; }
     for (i = 0; i < result.aux.length; i += 1) {
-      var ac = result.aux[i].coefs, alpha = ac[0], beta = ac[1] || 0, q = alpha !== 0 ? beta / alpha : 0;
-      var roots = q > 0 ? "±j" + num6(Math.sqrt(q)) : q < 0 ? "±" + num6(Math.sqrt(-q)) : num6(0);
-      h += "<p>有一列全零：存在對稱於原點的極點，輔助多項式 " + num6(alpha) + "s<sup>2</sup> ＋ " + num6(beta) + " 的根在 " + roots + "，系統至多臨界穩定。</p>";
+      var ac = result.aux[i].coefs, ap = result.aux[i].power, terms = [], aci, power, term;
+      for (aci = 0; aci < ac.length; aci += 1) {
+        power = ap - 2 * aci;
+        if (Math.abs(ac[aci]) < 1e-12 || power < 0) { continue; }
+        term = num6(Math.abs(ac[aci])) + (power > 0 ? "s" + (power > 1 ? "<sup>" + int0(power) + "</sup>" : "") : "");
+        terms.push((terms.length === 0 ? (ac[aci] < 0 ? "−" : "") : (ac[aci] < 0 ? " − " : " ＋ ")) + term);
+      }
+      h += "<p>有一列全零：存在對稱於原點的極點，輔助多項式為 " + terms.join("") + "；請由這個完整多項式求虛軸或對稱根，系統至多臨界穩定。</p>";
     }
     if (blank) { h += "<p>邊界提醒：清空的欄位視為 0。</p>"; }
     h += "<p>為什麼：Routh 表把求根換成交叉相乘，第一欄的符號變化次數就是右半平面根的個數，這是定理不是經驗。</p>";
@@ -441,7 +464,7 @@ function rlocus() {
     for (i = 0; i < roots.length; i += 1) { if (Math.abs(roots[i].im) > 1e-8) { pair = roots[i]; break; } }
     var zeta = pair ? -pair.re / Math.sqrt(pair.re * pair.re + pair.im * pair.im) : null;
     var h = "<table>" + row(["量", "結果"], true) + row(["漸近線重心", num6(centroid)]) + row(["漸近角", "60°、180°、300°"])
-      + row(["實軸區段", "(−∞, −max(a,b)) 與 (−min(a,b), 0)"]) + row(["分離點", num6(sb)]) + row(["分離增益", num6(Kb)])
+      + row(["實軸區段", "(−∞, " + num6(-Math.max(a, b)) + ") 與 (" + num6(-Math.min(a, b)) + ", 0)"]) + row(["分離點", num6(sb)]) + row(["分離增益", num6(Kb)])
       + row(["臨界增益", num6(Kcrit)]) + row(["臨界頻率", num6(wcrit)]) + row(["三個根", eigText(roots)])
       + row(["主導對 ζ", zeta === null ? "不適用（三個實根）" : num6(zeta)]) + "</table>";
     if (K === 0) { h += "<p><strong>判讀：K ＝ 0，根就是開迴路極點 0、−a、−b</strong></p>"; }
@@ -476,13 +499,13 @@ function bode() {
       h += row(ws[i] === w ? ["<strong>" + line[0] + "</strong>", "<strong>" + line[1] + "</strong>", "<strong>" + line[2] + "</strong>"] : line);
     }
     h += "</table>";
-    if ((wc1 > 0 && Math.abs(w - wc1) / wc1 < 0.05) || (wc2 > 0 && Math.abs(w - wc2) / wc2 < 0.05)) { h += "<p><strong>判讀：正在轉角頻率上，精確值比漸近線低約 3.01 dB，相位剛好走過 −45° 的一半路程</strong></p>"; }
+    if ((wc1 > 0 && Math.abs(w - wc1) / wc1 < 0.05) || (wc2 > 0 && Math.abs(w - wc2) / wc2 < 0.05)) { h += "<p><strong>判讀：正在轉角頻率上，該極點貢獻 −45°，是它最終 −90° 的一半</strong></p>"; }
     else if (phase <= -180) { h += "<p><strong>判讀：相位已過 −180°，這個頻率的回授是正回授；振幅還有 " + num6(dB) + " dB</strong></p>"; }
     else if (phase <= -135) { h += "<p><strong>判讀：相位剩不到 45° 就到 −180°，下一章會判斷是否夠用</strong></p>"; }
     else { h += "<p><strong>判讀：這一段斜率 " + num6(slope) + " dB/十倍頻，相位 " + deg(phase) + "</strong></p>"; }
     h += "<p>為什麼：每個極點在自己的轉角之後多吃 20 dB/十倍頻與 90° 相位，dB 與相位都是相加，所以三個極點疊起來最後會掉到 −270°。</p>";
     if (Math.abs(t1 - t2) < 1e-12) { h += "<p>邊界提醒：兩個轉角重合，該處精確值比漸近線低 6.02 dB。</p>"; }
-    if (w === 1000) { h += "<p>邊界提醒：三個極點都過了，斜率為 −60 dB/十倍頻。</p>"; }
+    if (w === 1000 && slope === -60) { h += "<p>邊界提醒：兩個有限轉角都已通過，加上積分器後斜率為 −60 dB/十倍頻。</p>"; }
     if (K === 100) { h += "<p>邊界提醒：增益只把整條振幅線抬 20 dB，相位一格都不動。</p>"; }
     put("bode-output", h);
   };
@@ -496,19 +519,19 @@ function margin() {
     var K = val("mg-k"), t1 = val("mg-t1"), t2 = val("mg-t2"), prod = t1 * t2, sum = t1 + t2;
     var wpc = prod > 0 ? 1 / Math.sqrt(prod) : 0, mpc = sum !== 0 ? K * prod / sum : 0, GM = mpc > 0 ? -20 * log10(mpc) : 0;
     var Kcrit = prod !== 0 ? sum / prod : 0, wgc = bisectGain(function (w) { return lmag(K, t1, t2, w); });
-    var phGc = lphase(t1, t2, wgc), PM = 180 + phGc, zetaEst = PM / 100, N = mpc >= 1 ? 2 : 0;
+    var phGc = lphase(t1, t2, wgc), PM = 180 + phGc, zetaEst = PM / 100, atCritical = Math.abs(mpc - 1) < 1e-6, N = mpc > 1 ? 2 : 0;
     var h = "<table>" + row(["量", "結果"], true) + row(["相位交越頻率", num6(wpc) + " rad/s"]) + row(["交越處振幅", num6(mpc)])
       + row(["增益裕度", num6(GM) + " dB"]) + row(["臨界增益", num6(Kcrit)]) + row(["增益交越頻率", num6(wgc) + " rad/s"])
-      + row(["交越處相位", deg(phGc)]) + row(["相位裕度", deg(PM)]) + row(["ζ 粗估", num6(zetaEst)]) + row(["N 與 Z", int0(N) + "、" + int0(N)]) + "</table>";
-    h += "<p>奈奎斯特判定：軌跡穿越負實軸於 −" + num6(mpc) + "，在 −1 的" + (mpc < 1 ? "右邊" : "左邊") + "，環繞 −1 共 " + int0(N) + " 次，閉迴路右半平面極點 Z ＝ " + int0(N) + "。</p>";
-    if (Math.abs(mpc - 1) < 1e-6) { h += "<p><strong>判讀：臨界，等幅振盪於 ω_pc；K ＝ K_crit ＝ " + num6(Kcrit) + "</strong></p>"; }
+      + row(["交越處相位", deg(phGc)]) + row(["相位裕度", deg(PM)]) + row(["ζ 粗估", num6(zetaEst)]) + row(["N 與 Z", atCritical ? "軌跡通過 −1（臨界，N 未定義）" : int0(N) + "、" + int0(N)]) + "</table>";
+    h += atCritical ? "<p>奈奎斯特判定：軌跡通過 −1，環繞次數 N 在此臨界情形不定義。</p>" : "<p>奈奎斯特判定：軌跡穿越負實軸於 −" + num6(mpc) + "，在 −1 的" + (mpc < 1 ? "右邊" : "左邊") + "，環繞 −1 共 " + int0(N) + " 次，閉迴路右半平面極點 Z ＝ " + int0(N) + "。</p>";
+    if (atCritical) { h += "<p><strong>判讀：臨界，等幅振盪於 ω_pc；K ＝ K_crit ＝ " + num6(Kcrit) + "</strong></p>"; }
     else if (mpc > 1) { h += "<p><strong>判讀：GM ＜ 0 dB，軌跡環繞 −1，Z ＝ 2，不穩定</strong></p>"; }
     else if (PM < 45) { h += "<p><strong>判讀：穩定但 PM 只有 " + deg(PM) + "，步階響應會晃，ζ 粗估 " + num6(zetaEst) + "</strong></p>"; }
     else if (PM > 60) { h += "<p><strong>判讀：很穩但偏慢，ω_gc 只有 " + num6(wgc) + "</strong></p>"; }
     else if (GM >= 6 && GM <= 12) { h += "<p><strong>判讀：兩個裕度都在目標帶</strong></p>"; }
     else { h += "<p><strong>判讀：PM 在目標帶，GM ＝ " + num6(GM) + " dB " + (GM > 12 ? "偏大（偏大只是保守）" : "偏小") + "</strong></p>"; }
     h += "<p>為什麼：閉迴路極點是 L ＝ −1 的解；相位 −180° 時的振幅離 1 有多遠、振幅 1 時的相位離 −180° 有多遠，就是離不穩定有多遠。</p>";
-    if (K === 110) { h += "<p>邊界提醒：K ＝ K_crit ＝ " + num6(Kcrit) + "。</p>"; }
+    if (Math.abs(K - Kcrit) < 0.5) { h += "<p>邊界提醒：K ＝ K_crit ＝ " + num6(Kcrit) + "。</p>"; }
     if (K === 200) { h += "<p>邊界提醒：增益超過臨界值，閉迴路有兩個右半平面極點。</p>"; }
     if (t1 === 0.01 && t2 === 0.01) { h += "<p>邊界提醒：兩個時間常數相等，ω_pc ＝ " + num6(wpc) + " rad/s、K_crit ＝ " + num6(Kcrit) + "。</p>"; }
     if (PM >= 60) { h += "<p>邊界提醒：ζ ≈ PM / 100 的粗估在 PM 大於 60° 時失效。</p>"; }
@@ -525,6 +548,7 @@ function pid() {
     if (event && event.target && event.target.id === "pd-preset" && preset !== "manual" && PID_PRESET[preset]) {
       p = PID_PRESET[preset]; $("pd-kp").value = p[0]; $("pd-ki").value = p[1]; $("pd-kd").value = p[2];
     }
+    if (event && event.target && event.target.id !== "pd-preset") { $("pd-preset").value = "manual"; preset = "manual"; }
     var Kp = val("pd-kp"), Ki = val("pd-ki"), Kd = val("pd-kd"), b1 = (6 * (11 + Kd) - (6 + Kp)) / 6;
     var c1 = b1 !== 0 ? (b1 * (6 + Kp) - 6 * Ki) / b1 : 0;
     var critical = b1 === 0 || (Ki === 0 && 6 * (11 + Kd) === 6 + Kp);
@@ -534,8 +558,8 @@ function pid() {
       + row(["量", "結果"], true) + row(["特徵多項式", Ki > 0 ? ("s⁴ ＋ 6s³ ＋ " + num6(11 + Kd) + "s² ＋ " + num6(6 + Kp) + "s ＋ " + num6(Ki)) : ("s³ ＋ 6s² ＋ " + num6(11 + Kd) + "s ＋ " + num6(6 + Kp))])
       + row(["Routh b₁", num6(b1)]) + row(["Routh c₁", Ki === 0 ? "不適用" : num6(c1)]) + row(["判定", critical ? "臨界" : stable ? "穩定" : "不穩定"]);
     if (sim && !sim.diverged) {
-      h += row(["峰值", num6(sim.peak)]) + row(["超越量", num6(sim.Mp) + " %"]) + row(["峰值時刻", num6(sim.tp) + " s"])
-        + row(["上升時間", sim.tr === null ? "不適用" : num6(sim.tr) + " s"]) + row(["整定時間", num6(sim.ts) + " s" + (sim.notSettled ? "（未進帶）" : "")])
+      h += row(["峰值", num6(sim.peak)]) + row(["相對命令的超出量", num6(sim.Mp) + " %"]) + row(["峰值時刻", num6(sim.tp) + " s"])
+        + row(["上升時間", sim.tr === null ? "不適用" : num6(sim.tr) + " s"]) + row(["命令 ±2 % 帶的最後越界時刻", num6(sim.ts) + " s" + (sim.notSettled ? "（10 s 內未進帶）" : "")])
         + row(["最後輸出", num6(sim.yfin)]) + row(["最後誤差", num6(sim.ess)]) + row(["IAE", num6(sim.iae)]);
     } else {
       h += row(["模擬", sim && sim.diverged ? "模擬發散" : "不執行"]);
@@ -545,10 +569,10 @@ function pid() {
     if (!stable || critical) { h += "<p><strong>判讀：Routh 第一欄變號或到達臨界，閉迴路不穩定；把 K_i 調小或 K_d 調大</strong></p>"; }
     else if (sim && sim.diverged) { h += "<p><strong>判讀：模擬發散</strong></p>"; }
     else if (Ki === 0) { h += "<p><strong>判讀：沒有積分項，穩態誤差停在 6 / (6 ＋ K_p) ＝ " + num6(theoryEss) + "</strong></p>"; }
-    else if (sim.Mp > 25) { h += "<p><strong>判讀：超越量 " + num6(sim.Mp) + " % 過大（ζ 約低於 0.4），減 K_p 或 K_i、或加 K_d</strong></p>"; }
+    else if (sim.Mp > 25) { h += "<p><strong>判讀：相對命令的超出量 " + num6(sim.Mp) + " % 過大，減 K_p 或 K_i、或加 K_d</strong></p>"; }
     else if (sim.ts >= 10) { h += "<p><strong>判讀：10 s 內未進 ±2 % 帶</strong></p>"; }
-    else { h += "<p><strong>判讀：超越量 " + num6(sim.Mp) + " %、整定 " + num6(sim.ts) + " s，這組可用</strong></p>"; }
-    if (preset === "zn") { h += "<p>Z–N 以四分之一衰減為目標，超越量本來就偏大，常當起點再手調。</p>"; }
+    else { h += "<p><strong>判讀：相對命令的超出量 " + num6(sim.Mp) + " %、最後越界時刻 " + num6(sim.ts) + " s，這組可用</strong></p>"; }
+    if (preset === "zn") { h += "<p>Z–N 以四分之一衰減為目標，相對命令的超出量本來就偏大，常當起點再手調。</p>"; }
     h += "<p>為什麼：K_p 把極點往虛軸推、K_i 多一個原點極點消掉穩態誤差但多吃 90° 相位、K_d 加一個零點把極點拉回左邊；三者都在動同一條特徵多項式。</p>";
     if (Kp === 0 && Ki === 0 && Kd === 0) { h += "<p>邊界提醒：沒有控制器，y 停在 " + num6(0) + "，e_ss ＝ " + num6(1) + "。</p>"; }
     if (Kp === 60 && Ki === 0 && Kd === 0) { h += "<p>邊界提醒：K_p ＝ K_u ＝ " + num6(60) + "，臨界，等幅振盪週期 T_u ＝ " + num6(Tu) + " s。</p>"; }
@@ -600,16 +624,17 @@ function state() {
     if (event && event.target && event.target.id === "ss-preset" && preset !== "custom" && SS_PRESET[preset]) {
       p = SS_PRESET[preset]; for (i = 0; i < matrixIds.length; i += 1) { $(matrixIds[i]).value = p[i]; }
     }
+    if (event && event.target && event.target.id !== "ss-preset") { $("ss-preset").value = "custom"; preset = "custom"; }
     var a = matrixIds.map(function (id) { return finiteOrZero(pick(id)); }), A = a.slice(0, 4), B = a.slice(4, 6), C = a.slice(6, 8), d1 = finiteOrZero(pick("ss-d1")), d0 = finiteOrZero(pick("ss-d0"));
     var r = stateSpace(A, B, C, d1, d0), mat = function (m) { return "[[" + num6(m[0]) + ", " + num6(m[1]) + "], [" + num6(m[2]) + ", " + num6(m[3]) + "]]"; };
-    var h = "<p>目前 A ＝ " + mat(A) + "、B ＝ [" + num6(B[0]) + ", " + num6(B[1]) + "]、C ＝ [" + num6(C[0]) + ", " + num6(C[1]) + "]（選自訂後改欄位才會用到欄位值）。</p><table>"
+    var h = "<p>目前 A ＝ " + mat(A) + "、B ＝ [" + num6(B[0]) + ", " + num6(B[1]) + "]、C ＝ [" + num6(C[0]) + ", " + num6(C[1]) + "]。</p><table>"
       + row(["量", "結果"], true) + row(["特徵多項式", "s² − (" + num6(r.tr) + ")s ＋ " + num6(r.det)]) + row(["特徵值", eigText(r.eig)])
       + row(["M_c", mat(r.Mc)]) + row(["det M_c", num6(r.detMc)]) + row(["M_o", mat(r.Mo)]) + row(["det M_o", num6(r.detMo)]);
     if (r.K) { h += row(["φ(A)", mat(r.phi)]) + row(["K", "[" + num6(r.K[0]) + ", " + num6(r.K[1]) + "]"]) + row(["閉迴路特徵值", eigText(r.eigCl)]); }
     else { h += row(["φ(A)", "不適用"]) + row(["K", "不適用"]) + row(["閉迴路特徵值", "不適用"]); }
     h += "</table>";
     if (Math.abs(r.detMc) < 1e-9) { h += "<p><strong>判讀：det M_c ＝ 0，不可控，極點配置無解——u 推不動的那個方向由它自己決定</strong></p>"; }
-    else if (Math.abs(r.detMo) < 1e-9) { h += "<p><strong>判讀：可控但不可觀，K ＝ [" + num6(r.K[0]) + ", " + num6(r.K[1]) + "] 算得出來，但沒有全狀態量測就實作不了，觀測器也無解</strong></p>"; }
+    else if (Math.abs(r.detMo) < 1e-9) { h += "<p><strong>判讀：可控但不可觀，K ＝ [" + num6(r.K[0]) + ", " + num6(r.K[1]) + "] 算得出來；無法任意配置觀測器極點，但若不可觀模態穩定，系統仍可偵測並估測可觀部分</strong></p>"; }
     else { h += "<p><strong>判讀：K ＝ [" + num6(r.K[0]) + ", " + num6(r.K[1]) + "]，閉迴路特徵值 " + eigText(r.eigCl) + "，與期望多項式一致；可設計觀測器</strong></p>"; }
     for (i = 0; i < r.eig.length; i += 1) { if (r.eig[i].re > 0) { h += "<p>開迴路不穩定，但只要可控一樣能配置。</p>"; break; } }
     h += "<p>為什麼：狀態回授把 A 換成 A − BK，K 的兩個數剛好可以自由決定特徵多項式的兩個係數，前提是 [B, AB] 張得開整個平面。</p>";
@@ -632,7 +657,7 @@ function dictionary() {
       c = cards[i]; hay = ((c.getAttribute("data-search") || "") + " " + (c.textContent || "")).toLowerCase();
       if (q === "" || hay.indexOf(q) !== -1) { c.removeAttribute("hidden"); shown += 1; } else { c.setAttribute("hidden", "hidden"); }
     }
-    put("term-count", "顯示 " + int0(shown) + " / " + int0(54) + " 張卡");
+    put("term-count", "顯示 " + int0(shown) + " / " + int0(cards.length) + " 張卡");
   };
   bind(["term-search"], draw); draw();
 }
@@ -669,5 +694,5 @@ if (typeof document !== "undefined") {
 
 /* ---------- 8. Node 匯出 ---------- */
 if (typeof module !== "undefined") {
-  module.exports = { num6: num6, routhTable: routhTable, cubicRoots: cubicRoots, lmag: lmag, lphase: lphase, bisectGain: bisectGain, bisectPhase: bisectPhase, pidSim: pidSim, stateSpace: stateSpace, QUIZ: QUIZ };
+  module.exports = { num6: num6, routhTable: routhTable, cubicRoots: cubicRoots, lmag: lmag, lphase: lphase, bisectGain: bisectGain, bisectPhase: bisectPhase, pidSim: pidSim, thirdOrderStep: thirdOrderStep, stateSpace: stateSpace, QUIZ: QUIZ };
 }
