@@ -4,5 +4,8 @@
 <h2>精確定義、符號與假設</h2><p>1 圈＝360°＝2π rad，所以 θ<sub>rad</sub>=θ<sub>deg</sub>×π/180。在半徑 1 的單位圓上，從正 x 軸逆時針為正，角 θ 的點是 (cosθ,sinθ)。畢氏定理給 cos²θ+sin²θ=1。tanθ=sinθ/cosθ 表示斜率；當 cosθ=0 時分母為零，tan 未定義。</p>
 <h2>數字實例：30° 一步步算</h2><p>30°×π/180=π/6≈0.5236 rad。單位圓座標約為 (0.866,0.500)，平方和 0.866²+0.500²≈1。tan30°≈0.577，表示沿 x 每前進 1，y 約上升 0.577。若將 30 直接當 30 rad 傳給程式，結果會落在完全不同的週期位置。</p>
 <section class="workspace"><h2>自由實驗：角度、弧度與單位圓</h2><p>拖到 0°、90°、180° 與負角，先預測座標再看原因。</p><div class="controls"><label for="angle-deg">角度（°）<input id="angle-deg" type="range" min="-180" max="180" step="1" value="30"></label></div><div id="trig-output" class="output" aria-live="polite"></div></section>
+<section class="self-check" data-quiz="01"><h2>自我檢核：換角度再判讀</h2><p>題目使用與正文不同的角度；數值題依標示容差判定，可重做。</p><div class="quiz-root"></div></section>
 <h2>為什麼／不要混淆</h2><ul><li><strong>弧度不是度數省略符號：</strong>90°=π/2 rad，不是 90 rad。</li><li><strong>sin、cos 是投影：</strong>它們也適用於超過 90° 與負角，不只限直角三角形內角。</li><li><strong>tan 可能不存在：</strong>接近 90° 時數值會急遽放大，不能當一般有限斜率。</li><li><strong>極小殘值常是浮點誤差：</strong>cos90° 理論為 0，程式可能顯示約 10<sup>−16</sup>。</li></ul>
-<h2>連到哪門機器人課</h2><p>這是第 05 章二維旋轉與第 09 章三維姿態的根。運動學用 sin、cos 算連桿端點；視覺旋轉影像座標；路徑規劃以方向角描述移動朝向。</p><nav class="pager" aria-label="章節導覽"><a href="00-為什麼機器人需要數學.html">← 上一頁：為什麼需要數學</a><a href="02-座標與距離.html">下一頁：座標與距離 →</a></nav></main></body></html>
+<h2>連到哪門機器人課</h2><p>這是第 05 章二維旋轉與第 09 章三維姿態的根。運動學用 sin、cos 算連桿端點；視覺旋轉影像座標；路徑規劃以方向角描述移動朝向。</p>
+<h2>帶走的結論</h2><ul class="takeaways"><li>度與弧度是同一轉角的兩種量尺，程式計算前要先確認單位。</li><li>單位圓上的點是 (cosθ,sinθ)，且到原點距離恆為 1。</li><li>tanθ 是 sinθ/cosθ；cosθ=0 時斜率未定義。</li></ul>
+<nav class="pager" aria-label="章節導覽"><a href="00-為什麼機器人需要數學.html">← 上一頁：為什麼需要數學</a><a href="02-座標與距離.html">下一頁：座標與距離 →</a></nav></main></body></html>

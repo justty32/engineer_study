@@ -4,5 +4,8 @@
 <h2>精確定義、單位與邊界</h2><p>二維 a·b=a<sub>x</sub>b<sub>x</sub>+a<sub>y</sub>b<sub>y</sub>=|a||b|cosφ。若兩向量非零，φ=acos((a·b)/(|a||b|))。a 在 b 方向的帶正負投影長為 a·b/|b|。內積單位是兩輸入單位相乘；只有純方向單位向量的內積沒有單位。</p>
 <h2>數字實例：(3,0) 與 (1,1)</h2><p>內積為 3×1+0×1=3。兩長度分別 3 與 √2，所以 cosφ=3/(3√2)=1/√2，φ=45°。投影長 3/√2≈2.121。若 b 改成 (0,1)，內積為 0，代表垂直。</p>
 <section class="workspace"><h2>自由實驗：兩向量有多對齊</h2><p>拖動兩向量，觀察內積正負、夾角與投影如何一起變化。</p><div class="controls"><label for="dax">a<sub>x</sub><input id="dax" type="range" min="-5" max="5" step=".5" value="3"></label><label for="day">a<sub>y</sub><input id="day" type="range" min="-5" max="5" step=".5" value="0"></label><label for="dbx">b<sub>x</sub><input id="dbx" type="range" min="-5" max="5" step=".5" value="1"></label><label for="dby">b<sub>y</sub><input id="dby" type="range" min="-5" max="5" step=".5" value="1"></label></div><div id="dot-output" class="output" aria-live="polite"></div></section>
+<section class="self-check" data-quiz="06"><h2>自我檢核：判斷另一組方向</h2><p>換一組向量重算內積並判斷夾角；數值題依標示容差判定，可重做。</p><div class="quiz-root"></div></section>
 <h2>為什麼／不要混淆</h2><ul><li><strong>內積為零不一定有兩個方向：</strong>只要其中之一是零向量也會為零，但零向量沒有夾角。</li><li><strong>投影長與投影向量不同：</strong>前者是一個帶正負數，後者還要乘 b 的單位向量。</li><li><strong>acos 前要限制數值：</strong>浮點誤差可能讓理論上的 1 變成略大於 1。</li><li><strong>大內積也可能只是向量很長：</strong>比較方向相似度前通常先正規化。</li></ul>
-<h2>連到哪門機器人課</h2><p>視覺用內積求表面方向與視線夾角；路徑規劃判斷轉彎角度；學習系統用正規化內積衡量特徵相似度，也用它判斷梯度與更新方向是否一致。</p><nav class="pager" aria-label="章節導覽"><a href="05-二維旋轉矩陣.html">← 上一頁：二維旋轉</a><a href="07-外積.html">下一頁：外積 →</a></nav></main></body></html>
+<h2>連到哪門機器人課</h2><p>視覺用內積求表面方向與視線夾角；路徑規劃判斷轉彎角度；學習系統用正規化內積衡量特徵相似度，也用它判斷梯度與更新方向是否一致。</p>
+<h2>帶走的結論</h2><ul class="takeaways"><li>內積是對應分量相乘後相加，可衡量兩方向的對齊程度。</li><li>內積正、零、負分別對應非零向量的銳角、直角、鈍角。</li><li>零向量沒有方向；內積為零時要先排除零向量再談垂直。</li></ul>
+<nav class="pager" aria-label="章節導覽"><a href="05-二維旋轉矩陣.html">← 上一頁：二維旋轉</a><a href="07-外積.html">下一頁：外積 →</a></nav></main></body></html>

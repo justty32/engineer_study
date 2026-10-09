@@ -1,5 +1,14 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="從零理解 PRM、RRT 與 RRT star"><title>03 取樣規劃｜機器人路徑規劃</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="00-從移動問題到規劃問題.html">零基礎</a><a href="00A-搜尋與圖論先修.html">搜尋先修</a><a aria-current="page" href="03-PRM-RRT與RRT-star.html">取樣規劃</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="從零理解 PRM、RRT 與 RRT star"><title>03 取樣規劃｜機器人路徑與運動規劃</title><link rel="stylesheet" href="styles.css"></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="00-從移動問題到規劃問題.html">零基礎</a>
+<a href="00A-搜尋與圖論先修.html">搜尋先修</a>
+<a aria-current="page" href="03-PRM-RRT與RRT-star.html">取樣規劃</a>
+<a href="06-C++架構與驗證證據.html">C++／證據</a>
+<a href="07-約束流形投影與任務空間限制.html">07 約束流形</a>
+<a href="08-動力可行規劃與煞停包絡.html">08 動力可行</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav><main>
 <p class="eyebrow">03 · 取樣式規劃</p><h1>機率路線圖與快速探索隨機樹：不建完整網格也能探索高維空間</h1><p class="lead">白話問題：七個關節的細網格大到存不下，是否還能找路？一句話答案：只隨機抽取少量候選組態，驗證局部連接，逐步形成足以連通起點和目標的路網或樹。</p>
 <div class="prereq"><strong>最小前置：</strong><a href="00A-搜尋與圖論先修.html">節點、邊與維度災難</a>、<a href="01-組態空間碰撞與間隙.html">狀態和邊的有效性</a>、<a href="02-圖搜尋Dijkstra與A-star.html">圖搜尋</a>。</div>
 <h2>取樣不是猜整條答案</h2><p>一次<strong>取樣（sampling）</strong>只是產生一個候選 q。規劃器先拒絕碰撞樣本，再用<strong>局部規劃器（local planner）</strong>嘗試連接鄰近樣本；局部規劃器通常做短距離插值並檢查中間。隨機性決定探索位置，碰撞檢查決定該位置與連接能否進圖。</p>
@@ -9,7 +18,7 @@
 <h2>可手算例：命中狹窄區的機率</h2><p>假設每個獨立樣本落入關鍵窄通道的機率 p=0.02。單次沒命中為 0.98，N 次都沒命中為 <code>(1-p)^N</code>，至少一次命中機率為 <code>1-(1-p)^N</code>。N=10 時約 1−0.98¹⁰=18.3%；N=100 時約 86.7%。增加樣本提高機率，但永遠不是有限 N 的必然保證，而且「命中」仍不代表能成功連接。</p>
 <p>公式 P<sub>hit</sub>=1−(1−p)<sup>N</sup> 中，p、P<sub>hit</sub> 都是 0 到 1 的無量綱機率，N 是無量綱次數。代入 p=0.02、N=100：P<sub>hit</sub>=1−0.98<sup>100</sup>≈1−0.133=0.867。反過來若想讓這個簡化模型達到約 95%，需找 N 使 1−0.98<sup>N</sup>≥0.95，約 N≥149。這不是 149 個樣本的工程保證，因獨立、固定 p 與「一次命中就足夠」都是強假設。</p>
 <h2>互動前先理解兩個滑桿</h2><p>樣本數 N 增加，教學公式的成功機率上升；單樣本命中率 p 越低，代表可行通道在抽樣分布中越稀少。兩者是假設獨立同分布的簡化模型，不模擬實際樹、近鄰搜尋或碰撞。</p>
-<section class="workspace"><h2>自由實驗：狹窄通道</h2><div class="controls"><label>樣本數 N<input id="sample-count" type="range" min="1" max="500" step="1" value="80"></label><label>單樣本命中機率 p<input id="sample-hit" type="range" min="0.001" max="0.10" step="0.001" value="0.015"></label></div><div id="sample-output" class="output" aria-live="polite"></div></section>
+<section class="workspace"><h2>自由實驗：狹窄通道</h2><div class="controls"><label for="sample-count">樣本數 N<input id="sample-count" type="range" min="1" max="500" step="1" value="80"></label><label for="sample-hit">單樣本命中機率 p<input id="sample-hit" type="range" min="0.001" max="0.10" step="0.001" value="0.015"></label></div><div id="sample-output" class="output" aria-live="polite"></div></section>
 <h3>從畫面數字走到真實實驗</h3><p>固定 p、逐步增加 N，觀察機率上升但邊際增益變小；再把 p 降低十倍，會看到同一 N 的成功率大幅下降。真實評估不能直接量到「p」，通常要固定場景與參數、換多個 seed 重跑。例如 200 次中成功 170 次，觀察成功率是 170÷200=85%；它是有限樣本估計，還應同報信賴區間、第一解時間與失敗 seed。成功率能描述測過的分布，不能證明未測場景。</p>
 <h2>證據、誤解與適用邊界</h2><p>重現一次規劃要記錄演算法、參數、樣本分布、亂數種子、時間與樣本預算、有效樣本數、碰撞檢查次數、第一解時間與成本改善曲線。只報平均成功率會隱藏最壞延遲與特定窄通道失敗。</p>
 <section class="section"><h2>痛點：完整地圖太大，但完全亂猜又沒有累積</h2><p>七軸每軸只切 20 格就有 20<sup>7</sup>=1,280,000,000 個網格點；逐一建立幾乎不可行。另一個極端是每次隨機猜一整條從起點到目標的曲線，猜錯便全部丟掉，也很浪費。取樣式規劃採中間路線：只抽一些組態，保留通過驗證的點與短連接，逐步累積出可搜尋的結構。</p><p>像在黑暗房間撒麵包屑的比喻可以說明「只記少數位置」，但精確限制是：樣本位於多維組態空間，不是桌面上的三維點；每一粒還需經碰撞檢查，兩粒之間能否連也要另驗。隨機抽到空地不代表已形成從起點到終點的連續通路。</p>
@@ -23,4 +32,7 @@
 <details><summary>想更深入：為何固定 seed 仍可能重現不了？</summary><p>seed 只固定亂數序列。平行執行緒的完成順序、浮點運算、近鄰資料結構平手規則、碰撞函式庫版本都可能改變哪個樣本先進樹。完整紀錄還需演算法參數、軟體版本、模型雜湊、執行緒設定與硬體環境；即使如此，實機感測噪聲也未必能逐位元重播。</p></details>
 <h2>容易混淆的四個保證</h2><ul><li><strong>找到一條路：</strong>只說這次候選通過目前驗證。</li><li><strong>機率完備：</strong>若解存在，隨資源增加，找到解的機率趨近 1；不是有限時間必成。</li><li><strong>漸近最佳：</strong>隨資源趨近無限，最佳成本趨近理論最佳；不是每次成本單調，也不是第一解最佳。</li><li><strong>實機安全：</strong>還需要模型可信、動態限制、執行監督與硬體保護；前三種演算法性質不能替代它。</li></ul></section>
 <ul><li><strong>機率完備（probabilistic completeness）</strong>是樣本趨近無限時找到既存解的機率趨近一，不是這次五秒內保證。</li><li>RRT 的「最近」依賴距離度量；不同關節尺度若未正規化，樹會被某些關節支配。</li><li>PRM 路網只對建圖時的環境有效；障礙移動後邊必須重新驗證。</li><li>公式假設獨立固定 p；實際採樣有相關性，窄通道也需要多個可連接樣本。</li></ul>
-<section class="section"><h2>公平比較 RRT 與 RRT*</h2><p>選開放、窄通道、兩條不同成本繞路三類場景。固定起終點、模型、碰撞解析度與 2 s 預算，各跑 100 seed。記成功、第一解時間、2 s 最佳成本、有效樣本率與碰撞查詢。若第一解中位為 0.08、0.12 s，最終成本中位為 5.4、3.8，只能說這批條件下 RRT 較快出解、RRT* 改善較多。</p><h2>重接時子樹也要更新</h2><p>S→A=3、S→B=6；新點 N 經 A 為 3+4=7、經 B 為 6+1=7，依固定平手規則選父。C 原成本 12，N→C=2，改接後 C=9；C 的子節點 D 邊成本 1，也要從 13 改成 10。漏改子樹會讓成本資料矛盾。</p><h2>窄通道失敗層次</h2><ul><li>沒抽中；抽中但碰撞；有效卻無近鄰。</li><li>入口有鄰居但插值偏離；路形成卻未接目標。</li><li>接近完成，預算在最後驗證前耗盡。</li></ul><p>sampled、valid、neighbor_found、edge_valid、goal_connected 應分開計數。</p><h2>教回去</h2><ol><li>PRM 建可重用路網；RRT 從起點長樹。</li><li>RRT 第一解通常不短不平滑；RRT* 以選父、重接改善。</li><li>漸近性質不是有限時間保證，seed 也不是成功保證。</li><li>比較隨機法要多 seed 報分布，不只挑最好一次。</li></ol></section><div class="pager"><a href="02-圖搜尋Dijkstra與A-star.html">← 上一頁</a><a href="04-平滑與時間參數化.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<section class="section"><h2>公平比較 RRT 與 RRT*</h2><p>選開放、窄通道、兩條不同成本繞路三類場景。固定起終點、模型、碰撞解析度與 2 s 預算，各跑 100 seed。記成功、第一解時間、2 s 最佳成本、有效樣本率與碰撞查詢。若第一解中位為 0.08、0.12 s，最終成本中位為 5.4、3.8，只能說這批條件下 RRT 較快出解、RRT* 改善較多。</p><h2>重接時子樹也要更新</h2><p>S→A=3、S→B=6；新點 N 經 A 為 3+4=7、經 B 為 6+1=7，依固定平手規則選父。C 原成本 12，N→C=2，改接後 C=9；C 的子節點 D 邊成本 1，也要從 13 改成 10。漏改子樹會讓成本資料矛盾。</p><h2>窄通道失敗層次</h2><ul><li>沒抽中；抽中但碰撞；有效卻無近鄰。</li><li>入口有鄰居但插值偏離；路形成卻未接目標。</li><li>接近完成，預算在最後驗證前耗盡。</li></ul><p>sampled、valid、neighbor_found、edge_valid、goal_connected 應分開計數。</p><h2>教回去</h2><ol><li>PRM 建可重用路網；RRT 從起點長樹。</li><li>RRT 第一解通常不短不平滑；RRT* 以選父、重接改善。</li><li>漸近性質不是有限時間保證，seed 也不是成功保證。</li><li>比較隨機法要多 seed 報分布，不只挑最好一次。</li></ol></section><div class="pager">
+<a href="02-圖搜尋Dijkstra與A-star.html">← 上一章：02 圖搜尋</a>
+<a href="04-平滑與時間參數化.html">下一章：04 平滑與時間化 →</a>
+</div></main><script src="app.js"></script></body></html>

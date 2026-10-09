@@ -1,5 +1,14 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="從零理解 Dijkstra 與 A* 搜尋"><title>02 圖搜尋｜機器人路徑規劃</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="00-從移動問題到規劃問題.html">零基礎</a><a href="00A-搜尋與圖論先修.html">搜尋先修</a><a href="03-PRM-RRT與RRT-star.html">取樣規劃</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="從零理解 Dijkstra 與 A* 搜尋"><title>02 圖搜尋｜機器人路徑與運動規劃</title><link rel="stylesheet" href="styles.css"></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="00-從移動問題到規劃問題.html">零基礎</a>
+<a href="00A-搜尋與圖論先修.html">搜尋先修</a>
+<a href="03-PRM-RRT與RRT-star.html">取樣規劃</a>
+<a href="06-C++架構與驗證證據.html">C++／證據</a>
+<a href="07-約束流形投影與任務空間限制.html">07 約束流形</a>
+<a href="08-動力可行規劃與煞停包絡.html">08 動力可行</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav><main>
 <p class="eyebrow">02 · 圖搜尋</p><h1>Dijkstra 與 A-star（A*）：只是決定下一個檢查誰</h1><p class="lead">白話問題：圖上可能有成千上萬個節點，怎麼避免毫無方向地全部看完？一句話答案：Dijkstra 優先處理目前已知總成本最低者；A* 再加上「離目標可能還有多遠」的估計來引導順序。</p>
 <div class="prereq"><strong>最小前置：</strong>先讀<a href="00A-搜尋與圖論先修.html">節點、邊、成本與離散化</a>，並理解<a href="01-組態空間碰撞與間隙.html">有效節點和有效邊</a>。</div>
 <h2>Dijkstra：只相信已經付出的成本</h2><p>對每個節點保存從起點走來的最佳已知成本 <code>g</code>。起點的 g=0，其餘先視為無限大。每次從優先佇列取出 g 最小的節點，嘗試用它改善鄰居；這個動作稱為<strong>鬆弛（relaxation）</strong>。在邊成本非負的條件下，一個節點以最小 g 確定取出後，就不會有晚到但更便宜的路線推翻它。</p>
@@ -8,7 +17,7 @@
 <h2>可手算例：展開順序為何不同</h2><p>起點 S 有兩個鄰居 A 與 B：g(A)=2、g(B)=4。估計到目標分別 h(A)=8、h(B)=3。因此 f(A)=10、f(B)=7。Dijkstra 只看 g，先展開 A；A* 看 f，先展開 B，因為雖然走到 B 已多付 2，估計後段少付 5。若 B 到目標實際成本為 3，A 的為 9，A* 的引導確實省下不必要探索。</p>
 <p>若錯把 h(B) 寫成 30，A* 可能長期迴避 B 並先回傳較差路線。令 h=0 時 f=g，A* 就退化成 Dijkstra。若把 h 乘權重 w&gt;1，搜尋通常更像直奔目標，但已改變最佳性條件，這稱為<strong>加權 A*（Weighted A*）</strong>。</p>
 <h2>互動前先建立預測</h2><p>下方「h 權重」不是障礙數，也不是答案好壞的直接刻度：0 表示沒有目標引導，1 表示標準比例，大於 1 表示更貪心。障礙密度指標只是教學模型，用來說明直線估計在繞路多時資訊較弱；它不執行真實 A*，也不能給出節點數保證。</p>
-<section class="workspace"><h2>自由實驗：啟發式權重</h2><div class="controls"><label>h 權重<input id="astar-weight" type="range" min="0" max="3" step="0.1" value="1"></label><label>障礙密度指標<input id="astar-blocked" type="range" min="0" max="8" step="1" value="3"></label></div><div id="astar-output" class="output" aria-live="polite"></div></section>
+<section class="workspace"><h2>自由實驗：啟發式權重</h2><div class="controls"><label for="astar-weight">h 權重<input id="astar-weight" type="range" min="0" max="3" step="0.1" value="1"></label><label for="astar-blocked">障礙密度指標<input id="astar-blocked" type="range" min="0" max="8" step="1" value="3"></label></div><div id="astar-output" class="output" aria-live="polite"></div></section>
 <h3>三組值得比較的操作</h3><ol><li>把權重設為 0：狀態變成只依 g 排序，結果應呈現 Dijkstra 式行為。</li><li>把權重設為 1：代表 f=g+h 的標準比例，但只有 h 符合可採納等條件時才保留相應最佳性論述。</li><li>把權重調到 2 或 3，再增加障礙指標：會更偏向目標，但直線估價在繞路場景的資訊可能較差。</li></ol><p>頁面輸出是規則解說，不是真實展開 trace。真正證據要比較同一張圖上的節點展開序列、最終成本和執行時間；節點較少能支持「這次搜尋較省」，不能單獨支持「解仍最佳」。</p>
 <h2>證據與除錯</h2><p>不要只記最後路線。應保存每次取出的節點、g/h/f、前驅、被拒絕的邊、優先佇列峰值與終止理由。若結果不是預期最低成本，先查是否有負邊、h 是否高估、距離單位是否一致、狀態是否被錯誤合併，以及浮點比較是否讓舊佇列項目重複生效。</p>
 <h2>常見誤解與邊界</h2><ul><li>A* 不是「永遠比 Dijkstra 快」；不良 h 可能毫無幫助，計算 h 本身也有成本。</li><li>最短路徑只對定義的成本最短，不等於最安全或最平滑。</li><li>圖搜尋的完備性只對已建出的有限圖成立；若離散化漏掉通道，搜尋再正確也找不到。</li><li>本章假設靜態圖與非負成本；動態環境需要更新圖或增量搜尋方法。</li></ul>
@@ -20,4 +29,7 @@
 <details><summary>想更深入：一致性為什麼讓實作更乾淨？</summary><p>一致性（consistency）要求每條 n→n' 邊都滿足 h(n)≤cost(n,n')+h(n')。白話是估價不能跨一步後突然下降得比那一步成本還多，類似三角不等式。符合一致性時，f 沿路通常不下降，節點確定後不必反覆重新展開。這裡只需記住：可採納管「不高估終點」，一致性還管「相鄰估價變化合理」，兩者不是同一句話。</p></details>
 <h2>互動滑桿的具體抄算</h2><p>若某候選 g=4、h=3，權重 w 分別取 0、1、2：f<sub>0</sub>=4+0×3=4；f<sub>1</sub>=4+1×3=7；f<sub>2</sub>=4+2×3=10。另一候選 g=6、h=0.5，三種 f 為 6、6.5、7。w=0 時第一候選優先；w=1 時第二候選優先；w=2 時第二候選優勢更大。滑桿改的不是圖，也不是 g，而是排序時剩餘估價的影響力。</p><p>第二組：候選甲 g=1、h=10，候選乙 g=5、h=2。w=0 時甲鍵值 1、乙 5，先甲；w=1 時甲 11、乙 7，先乙；w=3 時甲 31、乙 11，更強烈先乙。更快靠近目標並不等於最終成本一定更低，必須用最後路徑的實際邊成本驗證。</p>
 <h2>常見 bug 對應到哪種可觀察症狀</h2><ul><li><strong>h 單位錯：</strong>把毫米當公尺，h 放大一千倍，搜尋近似只看目標方向；列印 g、h、f 的量級可看出。</li><li><strong>舊佇列項未略過：</strong>同一節點反覆展開，節點數異常增加；trace 會出現 pop 的鍵值大於目前最佳 g。</li><li><strong>前驅更新漏掉：</strong>目標成本正確但重建路徑斷裂；逐節點比對 predecessor 與 g 的來源邊。</li><li><strong>提前終止時機錯：</strong>一發現目標鄰居就停，而非目標以適當條件從佇列取出，可能得到非最佳路。</li><li><strong>浮點平手不穩：</strong>同輸入在不同平台展開順序變化；固定平手規則並記錄編譯器與函式庫版本。</li></ul><p>驗證時在同一張小圖比較 Dijkstra、A* 與手算成本。最終成本一致可支持正確性；執行時間要重跑並報分布，單次較快可能只是快取、排程或量測雜訊。</p></section>
-<section class="section"><h2>同一張圖、三個 h 權重</h2><p>A 的 g=2、h=6；B 的 g=5、h=1。w=0 時鍵值為 2、5，先 A；w=1 時為 8、6，先 B；w=2 時為 14、7，更偏 B。若 A 後段真實成本 6、B 後段 4，總成本是 8 與 9，A 才最佳；較大 w 可能先得 B，卻不能宣稱最低成本。</p><h2>設計 h 的三步檢查</h2><ol><li>g 是秒，h 也必須轉成秒。</li><li>說明為何 h 不高於真正最低剩餘成本。</li><li>量 h 的計算時間；少展開節點不保證總時間短。</li></ol><p>距目標 4 m、速度上界 2 m/s，可取 h=2 s 作樂觀下界。若加固定 5 s「可能塞車」，可能高估而破壞條件。</p><h2>除錯順序</h2><ul><li>邊成本非負、單位一致；起點 g=0。</li><li>只在新成本較小時鬆弛；舊佇列項要略過。</li><li>沿 parent 逐邊重算總成本，再查終止時機。</li><li>最後才查 h；圖或 g 錯時，調 h 只會掩蓋症狀。</li></ul><h2>教回去</h2><p>Dijkstra 看 g；A* 用 h 改變下一個檢查誰。h=0 時相同。可採納不等於一定快，w&gt;1 常以品質保證換方向性。碰撞安全仍由圖的節點與邊驗證提供。</p></section><div class="pager"><a href="01-組態空間碰撞與間隙.html">← 上一頁</a><a href="03-PRM-RRT與RRT-star.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<section class="section"><h2>同一張圖、三個 h 權重</h2><p>A 的 g=2、h=6；B 的 g=5、h=1。w=0 時鍵值為 2、5，先 A；w=1 時為 8、6，先 B；w=2 時為 14、7，更偏 B。若 A 後段真實成本 6、B 後段 4，總成本是 8 與 9，A 才最佳；較大 w 可能先得 B，卻不能宣稱最低成本。</p><h2>設計 h 的三步檢查</h2><ol><li>g 是秒，h 也必須轉成秒。</li><li>說明為何 h 不高於真正最低剩餘成本。</li><li>量 h 的計算時間；少展開節點不保證總時間短。</li></ol><p>距目標 4 m、速度上界 2 m/s，可取 h=2 s 作樂觀下界。若加固定 5 s「可能塞車」，可能高估而破壞條件。</p><h2>除錯順序</h2><ul><li>邊成本非負、單位一致；起點 g=0。</li><li>只在新成本較小時鬆弛；舊佇列項要略過。</li><li>沿 parent 逐邊重算總成本，再查終止時機。</li><li>最後才查 h；圖或 g 錯時，調 h 只會掩蓋症狀。</li></ul><h2>教回去</h2><p>Dijkstra 看 g；A* 用 h 改變下一個檢查誰。h=0 時相同。可採納不等於一定快，w&gt;1 常以品質保證換方向性。碰撞安全仍由圖的節點與邊驗證提供。</p></section><div class="pager">
+<a href="01-組態空間碰撞與間隙.html">← 上一章：01 組態空間</a>
+<a href="03-PRM-RRT與RRT-star.html">下一章：03 取樣規劃 →</a>
+</div></main><script src="app.js"></script></body></html>

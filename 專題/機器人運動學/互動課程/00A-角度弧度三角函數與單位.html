@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>角度、弧度、三角函數與單位｜七軸機械手臂運動學</title>
+<title>00A 角度、弧度、三角函數與單位｜七軸機械手臂運動學</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar">
+<nav class="topbar" aria-label="課程導覽">
 <a href="index.html">首頁</a>
-<a aria-current="page" href="00A-角度弧度三角函數與單位.html">數學起點</a>
-<a href="05-七軸正運動學.html">七軸模型</a>
-<a href="09-七軸數值逆運動學.html">逆運動學</a>
+<a href="00-機械手臂自由度與座標.html">上一章</a>
+<a aria-current="page" href="00A-角度弧度三角函數與單位.html">本章</a>
+<a href="01-向量矩陣與二維旋轉.html">下一章</a>
 <a href="名詞與概念字典.html">字典</a>
 </nav>
 <main>
@@ -28,7 +28,8 @@
 <p>從原點出發、長度為 1 的箭頭與 x 軸夾角 θ，它的 x 分量是 cosθ，y 分量是 sinθ。θ=0° 時是 [1,0]；θ=90° 時是 [0,1]；θ=180° 時是 [−1,0]。這不只是一個直角三角形公式，而是任何方向在兩根座標軸上的投影。</p>
 <h2>換算不是背常數，而是換量尺</h2>
 <p>度與弧度描述同一轉角，就像公尺與毫米描述同一長度。因 360°=2π rad，所以 1°=π/180 rad≈0.01745 rad。例：30°×π/180≈0.5236 rad。若關節以 30°/s 旋轉，換成角速度就是 0.5236 rad/s；角度與角速度的分母單位不可漏掉。</p>
-<p><strong>實驗方式：</strong>依序拖到 0°、30°、90°、−90°、180°。先自己預測弧度及 [cosθ,sinθ]，再看輸出。你應看到單位向量長度約等於 1；接近 90° 時，三位小數會顯示 0.000，而更多位數會看到約 6×10<sup>−17</sup> 的浮點殘值，不是向量偏離單位圓。</p>
+<p><strong>怎麼玩：</strong>依序拖到 0°、30°、90°、−90°、180°。先自己預測弧度及 [cosθ,sinθ]，再看輸出。你應看到單位向量長度約等於 1；接近 90° 時，三位小數會顯示 0.000，而更多位數會看到約 6×10<sup>−17</sup> 的浮點殘值，不是向量偏離單位圓。</p>
+<details class="expected-output" data-answer-id="00A"><summary>預期輸出（遷移題）</summary><p>把角度設為 37°。<strong>答案鍵：</strong>0.6458 rad，[cosθ,sinθ]≈[0.799,0.602]。</p><p><strong>容許值：</strong>弧度 ±0.0001、方向分量 ±0.001。<strong>解析：</strong>先乘 π/180 換成弧度，再以同一角度計算 cos 與 sin。</p></details>
 <section class="workspace">
 <h2>自由實驗：度數轉弧度與單位向量</h2>
 <label for="angle-deg">角度（degree）</label>
@@ -78,8 +79,8 @@
 </details>
 <h2>單位錯誤如何沿運動鏈放大</h2><p>控制週期 10 ms、命令 30°/s。正確角速度約 0.524 rad/s，每週期增加 0.00524 rad，也就是 0.3°。若誤把 30 當 rad/s，每週期增加 0.3 rad≈17.2°，約快 57.3 倍。錯誤接著進入 sin、cos、FK 與 J，看起來會像所有幾何同時壞掉。</p><p>程式邊界應明寫 degree 或 rad，轉換後內部統一；log 同時保存原始值、轉換值與單位。特殊角能抓單位和週期，卻抓不到關節正方向與機械零位，後兩者要靠治具。</p><h2>零向量為何是特殊案例？</h2><p>v=[0,0] 的長度為 0，v/||v|| 會除以 0；幾何上也沒有方向。實作應回傳「無方向」或採明定 fallback，不能偷偷回 [1,0] 後假裝是資料推得。</p><p><strong>能教別人的檢核：</strong>解釋為何 rad 在量綱上可視為無因次，工程 log 卻仍應保留 rad；再用半徑 0.5 m、角速度 2 rad/s 算出尖端速率 1 m/s。</p>
 <div class="pager">
-<a href="00-機械手臂自由度與座標.html">← 00 自由度與座標</a>
-<a href="01-向量矩陣與二維旋轉.html">01 向量與旋轉 →</a>
+<a href="00-機械手臂自由度與座標.html">← 00 機械手臂、自由度與座標</a>
+<a href="01-向量矩陣與二維旋轉.html">01 向量、矩陣與二維旋轉 →</a>
 </div>
 </main>
 <script src="app.js">

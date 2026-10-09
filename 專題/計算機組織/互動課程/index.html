@@ -3,22 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>從電晶體到 C++ 執行</title>
-<link rel="stylesheet" href="styles.css">
+<title>課程首頁｜計算機組織互動課程</title>
+<link rel="stylesheet" href="styles.css"><script src="app.js" defer></script>
 </head>
 <body data-page="index">
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar" aria-label="課程導覽">
-<a aria-current="page" href="index.html">首頁</a>
-<a href="00-電晶體到反及閘.html">逐層造機器</a>
-<a href="05-x86-64組合語言.html">三套組合語言</a>
-<a href="10-編譯組譯與目的檔.html">工具鏈</a>
-<a href="名詞與概念字典.html">字典</a>
-</nav>
+<nav class="topbar" aria-label="課程導覽"><a href="index.html" aria-current="page">首頁</a><a href="00-電晶體到反及閘.html">00 電晶體到反及閘</a><a href="01-只用反及閘造邏輯.html">01</a><a href="02-組合邏輯與算術.html">02</a><a href="03-時序邏輯與記憶.html">03</a><a href="04-處理器資料路徑與指令週期.html">04 處理器資料路徑與指令週期</a><a href="05-x86-64組合語言.html">05</a><a href="06-AArch64組合語言.html">06</a><a href="07-RISC-V組合語言.html">07</a><a href="08-記憶體階層與虛擬記憶體.html">08 記憶體階層與虛擬記憶體</a><a href="09-程序ABI呼叫與系統邊界.html">09</a><a href="10-編譯組譯與目的檔.html">10 編譯、組譯與目的檔</a><a href="11-符號重定位與連結.html">11</a><a href="12-載入器動態函式庫與執行期.html">12</a><a href="13-從C++原始碼到執行證據.html">13 從 C++ 原始碼到執行證據</a><a href="名詞與概念字典.html">字典</a></nav>
 <main>
 <p class="eyebrow">逆向工程的必要前置</p>
 <h1>從電晶體到 C++ 執行</h1>
-<p class="lead">你已經會寫大型 C++ 系統；這門課把平常被編譯器、作業系統與硬體藏起來的層逐一打開。先用反及閘（NAND gate）造出計算，再讀 x86-64、64 位元 Arm 與 RISC-V，最後親手追過編譯、連結、載入與執行證據。</p>
+<p class="lead">預設讀者具程式基礎；C++ 例子另附說明。這門課把平常被編譯器、作業系統與硬體藏起來的層逐一打開。先用反及閘（NAND gate）造出計算，再讀 x86-64、64 位元 Arm 與 RISC-V，最後親手追過編譯、連結、載入與執行證據。</p>
+<div class="note"><strong>若不熟 C++ 工具鏈：</strong>可直接依章次前進；第 10 章會先定義翻譯單元，第 11 章會說明名稱修飾與一次定義規則（ODR），不要求先有大型 C++ 專案經驗。</div>
 <div class="prereq">
 <strong>不先考。</strong>每章先給最小前置、可操作模型、因果鏈與模型邊界，再讓你手算或步進。看不懂縮寫時可隨時開啟字典。</div>
 <h2>這門課在解決什麼痛點？</h2>
@@ -108,9 +103,6 @@
 <li>C++ 原始碼如何經目的檔、重定位與載入映射成為程序？</li>
 <li>看到錯誤位址或訊息時，哪種工具能直接證明哪一層的事實？</li>
 </ol>
-<div class="pager"><a href="名詞與概念字典.html">名詞與概念字典</a><a href="00-電晶體到反及閘.html">開始造機器 →</a></div>
-</main>
-<script src="app.js">
-</script>
-</body>
+<nav class="pager" aria-label="課程入口"><a href="名詞與概念字典.html">名詞與概念字典</a><a href="00-電晶體到反及閘.html">開始造機器 →</a></nav>
+</main></body>
 </html>

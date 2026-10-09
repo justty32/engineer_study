@@ -5,5 +5,8 @@
 <h2>偏導數與連鎖律</h2><p>算某個變數的偏導數時，先把其他變數當成常數。例如 F(x,y)=x²y，對 x 微分時 y 先不動，所以 ∂F/∂x=2xy；對 y 微分則得 ∂F/∂y=x²。若輸出經過一層又一層函式，連鎖律會把每層的局部變化率相乘：df(g(t))/dt=f′(g(t))g′(t)。</p>
 <h2>數字實例：x² 在 x=3 的斜率</h2><p>f(x)=x²，解析導數 f′(x)=2x，所以 x=3 時斜率 6。取 h=0.001，中央差為 ((3.001)²−(2.999)²)/0.002=6。對 F(x,y)=x²+y²，在 (3,1) 梯度是 (6,2)，沿負梯度走會朝原點、讓平方距離下降。</p>
 <section class="workspace"><h2>自由實驗：數值導數與下降方向</h2><p>切換 x² 與 sin x；sin 的 x 以弧度解讀。比較中央差與解析斜率。</p><div class="controls"><label for="fn-pick">函式<select id="fn-pick"><option value="sq">x²</option><option value="sin">sin x</option></select></label><label for="fn-x">x<input id="fn-x" type="range" min="-3" max="3" step=".1" value="3"></label></div><div id="deriv-output" class="output" aria-live="polite"></div></section>
+<section class="self-check" data-quiz="11"><h2>自我檢核：換位置求變化率</h2><p>把導數與偏導數套到正文外的點；數值題依標示容差判定，可重做。</p><div class="quiz-root"></div></section>
 <h2>為什麼／不要混淆</h2><ul><li><strong>導數不是總變化：</strong>它是目前位置附近「每單位輸入」的變化率；有限距離要積分或重新評估。</li><li><strong>梯度不是移動本身：</strong>還要選步長；太大可能越過低點，太小則進展很慢。</li><li><strong>負梯度只保證局部下降：</strong>非凸問題可能停在局部最低或平坦區。</li><li><strong>sin 的導數假設弧度：</strong>若用度數，鏈式換算會多出 π/180。</li></ul>
-<h2>連到哪門機器人課</h2><p>運動學的雅可比是「多個關節角對末端位姿」的多變數斜率；路徑規劃以梯度避障與平滑；機器人學習沿損失函式負梯度更新參數。</p><nav class="pager" aria-label="章節導覽"><a href="10-解方程式與逆.html">← 上一頁：解方程式</a><a href="12-機率一點點.html">下一頁：機率一點點 →</a></nav></main></body></html>
+<h2>連到哪門機器人課</h2><p>運動學的雅可比是「多個關節角對末端位姿」的多變數斜率；路徑規劃以梯度避障與平滑；機器人學習沿損失函式負梯度更新參數。</p>
+<h2>帶走的結論</h2><ul class="takeaways"><li>導數描述目前附近每單位輸入造成的輸出變化。</li><li>偏導數一次只改一個變數，其餘變數暫時視為常數。</li><li>梯度指向局部上升最快方向，負梯度則提供局部下降方向。</li></ul>
+<nav class="pager" aria-label="章節導覽"><a href="10-解方程式與逆.html">← 上一頁：解方程式</a><a href="12-機率一點點.html">下一頁：機率一點點 →</a></nav></main></body></html>

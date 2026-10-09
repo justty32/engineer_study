@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="機器人路徑規劃可搜尋深度字典">
-<title>字典｜機器人路徑規劃</title>
+<title>字典｜機器人路徑與運動規劃</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,6 +15,8 @@
 <a href="00A-搜尋與圖論先修.html">搜尋先修</a>
 <a href="03-PRM-RRT與RRT-star.html">取樣規劃</a>
 <a href="06-C++架構與驗證證據.html">C++／證據</a>
+<a href="07-約束流形投影與任務空間限制.html">07 約束流形</a>
+<a href="08-動力可行規劃與煞停包絡.html">08 動力可行</a>
 <a aria-current="page" href="名詞與概念字典.html">字典</a>
 </nav>
 <main>
@@ -483,7 +485,7 @@
 <article class="card"><h3>案例三：杯口水平，但手肘撞牆</h3><p><strong>約束投影</strong>讓 f(q) 接近零，只證明組態落在<strong>約束流形</strong>容許帶。它不會自動處理碰撞、關節極限或邊中偏離。七軸<strong>零空間</strong>可提供局部次要調整方向，仍須把每個候選送回狀態與邊驗證。</p><p>若成本鼓勵大間隙，它只在合法候選中排序；牆面碰撞必須是硬限制。保存每步約束殘差、最小間隙、關節極限距離與末端漂移，才能知道改善一項是否傷害另一項。</p></article>
 <h2>字典自我驗收</h2><ol><li>任選一詞，能否指出它屬於資料、檢查器、演算法、限制還是證據？</li><li>能否給一組帶單位的數字，逐步算出結果？</li><li>能否說出至少一個它不能證明的主張？</li><li>能否指出畫面、trace、碰撞報告、軌跡檔或量測中哪裡看得到它？</li><li>能否把它與前後各一層連起來，而不是只背英文全名？</li></ol><p>五題都能回答，才算真正掌握這個詞。數學細節卡住時，依主線連結回到「機器人數學基礎」相應章節，不必把字典當公式表死背。</p></section>
 <div class="pager">
-<a href="08-動力可行規劃與煞停包絡.html">← 08 動力可行性</a>
+<a href="08-動力可行規劃與煞停包絡.html">← 08 動力可行</a>
 <a href="index.html">回課程首頁 →</a>
 </div>
 </main>

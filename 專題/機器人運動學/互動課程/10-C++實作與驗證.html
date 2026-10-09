@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>10 C++ 實作與驗證</title>
+<title>10 C++ 實作與驗證｜七軸機械手臂運動學</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar">
+<nav class="topbar" aria-label="課程導覽">
 <a href="index.html">首頁</a>
-<a href="09-七軸數值逆運動學.html">09 IK</a>
-<a aria-current="page" href="10-C++實作與驗證.html">10 C++</a>
+<a href="09-七軸數值逆運動學.html">上一章</a>
+<a aria-current="page" href="10-C++實作與驗證.html">本章</a>
+<a href="11-SE3李群扭量與指數映射.html">下一章</a>
 <a href="名詞與概念字典.html">字典</a>
 </nav>
 <main>
@@ -20,6 +21,7 @@
 <p class="lead">真正難抓的錯通常不是矩陣乘法，而是「這個矩陣把哪個框架變到哪個框架、角度是度還是弧度、向量是點還是方向」沒有進入型別與測試。</p>
 <p><strong>白話定位：</strong>數學契約若只寫在開發者腦中，就像把資料庫 schema 拿掉後用幾個 <code>double[16]</code> 互傳。編譯器只看尺寸，不知道 frame、單位、時間與物理型別；本章要把這些隱含前提變成 API、測試與 log。</p>
 <p><strong>怎麼玩：</strong>先保留三個「靠人記住」的選項，看輸出列出哪些錯能靜默通過；再一次只改一項契約。最後全選顯式契約，觀察它仍不能替你證明幾何參數、碰撞或真機安全正確。</p>
+<details class="expected-output" data-answer-id="10"><summary>預期輸出（遷移題）</summary><p>依序選「座標系進型別／內部 rad／明定儲存與乘法」。<strong>答案鍵：</strong>三項中仍靠記憶的契約數為 0，狀態顯示「契約足以進入數值測試」。</p><p><strong>容許值：</strong>必須三項全符合，答案鍵不接受部分相符。<strong>解析：</strong>這三個選項只消除 frame、單位與矩陣語意的靜默風險；輸出仍明確提醒它不證明實體幾何與安全。</p></details>
 <section class="workspace">
 <h2>檢查 API 契約</h2>
 <div class="controls">
@@ -121,8 +123,8 @@ Transform&lt;ToolFrame, BaseFrame&gt; forwardKinematics(const JointState&amp;);<
 <h2>測試預言機不能與被測程式同源</h2><p>若 production FK 與 test expected 都呼叫同一個旋轉函式，該函式符號寫反時測試仍可能通過。手算特殊角、幾何不變量、不同建模方法與外部量測提供不同來源的證據；來源愈獨立，共同錯誤愈不容易被遮住。</p><p>property test 可隨機檢查 R<sup>T</sup>R≈I、T 反向往返、連桿固定距離與 FK→IK→FK。它適合找邊界，但每次失敗要保存亂數種子與最小化案例，否則無法重現。</p><h2>錯誤處理也是 API 契約</h2><p>IK 不可達、最大迭代、NaN、關節超限要分開回報；不得在數值無效時仍回傳上一組 q 並標成功。呼叫端也要決定保持、退回、安全停止或換種子，數學函式不應自行假設真機安全策略。</p><p><strong>能教別人的檢核：</strong>設計一筆可重現 log，讓另一位工程師不看原執行程序也能重建模型版本、輸入、每步誤差、裁切與停止原因。</p>
 <details><summary>一個 frame 型別測試的思考方式</summary><p>若函式宣告 Transform&lt;B,A&gt; compose(Transform&lt;B,C&gt;, Transform&lt;C,A&gt;)，中間 C 才能接合；把 Transform&lt;D,A&gt; 傳入應在編譯期失敗。實際 template 參數順序可自訂，但必須與數學文件一致，並用一個故意不該編譯的測試保護契約。</p><p>序列化後型別資訊可能只剩字串，因此反序列化也要驗證 from、to、單位與版本。強型別保護記憶體內的 API，不會自動保護網路封包或舊 log。</p></details>
 <div class="pager">
-<a href="09-七軸數值逆運動學.html">← 09 IK</a>
-<a href="11-SE3李群扭量與指數映射.html">11 SE(3) →</a>
+<a href="09-七軸數值逆運動學.html">← 09 七軸數值逆運動學</a>
+<a href="11-SE3李群扭量與指數映射.html">11 SE(3)、扭量與指數映射 →</a>
 </div>
 </main>
 <script src="app.js">

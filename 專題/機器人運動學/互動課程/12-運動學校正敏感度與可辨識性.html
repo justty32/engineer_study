@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>12 運動學校正、敏感度與可辨識性｜七軸運動學</title>
+<title>12 運動學校正、敏感度與可辨識性｜七軸機械手臂運動學</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar">
+<nav class="topbar" aria-label="課程導覽">
 <a href="index.html">首頁</a>
-<a href="09-七軸數值逆運動學.html">逆運動學</a>
-<a href="11-SE3李群扭量與指數映射.html">SE(3)</a>
-<a aria-current="page" href="12-運動學校正敏感度與可辨識性.html">校正</a>
+<a href="11-SE3李群扭量與指數映射.html">上一章</a>
+<a aria-current="page" href="12-運動學校正敏感度與可辨識性.html">本章</a>
+<a href="名詞與概念字典.html">下一章</a>
 <a href="名詞與概念字典.html">字典</a>
 </nav>
 <main>
@@ -28,6 +28,7 @@
 <p>一段 0.6 m 連桿若零點偏 <code>δ=0.5°≈0.00873 rad</code>，垂直於連桿方向的末端偏差量級約 <code>Lδ≈5.2 mm</code>。這個小角近似只在角度很小時成立；互動使用精確三角函數同時計算連桿長度與零點誤差。</p>
 <h2>讀完再操作：偏差會不會被平均掉？</h2>
 <p><strong>怎麼玩：</strong>先把連桿與零點偏差都設為 0，只增加 N，觀察隨機不確定度約依 1/√N 下降；再加入 0.5 mm 長度偏差或 0.5° 零點偏差。N 從 1 增到 100 時，理想隨機標準不確定度降為原本 1/10，但系統偏差不會跟著除以 10。</p>
+<details class="expected-output" data-answer-id="12"><summary>預期輸出（遷移題）</summary><p>設長度偏差 −0.7 mm、零點偏差 0.4°、N=64。<strong>答案鍵：</strong>末端系統偏差約 4.24 mm，平均值隨機標準不確定度約 0.125 mm。</p><p><strong>容許值：</strong>系統偏差 ±0.01 mm、隨機不確定度 ±0.001 mm。<strong>解析：</strong>系統偏差用精確三角函數比較名目與實際端點；隨機部分為 1/√64=1/8 mm。</p></details>
 <section class="workspace">
 <h2>偏差會不會被平均掉？</h2>
 <div class="controls">
@@ -68,7 +69,7 @@
 <h2>最小平方在做什麼，不能做什麼</h2><p>線性化後有許多樣本 r≈J<sub>θ</sub>Δθ。最小平方選一組 Δθ，使所有殘差平方和最小。若 J<sub>θ</sub> 欄獨立且噪聲假設合理，能穩定估參數；若欄相依，仍存在多組近似同樣好的答案，最佳化器回傳一組數字不等於參數被辨識。</p><p>若不同量測的不確定度不同，應加權。例如雷射位置標準差 0.05 mm、視覺量測 0.5 mm，後者單筆不該與前者等權。權重需來自量測模型或重複實驗，不是為了讓殘差圖好看。</p>
 <h2>殘差圖樣能指出模型缺了什麼</h2><ul><li>所有姿態近似固定方向偏移：先查基座或工具平移外參。</li><li>誤差隨某關節角呈正弦變化：可能是該軸零點、軸向或偏心。</li><li>正向接近與反向接近結果不同：可能有背隙或遲滯，剛體幾何參數難以吸收。</li><li>誤差隨負載或伸展量增加：可能是彈性撓曲，不宜無限增加固定連桿參數。</li><li>誤差隨速度而變：先查時間同步、控制跟隨與動力效應。</li></ul><p>這些是診斷線索，不是單憑圖樣就能定罪；需設計能區分候選原因的後續實驗。</p>
 <details><summary>一份可交付的校正報告至少包含什麼？</summary><p>模型與軟體版本、參數定義及單位、量測設備與外參、姿態選取方法、訓練／保留分割、原始與清理規則、J<sub>θ</sub> 條件、估計值與不確定度、校正前後位置與姿態分布、失敗樣本、適用溫度與負載範圍。只交付一張「平均誤差下降」表，無法讓下一位工程師重現或判斷邊界。</p></details>
-<div class="pager"><a href="11-SE3李群扭量與指數映射.html">← 11 SE(3)</a><a href="名詞與概念字典.html">字典 →</a></div>
+<div class="pager"><a href="11-SE3李群扭量與指數映射.html">← 11 SE(3)、扭量與指數映射</a><a href="名詞與概念字典.html">名詞與概念字典 →</a></div>
 </main>
 <script src="app.js"></script>
 </body>

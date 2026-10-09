@@ -3,14 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>00 手臂、自由度與座標</title>
+<title>00 機械手臂、自由度與座標｜七軸機械手臂運動學</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar">
+<nav class="topbar" aria-label="課程導覽">
 <a href="index.html">首頁</a>
-<a aria-current="page" href="00-機械手臂自由度與座標.html">00 起點</a>
+<a href="index.html">上一章</a>
+<a aria-current="page" href="00-機械手臂自由度與座標.html">本章</a>
+<a href="00A-角度弧度三角函數與單位.html">下一章</a>
 <a href="名詞與概念字典.html">字典</a>
 </nav>
 <main>
@@ -38,6 +40,8 @@
 <h2>任何數字都要回答「相對誰？」</h2>
 <p>點是空間中的位置；向量可表示位移、方向或速度；三個數字只是它們在某座標系基底下的分量。記號 <code>⁰p</code> 表示用座標系 0 表示的點。遺漏上標或型別標籤，是機器人程式最常見的靜默錯誤之一。</p>
 <p><strong>先把這個實驗當成序列化／反序列化：</strong>物理向量是同一份資料，座標系則像不同的編碼規則。拖動 x、y 是改變物理向量；拖動旋轉角只是在改變「用哪組軸讀它」。若只有後者改變，向量長度應保持不變。</p>
+<p><strong>怎麼玩：</strong>先固定向量只改座標系角度，確認分量改變但長度不變；再固定角度改 x、y，分辨「換表示」與「換物理向量」。</p>
+<details class="expected-output" data-answer-id="00"><summary>預期輸出（遷移題）</summary><p>設 x=0.8、y=0.3、角度 60°。<strong>答案鍵：</strong>新分量約 [0.660, −0.543]，長度約 0.854。</p><p><strong>容許值：</strong>各分量與長度 ±0.001。<strong>解析：</strong>被動換座標使用 [cosθ·x+sinθ·y, −sinθ·x+cosθ·y]；正交旋轉不改變長度。</p></details>
 <section class="workspace">
 <h2>同一向量，換一組旋轉基底</h2>
 <div class="controls">
@@ -118,8 +122,8 @@
 <h2>把整章講成一條因果鏈</h2><p>七個關節角 q 決定手臂形狀；形狀經正運動學決定工具相對基座的位姿；位姿包含位置與姿態；所有分量又必須依附某個座標系。只要其中一個 frame、單位或零位不明，最後三個或六個數字就失去可執行的意義。</p><p>例如相機回報物件在相機前方 [0,0,0.4] m。必須已知相機相對基座的旋轉與平移，才能轉成基座目標；不能直接把這三個數送給 IK。即使 IK 成功，也只是成功到錯誤的物理點。</p><ul><li>畫面的 frame 分量是座標計算證據。</li><li>編碼器 q 是關節狀態證據。</li><li>外部追蹤工具才是實體位姿證據。</li><li>碰撞與驅動安全另有證據，運動學不替代它們。</li></ul><p><strong>能教別人的檢核：</strong>說出七個關節自由度、六維剛體位姿、一般一維冗餘為何是不同層次的計數。</p>
 <details><summary>再用「工具前進」測一次 frame 語意</summary><p>工具姿態若相對基座繞 z 軸 90°，工具局部前方 [0.1,0,0] m 會對應基座 [0,0.1,0] m。命令「沿工具 x 前進 10 cm」與「沿基座 x 前進 10 cm」因此到不同點。兩者位移長度同為 0.1 m，單看長度抓不到 frame 錯；必須同時檢查方向分量與姿態。</p><p>實機驗證可在低速安全條件下，用外部追蹤器記錄起終點位移，將量得向量分別投影到基座軸與工具起始軸。控制器 log 只能說它送出了哪個 frame 的命令，外部軌跡才顯示機械真正往哪裡走。</p></details>
 <div class="pager">
-<a href="index.html">← 首頁</a>
-<a href="00A-角度弧度三角函數與單位.html">00A 數學起點 →</a>
+<a href="index.html">← 課程首頁</a>
+<a href="00A-角度弧度三角函數與單位.html">00A 角度、弧度、三角函數與單位 →</a>
 </div>
 </main>
 <script src="app.js">

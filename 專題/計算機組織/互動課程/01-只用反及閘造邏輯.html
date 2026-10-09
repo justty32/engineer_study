@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>01｜只用反及閘造邏輯</title>
+  <title>01｜只用反及閘造邏輯｜計算機組織互動課程</title>
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
 </head>
-<body data-page="nand-logic">
+<body data-page="chapter-01">
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-  <nav class="topbar" aria-label="課程導覽"><a href="index.html">課程首頁</a><a href="00-電晶體到反及閘.html">00 電晶體到反及閘</a><a href="01-只用反及閘造邏輯.html" aria-current="page">01 只用反及閘</a><a href="名詞與概念字典.html">字典</a></nav>
+  <nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="00-電晶體到反及閘.html">00 電晶體到反及閘</a><a href="01-只用反及閘造邏輯.html" aria-current="page">01</a><a href="02-組合邏輯與算術.html">02</a><a href="03-時序邏輯與記憶.html">03</a><a href="04-處理器資料路徑與指令週期.html">04 處理器資料路徑與指令週期</a><a href="05-x86-64組合語言.html">05</a><a href="06-AArch64組合語言.html">06</a><a href="07-RISC-V組合語言.html">07</a><a href="08-記憶體階層與虛擬記憶體.html">08 記憶體階層與虛擬記憶體</a><a href="09-程序ABI呼叫與系統邊界.html">09</a><a href="10-編譯組譯與目的檔.html">10 編譯、組譯與目的檔</a><a href="11-符號重定位與連結.html">11</a><a href="12-載入器動態函式庫與執行期.html">12</a><a href="13-從C++原始碼到執行證據.html">13 從 C++ 原始碼到執行證據</a><a href="名詞與概念字典.html">字典</a></nav>
   <main>
     <p class="eyebrow">一種閘，生成完整布林世界</p>
     <h1>為什麼只用反及閘就夠？</h1>
     <p class="lead">一句話答案：反及閘（NOT AND, NAND gate）具有功能完備性；只要把它的輸入與輸出重新接線，就能造出反相、且、或、互斥或、多工與解多工，因而能表達任何有限的布林函數。</p>
     <aside class="prereq"><strong>這章假設已懂：</strong><a href="00-電晶體到反及閘.html">電晶體如何形成 NAND</a>，以及 0／1 是電路對電壓範圍的解讀。</aside>
 
-    <h2>先看痛點：為什麼要從一種閘合成？</h2>
+    <h2 data-round="1">先看痛點：為什麼要從一種閘合成？</h2>
     <p>若每遇到一個新需求就發明一種全新的物理元件，設計、驗證與製造成本會失控；更糟的是，複雜函數很難確認是否涵蓋所有輸入。功能完備性提供一座橋：先把需求寫成布林函數，再機械式地分解成已知能做出的閘。它像編譯器把許多高階語法降成少數機器指令；但類比限制仍會回來，因為同一函數的不同閘網路在面積、功耗與延遲上可能差很多。</p>
 
-    <h2>先從三個基本閘開始</h2>
+    <h2 data-round="1">先從三個基本閘開始</h2>
     <table>
       <thead><tr><th>要造的函數</th><th>只用 NAND 的接法</th><th>為什麼成立</th></tr></thead>
       <tbody>
@@ -30,20 +30,20 @@
     </table>
     <p class="note"><strong>模型邊界：</strong>「功能完備」只保證能表達函數，不保證閘數最少、延遲最低、功耗最佳或容易布線。真實晶片會使用多種標準元件與經最佳化的電路。</p>
 
-    <h2>互斥或：輸入不同才輸出 1</h2>
+    <h2 data-round="1">互斥或：輸入不同才輸出 1</h2>
     <p>互斥或（Exclusive OR, XOR）可以用四個 NAND 組成。令 <code>T=NAND(A,B)</code>，再令 <code>U=NAND(A,T)</code>、<code>V=NAND(B,T)</code>，最後 <code>Y=NAND(U,V)</code>。</p>
     <table>
       <thead><tr><th>A</th><th>B</th><th>T</th><th>U</th><th>V</th><th>Y</th></tr></thead>
       <tbody><tr><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td></tr></tbody>
     </table>
 
-    <h2>多工器：用選擇位元決定資料去向</h2>
+    <h2 data-round="1">多工器：用選擇位元決定資料去向</h2>
     <p>二選一多工器（Multiplexer, MUX）接收資料 A、B 與選擇位元 S：S=0 時輸出 A，S=1 時輸出 B。用布林式寫成 <code>Y=(A AND NOT S) OR (B AND S)</code>；每個 NOT、AND、OR 都能替換成上一節的 NAND 網路。</p>
     <table><thead><tr><th>S</th><th>Y</th><th>意義</th></tr></thead><tbody><tr><td>0</td><td>A</td><td>選 A 這條資料路徑</td></tr><tr><td>1</td><td>B</td><td>選 B 這條資料路徑</td></tr></tbody></table>
     <p>解多工器（Demultiplexer, DEMUX）反過來把一個輸入送到兩個輸出之一：<code>Y0=IN AND NOT S</code>、<code>Y1=IN AND S</code>。沒有被選到的輸出為 0。這是「選路」，不是複製一份有能量的類比訊號。</p>
 
     <section class="workspace" aria-labelledby="manual-title">
-      <h2 id="manual-title">手算互動：像除錯暫存值一樣追中間節點</h2>
+      <h2 id="manual-title" data-round="2">手算互動：像除錯暫存值一樣追中間節點</h2>
       <p>令 A=1、B=0。依序算 <code>T</code>、<code>U</code>、<code>V</code>、<code>Y</code>，不要直接背 XOR 表。</p>
       <details><summary>展開一層</summary><p><code>T=NAND(1,0)=1</code>。先保留 T，不急著猜結果。</p></details>
       <details><summary>展開完整追蹤</summary><p><code>U=NAND(1,1)=0</code>；<code>V=NAND(0,1)=1</code>；<code>Y=NAND(0,1)=1</code>。輸入不同，所以 XOR 輸出 1。</p></details>
@@ -51,23 +51,23 @@
       <details><summary>邊界：很多閘串起來會怎樣？</summary><p>布林代數看來每層立即更新，真實電路卻有傳播延遲。輸入同時改變時，不同路徑可能先後抵達，短暫產生毛刺；若下游在錯誤時刻取樣，毛刺就可能成為真正的狀態錯誤。</p></details>
     </section>
 
-    <h2>從函數到硬體的兩層證據</h2>
+    <h2 data-round="3">從函數到硬體的兩層證據</h2>
     <p>布林層先用真值表核對所有輸入組合；電路層再用模擬器或邏輯分析儀觀察中間節點、延遲與毛刺。兩者回答不同問題：真值表驗證穩定後的函數，時序量測驗證「何時」可相信輸出。</p>
 
-    <h2>從需求一步步長出電路</h2>
+    <h2 data-round="1">從需求一步步長出電路</h2>
     <div class="grid">
       <section class="card"><h3>例一：只有兩個權限都允許才放行</h3><p>令 A 表示「使用者已登入」，B 表示「資源權限允許」，需求是 Y=A AND B。第一顆 NAND 得到 T=NAND(A,B)，這恰好是需求的反相；第二顆把 T 同時接到兩個輸入，得到 Y=NAND(T,T)=NOT T。當 A=1、B=0 時，T=1、Y=0；當 A=1、B=1 時，T=0、Y=1。兩次反相不是多餘，而是把 NAND 的先天反相收回來。</p></section>
       <section class="card"><h3>例二：二選一資料路徑</h3><p>取 A=1、B=0、S=0。先算 NOT S=1，再算左路 A AND NOT S=1，右路 B AND S=0，最後 OR 得 Y=1。若只把 S 改成 1，左路被關成 0，右路選到 B=0，因此 Y=0。S 並未把資料「搬動」；它改變的是哪一條組合邏輯路徑能影響輸出。</p></section>
     </div>
     <p>把任意真值表轉成電路時，可以先找出所有輸出為 1 的輸入列。每一列做成一個 AND 條件，例如 A=1、B=0 可寫成 A AND NOT B，再把這些條件全部 OR 起來。由於 NOT、AND、OR 都能用 NAND 合成，所以任何有限輸入的真值表都能落到 NAND。這是功能完備性的建構式理由，不只是口號。</p>
 
-    <h2>同一個 XOR，兩種檢查方式</h2>
+    <h2 data-round="1">同一個 XOR，兩種檢查方式</h2>
     <ol><li><strong>列舉檢查：</strong>對 A、B 的 00、01、10、11 四組輸入，逐層填 T、U、V、Y。四列全部一致才證明這個兩輸入函數正確，不能只試 01 一列。</li><li><strong>代數檢查：</strong>T 在 A、B 皆為 1 時才為 0；U 與 V 分別排除 A、B 相同的兩個端點；最後 NAND 只在兩者不同時留下 1。代數可解釋結構，真值表可防止推理漏列。</li></ol>
     <details><summary>想更深入：毛刺如何出現？</summary><p>假設多工器從 A 切換到 B，且 A=B=1。理想函數說輸出應一直是 1；但 NOT S 與 S 走過不同數目的閘，切換瞬間可能短暫讓左右兩路都成為 0，輸出便出現窄低脈衝。功能模擬若把所有閘設成零延遲可能看不到；含閘延遲模擬或示波器能看到脈衝寬度。這仍不能單獨證明系統一定失敗，還要看下游是否在脈衝期間取樣。</p></details>
-    <h2>常見錯誤與可觀察證據</h2>
+    <h2 data-round="3">常見錯誤與可觀察證據</h2>
     <ul><li>不要把 NAND 與 AND 的圖形或真值表混用；最可靠的做法是每個中間節點都命名並寫出值。</li><li>不要以「閘數較少」直接推出「速度較快」；臨界路徑長度、負載、扇出與元件尺寸也會改變延遲。</li><li>邏輯模擬通過能證明給定測試與模型下的輸出；窮舉才完整涵蓋小型組合函數，隨機測試沒有命中反例不等於不存在反例。</li><li>合成工具輸出的閘級網表可證明工具實際選了哪些標準元件；它不保證佈線後時序仍通過，仍要看靜態時序分析或實測。</li></ul>
 
-    <nav class="pager" aria-label="章節翻頁"><a href="00-電晶體到反及閘.html">← 上一章：電晶體到反及閘</a><a href="02-組合邏輯與算術.html">下一章：組合邏輯與算術 →</a></nav>
+    <section class="quiz" data-quiz-chapter="01" aria-labelledby="quiz-01-title"><h2 id="quiz-01-title" data-round="2">章末自測</h2><p>輸入數值後即時判分；每題可重做且不計總分。答案容差與解析會一併顯示。</p><div class="quiz-items"></div></section><section class="chapter-summary"><h2 data-round="3">本章小結</h2><ul><li>NAND 具有功能完備性，可合成其他布林函數。</li><li>真值表驗證穩定功能，路徑延遲決定輸出何時可信。</li><li>多工器用選擇位元控制資料路徑。</li></ul><p class="next-chapter"><strong>下章銜接：</strong>下一章把布林函數組成加法器、比較器與算術邏輯單元。</p></section><section class="further-reading"><h2 data-round="3">延伸閱讀</h2><p>可讀<a href="../../../電機/02-電機核心/邏輯設計-互動課程/06-多工器解碼器與編碼器.html">邏輯設計第 06 章：多工器、解碼器與編碼器</a>。</p></section><nav class="pager" aria-label="章節翻頁"><a href="00-電晶體到反及閘.html">← 上一頁：00 電晶體到反及閘</a><a href="02-組合邏輯與算術.html">下一頁：02 組合邏輯與算術 →</a></nav>
   </main>
 </body>
 </html>

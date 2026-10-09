@@ -3,19 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AArch64 組合語言｜計算機組織、編譯與連結</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>06｜AArch64 組合語言｜計算機組織互動課程</title>
+  <link rel="stylesheet" href="styles.css"><script src="app.js" defer></script>
 </head>
-<body>
+<body data-page="chapter-06">
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-  <nav class="topbar" aria-label="課程導覽">
-    <a href="index.html">課程首頁</a>
-    <a href="04-處理器資料路徑與指令週期.html">通用指令模型</a>
-    <a href="05-x86-64組合語言.html">x86-64</a>
-    <a href="06-AArch64組合語言.html" aria-current="page">AArch64</a>
-    <a href="07-RISC-V組合語言.html">RISC-V</a>
-    <a href="名詞與概念字典.html">字典</a>
-  </nav>
+  <nav class="topbar" aria-label="課程導覽"><a href="index.html">首頁</a><a href="00-電晶體到反及閘.html">00 電晶體到反及閘</a><a href="01-只用反及閘造邏輯.html">01</a><a href="02-組合邏輯與算術.html">02</a><a href="03-時序邏輯與記憶.html">03</a><a href="04-處理器資料路徑與指令週期.html">04 處理器資料路徑與指令週期</a><a href="05-x86-64組合語言.html">05</a><a href="06-AArch64組合語言.html" aria-current="page">06</a><a href="07-RISC-V組合語言.html">07</a><a href="08-記憶體階層與虛擬記憶體.html">08 記憶體階層與虛擬記憶體</a><a href="09-程序ABI呼叫與系統邊界.html">09</a><a href="10-編譯組譯與目的檔.html">10 編譯、組譯與目的檔</a><a href="11-符號重定位與連結.html">11</a><a href="12-載入器動態函式庫與執行期.html">12</a><a href="13-從C++原始碼到執行證據.html">13 從 C++ 原始碼到執行證據</a><a href="名詞與概念字典.html">字典</a></nav>
 
   <main>
     <p class="eyebrow">指令集實例 2／3</p>
@@ -26,7 +19,7 @@
       <strong>這章假設已懂：</strong>位址、暫存器、旗標、分支、呼叫與返回，以及<a href="04-處理器資料路徑與指令週期.html">通用指令模型</a>。本頁使用常見的 Arm 組合語法，三運算元通常寫成「目的、來源一、來源二」。
     </section>
 
-    <h2>最小可執行心智模型</h2>
+    <h2 data-round="1">最小可執行心智模型</h2>
     <div class="flow" aria-label="AArch64 指令執行因果鏈">
       <span><code>ldr</code> 把記憶體資料載入暫存器</span>
       <span>算術與比較在暫存器之間進行</span>
@@ -35,7 +28,7 @@
     </div>
     <p>「載入／儲存型」是程式設計模型，不代表實體處理器一次只做一件事。真實核心仍可有管線、多發射、亂序執行與快取；只要最終可觀察結果符合 ISA 即可。</p>
 
-    <h2>暫存器與特殊角色</h2>
+    <h2 data-round="1">暫存器與特殊角色</h2>
     <div class="grid">
       <article class="card"><h3>64 與 32 位元視圖</h3><p><code>X0</code> 到 <code>X30</code> 是 64 位元一般用途暫存器；<code>W0</code> 到 <code>W30</code> 是同一批暫存器的低 32 位元視圖。寫入 <code>Wn</code> 會把對應 <code>Xn</code> 的高 32 位元清零。</p></article>
       <article class="card"><h3>堆疊與返回</h3><p><code>SP</code> 是堆疊指標。<code>X30</code> 通常稱為連結暫存器，<code>bl target</code> 把返回位址放入其中；非葉函式若還要呼叫別人，通常先保存自己的返回位址。</p></article>
@@ -43,7 +36,7 @@
       <article class="card"><h3>條件旗標</h3><p>負、零、進位、溢位四個條件旗標常合稱 <code>NZCV</code>。會更新旗標的包括帶 <code>S</code> 後綴的算術／邏輯指令與比較類指令；普通 <code>add</code> 不更新旗標。</p></article>
     </div>
 
-    <h2>六類動作</h2>
+    <h2 data-round="1">六類動作</h2>
     <div class="grid">
       <article class="card"><h3>資料搬移</h3><p><code>mov w0, #7</code> 是方便閱讀的別名，組譯器會選擇可表達它的真實編碼。<code>ldr w0, [x1]</code> 載入 32 位元；<code>str w0, [x1]</code> 儲存 32 位元。</p></article>
       <article class="card"><h3>算術</h3><p><code>add x0, x1, x2</code> 表示 <code>x0 = x1 + x2</code>，來源不被覆寫。<code>sub</code>、<code>mul</code> 類似；某些指令可把移位合併進來源運算元。</p></article>
@@ -53,7 +46,7 @@
       <article class="card"><h3>程序參數</h3><p>常見 64 位元 Arm 平台把前幾個整數參數放在 <code>X0</code> 起的一組暫存器，結果也常由 <code>X0</code> 返回；精確規則仍由平台 ABI 決定，不是所有值都如此。</p></article>
     </div>
 
-    <h2>從 C++ 對照：載入、計算、儲存分開看</h2>
+    <h2 data-round="1">從 C++ 對照：載入、計算、儲存分開看</h2>
     <div class="workspace">
       <pre><code>void bump(int* p, std::size_t i) {
     p[i] += 3;
@@ -66,7 +59,7 @@ ret</code></pre>
       <p class="note">即使 C++ 只有一個複合指定運算，AArch64 的資料依賴仍是「記憶體 → 暫存器 → 算術 → 記憶體」。若別的執行緒可同時存取，這幾條普通指令並不自動提供 C++ 原子操作語意。</p>
     </div>
 
-    <h2>手工追蹤 1：普通加法不會自動改旗標</h2>
+    <h2 data-round="2">手工追蹤 1：普通加法不會自動改旗標</h2>
     <div class="workspace">
       <p>初始：<code>W0 = 5</code>、零旗標為 1。執行：</p>
       <pre><code>add  w0, w0, #1
@@ -84,7 +77,7 @@ b.eq .six</code></pre>
       </details>
     </div>
 
-    <h2>手工追蹤 2：連結暫存器為何要保存</h2>
+    <h2 data-round="2">手工追蹤 2：連結暫存器為何要保存</h2>
     <div class="workspace">
       <p>假設 <code>outer</code> 由位址 <code>0x4000</code> 的呼叫者以 <code>bl outer</code> 呼叫，返回點為 <code>0x4004</code>。<code>outer</code> 又執行 <code>bl inner</code>，其返回點為 <code>0x5008</code>。</p>
       <details>
@@ -98,19 +91,19 @@ b.eq .six</code></pre>
       </details>
     </div>
 
-    <h2>先看痛點：語法整齊仍可能藏著寬度與更新副作用</h2>
+    <h2 data-round="1">先看痛點：語法整齊仍可能藏著寬度與更新副作用</h2>
     <p>AArch64 的三運算元看似比 x86-64 直觀，但 <code>W</code>／<code>X</code> 寬度、符號擴展、前置／後置索引與旗標更新仍會改變結果。若把 <code>ldr</code> 一律理解成「讀一個數」或把每個 <code>add</code> 都當成會更新條件碼，分支與位址很快就追錯。讀一行時先圈出目的寬度，再標示基底是否被回寫，最後才計算數值。</p>
-    <h2>具體追蹤 3：載入寬度與擴展</h2>
+    <h2 data-round="2">具體追蹤 3：載入寬度與擴展</h2>
     <div class="workspace"><p>假設位址 <code>0x3000</code> 的第一個位元組是 <code>0xFF</code>，X1=<code>0x3000</code>：</p><ul><li><code>ldrb w0, [x1]</code> 做零擴展，因此 X0=<code>0x00000000000000FF</code>，數值可解讀為 255。</li><li><code>ldrsb x0, [x1]</code> 做有號擴展，因此 X0=<code>0xFFFFFFFFFFFFFFFF</code>，以 64 位元二補數解讀為 −1。</li><li>兩者讀的是同一個位元組，差別來自指令指定的擴展規則，不是記憶體裡存了兩份不同資料。</li></ul></div>
-    <h2>具體追蹤 4：定址同時更新基底</h2>
+    <h2 data-round="2">具體追蹤 4：定址同時更新基底</h2>
     <p>若 X0=<code>0x4000</code>、記憶體 <code>0x4000</code> 起的 8 位元組是一個值，<code>ldr x2, [x0], #8</code> 先從舊 X0 指向的位置載入 X2，再令 X0=<code>0x4008</code>。這種後置索引很適合走訪陣列，但逆向時若只記載入結果、漏記 X0 的副作用，下一次存取位址就會全部偏掉。</p>
     <details><summary>想更深入：如何證明返回位址真的被保存？</summary><p>在函式入口查看反組譯，常可見把 X30 與其他需保存暫存器寫入堆疊的成對儲存，再於返回前成對載入。除錯器可在儲存後檢查 SP 附近的位元組並與 X30 比對；這證明該次執行的保存位置。僅看典型序言範本不能證明每個函式都如此，葉函式、尾呼叫、指標驗證與最佳化都可能改變形式。</p></details>
 
-    <h2>證據與邊界</h2>
+    <h2 data-round="3">證據與邊界</h2>
     <p>可觀察證據包括：固定寬度指令的機器位元、反組譯中的 <code>X</code>／<code>W</code> 寬度、除錯器中的程式計數器（Program Counter, <code>PC</code>）、<code>SP</code>、<code>X30</code> 與條件旗標、堆疊內保存的返回位址，以及載入／儲存前後的記憶體內容。函式序言並非固定模板；最佳化、葉函式與安全機制會改變它。</p>
     <p class="warning">AArch64 不等於所有 Arm。32 位元 Arm、Thumb 與 AArch64 的暫存器、編碼和呼叫形式不同。本頁也未涵蓋浮點／向量、系統暫存器、特權層、記憶體一致性與指標驗證等擴充。</p>
 
-    <h2>常見誤解</h2>
+    <h2 data-round="1">常見誤解</h2>
     <ul>
       <li><strong><code>W0</code> 與 <code>X0</code> 不是兩個獨立暫存器。</strong>它們是同一架構暫存器的不同寬度視圖。</li>
       <li><strong>每個算術指令不一定更新旗標。</strong>要檢查是否有 <code>S</code> 形式，或是否為 <code>cmp</code> 等別名。</li>
@@ -119,10 +112,7 @@ b.eq .six</code></pre>
       <li><strong>固定指令寬度不代表固定執行時間。</strong>快取、分支與資料相依仍會造成顯著差異。</li>
     </ul>
 
-    <nav class="pager" aria-label="章節翻頁">
-      <a href="05-x86-64組合語言.html">← x86-64</a>
-      <a href="07-RISC-V組合語言.html">下一章：RISC-V →</a>
-    </nav>
+    <section class="quiz" data-quiz-chapter="06" aria-labelledby="quiz-06-title"><h2 id="quiz-06-title" data-round="2">章末自測</h2><p>輸入數值後即時判分；每題可重做且不計總分。答案容差與解析會一併顯示。</p><div class="quiz-items"></div></section><section class="chapter-summary"><h2 data-round="3">本章小結</h2><ul><li>AArch64 多數算術採三運算元形式。</li><li>寫入 W 暫存器會清除對應 X 暫存器的高 32 位。</li><li>呼叫把返回位址寫入 X30。</li></ul><p class="next-chapter"><strong>下章銜接：</strong>下一章觀察 RISC-V 沒有全域整數旗標的設計。</p></section><nav class="pager" aria-label="章節翻頁"><a href="05-x86-64組合語言.html">← 上一頁：05 x86-64 組合語言</a><a href="07-RISC-V組合語言.html">下一頁：07 RISC-V 組合語言 →</a></nav>
   </main>
 </body>
 </html>

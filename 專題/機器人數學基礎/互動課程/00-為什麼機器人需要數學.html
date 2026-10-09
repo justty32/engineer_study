@@ -4,5 +4,8 @@
 <h2>精確地說：先標符號、單位與參考系</h2><p>位置常寫 p=(x,y,z)，長度單位可用公尺 m；角度寫 θ，程式與微積分通常用弧度 rad；時間用秒 s；速度因此是 m/s 或 rad/s。數值還必須標明相對哪個座標系。相同的 (1,0,0) 若一個屬於基座、一個屬於相機，不能直接當作同一點。</p>
 <h2>具體例子：一句任務拆成五個問題</h2><p>假設相機看到零件在影像座標 (320,240)，手臂工具目前在基座座標 (0.40,0.10,0.25) m。系統要先用相機模型與座標變換得到零件的基座座標，再解方程式求關節角；接近時用導數修正誤差，並用機率描述深度量測的標準差。每一步都有不同的數學角色，不能用單一公式包辦。</p>
 <section class="workspace"><h2>自由實驗：任務需要哪一塊數學</h2><p>選一項任務，觀察它如何對應本課章節與後續機器人課。</p><div class="controls"><label for="task-pick">機器人任務<select id="task-pick"><option value="pose">手臂末端在哪</option><option value="rotate">工具怎麼轉</option><option value="path">怎麼從 A 到 B</option><option value="see">相機看到了什麼</option><option value="learn">怎麼從經驗變好</option></select></label></div><div id="taskmath-output" class="output" aria-live="polite"></div></section>
+<section class="self-check" data-quiz="00"><h2>自我檢核：把任務說完整</h2><p>換一組情境檢查你能否先辨認物理量與參考系；不計分，可重做。</p><div class="quiz-root"></div></section>
 <h2>為什麼／不要混淆</h2><ul><li><strong>公式不是咒語：</strong>每個符號都要有定義、單位、參考系與適用假設。</li><li><strong>數值相同不等於物理量相同：</strong>1 m、1 rad、1 s 不能因為都寫 1 就相加。</li><li><strong>模型不是世界本身：</strong>公式忽略的摩擦、彈性、校正誤差仍會出現在真機。</li><li><strong>不必一次懂完：</strong>本課依依賴排序，每章只在前一層再加一種運算。</li></ul>
-<h2>連到哪門機器人課</h2><p>運動學主要使用座標、向量、旋轉、變換與方程式；路徑規劃加上距離與梯度；機器人視覺使用座標、內外積、相機變換與機率；機器人學習使用向量相似度、梯度與期望值。後續四門課都在重用這套共同語言。</p><nav class="pager" aria-label="章節導覽"><a href="index.html">← 上一頁：課程地圖</a><a href="01-三角函數複習.html">下一頁：三角函數複習 →</a></nav></main></body></html>
+<h2>連到哪門機器人課</h2><p>運動學主要使用座標、向量、旋轉、變換與方程式；路徑規劃加上距離與梯度；機器人視覺使用座標、內外積、相機變換與機率；機器人學習使用向量相似度、梯度與期望值。後續四門課都在重用這套共同語言。</p>
+<h2>帶走的結論</h2><ul class="takeaways"><li>數學把位置、方向、變化與不確定性變成可重算的規則。</li><li>任何數值都要連同單位、參考系與適用假設一起理解。</li><li>不同機器人任務會重用同一組基礎工具，但每種工具回答的問題不同。</li></ul>
+<nav class="pager" aria-label="章節導覽"><a href="index.html">← 上一頁：課程地圖</a><a href="01-三角函數複習.html">下一頁：三角函數複習 →</a></nav></main></body></html>

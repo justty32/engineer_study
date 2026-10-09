@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>11 SE(3)、扭量與指數映射｜七軸運動學</title>
+<title>11 SE(3)、扭量與指數映射｜七軸機械手臂運動學</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar">
+<nav class="topbar" aria-label="課程導覽">
 <a href="index.html">首頁</a>
-<a href="05-七軸正運動學.html">七軸模型</a>
-<a href="09-七軸數值逆運動學.html">逆運動學</a>
-<a aria-current="page" href="11-SE3李群扭量與指數映射.html">SE(3)</a>
+<a href="10-C++實作與驗證.html">上一章</a>
+<a aria-current="page" href="11-SE3李群扭量與指數映射.html">本章</a>
+<a href="12-運動學校正敏感度與可辨識性.html">下一章</a>
 <a href="名詞與概念字典.html">字典</a>
 </nav>
 <main>
@@ -28,6 +28,7 @@
 <p>以平面車體為例，車體 x 軸速度為 <code>v</code>、角速度為 <code>ω</code>。若 <code>ω=0</code>，經過 <code>t</code> 秒就是直走 <code>x=vt</code>；若 <code>ω≠0</code>，它沿半徑 <code>v/ω</code> 的圓弧走，位移為 <code>x=(v/ω)sin(ωt)</code>、<code>y=(v/ω)(1−cos(ωt))</code>。把「同時平移與旋轉」分成先直走再原地轉，通常得到不同終點；指數映射處理的是同一段時間內同時發生的剛體運動。</p>
 <h2>讀完再操作：積分一段平面扭量</h2>
 <p><strong>怎麼玩：</strong>先令 ω=0，確認 x=vΔt、y=0；再令 v=0，確認位置不變而姿態旋轉；最後設 v=0.6 m/s、ω=45°/s、Δt=1 s。此時 ω≈0.7854 rad/s、圓弧半徑 v/ω≈0.764 m，預期 x≈0.540 m、y≈0.224 m、轉角 45°。這組數字可用來手算核對輸出。</p>
+<details class="expected-output" data-answer-id="11"><summary>預期輸出（遷移題）</summary><p>設 v=0.35 m/s、ω=−60°/s、Δt=0.8 s。<strong>答案鍵：</strong>x≈0.248 m、y≈−0.111 m、θ=−48.0°、帶符號半徑約 −0.334 m。</p><p><strong>容許值：</strong>位置與半徑 ±0.001 m、角度 ±0.1°。<strong>解析：</strong>先把 ω 換成 rad/s，再代入 x=(v/ω)sin(ωt)、y=(v/ω)(1−cos(ωt))。</p></details>
 <section class="workspace">
 <h2>積分一段平面扭量</h2>
 <div class="controls">
@@ -73,7 +74,7 @@
 </section>
 <h2>螺旋運動包含兩個可觀察極端</h2><p>旋轉關節的節距為 0，繞固定軸轉而不沿軸前進；移動關節可視為純平移極端，角速度為 0。一般螺旋則每轉一圈同時沿軸移固定距離。這是剛體瞬時運動的幾何描述，不表示機械結構真的一定有螺紋。</p><p>POE 中每個關節螺旋軸必須在共同零位與指定 frame 表示。若零位工具 M 正確、單軸指數也各自合法，軸卻混用 space 與 body 表示，連乘仍會產生合法但錯誤的位姿。逐關節有限差分與零位手算仍不可少。</p>
 <details><summary>數值上接近 ω=0 時怎麼辦？</summary><p>圓弧公式含 v/ω，直接在極小 ω 相除會造成數值不穩；極限其實平滑回到直線 x=vΔt、y=0。實作可在 |ωΔt| 很小時使用級數或穩定函式，而不是硬算兩個大數再相消。測試應掃 ω=0、10<sup>−8</sup>、10<sup>−4</sup> rad/s，確認輸出連續且沒有 NaN。</p></details>
-<div class="pager"><a href="10-C++實作與驗證.html">← 10 C++</a><a href="12-運動學校正敏感度與可辨識性.html">12 校正與敏感度 →</a></div>
+<div class="pager"><a href="10-C++實作與驗證.html">← 10 C++ 實作與驗證</a><a href="12-運動學校正敏感度與可辨識性.html">12 運動學校正、敏感度與可辨識性 →</a></div>
 </main>
 <script src="app.js"></script>
 </body>

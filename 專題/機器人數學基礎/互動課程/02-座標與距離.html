@@ -4,5 +4,8 @@
 <h2>精確定義：距離與方向</h2><p>平面直角座標系假設兩軸垂直且使用相同尺度。點 p=(x,y) 到原點的歐幾里得距離 d=√(x²+y²)，d 與 x、y 同單位。方向角 θ=atan2(y,x)，由正 x 軸逆時針量；atan2 讀兩個分量的正負，因此能分辨四個象限，輸出通常在 −180° 到 180°。</p>
 <h2>數字實例：(3,4) 為什麼距離是 5</h2><p>d=√(3²+4²)=√25=5 m。方向角 atan2(4,3)≈53.13°。若只算 atan(4/3)，在 (−3,−4) 也會看到同一比值，卻漏掉它其實在第三象限；atan2(−4,−3) 可正確給約 −126.87°。</p>
 <section class="workspace"><h2>自由實驗：點的象限、距離與方向</h2><p>拖動 x、y，觀察跨越座標軸時象限與角度如何改變。</p><div class="controls"><label for="pt-x">x（座標單位）<input id="pt-x" type="range" min="-5" max="5" step=".5" value="3"></label><label for="pt-y">y（座標單位）<input id="pt-y" type="range" min="-5" max="5" step=".5" value="4"></label></div><div id="point-output" class="output" aria-live="polite"></div></section>
+<section class="self-check" data-quiz="02"><h2>自我檢核：換點定位</h2><p>用新座標重算距離與象限；數值題依標示容差判定，可重做。</p><div class="quiz-root"></div></section>
 <h2>為什麼／不要混淆</h2><ul><li><strong>點不是向量：</strong>點表示位置；向量表示位移。兩者可用同樣數字，但角色不同。</li><li><strong>距離沒有正負：</strong>分量可為負，√(x²+y²) 永遠非負。</li><li><strong>atan2 的參數順序：</strong>常見程式介面寫 atan2(y,x)，別交換。</li><li><strong>原點方向未定義：</strong>(0,0) 的長度為零，沒有唯一朝向。</li></ul>
-<h2>連到哪門機器人課</h2><p>運動學以座標報告末端位置；路徑規劃把路線拆成一串點並算距離；視覺使用影像像素座標。跨課程傳值時，都必須一起傳遞參考座標系與單位。</p><nav class="pager" aria-label="章節導覽"><a href="01-三角函數複習.html">← 上一頁：三角函數</a><a href="03-向量.html">下一頁：向量 →</a></nav></main></body></html>
+<h2>連到哪門機器人課</h2><p>運動學以座標報告末端位置；路徑規劃把路線拆成一串點並算距離；視覺使用影像像素座標。跨課程傳值時，都必須一起傳遞參考座標系與單位。</p>
+<h2>帶走的結論</h2><ul class="takeaways"><li>座標只有在原點、軸方向與單位明確時才代表位置。</li><li>到原點距離是 √(x²+y²)，永遠不小於零。</li><li>atan2(y,x) 會保留分量正負，能正確區分象限。</li></ul>
+<nav class="pager" aria-label="章節導覽"><a href="01-三角函數複習.html">← 上一頁：三角函數</a><a href="03-向量.html">下一頁：向量 →</a></nav></main></body></html>

@@ -15,3 +15,6 @@ pre{max-width:100%;padding:1rem;overflow:auto;border:1px solid var(--line);backg
   text-decoration: none;
 }
 .main-site-link:hover { text-decoration: underline; }
+h2[data-round]::before{display:inline-block;margin-right:.55rem;padding:.18rem .48rem;border:1px solid currentColor;border-radius:999px;color:var(--accent);font-size:.68em;vertical-align:.12em}
+h2[data-round="1"]::before{content:"第一輪・理解"}h2[data-round="2"]::before{content:"第二輪・手算"}h2[data-round="3"]::before{content:"第三輪・驗證"}
+.quiz-items{display:grid;gap:1rem;margin-top:1rem}.quiz-question{padding:1rem;border:1px solid var(--line);border-radius:10px;background:var(--panel)}.quiz-question label{display:grid;gap:.35rem;font-weight:700}.quiz-question input[type=number]{width:min(100%,22rem);min-height:44px;padding:.55rem}.quiz-question button{margin-top:.8rem;padding:.5rem .8rem;border:1px solid var(--accent);border-radius:7px;color:var(--ink);background:var(--accent2);font-weight:800;cursor:pointer}.quiz-feedback{min-height:1.7em;font-weight:800}.quiz-question.is-correct{border-color:#237a4b}.quiz-question.is-correct .quiz-feedback{color:#17643b}.quiz-question.is-wrong{border-color:var(--warn)}.quiz-question.is-wrong .quiz-feedback{color:var(--warn)}.next-chapter{padding:.8rem 1rem;border-left:4px solid var(--accent);background:var(--accent2)}

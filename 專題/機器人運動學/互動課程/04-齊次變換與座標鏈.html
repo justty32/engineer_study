@@ -3,25 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>04 齊次變換與座標鏈</title>
+<title>04 齊次變換與座標鏈｜七軸機械手臂運動學</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-<nav class="topbar">
+<nav class="topbar" aria-label="課程導覽">
 <a href="index.html">首頁</a>
-<a href="03-三維旋轉與姿態.html">03 姿態</a>
-<a aria-current="page" href="04-齊次變換與座標鏈.html">04 變換</a>
+<a href="03-三維旋轉與姿態.html">上一章</a>
+<a aria-current="page" href="04-齊次變換與座標鏈.html">本章</a>
+<a href="05-七軸正運動學.html">下一章</a>
 <a href="名詞與概念字典.html">字典</a>
 </nav>
 <main>
 <p class="eyebrow">04 · 把旋轉和平移放進同一條鏈</p>
 <h1>齊次變換與座標鏈</h1>
+<section class="card">
+<h2>沒有齊次變換時，錯誤會藏在哪裡？</h2>
+<p>若旋轉和平移分散在不同函式，開發者很容易在某一節先加平移、下一節卻先旋轉，或忘記子框架的平移方向會被父框架帶動。4×4 表示的重點是讓「旋轉後再加原點位移」成為一個可組合物件；它不會自動修正 frame 命名、單位或乘法方向。</p>
+<p>把多節變換視為函式合成很有幫助，但精確限制是每個 T 都表示一個剛體座標轉換，不是任意 4×4。右下角必須是 1、底列前三格是 0、左上 R 必須是合法旋轉。合成變換的詳細先修可看<a href="../../機器人數學基礎/互動課程/08-合成變換.html">機器人數學基礎第 8 章：合成變換</a>。</p>
+</section>
 <p>齊次變換矩陣（Homogeneous Transformation Matrix）是特殊歐氏群（Special Euclidean Group, SE(3)）的矩陣表示：<code>T=[[R,p],[0,1]]</code>，逆矩陣為 <code>T⁻¹=[[Rᵀ,−Rᵀp],[0,1]]</code>。</p>
 <p>
 <code>⁰T₁</code> 的欄向量描述座標系 1 的軸如何用座標系 0 表示，最右欄是座標系 1 原點在 0 中的位置。完整上下標比變數名 <code>T</code> 更重要。</p>
 <p><strong>把 frame 名稱想成泛型型別：</strong><code><sup>A</sup>T<sub>B</sub></code> 接受 B 表示的點，輸出 A 表示的點。只有相鄰型別能接上的變換才能組合；4×4 尺寸相同只是記憶體形狀相容，並不保證幾何語意相容。</p>
 <p><strong>怎麼玩：</strong>先把父、子旋轉都設 0°，確認局部平移直接相加；再只轉父框架，觀察子框架的平移方向也被父旋轉帶走；最後交換兩角的數值比較。你看到的是兩個局部變換連乘後的總位姿，不是兩角單純相加的通則。</p>
+<details class="expected-output" data-answer-id="04"><summary>預期輸出（遷移題）</summary><p>設父角 40°、子角 −25°。<strong>答案鍵：</strong>末端原點約 [0.673,0.399,0.000] m。</p><p><strong>容許值：</strong>各位置分量 ±0.001 m。<strong>解析：</strong>0.5 m 的第一段先受父旋轉；0.3 m 的第二段受父、子合成角 15°，兩段世界座標貢獻再相加。</p></details>
 <section class="workspace">
 <h2>連乘兩個局部變換</h2>
 <div class="controls">
@@ -75,20 +82,8 @@
 <li><strong>反向與負平移：</strong>反向平移是 −R<sup>T</sup>t，不是只把原三格加負號。</li>
 <li><strong>單位：</strong>mm 與 m 混用仍會產生合法 4×4 數字，卻會造成千倍位置錯誤。</li>
 </ul>
-<div class="note">
-<strong>章末能說明：</strong>
-<code>ᴬT_B</code> 的輸入輸出、為何點受平移而方向不受、右邊變換先作用、反向平移為何不是只換負號，以及如何用 frame 標籤與 T·T⁻¹ 抓錯。</div>
-<h2>像型別接合一樣讀 frame</h2><p><sup>A</sup>T<sub>B</sub><sup>B</sup>T<sub>C</sub> 的 B 接上，結果是 <sup>A</sup>T<sub>C</sub>；若中間標籤不同，即使都是 4×4 也不能組成原本的幾何鏈。這是實用的型別檢查直覺，真正運算仍依已定義矩陣方向。</p><p>例如要把工具 T 的點轉到相機 C，要組出 <sup>C</sup>T<sub>B</sub><sup>B</sup>T<sub>W</sub><sup>W</sup>T<sub>T</sub>。若只有 <sup>B</sup>T<sub>C</sub>，須先求完整逆。</p><h2>時間也是契約</h2><p>動態 frame 要在同一時間組合。工具以 0.8 m/s 移動，兩筆資料錯開 25 ms，位置可能差約 0.8×0.025=0.02 m。矩陣都合法，錯在不是同一時刻。</p><p><strong>能教別人的檢核：</strong>解釋 −R<sup>T</sup>t 是先移回原點再反轉方向，並用一個點做正反向往返。</p>
+<h2>像型別接合一樣讀 frame</h2><p><sup>A</sup>T<sub>B</sub><sup>B</sup>T<sub>C</sub> 的 B 接上，結果是 <sup>A</sup>T<sub>C</sub>；若中間標籤不同，即使都是 4×4 也不能組成原本的幾何鏈。這是實用的型別檢查直覺，真正運算仍依已定義矩陣方向。</p><p>例如要把工具 T 的點轉到相機 C，要組出 <sup>C</sup>T<sub>B</sub><sup>B</sup>T<sub>W</sub><sup>W</sup>T<sub>T</sub>。若只有 <sup>B</sup>T<sub>C</sub>，須先求完整逆。</p><h2>時間也是契約</h2><p>動態 frame 要在同一時間組合。工具以 0.8 m/s 移動，兩筆資料錯開 25 ms，位置可能差約 0.8×0.025=0.02 m。矩陣都合法，錯在不是同一時刻。</p><p><strong>能教別人的檢核：</strong>說明 <code>ᴬT_B</code> 的輸入輸出、點與方向受平移的差異、右邊變換為何先作用，以及如何用 frame 標籤與 T·T<sup>−1</sup> 抓錯；再解釋 −R<sup>T</sup>t 為何不是只換負號，並用一個點做正反向往返。</p>
 <details><summary>為何齊次點最後一格固定為 1？</summary><p>將 [x,y,z] 寫成 [x,y,z,1] 後，T 的最右平移欄會乘上 1 而加入結果；方向寫成 [d<sub>x</sub>,d<sub>y</sub>,d<sub>z</sub>,0]，平移欄乘 0 因而消失。最後一格是把仿射的「加平移」嵌入一次矩陣乘法的記帳技巧，不是第四個物理空間座標。</p><p>例如 T 只有平移 [2,3,4]，點 [1,0,0,1] 變 [3,3,4,1]；方向 [1,0,0,0] 仍為 [1,0,0,0]。若法向或速度被無故加上 2、3、4，通常是末項型別用錯。</p></details>
-<div class="pager">
-<a href="03-三維旋轉與姿態.html">← 03 姿態</a>
-<a href="05-七軸正運動學.html">05 七軸 FK →</a>
-</div>
-<section class="card">
-<h2>沒有齊次變換時，錯誤會藏在哪裡？</h2>
-<p>若旋轉和平移分散在不同函式，開發者很容易在某一節先加平移、下一節卻先旋轉，或忘記子框架的平移方向會被父框架帶動。4×4 表示的重點是讓「旋轉後再加原點位移」成為一個可組合物件；它不會自動修正 frame 命名、單位或乘法方向。</p>
-<p>把多節變換視為函式合成很有幫助，但精確限制是每個 T 都表示一個剛體座標轉換，不是任意 4×4。右下角必須是 1、底列前三格是 0、左上 R 必須是合法旋轉。合成變換的詳細先修可看<a href="../../機器人數學基礎/互動課程/08-合成變換.html">機器人數學基礎第 8 章：合成變換</a>。</p>
-</section>
 <h2>把兩節鏈完整算一次</h2>
 <p>設 A 到 B：B 原點在 A 中為 [1,0] m，且 B 相對 A 轉 90°。B 到 C：C 原點在 B 中為 [1,0] m，無額外旋轉。第二個 [1,0] 必須先被 A 到 B 的旋轉轉成 [0,1]，再加 B 原點 [1,0]，所以 C 原點在 A 中是 [1,1] m，C 姿態仍為 90°。</p>
 <p>若錯把兩個局部平移直接相加，會得到 [2,0] m。若交換兩個 T，則先沿 A 的 x 走 1 m，再套另一個不同語意的旋轉，結果也不再代表原本的 A→B→C 鏈。這說明「相鄰 frame 標籤能消去」不是記號潔癖，而是決定哪個向量要先被哪個旋轉處理。</p>
@@ -100,6 +95,10 @@
 <p>點受旋轉和平移；自由方向只受旋轉。表面法向量在純旋轉下也用 R，但若一般圖學管線含非等比例縮放，法向量要用逆轉置，不能照搬方向向量規則。本課的 SE(3) 只含剛體旋轉和平移，不含縮放與剪切，因此這個差異暫時不出現。</p>
 <p>互動時可先將父、子角都設 0°取得純平移基準，再只轉父角。若子原點的位移方向沒有跟著父框架旋轉，代表實作把局部平移誤當世界平移。輸出可證明頁面模型的鏈順序，不能證明真機各節固定外參。</p>
 </details>
+<div class="pager">
+<a href="03-三維旋轉與姿態.html">← 03 三維旋轉與姿態</a>
+<a href="05-七軸正運動學.html">05 七軸正運動學 →</a>
+</div>
 </main>
 <script src="app.js">
 </script>

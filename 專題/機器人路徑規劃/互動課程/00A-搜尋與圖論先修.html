@@ -1,5 +1,14 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="從節點、邊和成本開始的圖搜尋先修"><title>00A 搜尋與圖論先修｜機器人路徑規劃</title><link rel="stylesheet" href="styles.css"></head><body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar"><a href="index.html">首頁</a><a href="00-從移動問題到規劃問題.html">零基礎</a><a aria-current="page" href="00A-搜尋與圖論先修.html">搜尋先修</a><a href="03-PRM-RRT與RRT-star.html">取樣規劃</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="從節點、邊和成本開始的圖搜尋先修"><title>00A 搜尋與圖論先修｜機器人路徑與運動規劃</title><link rel="stylesheet" href="styles.css"></head><body>
+<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar">
+<a href="index.html">首頁</a>
+<a href="00-從移動問題到規劃問題.html">零基礎</a>
+<a aria-current="page" href="00A-搜尋與圖論先修.html">搜尋先修</a>
+<a href="03-PRM-RRT與RRT-star.html">取樣規劃</a>
+<a href="06-C++架構與驗證證據.html">C++／證據</a>
+<a href="07-約束流形投影與任務空間限制.html">07 約束流形</a>
+<a href="08-動力可行規劃與煞停包絡.html">08 動力可行</a>
+<a href="名詞與概念字典.html">字典</a>
+</nav><main>
 <p class="eyebrow">00A · 搜尋與圖論先修</p><h1>把無限多種走法，變成程式能逐一比較的圖</h1>
 <p class="lead">白話問題：空間是連續的，關節角在兩個數字之間還有無限多個值，程式怎麼「找路」？一句話答案：先挑出有限個代表狀態，再記錄哪些狀態能直接相連以及要付多少代價，便得到可搜尋的圖。</p>
 <div class="prereq"><strong>最小前置：</strong>讀過<a href="00-從移動問題到規劃問題.html">規劃問題的輸入與輸出</a>，會看陣列與加法。不假設修過資料結構或演算法。</div>
@@ -21,4 +30,7 @@
 <h2>第二組數字：解析度與記憶體不能只看節點</h2><p>假設兩軸各 101 格，共 101<sup>2</sup>=10,201 節點。每節點若連上下左右至多 4 邊，無向邊約不超過 2×10,201=20,402 條，因每條邊會被兩端看見。若每節點資料 64 byte，約 653 KB；每條邊資料 32 byte，又約 653 KB，尚未含雜湊表、配置器與碰撞快取。只用「節點數×節點大小」會低估實際記憶體。</p>
 <h2>從畫面與 log 分辨四種結果</h2><ul><li><strong>找到低成本路：</strong>最後前驅鏈連回 S，且報告的總成本等於各邊相加；這支持搜尋實作內部一致。</li><li><strong>圖上無路：</strong>待處理集合耗盡仍未到 G；只支持目前有限圖不連通。</li><li><strong>預算用完：</strong>尚有節點未處理便停止；既不能說有路，也不能說無路。</li><li><strong>邊驗證失敗：</strong>候選鄰居存在，但局部運動撞障礙；應記下被拒絕的邊與碰撞位置，否則會誤以為搜尋器漏走。</li></ul><p>最有用的可視化不是只有最終彩線，而是展開順序、每個節點的 g 值、前驅箭頭與被拒邊。它能幫忙驗證演算法如何做決定；它仍不能補救錯誤的碰撞模型或過粗的離散化。</p></section>
 <p>本章假設邊成本非負且狀態在搜尋期間不變。若世界動態改變，既有成本與邊可能過期；若考慮速度、加速度或非完整約束，節點可能需包含速度等更多狀態。</p>
-<section class="section"><h2>完整除錯案例：繞圈與過早停止</h2><p>小圖有 S→A=1、A→B=1、B→A=1、B→G=2、S→G=10。最低成本是 S→A→B→G=4。若不保存最佳 g，A、B 會彼此重複加入；若第一次發現 G=10 就停，又會錯過 4。</p><ol><li>展開 S：A=1、G=10。</li><li>取 A=1：B=2。</li><li>取 B=2：回 A 的新成本 3 大於舊 1，拒絕；G 的新成本 4 小於舊 10，更新。</li><li>取 G=4 才終止，沿前驅回復答案。</li></ol><p>trace 要列 pop、候選新成本、舊成本、更新與前驅，才能分辨鄰接錯、鬆弛反向及終止太早。</p><h2>解析度如何吃掉預算</h2><p>二軸各 −90° 到 90°，步距 30° 時每軸 7 格，共 49 點；步距 10° 時每軸 19 格，共 361 點，增為 7.37 倍。每次碰撞查詢 50 μs 時，單看節點約從 2.45 ms 增到 18.05 ms。七軸完整 19<sup>7</sup> 約 893,871,739 點，逐點一次就超過 12 小時。</p><h2>資料結構對回概念</h2><ul><li><code>state[id]</code> 是完整候選；id 只是索引。</li><li><code>adj[id]</code> 是已驗證的直接連接。</li><li><code>g[id]</code> 是累積成本，<code>parent[id]</code> 保存最佳來源。</li><li><code>open</code> 是待展開工作量，不是真實空間大小。</li></ul><h2>教回去</h2><p>節點少描述計算效率，路徑短描述解成本。有限圖無路只表示這次離散化不連通，不能推出連續世界無路。端點合法是節點證據，整段可走是邊證據。</p></section><div class="pager"><a href="00-從移動問題到規劃問題.html">← 上一頁</a><a href="01-組態空間碰撞與間隙.html">下一頁 →</a></div></main><script src="app.js"></script></body></html>
+<section class="section"><h2>完整除錯案例：繞圈與過早停止</h2><p>小圖有 S→A=1、A→B=1、B→A=1、B→G=2、S→G=10。最低成本是 S→A→B→G=4。若不保存最佳 g，A、B 會彼此重複加入；若第一次發現 G=10 就停，又會錯過 4。</p><ol><li>展開 S：A=1、G=10。</li><li>取 A=1：B=2。</li><li>取 B=2：回 A 的新成本 3 大於舊 1，拒絕；G 的新成本 4 小於舊 10，更新。</li><li>取 G=4 才終止，沿前驅回復答案。</li></ol><p>trace 要列 pop、候選新成本、舊成本、更新與前驅，才能分辨鄰接錯、鬆弛反向及終止太早。</p><h2>解析度如何吃掉預算</h2><p>二軸各 −90° 到 90°，步距 30° 時每軸 7 格，共 49 點；步距 10° 時每軸 19 格，共 361 點，增為 7.37 倍。每次碰撞查詢 50 μs 時，單看節點約從 2.45 ms 增到 18.05 ms。七軸完整 19<sup>7</sup> 約 893,871,739 點，逐點一次就超過 12 小時。</p><h2>資料結構對回概念</h2><ul><li><code>state[id]</code> 是完整候選；id 只是索引。</li><li><code>adj[id]</code> 是已驗證的直接連接。</li><li><code>g[id]</code> 是累積成本，<code>parent[id]</code> 保存最佳來源。</li><li><code>open</code> 是待展開工作量，不是真實空間大小。</li></ul><h2>教回去</h2><p>節點少描述計算效率，路徑短描述解成本。有限圖無路只表示這次離散化不連通，不能推出連續世界無路。端點合法是節點證據，整段可走是邊證據。</p></section><div class="pager">
+<a href="00-從移動問題到規劃問題.html">← 上一章：00 規劃問題</a>
+<a href="01-組態空間碰撞與間隙.html">下一章：01 組態空間 →</a>
+</div></main><script src="app.js"></script></body></html>
