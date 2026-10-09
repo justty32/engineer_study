@@ -81,7 +81,7 @@
     ],
     flow: [["flow-generation", "Bus 2 發電", "nonnegative"], ["flow-load", "Bus 3 負載", "nonnegative"]],
     fault: [
-      ["fault-voltage", "故障電壓", "positive"], ["z-positive", "正序阻抗", "nonnegative"],
+      ["fault-voltage", "故障前電壓", "positive"], ["z-positive", "正序阻抗", "nonnegative"],
       ["z-negative", "負序阻抗", "nonnegative"], ["z-zero", "零序阻抗", "nonnegative"],
       ["fault-base-power", "故障基準功率", "positive"], ["fault-base-voltage", "故障基準電壓", "positive"]
     ],
@@ -114,10 +114,10 @@
     transmission: ["current-low", "current-high", "loss-low", "loss-high", "loss-ratio"],
     perunit: ["base-current", "base-impedance", "voltage-pu", "impedance-pu", "converted-zpu"],
     threephase: ["current-initial", "current-target", "reactive-initial", "reactive-target", "capacitor-kvar", "loss-reduction"],
-    flow: ["slack-power", "angle-bus-2", "angle-bus-3", "flow-12", "flow-13", "flow-23", "flow-status"],
-    fault: ["sequence-positive", "sequence-negative", "sequence-zero", "fault-current-pu", "fault-current-ka"],
+    flow: ["slack-power", "angle-bus-2", "angle-bus-3", "flow-12", "flow-13", "flow-23", "flow-status", "n1-scan"],
+    fault: ["sequence-positive", "sequence-negative", "sequence-zero", "fault-current-pu", "fault-base-current", "fault-current-ka"],
     protection: ["relay-main-time", "relay-backup-time", "relay-margin", "relay-status"],
-    stabilityAngle: ["initial-angle", "clearing-angle", "accelerating-area", "decelerating-area"],
+    stabilityAngle: ["initial-angle", "clearing-angle", "unstable-angle", "critical-angle", "critical-time", "accelerating-area", "decelerating-area"],
     stabilityFrequency: ["frequency-rocof", "frequency-steady"],
     dispatch: ["net-load", "g1-output", "g2-output", "dispatch-lambda", "dispatch-cost", "reserve-headroom", "dispatch-status"]
   };
@@ -210,7 +210,7 @@
     return { currentInitial: currentInitial, currentTarget: currentTarget, reactiveInitial: reactiveInitial, reactiveTarget: reactiveTarget, capacitor: Math.max(0, capacitor), lossReduction: reduction };
   }
 
-  function calculateFlow(v) {
+  function solveFlow(v) {
     var generation = assertNumber(v["flow-generation"], "Bus 2 發電", "nonnegative");
     var load = assertNumber(v["flow-load"], "Bus 3 負載", "nonnegative");
     var contingency = typeof v.contingency === "string" ? v.contingency : "";
@@ -250,6 +250,28 @@
       return { id: line.id, name: line.name, flow: flows[line.id], limit: line.limit, state: state };
     });
     return { slack: load - generation, theta2: theta2 * 180 / Math.PI, theta3: theta3 * 180 / Math.PI, flows: flows, states: states, contingency: contingency };
+  }
+
+  function calculateFlow(v) {
+    var result = solveFlow(v);
+    var cases = ["line-12", "line-13", "line-23"].map(function (contingency) {
+      var scenario = solveFlow({
+        "flow-generation": v["flow-generation"],
+        "flow-load": v["flow-load"],
+        contingency: contingency
+      });
+      return {
+        contingency: contingency,
+        states: scenario.states,
+        violation: scenario.states.some(function (line) { return line.state === "over"; })
+      };
+    });
+    result.nMinusOne = {
+      total: cases.length,
+      violations: cases.filter(function (scenario) { return scenario.violation; }).length,
+      cases: cases
+    };
+    return result;
   }
 
   function calculateFault(v) {
@@ -296,7 +318,14 @@
     var mainTime = relayTime(current, mainPickup, mainTms);
     var backupTime = relayTime(current, backupPickup, backupTms);
     if (mainTime === null || backupTime === null) {
-      return { mainTime: mainTime, backupTime: backupTime, margin: null, ok: false, reason: "至少一個電驛未拾取", target: target };
+      return {
+        mainTime: mainTime,
+        backupTime: backupTime,
+        margin: null,
+        ok: false,
+        reason: mainTime === null ? "主保護未拾取（靈敏度不足）" : "後備對此故障無涵蓋",
+        target: target
+      };
     }
     var margin = backupTime - mainTime;
     var ok = backupTime > mainTime && margin >= target;
@@ -314,22 +343,51 @@
     if (pm >= pre || pm >= post) throw new Error("故障前或故障後沒有穩定平衡點");
     var delta0 = Math.asin(pm / pre);
     var deltaU = Math.PI - Math.asin(pm / post);
-    var delta = delta0;
-    var speed = 0;
-    var elapsed = 0;
     var omegaS = 2 * Math.PI * 60;
-    while (elapsed < clearingTime - 1e-12) {
-      var step = Math.min(DT, clearingTime - elapsed);
-      var acceleration = omegaS * (pm - fault * Math.sin(delta)) / (2 * h);
-      if (!finite(acceleration)) throw new Error("擺動方程積分失敗");
-      speed += acceleration * step;
-      delta += speed * step;
-      elapsed += step;
+    function angleAt(time) {
+      var angle = delta0;
+      var speed = 0;
+      var elapsed = 0;
+      while (elapsed < time - 1e-12) {
+        var step = Math.min(DT, time - elapsed);
+        var acceleration = omegaS * (pm - fault * Math.sin(angle)) / (2 * h);
+        if (!finite(acceleration)) throw new Error("擺動方程積分失敗");
+        speed += acceleration * step;
+        angle += speed * step;
+        elapsed += step;
+      }
+      return angle;
     }
+    var delta = angleAt(clearingTime);
     var acceleratingArea = pm * (delta - delta0) + fault * (Math.cos(delta) - Math.cos(delta0));
-    var deceleratingArea = post * (Math.cos(delta) - Math.cos(deltaU)) - pm * (deltaU - delta);
+    var deceleratingArea = delta >= deltaU ? 0 : post * (Math.cos(delta) - Math.cos(deltaU)) - pm * (deltaU - delta);
     var stable = deceleratingArea >= acceleratingArea && delta < deltaU;
-    return { initialAngle: delta0 * 180 / Math.PI, clearingAngle: delta * 180 / Math.PI, acceleratingArea: acceleratingArea, deceleratingArea: deceleratingArea, stable: stable, deltaU: deltaU };
+    var criticalAngle = null;
+    var criticalTime = null;
+    var denominator = post - fault;
+    if (Math.abs(denominator) > 1e-12) {
+      var criticalCosine = (post * Math.cos(deltaU) + pm * (deltaU - delta0) - fault * Math.cos(delta0)) / denominator;
+      if (criticalCosine >= -1 && criticalCosine <= 1) criticalAngle = Math.acos(criticalCosine);
+    }
+    if (criticalAngle !== null && criticalAngle > delta0 && angleAt(5) >= criticalAngle) {
+      var lowTime = 0;
+      var highTime = 5;
+      for (var iteration = 0; iteration < 40; iteration += 1) {
+        var middleTime = (lowTime + highTime) / 2;
+        if (angleAt(middleTime) < criticalAngle) lowTime = middleTime; else highTime = middleTime;
+      }
+      criticalTime = (lowTime + highTime) / 2;
+    }
+    return {
+      initialAngle: delta0 * 180 / Math.PI,
+      clearingAngle: delta * 180 / Math.PI,
+      acceleratingArea: acceleratingArea,
+      deceleratingArea: deceleratingArea,
+      stable: stable,
+      deltaU: deltaU,
+      criticalAngle: criticalAngle === null ? null : criticalAngle * 180 / Math.PI,
+      criticalTime: criticalTime
+    };
   }
 
   function calculateFrequency(v) {
@@ -460,7 +518,6 @@
       element.style.borderLeftColor = colors[state] || colors.neutral;
       element.style.color = colors[state] || colors.neutral;
     }
-    if (typeof element.setAttribute === "function") element.setAttribute("aria-live", "polite");
   }
 
   function clearOutputs(doc, ids) {
@@ -479,11 +536,6 @@
       var element = safeGet(doc, spec[0]);
       if (!element) return { ok: false, error: "找不到輸入欄位：" + spec[0] };
       var raw = element.value;
-      if (spec[2] === "select") {
-        if (typeof raw !== "string" || !raw.trim()) return { ok: false, error: spec[1] + " 不可為空白" };
-        values[spec[0]] = raw;
-        continue;
-      }
       if (raw === null || raw === undefined || String(raw).trim() === "") return { ok: false, error: spec[1] + " 不可為空白" };
       var number = Number(raw);
       if (!finite(number)) return { ok: false, error: spec[1] + " 必須是有限數值" };
@@ -500,10 +552,15 @@
 
   function format(value, digits, unit) {
     if (!finite(value)) return "—";
-    return value.toFixed(digits) + (unit ? " " + unit : "");
+    var number = value.toFixed(digits).replace(/^-/, "−");
+    return number + (unit ? unit === "°" ? "°" : " " + unit : "");
   }
 
   function renderTransmission(doc, result) {
+    var lowVoltage = safeGet(doc, "voltage-low");
+    var highVoltage = safeGet(doc, "voltage-high");
+    setText(doc, "current-low-label", (lowVoltage ? lowVoltage.value : "低壓側") + " kV 電流");
+    setText(doc, "current-high-label", (highVoltage ? highVoltage.value : "高壓側") + " kV 電流");
     setText(doc, "current-low", format(result.currentLow, 1, "A"));
     setText(doc, "current-high", format(result.currentHigh, 1, "A"));
     setText(doc, "loss-low", format(result.lossLow, 3, "MW"));
@@ -567,7 +624,24 @@
     }).join("；");
     setText(doc, "flow-status", status);
     setState(doc, "flow-status", hasOverload ? "warn" : "ok");
-    setFeedback(doc, "flow-feedback", hasOverload ? "⚠ N-1 不通過：至少一條在線路限額上超載。DC 潮流忽略電阻、損失、無功與電壓幅值變化，Slack 自動補平衡。" : "✓ 所有在線路均未超過限額；Slack 自動補足發電與負載差額。", hasOverload ? "warn" : "ok");
+    var scan = result.nMinusOne;
+    var scanText = "N-1 掃描：" + scan.total + " 個事故中 " + scan.violations + " 個違限";
+    setText(doc, "n1-scan", scanText);
+    setState(doc, "n1-scan", scan.violations ? "warn" : "ok");
+    scan.cases.forEach(function (scenario) {
+      var row = safeAll(doc, '[data-n1-case="' + scenario.contingency + '"]')[0];
+      if (!row) return;
+      scenario.states.forEach(function (line) {
+        var cell = safeAll(row, '[data-n1-line="' + line.id + '"]')[0];
+        if (cell) cell.textContent = line.state === "out" ? "跳脫" : format(Math.abs(line.flow), 1, "MW") + " / " + format(Math.abs(line.flow) / line.limit * 100, 1, "%");
+      });
+      var verdict = safeAll(row, "[data-n1-verdict]")[0];
+      if (verdict) verdict.textContent = scenario.violation ? "違限" : "通過";
+    });
+    var scenarioText;
+    if (result.contingency === "none") scenarioText = hasOverload ? "⚠ 基準情境已有線路過載。" : "✓ 基準情境在線路限額內。";
+    else scenarioText = hasOverload ? "⚠ 此事故後至少一條在線路過載。" : "✓ 此事故後所有在線路均未過載。";
+    setFeedback(doc, "flow-feedback", scenarioText + " " + scanText + "；DC 潮流忽略電阻、損失、無功與電壓幅值變化，Slack 自動補平衡。", hasOverload || scan.violations ? "warn" : "ok");
   }
 
   function renderFault(doc, result) {
@@ -581,6 +655,7 @@
       }
     });
     setText(doc, "fault-current-pu", format(result.currentPu, 3, "p.u."));
+    setText(doc, "fault-base-current", format(result.baseCurrentKa, 4, "kA"));
     setText(doc, "fault-current-ka", format(result.currentKa, 4, "kA"));
     setFeedback(doc, "fault-feedback", "✓ 故障型態決定序網的使用與串接；故障電流標么值再乘以基準電流，得到 kA。", "ok");
   }
@@ -594,16 +669,20 @@
     [result.mainTime, result.backupTime].forEach(function (time, index) {
       if (relayBars[index] && relayBars[index].style) relayBars[index].style.width = maximum > 0 && time !== null ? Math.max(4, time / maximum * 100).toFixed(1) + "%" : "0%";
     });
-    setText(doc, "relay-status", result.ok ? "協調通過" : result.reason);
+    var shortStatus = result.ok ? "協調通過" : result.mainTime === null ? "主保護未拾取" : result.backupTime === null ? "後備未涵蓋" : "協調不通過";
+    setText(doc, "relay-status", shortStatus);
     setState(doc, "relay-status", result.ok ? "ok" : "warn");
-    setFeedback(doc, "relay-feedback", result.ok ? "✓ 主保護先動作，後備保護延遲 " + format(result.margin, 3, "s") + "，達到目標裕度；這是無量綱反時限教學曲線，不是 IEC/IEEE 實際曲線。" : "⚠ " + result.reason + "；保護協調需同時滿足選擇性與後備關係。這是無量綱反時限教學曲線，不是 IEC/IEEE 實際曲線。", result.ok ? "ok" : "warn");
+    setFeedback(doc, "relay-feedback", result.ok ? "✓ 主保護先動作，後備保護延遲 " + format(result.margin, 3, "s") + "，達到目標裕度；這是非標準的教學反時限曲線（M = I/I_pickup），不是 IEC/IEEE 實際曲線。" : "⚠ " + result.reason + "；保護協調需同時滿足選擇性與後備關係。這是非標準的教學反時限曲線（M = I/I_pickup），不是 IEC/IEEE 實際曲線。", result.ok ? "ok" : "warn");
   }
 
   function renderStabilityAngle(doc, result) {
     setText(doc, "initial-angle", format(result.initialAngle, 2, "°"));
     setText(doc, "clearing-angle", format(result.clearingAngle, 2, "°"));
+    setText(doc, "unstable-angle", format(result.deltaU * 180 / Math.PI, 2, "°"));
+    setText(doc, "critical-angle", result.criticalAngle === null ? "無可用臨界值" : format(result.criticalAngle, 2, "°"));
+    setText(doc, "critical-time", result.criticalTime === null ? "無可用臨界值" : format(result.criticalTime, 4, "s"));
     setText(doc, "accelerating-area", format(result.acceleratingArea, 4, "p.u.·rad"));
-    setText(doc, "decelerating-area", format(result.deceleratingArea, 4, "p.u.·rad"));
+    setText(doc, "decelerating-area", result.clearingAngle >= result.deltaU * 180 / Math.PI ? "0（已越過 δᵤ）" : format(result.deceleratingArea, 4, "p.u.·rad"));
     setText(doc, "stability-status", result.stable ? "暫態穩定" : "暫態不穩定");
     setState(doc, "stability-status", result.stable ? "ok" : "warn");
     return result.stable ? "✓ 清除角小於不穩定平衡角，最大減速面積大於加速面積，因此此教學案例穩定。" : "⚠ 最大減速面積不足或清除角超過不穩定平衡角，因此此教學案例不穩定。";
@@ -633,7 +712,8 @@
     } else {
       state = "ok"; message = "兩機以等增量成本解並以 active-set 處理上下限；向上餘裕高於備轉要求。";
     }
-    setText(doc, "dispatch-status", state === "ok" ? "可行且備轉足夠" : message);
+    var shortStatus = state === "ok" ? "可行且備轉足夠" : result.mode === "surplus" ? "最小出力過剩" : result.mode === "shortage" ? "容量不足" : "備轉不足";
+    setText(doc, "dispatch-status", shortStatus);
     setState(doc, "dispatch-status", state);
     setFeedback(doc, "dispatch-feedback", message + " 此模型不含 UC、網損與真實市場出清。", state);
   }
@@ -641,6 +721,29 @@
   function renderError(doc, outputIds, feedbackId, error) {
     clearOutputs(doc, outputIds);
     setFeedback(doc, feedbackId, "✕ 輸入錯誤：" + error, "error");
+  }
+
+  function clearVisualEvidence(doc, key) {
+    if (key === "threephase") {
+      safeAll(doc, ".power-bars .bar-fill").forEach(function (bar) { if (bar.style) bar.style.width = "0%"; });
+    }
+    if (key === "flow") {
+      safeAll(doc, ".line-row:not(.line-row-head)").forEach(function (row) {
+        var bar = safeAll(row, ".utilization i")[0];
+        var percent = safeAll(row, ".utilization em")[0];
+        var state = safeAll(row, ".state")[0];
+        if (bar && bar.style) bar.style.width = "0%";
+        if (percent) percent.textContent = "—";
+        if (state) {
+          state.textContent = "—";
+          if (state.classList) { state.classList.remove("state-ok"); state.classList.remove("state-warn"); }
+        }
+      });
+      safeAll(doc, "[data-n1-line], [data-n1-verdict]").forEach(function (cell) { cell.textContent = "—"; });
+    }
+    if (key === "protection") {
+      safeAll(doc, ".relay-ladder .time-track i").forEach(function (bar) { if (bar.style) bar.style.width = "0%"; });
+    }
   }
 
   function runModule(doc, key) {
@@ -671,7 +774,9 @@
       var ids = OUTPUTS[key] || [];
       renderError(doc, ids, key === "transmission" ? "transmission-feedback" : key === "perunit" ? "perunit-feedback" : key === "threephase" ? "threephase-feedback" : key === "flow" ? "flow-feedback" : key === "fault" ? "fault-feedback" : key === "protection" ? "relay-feedback" : "dispatch-feedback", calculation.error);
       var statusId = key === "flow" ? "flow-status" : key === "protection" ? "relay-status" : key === "dispatch" ? "dispatch-status" : null;
-      if (statusId) setState(doc, statusId, "error");
+      if (statusId) { setText(doc, statusId, "無法判定"); setState(doc, statusId, "error"); }
+      if (key === "flow") { setText(doc, "n1-scan", "無法判定"); setState(doc, "n1-scan", "error"); }
+      clearVisualEvidence(doc, key);
       return;
     }
     if (key === "transmission") renderTransmission(doc, calculation.value);
@@ -691,7 +796,7 @@
       setFeedback(doc, "stability-feedback", angleFeedback, angle.value.stable ? "ok" : "warn");
     } else {
       clearOutputs(doc, OUTPUTS.stabilityAngle);
-      setText(doc, "stability-status", "✕ 無法判定");
+      setText(doc, "stability-status", "無法判定");
       setState(doc, "stability-status", "error");
       setFeedback(doc, "stability-feedback", "✕ 輸入錯誤：" + angle.error, "error");
     }
@@ -756,10 +861,12 @@
     return completed;
   }
 
-  function activateModule(doc, key) {
+  function activateModule(doc, key, moveFocus) {
     if (MODULE_KEYS.indexOf(key) < 0) return;
+    var activeSection = null;
     safeAll(doc, "[data-module]").forEach(function (section) {
       var active = section.getAttribute("data-module") === key;
+      if (active) activeSection = section;
       section.hidden = !active;
       if (section.classList) section.classList.toggle("is-current", active);
       if (typeof section.setAttribute === "function") section.setAttribute("aria-hidden", active ? "false" : "true");
@@ -768,10 +875,18 @@
       var active = button.getAttribute("data-nav") === key;
       if (button.classList) button.classList.toggle("is-active", active);
       if (typeof button.setAttribute === "function") {
-        if (active) button.setAttribute("aria-current", "page"); else button.removeAttribute("aria-current");
+        if (active) button.setAttribute("aria-current", "true"); else button.removeAttribute("aria-current");
       }
       if (button.dataset) button.dataset.active = active ? "true" : "false";
+      if (active && moveFocus && typeof button.scrollIntoView === "function") button.scrollIntoView({ block: "nearest", inline: "nearest" });
     });
+    if (moveFocus && activeSection) {
+      if (typeof activeSection.scrollIntoView === "function") activeSection.scrollIntoView({ block: "start" });
+      var titleId = activeSection.getAttribute("aria-labelledby");
+      var title = titleId ? safeGet(doc, titleId) : null;
+      if (title && typeof title.setAttribute === "function") title.setAttribute("tabindex", "-1");
+      if (title && typeof title.focus === "function") title.focus({ preventScroll: true });
+    }
   }
 
   function setStabilityMode(doc, mode) {
@@ -815,7 +930,7 @@
     if (activeModule) activateModule(doc, activeModule);
     safeAll(doc, "[data-nav]").forEach(function (button) {
       if (String(button.tagName || "").toLowerCase() === "button") button.setAttribute("type", "button");
-      bindActivatable(button, function () { activateModule(doc, button.getAttribute("data-nav")); });
+      bindActivatable(button, function () { activateModule(doc, button.getAttribute("data-nav"), true); });
     });
     safeAll(doc, "[data-complete]").forEach(function (button) {
       if (String(button.tagName || "").toLowerCase() === "button") button.setAttribute("type", "button");
@@ -841,9 +956,17 @@
         var key = button.getAttribute("data-reset-module");
         var defaults = DEFAULTS[key];
         if (!defaults) return;
-        Object.keys(defaults).forEach(function (id) { var input = safeGet(doc, id); if (input) input.value = String(defaults[id]); });
-        if (key === "stability") setStabilityMode(doc, "angle");
-        else runModule(doc, key);
+        var stabilityReset = button.getAttribute("data-stability-reset");
+        Object.keys(defaults).forEach(function (id) {
+          if (key === "stability" && stabilityReset === "angle" && id.indexOf("frequency-") === 0) return;
+          if (key === "stability" && stabilityReset === "frequency" && id.indexOf("frequency-") !== 0) return;
+          var input = safeGet(doc, id);
+          if (input) input.value = String(defaults[id]);
+        });
+        if (key === "stability") {
+          var stabilitySection = safeAll(doc, '[data-module="stability"]')[0];
+          setStabilityMode(doc, stabilitySection && stabilitySection.dataset ? stabilitySection.dataset.stabilityMode : "angle");
+        } else runModule(doc, key);
       });
     });
     safeAll(doc, "[data-stability-mode]").forEach(function (button) {

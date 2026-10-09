@@ -23,8 +23,8 @@
 <div id="q00-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q00-3｜</strong>「20 dBm ＋ 20 dBm」是什麼意思？</p>
-<label for="q00-3">你的答案<select id="q00-3"><option value="">請選擇</option><option value="a">沒有意義：dBm 是絕對功率，相加沒有物理意義</option><option value="b">40 dBm</option><option value="c">23 dBm</option><option value="d">200 mW</option></select></label>
+<p><strong>q00-3｜</strong>把兩個 dBm 數字直接相加得 40 dBm，對嗎？</p>
+<label for="q00-3">你的答案<select id="q00-3"><option value="">請選擇</option><option value="a">對，結果是 40 dBm</option><option value="b">不對，總功率仍是 20 dBm</option><option value="c">不對；23.010300 dBm 才是兩個 20 dBm 功率先換成 mW 再相加的總功率</option><option value="d">不對，200 mW 等於 200 dBm</option></select></label>
 <button type="button" id="q00-3-check">對答案</button>
 <div id="q00-3-output" class="output" aria-live="polite"></div>
 </section>
@@ -170,7 +170,7 @@
 <div id="q07-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q07-3｜</strong>α ＝ 0 的磚牆濾波器為什麼不能實際使用？</p>
+<p><strong>q07-3｜</strong>α ＝ 0 的磚牆濾波器為什麼對時序誤差特別脆弱？</p>
 <label for="q07-3">你的答案<select id="q07-3"><option value="">請選擇</option><option value="a">因為頻寬太窄，裝不下訊號</option><option value="b">因為它的 ISI 在取樣點不為零</option><option value="c">尾巴以 1/t 衰減，時序偏一點時 ISI 加總就不收斂</option><option value="d">因為它需要無限大的功率</option></select></label>
 <button type="button" id="q07-3-check">對答案</button>
 <div id="q07-3-output" class="output" aria-live="polite"></div>
@@ -185,7 +185,7 @@
 <div id="q08-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q08-2｜</strong>在同一個 E_b 下，ON-OFF 比雙極方案多付幾 dB？</p>
+<p><strong>q08-2｜</strong>在同一個 E<sub>b</sub> 下（E<sub>b</sub> 指「1」脈衝的能量，依 08 章慣例），ON-OFF 比雙極方案多付幾 dB？</p>
 <label for="q08-2">你的答案（dB）<input id="q08-2" type="number" step="any"></label>
 <button type="button" id="q08-2-check">對答案</button>
 <div id="q08-2-output" class="output" aria-live="polite"></div>

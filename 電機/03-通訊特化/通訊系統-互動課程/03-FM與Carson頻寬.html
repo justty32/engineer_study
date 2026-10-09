@@ -19,7 +19,7 @@
 <p class="note">來源：14-通訊系統-上 §4.1–§4.6。</p>
 
 <h2>推導：偏移、頻寬與 3β² 各從哪裡來</h2>
-<p><strong>（a）瞬時頻率。</strong>角度調變寫成 s(t) ＝ A<sub>c</sub> cos[2π f<sub>c</sub>t + φ(t)]。相位變化率就是頻率，因此 f<sub>i</sub> ＝ f<sub>c</sub> + (1 / 2π) dφ/dt。若 FM 定義為 f<sub>i</sub>(t) ＝ f<sub>c</sub> + k<sub>f</sub>m(t)，積分後 φ(t) ＝ 2π k<sub>f</sub> ∫m dt；PM 與 FM 只差這一步積分。最大偏移 Δf ＝ k<sub>f</sub>m<sub>max</sub>，β ＝ Δf / W，兩者皆為無單位比值中的頻率量。</p>
+<p><strong>（a）瞬時頻率。</strong>角度調變寫成 s(t) ＝ A<sub>c</sub> cos[2π f<sub>c</sub>t + φ(t)]。相位變化率就是頻率，因此 f<sub>i</sub> ＝ f<sub>c</sub> + (1 / 2π) dφ/dt。若 FM 定義為 f<sub>i</sub>(t) ＝ f<sub>c</sub> + k<sub>f</sub>m(t)，積分後 φ(t) ＝ 2π k<sub>f</sub> ∫m dt；PM 與 FM 只差這一步積分。最大偏移 Δf ＝ k<sub>f</sub>m<sub>max</sub>，β ＝ Δf / W；Δf 與 W 的單位都是 Hz，相除後的 β 無單位。</p>
 <p><strong>（b）Carson 法則。</strong>中心頻率最多走到 f<sub>c</sub> ± Δf，而偏移又以最高 W 的速率變化，兩側各留一段 W，故 B<sub>T</sub> ≈ 2(Δf + W)。這是涵蓋約 98 % 功率的經驗法則，不是嚴格截止線。β ≤ 0.5 是本課的窄頻 FM 判準，頻譜近似 AM；β 大於 0.5 則進入寬頻情形。</p>
 <p><strong>（c）增益基準。</strong>高 CNR、單音、理想鑑頻器下，解調後雜訊功率譜隨 f² 增長，訊號功率則隨 Δf² 增長。定義同樣發射功率、同樣 N<sub>0</sub>、頻寬 W 的參考訊雜比 SNR<sub>ref</sub> ＝ P<sub>s</sub> / (N<sub>0</sub>W)，DSB-SC 同步解調的輸出訊雜比就等於 SNR<sub>ref</sub>；單音 FM 才是 3β² SNR<sub>ref</sub>。因此「3β²」的基準明確是 DSB-SC，不是一般含大載波 AM；若拿 μ ＝ 1 的 DSB-LC 比，還要再乘 3。</p>
 <p><strong>（d）門檻。</strong>CNR ＝ SNR<sub>ref</sub> × W / B<sub>T</sub>，用 dB 計算就是從 SNR<sub>ref</sub> 扣掉 10 log<sub>10</sub>(B<sub>T</sub> / W)。本課門檻固定取 10 dB；低於它會出現雜訊尖峰，3β² 立即失效。以上是單音、高 CNR、理想鑑頻器的一階教學模型，不能外推到門檻以下。</p>
@@ -37,7 +37,7 @@
 <tr><td>CNR</td><td>30 − 10.791812</td><td><strong>19.208188 dB（高於門檻 10 dB）</strong></td></tr>
 </tbody></table>
 <p><strong>量級對照。</strong>這組 FM 用相對 AM 的 6.000000 倍頻寬，換到相對 DSB-SC 的 18.750613 dB；廣播系統再以 200 kHz 間距留餘裕。</p>
-<p><strong>邊界對照。</strong>SNR<sub>ref</sub> ＝ 15 dB 時，CNR 為 <strong>4.208188 dB</strong>，低於門檻，<strong>3β² 失效，輸出出現雜訊尖峰</strong>。Δf ＝ 150 kHz 時，β ＝ 10、B<sub>T</sub> ＝ <strong>330 kHz</strong>，超過 200 kHz 頻道間距；增益 <strong>24.771213 dB</strong>、CNR <strong>16.575773 dB</strong>，多 6 dB 抗噪要付 11 倍頻寬。Δf ＝ 7.5 kHz 時，β ＝ <strong>0.500000</strong>、B<sub>T</sub> ＝ 45 kHz、3β² ＝ 0.75 ＝ <strong>−1.249387 dB</strong>；Δf ＝ 1 kHz 時，β ＝ 0.066667、B<sub>T</sub> ＝ 32 kHz、<strong>−18.750613 dB</strong>。若 Δf ＝ 150、W ＝ 1，β ＝ 150、增益 48.293038 dB，但 B<sub>T</sub>/W ＝ 302，CNR 只剩 <strong>5.199931 dB</strong>，會先撞門檻。</p>
+<p><strong>邊界對照。</strong>SNR<sub>ref</sub> ＝ 15 dB 時，CNR 為 <strong>4.208188 dB</strong>，低於門檻，<strong>3β² 失效，輸出出現雜訊尖峰</strong>。Δf ＝ 150 kHz 時，β ＝ 10、B<sub>T</sub> ＝ <strong>330 kHz</strong>，超過 200 kHz 頻道間距；增益 <strong>24.771213 dB</strong>、CNR <strong>16.575773 dB</strong>，多 6 dB 抗噪時，頻寬從 180 kHz 增到 330 kHz（相對 30 kHz 的 AM 為 11 倍）。Δf ＝ 7.5 kHz 時，β ＝ <strong>0.500000</strong>、B<sub>T</sub> ＝ 45 kHz、3β² ＝ 0.75 ＝ <strong>−1.249387 dB</strong>；Δf ＝ 1 kHz 時，β ＝ 0.066667、B<sub>T</sub> ＝ 32 kHz、<strong>−18.750613 dB</strong>。若 Δf ＝ 150、W ＝ 1，β ＝ 150、增益 48.293038 dB，但 B<sub>T</sub>/W ＝ 302，CNR 只剩 <strong>5.199931 dB</strong>，會先撞門檻。</p>
 
 <section class="workspace"><h2>自由實驗：偏移、訊息頻寬與門檻</h2>
 <p>場景是一個單音 FM 鏈路。調整最大偏移、訊息頻寬與參考訊雜比，觀察 Carson 頻寬、相對 DSB-SC 的增益，以及 CNR 是否仍足以支撐這個增益。</p>

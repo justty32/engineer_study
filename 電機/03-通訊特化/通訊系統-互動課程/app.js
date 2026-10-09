@@ -69,7 +69,7 @@ var QUIZ_CH={
 var QUIZ=[
   {id:"q00-1",t:"num",ans:20,tol:0.05,why:"100 mW 相對 1 mW 是 100 倍，因此是 20 dBm。",err:"用了 20 log（那是電壓比）。"},
   {id:"q00-2",t:"num",ans:0.749481,tol:0.001,why:"100 MHz 的波長是 2.997925 m，除以 4 得 0.749481 m。",err:"忘了除以 4，或 c 用錯量級。"},
-  {id:"q00-3",t:"sel",ans:"a",why:"dBm 是絕對功率；dBm 只能和 dB 相加減。",err:"把 dBm 當成可以相加的比值（20 dBm 加 3.010300 dB 才是 23.010300 dBm）。"},
+  {id:"q00-3",t:"sel",ans:"c",why:"把兩個 dBm 數字直接相加得 40 dBm 沒有物理意義；兩個 20 dBm 功率合成時，應先換成 100 mW + 100 mW，再得到 23.010300 dBm。",err:"兩個 dBm 數字不能直接相加；dBm 只能和 dB 相加減。"},
   {id:"q01-1",t:"num",ans:11.111111,tol:0.01,why:"μ² / (2 + μ²) 在 μ ＝ 0.5 時是 11.111111 %。",err:"用 μ² / 2，沒有除以 (2 + μ²)。"},
   {id:"q01-2",t:"num",ans:275.664448,tol:0.5,why:"代入 μ ＝ 0.5 與 1 kHz，RC 上限是 275.664448 µs。",err:"忘了 √(1 − μ²)，或 f_m 沒換成 Hz。"},
   {id:"q01-3",t:"sel",ans:"b",why:"μ 大於 1 時谷底變負，包絡翻折。",err:"以為過調變只是「調得更深」。"},
@@ -141,7 +141,7 @@ function amenv(){
     if(mu>1)h+="<p>過調變：1 + μ cos 在谷底變負、包絡翻折，檢波輸出不再是訊息的形狀。</p>";
     if(rc<lo)h+="<p>RC 太小：每個載波週期電容放掉 "+num6(ripple)+" %，輸出有大漣波。</p>";
     if(hi!==null&&rc>hi&&mu<1)h+="<p>RC 太大：放電斜率追不上包絡下降，形成對角線截波。</p>";
-    if(hi!==null&&lo>hi)h+="<p><strong>邊界</strong>：區間反轉，這組 f<sub>c</sub>、f<sub>m</sub>、μ 下包絡檢波器無解。</p>";
+    if(hi!==null&&lo>hi&&mu<1)h+="<p><strong>邊界</strong>：區間反轉，這組 f<sub>c</sub>、f<sub>m</sub>、μ 下包絡檢波器無解。</p>";
     if(hi!==null&&mu<1&&rc>=lo&&rc<=hi)h+="<p>RC 落在可用區間 ["+num6(lo)+", "+num6(hi)+"] µs。</p>";
     if(mu===0)h+="<p><strong>邊界</strong>：沒有調變，只剩載波，效率 0 %，上限無限大。</p>";
     if(mu===1)h+="<p><strong>邊界</strong>：100 % 調變，效率最高 33.333333 %，但上限為 0；谷底一定會截一點。</p>";
@@ -160,14 +160,14 @@ function cohdem(){
     if(s==="dsblc")head="這個模式只用到 W，其餘控制不影響結果。";
     else if(s==="dsbsc"){head="這個模式只用到 W、φ、Δf，其餘控制不影響結果。";amp=num6(c);loss=c>1e-12?num6(20*Math.log10(c))+" dB":"完全消失";effect="輸出以 "+num6(df)+" Hz 起伏";}
     else{head="這個模式只用到 W、Δf；φ 只造成相位失真，其餘控制不影響結果。";amp="1.000000（相位失真 "+num6(phi)+"°）";loss="0.000000 dB";effect="頻譜平移 "+num6(df)+" Hz";}
-    h="<p>"+head+"</p><table>"+row(["量","結果"],true)+row(["頻寬",num6(b)+" kHz"])+row(["100 kHz 可排路數",int0(nch)+" 路"])+row(["功率用於訊息",pwr])+row(["cos φ",s==="dsbsc"?num6(c):"不適用"])+row(["振幅",amp])+row(["振幅損失",loss])+row(["頻率誤差效應",effect])+"</table>";
+    h="<p>"+head+"</p><table>"+row(["量","結果"],true)+row(["頻寬",num6(b)+" kHz"])+row(["100 kHz 可排路數",int0(nch)+" 路"])+row(["功率用於訊息",pwr])+row(["cos φ",s==="dsbsc"?num6(c):"不適用"])+row(["振幅",amp])+row(["振幅變化",loss])+row(["頻率誤差效應",effect])+"</table>";
     if(s==="dsbsc"&&phi===90)h+="<p><strong>邊界</strong>：正交零點，輸出完全消失。</p>";
     else if(s==="dsbsc"&&phi>=60)h+="<p>振幅只剩 "+num6(c)+"，損失至少 6.020600 dB，必須加鎖相迴路。</p>";
     if(s==="ssb")h+="<p>頻寬只有 DSB 的一半，路數加倍；相位誤差不掉振幅但會失真。</p>";
     if(df>0&&s==="ssb")h+="<p>所有頻率成分平移 "+num6(df)+" Hz，超過 50 Hz 語音就變調。</p>";
     if(df>0&&s==="dsbsc")h+="<p>輸出以 "+num6(df)+" Hz 起伏，每秒歸零 "+num6(2*df)+" 次。</p>";
     if(phi===0&&df===0)h+="<p><strong>邊界</strong>：理想同步，四種方案只差頻寬與功率。</p>";
-    if(w===20)h+="<p><strong>邊界</strong>：高傳真音樂用 DSB 時只能排 2 路。</p>";
+    if(w===20)h+="<p><strong>邊界</strong>：高傳真音樂用這個方案時可排 "+int0(nch)+" 路。</p>";
     if(s==="dsblc")h+="<p>包絡檢波不需要本地載波，φ 與 Δf 無意義；代價是功率大多在載波上。</p>";
     h+="<p><strong>為什麼</strong>：省掉載波，接收端就得自己造一個一模一樣的載波；造得不準，cos φ 就把訊息吃掉。</p>";
     put("cohdem-output",h);
@@ -182,7 +182,7 @@ function fmcar(){
     var df=val("fm-df"),w=val("fm-w"),sr=val("fm-snr"),beta,bt,ra,g,gd,out,bwr,bwrd,cnr,h;
     if(w<=0){put("fmcar-output","<p>W 必須大於 0。</p>");return;}
     beta=df/w;bt=2*(df+w);ra=bt/(2*w);g=3*beta*beta;gd=db10(g);out=sr+gd;bwr=bt/w;bwrd=db10(bwr);cnr=sr-bwrd;
-    h="<table>"+row(["量","結果"],true)+row(["β",num6(beta)])+row(["B<sub>T</sub>",num6(bt)+" kHz"])+row(["相對 AM 頻寬",num6(ra)+" 倍"])+row(["3β²",num6(g)])+row(["3β²",num6(gd)+" dB"])+row(["輸出訊雜比",num6(out)+" dB"])+row(["B<sub>T</sub> / W",num6(bwr)+"（"+num6(bwrd)+" dB）"])+row(["CNR",num6(cnr)+" dB"])+"</table>";
+    h="<table>"+row(["量","結果"],true)+row(["β",num6(beta)])+row(["B<sub>T</sub>",num6(bt)+" kHz"])+row(["相對 AM 頻寬",num6(ra)+" 倍"])+row(["3β²",num6(g)])+row(["3β²（dB）",num6(gd)+" dB"])+row(["輸出訊雜比",num6(out)+" dB"])+row(["B<sub>T</sub> / W",num6(bwr)+"（"+num6(bwrd)+" dB）"])+row(["CNR",num6(cnr)+" dB"])+"</table>";
     if(cnr<10)h+="<p>CNR 低於 10 dB 門檻：3β² 公式失效，解調輸出出現雜訊尖峰，實際訊雜比遠低於表中數字。</p>";
     if(beta<=0.5)h+="<p>窄頻 FM：3β² ≤ 0.75，比 DSB-SC 還差，FM 的優勢只在 β 大。</p>";
     if(bt>200)h+="<p>頻寬超過 FM 廣播 200 kHz 的頻道間距，會干擾鄰台。</p>";
@@ -203,6 +203,7 @@ function superhet(){
     var frf=val("sh-frf"),fif=val("sh-fif"),side=pick("sh-side"),chan=val("sh-chan"),q=val("sh-q"),flo,fim,spacing=2*fif,nch,inband,rho=null,irr=null,idb=null,lolo,lohi,lor=null,h;
     if(frf<=0||chan<=0){put("superhet-output","<p>RF 與間距必須大於 0。</p>");return;}
     if(side==="high"){flo=frf+fif;fim=frf+2*fif;lolo=530+fif;lohi=1700+fif;}else{flo=frf-fif;fim=Math.abs(frf-2*fif);lolo=530-fif;lohi=1700-fif;}
+    if(flo<=0){put("superhet-output","<p>LO 頻率為負，這組低側注入參數不成立；因此不再計算影像頻率與抑制比。</p>");return;}
     nch=Math.floor((1700-530)/chan+1e-9)+1;inband=fim>=530&&fim<=1700;
     if(fim>0){rho=fim/frf-frf/fim;irr=Math.sqrt(1+(q*rho)*(q*rho));idb=20*Math.log10(irr);}
     if(lolo>0)lor=lohi/lolo;
@@ -255,8 +256,8 @@ function pcm(){
     if(n<=4)h+="<p>SQNR 不到 26 dB，量化雜訊聽得見。</p>";
     if(n>=16)h+="<p>解析度已達 CD 等級以上。</p>";
     if(n>=20)h+="<p>超過實際 ADC 的熱雜訊底，多的位元是假的。</p>";
-    if(ch===30)h+="<p><strong>邊界</strong>：E1 實際是 2048 kbit/s，多出的 128 是 2 個訊令時槽。</p>";
-    if(ch===24)h+="<p><strong>邊界</strong>：T1 實際是 1544 kbit/s，多出的 8 是訊框位元。</p>";
+    if(ch===30)h+="<p><strong>邊界</strong>：標準 E1 為 8 kHz × 8 位元 × 32 時槽 ＝ 2048 kbit/s，其中 30 時槽用於語音。</p>";
+    if(ch===24)h+="<p><strong>邊界</strong>：標準 T1 的 24 路語音以 8 kHz、8 位元取樣，再加入訊框位元後為 1544 kbit/s。</p>";
     h+="<p><strong>為什麼</strong>：每多一個位元，階距減半、量化雜訊功率除以 4，所以 SQNR 加 6.020600 dB；代價是位元率加 f<sub>s</sub> × 路數。</p>";
     put("pcm-output",h);
   };
@@ -293,9 +294,9 @@ function ber(){
     for(k in args)if(args.hasOwnProperty(k))h+=row([names[k],sci(Q(args[k]))]);h+="</table>";
     if(pe<1e-5)h+="<p>良好：不加通道編碼也能用。</p>";else if(pe<1e-3)h+="<p>需要通道編碼（留給數位通訊課）。</p>";else h+="<p>目前設定不可用。</p>";
     if(errs<1)h+="<p>傳這麼多位元，期望連 1 個錯都不到。</p>";
-    if(s==="onoff")h+="<p>同樣 E<sub>b</sub>，ON-OFF 的判決距離只有雙極的 1 / √2，Q 的引數少一半，等於多付 6.020600 dB。</p>";
+    if(s==="onoff")h+="<p>同樣 E<sub>b</sub>，ON-OFF 的判決距離只有雙極的 1 / 2，Q 的引數少一半，等於多付 6.020600 dB。</p>";
     if(s==="cfsk")h+="<p>正交訊號的距離是 √(2E<sub>b</sub>)，介於兩者之間，差 3.010300 dB。</p>";
-    if(ed===0)h+="<p><strong>邊界</strong>：E<sub>b</sub> ＝ N<sub>0</sub>，每 13 個位元約錯 1 個。</p>";
+    if(ed===0)h+="<p><strong>邊界</strong>：E<sub>b</sub> ＝ N<sub>0</sub>，目前方案約每 "+num6(1/pe)+" 個位元錯 1 個。</p>";
     if(ed===16&&s==="bipolar")h+="<p><strong>邊界</strong>：P<sub>e</sub> 為 2.267396 × 10<sup>−19</sup>，實務上量不到，系統會先受其他機制限制。</p>";
     h+="<p><strong>為什麼</strong>：錯誤機率只由判決距離除以雜訊標準差決定；匹配濾波器把這個比值推到最大，而距離只跟能量有關、跟波形無關。</p>";
     put("ber-output",h);
@@ -325,7 +326,7 @@ function constel(){
     if(r.pb<1e-5)h+="<p>良好。</p>";else if(r.pb<1e-3)h+="<p>需要通道編碼。</p>";else h+="<p>這個 E<sub>b</sub>/N<sub>0</sub> 下，"+r.c.name+" 幾乎不可用。</p>";
     if(r.raw>1)h+="<p>最近鄰近似算出超過 1，已夾成 1；此近似只在高 E<sub>b</sub>/N<sub>0</sub> 準。</p>";
     if(key==="qpsk")h+="<p>與 BPSK 的位元錯誤機率相同，但頻譜效率加倍：I、Q 各跑一個 BPSK。</p>";
-    if(key==="qam64")h+="<p>d<sub>min</sub> 只有 BPSK 的 0.154303 倍，要多付約 8 dB 才追得上。</p>";
+    if(key==="qam64")h+="<p>d<sub>min</sub> 只有 BPSK 的 0.154303 倍，要多付約 8.5 dB 才追得上。</p>";
     if(ed===0)h+="<p><strong>邊界</strong>：低能量區最近鄰近似可能失效，請留意夾限提示。</p>";
     if(ed===30)h+="<p><strong>邊界</strong>：極小機率以科學記號呈現；低於顯示下限則標示小於 10<sup>−300</sup>。</p>";
     if(rs===1000&&key==="qam64")h+="<p><strong>邊界</strong>：64-QAM 的 R<sub>b</sub> 是 6.000000 Mbit/s。</p>";
@@ -345,7 +346,7 @@ function shannon(){
     else if(pb>=1e-5)h+="<p>在容量之內，但未編碼的 "+CONSTEL[key].name+" 錯誤機率為 "+sci(pb)+"；缺口要靠通道編碼填。</p>";
     else h+="<p>未編碼就可用，但只用了容量的 "+num6(rb/cap*100)+" %。</p>";
     if(sd>=30)h+="<p>高 SNR 區：每加 1 bit/s/Hz 要多約 3 dB。</p>";
-    if(sd<=0)h+="<p>低 SNR 區：C 約為 1.442695 × B × SNR，功率受限，η 應該小。</p>";
+    if(sd<=-5)h+="<p>低 SNR 區：當 SNR ≪ 1 時，C 約為 1.442695 × B × SNR，功率受限，η 應該小。</p>";
     if(sd===-10)h+="<p><strong>邊界</strong>：SNR 很低，容量只剩 "+num6(cap)+" Mbit/s。</p>";
     if(sd===40)h+="<p><strong>邊界</strong>：C / B ＝ 13.287857 bit/s/Hz。</p>";
     h+="<p><strong>為什麼</strong>：Shannon 曲線是天花板；頻譜效率越高，每位元需要的能量以 (2<sup>η</sup> − 1) / η 上升。未編碼方案離天花板的距離，就是編碼增益可填的缺口。</p>";
