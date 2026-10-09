@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 行程排程｜作業系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-為什麼需要作業系統.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-為什麼需要作業系統.html">00 起點</a><a href="02-行程排程.html" aria-current="page">02 本章</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">02・決定下一個輪到誰</p><h1>行程排程：在等待、公平與切換成本間取捨</h1><p class="lead">可執行的行程常比 CPU 核心多。排程器（scheduler）決定誰先執行、每次多久；不同規則會改變等待與回應感受。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="01-行程是什麼.html">01 行程與狀態</a>。</p>
 <h2>兩種起點</h2><p>先到先服務（First-Come, First-Served, FCFS）像單一排隊櫃檯，工作一旦開始便做完；時間片輪轉（Round Robin, RR）像每人限時服務，時間片（quantum）到就排回隊尾。核心保存目前狀態、載入下一個狀態叫情境切換（context switch），它是管理成本，不會推進使用者工作。</p>
 <h2>量測的是什麼</h2><p>本章假設三行程都在 t=0 到達。完成時間 C 是結束時刻；周轉時間 T=完成−到達，因此此處 T=C；等待時間 W=T−執行時間。真實排程還會考慮到達時間、優先權與 I/O，本模型刻意隔離演算法差異。</p>

@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 執行緒與並行｜作業系統</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
-<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-為什麼需要作業系統.html">00 起點</a><a href="名詞與概念字典.html">字典</a></nav><main>
+<a class="main-site-link" href="../../../互動學習網站/index.html" aria-label="回到工程學習中央入口">← 回到工程學習主站</a><nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-為什麼需要作業系統.html">00 起點</a><a href="03-執行緒與並行.html" aria-current="page">03 本章</a><a href="名詞與概念字典.html">字典</a></nav><main>
 <p class="eyebrow">03・一個行程內有多條執行路線</p><h1>執行緒與並行：共享資料不代表所有工作都能一起跑</h1><p class="lead">一個應用程式可能同時處理畫面、網路與計算。執行緒讓同一行程有多條控制流，但能否真正加速，取決於核心數與不可平行部分。</p><p class="prereq"><strong>這章假設已懂：</strong><a href="02-行程排程.html">02 CPU 排程與情境切換</a>。</p>
 <h2>白話直覺收回精確定義</h2><p>行程像共用工作室，執行緒（thread）像其中的工作者：共享全域資料、heap 與開啟檔案，但各自有程式計數器、暫存器與 stack。這個比喻的限制是執行緒仍由 OS 排程；共享也帶來資料競態，而不是免費合作。</p>
 <h2>並行與平行</h2><p>並行（concurrency）表示多項工作在同一段時間都有進展，單核心輪流跑也能做到；平行（parallelism）表示同一瞬間真的由多核心執行。增加執行緒不會自動增加核心，也不會消除串行步驟。</p>
