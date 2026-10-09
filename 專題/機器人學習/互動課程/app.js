@@ -13,30 +13,6 @@ const num = id => {
 };
 const fmt = (value, digits = 3) => Number(value).toFixed(digits);
 
-const courseNav = [
-  ["index.html", "首頁"],
-  ["00-從控制程式到可學習策略.html", "00 世界觀"],
-  ["00A-機器學習數學先修.html", "00A 數學先修"],
-  ["03-MDP回報價值與策略.html", "03 強化學習"],
-  ["06-安全評估與C++部署.html", "06 部署"],
-  ["07-離線強化學習資料支撐與分布外動作.html", "07 離線學習"],
-  ["08-模型式學習世界模型與滾動規劃.html", "08 模型式學習"],
-  ["名詞與概念字典.html", "字典"]
-];
-
-function navigation() {
-  const nav = document.querySelector("nav.topbar");
-  if (!nav) return;
-  const current = decodeURIComponent(location.pathname.split("/").pop() || "index.html");
-  courseNav.forEach(([href, label]) => {
-    const link = document.createElement("a");
-    link.href = href;
-    link.textContent = label;
-    if (current === href) link.setAttribute("aria-current", "page");
-    nav.append(link);
-  });
-}
-
 const quizzes = {
   "00": [
     ["策略提議 0.12 m/s，安全上限為 0.07 m/s，實際命令是多少？", ["0.05 m/s", "0.07 m/s", "0.12 m/s"], 1, "安全層會把提議裁到 0.07 m/s。這是精確裁切題，答案容差為 ±0.001 m/s。"],
@@ -349,7 +325,6 @@ function dictionary() {
   draw();
 }
 
-navigation();
 rangeValues();
 [policyStep, gradientStep, split, bc, returns, explore, sim, gate, offline, modelBased, dictionary].forEach(run => run());
 selfChecks();
