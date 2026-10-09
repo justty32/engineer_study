@@ -13,12 +13,12 @@
 ## 第 1 章　驗證的全景
 
 ### 1.1 為什麼驗證重要
-- **流片成本**：先進節點光罩組 + 工程晶圓上看 1 億美元；發現 bug 後重做極貴。
+- **流片成本**：先進節點的光罩組可達數千萬美元，若連同設計、驗證與工程晶圓，整案開發成本可達上億美元；發現 bug 後重做極貴。
 - **bug 影響**：晶片問世後修不太了，往往要 software workaround 或 stepping 重流。
 - **覆蓋全部行為**：硬體並發、不可控外部、長啟動序列；測試不可窮舉。
 
 ### 1.2 V 字 / W 字模型
-規格 ← → 驗證計畫；架構 ← → 系統測試；RTL ← → 模組測試；元件 ← → 後矽量測。
+V 模型把開發層級與對應的驗證層級成對：規格 ↔ 驗收測試、系統架構 ↔ 系統測試、RTL 模組 ↔ 模組驗證、閨極／實體實現 ↔ 後矽量測；左側逐層細化，右側逐層整合驗收。
 
 ### 1.3 「驗證」三層
 1. **功能驗證**：邏輯是否符合規格。
@@ -34,7 +34,7 @@
 
 ### 2.2 子系統 / cluster 級
 多模組整合（CPU + Cache + Bus、GPU + Memory Controller）。
-- 跨界面協同 + 性能 / 帶寬測試。
+- 跨界面協同 + 性能 / 頻寬測試。
 
 ### 2.3 SoC / Top 級
 全晶片整合，啟動 OS、跑 benchmark。
@@ -66,6 +66,13 @@ test
 - **monitor**：觀察介面訊號、抽象成交易。
 - **scoreboard**：比對預期 vs 實際。
 
+最小骨架可先看出分工：sequence 產生項目，driver 取出後驅動介面；SVA 則直接寫成時序性質。
+```systemverilog
+assert property (@(posedge clk) req |-> ##[1:3] ack);
+class req_seq extends uvm_sequence #(req_t); /* 產生 req_t */ endclass
+class req_driver extends uvm_driver #(req_t); /* get_next_item 後驅動 DUT */ endclass
+```
+
 ### 3.3 constrained-random + coverage
 - 隨機產生大量場景，靠**覆蓋率**確定有夠廣度。
 - coverpoint、cross coverage、bin。
@@ -78,7 +85,7 @@ test
 
 ### 4.2 屬性檢查（Property / Model Checking）
 - 用 SystemVerilog Assertion（SVA）或 PSL 寫**永遠成立的屬性**。
-- 工具用數學證明（BMC、IPS、k-induction）或反例。
+- 工具用 BMC、k-induction、IC3/PDR 或 interpolation 等演算法證明屬性，若不成立則給出反例。
 - 適合：控制路徑、安全屬性、deadlock-free、protocol compliance。
 
 ### 4.3 連接性 / 暫存器檢查
@@ -93,11 +100,11 @@ test
 ### 5.1 工具
 - 模擬器：VCS、Xcelium、Questa。
 - 加速器：Synopsys ZeBu、Cadence Palladium、Siemens Veloce。
-- FPGA prototype：HAPS、ProtoCluster、Aldec。
+- FPGA prototype：HAPS（Synopsys）、Protium（Cadence）、HES（Aldec）。
 
 ### 5.2 為什麼要
 - 大型 SoC 跑 Linux boot 需要十億 cycles，模擬太慢（幾 Hz）。
-- emulation 提速 1000–10,000 倍（達 MHz 級）。
+- emulation 可達 MHz 級，遠快於純軟體 RTL 模擬。
 
 ### 5.3 部署
 - 軟體團隊「Pre-Silicon」就能跑 firmware / driver / OS / 應用。
@@ -152,7 +159,7 @@ test
 
 ### 9.1 ISO 26262（車用功能安全）
 - ASIL 等級 A–D，D 最嚴。
-- 要求：FIT 量化、Safety Mechanism、SPFM / LFM 比例、DFA（diagnostic coverage）。
+- 要求：FIT 量化、Safety Mechanism、SPFM / LFM 比例、DC（diagnostic coverage）與 DFA（dependent failure analysis，相依失效分析）。
 - 工具：故障注入模擬、形式 SafetyScope、生成 FMEDA。
 
 ### 9.2 安全驗證
@@ -187,7 +194,7 @@ test
 
 ### 11.2 回歸 / CI
 - 每天 / 每小時跑回歸（regression）→ 收集 pass/fail/coverage。
-- 失敗自動分類、stop bisect、自動分配給工程師。
+- 失敗自動分類、自動 bisect 定位引入問題的提交、自動分配給工程師。
 
 ### 11.3 Bug Tracking
 - Jira、Bugzilla、Tracker tool。
@@ -216,12 +223,12 @@ test
 - 也帶動開源驗證 IP 與方法學。
 
 ### 12.4 安全 / 功能安全的整合
-- 更多應用要求 ISO 26262、IEC 61508、CC、Common Criteria。
+- 更多應用要求 ISO 26262、IEC 61508、Common Criteria（CC）。
 - 驗證工具加上 fault campaign 自動化。
 
 ---
 
-# 第六階段　晶片（IC 設計）特化　完成
+## 第六階段　晶片（IC 設計）特化　完成
 
 至此 5 科：
 - IC1 類比 IC 設計（上 / 下）

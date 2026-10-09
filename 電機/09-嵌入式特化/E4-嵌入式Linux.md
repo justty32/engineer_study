@@ -56,6 +56,15 @@ ARM 平台硬體千變萬化；不可能每塊板子改核心程式碼。**Devic
 - 節點 / 屬性：`compatible`（配對驅動）、`reg`（地址）、`interrupts`、`clocks`、`pinctrl`、`status`。
 - **overlay**：執行期動態加裝置（如擴充板 / HAT）。
 
+例如掛在 I²C 匯流排、位址 `0x48` 的溫度感測器可寫成：
+```dts
+sensor@48 {
+    compatible = "vendor,temp-sensor";
+    reg = <0x48>;
+    interrupts = <17 2>;
+};
+```
+
 ### 3.3 與驅動的關係
 驅動宣告支援的 `compatible` 字串；核心比對 Device Tree 節點 → `probe()` 載入。
 
@@ -117,7 +126,7 @@ ARM 平台硬體千變萬化；不可能每塊板子改核心程式碼。**Devic
 ## 第 7 章　即時性與效能
 
 ### 7.1 PREEMPT_RT
-標準 Linux 不保證硬即時（中斷關閉區段、不可搶占核心路徑造成延遲）。**PREEMPT_RT** patch 讓幾乎整個核心可搶占、中斷執行緒化 → 低且有界的延遲（數十 µs）。
+標準 Linux 不保證硬即時（中斷關閉區段、不可搶占核心路徑造成延遲）。**PREEMPT_RT** 讓幾乎整個核心可搶占、中斷執行緒化 → 低且有界的延遲（數十 µs）；Linux 6.12 起已納入主線，舊版核心則需套用 PREEMPT_RT patch。
 - 仍不如裸機 RTOS，但對多數軟 / 韌即時夠用。
 
 ### 7.2 其他手段

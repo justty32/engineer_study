@@ -41,12 +41,7 @@ $$t_p\approx 0.69\,R_\text{eq}C_L$$
 - 上升 / 下降可能不對稱（需要 PMOS / NMOS 比例設計）。
 
 ### 1.5 功耗
-$$P=\alpha C_L V_{DD}^2 f + \text{leakage} + \text{shoot-through}$$
-- **動態**（$\alpha CV^2 f$）：切換頻率 × 電容 × 電壓平方。
-- **靜態（漏電）**：閘極漏 + 通道漏（subthreshold）+ 接面漏。先進製程下漏電占比可達 30–50%。
-- **短路電流（shoot-through）**：切換瞬間 PMOS 與 NMOS 同時導通的瞬間。
-
-降功耗主要手段：**降 $V_{DD}$**（平方項）→ 但延遲變慢，需 trade-off。
+數位 CMOS 功耗由動態切換、漏電與短路電流構成；定量公式與降功耗手段見第 6 章。
 
 ## 第 2 章　組合邏輯
 
@@ -84,9 +79,13 @@ $$P=\alpha C_L V_{DD}^2 f + \text{leakage} + \text{shoot-through}$$
 
 ### 3.3 同步時序分析
 最高時脈頻率：
-$$T_\text{clk}\ge t_\text{cq}+t_\text{logic}+t_\text{setup}+t_\text{skew}$$
+若定義有號偏斜 $t_\text{skew}=t_\text{capture}-t_\text{launch}$，則：
+$$T_\text{clk}\ge t_\text{cq,max}+t_\text{logic,max}+t_\text{setup}-t_\text{skew}$$
+$$t_\text{cq,min}+t_\text{logic,min}\ge t_\text{hold}+t_\text{skew}$$
+- 正偏斜（捕捉時脈較晚到）放寬 setup，卻壓縮 hold 餘裕；負偏斜的作用相反。
 - 違反 setup → 資料還沒準備好 → 錯誤。
 - 違反 hold → 資料太快變動 → 錯誤。
+- 小算例：若 $t_\text{cq}=100\ \mathrm{ps}$、$t_\text{logic}=600\ \mathrm{ps}$、$t_\text{setup}=50\ \mathrm{ps}$，再保守加入 $50\ \mathrm{ps}$ 的不利時脈偏斜預算，則 $T_\text{clk,min}=800\ \mathrm{ps}$、$f_\text{max}=1.25\ \mathrm{GHz}$。
 
 ### 3.4 時脈偏斜（Clock Skew）與抖動（Jitter）
 - **Skew**：不同地方時脈到達時間不一致。源於走線長度、緩衝器差異。
@@ -102,13 +101,13 @@ $$T_\text{clk}\ge t_\text{cq}+t_\text{logic}+t_\text{setup}+t_\text{skew}$$
 
 ### 4.1 時脈分配
 - **時脈樹**：H-tree、Mesh、Cluster。
-- **多時脈域（CDC）**：跨域訊號要同步 + FIFO。
+- **跨時脈域（CDC）**：跨域訊號要同步 + FIFO。
 - **時脈閘控（clock gating）**：不用時關掉時脈以省功耗。
 
 ### 4.2 重設策略
 - **同步 reset**：較容易時序收斂，但需要時脈才能 reset。
 - **非同步 assert、同步 deassert**：折衷。
-- **異步 reset**：上電可行，但 reset removal 仍要小心。
+- **非同步 reset**：上電可行，但解除 reset 前後仍要符合 recovery/removal 時序；recovery 要求解除時間與下一個有效時脈邊緣保持間隔，removal 則限制解除不可太靠近前一個邊緣。
 
 ### 4.3 I/O 設計
 - pad cell：含 ESD、level shifter、impedance control。
@@ -121,14 +120,17 @@ $$T_\text{clk}\ge t_\text{cq}+t_\text{logic}+t_\text{setup}+t_\text{skew}$$
 - 邏輯努力 $g$（依閘類型）
 - 電氣努力 $h$（負載 / 自身電容比）
 - 階段努力 $f=gh$，最佳每階段 $f\approx 4$。
+- 完整路徑還要納入分支努力 $B$ 與寄生延遲 $P$：$F=GBH$、$D\approx NF^{1/N}+P$。
+
+小算例：三級路徑為 NAND2 後接兩級反相器，若 $G=4/3$、$B=1$、$H=48$，則 $F=64$、每級最佳努力 $F^{1/3}=4$；取 $P=2+1+1=4$，估計延遲 $D\approx3\times4+4=16\tau$。
 
 工程上：把 fan-out 維持在 3–4，級聯緩衝器才能達最佳延遲。
 
 ### 5.2 加法器
 - 漣波（ripple-carry）：簡單但慢，$O(N)$。
-- 載前看（carry-lookahead, CLA）：$O(\log N)$。
+- 前瞻進位（carry-lookahead, CLA）：$O(\log N)$。
 - 載儲存（carry-save）：用於乘法陣列。
-- 現代 ALU 常用混合：基本 4-bit CLA 串接。
+- 現代 ALU 主流為 parallel-prefix 加法器（如 Kogge–Stone），也可依面積與時序需求混用 CLA。
 
 ### 5.3 乘法器
 - 部分積（partial product）矩陣 → Wallace tree / Dadda tree 壓縮 → 最終加法器。
@@ -140,7 +142,7 @@ $$T_\text{clk}\ge t_\text{cq}+t_\text{logic}+t_\text{setup}+t_\text{skew}$$
 - 設計要點：讀寫 noise margin、寫干擾、軟錯誤（α / 中子粒子）。
 
 ### 5.5 SerDes 與 PHY
-- 高速串列鏈路（PCIe Gen5 32 Gbps、Ethernet 112 Gbps PAM4）。
+- 高速串列鏈路（PCIe Gen5 每 lane 32 GT/s、Ethernet 112 Gbps PAM4）。
 - 含：CDR、等化（CTLE、DFE）、編碼（8b/10b、64b/66b、PAM4）、FEC（Reed-Solomon、KP-FEC）。
 - 設計挑戰：通道損耗、串擾、jitter budget。
 
@@ -154,7 +156,7 @@ $P_\text{dyn}=\alpha C V_{DD}^2 f$
 ### 6.2 漏電（Leakage）
 - **次臨界**（subthreshold）：$I_\text{leak}\propto e^{-V_{th}/(nV_T)}$。$V_{th}$ 高 → 漏電低但速度慢。
 - **閘極漏**：氧化層薄到 nm 級時 tunneling 嚴重 → 高 K 材料替換。
-- **GIDL**：閘汲漏感應。
+- **GIDL**：閘極引致汲極漏電；閘–汲間高電場使汲極邊緣發生帶對帶穿隧（band-to-band tunneling）。
 
 設計手段：
 - **多 $V_{th}$**（LVT / SVT / HVT）並用：性能路徑用 LVT、其他用 HVT。
@@ -166,7 +168,7 @@ $P_\text{dyn}=\alpha C V_{DD}^2 f$
 手機 SoC、伺服器 CPU 標準功能。
 
 ### 6.4 近 / 次臨界（Near-/Sub-threshold）設計
-極低 $V_{DD}$（< 0.4 V）工作，能效大幅提升，速度慢一個數量級。
+極低 $V_{DD}$（< 0.4 V）工作，能效大幅提升，但速度常慢約 10–1000 倍，實際差異取決於製程、電壓與負載。
 IoT、醫療植入用。
 
 ## 第 7 章　訊號完整性與電源完整性
@@ -179,14 +181,14 @@ IoT、醫療植入用。
 
 ### 7.2 IR Drop
 電源走線電阻造成電壓下降。
-- 解：寬電源網（power grid）、decoupling cap、多個 BUMP 直接接 PCB。
+- 解：寬電源網（power grid）、decoupling cap，並讓多個 bump 經封裝基板連到 PCB 的多層供電網路。
 
 ### 7.3 dI/dt 與 L 振盪
 電流瞬時變化 × 寄生電感 → 電源軌彈跳。
 - 解：去耦電容階層配置（MIM on-die + package + PCB）。
 
 ### 7.4 EM / 自加熱
-電流密度過高 → **電移**（electromigration）造成金屬線斷裂。要遵守 EM rule。
+電流密度過高 → **電遷移**（electromigration）造成金屬線斷裂。要遵守 EM rule。
 
 下一部進入流程、低功耗 / DFT、物理實現。
 

@@ -3,6 +3,8 @@
 > 數位 IC 設計第 2 部 / 共 2 部。
 > - [上：CMOS 邏輯、時序與功耗](IC2-數位積體電路設計-上.md)
 > - [下：流程、低功耗、DFT 與物理實現](IC2-數位積體電路設計-下.md) ← 你在這裡
+>
+> 名詞對照見 [中英名詞對照表 → 數位IC](../中英名詞對照表-3.md#數位ic)。
 
 ## 第 8 章　數位 IC 設計流程（RTL-to-GDS）
 
@@ -11,7 +13,7 @@
 規格 → 架構 → RTL（Verilog/SystemVerilog/VHDL）→
 功能驗證（模擬 / 形式 / UVM）→ 邏輯合成 →
 DFT 插入 → 邏輯等效檢查（LEC）→
-布局 / 規劃（floorplan）→ 配置（placement）→
+平面規劃（floorplan）→ 擺置（placement）→
 時脈樹合成（CTS）→ 繞線（routing）→
 寄生抽取（RC extraction）→ 簽核（STA / Power / EMIR / Noise）→
 DRC / LVS → GDSII → 流片
@@ -51,21 +53,16 @@ DRC / LVS → GDSII → 流片
 
 ## 第 10 章　驗證（Verification）
 
+本章只保留數位 IC 流程中的驗證地圖；UVM、形式驗證、emulation 與工具實務詳見 [IC5 晶片驗證與 EDA 工具](IC5-晶片驗證與EDA工具.md)。
+
 ### 10.1 模擬驗證
-- **direct test**：人寫測試刺激。
-- **constrained random**：用約束隨機產生大量場景。
-- **UVM**：通用驗證方法學，目前 SV 業界標準。
-- **assertion**：SystemVerilog Assertion（SVA）監看時序屬性。
-- **coverage**：function / code / assertion / toggle / FSM。
+- direct test 與 constrained-random 產生刺激，UVM 組織可重用的 testbench，SVA 與 coverage 分別檢查時序屬性與測試完整度。
 
 ### 10.2 形式驗證
-- **等效性檢查（LEC）**：RTL ↔ 合成後網表是否等價。
-- **屬性檢查（Property Checking）**：用數學證明特定 SVA 屬性永遠成立 / 找反例。
-- **CDC 檢查**：跨時脈域同步是否正確。
+- LEC 比對 RTL 與合成後網表，property checking 證明 SVA 屬性或找反例，CDC 則檢查跨時脈域同步。
 
 ### 10.3 模擬加速 / 模擬替代
-- **FPGA prototyping**：把 SoC 部分跑在 FPGA 上加速幾百倍模擬。
-- **硬體加速（emulator）**：Palladium、Veloce、ZeBu。模擬大型 SoC（CPU + GPU）關鍵。
+- FPGA prototype 通常可以數十 MHz 執行軟體工作負載，速度一般高於 emulator；emulator（Palladium、Veloce、ZeBu）則保留較完整的除錯可見性。
 
 ### 10.4 軟硬體協同驗證
 - 在 emulator 跑 Linux / Android boot 已是常態。
@@ -93,7 +90,8 @@ DRC / LVS → GDSII → 流片
 - 合成 / PnR 在時序餘裕大的地方用 HVT、緊路徑用 LVT。
 - ABB（Adaptive Body Biasing）：依溫度 / 速度動態調整 $V_{th}$。
 
-### 11.6 統一電源格式（UPF / CPF）
+### 11.6 電源意圖格式（UPF / CPF）
+UPF 是統一電源格式（Unified Power Format），CPF 是通用電源格式（Common Power Format）。
 描述電源域、隔離、開關、保留：合成 / PnR / 驗證共用同一份規格。
 
 ## 第 12 章　可測試設計（DFT）
@@ -117,14 +115,14 @@ DRC / LVS → GDSII → 流片
 
 ## 第 13 章　物理實現（PnR）
 
-### 13.1 Floorplan（樓層規劃）
+### 13.1 平面規劃（Floorplan）
 - 決定大模組（CPU、GPU、Cache、PHY、SRAM macro）位置。
 - 預留 power straps、I/O ring。
 - I/O 規劃會影響整顆晶片時序、面積、信號完整性。
 
-### 13.2 配置（Placement）
+### 13.2 擺置（Placement）
 - 標準元件依連接性與時序約束放到 row 上。
-- 全域配置（global placement）+ 細節配置（detailed placement）。
+- 全域擺置（global placement）+ 細節擺置（detailed placement）。
 
 ### 13.3 時脈樹合成（CTS）
 - 從 root（PLL 輸出）建樹到所有 FF。
@@ -140,7 +138,7 @@ DRC / LVS → GDSII → 流片
 ### 13.5 ECO（Engineering Change Order）
 晶片開發後期發現 bug，做小範圍補丁：
 - pre-mask ECO：合成 / PnR 重做局部。
-- post-mask（metal）ECO：只改金屬層 → 利用備援邏輯（spare cell）布線改連。
+- post-mask（metal）ECO：只改金屬層 → 利用備援邏輯（spare cell）繞線改連。
 
 ## 第 14 章　簽核（Sign-off）
 
@@ -165,7 +163,7 @@ DRC / LVS → GDSII → 流片
 - ERC
 
 ### 14.5 形式 / 邏輯等效（LEC）
-最後一次確認 GDS / netlist 與 RTL 等價。
+最後一次確認合成後或 ECO 後的 netlist 與 RTL 等價；GDS 對電路連線表的檢查屬於 LVS。
 
 ## 第 15 章　現代議題
 
@@ -175,7 +173,8 @@ DRC / LVS → GDSII → 流片
 
 ### 15.2 Chiplet 與 2.5D / 3D 封裝
 - 把大 SoC 切成多個 chiplet 並用先進封裝（CoWoS、Foveros、EMIB）連起。
-- 介面標準：UCIe、BoW、HBM3/3E。
+- chiplet 介面標準：UCIe、BoW。
+- 常搭配的高頻寬記憶體：HBM3/3E。
 - AMD、Intel、Apple、NVIDIA 主流伺服器 / AI 加速器均採用。
 
 ### 15.3 AI 加速器設計

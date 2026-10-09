@@ -27,15 +27,15 @@
 
 ### 1.2 能帶與載子
 - 能隙 $E_g$：導帶與價帶之間的禁區。
-- 本徵載子濃度 $n_i$：純半導體中熱激發電子 / 電洞密度，溫度高速指數成長。
+- 本徵載子濃度 $n_i$：純半導體中熱激發電子 / 電洞密度，隨溫度指數上升。
 - **摻雜（doping）**：
   - **n 型**：V 族（P、As、Sb），多自由電子。
   - **p 型**：III 族（B、Ga、In），多電洞。
 - 載子運動：漂移（drift, $J=\sigma E$）+ 擴散（diffusion, $J=qD dn/dx$）。
 
-## 第 2 章　PN 接面（複習電子學上）
+## 第 2 章　PN 接面（複習[電子學上](../02-電機核心/07-電子學-上.md)）
 
-- 平衡：空乏區、內建電位 $V_0\approx 0.7$ V（Si）。
+- 平衡：空乏區、內建電位通常約 $0.6$ 至 $0.9$ V（Si，視摻雜濃度而定）。這是熱平衡時空乏區內的內部電勢差，不等於工程近似中特定電流下的「0.7 V 導通壓降」。
 - 順偏：指數電流。
 - 反偏：飽和電流 + 崩潰（Zener / Avalanche）。
 - 動態：空乏電容 $C_j$ + 擴散電容 $C_d$。
@@ -55,7 +55,7 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 - **體效應**：$V_{SB}$ 變化使 $V_{th}$ 變動。
 
 ### 3.3 三大區
-- 截止、三極（線性）、飽和（在上[一節](../02-電機核心/07-電子學-中.md)、[IC1 上](IC1-類比積體電路設計-上.md)講過）。
+- 截止、三極（線性）、飽和（見[電子學中](../02-電機核心/07-電子學-中.md)與 [IC1 上](IC1-類比積體電路設計-上.md)）。
 
 ### 3.4 短通道效應
 製程縮小時：
@@ -77,7 +77,7 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 
 ### 4.1 結構與運作
 - 三層 npn 或 pnp，基極薄、輕摻雜。
-- 順偏 BE、反偏 BC：作用區，集電流 $I_C\propto e^{V_{BE}/V_T}$。
+- 順偏 BE、反偏 BC：作用區，集極電流 $I_C\propto e^{V_{BE}/V_T}$。
 
 ### 4.2 在 IC 中的角色
 - 主流 CMOS 製程中仍有 PNP / NPN 寄生 BJT（用於 BGR、ESD）。
@@ -93,7 +93,7 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 ### 5.2 影像感測器
 - **CCD**：電荷耦合移位輸出，老式但低雜訊。
 - **CMOS Image Sensor（CIS）**：每像素內含放大器，主流（手機、汽車）。
-  - BSI（背照式）：把佈線層挪到正面、光從背面進，提高量子效率。
+  - BSI（背照式）：將晶圓翻面並薄化，讓光從背面進入感光區，避免先穿過正面金屬互連層，以提高量子效率。
   - 堆疊式（stacked）：感測層 + 邏輯層分晶圓 + TSV 連接。
 
 ### 5.3 SPAD（單光子雪崩二極體）
@@ -122,7 +122,7 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 - 旋塗光阻 → 曝光（透過光罩）→ 顯影 → 蝕刻。
 - 解析度 ≈ $k_1\lambda/\mathrm{NA}$。
 - 演進：
-  - 365 / 248 / 193 nm KrF / ArF → 7 nm 以下。
+  - i-line 汞燈 365 nm、KrF 248 nm、ArF 193 nm。
   - **193 nm 浸潤 + 多重曝光**：曾撐到 7 nm 節點。
   - **EUV（13.5 nm）**：ASML 獨佔，7 nm 起逐步、5 nm 主用、3 nm 大量使用。
   - **High-NA EUV**：2 nm 級用。
@@ -156,12 +156,13 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 ### 6.9 缺陷與良率
 - 顆粒、刮傷、晶格缺陷。
 - **良率公式（Murphy）**：$Y=\left(\dfrac{1-e^{-DA}}{DA}\right)^2$，$D$ 為缺陷密度、$A$ 為晶片面積。
+- 小算例：若 $D=0.1\ \mathrm{cm}^{-2}$，$A=1\ \mathrm{cm}^2$ 時 $Y\approx90.6\%$；$A=8\ \mathrm{cm}^2$ 時 $Y\approx47.4\%$。單顆晶片越大，良率下降越明顯，這也是採用 chiplet 的動機之一。
 - 大晶片良率更難 → chiplet 動機之一。
 
 ## 第 7 章　可靠度（Reliability）
 
 ### 7.1 主要劣化機制
-- **電移（EM）**：金屬線載流密度過高 → 原子遷移 → 斷線。
+- **電遷移（EM）**：金屬線載流密度過高 → 原子遷移 → 斷線。
 - **TDDB（Time-Dependent Dielectric Breakdown）**：氧化層長期承壓 → 漏電變大 / 崩潰。
 - **HCI（Hot Carrier Injection）**：高能電子嵌入氧化層 → $V_{th}$ 漂移。
 - **NBTI / PBTI（Bias Temperature Instability）**：PMOS / NMOS 長期 stress 下 $V_{th}$ 漂移。
@@ -210,7 +211,7 @@ $$V_{th}=V_{FB}+2\phi_F+\dfrac{\sqrt{2q\varepsilon_s N_A(2\phi_F+V_{SB})}}{C_{ox
 - **GAA / nanosheet → CFET**：3D 整合電晶體本身。
 - **HKMG → ferroelectric gate**：NCFET、Logic-in-Memory。
 - **Cu → Co / Ru 互連**：先進節點低電阻。
-- **EUV / High-NA EUV**：光刻持續演進。
+- **EUV / High-NA EUV**：微影技術持續演進。
 - **2D 材料**：MoS₂、WSe₂ 通道。
 - **量子點 / 自旋元件**：未來量子計算與感測。
 

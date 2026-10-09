@@ -11,17 +11,21 @@
 
 ## 第 1 章　取樣與量化的 IC 視角
 
-### 1.1 採樣保持（S/H）
-- **bottom-plate sampling**：把採樣電容下板接地，避免 charge injection。
+### 1.1 取樣保持（S/H）
+- **bottom-plate sampling**：取樣結束時先斷開電容下板開關，讓開關注入電荷對輸入訊號不敏感，以降低輸入相依誤差。
 - **bootstrap 開關**：給 MOSFET 閘 - 源差固定（不隨輸入變化），改善線性度。是高速 ADC 必備技巧。
-- **採樣電容** $C_s$：太小 → kT/C 雜訊大；太大 → 驅動困難。
+- **取樣電容** $C_s$：太小 → kT/C 雜訊大；太大 → 驅動困難。
 
 ### 1.2 雜訊地板
 - **kT/C 雜訊**：$\overline{v_n^2}=kT/C_s$。
+- 小算例：300 K、$C_s=1\ \mathrm{pF}$ 時，$v_{n,\mathrm{rms}}=\sqrt{kT/C_s}\approx64\ \mathrm{\mu V}$；對 12 bit、1 V 全幅 ADC，$1\ \mathrm{LSB}=1/4096\approx244\ \mathrm{\mu V}$。
 - **量化雜訊**：$\sigma_q^2=\Delta^2/12$。
 - **熱雜訊 + 1/f**：來自 AFE 元件。
 
 ### 1.3 ENOB（有效位元數）
+對滿幅正弦波，訊號均方值與量化雜訊 $\Delta^2/12$ 相除，可得
+$$\mathrm{SNR}_{ideal}=10\log_{10}\!\left(\frac{3}{2}2^{2N}\right)\approx6.02N+1.76\ \mathrm{dB}.$$
+因此可將實測 SINAD 換算為：
 $$\mathrm{ENOB}=\dfrac{\mathrm{SINAD}-1.76}{6.02}$$
 - SINAD：訊號對雜訊與失真總和比。
 - 衡量 ADC 真實解析度。
@@ -71,7 +75,7 @@ ADC 是「應用驅動架構選擇」的代表科目。下表是粗略對照：
 
 ### 3.1 Flash ADC
 - $2^N-1$ 個比較器 + 編碼器。
-- 一次採樣一個 cycle 完成。
+- 一次取樣一個 cycle 完成。
 - 受限：N > 8 後比較器數量爆炸。
 - 變形：interpolating、folding 共用比較器減少數量。
 
@@ -102,10 +106,12 @@ ADC 是「應用驅動架構選擇」的代表科目。下表是粗略對照：
 
 ### 4.1 雜訊整形原理
 ΣΔ 用 $H(z)=z^{-1}/(1-z^{-1})$（積分器）放在迴路中：
+將量化器線性化為加性雜訊 $E$，迴路代數為
+$$Y=\frac{H}{1+H}X+\frac{1}{1+H}E,$$
 - 訊號通過增益接近 1。
 - 量化雜訊乘上 $(1-z^{-1})$ → 高通整形。
 
-二階以上整形可大幅提升 SNR（每階 +9 dB/octave）。
+$L$ 階雜訊整形在 OSR 每倍增時，SNR 理想提升量為 $(6L+3)\ \mathrm{dB}$：一、二、三階分別約為 9、15、21 dB/octave，每增加一階多 6 dB/octave。
 
 ### 4.2 CIC 與多級降取樣
 - CIC：cascaded integrator-comb，硬體最便宜的 decimation 濾波器。
@@ -140,6 +146,7 @@ ADC 是「應用驅動架構選擇」的代表科目。下表是粗略對照：
 ### 6.3 高速時脈
 - 由 PLL / DLL 產生 → 必須低 jitter。
 - jitter $\sigma_t$ × 訊號斜率 → 等效輸入雜訊。
+- 小算例：$\mathrm{SNR}_{jit}=-20\log_{10}(2\pi f_{in}\sigma_t)$；若 $f_{in}=100\ \mathrm{MHz}$、$\sigma_t=1\ \mathrm{ps}$，則 $\mathrm{SNR}_{jit}\approx64\ \mathrm{dB}$。
 
 ## 第 7 章　混合訊號版圖（Mixed-Signal Layout）
 
@@ -156,7 +163,7 @@ ADC 是「應用驅動架構選擇」的代表科目。下表是粗略對照：
 - Star ground、separate analog/digital ground。
 - 兩 ground 通常在 ESD 二極體 / single point 連接。
 
-### 7.4 寄生與布線
+### 7.4 寄生與繞線
 - 高速類比訊號最好走頂層金屬（最厚）。
 - 屏蔽：兩側 ground 線、上下層接地夾。
 - 走線盡量短、對稱。
@@ -168,25 +175,25 @@ ADC 是「應用驅動架構選擇」的代表科目。下表是粗略對照：
 - 取樣同步、DMA 進記憶體。
 
 ### 8.2 RF 通訊
-- 高速 ADC（10–14 b、1–5 GS/s）採樣 IF / RF。
+- 高速 ADC（10–14 b、1–5 GS/s）取樣 IF / RF。
 - DAC + 上變頻器 → 發射端。
 
 ### 8.3 影像感測器（CMOS Image Sensor）
 - 每行 / 每列 column ADC。
-- single-slope / SAR / Σ Δ；面積 vs 速度取捨。
+- single-slope / SAR / ΣΔ；面積 vs 速度取捨。
 
 ### 8.4 音訊
-- Σ Δ ADC + DAC 對：iPhone level → 117 dB SNR、24 bit。
+- ΣΔ ADC + DAC 對：高階行動音訊 codec 約 110–120 dB SNR、24 bit。
 
 ### 8.5 量測儀器
 - Keysight、Tektronix 示波器：12 b、100 GS/s TI-ADC。
-- DMM、頻譜儀：高解析 Σ Δ。
+- DMM、頻譜儀：高解析 ΣΔ。
 
 ## 第 9 章　趨勢
 
 ### 9.1 更高頻 / 更高解析
 - 5G/6G、光通訊：100+ GS/s ADC。
-- 量子計算讀出：超低噪 ADC。
+- 量子計算讀出：超低雜訊 ADC。
 
 ### 9.2 內建 DSP / AI
 - 在 ADC 後緊接做 DSP / 神經網路推論：在感測器晶片上完成部分推論。
@@ -200,7 +207,7 @@ ADC 是「應用驅動架構選擇」的代表科目。下表是粗略對照：
 
 - 類比 IC（IC1）：DAC / ADC 內部模組。
 - 數位 IC（IC2）：數位後處理、校準邏輯。
-- 信號與系統、DSP：採樣理論、ΣΔ 雜訊整形。
+- 信號與系統、DSP：取樣理論、ΣΔ 雜訊整形。
 - 通訊 / 影像 / 生醫：應用場景。
 
 下一科：[半導體製程與元件物理 →](IC4-半導體製程與元件物理.md)

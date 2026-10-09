@@ -2,7 +2,7 @@
 
 > 晶片特化第 1 科 / 類比 IC 設計第 1 部（共 2 部）。
 > - [上：MOSFET 物理與基本放大器](IC1-類比積體電路設計-上.md) ← 你在這裡
-> - [下：高階放大器、雜訊、迴授與類比模組](IC1-類比積體電路設計-下.md)
+> - [下：高階放大器、迴授與類比模組](IC1-類比積體電路設計-下.md)
 >
 > 名詞對照見 [中英名詞對照表 → 類比IC](../中英名詞對照表-3.md#類比ic)。
 
@@ -28,7 +28,7 @@
 
 ### 1.2 元件
 - **NMOS / PMOS**：核心。
-- **Native NMOS**：$V_{th}\approx 0$，深三極操作給 LDO 用。
+- **Native NMOS**：$V_{th}\approx 0$，可作 NMOS LDO 的通過元件（pass device）或低壓開關。
 - **高 $V_{th}$（HVT）、低 $V_{th}$（LVT）**：依需求選用。
 - **電容**：MOS cap、MIM、MOM、變容（varactor）。
 - **電阻**：多晶矽（poly-R）、N-well、金屬 metal-R。各有不同 TC、$1/f$、匹配。
@@ -54,7 +54,7 @@ $$I_D=\tfrac{1}{2}\mu_n C_{ox}\dfrac{W}{L}(V_{GS}-V_{th})^2(1+\lambda V_{DS})$$
 ### 2.2 弱反轉（Subthreshold）
 $$I_D=I_0\,e^{V_{GS}/(nV_T)}\,(1-e^{-V_{DS}/V_T})$$
 像 BJT 指數律。
-- $g_m=I_D/(nV_T)$，**$g_m/I_D\approx 1/(nV_T)$ 最大**（28 mS/V）。
+- $g_m=I_D/(nV_T)$，**$g_m/I_D\approx 1/(nV_T)$ 最大**，單位為 $\mathrm{S/A}=\mathrm{V}^{-1}$；例如 300 K、$n\approx1.4$ 時約 $28\ \mathrm{V}^{-1}$。
 - 低功耗類比 / 生醫前端 / 偏壓電路常用。
 
 ### 2.3 g_m/I_D 設計方法
@@ -73,6 +73,7 @@ $$I_D=I_0\,e^{V_{GS}/(nV_T)}\,(1-e^{-V_{DS}/V_T})$$
 
 ### 2.5 製程變異與失配（Mismatch）
 - **Pelgrom 失配定律**：$\sigma(\Delta V_{th})=\dfrac{A_{V_{th}}}{\sqrt{WL}}$。
+- 小算例：若 $A_{V_{th}}=3\ \mathrm{mV\cdot \mu m}$、$WL=10\ \mathrm{\mu m^2}$，則 $\sigma(\Delta V_{th})=3/\sqrt{10}\approx0.95\ \mathrm{mV}$，約為 $1\ \mathrm{mV}$。
 - 設計上「要匹配的元件」要做大 + 緊鄰版圖 + interdigitated / common-centroid。
 - 統計分析：Monte Carlo + Corner（FF / SS / TT 等）。
 
@@ -84,12 +85,13 @@ $$I_\text{out}\approx I_\text{ref}\cdot\dfrac{(W/L)_\text{out}}{(W/L)_\text{ref}
 不理想項：
 - **輸出阻抗** $r_o$ 不夠高 → $V_{DS}$ 變化會改變 $I_\text{out}$。
 - **$V_{DS}$ 失配** → 鏡像誤差。
+- 小算例：若通道長度調變參數 $\lambda=0.1\ \mathrm{V}^{-1}$、兩管 $\Delta V_{DS}=0.5\ \mathrm{V}$，一階近似的電流誤差為 $\lambda\Delta V_{DS}=0.05$，即 $5\%$。
 
 ### 3.2 疊接（Cascode）電流鏡
 加一顆共閘電晶體：
 - 輸出阻抗 $\sim g_m r_o^2$，大幅提升。
-- 代價：壓降增加（要 $V_{DS}\ge V_{OV}$ × 2）。
-- 變形：**摺疊疊接（folded cascode）**、**寬擺幅疊接（wide-swing cascode）**。
+- 代價：壓降增加；一般疊接電流鏡的最低輸出電壓約為 $V_{th}+2V_{OV}$。
+- 變形：**摺疊疊接（folded cascode）**、**寬擺幅疊接（wide-swing cascode）**；寬擺幅結構可將最低輸出電壓降至約 $2V_{OV}$。
 
 ### 3.3 帶隙基準（Bandgap Reference, BGR）
 產生與溫度 / 電源無關的固定電壓 ≈ 1.2 V（矽的能隙）。
@@ -109,7 +111,7 @@ $$I_\text{out}\approx I_\text{ref}\cdot\dfrac{(W/L)_\text{out}}{(W/L)_\text{ref}
 ### 4.1 共源（CS, Common-Source）—— 主力
 - **電阻負載**：增益 $A_v=-g_m R_D$。
 - **電流源負載**（MOSFET）：增益 $A_v=-g_m(r_{on}\|r_{op})$，可達 $g_m r_o/2$。
-- **疊接負載**：增益更大，達 $g_m r_o^2/2$。
+- **疊接負載**：共源＋共門疊接級搭配疊接負載時，增益量級可達 $(g_m r_o)^2/2$。
 
 ### 4.2 共閘（CG）
 低輸入阻抗、高輸出阻抗。常作為**疊接層**或**LNA 輸入級**（低入阻抗匹配天線）。
@@ -130,12 +132,13 @@ $$I_\text{out}\approx I_\text{ref}\cdot\dfrac{(W/L)_\text{out}}{(W/L)_\text{ref}
 
 ### 5.2 大訊號特性
 $$I_{d1}-I_{d2}=\dfrac{\mu_n C_{ox}(W/L)}{2}V_d\sqrt{\dfrac{4I_\text{bias}}{\mu_n C_{ox}(W/L)}-V_d^2}$$
-- 小 $V_d$ 時近似線性 ($g_m V_d$)。
-- $V_d$ 大到某個值會「飽和」（一邊電晶體截止）。
+這個式子描述尾電流如何隨差動輸入 $V_d$ 在兩支電晶體間重新分配。
+- 小 $V_d$ 時近似線性（$g_m V_d$）。
+- 若 $V_{OV}$ 指平衡時每支電晶體的 overdrive，當 $|V_d|=\sqrt{2}\,V_{OV}$ 時一邊電晶體截止，電流差達尾電流上限。
 
 ### 5.3 小訊號
 - **差模增益**：$A_d=g_m(r_o\|R_L)$。
-- **共模增益**：$A_{cm}\approx -R_L/(2r_{o,\text{tail}})$。
+- **共模增益**：對單端輸出，$A_{cm}\approx -R_L/(2r_{o,\text{tail}})$；理想全差動輸出的共模增益為 0。
 - **CMRR**：$A_d/A_{cm}\approx 2g_m r_{o,\text{tail}}$。
 
 ### 5.4 主動負載
@@ -173,4 +176,4 @@ $$\overline{v_{n,\text{in}}^2}=\dfrac{4kT\gamma}{g_m}+\dfrac{K_f}{WL C_{ox}f}$$
 
 下一部進入多級放大器、迴授、頻率補償，以及完整類比模組（運算放大器、轉換器前端等）。
 
-下一部：[下：高階放大器、雜訊、迴授與類比模組 →](IC1-類比積體電路設計-下.md)
+下一部：[下：高階放大器、迴授與類比模組 →](IC1-類比積體電路設計-下.md)
