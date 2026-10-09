@@ -48,7 +48,7 @@
 </div>
 <details>
 <summary>想更深入：用一個例子串起多個名詞</summary>
-<p>檔案位移 0x3000 有文字 api.example.test；密碼雜湊先固定你分析的是哪一版檔案。載入器依區段表把它映射到相對虛擬位址 0x5000，若本次基底為 0x140000000，除錯器看見的虛擬位址就是 0x140005000。反組譯器在某函式找到對該位址的交叉參照，反編譯器把附近資料流推成類 C 表示；控制流圖顯示有路可到名稱解析呼叫，定義使用鏈則顯示字串指標流進參數。最後在隔離環境設中斷點，若某次輸入真的命中並產生對應網路事件，才支持這次執行嘗試解析該名稱。每個名詞都只解釋因果鏈的一段，沒有單一工具能取代整條證據鏈。</p>
+<p>檔案位移 0x3000 有文字 api.example.test；密碼學雜湊先固定你分析的是哪一版檔案。載入器依區段表把它映射到相對虛擬位址 0x5000，若本次基底為 0x140000000，除錯器看見的虛擬位址就是 0x140005000。反組譯器在某函式找到對該位址的交叉參照，反編譯器把附近資料流推成類 C 表示；控制流圖顯示有路可到名稱解析呼叫，定義使用鏈則顯示字串指標流進參數。最後在隔離環境設中斷點，若某次輸入真的命中並產生對應網路事件，才支持這次執行嘗試解析該名稱。每個名詞都只解釋因果鏈的一段，沒有單一工具能取代整條證據鏈。</p>
 </details>
 </section>
 <div class="grid">
@@ -65,8 +65,8 @@
 <p>
 <strong>可觀察證據：</strong>分析註記應能回到位元組、位址與時間；漂亮的反編譯畫面本身不能證明原始設計或作者意圖。</p>
 </article>
-<article class="term-card" data-search="密碼雜湊 cryptographic hash 樣本 同一性">
-<h2>密碼雜湊（cryptographic hash）</h2>
+<article class="term-card" data-search="密碼學雜湊 cryptographic hash SHA-256 樣本 同一性">
+<h2>密碼學雜湊（cryptographic hash）</h2>
 <p>
 <strong>白話：</strong>把檔案映成固定長摘要，供完整性與同一性比對。</p>
 <p>
@@ -165,7 +165,7 @@
 <p>
 <strong>不要混淆：</strong>不同平台與編譯選項可能不同。</p>
 <p>
-<strong>具體例：</strong>教學模型把前四個整數放暫存器，其餘放堆疊，回傳值放指定暫存器；這不是所有平台的保證。</p>
+<strong>具體例：</strong>SysV x86-64 前 6 個整數參數走暫存器，Win64 前 4 個，AAPCS64 與 RISC-V 前 8 個；其餘由呼叫端放到外送參數區。</p>
 <p>
 <strong>可觀察證據：</strong>在呼叫前、入口與回傳前比較暫存器和堆疊，可重建這個函式的實際用法；單一呼叫點可能漏掉可選參數。</p>
 </article>
@@ -178,7 +178,7 @@
 <p>
 <strong>不要混淆：</strong>不是所有變數都在堆疊，也不是 C++ 容器。</p>
 <p>
-<strong>具體例：</strong>單一框架若占 80 位元組，三層尚未返回的同型呼叫在簡化模型約占 240 位元組，回傳時依相反順序收回。</p>
+<strong>具體例：</strong>教學模型的被呼叫端框架含 16 位元組保存資訊與 48 位元組區域資料，共 64 位元組；三層約占 192 位元組。呼叫端外送參數區需另計。</p>
 <p>
 <strong>可觀察證據：</strong>堆疊指標、記憶體檢視與展開資訊能顯示目前呼叫鏈；不能保存所有已返回呼叫的完整歷史。</p>
 </article>
@@ -363,6 +363,60 @@
 <strong>具體例：</strong>記錄 10:20 由人員 A 取得媒體、計算摘要 H、建立唯讀原件與分析副本，11:00 交給人員 B。</p>
 <p>
 <strong>可觀察證據：</strong>簽章紀錄、存取日誌、雜湊與交接表共同支持完整性；雜湊相同仍不能補回遺失的來源與處理歷程。</p>
+</article>
+<article class="term-card" data-search="旗標 flags zero carry sign overflow 零 進位 符號 溢位">
+<h2>旗標（flags）</h2>
+<p><strong>白話：</strong>處理器對前一次運算結果的短狀態摘要。</p>
+<p><strong>位置／機制：</strong>比較、算術或邏輯指令可更新零、進位、符號與溢位等旗標，條件分支再讀取它們。</p>
+<p><strong>不要混淆：</strong>旗標可被後續指令改寫，不一定還對應最近看到的比較。</p>
+</article>
+<article class="term-card" data-search="PE ELF Portable Executable Executable and Linkable Format 可執行檔 格式">
+<h2>PE／ELF 可執行檔格式</h2>
+<p><strong>白話：</strong>PE 是 Windows 常見格式，ELF 是 Linux 等類 Unix 系統常見格式。</p>
+<p><strong>位置／機制：</strong>標頭與表格描述架構、入口、區段、符號、重定位與相依項。</p>
+<p><strong>不要混淆：</strong>兩者欄位與映射規則不同，不能只換名詞套用。</p>
+</article>
+<article class="term-card" data-search="位元組序 endianness little endian big endian 小端 大端">
+<h2>位元組序（endianness）</h2>
+<p><strong>白話：</strong>多位元組數值在連續記憶體中的排列順序。</p>
+<p><strong>位置／機制：</strong>小端把最低有效位元組放在低位址；大端相反。</p>
+<p><strong>具體例：</strong><code>78 56 34 12</code> 以小端 32 位元讀成 <code>0x12345678</code>。</p>
+</article>
+<article class="term-card" data-search="檔案位移 file offset 相對虛擬位址 RVA relative virtual address">
+<h2>檔案位移／相對虛擬位址（file offset／RVA）</h2>
+<p><strong>白話：</strong>檔案位移從檔案開頭數位置；RVA 從模組映像基底數位置。</p>
+<p><strong>位置／機制：</strong>需依區段的檔案起點與映射起點換算。</p>
+<p><strong>不要混淆：</strong>RVA 還不是本次執行的完整虛擬位址，尚需加上載入基底。</p>
+</article>
+<article class="term-card" data-search="匯入 匯出 import export 符號 相依 函式">
+<h2>匯入與匯出（import／export）</h2>
+<p><strong>白話：</strong>匯入是模組向外取得的符號；匯出是它提供給別的模組的符號。</p>
+<p><strong>位置／機制：</strong>載入器與動態連結器依名稱或序號把參照連到實際位址。</p>
+<p><strong>不要混淆：</strong>匯入存在只證明相依能力，不證明執行時必然呼叫。</p>
+</article>
+<article class="term-card" data-search="位置獨立程式碼 position-independent code PIC 載入 基底">
+<h2>位置獨立程式碼（position-independent code, PIC）</h2>
+<p><strong>白話：</strong>不依賴某個固定絕對位址也能運作的程式碼。</p>
+<p><strong>位置／機制：</strong>常用相對參照或間接表格找程式碼與資料。</p>
+<p><strong>不要混淆：</strong>位置獨立不表示完全沒有重定位或動態連結工作。</p>
+</article>
+<article class="term-card" data-search="沙箱 sandbox 隔離 可回復 動態分析">
+<h2>沙箱（sandbox）</h2>
+<p><strong>白話：</strong>限制程式可接觸資源的隔離執行環境。</p>
+<p><strong>位置／機制：</strong>可結合虛擬化、存取控制、網路隔離、快照與事件記錄。</p>
+<p><strong>不要混淆：</strong>沙箱降低風險，不是絕對安全，也不代表行為與生產環境完全相同。</p>
+</article>
+<article class="term-card" data-search="戰術技術與程序 TTP tactics techniques procedures 行為">
+<h2>戰術、技術與程序（Tactics, Techniques, and Procedures, TTP）</h2>
+<p><strong>白話：</strong>用目標、方法與具體做法描述攻擊或防禦行為。</p>
+<p><strong>位置／機制：</strong>將多個可觀察事件組成較穩定的行為模式，便於偵測與溝通。</p>
+<p><strong>不要混淆：</strong>相似 TTP 不能單獨證明行動者身分或主觀意圖。</p>
+</article>
+<article class="term-card" data-search="基本區塊 basic block CFG 控制流 單一入口">
+<h2>基本區塊（basic block）</h2>
+<p><strong>白話：</strong>一段從中間不分支、通常由頭執行到尾的指令序列。</p>
+<p><strong>位置／機制：</strong>控制流圖把基本區塊當節點，用跳躍、順序落下與例外當邊。</p>
+<p><strong>不要混淆：</strong>基本區塊是分析單位，不等於一個函式或一行原始碼。</p>
 </article>
 </div>
 <h2>回主線</h2>

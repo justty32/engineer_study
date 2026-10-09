@@ -4,9 +4,9 @@
 <p class="eyebrow">00・零基礎起點</p><h1>封包與分層：一段資料為何要穿好幾層外套？</h1><p class="lead">因為「送到隔壁設備、送過多個網路、交給正確程式、讓程式理解意圖」是不同範圍的問題。每層只承諾一種服務，並把控制資訊包在資料周圍。</p>
 <p class="prereq"><strong>這章假設已懂：</strong>位元組是資料長度單位；程式可讀寫一段位元組。除此之外不要求網路知識。</p>
 <section class="card"><h2>先建立軟體工程師的直覺</h2><p>把分層想成多個介面契約：應用只交付「要傳的位元組」，傳輸層補上程式端點與端對端控制，網路層補上跨網位址，鏈路層再補上這一小段路真正要用的交付資訊。這個類比只說明責任切分；真實資料不是呼叫堆疊裡的物件，而是依協定格式排列的位元組，途中設備只解析自己需要的欄位。</p><p><strong>先記一句：</strong>每層的標頭都在回答不同問題，因此「額外位元組」不是重複浪費；代價換來的是可以各自演進、轉送與除錯的控制資訊。</p></section>
-<section class="card"><h2>實驗怎麼玩</h2><p>先把負載設為 100 位元組並保持三層全開，讀出總長度與各層比例；再把負載降到 0 或提高到 1500，觀察固定控制成本的占比如何改變。最後逐一關閉層級。關閉只是在問「少算這層會少多少」，不是表示真實網路可任意省略必要協定。</p></section>
+<section class="card"><h2>實驗怎麼玩</h2><p>先把負載設為 100 位元組並保持三層全開，讀出總長度與各層比例；再把負載降到 0 或提高到 1460，觀察固定控制成本的占比如何改變。以常見乙太網路最大傳輸單元（Maximum Transmission Unit, MTU）1500 位元組來說，扣掉 20 位元組 IPv4 與 20 位元組 TCP 標頭後，這個簡化模型的 TCP 最大區段大小（Maximum Segment Size, MSS）為 1460 位元組。最後逐一關閉層級。關閉只是在問「少算這層會少多少」，不是表示真實網路可任意省略必要協定。</p></section>
 <section class="workspace"><h2>自由實驗：看見封裝成本</h2><p>下列固定長度只供建立模型：傳輸與網路標頭各 20 位元組，鏈路標頭加尾碼共 18 位元組。真實長度會因協定版本、選項與鏈路而變。</p>
-<label for="payload">應用資料長度：<output id="payload-value">100 位元組</output></label><input id="payload" type="range" min="0" max="1500" value="100">
+<label for="payload">應用資料長度：<output id="payload-value">100 位元組</output></label><input id="payload" type="range" min="0" max="1460" value="100">
 <label><input id="layer-transport" type="checkbox" checked> 加上傳輸層控制資訊</label><label><input id="layer-network" type="checkbox" checked> 加上網路層控制資訊</label><label><input id="layer-link" type="checkbox" checked> 加上鏈路層控制資訊</label>
 <div id="envelope-output" class="output" aria-live="polite"></div><button id="reset-envelope" type="button">重設示意值</button></section>
 <h2>把數字親手算一次</h2><p>令應用負載為 P 位元組，三層示意控制資訊分別為 H<sub>T</sub> = 20、H<sub>N</sub> = 20、H<sub>L</sub> = 18 位元組。模型中的線上總長度為 L = P + H<sub>T</sub> + H<sub>N</sub> + H<sub>L</sub>，單位都是位元組，因此量綱可以直接相加；控制成本比例為 (H<sub>T</sub> + H<sub>N</sub> + H<sub>L</sub>) / L，是無單位比值。</p><p>以 P = 100 為例，L = 100 + 20 + 20 + 18 = 158 位元組，控制資訊占 58 / 158 ≈ 36.7%。若 P = 1000，總長度為 1058 位元組，占比降為約 5.5%。這只比較本頁列出的欄位，未計實體層前置碼、訊框間隔、填補、協定選項、分段與重傳，因此不能拿 158 位元組當作真實線路固定成本。</p>

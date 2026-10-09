@@ -38,7 +38,7 @@ function setupRoute() {
   if (!byId("route-destination")) return;
   const parseIpv4 = (text) => {
     const parts = text.trim().split(".");
-    if (parts.length !== 4 || parts.some(x => !/^\d+$/.test(x) || Number(x) > 255)) return null;
+    if (parts.length !== 4 || parts.some(x => !/^\d+$/.test(x) || (x.length > 1 && x.startsWith("0")) || Number(x) > 255)) return null;
     return parts.reduce((value, x) => ((value << 8) | Number(x)) >>> 0, 0);
   };
   const printIpv4 = (value) => [24, 16, 8, 0].map(shift => (value >>> shift) & 255).join(".");
@@ -48,7 +48,7 @@ function setupRoute() {
     const hops = number("route-hops");
     const destinationValue = parseIpv4(destination);
     if (destinationValue === null) {
-      byId("route-output").innerHTML = "<strong>格式尚不是四段有效的 IPv4 位址。</strong><br>每段必須是 0 到 255 的十進位整數；補完整後會立即重新判斷。";
+      byId("route-output").innerHTML = "<strong>格式尚不是四段有效的 IPv4 位址。</strong><br>每段必須是 0 到 255 且不帶前導 0 的十進位整數；例如請寫 10，不要寫 010。";
       return;
     }
     const sourceValue = parseIpv4("192.168.1.42");
@@ -56,7 +56,10 @@ function setupRoute() {
     const networkValue = destinationValue & mask;
     const local = (sourceValue & mask) === networkValue;
     const ttl = Math.max(0, 64 - hops);
-    byId("route-output").innerHTML = `<strong>${local ? "目的位址在示意本地前綴：直接交給本地鏈路。" : "目的位址不在示意本地前綴：交給預設閘道。"}</strong><br>示意本機是 192.168.1.42；前綴長度 /${prefix} 代表前 ${prefix} 位元辨認網路，目的網路位址是 ${printIpv4(networkValue)}/${prefix}。經過 ${hops} 個路由器後，存活時間欄位由 64 變為 ${ttl}。${ttl === 0 ? " 欄位歸零，路由器會丟棄封包，防止路由迴圈永遠轉送。" : " 每一跳只選下一站，不先規劃一條實體專線。"}`;
+    const ttlText = hops >= 64
+      ? "在第 64 跳將存活時間減為 0，封包當場被丟棄；該路由器通常回傳 ICMP 超時訊息，traceroute 就是利用這個機制。"
+      : `經過 ${hops} 個路由器後，存活時間欄位由 64 變為 ${ttl}。每一跳只選下一站，不先規劃一條實體專線。`;
+    byId("route-output").innerHTML = `<strong>${local ? "目的位址在示意本地前綴：直接交給本地鏈路。" : "目的位址不在示意本地前綴：交給預設閘道。"}</strong><br>示意本機是 192.168.1.42；前綴長度 /${prefix} 代表前 ${prefix} 位元辨認網路，目的網路位址是 ${printIpv4(networkValue)}/${prefix}。${ttlText}`;
   };
   ["route-destination","route-prefix","route-hops"].forEach(id => listen(id, "input", draw)); draw();
 }
@@ -92,13 +95,18 @@ function setupDns() {
 function setupHttp() {
   if (!byId("http-method")) return;
   const draw = () => {
-    const method = byId("http-method").value; const path = byId("http-path").value || "/"; const status = byId("http-status").value;
+    const method = byId("http-method").value; const path = encodeURI(byId("http-path").value || "/"); const status = byId("http-status").value;
     const meanings = {"200":"伺服器成功回傳表示法","301":"資源有新的永久位置，客戶端可依 Location 標頭改送請求","404":"伺服器收到請求，但找不到此資源","500":"伺服器處理時發生內部錯誤"};
+    const reasons = {"200":"OK","301":"Moved Permanently","404":"Not Found","500":"Internal Server Error"};
+    const requestBody = method === "POST" ? "title=example" : "";
+    const requestHeaders = method === "POST" ? "\nContent-Type: application/x-www-form-urlencoded\nContent-Length: 13" : "";
+    const responseHeaders = `Content-Type: text/plain${status === "301" ? "\nLocation: /articles/42-new" : ""}`;
+    const responseBody = method === "HEAD" ? "" : "\n\n示意內容";
     const output = byId("http-output");
     const title = document.createElement("strong");
     const message = document.createElement("pre");
     title.textContent = "這是應用層訊息，不是連線本身。";
-    message.textContent = `${method} ${path} HTTP/1.1\nHost: example.test\n\n\nHTTP/1.1 ${status}\nContent-Type: text/plain\n\n示意內容`;
+    message.textContent = `${method} ${path} HTTP/1.1\nHost: example.test${requestHeaders}\n\n${requestBody}\n\nHTTP/1.1 ${status} ${reasons[status]}\n${responseHeaders}${responseBody}`;
     output.replaceChildren(title, message, document.createTextNode(`${meanings[status]}。${method === "HEAD" ? "HEAD 要求只回傳與 GET 類似的標頭，不傳回應本文。" : method === "POST" ? "POST 把資料交給目標資源處理；重送是否安全取決於應用語意。" : "GET 讀取資源表示法，原則上不應用來改變伺服器狀態。"}`));
   };
   ["http-method","http-path","http-status"].forEach(id => listen(id, "input", draw)); draw();
@@ -125,7 +133,7 @@ function setupTrace() {
     const data = {
       dns:["名稱解析失敗，尚未得到目的網際網路協定位址。","查看解析器回覆、快取與權威記錄；尚不必怪罪傳輸連線。"],
       route:["已知目的位址，但封包無法到達下一跳或遠端。","查看路由表、閘道、存活時間與控制錯誤訊息；封包擷取可確認送往哪個硬體位址。"],
-      transport:["路徑可能可達，但連線逾時、被拒絕或反覆重傳。","查看埠、握手旗標、序號／確認與作業系統 socket 狀態。"],
+      transport:["路徑可能可達，但連線逾時、被拒絕或反覆重傳。","查看埠、握手旗標、序號／確認與作業系統 socket 狀態。收到 RST 是對端或中間設備明確拒絕的證據；只有 SYN 無回應直到逾時，候選原因則仍包含丟棄與回程問題。"],
       tls:["傳輸連線成立，但加密握手因名稱、有效期或信任鏈失敗。","查看握手警示、伺服器名稱與憑證鏈；不要跳過驗證來掩蓋問題。"],
       http:["安全通道可用，但伺服器回傳重新導向、找不到或內部錯誤。","查看請求方法、路徑、Host 標頭、狀態碼與伺服器應用紀錄。"]
     };
@@ -133,12 +141,29 @@ function setupTrace() {
     byId("trace-output").innerHTML = `<strong>可觀察現象：</strong>${symptom}<br><strong>下一份證據：</strong>${evidence}<br><span class="note">這是調查起點，不是單憑症狀定案；相鄰層錯誤可能造成相似表現。</span>`;
   };
   listen("fault-layer", "change", draw); draw();
+
+  const scenario = byId("trace-scenario");
+  const evidence = byId("trace-evidence");
+  if (!scenario || !evidence) return;
+  const reverseCases = {
+    "syn-timeout": ["transport", "DNS 已有答案，但 SYN 沒有回應；先查伺服器監聽狀態與兩端封包，可區分未監聽、中途丟棄與回程問題。"],
+    "http-404": ["http", "TCP 與 TLS 都成功，且收到 404；應查 HTTP 請求路徑、Host 標頭與服務存取紀錄。"],
+    "dns-failure": ["dns", "尚未取得目的位址；應先查 DNS 回覆碼、查詢名稱與快取，而不是先查 TCP 連線。"]
+  };
+  const reveal = () => {
+    const [answer, explanation] = reverseCases[scenario.value];
+    const chosen = evidence.value;
+    byId("trace-reverse-output").innerHTML = chosen
+      ? `<strong>${chosen === answer ? "這份證據最有區別力。" : "這不是當下最先要取得的證據。"}</strong><br>${explanation}`
+      : "<strong>先選擇下一份證據，再揭示理由。</strong>";
+  };
+  listen("trace-scenario", "change", reveal); listen("trace-evidence", "change", reveal); reveal();
 }
 
 function setupDictionary() {
   const search = byId("term-search"); if (!search) return;
   const count = byId("term-count");
-  const draw = () => { const q = search.value.trim().toLocaleLowerCase("zh-Hant"); let shown = 0; document.querySelectorAll(".term-card").forEach(card => { const hit = !q || card.dataset.search.toLocaleLowerCase("zh-Hant").includes(q); card.hidden = !hit; if (hit) shown++; }); count.textContent = `顯示 ${shown} 個條目`; };
+  const draw = () => { const q = search.value.trim().toLocaleLowerCase("zh-Hant"); let shown = 0; document.querySelectorAll(".term-card").forEach(card => { const haystack = `${card.textContent} ${card.dataset.search || ""}`.toLocaleLowerCase("zh-Hant"); const hit = !q || haystack.includes(q); card.hidden = !hit; if (hit) shown++; }); count.textContent = `顯示 ${shown} 個條目`; };
   search.addEventListener("input", draw); draw();
 }
 

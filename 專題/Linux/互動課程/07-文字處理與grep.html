@@ -7,10 +7,11 @@ ERROR disk full
 ERROR retry failed</code></pre><p>若輸入同時有 <code>INFO ERROR counter=0</code>，它包含 ERROR 卻不在行首，因此不會命中。這能避免把「訊息內提到錯誤」誤當成「這一筆日誌的層級是錯誤」。</p>
 <h2>正規表達式先學最少一組</h2><ul><li><strong><code>^</code> 與 <code>$</code>：</strong>固定行首與行尾。</li><li><strong><code>.</code> 與 <code>*</code>：</strong>前者比對任一單一字元；後者重複前一個元素零次以上。</li><li><strong><code>[0-9]</code>：</strong>比對一個數字。grep 的基本與擴充語法不完全相同；要用常見擴充寫法時通常加 <code>-E</code>。</li></ul>
 <h2>為什麼／不要混淆</h2><p>正規表達式不是 shell glob：glob 的 <code>*.log</code> 由 shell 選檔名，正規表達式由 grep 在每一行內容中匹配。也不要把「沒有輸出」直接解讀成程式故障；grep 找不到匹配時通常以結束狀態 1 表示，語法或 I/O 錯誤才常是 2。</p>
+<h2>不只篩選：把小工具接成管線</h2><pre><code>grep '^ERROR' app.log | sort | uniq -c | sort -rn | head</code></pre><p>這條管線先留下 ERROR 行，再排序、讓相同行相鄰，以 <code>uniq -c</code> 計數，再依次數由大到小排列，最後用 <code>head</code> 只看前幾名。<code>cut</code> 適合取固定分隔欄位，<code>sed</code> 適合逐行簡單改寫，<code>awk</code> 適合依欄位計算；輸出很長時可接 <code>less</code> 分頁閱讀。</p>
 <h2>可觀察證據</h2><p><code>grep -n '^ERROR' app.log</code> 顯示命中行號；緊接著執行 <code>echo $?</code> 可看結束狀態；<code>grep -c</code> 計數、<code>grep -C 2</code> 顯示前後文。篩選結果只是檢視，不等於完整日誌。</p>
 <section class="workspace"><h2>動手玩：篩選一小段日誌</h2><p><strong>示範什麼：</strong>正規表達式逐行匹配與大小寫選項。<strong>怎麼玩：</strong>先用 <code>^ERROR</code>，再改成 <code>error</code> 並勾選忽略大小寫。<strong>看什麼：</strong>命中行數與完整原文，尤其注意行首錨點造成的差異。</p><div class="controls"><label class="label">grep 樣式 <input type="text" id="grep-pat" value="^ERROR"></label><label class="label">範例日誌，每行一筆 <textarea id="grep-text" rows="6">INFO service started
 ERROR disk full
 WARN retry scheduled
 error client disconnected
-ERROR retry failed</textarea></label><label class="label"><input type="checkbox" id="grep-ic"> 忽略大小寫</label></div><div class="output" id="grep-output" aria-live="polite"></div></section>
+ERROR retry failed</textarea></label><label class="label"><input type="checkbox" id="grep-ic"> 忽略大小寫（-i）</label><label class="label"><input type="checkbox" id="grep-ext"> 使用擴充語法（-E）</label></div><div class="output" id="grep-output" aria-live="polite"></div></section>
 <nav class="pager" aria-label="章節導覽"><a href="06-管道與重導向.html">← 上一頁：管道與重導向</a><a href="08-環境變數與shell.html">下一頁：環境變數與 shell →</a></nav></main><footer class="site-footer"><span>07 文字處理與 grep</span><a href="名詞與概念字典.html">查字典</a></footer></body></html>
