@@ -41,11 +41,11 @@
 <tr><td>Δf × τ<sub>max</sub></td><td>312.5 kHz × 0.5 µs</td><td><strong>0.156250</strong></td></tr>
 <tr><td>1 kHz CFO 佔 Δf</td><td>1/312.5</td><td><strong>0.320000 %</strong></td></tr>
 </tbody></table>
-<p><strong>Wi-Fi 的 54 Mbit/s：</strong>48 個資料子載波 × 6 × 3/4 / 4 µs ＝ 54.000000 Mbit/s。原始上限使用 64 條，實際規格只用 48 條載資料，再乘率 3/4 的編碼，因此正好對上規格書。</p>
-<p><strong>LTE 對照：</strong>B ＝ 30.72 MHz、N ＝ 2048、CP ＝ 144/2048 → Δf 15.000000 kHz、T<sub>u</sub> 66.666667 µs、T<sub>cp</sub> 4.687500 µs、效率 93.430657 %、PAPR 33.113300 dB、1 kHz CFO 佔 6.666667 %。自由實驗沒有 144/2048 選項；選 LTE 的 B 與 N 時仍會套用所選的 1/4、1/8、1/16 或 1/32，不能把結果誤當成這行 LTE 標準設定。</p>
-<p><strong>邊界對照。</strong>CP ＝ 1/16 時 T<sub>cp</sub> ＝ 0.200000 µs，小於 0.5，會有 ISI，效率 94.117647 %；τ<sub>max</sub> ＝ 0.8 µs 時剛好等於 T<sub>cp</sub>，處於無 ISI 臨界。N ＝ 4096、CP ＝ 1/32、τ<sub>max</sub> ＝ 5 µs 時，Δf 4.882812 kHz、T<sub>u</sub> 204.800000 µs、T<sub>cp</sub> 6.400000 µs、效率 96.969697 %、PAPR 36.123599 dB，但 1 kHz CFO 已佔 20.480000 %。</p>
-<p>N ＝ 256、CP ＝ 1/4 時，Δf 78.125000 kHz、T<sub>u</sub> 12.800000 µs、T<sub>cp</sub> 3.200000 µs、PAPR 24.082400 dB。B ＝ 80 MHz、N ＝ 256、k ＝ 8 時原始上限是 512.000000 Mbit/s；B ＝ 1.25 MHz、N ＝ 64、k ＝ 1 時，Δf 19.531250 kHz、原始上限 1.000000 Mbit/s。這些比較顯示位元率、CP 與 CFO 敏感度會隨同一組旋鈕一起移動。</p>
-<p>τ<sub>max</sub> ＝ 10 µs、N ＝ 4096、CP ＝ 1/4 時，T<sub>cp</sub> ＝ 51.200000 µs，仍可無 ISI，效率為 80 %。若 τ<sub>max</sub> ＝ 0，任何 CP 都只剩負擔；這兩端提醒設計者，保護時間必須跟實際環境的延遲尺度配對。</p>
+<p><strong>Wi-Fi 的 54 Mbit/s：</strong>48 個資料子載波 × 6 × 3/4 / 4 µs ＝ 54 Mbit/s。原始上限使用 64 條，實際規格只用 48 條載資料，再乘率 3/4 的編碼，因此正好對上規格書。</p>
+<p><strong>LTE 對照：</strong>B ＝ 30.72 MHz、N ＝ 2048、CP ＝ 144/2048 → Δf 15 kHz、T<sub>u</sub> 66.67 µs、T<sub>cp</sub> 4.688 µs、效率 93.43 %、PAPR 33.11 dB、1 kHz CFO 佔 6.667 %。自由實驗沒有 144/2048 選項；選 LTE 的 B 與 N 時仍會套用所選的 1/4、1/8、1/16 或 1/32，不能把結果誤當成這行 LTE 標準設定。</p>
+<p><strong>邊界對照。</strong>CP ＝ 1/16 時 T<sub>cp</sub> ＝ 0.2 µs，小於 0.5，會有 ISI，效率 94.12 %；τ<sub>max</sub> ＝ 0.8 µs 時剛好等於 T<sub>cp</sub>，處於無 ISI 臨界。N ＝ 4096、CP ＝ 1/32、τ<sub>max</sub> ＝ 5 µs 時，Δf 4.883 kHz、T<sub>u</sub> 204.8 µs、T<sub>cp</sub> 6.4 µs、效率 96.97 %、PAPR 36.12 dB，但 1 kHz CFO 已佔 20.48 %。</p>
+<p>N ＝ 256、CP ＝ 1/4 時，Δf 78.13 kHz、T<sub>u</sub> 12.8 µs、T<sub>cp</sub> 3.2 µs、PAPR 24.08 dB。B ＝ 80 MHz、N ＝ 256、k ＝ 8 時原始上限是 512 Mbit/s；B ＝ 1.25 MHz、N ＝ 64、k ＝ 1 時，Δf 19.53 kHz、原始上限 1 Mbit/s。這些比較顯示位元率、CP 與 CFO 敏感度會隨同一組旋鈕一起移動。</p>
+<p>τ<sub>max</sub> ＝ 10 µs、N ＝ 4096、CP ＝ 1/4 時，T<sub>cp</sub> ＝ 51.2 µs，仍可無 ISI，效率為 80 %。若 τ<sub>max</sub> ＝ 0，任何 CP 都只剩負擔；這兩端提醒設計者，保護時間必須跟實際環境的延遲尺度配對。</p>
 
 <section class="workspace"><h2>自由實驗：在 CP 負擔、拖尾與頻率偏移間取捨</h2>
 <p>選取樣頻寬、子載波數、CP 比例與每子載波位元數，再調最大多徑延遲。輸出會檢查 CP 是否足夠、每條子載波是否仍近似平坦，以及原始位元率、PAPR 與 1 kHz 偏移佔比。</p>
@@ -53,9 +53,9 @@
 <label for="of-bw">頻寬 B（= 取樣率）<select id="of-bw"><option value="1.25">1.25 MHz</option><option value="5">5 MHz</option><option value="10">10 MHz</option><option value="20" selected>20 MHz（Wi-Fi）</option><option value="30.72">30.72 MHz（LTE 20 MHz 取樣率）</option><option value="80">80 MHz</option></select></label>
 <label for="of-n">子載波數 N<select id="of-n"><option value="64" selected>64</option><option value="128">128</option><option value="256">256</option><option value="512">512</option><option value="1024">1024</option><option value="2048">2048</option><option value="4096">4096</option></select></label>
 <label for="of-cp">循環字首比例 T_cp/T_u<select id="of-cp"><option value="0.25" selected>1/4</option><option value="0.125">1/8</option><option value="0.0625">1/16</option><option value="0.03125">1/32</option></select></label>
-<label for="of-tau">最大多徑延遲 τ_max（µs）<input id="of-tau" type="range" min="0" max="10" step="0.1" value="0.5"></label>
+<label for="of-tau">最大多徑延遲 τ_max（µs） <output id="of-tau-val" for="of-tau">0.5</output><input id="of-tau" type="range" min="0" max="10" step="0.1" value="0.5"></label>
 <label for="of-k">每子載波位元數 k<select id="of-k"><option value="1">BPSK（1）</option><option value="2">QPSK（2）</option><option value="4">16-QAM（4）</option><option value="6" selected>64-QAM（6）</option><option value="8">256-QAM（8）</option></select></label>
-</div><div id="ofdm-output" class="output" aria-live="polite"></div></section>
+</div><div><p><strong>先預測再拖：</strong>B ＝ 10 MHz、N ＝ 256 時，子載波間距 Δf 是多少 kHz？</p><label for="p12">你的預測（kHz）<input id="p12" type="number" step="0.01"></label><button id="p12-check" type="button">檢查預測</button><div id="p12-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q12-1">再做 12 章自我檢核</a></p></div><div id="ofdm-output" class="output" aria-live="polite"></div></section>
 
 <h2>不要混淆</h2>
 <ul><li>OFDM 的正交是子載波之間的積分關係，不是星座 I／Q 兩軸的正交。</li><li>循環字首不只是空白保護間隔；複製自己的尾端，才會讓有效視窗呈現圓形摺積，空白只隔開拖尾。</li><li>CP 足夠只代表上一符元拖尾不進 FFT 視窗；若 Δf × τ<sub>max</sub> 不夠小，單一子載波內仍可能不平坦。</li><li>PAPR 高是許多子載波同相疊加的結果，還要再與 02 章星座本身的振幅起伏一起考量。</li><li>Δf 越小並非越好；符元變長雖減輕 CP 負擔，卻放大 CFO 與時變效應的相對影響。</li></ul>

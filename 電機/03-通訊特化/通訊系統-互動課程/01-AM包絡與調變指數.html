@@ -33,10 +33,10 @@
 <p><strong>邊界對照。</strong>μ ＝ 1 時 E<sub>min</sub> ＝ 0、效率 33.333333 %、RC 上限 0；μ ＝ 0.05 時效率 0.124844 %。RC ＝ 1000 µs 超過 275.664448 µs，發生對角線截波；RC ＝ 1 µs 時漣波 63.212056 %。f<sub>m</sub> ＝ 5 kHz、μ ＝ 0.8 時上限 23.873241 µs。f<sub>c</sub> ＝ 540 kHz、f<sub>m</sub> ＝ 15 kHz、μ ＝ 0.5 時，下限 18.518519 µs、上限 18.377630 µs，區間反轉而無解，這是 AM 廣播只留 5 kHz 音頻的原因之一。</p>
 
 <section class="workspace"><h2>自由實驗：包絡深度與 RC 可用區間</h2><p>場景是 1 V 載波被一個單音訊息改變振幅，接收端用理想二極體與 RC 記住峰值。你要看包絡是否翻摺，並檢查 RC 是否同時高於下限、低於上限。</p><div class="controls">
-<label for="am-mu">調變指數 μ<input id="am-mu" type="range" min="0" max="1.5" step="0.05" value="0.5"></label>
-<label for="am-fm">訊息頻率 f_m（kHz）<input id="am-fm" type="range" min="0.1" max="15" step="0.1" value="1"></label>
-<label for="am-fc">載波頻率 f_c（kHz）<input id="am-fc" type="range" min="100" max="1600" step="10" value="1000"></label>
-<label for="am-rc">檢波器 RC 時間常數（µs）<input id="am-rc" type="range" min="1" max="1000" step="1" value="100"></label>
+<label for="am-mu">調變指數 μ<output for="am-mu" id="am-mu-value" style="float:inline-end">0.5</output><input id="am-mu" type="range" min="0" max="1.5" step="0.05" value="0.5"></label>
+<label for="am-fm">訊息頻率 f<sub>m</sub>（kHz）<output for="am-fm" id="am-fm-value" style="float:inline-end">1</output><input id="am-fm" type="range" min="0.1" max="15" step="0.1" value="1"></label>
+<label for="am-fc">載波頻率 f<sub>c</sub>（kHz）<output for="am-fc" id="am-fc-value" style="float:inline-end">1000</output><input id="am-fc" type="range" min="100" max="1600" step="10" value="1000"></label>
+<label for="am-rc">檢波器 RC 時間常數（µs）<output for="am-rc" id="am-rc-value" style="float:inline-end">100</output><input id="am-rc" type="range" min="1" max="1000" step="1" value="100"></label>
 </div><div id="amenv-output" class="output" aria-live="polite"></div></section>
 
 <h2>不要混淆</h2>
@@ -49,6 +49,7 @@
 
 <h2>連到哪門課</h2>
 <p>AM 的三根譜線、頻寬與功率分配已在<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統的調變與頻譜搬移</a>推導，本章只用結論做檢波器取捨；二極體與電容的回路機制見<a href="../../02-電機核心/電子學-互動課程/04-整流與濾波.html">電子學的整流與濾波</a>。下一章會省掉載波，看功率節省如何變成同步代價。</p>
+<section aria-labelledby="summary-01"><h2 id="summary-01">本章帶走的三件事</h2><ul><li>μ ≤ 1 時包絡保留訊息形狀，μ &gt; 1 會翻摺。</li><li>單音 AM 的訊息功率效率為 μ²/(2+μ²)，最高只有三分之一。</li><li>包絡檢波器的 RC 必須同時壓載波漣波並追得上訊息。</li></ul><p><strong>下章銜接：</strong><a href="02-抑制載波單邊帶與同步解調.html">02 章</a>拿掉耗功率的載波與多餘邊帶；也可先做<a href="自我檢核.html#quiz-01">本章檢核</a>。</p></section>
 <nav class="pager" aria-label="章節導覽"><a href="00-通訊世界觀與分貝帳本.html">← 上一頁：通訊世界觀與分貝帳本</a><a href="02-抑制載波單邊帶與同步解調.html">下一頁：抑制載波、單邊帶與同步解調 →</a></nav>
 </main><footer class="site-footer"><span>01 AM 包絡與調變指數</span><a href="名詞與概念字典.html">查字典</a></footer>
 </body></html>

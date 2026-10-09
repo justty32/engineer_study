@@ -29,7 +29,7 @@
 <tr><td>w<sub>4</sub></td><td>+ + + + − − − −</td></tr><tr><td>w<sub>5</sub></td><td>+ − + − − + − +</td></tr>
 <tr><td>w<sub>6</sub></td><td>+ + − − − − + +</td></tr><tr><td>w<sub>7</sub></td><td>+ − − + − + + −</td></tr>
 </tbody></table>
-<p><strong>兩用戶範例。</strong>用戶 1 用 w<sub>1</sub> 送 +1，用戶 2 用 w<sub>2</sub> 送 −1，疊加後 8 個碼片為 <code>0 −2 +2 0 0 −2 +2 0</code>。接收端與 w<sub>1</sub> 內積除以 8 得 <strong>+1.000000</strong>，與 w<sub>2</sub> 內積除以 8 得 <strong>−1.000000</strong>，兩個用戶完全分開。</p>
+<p><strong>兩用戶範例。</strong>用戶 1 用 w<sub>1</sub> 送 +1，用戶 2 用 w<sub>2</sub> 送 −1，疊加後 8 個碼片為 <code>0 −2 +2 0 0 −2 +2 0</code>。接收端與 w<sub>1</sub> 內積除以 8 得 <strong>+1</strong>，與 w<sub>2</sub> 內積除以 8 得 <strong>−1</strong>，兩個用戶完全分開。</p>
 
 <h2>數值實例：64 碼片、8 用戶與 10 dB 窄頻干擾</h2>
 <p>取 N ＝ 64、K ＝ 8、J/S ＝ 10 dB、熱雜訊 E<sub>b</sub>/N<sub>0</sub> ＝ 12 dB，與自由實驗預設值一致。</p>
@@ -44,19 +44,19 @@
 <tr><td>同步誤碼率</td><td>Q(√(2 × 4.559013))</td><td><strong>1.265515 × 10<sup>−3</sup></strong></td></tr>
 <tr><td>K<sub>max</sub>（要求 7 dB）</td><td>⌊1 ＋ 64(0.199526 − 0.063096 − 0.156250)⌋</td><td><strong>0（干擾太強，連一個用戶都達不到）</strong></td></tr>
 </tbody></table>
-<p><strong>邊界對照。</strong>J/S ＝ −10 dB、K ＝ 8 時，非同步為 7.593678 dB、誤碼率 3.494710 × 10<sup>−4</sup>，同步為 11.893762 dB、1.336236 × 10<sup>−8</sup>，K<sub>max</sub> ＝ 9。N ＝ 16、K ＝ 8、J/S ＝ 10 時，γ<sub>eff</sub> 為 −0.513824 dB、誤碼率 9.126911 × 10<sup>−2</sup>；N ＝ 128 時則為 7.079473 dB、6.988372 × 10<sup>−4</sup>，K<sub>max</sub> ＝ 8。J/S ＝ 40 dB 時為 −21.942991 dB、4.549857 × 10<sup>−1</sup>，強度超過處理增益約 22 dB，仍然壓不住。</p>
-<p>K ＝ 32 時（J/S ＝ −10 dB、E<sub>b</sub>/N<sub>0</sub> ＝ 12 dB）非同步結果降到 2.604014 dB、誤碼率 2.815664 × 10<sup>−2</sup>，顯示多用戶項可取代窄頻干擾成為主要限制。N ＝ 64、K ＝ 64、J/S ＝ −10 dB、E<sub>b</sub>/N<sub>0</sub> ＝ 20 dB 時，非同步只剩 0.017679 dB、7.822758 × 10<sup>−2</sup>；同步則有 19.369483 dB，說明滿載 Walsh 碼只有在同步條件下仍能保持正交。</p>
+<p><strong>邊界對照。</strong>J/S ＝ −10 dB、K ＝ 8 時，非同步為 7.594 dB、誤碼率 3.495 × 10<sup>−4</sup>，同步為 11.89 dB、1.336 × 10<sup>−8</sup>，K<sub>max</sub> ＝ 9。N ＝ 16、K ＝ 8、J/S ＝ 10 時，γ<sub>eff</sub> 為 −0.5138 dB、誤碼率 9.127 × 10<sup>−2</sup>；N ＝ 128 時則為 7.079 dB、6.988 × 10<sup>−4</sup>，K<sub>max</sub> ＝ 8。J/S ＝ 40 dB 時為 −21.94 dB、4.55 × 10<sup>−1</sup>，強度超過處理增益約 22 dB，仍然壓不住。</p>
+<p>K ＝ 32 時（J/S ＝ −10 dB、E<sub>b</sub>/N<sub>0</sub> ＝ 12 dB）非同步結果降到 2.604 dB、誤碼率 2.816 × 10<sup>−2</sup>，顯示多用戶項可取代窄頻干擾成為主要限制。N ＝ 64、K ＝ 64、J/S ＝ −10 dB、E<sub>b</sub>/N<sub>0</sub> ＝ 20 dB 時，非同步只剩 0.01768 dB、7.823 × 10<sup>−2</sup>；同步則有 19.37 dB，說明滿載 Walsh 碼只有在同步條件下仍能保持正交。</p>
 <p>若只有一個用戶，MAI 項自然為 0，同步 Walsh 與非同步隨機碼在本模型中得到相同結果。這個邊界可用來檢查計算：兩種模式仍不同，表示程式把自己的功率也誤算進 K − 1。</p>
 
 <section class="workspace"><h2>自由實驗：找出熱雜訊、多用戶與窄頻干擾誰主導</h2>
 <p>選展頻因子與碼型，再調同頻用戶數、干擾比與熱雜訊條件。回饋會拆開三個倒數項，比較同步 Walsh 與非同步隨機碼的有效比值與誤碼率。</p>
 <div class="controls">
 <label for="cd-sf">展頻因子 N（碼片/位元）<select id="cd-sf"><option value="4">4</option><option value="8">8</option><option value="16">16</option><option value="32">32</option><option value="64" selected>64</option><option value="128">128</option></select></label>
-<label for="cd-users">同頻用戶數 K（含自己）<input id="cd-users" type="range" min="1" max="64" step="1" value="8"></label>
-<label for="cd-js">窄頻干擾對訊號比 J/S（dB）<input id="cd-js" type="range" min="-10" max="40" step="1" value="10"></label>
-<label for="cd-ebn0">熱雜訊 E_b/N_0（dB）<input id="cd-ebn0" type="range" min="0" max="20" step="0.5" value="12"></label>
+<label for="cd-users">同頻用戶數 K（含自己） <output id="cd-users-val" for="cd-users">8</output><input id="cd-users" type="range" min="1" max="64" step="1" value="8"></label>
+<label for="cd-js">窄頻干擾對訊號比 J/S（dB） <output id="cd-js-val" for="cd-js">10</output><input id="cd-js" type="range" min="-10" max="40" step="1" value="10"></label>
+<label for="cd-ebn0">熱雜訊 E_b/N_0（dB） <output id="cd-ebn0-val" for="cd-ebn0">12</output><input id="cd-ebn0" type="range" min="0" max="20" step="0.5" value="12"></label>
 <label for="cd-code">碼型<select id="cd-code"><option value="async" selected>非同步隨機碼（MAI = (K−1)/N）</option><option value="sync">同步 Walsh 正交碼（MAI = 0）</option></select></label>
-</div><div id="cdma-output" class="output" aria-live="polite"></div></section>
+</div><div><p><strong>先預測再拖：</strong>非同步近似中，N ＝ 32、K ＝ 7 時的 MAI 項是多少？</p><label for="p11">你的預測<input id="p11" type="number" step="0.0001"></label><button id="p11-check" type="button">檢查預測</button><div id="p11-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q11-1">再做 11 章自我檢核</a></p></div><div id="cdma-output" class="output" aria-live="polite"></div></section>
 
 <h2>不要混淆</h2>
 <p><strong>近遠效應的邊界。</strong>上式把每個用戶視為等功率；若近端用戶到基地台的接收功率遠高於遠端用戶，即使兩者使用不同碼，非零互相關乘上巨大功率後仍會壓過遠端相關峰。功率控制的目的，是讓接收端看到的各用戶功率落在接近範圍，而不是讓所有手機用相同發射功率。</p>

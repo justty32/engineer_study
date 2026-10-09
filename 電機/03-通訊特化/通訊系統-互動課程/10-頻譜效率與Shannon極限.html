@@ -19,7 +19,7 @@
 <p class="note">來源：14-通訊系統-下 §12。</p>
 
 <h2>推導：從功率帳反解每赫茲的最低能量</h2>
-<p><strong>第一步，連接 SNR 與 E<sub>b</sub>/N<sub>0</sub>。</strong>每位元能量乘每秒位元數得到訊號功率：S ＝ E<sub>b</sub> × R<sub>b</sub>；單邊雜訊功率譜密度乘接收頻寬得到雜訊功率：N ＝ N<sub>0</sub> × B。兩式相除，SNR ＝ S/N ＝ (E<sub>b</sub>/N<sub>0</sub>) × (R<sub>b</sub>/B) ＝ (E<sub>b</sub>/N<sub>0</sub>) × η。S、N 用 W，E<sub>b</sub> 用 J，R<sub>b</sub> 用 bit/s，B 用 Hz；兩個比值皆無單位。</p>
+<p><strong>第一步，連接 SNR 與 E<sub>b</sub>/N<sub>0</sub>。</strong>本課的 E<sub>b</sub> 一律是等機率資料下的平均每位元能量。每位元能量乘每秒位元數得到訊號功率：S ＝ E<sub>b</sub> × R<sub>b</sub>；單邊雜訊功率譜密度乘接收頻寬得到雜訊功率：N ＝ N<sub>0</sub> × B。兩式相除，SNR ＝ S/N ＝ (E<sub>b</sub>/N<sub>0</sub>) × (R<sub>b</sub>/B) ＝ (E<sub>b</sub>/N<sub>0</sub>) × η。S、N 用 W，E<sub>b</sub> 用 J，R<sub>b</sub> 用 bit/s，B 用 Hz；兩個比值皆無單位。</p>
 <p><strong>第二步，把容量改寫成能量下界。</strong>在邊界 R<sub>b</sub> ＝ C，將 SNR ＝ η E<sub>b</sub>/N<sub>0</sub> 代入 C ＝ B log<sub>2</sub>(1 + SNR)，兩邊除以 B，得到 η ＝ log<sub>2</sub>(1 + η E<sub>b</sub>/N<sub>0</sub>)。移項後 2<sup>η</sup> ＝ 1 + η E<sub>b</sub>/N<sub>0</sub>，所以 E<sub>b</sub>/N<sub>0</sub> ≥ (2<sup>η</sup> − 1)/η。η 越高，最低能量比越快上升。</p>
 <p><strong>第三步，取得寬頻極限。</strong>當 η → 0，用 2<sup>η</sup> ＝ e<sup>η ln 2</sup> ≈ 1 + η ln 2，便得 (2<sup>η</sup> − 1)/η → ln 2 ＝ 0.693147，換成 dB 是 −1.591745 dB。這個 Shannon 極限只在頻寬趨於無限、頻譜效率趨於零時成立；它不是 η ＝ 6 的門檻。</p>
 <p><strong>第四步，看高 SNR 的代價。</strong>SNR 遠大於 1 時，C/B ＝ log<sub>2</sub>(1 + SNR) ≈ log<sub>2</sub> SNR。要讓 C/B 增加 1 bit/s/Hz，SNR 約要乘 2，也就是增加約 3 dB。因此高階星座並非免費把速度往上堆，而是持續付更高功率。</p>
@@ -37,10 +37,10 @@
 <p>SNR ＝ 10 dB 選 16-QAM → C ＝ <strong>3.459432 Mbit/s</strong> &lt; 4 Mbit/s，超過容量，任何編碼都救不回；SNR ＝ 0 dB、BPSK → C ＝ 1.000000 Mbit/s ＝ R<sub>b</sub>，剛好碰到容量；SNR ＝ −10 dB → C ＝ <strong>0.137504 Mbit/s</strong>，BPSK 超過容量。SNR ＝ 40 dB → C/B ＝ <strong>13.287857</strong>，64-QAM 只用了 45 %；B ＝ 20 MHz、20 dB → C ＝ 133.164230 Mbit/s，是 Wi-Fi 一條 20 MHz 頻道的量級；SNR ＝ 17 dB 選 64-QAM → C ＝ 5.675780 &lt; 6，超過容量。</p>
 
 <section class="workspace"><h2>自由實驗：把方案放到 Shannon 天花板下</h2>
-<p>場景是一條頻寬與平均接收功率都受限的 AWGN 鏈路。調整頻寬、SNR 與星座，回饋會比較方案位元率和容量，並算出當前 η 的最低 E_b/N_0，判斷是撞上天花板，還是只因方案本身離天花板太遠。</p>
+<p>場景是一條頻寬與平均接收功率都受限的 AWGN 鏈路。調整頻寬、SNR 與星座，回饋會比較方案位元率和容量，並算出當前 η 的最低 E<sub>b</sub>/N<sub>0</sub>，判斷是撞上天花板，還是只因方案本身離天花板太遠。</p>
 <div class="controls">
-<label for="sc-b">頻寬 B（MHz）<input id="sc-b" type="range" min="0.1" max="100" step="0.1" value="1"></label>
-<label for="sc-snr">訊雜比 SNR（dB）<input id="sc-snr" type="range" min="-10" max="40" step="0.5" value="20"></label>
+<label for="sc-b">頻寬 B（MHz）<output for="sc-b" id="sc-b-value" style="float:inline-end">1</output><input id="sc-b" type="range" min="0.1" max="100" step="0.1" value="1"></label>
+<label for="sc-snr">訊雜比 SNR（dB）<output for="sc-snr" id="sc-snr-value" style="float:inline-end">20</output><input id="sc-snr" type="range" min="-10" max="40" step="0.5" value="20"></label>
 <label for="sc-scheme">要比較的調變（α ＝ 0）<select id="sc-scheme"><option value="bpsk">BPSK（η ＝ 1）</option><option value="qpsk">QPSK（η ＝ 2）</option><option value="qam16">16-QAM（η ＝ 4）</option><option value="qam64" selected>64-QAM（η ＝ 6）</option></select></label>
 </div>
 <div id="shannon-output" class="output" aria-live="polite"></div>
@@ -56,6 +56,7 @@
 
 <h2>連到哪門課</h2>
 <p>本章往下連到資訊理論：那門課證明容量公式與可達條件；具體方案如何逼近容量留給數位通訊課。實務上，基地台與 Wi-Fi 存取點會以速率自適應把每個 MCS 放在合適的 SNR 區間，這正是把理論曲線變成軟體決策表。</p>
+<section aria-labelledby="summary-10"><h2 id="summary-10">本章帶走的三件事</h2><ul><li>容量 C ＝ B log<sub>2</sub>(1+SNR) 是可達上限，不是未編碼方案的保證。</li><li>頻譜效率越高，理論所需的平均 E<sub>b</sub>/N<sub>0</sub> 越高。</li><li>−1.591745 dB 只在 η 趨近零時成立，代價是頻寬趨近無限。</li></ul><p><strong>下章銜接：</strong><a href="11-鏈路預算.html">11 章</a>把發射功率、路徑損失、雜訊與所需 SNR 收進同一本帳；也可先做<a href="自我檢核.html#quiz-10">本章檢核</a>。</p></section>
 <nav class="pager" aria-label="章節導覽"><a href="09-數位調變與星座圖.html">← 上一頁：數位調變與星座圖</a><a href="11-鏈路預算.html">下一頁：鏈路預算 →</a></nav>
 </main>
 <footer class="site-footer"><span>10 頻譜效率與 Shannon 極限</span><a href="名詞與概念字典.html">查字典</a></footer>

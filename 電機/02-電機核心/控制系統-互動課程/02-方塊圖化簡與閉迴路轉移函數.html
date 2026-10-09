@@ -49,7 +49,7 @@
 <label for="bk-tau">受控體時間常數 τ（s）<input id="bk-tau" type="range" min="0.1" max="2" step="0.1" value="0.5"></label>
 <label for="bk-h">感測器增益 H<input id="bk-h" type="range" min="0.5" max="2" step="0.1" value="1"></label>
 </div>
-<div id="block-output" class="output" aria-live="polite"></div>
+<div id="block-output" class="output"></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -66,6 +66,9 @@
 <p><strong>能證明什麼。</strong>63.2 % 時刻接近 τ / (1 ＋ K<sub>c</sub>Kh)，可支持閉迴路極點確實左移；終值接近 T(0) × r，可支持比例控制留下 1 / (1 ＋ K<sub>c</sub>Kh) 等級的誤差。</p>
 <p><strong>不能證明什麼。</strong>一次低增益量測不能證明 K<sub>c</sub> 任意加大都維持一階。電流飽和、電氣極點與延遲若尚未被激發，儀器看不到它們，不能據此宣稱簡化模型在所有操作範圍都成立。</p>
 
+<p><strong>在家版本。</strong>用自由實驗比較無回授與負回授，再把 K<sub>c</sub> 依序設為 1、10、50，記下極點、時間常數與直流增益。這能重現代數關係，卻不會呈現真實致動器飽和與被忽略的高頻極點。</p>
+<h2>帶走三件事</h2>
+<ul><li>串聯相乘、並聯相加，負回授則形成 CG / (1 ＋ CGH)。</li><li>閉迴路極點由 1 ＋ L(s) ＝ 0 決定，增益會同時改變速度與穩態誤差。</li><li>比例控制需要誤差維持控制量，因此有限增益下通常仍有終值偏差。</li></ul>
 <h2>連到哪門課</h2>
 <p>串聯、並聯與互聯的數學定義見<a href="../信號與系統-互動課程/04-線性非時變與摺積.html">信號與系統的線性非時變與摺積</a>。運算放大器的閉迴路增益 A / (1 ＋ Aβ) 也使用同一種代數結構；下一章則把 T(0) 沒有追到理想值的現象整理成可直接判讀的型式與誤差常數。</p>
 <nav class="pager" aria-label="章節導覽"><a href="01-建模從微分方程到轉移函數.html">← 上一頁：建模：從微分方程到轉移函數</a><a href="03-穩態誤差與系統型式.html">下一頁：穩態誤差與系統型式 →</a></nav>

@@ -149,7 +149,7 @@
 <h3>角度調變：FM 與 PM（angle modulation）</h3>
 <p><strong>白話：</strong>不改載波振幅，而改它旋轉的角度進度；直接改瞬時頻率叫 FM，直接改相位叫 PM，兩者可互相用微分與積分連接。</p>
 <p><strong>位置／角色：</strong><a href="03-FM與Carson頻寬.html">03 章</a>主講 FM；廣播、雙向無線電與頻率合成器都利用恆定振幅帶來的放大便利。</p>
-<p><strong>機制：</strong>廣播例取 Δf ＝ 75 kHz、W ＝ 15 kHz，β ＝ 5.000000，Carson 頻寬為 180.000000 kHz，換得 18.750613 dB 的模型增益。</p>
+<p><strong>機制：</strong>廣播例取 Δf ＝ 75 kHz、W ＝ 15 kHz，β ＝ 5.000000，Carson 頻寬為 180.000000 kHz；峰值正規化單音的 P<sub>m</sub> ＝ 1/2，換得 1.5β² ＝ 37.5，也就是 15.740313 dB 的模型增益。</p>
 <p><strong>不要混淆：</strong>FM 與 PM 都是角度調變，但同一個訊息套入後的瞬時頻率不同；不能只看到恆定振幅就斷定是哪一種。恆定振幅也只是在理想表達式成立，通過實際通道後仍可能出現振幅起伏，接收器通常先限幅再解調。</p>
 </article>
 
@@ -172,9 +172,9 @@
 <article class="term-card" data-search="fm threshold pre-emphasis 門檻效應 預加重 cnr high frequency">
 <h3>FM 門檻效應與預加重（threshold effect &amp; pre-emphasis）</h3>
 <p><strong>白話：</strong>FM 在載波夠強時很乾淨，一旦低到門檻下會突然冒出尖峰；預加重先抬高高頻內容，接收端再壓回來改善高頻表現。</p>
-<p><strong>位置／角色：</strong><a href="03-FM與Carson頻寬.html">03 章</a>界定理想 3β² 模型何時有效；FM 廣播接收器的限幅、解調與去加重電路都面對此現象。</p>
+<p><strong>位置／角色：</strong><a href="03-FM與Carson頻寬.html">03 章</a>界定理想 3β²P<sub>m</sub> 模型何時有效；FM 廣播接收器的限幅、解調與去加重電路都面對此現象。</p>
 <p><strong>機制：</strong>預設參考 SNR 30 dB 時 CNR 是 19.208188 dB，高於 10 dB 門檻；降到 15 dB 時 CNR 只剩 4.208188 dB，模型失效。</p>
-<p><strong>不要混淆：</strong>FM 並非任何情況都較乾淨；β 大且 CNR 過門檻才有增益，窄頻 β ＝ 0.5 時 3β² 只有 0.75。預加重也不是增加總發射音量，而是改變不同音頻的相對權重，接收端必須用相反曲線還原。</p>
+<p><strong>不要混淆：</strong>FM 並非任何情況都較乾淨；一般式是 3β²P<sub>m</sub>，峰值正規化單音才化成 1.5β²。窄頻 β ＝ 0.5 時單音增益只有 0.375。預加重也不是增加總發射音量，而是改變不同音頻的相對權重，接收端必須用相反曲線還原。</p>
 </article>
 </div>
 
@@ -364,10 +364,10 @@
 
 <article class="term-card" data-search="ebn0 energy per bit noise density 能量 雜訊密度 bit snr">
 <h3>E<sub>b</sub>/N<sub>0</sub>（energy per bit to noise density ratio）</h3>
-<p><strong>白話：</strong>把每個位元獲得的能量與每 Hz 雜訊功率相比，抽離傳送速度與量測頻寬，方便跨系統比較偵測難度。</p>
+<p><strong>白話：</strong>把等機率資料下的平均每位元能量與每 Hz 雜訊功率相比，抽離傳送速度與量測頻寬，方便跨系統比較偵測難度。</p>
 <p><strong>位置／角色：</strong><a href="08-匹配濾波器與位元錯誤率.html">08 章</a>把它送進 Q 函數，<a href="10-頻譜效率與Shannon極限.html">10 章</a>用它比較功率效率。</p>
 <p><strong>機制：</strong>E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB 時，BPSK 的 Q 引數是 √20 ＝ 4.472136，位元錯誤率為 3.872108 × 10<sup>−6</sup>；√ 讀作平方根。</p>
-<p><strong>不要混淆：</strong>它不是 SNR：兩者差一個 R<sub>b</sub>/B。同一鏈路把頻寬開大時 SNR 下降，E<sub>b</sub>/N<sub>0</sub> 可以不變。比較規格時還要確認 N<sub>0</sub> 採單邊或雙邊定義，本課固定採單邊，否則公式會無端差 3.010300 dB。</p>
+<p><strong>不要混淆：</strong>它不是 SNR：兩者差一個 R<sub>b</sub>/B。同一鏈路把頻寬開大時 SNR 下降，E<sub>b</sub>/N<sub>0</sub> 可以不變。本課把 E<sub>b</sub> 固定定義為平均每位元能量；對等機率 ON-OFF 而言，「1」脈衝能量因此是 2E<sub>b</sub>。比較規格時還要確認 N<sub>0</sub> 採單邊或雙邊定義，本課固定採單邊。</p>
 </article>
 
 <article class="term-card" data-search="ber bit error rate 位元錯誤率 probability measured errors">
@@ -382,8 +382,8 @@
 <h3>振幅鍵控 ASK（amplitude shift keying, ASK）</h3>
 <p><strong>白話：</strong>用幾個離散振幅代表不同符元；最簡單的 ON-OFF 以有載波與無載波代表兩種狀態。</p>
 <p><strong>位置／角色：</strong><a href="09-數位調變與星座圖.html">09 章</a>把它與 FSK、PSK、QAM 並列；低成本遙控器與光強度鏈路常見這種選擇。</p>
-<p><strong>機制：</strong>08 章在 E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB 時，ON-OFF 的錯誤率為 1.267366 × 10<sup>−2</sup>，明顯高於 BPSK。</p>
-<p><strong>不要混淆：</strong>ASK 的離散振幅不是類比 AM 的連續包絡；同一 E<sub>b</sub> 比較時，ON-OFF 判決距離較短，要多付 6.020600 dB。若改用平均功率相同的比較基準，常會看到 3.010300 dB 的說法；兩者差異來自比較條件，不是公式互相矛盾。</p>
+<p><strong>機制：</strong>以平均每位元能量為基準，08 章在 E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB 時，ON-OFF 的 Q 引數為 √10，錯誤率為 7.827011 × 10<sup>−4</sup>。</p>
+<p><strong>不要混淆：</strong>ASK 的離散振幅不是類比 AM 的連續包絡；同一平均 E<sub>b</sub> 下，ON-OFF 判決距離是雙極的 1/√2，要多付 3.010300 dB。若把 E<sub>b</sub> 改指「1」脈衝能量才會得到 6.020600 dB，但那不是本課採用的定義。</p>
 </article>
 
 <article class="term-card" data-search="fsk frequency shift keying 頻率鍵控 tones coherent orthogonal">
@@ -413,7 +413,7 @@
 <article class="term-card" data-search="constellation iq plane 星座圖 iq 平面 in phase quadrature decision">
 <h3>星座圖與 IQ 平面（constellation diagram &amp; IQ plane）</h3>
 <p><strong>白話：</strong>把每個符元畫成 I、Q 兩個座標；接收點落在哪個判決區，就決定解成哪個符元。</p>
-<p><strong>位置／角色：</strong><a href="09-數位調變與星座圖.html">09 章</a>不用圖片而以座標表呈現；向量訊號分析儀與 SDR 軟體會用它觀察失真。</p>
+<p><strong>位置／角色：</strong><a href="09-數位調變與星座圖.html">09 章</a>同時用座標表與程式繪製的 inline SVG 呈現；向量訊號分析儀與 SDR 軟體會用它觀察失真。</p>
 <p><strong>機制：</strong>E<sub>s</sub> ＝ 1 時，QPSK 座標為 (±0.707107, ±0.707107)；16-QAM 每軸用 ±0.316228 與 ±0.948683，共 4 × 4 ＝ 16 點。</p>
 <p><strong>不要混淆：</strong>理想星座只列中心位置，實測點雲還混入雜訊、增益、相位與頻率誤差；散開不一定只由一種原因造成。點雲整體旋轉常指向相位偏差，沿半徑拉長與均勻擴散又是不同線索，但單張圖仍需配合儀器量測才能定因。</p>
 </article>

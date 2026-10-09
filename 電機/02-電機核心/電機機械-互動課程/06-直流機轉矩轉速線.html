@@ -1,4 +1,14 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 直流機轉矩轉速線｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>06 直流機轉矩轉速線｜電機機械</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
@@ -50,7 +60,7 @@
 <label for="dc-ra">電樞電阻 R_a（Ω）<input id="dc-ra" type="range" min="0.1" max="2" step="0.05" value="0.5"></label>
 <label for="dc-t">負載轉矩 T（N·m）<input id="dc-t" type="range" min="0" max="500" step="5" value="20"></label>
 </div>
-<div id="dcmotor-output" class="output" aria-live="polite">目前設定：V_t ＝ 240 V、I_f ＝ 1.0 A、KΦ ＝ 1.000000 V·s/rad、R_a ＝ 0.5 Ω、T ＝ 20 N·m。<table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>電樞電流 I_a</td><td><strong>20.000000 A</strong></td></tr><tr><td>反電動勢 E_a</td><td><strong>230.000000 V</strong></td></tr><tr><td>角速度 ω</td><td><strong>230.000000 rad/s</strong></td></tr><tr><td>轉速 n</td><td><strong>2196.338215 rpm</strong></td></tr><tr><td>無負載速度</td><td><strong>240.000000 rad/s ＝ 2291.831181 rpm</strong></td></tr><tr><td>負載造成的速降</td><td><strong>10.000000 rad/s</strong></td></tr><tr><td>轉換功率</td><td><strong>4600.000000 W</strong></td></tr><tr><td>電樞輸入功率</td><td><strong>4800.000000 W</strong></td></tr><tr><td>電樞銅損</td><td><strong>200.000000 W</strong></td></tr><tr><td>電樞效率</td><td><strong>95.833333 %</strong></td></tr><tr><td>直接起動電流</td><td><strong>480.000000 A</strong></td></tr><tr><td>失速轉矩</td><td><strong>480.000000 N·m</strong></td></tr></tbody></table><table><thead><tr><th>取樣轉矩</th><th>0</th><th>0.25 T_stall</th><th>0.5 T_stall</th><th>0.75 T_stall</th><th>T_stall</th></tr></thead><tbody><tr><td>轉速（rpm）</td><td>2291.831181</td><td>1718.873385</td><td>1145.915590</td><td>572.957795</td><td>0.000000</td></tr></tbody></table><strong>判讀：目前是正常馬達工作點，負載使速度由無負載值下降 10.000000 rad/s。</strong>電樞電流由負載轉矩決定 I_a = T / KΦ；電壓決定的是無負載速度。為什麼：負載增加需要更多電磁轉矩，所以 I_a 上升，R_a 壓降增加，留給 E_a 的電壓下降，轉速便降低。直接起動電流 V_t / R_a ＝ 480.000000 A，是這個負載點電流的 24.000000 倍，見第 11 章。邊界提醒：E_a 小於 0 代表拉不動；E_a 等於 0 是失速；I_f 不大於 0.3 A 時磁通太弱，實機激磁回路斷線會飛車；T ＝ 0 時速度停在 V_t / KΦ，不會無限升；V_t ＝ 0 時沒有電樞電壓，馬達不轉。</div>
+<div id="dcmotor-output" class="output"><p class="current-settings">目前設定：V_t ＝ 240 V、I_f ＝ 1.0 A、KΦ ＝ 1.000000 V·s/rad、R_a ＝ 0.5 Ω、T ＝ 20 N·m。</p><table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>KΦ</td><td>1.000000</td></tr><tr><td>I_a</td><td>20.000000 A</td></tr><tr><td>E_a</td><td>230.000000 V</td></tr><tr><td>ω</td><td>230.000000 rad/s</td></tr><tr><td>n</td><td>2196.338215 rpm</td></tr><tr><td>無負載角速度</td><td>240.000000 rad/s</td></tr><tr><td>無負載轉速</td><td>2291.831181 rpm</td></tr><tr><td>速降</td><td>10.000000 rad/s</td></tr><tr><td>轉換功率</td><td>4600.000000 W</td></tr><tr><td>電樞輸入</td><td>4800.000000 W</td></tr><tr><td>電樞銅損</td><td>200.000000 W</td></tr><tr><td>效率</td><td>95.833333 %</td></tr><tr><td>起動電流</td><td>480.000000 A</td></tr><tr><td>失速轉矩</td><td>480.000000 N·m</td></tr></tbody></table><table><thead><tr><th>轉矩（N·m）</th><th>轉速（rpm）</th></tr></thead><tbody><tr><td>0.000000</td><td>2291.831181</td></tr><tr><td>120.000000</td><td>1718.873385</td></tr><tr><td>240.000000</td><td>1145.915590</td></tr><tr><td>360.000000</td><td>572.957795</td></tr><tr><td>480.000000</td><td>0.000000</td></tr></tbody></table><p>目前是可運作的工作點。</p><p>電樞電流由負載轉矩決定 I_a = T / KΦ；電壓決定的是無負載速度。直接起動電流 V_t / R_a ＝ 480.000000 A，是這個負載點電流的 24.000000 倍，見第 11 章。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -67,7 +77,7 @@
 <p><strong>能證明什麼。</strong>在不同負載下記錄成對的 T 與 n，可檢查轉矩–轉速線的截距與斜率；改 V<sub>t</sub> 後重測，可驗證近似平行的線移動。同步記錄 I<sub>a</sub> 則能檢查 T 與 I<sub>a</sub> 是否近似成正比。</p>
 <p><strong>不能證明什麼。</strong>這些外部量測無法單獨證明 KΦ 在整段 I<sub>f</sub> 範圍內都成正比，也不能分離電樞反應、機械損與電刷壓降各自造成多少偏差。要確認磁性飽和，還需另做磁化特性量測。</p>
 
-<h2>連到哪門課</h2>
+<h2>本章帶走的三件事</h2><ul><li>負載轉矩透過 KΦ 決定電樞電流。</li><li>電樞電壓主要平移轉矩–轉速線，弱磁則同時改變截距與斜率。</li><li>起動時反電動勢為零，必須限制電流。</li></ul><p><a href="自我檢核.html#ch06">做本章 3 題 →</a></p>\n<h2>連到哪門課</h2>
 <p>這條直線會用在輸送帶、捲揚設備與舊式直流驅動的速度設定；第 11 章會接著比較起動電阻、端電壓控制與弱磁控制。把直導體的感應原理捲成旋轉電樞，見<a href="../電磁學-互動課程/11-電磁感應.html">電磁學的電磁感應</a>。永磁同步馬達與無刷直流馬達為何常被說成「像直流機」，會在第 12 章用換相方式重新說清楚。</p>
 <p><strong>控制程式那一端：</strong>V<sub>t</sub> 對應驅動器的電壓命令，I<sub>a</sub> 對應電流限制或轉矩命令，I<sub>f</sub> 對應弱磁區設定；程式若只追速度而沒有電流上限，起動與堵轉時就可能要求危險電流。</p>
 <nav class="pager" aria-label="章節導覽"><a href="05-旋轉機共同語言.html">← 上一頁：旋轉機共同語言</a><a href="07-感應機滑差與功率流.html">下一頁：感應機滑差與功率流 →</a></nav>

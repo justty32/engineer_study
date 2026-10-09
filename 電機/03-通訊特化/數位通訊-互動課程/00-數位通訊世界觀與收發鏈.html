@@ -33,17 +33,18 @@
 <tr><td>頻譜效率 η</td><td>1000 / 1250</td><td><strong>0.800000 bit/s/Hz</strong></td></tr>
 <tr><td>E<sub>s</sub>/N<sub>0</sub> 對 E<sub>b</sub>/N<sub>0</sub> 的倍率 kR</td><td>2 × 0.5</td><td><strong>1.000000（0.000000 dB）</strong></td></tr>
 </tbody></table>
-<p><strong>量級與邊界對照。</strong>不編碼、BPSK、α ＝ 0.25 時，R<sub>s</sub> ＝ 1000.000000 kbaud、B ＝ 1250.000000 kHz、η ＝ 0.800000，恰與預設相同；率 1/2 的冗餘被 QPSK 每符元多帶的一個位元抵銷。不編碼、64-QAM 時，R<sub>s</sub> ＝ 166.666667 kbaud、B ＝ 208.333333 kHz、η ＝ 4.800000，kR ＝ 6.000000（7.781513 dB）。(7,4) 漢明碼配 QPSK 時，R<sub>c</sub> ＝ 1750.000000、R<sub>s</sub> ＝ 875.000000、B ＝ 1093.750000、η ＝ 0.914286，kR ＝ 1.142857（0.579919 dB）。α ＝ 0 時 B ＝ 1000.000000 kHz，對應不可實現的理想 sinc；α ＝ 1 時 B ＝ 2000.000000 kHz。</p>
-<p>再看較高速邊界：R<sub>b</sub> ＝ 10000 kbit/s、R ＝ 5/6、256-QAM、α ＝ 0.05 時，R<sub>s</sub> ＝ 1500.000000 kbaud、B ＝ 1575.000000 kHz、η ＝ 6.349206，kR ＝ 6.666667（8.239087 dB）。高階星座壓低符元率，代價要到第 02 與第 04 章用距離與誤碼率結帳。</p>
+<p><strong>量級與邊界對照。</strong>不編碼、BPSK、α ＝ 0.25 時，R<sub>s</sub> ＝ 1000 kbaud、B ＝ 1250 kHz、η ＝ 0.8，恰與預設相同；率 1/2 的冗餘被 QPSK 每符元多帶的一個位元抵銷。不編碼、64-QAM 時，R<sub>s</sub> ＝ 166.7 kbaud、B ＝ 208.3 kHz、η ＝ 4.8，kR ＝ 6（7.782 dB）。(7,4) 漢明碼配 QPSK 時，R<sub>c</sub> ＝ 1750、R<sub>s</sub> ＝ 875、B ＝ 1094、η ＝ 0.9143，kR ＝ 1.143（0.5799 dB）。α ＝ 0 時 B ＝ 1000 kHz，對應不可實現的理想 sinc；α ＝ 1 時 B ＝ 2000 kHz。</p>
+<p>再看較高速邊界：R<sub>b</sub> ＝ 10000 kbit/s、R ＝ 5/6、256-QAM、α ＝ 0.05 時，R<sub>s</sub> ＝ 1500 kbaud、B ＝ 1575 kHz、η ＝ 6.349，kR ＝ 6.667（8.239 dB）。高階星座壓低符元率，代價要到第 02 與第 04 章用距離與誤碼率結帳。</p>
 
 <section class="workspace"><h2>自由實驗：四個控制量如何改寫同一本帳</h2>
 <p>調整資訊位元率、編碼率、每符元位元數與滾降係數；程式會在下方空白輸出區即時更新數值與原因。預設狀態先用靜態表保留，沒有程式也能核對。</p>
 <div class="controls">
-<label for="ch-rb">資訊位元率 R_b（kbit/s）<input id="ch-rb" type="range" min="10" max="10000" step="10" value="1000"></label>
+<label for="ch-rb">資訊位元率 R_b（kbit/s） <output id="ch-rb-val" for="ch-rb">1000</output><input id="ch-rb" type="range" min="10" max="10000" step="10" value="1000"></label>
 <label for="ch-rate">編碼率 R<select id="ch-rate"><option value="1">不編碼（R = 1）</option><option value="4/7">(7,4) 漢明碼（R = 4/7）</option><option value="1/2" selected>率 1/2 摺積碼</option><option value="3/4">R = 3/4</option><option value="5/6">R = 5/6</option></select></label>
 <label for="ch-k">每符元位元數 k<select id="ch-k"><option value="1">BPSK（1 位元/符元）</option><option value="2" selected>QPSK（2）</option><option value="4">16-QAM（4）</option><option value="6">64-QAM（6）</option><option value="8">256-QAM（8）</option></select></label>
-<label for="ch-alpha">滾降係數 α<input id="ch-alpha" type="range" min="0" max="1" step="0.05" value="0.25"></label>
+<label for="ch-alpha">滾降係數 α <output id="ch-alpha-val" for="ch-alpha">0.25</output><input id="ch-alpha" type="range" min="0" max="1" step="0.05" value="0.25"></label>
 </div>
+<div><p><strong>先預測再拖：</strong>R<sub>b</sub> ＝ 1800 kbit/s、R ＝ 3/4、k ＝ 4、α ＝ 0.35 時，頻寬 B 是多少 kHz？</p><label for="p00">你的預測（kHz）<input id="p00" type="number" step="0.1"></label><button id="p00-check" type="button">檢查預測</button><div id="p00-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q00-1">再做 00 章自我檢核</a></p></div>
 <table><thead><tr><th>預設回饋</th><th>數值</th></tr></thead><tbody><tr><td>R<sub>c</sub></td><td>2000.000000 kbit/s</td></tr><tr><td>R<sub>s</sub></td><td>1000.000000 kbaud</td></tr><tr><td>B</td><td>1250.000000 kHz</td></tr><tr><td>η</td><td>0.800000 bit/s/Hz</td></tr><tr><td>kR</td><td>1.000000（0.000000 dB）</td></tr></tbody></table>
 <table><thead><tr><th>方塊</th><th>做什麼</th><th>本課位置</th></tr></thead><tbody>
 <tr><td>訊源編碼</td><td>壓縮表示</td><td>資訊理論與編碼</td></tr><tr><td>通道編碼</td><td>加入可用冗餘</td><td>08–09</td></tr><tr><td>交錯</td><td>重排位元順序</td><td>10</td></tr><tr><td>調變</td><td>位元組合指派到星座</td><td>01–04</td></tr><tr><td>脈衝整形</td><td>限制頻譜</td><td>通訊系統 07</td></tr><tr><td>上變頻</td><td>搬到射頻</td><td>本章點名</td></tr><tr><td>天線</td><td>電氣波形與空間波互換</td><td>無線與行動通訊</td></tr><tr><td>通道</td><td>加入雜訊、多徑與干擾</td><td>06、11–12</td></tr><tr><td>下變頻</td><td>搬回基頻</td><td>本章點名</td></tr><tr><td>匹配濾波</td><td>收集判決所需能量</td><td>通訊系統 08</td></tr><tr><td>同步</td><td>對準載波與時序</td><td>05</td></tr><tr><td>等化</td><td>減少通道拖尾</td><td>06–07</td></tr><tr><td>解調</td><td>由接收點做判決</td><td>03</td></tr><tr><td>解交錯</td><td>還原原本順序</td><td>10</td></tr><tr><td>通道解碼</td><td>利用冗餘修正錯誤</td><td>08–09</td></tr><tr><td>訊源解碼</td><td>還原來源表示</td><td>資訊理論與編碼</td></tr>

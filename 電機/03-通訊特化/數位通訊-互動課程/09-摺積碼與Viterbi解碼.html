@@ -27,7 +27,7 @@
 <p><strong>編碼為何有記憶。</strong>輸出同時取決於 u[n]、u[n − 1] 與 u[n − 2]；同一個目前輸入在狀態 00 與 10 會產生不同輸出。前兩個輸入已完整決定未來需要的歷史，再更早的內容不必保留，這就是有限狀態與格狀圖成立的原因。</p>
 <p><strong>Viterbi 為何是 ML。</strong>在加性白色高斯雜訊且先做硬判決的一階模型中，最可能的合法序列就是與接收序列漢明距離最小者。每條合法序列對應格狀圖的一條路；分支度量是接收兩位元與分支輸出的距離，路徑度量是逐級累加。兩條路若到達相同狀態，後續可接的分支完全一致，因此只留較小者不會漏掉全域最佳解。平手時，本課依前一狀態 00、01、10、11 的順序處理，只在嚴格較小時取代。</p>
 <p><strong>自由距離與糾錯。</strong>從 00 輸入 1，輸出 11 到 10；再輸入 0，輸出 10 到 01；再輸入 0，輸出 11 回到 00。輸出重量為 2 ＋ 1 ＋ 2 ＝ 5，且這是離開全零路徑再回來的最小重量，所以 d<sub>free</sub> ＝ 5。任兩條路徑至少差 5 個編碼位元，錯 2 個後仍距正確路徑最近，故 t ＝ ⌊(5 − 1) / 2⌋ ＝ 2；3 個錯已越過保證邊界，但特定位置仍可能解對。</p>
-<p>漸近編碼增益在軟判決下為 10 log<sub>10</sub>(R d<sub>free</sub>) ＝ 3.979400 dB，硬判決下為 10 log<sub>10</sub>(R d<sub>free</sub> / 2) ＝ 0.969100 dB。這只是長序列的漸近比較，不等於每個短區塊都固定得到同樣改善。本課用硬判決、6 級與兩個清零位元的一階教學模型；真實系統常用軟判決分支度量與截斷回溯。</p>
+<p>漸近編碼增益在軟判決下為 10 log<sub>10</sub>(R d<sub>free</sub>) ＝ 3.979 dB，硬判決下為 10 log<sub>10</sub>(R d<sub>free</sub> / 2) ＝ 0.9691 dB。這只是長序列的漸近比較，不等於每個短區塊都固定得到同樣改善。本課用硬判決、6 級與兩個清零位元的一階教學模型；真實系統常用軟判決分支度量與截斷回溯。</p>
 
 <h2>數值實例：1011 加清零、編碼後第 3 位翻轉</h2>
 <p>令 m ＝ 1011，加兩個清零位元成 101100，共 6 級、12 個編碼位元。狀態依序 00 → 10 → 01 → 10 → 11 → 01 → 00，輸出 <strong>11 10 00 01 01 11</strong>，即 <code>111000010111</code>；第 3 位翻轉後接收 <code>110000010111</code>。</p>
@@ -39,6 +39,8 @@
 <p>由終點狀態 00 回溯得到輸入序列 <strong>101100</strong>，訊息 <strong>1011（正確）</strong>，最終度量 1 ＝ 錯誤數。無錯誤時各級度量為 2、—、0、— ／ 3、0、3、2 ／ 2、3、0、3 ／ 3、2、3、0 ／ 3、0、3、2 ／ 0、3、2、3，最終度量 0。</p>
 <p><strong>邊界對照。</strong>錯誤 3、6 時接收 <code>110001010111</code>，最終度量 2，仍解回 1011；錯誤 1、2、3 時接收 <code>000000010111</code>，會解成 <strong>0011（錯）</strong>，最終度量 2。錯誤 2、5、8 雖有 3 個，仍解回正確訊息且度量 3，說明「超過保證」不等於「必定失敗」。m ＝ 1111 且錯誤 4 時，碼字為 <code>110110100111</code>，仍可正確解碼。</p>
 
+<figure><svg viewBox="0 0 420 190" role="img" aria-label="Viterbi 格狀圖存活路徑示意" style="max-width:100%;height:auto;color:inherit"><g stroke="currentColor" fill="none" opacity="0.55"><path d="M55 30L150 30L245 80L340 30M55 80L150 130L245 130L340 80M55 130L150 80L245 30L340 130M55 160L150 160L245 160L340 160"/></g><g stroke="currentColor" fill="none" stroke-width="4"><path d="M55 30L150 80L245 30L340 80"/></g><g fill="currentColor" font-size="12"><circle cx="55" cy="30" r="4"/><circle cx="150" cy="80" r="4"/><circle cx="245" cy="30" r="4"/><circle cx="340" cy="80" r="4"/><text x="45" y="181">第 0 級</text><text x="326" y="181">第 3 級</text><text x="170" y="18">粗線：目前存活路徑</text></g></svg><figcaption>格狀圖以水平方向表示時間級數，節點是編碼器狀態；每級只保留到達同一狀態的最小度量路徑。</figcaption></figure>
+
 <section class="workspace"><h2>自由實驗：翻轉編碼位元，看存活路徑如何改變</h2>
 <p>選一個 4 位元訊息，系統會補上兩個清零位元並編碼。再指定至多三個翻轉位置，觀察逐級路徑度量與回溯結果；重複位置會翻轉兩次而互相抵消。</p>
 <div class="controls">
@@ -46,7 +48,7 @@
 <label for="vt-e1">錯誤位置 1<select id="vt-e1"><option value="0">無</option><option value="1">第 1 位</option><option value="2">第 2 位</option><option value="3" selected>第 3 位</option><option value="4">第 4 位</option><option value="5">第 5 位</option><option value="6">第 6 位</option><option value="7">第 7 位</option><option value="8">第 8 位</option><option value="9">第 9 位</option><option value="10">第 10 位</option><option value="11">第 11 位</option><option value="12">第 12 位</option></select></label>
 <label for="vt-e2">錯誤位置 2<select id="vt-e2"><option value="0" selected>無</option><option value="1">第 1 位</option><option value="2">第 2 位</option><option value="3">第 3 位</option><option value="4">第 4 位</option><option value="5">第 5 位</option><option value="6">第 6 位</option><option value="7">第 7 位</option><option value="8">第 8 位</option><option value="9">第 9 位</option><option value="10">第 10 位</option><option value="11">第 11 位</option><option value="12">第 12 位</option></select></label>
 <label for="vt-e3">錯誤位置 3<select id="vt-e3"><option value="0" selected>無</option><option value="1">第 1 位</option><option value="2">第 2 位</option><option value="3">第 3 位</option><option value="4">第 4 位</option><option value="5">第 5 位</option><option value="6">第 6 位</option><option value="7">第 7 位</option><option value="8">第 8 位</option><option value="9">第 9 位</option><option value="10">第 10 位</option><option value="11">第 11 位</option><option value="12">第 12 位</option></select></label>
-</div><div id="viterbi-output" class="output" aria-live="polite"></div></section>
+</div><div><p><strong>先預測再拖：</strong>訊息 1001 加兩個清零位元後編碼，12 個輸出中共有幾個 1？</p><label for="p09">你的預測<input id="p09" type="number" step="1"></label><button id="p09-check" type="button">檢查預測</button><div id="p09-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q09-1">再做 09 章自我檢核</a></p></div><div id="viterbi-output" class="output" aria-live="polite"></div></section>
 
 <h2>不要混淆</h2>
 <ul><li>約束長度 K ＝ 3 是輸出會看幾個輸入；暫存器只有 K − 1 ＝ 2 個。</li><li>d<sub>free</sub> 是合法序列間的距離，不是某個固定長度碼字的重量分布。</li><li>Viterbi 每個狀態只留一條存活路徑，並非只留全圖一條；過早只留一條會失去正確答案。</li><li>複雜度隨狀態數 2<sup>K−1</sup> 指數成長；K ＝ 7 已有 64 個狀態，不能靠無限加深換可靠度。</li><li>最終度量小於或等於真實錯誤數；兩者相等不保證一定解對，仍可能有平手的錯誤路徑。</li></ul>

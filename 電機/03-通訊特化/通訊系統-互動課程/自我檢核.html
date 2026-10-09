@@ -4,14 +4,14 @@
 <main>
 <p class="eyebrow">檢・12 章各 3 題，共 36 題</p>
 <h1>自我檢核：把每一章的關鍵數字與判斷各檢查一次</h1>
-<p class="lead">每一題都取自該章正文出現過的數字或結論，沒有新的題型也沒有陷阱。填完按「對答案」，回饋會告訴你為什麼，並附上該回去看的章節。</p>
+<p class="lead">每章都有一題改用正文未示範過的新參數，檢查你能否把公式遷移到新情境；其餘題目檢查關鍵判斷。填完按「對答案」，回饋會說明計算並附回讀章節。</p>
 <p class="note">這頁的題目<strong>不計分、不記錄、不阻擋</strong>。答錯只會告訴你為什麼，並附上該回去看的章節。可以無限重做。</p>
 <div class="controls"><button type="button" id="quiz-reset">全部清除</button><span id="quiz-progress" aria-live="polite"></span></div>
 
-<h2>00 通訊世界觀與分貝帳本</h2>
+<h2 id="quiz-00">00 通訊世界觀與分貝帳本</h2>
 <p>回去看：<a href="00-通訊世界觀與分貝帳本.html">00 通訊世界觀與分貝帳本</a></p>
 <section class="card">
-<p><strong>q00-1｜</strong>100 mW 是幾 dBm？</p>
+<p><strong>q00-1｜遷移題：</strong>250 mW 是幾 dBm？</p>
 <label for="q00-1">你的答案（dBm）<input id="q00-1" type="number" step="any"></label>
 <button type="button" id="q00-1-check">對答案</button>
 <div id="q00-1-output" class="output" aria-live="polite"></div>
@@ -29,31 +29,31 @@
 <div id="q00-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>01 AM 包絡與調變指數</h2>
+<h2 id="quiz-01">01 AM 包絡與調變指數</h2>
 <p>回去看：<a href="01-AM包絡與調變指數.html">01 AM 包絡與調變指數</a></p>
 <section class="card">
-<p><strong>q01-1｜</strong>μ ＝ 0.5 的單音 AM 功率效率是多少百分比？直接填百分比數字，不要除以 100。</p>
+<p><strong>q01-1｜遷移題：</strong>μ ＝ 0.8 的單音 AM 功率效率是多少百分比？直接填百分比數字，不要除以 100。</p>
 <label for="q01-1">你的答案（%）<input id="q01-1" type="number" step="any"></label>
 <button type="button" id="q01-1-check">對答案</button>
 <div id="q01-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q01-2｜</strong>μ ＝ 0.5、f_m ＝ 1 kHz 時，包絡檢波器 RC 的上限是多少微秒？</p>
+<p><strong>q01-2｜</strong>μ ＝ 0.5、f<sub>m</sub> ＝ 1 kHz 時，包絡檢波器 RC 的上限是多少微秒？</p>
 <label for="q01-2">你的答案（µs）<input id="q01-2" type="number" step="any"></label>
 <button type="button" id="q01-2-check">對答案</button>
 <div id="q01-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
 <p><strong>q01-3｜</strong>把 μ 推到 1.5 會發生什麼？</p>
-<label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">頻寬變成 3 f_m</option><option value="b">包絡翻摺，檢波輸出不再是訊息的形狀</option><option value="c">效率降到 0</option><option value="d">載波消失</option></select></label>
+<label for="q01-3">你的答案<select id="q01-3"><option value="">請選擇</option><option value="a">頻寬變成 3 fₘ</option><option value="b">包絡翻摺，檢波輸出不再是訊息的形狀</option><option value="c">效率降到 0</option><option value="d">載波消失</option></select></label>
 <button type="button" id="q01-3-check">對答案</button>
 <div id="q01-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>02 抑制載波、單邊帶與同步解調</h2>
+<h2 id="quiz-02">02 抑制載波、單邊帶與同步解調</h2>
 <p>回去看：<a href="02-抑制載波單邊帶與同步解調.html">02 抑制載波、單邊帶與同步解調</a></p>
 <section class="card">
-<p><strong>q02-1｜</strong>W ＝ 4 kHz 的 SSB，在 100 kHz 內可塞幾路？</p>
+<p><strong>q02-1｜遷移題：</strong>W ＝ 5.5 kHz 的 SSB，在 100 kHz 內可完整排幾路？</p>
 <label for="q02-1">你的答案（路）<input id="q02-1" type="number" step="any"></label>
 <button type="button" id="q02-1-check">對答案</button>
 <div id="q02-1-output" class="output" aria-live="polite"></div>
@@ -71,10 +71,10 @@
 <div id="q02-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>03 FM 與 Carson 頻寬</h2>
+<h2 id="quiz-03">03 FM 與 Carson 頻寬</h2>
 <p>回去看：<a href="03-FM與Carson頻寬.html">03 FM 與 Carson 頻寬</a></p>
 <section class="card">
-<p><strong>q03-1｜</strong>Δf ＝ 75 kHz、W ＝ 15 kHz 時，β 是多少？</p>
+<p><strong>q03-1｜遷移題：</strong>Δf ＝ 48 kHz、W ＝ 12 kHz 時，β 是多少？</p>
 <label for="q03-1">你的答案（無單位）<input id="q03-1" type="number" step="any"></label>
 <button type="button" id="q03-1-check">對答案</button>
 <div id="q03-1-output" class="output" aria-live="polite"></div>
@@ -87,15 +87,15 @@
 </section>
 <section class="card">
 <p><strong>q03-3｜</strong>窄頻 FM（β ＝ 0.5）為什麼沒有抗雜訊優勢？</p>
-<label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">因為頻寬太窄，雜訊進不來</option><option value="b">3β² ＝ 0.75 小於 1，比 DSB-SC 還差</option><option value="c">因為窄頻 FM 沒有限幅器</option><option value="d">因為 Carson 法則不適用</option></select></label>
+<label for="q03-3">你的答案<select id="q03-3"><option value="">請選擇</option><option value="a">因為頻寬太窄，雜訊進不來</option><option value="b">單音 1.5β² ＝ 0.375 小於 1，比 DSB-SC 還差</option><option value="c">因為窄頻 FM 沒有限幅器</option><option value="d">因為 Carson 法則不適用</option></select></label>
 <button type="button" id="q03-3-check">對答案</button>
 <div id="q03-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>04 超外差接收機與影像頻率</h2>
+<h2 id="quiz-04">04 超外差接收機與影像頻率</h2>
 <p>回去看：<a href="04-超外差接收機與影像頻率.html">04 超外差接收機與影像頻率</a></p>
 <section class="card">
-<p><strong>q04-1｜</strong>接收 1000 kHz、IF 為 455 kHz 且採高側注入時，影像頻率是多少 kHz？</p>
+<p><strong>q04-1｜遷移題：</strong>接收 1200 kHz、f<sub>IF</sub> 為 455 kHz 且採高側注入時，影像頻率是多少 kHz？</p>
 <label for="q04-1">你的答案（kHz）<input id="q04-1" type="number" step="any"></label>
 <button type="button" id="q04-1-check">對答案</button>
 <div id="q04-1-output" class="output" aria-live="polite"></div>
@@ -113,10 +113,10 @@
 <div id="q04-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>05 雜訊、訊雜比與雜訊指數</h2>
+<h2 id="quiz-05">05 雜訊、訊雜比與雜訊指數</h2>
 <p>回去看：<a href="05-雜訊訊雜比與雜訊指數.html">05 雜訊、訊雜比與雜訊指數</a></p>
 <section class="card">
-<p><strong>q05-1｜</strong>B ＝ 1 MHz 時，雜訊底是多少 dBm？請填負值。</p>
+<p><strong>q05-1｜遷移題：</strong>B ＝ 2 MHz 時，290 K 的熱雜訊底是多少 dBm？請填負值。</p>
 <label for="q05-1">你的答案（dBm）<input id="q05-1" type="number" step="any"></label>
 <button type="button" id="q05-1-check">對答案</button>
 <div id="q05-1-output" class="output" aria-live="polite"></div>
@@ -129,15 +129,15 @@
 </section>
 <section class="card">
 <p><strong>q05-3｜</strong>把增益 −6 dB 的混頻器放在 LNA 前面，總 NF 會變成多少？原因是什麼？</p>
-<label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">不變，Friis 與順序無關</option><option value="b">9.051478 dB：損耗放前面等於把後級雜訊乘 1/G_2</option><option value="c">1.5 dB：LNA 的 NF 最小，所以仍由它決定</option><option value="d">8 dB：混頻器的 NF 直接決定</option></select></label>
+<label for="q05-3">你的答案<select id="q05-3"><option value="">請選擇</option><option value="a">不變，Friis 與順序無關</option><option value="b">9.051478 dB：損耗放前面等於把後級雜訊乘 1/G₂</option><option value="c">1.5 dB：LNA 的 NF 最小，所以仍由它決定</option><option value="d">8 dB：混頻器的 NF 直接決定</option></select></label>
 <button type="button" id="q05-3-check">對答案</button>
 <div id="q05-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>06 取樣、量化與 PCM</h2>
+<h2 id="quiz-06">06 取樣、量化與 PCM</h2>
 <p>回去看：<a href="06-取樣量化與PCM.html">06 取樣、量化與 PCM</a></p>
 <section class="card">
-<p><strong>q06-1｜</strong>8 kHz 取樣、每樣本 8 位元、1 路的 PCM 位元率是多少 kbit/s？</p>
+<p><strong>q06-1｜遷移題：</strong>12 kHz 取樣、每樣本 10 位元、2 路的 PCM 位元率是多少 kbit/s？</p>
 <label for="q06-1">你的答案（kbit/s）<input id="q06-1" type="number" step="any"></label>
 <button type="button" id="q06-1-check">對答案</button>
 <div id="q06-1-output" class="output" aria-live="polite"></div>
@@ -150,15 +150,15 @@
 </section>
 <section class="card">
 <p><strong>q06-3｜</strong>每個樣本多一個位元，換到什麼，又付出什麼？</p>
-<label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">SQNR 增加 3.010300 dB，位元率不變</option><option value="b">SQNR 增加 6.020600 dB，位元率多 f_s × 路數</option><option value="c">頻寬減半</option><option value="d">取樣率可以降低</option></select></label>
+<label for="q06-3">你的答案<select id="q06-3"><option value="">請選擇</option><option value="a">SQNR 增加 3.010300 dB，位元率不變</option><option value="b">SQNR 增加 6.020600 dB，位元率多 fₛ × 路數</option><option value="c">頻寬減半</option><option value="d">取樣率可以降低</option></select></label>
 <button type="button" id="q06-3-check">對答案</button>
 <div id="q06-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>07 基頻傳輸、ISI 與升餘弦</h2>
+<h2 id="quiz-07">07 基頻傳輸、ISI 與升餘弦</h2>
 <p>回去看：<a href="07-基頻傳輸ISI與升餘弦.html">07 基頻傳輸、ISI 與升餘弦</a></p>
 <section class="card">
-<p><strong>q07-1｜</strong>R_s ＝ 100 kbaud、α ＝ 0.35 時，升餘弦頻寬是多少 kHz？</p>
+<p><strong>q07-1｜遷移題：</strong>R<sub>s</sub> ＝ 80 kbaud、α ＝ 0.25 時，升餘弦頻寬是多少 kHz？</p>
 <label for="q07-1">你的答案（kHz）<input id="q07-1" type="number" step="any"></label>
 <button type="button" id="q07-1-check">對答案</button>
 <div id="q07-1-output" class="output" aria-live="polite"></div>
@@ -176,58 +176,58 @@
 <div id="q07-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>08 匹配濾波器與位元錯誤率</h2>
+<h2 id="quiz-08">08 匹配濾波器與位元錯誤率</h2>
 <p>回去看：<a href="08-匹配濾波器與位元錯誤率.html">08 匹配濾波器與位元錯誤率</a></p>
 <section class="card">
-<p><strong>q08-1｜</strong>BPSK 在 E_b/N_0 ＝ 10 dB 時，位元錯誤率是多少？以 10^−6 為單位填數字，例如 3 × 10^−6 就填 3。</p>
-<label for="q08-1">你的答案（× 10^−6）<input id="q08-1" type="number" step="any"></label>
+<p><strong>q08-1｜遷移題：</strong>BPSK 在 E<sub>b</sub>/N<sub>0</sub> ＝ 8 dB 時，位元錯誤率是多少？以 10<sup>−4</sup> 為單位填數字，例如 3 × 10<sup>−4</sup> 就填 3。</p>
+<label for="q08-1">你的答案（× 10<sup>−4</sup>）<input id="q08-1" type="number" step="any"></label>
 <button type="button" id="q08-1-check">對答案</button>
 <div id="q08-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q08-2｜</strong>在同一個 E<sub>b</sub> 下（E<sub>b</sub> 指「1」脈衝的能量，依 08 章慣例），ON-OFF 比雙極方案多付幾 dB？</p>
+<p><strong>q08-2｜</strong>在同一個平均每位元能量 E<sub>b</sub> 下，ON-OFF 比雙極方案多付幾 dB？</p>
 <label for="q08-2">你的答案（dB）<input id="q08-2" type="number" step="any"></label>
 <button type="button" id="q08-2-check">對答案</button>
 <div id="q08-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q08-3｜</strong>匹配濾波器的最大取樣訊雜比 2E/N_0 跟什麼有關？</p>
-<label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">訊號的波形細節</option><option value="b">只跟訊號能量 E 與 N_0 有關，波形無關</option><option value="c">濾波器的階數</option><option value="d">取樣率</option></select></label>
+<p><strong>q08-3｜</strong>匹配濾波器的最大取樣訊雜比 2E/N<sub>0</sub> 跟什麼有關？</p>
+<label for="q08-3">你的答案<select id="q08-3"><option value="">請選擇</option><option value="a">訊號的波形細節</option><option value="b">只跟訊號能量 E 與 N₀ 有關，波形無關</option><option value="c">濾波器的階數</option><option value="d">取樣率</option></select></label>
 <button type="button" id="q08-3-check">對答案</button>
 <div id="q08-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>09 數位調變與星座圖</h2>
+<h2 id="quiz-09">09 數位調變與星座圖</h2>
 <p>回去看：<a href="09-數位調變與星座圖.html">09 數位調變與星座圖</a></p>
 <section class="card">
-<p><strong>q09-1｜</strong>16-QAM 在 E_s ＝ 1 歸一化下，最小距離是多少？</p>
+<p><strong>q09-1｜</strong>16-QAM 在 E<sub>s</sub> ＝ 1 歸一化下，最小距離是多少？</p>
 <label for="q09-1">你的答案（無單位）<input id="q09-1" type="number" step="any"></label>
 <button type="button" id="q09-1-check">對答案</button>
 <div id="q09-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q09-2｜</strong>64-QAM 每個符元帶幾個位元？</p>
-<label for="q09-2">你的答案（位元）<input id="q09-2" type="number" step="any"></label>
+<p><strong>q09-2｜遷移題：</strong>16-QAM 以 R<sub>s</sub> ＝ 250 kbaud 傳送時，位元率是多少 kbit/s？</p>
+<label for="q09-2">你的答案（kbit/s）<input id="q09-2" type="number" step="any"></label>
 <button type="button" id="q09-2-check">對答案</button>
 <div id="q09-2-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
 <p><strong>q09-3｜</strong>QPSK 與 BPSK 的位元錯誤率關係為何？</p>
-<label for="q09-3">你的答案<select id="q09-3"><option value="">請選擇</option><option value="a">QPSK 差 3 dB</option><option value="b">QPSK 差 6 dB</option><option value="c">相同：QPSK 是 I、Q 各跑一個 BPSK，每維的 E_b 與 σ 都不變</option><option value="d">QPSK 較好，因為點較多</option></select></label>
+<label for="q09-3">你的答案<select id="q09-3"><option value="">請選擇</option><option value="a">QPSK 差 3 dB</option><option value="b">QPSK 差 6 dB</option><option value="c">相同：QPSK 是 I、Q 各跑一個 BPSK，每維的 Eᵦ 與 σ 都不變</option><option value="d">QPSK 較好，因為點較多</option></select></label>
 <button type="button" id="q09-3-check">對答案</button>
 <div id="q09-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>10 頻譜效率與 Shannon 極限</h2>
+<h2 id="quiz-10">10 頻譜效率與 Shannon 極限</h2>
 <p>回去看：<a href="10-頻譜效率與Shannon極限.html">10 頻譜效率與 Shannon 極限</a></p>
 <section class="card">
-<p><strong>q10-1｜</strong>B ＝ 1 MHz、SNR ＝ 20 dB 時，Shannon 容量是多少 Mbit/s？</p>
+<p><strong>q10-1｜遷移題：</strong>B ＝ 2 MHz、SNR ＝ 15 dB 時，Shannon 容量是多少 Mbit/s？</p>
 <label for="q10-1">你的答案（Mbit/s）<input id="q10-1" type="number" step="any"></label>
 <button type="button" id="q10-1-check">對答案</button>
 <div id="q10-1-output" class="output" aria-live="polite"></div>
 </section>
 <section class="card">
-<p><strong>q10-2｜</strong>Shannon 極限的 E_b/N_0 是多少 dB？請填負值。</p>
+<p><strong>q10-2｜</strong>Shannon 極限的 E<sub>b</sub>/N<sub>0</sub> 是多少 dB？請填負值。</p>
 <label for="q10-2">你的答案（dB）<input id="q10-2" type="number" step="any"></label>
 <button type="button" id="q10-2-check">對答案</button>
 <div id="q10-2-output" class="output" aria-live="polite"></div>
@@ -239,10 +239,10 @@
 <div id="q10-3-output" class="output" aria-live="polite"></div>
 </section>
 
-<h2>11 鏈路預算</h2>
+<h2 id="quiz-11">11 鏈路預算</h2>
 <p>回去看：<a href="11-鏈路預算.html">11 鏈路預算</a></p>
 <section class="card">
-<p><strong>q11-1｜</strong>2400 MHz、100 m 的自由空間路徑損失是多少 dB？</p>
+<p><strong>q11-1｜遷移題：</strong>915 MHz、250 m 的自由空間路徑損失是多少 dB？</p>
 <label for="q11-1">你的答案（dB）<input id="q11-1" type="number" step="any"></label>
 <button type="button" id="q11-1-check">對答案</button>
 <div id="q11-1-output" class="output" aria-live="polite"></div>

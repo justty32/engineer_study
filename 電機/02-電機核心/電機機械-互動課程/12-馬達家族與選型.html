@@ -1,4 +1,14 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 馬達家族與選型｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>12 馬達家族與選型｜電機機械</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
@@ -49,7 +59,7 @@
 <label for="mp-w5">功率密度權重<input id="mp-w5" type="range" min="0" max="5" step="1" value="5"></label>
 <label for="mp-w6">可調激磁權重<input id="mp-w6" type="range" min="0" max="5" step="1" value="0"></label>
 </div>
-<div id="motorpick-output" class="output" aria-live="polite"><table><thead><tr><th>名次／家族</th><th>總分</th><th>效率</th><th>低成本</th><th>控制簡單</th><th>定位</th><th>功率密度</th><th>可調激磁</th></tr></thead><tbody><tr><td>1 永磁同步馬達</td><td>60</td><td>5</td><td>2</td><td>2</td><td>4</td><td>5</td><td>1</td></tr><tr><td>2 無刷直流馬達</td><td>56</td><td>4</td><td>3</td><td>3</td><td>2</td><td>5</td><td>1</td></tr><tr><td>3 三相感應機</td><td>45</td><td>3</td><td>5</td><td>4</td><td>1</td><td>3</td><td>2</td></tr><tr><td>4 繞線激磁同步機</td><td>39</td><td>4</td><td>1</td><td>1</td><td>1</td><td>3</td><td>5</td></tr><tr><td>5 有刷直流機</td><td>38</td><td>3</td><td>3</td><td>5</td><td>2</td><td>2</td><td>1</td></tr><tr><td>6 步進馬達</td><td>32</td><td>1</td><td>4</td><td>4</td><td>5</td><td>2</td><td>1</td></tr></tbody></table><strong>判讀：第一名永磁同步馬達（總分 60），因為權重最高的準則是效率，而永磁同步馬達在效率拿 5 分。</strong>為什麼：效率與功率密度各乘 5，放大了永磁同步馬達在這兩欄的優勢。這是一階加權模型，真正的選型還要看轉矩曲線、環境、供應鏈與驅動器成本。邊界提醒：若六個權重全為 0，全部都是 0 分；沒有準則就沒有取捨，先決定你在乎什麼。前兩名同分或只差 2 分時，換一個權重就會翻盤，這正是選型要看細部規格的地方。</div>
+<div id="motorpick-output" class="output"><p class="current-settings">目前設定：電動車牽引；權重 [5, 2, 1, 1, 5, 0]。</p><table><thead><tr><th>家族</th><th>總分</th><th>效率</th><th>低成本</th><th>控制簡單</th><th>定位能力</th><th>功率密度</th><th>可調激磁</th></tr></thead><tbody><tr><td>永磁同步馬達</td><td>60</td><td>5</td><td>2</td><td>2</td><td>4</td><td>5</td><td>1</td></tr><tr><td>無刷直流馬達</td><td>56</td><td>4</td><td>3</td><td>3</td><td>2</td><td>5</td><td>1</td></tr><tr><td>三相感應機</td><td>45</td><td>3</td><td>5</td><td>4</td><td>1</td><td>3</td><td>2</td></tr><tr><td>繞線激磁同步機</td><td>39</td><td>4</td><td>1</td><td>1</td><td>1</td><td>3</td><td>5</td></tr><tr><td>有刷直流機</td><td>38</td><td>3</td><td>3</td><td>5</td><td>2</td><td>2</td><td>1</td></tr><tr><td>步進馬達</td><td>32</td><td>1</td><td>4</td><td>4</td><td>5</td><td>2</td><td>1</td></tr></tbody></table><p>第一名 永磁同步馬達（總分 60），它的最大加權貢獻來自 效率（5 × 5 = 25）。</p><p>這是一階加權模型，真正的選型還要看轉矩曲線、環境、供應鏈與驅動器成本。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -65,7 +75,7 @@
 <p><strong>用什麼量。</strong>先讀銘牌上的額定功率、電壓、電流、轉速、效率等級與防護等級；再用功率分析儀量輸入功率、動力計量轉矩與轉速，計算實際工作點效率。若要分辨永磁機型的驅動設計，可在安全隔離條件下用示波器觀察未通電轉動時的反電動勢波形。</p>
 <p><strong>能證明什麼。</strong>銘牌和製造商資料能確認機器種類與額定邊界；正弦或梯形的反電動勢可協助辨認 PMSM 或 BLDC 的設計取向；輸入與軸出力實測能驗證指定工作點效率。<strong>不能證明什麼。</strong>只讀額定效率不能推知整條負載曲線，也不能證明在你的冷卻、振動、粉塵與控制器條件下仍符合壽命要求。</p>
 
-<h2>連到哪門課</h2>
+<h2>本章帶走的三件事</h2><ul><li>馬達選型是多準則取捨，不是一個家族全面最好。</li><li>權重改變可能讓排名翻轉，分數只是一階模型。</li><li>真正選型還要檢查曲線、環境、驅動器與供應鏈。</li></ul><p><a href="自我檢核.html#ch12">做本章 3 題 →</a></p>\n<h2>連到哪門課</h2>
 <p>FOC、脈寬調變、電流迴路與驅動器熱設計留給後續馬達驅動課；大型同步發電機的電壓、無功與潮流則接到<a href="../../04-電力特化/P1-電力系統-互動網站/index.html">電力系統互動工作台</a>。本章完成第一輪選型後，應回到前面各章，用候選家族的轉矩曲線、效率、起動條件與實測資料做第二輪淘汰。</p>
 <nav class="pager" aria-label="章節導覽"><a href="11-起動與速控.html">← 上一頁：起動與速控</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
 </main>

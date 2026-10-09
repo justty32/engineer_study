@@ -19,26 +19,29 @@
 
 <h2>推導：從旋轉矩陣算到跨越判決邊界</h2>
 <p><strong>旋轉來源。</strong>本地載波與發射載波相差 φ，混頻後 I′ ＝ I cos φ − Q sin φ，Q′ ＝ I sin φ ＋ Q cos φ；複數寫法就是乘上 e<sup>jφ</sup>。BPSK 的 (±1, 0) 變成 (±cos φ, ±sin φ)，判決只看 I′，所以 P<sub>b</sub> ＝ Q(√(2γ<sub>b</sub>)cos φ)。</p>
-<p><strong>QPSK 的最壞軸。</strong>代表點 (1/√2)(1, 1) 旋轉後，I′ ＝ (cos φ − sin φ)/√2，Q′ ＝ (cos φ ＋ sin φ)/√2。一軸縮短、另一軸拉長，因此 P<sub>b</sub> ＝ ½[Q(√(2γ<sub>b</sub>)(cos φ − sin φ)) ＋ Q(√(2γ<sub>b</sub>)(cos φ ＋ sin φ))]。φ ＝ 45° 時一軸距離歸零，P<sub>b</sub> 趨近 2.500000 × 10<sup>−1</sup>。</p>
+<p><strong>QPSK 的最壞軸。</strong>代表點 (1/√2)(1, 1) 旋轉後，I′ ＝ (cos φ − sin φ)/√2，Q′ ＝ (cos φ ＋ sin φ)/√2。一軸縮短、另一軸拉長，因此 P<sub>b</sub> ＝ ½[Q(√(2γ<sub>b</sub>)(cos φ − sin φ)) ＋ Q(√(2γ<sub>b</sub>)(cos φ ＋ sin φ))]。φ ＝ 45° 時一軸距離歸零，P<sub>b</sub> 趨近 2.5 × 10<sup>−1</sup>。</p>
 <p><strong>dB 損失與頻率偏移。</strong>BPSK 的損失為 −20 log<sub>10</sub>(cos φ)，QPSK 以最壞軸算 −20 log<sub>10</sub>(cos φ − |sin φ|)。每符元相位增量是 360° × Δf/R<sub>s</sub>；以目前 |φ| 到邊界的角度除以增量並向下取整，可估跨界前的完整符元數。BPSK 邊界為 90°，QPSK 為 45°。</p>
 <p><strong>Costas 為何留下方向模糊。</strong>BPSK 資料相位只可能相差 180°，平方後兩者都變成相同的載波相位，迴路能鎖住頻率與軸線，卻無從判定正向或反向。QPSK 用四次方消去四種資料相位，也會留下相差 90° 的四個等價鎖定方向。已知前導碼可測出落在哪個方向，再把整批座標轉回；差分編碼則讓相鄰符元的變化承載位元，避開絕對方向未知。</p>
 <p><strong>模型邊界。</strong>本課用的是一階教學模型：φ 固定、AWGN、理想符元時序；真實系統不是這樣，相位雜訊會隨時間改變，載波迴路也有有限追蹤頻寬。迴路穩定度與鎖定範圍留給控制系統課。</p>
 
-<h2>數值實例：QPSK、10 dB、10° 與每符元 1.800000°</h2>
-<p>取 QPSK、E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB、φ ＝ 10°、Δf/R<sub>s</sub> ＝ 5 ‰。√(2γ<sub>b</sub>) ＝ <strong>4.472136</strong>，無相位誤差的 P<sub>b</sub> 是 <strong>3.872108 × 10<sup>−6</sup></strong>；原點 (0.707107, 0.707107) 轉成 <strong>(0.573576, 0.819152)</strong>。最壞軸有效距離是 0.984808 − 0.173648 ＝ <strong>0.811160</strong>，故 P<sub>b</sub> ＝ ½[Q(3.627569) ＋ Q(5.180783)] ＝ <strong>7.156784 × 10<sup>−5</sup></strong>，等效損失 <strong>1.817874 dB</strong>。</p>
-<p>頻率偏移讓每符元增加 <strong>1.800000°</strong>，⌊(45 − 10)/1.8⌋ ＝ <strong>19</strong>，也就是 19 個完整符元後逼近跨界。相同條件的 BPSK 代表點為 <strong>(0.984808, 0.173648)</strong>，P<sub>b</sub> 為 <strong>5.308891 × 10<sup>−6</sup></strong>，損失 <strong>0.132971 dB</strong>，需 <strong>44</strong> 個符元才跨過 90°；QPSK 的 dB 損失約為其 14 倍。</p>
-<p><strong>邊界對照。</strong>QPSK 在 φ ＝ 0° 時為 <strong>3.872108 × 10<sup>−6</sup></strong>、損失 0；φ ＝ 20° 時為 <strong>1.880123 × 10<sup>−3</sup></strong>、損失 <strong>4.470735 dB</strong>；φ ＝ 45° 時為 <strong>2.500000 × 10<sup>−1</sup></strong>，因距離為 0，損失寫作<strong>不適用</strong>。若 Δf/R<sub>s</sub> ＝ 0，相位不漂移。</p>
+<h2>數值實例：QPSK、10 dB、10° 與每符元 1.8°</h2>
+<p>取 QPSK、E<sub>b</sub>/N<sub>0</sub> ＝ 10 dB、φ ＝ 10°、Δf/R<sub>s</sub> ＝ 5 ‰。√(2γ<sub>b</sub>) ＝ <strong>4.472</strong>，無相位誤差的 P<sub>b</sub> 是 <strong>3.872 × 10<sup>−6</sup></strong>；原點 (0.7071, 0.7071) 轉成 <strong>(0.5736, 0.8192)</strong>。最壞軸有效距離約為 <strong>0.8112</strong>，故 P<sub>b</sub> ＝ ½[Q(3.628) ＋ Q(5.181)] ＝ <strong>7.157 × 10<sup>−5</sup></strong>，等效損失 <strong>1.818 dB</strong>。</p>
+<p>頻率偏移讓每符元增加 <strong>1.8°</strong>，⌊(45 − 10)/1.8⌋ ＝ <strong>19</strong>，也就是 19 個完整符元後逼近跨界。相同條件的 BPSK 代表點為 <strong>(0.9848, 0.1736)</strong>，P<sub>b</sub> 為 <strong>5.309 × 10<sup>−6</sup></strong>，損失 <strong>0.133 dB</strong>，需 <strong>44</strong> 個符元才跨過 90°；QPSK 的 dB 損失約為其 14 倍。</p>
+<p><strong>邊界對照。</strong>QPSK 在 φ ＝ 0° 時為 <strong>3.872 × 10<sup>−6</sup></strong>、損失 0；φ ＝ 20° 時為 <strong>1.88 × 10<sup>−3</sup></strong>、損失 <strong>4.471 dB</strong>；φ ＝ 45° 時為 <strong>2.5 × 10<sup>−1</sup></strong>，因距離為 0，損失寫作<strong>不適用</strong>。若 Δf/R<sub>s</sub> ＝ 0，相位不漂移。</p>
 <p><strong>Barker−13 前導碼。</strong>序列為 +1 +1 +1 +1 +1 −1 −1 +1 +1 −1 +1 −1 +1；非週期自相關由位移 0 到 12 依序是 <strong>13、0、1、0、1、0、1、0、1、0、1、0、1</strong>。主峰 13、最大旁瓣 1，接收端因此容易把真正邊界與錯誤位移分開。</p>
 <p>早晚閘用最佳時刻前後兩個讀值比較能量；兩側相等表示落在中央，一側較大就往該側修正。它處理的是符元時序，並不修正星座角度。Barker 相關也只回答「已知序列在哪裡」，不能代替載波迴路。把三種誤差拆開量，才不會把相關峰偏低誤判成單一同步器故障。</p>
+
+<figure><svg viewBox="0 0 360 190" role="img" aria-label="QPSK 星座旋轉與判決邊界示意" style="max-width:100%;height:auto;color:inherit"><g stroke="currentColor" fill="none"><path d="M180 15V175M35 95H325" opacity="0.6"/><path d="M180 95L245 30" stroke-dasharray="5 4"/><path d="M180 95L260 52" stroke-width="3"/><path d="M231 44A72 72 0 0 1 248 58"/></g><g fill="currentColor"><circle cx="245" cy="30" r="5"/><circle cx="260" cy="52" r="5"/><text x="250" y="26" font-size="13">原點</text><text x="266" y="55" font-size="13">旋轉後</text><text x="233" y="72" font-size="13">φ</text><text x="330" y="99" font-size="13">I</text><text x="185" y="16" font-size="13">Q</text></g></svg><figcaption>圖示相位誤差 φ 把 QPSK 點繞原點旋轉；點越靠近 I 或 Q 軸的判決邊界，誤判越容易。</figcaption></figure>
 
 <section class="workspace"><h2>自由實驗：旋轉星座並累積頻率偏移</h2>
 <p>場景是鎖定後仍留下固定相位誤差與殘餘頻率偏移的接收機。選 BPSK 或 QPSK，再改 E_b/N_0、φ 與 Δf/R_s，觀察座標、誤碼率、最壞軸損失和跨界時間。</p>
 <div class="controls">
 <label for="ph-scheme">調變<select id="ph-scheme"><option value="bpsk">BPSK（邊界 ±90°）</option><option value="qpsk" selected>QPSK（邊界 ±45°）</option></select></label>
-<label for="ph-ebn0">E_b/N_0（dB）<input id="ph-ebn0" type="range" min="0" max="16" step="0.5" value="10"></label>
-<label for="ph-phi">載波相位誤差 φ（度）<input id="ph-phi" type="range" min="-90" max="90" step="1" value="10"></label>
-<label for="ph-df">歸一化頻率偏移 Δf/R_s（千分之一）<input id="ph-df" type="range" min="0" max="50" step="1" value="5"></label>
+<label for="ph-ebn0">E_b/N_0（dB） <output id="ph-ebn0-val" for="ph-ebn0">10</output><input id="ph-ebn0" type="range" min="0" max="16" step="0.5" value="10"></label>
+<label for="ph-phi">載波相位誤差 φ（度） <output id="ph-phi-val" for="ph-phi">10</output><input id="ph-phi" type="range" min="-90" max="90" step="1" value="10"></label>
+<label for="ph-df">歸一化頻率偏移 Δf/R_s（千分之一） <output id="ph-df-val" for="ph-df">5</output><input id="ph-df" type="range" min="0" max="50" step="1" value="5"></label>
 </div>
+<div><p><strong>先預測再拖：</strong>Δf/R<sub>s</sub> ＝ 7 ‰ 時，每符元相位增量是多少度？</p><label for="p05">你的預測（度）<input id="p05" type="number" step="0.01"></label><button id="p05-check" type="button">檢查預測</button><div id="p05-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q05-1">再做 05 章自我檢核</a></p></div>
 <div id="phase-output" class="output" aria-live="polite"></div>
 </section>
 

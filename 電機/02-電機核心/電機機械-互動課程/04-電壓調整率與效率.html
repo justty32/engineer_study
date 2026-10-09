@@ -1,4 +1,14 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 電壓調整率與效率｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 電壓調整率與效率｜電機機械</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
@@ -48,7 +58,7 @@
 <label for="xr-xeq">等效電抗 X_eq（Ω，低壓側）<input id="xr-xeq" type="range" min="0.01" max="0.5" step="0.01" value="0.12"></label>
 <label for="xr-pcore">鐵損 P_core（W）<input id="xr-pcore" type="range" min="20" max="300" step="5" value="60"></label>
 </div>
-<div id="xfreg-output" class="output" aria-live="polite"><table><tbody><tr><th>I_2</th><td>41.666667 A</td></tr><tr><th>|V_1′|、VR</th><td>245.674808 V；2.364503 %</td></tr><tr><th>P_out</th><td>8000.000000 W</td></tr><tr><th>P_cu、P_core</th><td>138.888889 W；60 W</td></tr><tr><th>P_in、η</th><td>8198.888889 W；97.574197 %</td></tr><tr><th>x*、η*</th><td>0.657267；97.768744 %</td></tr></tbody></table><strong>判讀：超過最大效率點，銅損已大於鐵損。</strong>效率的分母裡鐵損固定、銅損隨 x² 變，所以最大效率在 x* = √(P_core / P_cu,fl)。為什麼：目前滿載銅損 138.888889 W 大於鐵損 60 W，繼續加重負載會讓平方項更快上升。邊界提醒：領前功因可使 VR 小於 0；空載效率為 0 但鐵損仍在；過載 25 % 時銅損變 1.5625 倍；若 x* 大於 1，代表鐵損做得太大；pf = 0.5 時同樣電流只送一半實功。任何狀態都不輸出非數值。</div>
+<div id="xfreg-output" class="output"><p class="current-settings">目前設定：負載 1.0；功率因數 0.8 落後；R_eq = 0.08 Ω；X_eq = 0.12 Ω；鐵損 60 W。</p><table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>I_2</td><td>41.666667 A</td></tr><tr><td>|V_1′|</td><td>245.674808 V</td></tr><tr><td>調整率</td><td>2.364503 %</td></tr><tr><td>輸出功率</td><td>8000.000000 W</td></tr><tr><td>銅損</td><td>138.888889 W</td></tr><tr><td>鐵損</td><td>60.000000 W</td></tr><tr><td>輸入功率</td><td>8198.888889 W</td></tr><tr><td>效率</td><td>97.574197 %</td></tr><tr><td>滿載銅損</td><td>138.888889 W</td></tr><tr><td>x*</td><td>0.657267</td></tr><tr><td>η*</td><td>97.768744 %</td></tr></tbody></table><p>超過最大效率點：銅損已大於鐵損。</p><p>效率的分母裡鐵損固定、銅損隨 x² 變，所以最大效率在 x* = √(P_core / P_cu,fl)。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -57,7 +67,7 @@
 <h2>可觀察證據：要量多個負載點才看得到峰值</h2>
 <p><strong>用什麼量。</strong>以電壓表分別量空載與負載二次電壓，再以輸入端、輸出端功率計量實功；逐步改變負載並記錄各點。<strong>能證明什麼。</strong>單一負載點可證明當下的 VR 與 η，多點資料可找出效率最高附近。<strong>不能證明什麼。</strong>只量輸入輸出不能拆出鐵損與銅損，也不能靠一個滿載點證明最大效率位置；損耗組成仍需前章試驗。</p>
 
-<h2>連到哪門課</h2>
+<h2>本章帶走的三件事</h2><ul><li>負載功率因數會改變電壓調整率的大小與正負。</li><li>銅損隨負載平方變，鐵損在本模型近似固定。</li><li>最大效率點出現在銅損等於鐵損附近。</li></ul><p><a href="自我檢核.html#ch04">做本章 3 題 →</a></p>\n<h2>連到哪門課</h2>
 <p>配電設計會同時限制端電壓偏移與全年能量損耗。功率因數、複功率及相量方向見<a href="../電路學-互動課程/11-交流功率與功因.html">電路學的交流功率與功因</a>；固定損耗和可變損耗的平衡，也會在下一章的旋轉機功率流再次出現。</p>
 <nav class="pager" aria-label="章節導覽"><a href="03-變壓器等效電路與試驗.html">← 上一頁：變壓器等效電路與試驗</a><a href="05-旋轉機共同語言.html">下一頁：旋轉機共同語言 →</a></nav>
 </main>

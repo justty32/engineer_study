@@ -16,6 +16,16 @@ var sci=function(x){var v=Number(x),p;if(!isFinite(v))return "不適用";if(v===
 var put=function(id,html){var n=$(id);if(n)n.innerHTML=html;};
 var row=function(cells,th){var t=th?"th":"td";return "<tr><"+t+">"+cells.join("</"+t+"><"+t+">")+"</"+t+"></tr>";};
 var esc=function(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
+function rangeReadouts(){
+  if(typeof document==="undefined")return;
+  var ranges=document.querySelectorAll('input[type="range"]'),i,n,o,draw;
+  for(i=0;i<ranges.length;i+=1){
+    n=ranges[i];o=$(n.id+"-value");
+    if(!o)continue;
+    draw=(function(input,output){return function(){output.value=input.value;output.textContent=input.value;input.setAttribute("aria-valuetext",input.value);};}(n,o));
+    n.addEventListener("input",draw);draw();
+  }
+}
 
 /* ---------- 2. 數學 ---------- */
 function erfc(x){
@@ -35,6 +45,42 @@ function sinc(x){return Math.abs(x)<1e-12?1:Math.sin(Math.PI*x)/(Math.PI*x);}
 function rcPulse(x,a){var d=1-(2*a*x)*(2*a*x);if(Math.abs(d)<1e-9)return (Math.PI/4)*sinc(x);return sinc(x)*Math.cos(Math.PI*a*x)/d;}
 function db10(x){return 10*Math.log10(x);}
 function undb(d){return Math.pow(10,d/10);}
+function svgPath(fn,x0,x1,steps,sx,sy,ox,oy){
+  var d="",i,x,y;
+  for(i=0;i<=steps;i+=1){x=x0+(x1-x0)*i/steps;y=fn(x);d+=(i?" L ":"M ")+num6(ox+sx*(x-x0)/(x1-x0))+" "+num6(oy-sy*y);}
+  return d;
+}
+function amEnvelopeSvg(mu){
+  var top=svgPath(function(x){return 1+mu*Math.cos(x);},0,2*Math.PI,160,600,62,20,106);
+  var bottom=svgPath(function(x){return -(1+mu*Math.cos(x));},0,2*Math.PI,160,600,62,20,106);
+  var carrier=svgPath(function(x){return (1+mu*Math.cos(x))*Math.cos(18*x);},0,2*Math.PI,320,600,62,20,106);
+  return '<figure style="margin:1rem 0"><svg viewBox="0 0 640 215" role="img" aria-label="AM 載波與上下包絡；調變指數超過一時包絡穿越零並翻摺" style="width:100%;height:auto;color:var(--ink,currentColor)"><line x1="20" y1="106" x2="620" y2="106" stroke="currentColor" opacity=".35"/><path d="'+carrier+'" fill="none" stroke="currentColor" opacity=".45"/><path d="'+top+' '+bottom+'" fill="none" stroke="currentColor" stroke-width="2"/></svg><figcaption>實線輪廓是包絡，細線是載波；μ 超過 1 時包絡會穿越零，包絡檢波因而翻摺。</figcaption></figure>';
+}
+function isiSvg(a,tau){
+  var pulse=svgPath(function(x){return rcPulse(x,a);},-3.5,3.5,240,600,52,20,62);
+  var eye1=svgPath(function(x){return rcPulse(x+tau,a)+rcPulse(x-1+tau,a);},-1,1,160,600,38,20,166);
+  var eye2=svgPath(function(x){return rcPulse(x+tau,a)-rcPulse(x-1+tau,a);},-1,1,160,600,38,20,166);
+  return '<figure style="margin:1rem 0"><svg viewBox="0 0 640 220" role="img" aria-label="升餘弦脈衝與兩條眼圖軌跡；滾降係數與取樣偏移會改變眼開度" style="width:100%;height:auto;color:var(--ink,currentColor)"><line x1="20" y1="62" x2="620" y2="62" stroke="currentColor" opacity=".3"/><path d="'+pulse+'" fill="none" stroke="currentColor" stroke-width="2"/><line x1="20" y1="166" x2="620" y2="166" stroke="currentColor" opacity=".3"/><path d="'+eye1+'" fill="none" stroke="currentColor"/><path d="'+eye2+'" fill="none" stroke="currentColor" stroke-dasharray="6 4"/></svg><figcaption>上半部是升餘弦脈衝；下半部疊出兩種相鄰符元軌跡，中央垂直間距代表可用眼開度。</figcaption></figure>';
+}
+function constellationPoints(key){
+  var pts=[],i,j,levels,norm;
+  if(key==="bpsk")return [[-1,0],[1,0]];
+  if(key==="qpsk")return [[-Math.SQRT1_2,-Math.SQRT1_2],[-Math.SQRT1_2,Math.SQRT1_2],[Math.SQRT1_2,-Math.SQRT1_2],[Math.SQRT1_2,Math.SQRT1_2]];
+  if(key==="psk8"){for(i=0;i<8;i+=1)pts.push([Math.cos(Math.PI*i/4),Math.sin(Math.PI*i/4)]);return pts;}
+  levels=key==="qam16"?[-3,-1,1,3]:[-7,-5,-3,-1,1,3,5,7];norm=Math.sqrt(key==="qam16"?10:42);
+  for(i=0;i<levels.length;i+=1)for(j=0;j<levels.length;j+=1)pts.push([levels[i]/norm,levels[j]/norm]);
+  return pts;
+}
+function constellationSvg(key,sigma){
+  var pts=constellationPoints(key),h='<figure style="margin:1rem 0"><svg viewBox="0 0 420 420" role="img" aria-label="'+esc(CONSTEL[key].name)+' 理想星座點與雜訊點雲" style="width:min(100%,420px);height:auto;color:var(--ink,currentColor)"><line x1="30" y1="210" x2="390" y2="210" stroke="currentColor" opacity=".4"/><line x1="210" y1="30" x2="210" y2="390" stroke="currentColor" opacity=".4"/>',i,j,x,y,r=Math.min(18,Math.max(2,sigma*70)),angles=[0,.8,1.7,2.6,3.5,4.4,5.3];
+  for(i=0;i<pts.length;i+=1){x=210+145*pts[i][0];y=210-145*pts[i][1];for(j=0;j<angles.length;j+=1)h+='<circle cx="'+num6(x+r*Math.cos(angles[j]))+'" cy="'+num6(y+r*Math.sin(angles[j]))+'" r="1.7" fill="currentColor" opacity=".25"/>';h+='<circle cx="'+num6(x)+'" cy="'+num6(y)+'" r="3" fill="currentColor"/>';}
+  return h+'</svg><figcaption>實心點是理想座標，淡色點雲示意每維標準差 σ；點距相對點雲越小，越容易跨過判決邊界。</figcaption></figure>';
+}
+function shannonSvg(eta,ebd){
+  var curve="",i,y,x,px=Math.max(65,Math.min(375,65+(ebd+2)*310/22)),py=342-eta*36;
+  for(i=0;i<=180;i+=1){y=.05+(8-.05)*i/180;x=db10((Math.pow(2,y)-1)/y);curve+=(i?" L ":"M ")+num6(65+(x+2)*310/22)+" "+num6(342-y*36);}
+  return '<figure style="margin:1rem 0"><svg viewBox="0 0 420 390" role="img" aria-label="頻譜效率對平均每位元能量比的 Shannon 平面" style="width:min(100%,520px);height:auto;color:var(--ink,currentColor)"><line x1="65" y1="342" x2="390" y2="342" stroke="currentColor"/><line x1="65" y1="342" x2="65" y2="35" stroke="currentColor"/><path d="'+curve+'" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="'+num6(px)+'" cy="'+num6(py)+'" r="5" fill="currentColor"/><text x="200" y="375" text-anchor="middle" fill="currentColor">E_b/N_0（dB）</text><text x="18" y="190" text-anchor="middle" transform="rotate(-90 18 190)" fill="currentColor">η（bit/s/Hz）</text></svg><figcaption>曲線是 Shannon 可達邊界，圓點是目前方案；圓點若落在邊界左側，要求超過理論極限。</figcaption></figure>';
+}
 
 /* ---------- 3. 常數 ---------- */
 var C_LIGHT=299792458;
@@ -50,7 +96,7 @@ var CONSTEL={
   qam64:{name:"64-QAM",M:64,k:6,dmin:2/Math.sqrt(42),nn:3.5}
 };
 var ETA={bpsk:1,qpsk:2,qam16:4,qam64:6};
-var PENALTY={bipolar:0,onoff:6.020600,cfsk:3.010300};
+var PENALTY={bipolar:0,onoff:3.010300,cfsk:3.010300};
 
 var QUIZ_CH={
   "00":["00-通訊世界觀與分貝帳本.html","00 通訊世界觀與分貝帳本"],
@@ -67,40 +113,40 @@ var QUIZ_CH={
   "11":["11-鏈路預算.html","11 鏈路預算"]
 };
 var QUIZ=[
-  {id:"q00-1",t:"num",ans:20,tol:0.05,why:"100 mW 相對 1 mW 是 100 倍，因此是 20 dBm。",err:"用了 20 log（那是電壓比）。"},
+  {id:"q00-1",t:"num",ans:23.979400,tol:0.01,why:"250 mW 相對 1 mW 是 250 倍，10 log₁₀(250) ＝ 23.979400 dBm。",err:"把 mW 數字直接當成 dBm，或用了 20 log。"},
   {id:"q00-2",t:"num",ans:0.749481,tol:0.001,why:"100 MHz 的波長是 2.997925 m，除以 4 得 0.749481 m。",err:"忘了除以 4，或 c 用錯量級。"},
   {id:"q00-3",t:"sel",ans:"c",why:"把兩個 dBm 數字直接相加得 40 dBm 沒有物理意義；兩個 20 dBm 功率合成時，應先換成 100 mW + 100 mW，再得到 23.010300 dBm。",err:"兩個 dBm 數字不能直接相加；dBm 只能和 dB 相加減。"},
-  {id:"q01-1",t:"num",ans:11.111111,tol:0.01,why:"μ² / (2 + μ²) 在 μ ＝ 0.5 時是 11.111111 %。",err:"用 μ² / 2，沒有除以 (2 + μ²)。"},
-  {id:"q01-2",t:"num",ans:275.664448,tol:0.5,why:"代入 μ ＝ 0.5 與 1 kHz，RC 上限是 275.664448 µs。",err:"忘了 √(1 − μ²)，或 f_m 沒換成 Hz。"},
+  {id:"q01-1",t:"num",ans:24.242424,tol:0.01,why:"μ² / (2 + μ²) 在 μ ＝ 0.8 時是 24.242424 %。",err:"用 μ² / 2，沒有除以 (2 + μ²)。"},
+  {id:"q01-2",t:"num",ans:275.664448,tol:0.5,why:"代入 μ ＝ 0.5 與 1 kHz，RC 上限是 275.664448 µs。",err:"忘了 √(1 − μ²)，或 f<sub>m</sub> 沒換成 Hz。"},
   {id:"q01-3",t:"sel",ans:"b",why:"μ 大於 1 時谷底變負，包絡翻折。",err:"以為過調變只是「調得更深」。"},
-  {id:"q02-1",t:"num",ans:25,tol:0.5,why:"SSB 只占 4 kHz，所以 100 kHz 可排 25 路。",err:"用了 DSB 的 2W。"},
+  {id:"q02-1",t:"num",ans:18,tol:0.1,why:"SSB 每路占 5.5 kHz，100 / 5.5 ＝ 18.1818…，只能完整排 18 路。",err:"忘了路數必須向下取整，或用了 DSB 的 2W。"},
   {id:"q02-2",t:"num",ans:-6.020600,tol:0.05,why:"cos 60° ＝ 0.5，以 20 log 換算是 −6.020600 dB。",err:"用了 10 log；cos φ 是振幅比，要用 20 log。"},
   {id:"q02-3",t:"sel",ans:"c",why:"SSB 的相位誤差改變相位關係，但不縮小振幅。",err:"把 DSB-SC 的 cos φ 套到 SSB。"},
-  {id:"q03-1",t:"num",ans:5,tol:0.01,why:"β ＝ 75 / 15 ＝ 5。",err:"把分子與分母倒過來。"},
+  {id:"q03-1",t:"num",ans:4,tol:0.01,why:"β ＝ 48 / 12 ＝ 4。",err:"把分子與分母倒過來。"},
   {id:"q03-2",t:"num",ans:180,tol:0.5,why:"Carson 法則給出 2 × (75 + 15) ＝ 180 kHz。",err:"只算 2Δf ＝ 150。"},
-  {id:"q03-3",t:"sel",ans:"b",why:"β ＝ 0.5 時 3β² 只有 0.75，小於 1。",err:"以為 FM 在任何條件都較抗雜訊。"},
-  {id:"q04-1",t:"num",ans:1910,tol:0.5,why:"高側影像是 1000 + 2 × 455 ＝ 1910 kHz。",err:"只加一個 f_IF；那是 f_LO。"},
+  {id:"q03-3",t:"sel",ans:"b",why:"單音 β ＝ 0.5 時，1.5β² 只有 0.375，小於 1。",err:"以為 FM 在任何條件都較抗雜訊。"},
+  {id:"q04-1",t:"num",ans:2110,tol:0.5,why:"高側影像是 1200 + 2 × 455 ＝ 2110 kHz。",err:"只加一個 f<sub>IF</sub>；那是 f<sub>LO</sub>。"},
   {id:"q04-2",t:"num",ans:118,tol:0.5,why:"兩端都算入，(1700 − 530) / 10 + 1 ＝ 118 台。",err:"忘了加 1。"},
   {id:"q04-3",t:"sel",ans:"c",why:"RF 與影像混頻後都落到同一個 IF，之後已分不開。",err:"以為 IF 濾波器可以擋影像。"},
-  {id:"q05-1",t:"num",ans:-113.975187,tol:0.05,why:"1 MHz 比 1 Hz 多 60 dB，所以底是 −113.975187 dBm。",err:"用了 −174 速記後又多算一次，或 B 用成 kHz。"},
+  {id:"q05-1",t:"num",ans:-110.964887,tol:0.05,why:"2 MHz 比 1 Hz 多 63.010300 dB，所以底是 −110.964887 dBm。",err:"忘了 2 MHz 比 1 MHz 再多 3.010300 dB，或 B 用成 kHz。"},
   {id:"q05-2",t:"num",ans:1.908120,tol:0.01,why:"Friis 線性相加後，總 NF 是 1.908120 dB。",err:"把 dB 直接相加，或忘了先換線性。"},
   {id:"q05-3",t:"sel",ans:"b",why:"損耗先出現會裸露後級，總 NF 升到 9.051478 dB。",err:"以為級聯 NF 與順序無關。"},
-  {id:"q06-1",t:"num",ans:64,tol:0.5,why:"8 kHz × 8 位元 × 1 路 ＝ 64 kbit/s。",err:"忘了乘位元數。"},
+  {id:"q06-1",t:"num",ans:240,tol:0.5,why:"12 kHz × 10 位元 × 2 路 ＝ 240 kbit/s。",err:"忘了乘每樣本位元數或路數。"},
   {id:"q06-2",t:"num",ans:49.925712,tol:0.05,why:"10 log10(1.5 × 4^8) ＝ 49.925712 dB。",err:"只算 6.02 × 8，沒加 1.76。"},
   {id:"q06-3",t:"sel",ans:"b",why:"階距減半使量化雜訊功率除以 4，因此多 6.020600 dB。",err:"把功率加倍的 3 dB 與階距減半的 6 dB 混在一起。"},
-  {id:"q07-1",t:"num",ans:67.5,tol:0.05,why:"(1 + 0.35) × 100 / 2 ＝ 67.5 kHz。",err:"忘了除以 2，或忘了 (1 + α)。"},
+  {id:"q07-1",t:"num",ans:50,tol:0.05,why:"(1 + 0.25) × 80 / 2 ＝ 50 kHz。",err:"忘了除以 2，或忘了 (1 + α)。"},
   {id:"q07-2",t:"num",ans:72.958020,tol:0.1,why:"主瓣扣除兩側 20 個鄰居後，相對開度是 72.958020 %。",err:"只算了最近兩個鄰居。"},
   {id:"q07-3",t:"sel",ans:"c",why:"α ＝ 0 的尾巴只按 1/t 衰減，時序一偏，鄰居影響會持續累積。",err:"以為 α ＝ 0 在準確取樣點仍有 ISI。"},
-  {id:"q08-1",t:"num",ans:3.872108,tol:0.01,why:"Q(√20) ＝ 3.872108 × 10^−6。",err:"用了 Q(√(E_b/N_0))；那是 FSK。"},
-  {id:"q08-2",t:"num",ans:6.020600,tol:0.05,why:"ON-OFF 的 Q 引數少一半，要以 4 倍能量補回，即 6.020600 dB。",err:"答成 3 dB；那是平均功率相同的比法。"},
+  {id:"q08-1",t:"num",ans:1.909078,tol:0.01,why:"8 dB 是線性 6.309573，Q(√(2 × 6.309573)) ＝ 1.909078 × 10<sup>−4</sup>。",err:"忘了先把 8 dB 轉成線性值，或漏了根號內的 2。"},
+  {id:"q08-2",t:"num",ans:3.010300,tol:0.05,why:"以平均每位元能量比較時，ON-OFF 的 Q 引數為 √(E<sub>b</sub>/N<sub>0</sub>)，要以 2 倍能量追平 BPSK，即 3.010300 dB。",err:"答成 6.020600 dB；那是把 E<sub>b</sub> 誤當成 ON-OFF 的「1」脈衝能量。"},
   {id:"q08-3",t:"sel",ans:"b",why:"最大取樣訊雜比是 2E / N_0，只由能量與 N_0 決定。",err:"以為波形越尖越好。"},
   {id:"q09-1",t:"num",ans:0.632456,tol:0.001,why:"16-QAM 歸一化後 d_min ＝ 2 / √10 ＝ 0.632456。",err:"忘了除以 √10。"},
-  {id:"q09-2",t:"num",ans:6,tol:0.5,why:"log2(64) ＝ 6，所以每符元帶 6 位元。",err:"答成 64 或 8。"},
+  {id:"q09-2",t:"num",ans:1000,tol:0.5,why:"16-QAM 每符元 4 位元，4 × 250 kbaud ＝ 1000 kbit/s。",err:"把符元率直接當位元率，或用了 16 當倍率。"},
   {id:"q09-3",t:"sel",ans:"c",why:"QPSK 的 I、Q 各自等同一個 BPSK，所以位元錯誤機率相同。",err:"把符元錯誤機率約 2 倍當成位元錯誤機率。"},
-  {id:"q10-1",t:"num",ans:6.658211,tol:0.01,why:"1 × log2(1 + 100) ＝ 6.658211 Mbit/s。",err:"用了 log10，或把 20 當成線性 SNR。"},
-  {id:"q10-2",t:"num",ans:-1.591745,tol:0.01,why:"η 趨近 0 時，E_b/N_0 趨近 ln 2，也就是 −1.591745 dB。",err:"答成 0 dB。"},
+  {id:"q10-1",t:"num",ans:10.055615,tol:0.01,why:"15 dB 先換成線性 31.622777，再算 2 × log₂(1 + 31.622777) ＝ 10.055615 Mbit/s。",err:"用了 log₁₀，或把 15 當成線性 SNR。"},
+  {id:"q10-2",t:"num",ans:-1.591745,tol:0.01,why:"η 趨近 0 時，E<sub>b</sub>/N<sub>0</sub> 趨近 ln 2，也就是 −1.591745 dB。",err:"答成 0 dB。"},
   {id:"q10-3",t:"sel",ans:"b",why:"容量是可達天花板；未編碼的 64-QAM 仍有 0.85 % 的位元錯誤機率。",err:"把容量當成任何方案的錯誤機率保證。"},
-  {id:"q11-1",t:"num",ans:80.052008,tol:0.05,why:"2400 MHz、100 m 代入自由空間公式是 80.052008 dB。",err:"用了 10 log，或 λ 算錯。"},
+  {id:"q11-1",t:"num",ans:79.635005,tol:0.05,why:"915 MHz、250 m 代入 20 log₁₀(4πd/λ) 是 79.635005 dB。",err:"用了 10 log，或頻率、距離的單位沒有換成 Hz、m。"},
   {id:"q11-2",t:"num",ans:28.912879,tol:0.05,why:"接收功率扣掉含 NF 的雜訊底與所需 SNR，裕度是 28.912879 dB。",err:"雜訊底忘了加 NF。"},
   {id:"q11-3",t:"sel",ans:"b",why:"球面面積與距離平方成正比，距離加倍少 6.020600 dB。",err:"把距離平方的 20 log 當成 10 log。"}
 ];
@@ -145,6 +191,7 @@ function amenv(){
     if(hi!==null&&mu<1&&rc>=lo&&rc<=hi)h+="<p>RC 落在可用區間 ["+num6(lo)+", "+num6(hi)+"] µs。</p>";
     if(mu===0)h+="<p><strong>邊界</strong>：沒有調變，只剩載波，效率 0 %，上限無限大。</p>";
     if(mu===1)h+="<p><strong>邊界</strong>：100 % 調變，效率最高 33.333333 %，但上限為 0；谷底一定會截一點。</p>";
+    h+=amEnvelopeSvg(mu);
     h+="<p><strong>為什麼</strong>：包絡等於訊息，只成立在 1 + μ cos 恆正的時候；檢波器只是用電容記住峰值。</p>";
     put("amenv-output",h);
   };
@@ -181,10 +228,10 @@ function fmcar(){
   var draw=function(){
     var df=val("fm-df"),w=val("fm-w"),sr=val("fm-snr"),beta,bt,ra,g,gd,out,bwr,bwrd,cnr,h;
     if(w<=0){put("fmcar-output","<p>W 必須大於 0。</p>");return;}
-    beta=df/w;bt=2*(df+w);ra=bt/(2*w);g=3*beta*beta;gd=db10(g);out=sr+gd;bwr=bt/w;bwrd=db10(bwr);cnr=sr-bwrd;
-    h="<table>"+row(["量","結果"],true)+row(["β",num6(beta)])+row(["B<sub>T</sub>",num6(bt)+" kHz"])+row(["相對 AM 頻寬",num6(ra)+" 倍"])+row(["3β²",num6(g)])+row(["3β²（dB）",num6(gd)+" dB"])+row(["輸出訊雜比",num6(out)+" dB"])+row(["B<sub>T</sub> / W",num6(bwr)+"（"+num6(bwrd)+" dB）"])+row(["CNR",num6(cnr)+" dB"])+"</table>";
-    if(cnr<10)h+="<p>CNR 低於 10 dB 門檻：3β² 公式失效，解調輸出出現雜訊尖峰，實際訊雜比遠低於表中數字。</p>";
-    if(beta<=0.5)h+="<p>窄頻 FM：3β² ≤ 0.75，比 DSB-SC 還差，FM 的優勢只在 β 大。</p>";
+    beta=df/w;bt=2*(df+w);ra=bt/(2*w);g=1.5*beta*beta;gd=db10(g);out=sr+gd;bwr=bt/w;bwrd=db10(bwr);cnr=sr-bwrd;
+    h="<table>"+row(["量","結果"],true)+row(["β",num6(beta)])+row(["B<sub>T</sub>",num6(bt)+" kHz"])+row(["相對 AM 頻寬",num6(ra)+" 倍"])+row(["單音 1.5β²",num6(g)])+row(["單音 1.5β²（dB）",num6(gd)+" dB"])+row(["輸出訊雜比",num6(out)+" dB"])+row(["B<sub>T</sub> / W",num6(bwr)+"（"+num6(bwrd)+" dB）"])+row(["CNR",num6(cnr)+" dB"])+"</table>";
+    if(cnr<10)h+="<p>CNR 低於 10 dB 門檻：單音 1.5β² 公式失效，解調輸出出現雜訊尖峰，實際訊雜比遠低於表中數字。</p>";
+    if(beta<=0.5)h+="<p>窄頻 FM：單音 1.5β² ≤ 0.375，比 DSB-SC 還差，FM 的優勢只在 β 大。</p>";
     if(bt>200)h+="<p>頻寬超過 FM 廣播 200 kHz 的頻道間距，會干擾鄰台。</p>";
     if(cnr>=10&&beta>0.5)h+="<p>寬頻 FM 在門檻之上：用 "+num6(bwr)+" 倍頻寬換到 "+num6(gd)+" dB。</p>";
     if(sr===0)h+="<p><strong>邊界</strong>：載波已淹在雜訊裡。</p>";
@@ -279,6 +326,7 @@ function isi(){
     if(a>=0.5)h+="<p>頻寬多付 "+num6(a*100)+" %，換到眼開度 "+(rel===null?"不適用":num6(rel)+" %")+"。</p>";
     if(K===1)h+="<p><strong>邊界</strong>：只算最近兩個鄰居，會低估 ISI。</p>";
     if(a===1&&tau===0)h+="<p><strong>邊界</strong>：α ＝ 1 時頻寬等於 R<sub>s</sub>。</p>";
+    h+=isiSvg(a,tau);
     h+="<p><strong>為什麼</strong>：升餘弦的 α 越大，尾巴掉得越快，取樣點偏一點也踩不到多少鄰居；代價是頻寬乘 (1 + α)。</p>";
     put("isi-output",h);
   };
@@ -289,12 +337,12 @@ function ber(){
   if(!$("be-ebn0"))return;
   var ids=["be-ebn0","be-scheme","be-n"];
   var draw=function(){
-    var ed=val("be-ebn0"),s=pick("be-scheme"),N=val("be-n"),g=undb(ed),args={bipolar:Math.sqrt(2*g),onoff:Math.sqrt(g/2),cfsk:Math.sqrt(g)},names={bipolar:"雙極基頻／BPSK",onoff:"ON-OFF 基頻／ASK",cfsk:"同調 FSK"},formula={bipolar:"Q(√(2E<sub>b</sub> / N<sub>0</sub>))",onoff:"Q(√(E<sub>b</sub> / 2N<sub>0</sub>))",cfsk:"Q(√(E<sub>b</sub> / N<sub>0</sub>))"},pe=Q(args[s]),errs=N*pe,h,k;
-    h="<p>這個模式只用到 E<sub>b</sub>/N<sub>0</sub>、方案與傳送位元數；公式是 "+formula[s]+"。</p><table>"+row(["量","結果"],true)+row(["線性 E<sub>b</sub>/N<sub>0</sub>",num6(g)])+row(["匹配濾波器最大訊雜比",num6(2*g)+"（"+num6(db10(2*g))+" dB）"])+row(["Q 引數",num6(args[s])])+row(["P<sub>e</sub>",sci(pe)])+row(["期望錯誤數",num6(errs)])+row(["相對 BPSK 損失",num6(PENALTY[s])+" dB"])+"</table><table>"+row(["方案","P<sub>e</sub>"],true);
+    var ed=val("be-ebn0"),s=pick("be-scheme"),N=val("be-n"),g=undb(ed),args={bipolar:Math.sqrt(2*g),onoff:Math.sqrt(g),cfsk:Math.sqrt(g)},names={bipolar:"雙極基頻／BPSK",onoff:"ON-OFF 基頻／ASK",cfsk:"同調 FSK"},formula={bipolar:"Q(√(2E<sub>b</sub> / N<sub>0</sub>))",onoff:"Q(√(E<sub>b</sub> / N<sub>0</sub>))",cfsk:"Q(√(E<sub>b</sub> / N<sub>0</sub>))"},signalSnr=s==="onoff"?4*g:2*g,pe=Q(args[s]),errs=N*pe,h,k;
+    h="<p>全頁的 E<sub>b</sub> 都是等機率資料下的平均每位元能量；公式是 "+formula[s]+"。</p><table>"+row(["量","結果"],true)+row(["線性 E<sub>b</sub>/N<sub>0</sub>",num6(g)])+row(["匹配濾波器訊號峰值比",num6(signalSnr)+"（"+num6(db10(signalSnr))+" dB）"])+row(["Q 引數",num6(args[s])])+row(["P<sub>e</sub>",sci(pe)])+row(["期望錯誤數",num6(errs)])+row(["相對 BPSK 損失",num6(PENALTY[s])+" dB"])+"</table><table>"+row(["方案","P<sub>e</sub>"],true);
     for(k in args)if(args.hasOwnProperty(k))h+=row([names[k],sci(Q(args[k]))]);h+="</table>";
     if(pe<1e-5)h+="<p>良好：不加通道編碼也能用。</p>";else if(pe<1e-3)h+="<p>需要通道編碼（留給數位通訊課）。</p>";else h+="<p>目前設定不可用。</p>";
     if(errs<1)h+="<p>傳這麼多位元，期望連 1 個錯都不到。</p>";
-    if(s==="onoff")h+="<p>同樣 E<sub>b</sub>，ON-OFF 的判決距離只有雙極的 1 / 2，Q 的引數少一半，等於多付 6.020600 dB。</p>";
+    if(s==="onoff")h+="<p>同樣平均 E<sub>b</sub>，ON-OFF 的『1』脈衝能量是 2E<sub>b</sub>；判決距離是雙極的 1 / √2，Q 引數也少 1 / √2，等於多付 3.010300 dB。</p>";
     if(s==="cfsk")h+="<p>正交訊號的距離是 √(2E<sub>b</sub>)，介於兩者之間，差 3.010300 dB。</p>";
     if(ed===0)h+="<p><strong>邊界</strong>：E<sub>b</sub> ＝ N<sub>0</sub>，目前方案約每 "+num6(1/pe)+" 個位元錯 1 個。</p>";
     if(ed===16&&s==="bipolar")h+="<p><strong>邊界</strong>：P<sub>e</sub> 為 2.267396 × 10<sup>−19</sup>，實務上量不到，系統會先受其他機制限制。</p>";
@@ -330,6 +378,7 @@ function constel(){
     if(ed===0)h+="<p><strong>邊界</strong>：低能量區最近鄰近似可能失效，請留意夾限提示。</p>";
     if(ed===30)h+="<p><strong>邊界</strong>：極小機率以科學記號呈現；低於顯示下限則標示小於 10<sup>−300</sup>。</p>";
     if(rs===1000&&key==="qam64")h+="<p><strong>邊界</strong>：64-QAM 的 R<sub>b</sub> 是 6.000000 Mbit/s。</p>";
+    h+=constellationSvg(key,r.sigma);
     h+="<p><strong>為什麼</strong>：符元帶越多位元，同樣的平均能量要分給越多點，點就越擠；誤判機率只看最近兩點的距離除以雜訊標準差。</p>";
     put("constel-output",h);
   };
@@ -349,6 +398,7 @@ function shannon(){
     if(sd<=-5)h+="<p>低 SNR 區：當 SNR ≪ 1 時，C 約為 1.442695 × B × SNR，功率受限，η 應該小。</p>";
     if(sd===-10)h+="<p><strong>邊界</strong>：SNR 很低，容量只剩 "+num6(cap)+" Mbit/s。</p>";
     if(sd===40)h+="<p><strong>邊界</strong>：C / B ＝ 13.287857 bit/s/Hz。</p>";
+    h+=shannonSvg(eta,ebd);
     h+="<p><strong>為什麼</strong>：Shannon 曲線是天花板；頻譜效率越高，每位元需要的能量以 (2<sup>η</sup> − 1) / η 上升。未編碼方案離天花板的距離，就是編碼增益可填的缺口。</p>";
     put("shannon-output",h);
   };
@@ -397,8 +447,8 @@ function selfcheck(){
 
 /* ---------- 7. 註冊 ---------- */
 if(typeof document!=="undefined"){
-  [dbcalc,amenv,cohdem,fmcar,superhet,friis,pcm,isi,ber,constel,shannon,link,dictionary,selfcheck].forEach(function(f){f();});
+  [rangeReadouts,dbcalc,amenv,cohdem,fmcar,superhet,friis,pcm,isi,ber,constel,shannon,link,dictionary,selfcheck].forEach(function(f){f();});
 }
 
 /* ---------- 8. Node 匯出 ---------- */
-if(typeof module!=="undefined")module.exports={erfc:erfc,Q:Q,sinc:sinc,rcPulse:rcPulse,num6:num6,sci:sci,CONSTEL:CONSTEL,KT0_DBM_HZ:KT0_DBM_HZ,QUIZ:QUIZ};
+if(typeof module!=="undefined")module.exports={erfc:erfc,Q:Q,sinc:sinc,rcPulse:rcPulse,num6:num6,sci:sci,CONSTEL:CONSTEL,PENALTY:PENALTY,KT0_DBM_HZ:KT0_DBM_HZ,QUIZ:QUIZ,amEnvelopeSvg:amEnvelopeSvg,isiSvg:isiSvg,constellationSvg:constellationSvg,shannonSvg:shannonSvg};

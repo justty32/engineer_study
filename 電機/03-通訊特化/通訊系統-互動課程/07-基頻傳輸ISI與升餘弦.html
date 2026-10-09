@@ -40,12 +40,12 @@
 <p>從 α ＝ 0.35 改成 1，頻寬由 67.500000 kHz 增至 100 kHz；換來的則是相同 10 % 偏移下，眼開度由 0.716817 增至 0.895944。選 α 必須同時看可用頻寬與時序品質，不能只挑眼睛最大的數值。</p>
 
 <section class="workspace"><h2>自由實驗：滾降係數與最壞眼開度</h2>
-<p>設定符元率、滾降係數、取樣時序偏移與每側納入的鄰居數。回饋會列出頻寬、主瓣、ISI 總和與八個脈衝取樣值，用數字取代波形圖，觀察頻寬和時序容忍的交換。</p>
+<p>設定符元率、滾降係數、取樣時序偏移與每側納入的鄰居數。回饋會保留頻寬、主瓣、ISI 總和與八個脈衝取樣值，並同步畫出脈衝與簡化眼圖，觀察頻寬和時序容忍的交換。</p>
 <div class="controls">
-<label for="is-rs">符元率 R_s（kbaud）<input id="is-rs" type="range" min="1" max="1000" step="1" value="100"></label>
-<label for="is-alpha">滾降係數 α<input id="is-alpha" type="range" min="0" max="1" step="0.05" value="0.35"></label>
-<label for="is-tau">取樣時序偏移 τ/T（%）<input id="is-tau" type="range" min="0" max="40" step="1" value="10"></label>
-<label for="is-k">計入的鄰近符元數 K（每側）<input id="is-k" type="range" min="1" max="50" step="1" value="20"></label>
+<label for="is-rs">符元率 R<sub>s</sub>（kbaud）<output for="is-rs" id="is-rs-value" style="float:inline-end">100</output><input id="is-rs" type="range" min="1" max="1000" step="1" value="100"></label>
+<label for="is-alpha">滾降係數 α<output for="is-alpha" id="is-alpha-value" style="float:inline-end">0.35</output><input id="is-alpha" type="range" min="0" max="1" step="0.05" value="0.35"></label>
+<label for="is-tau">取樣時序偏移 τ/T（%）<output for="is-tau" id="is-tau-value" style="float:inline-end">10</output><input id="is-tau" type="range" min="0" max="40" step="1" value="10"></label>
+<label for="is-k">計入的鄰近符元數 K（每側）<output for="is-k" id="is-k-value" style="float:inline-end">20</output><input id="is-k" type="range" min="1" max="50" step="1" value="20"></label>
 </div>
 <div id="isi-output" class="output" aria-live="polite"></div>
 </section>
@@ -65,6 +65,7 @@
 
 <h2>連到哪門課</h2>
 <p>理想濾波器為何做不出來見<a href="../../02-電機核心/信號與系統-互動課程/09-濾波器與群延遲.html">信號與系統的濾波器與群延遲</a>。本章只建立定義、Nyquist 判準與一個升餘弦數值例；平方根升餘弦的實作細節也不在本章展開。</p>
+<section aria-labelledby="summary-07"><h2 id="summary-07">本章帶走的三件事</h2><ul><li>零 ISI 要求脈衝在其他整數符元時刻過零。</li><li>α 增加會多占頻寬，卻讓尾巴衰減更快、時序容忍度更高。</li><li>眼圖的垂直開度直接呈現最壞 ISI 與可用雜訊裕度。</li></ul><p><strong>下章銜接：</strong><a href="08-匹配濾波器與位元錯誤率.html">08 章</a>把眼開度背後的判決距離轉成錯誤機率；也可先做<a href="自我檢核.html#quiz-07">本章檢核</a>。</p></section>
 <nav class="pager" aria-label="章節導覽"><a href="06-取樣量化與PCM.html">← 上一頁：取樣、量化與 PCM</a><a href="08-匹配濾波器與位元錯誤率.html">下一頁：匹配濾波器與位元錯誤率 →</a></nav>
 </main>
 <footer class="site-footer"><span>07 基頻傳輸、ISI 與升餘弦</span><a href="名詞與概念字典.html">查字典</a></footer>

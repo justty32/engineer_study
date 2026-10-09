@@ -33,18 +33,19 @@
 <tr><td>零強制理想抽頭</td><td>(−0.5)<sup>n</sup></td><td><strong>1.000000、−0.500000、0.250000、−0.125000、0.062500</strong></td></tr>
 <tr><td>判定</td><td>最後 31 次平均 e² &lt; 0.01</td><td><strong>已收斂</strong></td></tr>
 </tbody></table>
-<p><strong>邊界對照。</strong>μ ＝ 0.005 時，200 次後最後 31 次平均 e² 為 0.228615，抽頭為 0.590166、−0.135342、…，太慢而未收斂；500 次仍是 0.043255。μ ＝ 0.2 的 e² 依次為 1.000000、0.016456、0.073403、0.000805、0.002989、0.004483，最後 31 次為 0.002469，快但殘餘震盪大。μ ＝ 0.3 雖小於 0.32，第 50、100 次卻衝到 4.131711、7.113465，最後 31 次平均 1.793240，抽頭 0.374915、−0.268157、…，未收斂；這正是上界不是保證的實例。</p>
-<p><strong>量級對照。</strong>μ ＝ 0.35 在第 99 次 e² 超過 10<sup>6</sup>，μ ＝ 0.4 在第 49 次發散，μ ＝ 0.5 在第 31 次發散。a ＝ 0.9、μ ＝ 0.05、L ＝ 5 時，上界 0.220994、最後 31 次 0.137087，因理想尾端 0.9<sup>4</sup> ＝ 0.656100 仍太大；L ＝ 7、500 次時，上界 0.157853、最後 31 次 0.095340。a ＝ 0 時上界 0.400000，200 次後最後平均顯示 0.000000，w<sub>0</sub> ＝ 0.999986。L ＝ 3、a ＝ 0.5 時上界 0.533333、最後平均 0.013694；L ＝ 7 時上界 0.228571、最後平均 0.000172。</p>
+<p><strong>邊界對照。</strong>μ ＝ 0.005 時，200 次後最後 31 次平均 e² 為 0.2286，抽頭為 0.5902、−0.1353、…，太慢而未收斂；500 次仍是 0.04326。μ ＝ 0.2 的 e² 依次約為 1、0.01646、0.0734、0.000805、0.002989、0.004483，最後 31 次為 0.002469，快但殘餘震盪大。μ ＝ 0.3 雖小於 0.32，第 50、100 次卻衝到 4.132、7.113，最後 31 次平均 1.793，抽頭 0.3749、−0.2682、…，未收斂；這正是上界不是保證的實例。</p>
+<p><strong>量級對照。</strong>μ ＝ 0.35 在第 99 次 e² 超過 10<sup>6</sup>，μ ＝ 0.4 在第 49 次發散，μ ＝ 0.5 在第 31 次發散。a ＝ 0.9、μ ＝ 0.05、L ＝ 5 時，上界 0.221、最後 31 次 0.1371，因理想尾端 0.9<sup>4</sup> ＝ 0.6561 仍太大；L ＝ 7、500 次時，上界 0.1579、最後 31 次 0.09534。a ＝ 0 時上界 0.4，200 次後最後平均約為 0，w<sub>0</sub> ＝ 1。L ＝ 3、a ＝ 0.5 時上界 0.5333、最後平均 0.01369；L ＝ 7 時上界 0.2286、最後平均 0.000172。</p>
 <p>更極端的組合也吻合同一因果：μ ＝ 0.3、a ＝ 0.9、L ＝ 7 時第 18 次發散；μ ＝ 0.5、a ＝ 0.9、L ＝ 7、500 次的設定下，第 9 次就發散。通道尾巴越長、步子越大，單次更新就越容易跨過誤差谷底。</p>
 
 <section class="workspace"><h2>自由實驗：看步長、抽頭與訓練長度的拉扯</h2>
 <p>場景是固定 31 碼片序列週期通過 [1, a] 通道，等化器從零抽頭開始學。調整 μ、a、L 與迭代次數，比較學習曲線、最後平均誤差與理想零強制抽頭。</p>
 <div class="controls">
-<label for="lm-mu">步長 μ<input id="lm-mu" type="range" min="0.005" max="0.5" step="0.005" value="0.05"></label>
-<label for="lm-a">回音係數 a<input id="lm-a" type="range" min="0" max="0.9" step="0.05" value="0.5"></label>
+<label for="lm-mu">步長 μ <output id="lm-mu-val" for="lm-mu">0.05</output><input id="lm-mu" type="range" min="0.005" max="0.5" step="0.005" value="0.05"></label>
+<label for="lm-a">回音係數 a <output id="lm-a-val" for="lm-a">0.5</output><input id="lm-a" type="range" min="0" max="0.9" step="0.05" value="0.5"></label>
 <label for="lm-taps">等化器抽頭數 L<select id="lm-taps"><option value="3">3 個抽頭</option><option value="5" selected>5 個抽頭</option><option value="7">7 個抽頭</option></select></label>
 <label for="lm-iter">迭代次數 N<select id="lm-iter"><option value="50">50 次</option><option value="100">100 次</option><option value="200" selected>200 次</option><option value="500">500 次</option></select></label>
 </div>
+<div><p><strong>先預測再拖：</strong>a ＝ 0.4、L ＝ 7 時，LMS 教科書步長上界是多少？</p><label for="p07">你的預測<input id="p07" type="number" step="0.001"></label><button id="p07-check" type="button">檢查預測</button><div id="p07-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q07-1">再做 07 章自我檢核</a></p></div>
 <div id="lms-output" class="output" aria-live="polite"></div>
 </section>
 

@@ -18,7 +18,7 @@ var reflectWorkspace = function (source) {
   summary.textContent = "目前設定：" + controls.map(function (node) {
     var label = workspace.querySelector('label[for="' + node.id + '"]');
     var name = label && label.firstChild ? label.firstChild.textContent.trim() : node.id;
-    var shown = node.options ? node.options[node.selectedIndex].text : node.value;
+    var shown = node.options ? node.options[node.selectedIndex].text : (node.type === "range" ? num6(node.value) : node.value);
     if (node.type === "range") { node.setAttribute("aria-valuetext", shown); }
     return name + " = " + shown;
   }).join("；") + "。";
@@ -38,7 +38,22 @@ var int0 = function (x) {
   if (!isFinite(v)) { return "不適用"; }
   return minus(String(Math.round(zc(v))));
 };
-var put = function (id, html) { var n = $(id); if (n) { n.innerHTML = html; } };
+var put = function (id, html, announcement) {
+  var n = $(id), live;
+  if (!n) { return; }
+  n.innerHTML = html;
+  if (announcement === undefined || !n.closest || !n.closest(".workspace")) { return; }
+  live = $(id + "-status");
+  if (!live) {
+    live = document.createElement("p");
+    live.id = id + "-status";
+    live.setAttribute("aria-live", "polite");
+    live.setAttribute("aria-atomic", "true");
+    live.style.marginTop = "0.75rem";
+    n.insertAdjacentElement("afterend", live);
+  }
+  live.textContent = "判讀：" + announcement;
+};
 var row = function (cells, th) {
   var t = th ? "th" : "td";
   return "<tr><" + t + ">" + cells.join("</" + t + "><" + t + ">") + "</" + t + "></tr>";
@@ -55,6 +70,7 @@ var table = function (heads, rows) {
 var MU0 = 4 * Math.PI * 1e-7;
 var K444 = 2 * Math.PI / Math.SQRT2; /* 4.442883 */
 var IM = {R1: 0.5, X1: 1.0, X2: 1.0, XM: 30, POLES: 4};
+var IM_ANCHOR = {VLL:380, F:60, S:0.03, R2:0.4, N:1746, PAG:9273.742103, PRCL:278.212263, PCONV:8995.529840, TIND:49.198730, ISTART_RATIO:6.5, TSTART_RATIO:1.25};
 var SCORE = {
   pmsm: [5, 2, 2, 4, 5, 1], im: [3, 5, 4, 1, 3, 2], dcbrush: [3, 3, 5, 2, 2, 1],
   bldc: [4, 3, 3, 2, 5, 1], stepper: [1, 4, 4, 5, 2, 1], wrsm: [4, 1, 1, 1, 3, 5]
@@ -80,43 +96,43 @@ var QUIZ_CH = {
   "12": ["12-馬達家族與選型.html", "12 馬達家族與選型"]
 };
 var QUIZ = [
-  {id:"q00-1",t:"num",ans:10,tol:0.05,why:"i = F / (B × l)：電流由負載決定。",err:"常見錯因：把電池電壓直接除以電阻。"},
+  {id:"q00-1",t:"num",ans:15,tol:0.05,why:"i = 15 / (1.0 × 1.0) = 15 A；電流由負載決定。",err:"常見錯因：把電池電壓直接除以電阻。"},
   {id:"q00-2",t:"num",ans:240,tol:1,why:"v = 0 時 e_ind = 0，i = V_B / R。",err:"常見錯因：沿用穩態負載電流。"},
   {id:"q00-3",t:"sel",ans:"b",tol:0,why:"e_ind 追上 V_B 後，電流與力都成為零。",err:"常見錯因：把理想模型的平衡誤認為摩擦造成。"},
-  {id:"q01-1",t:"num",ans:1.125395,tol:0.01,why:"Φ_max = V / (4.442883 × f × N)，再除以 A。",err:"常見錯因：cm² 沒換成 m²。"},
+  {id:"q01-1",t:"num",ans:1.131826,tol:0.01,why:"Φ_max = 220 / (4.442883 × 50 × 250)，再除以 0.0035 m²。",err:"常見錯因：cm² 沒換成 m²。"},
   {id:"q01-2",t:"num",ans:3.799544,tol:0.05,why:"氣隙磁阻是鐵心的 5 倍，總磁阻為 6 倍。",err:"常見錯因：漏加原本的鐵心磁阻。"},
   {id:"q01-3",t:"sel",ans:"d",tol:0,why:"磁通峰值由電壓、頻率與匝數決定。",err:"常見錯因：把決定電流的磁阻當成決定磁通。"},
-  {id:"q02-1",t:"num",ans:583.095189,tol:0.5,why:"Z′ = a² × Z_L。",err:"常見錯因：只乘 a，或沒先算複數阻抗大小。"},
+  {id:"q02-1",t:"num",ans:320,tol:0.5,why:"|Z_L| = 5 Ω，Z′ = 8² × 5 = 320 Ω。",err:"常見錯因：只乘 a，或沒先算複數阻抗大小。"},
   {id:"q02-2",t:"num",ans:11,tol:0.05,why:"功率優勢為 (N_C + N_SE) / N_SE。",err:"常見錯因：分母用了共同繞組匝數。"},
   {id:"q02-3",t:"sel",ans:"a",tol:0,why:"電壓乘 a、電流除 a，所以比值乘 a²。",err:"常見錯因：誤以為折算會改變功率。"},
-  {id:"q03-1",t:"num",ans:7.993605,tol:0.01,why:"R_eq = P_sc / I_sc²。",err:"常見錯因：把 V_sc / I_sc 當成電阻而非阻抗大小。"},
+  {id:"q03-1",t:"num",ans:7.5,tol:0.01,why:"R_eq = 120 / 4² = 7.5 Ω。",err:"常見錯因：把 V_sc / I_sc 當成電阻而非阻抗大小。"},
   {id:"q03-2",t:"num",ans:2.498002,tol:0.01,why:"Z_base = 2400² / 10000 = 576 Ω。",err:"常見錯因：忘了乘 100 %。"},
   {id:"q03-3",t:"sel",ans:"c",tol:0,why:"開路試驗給 R_c 與 X_m。",err:"常見錯因：把開路與短路試驗的角色對調。"},
-  {id:"q04-1",t:"num",ans:2.364503,tol:0.01,why:"|V_1′| = 245.674808 V。",err:"常見錯因：直接把電阻壓降與電抗壓降相加。"},
+  {id:"q04-1",t:"num",ans:1.711501,tol:0.01,why:"0.75 倍負載、功率因數 0.85 落後時，以複數壓降求得 1.711501 %。",err:"常見錯因：直接把電阻壓降與電抗壓降相加。"},
   {id:"q04-2",t:"num",ans:0.657267,tol:0.005,why:"x* = √(P_core / P_cu,fl)。",err:"常見錯因：漏取平方根。"},
   {id:"q04-3",t:"sel",ans:"b",tol:0,why:"領前時 X sin θ 項變號，二次電壓可能升高。",err:"常見錯因：把調整率和損耗混在一起。"},
-  {id:"q05-1",t:"num",ans:1800,tol:0.5,why:"n_s = 120 × f / P。",err:"常見錯因：把極數當極對數。"},
-  {id:"q05-2",t:"num",ans:7330.382858,tol:1,why:"P = T × ω，ω = 2π × 1750 / 60。",err:"常見錯因：rpm 沒換成 rad/s。"},
+  {id:"q05-1",t:"num",ans:1000,tol:0.5,why:"n_s = 120 × 50 / 6 = 1000 rpm。",err:"常見錯因：把極數當極對數。"},
+  {id:"q05-2",t:"num",ans:8815.529840,tol:1,why:"P = T × ω，ω = 2π × 1746 / 60。",err:"常見錯因：rpm 沒換成 rad/s。"},
   {id:"q05-3",t:"sel",ans:"d",tol:0,why:"超過同步速時，機械功率往電網送。",err:"常見錯因：只看轉速高低，沒看能量方向。"},
-  {id:"q06-1",t:"num",ans:20,tol:0.05,why:"I_a = T / KΦ。",err:"常見錯因：拿端電壓除以電樞電阻。"},
+  {id:"q06-1",t:"num",ans:30,tol:0.05,why:"I_a = 24 / 0.8 = 30 A。",err:"常見錯因：拿端電壓除以電樞電阻。"},
   {id:"q06-2",t:"num",ans:2196.338215,tol:1,why:"E_a = 230 V，ω = 230 rad/s。",err:"常見錯因：忘記 rad/s 換成 rpm。"},
   {id:"q06-3",t:"sel",ans:"a",tol:0,why:"改電樞電壓會讓整條線平移，斜率與電流不變。",err:"常見錯因：和改激磁的效果混淆。"},
-  {id:"q07-1",t:"num",ans:2,tol:0.01,why:"f_r = s × f，s = 0.033333。",err:"常見錯因：把百分比 3.333333 直接乘頻率。"},
-  {id:"q07-2",t:"num",ans:266.666667,tol:0.5,why:"P_RCL = s × P_AG。",err:"常見錯因：用 1 − s 計算銅損。"},
+  {id:"q07-1",t:"num",ans:3,tol:0.01,why:"s = (1800 − 1710) / 1800 = 0.05，f_r = 0.05 × 60 = 3 Hz。",err:"常見錯因：把百分比 5 直接乘頻率。"},
+  {id:"q07-2",t:"num",ans:278.212263,tol:0.5,why:"P_RCL = 0.03 × 9273.742103 = 278.212263 W。",err:"常見錯因：用 1 − s 計算銅損。"},
   {id:"q07-3",t:"sel",ans:"c",tol:0,why:"沒有相對運動就沒有感應電流。",err:"常見錯因：把同步速誤認為最大轉矩點。"},
-  {id:"q08-1",t:"num",ans:143.556819,tol:0.5,why:"代入戴維寧參數與最大轉矩式。",err:"常見錯因：把線電壓當每相電壓。"},
+  {id:"q08-1",t:"num",ans:159.065728,tol:0.5,why:"400 V 線電壓先除以 √3，再代入戴維寧參數與最大轉矩式。",err:"常見錯因：把線電壓當每相電壓。"},
   {id:"q08-2",t:"num",ans:61.626951,tol:0.5,why:"起動時 s = 1。",err:"常見錯因：代入額定滑差。"},
   {id:"q08-3",t:"sel",ans:"b",tol:0,why:"R_2 只移動崩潰滑差，不改崩潰轉矩。",err:"常見錯因：把起動轉矩與崩潰轉矩混淆。"},
-  {id:"q09-1",t:"num",ans:33859.994189,tol:5,why:"P = 3 × V × E × sin δ / X_s。",err:"常見錯因：角度未換成弧度或漏掉三相。"},
-  {id:"q09-2",t:"num",ans:99000,tol:5,why:"δ = 90° 時 sin δ = 1。",err:"常見錯因：仍代入 20°。"},
+  {id:"q09-1",t:"num",ans:35702.790752,tol:5,why:"P = 3 × 220 × 320 × sin 25° / 2.5 = 35702.790752 W。",err:"常見錯因：角度未換成弧度或漏掉三相。"},
+  {id:"q09-2",t:"num",ans:84480,tol:5,why:"δ = 90° 時 sin δ = 1，P_max = 3 × 220 × 320 / 2.5。",err:"常見錯因：仍代入 25°。"},
   {id:"q09-3",t:"sel",ans:"d",tol:0,why:"超過 90° 後實功反而下降，會脫步。",err:"常見錯因：以為功率角越大功率必然越大。"},
-  {id:"q10-1",t:"num",ans:224.646646,tol:0.1,why:"E_f = |V − jX_s I_a,min|。",err:"常見錯因：直接把兩個量算術相加。"},
-  {id:"q10-2",t:"num",ans:22.727273,tol:0.05,why:"I_a,min = P / (3 × V_φ)。",err:"常見錯因：漏掉三相係數。"},
+  {id:"q10-1",t:"num",ans:230.323165,tol:0.1,why:"I_a,min = 18000 / (3 × 220)，E_f = |220 − j × 2.5 × I_a,min| = 230.323165 V。",err:"常見錯因：直接把兩個量算術相加。"},
+  {id:"q10-2",t:"num",ans:27.272727,tol:0.05,why:"I_a,min = 18000 / (3 × 220) = 27.272727 A。",err:"常見錯因：漏掉三相係數。"},
   {id:"q10-3",t:"sel",ans:"a",tol:0,why:"超激磁時電流領前，馬達供給無功。",err:"常見錯因：把實功與無功方向混淆。"},
-  {id:"q11-1",t:"num",ans:2,tol:0.01,why:"Y–Δ 的線電流是直接起動的 1 / 3。",err:"常見錯因：只除以 √3。"},
-  {id:"q11-2",t:"num",ans:0.63375,tol:0.005,why:"x² × t = 0.4225 × 1.5。",err:"常見錯因：分接比例沒有平方。"},
+  {id:"q11-1",t:"num",ans:2.166667,tol:0.01,why:"Y–Δ 的線電流是直接起動的 1 / 3：6.5 / 3 = 2.166667。",err:"常見錯因：只除以 √3。"},
+  {id:"q11-2",t:"num",ans:0.528125,tol:0.005,why:"x² × t = 0.65² × 1.25 = 0.528125。",err:"常見錯因：分接比例沒有平方。"},
   {id:"q11-3",t:"sel",ans:"c",tol:0,why:"V/f 維持磁通，滑差頻率維持在額定附近的小值，每安培轉矩與額定時相近。",err:"常見錯因：以為變頻起動靠提高電壓。"},
-  {id:"q12-1",t:"num",ans:60,tol:0.5,why:"5×5 + 2×2 + 1×2 + 1×4 + 5×5 + 0×1。",err:"常見錯因：權重與分數的順序對錯。"},
+  {id:"q12-1",t:"num",ans:57,tol:0.5,why:"無刷直流馬達：3×4 + 2×3 + 4×3 + 1×2 + 5×5 + 0×1 = 57。",err:"常見錯因：權重與分數的順序對錯。"},
   {id:"q12-2",t:"num",ans:52,tol:0.5,why:"4×3 + 5×5 + 3×4 + 0 + 1×3 + 0。",err:"常見錯因：漏算控制簡單權重。"},
   {id:"q12-3",t:"sel",ans:"b",tol:0,why:"兩者同屬永磁機器，差在反電動勢波形與換向方式。",err:"常見錯因：把驅動差異誤認成有無磁鐵。"}
 ];
@@ -276,14 +292,14 @@ function linmach() {
     var mode=pick("lm-mode"), r=linmachCalc(mode,val("lm-vb"),val("lm-r"),val("lm-b"),val("lm-l"),val("lm-f")), rows;
     if(mode==="gen"){
       rows=[["電流",f6(r.i)+" A"],["感應電壓",f6(r.e)+" V"],["速度",f6(r.v)+" m/s"],["機械輸入",f6(r.Pmech)+" W"],["電池收到",f6(r.Pbatt)+" W"],["銅損",f6(r.Pcu)+" W"],["效率",f6(r.eta)+" %"]];
-      put("linmach-output","<p>這個模式只用到六個控制的同一組值，把 F 當成外力（發電機）。</p>"+table(["量","結果"],rows)+"<p>電流反向流回電池，機械功率 e × i 比電池收到的 V_B × i 多出銅損。效率 ＝ V_B / e，差的那一段全是 i² × R。</p>"+(val("lm-vb")===0?"<p>電池收到 0 W，外力仍可推動發電。</p>":""));
+      put("linmach-output","<p>這個模式只用到六個控制的同一組值，把 F 當成外力（發電機）。</p>"+table(["量","結果"],rows)+"<p>電流反向流回電池，機械功率 e × i 比電池收到的 V_B × i 多出銅損。效率 ＝ V_B / e，差的那一段全是 i² × R。</p>"+(val("lm-vb")===0?"<p>電池收到 0 W，外力仍可推動發電。</p>":""),"發電機模式：機械功率透過銅損後送回電池。");
     }else{
       var dragged=r.e<0;
       rows=[["電流",f6(r.i)+" A"],["感應電壓",f6(r.e)+" V"],["速度",dragged?"不適用（被倒拖）":f6(r.v)+" m/s"],["電池輸出",f6(r.Pin)+" W"],["轉換功率",dragged?"不適用（被倒拖）":f6(r.Pconv)+" W"],["銅損",f6(r.Pcu)+" W"],["效率",dragged?"不適用（被倒拖）":f6(r.eta)+" %"],["無負載速度",f6(r.v0)+" m/s"],["失速電流",f6(r.Istall)+" A"],["失速力",f6(r.Fstall)+" N"]];
       var edge=r.e<0?"拉不動：負載力超過失速力，導桿被倒拖，這不是穩態工作點。":(r.e===0?"失速：全部電功率變成銅損。":(val("lm-f")===0?"無負載：電流為 0，感應電壓追上電池電壓後便不再加速。":"目前是可運作的馬達工作點。"));
       if(val("lm-vb")===0){edge="沒有電源，馬達模式不成立。";}
       if(val("lm-b")===0.1&&val("lm-f")>=24){edge+=" 磁通太弱，同樣的力要 10 倍電流。";}
-      put("linmach-output","<p>這個模式只用到六個控制的同一組值，把 F 當成負載力（馬達）。</p>"+table(["量","結果"],rows)+"<p>"+edge+"</p><p>電流由負載力決定：i = F / (B × l)，不是由電壓決定。效率 ＝ e / V_B，差的那一段全是 i² × R。</p>");
+      put("linmach-output","<p>這個模式只用到六個控制的同一組值，把 F 當成負載力（馬達）。</p>"+table(["量","結果"],rows)+"<p>"+edge+"</p><p>電流由負載力決定：i = F / (B × l)，不是由電壓決定。效率 ＝ e / V_B，差的那一段全是 i² × R。</p>",edge);
     }
   }; bind(ids,draw); draw();
 }
@@ -298,7 +314,7 @@ function coreflux(){
     if(val("cf-gap")>=1){msg+=" 轉子要轉非留氣隙不可，因此激磁電流與無功較大。";}
     if(val("cf-f")===50&&val("cf-v")===240&&val("cf-n")===200){msg+=" 同一顆 60 Hz 鐵心接 50 Hz，磁通多 20 %。";}
     if(val("cf-mur")===5000){msg+=" 高導磁材料省的是激磁電流，不改變磁通。";}
-    put("coreflux-output",table(["量","結果"],rows)+"<p>"+msg+"</p><p>磁通由 V、f、N 決定，磁阻只決定電流。</p>");}; bind(ids,draw);draw();
+    put("coreflux-output",table(["量","結果"],rows)+"<p>"+msg+"</p><p>磁通由 V、f、N 決定，磁阻只決定電流。</p>",msg);}; bind(ids,draw);draw();
 }
 
 function referral(){
@@ -306,13 +322,13 @@ function referral(){
   var ids=["rf-mode","rf-v1","rf-n1","rf-n2","rf-r","rf-x"];
   var draw=function(){var mode=pick("rf-mode"),r=referralCalc(mode,val("rf-v1"),val("rf-n1"),val("rf-n2"),val("rf-r"),val("rf-x"));
     if(mode==="auto"){
-      put("referral-output","<p>這個模式只用到 V_1、N_1、N_2，其餘控制不影響結果。</p>"+table(["量","結果"],[["V_H",f6(r.VH)+" V"],["I_H",f6(r.IH)+" A"],["I_L",f6(r.IL)+" A"],["I_C",f6(r.IC)+" A"],["S_W",f6(r.SW)+" VA"],["功率優勢",f6(r.adv)]])+"<p>繞組只承擔 (V_H − V_L) × I_H，優勢 ＝ (N_C + N_SE) / N_SE。代價是沒有隔離，高壓側故障會直接打到低壓側。</p>"+(val("rf-n2")>=val("rf-n1")*5?"<p>升壓比太大，自耦沒有優勢，改用雙繞組。</p>":""));
+      put("referral-output","<p>這個模式只用到 V_1、N_1、N_2，其餘控制不影響結果。</p>"+table(["量","結果"],[["V_H",f6(r.VH)+" V"],["I_H",f6(r.IH)+" A"],["I_L",f6(r.IL)+" A"],["I_C",f6(r.IC)+" A"],["S_W",f6(r.SW)+" VA"],["功率優勢",f6(r.adv)]])+"<p>繞組只承擔 (V_H − V_L) × I_H，優勢 ＝ (N_C + N_SE) / N_SE。代價是沒有隔離，高壓側故障會直接打到低壓側。</p>"+(val("rf-n2")>=val("rf-n1")*5?"<p>升壓比太大，自耦沒有優勢，改用雙繞組。</p>":""),"自耦繞組只承擔差額功率，但不提供隔離。");
     }else{
       var short=val("rf-r")===0&&val("rf-x")===0;
       var rows=[["匝比",f6(r.a)],["V_2",f6(r.V2)+" V"],["I_2",f6(r.I2)+" A"],["I_1",f6(r.I1)+" A"],["Z′ 實部",f6(r.Rref)+" Ω"],["Z′ 虛部",f6(r.Xref)+" Ω"],["Z′ 大小",f6(r.Zrefm)+" Ω"],["視在功率",f6(r.S)+" VA"],["實功",f6(r.P)+" W"],["無功",f6(r.Q)+" var"],["功率因數",f6(r.pf)]];
       var msg=short?"短路：理想變壓器無法限流；真實變壓器靠第 03 章的漏阻抗限流。":(r.a<1?"升壓：二次電壓比一次高，二次電流比一次小。":(r.a===1?"隔離變壓器：只隔離不變壓。":"目前為降壓折算。"));
       if(val("rf-x")<0){msg+=" 電容性負載，Q 為負，負載在供給無功。";}
-      put("referral-output","<p>這個模式只用到 V_1、N_1、N_2、R、X。</p>"+table(["量","結果"],rows)+"<p>"+msg+"</p><p>Z′ = a² × Z_L：電壓乘 a、電流除 a，所以阻抗乘 a²，功率不變。</p>");
+      put("referral-output","<p>這個模式只用到 V_1、N_1、N_2、R、X。</p>"+table(["量","結果"],rows)+"<p>"+msg+"</p><p>Z′ = a² × Z_L：電壓乘 a、電流除 a，所以阻抗乘 a²，功率不變。</p>",msg);
     }};bind(ids,draw);draw();
 }
 
@@ -323,7 +339,7 @@ function xftest(){
     var rows=[["R_c 低壓側",f6(r.Rc_lv)+" Ω"],["X_m 低壓側",f6(r.Xm_lv)+" Ω"],["R_c 高壓側",f6(r.Rc)+" Ω"],["X_m 高壓側",f6(r.Xm)+" Ω"],["鐵損電流",f6(r.Ic)+" A"],["激磁電流",f6(r.Im)+" A"],["Z_eq",f6(r.Zeq)+" Ω"],["R_eq",f6(r.Req)+" Ω"],["X_eq",f6(r.Xeq)+" Ω"],["Z_base",f6(r.Zbase)+" Ω"],["百分阻抗",f6(r.Zpct)+" %"],["額定一次電流",f6(r.Ir)+" A"],["滿載銅損",f6(r.Pcu_fl)+" W"],["R_eq 低壓側",f6(r.Req_lv)+" Ω"],["X_eq 低壓側",f6(r.Xeq_lv)+" Ω"]];
     var msg=r.bad?"讀數不可能：功率可能大於視在功率，或電流與阻抗條件互相矛盾，請檢查儀表讀數。":"開路試驗給激磁分支（R_c、X_m），短路試驗給串聯支路（R_eq、X_eq），兩個試驗各關掉一半電路。";
     if(r.Zpct!==null&&r.Zpct<1){msg+=" 百分阻抗很小：短路電流會非常大，保護要更快。";} if(r.Zpct!==null&&r.Zpct>8){msg+=" 百分阻抗偏大：電壓調整率會差。";} if(val("xt-a")===20){msg+=" 匝比改為 20 時仍沿用同一組高壓側讀數，只用來示範 Z_base 變成原本 4 倍；這組 I_sc 並非 4800 V 側的額定電流。";}
-    put("xftest-output",table(["量","結果"],rows)+"<p>"+msg+"</p><p>滿載銅損 "+f6(r.Pcu_fl)+" W，鐵損 "+f6(val("xt-poc"))+" W。</p>");};bind(ids,draw);draw();
+    put("xftest-output",table(["量","結果"],rows)+"<p>"+msg+"</p><p>滿載銅損 "+f6(r.Pcu_fl)+" W，鐵損 "+f6(val("xt-poc"))+" W。</p>",msg);};bind(ids,draw);draw();
 }
 
 function xfreg(){
@@ -333,7 +349,7 @@ function xfreg(){
     var rows=[["I_2",f6(r.I2)+" A"],["|V_1′|",f6(r.V1)+" V"],["調整率",f6(r.VR)+" %"],["輸出功率",f6(r.Pout)+" W"],["銅損",f6(r.Pcu)+" W"],["鐵損",f6(val("xr-pcore"))+" W"],["輸入功率",f6(r.Pin)+" W"],["效率",f6(r.eta)+" %"],["滿載銅損",f6(r.Pcu_fl)+" W"],["x*",f6(r.xstar)],["η*",f6(r.eta_star)+" %"]];
     var msg=r.VR<0?"領前功因讓二次電壓比空載還高：X sin θ 項變號。":(Math.abs(x-r.xstar)<=0.05?"你正站在最大效率點附近：銅損約等於鐵損。":(x>r.xstar?"超過最大效率點：銅損已大於鐵損。":"輕載：鐵損佔比大。"));
     if(x===0){msg="空載：效率 0，鐵損仍在燒。";} if(x===1.25){msg+=" 過載 25 %：銅損變 1.5625 倍，長時間會過熱。";} if(r.xstar>1){msg+=" 最大效率點超過額定，這種設計把鐵損做得太大，不合理。";} if(val("xr-pf")===0.5){msg+=" 同樣電流只送一半實功，效率必然掉。";}
-    put("xfreg-output",table(["量","結果"],rows)+"<p>"+msg+"</p><p>效率的分母裡鐵損固定、銅損隨 x² 變，所以最大效率在 x* = √(P_core / P_cu,fl)。</p>");};bind(ids,draw);draw();
+    put("xfreg-output",table(["量","結果"],rows)+"<p>"+msg+"</p><p>效率的分母裡鐵損固定、銅損隨 x² 變，所以最大效率在 x* = √(P_core / P_cu,fl)。</p>",msg);};bind(ids,draw);draw();
 }
 
 function powerflow(){
@@ -343,7 +359,7 @@ function powerflow(){
     var rows=[["n_s",f6(r.ns)+" rpm"],["ω_s",f6(r.ws)+" rad/s"],["ω",f6(r.w)+" rad/s"],["滑差",f6(r.s)+" %"],[r.generator?"電輸出":"軸輸出",f6(r.Pout)+" W"],["軸功率馬力",f6(r.hp)+" hp"],["總損耗",f6(r.loss)+" W"],[r.generator?"機械輸入":"電輸入",f6(r.Pin)+" W"],["效率",f6(r.eta)+" %"]];
     var n=val("pw-n"),msg=n===0?"堵轉：輸出 0，全部輸入變損耗，銅損此時實際會遠大於你設的值。":(n<r.ns?"感應馬達區：轉子比旋轉磁場慢。":(n===r.ns?"同步速：只有同步機能在這裡出力，感應機在這裡沒有轉矩。":"超過同步速：這是感應發電機，機械功率在往電網送。"));
     if(val("pw-t")===0){msg+=" 無負載：只剩損耗。";} if(r.s>20&&n>0){msg+=" 滑差這麼大不是正常工作點，多半是極數或頻率設錯。";}
-    put("powerflow-output",table(["量","結果"],rows)+"<p>"+(r.generator?"機械輸入 ":"電輸入 ")+f6(r.Pin)+" W → 損耗 "+f6(r.loss)+" W → "+(r.generator?"電輸出 ":"軸輸出 ")+f6(r.Pout)+" W</p><p>"+msg+"</p><p>P = T × ω，rpm 要先換成 rad/s 才能乘。固定損耗不隨負載變，銅損隨負載平方變。</p>");};bind(ids,draw);draw();
+    put("powerflow-output",table(["量","結果"],rows)+"<p>"+(r.generator?"機械輸入 ":"電輸入 ")+f6(r.Pin)+" W → 損耗 "+f6(r.loss)+" W → "+(r.generator?"電輸出 ":"軸輸出 ")+f6(r.Pout)+" W</p><p>"+msg+"</p><p>P = T × ω，rpm 要先換成 rad/s 才能乘。固定損耗不隨負載變，銅損隨負載平方變。</p>",msg);};bind(ids,draw);draw();
 }
 
 function dcmotor(){
@@ -355,7 +371,7 @@ function dcmotor(){
     var msg=r.Ea<0?"拉不動：負載超過失速轉矩。":(r.Ea===0?"失速。":"目前是可運作的工作點。");
     if(val("dc-if")<=0.3){msg+=" 磁通太弱、轉速失控：實機的激磁回路斷線會飛車。";} if(val("dc-t")===0){msg+=" 無負載：轉速停在 V_t / KΦ，不會無限升。";} if(val("dc-vt")===0){msg="沒有電樞電壓，馬達不轉。";} if(val("dc-vt")!==240&&val("dc-if")===1&&val("dc-ra")===0.5&&val("dc-t")===20){msg+=" 改電樞電壓：整條線平移、斜率不變、電流不變。";} if(val("dc-if")!==1){msg+=" 改激磁：截距與斜率都變；弱磁升速但同樣轉矩要更多電流，失速轉矩下降。";}
     var multiple=r.Ia?r.Istart/r.Ia:null;
-    put("dcmotor-output",table(["量","結果"],rows)+table(["轉矩（N·m）","轉速（rpm）"],pts)+"<p>"+msg+"</p><p>電樞電流由負載轉矩決定 I_a = T / KΦ；電壓決定的是無負載速度。直接起動電流 V_t / R_a ＝ "+f6(r.Istart)+" A，是這個負載點電流的 "+f6(multiple)+" 倍，見第 11 章。</p>");};bind(ids,draw);draw();
+    put("dcmotor-output",table(["量","結果"],rows)+table(["轉矩（N·m）","轉速（rpm）"],pts)+"<p>"+msg+"</p><p>電樞電流由負載轉矩決定 I_a = T / KΦ；電壓決定的是無負載速度。直接起動電流 V_t / R_a ＝ "+f6(r.Istart)+" A，是這個負載點電流的 "+f6(multiple)+" 倍，見第 11 章。</p>",msg);};bind(ids,draw);draw();
 }
 
 function imslip(){
@@ -365,7 +381,7 @@ function imslip(){
     var rows=[["n_s",f6(r.ns)+" rpm"],["滑差",f6(r.s)+"（"+f6(r.s*100)+" %）"],["f_r",f6(r.fr)+" Hz"],["轉子銅損",f6(r.Prcl)+" W"],[r.generator?"電磁轉換的機械輸入":"轉換功率",f6(r.Pconv)+" W"],[r.generator?"電輸出":"軸輸出",f6(r.Pout)+" W"],["感應轉矩",f6(r.Tind)+" N·m"],[r.generator?"軸端機械輸入":"軸轉矩",r.generator?f6(r.PmechIn)+" W":f6(r.Tout)+(r.Tout===null?"（軸不轉）":" N·m")]];
     var msg=r.s===1?"堵轉：全部氣隙功率變轉子銅損。":(r.s===0?"同步速：沒有感應、沒有轉矩，這裡的數字只是照式子算，實機到不了。":(r.s<0?"感應發電機：轉子比磁場快，機械輸入支付電輸出、轉子銅損與機械損；感應轉矩為負，方向與轉動相反。":"馬達區。"));
     if(r.s>0.1&&r.s<1){msg+=" 滑差超過 10 %：轉子銅損佔比太高，不是正常工作點。";} if(r.Pout<0){msg+=" 機械損比轉換功率還大，軸實際轉不動。";}
-    put("imslip-output",table(["量","結果"],rows)+"<p>"+(r.generator?"軸端機械輸入 → 機械損／轉子銅損 → |P_AG| 電輸出":"P_AG → 轉子銅損 s × P_AG → P_conv (1 − s) × P_AG → 減機械損 → P_out")+"</p><p>"+msg+"</p><p>"+(r.generator?"發電區用 |s| 算非負的銅損，並以能量方向決定轉矩符號。":"氣隙功率照 1 : (1 − s) : s 分：滑差就是轉子銅損的比例。")+" 轉子頻率 f_r = |s| × f ＝ "+f6(r.fr)+" Hz。</p>");};bind(ids,draw);draw();
+    put("imslip-output",table(["量","結果"],rows)+"<p>"+(r.generator?"軸端機械輸入 → 機械損／轉子銅損 → |P_AG| 電輸出":"P_AG → 轉子銅損 s × P_AG → P_conv (1 − s) × P_AG → 減機械損 → P_out")+"</p><p>"+msg+"</p><p>"+(r.generator?"發電區用 |s| 算非負的銅損，並以能量方向決定轉矩符號。":"氣隙功率照 1 : (1 − s) : s 分：滑差就是轉子銅損的比例。")+" 轉子頻率 f_r = |s| × f ＝ "+f6(r.fr)+" Hz。</p>",msg);};bind(ids,draw);draw();
 }
 
 function imtorque(){
@@ -377,7 +393,7 @@ function imtorque(){
     var msg=r.ok?"直接起動起得動（起動轉矩 "+f6(r.Tstart)+" ≥ 1.1 × 負載）。":"起不動：起動轉矩 "+f6(r.Tstart)+" 小於 1.1 × 負載，見第 11 章換起動方式或改用繞線式加轉子電阻。";
     msg+=r.Ts>val("it-tload")?" 在這個滑差產生的轉矩大於負載，轉子會加速、s 變小。":" 在這個滑差產生的轉矩小於負載，轉子會減速、s 變大。";
     if(val("it-s")>r.smax&&val("it-s")<1){msg+=" 你在崩潰點右側的不穩定區：減速會讓轉矩更小。";} if(val("it-r2")!==0.4){msg+=" 崩潰轉矩不變，只有崩潰滑差跟著 R_2 移動。";} if(val("it-v")!==380){msg+=" 轉矩與電壓平方成正比：電壓 "+f6(val("it-v")/380*100)+" %，轉矩 "+f6(Math.pow(val("it-v")/380,2)*100)+" %。";} if(val("it-f")===50){msg+=" 電壓不變、頻率降低，磁通變大；本模型不含飽和，實機可能飽和。";} if(val("it-s")===0.005){msg+=" 接近同步速：轉矩趨近 0。";} if(val("it-s")===1){msg+=" 堵轉：轉子電流最大、全部氣隙功率變轉子銅損。";}
-    put("imtorque-output",table(["量","結果"],rows)+table(["滑差","轉矩（N·m）"],curve)+"<p>"+msg+"</p><p>戴維寧把定子與激磁分支收成 V_TH 與 Z_TH，轉矩只剩一個迴路的事。</p>");};bind(ids,draw);draw();
+    put("imtorque-output",table(["量","結果"],rows)+table(["滑差","轉矩（N·m）"],curve)+"<p>"+msg+"</p><p>戴維寧把定子與激磁分支收成 V_TH 與 Z_TH，轉矩只剩一個迴路的事。</p>",msg);};bind(ids,draw);draw();
 }
 
 function syncpower(){
@@ -389,7 +405,7 @@ function syncpower(){
     var msg=d<90?"穩定區：δ 再增加，P 還會上升。":(d===90?"靜態穩定極限：P 到頂，同步化功率係數為 0。":"脫步區：δ 增加，P 反而下降，原動機推不回來，機器失去同步。");
     msg+=Math.abs(r.Q)<1?" 單位功因。":(r.Q>0?" 超激磁：E_f cos δ > V_φ，發電機在供給無功。":" 欠激磁：吸收無功。");
     if(d===0){msg+=" 不送實功，只有無功流動。";} if(d===180){msg+=" P = 0 且 Q 極負，這是不可能維持的狀態。";} if(val("sp-ef")<val("sp-vt")&&d===0){msg+=" 欠激磁到端電壓比內電勢高：無功往機器裡流。";}
-    put("syncpower-output",table(["量","結果"],rows)+table(["δ（°）","P（W）"],curve)+"<p>"+msg+"</p><p>原動機推的是 δ（實功），激磁推的是 E_f（無功與電壓）。</p>");};bind(ids,draw);draw();
+    put("syncpower-output",table(["量","結果"],rows)+table(["δ（°）","P（W）"],curve)+"<p>"+msg+"</p><p>原動機推的是 δ（實功），激磁推的是 E_f（無功與電壓）。</p>",msg);};bind(ids,draw);draw();
 }
 
 function vcurve(){
@@ -400,7 +416,7 @@ function vcurve(){
     var samples=r.table.map(function(p){return [Math.abs(p.Ef-r.Eu)<1e-9?f6(p.Ef)+"（單位功因）":f6(p.Ef),p.lost?"脫步":f6(p.Ia)];});
     var msg=r.lost?"脫步：激磁不足以在 δ = 90° 內撐住這個實功。":(r.Iang>0.001?"超激磁：電流領前，馬達供給無功，像一顆電容。":(r.Iang < 0-0.001?"欠激磁：電流落後，馬達吸收無功。":"單位功因：電樞電流最小。"));
     if(!r.lost&&Math.abs(val("vc-ef")-r.Eu)<=5){msg+=" 你在 V 曲線最低點附近。";} if(val("vc-p")===0){msg+=" 同步調相機：不出力，只供無功。";} if(val("vc-ef")===400&&val("vc-p")===15000){msg+=" 激磁過頭：電流約為最低點的 4 倍，幾乎全是無功。";}
-    put("vcurve-output",table(["量","結果"],rows)+table(["E_f（V）","I_a（A）"],samples)+"<p>"+msg+"</p><p>實功固定，電流實部固定 P / (3 V_φ)，改激磁只改虛部，所以電流對激磁是 V 形。</p>");};bind(ids,draw);draw();
+    put("vcurve-output",table(["量","結果"],rows)+table(["E_f（V）","I_a（A）"],samples)+"<p>"+msg+"</p><p>實功固定，電流實部固定 P / (3 V_φ)，改激磁只改虛部，所以電流對激磁是 V 形。</p>",msg);};bind(ids,draw);draw();
 }
 
 function starting(){
@@ -413,7 +429,7 @@ function starting(){
     var used=method==="autotx"?"k、t、分接頭與負載":(method==="vfd"?"固定的變頻常數與負載":"k、t 與負載");
     var msg="這個方式只用到 "+used+"；自耦分接頭只在自耦模式有效。 "+(r.ok?"起得動：起動轉矩 "+f6(r.Tstart)+" ≥ 1.1 × 負載。":"起不動：起動轉矩 "+f6(r.Tstart)+" < 1.1 × 負載，換方式或減輕起動負載。");
     if(method==="ydelta"){msg+=" 電壓變 1 / √3，電流與轉矩都變 1 / 3。";} if(method==="autotx"){msg+=" 馬達電流 x 倍、線電流 x² 倍、轉矩 x² 倍。";} if(method==="vfd"){msg+=" 靠 V/f 維持磁通，並把滑差頻率維持在額定附近的小值；本模型以短時 1.5 倍電流對應 1.5 倍轉矩。";} if(method==="dol"){msg+=" 電流 k 倍是第 00 章 v = 0 時 e_ind = 0 的結果。";} if(val("st-tload")===0){msg+=" 空載起動：任何方式都起得動，問題只剩電流。";} if(val("st-tload")>=1.5){msg+=" 重載起動：只有直接起動或繞線式加轉子電阻才可能夠力。";} if(method==="autotx"&&val("st-tap")===50){msg+=" 分接頭太低：線電流只剩 1 / 4，轉矩也只剩 1 / 4。";}
-    put("starting-output",table(["量","結果"],rows)+table(["方式","線電流","馬達電流","起動轉矩","判準"],all)+"<p>"+msg+"</p>");};bind(ids,draw);draw();
+    put("starting-output",table(["量","結果"],rows)+table(["方式","線電流","馬達電流","起動轉矩","判準"],all)+"<p>"+msg+"</p>",msg);};bind(ids,draw);draw();
 }
 
 function motorpick(){
@@ -423,7 +439,7 @@ function motorpick(){
     var max=Math.max.apply(null,weights),first=r.ranked[0],contrib=weights.map(function(w,i){return w*first.scores[i];}),idx=contrib.indexOf(Math.max.apply(null,contrib)),msg;
     if(max===0){msg="沒有準則就沒有取捨，先決定你在乎什麼。";}else{msg="第一名 "+first.name+"（總分 "+first.total+"），它的最大加權貢獻來自 "+criteria[idx]+"（"+weights[idx]+" × "+first.scores[idx]+" = "+contrib[idx]+"）。";}
     if(r.ranked[0].total-r.ranked[1].total<=2){msg+=" 差距很小，換一個權重就會翻盤，這正是選型要看細部規格的地方。";} if(pick("mp-app")==="plant"){msg+=" 發電廠要可調激磁來控電壓與無功，見第 09 章。";}
-    put("motorpick-output",table(["家族","總分"].concat(criteria),rows)+"<p>"+msg+"</p><p>這是一階加權模型，真正的選型還要看轉矩曲線、環境、供應鏈與驅動器成本。</p>");};
+    put("motorpick-output",table(["家族","總分"].concat(criteria),rows)+"<p>"+msg+"</p><p>這是一階加權模型，真正的選型還要看轉矩曲線、環境、供應鏈與驅動器成本。</p>",msg);};
   var app=$("mp-app");app.addEventListener("input",function(){var p=PRESET[pick("mp-app")],i;if(p){for(i=0;i<6;i+=1){$(wids[i]).value=p[i];}}draw();});
   wids.forEach(function(id){var n=$(id);if(n){n.addEventListener("input",function(){if($("mp-app").value!=="custom"){$("mp-app").value="custom";}});}});bind(wids,draw);draw();
 }
@@ -454,5 +470,5 @@ if(typeof document!=="undefined"){
 
 /* ---------- 7. Node 匯出 ---------- */
 if(typeof module!=="undefined"){
-  module.exports={linmachCalc:linmachCalc,corefluxCalc:corefluxCalc,referralCalc:referralCalc,xftestCalc:xftestCalc,xfregCalc:xfregCalc,powerflowCalc:powerflowCalc,dcmotorCalc:dcmotorCalc,imslipCalc:imslipCalc,imtorqueCalc:imtorqueCalc,syncpowerCalc:syncpowerCalc,vcurveCalc:vcurveCalc,startingCalc:startingCalc,motorpickCalc:motorpickCalc,num6:num6,SCORE:SCORE,PRESET:PRESET,QUIZ:QUIZ};
+  module.exports={linmachCalc:linmachCalc,corefluxCalc:corefluxCalc,referralCalc:referralCalc,xftestCalc:xftestCalc,xfregCalc:xfregCalc,powerflowCalc:powerflowCalc,dcmotorCalc:dcmotorCalc,imslipCalc:imslipCalc,imtorqueCalc:imtorqueCalc,syncpowerCalc:syncpowerCalc,vcurveCalc:vcurveCalc,startingCalc:startingCalc,motorpickCalc:motorpickCalc,num6:num6,IM_ANCHOR:IM_ANCHOR,SCORE:SCORE,PRESET:PRESET,QUIZ:QUIZ};
 }

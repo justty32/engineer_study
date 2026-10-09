@@ -42,13 +42,15 @@
 <p><strong>邊界對照。</strong>D ＝ 1 等於沒有交錯，b ＝ 6 時碼字 1 挨 3 個。D ＝ 4、b ＝ 8、起點 1 時是 2、2、2、2，全滅。D ＝ 7、b ＝ 7、起點 3 時每列 1 個，b ＝ D 正好是臨界。D ＝ 16、b ＝ 24、起點 1 時前 8 列各 2、後 8 列各 1，救不回 8 個，延遲 112。D ＝ 4、b ＝ 6、起點 27 時，串尾把突發截成 2 個命中，計數為 0、0、1、1。</p>
 <p>矩陣文字表中的「×」應沿發射次序連續，回到各列後卻呈週期性分散。若輸出顯示命中數少於 b，先看起點是否已靠近 L 的尾端；若起點大於 L，整段突發在目前發射串之外，零命中不代表通道沒有發生干擾，而是這個矩陣沒有被它碰到。</p>
 
+<figure><svg viewBox="0 0 380 190" role="img" aria-label="區塊交錯矩陣逐列寫入、逐行讀出示意" style="max-width:100%;height:auto;color:inherit"><g stroke="currentColor" fill="none"><path d="M70 35H315V155H70Z"/><path d="M105 35V155M140 35V155M175 35V155M210 35V155M245 35V155M280 35V155"/><path d="M70 65H315M70 95H315M70 125H315"/><path d="M48 48H302" stroke-width="3"/><path d="M292 41L307 48L292 55"/><path d="M88 24V143" stroke-dasharray="4 3"/><path d="M81 133L88 148L95 133"/></g><g fill="currentColor" font-size="12"><text x="132" y="18">發射：橫向逐行讀出</text><text x="8" y="104">碼字</text><text x="8" y="119">逐列</text><text x="8" y="134">寫入</text><text x="74" y="54">×</text><text x="109" y="54">×</text><text x="144" y="54">×</text><text x="179" y="54">×</text><text x="214" y="54">×</text><text x="249" y="54">×</text></g></svg><figcaption>每列先放一個碼字，發射時改成逐行讀出；時間上連續的突發錯誤因此會分散到不同碼字。</figcaption></figure>
+
 <section class="workspace"><h2>自由實驗：改深度與突發位置，觀察每個碼字挨幾個錯</h2>
 <p>矩陣固定每列 7 位元，深度決定列數。拖動突發長度與起點，輸出會並排呈現交錯前後的每碼字錯誤數、是否可由糾 1 錯碼救回，以及延遲代價。</p>
 <div class="controls">
-<label for="il-depth">交錯深度 D（列數 = 同時交錯的碼字數）<input id="il-depth" type="range" min="1" max="16" step="1" value="4"></label>
-<label for="il-burst">突發長度 b（位元）<input id="il-burst" type="range" min="1" max="24" step="1" value="6"></label>
-<label for="il-start">突發起點（發射串的第幾個位元）<input id="il-start" type="range" min="1" max="112" step="1" value="5"></label>
-</div><div id="interleave-output" class="output" aria-live="polite"></div></section>
+<label for="il-depth">交錯深度 D（列數 = 同時交錯的碼字數） <output id="il-depth-val" for="il-depth">4</output><input id="il-depth" type="range" min="1" max="16" step="1" value="4"></label>
+<label for="il-burst">突發長度 b（位元） <output id="il-burst-val" for="il-burst">6</output><input id="il-burst" type="range" min="1" max="24" step="1" value="6"></label>
+<label for="il-start">突發起點（發射串的第幾個位元） <output id="il-start-val" for="il-start">5</output><input id="il-start" type="range" min="1" max="112" step="1" value="5"></label>
+</div><div><p><strong>先預測再拖：</strong>D ＝ 5、b ＝ 13、起點 9 時，解交錯後單一碼字最多挨幾個錯？</p><label for="p10">你的預測<input id="p10" type="number" step="1"></label><button id="p10-check" type="button">檢查預測</button><div id="p10-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q10-1">再做 10 章自我檢核</a></p></div><div id="interleave-output" class="output" aria-live="polite"></div></section>
 
 <h2>不要混淆</h2>
 <ul><li>交錯不是編碼；它不新增位元，也不降低錯誤總數，只改變錯誤分布。</li><li>交錯深度 D 是列數，不是矩陣總大小；總緩衝量還要乘上碼長 n。</li><li>b ≤ D 是單一突發下的保證條件，不代表更長突發一定全部失敗；串尾截斷或特定位置仍可能較輕。</li><li>延遲以位元表示時還不是時間；必須除以位元率，且發射與接收兩端各有一次緩衝。</li><li>摺積交錯器以不同支路延遲達成持續串流；本章矩陣模型是區塊交錯器，緩衝方式不同。</li></ul>

@@ -46,13 +46,13 @@
 <section class="workspace"><h2>自由實驗：級聯順序與雜訊底</h2>
 <p>場景是 LNA、混頻器與 IF 放大器組成的三級接收鏈。改變頻寬、輸入功率、各級增益與 NF，再交換前兩級，觀察三個 Friis 項、總 NF 與輸出訊雜比。</p>
 <div class="controls">
-<label for="nf-b">接收頻寬 B（MHz）<input id="nf-b" type="range" min="0.01" max="100" step="0.01" value="1"></label>
-<label for="nf-pin">輸入訊號功率（dBm）<input id="nf-pin" type="range" min="-130" max="-30" step="1" value="-100"></label>
-<label for="nf-g1">LNA 增益 G_1（dB）<input id="nf-g1" type="range" min="0" max="40" step="1" value="20"></label>
-<label for="nf-f1">LNA 雜訊指數 NF_1（dB）<input id="nf-f1" type="range" min="0.5" max="10" step="0.1" value="1.5"></label>
-<label for="nf-g2">混頻器增益 G_2（dB，負值是損耗）<input id="nf-g2" type="range" min="-15" max="20" step="1" value="-6"></label>
-<label for="nf-f2">混頻器雜訊指數 NF_2（dB）<input id="nf-f2" type="range" min="1" max="20" step="0.5" value="8"></label>
-<label for="nf-f3">IF 放大器雜訊指數 NF_3（dB）<input id="nf-f3" type="range" min="1" max="20" step="0.5" value="5"></label>
+<label for="nf-b">接收頻寬 B（MHz）<output for="nf-b" id="nf-b-value" style="float:inline-end">1</output><input id="nf-b" type="range" min="0.01" max="100" step="0.01" value="1"></label>
+<label for="nf-pin">輸入訊號功率（dBm）<output for="nf-pin" id="nf-pin-value" style="float:inline-end">-100</output><input id="nf-pin" type="range" min="-130" max="-30" step="1" value="-100"></label>
+<label for="nf-g1">LNA 增益 G<sub>1</sub>（dB）<output for="nf-g1" id="nf-g1-value" style="float:inline-end">20</output><input id="nf-g1" type="range" min="0" max="40" step="1" value="20"></label>
+<label for="nf-f1">LNA 雜訊指數 NF<sub>1</sub>（dB）<output for="nf-f1" id="nf-f1-value" style="float:inline-end">1.5</output><input id="nf-f1" type="range" min="0.5" max="10" step="0.1" value="1.5"></label>
+<label for="nf-g2">混頻器增益 G<sub>2</sub>（dB，負值是損耗）<output for="nf-g2" id="nf-g2-value" style="float:inline-end">-6</output><input id="nf-g2" type="range" min="-15" max="20" step="1" value="-6"></label>
+<label for="nf-f2">混頻器雜訊指數 NF<sub>2</sub>（dB）<output for="nf-f2" id="nf-f2-value" style="float:inline-end">8</output><input id="nf-f2" type="range" min="1" max="20" step="0.5" value="8"></label>
+<label for="nf-f3">IF 放大器雜訊指數 NF<sub>3</sub>（dB）<output for="nf-f3" id="nf-f3-value" style="float:inline-end">5</output><input id="nf-f3" type="range" min="1" max="20" step="0.5" value="5"></label>
 <label for="nf-swap"><input id="nf-swap" type="checkbox">把混頻器放在 LNA 前面</label>
 </div>
 <div id="friis-output" class="output" aria-live="polite"></div>
@@ -75,6 +75,7 @@
 
 <h2>連到哪門課</h2>
 <p>高斯分布與標準差見<a href="../../../共通基礎/數學/互動課程/12-機率與隨機變數.html">工程數學先修的機率與隨機變數</a>，本章不重講其機制。雜訊底會在第 11 章鏈路預算再次使用；LNA、接收器前端、衛星地面站與射電望遠鏡則把 NF 或 T<sub>e</sub> 當成核心規格。</p>
+<section aria-labelledby="summary-05"><h2 id="summary-05">本章帶走的三件事</h2><ul><li>熱雜訊底隨頻寬以 10 log<sub>10</sub>B 增加。</li><li>Friis 公式把後級雜訊除以前級增益，因此第一級位置最關鍵。</li><li>雜訊指數直接從輸入訊雜比扣掉，不能與增益混為一談。</li></ul><p><strong>下章銜接：</strong><a href="06-取樣量化與PCM.html">06 章</a>把連續訊號轉成位元流，開始另一種雜訊帳；也可先做<a href="自我檢核.html#quiz-05">本章檢核</a>。</p></section>
 <nav class="pager" aria-label="章節導覽"><a href="04-超外差接收機與影像頻率.html">← 上一頁：超外差接收機與影像頻率</a><a href="06-取樣量化與PCM.html">下一頁：取樣、量化與 PCM →</a></nav>
 </main>
 <footer class="site-footer"><span>05 雜訊、訊雜比與雜訊指數</span><a href="名詞與概念字典.html">查字典</a></footer>

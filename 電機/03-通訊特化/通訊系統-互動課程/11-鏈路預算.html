@@ -38,15 +38,15 @@
 <section class="workspace"><h2>自由實驗：九個旋鈕完成一張鏈路預算</h2>
 <p>場景是兩支對準、視距內的天線。依序設定發射功率、兩端增益、頻率、距離、接收頻寬、NF、所需 SNR 與衰落保險；結果會逐項列出加減帳，並告訴你鏈路是否可通、最多可拉到多遠。</p>
 <div class="controls">
-<label for="lb-pt">發射功率 P_t（dBm）<input id="lb-pt" type="range" min="-10" max="40" step="1" value="20"></label>
-<label for="lb-gt">發射天線增益 G_t（dBi）<input id="lb-gt" type="range" min="0" max="30" step="1" value="2"></label>
-<label for="lb-gr">接收天線增益 G_r（dBi）<input id="lb-gr" type="range" min="0" max="30" step="1" value="2"></label>
-<label for="lb-f">頻率 f（MHz）<input id="lb-f" type="range" min="100" max="6000" step="1" value="2400"></label>
-<label for="lb-d">距離 d（m）<input id="lb-d" type="range" min="10" max="5000" step="10" value="100"></label>
-<label for="lb-b">接收頻寬 B（MHz）<input id="lb-b" type="range" min="0.1" max="100" step="0.1" value="20"></label>
-<label for="lb-nf">接收機雜訊指數 NF（dB）<input id="lb-nf" type="range" min="1" max="15" step="0.5" value="6"></label>
-<label for="lb-req">所需 SNR（dB）<input id="lb-req" type="range" min="0" max="30" step="0.5" value="10"></label>
-<label for="lb-fade">衰落裕度（dB）<input id="lb-fade" type="range" min="0" max="30" step="1" value="0"></label>
+<label for="lb-pt">發射功率 P<sub>t</sub>（dBm）<output for="lb-pt" id="lb-pt-value" style="float:inline-end">20</output><input id="lb-pt" type="range" min="-10" max="40" step="1" value="20"></label>
+<label for="lb-gt">發射天線增益 G<sub>t</sub>（dBi）<output for="lb-gt" id="lb-gt-value" style="float:inline-end">2</output><input id="lb-gt" type="range" min="0" max="30" step="1" value="2"></label>
+<label for="lb-gr">接收天線增益 G<sub>r</sub>（dBi）<output for="lb-gr" id="lb-gr-value" style="float:inline-end">2</output><input id="lb-gr" type="range" min="0" max="30" step="1" value="2"></label>
+<label for="lb-f">頻率 f（MHz）<output for="lb-f" id="lb-f-value" style="float:inline-end">2400</output><input id="lb-f" type="range" min="100" max="6000" step="1" value="2400"></label>
+<label for="lb-d">距離 d（m）<output for="lb-d" id="lb-d-value" style="float:inline-end">100</output><input id="lb-d" type="range" min="10" max="5000" step="10" value="100"></label>
+<label for="lb-b">接收頻寬 B（MHz）<output for="lb-b" id="lb-b-value" style="float:inline-end">20</output><input id="lb-b" type="range" min="0.1" max="100" step="0.1" value="20"></label>
+<label for="lb-nf">接收機雜訊指數 NF（dB）<output for="lb-nf" id="lb-nf-value" style="float:inline-end">6</output><input id="lb-nf" type="range" min="1" max="15" step="0.5" value="6"></label>
+<label for="lb-req">所需 SNR（dB）<output for="lb-req" id="lb-req-value" style="float:inline-end">10</output><input id="lb-req" type="range" min="0" max="30" step="0.5" value="10"></label>
+<label for="lb-fade">衰落裕度（dB）<output for="lb-fade" id="lb-fade-value" style="float:inline-end">0</output><input id="lb-fade" type="range" min="0" max="30" step="1" value="0"></label>
 </div>
 <div id="link-output" class="output" aria-live="polite"></div>
 </section>
@@ -61,6 +61,7 @@
 
 <h2>連到哪門課</h2>
 <p>λ ＝ c/f 與波的傳播機制見<a href="../../02-電機核心/電磁學-互動課程/13-電磁波與平面波.html">電磁學的電磁波與平面波</a>。Rayleigh／Rician 統計、分集與 MIMO 留給無線與行動通訊課；天線增益與有效面積的完整物理留給天線課。這張預算表則直接用在基地台覆蓋、點對點微波與物聯網節點規劃。</p>
+<section aria-labelledby="summary-11"><h2 id="summary-11">本章帶走的三件事</h2><ul><li>接收功率等於發射功率加天線增益再扣路徑損失。</li><li>雜訊底由 kT<sub>0</sub>B 與 NF 決定，兩本帳相減才得到 SNR。</li><li>鏈路裕度每增加 6.020600 dB，自由空間最遠距離約加倍。</li></ul><p><strong>課程收束：</strong>到<a href="名詞與概念字典.html">字典</a>回查術語，再用<a href="自我檢核.html#quiz-11">本章檢核</a>與其餘 11 組題目重建整條 dB 帳本。</p></section>
 <nav class="pager" aria-label="章節導覽"><a href="10-頻譜效率與Shannon極限.html">← 上一頁：頻譜效率與 Shannon 極限</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>
 </main>
 <footer class="site-footer"><span>11 鏈路預算</span><a href="名詞與概念字典.html">查字典</a></footer>

@@ -46,10 +46,10 @@
 <tr><td>10<sup>−5</sup></td><td>9.587858 dB</td><td>9.174484 dB</td><td><strong>0.413375 dB</strong></td></tr>
 <tr><td>10<sup>−6</sup></td><td>10.529832 dB</td><td>10.056825 dB</td><td><strong>0.473007 dB</strong></td></tr>
 </tbody></table>
-<p class="note">表中增益由未捨入的所需 E<sub>b</sub>/N<sub>0</sub> 相減後，再捨入為六位小數；直接拿表上兩個已捨入值相減，可能差 0.000001 dB。</p>
-<p><strong>量級與邊界對照。</strong>漸近硬判決增益 10 log<sub>10</sub>(R(t ＋ 1)) ＝ 0.579919 dB，軟判決漸近 10 log<sub>10</sub>(R d<sub>min</sub>) ＝ 2.340832 dB。E<sub>b</sub>/N<sub>0</sub> ＝ 4 dB 時，編碼後 1.615397 × 10<sup>−2</sup> 比未編碼 1.250082 × 10<sup>−2</sup> 更差，倍率 0.773854；6 dB 時幾乎打平，倍率 1.025105；8 dB 為 1.632334 倍；12 dB 為 9.237060 倍。兩位錯誤例如第 3 與第 6 位，接收 1001 000、症狀 001，解碼器翻第 7 位得 1001 001，解出 1001，是誤糾。</p>
+<p class="note">表中增益由未捨入的所需 E<sub>b</sub>/N<sub>0</sub> 相減後，再捨入為六位小數；直接拿表上兩個已捨入值相減，可能差 1 × 10<sup>−6</sup> dB。</p>
+<p><strong>量級與邊界對照。</strong>漸近硬判決增益 10 log<sub>10</sub>(R(t ＋ 1)) ＝ 0.5799 dB，軟判決漸近 10 log<sub>10</sub>(R d<sub>min</sub>) ＝ 2.341 dB。E<sub>b</sub>/N<sub>0</sub> ＝ 4 dB 時，編碼後 1.615 × 10<sup>−2</sup> 比未編碼 1.25 × 10<sup>−2</sup> 更差，倍率 0.7739；6 dB 時幾乎打平，倍率 1.025；8 dB 為 1.632 倍；12 dB 為 9.237 倍。兩位錯誤例如第 3 與第 6 位，接收 1001 000、症狀 001，解碼器翻第 7 位得 1001 001，解出 1001，是誤糾。</p>
 <p>其他錯誤組合可用來檢查邊界：無錯時症狀 000；第 7 位單錯時症狀 001，指向 7 並正確糾回。第 1 與第 2 位錯時症狀 011，解碼器翻第 3 位後解出 0101；第 1 與第 7 位錯時症狀 111，翻第 4 位後解出 0010，兩者都錯。同一位翻兩次會抵消；m ＝ 0000 的碼字是 0000 000，m ＝ 1111 的碼字是 1111 111，第 4 位錯時症狀 111 並可正確糾回；m ＝ 0101、第 5 位錯時症狀 100，也可正確糾回。</p>
-<p>E<sub>b</sub>/N<sub>0</sub> ＝ 0 dB 時，p ＝ 1.425247 × 10<sup>−1</sup>，編碼後遠差於未編碼；調到 12 dB 時，編碼好 9.237060 倍。這兩端說明漢明碼的冗餘能量成本先出現，要等交叉機率降低後，糾單錯的收益才會超過成本。</p>
+<p>E<sub>b</sub>/N<sub>0</sub> ＝ 0 dB 時，p ＝ 1.425 × 10<sup>−1</sup>，編碼後遠差於未編碼；調到 12 dB 時，編碼好 9.237 倍。這兩端說明漢明碼的冗餘能量成本先出現，要等交叉機率降低後，糾單錯的收益才會超過成本。</p>
 
 <section class="workspace"><h2>自由實驗：編碼、翻位、查症狀</h2>
 <p>先選 4 位訊息，再指定零、一或兩個翻轉位置。輸出會逐式列出編碼與症狀，並以同一 E_b/N_0 比較編碼前後的誤碼率。</p>
@@ -57,8 +57,9 @@
 <label for="hm-msg">4 位元訊息 m<select id="hm-msg"><option value="0000">0000</option><option value="0001">0001</option><option value="0010">0010</option><option value="0011">0011</option><option value="0100">0100</option><option value="0101">0101</option><option value="0110">0110</option><option value="0111">0111</option><option value="1000">1000</option><option value="1001">1001</option><option value="1010">1010</option><option value="1011" selected>1011</option><option value="1100">1100</option><option value="1101">1101</option><option value="1110">1110</option><option value="1111">1111</option></select></label>
 <label for="hm-e1">錯誤位置 1<select id="hm-e1"><option value="0">無</option><option value="1">第 1 位</option><option value="2">第 2 位</option><option value="3" selected>第 3 位</option><option value="4">第 4 位</option><option value="5">第 5 位</option><option value="6">第 6 位</option><option value="7">第 7 位</option></select></label>
 <label for="hm-e2">錯誤位置 2<select id="hm-e2"><option value="0" selected>無</option><option value="1">第 1 位</option><option value="2">第 2 位</option><option value="3">第 3 位</option><option value="4">第 4 位</option><option value="5">第 5 位</option><option value="6">第 6 位</option><option value="7">第 7 位</option></select></label>
-<label for="hm-ebn0">E_b/N_0（dB，算編碼增益用）<input id="hm-ebn0" type="range" min="0" max="12" step="0.5" value="10"></label>
+<label for="hm-ebn0">E_b/N_0（dB，算編碼增益用） <output id="hm-ebn0-val" for="hm-ebn0">10</output><input id="hm-ebn0" type="range" min="0" max="12" step="0.5" value="10"></label>
 </div>
+<div><p><strong>先預測再拖：</strong>未編碼 E<sub>b</sub>/N<sub>0</sub> ＝ 9 dB 時，率 4/7 漢明碼的 E<sub>c</sub>/N<sub>0</sub> 是多少 dB？</p><label for="p08">你的預測（dB）<input id="p08" type="number" step="0.01"></label><button id="p08-check" type="button">檢查預測</button><div id="p08-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q08-1">再做 08 章自我檢核</a></p></div>
 <div id="hamming-output" class="output" aria-live="polite"></div>
 </section>
 

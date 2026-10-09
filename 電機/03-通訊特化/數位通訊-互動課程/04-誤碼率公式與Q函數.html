@@ -37,19 +37,20 @@
 <tr><td>非同調 BFSK</td><td>e<sup>−5</sup></td><td><strong>3.368973 × 10<sup>−3</sup></strong></td><td>3.368973 × 10<sup>3</sup></td><td>13.352484</td><td>3.764625</td></tr>
 <tr><td>同調 BFSK</td><td>√10 ＝ 3.162278</td><td><strong>7.827011 × 10<sup>−4</sup></strong></td><td>7.827011 × 10<sup>2</sup></td><td>12.598158</td><td>3.010300</td></tr>
 </tbody></table>
-<p><strong>筆記 dB 差是粗略值。</strong>筆記 §6 寫 8-PSK 差 4 dB、16-QAM 差 4 dB、64-QAM 差 9 dB、256-QAM 差 14 dB；本課在 10<sup>−5</sup> 算得 <strong>3.383774、3.846663、8.199029、12.915298 dB</strong>。差距會隨目標誤碼率略變；到 10<sup>−9</sup> 時依序是 <strong>3.475579、3.911208、8.322350、13.091692 dB</strong>，所以不可把整數差當固定常數。</p>
-<p>DBPSK 在 10<sup>−5</sup> 需要 <strong>10.342184 dB</strong>，相對 BPSK 多 <strong>0.754325 dB</strong>。這個差距在高 SNR 時不到 1 dB，不能反推所有工作區都只差同一數字；低 SNR 時，前一符元所帶的雜訊更明顯，差距會擴大。</p>
-<p><strong>量級對照。</strong>0 dB 時 BPSK 為 <strong>7.864960 × 10<sup>−2</sup></strong>，256-QAM 為 <strong>1.778921 × 10<sup>−1</sup></strong>，非同調 BFSK 為 <strong>3.032653 × 10<sup>−1</sup></strong>；20 dB 時 BPSK 已到 <strong>1.044244 × 10<sup>−45</sup></strong>，64-QAM 仍為 <strong>2.633893 × 10<sup>−8</sup></strong>，256-QAM 為 <strong>5.053069 × 10<sup>−4</sup></strong>。</p>
-<p>目標改為 10<sup>−3</sup> 時，BPSK 需要 <strong>6.789523 dB</strong>，16-QAM 需要 <strong>10.522401 dB</strong>；目標收緊到 10<sup>−9</sup> 時，BPSK 需要 <strong>12.549550 dB</strong>，64-QAM 需要 <strong>20.871900 dB</strong>。若傳 10<sup>9</sup> 位元、BPSK 工作在 16 dB，期望錯誤數只有 <strong>2.267396 × 10<sup>−10</sup></strong> 個，顯示畫面應解讀為「期望連一個都不到」，而不是必然不會出錯。</p>
+<p><strong>筆記 dB 差是粗略值。</strong>筆記 §6 寫 8-PSK 差 4 dB、16-QAM 差 4 dB、64-QAM 差 9 dB、256-QAM 差 14 dB；本課在 10<sup>−5</sup> 算得 <strong>3.384、3.847、8.199、12.92 dB</strong>。差距會隨目標誤碼率略變；到 10<sup>−9</sup> 時依序是 <strong>3.476、3.911、8.322、13.09 dB</strong>，所以不可把整數差當固定常數。</p>
+<p>DBPSK 在 10<sup>−5</sup> 需要 <strong>10.34 dB</strong>，相對 BPSK 多 <strong>0.7543 dB</strong>。這個差距在高 SNR 時不到 1 dB，不能反推所有工作區都只差同一數字；低 SNR 時，前一符元所帶的雜訊更明顯，差距會擴大。</p>
+<p><strong>量級對照。</strong>0 dB 時 BPSK 為 <strong>7.865 × 10<sup>−2</sup></strong>，256-QAM 為 <strong>1.779 × 10<sup>−1</sup></strong>，非同調 BFSK 為 <strong>3.033 × 10<sup>−1</sup></strong>；20 dB 時 BPSK 已到 <strong>1.044 × 10<sup>−45</sup></strong>，64-QAM 仍為 <strong>2.634 × 10<sup>−8</sup></strong>，256-QAM 為 <strong>5.053 × 10<sup>−4</sup></strong>。</p>
+<p>目標改為 10<sup>−3</sup> 時，BPSK 需要 <strong>6.79 dB</strong>，16-QAM 需要 <strong>10.52 dB</strong>；目標收緊到 10<sup>−9</sup> 時，BPSK 需要 <strong>12.55 dB</strong>，64-QAM 需要 <strong>20.87 dB</strong>。若傳 10<sup>9</sup> 位元、BPSK 工作在 16 dB，期望錯誤數只有 <strong>2.267 × 10<sup>−10</sup></strong> 個，顯示畫面應解讀為「期望連一個都不到」，而不是必然不會出錯。</p>
 
 <section class="workspace"><h2>自由實驗：九方案誤碼率帳本</h2>
 <p>場景是理想同步的 AWGN 鏈路。選方案、E_b/N_0、目標誤碼率與傳送量，回饋會同時計算當前錯誤率、期望錯誤數、達標所需 dB，並把九種方案排在同一張表。</p>
 <div class="controls">
 <label for="bf-scheme">調變方案<select id="bf-scheme"><option value="bpsk">BPSK／QPSK（同調）</option><option value="psk8">8-PSK</option><option value="psk16">16-PSK</option><option value="qam16">16-QAM</option><option value="qam64">64-QAM</option><option value="qam256">256-QAM</option><option value="dpsk">DBPSK（差分）</option><option value="ncfsk">非同調 BFSK</option><option value="cfsk">同調 BFSK</option></select></label>
-<label for="bf-ebn0">E_b/N_0（dB）<input id="bf-ebn0" type="range" min="0" max="20" step="0.5" value="10"></label>
+<label for="bf-ebn0">E_b/N_0（dB） <output id="bf-ebn0-val" for="bf-ebn0">10</output><input id="bf-ebn0" type="range" min="0" max="20" step="0.5" value="10"></label>
 <label for="bf-target">目標誤碼率<select id="bf-target"><option value="1e-3">10^-3</option><option value="1e-5" selected>10^-5</option><option value="1e-6">10^-6</option><option value="1e-9">10^-9</option></select></label>
 <label for="bf-n">傳送位元數<select id="bf-n"><option value="1000">10^3 位元</option><option value="1000000" selected>10^6 位元</option><option value="1000000000">10^9 位元</option></select></label>
 </div>
+<div><p><strong>先預測再拖：</strong>BPSK 在 E<sub>b</sub>/N<sub>0</sub> ＝ 8 dB 時，誤碼率約是多少？</p><label for="p04">你的預測<input id="p04" type="number" step="0.000001"></label><button id="p04-check" type="button">檢查預測</button><div id="p04-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q04-1">再做 04 章自我檢核</a></p></div>
 <div id="berfam-output" class="output" aria-live="polite"></div>
 </section>
 

@@ -2,7 +2,7 @@
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-回授的價值.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
-<p class="eyebrow">07・用九個頻率讀值取代畫圖</p>
+<p class="eyebrow">07・用曲線看走勢，用九個頻率讀值核對</p>
 <h1>07 頻率響應與波德圖：把三個極點的衰減與相位逐項相加</h1>
 <p class="lead">在 ω ＝ 10 rad/s，精確讀值是 −3.053514 dB、−140.710593°，而漸近線給 0.000000 dB。這個差距不是算錯：其中 3.010300 dB 來自第一個極點正好位於轉角，另外約 0.043214 dB 來自第二個極點已開始衰減。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="01-建模從微分方程到轉移函數.html">01 建模：從微分方程到轉移函數</a>的一階模型。<strong>前置：</strong>見〈09 濾波器與群延遲〉<a href="../信號與系統-互動課程/09-濾波器與群延遲.html">信號與系統的頻率響應</a>；另見電路學〈12 一階濾波器與頻率響應〉<a href="../電路學-互動課程/12-一階濾波器與頻率響應.html">一個極點的讀值</a>。s ＝ jω 的由來不在本章重推。</p>
@@ -15,7 +15,7 @@
 <h2>白話直覺：每個極點都接手一段下坡</h2>
 <p>可以暫時把三個極點想成依序加入的煞車，每加入一個就讓下坡再陡 20 dB/十倍頻；比喻到此為止。精確說法是積分器從一開始貢獻 −20 dB/十倍頻與 −90°，兩個一階極點則各以 √(1 + (ωτ)²) 壓低振幅，並以 −arctan(ωτ) 增加相位落後。</p>
 <p>因果鏈從參考命令的弦波開始：誤差經迴路增益放大成控制量 u，受控體對不同 ω 的控制量給出不同輸出。ω 跨過 10 與 100 rad/s 後，有效增益快速下降，相位逐步接近 −270°；這等於描述極點對閉迴路設計留下多少餘裕。網路分析儀逐頻量振幅比與相位差，會直接看到兩個轉角與三段斜率。</p>
-<p>頻率響應（frequency response）是 L(jω) 隨 ω 的複數讀值；波德圖（Bode plot）把它拆成「振幅 dB 對 log ω」與「相位度對 log ω」。本課不畫曲線，而用九點表保留每個可核對的數字。</p>
+<p>頻率響應（frequency response）是 L(jω) 隨 ω 的複數讀值；波德圖（Bode plot）把它拆成「振幅 dB 對 log ω」與「相位度對 log ω」。本課用動態曲線顯示形狀，並用九點表保留每個可核對的數字。</p>
 <p>這件事在你的程式裡長什麼樣：對固定九個 ω 逐一計算平方根、常用對數與反正切，把精確 dB、漸近 dB、誤差及相位寫入表格，再依目前所選頻率標出判讀。</p>
 <p class="note">來源：13-控制系統 §5.1、§5.2。</p>
 
@@ -48,7 +48,7 @@
 <label for="bd-t2">時間常數 τ_2（s）<input id="bd-t2" type="range" min="0.001" max="0.1" step="0.001" value="0.01"></label>
 <label for="bd-w">角頻率<select id="bd-w"><option value="0.1">ω = 0.1 rad/s</option><option value="0.3">ω = 0.3 rad/s</option><option value="1">ω = 1 rad/s</option><option value="3">ω = 3 rad/s</option><option value="10" selected>ω = 10 rad/s</option><option value="30">ω = 30 rad/s</option><option value="100">ω = 100 rad/s</option><option value="300">ω = 300 rad/s</option><option value="1000">ω = 1000 rad/s</option></select></label>
 </div>
-<div id="bode-output" class="output" aria-live="polite"></div>
+<div id="bode-output" class="output"></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -63,6 +63,9 @@
 <p><strong>用什麼量。</strong>在安全條件下斷開迴路，以網路分析儀掃頻；也可用訊號產生器逐點輸入弦波，再由示波器量輸入與輸出的振幅比、時間差，換算 L(jω) 的 dB 與相位。每一點都必須等暫態消退後再記錄。</p>
 <p><strong>能證明什麼。</strong>九點量測能驗證 10 與 100 rad/s 兩個轉角、三段斜率，以及相位是否近似三項反正切相加。<strong>不能證明什麼。</strong>開迴路掃頻本身不能保證閉迴路穩定；也不能只由振幅證明模型為最小相位，因為純延遲可能只讓相位額外下降。</p>
 
+<p><strong>在家版本。</strong>以動態 SVG 先讀曲線趨勢，再把 ω 選在 1、10、100、1000 rad/s，核對九點表的斜率與相位；不需要網路分析儀，但只能驗證指定模型，無法發現實機延遲或寄生極點。</p>
+<h2>帶走三件事</h2>
+<ul><li>每個一階極點最終增加 −20 dB/十倍頻與 −90° 相位。</li><li>轉角處漸近線與精確值不同，單一極點的修正是 −3.010300 dB。</li><li>振幅用 dB 相加、相位直接相加，能把多個因子拆開檢查。</li></ul>
 <h2>連到哪門課</h2>
 <p>s ＝ jω 與頻率響應的數學來源見<a href="../信號與系統-互動課程/09-濾波器與群延遲.html">信號與系統的濾波器與群延遲</a>；一階 RC 的實體量測見<a href="../電路學-互動課程/12-一階濾波器與頻率響應.html">電路學的一階濾波器與頻率響應</a>。電源轉換器、馬達驅動器與伺服迴路都用掃頻檢查模型；下一章會從同一組讀值找出增益裕度與相位裕度。</p>
 <nav class="pager" aria-label="章節導覽"><a href="06-根軌跡.html">← 上一頁：根軌跡</a><a href="08-增益裕度相位裕度與奈奎斯特.html">下一頁：增益裕度、相位裕度與奈奎斯特 →</a></nav>

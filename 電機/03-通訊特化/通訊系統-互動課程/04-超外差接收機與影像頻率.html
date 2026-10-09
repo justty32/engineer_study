@@ -41,11 +41,11 @@
 <section class="workspace"><h2>自由實驗：選台、注入側與影像抑制</h2>
 <p>場景是一台 530–1700 kHz AM 接收機。選擇目標台、中頻、注入側、頻道間距與預選器 Q，觀察 LO、影像位置、可排台數與影像抑制。</p>
 <div class="controls">
-<label for="sh-frf">想收的電台 f_RF（kHz）<input id="sh-frf" type="range" min="530" max="1700" step="10" value="1000"></label>
-<label for="sh-fif">中頻 f_IF（kHz）<input id="sh-fif" type="range" min="100" max="1000" step="5" value="455"></label>
-<label for="sh-side">本地振盪器注入側<select id="sh-side"><option value="high" selected>高側注入（f_LO ＝ f_RF + f_IF）</option><option value="low">低側注入（f_LO ＝ f_RF − f_IF）</option></select></label>
-<label for="sh-chan">頻道間距（kHz）<input id="sh-chan" type="range" min="5" max="20" step="1" value="10"></label>
-<label for="sh-q">RF 預選器品質因數 Q<input id="sh-q" type="range" min="10" max="200" step="5" value="50"></label>
+<label for="sh-frf">想收的電台 f<sub>RF</sub>（kHz）<output for="sh-frf" id="sh-frf-value" style="float:inline-end">1000</output><input id="sh-frf" type="range" min="530" max="1700" step="10" value="1000"></label>
+<label for="sh-fif">中頻 f<sub>IF</sub>（kHz）<output for="sh-fif" id="sh-fif-value" style="float:inline-end">455</output><input id="sh-fif" type="range" min="100" max="1000" step="5" value="455"></label>
+<label for="sh-side">本地振盪器注入側<select id="sh-side"><option value="high" selected>高側注入（LO ＝ RF + IF）</option><option value="low">低側注入（LO ＝ RF − IF）</option></select></label>
+<label for="sh-chan">頻道間距（kHz）<output for="sh-chan" id="sh-chan-value" style="float:inline-end">10</output><input id="sh-chan" type="range" min="5" max="20" step="1" value="10"></label>
+<label for="sh-q">RF 預選器品質因數 Q<output for="sh-q" id="sh-q-value" style="float:inline-end">50</output><input id="sh-q" type="range" min="10" max="200" step="5" value="50"></label>
 </div>
 <div id="superhet-output" class="output" aria-live="polite"></div>
 </section>
@@ -67,6 +67,7 @@
 
 <h2>連到哪門課</h2>
 <p>濾波器過渡範圍的來源見<a href="../../02-電機核心/信號與系統-互動課程/09-濾波器與群延遲.html">信號與系統的濾波器與群延遲</a>；品質因數的電路意義見<a href="../../02-電機核心/電路學-互動課程/13-RLC共振與品質因數.html">電路學的 RLC 共振與品質因數</a>。收音機、電視調諧器與頻譜分析儀都用到頻率轉換；鎖相迴路設計則接到控制系統課。</p>
+<section aria-labelledby="summary-04"><h2 id="summary-04">本章帶走的三件事</h2><ul><li>超外差把不同 RF 搬到固定 IF，讓後級濾波器可重複使用。</li><li>目標與影像都能混到同一 IF，所以影像必須在混頻前壓掉。</li><li>提高 IF 有利影像抑制，降低 IF 有利窄頻選擇性，兩者需取捨。</li></ul><p><strong>下章銜接：</strong><a href="05-雜訊訊雜比與雜訊指數.html">05 章</a>接著計算接收鏈各級如何累積雜訊；也可先做<a href="自我檢核.html#quiz-04">本章檢核</a>。</p></section>
 <nav class="pager" aria-label="章節導覽"><a href="03-FM與Carson頻寬.html">← 上一頁：FM 與 Carson 頻寬</a><a href="05-雜訊訊雜比與雜訊指數.html">下一頁：雜訊、訊雜比與雜訊指數 →</a></nav>
 </main>
 <footer class="site-footer"><span>04 超外差接收機與影像頻率</span><a href="名詞與概念字典.html">查字典</a></footer>

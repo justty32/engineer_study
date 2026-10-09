@@ -1,4 +1,14 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 變壓器等效電路與試驗｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 變壓器等效電路與試驗｜電機機械</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
@@ -14,6 +24,7 @@
 <h2>白話直覺：一次只讓半邊說話</h2>
 <p>可把兩次試驗暫時想成訪談時先請另一組人安靜；比喻到此為止，真實機制是阻抗與端電壓讓某條回路的影響遠小於另一條。開路試驗（open-circuit test）在低壓側加額定電壓，高壓側斷開，串聯支路電流很小，因此功率主要進入鐵損，總電流則分成鐵損電流與激磁電流。短路試驗（short-circuit test）在低壓側短接，只在高壓側慢慢加低電壓直到額定電流；激磁分支承受的電壓很低，因此功率主要成為銅損。</p>
 <p>因果鏈是：電源以儀表共同參考點加到指定端子，開路或低壓短路回路決定電流路徑；電流建立磁通或流過線圈電阻，分別造成鐵損與銅損；穩態時端電壓、電流及輸入功率固定；電壓表、電流表與功率計就能提供反推資料。開路選低壓側，是因為額定電壓較小；短路由高壓側供電，是因為額定電流較小，兩者都讓儀表較安全。</p>
+<figure style="margin:1rem 0;overflow-x:auto"><svg viewBox="0 0 720 250" role="img" aria-label="變壓器近似等效電路：輸入端並聯鐵損電阻與激磁電抗，再經串聯等效電阻與漏電抗到負載" style="width:100%;min-width:620px;max-height:250px;color:var(--ink,currentColor)" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><title>變壓器近似等效電路</title><path d="M60 55v140m0-115h95m0 0v115m0-115h95m-95 115h95m0-115h55l10-18 20 36 20-36 20 36 10-18h50m0 0c8-24 18-24 26 0s18 24 26 0 18-24 26 0 18 24 26 0h55m0 0v115H250V80"/><path d="M185 80v22m0 0c-18 8-18 22 0 30s18 22 0 30-18 22 0 30v3"/><path d="M220 80v25l-12 8 24 14-24 14 24 14-12 8v32"/><text x="28" y="48" fill="currentColor" stroke="none">V₁</text><text x="166" y="225" fill="currentColor" stroke="none">Rᴄ</text><text x="207" y="225" fill="currentColor" stroke="none">jXₘ</text><text x="326" y="48" fill="currentColor" stroke="none">R_eq</text><text x="467" y="48" fill="currentColor" stroke="none">jX_eq</text><text x="657" y="48" fill="currentColor" stroke="none">Z_L</text></svg><figcaption>圖中並聯支路 R<sub>c</sub>、jX<sub>m</sub> 表示鐵損與建立磁通；串聯 R<sub>eq</sub>、jX<sub>eq</sub> 表示繞組銅損與漏磁。</figcaption></figure>
 <p class="note">來源：12-電機機械 §2.2、§2.3。</p>
 
 <h2>推導：開路求並聯支路，短路求串聯支路</h2>
@@ -49,7 +60,7 @@
 <label for="xt-isc">短路試驗電流 I_sc（A）<input id="xt-isc" type="range" min="1" max="8" step="0.01" value="4.17"></label>
 <label for="xt-psc">短路試驗功率 P_sc（W）<input id="xt-psc" type="range" min="10" max="300" step="1" value="139"></label>
 </div>
-<div id="xftest-output" class="output" aria-live="polite"><table><tbody><tr><th>G、|Y|、B</th><td>0.001042 S；0.012542 S；0.012498 S</td></tr><tr><th>R_c,LV、X_m,LV</th><td>960.000000 Ω；80.010669 Ω</td></tr><tr><th>R_c、X_m</th><td>96000.000000 Ω；8001.066880 Ω</td></tr><tr><th>鐵損電流、激磁電流</th><td>0.250000 A；2.999600 A</td></tr><tr><th>|Z_eq|、R_eq、X_eq</th><td>14.388489 Ω；7.993605 Ω；11.963733 Ω</td></tr><tr><th>額定一次電流、滿載銅損</th><td>4.166667 A；138.777867 W</td></tr><tr><th>Z_base、%Z</th><td>576.000000 Ω；2.498002 %</td></tr><tr><th>R_eq,LV、X_eq,LV</th><td>0.079936 Ω；0.119637 Ω</td></tr></tbody></table><strong>判讀：開路試驗給激磁分支（R_c、X_m），短路試驗給串聯支路（R_eq、X_eq），兩個試驗各關掉一半電路。</strong>滿載銅損 138.777867 W 對鐵損 60 W。為什麼：開路時串聯電流很小，短路試驗的低電壓又壓低激磁支路作用。邊界提醒：功率不得大於電壓與電流的乘積；平方根內若小於等於零就顯示不適用，絕不輸出非數值；百分阻抗低於 1 % 時短路電流很大，高於 8 % 時電壓調整率會差。</div>
+<div id="xftest-output" class="output"><p class="current-settings">目前設定：a = 10；V_oc = 240 V；I_oc = 3.01 A；P_oc = 60 W；V_sc = 60 V；I_sc = 4.17 A；P_sc = 139 W。</p><table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>R_c 低壓側</td><td>960.000000 Ω</td></tr><tr><td>X_m 低壓側</td><td>80.010669 Ω</td></tr><tr><td>R_c 高壓側</td><td>96000.000000 Ω</td></tr><tr><td>X_m 高壓側</td><td>8001.066880 Ω</td></tr><tr><td>鐵損電流</td><td>0.250000 A</td></tr><tr><td>激磁電流</td><td>2.999600 A</td></tr><tr><td>Z_eq</td><td>14.388489 Ω</td></tr><tr><td>R_eq</td><td>7.993605 Ω</td></tr><tr><td>X_eq</td><td>11.963733 Ω</td></tr><tr><td>Z_base</td><td>576.000000 Ω</td></tr><tr><td>百分阻抗</td><td>2.498002 %</td></tr><tr><td>額定一次電流</td><td>4.166667 A</td></tr><tr><td>滿載銅損</td><td>138.777867 W</td></tr><tr><td>R_eq 低壓側</td><td>0.079936 Ω</td></tr><tr><td>X_eq 低壓側</td><td>0.119637 Ω</td></tr></tbody></table><p>開路試驗給激磁分支（R_c、X_m），短路試驗給串聯支路（R_eq、X_eq），兩個試驗各關掉一半電路。</p><p>滿載銅損 138.777867 W，鐵損 60.000000 W。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -58,7 +69,7 @@
 <h2>可觀察證據：三表讀數能證明到哪裡</h2>
 <p><strong>用什麼量。</strong>以功率計、電壓表、電流表量兩次試驗的六個讀數，另用紅外線溫度計追蹤鐵心溫度，避免溫升悄悄改變條件。<strong>能證明什麼。</strong>在近似模型成立時，可求四個合併參數與百分阻抗，溫度趨勢也能支持確有損耗。<strong>不能證明什麼。</strong>兩次試驗只給合併值，不能分辨 R<sub>1</sub> 與 a² R<sub>2</sub> 各佔多少；要拆開還得另量直流電阻。</p>
 
-<h2>連到哪門課</h2>
+<h2>本章帶走的三件事</h2><ul><li>開路試驗辨識鐵損與激磁並聯支路。</li><li>短路試驗辨識繞組電阻與漏電抗串聯支路。</li><li>量測側別與 a² 折算若弄錯，所有參數都會錯位。</li></ul><p><a href="自我檢核.html#ch03">做本章 3 題 →</a></p>\n<h2>連到哪門課</h2>
 <p>這套方法用於變壓器出廠試驗、保護整定與負載評估。串聯阻抗和並聯導納的算法見<a href="../電路學-互動課程/10-阻抗與交流穩態.html">電路學的阻抗與交流穩態</a>；本章得到的 R<sub>eq</sub>、X<sub>eq</sub> 與損耗會在下一章直接算電壓調整率與效率。</p>
 <nav class="pager" aria-label="章節導覽"><a href="02-阻抗折算與自耦變壓器.html">← 上一頁：阻抗折算與自耦變壓器</a><a href="04-電壓調整率與效率.html">下一頁：電壓調整率與效率 →</a></nav>
 </main>

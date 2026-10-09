@@ -19,7 +19,7 @@
 
 <h2>推導：同一個頻率平均，看出 ZF 的代價與 MMSE 的折衷</h2>
 <p><strong>先反轉通道。</strong>H(θ) ＝ 1 ＋ a e<sup>−jθ</sup>，所以 |H|² ＝ 1 ＋ a² ＋ 2a cos θ；θ 是 0 到 2π 的歸一化角頻率，無單位。在 θ ＝ π 附近，|H|² ＝ (1 − a)²，a 越大洞越深。W ＝ 1/H 把 ISI 完全消掉，雜訊功率則乘 |W|²。對 θ 平均 1/(1 ＋ a² ＋ 2a cos θ)，用平均公式 1/√((1 ＋ a²)² − 4a²)，得 NE<sub>ZF</sub> ＝ 1/(1 − a²)。因此 SNR<sub>ZF</sub> ＝ SNR<sub>in</sub>/NE<sub>ZF</sub>。</p>
-<p><strong>再看時域抽頭。</strong>以 D 表示延遲一個符元，1/(1 ＋ aD) ＝ 1 − aD ＋ a²D² − a³D³ ＋ …，故第 n 個抽頭是 (−a)<sup>n</sup>。a ＝ 0.5 時，前 5 個抽頭平方和為 1 ＋ a² ＋ a<sup>4</sup> ＋ a<sup>6</sup> ＋ a<sup>8</sup> ＝ 1.332031，已接近無限和 1/(1 − a²) ＝ 1.333333。這也把頻域的雜訊放大連回抽頭能量。</p>
+<p><strong>再看時域抽頭。</strong>以 D 表示延遲一個符元，1/(1 ＋ aD) ＝ 1 − aD ＋ a²D² − a³D³ ＋ …，故第 n 個抽頭是 (−a)<sup>n</sup>。a ＝ 0.5 時，前 5 個抽頭平方和為 1 ＋ a² ＋ a<sup>4</sup> ＋ a<sup>6</sup> ＋ a<sup>8</sup> ＝ 1.332，已接近無限和 1/(1 − a²) ＝ 1.333。這也把頻域的雜訊放大連回抽頭能量。</p>
 <p><strong>MMSE 加入雜訊成本。</strong>令 E<sub>s</sub> ＝ 1、σ² ＝ 1/SNR<sub>in</sub>，W ＝ conj(H)/(|H|² ＋ σ²)，conj(H) 表示 H 的複數共軌。|H|² 大時它接近 1/H；|H|² 小時分母不再趨近零，所以不會硬拉深洞。令 c ＝ 1 ＋ a² ＋ σ²、b ＝ 2a，將 σ²/(c ＋ b cos θ) 取平均，得 MSE ＝ σ²/√(c² − b²)，而 SNR<sub>MMSE</sub> ＝ 1/MSE − 1。這個「− 1」是除去 MMSE 輸出所帶 (1 − MSE) 的縮放偏差，去偏後才能與 ZF 公平比較。不等化時把 a x[n − 1] 當雜訊，ISI 功率是 a²，所以 SINR ＝ 1/(a² ＋ σ²)。</p>
 <p><strong>模型邊界。</strong>本課用的是一階教學模型：兩抽頭最小相位通道、無限長線性等化器、E<sub>s</sub> ＝ 1；本頁直接使用閉合式，並已用 4096 點頻域數值平均核對。真實系統不是這樣：抽頭有限、通道可能非最小相位且隨時間改變，效果通常更差；a 大於或等於 1 時本頁零強制不可實現。</p>
 
@@ -35,16 +35,17 @@
 <tr><td>MMSE 輸出 SNR</td><td>1/0.039450 − 1</td><td><strong>24.348707（13.864759 dB）</strong></td></tr>
 <tr><td>MMSE 比零強制多</td><td>13.864759 − 13.750613</td><td><strong>0.114146 dB</strong></td></tr>
 </tbody></table>
-<p><strong>邊界對照。</strong>a ＝ 0.9 時，NE<sub>ZF</sub> ＝ 5.263158（7.212464 dB），零強制為 7.787536 dB、MMSE 為 10.535224 dB，多 2.747688 dB，不等化為 0.748825 dB。a ＝ 0.95 時 NE ＝ 10.256410（10.109954 dB），零強制 4.890046 dB，MMSE 10.186229 dB，多 5.296183 dB。a ＝ 0 時三者都是 15.000000 dB。a ＝ 0.5、SNR ＝ 0 dB 時，零強制 −1.249387 dB、MMSE 0.067075 dB、不等化 −0.969100 dB；低 SNR 下零強制反而更差。</p>
-<p><strong>量級對照。</strong>a ＝ 0.5、30 dB 時，零強制 28.750613 dB、MMSE 28.754464 dB，高 SNR 下幾乎相同；a ＝ 0.95、0 dB 時，零強制 −10.109954 dB、MMSE 0.770765 dB，多 10.880718 dB。a ＝ 0.7 的 NE 為 1.960784（2.924298 dB），MMSE 多 0.440767 dB；a ＝ 0.3 的 NE 只有 1.098901（0.409586 dB）。</p>
+<p><strong>邊界對照。</strong>a ＝ 0.9 時，NE<sub>ZF</sub> ＝ 5.263（7.212 dB），零強制為 7.788 dB、MMSE 為 10.54 dB，多 2.748 dB，不等化為 0.7488 dB。a ＝ 0.95 時 NE ＝ 10.26（10.11 dB），零強制 4.89 dB，MMSE 10.19 dB，多 5.296 dB。a ＝ 0 時三者都是 15 dB。a ＝ 0.5、SNR ＝ 0 dB 時，零強制 −1.249 dB、MMSE 0.06708 dB、不等化 −0.9691 dB；低 SNR 下零強制反而更差。</p>
+<p><strong>量級對照。</strong>a ＝ 0.5、30 dB 時，零強制 28.75 dB、MMSE 28.75 dB，高 SNR 下幾乎相同；a ＝ 0.95、0 dB 時，零強制 −10.11 dB、MMSE 0.7708 dB，多 10.88 dB。a ＝ 0.7 的 NE 為 1.961（2.924 dB），MMSE 多 0.4408 dB；a ＝ 0.3 的 NE 只有 1.099（0.4096 dB）。</p>
 <p>這些邊界值把選擇原則說得很清楚：通道平坦或 SNR 很高時，兩種方法幾乎重合；通道有深洞或 SNR 低時，硬把 ISI 壓到零反而把更多錯誤能量送進判決器。實作時不能只問「ISI 還剩多少」，還要同時核對輸出 SNR 與有限抽頭誤差。</p>
 
 <section class="workspace"><h2>自由實驗：調通道深度與輸入 SNR</h2>
 <p>場景是兩抽頭通道 h ＝ [1, a]，符元能量歸一化為 1。調 a 改變頻率洞的深度，調 SNR 改變雜訊成本；輸出會並列不等化、零強制與 MMSE。</p>
 <div class="controls">
-<label for="eq-a">回音係數 a（通道 h = [1, a]）<input id="eq-a" type="range" min="0" max="0.95" step="0.05" value="0.5"></label>
-<label for="eq-snr">輸入 SNR（dB）<input id="eq-snr" type="range" min="0" max="30" step="1" value="15"></label>
+<label for="eq-a">回音係數 a（通道 h = [1, a]） <output id="eq-a-val" for="eq-a">0.5</output><input id="eq-a" type="range" min="0" max="0.95" step="0.05" value="0.5"></label>
+<label for="eq-snr">輸入 SNR（dB） <output id="eq-snr-val" for="eq-snr">15</output><input id="eq-snr" type="range" min="0" max="30" step="1" value="15"></label>
 </div>
+<div><p><strong>先預測再拖：</strong>通道回音係數 a ＝ 0.8 時，零強制雜訊放大倍數是多少？</p><label for="p06">你的預測<input id="p06" type="number" step="0.001"></label><button id="p06-check" type="button">檢查預測</button><div id="p06-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q06-1">再做 06 章自我檢核</a></p></div>
 <div id="eq-output" class="output" aria-live="polite"></div>
 </section>
 

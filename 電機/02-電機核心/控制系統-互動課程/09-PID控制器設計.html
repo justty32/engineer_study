@@ -55,7 +55,7 @@
 <label for="pd-ki">積分增益 K_i<input id="pd-ki" type="range" min="0" max="60" step="0.5" value="10"></label>
 <label for="pd-kd">微分增益 K_d<input id="pd-kd" type="range" min="0" max="20" step="0.5" value="5"></label>
 </div>
-<div id="pid-output" class="output" aria-live="polite"></div>
+<div id="pid-output" class="output"></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -73,6 +73,9 @@
 <p><strong>不能證明什麼。</strong>曲線混合了飽和、摩擦與量測雜訊，不能單憑它反推出模型的三個極點；一次測試也不能證明同一組參數適用所有負載與溫度。</p>
 <p>測試時還應記錄控制量是否碰到上下限。若輸出看起來變慢，但 u 已長時間貼住限幅，問題不是線性模型裡的增益太小，而是可用致動能力不足。此時繼續增加 K<sub>i</sub> 只會累積更多積分狀態；必須先加入抗積分飽和，再重新量測。</p>
 
+<p><strong>在家版本。</strong>用自由實驗選 P、PI、Z–N 與手動四組參數，記錄最後誤差、超出量與控制判定；刻意把 K<sub>i</sub> 調大或 K<sub>d</sub> 調大比較代價。模擬未含飽和與雜訊，不能直接當實機參數。</p>
+<h2>帶走三件事</h2>
+<ul><li>P、I、D 都透過同一條特徵多項式改變閉迴路極點。</li><li>I 可消除步階穩態誤差，卻增加相位落後與積分飽和風險。</li><li>Z–N 是起點而非終點，仍要用時域指標、裕度與控制量驗收。</li></ul>
 <h2>連到哪門課</h2>
 <p>積分器的物理直覺回到<a href="../電路學-互動課程/07-一階暫態RC與RL.html">電路學的一階暫態 RC 與 RL</a>，ζ 與時域指標回到<a href="04-二階閉迴路與極點位置.html">04 二階閉迴路與極點位置</a>。數位 PID、離散極點與實作限制見<a href="../信號與系統-互動課程/14-Z轉換與單位圓.html">信號與系統的 Z 轉換與單位圓</a>；本課只點名積分飽和與微分濾波，不展開離散化。下一章改用頻域方法設計補償器。</p>
 <nav class="pager" aria-label="章節導覽"><a href="08-增益裕度相位裕度與奈奎斯特.html">← 上一頁：增益裕度、相位裕度與奈奎斯特</a><a href="10-領先落後補償器.html">下一頁：領先／落後補償器 →</a></nav>

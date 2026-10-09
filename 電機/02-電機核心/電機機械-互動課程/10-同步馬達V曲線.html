@@ -1,4 +1,14 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 同步馬達 V 曲線｜電機機械</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>10 同步馬達 V 曲線｜電機機械</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js">
+</script>
+</head>
+<body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-線性直流機與能量轉換.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
@@ -43,7 +53,7 @@
 <label for="vc-ef">內電勢 E_f（V，每相；由激磁電流決定）<input id="vc-ef" type="range" min="40" max="400" step="5" value="300"></label>
 <label for="vc-xs">同步電抗 X_s（Ω）<input id="vc-xs" type="range" min="1" max="5" step="0.5" value="2"></label>
 </div>
-<div id="vcurve-output" class="output" aria-live="polite"><table><thead><tr><th>量</th><th>預設結果</th></tr></thead><tbody><tr><td>E_f,min／δ</td><td>45.454545 V／8.714742°</td></tr><tr><td>I_a 實部／虛部</td><td>22.727273 A／38.268240 A</td></tr><tr><td>I_a 大小／相角</td><td>44.508282 A／+59.294184°</td></tr><tr><td>功率因數／性質</td><td>0.510630／領前</td></tr><tr><td>Q</td><td>−25257.038582 var</td></tr><tr><td>I_a,min／E_f,unity</td><td>22.727273 A／224.646646 V</td></tr></tbody></table><table><thead><tr><th>E_f（V）</th><th>150</th><th>200</th><th>224.646646</th><th>250</th><th>300</th><th>350</th><th>400</th></tr></thead><tbody><tr><td>I_a（A）</td><td>44.730468</td><td>25.994513</td><td>22.727273（單位功因）</td><td>26.141259</td><td>44.508282</td><td>67.461515</td><td>91.569722</td></tr></tbody></table><strong>判讀：超激磁：電流領前，馬達供給無功，像一顆電容。</strong>實功固定，電流實部固定 P / (3 V_φ)，改激磁只改虛部，所以電流對激磁是 V 形。為什麼：目前 E_f 高於單位功因所需值，正交電流增加而總電流離開最低點。邊界提醒：E_f 低於 45.454545 V 時會脫步；P = 0 時是同步調相機，不出力，只供無功；E_f = 400 V 且 P 為預設值時，激磁過頭，電流約 4 倍於最低點，幾乎全是無功。</div>
+<div id="vcurve-output" class="output"><p class="current-settings">目前設定：P = 15000 W；E_f = 300 V；X_s = 2 Ω。</p><table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>E_f,min</td><td>45.454545 V</td></tr><tr><td>δ</td><td>8.714742°</td></tr><tr><td>I_a</td><td>44.508282 A</td></tr><tr><td>電流相角</td><td>59.294184°</td></tr><tr><td>功率因數</td><td>0.510630</td></tr><tr><td>無功（正＝馬達吸收）</td><td>−25257.038582 var</td></tr><tr><td>I_a,min</td><td>22.727273 A</td></tr><tr><td>E_f,unity</td><td>224.646646 V</td></tr></tbody></table><table><thead><tr><th>E_f（V）</th><th>I_a（A）</th></tr></thead><tbody><tr><td>150.000000</td><td>44.730468</td></tr><tr><td>200.000000</td><td>25.994513</td></tr><tr><td>224.646646（單位功因）</td><td>22.727273</td></tr><tr><td>250.000000</td><td>26.141259</td></tr><tr><td>300.000000</td><td>44.508282</td></tr><tr><td>350.000000</td><td>67.461515</td></tr><tr><td>400.000000</td><td>91.569722</td></tr></tbody></table><p>超激磁：電流領前，馬達供給無功，像一顆電容。</p><p>實功固定，電流實部固定 P / (3 V_φ)，改激磁只改虛部，所以電流對激磁是 V 形。</p></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -59,7 +69,7 @@
 <p><strong>用什麼量。</strong>固定軸上負載，用直流電流表記錄轉子激磁電流，逐點調整；同時用鉗形表記 I<sub>a</sub>，用三相功率計記 P、Q 與功率因數。把鉗形表讀值對激磁電流作表，就會看到先降後升。</p>
 <p><strong>能證明什麼。</strong>曲線最低點可證明單位功因附近電樞電流最小；Q 越過零並換號，可證明馬達由吸收無功轉成供給無功，因而能做功因修正。<strong>不能證明什麼。</strong>這些讀值不能直接給出 E<sub>f</sub> 的絕對值，因為激磁電流到內電勢還要靠空載特性曲線換算，也不能證明磁路始終線性。</p>
 
-<h2>連到哪門課</h2>
+<h2>本章帶走的三件事</h2><ul><li>固定實功時，改激磁主要改變電流的無功分量。</li><li>單位功率因數處的電樞電流最小。</li><li>超激磁同步馬達可向系統供給無功。</li></ul><p><a href="自我檢核.html#ch10">做本章 3 題 →</a></p>\n<h2>連到哪門課</h2>
 <p>大型工廠可用超激磁同步馬達在做機械工作的同時供給無功，降低饋線電流；若只做無功補償，就是同步調相機。補償容量與電容器組的算法見<a href="../電路學-互動課程/11-交流功率與功因.html">電路學的交流功率與功因</a>。PMSM 如何用變頻器控制電流角，會在第 12 章銜接到後續馬達驅動課。</p>
 <nav class="pager" aria-label="章節導覽"><a href="09-同步發電機功率角.html">← 上一頁：同步發電機功率角</a><a href="11-起動與速控.html">下一頁：起動與速控 →</a></nav>
 </main>

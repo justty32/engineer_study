@@ -110,36 +110,7 @@
 <label for="cf-gap">氣隙 g（mm）<input id="cf-gap" type="range" min="0" max="2" step="0.1" value="0">
 </label>
 </div>
-<div id="coreflux-output" class="output" aria-live="polite">
-<table>
-<tbody>
-<tr>
-<th>Φ_max／B_max</th>
-<td>0.004502 Wb／1.125395 T</td>
-</tr>
-<tr>
-<th>鐵心／氣隙／總磁阻</th>
-<td>39788.735773／0.000000／39788.735773 A/Wb</td>
-</tr>
-<tr>
-<th>磁動勢峰值</th>
-<td>179.112240 A·匝</td>
-</tr>
-<tr>
-<th>激磁電流峰值／有效值</th>
-<td>0.895561 A／0.633257 A</td>
-</tr>
-<tr>
-<th>L_m／X_m</th>
-<td>1.005310 H／378.992809 Ω</td>
-</tr>
-<tr>
-<th>V / X_m 檢查</th>
-<td>0.633257 A ✓</td>
-</tr>
-</tbody>
-</table>
-<strong>判讀：未飽和，線性模型成立。</strong>磁通由 V、f、N 決定，磁阻只決定電流。為什麼：端電壓先逼出磁通變化率，磁阻再決定所需磁動勢。邊界提醒：這是變壓器的情況，不留氣隙，激磁電流最小；B_max 超過 1.5 T 時，本模型的電流只是線性下限，實際會遠大於此且波形畸變。</div>
+<div id="coreflux-output" class="output"><p class="current-settings">目前設定：V = 240 V；f = 60 Hz；N = 200 匝；A = 40 cm²；l = 40 cm；µ_r = 2000；氣隙 = 0 mm。</p><table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>Φ_max</td><td>0.004502 Wb</td></tr><tr><td>B_max</td><td>1.125395 T</td></tr><tr><td>鐵心磁阻 R_m,core</td><td>39788.735773 A/Wb</td></tr><tr><td>氣隙磁阻 R_m,gap</td><td>0.000000 A/Wb</td></tr><tr><td>總磁阻 R_m,total</td><td>39788.735773 A/Wb</td></tr><tr><td>磁動勢峰值</td><td>179.112240 A·匝</td></tr><tr><td>激磁電流峰值</td><td>0.895561 A</td></tr><tr><td>激磁電流有效值</td><td>0.633257 A</td></tr><tr><td>L_m</td><td>1.005310 H</td></tr><tr><td>X_m</td><td>378.992809 Ω</td></tr><tr><td>V / X_m</td><td>0.633257 A</td></tr></tbody></table><p>未飽和，線性模型成立。 這是變壓器的情況：不留氣隙，激磁電流最小。</p><p>磁通由 V、f、N 決定，磁阻只決定電流。</p></div>
 </section>
 <h2>不要混淆</h2>
 <ul>
@@ -150,7 +121,7 @@
 </ul>
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
 <p>用鉗形電流表量無載電流，用示波器看電流波形。讀值增加且波峰尖窄，能證明激磁電流增加並顯示飽和；沒有截面積與匝數便不能單靠電流讀值證明 B<sub>max</sub>，也不能獨立求得 µ<sub>r</sub>。</p>
-<h2>連到哪門課</h2>
+<h2>本章帶走的三件事</h2><ul><li>電壓、頻率與匝數先決定磁通峰值。</li><li>磁阻決定建立該磁通需要多少激磁電流。</li><li>氣隙會大幅提高磁阻，飽和則使線性模型失效。</li></ul><p><a href="自我檢核.html#ch01">做本章 3 題 →</a></p>\n<h2>連到哪門課</h2>
 <p>磁路與氣隙的機制見<a href="../電磁學-互動課程/10-磁性材料與磁路.html">磁性材料與磁路</a>。控制程式那一端，V/f 定值會成為變頻器韌體的查表規則，低速時並配合電流限制。</p>
 <nav class="pager" aria-label="章節導覽">
 <a href="00-線性直流機與能量轉換.html">← 上一頁：線性直流機與能量轉換</a>

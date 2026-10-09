@@ -49,7 +49,7 @@
 <label for="so-p">第三極點距離 p（只用來判主導）<input id="so-p" type="range" min="5" max="100" step="5" value="30"></label>
 <label for="so-t">觀測時刻 t（s）<input id="so-t" type="range" min="0" max="3" step="0.01" value="0.5"></label>
 </div>
-<div id="second-output" class="output" aria-live="polite"></div>
+<div id="second-output" class="output"></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -66,6 +66,9 @@
 <p><strong>能證明什麼。</strong>峰高與峰值時刻可反推實際 ζ、ω<sub>d</sub>，兩者合起來估計 ω<sub>n</sub>；掃動 K 後若 M<sub>p</sub> 上升而 t<sub>s</sub> 大致維持 1.333333 s，就支持極點沿實部 −a / 2 的直線移動。</p>
 <p><strong>不能證明什麼。</strong>這些量不能單獨證明系統真的只有二階。未建模的高階極點與零點會改變峰高和時間；2 % 邊界也只是整定準則的選擇，無法由一次量測證明其中常數具有普遍性。</p>
 
+<p><strong>在家版本。</strong>以自由實驗固定 a、逐步增加 K，記錄 ζ、超越量與整定時間；再把第三極點 p 拉近，比較二階近似與三階精確 y(t)。這是理想線性模擬，不能驗證真實裝置的限幅與摩擦。</p>
+<h2>帶走三件事</h2>
+<ul><li>ω<sub>n</sub> ＝ √K 決定尺度，ζ ＝ a / (2√K) 決定振盪與超越。</li><li>這個結構的極點實部固定為 −a / 2，加大 K 不會照比例縮短整定時間。</li><li>第三極點至少快約 5 倍，二階主導近似才較可信。</li></ul>
 <h2>連到哪門課</h2>
 <p>四個二階指標的證明已在<a href="../信號與系統-互動課程/08-極零點與二階系統.html">信號與系統的極零點與二階系統</a>完成，本章只引用。RLC 電路中的 α ＝ ζω<sub>n</sub> 與三種暫態對照見<a href="../電路學-互動課程/08-二階RLC暫態.html">電路學的二階 RLC 暫態</a>。第 05 章會判斷增益範圍，第 06 章再把 K 改變時的完整極點路徑串起來。</p>
 <nav class="pager" aria-label="章節導覽"><a href="03-穩態誤差與系統型式.html">← 上一頁：穩態誤差與系統型式</a><a href="05-Routh穩定度判別.html">下一頁：Routh 穩定度判別 →</a></nav>

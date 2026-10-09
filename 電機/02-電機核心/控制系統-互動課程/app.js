@@ -6,7 +6,17 @@ var $ = function (id) {
   if (typeof document === "undefined") { return null; }
   return document.getElementById(id);
 };
-var bind = function (ids, f) { ids.forEach(function (x) { var n = $(x); if (n) { n.addEventListener("input", f); } }); };
+var syncRangeValue = function (n) {
+  if (!n || n.type !== "range") { return; }
+  var oid = n.id + "-value", out = $(oid);
+  if (!out) {
+    out = document.createElement("output"); out.id = oid; out.htmlFor = n.id;
+    out.style.display = "inline-block"; out.style.marginInlineStart = ".5rem";
+    n.insertAdjacentElement("afterend", out);
+  }
+  out.value = n.value; out.textContent = "目前：" + n.value; n.setAttribute("aria-valuetext", n.value);
+};
+var bind = function (ids, f) { ids.forEach(function (x) { var n = $(x); if (n) { syncRangeValue(n); n.addEventListener("input", function (event) { syncRangeValue(n); f(event); }); } }); };
 var val = function (id) { var n = $(id); return n ? Number(n.value) : 0; };
 var pick = function (id) { var n = $(id); return n ? n.value : ""; };
 var minus = function (s) { return String(s).replace(/^-/, "−"); };
@@ -33,7 +43,18 @@ var deg = function (x) { return num6(x) + "°"; };
 var esc = function (s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 };
-var put = function (id, html) { var n = $(id); if (n) { n.innerHTML = html; } };
+var put = function (id, html) {
+  var n = $(id), judgment;
+  if (!n) { return; }
+  n.removeAttribute("aria-live");
+  n.innerHTML = html;
+  judgment = n.querySelector("p strong");
+  if (judgment && judgment.parentNode) {
+    judgment.parentNode.setAttribute("role", "status");
+    judgment.parentNode.setAttribute("aria-live", "polite");
+    judgment.parentNode.setAttribute("aria-atomic", "true");
+  }
+};
 var row = function (cells, th) {
   var t = th ? "th" : "td";
   return "<tr><" + t + ">" + cells.join("</" + t + "><" + t + ">") + "</" + t + "></tr>";
@@ -71,41 +92,41 @@ var QUIZ_CH = {
   "11": ["11-狀態空間入門.html", "11 狀態空間入門"]
 };
 var QUIZ = [
-  {id:"q00-1",t:"num",ans:0.993388,tol:0.001,why:"y ＝ 120 / 121 ＋ 0.2 / 121 ＝ 0.993388。",err:"常見錯因：忘了干擾也要除以 1 ＋ L。"},
-  {id:"q00-2",t:"num",ans:0.008264,tol:0.0001,why:"S ＝ 1 / (1 ＋ 120) ＝ 0.008264。",err:"常見錯因：算成 1 / L 而不是 1 / (1 ＋ L)。"},
+  {id:"q00-1",t:"num",ans:0.987640449,tol:0.001,why:"實際 G ＝ 2.2、L ＝ 88，y ＝ 88 / 89 − 0.1 / 89 ＝ 0.987640。",err:"常見錯因：忘了負干擾也要除以 1 ＋ L。"},
+  {id:"q00-2",t:"num",ans:0.012345679,tol:0.0001,why:"S ＝ 1 / (1 ＋ 80) ＝ 0.012346。",err:"常見錯因：算成 1 / L 而不是 1 / (1 ＋ L)。"},
   {id:"q00-3",t:"sel",ans:"b",why:"模型準且沒有干擾時，開迴路誤差為零。",err:"常見錯因：以為回授永遠更準。"},
-  {id:"q01-1",t:"num",ans:0.0999,tol:0.0005,why:"τ ＝ JR / (bR ＋ K_tK_e) ＝ 0.01 / 0.1001 ＝ 0.099900 s。",err:"常見錯因：忘了分母的 K_tK_e 項或算成 J / b。"},
-  {id:"q01-2",t:"num",ans:1.198801,tol:0.005,why:"穩態轉速 ＝ 12 × 0.01 / 0.1001 ＝ 1.198801 rad/s。",err:"常見錯因：忘了乘電壓。"},
+  {id:"q01-1",t:"num",ans:0.166389351,tol:0.0005,why:"D ＝ 0.12 × 2 ＋ 0.02² ＝ 0.2404，τ ＝ 0.02 × 2 / 0.2404 ＝ 0.166389 s。",err:"常見錯因：忘了分母的 K_tK_e 項或漏乘 R。"},
+  {id:"q01-2",t:"num",ans:0.74875208,tol:0.005,why:"穩態轉速 ＝ 9 × 0.02 / 0.2404 ＝ 0.748752 rad/s。",err:"常見錯因：忘了乘電壓。"},
   {id:"q01-3",t:"sel",ans:"c",why:"J 只出現在 τ 的分子，不在直流增益裡。",err:"常見錯因：以為慣性會改變穩態。"},
-  {id:"q02-1",t:"num",ans:-42,tol:0.5,why:"極點 ＝ −(1 ＋ 10 × 2 × 1) / 0.5 ＝ −42。",err:"常見錯因：忘了分母裡的 1，或忘了除以 τ。"},
-  {id:"q02-2",t:"num",ans:0.952381,tol:0.001,why:"T(0) ＝ 20 / 21 ＝ 0.952381。",err:"常見錯因：把分母的 1 漏掉。"},
+  {id:"q02-1",t:"num",ans:-26.5,tol:0.05,why:"極點 ＝ −(1 ＋ 8 × 1.5 × 0.8) / 0.4 ＝ −26.5。",err:"常見錯因：忘了感測器增益 H，或忘了除以 τ。"},
+  {id:"q02-2",t:"num",ans:1.132075472,tol:0.001,why:"T(0) ＝ 8 × 1.5 / (1 ＋ 8 × 1.5 × 0.8) ＝ 1.132075。",err:"常見錯因：把分母的 1 或 H 漏掉。"},
   {id:"q02-3",t:"sel",ans:"d",why:"比例控制器需要非零誤差才能維持非零控制量；H ＝ 1 時誤差為 1 / (1 ＋ K_cK)。",err:"常見錯因：把穩態誤差歸咎於動態。"},
-  {id:"q03-1",t:"num",ans:0.2,tol:0.005,why:"K_v ＝ K / a ＝ 5，所以斜坡誤差 ＝ 1 / K_v ＝ 0.2。",err:"常見錯因：算成 1 / K。"},
-  {id:"q03-2",t:"num",ans:0.166667,tol:0.001,why:"K_pos ＝ K / a ＝ 5，步階誤差 ＝ 1 / 6 ＝ 0.166667。",err:"常見錯因：算成 1 / K_pos。"},
+  {id:"q03-1",t:"num",ans:0.166666667,tol:0.001,why:"K_v ＝ K / a ＝ 6，所以斜坡誤差 ＝ 1 / K_v ＝ 0.166667。",err:"常見錯因：算成 1 / K。"},
+  {id:"q03-2",t:"num",ans:0.25,tol:0.001,why:"K_pos ＝ K / a ＝ 3，步階誤差 ＝ 1 / (1 ＋ 3) ＝ 0.25。",err:"常見錯因：算成 1 / K_pos。"},
   {id:"q03-3",t:"sel",ans:"b",why:"型式 2 對拋物線命令留下有限常數 1 / K_a。",err:"常見錯因：把型式數與命令階數對錯。"},
-  {id:"q04-1",t:"num",ans:0.6,tol:0.005,why:"ζ ＝ a / (2√K) ＝ 6 / 10 ＝ 0.6。",err:"常見錯因：忘了分母的 2。"},
-  {id:"q04-2",t:"num",ans:9.478022,tol:0.05,why:"M_p ＝ e<sup>−π × 0.6 / 0.8</sup> × 100 ＝ 9.478022 %。",err:"常見錯因：把 ζ 與 √(1 − ζ²) 放反。"},
+  {id:"q04-1",t:"num",ans:0.666666667,tol:0.005,why:"ζ ＝ a / (2√K) ＝ 8 / 12 ＝ 0.666667。",err:"常見錯因：忘了分母的 2。"},
+  {id:"q04-2",t:"num",ans:16.303353482,tol:0.05,why:"M_p ＝ e<sup>−π × 0.5 / √(1 − 0.5²)</sup> × 100 ＝ 16.303353 %。",err:"常見錯因：把 ζ 與 √(1 − ζ²) 放反。"},
   {id:"q04-3",t:"sel",ans:"c",why:"極點實部 −a / 2 與 K 無關，所以整定時間不變。",err:"常見錯因：以為 ω_n 加倍就會讓整定時間減半。"},
-  {id:"q05-1",t:"num",ans:-6,tol:0.01,why:"依 Routh 交叉相乘，s¹ 列首元是 −6。",err:"常見錯因：交叉相乘的順序反了。"},
-  {id:"q05-2",t:"num",ans:9,tol:0.01,why:"三階穩定條件是 3 × 3 ＞ K，所以 K 上限是 9。",err:"常見錯因：算成係數相加。"},
+  {id:"q05-1",t:"num",ans:-0.5,tol:0.01,why:"s² 列首元為 2 / 3，再交叉相乘得 s¹ 列首元 −0.5。",err:"常見錯因：交叉相乘的順序反了。"},
+  {id:"q05-2",t:"num",ans:20,tol:0.01,why:"三階穩定條件是 4 × 5 ＞ K，所以 K 上限是 20。",err:"常見錯因：算成係數相加。"},
   {id:"q05-3",t:"sel",ans:"d",why:"全零列表示有對稱於原點的根，常見情形是一對純虛根。",err:"常見錯因：把全零列當成首元為零，直接用 ε 取代。"},
-  {id:"q06-1",t:"num",ans:48,tol:0.01,why:"K_crit ＝ ab(a ＋ b) ＝ 2 × 4 × 6 ＝ 48。",err:"常見錯因：只算 ab。"},
-  {id:"q06-2",t:"num",ans:-2,tol:0.01,why:"重心 ＝ −(0 ＋ 2 ＋ 4) / 3 ＝ −2。",err:"常見錯因：忘了除以極點數減零點數。"},
+  {id:"q06-1",t:"num",ans:120,tol:0.01,why:"K_crit ＝ ab(a ＋ b) ＝ 3 × 5 × 8 ＝ 120。",err:"常見錯因：只算 ab。"},
+  {id:"q06-2",t:"num",ans:-2.666666667,tol:0.01,why:"重心 ＝ −(0 ＋ 3 ＋ 5) / 3 ＝ −2.666667。",err:"常見錯因：忘了除以極點數減零點數。"},
   {id:"q06-3",t:"sel",ans:"b",why:"分離點是兩個實根相遇並離開實軸的位置。",err:"常見錯因：把分離點與虛軸穿越混為一談。"},
-  {id:"q07-1",t:"num",ans:-3.053514,tol:0.01,why:"將 ω ＝ 10 代入精確振幅式，再取 20 log10 得 −3.053514 dB。",err:"常見錯因：用了漸近線的 0 dB。"},
-  {id:"q07-2",t:"num",ans:-140.710593,tol:0.05,why:"相位 ＝ −90° − arctan(1) − arctan(0.1) ＝ −140.710593°。",err:"常見錯因：漏掉積分器或第二個極點。"},
+  {id:"q07-1",t:"num",ans:0.808810309,tol:0.01,why:"將 K ＝ 8、τ_1 ＝ 0.2、τ_2 ＝ 0.05、ω ＝ 5 代入精確式，得 0.808810 dB。",err:"常見錯因：用了漸近線讀值。"},
+  {id:"q07-2",t:"num",ans:-149.036243468,tol:0.05,why:"相位 ＝ −90° − arctan(1) − arctan(0.25) ＝ −149.036243°。",err:"常見錯因：漏掉積分器或第二個極點。"},
   {id:"q07-3",t:"sel",ans:"c",why:"每個一階極點最終多帶來 −20 dB/十倍頻與 −90°。",err:"常見錯因：把單一極點的斜率變化誤算成兩個極點。"},
-  {id:"q08-1",t:"num",ans:31.622777,tol:0.01,why:"ω_pc ＝ 1 / √(0.1 × 0.01) ＝ 31.622777 rad/s。",err:"常見錯因：算成 1 / (τ_1 ＋ τ_2)。"},
-  {id:"q08-2",t:"num",ans:20.827854,tol:0.05,why:"相位交越處振幅為 0.090909，GM ＝ −20 log10(0.090909) ＝ 20.827854 dB。",err:"常見錯因：忘了負號或用了自然對數。"},
+  {id:"q08-1",t:"num",ans:15.811388301,tol:0.01,why:"ω_pc ＝ 1 / √(0.2 × 0.02) ＝ 15.811388 rad/s。",err:"常見錯因：算成 1 / (τ_1 ＋ τ_2)。"},
+  {id:"q08-2",t:"num",ans:16.74545405,tol:0.05,why:"相位交越處振幅為 8 × 0.004 / 0.22 ＝ 0.145455，GM ＝ 16.745454 dB。",err:"常見錯因：忘了負號或用了自然對數。"},
   {id:"q08-3",t:"sel",ans:"d",why:"PM 只有 30° 仍可能穩定，但離 −180° 的餘量小，通常會有較明顯的振盪與超越。",err:"常見錯因：把正相位裕度理解成響應一定平順，或把 PM 當成只影響穩態誤差。"},
-  {id:"q09-1",t:"num",ans:60,tol:0.01,why:"臨界條件 6 × 11 ＝ 6 ＋ K_p，得 K_u ＝ 60。",err:"常見錯因：忘了減掉常數項 6。"},
-  {id:"q09-2",t:"num",ans:1.894452,tol:0.005,why:"ω_u ＝ √11，T_u ＝ 2π / √11 ＝ 1.894452 s。",err:"常見錯因：用了 ω_u 卻沒換成週期。"},
+  {id:"q09-1",t:"num",ans:140,tol:0.01,why:"受控體分母展開為 s³ ＋ 8s² ＋ 19s ＋ 12；臨界條件 8 × 19 ＝ 12 ＋ K_p，得 K_u ＝ 140。",err:"常見錯因：忘了減掉常數項 12。"},
+  {id:"q09-2",t:"num",ans:1.441461568,tol:0.005,why:"ω_u ＝ √19，T_u ＝ 2π / √19 ＝ 1.441462 s。",err:"常見錯因：用了 ω_u 卻沒換成週期。"},
   {id:"q09-3",t:"sel",ans:"b",why:"積分消除步階穩態誤差，但多帶來 −90° 相位。",err:"常見錯因：把積分與微分的角色對調。"},
-  {id:"q10-1",t:"num",ans:36.869898,tol:0.05,why:"φ_max ＝ asin((4 − 1) / (4 ＋ 1)) ＝ 36.869898°。",err:"常見錯因：算成 arctan。"},
-  {id:"q10-2",t:"num",ans:50,tol:0.01,why:"K_v ＝ 10β ＝ 50。",err:"常見錯因：以為落後補償不改 K_v。"},
+  {id:"q10-1",t:"num",ans:53.130102354,tol:0.05,why:"φ_max ＝ asin((9 − 1) / (9 ＋ 1)) ＝ 53.130102°。",err:"常見錯因：算成 arctan。"},
+  {id:"q10-2",t:"num",ans:30,tol:0.01,why:"K_v ＝ 10β ＝ 30。",err:"常見錯因：以為落後補償不改 K_v。"},
   {id:"q10-3",t:"sel",ans:"c",why:"領先主要加相位，落後主要加低頻增益，角色不同。",err:"常見錯因：只看兩者都有一個極點與零點，就以為可以互換。"},
-  {id:"q11-1",t:"num",ans:-1,tol:0.01,why:"M_c ＝ [[0, 1], [1, −3]]，行列式為 −1。",err:"常見錯因：AB 算錯。"},
-  {id:"q11-2",t:"num",ans:48,tol:0.01,why:"Ackermann 公式得到 K ＝ [48, 7]。",err:"常見錯因：忘了減掉開迴路的常數係數 2。"},
+  {id:"q11-1",t:"num",ans:-4,tol:0.01,why:"AB ＝ [2, −10]，M_c ＝ [[0, 2], [2, −10]]，行列式為 −4。",err:"常見錯因：AB 算錯。"},
+  {id:"q11-2",t:"num",ans:7,tol:0.01,why:"Ackermann 公式將此模型配置到 s² ＋ 8s ＋ 20，得 K ＝ [7, 1.5]。",err:"常見錯因：忘了 B 的倍率會改變 K。"},
   {id:"q11-3",t:"sel",ans:"d",why:"det M_c ＝ 0 表示 B 與 AB 共線，輸入推不動某個方向。",err:"常見錯因：把可控性與穩定度或可觀性混為一談。"}
 ];
 
@@ -259,6 +280,39 @@ function stateSpace(A, B, C, d1, d0) {
     out.K = K; out.phi = phi; out.Acl = Acl; out.eigCl = eig2(Acl);
   }
   return out;
+}
+
+/* 圖形只是已計算數值的視覺化；線條用 currentColor，重點用站內 CSS 變數。 */
+var svgNum = function (x) { return Number(x).toFixed(3); };
+var svgPointList = function (points) { return points.map(function (p) { return svgNum(p[0]) + "," + svgNum(p[1]); }).join(" "); };
+function rootLocusSvg(a, b, K, Kcrit) {
+  var samples = [], maxK = Math.max(K, Kcrit * 1.25, 1), i, j, roots, all = [], minX = -Math.max(a, b) * 1.45, maxX = Math.max(1, Math.max(a, b) * 0.35), maxY = Math.max(2, Math.sqrt(Math.max(Kcrit, K)) * 1.45);
+  var sx = function (x) { return 46 + (x - minX) * 560 / (maxX - minX); }, sy = function (y) { return 145 - y * 116 / maxY; };
+  for (i = 0; i <= 80; i += 1) { roots = cubicRoots(a + b, a * b, maxK * i / 80); for (j = 0; j < roots.length; j += 1) { all.push([sx(roots[j].re), sy(roots[j].im)]); } }
+  roots = cubicRoots(a + b, a * b, K);
+  for (i = 0; i < roots.length; i += 1) { samples.push("<circle cx=\"" + svgNum(sx(roots[i].re)) + "\" cy=\"" + svgNum(sy(roots[i].im)) + "\" r=\"5\" fill=\"var(--warn)\"><title>目前極點 " + esc(rootText(roots[i])) + "</title></circle>"); }
+  return "<figure style=\"margin:1rem 0\"><svg viewBox=\"0 0 640 290\" width=\"100%\" role=\"img\" aria-label=\"動態根軌跡圖：點雲顯示增益由零增加時的極點路徑，橘色點是目前增益的三個極點\">"
+    + "<line x1=\"46\" y1=\"145\" x2=\"606\" y2=\"145\" stroke=\"currentColor\"/><line x1=\"" + svgNum(sx(0)) + "\" y1=\"20\" x2=\"" + svgNum(sx(0)) + "\" y2=\"270\" stroke=\"currentColor\"/>"
+    + all.map(function (p) { return "<circle cx=\"" + svgNum(p[0]) + "\" cy=\"" + svgNum(p[1]) + "\" r=\"1.35\" fill=\"currentColor\" opacity=\".48\"/>"; }).join("") + samples.join("")
+    + "<text x=\"590\" y=\"138\" fill=\"currentColor\">實軸</text><text x=\"" + svgNum(sx(0) + 7) + "\" y=\"32\" fill=\"currentColor\">虛軸</text></svg><figcaption>點雲是 0 到 " + num6(maxK) + " 的根軌跡；橘色點標出目前 K ＝ " + num6(K) + " 的三個閉迴路極點。</figcaption></figure>";
+}
+function bodeSvg(K, t1, t2, currentW) {
+  var mags = [], phases = [], i, w, x, m, p, sx = function (v) { return 48 + (log10(v) + 1) * 138; };
+  for (i = 0; i <= 120; i += 1) { w = Math.pow(10, -1 + 4 * i / 120); x = sx(w); m = 20 * log10(lmag(K, t1, t2, w)); p = lphase(t1, t2, w); mags.push([x, 112 - (m + 20) * 0.7]); phases.push([x, 252 - (p + 180) * 0.65]); }
+  return "<figure style=\"margin:1rem 0\"><svg viewBox=\"0 0 640 300\" width=\"100%\" role=\"img\" aria-label=\"動態波德圖：上圖是振幅分貝，下圖是相位，皆隨滑桿即時更新\">"
+    + "<line x1=\"48\" y1=\"112\" x2=\"600\" y2=\"112\" stroke=\"currentColor\" opacity=\".45\"/><line x1=\"48\" y1=\"252\" x2=\"600\" y2=\"252\" stroke=\"currentColor\" opacity=\".45\"/>"
+    + "<polyline points=\"" + svgPointList(mags) + "\" fill=\"none\" stroke=\"var(--accent)\" stroke-width=\"3\"/><polyline points=\"" + svgPointList(phases) + "\" fill=\"none\" stroke=\"var(--warn)\" stroke-width=\"3\"/>"
+    + "<line x1=\"" + svgNum(sx(currentW)) + "\" y1=\"12\" x2=\"" + svgNum(sx(currentW)) + "\" y2=\"280\" stroke=\"currentColor\" stroke-dasharray=\"5 5\"/><text x=\"52\" y=\"20\" fill=\"currentColor\">振幅 dB</text><text x=\"52\" y=\"160\" fill=\"currentColor\">相位度</text></svg><figcaption>青綠線是振幅，橘線是相位；虛線標出目前 ω ＝ " + num6(currentW) + " rad/s。</figcaption></figure>";
+}
+function nyquistSvg(K, t1, t2) {
+  var upper = [], lower = [], i, w, a, bb, c, re, im, span = Math.max(1.5, K * t1 * t2 / (t1 + t2) * 1.35), sx = function (v) { return 500 + v * 260 / span; }, sy = function (v) { return 145 - v * 120 / span; };
+  for (i = 0; i <= 180; i += 1) {
+    w = Math.pow(10, -1 + 5 * i / 180); a = -w * w * (t1 + t2); bb = w * (1 - w * w * t1 * t2); c = a * a + bb * bb; re = K * a / c; im = -K * bb / c;
+    upper.push([sx(Math.max(-span * 1.8, Math.min(span * 0.4, re))), sy(Math.max(-span * 1.4, Math.min(span * 1.4, im)))]); lower.unshift([sx(Math.max(-span * 1.8, Math.min(span * 0.4, re))), sy(Math.max(-span * 1.4, Math.min(span * 1.4, -im)))]);
+  }
+  return "<figure style=\"margin:1rem 0\"><svg viewBox=\"0 0 640 290\" width=\"100%\" role=\"img\" aria-label=\"動態奈奎斯特圖：軌跡顯示複數迴路增益如何相對於臨界點負一\">"
+    + "<line x1=\"32\" y1=\"145\" x2=\"610\" y2=\"145\" stroke=\"currentColor\"/><line x1=\"500\" y1=\"15\" x2=\"500\" y2=\"275\" stroke=\"currentColor\"/>"
+    + "<polyline points=\"" + svgPointList(upper.concat(lower)) + "\" fill=\"none\" stroke=\"var(--accent)\" stroke-width=\"3\"/><circle cx=\"" + svgNum(sx(-1)) + "\" cy=\"145\" r=\"6\" fill=\"var(--warn)\"><title>臨界點 −1</title></circle><text x=\"" + svgNum(sx(-1) + 8) + "\" y=\"138\" fill=\"currentColor\">−1</text></svg><figcaption>青綠線是正、負頻率的奈奎斯特軌跡；橘點是閉迴路臨界點 −1，調整 K 會使軌跡縮放。</figcaption></figure>";
 }
 
 /* ---------- 4. 十二章 widget ---------- */
@@ -467,6 +521,7 @@ function rlocus() {
       + row(["實軸區段", "(−∞, " + num6(-Math.max(a, b)) + ") 與 (" + num6(-Math.min(a, b)) + ", 0)"]) + row(["分離點", num6(sb)]) + row(["分離增益", num6(Kb)])
       + row(["臨界增益", num6(Kcrit)]) + row(["臨界頻率", num6(wcrit)]) + row(["三個根", eigText(roots)])
       + row(["主導對 ζ", zeta === null ? "不適用（三個實根）" : num6(zeta)]) + "</table>";
+    h += rootLocusSvg(a, b, K, Kcrit);
     if (K === 0) { h += "<p><strong>判讀：K ＝ 0，根就是開迴路極點 0、−a、−b</strong></p>"; }
     else if (Math.abs(K - Kcrit) < 0.5) { h += "<p><strong>判讀：共軛對落在虛軸 ±j" + num6(wcrit) + "，臨界穩定，等幅振盪</strong></p>"; }
     else if (K < Kb) { h += "<p><strong>判讀：三個實根，還沒分離，不振盪</strong></p>"; }
@@ -499,6 +554,7 @@ function bode() {
       h += row(ws[i] === w ? ["<strong>" + line[0] + "</strong>", "<strong>" + line[1] + "</strong>", "<strong>" + line[2] + "</strong>"] : line);
     }
     h += "</table>";
+    h += bodeSvg(K, t1, t2, w);
     if ((wc1 > 0 && Math.abs(w - wc1) / wc1 < 0.05) || (wc2 > 0 && Math.abs(w - wc2) / wc2 < 0.05)) { h += "<p><strong>判讀：正在轉角頻率上，該極點貢獻 −45°，是它最終 −90° 的一半</strong></p>"; }
     else if (phase <= -180) { h += "<p><strong>判讀：相位已過 −180°，這個頻率的回授是正回授；振幅還有 " + num6(dB) + " dB</strong></p>"; }
     else if (phase <= -135) { h += "<p><strong>判讀：相位剩不到 45° 就到 −180°，下一章會判斷是否夠用</strong></p>"; }
@@ -523,6 +579,7 @@ function margin() {
     var h = "<table>" + row(["量", "結果"], true) + row(["相位交越頻率", num6(wpc) + " rad/s"]) + row(["交越處振幅", num6(mpc)])
       + row(["增益裕度", num6(GM) + " dB"]) + row(["臨界增益", num6(Kcrit)]) + row(["增益交越頻率", num6(wgc) + " rad/s"])
       + row(["交越處相位", deg(phGc)]) + row(["相位裕度", deg(PM)]) + row(["ζ 粗估", num6(zetaEst)]) + row(["N 與 Z", atCritical ? "軌跡通過 −1（臨界，N 未定義）" : int0(N) + "、" + int0(N)]) + "</table>";
+    h += nyquistSvg(K, t1, t2);
     h += atCritical ? "<p>奈奎斯特判定：軌跡通過 −1，環繞次數 N 在此臨界情形不定義。</p>" : "<p>奈奎斯特判定：軌跡穿越負實軸於 −" + num6(mpc) + "，在 −1 的" + (mpc < 1 ? "右邊" : "左邊") + "，環繞 −1 共 " + int0(N) + " 次，閉迴路右半平面極點 Z ＝ " + int0(N) + "。</p>";
     if (atCritical) { h += "<p><strong>判讀：臨界，等幅振盪於 ω_pc；K ＝ K_crit ＝ " + num6(Kcrit) + "</strong></p>"; }
     else if (mpc > 1) { h += "<p><strong>判讀：GM ＜ 0 dB，軌跡環繞 −1，Z ＝ 2，不穩定</strong></p>"; }
@@ -665,25 +722,33 @@ function dictionary() {
 /* ---------- 6. 自我檢核 ---------- */
 function selfcheck() {
   if (!$("quiz-reset")) { return; }
-  var answered = {};
+  var answered = {}, saved = {}, storageKey = "control-systems-selfcheck-v1";
+  try { saved = JSON.parse(localStorage.getItem(storageKey) || "{}") || {}; } catch (ignoreRead) { saved = {}; }
+  var save = function () {
+    var data = {}, i, n;
+    for (i = 0; i < QUIZ.length; i += 1) { n = $(QUIZ[i].id); if (answered[QUIZ[i].id] && n) { data[QUIZ[i].id] = n.value; } }
+    try { localStorage.setItem(storageKey, JSON.stringify(data)); } catch (ignoreWrite) { /* 儲存失效不影響作答 */ }
+  };
   var progress = function () { var n = 0, k; for (k in answered) { if (answered.hasOwnProperty(k) && answered[k]) { n += 1; } } put("quiz-progress", "已作答 " + int0(n) + " / " + int0(QUIZ.length) + " 題（僅供參考，不影響瀏覽）"); };
   var link = function (id) { var t = QUIZ_CH[id.slice(1, 3)]; return t ? "<p>回去看：<a href=\"" + t[0] + "\">" + t[1] + "</a></p>" : ""; };
   var makeCheck = function (q) {
     return function () {
       var node = $(q.id), raw, ok, v, right;
       if (!node) { return; } raw = node.value;
-      if (raw === "" || raw === null) { put(q.id + "-output", "<p>" + (q.t === "num" ? "先填一個數字。" : "先選一個選項。") + "</p>"); answered[q.id] = false; progress(); return; }
-      if (q.t === "num") { v = Number(raw); if (!isFinite(v)) { put(q.id + "-output", "<p>先填一個數字。</p>"); answered[q.id] = false; progress(); return; } ok = Math.abs(v - q.ans) <= q.tol; }
+      if (raw === "" || raw === null) { put(q.id + "-output", "<p>" + (q.t === "num" ? "先填一個數字。" : "先選一個選項。") + "</p>"); answered[q.id] = false; save(); progress(); return; }
+      if (q.t === "num") { v = Number(raw); if (!isFinite(v)) { put(q.id + "-output", "<p>先填一個數字。</p>"); answered[q.id] = false; save(); progress(); return; } ok = Math.abs(v - q.ans) <= q.tol; }
       else { ok = String(raw) === q.ans; }
       answered[q.id] = true;
       if (ok) { put(q.id + "-output", "<p><strong>答對</strong>　" + q.why + "</p>" + link(q.id)); }
       else { right = q.t === "num" ? "正確答案是 " + num6(q.ans) + "。" : "正確答案是選項 " + q.ans + "。"; put(q.id + "-output", "<p><strong>再看一次</strong>　" + right + q.why + "　" + q.err + "</p>" + link(q.id)); }
-      progress();
+      save(); progress();
     };
   };
   var i, q, btn;
   for (i = 0; i < QUIZ.length; i += 1) { q = QUIZ[i]; btn = $(q.id + "-check"); if (btn) { btn.addEventListener("click", makeCheck(q)); } }
-  $("quiz-reset").addEventListener("click", function () { var j, n; for (j = 0; j < QUIZ.length; j += 1) { n = $(QUIZ[j].id); if (n) { n.value = ""; } put(QUIZ[j].id + "-output", ""); answered[QUIZ[j].id] = false; } progress(); });
+  for (i = 0; i < QUIZ.length; i += 1) { q = QUIZ[i]; if (saved.hasOwnProperty(q.id) && $(q.id)) { $(q.id).value = saved[q.id]; answered[q.id] = true; } }
+  for (i = 0; i < QUIZ.length; i += 1) { q = QUIZ[i]; if (saved.hasOwnProperty(q.id) && $(q.id)) { makeCheck(q)(); } }
+  $("quiz-reset").addEventListener("click", function () { var j, n; for (j = 0; j < QUIZ.length; j += 1) { n = $(QUIZ[j].id); if (n) { n.value = ""; } put(QUIZ[j].id + "-output", ""); answered[QUIZ[j].id] = false; } try { localStorage.removeItem(storageKey); } catch (ignoreRemove) { /* 儲存失效不影響清除 */ } progress(); });
   progress();
 }
 

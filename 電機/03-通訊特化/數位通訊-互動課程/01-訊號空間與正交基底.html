@@ -37,17 +37,18 @@
 <tr><td>P<sub>e</sub></td><td>Q(4.472136)</td><td><strong>3.872108 × 10<sup>−6</sup></strong></td></tr>
 </tbody></table>
 <p>這個數字就是通訊系統 08 的 BPSK 在 10 dB 的誤碼率；同一件事，本章從兩點距離重新推出來。</p>
-<p><strong>量級與邊界對照。</strong>ρ ＝ 0 時，d ＝ 1.414214、s<sub>2</sub> ＝ (0.000000, 1.000000)、引數 3.162278、P<sub>e</sub> ＝ 7.827011 × 10<sup>−4</sup>，與反極性差 3.010300 dB。ρ ＝ 1 且能量相同時，d ＝ 0、P<sub>e</sub> ＝ 5.000000 × 10<sup>−1</sup>。ρ ＝ 0.5 時，d ＝ 1.000000、s<sub>2</sub> ＝ (0.500000, 0.866025)、P<sub>e</sub> ＝ 1.267366 × 10<sup>−2</sup>；ρ ＝ −0.5 時，d ＝ 1.732051、P<sub>e</sub> ＝ 5.375559 × 10<sup>−5</sup>。</p>
-<p>若 E<sub>1</sub> ＝ 1、E<sub>2</sub> ＝ 0.1、ρ ＝ 0，則 d ＝ 1.048809、E<sub>b</sub> ＝ 0.550000（7.403627 dB）、P<sub>e</sub> ＝ 9.508237 × 10<sup>−3</sup>。若兩個能量都升到 4 且 ρ ＝ −1，d ＝ 4、P<sub>e</sub> ＝ 1.872049 × 10<sup>−19</sup>。固定預設能量時，N<sub>0</sub> ＝ 2 使引數成為 1.000000，P<sub>e</sub> ＝ 1.586553 × 10<sup>−1</sup>；N<sub>0</sub> ＝ 0.05 則得到 1.269814 × 10<sup>−10</sup>。</p>
+<p><strong>量級與邊界對照。</strong>ρ ＝ 0 時，d ＝ 1.414、s<sub>2</sub> ＝ (0, 1)、引數 3.162、P<sub>e</sub> ＝ 7.827 × 10<sup>−4</sup>，與反極性差 3.01 dB。ρ ＝ 1 且能量相同時，d ＝ 0、P<sub>e</sub> ＝ 5 × 10<sup>−1</sup>。ρ ＝ 0.5 時，d ＝ 1、s<sub>2</sub> ＝ (0.5, 0.866)、P<sub>e</sub> ＝ 1.267 × 10<sup>−2</sup>；ρ ＝ −0.5 時，d ＝ 1.732、P<sub>e</sub> ＝ 5.376 × 10<sup>−5</sup>。</p>
+<p>若 E<sub>1</sub> ＝ 1、E<sub>2</sub> ＝ 0.1、ρ ＝ 0，則 d ＝ 1.049、E<sub>b</sub> ＝ 0.55（7.404 dB）、P<sub>e</sub> ＝ 9.508 × 10<sup>−3</sup>。若兩個能量都升到 4 且 ρ ＝ −1，d ＝ 4、P<sub>e</sub> ＝ 1.872 × 10<sup>−19</sup>。固定預設能量時，N<sub>0</sub> ＝ 2 使引數成為 1，P<sub>e</sub> ＝ 1.587 × 10<sup>−1</sup>；N<sub>0</sub> ＝ 0.05 則得到 1.27 × 10<sup>−10</sup>。</p>
 
 <section class="workspace"><h2>自由實驗：調能量、相關與雜訊，看距離如何接管結果</h2>
 <p>四個控制量會同時更新內積、Gram–Schmidt 座標、距離、能量比與誤判機率。特別比較 ρ ＝ −1、0、1，觀察能量相同時幾何佈局造成的差異。</p>
 <div class="controls">
-<label for="ss-e1">訊號 1 的能量 E_1<input id="ss-e1" type="range" min="0.1" max="4" step="0.1" value="1"></label>
-<label for="ss-e2">訊號 2 的能量 E_2<input id="ss-e2" type="range" min="0.1" max="4" step="0.1" value="1"></label>
-<label for="ss-rho">相關係數 ρ<input id="ss-rho" type="range" min="-1" max="1" step="0.05" value="-1"></label>
-<label for="ss-n0">雜訊功率譜密度 N_0<input id="ss-n0" type="range" min="0.05" max="2" step="0.05" value="0.1"></label>
+<label for="ss-e1">訊號 1 的能量 E_1 <output id="ss-e1-val" for="ss-e1">1</output><input id="ss-e1" type="range" min="0.1" max="4" step="0.1" value="1"></label>
+<label for="ss-e2">訊號 2 的能量 E_2 <output id="ss-e2-val" for="ss-e2">1</output><input id="ss-e2" type="range" min="0.1" max="4" step="0.1" value="1"></label>
+<label for="ss-rho">相關係數 ρ <output id="ss-rho-val" for="ss-rho">−1</output><input id="ss-rho" type="range" min="-1" max="1" step="0.05" value="-1"></label>
+<label for="ss-n0">雜訊功率譜密度 N_0 <output id="ss-n0-val" for="ss-n0">0.1</output><input id="ss-n0" type="range" min="0.05" max="2" step="0.05" value="0.1"></label>
 </div>
+<div><p><strong>先預測再拖：</strong>E<sub>1</sub> ＝ 1.6、E<sub>2</sub> ＝ 0.9、ρ ＝ 0.25 時，兩點距離 d 是多少？</p><label for="p01">你的預測<input id="p01" type="number" step="0.001"></label><button id="p01-check" type="button">檢查預測</button><div id="p01-output" class="output" aria-live="polite"></div><p><a href="自我檢核.html#q01-1">再做 01 章自我檢核</a></p></div>
 <div id="sigspace-output" class="output" aria-live="polite"></div>
 </section>
 

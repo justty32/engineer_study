@@ -59,7 +59,7 @@
 <label for="ss-d1">期望特徵多項式 s² + d1 s + d0 的 d1<input id="ss-d1" type="number" step="any" value="10"></label>
 <label for="ss-d0">d0<input id="ss-d0" type="number" step="any" value="50"></label>
 </div>
-<div id="state-output" class="output" aria-live="polite"></div>
+<div id="state-output" class="output"></div>
 </section>
 
 <h2>不要混淆</h2>
@@ -78,6 +78,9 @@
 <p><strong>不能證明什麼。</strong>單次實驗不能排除未建模的彈性、延遲與感測器動態，也不能涵蓋任意命令。K 很大時，飽和會使 A − BK 的線性推導失效。</p>
 <p>保持 K 不變而改變初始狀態；各次衰減率一致時，證據比單次命令強。若 u 削頂或衰減率隨初值改變，應先查飽和與非線性。同時保留命令、y 與 u，才能看出是否以過大控制量彌補模型誤差。</p>
 
+<p><strong>在家版本。</strong>用預設、不可控、不可觀三組矩陣切換，比對 det M<sub>c</sub>、det M<sub>o</sub> 與配置結果，再手改期望多項式確認閉迴路特徵值。這是矩陣層級驗證，不能證明未建模狀態與感測器動態不存在。</p>
+<h2>帶走三件事</h2>
+<ul><li>可控性回答輸入能否推動全部狀態方向，可觀性回答輸出能否辨識它們。</li><li>狀態回授把 A 改成 A − BK；不可控時不能任意配置全部極點。</li><li>不可觀不等於完全不能估測；不可觀模態穩定時仍可能具有可偵測性。</li></ul>
 <h2>連到哪門課</h2>
 <p>極點與特徵值的關係見<a href="../信號與系統-互動課程/07-拉氏轉換與轉移函數.html">信號與系統的〈07 拉氏轉換與轉移函數〉</a>。觀測器、線性二次調節器（linear-quadratic regulator, LQR）的 Q、R 權重，以及卡爾曼濾波器（Kalman filter, KF）的最佳估測，屬於線性系統理論與最佳控制。下一頁可用字典回查概念。</p>
 <nav class="pager" aria-label="章節導覽"><a href="10-領先落後補償器.html">← 上一頁：領先／落後補償器</a><a href="名詞與概念字典.html">下一頁：名詞與概念字典 →</a></nav>

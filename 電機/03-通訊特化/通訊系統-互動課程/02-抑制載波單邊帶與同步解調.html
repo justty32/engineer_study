@@ -33,9 +33,9 @@
 
 <section class="workspace"><h2>自由實驗：方案、頻寬與同步代價</h2><p>場景是四種 AM 家族方案共用 100 kHz 空間，你可改每路訊息頻寬，再主動加入本地載波的相位與頻率誤差。輸出會先說明當前模式真正用到哪些控制，再比較可放路數與同步後果。</p><div class="controls">
 <label for="cd-scheme">調變方案<select id="cd-scheme"><option value="dsblc">DSB-LC（一般 AM，包絡檢波）</option><option value="dsbsc" selected>DSB-SC（抑制載波，同步解調）</option><option value="ssb">SSB（單邊帶，同步解調）</option><option value="vsb">VSB（殘留邊帶）</option></select></label>
-<label for="cd-w">訊息頻寬 W（kHz）<input id="cd-w" type="range" min="1" max="20" step="0.5" value="4"></label>
-<label for="cd-phi">本地載波相位誤差 φ（°）<input id="cd-phi" type="range" min="0" max="90" step="1" value="30"></label>
-<label for="cd-df">本地載波頻率誤差 Δf（Hz）<input id="cd-df" type="range" min="0" max="100" step="1" value="0"></label>
+<label for="cd-w">訊息頻寬 W（kHz）<output for="cd-w" id="cd-w-value" style="float:inline-end">4</output><input id="cd-w" type="range" min="1" max="20" step="0.5" value="4"></label>
+<label for="cd-phi">本地載波相位誤差 φ（°）<output for="cd-phi" id="cd-phi-value" style="float:inline-end">30</output><input id="cd-phi" type="range" min="0" max="90" step="1" value="30"></label>
+<label for="cd-df">本地載波頻率誤差 Δf（Hz）<output for="cd-df" id="cd-df-value" style="float:inline-end">0</output><input id="cd-df" type="range" min="0" max="100" step="1" value="0"></label>
 </div><div id="cohdem-output" class="output" aria-live="polite"></div></section>
 
 <h2>不要混淆</h2>
@@ -48,6 +48,7 @@
 
 <h2>連到哪門課</h2>
 <p>同步解調借用的「相乘等於搬移」見<a href="../../02-電機核心/信號與系統-互動課程/10-調變與頻譜搬移.html">信號與系統的調變與頻譜搬移</a>，本章只追蹤同步代價。PLL 怎麼選迴路頻寬與相位裕度留給控制系統課；SSB 的希爾伯特轉換實作留給數位訊號處理課。下一章會把訊息改放進頻率，比較另一種頻寬與抗雜訊取捨。</p>
+<section aria-labelledby="summary-02"><h2 id="summary-02">本章帶走的三件事</h2><ul><li>DSB-SC 省載波功率，SSB 再把頻寬減半。</li><li>省掉載波後必須同步重建；DSB-SC 相位誤差會乘上 cos φ。</li><li>頻率誤差在 DSB-SC 造成拍頻，在 SSB 造成整體頻譜平移。</li></ul><p><strong>下章銜接：</strong><a href="03-FM與Carson頻寬.html">03 章</a>改把訊息寫進瞬時頻率並計算頻寬代價；也可先做<a href="自我檢核.html#quiz-02">本章檢核</a>。</p></section>
 <nav class="pager" aria-label="章節導覽"><a href="01-AM包絡與調變指數.html">← 上一頁：AM 包絡與調變指數</a><a href="03-FM與Carson頻寬.html">下一頁：FM 與 Carson 頻寬 →</a></nav>
 </main><footer class="site-footer"><span>02 抑制載波、單邊帶與同步解調</span><a href="名詞與概念字典.html">查字典</a></footer>
 </body></html>

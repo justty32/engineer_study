@@ -64,6 +64,23 @@ var comb = function (n, k) {
   return r;
 };
 
+var rangeReadouts = function () {
+  if (typeof document === "undefined") { return; }
+  var ranges = document.querySelectorAll('input[type="range"]'), i, input, output, draw;
+  for (i = 0; i < ranges.length; i += 1) {
+    input = ranges[i]; output = $(input.id + "-val");
+    if (!output) { continue; }
+    draw = (function (control, readout) {
+      return function () {
+        var shown = minus(control.value);
+        readout.textContent = shown;
+        control.setAttribute("aria-valuetext", shown);
+      };
+    }(input, output));
+    input.addEventListener("input", draw); draw();
+  }
+};
+
 var erfc = function (x) {
   var term, s, n, t, f, k;
   if (x < 0) { return 2 - erfc(-x); }
@@ -152,6 +169,22 @@ var QUIZ = [
   {id:"q12-1",t:"num",ans:312.5,tol:0.01,why:"20000 / 64 ＝ 312.5 kHz。",err:"常見錯因：MHz 沒換成 kHz。"},
   {id:"q12-2",t:"num",ans:0.8,tol:0.001,why:"3.2 µs × 1 / 4 ＝ 0.8 µs。",err:"常見錯因：把比例乘到總時間。"},
   {id:"q12-3",t:"sel",ans:"b",tol:0,why:"複製尾端到前面，FFT 後每個子載波只需一個係數。",err:"常見錯因：把循環字首當成只補空白。"}
+];
+
+var PREDICT = [
+  {id:"p00",ans:810,tol:0.1,why:"R<sub>s</sub> ＝ 1800 / (3/4) / 4 ＝ 600 kbaud，B ＝ 1.35 × 600 ＝ 810 kHz。"},
+  {id:"p01",ans:1.378405,tol:0.001,why:"d ＝ √[1.6 ＋ 0.9 − 2 × 0.25 × √(1.6 × 0.9)] ＝ 1.378405。"},
+  {id:"p02",ans:0.125445,tol:0.001,why:"σ ＝ √[1 / (2 × 4 × 10<sup>0.9</sup>)] ＝ 0.125445。"},
+  {id:"p03",ans:-0.053208,tol:0.001,why:"γ ＝ (10<sup>−0.6</sup>/4) ln(0.3/0.7) ＝ −0.053208。"},
+  {id:"p04",ans:0.000190908,tol:0.000001,why:"BPSK 代入 Q(√(2 × 10<sup>0.8</sup>))，得 1.909078 × 10<sup>−4</sup>。"},
+  {id:"p05",ans:2.52,tol:0.01,why:"每符元轉角是 360° × 7/1000 ＝ 2.52°。"},
+  {id:"p06",ans:2.777778,tol:0.001,why:"NE<sub>ZF</sub> ＝ 1/(1 − 0.8²) ＝ 2.777778。"},
+  {id:"p07",ans:0.246305,tol:0.001,why:"上界 ＝ 2/[7 × (1 ＋ 0.4²)] ＝ 0.246305。"},
+  {id:"p08",ans:6.56962,tol:0.01,why:"E<sub>c</sub>/N<sub>0</sub> ＝ 9 ＋ 10 log<sub>10</sub>(4/7) ＝ 6.569620 dB。"},
+  {id:"p09",ans:10,tol:0,why:"訊息 1001 加入兩個清零位元後編碼為 111011111011，共有 10 個 1。"},
+  {id:"p10",ans:3,tol:0,why:"實算各列錯誤數為 3、2、2、3、3，最大值是 3。"},
+  {id:"p11",ans:0.1875,tol:0.0001,why:"非同步近似的 MAI 項為 (K − 1)/N ＝ 6/32 ＝ 0.1875。"},
+  {id:"p12",ans:39.0625,tol:0.01,why:"Δf ＝ 10000 kHz / 256 ＝ 39.0625 kHz。"}
 ];
 
 /* ---------- 3. 演算法 ---------- */
@@ -661,12 +694,30 @@ function selfcheck() {
   progress();
 }
 
+function predictionQuestions() {
+  var makeCheck = function (q) {
+    return function () {
+      var input = $(q.id), raw, value, ok;
+      if (!input) { return; }
+      raw = input.value; value = Number(raw);
+      if (raw === "" || !isFinite(value)) { put(q.id + "-output", "<p>先寫下預測值，再拖動滑桿驗證。</p>"); return; }
+      ok = Math.abs(value - q.ans) <= q.tol;
+      put(q.id + "-output", "<p><strong>" + (ok ? "預測命中" : "再對一次") + "</strong>　答案 " + num6(q.ans).replace(/\.?0+$/, "") + "，容差 ±" + num6(q.tol).replace(/\.?0+$/, "") + "。" + q.why + "</p>");
+    };
+  };
+  var i, q, button;
+  for (i = 0; i < PREDICT.length; i += 1) {
+    q = PREDICT[i]; button = $(q.id + "-check");
+    if (button) { button.addEventListener("click", makeCheck(q)); }
+  }
+}
+
 /* ---------- 6. 註冊 ---------- */
 if (typeof document !== "undefined") {
-  [chain, sigspace, mary, mapml, berfam, phase, eq, lms, hamming, viterbi, interleave, cdma, ofdm, dictionary, selfcheck].forEach(function (f) { f(); });
+  [rangeReadouts, chain, sigspace, mary, mapml, berfam, phase, eq, lms, hamming, viterbi, interleave, cdma, ofdm, dictionary, selfcheck, predictionQuestions].forEach(function (f) { f(); });
 }
 
 /* ---------- 7. Node 匯出 ---------- */
 if (typeof module !== "undefined") {
-  module.exports = { erfc: erfc, Q: Q, num6: num6, sci: sci, CONS: CONS, TRAIN: TRAIN, berOf: berOf, reqEbN0: reqEbN0, lmsRun: lmsRun, hamEncode: hamEncode, hamSyndrome: hamSyndrome, convEncode: convEncode, viterbiDecode: viterbiDecode, interleaveRun: interleaveRun, QUIZ: QUIZ };
+  module.exports = { erfc: erfc, Q: Q, num6: num6, sci: sci, CONS: CONS, TRAIN: TRAIN, berOf: berOf, reqEbN0: reqEbN0, lmsRun: lmsRun, hamEncode: hamEncode, hamSyndrome: hamSyndrome, convEncode: convEncode, viterbiDecode: viterbiDecode, interleaveRun: interleaveRun, QUIZ: QUIZ, PREDICT: PREDICT };
 }

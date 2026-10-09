@@ -43,9 +43,9 @@
 <section class="workspace"><h2>自由實驗：PCM 位元率帳本</h2>
 <p>設定類比輸入的最高頻率、每秒取樣次數、每個樣本位元數與分時多工路數。回饋會同時計算判準、振幅階距、SQNR、位元率與最低基頻頻寬，讓品質收益和傳輸代價放在同一張表比較。</p>
 <div class="controls">
-<label for="pc-w">訊號最高頻率 W（kHz）<input id="pc-w" type="range" min="0.1" max="24" step="0.1" value="3.4"></label>
-<label for="pc-fs">取樣率 f_s（kHz）<input id="pc-fs" type="range" min="1" max="96" step="0.1" value="8"></label>
-<label for="pc-bits">每樣本位元數 n<input id="pc-bits" type="range" min="1" max="24" step="1" value="8"></label>
+<label for="pc-w">訊號最高頻率 W（kHz）<output for="pc-w" id="pc-w-value" style="float:inline-end">3.4</output><input id="pc-w" type="range" min="0.1" max="24" step="0.1" value="3.4"></label>
+<label for="pc-fs">取樣率 f<sub>s</sub>（kHz）<output for="pc-fs" id="pc-fs-value" style="float:inline-end">8</output><input id="pc-fs" type="range" min="1" max="96" step="0.1" value="8"></label>
+<label for="pc-bits">每樣本位元數 n<output for="pc-bits" id="pc-bits-value" style="float:inline-end">8</output><input id="pc-bits" type="range" min="1" max="24" step="1" value="8"></label>
 <label for="pc-ch">分時多工路數<select id="pc-ch"><option value="1">1 路（電話）</option><option value="2">2 路（立體聲）</option><option value="24">24 路（T1 分時多工）</option><option value="30">30 路（E1 分時多工）</option></select></label>
 </div>
 <div id="pcm-output" class="output" aria-live="polite"></div>
@@ -66,6 +66,7 @@
 
 <h2>連到哪門課</h2>
 <p>混疊的視在頻率與 ZOH 見<a href="../../02-電機核心/信號與系統-互動課程/12-取樣與混疊.html">信號與系統的取樣與混疊</a>，本章不重述其機制。壓伸、DPCM、Delta 調變留給數位通訊課；音訊程式讀檔頭時，正是在取得 f<sub>s</sub>、n 與路數，再決定緩衝區每秒要吞下多少位元。</p>
+<section aria-labelledby="summary-06"><h2 id="summary-06">本章帶走的三件事</h2><ul><li>取樣率不足 2W 會混疊，數位化後無法補救。</li><li>滿刻度弦波每多一個量化位元，SQNR 約增加 6.020600 dB。</li><li>PCM 位元率等於取樣率、每樣本位元數與路數三者相乘。</li></ul><p><strong>下章銜接：</strong><a href="07-基頻傳輸ISI與升餘弦.html">07 章</a>開始問位元流如何在有限頻寬中不互相干擾；也可先做<a href="自我檢核.html#quiz-06">本章檢核</a>。</p></section>
 <nav class="pager" aria-label="章節導覽"><a href="05-雜訊訊雜比與雜訊指數.html">← 上一頁：雜訊、訊雜比與雜訊指數</a><a href="07-基頻傳輸ISI與升餘弦.html">下一頁：基頻傳輸、ISI 與升餘弦 →</a></nav>
 </main>
 <footer class="site-footer"><span>06 取樣、量化與 PCM</span><a href="名詞與概念字典.html">查字典</a></footer>

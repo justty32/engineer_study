@@ -93,31 +93,7 @@
 <label for="rf-x">負載電抗 X（Ω，正為電感性，只有折算模式用）<input id="rf-x" type="range" min="-50" max="50" step="1" value="3">
 </label>
 </div>
-<div id="referral-output" class="output" aria-live="polite">這個模式只用到 V_1、N_1、N_2、R、X，其餘控制不影響結果。<table>
-<tbody>
-<tr>
-<th>a／V_2</th>
-<td>10.000000／240.000000 V</td>
-</tr>
-<tr>
-<th>I_2／I_1</th>
-<td>41.159660 A／4.115966 A</td>
-</tr>
-<tr>
-<th>Z′</th>
-<td>500.000000 + j300.000000 Ω，大小 583.095189 Ω</td>
-</tr>
-<tr>
-<th>S／P／Q</th>
-<td>9878.318504 VA／8470.588235 W／5082.352941 var</td>
-</tr>
-<tr>
-<th>功率因數</th>
-<td>0.857493 落後</td>
-</tr>
-</tbody>
-</table>
-<strong>判讀：目前為降壓，折算後阻抗變為負載的 100.000000 倍。</strong>Z′ = a² × Z_L：電壓乘 a、電流除 a，所以阻抗乘 a²，功率不變。為什麼：同一磁通連結兩側，只改變電壓與電流的座標。邊界提醒：R 與 X 同為 0 時是短路，理想模型電流無限大，數值不適用；真實機器靠第 03 章的漏阻抗限流。</div>
+<div id="referral-output" class="output"><p class="current-settings">目前設定：雙繞組；V_1 = 2400 V；N_1 = 1000；N_2 = 100；R = 5 Ω；X = 3 Ω。</p><p>這個模式只用到 V_1、N_1、N_2、R、X。</p><table><thead><tr><th>量</th><th>結果</th></tr></thead><tbody><tr><td>匝比</td><td>10.000000</td></tr><tr><td>V_2</td><td>240.000000 V</td></tr><tr><td>I_2</td><td>41.159660 A</td></tr><tr><td>I_1</td><td>4.115966 A</td></tr><tr><td>Z′ 實部</td><td>500.000000 Ω</td></tr><tr><td>Z′ 虛部</td><td>300.000000 Ω</td></tr><tr><td>Z′ 大小</td><td>583.095189 Ω</td></tr><tr><td>視在功率</td><td>9878.318504 VA</td></tr><tr><td>實功</td><td>8470.588235 W</td></tr><tr><td>無功</td><td>5082.352941 var</td></tr><tr><td>功率因數</td><td>0.857493</td></tr></tbody></table><p>目前為降壓折算。</p><p>Z′ = a² × Z_L：電壓乘 a、電流除 a，所以阻抗乘 a²，功率不變。</p></div>
 </section>
 <h2>不要混淆</h2>
 <ul>
@@ -128,7 +104,7 @@
 </ul>
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
 <p>用鉗形表分別量 I<sub>1</sub>、I<sub>2</sub>，再用 LCR 表從一次側量入端阻抗。電流比與阻抗比能證明匝比及 a² 折算；它們不能證明機器完全理想，因為真實一次電流還包含激磁電流與損耗。</p>
-<h2>連到哪門課</h2>
+<h2>本章帶走的三件事</h2><ul><li>電壓按匝比變，阻抗按匝比平方折算。</li><li>折算不改變理想變壓器傳遞的功率。</li><li>自耦變壓器省繞組容量，但失去電氣隔離。</li></ul><p><a href="自我檢核.html#ch02">做本章 3 題 →</a></p>\n<h2>連到哪門課</h2>
 <p>匝比與接法見<a href="../電路學-互動課程/14-變壓器與三相.html">變壓器與三相</a>。控制程式那一端會依 CT、PT 比例把量測值換回一次側單位；折算也會在後續參數估測中統一座標。</p>
 <nav class="pager" aria-label="章節導覽">
 <a href="01-鐵心電壓與磁通.html">← 上一頁：鐵心電壓與磁通</a>
