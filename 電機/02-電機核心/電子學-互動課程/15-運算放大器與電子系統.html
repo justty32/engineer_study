@@ -13,8 +13,9 @@
 
 <h2>白話直覺：訊號決定狀態，真正的能量都由電源供應</h2>
 <p>可以暫時把電子系統想成資料管線，每級只保留下一級需要的資訊；比喻到此為止，精確描述仍須追蹤導通路徑與能量。典型兩級運算放大器的正、負電源相對地供能；輸入差動對把兩端電壓差轉成電流，電流鏡主動負載把差分電流合成高增益單端電壓，第二級共源放大，推挽射隨器向負載供電流，所有路徑經電源返回而閉合。</p>
-<p>米勒補償電容跨在第二級輸入與輸出，故意建立低主極點，讓迴路增益降到一之前保有相位裕度。輸入失調電壓、偏壓電流、有限 CMRR 與電源拒斥比會造成直流誤差；有限 GBW 限制小訊號頻寬；轉換速率（slew rate, SR）限制輸出每秒最大電壓變化；雜訊則設定最小可辨信號。主動濾波器以運算放大器加 R、C 實作 Sallen–Key 或多回授拓樸，但多項式選擇留給後續課程。</p>
+<p>米勒補償電容跨在第二級輸入與輸出，故意建立低主極點，讓迴路增益降到一之前保有相位裕度。輸入失調電壓、偏壓電流、有限 CMRR 與電源拒斥比會造成直流誤差；有限 GBW 限制小訊號頻寬；轉換速率（slew rate, SR）限制輸出每秒最大電壓變化；雜訊則設定最小可辨訊號。主動濾波器以運算放大器加 R、C 實作 Sallen–Key 或多回授拓樸，但多項式選擇留給後續課程。</p>
 <p>比較器讓微小差值把輸出推向兩個電源端。施密特觸發器（Schmitt trigger）加正回授形成遲滯（hysteresis）：輸入上升與下降使用不同門檻，雜訊在門檻附近來回時不會反覆切換。這與第 14 章穩定放大的負回授方向相反，是故意建立兩個穩態。</p>
+<p>推挽輸出級在理想 B 類偏壓下，正、負半週分別交給上、下電晶體；輸入穿越零點時，兩顆都可能暫時未達順向導通門檻，造成交越失真。AB 類以小靜態電流讓兩顆在零點附近都微導通，用靜態功耗換取較小的交越失真。</p>
 <p>振盪器把某頻率的迴路相位與增益調到可自我維持。RC 型適合低頻；LC 型由電感與電容來回交換磁場、電場能量，適合射頻；石英晶體的高 Q 讓共振點銳利；壓控振盪器供鎖相迴路調頻；多諧振盪器利用充放電與切換產生方波。啟振能量來自電源，回授只選擇哪些擾動被強化。</p>
 <p>電源管理則直接搬運能量。低壓差線性穩壓器（Low Dropout Regulator, LDO）的串聯電晶體持續導通，多餘電壓乘電流變成熱；Buck 讓 MOSFET 在三極區全通與截止區全斷間切換，電感電流維持閉合路徑，輸出電容平滑端點電壓，脈衝寬度調變以佔空比控制平均值。資料轉換器最後在連續電壓與離散碼之間建立有限解析度的映射。</p>
 <p class="note">來源：07-電子學-下 第 12、13、14、15 章。</p>
@@ -47,7 +48,8 @@
 <label for="sy-l">諧振電感 L（µH）<input id="sy-l" type="range" min="1" max="1000" step="1" value="100"></label>
 <label for="sy-c">諧振電容 C（pF）<input id="sy-c" type="range" min="10" max="10000" step="10" value="100"></label>
 <label for="sy-vin">電源輸入電壓 V<sub>in</sub>（V）<input id="sy-vin" type="range" min="1" max="24" step="0.1" value="12"></label>
-<label for="sy-vout">輸出電壓 V<sub>out</sub>（V，也當 ADC 的 V<sub>ref</sub>）<input id="sy-vout" type="range" min="0.8" max="12" step="0.1" value="3.3"></label>
+<label for="sy-vout">輸出電壓 V<sub>out</sub>（V）<input id="sy-vout" type="range" min="0.8" max="12" step="0.1" value="3.3"></label>
+<label for="sy-vref">ADC 參考電壓 V<sub>ref</sub>（V）<input id="sy-vref" type="range" min="0.8" max="5" step="0.1" value="3.3"></label>
 <label for="sy-bits">ADC 位元數 N<input id="sy-bits" type="range" min="6" max="24" step="1" value="12"></label>
 <label for="sy-fs">取樣率 f<sub>s</sub>（kHz）<input id="sy-fs" type="range" min="1" max="10000" step="1" value="1000"></label>
 </div>

@@ -23,6 +23,7 @@
 <p><strong>為什麼會洩漏。</strong>DFT 隱含一個假設：這 N 點就是一個週期，前後無限重複。若訊號在窗內不是整數個週期，把窗尾接回窗頭時會出現一個跳躍；跳躍在頻域是寬頻的，能量因此散到鄰近所有 bin，這就是<strong>譜洩漏（spectral leakage）</strong>。<strong>加窗（windowing）</strong>的做法是先把序列乘上一條降低兩端權重的曲線（Hann、Hamming、Blackman；Hamming 端點不為 0），減弱接縫造成的旁瓣，裙邊跟著下降；代價是主瓣變寬，也就是解析度變差。</p>
 <p><strong>為什麼零填充不增加解析度。</strong><strong>零填充（zero-padding）</strong>是把 N 點補 0 到更長再做 FFT。補進去的 0 不含任何觀測資訊，<strong>有效</strong>的 T<sub>win</sub> 完全沒變，所以 1/T<sub>win</sub> 也沒變。它做的事是在同一條 DTFT 曲線上多取幾個樣本點，屬於內插；圖會變平滑、峰值位置讀起來更順眼，但兩根本來分不開的線還是分不開。</p>
 <p><strong>運算量。</strong>直接算 DFT 要做 N 次求和、每次 N 項，共 N² 次複數乘法。基 2 FFT 遞迴地把長度對半拆，共 log<sub>2</sub>N 層、每層 N/2 個蝶形，因此是 (N/2)log<sub>2</sub>N 次。兩者相除就是加速倍率，N 愈大差距愈懸殊。</p>
+<p><strong>寫成程式會怎麼算。</strong><code>for k = 0..N−1: X[k] = 0; for n = 0..N−1: X[k] += x[n] * exp(−j2πkn/N)</code>。這就是 N×N 矩陣乘法；FFT 只是在不改答案的前提下重排並重用乘法。</p>
 <p><strong>四個窗函數的固定數值</strong>（查表常數，本課全程只用這一組）：</p>
 <table><thead><tr><th>窗</th><th>主瓣寬度（bin）</th><th>最高旁瓣（dB）</th><th>一句話</th></tr></thead><tbody>
 <tr><td>rect（矩形／不加窗）</td><td>2</td><td><strong>−13.3</strong></td><td>解析度最好、洩漏最嚴重</td></tr>
@@ -37,7 +38,7 @@
 <tr><td>窗長</td><td>T<sub>win</sub> = N/f<sub>s</sub> = 1024/8000</td><td><strong>0.128000 s</strong></td></tr>
 <tr><td>精確 bin 位置</td><td>f·N/f<sub>s</sub> = 1000 × 1024/8000</td><td><strong>128.000000（正好整數）</strong></td></tr>
 <tr><td>最近的 bin</td><td>k = round(128.000000)</td><td><strong>k = 128，中心 1000.000000 Hz</strong></td></tr>
-<tr><td>誤差</td><td>f − k·Δf</td><td><strong>0.000000 Hz → 無洩漏</strong></td></tr>
+<tr><td>誤差</td><td>f − k·Δf</td><td><strong>0.000000 Hz；矩形窗下無洩漏，Hann 窗仍展寬成鄰近 3 根非零譜線</strong></td></tr>
 <tr><td>hann 主瓣寬度</td><td>4 × 7.812500</td><td><strong>31.250000 Hz</strong></td></tr>
 <tr><td>直接 DFT 運算量</td><td>N²</td><td><strong>1048576 次複數乘法</strong></td></tr>
 <tr><td>FFT 運算量</td><td>(N/2)log<sub>2</sub>N = 512 × 10</td><td><strong>5120 次</strong></td></tr>

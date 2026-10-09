@@ -2,9 +2,9 @@
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
-<p class="eyebrow">02・六個積木，加上三種會互相打架的時間軸運算</p>
+<p class="eyebrow">02・連續五個＋離散三個積木，加上三種會互相打架的時間軸運算</p>
 <h1>基本訊號與訊號運算：δ 的篩選性是下一章的唯一地基</h1>
-<p class="lead">這章把六個基本訊號變成可以拿來組裝任何東西的積木，並且把平移、反轉、縮放三種運算的順序陷阱一次講清楚。核心只有一件事：δ(t) 的篩選性，它是第 04 章摺積唯一站得住腳的地基。</p>
+<p class="lead">這章把連續時間五個、離散時間三個基本訊號變成可以拿來組裝任何東西的積木，並且把平移、反轉、縮放三種運算的順序陷阱一次講清楚。核心只有一件事：δ(t) 的篩選性，它是第 04 章摺積唯一站得住腳的地基。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="01-訊號的分類.html">01 訊號的分類</a>裡的能量／功率與奇偶判斷，以及訊號就是一個函數這件事。</p>
 
 <h2>痛點：δ 到底是什麼，還有 x(2t − 1) 到底移了多少</h2>
@@ -23,21 +23,21 @@
 <p><strong>（c）複合運算的順序陷阱。</strong><code>y(t) = x(2(t − 1))</code> 與 <code>y(t) = x(2t − 1)</code> <strong>不是同一個訊號</strong>：前者在 t = 1 時內部引數為 0，後者在 t = 0.5 時內部引數才為 0。本課的統一作法是先把式子整理成標準形 <code>x(a(t − t<sub>0</sub>))</code>，整理完的 t<sub>0</sub> 才是真正的平移量。把 2t − 1 提出 2 得 2(t − 0.5)，所以 <code>x(2t − 1) = x(2(t − 0.5))</code>——<strong>平移的是 0.5 不是 1</strong>。記法很簡單：課本寫 x(at − b) 時，真正的平移量是 b/a。</p>
 <p><strong>（d）離散的縮放為什麼要小心。</strong>連續時間的 x(at) 只是把時間軸拉伸或壓縮，資訊原則上還在。離散時間就不一樣：<code>x[2n]</code> 是把偶數項留下、奇數項<strong>丟掉</strong>，這叫降取樣，被丟的樣本真的沒了；而 <code>x[n/2]</code> 只在 n 是偶數時有定義，奇數位置是空的，必須靠內插補出來，補出來的值是猜的、不是量到的。這一組不對稱正是第 15 章多速率處理的起點。</p>
 
-<h2>數值實例：x(t) = e<sup>−t</sup>·u(t) 做 y(t) = A·x(a(t − t<sub>0</sub>))</h2>
-<p>取 A = 1、a = 1、t<sub>0</sub> = 1 s、觀測時刻 t = 2 s。這組數字是本章互動元件的預設值。</p>
+<h2>數值實例：x(t) = e<sup>−t</sup>·u(t) 做 y(t) = x(a(t − t<sub>0</sub>))</h2>
+<p>取 a = 1、t<sub>0</sub> = 1 s、觀測時刻 t = 2 s。這組數字是本章互動元件的預設值。</p>
 <table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
 <tr><td>內部引數</td><td>arg = a(t − t<sub>0</sub>) = 1 × (2 − 1)</td><td><strong>1.000000</strong></td></tr>
-<tr><td>輸出值</td><td>y = A·e<sup>−arg</sup>（arg ≥ 0）</td><td><strong>0.367879</strong></td></tr>
+<tr><td>輸出值</td><td>y = e<sup>−arg</sup>（arg ≥ 0）</td><td><strong>0.367879</strong></td></tr>
 <tr><td>篩選性</td><td>∫ x(τ)δ(τ − 1) dτ = x(1)</td><td><strong>0.367879</strong></td></tr>
 <tr><td>意義</td><td>訊號被<strong>延後 1 秒</strong>，所以 t = 2 秒看到的是原本 t = 1 秒的值</td><td>—</td></tr>
 </tbody></table>
-<p>邊界對照。a = <strong>−1</strong>、t<sub>0</sub> = 1、t = <strong>0</strong> → arg = <strong>1.000000</strong>、y = <strong>0.367879</strong>（<strong>時間反轉後，t = 0 看到的是原本 t = 1 的值</strong>）。a = <strong>2</strong> → arg = <strong>2.000000</strong>、y = <strong>0.135335</strong>（<strong>壓縮成兩倍快，同樣的 1 秒走完原本 2 秒的路</strong>）。a = <strong>0.5</strong> → arg = <strong>0.500000</strong>、y = <strong>0.606531</strong>。t = <strong>0.5</strong>（arg = <strong>−0.500000</strong>）→ y = <strong>0.000000</strong>（<strong>u(t) 在負引數處是 0</strong>）。A = 2 → y = <strong>0.735759</strong>。換成斜坡且 arg = 1 → y = <strong>1.000000</strong>；換成弦波 cos(2π·arg) 且 arg = 1 → y = <strong>1.000000</strong>，arg = 0.25 → y = <strong>0.000000</strong>。</p>
+<p>邊界對照。a = <strong>−1</strong>、t<sub>0</sub> = 1、t = <strong>0</strong> → arg = <strong>1.000000</strong>、y = <strong>0.367879</strong>（<strong>時間反轉後，t = 0 看到的是原本 t = 1 的值</strong>）。a = <strong>2</strong> → arg = <strong>2.000000</strong>、y = <strong>0.135335</strong>（<strong>壓縮成兩倍快，同樣的 1 秒走完原本 2 秒的路</strong>）。a = <strong>0.5</strong> → arg = <strong>0.500000</strong>、y = <strong>0.606531</strong>。t = <strong>0.5</strong>（arg = <strong>−0.500000</strong>）→ y = <strong>0.000000</strong>（<strong>u(t) 在負引數處是 0</strong>）。換成斜坡且 arg = 1 → y = <strong>1.000000</strong>；換成弦波 cos(2π·arg) 且 arg = 1 → y = <strong>1.000000</strong>，arg = 0.25 → y = <strong>0.000000</strong>。</p>
 <p>量級對照：要用窄脈衝去近似 δ，寬度必須遠小於系統的時間常數。上面這個系統的時間常數是 1 s，那麼 1 ms 的脈衝就綽綽有餘（差 1000 倍）；但如果系統是電話語音鏈路，取樣週期只有 125.000000 µs，同樣一個 1 ms 的脈衝反而已經算「寬」了。<strong>窄不窄從來不是絕對值，是比值</strong>。</p>
 
 <section class="workspace"><h2>自由實驗：把縮放、反轉、平移拆開來看引數</h2>
 <p>場景是拿一個基底訊號 x，做標準形變換 y(t) = x(a(t − t<sub>0</sub>))，再在某個觀測時刻 t 讀值。三個滑桿分別控制縮放係數、平移量與觀測時刻；四種基底都會用到全部三個滑桿，沒有哪個模式會讓滑桿失效。重點是盯著內部引數 arg，因為輸出值完全由它決定。</p>
 <div class="controls">
-<label for="ops-base">基底訊號<select id="ops-base"><option value="exp">衰減指數 exp(−t)·u(t)</option><option value="step">單位步階 u(t)</option><option value="ramp">斜坡 t·u(t)</option><option value="cos">弦波 cos(2*pi*t)</option></select></label>
+<label for="ops-base">基底訊號<select id="ops-base"><option value="exp">衰減指數 exp(−t)·u(t)</option><option value="step">單位步階 u(t)</option><option value="ramp">斜坡 t·u(t)</option><option value="cos">弦波 cos(2πt)</option></select></label>
 <label for="ops-a">時間縮放係數 a（負值代表時間反轉）<input id="ops-a" type="range" min="-3" max="3" step="0.5" value="1"></label>
 <label for="ops-t0">平移量 t<sub>0</sub>（s，正值代表延後）<input id="ops-t0" type="range" min="-3" max="3" step="0.1" value="1"></label>
 <label for="ops-t">觀測時刻 t（s）<input id="ops-t" type="range" min="-5" max="5" step="0.1" value="2"></label>

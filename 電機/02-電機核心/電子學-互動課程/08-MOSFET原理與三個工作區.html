@@ -36,8 +36,9 @@
 <tr><td>輸出阻抗</td><td>1 / (0.02 × 275 µA)</td><td><strong>181818.181818 Ω</strong></td></tr>
 <tr><td>本徵增益</td><td>2 / (0.02 × 1)</td><td><strong>100.000000</strong></td></tr>
 </tbody></table>
-<p>改成 V<sub>DS</sub> = 0.5 V 時為<strong>三極區</strong>，I<sub>D</sub> = <strong>187.500000 µA</strong>，r<sub>DS</sub> = <strong>2666.666667 Ω</strong>。V<sub>DS</sub> = 1.0 V 是飽和區邊界；依含 λ 的飽和式得 <strong>255.000000 µA</strong>，理想三極式在邊界給 <strong>250.000000 µA</strong>，差別只來自 λ 項。V<sub>GS</sub> = 0.5 V 時為截止區，I<sub>D</sub> = <strong>0.000000 µA</strong>。λ = 0 時則有 I<sub>D</sub> = <strong>250.000000 µA</strong>、g<sub>m</sub> = <strong>500.000000 µA/V</strong>、r<sub>o</sub> 無限大。</p>
+<p>改成 V<sub>DS</sub> = 0.5 V 時為<strong>三極區</strong>，I<sub>D</sub> = <strong>187.500000 µA</strong>，此工作點的直流比值 V<sub>DS</sub>/I<sub>D</sub> = <strong>2666.666667 Ω</strong>；小 V<sub>DS</sub> 極限的微分電阻 1/(kV<sub>OV</sub>) 則是 <strong>2000.000000 Ω</strong>。V<sub>DS</sub> = 1.0 V 是飽和區邊界；依含 λ 的飽和式得 <strong>255.000000 µA</strong>，理想三極式在邊界給 <strong>250.000000 µA</strong>，差別只來自 λ 項。V<sub>GS</sub> = 0.5 V 時為截止區，I<sub>D</sub> = <strong>0.000000 µA</strong>。λ = 0 時則有 I<sub>D</sub> = <strong>250.000000 µA</strong>、g<sub>m</sub> = <strong>500.000000 µA/V</strong>、r<sub>o</sub> 無限大。</p>
 <p>體效應範例採 V<sub>th0</sub> = 0.7 V、γ = 0.4 √V、2φ<sub>F</sub> = 0.6 V、V<sub>SB</sub> = 1 V，得到 V<sub>th</sub> = <strong>0.896126 V</strong>，升高 <strong>0.196126 V</strong>。這會減少既定 V<sub>GS</sub> 下的 V<sub>OV</sub>，進而降低電流與跨導。</p>
+<p>MOSFET 偏壓也可以加源極電阻 R<sub>S</sub> 形成源極退化：I<sub>D</sub> 增加會抬高 V<sub>S</sub> = I<sub>D</sub>R<sub>S</sub>，使 V<sub>GS</sub> 和 V<sub>OV</sub> 降低，再把電流拉回。這與第 07 章 BJT 射極退化是同一個直流負回授機制，但實際 Q 點必須聯立 V<sub>GS</sub> = V<sub>G</sub> − I<sub>D</sub>R<sub>S</sub> 與對應工作區的 I<sub>D</sub> 式子求解。</p>
 
 <section class="workspace"><h2>自由實驗：掃過 MOSFET 三個工作區</h2>
 <p>汲極由正電源經負載供能，源極與基板接地，閘極由獨立電壓源設定 V<sub>GS</sub>；汲源回路只有形成反轉通道後才閉合。調整端點電壓、門檻、k 與 λ，觀察工作區、電流、跨導及輸出阻抗如何同步改變。</p>

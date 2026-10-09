@@ -7,7 +7,6 @@
 const $=x=>document.getElementById(x),on=(x,e,f)=>{const n=$(x);if(n)n.addEventListener(e,f)};
 const rad=d=>d*Math.PI/180,deg=r=>r*180/Math.PI,clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const fmt=(x,n=6)=>{if(typeof x!=="number")x=Number(x);if(!isFinite(x))return x>0?"∞":(x<0?"−∞":"未定義");return x.toFixed(n).replace("-","−")};
-const fmtSigned=(x,n=6)=>{if(typeof x!=="number")x=Number(x);if(!isFinite(x))return fmt(x,n);return (x>=0?"+":"−")+Math.abs(x).toFixed(n)};
 const expHtml=(x,n=6)=>{if(typeof x!=="number")x=Number(x);if(!isFinite(x))return fmt(x,n);if(x===0)return "0";const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return fmt(m,n)+" × 10<sup>"+String(e).replace("-","−")+"</sup>"};
 const trimZeros=s=>{let r=String(s);if(r.indexOf(".")<0)return r;while(r.charAt(r.length-1)==="0")r=r.slice(0,-1);if(r.charAt(r.length-1)===".")r=r.slice(0,-1);return r};
 const val=x=>{const n=$(x);return n?Number(n.value):0};
@@ -168,7 +167,7 @@ function nodal2(){
     }else if(v2>v1){
       rows.push(P("v<sub>2</sub> − v<sub>1</sub> = "+fmt(v2-v1,6)+" V > 0：電流由節點 2 流向節點 1，大小 "+fmt(Math.abs(i2branch),6)+" mA。"));
     }else{
-      rows.push(P("v<sub>2</sub> − v<sub>1</sub> = "+fmt(v2-v1,6)+" V < 0：電流由節點 1 流向節點 2，大小 "+fmt(Math.abs(i2branch),6)+" mA。"));
+      rows.push(P("v<sub>2</sub> − v<sub>1</sub> = "+fmt(v2-v1,6)+" V &lt; 0：電流由節點 1 流向節點 2，大小 "+fmt(Math.abs(i2branch),6)+" mA。"));
     }
     rows.push(P("為什麼：節點電壓被「流進來的電流必須全部流出去」這條 KCL 決定，電阻只是把電流換算成電壓的匯率。"));
     if(is1===0&&is2===0){
@@ -252,7 +251,7 @@ function thevenin(){
     if(k<=0.1){
       rows.push(P("邊界提醒：k = "+fmt(k,1)+" 已經接近短路，η ≈ "+fmt(eta*100,3)+" %。電流最大但幾乎全部功率燒在源內部。"));
     }else if(k>=5){
-      rows.push(P("邊界提醒：k = "+fmt(k,1)+" 已經接近開路，η ≈ "+fmt(eta*100,3)+" %、P<sub>L</sub>/P<sub>max</sub> ≈ "+fmt(pmax>0?pl/pmax*100:0,3)+" %。效率漂亮但功率很小，極限是開路時效率 100 %、功率 0 W——效率的定義在這裡會誤導人。"));
+      rows.push(P("邊界提醒：k = "+fmt(k,1)+" 正往開路方向走，η ≈ "+fmt(eta*100,3)+" %、P<sub>L</sub>/P<sub>max</sub> ≈ "+fmt(pmax>0?pl/pmax*100:0,3)+" %。效率提高但負載功率也在下降；極限是開路時效率 100 %、功率 0 W，效率的定義在這裡會誤導人。"));
     }
     setOut('thevenin-output',rows);
   };
@@ -266,6 +265,8 @@ function storage(){
   const draw=()=>{
     const type=pick('sto-type'),cUF=val('sto-c'),lMH=val('sto-l'),rate=val('sto-rate'),level=val('sto-level');
     const rows=[];
+    $('sto-c').disabled=type==='ind';
+    $('sto-l').disabled=type!=='ind';
     let resp,w,ser,par2,jump;
     if(type==='ind'){
       const L=lMH*1e-3;
@@ -292,7 +293,7 @@ function storage(){
     }
     rows.push(P("為什麼：儲能只跟<strong>現在的狀態量</strong>有關，跟你怎麼走到這裡無關——這就是「狀態變數」的意思。"));
     if(level===0){
-      rows.push(P("邊界提醒：狀態量為 0 時儲能是 0 J，但電流／電壓不一定是 0——狀態量與變化率是兩件獨立的事。"));
+      rows.push(P("邊界提醒：狀態量為 0 時儲能是 0 J，但響應量（電容電流／電感電壓）不一定是 0——狀態量與變化率是兩件獨立的事。"));
     }
     if(type==='cap'&&rate>=2000&&cUF>=500){
       rows.push(P("邊界提醒：大電容配上快速變化，需要的電流會很可觀（目前 "+fmt(resp,6)+" A），這是選旁路電容時的實際考量。"));
@@ -307,16 +308,18 @@ function storage(){
 function rctau(){
   if(!$('rc-type'))return;
   const draw=()=>{
-    const type=pick('rc-type'),r=val('rc-r'),cUF=val('rc-c'),lMH=val('rc-l'),x0=val('rc-v0'),xInf=val('rc-vs'),k=val('rc-k');
+    const type=pick('rc-type'),r=val('rc-r'),cUF=val('rc-c'),lMH=val('rc-l'),x0=val('rc-v0'),source=val('rc-vs'),k=val('rc-k');
     const rows=[];
-    let tau,unit,form;
+    let tau,unit,form,xInf;
+    $('rc-c').disabled=type==='rl';
+    $('rc-l').disabled=type!=='rl';
     if(type==='rl'){
       const L=lMH*1e-3;
-      tau=r>0?L/r:0;unit="mA";
+      tau=r>0?L/r:0;unit="mA";xInf=r>0?source/r*1000:0;
       form="τ = L / R = "+fmt(L,6)+" H / "+fmt(r,0)+" Ω";
     }else{
       const C=cUF*1e-6;
-      tau=r*C;unit="V";
+      tau=r*C;unit="V";xInf=source;
       form="τ = R × C = "+fmt(r,0)+" Ω × "+fmt(C,9)+" F";
     }
     if(!(tau>0)){
@@ -343,7 +346,7 @@ function rctau(){
       rows.push(P("t = 0 時狀態量等於初值 "+fmt(x0,6)+" "+unit+"、完成 0 %，這就是連續性條件：開關動作那一瞬間，電容電壓與電感電流不會跳。"));
     }
     if(type==='rl'){
-      rows.push(P("為什麼：RL 的 τ 和 R 成<strong>反比</strong>——電阻愈大，電流的終值愈小也愈快到位。"));
+      rows.push(P("為什麼：RL 的 τ 和 R 成<strong>反比</strong>；在固定電源 V<sub>s</sub> 下，R 愈大時終值 V<sub>s</sub>/R 愈小，且時間常數愈短。"));
     }else{
       rows.push(P("為什麼：RC 的 τ 和 R 成<strong>正比</strong>——電阻愈大，充電流愈小，爬得愈慢。"));
     }
@@ -372,6 +375,7 @@ function rlcdamp(){
     const rcrit=2*Math.sqrt(L/C);
     const q=w0*L/r;
     const rows=[];
+    rows.push(P("輸入：R = "+fmt(r,0)+" Ω、L = "+fmt(lMH,1)+" mH、C = "+fmt(cUF,1)+" µF。"));
     rows.push(P("ω<sub>0</sub> = 1/√(LC) = <strong>"+fmt(w0,6)+" rad/s</strong>（f<sub>0</sub> = "+fmt(f0,6)+" Hz）；α = R/(2L) = <strong>"+fmt(alpha,6)+" 1/s</strong>。"));
     rows.push(P("阻尼比 ζ = α/ω<sub>0</sub> = <strong>"+fmt(zeta,6)+"</strong>；臨界電阻 R<sub>臨界</sub> = 2√(L/C) = <strong>"+fmt(rcrit,6)+" Ω</strong>。"));
     rows.push(P("R/R<sub>臨界</sub> = "+fmt(r/rcrit,6)+"，<strong>這個比值就是 ζ</strong>（因為 ζ = R/(2√(L/C))）。"));
@@ -400,7 +404,7 @@ function rlcdamp(){
       }
     }
     rows.push(P("為什麼：ω<sub>0</sub> 決定振多快（只看 L 與 C），α 決定衰多快（只看 R 與 L），兩者的比值 ζ 決定會不會振。"));
-    rows.push(P("順帶一提：R<sub>臨界</sub> = 2√(L/C) 只由 L 與 C 的比值決定，和 ω<sub>0</sub> 是兩件獨立的事——L 與 C 同時放大 100 倍，ω<sub>0</sub> 不變但 R<sub>臨界</sub> 會變。"));
+    rows.push(P("順帶一提：R<sub>臨界</sub> = 2√(L/C) 只由 L 與 C 的比值決定，和 ω<sub>0</sub> 是兩件獨立的事——L 放大 100 倍、C 縮小為 1/100 時，ω<sub>0</sub> 不變，但 R<sub>臨界</sub> 放大 100 倍。"));
     setOut('rlcdamp-output',rows);
   };
   ['rlc-r','rlc-l','rlc-c'].forEach(x=>on(x,'input',draw));
@@ -472,6 +476,7 @@ function impedance(){
     const angZ=deg(Math.atan2(x,r));
     const i=magZ>0?v/magZ:0;
     const f0=1/(2*Math.PI*Math.sqrt(L*C));
+    rows.push(P("輸入：R = "+fmt(r,0)+" Ω、L = "+fmt(lMH,1)+" mH、C = "+fmt(cUF,1)+" µF、f = "+fmt(f,0)+" Hz、V = "+fmt(v,0)+" V。"));
     rows.push(P("ω = 2πf = <strong>"+fmt(w,6)+" rad/s</strong>。"));
     rows.push(P("X<sub>L</sub> = ωL = <strong>"+fmt(xl,6)+" Ω</strong>；X<sub>C</sub> = 1/(ωC) = <strong>"+fmt(xc,6)+" Ω</strong>；總電抗 X = X<sub>L</sub> − X<sub>C</sub> = <strong>"+fmt(x,6)+" Ω</strong>。"));
     rows.push(P("Z = R + jX = "+fmt(r,0)+" "+(x>=0?"+":"−")+" j"+fmt(Math.abs(x),6)+" Ω；極式 |Z| = <strong>"+fmt(magZ,6)+" Ω</strong>∠<strong>"+fmt(angZ,6)+"°</strong>。"));
@@ -486,10 +491,10 @@ function impedance(){
     }
     rows.push(P("把 f 加倍到 "+fmt(2*f,0)+" Hz：X<sub>L</sub> 會變成 "+fmt(2*xl,6)+" Ω（也加倍）、X<sub>C</sub> 會變成 "+fmt(xc/2,6)+" Ω（變一半）。一個正比於 ω、一個反比於 ω，這就是它們會在某個頻率相遇的原因。"));
     rows.push(P("為什麼：阻抗是複數，因為它同時要記住「擋多少」（大小）和「把電流推遲或提前多少」（相位）——這兩件事一個實數裝不下。"));
-    if(f<=100){
-      rows.push(P("邊界提醒：低頻時 X<sub>C</sub> 高達 "+fmt(xc,1)+" Ω，電容幾乎是開路，這就是耦合電容能擋直流的原因。"));
-    }else if(f>=5000){
-      rows.push(P("邊界提醒：高頻時 X<sub>L</sub> = "+fmt(xl,2)+" Ω 主導，電感幾乎是開路，這就是扼流圈的用法。"));
+    if(xc>=10*Math.max(r,xl)){
+      rows.push(P("邊界提醒：X<sub>C</sub> = "+fmt(xc,2)+" Ω，至少是 R = "+fmt(r,2)+" Ω 與 X<sub>L</sub> = "+fmt(xl,2)+" Ω 的 10 倍，電容在這個頻率下近似開路。"));
+    }else if(xl>=10*Math.max(r,xc)){
+      rows.push(P("邊界提醒：X<sub>L</sub> = "+fmt(xl,2)+" Ω，至少是 R = "+fmt(r,2)+" Ω 與 X<sub>C</sub> = "+fmt(xc,2)+" Ω 的 10 倍，電感在這個頻率下近似開路。"));
     }
     if(r<=2&&Math.abs(x)<=r*2){
       rows.push(P("邊界提醒：R 很小又接近共振，|Z| = "+fmt(magZ,6)+" Ω 極小、電流極大。真實電路在這裡會過流，L 的繞線電阻會救你一命。"));
@@ -517,6 +522,7 @@ function acpower(){
     const p=s*Math.cos(th);
     const q=s*Math.sin(th);
     const pf=Math.cos(th);
+    rows.push(P("輸入：V = "+fmt(v,0)+" V、R = "+fmt(r,2)+" Ω、X = "+fmt(x,2)+" Ω、f = "+fmt(f,0)+" Hz、目標 pf = "+fmt(target,2)+"。"));
     rows.push(P("|Z| = √(R² + X²) = <strong>"+fmt(z,6)+" Ω</strong>；θ = <strong>"+fmt(deg(th),6)+"°</strong>；pf = cos θ = <strong>"+fmt(pf,6)+"</strong>（"+(x>1e-12?"落後":(x<-1e-12?"超前":"同相"))+"）。"));
     rows.push(P("I = V/|Z| = <strong>"+fmt(i,6)+" A</strong>；S = VI = <strong>"+fmt(s,6)+" VA</strong>；P = S cos θ = <strong>"+fmt(p,6)+" W</strong>；Q = S sin θ = <strong>"+fmt(q,6)+" var</strong>。"));
     rows.push(P("交叉驗算：I²R = "+fmt(i*i*r,6)+" W（＝P）、I²X = "+fmt(i*i*x,6)+" var（＝Q）。P 全部落在 R 上、Q 全部落在 X 上——這是功率三角形的物理意義，不是幾何巧合。"));
@@ -527,6 +533,11 @@ function acpower(){
       rows.push(P("<strong>容性、超前功因</strong>：電流超前電壓，要並<strong>電感</strong>校正（實務少見，長電纜輕載時會發生）。"));
     }else{
       rows.push(P("<strong>純阻</strong>，pf = 1，沒有東西要校正。"));
+    }
+    if(target<=pf+1e-9){
+      rows.push(P("目前功因 "+fmt(pf,6)+" 已優於或等於目標 "+fmt(target,2)+"，不需要（也不該）補償；加入反向無效元件只會使線電流與線損增加。"));
+      rows.push(P("為什麼：Q 不做功卻要佔電流，電流又決定線損與導線粗細；補償的目標是減少 |Q|，不是追著一個比現況更差的 pf。"));
+      setOut('acpower-output',rows);return;
     }
     const th2=Math.acos(clamp(target,-1,1));
     const sgn=Math.sign(x||1);
@@ -553,7 +564,7 @@ function acpower(){
     }
     rows.push(P("為什麼：Q 不做功卻要佔電流，電流又決定線損與導線粗細——這就是電力公司要對低功因收費的理由。"));
     if(pf<=0.05){
-      rows.push(P("邊界提醒：pf ≈ "+fmt(pf,4)+" 是極端落後功因，幾乎全是無效功率，線路要承受 "+fmt(1/Math.max(pf,1e-9),0)+" 倍於實功的電流。"));
+      rows.push(P("邊界提醒：pf ≈ "+fmt(pf,4)+" 是極端落後功因，幾乎全是無效功率；在相同實功下，線電流是 pf = 1 時的 "+fmt(1/Math.max(pf,1e-9),0)+" 倍。"));
     }
     setOut('acpower-output',rows);
   };
@@ -592,9 +603,11 @@ function rcfilter(){
     }else if(type==='lp'&&Math.abs(d+1)<1e-12){
       rows.push(P("遠低於 f<sub>c</sub> 時幾乎原封不動通過（"+fmt(db,6)+" dB），這才是「通帶」。"));
     }
-    rows.push(P("時域與頻域是同一件事：這個 RC 就是第 07 章的時間常數 τ = "+fmt(rc*1e6,6)+" µs，而 f<sub>c</sub> = 1/(2πτ)。τ 愈大 → 反應愈慢 → 能通過的頻率愈低。"));
+    rows.push(P("時域與頻域是同一件事：這個 RC 就是第 07 章所說的時間常數這個量，本例 τ = "+fmt(rc*1e6,6)+" µs，而 f<sub>c</sub> = 1/(2πτ)。τ 愈大 → 反應愈慢 → 能通過的頻率愈低。"));
     rows.push(P("相位的極限：低通往上走到 −90°、高通往下走到 +90°，一個極點最多只能轉 90°。目前是 "+fmt(ph,6)+"°。"));
-    rows.push(P("為什麼：高頻時 Z<sub>C</sub> = 1/(ωC) 變小，電容把訊號拉到地，所以輸出變小——低通不是「擋掉」高頻，是<strong>分壓分不到</strong>。"));
+    rows.push(P(type==='hp'
+      ?"為什麼：低頻時 Z<sub>C</sub> = 1/(ωC) 很大，串聯電流很小，所以電阻 R 上分不到多少電壓；頻率升高後才逐漸進入通帶。"
+      :"為什麼：高頻時 Z<sub>C</sub> = 1/(ωC) 變小，電容把訊號拉到地，所以輸出變小——低通不是「擋掉」高頻，是<strong>分壓分不到</strong>。"));
     if(d<=-2){
       rows.push(P("邊界提醒："+(type==='hp'?"高通在這裡只剩 "+fmt(mag*100,4)+" %，訊號幾乎被完全擋住，但沒有真正變成 0。":"低通幾乎 0 dB（"+fmt(db,6)+"），通帶內的衰減小到量不出來，這時你會以為濾波器不存在。")));
     }else if(d>=2){
@@ -633,6 +646,7 @@ function resonance(){
     const magZ=hyp(r,x);
     const rel=magZ>0?r/magZ:0;
     const angZ=deg(Math.atan2(x,r));
+    rows.push(P("輸入：R = "+fmt(r,0)+" Ω、L = "+fmt(lMH,1)+" mH、C = "+fmt(cUF,1)+" µF、f/f<sub>0</sub> = "+fmt(ratio,2)+"。"));
     rows.push(P("共振頻率 f<sub>0</sub> = 1/(2π√(LC)) = <strong>"+fmt(f0,6)+" Hz</strong>（ω<sub>0</sub> = "+fmt(w0,6)+" rad/s）。"));
     rows.push(P("品質因數三種算法都對得上：ω<sub>0</sub>L/R = <strong>"+fmt(q,6)+"</strong>、1/(ω<sub>0</sub>RC) = <strong>"+fmt(q2,6)+"</strong>、(1/R)√(L/C) = <strong>"+fmt(q3,6)+"</strong>。"));
     rows.push(P("ζ = 1/(2Q) = <strong>"+fmt(zeta,6)+"</strong>——<strong>這就是第 08 章的阻尼比</strong>：高 Q ＝ 低 ζ ＝ 頻域上選得很準，但時域上振鈴很久。選擇性與安定時間是同一枚硬幣的兩面，改 R 只能在兩者之間移動，不能同時變好。"));
@@ -644,20 +658,22 @@ function resonance(){
     }else if(x>0){
       rows.push(P("目前在共振點<strong>上方</strong>，X > 0 呈感性，電流落後電壓 "+fmt(angZ,6)+" 度，而且被擋掉了一部分。"));
     }else{
-      rows.push(P("目前在共振點<strong>下方</strong>，X < 0 呈容性，電流超前電壓 "+fmt(Math.abs(angZ),6)+" 度，而且被擋掉了一部分。"));
+      rows.push(P("目前在共振點<strong>下方</strong>，X &lt; 0 呈容性，電流超前電壓 "+fmt(Math.abs(angZ),6)+" 度，而且被擋掉了一部分。"));
     }
     rows.push(P("共振時 L 與 C 上的電壓是源電壓的 Q = <strong>"+fmt(q,6)+"</strong> 倍。Q = 10 時元件就要承受 10 倍源電壓，選料要注意耐壓。"));
     if(q<0.5){
-      rows.push(P("警語：Q 已經小於 0.5（ζ = "+fmt(zeta,6)+" > 1，過阻尼），共振峰幾乎平掉，這個電路不再有選頻能力。"));
+      rows.push(P("警語：Q 已經小於 0.5（ζ = "+fmt(zeta,6)+" > 1，過阻尼），頻域電流仍在 f<sub>0</sub> 取得最大值，但頻寬已大於 2f<sub>0</sub>，幾乎沒有選擇性。"));
     }
     rows.push(P("為什麼：Q 高是因為每週期存進 L 和 C 的能量遠多於 R 吃掉的；R 愈小，能量在 L 和 C 之間來回愈多次才耗盡。"));
     if(r<=1){
       rows.push(P("邊界提醒：R = "+fmt(r,0)+" Ω 時 Q = "+fmt(q,3)+"、B = "+fmt(b,2)+" Hz，是極窄帶：適合做選台，但共振時元件電壓是源的 "+fmt(q,0)+" 倍，而且振鈴會拖很久。"));
     }else if(Math.abs(q-0.5)<0.02){
-      rows.push(P("邊界提醒：Q ≈ 0.5、ζ ≈ 1，已經到臨界阻尼，共振峰完全消失。"));
+      rows.push(P("邊界提醒：Q ≈ 0.5、ζ ≈ 1，時域不再振鈴；頻域電流峰仍在 f<sub>0</sub>，但頻寬 2f<sub>0</sub> 已寬到幾乎沒有選擇性。"));
     }
-    if(Math.abs(ratio-1)>=0.45){
-      rows.push(P("邊界提醒：離共振點半個 f<sub>0</sub>，電流只剩 "+fmt(rel*100,4)+" %，幾乎完全被擋掉——這就是選擇性。"));
+    if(Math.abs(ratio-1)>=0.45&&rel<0.2){
+      rows.push(P("邊界提醒：離共振點半個 f<sub>0</sub> 以上，電流只剩 "+fmt(rel*100,4)+" %，幾乎完全被擋掉——這就是選擇性。"));
+    }else if(Math.abs(ratio-1)>=0.45){
+      rows.push(P("邊界提醒：低 Q 時離 f<sub>0</sub> 半個 f<sub>0</sub> 以上仍有 "+fmt(rel*100,4)+" % 的電流，選擇性很差。"));
     }
     setOut('resonance-output',rows);
   };
@@ -671,6 +687,9 @@ function transformer(){
   const draw=()=>{
     const mode=pick('tr-mode'),n1=val('tr-n1'),n2=val('tr-n2'),v1=val('tr-v1'),zl=val('tr-zl');
     const rows=[];
+    const isTransformer=mode==='xfmr';
+    $('tr-n1').disabled=!isTransformer;
+    $('tr-n2').disabled=!isTransformer;
     if(!(zl>0)){
       rows.push(P("負載電阻為 0 會造成短路電流發散，請把滑桿拉回大於 0 的值。"));
       setOut('transformer-output',rows);return;
@@ -695,6 +714,7 @@ function transformer(){
       if(il>=200){
         rows.push(P("安全提醒：線電流已達 "+fmt(il,1)+" A，這是工業級的量，導線截面積與斷路器規格由它決定。實際量測三相電路必須斷電、掛接地棒、由具資格人員操作。"));
       }
+      rows.push(P("為什麼：√3 來自兩個夾 120° 的相量相減；Y 接的線電壓、Δ 接的線電流都是這個幾何關係的結果。"));
     }else{
       const n=n2>0?n1/n2:0;
       if(!(n>0)){
@@ -717,8 +737,8 @@ function transformer(){
       if(n<=0.2){
         rows.push(P("邊界提醒：n = "+fmt(n,6)+" 是升壓 "+fmt(1/n,3)+" 倍，Z<sub>ref</sub> 只剩 Z<sub>L</sub> 的 "+fmt(n*n,6)+" 倍。升壓變壓器把負載看起來變得很小，這在阻抗匹配上很有用。"));
       }
+      rows.push(P("為什麼：變壓器靠的是<strong>共用的磁通</strong>，所以它只對交流有用——直流的 dΦ/dt = 0，二次側什麼也感應不到。"));
     }
-    rows.push(P("為什麼：變壓器靠的是<strong>共用的磁通</strong>，所以它只對交流有用——直流的 dΦ/dt = 0，二次側什麼也感應不到。"));
     setOut('transformer-output',rows);
   };
   ['tr-mode','tr-n1','tr-n2','tr-v1','tr-zl'].forEach(x=>on(x,'input',draw));
@@ -767,7 +787,7 @@ function selfcheck(){
   const Q={
     'q00-1':{t:'sel',ans:'a',why:'電流的定義是 i = dq/dt，也就是每秒通過某個截面的電荷量，單位 A = C/s。',fix:'常見卡點是把電流想成「電壓除以電阻」；那是歐姆定律的結果，不是電流的定義。',ref:R00,refName:N00},
     'q00-2':{t:'num',ans:1.2,tol:0.01,why:'定電流時 Q = I ⋅ t = 0.02 A × 60 s = 1.200000 C，換算成電子大約 7.489811 × 10<sup>18</sup> 個。',fix:'常見卡點是忘了把 20 mA 換成 0.02 A，算出 1200 就是差了 1000 倍。',ref:R00,refName:N00},
-    'q00-3':{t:'sel',ans:'a',why:'λ = c/f = 3 × 10<sup>8</sup> / 10<sup>8</sup> = 3 m，d/λ = 0.1/3 = 0.033333 遠小於 0.05，所以集總假設成立。',fix:'常見卡點是看到 100 MHz 就直覺說「高頻一定失效」；判準是 d 與 λ 的比值，不是頻率本身。',ref:R00,refName:N00},
+    'q00-3':{t:'sel',ans:'a',why:'λ = c/f = 3 × 10<sup>8</sup> / 10<sup>8</sup> = 3 m，d/λ = 0.1/3 = 0.033333 &lt; 0.05，所以集總假設成立。',fix:'常見卡點是看到 100 MHz 就直覺說「高頻一定失效」；判準是 d 與 λ 的比值，不是頻率本身。',ref:R00,refName:N00},
     'q01-1':{t:'num',ans:4,tol:0.01,why:'串聯 R<sub>eq</sub> = 1000 + 2000 = 3000 Ω，I = 12/3000 = 0.004 A = 4 mA，整條回路只有這一個電流。',fix:'常見卡點是把兩顆電阻分開各算一次電流；串聯時電流只有一個。',ref:R01,refName:N01},
     'q01-2':{t:'num',ans:8,tol:0.01,why:'V<sub>2</sub> = I ⋅ R<sub>2</sub> = 0.004 × 2000 = 8 V，也等於 12 × 2/3 的分壓比。',fix:'常見卡點是把分壓比寫反成 R<sub>1</sub>/(R<sub>1</sub> + R<sub>2</sub>)，那算出來會是 4 V。',ref:R01,refName:N01},
     'q01-3':{t:'num',ans:666.666667,tol:0.5,why:'兩顆並聯 R<sub>eq</sub> = R<sub>1</sub>R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>) = 1000 × 2000/3000 = 666.666667 Ω，比較小的那顆還小。',fix:'常見卡點是忘了最後要取倒數，算出 0.0015 那個是等效電導 G。',ref:R01,refName:N01},
@@ -797,7 +817,7 @@ function selfcheck(){
     'q09-3':{t:'sel',ans:'a',why:'相量法把共有的 e<sup>jωt</sup> 提出來，前提就是兩者頻率相同；頻率不同時這個公因式不存在。',fix:'常見卡點是選「振幅相同」；振幅不同完全可以相加，頻率不同才不行。',ref:R09,refName:N09},
     'q10-1':{t:'num',ans:62.831853,tol:0.05,why:'X<sub>L</sub> = ωL = 2π × 1000 × 0.01 = 62.831853 Ω，感抗與頻率成正比。',fix:'常見卡點是忘了乘 2π，直接用 f × L 算出 10。',ref:R10,refName:N10},
     'q10-2':{t:'num',ans:159.154943,tol:0.1,why:'X<sub>C</sub> = 1/(ωC) = 1/(6283.185307 × 10<sup>−6</sup>) = 159.154943 Ω，容抗與頻率成反比。',fix:'常見卡點是漏掉取倒數，算出 0.006283。',ref:R10,refName:N10},
-    'q10-3':{t:'sel',ans:'b',why:'X = X<sub>L</sub> − X<sub>C</sub> < 0 代表電容贏了，電路呈容性，電流超前電壓。',fix:'常見卡點是把超前與落後記反；感性才是電流落後。',ref:R10,refName:N10},
+    'q10-3':{t:'sel',ans:'b',why:'X = X<sub>L</sub> − X<sub>C</sub> &lt; 0 代表電容贏了，電路呈容性，電流超前電壓。',fix:'常見卡點是把超前與落後記反；感性才是電流落後。',ref:R10,refName:N10},
     'q11-1':{t:'num',ans:3097.6,tol:5,why:'|Z| = 12.5 Ω、I = 220/12.5 = 17.6 A、S = 3872 VA、pf = 0.8，所以 P = 3872 × 0.8 = 3097.6 W，也等於 I²R。',fix:'常見卡點是直接用 V²/R 算，那忽略了電抗，會得到 4840 W。',ref:R11,refName:N11},
     'q11-2':{t:'num',ans:2323.2,tol:5,why:'Q = S sin θ = 3872 × 0.6 = 2323.2 var，也等於 I²X = 17.6² × 7.5。',fix:'常見卡點是把 Q 與 S 搞混；S = 3872 VA 是斜邊，Q 是垂直邊。',ref:R11,refName:N11},
     'q11-3':{t:'sel',ans:'b',why:'並聯電容抵掉一部分 Q，功率三角形的斜邊變短，所以 S 與線電流變小，線損隨電流平方下降。',fix:'常見卡點是以為 P 或電費會變小；實功一點都沒變，省的是線損與變壓器容量。',ref:R11,refName:N11},
@@ -812,10 +832,11 @@ function selfcheck(){
     'q14-3':{t:'num',ans:127.017059,tol:0.5,why:'Y 接的線電壓是相電壓的 √3 倍，所以 V<sub>p</sub> = 220/√3 = 127.017059 V。',fix:'常見卡點是乘以 √3 算成 381 V，或誤用 Δ 接（Δ 接的相電壓就等於線電壓 220 V）。',ref:R14,refName:N14}
   };
   const ids=Object.keys(Q);
+  const checked=new Set(),hinted=new Set();
   const progress=()=>{
-    const n=ids.filter(i=>$(i)&&String($(i).value).trim()!=='').length;
+    const n=checked.size;
     const node=$('quiz-progress');
-    if(node)node.textContent="已作答 "+n+" / "+ids.length+" 題（僅供參考，不影響瀏覽）";
+    if(node)node.textContent="已對答案 "+n+" / "+ids.length+" 題（僅供參考，不影響瀏覽）";
   };
   const link=q=>'<a href="'+q.ref+'">'+q.refName+'</a>';
   const check=id=>{
@@ -826,6 +847,7 @@ function selfcheck(){
       out.innerHTML=q.t==='num'?"<p>先填一個數字再對答案。</p>":"<p>先選一個選項再對答案。</p>";
       progress();return;
     }
+    checked.add(id);
     let ok;
     if(q.t==='num'){
       const v=Number(raw);
@@ -834,7 +856,14 @@ function selfcheck(){
       ok=(raw===q.ans);
     }
     if(ok){
+      hinted.delete(id);
       out.innerHTML="<p><strong>答對</strong>："+q.why+"　回頭複習："+link(q)+"</p>";
+    }else if(q.t==='sel'&&!hinted.has(id)){
+      hinted.add(id);
+      out.innerHTML="<p><strong>提示</strong>："+q.fix+"請先再判斷一次；若仍卡住，可直接看答案。</p><button type=\"button\" id=\""+id+"-reveal\">看答案</button>";
+      on(id+'-reveal','click',()=>{
+        out.innerHTML="<p><strong>答案</strong>："+q.ans+"。"+q.why+"</p><p>建議回去看："+link(q)+"</p>";
+      });
     }else{
       const shownAns=q.t==='num'?trimZeros(fmt(q.ans,6)):q.ans;
       out.innerHTML="<p><strong>再看一次</strong>：正確答案是 "+shownAns+"。"+q.why+"</p><p>常見卡點："+q.fix+"　建議回去看："+link(q)+"</p>";
@@ -843,6 +872,7 @@ function selfcheck(){
   };
   ids.forEach(id=>{on(id+'-check','click',()=>check(id));on(id,'input',progress)});
   on('quiz-reset','click',()=>{
+    checked.clear();hinted.clear();
     ids.forEach(id=>{if($(id))$(id).value='';if($(id+'-output'))$(id+'-output').innerHTML='';});
     progress();
   });
@@ -855,4 +885,4 @@ if(typeof document!=="undefined"){
 }
 
 // 7. 匯出（供 node --check 與人工交叉驗算）
-if(typeof module!=="undefined")module.exports={fmt,fmtSigned,expHtml,trimZeros,clamp,rad,deg,par,dbv,hyp,fmtEng,wrapDeg};
+if(typeof module!=="undefined")module.exports={fmt,expHtml,trimZeros,clamp,rad,deg,par,dbv,hyp,fmtEng,wrapDeg};

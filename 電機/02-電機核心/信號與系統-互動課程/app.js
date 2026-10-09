@@ -7,8 +7,7 @@
 const $=x=>document.getElementById(x),on=(x,e,f)=>{const n=$(x);if(n)n.addEventListener(e,f)};
 const val=x=>Number($(x).value),pick=x=>$(x).value;
 const fmt=(x,n=6)=>Number(x).toFixed(n),exp=(x,n=6)=>Number(x).toExponential(n);
-const rad=d=>d*Math.PI/180,deg=r=>r*180/Math.PI;
-const db20=x=>20*Math.log10(x),db10=x=>10*Math.log10(x);
+const db20=x=>20*Math.log10(x);
 const sinc=x=>x===0?1:Math.sin(Math.PI*x)/(Math.PI*x);   // 歸一化 sinc，全檔唯一定義
 /* 三角函式殘差夾零：sin／cos 及其比值的量級恆為 O(1)，理論上為 0 的點（sin π、cos 90°、
    sinc 的零點、移動平均的零點）在浮點下會留下 1e−16 量級的殘差，直接印出來會讓
@@ -19,7 +18,6 @@ const trig0=x=>Math.abs(x)<1e-12?0:x;
 
 /* ---------- 2. 常數與慣例（唯一定義處，與 PROJECT-BRIEF 第 7 節一致） ---------- */
 const SQRT1_2=Math.SQRT1_2;          // 0.7071067812
-const DB3=10*Math.log10(2);          // 3.010300 dB
 const MINUS="−";                // U+2212，畫面上的負號
 const MU="µ";                   // U+00B5，micro sign
 const CONV="∗";                 // U+2217，摺積符號
@@ -45,6 +43,52 @@ function sci(x){
   return parts[0].replace(/-/g,MINUS)+" × 10<sup>"+parts[1].replace(/^\+/,"").replace(/-/g,MINUS)+"</sup>";
 }
 const INF_TXT="無限大";
+
+/* 可由 Node 直接載入重算的純函式。 */
+const CALC={
+  secondOrderStep(z,wn,t){
+    if(Math.abs(z-1)<1e-9)return 1-(1+wn*t)*Math.exp(-wn*t);
+    if(z<1){
+      const wd=wn*Math.sqrt(1-z*z);
+      return 1-Math.exp(-z*wn*t)*(Math.cos(wd*t)+(z/Math.sqrt(1-z*z))*Math.sin(wd*t));
+    }
+    const s1=-z*wn+wn*Math.sqrt(z*z-1),s2=-z*wn-wn*Math.sqrt(z*z-1);
+    return 1-(s2*Math.exp(s1*t)-s1*Math.exp(s2*t))/(s2-s1);
+  },
+  settlingTime2(z,wn){
+    if(z<1)return 4/(z*wn);
+    let lo=0,hi=1/wn;
+    while(CALC.secondOrderStep(z,wn,hi)<0.98)hi*=2;
+    for(let i=0;i<80;i++){
+      const mid=(lo+hi)/2;
+      if(CALC.secondOrderStep(z,wn,mid)<0.98)lo=mid;else hi=mid;
+    }
+    return hi;
+  },
+  butterworthGroupDelay(n,fc,f){
+    const omegaC=2*Math.PI*fc,ratio=f/fc;
+    let normalized=0;
+    for(let k=0;k<n;k++){
+      const angle=Math.PI*(2*k+n+1)/(2*n);
+      const re=Math.cos(angle),im=Math.sin(angle);
+      normalized+=(-re)/(re*re+Math.pow(ratio-im,2));
+    }
+    return normalized/omegaC;
+  },
+  aliasFrequency(f,fs){return Math.abs(f-Math.round(f/fs)*fs);},
+  zohGain(f,fs){return Math.abs(sinc(CALC.aliasFrequency(f,fs)/fs));},
+  prewarp(f,fs){return fs/Math.PI*Math.tan(Math.PI*f/fs);},
+  iirCutoff(a,fs){
+    const c=(4*a-1-a*a)/(2*a);
+    return c>=-1&&c<=1?Math.acos(c)*fs/(2*Math.PI):null;
+  }
+};
+
+/* 本輪有異動的答案鍵也保持可由 Node 載入驗算。 */
+const ANSWER_KEYS={
+  'q00-1':'d','q01-3':'d','q03-3':'c','q04-3':'d','q10-3':'d',
+  'q15-2':CALC.iirCutoff(0.8,8000)
+};
 
 /* ---------- 3. 十六個章節守衛函式 ---------- */
 
@@ -72,7 +116,7 @@ function sysmap(){
     $('sysmap-output').innerHTML=
       "<p>頻率比 r ＝ f/f<sub>c</sub> ＝ <strong>"+num6(r)+"</strong>｜增益 |H| ＝ <strong>"+num6(mag)+"</strong>（<strong>"+num6(db)+" dB</strong>）</p>"+
       "<p>輸出振幅 A·|H| ＝ <strong>"+num6(out)+" V</strong>｜相位 ∠H ＝ <strong>"+num6(ph)+"°</strong></p>"+
-      "<p>相位延遲 t<sub>p</sub> ＝ <strong>"+num6(tp)+" s</strong>（＝ "+num6(tp*1e6)+" "+MU+"s）｜群延遲 τ<sub>g</sub> ＝ <strong>"+num6(tg)+" s</strong>（＝ "+num6(tg*1e6)+" "+MU+"s）</p>"+
+      "<p>相位延遲 t<sub>p</sub> ＝ <strong>"+sci(tp)+" s</strong>（＝ "+num6(tp*1e6)+" "+MU+"s）｜群延遲 τ<sub>g</sub> ＝ <strong>"+sci(tg)+" s</strong>（＝ "+num6(tg*1e6)+" "+MU+"s）</p>"+
       "<p>"+judge+"</p>"+
       "<p>為什麼：系統之所以會「挑頻率」，是因為它<strong>有記憶</strong>（要充放電），輸出取決於過去而不只是現在。</p>"+
       "<p>量級對照："+MINUS+"3 dB 就是掉到 70.7 %，功率剩一半；這是全業界定義頻寬的門檻。</p>"+
@@ -143,6 +187,8 @@ function sigops(){
       judge="a ＝ 0：整條時間軸被壓成一個點，y 恆等於 x(0) ＝ <strong>"+num6(base(ty,0))+"</strong>，這是退化情形。";
     }else if(arg<0&&causal){
       judge="輸出是 0：因果訊號在引數為負的地方沒有值，<strong>這不是壞掉，是 u( ) 的定義</strong>。";
+    }else if(arg<0){
+      judge="弦波是非因果基底：引數 arg ＝ "+num6(arg)+" 雖為負，弦波在負引數處照樣有值。";
     }else{
       judge="引數 arg ＝ "+num6(arg)+" ≥ 0，訊號在這一點確實有值。";
     }
@@ -175,15 +221,29 @@ function syscheck(){
     integ:{name:"y(t) ＝ ∫ x(τ)dτ",p:["是","是","是","否","否","是"],note:"有界輸入 u(t) 產生無界輸出 t·u(t)，<strong>BIBO 不成立</strong>。"}
   };
   const LABEL=["線性","時不變","因果","BIBO 穩定","無記憶","可逆"];
+  const apply=(sys,x,n)=>{
+    if(sys==='gain')return 2*x(n);
+    if(sys==='square')return x(n)*x(n);
+    if(sys==='bias')return x(n)+3;
+    if(sys==='delay')return x(n-1);
+    if(sys==='scale')return x(2*n);
+    let sum=0;
+    for(let k=-8;k<=n;k++)sum+=x(k);
+    return sum;
+  };
   const draw=()=>{
     const sys=pick('chk-sys'),a=val('chk-a'),b=val('chk-b'),x1=val('chk-x1'),x2=val('chk-x2');
-    const u=a*x1+b*x2;
-    let lhs,rhs;
-    if(sys==='square'){lhs=u*u;rhs=a*x1*x1+b*x2*x2;}
-    else if(sys==='bias'){lhs=u+3;rhs=a*(x1+3)+b*(x2+3);}
-    else if(sys==='gain'){lhs=2*u;rhs=a*2*x1+b*2*x2;}
-    else{lhs=u;rhs=u;}
+    const f1=n=>(n>=0&&n<=2?x1*(n+1):0);
+    const f2=n=>(n===0?x2:(n===1?-x2:(n===2?x2/2:0)));
+    const mix=n=>a*f1(n)+b*f2(n);
+    const lhs=apply(sys,mix,0),rhs=a*apply(sys,f1,0)+b*apply(sys,f2,0);
     const res=lhs-rhs;
+    let seqRes=0,timeRes=0;
+    const shifted=n=>f1(n-1);
+    for(let n=-2;n<=6;n++){
+      seqRes=Math.max(seqRes,Math.abs(apply(sys,mix,n)-a*apply(sys,f1,n)-b*apply(sys,f2,n)));
+      timeRes=Math.max(timeRes,Math.abs(apply(sys,shifted,n)-apply(sys,f1,n-1)));
+    }
     const info=TABLE[sys];
     let props="";
     for(let i=0;i<6;i++)props+="<li>"+LABEL[i]+"："+(info.p[i]==="是"?"是":"<strong>否</strong>")+"</li>";
@@ -192,10 +252,13 @@ function syscheck(){
       : "<strong>線性被推翻</strong>：左式 "+num6(lhs)+"、右式 "+num6(rhs)+"、殘差 "+num6(res)+"。一個反例就夠了。";
     const zeroNote=(a===0&&b===0)
       ? "<p>邊界提醒：兩個係數都是 0，測試訊號整個消失；<code>bias</code> 的殘差仍然是 <strong>"+num6(3)+"</strong>（通式 3 "+MINUS+" 3(a + b)），其餘系統的殘差都是 "+num6(0)+"，測不出東西——<strong>這說明測試要挑得夠好</strong>。</p>"
-      : "<p>邊界提醒：把 a、b、x<sub>1</sub>、x<sub>2</sub> 都推到 "+MINUS+"3，平方系統的殘差會衝到 "+num6(378)+"；把 a 與 b 都設成 0，只有偏移系統還留得下痕跡。</p>";
+      : (sys==='square'
+        ? "<p>邊界提醒：平方系統的殘差會隨振幅快速放大；把 a 與 b 都設成 0，則測試訊號消失，鑑別力也跟著消失。</p>"
+        : "<p>邊界提醒：這段有限序列只提供反例；殘差為 0 仍不能證明系統對所有訊號都成立。</p>");
     $('syscheck-output').innerHTML=
       "<p>受測系統：<strong>"+info.name+"</strong></p><ul>"+props+"</ul>"+
       "<p>疊加測試 T{a·x<sub>1</sub> + b·x<sub>2</sub>}：左式 <strong>"+num6(lhs)+"</strong>｜右式 a·T{x<sub>1</sub>} + b·T{x<sub>2</sub>} ＝ <strong>"+num6(rhs)+"</strong>｜殘差 <strong>"+num6(res)+"</strong></p>"+
+      "<p>有限序列逐點重算：最大疊加殘差 <strong>"+num6(seqRes)+"</strong>｜時移測試最大殘差 <strong>"+num6(timeRes)+"</strong>"+(timeRes>1e-12?"（<strong>時不變被推翻</strong>）":"（這組測試未推翻時不變）")+"</p>"+
       "<p>"+judge+"</p><p>"+info.note+"</p>"+
       "<p>為什麼：六個性質裡只有<strong>線性＋時不變</strong>能換來「一個 h 就描述整個系統」的特權，這就是下一章只談 LTI 的原因。</p>"+
       zeroNote;
@@ -222,8 +285,8 @@ function convolve(){
     else if(tau>t1*5)speed="系統比脈衝慢得多（τ ＞ 5T<sub>1</sub>），輸出幾乎只看到「總面積」，形狀被抹平——<strong>這就是低通濾波在時間域的樣子</strong>。";
     else speed="τ 與 T<sub>1</sub> 同一個量級，輸出既有明顯的上升也有明顯的拖尾，是最能看出「記憶」的區間。";
     $('convolve-output').innerHTML=
-      "<p>輸出 y(t) ＝ <strong>"+num6(y)+" V</strong>｜峰值 <strong>"+num6(peak)+"</strong>，發生在 t ＝ <strong>"+num6(t1)+" s</strong>（脈衝結束的瞬間）</p>"+
-      "<p>面積檢查：輸入面積 ∫x dt ＝ <strong>"+num6(areaX)+"</strong> × 脈衝響應面積 ∫h dt ＝ <strong>"+num6(areaH)+"</strong> ＝ 輸出面積 ∫y dt ＝ <strong>"+num6(areaY)+"</strong></p>"+
+      "<p>輸出 y(t) ＝ <strong>"+num6(y)+" V·s</strong>｜峰值 <strong>"+num6(peak)+" V·s</strong>，發生在 t ＝ <strong>"+num6(t1)+" s</strong>（脈衝結束的瞬間）</p>"+
+      "<p>面積檢查：輸入面積 ∫x dt ＝ <strong>"+num6(areaX)+" V·s</strong> × 脈衝響應面積 ∫h dt ＝ <strong>"+num6(areaH)+" s</strong> ＝ 輸出面積 ∫y dt ＝ <strong>"+num6(areaY)+" V·s²</strong></p>"+
       "<p>"+judge+"</p><p>"+speed+"</p>"+
       "<p>為什麼：摺積把兩條曲線的面積相乘，這是最好用的驗算：如果你算出來的 y 面積不等於 A·T<sub>1</sub>·τ，一定有地方錯了。這裡算的是 y(t) ＝ x(t) "+CONV+" h(t)。</p>"+
       "<p>邊界提醒：把 τ 拉到最小、T<sub>1</sub> 拉到最大再把 t 推到 6 s，y 會小到要用指數格式才寫得出來，但它<strong>不是 0</strong>——指數衰減永遠不會真的到 0。</p>";
@@ -255,7 +318,7 @@ function fourierseries(){
     if(share<90)judge="<strong>還差得遠</strong>：前 "+N+" 個諧波只湊到 "+num6(share)+" %，波形的稜角還原不出來。";
     else if(share<99)judge="<strong>形狀出來了</strong>："+num6(share)+" % 的功率已到位，剩下的高頻只負責邊緣的銳利度。";
     else judge="<strong>幾乎完全</strong>："+num6(share)+" %，再加諧波的邊際效益很小。";
-    const gibbs=wave==='square'?"<p>方波專屬：不連續點附近永遠有約 9 % 的過衝（吉布斯現象），加再多諧波也不會消失，只會變窄。</p>":"";
+    const gibbs=wave==='square'?"<p>方波專屬：不連續點附近永遠有約為跳躍高度 9 % 的過衝（對 ±A 方波等於超出 A 約 18 %）；加再多諧波也不會消失，只會變窄。</p>":"";
     const hi=N*f0;
     const warnHi=hi>4000?"<p>邊界提醒：最高諧波已到 "+num6(hi)+" Hz，超過人耳上限，也超過 8000 Hz 取樣系統的奈奎斯特頻率——第 12 章會回來算這件事。</p>":"";
     $('fourierseries-output').innerHTML=
@@ -278,7 +341,7 @@ function ctft(){
   const draw=()=>{
     const a=val('ftr-a'),t=val('ftr-t'),f=val('ftr-f'),t0=val('ftr-t0');
     const tSI=t*1e-3,t0SI=t0*1e-3;
-    const x=f===0?1:trig0(Math.sin(Math.PI*f*tSI)/(Math.PI*f*tSI));
+    const x=trig0(sinc(f*tSI));
     const X=a*tSI*x;
     const mag=Math.abs(X);
     const base=X<0?180:0;
@@ -293,7 +356,7 @@ function ctft(){
     else judge="介於 3 dB 頻寬與第一個零點之間：主瓣的裙邊，振幅正在快速下滑。";
     $('ctft-output').innerHTML=
       "<p>直流分量 X(0) ＝ A·T ＝ <strong>"+sci(a*tSI)+" V·s</strong>｜sinc(fT) ＝ <strong>"+num6(x)+"</strong></p>"+
-      "<p>|X(jω)| ＝ <strong>"+sci(mag)+" V·s</strong>｜相位 ＝ <strong>"+num6(ph)+"°</strong></p>"+
+      "<p>|X(jω)| ＝ <strong>"+sci(mag)+" V·s</strong>｜相位 ＝ <strong>"+(mag<1e-15?"無定義":num6(ph)+"°")+"</strong></p>"+
       "<p>第一個零點 ＝ <strong>"+num6(null1)+" Hz</strong>｜3 dB 頻寬 ＝ <strong>"+num6(bw3)+" Hz</strong>｜訊號能量 E ＝ A²T ＝ <strong>"+sci(energy)+" V²·s</strong></p>"+
       "<p>"+judge+"</p>"+
       "<p>為什麼：脈衝愈窄（T 愈小），第一個零點 1/T 就愈遠，頻譜愈寬——<strong>時域與頻域的寬度成反比，這是本課最重要的權衡</strong>。</p>"+
@@ -352,7 +415,7 @@ function secondorder(){
     const wd=under?wn*Math.sqrt(1-z*z):0;
     const Mp=under?Math.exp(-Math.PI*z/Math.sqrt(1-z*z)):0;
     const tp=under?Math.PI/wd:null;
-    const ts=4/(z*wn);
+    const ts=CALC.settlingTime2(z,wn);
     const den=Math.sqrt(Math.pow(wn*wn-w*w,2)+Math.pow(2*z*wn*w,2));
     const mag=wn*wn/den;
     const ph=-Math.atan2(2*z*wn*w,wn*wn-w*w)*180/Math.PI;
@@ -362,16 +425,16 @@ function secondorder(){
     const Q=1/(2*z);
     let y,poleTxt,cls;
     if(crit){
-      y=1-(1+wn*t)*Math.exp(-wn*t);
+      y=CALC.secondOrderStep(z,wn,t);
       poleTxt="兩個重合的實極點 "+num6(-wn)+"（重根）";
       cls="<strong>臨界阻尼</strong>：不超越，而且是所有不超越的情形裡<strong>最快</strong>的。";
     }else if(under){
-      y=1-Math.exp(-z*wn*t)*(Math.cos(wd*t)+(z/Math.sqrt(1-z*z))*Math.sin(wd*t));
+      y=CALC.secondOrderStep(z,wn,t);
       poleTxt="s ＝ "+num6(-z*wn)+" ± j"+num6(wd);
       cls="<strong>欠阻尼</strong>：會超越 "+num6(Mp*100)+" %，第一個峰在 t<sub>p</sub> ＝ "+num6(tp)+" s，大約 t<sub>s</sub> ＝ "+num6(ts)+" s 後穩定下來。";
     }else{
       const s1=-z*wn+wn*Math.sqrt(z*z-1),s2=-z*wn-wn*Math.sqrt(z*z-1);
-      y=1-(s2*Math.exp(s1*t)-s1*Math.exp(s2*t))/(s2-s1);
+      y=CALC.secondOrderStep(z,wn,t);
       poleTxt="兩個實極點 "+num6(s1)+" 與 "+num6(s2);
       cls="<strong>過阻尼</strong>：兩個實極點（"+num6(s1)+" 與 "+num6(s2)+"），慢的那個主導，沒有振盪但比臨界慢。";
     }
@@ -384,7 +447,7 @@ function secondorder(){
     $('secondorder-output').innerHTML=
       "<p>阻尼分類："+cls+"</p>"+
       "<p>極點："+poleTxt+"｜ω<sub>d</sub> ＝ <strong>"+(under?num6(wd)+" rad/s":"不適用（不振盪）")+"</strong></p>"+
-      "<p>超越量 M<sub>p</sub> ＝ <strong>"+(under?num6(Mp*100)+" %":"不適用（不振盪）")+"</strong>｜峰值時間 t<sub>p</sub> ＝ <strong>"+(under?num6(tp)+" s":"不適用（不振盪）")+"</strong>｜整定時間 t<sub>s</sub> ＝ <strong>"+num6(ts)+" s</strong>｜Q ＝ 1/(2ζ) ＝ <strong>"+num6(Q)+"</strong></p>"+
+      "<p>超越量 M<sub>p</sub> ＝ <strong>"+(under?num6(Mp*100)+" %":"不適用（不振盪）")+"</strong>｜峰值時間 t<sub>p</sub> ＝ <strong>"+(under?num6(tp)+" s":"不適用（不振盪）")+"</strong>｜2 % 整定時間 t<sub>s</sub> ＝ <strong>"+num6(ts)+" s</strong>"+(under?"（欠阻尼包絡近似）":"（由步階響應數值求解）")+"｜Q ＝ 1/(2ζ) ＝ <strong>"+num6(Q)+"</strong></p>"+
       "<p>共振："+peakTxt+"</p>"+
       "<p>在 ω ＝ "+num6(w)+" rad/s：|H(jω)| ＝ <strong>"+num6(mag)+"</strong>（"+num6(db20(mag))+" dB）｜∠H ＝ <strong>"+num6(ph)+"°</strong></p>"+
       "<p>步階響應 y("+num6(t)+") ＝ <strong>"+num6(y)+"</strong></p>"+onWn+
@@ -400,7 +463,7 @@ function secondorder(){
 function filterorder(){
   if(!$('flt-fc'))return;
   const bwDb=(ratio,n)=>{
-    if(ratio>100&&n>=5)return -20*n*Math.log10(ratio);      // 漸近式，避開 1 + 10^46 的精度陷阱
+    if(ratio>100&&n>=5)return -20*n*Math.log10(ratio);      // 極端輸入的溢位保護
     return -10*Math.log10(1+Math.pow(ratio,2*n));
   };
   const draw=()=>{
@@ -414,8 +477,8 @@ function filterorder(){
     const db=f===0?0:bwDb(fr,n);
     const mag=Math.pow(10,db/20);
     const slope=20*n;
-    const tg0=1/(2*Math.PI*fc);
-    const tgf=tg0/(1+fr*fr);
+    const tg0=CALC.butterworthGroupDelay(n,fc,0);
+    const tgfc=CALC.butterworthGroupDelay(n,fc,fc);
     let judge;
     if(!ok){
       judge="<strong>規格不成立</strong>：阻帶邊緣必須高於通帶邊緣，否則沒有過渡帶可言。現在 f<sub>s</sub> ＝ "+num6(fs)+" Hz 不大於 f<sub>c</sub> ＝ "+num6(fc)+" Hz，最小階數無從算起。";
@@ -428,9 +491,9 @@ function filterorder(){
       "<p>過渡帶比值 f<sub>s</sub>/f<sub>c</sub> ＝ <strong>"+num6(ratio)+"</strong>｜所需最小階數 n<sub>min</sub> ＝ <strong>"+(ok?num6(nmin)+" → 取 "+nreq+" 階":"不適用（規格不成立）")+"</strong></p>"+
       "<p>採用 "+n+" 階在 f<sub>s</sub> 的實際衰減 ＝ <strong>"+(ok?num6(att)+" dB":"不適用")+"</strong>｜下降斜率 ＝ <strong>"+slope+" dB/decade</strong></p>"+
       "<p>在觀測頻率 "+num6(f)+" Hz：|H(f)| ＝ <strong>"+num6(mag)+"</strong>（<strong>"+num6(db)+" dB</strong>）</p>"+
-      "<p>同一個 f<sub>c</sub> 的一階系統群延遲：直流 <strong>"+num6(tg0*1e6)+" "+MU+"s</strong>，在 "+num6(f)+" Hz 只剩 <strong>"+num6(tgf*1e6)+" "+MU+"s</strong>（差 "+num6((tg0-tgf)*1e6)+" "+MU+"s）</p>"+
+      "<p>這個 "+n+" 階巴特沃斯的群延遲：直流 <strong>"+num6(tg0*1e6)+" "+MU+"s</strong>，在 f<sub>c</sub> 處 <strong>"+num6(tgfc*1e6)+" "+MU+"s</strong>（差 "+num6(Math.abs(tgfc-tg0)*1e6)+" "+MU+"s）</p>"+
       "<p>"+judge+"</p>"+
-      "<p>為什麼：階數愈高愈陡（每階 20 dB/decade），但<strong>每加一階就多一對極點</strong>，相位轉得更多、群延遲更不平坦、元件容差的影響也更大。</p>"+
+      "<p>為什麼：階數愈高愈陡（每階 20 dB/decade），但<strong>每加一階就多一個極點</strong>，相位轉得更多、群延遲更不平坦、元件容差的影響也更大。</p>"+
       "<p>群延遲那一句：兩個頻率的成分不同步抵達，方波的角就是這樣被磨圓的。</p>"+
       "<p>家族取捨：要最平坦選巴特沃斯、要最陡選橢圓、要波形不變形選貝索、要在陡與階數之間妥協選柴比雪夫。</p>"+
       "<p>邊界提醒：觀測頻率為 0 時 |H| 恆等於 "+num6(1)+"（不會除以 0）；把階數與頻率比同時推到極端，dB 會走漸近式 "+MINUS+"20n·log<sub>10</sub>(f/f<sub>c</sub>)，倍數以指數格式顯示。</p>";
@@ -453,13 +516,14 @@ function ammod(){
     if(m===0)judge="<strong>沒有調變</strong>：頻譜只剩一根載波，效率 "+num6(0)+" %——全部功率都用來發一個不帶任何資訊的正弦波。";
     else if(m<=1)judge="<strong>正常調變</strong>：包絡在 "+num6(emin)+" 與 "+num6(emax)+" 之間擺動且不會碰到 0，<strong>一顆二極體加 RC 就能解調</strong>。效率 "+num6(eff)+" %。";
     else judge="<strong>過調變</strong>：包絡下限本來應該是 1 "+MINUS+" m ＝ 負數，實際上包絡檢波器會把它折回去（這裡顯示的 E<sub>min</sub> ＝ "+num6(emin)+" 是絕對值），<strong>聲音會破</strong>。要靠同步檢測才救得回來。";
-    const lsbWarn=lsb<=0
-      ? "<p>下邊帶頻率算出來不是正數：f<sub>m</sub> 太接近 f<sub>c</sub>，這不是合理的調變情境。</p>"
-      : (fm>=fc/2?"<p>邊界提醒：f<sub>m</sub> 已達 f<sub>c</sub> 的一半，這已經不是窄頻調變。</p>":"");
+    const lsbWarn=fm>=fc/2?"<p>邊界提醒：f<sub>m</sub> 已達 f<sub>c</sub> 的一半，這已經不是窄頻調變。</p>":"";
+    const inferred=m>1
+      ? "公式失效：過調變下包絡反推不出 m"
+      : num6(emax+emin===0?0:(emax-emin)/(emax+emin));
     $('ammod-output').innerHTML=
       "<p>上邊帶 f<sub>c</sub> + f<sub>m</sub> ＝ <strong>"+num6(usb)+" kHz</strong>｜下邊帶 f<sub>c</sub> "+MINUS+" f<sub>m</sub> ＝ <strong>"+num6(lsb)+" kHz</strong>｜佔用頻寬 B ＝ 2f<sub>m</sub> ＝ <strong>"+num6(bw)+" kHz</strong></p>"+
       "<p>每個邊帶功率 ＝ <strong>"+num6(psb)+" W</strong>｜總發射功率 P<sub>t</sub> ＝ <strong>"+num6(pt)+" W</strong>｜功率效率 η ＝ <strong>"+num6(eff)+" %</strong></p>"+
-      "<p>包絡最大 ＝ <strong>"+num6(emax)+"</strong>｜包絡最小 ＝ <strong>"+num6(emin)+"</strong>｜由波形反推 m ＝ (E<sub>max</sub> "+MINUS+" E<sub>min</sub>)/(E<sub>max</sub> + E<sub>min</sub>) ＝ <strong>"+num6(emax+emin===0?0:(emax-emin)/(emax+emin))+"</strong></p>"+
+      "<p>包絡最大 ＝ <strong>"+num6(emax)+"</strong>｜包絡最小 ＝ <strong>"+num6(emin)+"</strong>｜由波形反推 m：<strong>"+inferred+"</strong></p>"+
       "<p>"+judge+"</p>"+lsbWarn+
       "<p>為什麼：效率 η ＝ (m²/2)/(1 + m²/2) <strong>只由 m 決定，與載波功率無關</strong>——把發射機開大只是讓兩邊一起變大。</p>"+
       "<p>頻寬 2f<sub>m</sub> 與 m 完全無關：調得深不會佔更多頻寬，只會把功率從載波搬到邊帶。</p>"+
@@ -482,7 +546,7 @@ function dtsystem(){
       sumh=1/(1-a);
       ntauTxt=a>0?num6(-1/Math.log(a))+" 個樣本":"不適用（沒有記憶）";
       uses="遞迴係數 a 與觀測樣本 n（平均點數 M 不影響結果）";
-      shape="<strong>IIR</strong>：h[n] ＝ a<sup>n</sup> 永遠不會真的到 0，只是愈來愈小。Σ|h[n]| ＝ 1/(1 "+MINUS+" a) ＝ "+num6(sumh)+" ＜ ∞，所以 <strong>BIBO 穩定</strong>；每個輸出只要 2 次乘加，<strong>很便宜</strong>。";
+      shape="<strong>IIR</strong>：h[n] ＝ a<sup>n</sup> 永遠不會真的到 0，只是愈來愈小。Σ|h[n]| ＝ 1/(1 "+MINUS+" a) ＝ "+num6(sumh)+" ＜ ∞，所以 <strong>BIBO 穩定</strong>；本章非正規化式每個輸出只要 1 次乘法加 1 次加法，<strong>很便宜</strong>。";
     }else{
       y=step?Math.min(n+1,m)/m:(n<m?1/m:0);
       hn=n<m?1/m:0;
@@ -517,16 +581,15 @@ function sampling(){
     const f=val('smp-f'),fs=val('smp-fs'),a=val('smp-a'),n=val('smp-n');
     const ts=1/fs,nyq=fs/2;
     const k=Math.round(f/fs);
-    const fa=Math.abs(f-k*fs);
+    const fa=CALC.aliasFrequency(f,fs);
     const sample=a*trig0(Math.cos(2*Math.PI*f*n/fs));
-    const x=f/fs;
-    const zoh=x===0?1:trig0(Math.abs(Math.sin(Math.PI*x)/(Math.PI*x)));
+    const zoh=trig0(CALC.zohGain(f,fs));
     const zohdb=zoh>1e-12?db20(zoh):null;
     let list="";
     for(let i=0;i<6;i++)list+="<li>x["+i+"] ＝ "+num6(a*trig0(Math.cos(2*Math.PI*f*i/fs)))+"</li>";
     let judge;
     if(Math.abs(f-nyq)<1e-9){
-      judge="<strong>恰好在臨界</strong>：f ＝ f<sub>s</sub>/2。理論上是邊界、實務上不可用——取樣點可能剛好全落在零交越，量到一整排 0。<strong>規格一律要求 f<sub>s</sub> 嚴格大於 2W</strong>。";
+      judge="<strong>恰好在臨界</strong>：f ＝ f<sub>s</sub>/2。理論上是邊界、實務上不可用；本模擬器用相位 0 的 cos，所以樣本是 ±A 交替，若換成同頻 sin 才會全部落在 0。<strong>規格一律要求 f<sub>s</sub> 嚴格大於 2W</strong>。";
     }else if(f<nyq){
       judge="<strong>沒有混疊</strong>：f ＝ "+num6(f)+" Hz ＜ f<sub>s</sub>/2 ＝ "+num6(nyq)+" Hz，這些樣本足以完美還原原訊號（理論上用 sinc 內插）。";
     }else{
@@ -537,12 +600,12 @@ function sampling(){
       "<p>取樣週期 T<sub>s</sub> ＝ 1/f<sub>s</sub> ＝ <strong>"+sci(ts)+" s</strong>（＝ "+num6(ts*1e6)+" "+MU+"s）｜奈奎斯特頻率 f<sub>s</sub>/2 ＝ <strong>"+num6(nyq)+" Hz</strong></p>"+
       "<p>視在頻率 f<sub>a</sub> ＝ |f "+MINUS+" k·f<sub>s</sub>| ＝ <strong>"+num6(fa)+" Hz</strong>（k ＝ "+k+"）｜第 "+n+" 個樣本 ＝ <strong>"+num6(sample)+" V</strong></p>"+
       "<p>前 6 個樣本：</p><ul>"+list+"</ul>"+
-      "<p>零階保持衰減 |sinc(f/f<sub>s</sub>)| ＝ <strong>"+num6(zoh)+"</strong>（"+(zohdb===null?"ZOH 在這個頻率剛好是零點":num6(zohdb)+" dB")+"）</p>"+
+      "<p>零階保持對重建後視在頻率的衰減 |sinc(f<sub>a</sub>/f<sub>s</sub>)| ＝ <strong>"+num6(zoh)+"</strong>（"+(zohdb===null?"落在零點":num6(zohdb)+" dB")+"）</p>"+
       "<p>"+judge+"</p>"+
       "<p>為什麼：取樣把頻譜每隔 f<sub>s</sub> 複製一份；f<sub>s</sub> 不夠大時複製品的裙邊互相重疊，重疊的部分就永遠分不開了。</p>"+
       "<p>DAC 用零階保持把樣本撐成方塊，等於與一個寬 T<sub>s</sub> 的矩形摺積，所以高頻被 sinc 壓下去——這叫 droop，可以事後用數位等化補回來。</p>"+
       "<p>量級對照：電話 8000 Hz、CD 44100 Hz、專業錄音 48000 Hz；電話只留 3400 Hz 以下的語音，所以聽不出 s 與 f 的差別。</p>"+
-      "<p>邊界提醒：n ＝ 0 的樣本恆等於 A（任何頻率皆然）；f 恰為 f<sub>s</sub> 的整數倍時 ZOH 落在零點，dB 一律寫成文字。</p>";
+      "<p>邊界提醒：n ＝ 0 的樣本恆等於 A（任何頻率皆然）；原始頻率若已混疊，DAC 只會重建 f<sub>a</sub>，所以 ZOH 必須用 f<sub>a</sub> 計算。</p>";
   };
   ['smp-f','smp-fs','smp-a','smp-n'].forEach(x=>on(x,'input',draw));
   draw();
@@ -601,7 +664,7 @@ function zplane(){
     const h=Math.abs(sth)<1e-12
       ? Math.pow(r,n)*(n+1)*trig0(Math.cos(n*th))
       : Math.pow(r,n)*trig0(Math.sin((n+1)*th))/sth;
-    const fpk=theta/360*fs;
+    const ftheta=theta/360*fs;
     const ntau=(r>0&&r<1)?-1/Math.log(r):null;
     const a1=2*r*trig0(Math.cos(th)),a2=r*r;
     const Hmag=w=>{
@@ -617,9 +680,12 @@ function zplane(){
     if(r===0){
       ntauTxt="不適用（沒有記憶）";
       judge="r ＝ 0：極點退化到原點，系統沒有記憶（h[n] 只有 n ＝ 0 那一項）。";
+    }else if(Math.abs(r-1)<1e-9&&Math.abs(sth)<1e-12){
+      ntauTxt="不適用（線性成長）";
+      judge="<strong>不穩定</strong>：重根落在單位圓上，h[n] 含有 n + 1 因子並線性成長，不是永不衰減的單純振盪。";
     }else if(Math.abs(r-1)<1e-9){
       ntauTxt=INF_TXT+"（不衰減）";
-      judge="<strong>邊界穩定</strong>：極點正好在單位圓上，h[n] 永不衰減；|H| 在共振頻率上<strong>發散</strong>——這是理想振盪器，也是數位濾波器<strong>絕對要避開</strong>的位置（浮點誤差就足以把它推到圈外）。";
+      judge="<strong>邊界（非 BIBO 穩定）</strong>：單根極點在單位圓上，h[n] 等幅振盪而不衰減；因果系統的收斂域不含單位圓。";
     }else if(r<1){
       ntauTxt=num6(ntau)+" 個樣本（＝ "+num6(ntau/fs*1e3)+" ms）";
       judge="<strong>穩定</strong>：極點在單位圓內，h[n] 以 r<sup>n</sup> 衰減，大約 n<sub>τ</sub> ＝ "+num6(ntau)+" 個樣本後掉到 36.8 %。";
@@ -628,17 +694,20 @@ function zplane(){
       judge="<strong>不穩定</strong>：極點在單位圓外，h[n] 指數成長，輸出會很快撞到數值上限。";
     }
     let kind="";
-    if(theta===0)kind="<p>θ ＝ 0：實極點，共振在直流，這是一個<strong>低通</strong>。</p>";
-    else if(theta===180)kind="<p>θ ＝ 180°：共振在 f<sub>s</sub>/2，這是一個<strong>高通</strong>。</p>";
+    if(theta===0&&r<1)kind="<p>θ ＝ 0：實極點，增益偏向直流，是一個<strong>低通</strong>。</p>";
+    else if(theta===180&&r<1)kind="<p>θ ＝ 180°：增益偏向 f<sub>s</sub>/2，是一個<strong>高通</strong>。</p>";
+    const response=r>=1
+      ? "<p><strong>頻率響應不存在</strong>：因果系統的收斂域不含單位圓，不能把單位圓上的代入值當成 DTFT。</p>"
+      : "<p>|H| 在極點角 ω ＝ θ 處 ＝ <strong>"+txt(hPk)+"</strong>｜在直流 ＝ <strong>"+txt(hDc)+"</strong>｜在 f<sub>s</sub>/2 ＝ <strong>"+txt(hNy)+"</strong>｜極點角／直流比 ＝ <strong>"+ratio+"</strong></p>";
     $('zplane-output').innerHTML=
       "<p>極點 z ＝ r·exp(±jθ) ＝ "+num6(r)+"·exp(±j"+num6(theta)+"°)｜h["+n+"] ＝ <strong>"+num6(h)+"</strong></p>"+
-      "<p>共振頻率 f<sub>peak</sub> ＝ (θ/360°)·f<sub>s</sub> ＝ <strong>"+num6(fpk)+" Hz</strong>｜衰減常數 n<sub>τ</sub>：<strong>"+ntauTxt+"</strong></p>"+
+      "<p>極點角對應頻率 f<sub>θ</sub> ＝ (θ/360°)·f<sub>s</sub> ＝ <strong>"+num6(ftheta)+" Hz</strong>（r 接近 1 時才近似峰值位置）｜衰減常數 n<sub>τ</sub>：<strong>"+ntauTxt+"</strong></p>"+
       "<p>差分方程：<code>y[n] ＝ "+num6(a1)+"·y[n"+MINUS+"1] "+MINUS+" "+num6(a2)+"·y[n"+MINUS+"2] + x[n]</code></p>"+
-      "<p>|H| 在共振點 ＝ <strong>"+txt(hPk)+"</strong>｜在直流 ＝ <strong>"+txt(hDc)+"</strong>｜在 f<sub>s</sub>/2 ＝ <strong>"+txt(hNy)+"</strong>｜峰／直流比 ＝ <strong>"+ratio+"</strong></p>"+
+      response+
       "<p>"+judge+"</p>"+kind+
       "<p>為什麼：|H| 的分母就是「單位圓上的觀測點到極點的距離」——<strong>距離愈近值愈大</strong>，所以 r 愈接近 1，共振峰愈高愈尖，代價是拖尾愈長。</p>"+
       "<p>對照：連續時間看「在不在左半平面」，離散時間看「在不在單位圓內」——z ＝ exp(sT<sub>s</sub>) 把無限長的虛軸捲成一個圓，這就是離散頻譜為什麼是週期的幾何理由。</p>"+
-      "<p>邊界提醒：θ 的單位是「每個樣本的弧度」；同一組係數換一個 f<sub>s</sub>，濾的就是不同的頻率。</p>";
+      "<p>邊界提醒：θ 代表每個樣本轉過的角度，本頁以度表示；同一組係數換一個 f<sub>s</sub>，濾的就是不同的頻率。</p>";
   };
   ['zpl-r','zpl-theta','zpl-n','zpl-fs'].forEach(x=>on(x,'input',draw));
   draw();
@@ -651,7 +720,7 @@ function digfilter(){
     const mode=pick('dgf-mode'),m=val('dgf-m'),a=val('dgf-a'),f=val('dgf-f'),fs=val('dgf-fs');
     const w=2*Math.PI*f/fs;
     let body="",uses="";
-    const overNyq=f>fs/2
+    const overNyq=(mode==='fir'||mode==='iir')&&f>fs/2
       ? "<p><strong>觀測頻率已超過奈奎斯特頻率</strong>（f<sub>s</sub>/2 ＝ "+num6(fs/2)+" Hz）：離散系統的頻率響應以 f<sub>s</sub> 為週期，這裡的數值是摺回來的鏡像——先回第 12 章。</p>"
       : "";
     if(mode==='fir'){
@@ -684,13 +753,23 @@ function digfilter(){
         "<p>"+MINUS+"3 dB 頻率 ＝ <strong>"+(fc3===null?"高過奈奎斯特頻率（不適用）":num6(fc3)+" Hz")+"</strong>｜運算量 <strong>"+num6(mac)+" 次乘加／秒</strong></p>"+
         warn+
         "<p>一階 IIR 每個輸出只要 2 次乘加（"+num6(mac)+" 次／秒），M ＝ "+m+" 的 FIR 要 "+m+" 次（"+num6(m*fs)+" 次／秒）——<strong>這就是 IIR 便宜的地方</strong>；代價是相位非線性、群延遲隨頻率變，而且極點靠近單位圓時定點量化會出問題。</p>";
-    }else{
+    }else if(mode==='decim'){
       uses="抽取倍率 M 與取樣頻率 f<sub>s</sub>（係數 a 與觀測頻率 f 不影響結果）";
       const fs2=fs/m,cutoff=fs2/2,fsUp=fs*m;
       body=
         "<p>抽取 "+m+" 倍後的新取樣率 ＝ <strong>"+num6(fs2)+" Hz</strong>｜抽取前必須先低通到 <strong>"+num6(cutoff)+" Hz</strong>（新的奈奎斯特頻率）</p>"+
         "<p>內插 "+m+" 倍後的取樣率 ＝ <strong>"+num6(fsUp)+" Hz</strong>（先插 "+(m-1)+" 個 0，再低通）</p>"+
         "<p>抽取之前一定要先低通，否則第 12 章的混疊會原封不動再發生一次；多相分解讓這兩件事只算「用得到的那些乘法」。</p>";
+    }else{
+      uses="目標數位頻率 f 與取樣頻率 f<sub>s</sub>（M 與 a 不影響結果）";
+      if(f>=fs/2){
+        body="<p><strong>預扭曲不適用</strong>：目標頻率必須低於奈奎斯特頻率 f<sub>s</sub>/2 ＝ "+num6(fs/2)+" Hz。</p>";
+      }else{
+        const analog=CALC.prewarp(f,fs);
+        const error=f===0?0:(analog/f-1)*100;
+        body="<p>目標數位頻率 ＝ <strong>"+num6(f)+" Hz</strong>｜類比原型預扭曲頻率 ＝ <strong>"+num6(analog)+" Hz</strong>｜偏差 ＝ <strong>"+num6(error)+" %</strong></p>"+
+          "<p>為什麼：雙線性變換把整條類比頻率軸壓進 0 到 f<sub>s</sub>/2；先用 tan 反扭，才能讓指定的數位截止點落在正確位置。</p>";
+      }
     }
     $('digfilter-output').innerHTML=
       "<p>這個模式只用到 <strong>"+uses+"</strong>，其餘滑桿不影響結果。</p>"+
@@ -745,53 +824,53 @@ function selfcheck(){
   };
   const q=(id,o)=>{const c=id.slice(1,3);o.ref=R[c][0];o.refName=R[c][1];return o;};
   const Q={
-    'q00-1':q('q00-1',{t:'sel',ans:'a',why:'系統一旦有記憶（電容要充電、機械有慣性），輸出就取決於過去而不只是現在，同一個振幅在不同頻率下得到不同的輸出——一個增益倍數描述不了這件事。',fix:'振幅、電壓、元件數量都不是關鍵；關鍵是「輸出依賴過去」。'}),
-    'q00-2':q('q00-2',{t:'num',ans:0.707107,tol:0.001,why:'r ＝ f/f_c ＝ 1 時 |H| ＝ 1/√(1 + 1²) ＝ 0.707107，正好是 −3.010300 dB、功率剩一半。',fix:'常見的錯是把 −3 dB 當成「掉 3 %」；它其實是掉到 70.7 %。'}),
+    'q00-1':q('q00-1',{t:'sel',ans:ANSWER_KEYS['q00-1'],why:'系統一旦有記憶（電容要充電、機械有慣性），輸出就取決於過去而不只是現在，同一個振幅在不同頻率下得到不同的輸出——一個增益倍數描述不了這件事。',fix:'振幅、電壓、元件數量都不是關鍵；關鍵是「輸出依賴過去」。'}),
+    'q00-2':q('q00-2',{t:'num',ans:0.707107,tol:0.001,why:'r ＝ f/f<sub>c</sub> ＝ 1 時 |H| ＝ 1/√(1 + 1²) ＝ 0.707107，正好是 −3.010300 dB、功率剩一半。',fix:'常見的錯是把 −3 dB 當成「掉 3 %」；它其實是掉到 70.7 %。'}),
     'q00-3':q('q00-3',{t:'num',ans:-45,tol:0.5,why:'∠H ＝ −arctan(r)，r ＝ 1 時 arctan 1 ＝ 45°，所以相位是 −45.000000°。',fix:'注意是負的：一階低通讓輸出落後輸入。'}),
-    'q01-1':q('q01-1',{t:'num',ans:1,tol:0.01,why:'E ＝ A²τ/2 ＝ 4 × 0.5 / 2 ＝ 1.000000 V²·s，因為 ∫ A²e^(−2t/τ) dt ＝ A²τ/2。',fix:'常見的錯是忘了指數平方後時間常數變成 τ/2，於是少除了一個 2。'}),
+    'q01-1':q('q01-1',{t:'num',ans:1,tol:0.01,why:'E ＝ A²τ/2 ＝ 4 × 0.5 / 2 ＝ 1.000000 V²·s，因為 ∫ A²e<sup>−2t/τ</sup> dt ＝ A²τ/2。',fix:'常見的錯是忘了指數平方後時間常數變成 τ/2，於是少除了一個 2。'}),
     'q01-2':q('q01-2',{t:'num',ans:0.707107,tol:0.001,why:'弦波的平均功率 P ＝ A²/2 ＝ 0.500000，rms ＝ √P ＝ A/√2 ＝ 0.707107 V。',fix:'rms 不是峰值的一半，是峰值除以 √2。'}),
-    'q01-3':q('q01-3',{t:'sel',ans:'b',why:'弦波永遠不停，能量積分發散、平均功率有限，所以是功率訊號；所有週期訊號都是功率訊號。',fix:'能量訊號的能量有限且功率為 0，弦波兩者都不符合。'}),
-    'q02-1':q('q02-1',{t:'num',ans:0.367879,tol:0.001,why:'arg ＝ a(t − t_0) ＝ 1 × (2 − 1) ＝ 1.000000，y ＝ e^(−1) ＝ 0.367879：訊號被延後 1 秒，t ＝ 2 秒看到的是原本 t ＝ 1 秒的值。',fix:'常見的錯是直接代 t ＝ 2 而忘了先減掉平移量。'}),
-    'q02-2':q('q02-2',{t:'num',ans:0.367879,tol:0.001,why:'篩選性 ∫ x(τ)δ(τ − 1) dτ ＝ x(1) ＝ e^(−1) ＝ 0.367879；δ 的作用是把曲線在某一點的值挑出來。',fix:'δ 的高度沒有意義，只有面積有意義，所以答案就是被積函數在該點的值。'}),
+    'q01-3':q('q01-3',{t:'sel',ans:ANSWER_KEYS['q01-3'],why:'弦波永遠不停，能量積分發散、平均功率有限，所以是功率訊號；所有週期訊號都是功率訊號。',fix:'能量訊號的能量有限且功率為 0，弦波兩者都不符合。'}),
+    'q02-1':q('q02-1',{t:'num',ans:0.367879,tol:0.001,why:'引數 ＝ a(t − t<sub>0</sub>) ＝ 1 × (2 − 1) ＝ 1.000000，y ＝ e<sup>−1</sup> ＝ 0.367879：訊號被延後 1 秒，t ＝ 2 秒看到的是原本 t ＝ 1 秒的值。',fix:'常見的錯是直接代 t ＝ 2 而忘了先減掉平移量。'}),
+    'q02-2':q('q02-2',{t:'num',ans:0.367879,tol:0.001,why:'篩選性 ∫ x(τ)δ(τ − 1) dτ ＝ x(1) ＝ e<sup>−1</sup> ＝ 0.367879；δ 的作用是把曲線在某一點的值挑出來。',fix:'δ 的高度沒有意義，只有面積有意義，所以答案就是被積函數在該點的值。'}),
     'q02-3':q('q02-3',{t:'sel',ans:'b',why:'把 x(2t − 1) 整理成標準形 x(2(t − 0.5))，真正的平移量是 0.5 秒。',fix:'式子裡的 1 是「at − b」的 b，真正的平移是 b/a。'}),
-    'q03-1':q('q03-1',{t:'num',ans:20,tol:0.01,why:'左式 (2×1 + 3×1)² ＝ 25、右式 2×1² + 3×1² ＝ 5，殘差 20.000000；殘差來自交叉項 2ab·x_1x_2。',fix:'左式是「先加再平方」，右式是「先平方再加權」，兩者差的就是交叉項。'}),
+    'q03-1':q('q03-1',{t:'num',ans:20,tol:0.01,why:'左式 (2×1 + 3×1)² ＝ 25、右式 2×1² + 3×1² ＝ 5，左式減右式的殘差為 20.000000；殘差來自交叉項 2ab·x<sub>1</sub>x<sub>2</sub>。',fix:'左式是「先加再平方」，右式是「先平方再加權」，兩者差的就是交叉項。'}),
     'q03-2':q('q03-2',{t:'num',ans:-12,tol:0.01,why:'左式 (2 + 3) + 3 ＝ 8、右式 2(1 + 3) + 3(1 + 3) ＝ 20，殘差 −12.000000；通式是 3 − 3(a + b)。',fix:'注意殘差是負的，而且與輸入大小無關——毛病在那個常數偏移。'}),
-    'q03-3':q('q03-3',{t:'sel',ans:'c',why:'把輸入延後 t_0 得 x(2t − t_0)，把輸出延後 t_0 得 x(2t − 2t_0)，兩者差一倍，所以違反的是時不變。',fix:'它其實是線性的（對輸入的疊加成立），壞掉的是時間軸。'}),
-    'q04-1':q('q04-1',{t:'num',ans:0.432332,tol:0.001,why:'t ＝ 1 ≤ T_1 ＝ 1 屬於充電段，y ＝ Aτ(1 − e^(−t/τ)) ＝ 0.5(1 − 0.135335) ＝ 0.432332，這也正好是峰值。',fix:'常見的錯是用放電段的式子；分段判定要先做。'}),
+    'q03-3':q('q03-3',{t:'sel',ans:ANSWER_KEYS['q03-3'],why:'把輸入延後 t<sub>0</sub> 得 x(2t − t<sub>0</sub>)，把輸出延後 t<sub>0</sub> 得 x(2t − 2t<sub>0</sub>)，兩者差一倍，所以違反的是時不變。',fix:'它其實是線性的（對輸入的疊加成立），壞掉的是時間軸。'}),
+    'q04-1':q('q04-1',{t:'num',ans:0.432332,tol:0.001,why:'t ＝ 1 ≤ T<sub>1</sub> ＝ 1 屬於充電段，y ＝ Aτ(1 − e<sup>−t/τ</sup>) ＝ 0.5(1 − 0.135335) ＝ 0.432332 V·s，這也正好是峰值。',fix:'常見的錯是用放電段的式子；分段判定要先做。'}),
     'q04-2':q('q04-2',{t:'num',ans:0.5,tol:0.005,why:'摺積的面積性質：∫y ＝ (∫x)(∫h) ＝ (A·T_1)(τ) ＝ 1.000000 × 0.500000 ＝ 0.500000。',fix:'這條性質是驗算摺積最好用的檢查，不必真的積分。'}),
-    'q04-3':q('q04-3',{t:'sel',ans:'a',why:'篩選性把輸入寫成無限多根加權延遲脈衝，時不變讓每根脈衝的響應都是平移過的 h，線性讓它們可以疊回來——四個步驟只用到 LTI 這兩條性質。',fix:'h 不是「最大的響應」，它是系統對 δ 的響應，特別之處在於能生出所有其他輸出。'}),
+    'q04-3':q('q04-3',{t:'sel',ans:ANSWER_KEYS['q04-3'],why:'篩選性把輸入寫成無限多根加權延遲脈衝，時不變讓每根脈衝的響應都是平移過的 h，線性讓它們可以疊回來——四個步驟只用到 LTI 這兩條性質。',fix:'h 不是「最大的響應」，它是系統對 δ 的響應，特別之處在於能生出所有其他輸出。'}),
     'q05-1':q('q05-1',{t:'num',ans:1.273240,tol:0.005,why:'方波是奇函數且半波對稱，只有奇次 sin 項，B_n ＝ 4A/(nπ)，n ＝ 1 時就是 4/π ＝ 1.273240。',fix:'注意基波振幅比方波本身的 A 還大，這不是錯——級數各項會互相抵消。'}),
     'q05-2':q('q05-2',{t:'num',ans:93.305552,tol:0.05,why:'累積功率 (B_1² + B_3² + B_5²)/2 ＝ 0.933056，總功率 A² ＝ 1.000000，佔 93.305552 %。',fix:'記得每一項要除以 2（來自 cos² 的時間平均），不是直接平方相加。'}),
     'q05-3':q('q05-3',{t:'sel',ans:'b',why:'方波有跳躍（不連續）所以係數 ∝ 1/n，三角波連續、只有斜率跳躍所以 ∝ 1/n²——波形愈平滑，高頻成分愈少。',fix:'與振幅、週期、奇偶都無關，關鍵是不連續的階數。'}),
     'q06-1':q('q06-1',{t:'num',ans:1000,tol:5,why:'矩形脈衝的頻譜是 A·T·sinc(fT)，第一個零點在 sin(πfT) ＝ 0 的第一個非零解，即 f ＝ 1/T ＝ 1/0.001 ＝ 1000.000000 Hz。',fix:'零點位置只由脈衝寬度決定，與高度無關。'}),
     'q06-2':q('q06-2',{t:'num',ans:0.636620,tol:0.002,why:'sinc(fT) ＝ sinc(0.5) ＝ sin(π/2)/(π/2) ＝ 1/1.570796 ＝ 0.636620（本課全程用歸一化 sinc）。',fix:'如果用 sin(x)/x 版本會算成別的數；本課一律用 sin(πx)/(πx)。'}),
-    'q06-3':q('q06-3',{t:'sel',ans:'b',why:'x(t − t_0) ⇔ X(jω)·exp(−jωt_0)，那個因子的絕對值是 1，所以只改相位、振幅完全不變，相位隨頻率線性下降。',fix:'這正是「線性相位＝不失真延遲」的來歷，第 09 章會再用一次。'}),
-    'q07-1':q('q07-1',{t:'num',ans:0.104353,tol:0.002,why:'h(t) ＝ K·e^(σt)·cos(ω_d t) ＝ e^(−1)·cos(5) ＝ 0.367879 × 0.283662 ＝ 0.104353。',fix:'cos 的引數是弧度不是度：ω_d t ＝ 10 × 0.5 ＝ 5 rad。'}),
+    'q06-3':q('q06-3',{t:'sel',ans:'b',why:'x(t − t<sub>0</sub>) ⇔ X(jω)·exp(−jωt<sub>0</sub>)，那個因子的絕對值是 1，所以只改相位、振幅完全不變，相位隨頻率線性下降。',fix:'這正是「線性相位＝不失真延遲」的來歷，第 09 章會再用一次。'}),
+    'q07-1':q('q07-1',{t:'num',ans:0.104353,tol:0.002,why:'h(t) ＝ K·e<sup>σt</sup>·cos(ω<sub>d</sub>t) ＝ e<sup>−1</sup>·cos(5) ＝ 0.367879 × 0.283662 ＝ 0.104353。',fix:'cos 的引數是弧度不是度：ω<sub>d</sub>t ＝ 10 × 0.5 ＝ 5 rad。'}),
     'q07-2':q('q07-2',{t:'num',ans:0.5,tol:0.01,why:'τ ＝ 1/|σ| ＝ 1/2 ＝ 0.500000 s，5τ ＝ 2.500000 s 後包絡只剩 0.674 %，工程上視為結束。',fix:'時間常數只看實部，與虛部（振盪多快）完全無關。'}),
-    'q07-3':q('q07-3',{t:'sel',ans:'c',why:'σ ＝ 0 時包絡 e^(σt) 恆為 1，響應等幅振盪、永遠不停，這是邊界穩定（理想振盪器）。',fix:'衰減要 σ ＜ 0、發散要 σ ＞ 0；虛軸正好是兩者的分界。'}),
-    'q08-1':q('q08-1',{t:'num',ans:16.303353,tol:0.1,why:'M_p ＝ exp(−πζ/√(1 − ζ²)) ＝ exp(−π×0.5/0.866025) ＝ 0.163034，也就是 16.303353 %。',fix:'M_p 只跟 ζ 有關，跟 omega_n 完全無關。'}),
-    'q08-2':q('q08-2',{t:'num',ans:8.660254,tol:0.01,why:'omega_d ＝ omega_n√(1 − ζ²) ＝ 10 × √0.75 ＝ 8.660254 rad/s，這是實際振盪的頻率。',fix:'omega_n、omega_d、omega_r 是三個不同的頻率（10.000000、8.660254、7.071068），不要混用。'}),
-    'q08-3':q('q08-3',{t:'sel',ans:'c',why:'超越量的式子裡只有 ζ，omega_n 只決定時間軸的快慢——把 omega_n 加倍，波形形狀一模一樣，只是時間壓縮一半。',fix:'會變的是 t_p 與 t_s（都減半），不是 M_p。'}),
-    'q09-1':q('q09-1',{t:'num',ans:4.191761,tol:0.01,why:'n_min ＝ log10(10^(A_s/10) − 1)/(2·log10(f_s/f_c)) ＝ log10(9999)/(2·log10 3) ＝ 4.191761，取上整得 5 階。',fix:'記得先減 1 再取對數；直接用 A_s/(20·log10 ratio) 只是漸近近似。'}),
+    'q07-3':q('q07-3',{t:'sel',ans:'c',why:'σ ＝ 0 時包絡 e<sup>σt</sup> 恆為 1，響應等幅振盪、永遠不停；這是自然響應的臨界情形，但不是 BIBO 穩定。',fix:'衰減要 σ ＜ 0、發散要 σ ＞ 0；虛軸正好是兩者的分界。'}),
+    'q08-1':q('q08-1',{t:'num',ans:16.303353,tol:0.1,why:'M<sub>p</sub> ＝ exp(−πζ/√(1 − ζ²)) ＝ exp(−π×0.5/0.866025) ＝ 0.163034，也就是 16.303353 %。',fix:'M<sub>p</sub> 只跟 ζ 有關，跟 ω<sub>n</sub> 完全無關。'}),
+    'q08-2':q('q08-2',{t:'num',ans:8.660254,tol:0.01,why:'ω<sub>d</sub> ＝ ω<sub>n</sub>√(1 − ζ²) ＝ 10 × √0.75 ＝ 8.660254 rad/s，這是實際振盪的頻率。',fix:'ω<sub>n</sub>、ω<sub>d</sub>、ω<sub>r</sub> 是三個不同的頻率（10.000000、8.660254、7.071068），不要混用。'}),
+    'q08-3':q('q08-3',{t:'sel',ans:'c',why:'超越量的式子裡只有 ζ，ω<sub>n</sub> 只決定時間軸的快慢——把 ω<sub>n</sub> 加倍，波形形狀一模一樣，只是時間壓縮一半。',fix:'會變的是 t<sub>p</sub> 與 t<sub>s</sub>（都減半），不是 M<sub>p</sub>。'}),
+    'q09-1':q('q09-1',{t:'num',ans:4.191761,tol:0.01,why:'n<sub>min</sub> ＝ log<sub>10</sub>(10<sup>A<sub>s</sub>/10</sup> − 1)/(2·log<sub>10</sub>(f<sub>s</sub>/f<sub>c</sub>)) ＝ log<sub>10</sub>(9999)/(2·log<sub>10</sub>3) ＝ 4.191761，取上整得 5 階。',fix:'記得先減 1 再取對數；直接用 A<sub>s</sub>/(20·log<sub>10</sub>ratio) 只是漸近近似。'}),
     'q09-2':q('q09-2',{t:'num',ans:47.712199,tol:0.1,why:'衰減 ＝ 10·log10(1 + 3^10) ＝ 10·log10(59050) ＝ 47.712199 dB，超過要求的 40 dB 所以合格。',fix:'4 階只給 38.170362 dB，不到 40——這就是為什麼要取上整。'}),
     'q09-3':q('q09-3',{t:'sel',ans:'b',why:'群延遲是「這個頻率成分被延後多久」；不平坦就代表不同頻率延後不同，各成分不同步抵達，波形因此變形（方波的角被磨圓）。',fix:'增益、穩定性、頻寬都不是群延遲不平坦的直接後果。'}),
     'q10-1':q('q10-1',{t:'num',ans:112.5,tol:0.1,why:'P_t ＝ P_c(1 + m²/2) ＝ 100 × (1 + 0.125) ＝ 112.500000 W，其中兩個邊帶各 6.250000 W。',fix:'常見的錯是忘了載波功率本身仍然全額存在。'}),
     'q10-2':q('q10-2',{t:'num',ans:11.111111,tol:0.05,why:'η ＝ (m²/2)/(1 + m²/2) ＝ 12.5/112.5 ＝ 11.111111 %；即使 m ＝ 1 也只有 33.333333 %。',fix:'效率只由 m 決定，與 P_c 無關——把發射機開大不會改善效率。'}),
-    'q10-3':q('q10-3',{t:'sel',ans:'b',why:'m ＞ 1 時包絡 A_c[1 + m·cos] 會變負，二極體只認絕對值，波形被折回去，這就是過調變造成的失真。',fix:'頻寬 2f_m 與 m 無關，總功率反而變大，載波也不會消失。'}),
-    'q11-1':q('q11-1',{t:'num',ans:3.689280,tol:0.005,why:'y[n] ＝ (1 − a^(n+1))/(1 − a) ＝ (1 − 0.8^6)/0.2 ＝ (1 − 0.262144)/0.2 ＝ 3.689280，這是幾何級數求和的結果。',fix:'指數是 n + 1 不是 n：從 k ＝ 0 加到 k ＝ n 共有 n + 1 項。'}),
+    'q10-3':q('q10-3',{t:'sel',ans:ANSWER_KEYS['q10-3'],why:'m ＞ 1 時包絡 A<sub>c</sub>[1 + m·cos] 會變負，二極體只認絕對值，波形被折回去，這就是過調變造成的失真。',fix:'頻寬 2f<sub>m</sub> 與 m 無關，總功率反而變大，載波也不會消失。'}),
+    'q11-1':q('q11-1',{t:'num',ans:3.689280,tol:0.005,why:'y[n] ＝ (1 − a<sup>n+1</sup>)/(1 − a) ＝ (1 − 0.8<sup>6</sup>)/0.2 ＝ (1 − 0.262144)/0.2 ＝ 3.689280，這是幾何級數求和的結果。',fix:'指數是 n + 1 不是 n：從 k ＝ 0 加到 k ＝ n 共有 n + 1 項。'}),
     'q11-2':q('q11-2',{t:'num',ans:5,tol:0.01,why:'Σ|h[n]| ＝ Σ a^n ＝ 1/(1 − 0.8) ＝ 5.000000，這個和有限所以 BIBO 穩定，同時它就是直流增益。',fix:'直流增益不是 1：一階遞迴 y[n] ＝ a·y[n−1] + x[n] 沒有做正規化。'}),
     'q11-3':q('q11-3',{t:'sel',ans:'b',why:'FIR 沒有回授，h[n] 只有有限項，Σ|h[n]| 一定是有限個有限數的和，必然收斂，所以天生 BIBO 穩定。',fix:'長度短、係數對稱、是不是低通都不是穩定的理由。'}),
-    'q12-1':q('q12-1',{t:'num',ans:3000,tol:5,why:'f_a ＝ |f − k·f_s|，k ＝ round(5000/8000) ＝ 1，所以 f_a ＝ |5000 − 8000| ＝ 3000.000000 Hz，而且它的樣本與真正的 3000 Hz 完全相同。',fix:'混疊不是「訊號變差」，而是變成另一個確定的頻率。'}),
-    'q12-2':q('q12-2',{t:'num',ans:0.784213,tol:0.002,why:'|sinc(f/f_s)| ＝ |sinc(0.375)| ＝ 0.784213，也就是 −2.111316 dB，這是零階保持造成的 droop。',fix:'注意是 f/f_s 不是 f/(f_s/2)；ZOH 的零點在 f_s 的整數倍。'}),
+    'q12-1':q('q12-1',{t:'num',ans:3000,tol:5,why:'f<sub>a</sub> ＝ |f − k·f<sub>s</sub>|，k ＝ round(5000/8000) ＝ 1，所以 f<sub>a</sub> ＝ |5000 − 8000| ＝ 3000.000000 Hz，而且它的樣本與真正的 3000 Hz 完全相同。',fix:'混疊不是「訊號變差」，而是變成另一個確定的頻率。'}),
+    'q12-2':q('q12-2',{t:'num',ans:0.784213,tol:0.002,why:'|sinc(f/f<sub>s</sub>)| ＝ |sinc(0.375)| ＝ 0.784213，也就是 −2.111316 dB，這是零階保持造成的 droop。',fix:'注意是 f/f<sub>s</sub> 不是 f/(f<sub>s</sub>/2)；ZOH 的零點在 f<sub>s</sub> 的整數倍。'}),
     'q12-3':q('q12-3',{t:'sel',ans:'a',why:'混疊在取樣的那一刻就發生了，樣本裡已經分不出原始頻率，所以抗混疊濾波器必須在 ADC 之前的類比端把頻寬限制住。',fix:'數位端再強的濾波器也救不回已經重疊的頻譜。'}),
-    'q13-1':q('q13-1',{t:'num',ans:7.8125,tol:0.01,why:'Δf ＝ f_s/N ＝ 8000/1024 ＝ 7.812500 Hz，等價於 1/T_win，其中 T_win ＝ 0.128000 s。',fix:'頻點間距由窗長決定，零填充不會讓它變好。'}),
+    'q13-1':q('q13-1',{t:'num',ans:7.8125,tol:0.01,why:'Δf ＝ f<sub>s</sub>/N ＝ 8000/1024 ＝ 7.812500 Hz，等價於 1/T<sub>win</sub>，其中 T<sub>win</sub> ＝ 0.128000 s。',fix:'頻點間距由窗長決定，零填充不會讓它變好。'}),
     'q13-2':q('q13-2',{t:'num',ans:204.8,tol:1,why:'直接 DFT 要 N² ＝ 1048576 次複數乘法，基 2 FFT 要 (N/2)log2 N ＝ 512 × 10 ＝ 5120 次，加速 204.800000 倍。',fix:'N 很小時（例如 16）加速只有 8 倍，FFT 的優勢不明顯。'}),
-    'q13-3':q('q13-3',{t:'sel',ans:'c',why:'補 0 沒有帶來新的觀測時間，T_win 沒變，所以真正能分辨的最小頻率差不變；它只是把 DTFT 取樣得更密，是內插。',fix:'要提高解析度只有一個辦法：量更久。'}),
+    'q13-3':q('q13-3',{t:'sel',ans:'c',why:'補 0 沒有帶來新的觀測時間，T<sub>win</sub> 沒變，所以真正能分辨的最小頻率差不變；它只是把 DTFT 取樣得更密，是內插。',fix:'要提高解析度只有一個辦法：量更久。'}),
     'q14-1':q('q14-1',{t:'num',ans:-0.835079,tol:0.002,why:'h[n] ＝ r^n·sin((n+1)θ)/sinθ ＝ 0.9^5 × sin(270°)/sin(45°) ＝ 0.590490 × (−1.414214) ＝ −0.835079。',fix:'(n + 1)θ ＝ 6 × 45° ＝ 270°，sin 270° ＝ −1，所以 h[5] 是負的。'}),
-    'q14-2':q('q14-2',{t:'num',ans:1.272792,tol:0.005,why:'(1 − pz^(−1))(1 − p*z^(−1)) ＝ 1 − 2r·cos θ·z^(−1) + r²z^(−2)，所以係數是 2 × 0.9 × cos 45° ＝ 1.272792。',fix:'第二個係數是 −r² ＝ −0.810000，不要和第一個搞混。'}),
+    'q14-2':q('q14-2',{t:'num',ans:1.272792,tol:0.005,why:'(1 − pz<sup>−1</sup>)(1 − p<sup>∗</sup>z<sup>−1</sup>) ＝ 1 − 2r·cos θ·z<sup>−1</sup> + r²z<sup>−2</sup>，所以係數是 2 × 0.9 × cos 45° ＝ 1.272792。',fix:'第二個係數是 −r² ＝ −0.810000，不要和第一個搞混。'}),
     'q14-3':q('q14-3',{t:'sel',ans:'b',why:'離散時間的穩定條件是所有極點落在單位圓內（|z| ＜ 1）；z ＝ exp(sT_s) 把左半平面映射成單位圓內部。',fix:'「左半平面」是連續時間的條件，不能拿來判斷離散系統。'}),
     'q15-1':q('q15-1',{t:'num',ans:0.640729,tol:0.002,why:'|H| ＝ |sin(Mω/2)/(M·sin(ω/2))|，ω ＝ 2π×500/8000 ＝ 0.392699，代入得 0.640729，也就是 −3.866514 dB。',fix:'注意分母有一個 M；ω ＝ 0 時整個式子要取極限值 1。'}),
-    'q15-2':q('q15-2',{t:'num',ans:285.301514,tol:1,why:'令 |H|² ＝ 1/2 解得 cos ω ＝ (4a − 1 − a²)/(2a) ＝ 0.975，ω ＝ arccos(0.975)，換算成頻率是 285.301514 Hz。',fix:'a 太小時這個餘弦值會超出 ±1，代表 −3 dB 點高過奈奎斯特頻率。'}),
+    'q15-2':q('q15-2',{t:'num',ans:ANSWER_KEYS['q15-2'],tol:1,why:'令 |H|² ＝ 1/2 解得 cos ω ＝ (4a − 1 − a²)/(2a) ＝ 0.975，ω ＝ arccos(0.975)，換算成頻率是 285.301514 Hz。',fix:'a 太小時這個餘弦值會超出 ±1，代表 −3 dB 點高過奈奎斯特頻率。'}),
     'q15-3':q('q15-3',{t:'sel',ans:'a',why:'FIR 沒有回授所以保證穩定，係數對稱時可得嚴格線性相位；IIR 用回授換到同規格下少得多的係數，代價是相位非線性且要小心穩定性。',fix:'FIR 不一定比較快（M 次乘加通常更貴），IIR 也不一定不穩定。'})
   };
   const ids=Object.keys(Q);
@@ -803,6 +882,7 @@ function selfcheck(){
   const check=id=>{
     const node=$(id),out=$(id+'-output');
     if(!node||!out)return;
+    out.hidden=false;
     const o=Q[id];
     const raw=String(node.value).trim();
     if(raw===''){
@@ -823,7 +903,7 @@ function selfcheck(){
   };
   ids.forEach(id=>{on(id+'-check','click',()=>check(id));on(id,'input',progress)});
   on('quiz-reset','click',()=>{
-    ids.forEach(id=>{if($(id))$(id).value='';if($(id+'-output'))$(id+'-output').innerHTML='';});
+    ids.forEach(id=>{if($(id))$(id).value='';if($(id+'-output')){ $(id+'-output').innerHTML=''; $(id+'-output').hidden=true; }});
     progress();
   });
   progress();
@@ -838,7 +918,7 @@ if(typeof document!=="undefined"){
 
 /* ---------- 7. 匯出（供語法檢查與人工交叉驗算） ---------- */
 if(typeof module!=="undefined")module.exports={
-  fmt,exp,num6,sci,sinc,rad,deg,db20,db10,SQRT1_2,DB3,
+  fmt,exp,num6,sci,sinc,db20,SQRT1_2,CALC,ANSWER_KEYS,
   sysmap,sigclass,sigops,syscheck,convolve,fourierseries,ctft,splane,
   secondorder,filterorder,ammod,dtsystem,sampling,dftlab,zplane,digfilter,
   dictionary,selfcheck

@@ -158,7 +158,7 @@ function carrier(){
     }else if(dope<=13){
       judge="<strong>輕摻雜</strong>：這種濃度常見於功率元件的漂移區，電阻率高但耐壓好——空乏區可以延伸得很長，電場才不會集中。";
     }else if(dope>=19){
-      judge="<strong>重摻雜</strong>（寫作 n<sup>+</sup> 或 p<sup>+</sup>）：電阻率已經接近金屬，IC 裡拿它當內部走線與歐姆接觸。";
+      judge="<strong>重摻雜</strong>（寫作 n<sup>+</sup> 或 p<sup>+</sup>）：此簡化模型的電阻率已降到 mΩ⋅cm 量級，足以當歐姆接觸與短走線；但此濃度的遷移率已明顯下降，固定 µ 的結果偏樂觀。";
     }else{
       judge="<strong>一般元件摻雜區間</strong>：多數載子由摻雜濃度決定，少數載子被質量作用定律壓到極低。";
     }
@@ -414,7 +414,8 @@ function bjt(){
     const IBsat=ICsat/beta;
     const ICactive=beta*IB;
     let region,IC,VCE,betaEff;
-    if(ICactive>=ICsat){
+    const atBoundary=Math.abs(ICactive-ICsat)<=Math.max(ICsat,1)*1e-12;
+    if(ICactive>=ICsat*(1-1e-12)){
       region='sat';IC=ICsat;VCE=0.2;betaEff=(IB>0)?(IC/IB):0;
     }else{
       region='active';IC=ICactive;VCE=vcc-IC*rc;betaEff=beta;
@@ -424,7 +425,9 @@ function bjt(){
     const ro=(vaSel==='inf'||IC<=0)?null:(Number(vaSel)/IC);
     const headroom=(IBsat>0)?((IBsat-val('bj-ib')*1e-6)/IBsat*100):0;
     let judge;
-    if(region==='active'){
+    if(atBoundary){
+      judge="<strong>臨界（兩區交界）</strong>：作用區預測的 βI<sub>B</sub> 正好碰到外部電路允許的 I<sub>C,sat</sub>，比較時已納入浮點容差。";
+    }else if(region==='active'){
       judge="<strong>作用區（active）</strong>：BE 順偏、BC 反偏，射極注入的載子大部分穿過薄基極到達集極，所以 I<sub>C</sub> = βI<sub>B</sub> 成立，集極看起來像一個由 I<sub>B</sub> 控制的電流源。";
     }else{
       judge="<strong>飽和區（saturation）</strong>：BC 接面也順偏了，V<sub>CE</sub> 被鎖在 0.2 V，I<sub>C</sub> 由外部電路（V<sub>CC</sub> 與 R<sub>C</sub>）決定而不是由 β 決定。此時實際 β<sub>eff</sub> 只有 "+sfmt(betaEff,6)+"，再灌基極電流也沒用——<strong>這正是拿 BJT 當開關時故意做的事</strong>。注意 BJT 的飽和是「開關全開」，與 MOSFET 的飽和區（定電流放大）意思相反。";
@@ -437,7 +440,7 @@ function bjt(){
     }
     $('bjt-output').innerHTML=
       rows([
-        "工作區判定："+((region==='active')?"作用區（active）":"飽和區（saturation）"),
+        "工作區判定："+(atBoundary?"臨界（兩區交界）":((region==='active')?"作用區（active）":"飽和區（saturation）")),
         "集極電流 I<sub>C</sub> = "+sfmt(IC*1e3,6)+" mA",
         "射極電流 I<sub>E</sub> = I<sub>C</sub> + I<sub>B</sub> = "+sfmt(IE*1e3,6)+" mA",
         "集—射電壓 V<sub>CE</sub> = "+sfmt(VCE,6)+" V",
@@ -490,9 +493,17 @@ function bjtbias(){
     }
     const s2=solve(vcc,R1,R2,re,rc,2*beta);
     const drift=(s2.IC-s.IC)/s.IC*100;
+    const saturated=s.VCE<0.2;
+    let shown=s;
+    if(saturated){
+      const VE=re*((s.VTH-VBE)/s.RTH+(vcc-0.2)/rc)/(1+re*(1/s.RTH+1/rc));
+      const IB=Math.max(0,(s.VTH-VBE-VE)/s.RTH);
+      const IC=Math.max(0,(vcc-0.2-VE)/rc);
+      shown={VTH:s.VTH,RTH:s.RTH,IB:IB,IC:IC,IE:IB+IC,VE:VE,VC:VE+0.2,VCE:0.2,stab:s.stab};
+    }
     let judge;
-    if(s.VCE<0.2){
-      judge="<strong>已進入飽和區</strong>：V<sub>CE</sub> = "+sfmt(s.VCE,6)+" V 低於 0.2 V，Q 點沒有訊號擺動的空間，這個放大器不能用。把 R<sub>C</sub> 或 R<sub>E</sub> 調小。"+((s.VCE<0)?"（算出負值代表「作用區」這個假設本身不成立，不是電路真的產生負電壓。）":"");
+    if(saturated){
+      judge="<strong>已進入飽和區</strong>：作用區假設會算出 V<sub>CE</sub> = "+sfmt(s.VCE,6)+" V，低於 0.2 V，所以改用 V<sub>CE,sat</sub> = 0.2 V 聯立集極、基極與射極回路。要離開飽和，應降低 V<sub>TH</sub>（減小 R<sub>2</sub> 或增大 R<sub>1</sub>）或減小 R<sub>C</sub>。";
     }else if(s.stab>=10){
       judge="<strong>Q 點健康且對 β 不敏感</strong>：(β+1)R<sub>E</sub> 是 R<sub>TH</sub> 的 "+sfmt(s.stab,6)+" 倍，β 從 I<sub>C</sub> 的算式裡幾乎消失了。";
     }else{
@@ -502,15 +513,15 @@ function bjtbias(){
       rows([
         "戴維寧電壓 V<sub>TH</sub> = V<sub>CC</sub>R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>) = "+sfmt(s.VTH,6)+" V",
         "戴維寧電阻 R<sub>TH</sub> = R<sub>1</sub>‖R<sub>2</sub> = "+sfmt(s.RTH,6)+" Ω",
-        "基極電流 I<sub>B</sub> = (V<sub>TH</sub> − V<sub>BE</sub>) / [R<sub>TH</sub> + (β + 1)R<sub>E</sub>] = "+sfmt(s.IB*1e6,6)+" µA",
-        "集極電流 I<sub>C</sub> = "+sfmt(s.IC*1e3,6)+" mA",
-        "射極電位 V<sub>E</sub> = "+sfmt(s.VE,6)+" V",
-        "集極電位 V<sub>C</sub> = "+sfmt(s.VC,6)+" V",
-        "集—射電壓 V<sub>CE</sub> = "+sfmt(s.VCE,6)+" V",
+        "基極電流 I<sub>B</sub> = "+sfmt(shown.IB*1e6,6)+" µA"+(saturated?"（飽和解）":""),
+        "集極電流 I<sub>C</sub> = "+sfmt(shown.IC*1e3,6)+" mA",
+        "射極電位 V<sub>E</sub> = "+sfmt(shown.VE,6)+" V",
+        "集極電位 V<sub>C</sub> = "+sfmt(shown.VC,6)+" V",
+        "集—射電壓 V<sub>CE</sub> = "+sfmt(shown.VCE,6)+" V",
         "穩定度指標 (β + 1)R<sub>E</sub> / R<sub>TH</sub> = "+sfmt(s.stab,6)
       ])+
       say(judge)+
-      say("β 敏感度：β 從 "+sfmt(beta,0)+" 加倍到 "+sfmt(2*beta,0)+"，I<sub>C</sub> 從 "+sfmt(s.IC*1e3,6)+" mA 變成 "+sfmt(s2.IC*1e3,6)+" mA，只變 "+sfmt(drift,6)+" %。<strong>同一個 Q 點若改用固定基極偏壓，β 加倍 I<sub>C</sub> 會整整變 100 %。</strong>")+
+      (saturated?"":say("β 敏感度：β 從 "+sfmt(beta,0)+" 加倍到 "+sfmt(2*beta,0)+"，I<sub>C</sub> 從 "+sfmt(s.IC*1e3,6)+" mA 變成 "+sfmt(s2.IC*1e3,6)+" mA，只變 "+sfmt(drift,6)+" %。<strong>同一個 Q 點若改用固定基極偏壓，β 加倍 I<sub>C</sub> 會整整變 100 %。</strong>"))+
       say("為什麼：射極電阻是直流負回授——I<sub>C</sub> 想變大就會抬高 V<sub>E</sub>，把 V<sub>BE</sub> 壓小，於是 I<sub>C</sub> 又被拉回來。");
   };
   ['bb-vcc','bb-r1','bb-r2','bb-re','bb-rc','bb-beta'].forEach(x=>on(x,'input',draw));
@@ -557,6 +568,12 @@ function mosfet(){
     if(atEdge){
       edge=edge+say("邊界提醒：V<sub>DS</sub> 恰等於 V<sub>OV</sub>，<strong>這裡是兩區的交界，兩條公式在此連續</strong>（差別只來自 λ 項：三極區給 "+sfmt(K*(VOV*vds-0.5*vds*vds)*1e6,6)+" µA，飽和區給 "+sfmt(0.5*K*VOV*VOV*(1+lam*vds)*1e6,6)+" µA）。");
     }
+    const mosScan=[0,0.5,1,1.5,2,2.5,3].map(x=>{
+      let id=0,name="截止";
+      if(VOV>0&&x<VOV){id=K*(VOV*x-0.5*x*x);name="三極";}
+      else if(VOV>0){id=0.5*K*VOV*VOV*(1+lam*x);name="飽和";}
+      return "<tr><td>"+sfmt(x,1)+"</td><td>"+name+"</td><td>"+sfmt(id*1e6,6)+"</td></tr>";
+    }).join('');
     $('mosfet-output').innerHTML=
       rows([
         "工作區判定："+((region==='cutoff')?"截止區（cutoff）":(region==='triode')?"三極區／線性區（triode / linear）":"飽和區（saturation）"),
@@ -565,12 +582,14 @@ function mosfet(){
         "跨導 g<sub>m</sub> = "+sfmt(gm*1e6,6)+" µA/V",
         (region==='sat')
           ? ("輸出阻抗 r<sub>o</sub> = "+((ro===null)?"<strong>無限大（理想定電流源）</strong>":ohms(ro)))
-          : ("等效通道電阻 r<sub>DS</sub> = "+((rds===null)?"（此區不適用或 V<sub>DS</sub> = 0）":ohms(rds))),
+          : ("直流比值 V<sub>DS</sub>/I<sub>D</sub> = "+((rds===null)?"（此區不適用或 V<sub>DS</sub> = 0）":ohms(rds))),
+        (VOV>0)?("小 V<sub>DS</sub> 極限電阻 1/(kV<sub>OV</sub>) = "+ohms(1/(K*VOV))):"小 V<sub>DS</sub> 極限電阻：截止區不適用",
         "本徵增益 g<sub>m</sub>r<sub>o</sub> = "+((A0===null)?"（僅飽和區且 λ &gt; 0 時有定義）":sfmt(A0,6))
       ])+
       say(judge)+
       say("為什麼：I<sub>D</sub> 正比於 V<sub>OV</sub> 的平方，所以 V<sub>GS</sub> 多給一點，電流就多很多；但 g<sub>m</sub> 只正比於 √I<sub>D</sub>，所以靠加電流換增益的效率比 BJT 差。")+
       ((lam===0)?say("λ = 0 是教科書理想，<strong>真實元件永遠有通道長度調變</strong>，r<sub>o</sub> 一定是有限的。"):"")+
+      "<table><thead><tr><th>V<sub>DS</sub>（V）</th><th>工作區</th><th>I<sub>D</sub>（µA）</th></tr></thead><tbody>"+mosScan+"</tbody></table>"+
       edge;
   };
   ['mo-vgs','mo-vds','mo-vth','mo-k','mo-lambda'].forEach(x=>on(x,'input',draw));
@@ -581,7 +600,10 @@ function mosfet(){
 function cmos(){
   if(!$('cm-vdd'))return;
   const draw=()=>{
-    const vdd=val('cm-vdd'),vin=val('cm-vin'),vthn=val('cm-vthn'),kr=Number(sel('cm-kratio'));
+    const vdd=val('cm-vdd'),vinEl=$('cm-vin');
+    vinEl.max=String(vdd);
+    if(val('cm-vin')>vdd)vinEl.value=String(vdd);
+    const vin=val('cm-vin'),vthn=val('cm-vthn'),kr=Number(sel('cm-kratio'));
     const s=Math.sqrt(kr);
     const VM=(vthn+s*(vdd-vthn))/(1+s);
     const CL=val('cm-cl')*1e-15,F=val('cm-f')*1e6;
@@ -590,15 +612,31 @@ function cmos(){
     const impossible=(vthn>=vdd);
     const noGuard=(vih<=vthn);
     let state;
-    if(impossible){state='transition';}
+    if(impossible){state='off';}
+    else if(noGuard&&vin>vih&&vin<vthn){state='deadzone';}
+    else if(noGuard){state=(vin<=vih)?'low':'high';}
     else if(vin<vthn){state='low';}
     else if(vin>vih){state='high';}
     else{state='transition';}
-    const vout=(state==='low')?vdd:((state==='high')?0:VM);
+    const atVM=Math.abs(vin-VM)<1e-12;
+    const voutText=(state==='low')?sfmt(vdd,6)+" V":((state==='high')?"0.000000 V":((state==='deadzone'||state==='off')?"由負載電容保持，靜態無唯一值":(atVM?sfmt(VM,6)+" V":"介於 0 與 "+sfmt(vdd,6)+" V 之間")));
+    const cmosScan=[0,0.25,0.5,0.75,1].map(frac=>{
+      const x=frac*vdd;
+      let label;
+      if(impossible)label="兩顆無法正常導通";
+      else if(noGuard&&x>vih&&x<vthn)label="死區（電容保持）";
+      else if(noGuard)label=(x<=vih)?sfmt(vdd,6)+" V":"0.000000 V";
+      else if(x<vthn)label=sfmt(vdd,6)+" V";
+      else if(x>vih)label="0.000000 V";
+      else label=(Math.abs(x-VM)<1e-12)?sfmt(VM,6)+" V":"0–"+sfmt(vdd,6)+" V（轉態）";
+      return "<tr><td>"+sfmt(x,6)+"</td><td>"+label+"</td></tr>";
+    }).join('');
     const scale=(vdd>0)?Math.pow(1.0/vdd,2):Infinity;
     let judge;
     if(impossible){
       judge="<strong>這個組合不可能工作</strong>：門檻電壓 "+sfmt(vthn,6)+" V 已經超過電源電壓 "+sfmt(vdd,6)+" V，電晶體打不開。真實低壓製程必須同步降低 V<sub>th</sub>，代價是漏電流暴增。";
+    }else if(state==='deadzone'){
+      judge="<strong>兩顆都截止的死區</strong>：輸出沒有主動上拉或下拉，會由負載電容保持前一個電壓，不能由靜態平方律唯一決定。";
     }else if(state==='low'){
       judge="<strong>輸入低</strong>：NMOS 截止、PMOS 導通，輸出被拉到 V<sub>DD</sub>。從電源到地沒有導通路徑，靜態電流只剩漏電。";
     }else if(state==='high'){
@@ -610,7 +648,7 @@ function cmos(){
     if(impossible){
       edge=say("邊界提醒：V<sub>th</sub> ≥ V<sub>DD</sub>，<strong>兩顆永遠不會完全導通</strong>，下面的功耗數字只是把公式代進去的形式值。");
     }else if(noGuard){
-      edge=say("邊界提醒：V<sub>th</sub> ≥ V<sub>DD</sub>/2，「保證截止」的上下界重疊了（V<sub>th</sub> = "+sfmt(vthn,6)+" V ≥ V<sub>DD</sub> − V<sub>th</sub> = "+sfmt(vih,6)+" V），整個輸入範圍都算轉態區——這種設計沒有雜訊邊限。");
+      edge=say("邊界提醒：V<sub>th</sub> ≥ V<sub>DD</sub>/2，V<sub>DD</sub> − V<sub>th</sub> 與 V<sub>th</sub> 之間出現兩顆都截止的死區，輸出只能由電容暫時保持；這種設計沒有正常的雜訊邊限。");
     }else if(P>=1e-3){
       edge=say("邊界提醒：單一個閘就 "+sfmt(P*1e3,6)+" mW，<strong>這就是高頻大負載的代價</strong>。");
     }
@@ -618,16 +656,17 @@ function cmos(){
       rows([
         "切換閾值 V<sub>M</sub> = [V<sub>th,n</sub> + √k<sub>r</sub>(V<sub>DD</sub> − |V<sub>th,p</sub>|)] / (1 + √k<sub>r</sub>) = "+sfmt(VM,6)+" V",
         "V<sub>M</sub> 與 V<sub>DD</sub>/2 的差 = "+sfmt(VM-vdd/2,6)+" V",
-        "目前輸入狀態："+((state==='low')?"低準位":(state==='high')?"高準位":"轉態區"),
-        "輸出電壓 ≈ "+sfmt(vout,6)+" V",
-        "NMOS："+((state==='low')?"截止":(state==='high')?"導通":"部分導通")+"；PMOS："+((state==='low')?"導通":(state==='high')?"截止":"部分導通"),
+        "目前輸入狀態："+((state==='low')?"低準位":(state==='high')?"高準位":(state==='deadzone')?"兩顆都截止的死區":"轉態區"),
+        "輸出電壓 ≈ "+voutText+(state==='transition'&&!atVM?"（只有 V<sub>in</sub> = V<sub>M</sub> 時才等於 V<sub>M</sub>）":""),
+        "NMOS："+((state==='low'||state==='deadzone'||state==='off')?"截止":(state==='high')?"導通":"部分導通")+"；PMOS："+((state==='low')?"導通":(state==='high'||state==='deadzone'||state==='off')?"截止":"部分導通"),
         "NMOS 保證截止的上界 = "+sfmt(vthn,6)+" V、PMOS 保證截止的下界 = "+sfmt(vih,6)+" V",
         "每次完整切換的能量 E = C<sub>L</sub>V<sub>DD</sub>² = "+sfmt(E*1e15,6)+" fJ",
         "動態功耗 P = C<sub>L</sub>V<sub>DD</sub>²f = "+sfmt(P*1e6,6)+" µW"
       ])+
       say(judge)+
-      say("為什麼：P = C<sub>L</sub>V<sub>DD</sub>²f，電壓進的是平方，所以降壓比降頻省得多。V<sub>DD</sub> 若降到 1.0 V，功耗會變成現在的 "+sfmt(scale,6)+" 倍（也就是省 "+sfmt((1-scale)*100,6)+" %），代價是速度變慢。")+
+      say("為什麼：P = C<sub>L</sub>V<sub>DD</sub>²f，電壓進的是平方，所以降壓比降頻省得多。"+(vdd>1?("V<sub>DD</sub> 若降到 1.0 V，功耗會變成現在的 "+sfmt(scale,6)+" 倍（省 "+sfmt((1-scale)*100,6)+" %）。"):("V<sub>DD</sub> 若升到 1.0 V，功耗會變成現在的 "+sfmt(scale,6)+" 倍（多耗 "+sfmt((scale-1)*100,6)+" %）。"))+"代價是低壓時速度通常變慢。")+
       say("k<sub>r</sub> = 1 且兩個門檻相等時 V<sub>M</sub> 恰為 V<sub>DD</sub>/2；PMOS 弱（k<sub>r</sub> &lt; 1）就把閾值拉低。電洞遷移率只有電子的 480/1350，所以 PMOS 要做得比 NMOS 寬才拉得平。")+
+      "<table><thead><tr><th>V<sub>in</sub>（V）</th><th>V<sub>out</sub> 文字掃描</th></tr></thead><tbody>"+cmosScan+"</tbody></table>"+
       edge;
   };
   ['cm-vdd','cm-vin','cm-vthn','cm-kratio','cm-f','cm-cl'].forEach(x=>on(x,'input',draw));
@@ -648,7 +687,7 @@ function smallsig(){
     const ratio=gmB/gmM;
     let edge="";
     if(VOV<0.4){
-      edge=say("邊界提醒：V<sub>OV</sub> = "+sfmt(VOV,6)+" V 太小會讓元件靠近次臨界區，<strong>平方律不再準確</strong>，真實的 g<sub>m</sub> 會比這裡算的高。");
+      edge=say("邊界提醒：V<sub>OV</sub> = "+sfmt(VOV,6)+" V 太小會讓元件靠近次臨界區，<strong>平方律不再準確</strong>，真實的 g<sub>m</sub> 會低於平方律外推；弱反轉的上限量級約為 I<sub>D</sub>/(nV<sub>T</sub>)。");
     }else if(VOV>5){
       edge=say("邊界提醒：V<sub>OV</sub> = "+sfmt(VOV,6)+" V 在低壓製程根本擺不下，<strong>實務上 V<sub>OV</sub> 通常取 0.1–0.3 V</strong>。");
     }
@@ -710,7 +749,7 @@ function stage(){
       Av=gm*rc;Rin=re0;Rout=rc;
       note="共基 CB：訊號從射極進、集極出，基極接地。<strong>R<sub>E</sub> 滑桿在本模式不參與計算。</strong>";
     }
-    const AvCE=-gm*rc/(1+gmRE),AvCB=gm*rc;
+    const AvCE0=-gm*rc,AvCB=gm*rc;
     let judge;
     if(topo==='ce'&&re===0){
       judge="<strong>無退化的共射</strong>：增益 −g<sub>m</sub>R<sub>C</sub> 最大，但它完全靠 g<sub>m</sub>，而 g<sub>m</sub> 隨電流與溫度變——增益不可靠，失真也大。";
@@ -742,7 +781,7 @@ function stage(){
       ])+
       say(judge)+
       ((topo==='ce'||topo==='cb')
-        ? say("正負號對照：同樣的 g<sub>m</sub> 與 R<sub>C</sub> 下，共射 A<sub>v</sub> = "+sfmt(AvCE,6)+"（反相），共基 A<sub>v</sub> = "+sfmt(AvCB,6)+"（同相）。<strong>大小一樣，差別只在相位。</strong>")
+        ? say("正負號對照：同樣的 g<sub>m</sub> 與 R<sub>C</sub> 下，<strong>無退化</strong>共射 A<sub>v</sub> = "+sfmt(AvCE0,6)+"（反相），共基 A<sub>v</sub> = "+sfmt(AvCB,6)+"（同相）。<strong>這兩個基準的大小相同；當前共射若有 R<sub>E</sub> 退化，其增益會另外降低。</strong>")
         : "")+
       say("為什麼：三種組態的電壓增益量級都是 g<sub>m</sub> 乘上輸出端看到的電阻，差別在輸入端怎麼接、以及電流增益是誰。")+
       edge;
@@ -762,6 +801,10 @@ function freq(){
     const gbwLimit=1/(2*Math.PI*rs*CGD);
     const boost=ce.cin/casc.cin;
     const cur=(topo==='ce')?ce:casc;
+    const freqScan=[0.01,0.1,1,10,100].map(r=>{
+      const mag=av/Math.sqrt(1+r*r);
+      return "<tr><td>"+hzFmt(cur.fH*r)+"</td><td>"+sfmt(mag,6)+"</td><td>"+sfmt(20*Math.log10(mag/av),6)+" dB</td></tr>";
+    }).join('');
     let judge;
     if(cur.cmil>5*CGS){
       judge="<strong>米勒效應主導</strong>：跨接電容被放大 (1 + |A<sub>v</sub>|) 倍之後遠大於 C<sub>gs</sub>，頻寬幾乎完全由它決定。這時改善 C<sub>gs</sub> 沒用，要嘛降增益、要嘛換拓樸。";
@@ -793,6 +836,7 @@ function freq(){
       say(judge)+
       say("GBW 的理論上限 1/(2πR<sub>s</sub>C<sub>gd</sub>) = "+sfmt(gbwLimit/1e6,6)+" MHz。<strong>共射的 GBW 永遠爬不過這條線；疊接可以，因為它根本不讓米勒效應發生。</strong>")+
       say("為什麼：跨接電容兩端的電壓是反向擺動的，所以它看到的擺幅是輸入的 (1 + |A<sub>v</sub>|) 倍，等效電容就被放大同樣倍數。")+
+      "<table><thead><tr><th>頻率</th><th>一階模型 |A<sub>v</sub>|</th><th>相對中頻</th></tr></thead><tbody>"+freqScan+"</tbody></table>"+
       edge;
   };
   ['fq-topo','fq-av','fq-rs','fq-cgd','fq-cgs'].forEach(x=>on(x,'input',draw));
@@ -808,14 +852,23 @@ function diffpair(){
     const load=sel('dp-load'),vid=val('dp-vid')*1e-3;
     const IC=Itail/2,gm=IC/VT,ro=VA/IC;
     const RL=(load==='resistor')?rc:(ro/2);
-    const Ad=gm*RL,Acm=RL/(2*Roc),CMRR=Ad/Acm;
+    const Ad=(load==='resistor')?(gm*RL/2):(gm*RL);
+    const Acm=(load==='resistor')?(RL/(2*Roc)):(1/(2*gm*Roc));
+    const CMRR=Ad/Acm;
     const vout=Ad*vid;
     const dIreal=Itail*Math.tanh(vid/(2*VT));
     const dIlin=gm*vid;
     const linErr=(val('dp-vid')===0)?0:((dIlin-dIreal)/dIreal);
-    const chk=Math.abs(CMRR-2*gm*Roc)/CMRR;
+    const cmrrExpected=(load==='resistor')?(gm*Roc):(2*gm*gm*RL*Roc);
+    const chk=Math.abs(CMRR-cmrrExpected)/CMRR;
     const RLalt=(load==='resistor')?(ro/2):rc;
-    const AdAlt=gm*RLalt;
+    const AdAlt=(load==='resistor')?(gm*RLalt):(gm*RLalt/2);
+    const AcmAlt=(load==='resistor')?(1/(2*gm*Roc)):(RLalt/(2*Roc));
+    const CMRRAlt=AdAlt/AcmAlt;
+    const scan=[-100,-50,0,50,100].map(mv=>{
+      const di=Itail*Math.tanh((mv*1e-3)/(2*VT));
+      return "<tr><td>"+mv+"</td><td>"+sfmt(di*1e3,6)+"</td></tr>";
+    }).join('');
     const ae=Math.abs(linErr);
     let judge;
     if(val('dp-vid')===0){
@@ -840,17 +893,18 @@ function diffpair(){
         "每邊集極電流 I<sub>C</sub> = I<sub>tail</sub>/2 = "+sfmt(IC*1e3,6)+" mA",
         "每邊跨導 g<sub>m</sub> = "+sfmt(gm*1e3,6)+" mA/V",
         "有效負載阻抗 R<sub>L,eff</sub> = "+sfmt(RL,6)+" Ω（"+((load==='resistor')?"電阻負載 R<sub>C</sub>":"電流鏡主動負載 r<sub>o</sub>‖r<sub>o</sub>")+"）",
-        "差模增益 A<sub>d</sub>（單端輸出）= "+sfmt(Ad,6)+"（"+sfmt(dbv(Ad),6)+" dB）",
-        "共模增益 A<sub>cm</sub> = R<sub>L,eff</sub>/(2R<sub>oc</sub>) = "+sfmt(Acm,6)+"（"+sfmt(dbv(Acm),6)+" dB）",
+        "差模增益 A<sub>d</sub>（單端輸出）= "+sfmt(Ad,6)+"（"+sfmt(dbv(Ad),6)+" dB；"+((load==='resistor')?"g<sub>m</sub>R<sub>C</sub>/2":"g<sub>m</sub>(r<sub>o</sub>∥r<sub>o</sub>)")+"）",
+        "共模增益 A<sub>cm</sub> = "+sfmt(Acm,9)+"（"+sfmt(dbv(Acm),6)+" dB；"+((load==='resistor')?"R<sub>C</sub>/(2R<sub>oc</sub>)":"鏡像抵銷近似 1/(2g<sub>m</sub>R<sub>oc</sub>)")+"）",
         "共模拒斥比 CMRR = "+sfmt(CMRR,6)+"（"+sfmt(dbv(CMRR),6)+" dB）",
         "輸出電壓 v<sub>out</sub> = A<sub>d</sub>v<sub>id</sub> = "+sfmt(vout,6)+" V",
         "真實 ΔI = I<sub>tail</sub>tanh[v<sub>id</sub>/(2V<sub>T</sub>)] = "+sfmt(dIreal*1e3,6)+" mA",
         "線性預測 g<sub>m</sub>v<sub>id</sub> = "+sfmt(dIlin*1e3,6)+" mA（高估 "+sfmt(linErr*100,6)+" %）"
       ])+
-      say("CMRR 自檢：|CMRR − 2g<sub>m</sub>R<sub>oc</sub>| / CMRR = "+expFmt(chk,6)+"（判定 "+((chk<1e-12)?"通過":"需注意")+"）。<strong>CMRR = 2g<sub>m</sub>R<sub>oc</sub>，負載阻抗在分子分母同時出現、完全約掉——想提高 CMRR 只能改善尾電流源，換負載電阻沒有用。</strong>")+
+      say("CMRR 獨立推導自檢：|CMRR − CMRR<sub>expected</sub>| / CMRR = "+expFmt(chk,6)+"（判定 "+((chk<1e-12)?"通過":"需注意")+"）。<strong>"+((load==='resistor')?"電阻負載的單端 CMRR = g<sub>m</sub>R<sub>oc</sub>；R<sub>C</sub> 會在比值中約掉。":"電流鏡模式另納入兩支路共模電流的鏡像抵銷，不能套用電阻負載的約分式。")+"</strong>")+
       say(judge)+
-      say("換負載對照：切到"+((load==='resistor')?"電流鏡主動負載":"電阻負載")+"時 A<sub>d</sub> 會變成 "+sfmt(AdAlt,6)+"（"+sfmt(AdAlt/Ad,6)+" 倍），<strong>但 CMRR 一個 dB 都沒變</strong>。主動負載買到的是差模增益，不是更好的 CMRR。")+
+      say("換負載對照：切到"+((load==='resistor')?"電流鏡主動負載":"電阻負載")+"時 A<sub>d</sub> 會變成 "+sfmt(AdAlt,6)+"（"+sfmt(AdAlt/Ad,6)+" 倍），CMRR 會變成 "+sfmt(CMRRAlt,6)+"（"+sfmt(dbv(CMRRAlt),6)+" dB）。<strong>主動負載同時合成差模電流與抵銷共模電流。</strong>")+
       say("為什麼：共模訊號要動，就得讓尾電流源的電流改變；R<sub>oc</sub> 愈大它愈不肯改變，共模增益就愈小。")+
+      "<table><thead><tr><th>v<sub>id</sub>（mV）</th><th>ΔI（mA）</th></tr></thead><tbody>"+scan+"</tbody></table>"+
       edge;
   };
   ['dp-itail','dp-rc','dp-roc','dp-load','dp-vid'].forEach(x=>on(x,'input',draw));
@@ -919,12 +973,13 @@ function syscap(){
   const draw=()=>{
     const mode=sel('sy-mode');
     const L=val('sy-l')*1e-6,C=val('sy-c')*1e-12;
-    const vin=val('sy-vin'),vout=val('sy-vout'),bits=val('sy-bits'),fs=val('sy-fs');
+    const vin=val('sy-vin'),vout=val('sy-vout'),vref=val('sy-vref'),bits=val('sy-bits'),fs=val('sy-fs');
     // 振盪器
     const f0=1/(2*Math.PI*Math.sqrt(L*C));
     // 電源
     const Pout=vout*IOUT;
     const ldoOk=(vout<vin);
+    const DROPOUT=0.2,ldoRegulated=ldoOk&&((vin-vout)>=DROPOUT);
     const etaLdo=ldoOk?(vout/vin):null;
     const PinLdo=vin*IOUT;
     const PlossLdo=(vin-vout)*IOUT;
@@ -934,12 +989,12 @@ function syscap(){
     const D=ldoOk?(vout/vin):null;
     // 資料轉換
     const levels=Math.pow(2,bits);
-    const lsb=vout/levels;
+    const lsb=vref/levels;
     const snr=6.02*bits+1.76;
     const fmax=fs/2;
     let oscJudge;
     if(f0<1e5){
-      oscJudge="<strong>音頻範圍</strong>：這個頻段用 RC 振盪器（Wien 橋、相移網路）更省成本，因為電感在低頻要做得很大。";
+      oscJudge="<strong>低頻（&lt; 100 kHz）</strong>：這個頻段用 RC 振盪器（Wien 橋、相移網路）常較省成本，因為電感在低頻要做得很大。";
     }else if(f0<=1e8){
       oscJudge="<strong>射頻範圍</strong>：LC 振盪器（Colpitts、Hartley、Clapp）的主場。";
     }else{
@@ -948,6 +1003,8 @@ function syscap(){
     let supJudge;
     if(!ldoOk){
       supJudge="<strong>這個組合 LDO 做不到</strong>：線性穩壓器只能降壓，輸出必須低於輸入（還要扣掉壓差）。要升壓得用 Boost。";
+    }else if(!ldoRegulated){
+      supJudge="<strong>低於 LDO 壓差，無法穩壓</strong>：V<sub>in</sub> − V<sub>out</sub> = "+sfmt(vin-vout,6)+" V，小於本簡化模型假設的 0.2 V 最小壓差。";
     }else if(etaLdo>=0.8){
       supJudge="<strong>壓差小，LDO 合理</strong>：效率 "+sfmt(etaLdo*100,6)+" %，而且雜訊比切換式低得多，適合射頻與類比電源。";
     }else{
@@ -974,6 +1031,7 @@ function syscap(){
     const convBlock=
       rows([
         "量化階數 2<sup>N</sup> = "+sfmt(levels,0),
+        "ADC 參考電壓 V<sub>ref</sub> = "+sfmt(vref,6)+" V",
         "量化階 LSB = V<sub>ref</sub>/2<sup>N</sup> = "+sfmt(lsb*1e6,6)+" µV",
         "理論 SNR = 6.02N + 1.76 = "+sfmt(snr,6)+" dB",
         "可重建的最高頻率 = f<sub>s</sub>/2 = "+sfmt(fmax,6)+" kHz"
@@ -1003,7 +1061,7 @@ function syscap(){
     }
     $('syscap-output').innerHTML=html+edge;
   };
-  ['sy-mode','sy-l','sy-c','sy-vin','sy-vout','sy-bits','sy-fs'].forEach(x=>on(x,'input',draw));
+  ['sy-mode','sy-l','sy-c','sy-vin','sy-vout','sy-vref','sy-bits','sy-fs'].forEach(x=>on(x,'input',draw));
   draw();
 }
 
@@ -1062,7 +1120,7 @@ function selfcheck(){
       '最常見的原因是把 V<sub>T</sub> 記成 26 mV 或把 I<sub>S</sub> 記成 10 fA；I<sub>S</sub> 差 10 倍電流就差 10 倍。','00'),
     'q00-3':mk('num',44.979198,0.05,
       'g = (I + I<sub>S</sub>)/V<sub>T</sub> = 22.232499 mA/V，r<sub>d</sub> = 1/g = 44.979198 Ω。',
-      '如果你算出 1217.917 Ω，那是直流電阻 V/I，不是小訊號電阻。兩者在同一個工作點差了 27 倍。','00'),
+      '如果你算出 1217.911 Ω，那是直流電阻 V/I，不是小訊號電阻。兩者在同一個工作點差了約 27 倍。','00'),
     'q01-1':mk('sel','a',0,
       '熱平衡下 np = n<sub>i</sub>² 恆成立。摻雜不是製造載子總量，是把天平壓向一邊：n 型的 n 上升、p 就被壓下去。',
       '若選「摻雜後 n = p」，那是本徵半導體才有的情況；n<sub>i</sub> 只跟材料與溫度有關，與摻雜濃度無關。','01'),
@@ -1154,16 +1212,16 @@ function selfcheck(){
       'r<sub>π</sub> = β/g<sub>m</sub> = 100/0.038681727 = 2585.199979 Ω。',
       'r<sub>π</sub> 是小訊號輸入電阻，不是直流的 V<sub>BE</sub>/I<sub>B</sub>（後者約 70 kΩ，差很多）。','10'),
     'q11-1':mk('sel','b',0,
-      '射隨器的 R<sub>out</sub> ≈ 1/g<sub>m</sub>（本例約 20–25 Ω），電壓增益接近 1 但電流增益很大，正好拿來當緩衝驅動重負載。',
+      '射隨器的 R<sub>out</sub> ≈ 1/g<sub>m</sub>；I<sub>C</sub> = 1 mA 時約 25 Ω。它的電壓增益接近 1，但電流增益很大，正好拿來當緩衝驅動重負載。',
       '大電壓增益要找共射；提高頻寬要找共基或疊接；射隨器也不反相。','11'),
     'q11-2':mk('num',193.408635,0.5,
       '|A<sub>v</sub>| = g<sub>m</sub>R<sub>C</sub> = 0.038681727 × 5000 = 193.408635（實際 A<sub>v</sub> = −193.408635，反相）。',
       '共射的電壓增益根本不含 β；若你把 β 乘進去就會差兩個數量級。','11'),
-    'q11-3':mk('num',39.729206,0.1,
+    'q11-3':mk('num',39.729206,0.5,
       '|A<sub>v</sub>| = g<sub>m</sub>R<sub>C</sub>/(1 + g<sub>m</sub>R<sub>E</sub>) = 193.408635/(1 + 3.8681727) = 39.729206。',
       '分母是 1 + g<sub>m</sub>R<sub>E</sub>，不能只寫 g<sub>m</sub>R<sub>E</sub>；此時 R<sub>C</sub>/R<sub>E</sub> = 50 還差得遠，要 g<sub>m</sub>R<sub>E</sub> ≫ 1 才趨近它。','11'),
     'q12-1':mk('sel','b',0,
-      '疊接讓下級的負載變成上級的低輸入阻抗（約 1/g<sub>m</sub>），下級增益被壓成約 −1，米勒倍數從 (1 + 200) 掉到 2，C<sub>in</sub> 從 206 pF 變 7 pF。',
+      '疊接讓下級看見上級約 1/g<sub>m</sub> 的低輸入阻抗，把下級增益壓到約 −1，所以米勒倍數由 1 + |A<sub>v</sub>| 降到約 2。',
       '總增益完全沒變（仍由上級的集極負載決定），實體電容 C<sub>gd</sub> 也一點都沒變——變的只是它被放大的倍數。','12'),
     'q12-2':mk('num',206,0.5,
       'C<sub>in</sub> = C<sub>gs</sub> + (1 + |A<sub>v</sub>|)C<sub>gd</sub> = 5 + 201 × 1 = 206 pF。',
@@ -1171,15 +1229,15 @@ function selfcheck(){
     'q12-3':mk('num',386.298406,1,
       'f<sub>H</sub> = 1/(2πR<sub>s</sub>C<sub>in</sub>) = 1/(2π × 2000 × 206 × 10<sup>−12</sup>) = 386298.405563 Hz = 386.298406 kHz。',
       '題目要的是 kHz，別忘了除以 1000；另外 2π 不能寫成 π。','12'),
-    'q13-1':mk('sel','b',0,
-      'CMRR = |A<sub>d</sub>/A<sub>cm</sub>| = g<sub>m</sub>R<sub>L,eff</sub> / [R<sub>L,eff</sub>/(2R<sub>oc</sub>)] = 2g<sub>m</sub>R<sub>oc</sub>，負載完全約掉，兩種負載都是 85.729517 dB。',
-      '主動負載買到的是 10 倍的差模增益（193.408635 → 1934.086354），不是更好的 CMRR。要提高 CMRR 只能改善尾電流源。','13'),
-    'q13-2':mk('num',193.408635,0.5,
-      '每邊電流是 I<sub>tail</sub>/2 = 0.5 mA，g<sub>m</sub> = 19.340864 mA/V，A<sub>d</sub>（單端）= g<sub>m</sub>R<sub>C</sub> = 193.408635。',
-      '最常見的原因是用 I<sub>tail</sub> = 1 mA 去算 g<sub>m</sub>，那會得到兩倍的答案。','13'),
-    'q13-3':mk('num',85.729517,0.1,
-      'CMRR = 2g<sub>m</sub>R<sub>oc</sub> = 2 × 0.019340864 × 500000 = 19340.863536，20log<sub>10</sub> 後是 85.729517 dB。',
-      'dB 要用 20log<sub>10</sub>（電壓比）不是 10log<sub>10</sub>；用後者會得到 42.86 dB。','13'),
+    'q13-1':mk('sel','a',0,
+      '電流鏡把一支路的電流鏡射到另一支路：差模電流在單端輸出相加，兩支路的共模電流則互相抵銷，所以 CMRR 大幅提高。',
+      '「負載會在 A<sub>d</sub>/A<sub>cm</sub> 中約掉」只適用於電阻負載的半電路模型；電流鏡還多了共模抵銷機制。','13'),
+    'q13-2':mk('num',96.704318,0.5,
+      '每邊電流是 I<sub>tail</sub>/2 = 0.5 mA，g<sub>m</sub> = 19.340864 mA/V。因每邊只收到 ±v<sub>id</sub>/2，A<sub>d</sub>（單端）= g<sub>m</sub>R<sub>C</sub>/2 = 96.704318。',
+      '193.408635 是把兩側輸出相減後的雙端增益；題目問的單端輸出要再除以 2。','13'),
+    'q13-3':mk('num',79.708917,0.1,
+      '電阻負載的單端 CMRR = g<sub>m</sub>R<sub>oc</sub> = 0.019340864 × 500000 = 9670.431768，20log<sub>10</sub> 後是 79.708917 dB。',
+      '85.729517 dB 混用了雙端 A<sub>d</sub> 與單端 A<sub>cm</sub>，所以多了 6.020600 dB。','13'),
     'q14-1':mk('sel','a',0,
       '多極點系統在高頻累積相位，轉到 −180° 時原本的負回授變成正回授；若此時 |Aβ<sub>f</sub>| 仍 ≥ 1，分母 1 + Aβ<sub>f</sub> 趨近 0，增益發散就是振盪。',
       '單極點系統相位最多轉 −90°，永遠穩定——所以射極退化不會振盪。振盪跟發熱、漏電無關。','14'),
@@ -1191,7 +1249,7 @@ function selfcheck(){
       '頻寬是乘以 (1 + Aβ<sub>f</sub>)、增益是除以它，兩者相乘守恆——這就是 GBW 不變。','14'),
     'q15-1':mk('sel','a',0,
       'SNR = 6.02N + 1.76 = 6.02 × 12 + 1.76 = 74 dB。這是量化雜訊的理論上限，真實 ADC 的 ENOB 一定更低。',
-      '96 dB 對應的是 16 位元（98.08 dB 附近）；位元數與 SNR 是線性關係，不是無關。','15'),
+      '96 dB 是對 16 位元只算 6.02 × 16、漏掉 1.76 dB 的常見誤記；完整理論值是 98.08 dB。','15'),
     'q15-2':mk('num',1591549.430919,200,
       'f<sub>0</sub> = 1/(2π√(LC)) = 1/(2π√(100 × 10<sup>−6</sup> × 100 × 10<sup>−12</sup>)) = 1591549.430919 Hz。',
       '單位換算是主要陷阱：100 µH = 10<sup>−4</sup> H、100 pF = 10<sup>−10</sup> F，乘積是 10<sup>−14</sup>。','15'),

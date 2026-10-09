@@ -30,7 +30,7 @@
 <tr><td>旋度 z 分量</td><td>(∇×<b>F</b>)<sub>z</sub> = ∂F<sub>y</sub>/∂x − ∂F<sub>x</sub>/∂y = ω − (−ω) = 2ω</td><td><strong>4.000000 1/s</strong></td></tr>
 <tr><td>旋度 x、y 分量</td><td>0 − 0、0 − 0</td><td><strong>0、0</strong></td></tr>
 <tr><td>半徑 2 m 球面的通量</td><td>(∇⋅<b>F</b>) ⋅ (4/3)πr³ = 3 × (4/3)π × 8 = 32π</td><td><strong>100.530965 m³/s</strong></td></tr>
-<tr><td>半徑 2 m 圓周的環流</td><td>(∇×<b>F</b>)<sub>z</sub> ⋅ πr² = 4 × π × 4 = 16π</td><td><strong>50.265482 m³/s²</strong></td></tr>
+<tr><td>半徑 2 m 圓周的環流</td><td>(∇×<b>F</b>)<sub>z</sub> ⋅ πr² = 4 × π × 4 = 16π</td><td><strong>50.265482 m²/s</strong></td></tr>
 </tbody></table>
 <p>通量另以球面上 4 萬個取樣點的數值面積分驗證，得 100.5338，與解析值 100.530965 差 0.003 %，差異來自離散化。邊界對照：a = 0、b = 0 → 散度 0，<strong>純旋轉場，通量為零但環流不為零</strong>（像靜磁場）；ω = 0 → 旋度 0，<strong>純徑向場，環流為零但通量不為零</strong>（像靜電場）。<strong>這兩種極端就是馬克士威方程式裡「有源無旋」與「無源有旋」的原型。</strong></p>
 <p>量級上，地磁場約 50 µT，喇叭磁鐵可到 1 T，差約兩萬倍；但無論數值大小，若要從有限量測推回局部旋度，仍須以環流除以面積並考慮面積縮小的極限，不能把單點場強直接叫作旋度。</p>
@@ -43,7 +43,7 @@
 <label for="vec-b">z 向擴張 b（1/s）<input id="vec-b" type="range" min="-3" max="3" step="0.5" value="1"></label>
 <label for="vec-r">觀測半徑 r（m）<input id="vec-r" type="range" min="0.5" max="3" step="0.5" value="2"></label>
 </div>
-<div id="vecfield-output" class="output" aria-live="polite">∇⋅<b>F</b> = 3.000000 1/s；(∇×<b>F</b>)<sub>z</sub> = 4.000000 1/s，x、y 分量恆為 0；通量 100.530965 m³/s；環流 50.265482 m³/s²。這裡是源且繞 z 軸有環流；通量 ÷ 體積 = 散度，環流 ÷ 面積 = 旋度。調到零場、負通量或最小半徑時，仍要依定理與尺度判讀，不把負值當錯誤。</div>
+<div id="vecfield-output" class="output" aria-live="polite">∇⋅<b>F</b> = 3.000000 1/s；(∇×<b>F</b>)<sub>z</sub> = 4.000000 1/s，x、y 分量恆為 0；通量 100.530965 m³/s；環流 50.265482 m²/s。這裡是源且繞 z 軸有環流；通量 ÷ 體積 = 散度，環流 ÷ 面積 = 旋度。調到零場、負通量或最小半徑時，仍要依定理與尺度判讀，不把負值當錯誤。</div>
 </section>
 
 <h2>不要混淆</h2>

@@ -24,9 +24,10 @@
 <p><strong>第二步到第四步，逐字對應連續版。</strong>系統對 δ[n] 的響應叫脈衝響應 h[n]；由<strong>時不變</strong>，系統對 δ[n − k] 的響應是 h[n − k]；由<strong>線性的齊次性</strong>，乘上權重 x[k] 之後響應是 x[k]h[n − k]；由<strong>線性的可加性</strong>，把所有 k 加起來就得到<strong>摺積和</strong> y[n] = x[n] ∗ h[n] = ∑<sub>k=−∞</sub><sup>∞</sup> x[k]h[n − k]。與第 04 章唯一的差別是積分號換成求和號。因果條件 h[n] = 0（n &lt; 0），BIBO 穩定條件 ∑<sub>n</sub>|h[n]| &lt; ∞。</p>
 <p><strong>一階 IIR 的脈衝響應要用手展開一次。</strong>對 y[n] = a·y[n − 1] + x[n] 打入 x[n] = δ[n]，假設初始靜止（y[−1] = 0）。n = 0 時 y[0] = a·0 + 1 = 1；n = 1 時 y[1] = a·1 + 0 = a；n = 2 時 y[2] = a²；n = 3 時 y[3] = a³。於是 h[n] = a<sup>n</sup>u[n]，每一項都不為零，這就是「無限」的字面意思。</p>
 <p><strong>步階響應要用幾何級數收尾。</strong>把 x[n] = u[n] 代進摺積和，n ≥ 0 時 y[n] = ∑<sub>k=0</sub><sup>n</sup> a<sup>k</sup>。這是首項 1、公比 a、共 n + 1 項的幾何級數，套公式得 y[n] = (1 − a<sup>n+1</sup>)/(1 − a)。|a| &lt; 1 時 a<sup>n+1</sup> → 0，所以終值是 1/(1 − a)，它就是<strong>直流增益</strong>，也正好等於 ∑<sub>n</sub>h[n]。</p>
+<p><strong>寫成程式會怎麼算。</strong><code>yPrev = 0; for n: y[n] = a * yPrev + x[n]; yPrev = y[n]</code>。狀態只有上一個輸出；每輪做一次乘法與一次加法。</p>
 <p><strong>穩定條件與時間常數。</strong>取絕對值再求和：∑<sub>n=0</sub><sup>∞</sup>|a<sup>n</sup>| = 1/(1 − |a|)，只要 |a| &lt; 1 就收斂，系統 BIBO 穩定；|a| ≥ 1 時級數發散。<strong>這個「|a| 要小於 1」就是第 14 章「極點必須落在單位圓內」的雛形</strong>。衰減速度可借用連續時間的說法：令 a<sup>n</sup> = exp(−n / n<sub>τ</sub>) 兩邊取自然對數，得等效時間常數 n<sub>τ</sub> = −1/ln a，單位是<strong>樣本</strong>而不是秒。</p>
 <p><strong>移動平均的步階響應是一條斜線接一條水平線。</strong>M 點移動平均的 h[n] = 1/M（0 ≤ n ≤ M − 1），其餘為零，所以 y[n] = (1/M)∑<sub>k=0</sub><sup>M−1</sup> x[n − k]。打入步階時，視窗裡有幾個 1 就加幾個，於是 y[n] = min(n + 1, M)/M：前 M 個樣本線性爬升，第 M 個樣本剛好到 1，之後<strong>完全停住，一步不多</strong>。它的 Σ|h[n]| 恆等於 1，所以<strong>沒有回授的系統不可能不穩定</strong>。</p>
-<p><strong>成本比較。</strong>M 點 FIR 每算一個輸出要 M 次乘加；一階 IIR 只要 2 次，而且不管衰減拖多長都還是 2 次。這就是 IIR 在嵌入式系統裡受歡迎的理由。</p>
+<p><strong>成本比較。</strong>M 點 FIR 每算一個輸出要 M 次乘加；本章的非正規化一階 IIR y[n] = a·y[n − 1] + x[n] 每個輸出只要 1 次乘法加 1 次加法。第 15 章的正規化版本還會多算 (1 − a)x[n]，才是 2 次乘法。這就是 IIR 在嵌入式系統裡受歡迎的理由。</p>
 
 <h2>數值實例：一階 IIR，a = 0.8、步階輸入、觀測第 5 個樣本</h2>
 <p>系統 y[n] = 0.8·y[n − 1] + x[n]，輸入單位步階 u[n]，初始靜止，觀測 n = 5。</p>
@@ -44,13 +45,13 @@
 <section class="workspace"><h2>自由實驗：同一個輸入，兩種系統原型</h2>
 <p>系統可以選一階遞迴 IIR 或 M 點移動平均 FIR，輸入可以選單位步階或單位脈衝，觀測樣本 n 可以滑到 40。要看三件事：這一格的輸出值、脈衝響應的絕對值總和是不是有限、以及達到終值需要幾個樣本。</p>
 <div class="controls">
-<label for="dts-mode">系統型式<select id="dts-mode"><option value="iir">一階遞迴 IIR：y[n] = a*y[n-1] + x[n]</option><option value="fir">M 點移動平均 FIR</option></select></label>
-<label for="dts-x">輸入訊號<select id="dts-x"><option value="step">單位步階 u[n]</option><option value="impulse">單位脈衝 delta[n]</option></select></label>
+<label for="dts-mode">系統型式<select id="dts-mode"><option value="iir">一階遞迴 IIR：y[n] = a·y[n − 1] + x[n]</option><option value="fir">M 點移動平均 FIR</option></select></label>
+<label for="dts-x">輸入訊號<select id="dts-x"><option value="step">單位步階 u[n]</option><option value="impulse">單位脈衝 δ[n]</option></select></label>
 <label for="dts-a">遞迴係數 a（只有 IIR 模式用）<input id="dts-a" type="range" min="0" max="0.99" step="0.01" value="0.8"></label>
 <label for="dts-m">平均點數 M（只有 FIR 模式用）<input id="dts-m" type="range" min="2" max="32" step="1" value="8"></label>
 <label for="dts-n">觀測樣本 n<input id="dts-n" type="range" min="0" max="40" step="1" value="5"></label>
 </div>
-<div id="dtsystem-output" class="output" aria-live="polite">這個模式只用到「遞迴係數 a」與「觀測樣本 n」兩個滑桿，「平均點數 M」不影響結果。y[5] = 3.689280，h[5] = 0.327680，Σ|h[n]| = 5.000000，直流增益 5.000000，n<sub>τ</sub> = 4.481420 個樣本，已達終值 73.785600 %。<strong>IIR</strong>：h[n] = a<sup>n</sup> 永遠不會真的到 0，只是愈來愈小。Σ|h[n]| = 1/(1 − a) = 5.000000 &lt; ∞，所以 <strong>BIBO 穩定</strong>；每個輸出只要 2 次乘加，<strong>很便宜</strong>。IIR 用回授換效率（少量係數就能做出很窄的濾波），FIR 用長度換保證（沒有回授就不可能不穩定，而且可以做到嚴格線性相位）——<strong>第 15 章會用頻率響應把這個取捨算給你看</strong>。把 a 滑到 0 會看到遞迴整個消失、系統退化成 y[n] = x[n]；把 a 滑到 0.99 再把 n 拉到 40，會看到直流增益衝到 100.000000 而輸出才走到 33.771796，離終值還有很長一段。</div>
+<div id="dtsystem-output" class="output" aria-live="polite">這個模式只用到「遞迴係數 a」與「觀測樣本 n」兩個滑桿，「平均點數 M」不影響結果。y[5] = 3.689280，h[5] = 0.327680，Σ|h[n]| = 5.000000，直流增益 5.000000，n<sub>τ</sub> = 4.481420 個樣本，已達終值 73.785600 %。<strong>IIR</strong>：h[n] = a<sup>n</sup> 永遠不會真的到 0，只是愈來愈小。Σ|h[n]| = 1/(1 − a) = 5.000000 &lt; ∞，所以 <strong>BIBO 穩定</strong>；本章非正規化式每個輸出只要 1 次乘法加 1 次加法，<strong>很便宜</strong>。IIR 用回授換效率（少量係數就能做出很窄的濾波），FIR 用長度換保證（沒有回授就不可能不穩定，而且可以做到嚴格線性相位）——<strong>第 15 章會用頻率響應把這個取捨算給你看</strong>。把 a 滑到 0 會看到遞迴整個消失、系統退化成 y[n] = x[n]；把 a 滑到 0.99 再把 n 拉到 40，會看到直流增益衝到 100.000000 而輸出才走到 33.771796，離終值還有很長一段。</div>
 </section>
 
 <h2>不要混淆</h2>

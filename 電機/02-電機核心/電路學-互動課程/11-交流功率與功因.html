@@ -25,8 +25,8 @@
 <p><code>S² = P² + Q²，pf = cos θ = P/S</code></p>
 <p>複數功率寫成 <strong>S</strong> = P + jQ = <strong>V</strong><sub>rms</sub><strong>I</strong><sub>rms</sub>*。星號代表複數共軛，確保感性負載在本課被動符號慣例下得到正 Q。P、Q、S 雖量綱都等於 V⋅A，分別用 W、var、VA 是為了避免把正交成分直接算術相加。</p>
 <p><strong>（c）為什麼電容並聯。</strong>並聯元件共用負載電壓，不改變原負載端電壓，故理想電壓源下原負載自己的 P、Q 不變。電容 X<sub>C</sub> = 1/(ωC)，提供 Q<sub>C</sub> = −V<sub>rms</sub>²/X<sub>C</sub> = −ωCV<sub>rms</sub>²，從感性總 Q 中扣除。若串聯電容，負載電壓會改變，已不是單純校正上游電流。</p>
-<p><strong>（d）求校正元件。</strong>目標 pf<sub>2</sub> 給 θ<sub>2</sub> = arccos(pf<sub>2</sub>)；目標 Q<sub>2</sub> = P ⋅ tan θ<sub>2</sub>；所需補償量 Q<sub>C</sub> = Q<sub>1</sub> − Q<sub>2</sub>。感性負載需要電容：</p>
-<p><code>C = Q<sub>C</sub>/(ωV<sub>rms</sub>²)</code></p>
+<p><strong>（d）求校正元件。</strong>目標 pf<sub>2</sub> 給 θ<sub>2</sub> = arccos(pf<sub>2</sub>)；目標 Q<sub>2</sub> = P ⋅ tan θ<sub>2</sub>；所需的正值補償量 Q<sub>comp</sub> = Q<sub>1</sub> − Q<sub>2</sub>。感性負載需要電容：</p>
+<p><code>C = Q<sub>comp</sub>/(ωV<sub>rms</sub>²)</code></p>
 <p>C 單位 F，ω 單位 rad/s。容性負載若需反向校正，則並聯電感；實務須考慮電容容差、切換階級、諧波與共振，不能把理想公式當成固定萬用值。</p>
 <p><strong>（e）真正省下的量。</strong>校正前後 P 不變；新的 S<sub>2</sub> = P/pf<sub>2</sub>，I<sub>2</sub> = S<sub>2</sub>/V。配線損耗與 I² 成正比，因此損耗比 (I<sub>2</sub>/I<sub>1</sub>)² = (pf<sub>1</sub>/pf<sub>2</sub>)²。省下的是上游電流、配線損耗與設備容量，不是負載完成工作的能量。</p>
 
@@ -46,7 +46,7 @@
 <tr><td>目標角 θ₂</td><td>arccos(0.95)</td><td><strong>18.194872°</strong></td></tr>
 <tr><td>tan θ₂</td><td>—</td><td><strong>0.328684</strong></td></tr>
 <tr><td>目標 Q₂</td><td>3097.6 × 0.328684</td><td><strong>1018.131884 var</strong></td></tr>
-<tr><td>需補償 Q<sub>C</sub></td><td>2323.2 − 1018.131884</td><td><strong>1305.068116 var</strong></td></tr>
+<tr><td>需補償 Q<sub>comp</sub></td><td>2323.2 − 1018.131884</td><td><strong>1305.068116 var</strong></td></tr>
 <tr><td>電容值</td><td>1305.068116/(2π × 60 × 220²)</td><td><strong>71.524808 µF</strong></td></tr>
 <tr><td>校正後 S</td><td>3097.6/0.95</td><td><strong>3260.631579 VA</strong></td></tr>
 <tr><td>校正後電流</td><td>3260.631579/220</td><td><strong>14.821053 A</strong></td></tr>
@@ -83,7 +83,7 @@
 
 <h2>連到哪門課</h2>
 <p>電力系統用 P、Q 調度電壓與容量；電機機械中的馬達是典型感性負載；變頻器、UPS、發電機與變壓器都以 VA 額定而不只看 W。第 14 章會把功率公式擴展到平衡三相，仍保留實功、無效功率與功因的區分。</p>
-<p>這裡的積化和差來自三角函數恆等式，可回工程數學先修的<a href="../../../共通基礎/數學/互動課程/03-級數與泰勒.html">級數與泰勒</a>查閱相關三角工具。更進一步的電力電子學會處理整流器造成的非弦波電流、主動功因校正與諧波標準；本章只建立線性負載、同頻純弦波、穩態下的基準模型。</p>
+<p>這裡直接用積化和差恆等式 <code>cos A cos B = [cos(A−B) + cos(A+B)]/2</code>；若要複習複數與三角表示，可回工程數學先修的<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">複變入門</a>。更進一步的電力電子學會處理整流器造成的非弦波電流、主動功因校正與諧波標準；本章只建立線性負載、同頻純弦波、穩態下的基準模型。</p>
 <p>選補償設備時不能只把公式算出的 µF 四捨五入後永久接上。馬達負載會隨產量改變，固定電容可能在輕載時造成超前功因；分段投切的電容櫃會依量測 Q 增減級數，並保留避免頻繁切換的遲滯。若系統有大量變頻器，還要檢查電容與電網電感是否把某次諧波放大，必要時使用串聯電抗器或主動濾波。</p>
 <p>帳務邊界也要分清：住宅電費常主要按實功電能計價，工業用戶則可能另受契約容量、需量與低功因條款影響。功因改善未必讓負載本身的度數明顯下降，卻可能釋放變壓器與饋線容量並降低廠內線損。是否划算必須用實際費率、負載週期與設備成本評估，不能從 pf 一個數字直接下結論。</p>
 

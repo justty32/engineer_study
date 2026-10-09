@@ -18,7 +18,7 @@
 <p>回去看：<a href="01-半導體與載子.html">01 半導體與載子</a></p>
 <section class="card"><p><strong>q01-1｜</strong>質量作用定律說明哪一項？</p><label for="q01-1">你的答案<select id="q01-1"><option value="">請選擇</option><option value="a">np = n_i²</option><option value="b">n + p = n_i</option><option value="c">摻雜後 n = p</option><option value="d">n_i 正比於摻雜濃度</option></select></label><button type="button" id="q01-1-check">對答案</button><div id="q01-1-output" class="output" aria-live="polite"></div></section>
 <section class="card"><p><strong>q01-2｜</strong>N<sub>D</sub> = 10<sup>16</sup> cm<sup>−3</sup> 時，少數載子濃度是 2.25 × 10<sup>x</sup> cm<sup>−3</sup>，x 是多少？</p><label for="q01-2">你的答案（無單位）<input id="q01-2" type="number" step="any"></label><button type="button" id="q01-2-check">對答案</button><div id="q01-2-output" class="output" aria-live="polite"></div></section>
-<section class="card"><p><strong>q01-3｜</strong>同一樣品的電阻率是多少 Ω⋅cm？</p><label for="q01-3">你的答案（Ω⋅cm）<input id="q01-3" type="number" step="any"></label><button type="button" id="q01-3-check">對答案</button><div id="q01-3-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q01-3｜</strong>沿用上題的 n 型樣品，電阻率是多少 Ω⋅cm？</p><label for="q01-3">你的答案（Ω⋅cm）<input id="q01-3" type="number" step="any"></label><button type="button" id="q01-3-check">對答案</button><div id="q01-3-output" class="output" aria-live="polite"></div></section>
 
 <h2>02 PN 接面與二極體方程</h2>
 <p>回去看：<a href="02-PN接面與二極體方程.html">02 PN 接面與二極體方程</a></p>
@@ -48,7 +48,7 @@
 <p>回去看：<a href="06-BJT原理與工作區.html">06 BJT 原理與工作區</a></p>
 <section class="card"><p><strong>q06-1｜</strong>BJT 的飽和區是什麼意思？</p><label for="q06-1">你的答案<select id="q06-1"><option value="">請選擇</option><option value="a">定電流的放大區</option><option value="b">開關全開，V_CE ≈ 0.2 V</option><option value="c">完全不導通</option><option value="d">與 MOSFET 的飽和區同義</option></select></label><button type="button" id="q06-1-check">對答案</button><div id="q06-1-output" class="output" aria-live="polite"></div></section>
 <section class="card"><p><strong>q06-2｜</strong>I<sub>B</sub> = 20 µA、β（讀作貝塔）= 100 時，集極電流是多少 mA？</p><label for="q06-2">你的答案（mA）<input id="q06-2" type="number" step="any"></label><button type="button" id="q06-2-check">對答案</button><div id="q06-2-output" class="output" aria-live="polite"></div></section>
-<section class="card"><p><strong>q06-3｜</strong>V<sub>CC</sub> = 12 V、R<sub>C</sub> = 1 kΩ 時，V<sub>CE</sub> 是多少 V？</p><label for="q06-3">你的答案（V）<input id="q06-3" type="number" step="any"></label><button type="button" id="q06-3-check">對答案</button><div id="q06-3-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q06-3｜</strong>沿用上題 I<sub>C</sub> = 2 mA；V<sub>CC</sub> = 12 V、R<sub>C</sub> = 1 kΩ 時，V<sub>CE</sub> 是多少 V？</p><label for="q06-3">你的答案（V）<input id="q06-3" type="number" step="any"></label><button type="button" id="q06-3-check">對答案</button><div id="q06-3-output" class="output" aria-live="polite"></div></section>
 
 <h2>07 BJT 偏壓與 Q 點</h2>
 <p>回去看：<a href="07-BJT偏壓與Q點.html">07 BJT 偏壓與 Q 點</a></p>
@@ -88,9 +88,9 @@
 
 <h2>13 差動對與電流鏡</h2>
 <p>回去看：<a href="13-差動對與電流鏡.html">13 差動對與電流鏡</a></p>
-<section class="card"><p><strong>q13-1｜</strong>換成電流鏡主動負載後，共模拒斥比 CMRR 會如何？</p><label for="q13-1">你的答案<select id="q13-1"><option value="">請選擇</option><option value="a">提高 10 倍</option><option value="b">完全不變，因為 CMRR = 2g_mR_oc 與負載無關</option><option value="c">降低 10 倍</option><option value="d">變成無限大</option></select></label><button type="button" id="q13-1-check">對答案</button><div id="q13-1-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q13-1｜</strong>換成電流鏡主動負載後，共模拒斥比 CMRR 會如何？</p><label for="q13-1">你的答案<select id="q13-1"><option value="">請選擇</option><option value="a">大幅提高，因電流鏡會抵銷兩支路的共模電流</option><option value="b">完全不變，因為誤以為負載會在比值中約掉</option><option value="c">固定降低 10 倍</option><option value="d">必然變成無限大</option></select></label><button type="button" id="q13-1-check">對答案</button><div id="q13-1-output" class="output" aria-live="polite"></div></section>
 <section class="card"><p><strong>q13-2｜</strong>I<sub>tail</sub> = 1 mA、R<sub>C</sub> = 10 kΩ 時，單端差模增益是多少？</p><label for="q13-2">你的答案（無單位）<input id="q13-2" type="number" step="any"></label><button type="button" id="q13-2-check">對答案</button><div id="q13-2-output" class="output" aria-live="polite"></div></section>
-<section class="card"><p><strong>q13-3｜</strong>R<sub>oc</sub> = 500 kΩ 時，共模拒斥比是多少 dB？</p><label for="q13-3">你的答案（dB）<input id="q13-3" type="number" step="any"></label><button type="button" id="q13-3-check">對答案</button><div id="q13-3-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q13-3｜</strong>沿用上題的電阻負載，R<sub>oc</sub> = 500 kΩ 時，單端共模拒斥比是多少 dB？</p><label for="q13-3">你的答案（dB）<input id="q13-3" type="number" step="any"></label><button type="button" id="q13-3-check">對答案</button><div id="q13-3-output" class="output" aria-live="polite"></div></section>
 
 <h2>14 回授與穩定性</h2>
 <p>回去看：<a href="14-回授與穩定性.html">14 回授與穩定性</a></p>
@@ -102,7 +102,7 @@
 <p>回去看：<a href="15-運算放大器與電子系統.html">15 運算放大器與電子系統</a></p>
 <section class="card"><p><strong>q15-1｜</strong>12 位元類比數位轉換器 ADC 的理論訊號雜訊比 SNR 約為多少？</p><label for="q15-1">你的答案<select id="q15-1"><option value="">請選擇</option><option value="a">74 dB（6.02N + 1.76）</option><option value="b">12 dB</option><option value="c">96 dB</option><option value="d">與位元數無關</option></select></label><button type="button" id="q15-1-check">對答案</button><div id="q15-1-output" class="output" aria-live="polite"></div></section>
 <section class="card"><p><strong>q15-2｜</strong>L = 100 µH、C = 100 pF 時，LC 振盪頻率是多少 Hz？</p><label for="q15-2">你的答案（Hz）<input id="q15-2" type="number" step="any"></label><button type="button" id="q15-2-check">對答案</button><div id="q15-2-output" class="output" aria-live="polite"></div></section>
-<section class="card"><p><strong>q15-3｜</strong>12 V 降到 3.3 V 時，低壓降穩壓器 LDO 的效率是多少 %？</p><label for="q15-3">你的答案（%）<input id="q15-3" type="number" step="any"></label><button type="button" id="q15-3-check">對答案</button><div id="q15-3-output" class="output" aria-live="polite"></div></section>
+<section class="card"><p><strong>q15-3｜</strong>12 V 降到 3.3 V、I<sub>out</sub> = 0.5 A 時，低壓降穩壓器 LDO 的效率是多少 %？</p><label for="q15-3">你的答案（%）<input id="q15-3" type="number" step="any"></label><button type="button" id="q15-3-check">對答案</button><div id="q15-3-output" class="output" aria-live="polite"></div></section>
 
 <nav class="pager" aria-label="章節導覽"><a href="名詞與概念字典.html">← 上一頁：名詞與概念字典</a><a href="index.html">回課程地圖 →</a></nav>
 </main>

@@ -5,7 +5,7 @@
 <p class="eyebrow">07・用初值、終值與時間常數讀懂切換</p>
 <h1>一階暫態 RC 與 RL：開關之後的狀態如何靠近穩態</h1>
 <p class="lead">開關切換不會讓儲能元件的狀態瞬移，而會沿著指數曲線消除初值與終值的差距。只要找對初值、終值與時間常數，就能預測任一時刻的電容電壓或電感電流，並知道儀器是否來得及看見。</p>
-<p class="prereq"><strong>這章假設已懂：</strong><a href="05-戴維寧與最大功率.html">05 戴維寧與最大功率</a>的 R<sub>th</sub>、<a href="06-電容與電感.html">06 電容與電感</a>的連續性，以及一階常微分方程與 e 的指數衰減。</p>
+<p class="prereq"><strong>這章假設已懂：</strong><a href="05-戴維寧與最大功率.html">05 戴維寧與最大功率</a>的 R<sub>th</sub>、<a href="06-電容與電感.html">06 電容與電感</a>的連續性，以及<a href="../../../共通基礎/數學/互動課程/07-常微分方程.html">一階常微分方程與 e 的指數衰減</a>。</p>
 
 <h2>痛點：為什麼一個 τ 只走 63.2 %，又該從哪裡算 R？</h2>
 <p>看到 RC 常把 τ = RC 直接套進去，卻忘了 R 應是從電容兩端看出去的戴維寧電阻；電路一複雜，隨手挑一顆電阻就會算錯。另一個理解債是把時間常數當成「完成時間」，因此期待 t = τ 時已到穩態。事實上指數曲線理論上永遠保留一點差距，τ 只是把剩餘差距縮成原來的 e<sup>−1</sup>，也就是走完 63.2 %。</p>
@@ -52,7 +52,7 @@
 <label for="rc-c">C（µF，只在 RC 模式使用）<input id="rc-c" type="range" min="1" max="100" step="1" value="10"></label>
 <label for="rc-l">L（mH，只在 RL 模式使用）<input id="rc-l" type="range" min="1" max="200" step="1" value="10"></label>
 <label for="rc-v0">初值（RC：v<sub>C</sub>(0<sup>+</sup>)，V；RL：i<sub>L</sub>(0<sup>+</sup>)，mA）<input id="rc-v0" type="range" min="-5" max="5" step="0.5" value="0"></label>
-<label for="rc-vs">終值（RC：V<sub>s</sub>，V；RL：V<sub>s</sub>/R 換算成 mA）<input id="rc-vs" type="range" min="-5" max="5" step="0.5" value="5"></label>
+<label for="rc-vs">電源 V<sub>s</sub>（V；RC 終值＝V<sub>s</sub>，RL 終值＝V<sub>s</sub>/R）<input id="rc-vs" type="range" min="-5" max="5" step="0.5" value="5"></label>
 <label for="rc-k">觀察時刻 t（單位＝幾個 τ）<input id="rc-k" type="range" min="0" max="6" step="0.1" value="1"></label>
 </div>
 <div id="rctau-output" class="output" aria-live="polite"></div>

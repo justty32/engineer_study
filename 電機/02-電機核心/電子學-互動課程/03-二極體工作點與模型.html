@@ -44,7 +44,7 @@
 <section class="workspace"><h2>自由實驗：讓三種模型解同一個回路</h2>
 <p>拓樸為 V<sub>s</sub> 正端 → 串聯電阻 R → 節點 A → 二極體陽極；二極體陰極與 V<sub>s</sub> 負端都接地，輸出觀察節點 A 的 V<sub>D</sub>。調整電源與電阻並選一種模型，三種結果仍會同時計算，方便比較誤差與牛頓法殘差。</p>
 <div class="controls">
-<label for="dl-vs">電源電壓 V<sub>s</sub>（V）<input id="dl-vs" type="range" min="1" max="12" step="0.1" value="5"></label>
+<label for="dl-vs">電源電壓 V<sub>s</sub>（V）<input id="dl-vs" type="range" min="0.3" max="12" step="0.1" value="5"></label>
 <label for="dl-r">串聯電阻 R（Ω）<input id="dl-r" type="range" min="100" max="10000" step="100" value="1000"></label>
 <label for="dl-model">二極體模型<select id="dl-model"><option value="ideal">理想開關（V_D = 0）</option><option value="cvd" selected>恆壓降（V_D = 0.7 V）</option><option value="exp">完整指數（牛頓法迭代）</option></select></label>
 </div>

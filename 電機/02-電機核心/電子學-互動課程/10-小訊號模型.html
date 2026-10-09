@@ -37,7 +37,7 @@
 <tr><td>輸出電阻</td><td><strong>100000.000000 Ω</strong></td><td><strong>100000.000000 Ω</strong></td></tr>
 <tr><td>本徵增益</td><td><strong>3868.172707</strong></td><td><strong>100.000000</strong></td></tr>
 </tbody></table>
-<p>同樣 1 mA，BJT 的跨導與本徵增益都是 MOSFET 的 <strong>38.681727 倍</strong>。I = 0.1 mA 時，BJT g<sub>m</sub> = <strong>3.868173 mA/V</strong>、本徵增益 <strong>3868.172707</strong>；MOSFET g<sub>m</sub> = <strong>0.316228 mA/V</strong>、本徵增益 <strong>316.227766</strong>。I = 10 mA 時，BJT 為 <strong>386.817271 mA/V</strong>、<strong>3868.172707</strong>；MOSFET 為 <strong>3.162278 mA/V</strong>、<strong>31.622777</strong>。</p>
+<p>這組 k = 500 µA/V² 的數字會得到不實用的 V<sub>OV</sub> = 2 V，所以 38.681727 倍只是說明「比值取決於工作點」的極端範例，不是 BJT 與 MOSFET 的固定差距。若改用實務常見的 V<sub>OV</sub> = 0.2 V（同一 1 mA 時 k = 50 mA/V²），MOSFET g<sub>m</sub> = 2I<sub>D</sub>/V<sub>OV</sub> = <strong>10.000000 mA/V</strong>，BJT 跨導只是其 <strong>3.868173 倍</strong>。原表的電流掃描仍可用來觀察固定 k 下的趨勢：I = 0.1 mA 時，BJT g<sub>m</sub> = <strong>3.868173 mA/V</strong>、MOSFET g<sub>m</sub> = <strong>0.316228 mA/V</strong>；I = 10 mA 時分別為 <strong>386.817271 mA/V</strong> 與 <strong>3.162278 mA/V</strong>。</p>
 <p>結果不是宣告 BJT 在所有場合都優勝。MOSFET 的閘極直流輸入阻抗極高、易於密集整合，且是 CMOS 數位電路核心；BJT 則在相同偏壓電流下提供較高跨導與常見的低雜訊優勢。元件選擇還要看輸入負載、電壓餘裕、頻率、匹配與製程。</p>
 
 <section class="workspace"><h2>自由實驗：同電流比較 BJT 與 MOSFET</h2>

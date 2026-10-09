@@ -30,6 +30,13 @@ function num6(x){
 const li=a=>"<ul>"+a.map(t=>"<li>"+t+"</li>").join("")+"</ul>";
 const p=t=>"<p>"+t+"</p>";
 const row=(k,v)=>"<li>"+k+"：<code>"+v+"</code></li>";
+// 滑桿拖動時仍即時更新視覺結果，但只在 change 時讓輔助科技播報整段輸出。
+function bindLive(ids,outputId,draw){
+  ids.forEach(x=>{
+    on(x,"input",()=>{const out=$(outputId);if(out)out.setAttribute("aria-live","off");draw();});
+    on(x,"change",()=>{const out=$(outputId);if(out)out.setAttribute("aria-live","polite");draw();});
+  });
+}
 
 // ---------- 2. 物理常數（唯一定義處，與 PROJECT-BRIEF 第 7 節一致）----------
 const EPS0=8.8541878128e-12;      // F/m
@@ -65,8 +72,8 @@ function emscale(){
     }
     why="λ = v/f，頻率愈高、介質 ε<sub>r</sub> 愈大，波長就愈短，同一塊板子愈容易踩出分布效應。";
     const edge=[];
-    if(f<=1)edge.push("f = 1 MHz：λ = 299.792458 m，幾乎任何實驗室尺寸的東西在這裡都是集總。");
-    if(f>=6000&&er>=12-1e-9)edge.push("f = 6000 MHz 配 ε<sub>r</sub> = 12：λ = 0.014425 m，只要 d ≥ 0.01 m 就已經 d/λ > 0.5。");
+    if(f<=1)edge.push("f = 1 MHz：λ = "+num6(r.lam)+" m，幾乎任何實驗室尺寸的東西在這裡都是集總。");
+    if(f>=6000&&er>=12-1e-9)edge.push("f = 6000 MHz 配 ε<sub>r</sub> = 12：λ = 0.014424 m，只要 d ≥ 0.01 m 就已經 d/λ > 0.5。");
     if(er>=12-1e-9)edge.push("高介電常數材料會把波長壓縮 √ε<sub>r</sub> 倍，這就是陶瓷天線可以做很小的原因。");
     $("emscale-output").innerHTML=
       "<ul>"+
@@ -79,7 +86,7 @@ function emscale(){
       p("量級對照：2.4 GHz 在真空的波長是 0.124914 m，大約一個手掌長。")+
       (edge.length?li(edge):"");
   };
-  ["scl-f","scl-d","scl-er"].forEach(x=>on(x,"input",draw));
+  bindLive(["scl-f","scl-d","scl-er"],"emscale-output",draw);
   draw();
 }
 
@@ -98,7 +105,7 @@ function vecfield(){
     if(c.div>0)notes.push("<strong>這裡是源</strong>：淨流出為正，像正電荷所在的位置。");
     else if(c.div<0)notes.push("<strong>這裡是匯</strong>：淨流入，像負電荷。");
     else notes.push("<strong>無源</strong>：進去多少出來多少。");
-    if(c.curlz!==0)notes.push("這個場繞 z 軸有環流，右手大拇指指 "+(w>0?"+z":"−z")+"——像一條沿 z 軸流的電流在周圍造出的 <b>B</b>。");
+    if(c.curlz!==0)notes.push("這個場繞 z 軸有環流，右手大拇指指 "+(w>0?"+z":"−z")+"——像均勻電流密度的粗導線內部的 <b>B</b>。");
     else notes.push("旋度為零：繞任何封閉路徑一圈的環流都是 0，這是無旋場。");
     notes.push("x 與 y 兩個旋度分量恆為 0（場的 x、y 分量都不含 z）。");
     if(a===0&&b===0&&w!==0)notes.push("<strong>純旋轉場</strong>：通量 0、環流不為 0，這是 ∇⋅<b>B</b> = 0 的原型。");
@@ -113,12 +120,12 @@ function vecfield(){
       row("半徑 r 球體積",num6(c.vol)+" m³")+
       row("球面通量",num6(c.flux)+" m³/s")+
       row("圓面積",num6(c.area)+" m²")+
-      row("圓周環流",num6(c.circ)+" m³/s²")+
+      row("圓周環流",num6(c.circ)+" m²/s")+
       "</ul>"+
       p("通量 ÷ 體積 = "+num6(c.flux)+" ÷ "+num6(c.vol)+" = "+num6(c.div)+"（就是散度）；環流 ÷ 面積 = "+num6(c.circ)+" ÷ "+num6(c.area)+" = "+num6(c.curlz)+"（就是旋度）。這就是散度定理與史托克斯定理：微分性質乘上體積或面積，就是積分性質。")+
       li(notes);
   };
-  ["vec-a","vec-w","vec-b","vec-r"].forEach(x=>on(x,"input",draw));
+  bindLive(["vec-a","vec-w","vec-b","vec-r"],"vecfield-output",draw);
   draw();
 }
 
@@ -127,7 +134,7 @@ CALC.coulomb=function(q1nC,q2nC,rcm,er){
   const Q1=q1nC*1e-9,Q2=q2nC*1e-9,rSI=rcm*1e-2,half=rSI/2;
   const F=KE/er*Math.abs(Q1*Q2)/(rSI*rSI);
   const E1=KE/er*Q1/(half*half),E2=-KE/er*Q2/(half*half);
-  return {F:F,E1:E1,E2:E2,Emid:E1+E2,Vmid:KE/er*(Q1+Q2)/half,rSI:rSI};
+  return {F:F,E1:E1,E2:E2,Emid:E1+E2,Vmid:KE/er*(Q1+Q2)/half};
 };
 const dirTxt=x=>x>0?"指向 +x":(x<0?"指向 −x":"沒有方向（為零）");
 function coulomb(){
@@ -139,6 +146,7 @@ function coulomb(){
     const prod=q1*q2;
     if(prod>0)notes.push("<strong>同號：互相排斥。</strong>");
     else if(prod<0)notes.push("<strong>異號：互相吸引。</strong>");
+    else if(q1===0&&q2===0)notes.push("兩顆都是零電荷：彼此沒有力，中點也沒有電場或電位。");
     else notes.push("其中一顆是零電荷，沒有力，但另一顆的場仍然存在。");
     notes.push("力隨 1/r² 掉，距離加倍力就剩 1/4；場也一樣，因為場就是力除以試驗電荷。");
     if(Math.abs(c.Emid)<1e-9&&Math.abs(c.Vmid)>1e-9)
@@ -146,8 +154,8 @@ function coulomb(){
     if(Math.abs(c.Vmid)<1e-9&&Math.abs(c.Emid)>1e-9)
       notes.push("電位為零但電場不為零：q<sub>1</sub> = −q<sub>2</sub> 時中點電位剛好抵消，但兩個場同向相加。");
     notes.push("介質把力與場都除以 ε<sub>r</sub> = "+num6(er)+"，因為介質分子被極化後產生反向的場。");
-    if(r<=1)notes.push("r = 1 cm 已經接近分子尺度，連續介質的 ε<sub>r</sub> 描述開始失真。");
-    if(er>=12-1e-9)notes.push("力只剩 1/12：這就是為什麼電容器要塞高介電常數材料——同樣電壓能存更多電荷。");
+    if(r<=1)notes.push("r = 1 cm 時，若電荷其實分佈在有限尺寸的帶電體上，點電荷模型會開始失準。");
+    if(er>=12-1e-9)notes.push("力與場只剩真空值的 1/"+num6(er)+"：這就是為什麼電容器要塞高介電常數材料——同樣電壓能存更多電荷。");
     $("coulomb-output").innerHTML=
       "<ul>"+
       row("庫侖力大小 F",sci(c.F)+" N（"+(prod>0?"排斥":(prod<0?"吸引":"無力"))+"）")+
@@ -157,7 +165,7 @@ function coulomb(){
       row("中點電位 V",num6(c.Vmid)+" V")+
       "</ul>"+li(notes);
   };
-  ["cou-q1","cou-q2","cou-r","cou-er"].forEach(x=>on(x,"input",draw));
+  bindLive(["cou-q1","cou-q2","cou-r","cou-er"],"coulomb-output",draw);
   draw();
 }
 
@@ -208,7 +216,7 @@ function gauss(){
       p("兩邊相等（殘差 "+sci(c.res)+"，絕對值 &lt; 1e−9）就是高斯定律本身：通量只由面內的電荷決定。")+
       li(notes);
   };
-  ["gau-shape","gau-src","gau-r","gau-er"].forEach(x=>on(x,"input",draw));
+  bindLive(["gau-shape","gau-src","gau-r","gau-er"],"gauss-output",draw);
   draw();
 }
 
@@ -216,9 +224,9 @@ function gauss(){
 CALC.potential=function(mode,qnC,rcm,dmm,thdeg){
   const Q=qnC*1e-9,rSI=rcm*1e-2,dSI=dmm*1e-3,th=rad(thdeg);
   if(mode==="dipole"){
-    const pm=Q*dSI;
-    const V=KE*pm*Math.cos(th)/(rSI*rSI);
-    const Er=2*KE*pm*Math.cos(th)/(rSI*rSI*rSI);
+    const pm=Q*dSI,rawCos=Math.cos(th),cosTheta=Math.abs(rawCos)<1e-12?0:rawCos;
+    const V=KE*pm*cosTheta/(rSI*rSI);
+    const Er=2*KE*pm*cosTheta/(rSI*rSI*rSI);
     const Eth=KE*pm*Math.sin(th)/(rSI*rSI*rSI);
     return {mode:mode,p:pm,V:V,Er:Er,Eth:Eth,Emag:Math.hypot(Er,Eth),ratio:dSI/rSI};
   }
@@ -260,7 +268,7 @@ function potential(){
     }
     $("potential-output").innerHTML=p(head)+body+li(notes);
   };
-  ["pot-mode","pot-q","pot-r","pot-d","pot-theta"].forEach(x=>on(x,"input",draw));
+  bindLive(["pot-mode","pot-q","pot-r","pot-d","pot-theta"],"potential-output",draw);
   draw();
 }
 
@@ -272,7 +280,7 @@ CALC.dielectric=function(er1,er2,thdeg,E1){
   const E2t=E1t,E2n=D1n/(EPS0*er2);
   const E2=Math.hypot(E2t,E2n),t2=Math.atan2(E2t,E2n);
   return {E1t:E1t,E1n:E1n,D1n:D1n,E2t:E2t,E2n:E2n,E2:E2,t2deg:deg(t2),
-    P1:(er1-1)*EPS0*E1,P2:(er2-1)*EPS0*E2,
+    P2:(er2-1)*EPS0*E2,
     resT:E1t-E2t,resN:EPS0*er1*E1n-EPS0*er2*E2n};
 };
 function dielectric(){
@@ -286,7 +294,7 @@ function dielectric(){
     else notes.push("同一種材料：沒有界面，θ<sub>2</sub> = θ<sub>1</sub>、|E<sub>2</sub>| = |E<sub>1</sub>|。");
     if(th===0)notes.push("<strong>垂直入射</strong>：切向分量為 0，只有法向被壓縮，<strong>方向不變、只變小</strong>。");
     if(th>=89)notes.push("掠射時場線幾乎平行界面，法向分量幾乎為零。");
-    if(er2>=12-1e-9&&er1<=1+1e-9)notes.push("E<sub>2n</sub> 只剩 1/12，束縛電荷很大——這就是高 ε<sub>r</sub> 材料表面容易吸灰的原因之一。");
+    if(er2>=12-1e-9&&er1<=1+1e-9)notes.push("E<sub>2n</sub> 只剩介質 1 的 1/"+num6(er2)+"，束縛電荷很大——這就是高 ε<sub>r</sub> 材料表面容易吸灰的原因之一。");
     notes.push("連續的是 E 的切向與 D 的法向，<strong>不是 E 的法向</strong>——這是本章唯一要背的東西。");
     $("dielectric-output").innerHTML=
       "<ul>"+
@@ -302,7 +310,7 @@ function dielectric(){
       p("連續性殘差：切向 "+sci(c.resT)+"、法向 D "+sci(c.resN)+"（兩者絕對值都 &lt; 1e−15，邊界條件成立）。")+
       li(notes);
   };
-  ["die-er1","die-er2","die-theta","die-e1"].forEach(x=>on(x,"input",draw));
+  bindLive(["die-er1","die-er2","die-theta","die-e1"],"dielectric-output",draw);
   draw();
 }
 
@@ -324,7 +332,9 @@ CALC.capacitor=function(geom,areacm2,gapmm,amm,bmm,er,v){
     C=eps*A/d;E=v/d;vol=A*d;
   }
   const Q=C*v,W=0.5*C*v*v,we=0.5*eps*E*E;
-  return {ok:true,C:C,E:E,Q:Q,W:W,we:we,vol:vol,Wfield:we*vol,res:W-we*vol,eps:eps};
+  const out={ok:true,C:C,E:E,Q:Q,W:W,we:we,eps:eps};
+  if(geom==="parallel"){out.Wfield=we*vol;out.res=W-out.Wfield;}
+  return out;
 };
 function capacitor(){
   if(!$("cap-geom"))return;
@@ -338,7 +348,9 @@ function capacitor(){
       $("capacitor-output").innerHTML=p(used)+p("<strong>"+c.note+"</strong>：目前的內半徑不小於外半徑，這個幾何不存在，所以不計算。請把外半徑 b 拉大或內半徑 a 縮小。");
       return;
     }
-    const unit=geom==="coax"?"pF/m":"pF";
+    const cUnit=geom==="coax"?"pF/m":"pF";
+    const qUnit=geom==="coax"?"nC/m":"nC";
+    const wUnit=geom==="coax"?"nJ/m":"nJ";
     const notes=[];
     if(geom==="parallel")
       notes.push("W = (1/2)CV² = "+num6(c.W*1e9)+" nJ，w<sub>e</sub> × 體積 = "+num6(c.Wfield*1e9)+" nJ，殘差 "+sci(c.res)+"。兩邊相等就證明能量是存在場裡的，不是存在「那個零件」裡。");
@@ -347,17 +359,17 @@ function capacitor(){
     if(c.E>2e7)notes.push("<strong>E = "+num6(c.E)+" V/m：連 FR-4（約 2 × 10<sup>7</sup> V/m）都撐不住。</strong>");
     else if(c.E>3e6)notes.push("<strong>警告：已超過空氣的介電強度 3 × 10<sup>6</sup> V/m，真實裝置會打火。</strong>");
     notes.push("C 只跟幾何與材料有關，跟你加多少電壓無關；電壓只決定 Q 與 W。");
-    notes.push("量級對照：一顆常見的 100 nF 陶瓷電容，等效 A/d 要比這個大一千倍以上——那是靠幾百層極薄陶瓷疊出來的。");
+    if(geom==="parallel")notes.push("量級對照：常見的 100 nF 多層陶瓷電容靠 ε<sub>r</sub> 上千的陶瓷，再把幾百層極薄介質疊起來，共同疊出 εA/d；不是只靠把 A/d 放大。");
     $("capacitor-output").innerHTML=p(used)+
       "<ul>"+
-      row("電容 C",num6(c.C*1e12)+" "+unit)+
-      row("電荷 Q",num6(c.Q*1e9)+" nC")+
-      row("儲能 W",num6(c.W*1e9)+" nJ")+
+      row("電容 C",num6(c.C*1e12)+" "+cUnit)+
+      row("電荷 Q",num6(c.Q*1e9)+" "+qUnit)+
+      row("儲能 W",num6(c.W*1e9)+" "+wUnit)+
       row("最大場強 E<sub>max</sub>",num6(c.E)+" V/m")+
-      row("能量密度 w<sub>e</sub>",num6(c.we)+" J/m³")+
+      row(geom==="parallel"?"能量密度 w<sub>e</sub>":"內表面最大能量密度 w<sub>e</sub>",num6(c.we)+" J/m³")+
       "</ul>"+li(notes);
   };
-  ["cap-geom","cap-area","cap-gap","cap-a","cap-b","cap-er","cap-v"].forEach(x=>on(x,"input",draw));
+  bindLive(["cap-geom","cap-area","cap-gap","cap-a","cap-b","cap-er","cap-v"],"capacitor-output",draw);
   draw();
 }
 
@@ -377,7 +389,9 @@ function conduction(){
     const c=CALC.conduction(mat,i,area,len);
     const notes=[];
     notes.push("P = I²R = "+num6(c.P)+" W，p × 體積 = "+num6(c.pd*c.vol)+" W，殘差 "+sci(c.res)+"。兩邊相等就證明 R 只是把場的性質積出來的結果。");
-    notes.push("E 在導線裡小得可憐（毫伏／公尺等級），因為 σ 很大——σ 愈大，同樣的 J 只需要愈小的 E 就推得動。");
+    if(mat==="seawater")notes.push("海水的電導率遠低於金屬，同樣的 J 需要 E = "+num6(c.E)+" V/m，不能套用金屬導線的毫伏／公尺量級感。");
+    else if(c.E<0.1)notes.push("目前 E = "+num6(c.E)+" V/m，在金屬導線裡很小，因為 σ 大；同樣的 J 只需要很小的 E 就推得動。");
+    else notes.push("雖然是金屬，但大電流或極小截面會把 J 與 E 同時抬高；目前 E = "+num6(c.E)+" V/m，已不是毫伏／公尺等級。");
     if(c.J>5e6)notes.push("<strong>電流密度 "+sci(c.J)+" A/m² 已超過一般 PCB 走線與家用電線的建議值（約 2–5 A/mm²），會過熱。</strong>");
     if(c.J>=1e8)notes.push("<strong>這條線會在幾秒內熔斷。</strong>");
     if(mat==="copper")notes.push("電子漂移速度只有 "+sci(c.vd)+" m/s，燈卻立刻亮——亮燈的是場的傳播（接近光速），不是電子本身跑過去。");
@@ -394,7 +408,7 @@ function conduction(){
       row("弛豫時間 τ = ε<sub>0</sub>ρ",sci(c.tau)+" s")+
       "</ul>"+li(notes);
   };
-  ["con-mat","con-i","con-area","con-len"].forEach(x=>on(x,"input",draw));
+  bindLive(["con-mat","con-i","con-area","con-len"],"conduction-output",draw);
   draw();
 }
 
@@ -413,13 +427,13 @@ function lorentz(){
   const draw=()=>{
     const mode=pick("lor-mode"),b=val("lor-b"),ang=val("lor-angle"),v=val("lor-v"),i=val("lor-i");
     const c=CALC.lorentz(mode,b,ang,v,i);
-    const notes=["磁力對速度做的功是零：<b>F</b>⊥<b>v</b>，所以動能完全不變、只有方向在轉。"];
-    if(ang===0)notes.push("θ = 0°：速度（或電流）與 <b>B</b> 平行，磁力為零，粒子直線前進。磁場只理會橫向的那一部分。沒有橫向分量就沒有圓周運動。");
-    if(ang===90)notes.push("θ = 90°：全部速度都是橫向的，力最大，軌跡是完整的圓。");
+    const notes=[];
     let head,body;
     if(mode==="wire"){
       head="這個模式只用到<strong>磁通密度 B</strong>、<strong>夾角 θ</strong> 與<strong>導線電流 I</strong>；粒子速率滑桿不影響結果。導線長度固定 0.20 m。";
       body="<ul>"+row("導線受力 F = BIL sin θ",num6(c.F)+" N")+"</ul>";
+      if(ang===0)notes.push("θ = 0°：電流與 <b>B</b> 平行，導線受力為零。");
+      notes.push("導線受力可對外做功；機械能來自電源，磁場負責把電流受力組織成運動。");
       notes.push("這就是馬達轉矩的源頭：把電流擺在磁場裡，導線就被推。");
     }else{
       head="這個模式只用到<strong>磁通密度 B</strong>、<strong>夾角 θ</strong> 與<strong>粒子速率 v</strong>；導線電流滑桿不影響結果。";
@@ -430,6 +444,9 @@ function lorentz(){
         row("週期 T = 1/f<sub>c</sub>",sci(c.T)+" s")+
         row("動能 K = (1/2)mv²",num6(c.K/1e3)+" keV")+
         "</ul>";
+      notes.push("粒子模式中，磁力對速度做的功是零：<b>F</b>⊥<b>v</b>，所以動能不變、只有方向在轉。");
+      if(ang===0)notes.push("θ = 0°：速度與 <b>B</b> 平行，磁力為零，粒子直線前進。沒有橫向分量就沒有圓周運動。");
+      if(ang===90)notes.push("θ = 90°：全部速度都是橫向的，力最大，軌跡是完整的圓。");
       if(ang>0&&ang<90)notes.push("真實軌跡是螺旋線：橫向分量畫圓、縱向分量等速前進。顯示的 r 是螺旋的半徑，只由橫向分量決定。");
       notes.push("f<sub>c</sub> 與 v 無關：粒子跑得快、圈也畫得大，剛好抵消——迴旋加速器就是靠這件事用固定頻率持續加速。");
       if(v>=3)notes.push("v/c = "+num6(100*c.vSI/C0)+" %，古典公式開始有誤差；超過 10 % 要用相對論質量。");
@@ -438,7 +455,7 @@ function lorentz(){
     notes.push("量級對照：地磁 50 µT、冰箱磁鐵 5 mT、喇叭磁鐵 1 T、MRI 1.5–3 T。");
     $("lorentz-output").innerHTML=p(head)+body+li(notes);
   };
-  ["lor-mode","lor-b","lor-angle","lor-v","lor-i"].forEach(x=>on(x,"input",draw));
+  bindLive(["lor-mode","lor-b","lor-angle","lor-v","lor-i"],"lorentz-output",draw);
   draw();
 }
 
@@ -476,7 +493,7 @@ function ampere(){
       notes.push("圓迴圈<strong>沒有</strong>能讓安培定律派上用場的對稱性，只能用畢歐—沙伐逐段積分。z = 0 時 B = µ<sub>0</sub>I/(2a)。");
       if(val("amp-z")>0)notes.push("離開中心後衰減得比 1/z² 還快，遠場趨近 1/z³ 的磁偶極律。");
     }else{
-      notes.push("管內 B 與位置完全無關，這是唯一能做出均勻磁場的簡單結構；管外近似為零，所以螺線管自己就是屏蔽。");
+      notes.push("管內 B 與位置完全無關，這是唯一能做出均勻磁場的簡單結構；管外近似為零，所以理想長螺線管幾乎不漏磁。");
       if(c.B>0.3)notes.push("這種電流需要主動散熱，實驗室螺線管會泡水冷。");
     }
     notes.push("量級對照：地磁約 50 µT，目前是它的 "+num6(c.earthRatio)+" 倍。");
@@ -490,7 +507,7 @@ function ampere(){
       (c.m!==null?row("磁偶極矩 m = Iπa²",num6(c.m)+" A⋅m²"):"")+
       "</ul>"+li(notes);
   };
-  ["amp-shape","amp-i","amp-rho","amp-a","amp-z","amp-n"].forEach(x=>on(x,"input",draw));
+  bindLive(["amp-shape","amp-i","amp-rho","amp-a","amp-z","amp-n"],"ampere-output",draw);
   draw();
 }
 
@@ -523,7 +540,8 @@ function magcircuit(){
     }else{
       notes.push("沒有氣隙：磁阻全部在鐵心，電感最大，但也最容易飽和。");
     }
-    if(mur<=100)notes.push("µ<sub>r</sub> = 100 是鐵氧體等級：高頻材料犧牲 µ<sub>r</sub> 換低損耗。");
+    if(mur<=1+1e-9)notes.push("µ<sub>r</sub> = 1 是空心的量級，幾乎沒有鐵心導磁效果。");
+    else if(mur<=100)notes.push("目前 µ<sub>r</sub> = "+num6(mur)+"，屬於低磁導率範圍；高頻材料常犧牲 µ<sub>r</sub> 換取低損耗。");
     notes.push("本模型假設 µ<sub>r</sub> 是常數、磁通完全被鐵心導住、沒有磁滯——真實鐵心三條都會破。");
     $("magcircuit-output").innerHTML=
       p("固定幾何：平均磁路長 ℓ = 0.30 m、截面積 A = 4 cm²。")+
@@ -540,7 +558,7 @@ function magcircuit(){
       row("儲能 W",num6(c.W)+" J")+
       "</ul>"+li(notes);
   };
-  ["mag-mur","mag-n","mag-i","mag-gap"].forEach(x=>on(x,"input",draw));
+  bindLive(["mag-mur","mag-n","mag-i","mag-gap"],"magcircuit-output",draw);
   draw();
 }
 
@@ -571,7 +589,7 @@ function faraday(){
         row("電動勢峰值 ε<sub>max</sub>",num6(c.emfMax)+" V")+
         row("有效值 ε<sub>rms</sub>",num6(c.emfRms)+" V")+
         "</ul>";
-      notes.push("ε 與 f 成正比：同一個鐵心在 400 Hz 能做出 50 Hz 的 8 倍電壓，這就是開關電源與航空電源用高頻的原因。");
+      notes.push("ε 與 f 成正比：在同電壓下，頻率由 50 Hz 提到 400 Hz，所需磁通與鐵心截面可降到約 1/8，因此航空電源能縮小變壓器。開關電源則使用 kHz–MHz 等更高頻率來進一步縮小磁性元件。");
     }else{
       head="這個模式只用到<strong>磁通密度 B</strong>、<strong>導軌間距 L</strong>、<strong>棒速 v</strong> 與<strong>迴路電阻 R</strong>；匝數與頻率滑桿不影響結果。";
       body="<ul>"+
@@ -587,10 +605,11 @@ function faraday(){
       notes.push("反抗力 F = B²L²v/R 與速度成正比：你想推得愈快，它就頂得愈用力。發電機的「重」就是這樣來的。");
       if(c.I>10)notes.push("這種電流會讓導軌發燙，實驗室裝置要限流。");
     }
-    notes.push("時變磁場讓 <b>E</b> 有旋（∇×<b>E</b> = −∂<b>B</b>/∂t），所以第 04 章的「電位」在這裡失效——繞一圈回來電位不會回到原值。");
+    if(mode==="varying")notes.push("時變磁場讓 <b>E</b> 有旋（∇×<b>E</b> = −∂<b>B</b>/∂t），所以不能再用第 04 章的純靜電電位完整描述：繞封閉路徑一圈的環流不為零。");
+    else notes.push("動生模式的 <b>B</b> 是靜態的；電動勢來自導體電荷受到羅倫茲力 q<b>v</b>×<b>B</b>，不需要時變磁場產生有旋電場。");
     $("faraday-output").innerHTML=p(head)+body+li(notes);
   };
-  ["far-mode","far-b","far-l","far-v","far-r","far-n","far-f"].forEach(x=>on(x,"input",draw));
+  bindLive(["far-mode","far-b","far-l","far-v","far-r","far-n","far-f"],"faraday-output",draw);
   draw();
 }
 
@@ -622,7 +641,7 @@ function displacement(){
     notes.push("板緣磁場 "+sci(c.Bedge)+" T，比地磁（50 µT）小 "+sci(BEARTH/c.Bedge)+" 倍——位移電流的磁場太小，從來不是被「量出來」的，是被方程式的自洽性逼出來的。");
     if(mat==="seawater"&&c.Ic>100)notes.push("<strong>算出的傳導電流荒謬到不可能</strong>：真實情況下電源根本無法在海水上維持這個電壓。這裡只用來看 σ/(ωε) 的量級。");
     if(c.E0>3e6)notes.push("<strong>E<sub>0</sub> 超過空氣介電強度 3 × 10<sup>6</sup> V/m，真實裝置會打火。</strong>");
-    if(val("dsp-fexp")>=9)notes.push("1 GHz 下 1 mm 板間距對應的波長只有 0.3 m，這個尺寸已經不是集總電容，本模型只是為了看位移電流的量級。");
+    if(val("dsp-fexp")>=9)notes.push("目前頻率的真空波長約 "+num6(C0/c.f)+" m，而板邊長 √A = "+num6(Math.sqrt(val("dsp-a")*1e-4))+" m；橫向尺寸不再遠小於波長時，集總電容模型會失準。");
     $("displacement-output").innerHTML=
       p("材料："+DNAME[mat]+"（ε<sub>r</sub> = "+num6(c.er)+"、σ = "+sci(c.sig)+" S/m）。這個模式用到四個滑桿：板面積、板間距、電壓峰值與頻率指數。")+
       "<ul>"+
@@ -636,7 +655,7 @@ function displacement(){
       row("板緣磁場 B",sci(c.Bedge)+" T")+
       "</ul>"+li(notes);
   };
-  ["dsp-mat","dsp-a","dsp-d","dsp-v","dsp-fexp"].forEach(x=>on(x,"input",draw));
+  bindLive(["dsp-mat","dsp-a","dsp-d","dsp-v","dsp-fexp"],"displacement-output",draw);
   draw();
 }
 
@@ -660,7 +679,7 @@ function planewave(){
     if(c.eta<ETA0)notes.push("η 比真空小：同樣的 E<sub>0</sub> 會伴隨更大的 H<sub>0</sub>，功率密度更高。");
     else if(c.eta>ETA0)notes.push("η 比真空大：同樣的 E<sub>0</sub> 只伴隨較小的 H<sub>0</sub>，功率密度更低。");
     if(c.n>10)notes.push("高 n 材料把波長壓縮成 1/"+num6(c.n)+"，這就是陶瓷天線與介質透鏡的原理。");
-    if(f<=1)notes.push("λ = 299.792458 m：AM 廣播的波長是幾百公尺，所以天線只能做成 λ/4 甚至更短的一小段。");
+    if(f<=1)notes.push("λ = "+num6(c.lam)+" m：低頻波長很長，實際天線常只能做成 λ/4 甚至更短的一小段。");
     notes.push("量級對照：正午陽光約 1000 W/m²，目前是它的 "+sci(c.S/1000)+" 倍。");
     $("planewave-output").innerHTML=
       "<ul>"+
@@ -675,7 +694,7 @@ function planewave(){
       row("週期 T = 1/f",sci(c.T)+" s")+
       "</ul>"+li(notes);
   };
-  ["pwv-f","pwv-e0","pwv-er","pwv-mur"].forEach(x=>on(x,"input",draw));
+  bindLive(["pwv-f","pwv-e0","pwv-er","pwv-mur"],"planewave-output",draw);
   draw();
 }
 
@@ -694,8 +713,7 @@ CALC.lossymedium=function(mode,mat,fexp,thickum,angledeg){
   const o={sig:sig,er:er,f:f,w:w,p:pp,v:v,q:q,u:u,alpha:alpha,beta:beta,delta:delta,
     etaMag:etaMag,etaAngDeg:deg(etaAng),etaRe:etaRe,etaIm:etaIm};
   if(mode==="skin"){
-    const tSI=thickum*1e-6;
-    o.tSI=tSI;o.np=alpha*tSI;o.db=alpha*tSI*NP2DB;
+    o.np=alpha*thickum*1e-6;o.db=o.np*NP2DB;
     o.approx=sig>0?Math.sqrt(2/(w*MU0*sig)):Infinity;
     o.approxErr=(sig>0&&isFinite(delta))?100*(o.approx-delta)/delta:0;
   }else{
@@ -750,7 +768,7 @@ function lossymedium(){
           row("t/δ",num6(c.np)+" Np")+
           row("屏蔽衰減",num6(c.db)+" dB")+
           "</ul>";
-        notes.push("p 愈大近似愈準；海水在 1 MHz 只差 0.06 %，但在 1 kHz 就差得多。目前的相對誤差是 "+num6(c.approxErr)+" %。");
+        notes.push("p 愈大近似愈準；海水在 1 MHz 只差約 0.06 %，但在 1 GHz 會差約 38 %。目前的相對誤差是 "+num6(c.approxErr)+" %。");
       }
       notes.push("每走一個 δ，振幅剩 36.8 %、功率剩 13.5 %，換算 8.685890 dB。");
       if(mat==="copper"&&val("med-fexp")<=3)notes.push("低頻幾乎擋不住，磁屏蔽要改用高 µ<sub>r</sub> 材料（例如坡莫合金）而不是銅。");
@@ -780,11 +798,13 @@ function lossymedium(){
       if(c.Gmag>0.99)notes.push("<strong>幾乎全反射</strong>：這就是金屬屏蔽的主力——<strong>反射損耗遠大於吸收損耗</strong>，波根本進不去。");
       if(c.GRe<0)notes.push("Γ 為負：反射波的相位翻轉 180°，因為波從高 η 進到低 η。");
     }
+    if((mat==="water"||mat==="seawater")&&val("med-fexp")>=9)
+      notes.push("水在 GHz 以上有強烈色散；這裡固定的 ε<sub>r</sub> 只是低頻教學值，不能當成高頻材料規格。");
     $("lossymedium-output").innerHTML=
       p("材料："+LNAME[mat]+"（σ = "+sci(c.sig)+" S/m、ε<sub>r</sub> = "+num6(c.er)+"），f = "+sci(c.f)+" Hz。"+used)+
       body+li(notes);
   };
-  ["med-mode","med-mat","med-fexp","med-thick","med-angle"].forEach(x=>on(x,"input",draw));
+  bindLive(["med-mode","med-mat","med-fexp","med-thick","med-angle"],"lossymedium-output",draw);
   draw();
 }
 
@@ -797,7 +817,10 @@ CALC.tline=function(z0,rl,xl,lendeg){
     vswr:Gmag<1?(1+Gmag)/(1-Gmag):Infinity,
     RL:Gmag>1e-12?-20*Math.log10(Gmag):Infinity};
   const m=((lendeg%180)+180)%180;
-  if(Math.abs(m-90)<1e-9){
+  o.half=Math.abs(m)<1e-9;
+  if(o.half){
+    o.open=false;o.quarter=false;o.ZinRe=rl;o.ZinIm=xl;
+  }else if(Math.abs(m-90)<1e-9){
     const mag2=rl*rl+xl*xl;
     if(mag2===0){o.open=true;o.ZinRe=Infinity;o.ZinIm=0;}
     else{o.open=false;o.ZinRe=z0*z0*rl/mag2;o.ZinIm=-z0*z0*xl/mag2;}
@@ -806,11 +829,14 @@ CALC.tline=function(z0,rl,xl,lendeg){
     const t=Math.tan(rad(lendeg));
     const nr=rl,ni=xl+z0*t,dr=z0-xl*t,di=rl*t;
     const D=dr*dr+di*di;
-    o.open=false;o.quarter=false;
-    o.ZinRe=z0*(nr*dr+ni*di)/D;
-    o.ZinIm=z0*(ni*dr-nr*di)/D;
+    o.quarter=false;
+    if(D<1e-18*z0*z0){o.open=true;o.ZinRe=Infinity;o.ZinIm=0;}
+    else{
+      o.open=false;
+      o.ZinRe=z0*(nr*dr+ni*di)/D;
+      o.ZinIm=z0*(ni*dr-nr*di)/D;
+    }
   }
-  o.half=Math.abs(m)<1e-9;
   return o;
 };
 function tline(){
@@ -828,6 +854,7 @@ function tline(){
       if(xl===0&&rl>0)notes.push("要匹配 R<sub>L</sub> = "+num6(rl)+" Ω 到 Z<sub>0</sub> = "+num6(z0)+" Ω，該用的轉換段阻抗是 √(Z<sub>0</sub>R<sub>L</sub>) = "+num6(Math.sqrt(z0*rl))+" Ω。");
       if(c.open)notes.push("短路線走過 λ/4 之後在輸入端看起來是<strong>開路</strong>——這是微波電路最常用的一招。");
     }
+    if(c.open&&!c.quarter)notes.push("此電氣長度剛好使輸入阻抗公式的分母趨近零，輸入端等效為<strong>開路</strong>，不應顯示成極大但有限的電抗。");
     if(rl===0&&xl===0&&!c.quarter&&!c.half)notes.push("一段短路線變成純電抗：Z<sub>in</sub> 只有虛部，這就是用線段做電感或電容的技巧。");
     if(Math.abs(xl)>0)notes.push("Γ 是複數：不只反射多少，還有反射回來的相位。");
     if(c.Gmag>0.9&&c.Gmag<1)notes.push("嚴重失配："+num6(100*c.Gmag*c.Gmag)+" % 的功率被打回去。");
@@ -847,7 +874,7 @@ function tline(){
       row("輸入阻抗 Z<sub>in</sub>(ℓ)",zinTxt)+
       "</ul>"+li(notes);
   };
-  ["tl-z0","tl-rl","tl-xl","tl-len"].forEach(x=>on(x,"input",draw));
+  bindLive(["tl-z0","tl-rl","tl-xl","tl-len"],"tline-output",draw);
   draw();
 }
 
@@ -893,7 +920,7 @@ function selfcheck(){
   const Q={
     "q00-1":{t:"sel",ans:"a",why:"判準是尺寸與波長的比值 d/λ：d/λ &lt; 0.05 時整條路徑的相位差不到 18°，可以用集總電路；比值變大就要用場。",fix:"電壓、元件數量、電流大小都不決定該用哪個模型；決定的是幾何尺寸相對於波長有多大。",ref:R00,refName:N00},
     "q00-2":{t:"num",ans:2.997925,tol:0.01,why:"λ = v/f = 2.99792458 × 10<sup>8</sup> / 10<sup>8</sup> = 2.997925 m。",fix:"常見原因是把 100 MHz 當成 100 Hz，或忘了 M 是 10<sup>6</sup>。",ref:R00,refName:N00},
-    "q00-3":{t:"num",ans:0.033356,tol:0.001,why:"d/λ = 0.1 / 2.997925 = 0.033356，遠小於 0.05，所以集總成立。",fix:"用 c ≈ 3 × 10<sup>8</sup> 會得到 0.033333，那是電路學 00 章的寫法；本課用精確 c。",ref:R00,refName:N00},
+    "q00-3":{t:"num",ans:0.033356,tol:0.00001,why:"d/λ = 0.1 / 2.997925 = 0.033356，遠小於 0.05，所以集總成立。",fix:"用 c ≈ 3 × 10<sup>8</sup> 會得到 0.033333，那是電路學 00 章的寫法；本課用精確 c。",ref:R00,refName:N00},
     "q01-1":{t:"num",ans:3,tol:0.01,why:"∇⋅<b>F</b> = ∂F<sub>x</sub>/∂x + ∂F<sub>y</sub>/∂y + ∂F<sub>z</sub>/∂z = a + a + b = 2 × 1 + 1 = 3 1/s。",fix:"ω 那兩項對散度沒有貢獻：−ωy 對 x 微分是 0、+ωx 對 y 微分也是 0。",ref:R01,refName:N01},
     "q01-2":{t:"num",ans:4,tol:0.01,why:"(∇×<b>F</b>)<sub>z</sub> = ∂F<sub>y</sub>/∂x − ∂F<sub>x</sub>/∂y = ω − (−ω) = 2ω = 4 1/s。",fix:"忘了第二項的負號會得到 2 而不是 4。",ref:R01,refName:N01},
     "q01-3":{t:"sel",ans:"b",why:"散度 0（無源）但旋度不為 0（有環流）正是靜磁場的特徵：∇⋅<b>B</b> = 0 且 ∇×<b>B</b> = µ<sub>0</sub><b>J</b>。",fix:"靜電場與重力場都是有源無旋；溫度場是純量場，談不上旋度。",ref:R01,refName:N01},
@@ -923,7 +950,7 @@ function selfcheck(){
     "q09-3":{t:"num",ans:12.566371,tol:0.05,why:"B = µ<sub>0</sub>nI，n = 10 匝/cm = 1000 匝/m，所以 B = 4π × 10<sup>−7</sup> × 1000 × 10 = 1.256637 × 10<sup>−2</sup> T ＝ 12.566371 mT。",fix:"匝/cm 要乘 100 才是匝/m，忘了會差 100 倍。",ref:R09,refName:N09},
     "q10-1":{t:"num",ans:2.984155,tol:0.005,why:"R<sub>m</sub> = ℓ/(µ<sub>0</sub>µ<sub>r</sub>A) = 0.30 / (4π × 10<sup>−7</sup> × 2000 × 4 × 10<sup>−4</sup>) = 2.984155 × 10<sup>5</sup> A/Wb。",fix:"4 cm² = 4 × 10<sup>−4</sup> m²；忘了換算會差 10<sup>4</sup> 倍。",ref:R10,refName:N10},
     "q10-2":{t:"num",ans:0.837758,tol:0.005,why:"Φ = NI/R<sub>m</sub> = 100 / 2.984155 × 10<sup>5</sup> = 3.351032 × 10<sup>−4</sup> Wb，B = Φ/A = 0.837758 T。",fix:"最後一步要除以截面積才是 B；Φ 本身不是 B。",ref:R10,refName:N10},
-    "q10-3":{t:"num",ans:0.109320,tol:0.002,why:"1 mm 氣隙的 R<sub>m,氣隙</sub> = 1.989437 × 10<sup>6</sup>，是鐵心的 6.7 倍，總磁阻變 2.286858 × 10<sup>6</sup>，B 只剩 0.109320 T（原來的 13.05 %）。",fix:"氣隙磁阻要用 µ<sub>0</sub>（µ<sub>r</sub> = 1）算，不能用鐵心的 µ。",ref:R10,refName:N10},
+    "q10-3":{t:"num",ans:0.109320,tol:0.002,why:"開 1 mm 氣隙後，鐵心長度改為 0.299 m；氣隙的 R<sub>m,氣隙</sub> = 1.989437 × 10<sup>6</sup>，是鐵心的 6.7 倍，總磁阻變 2.286858 × 10<sup>6</sup>，B 只剩 0.109320 T（原來的 13.05 %）。",fix:"氣隙磁阻要用 µ<sub>0</sub>（µ<sub>r</sub> = 1）算，不能用鐵心的 µ。",ref:R10,refName:N10},
     "q11-1":{t:"num",ans:0.3,tol:0.005,why:"ε<sub>emf</sub> = BLv = 0.5 × 0.2 × 3 = 0.3 V。這是動生電動勢，來自導體裡的自由電子受到的 q<b>v</b>×<b>B</b>。",fix:"L 是導軌間距（垂直於運動與磁場的那一段），不是棒走過的距離。",ref:R11,refName:N11},
     "q11-2":{t:"num",ans:0.015,tol:0.0005,why:"I = 0.3/2 = 0.15 A，F = BIL = 0.5 × 0.15 × 0.2 = 0.015 N，方向與 v 相反（冷次定律）。",fix:"這個力必然存在：機械功率 Fv = 0.045 W 剛好等於電阻上的熱。",ref:R11,refName:N11},
     "q11-3":{t:"num",ans:628.318531,tol:1,why:"Φ<sub>max</sub> = B<sub>0</sub>A = 0.02 Wb，ε<sub>max</sub> = NΦ<sub>max</sub> × 2πf = 100 × 0.02 × 314.159265 = 628.318531 V。",fix:"忘了 2π 會得到 100 V；用 rms 會得到 444.288294 V。",ref:R11,refName:N11},
@@ -931,7 +958,7 @@ function selfcheck(){
     "q12-2":{t:"sel",ans:"c",why:"位移電流補在安培定律：∇×<b>B</b> = µ<sub>0</sub><b>J</b> + µ<sub>0</sub>ε<sub>0</sub> ∂<b>E</b>/∂t，補完之後才與連續性方程自洽。",fix:"法拉第定律講的是反向的那件事（變化的磁場產生電場），本來就不缺項。",ref:R12,refName:N12},
     "q12-3":{t:"sel",ans:"b",why:"∂<b>D</b>/∂t 不是電荷在流動，它是「變化的電場也會產生磁場」，與法拉第定律對稱，兩者一起才形成電磁波。",fix:"位移電流不代表電容器漏電，也不代表有磁荷。",ref:R12,refName:N12},
     "q13-1":{t:"num",ans:0.299792458,tol:0.001,why:"λ = c/f = 2.99792458 × 10<sup>8</sup> / 10<sup>9</sup> = 0.299792458 m，大約 30 cm。",fix:"GHz 是 10<sup>9</sup> Hz，寫成 10<sup>6</sup> 會差一千倍。",ref:R13,refName:N13},
-    "q13-2":{t:"num",ans:376.730314,tol:0.5,why:"η<sub>0</sub> = √(µ<sub>0</sub>/ε<sub>0</sub>) = 376.730314 Ω。常見的 120π = 376.991118 Ω 是近似值，差 0.069 %。",fix:"這是 E 與 H 的比值，不是電路裡的電阻。",ref:R13,refName:N13},
+    "q13-2":{t:"num",ans:376.730314,tol:0.1,why:"η<sub>0</sub> = √(µ<sub>0</sub>/ε<sub>0</sub>) = 376.730314 Ω。常見的 120π = 376.991118 Ω 是近似值，差 0.069 %。",fix:"這是 E 與 H 的比值，不是電路裡的電阻。",ref:R13,refName:N13},
     "q13-3":{t:"num",ans:1.327209,tol:0.005,why:"⟨S⟩ = E<sub>0</sub>²/(2η<sub>0</sub>) = 1 / (2 × 376.730314) = 1.327209 × 10<sup>−3</sup> W/m²。",fix:"題目的單位是 × 10<sup>−3</sup> W/m²，只要填 1.327209；忘了 1/2 會得到 2.654419。",ref:R13,refName:N13},
     "q14-1":{t:"num",ans:65.234115,tol:0.5,why:"δ = √(2/(ωµ<sub>0</sub>σ)) = 6.523411 × 10<sup>−5</sup> m ＝ 65.234115 µm。銅在 1 MHz 的電流只走表面這麼薄一層。",fix:"ω = 2πf；直接用 f 會差 √(2π) 倍。",ref:R14,refName:N14},
     "q14-2":{t:"num",ans:13.314950,tol:0.1,why:"t/δ = 100/65.234115 = 1.532940 Np，乘 8.685890 得 13.314950 dB。",fix:"Np 與 dB 是兩種對數單位，直接把 1.53 當成 dB 會差 8.7 倍。",ref:R14,refName:N14},
@@ -955,7 +982,11 @@ function selfcheck(){
       progress();return;
     }
     let ok,ansTxt;
-    if(q.t==="sel"){ok=raw===q.ans;ansTxt="正確答案是 "+q.ans+"。";}
+    if(q.t==="sel"){
+      ok=raw===q.ans;
+      const answer=Array.from(node.options).find(option=>option.value===q.ans);
+      ansTxt="正確答案是 "+q.ans+"（"+(answer?answer.textContent:"選項文字不可用")+"）。";
+    }
     else{
       const v=Number(raw);
       ok=isFinite(v)&&Math.abs(v-q.ans)<=q.tol;

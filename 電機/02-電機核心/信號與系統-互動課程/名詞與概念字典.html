@@ -17,7 +17,7 @@
 <div class="term-list">
 
 <article class="term-card" data-search="signal 訊號 信號 函數 x(t) x[n] 波形">
-<h2>訊號（signal）</h2>
+<h3>訊號（signal）</h3>
 <p><strong>白話：</strong>訊號就是「一個量隨著時間（或空間）怎麼變」的紀錄。數學上它是一個函數：給它一個時刻，它回你一個數。麥克風把聲壓變成電壓、感測器把溫度變成電壓、天線把電磁場變成電壓，拿到手上的都是同一種東西。</p>
 <p><strong>位置／角色：</strong>本課<a href="00-訊號與系統世界觀.html">第 00 章</a>開宗明義的第一個對象，之後每一章都在處理它。寫成程式，它就是一個陣列，或一個吃時間、回傳浮點數的函式。</p>
 <p><strong>機制：</strong>連續時間寫 x(t)（t 是實數，單位 s），離散時間寫 x[n]（n 是整數，沒有單位，只代表第幾個樣本）。本課全程用這個括號差別區分兩個世界。訊號本身不做任何事，是系統對它做事。</p>
@@ -25,7 +25,7 @@
 </article>
 
 <article class="term-card" data-search="system 系統 算子 operator 記憶 memory">
-<h2>系統（system）</h2>
+<h3>系統（system）</h3>
 <p><strong>白話：</strong>系統是把一個訊號變成另一個訊號的機器，寫成算子 T：y(t) = T{x(t)}。放大器、電纜、房間、一段程式都算系統。</p>
 <p><strong>位置／角色：</strong><a href="00-訊號與系統世界觀.html">第 00 章</a>與<a href="03-系統的六個性質.html">第 03 章</a>。真實對應物：喇叭分頻網路、感測器前端、馬達控制迴路、接收機的中頻級。</p>
 <p><strong>機制：</strong>判斷「要不要用這門課」只有一條線：系統有沒有記憶。無記憶時 y 的每一點只由 x 的同一點決定，一個乘法就講完了；有記憶時 y 的某一點由 x 的一整段過去共同決定，時間域上變成一個難算的積分，這才需要換域。</p>
@@ -33,7 +33,7 @@
 </article>
 
 <article class="term-card" data-search="continuous-time discrete-time 連續時間 離散時間 取樣週期 ts">
-<h2>連續時間與離散時間（continuous-time &amp; discrete-time）</h2>
+<h3>連續時間與離散時間（continuous-time &amp; discrete-time）</h3>
 <p><strong>白話：</strong>時間軸是連綿不斷的，還是一格一格的。</p>
 <p><strong>位置／角色：</strong><a href="01-訊號的分類.html">第 01 章</a>的第一組分類；<a href="11-離散時間訊號與差分方程.html">第 11 章</a>起是整個離散世界；<a href="12-取樣與混疊.html">第 12 章</a>是兩者之間的橋。</p>
 <p><strong>機制：</strong>連續時間訊號寫 x(t)，t 可以是任意實數；離散時間訊號寫 x[n]，n 只能是整數，兩個樣本之間沒有定義任何值。取樣週期 T<sub>s</sub>（讀作「T sub s」，單位 s）把兩者接起來：x[n] = x(nT<sub>s</sub>)。本課參考取樣率 f<sub>s</sub> = 8000 Hz（電話品質），對應 T<sub>s</sub> = 1.250000 × 10<sup>−4</sup> s。</p>
@@ -41,7 +41,7 @@
 </article>
 
 <article class="term-card" data-search="analog digital 類比 數位 量化 quantization adc dac">
-<h2>類比與數位（analog &amp; digital）</h2>
+<h3>類比與數位（analog &amp; digital）</h3>
 <p><strong>白話：</strong>訊號的「值」是連綿的，還是被切成有限階的。</p>
 <p><strong>位置／角色：</strong><a href="01-訊號的分類.html">第 01 章</a>；真實裝置是 ADC 與 DAC，它們的電路實現留給電子學與混合訊號設計。</p>
 <p><strong>機制：</strong>類比訊號的值域是連續區間；數位訊號的值域是有限集合，量化把每個樣本對到最近的一階，差額就是量化雜訊。ADC 做的是「取樣＋量化」兩件事：取樣切時間軸（<a href="12-取樣與混疊.html">第 12 章</a>），量化切值軸。</p>
@@ -49,7 +49,7 @@
 </article>
 
 <article class="term-card" data-search="periodic 週期訊號 基本週期 omega0 市電 50 hz">
-<h2>週期訊號（periodic signal）</h2>
+<h3>週期訊號（periodic signal）</h3>
 <p><strong>白話：</strong>把訊號沿時間軸平移一個固定量之後，跟原來一模一樣。</p>
 <p><strong>位置／角色：</strong><a href="01-訊號的分類.html">第 01 章</a>的分類，也是<a href="05-傅立葉級數.html">第 05 章</a>傅立葉級數成立的前提。量級對照：市電 50 Hz 是最常見的週期訊號。</p>
 <p><strong>機制：</strong>連續時間的條件是存在 T &gt; 0 使 x(t + T) = x(t) 對所有 t 成立，最小的那個 T 叫基本週期，對應基頻 ω<sub>0</sub> = 2π/T（ω<sub>0</sub> 讀作「omega zero」，單位 rad/s）。離散時間要求 x[n + N] = x[n]，而 N 必須是整數。</p>
@@ -57,7 +57,7 @@
 </article>
 
 <article class="term-card" data-search="energy power signal 能量訊號 功率訊號 rms 均方根">
-<h2>能量訊號與功率訊號（energy &amp; power signal）</h2>
+<h3>能量訊號與功率訊號（energy &amp; power signal）</h3>
 <p><strong>白話：</strong>問的是這個訊號一輩子累積的總能量是有限的，還是每秒平均功率有限、但總量無窮。</p>
 <p><strong>位置／角色：</strong><a href="01-訊號的分類.html">第 01 章</a>最核心的判斷，決定後面該用傅立葉轉換（能量型）還是傅立葉級數（功率型）。</p>
 <p><strong>機制：</strong>E = ∫<sub>−∞</sub><sup>∞</sup> |x(t)|² dt；P = lim (1/T)∫<sub>−T/2</sub><sup>T/2</sup> |x(t)|² dt。E 有限且非零叫能量訊號，此時 P = 0；P 有限且非零叫功率訊號，此時 E 發散。錨定實例：A = 2、τ = 0.5 s 的衰減指數 x(t) = 2·exp(−t/τ)·u(t)，E = 1.000000（V²·s）、P = 0，是能量訊號；振幅 A = 1 的弦波 P = 0.500000、rms = 0.707107，是功率訊號。</p>
@@ -65,7 +65,7 @@
 </article>
 
 <article class="term-card" data-search="odd even function 奇函數 偶函數 對稱 symmetry">
-<h2>奇函數與偶函數（odd &amp; even function）</h2>
+<h3>奇函數與偶函數（odd &amp; even function）</h3>
 <p><strong>白話：</strong>偶函數對原點左右對稱（x(−t) = x(t)），奇函數是反對稱（x(−t) = −x(t)）。</p>
 <p><strong>位置／角色：</strong><a href="01-訊號的分類.html">第 01 章</a>的第五組分類；<a href="05-傅立葉級數.html">第 05 章</a>用它預先判斷傅立葉係數只剩餘弦項或只剩正弦項，省一半計算。</p>
 <p><strong>機制：</strong>任何訊號都能唯一拆成偶部 x<sub>e</sub>(t) = [x(t) + x(−t)]/2 與奇部 x<sub>o</sub>(t) = [x(t) − x(−t)]/2。偶訊號的傅立葉係數是實數，奇訊號的是純虛數。方波是奇對稱的，所以它只有正弦項，錨定值 |b<sub>1</sub>| = 1.273240 而沒有對應的餘弦分量。</p>
@@ -73,7 +73,7 @@
 </article>
 
 <article class="term-card" data-search="unit impulse delta dirac 單位脈衝 脈衝 針函數">
-<h2>單位脈衝（unit impulse, δ）</h2>
+<h3>單位脈衝（unit impulse, δ）</h3>
 <p><strong>白話：</strong>一根寬度趨近 0、高度趨近無限、面積剛好等於 1 的「針」。它是拿來敲系統、量系統的標準槌子。</p>
 <p><strong>位置／角色：</strong><a href="02-基本訊號與訊號運算.html">第 02 章</a>定義，<a href="04-線性非時變與摺積.html">第 04 章</a>用它定義脈衝響應 h(t)。真實世界的近似物是很短的電壓脈衝，或一聲拍手。</p>
 <p><strong>機制：</strong>δ 讀作「delta」。連續時間的 δ(t) 不是普通函數而是廣義函數，它只由兩條性質定義：∫<sub>−∞</sub><sup>∞</sup> δ(t) dt = 1 與篩選性。離散時間的 δ[n] 則是老老實實的序列：n = 0 時為 1、其餘為 0，沒有任何病態。任何離散訊號都能寫成 x[n] = ∑<sub>k=−∞</sub><sup>∞</sup> x[k]δ[n − k]。</p>
@@ -81,7 +81,7 @@
 </article>
 
 <article class="term-card" data-search="sifting property 篩選性 取值 delta integral">
-<h2>篩選性（sifting property）</h2>
+<h3>篩選性（sifting property）</h3>
 <p><strong>白話：</strong>把 δ 放進積分裡，它會從整條函數裡「挑」出一個時刻的值，其餘全部歸零。</p>
 <p><strong>位置／角色：</strong><a href="02-基本訊號與訊號運算.html">第 02 章</a>；<a href="04-線性非時變與摺積.html">第 04 章</a>的摺積能成立、<a href="12-取樣與混疊.html">第 12 章</a>的理想取樣能寫成乘上一串脈衝，靠的都是這一條。</p>
 <p><strong>機制：</strong>∫<sub>−∞</sub><sup>∞</sup> f(t)δ(t − t<sub>0</sub>) dt = f(t<sub>0</sub>)。因為 δ 只在 t = t<sub>0</sub> 那一點非零、而且面積為 1，積分就把 f 在該點的值原封不動取出來。錨定實例：x(t) = exp(−t)·u(t)、t<sub>0</sub> = 1，∫x(τ)δ(τ − 1) dτ = 0.367879（τ 讀作「tau」，是積分變數）。</p>
@@ -89,7 +89,7 @@
 </article>
 
 <article class="term-card" data-search="unit step u(t) 單位步階 步階 開關 ramp">
-<h2>單位步階（unit step, u）</h2>
+<h3>單位步階（unit step, u）</h3>
 <p><strong>白話：</strong>t &lt; 0 為 0、t ≥ 0 為 1 的開關函數，代表「在某個時刻把電源打開」。</p>
 <p><strong>位置／角色：</strong><a href="02-基本訊號與訊號運算.html">第 02 章</a>；<a href="08-極零點與二階系統.html">第 08 章</a>的暫態指標（超越量、峰值時間、整定時間）全都是對步階輸入定義的。</p>
 <p><strong>機制：</strong>u(t) 與 δ(t) 是微積分關係：du/dt = δ(t)，而 ∫<sub>−∞</sub><sup>t</sup> δ(τ) dτ = u(t)。再積一次得到斜坡 r(t) = t·u(t)。u(t) 最常見的用途是把式子的有效範圍寫進式子本身，例如 exp(−t/τ)·u(t) 就表示「t &lt; 0 沒有訊號」。</p>
@@ -97,7 +97,7 @@
 </article>
 
 <article class="term-card" data-search="linearity 線性 疊加 superposition 仿射 affine">
-<h2>線性（linearity）</h2>
+<h3>線性（linearity）</h3>
 <p><strong>白話：</strong>兩個輸入分別送進去、結果加起來，等於先把兩個輸入加起來再送進去。</p>
 <p><strong>位置／角色：</strong><a href="03-系統的六個性質.html">第 03 章</a>六個性質之一，也是<a href="04-線性非時變與摺積.html">第 04 章</a>之後一切工具的前提。電路學把疊加當成解題技巧，本課把它當成系統的定義性質。</p>
 <p><strong>機制：</strong>條件是 T{a·x<sub>1</sub> + b·x<sub>2</sub>} = a·T{x<sub>1</sub>} + b·T{x<sub>2</sub>}，這一條同時涵蓋齊次性與可加性。錨定實例：y = x²、a = 2、b = 3、x<sub>1</sub> = x<sub>2</sub> = 1，左式 25、右式 5、殘差 20，違反；y = x + 3 時左式 8、右式 20、殘差 −12，同樣違反。</p>
@@ -105,7 +105,7 @@
 </article>
 
 <article class="term-card" data-search="time invariance 時不變 非時變 平移 shift">
-<h2>時不變（time invariance）</h2>
+<h3>時不變（time invariance）</h3>
 <p><strong>白話：</strong>今天做實驗和明天做實驗結果一樣，只是輸出跟著整體平移。</p>
 <p><strong>位置／角色：</strong><a href="03-系統的六個性質.html">第 03 章</a>；<a href="04-線性非時變與摺積.html">第 04 章</a>要能寫出摺積，必須同時具備線性與時不變。</p>
 <p><strong>機制：</strong>條件是若 x(t) → y(t)，則對任意 t<sub>0</sub> 都有 x(t − t<sub>0</sub>) → y(t − t<sub>0</sub>)。檢驗做法是算兩條路：「先延遲再送進系統」與「先送進系統再延遲」，兩者必須完全相同。係數會隨時間改變的系統（例如增益被自動增益控制持續調整）就不是時不變。</p>
@@ -118,15 +118,15 @@
 <div class="term-list">
 
 <article class="term-card" data-search="lti linear time-invariant 線性非時變 本徵函數 eigenfunction">
-<h2>線性非時變系統（linear time-invariant system, LTI）</h2>
+<h3>線性非時變系統（linear time-invariant system, LTI）</h3>
 <p><strong>白話：</strong>同時滿足疊加與時間平移不變的系統。它是本課唯一能被一個 h 完全描述的對象。</p>
 <p><strong>位置／角色：</strong><a href="04-線性非時變與摺積.html">第 04 章</a>的主角；之後所有轉換、頻率響應與濾波器設計都預設它成立。</p>
-<p><strong>機制：</strong>LTI 是 linear time-invariant（線性非時變）的縮寫。因為線性，輸入可以拆成一堆脈衝的加權和；因為時不變，每個脈衝的響應都是同一個 h，只是位置不同。兩者合起來，輸出必定是 y(t) = x(t) ∗ h(t)。弦波是 LTI 的本徵函數：送進 cos(2πft)，出來一定是同頻率的 cos(2πft + φ)，頻率不會被改變。</p>
+<p><strong>機制：</strong>LTI 是 linear time-invariant（線性非時變）的縮寫。因為線性，輸入可以拆成一堆脈衝的加權和；因為時不變，每個脈衝的響應都是同一個 h，只是位置不同。兩者合起來，輸出必定是 y(t) = x(t) ∗ h(t)。真正的本徵函數是複指數 e<sup>j2πft</sup>；實弦波是正、負頻率兩個共軛複指數的組合，所以通過 LTI 後仍是同頻率弦波，只改振幅與相位。</p>
 <p><strong>不要混淆：</strong>LTI 不是「大部分系統」。放大器一飽和就不線性，混波器與取樣器不時不變。工程上說的「小訊號線性化」是在工作點附近把系統近似成 LTI，一離開工作點這套工具就全部失效。</p>
 </article>
 
 <article class="term-card" data-search="impulse response h(t) h[n] 脈衝響應 房間 迴音">
-<h2>脈衝響應（impulse response, h）</h2>
+<h3>脈衝響應（impulse response, h）</h3>
 <p><strong>白話：</strong>拿 δ 敲系統一下，量到的那個輸出。房間的脈衝響應就是你拍一次手、錄下來的整段迴音。</p>
 <p><strong>位置／角色：</strong><a href="04-線性非時變與摺積.html">第 04 章</a>的核心。電路學的 RC 充放電曲線，從本課角度看就是一個 h(t)。</p>
 <p><strong>機制：</strong>h(t) = T{δ(t)}。它之所以值錢，是因為有了它，任何輸入的輸出都能用摺積算出來：y(t) = x(t) ∗ h(t)。因果性、穩定性、頻率響應也全部可以從 h 讀出來——H(jω) 就是 h(t) 的傅立葉轉換。</p>
@@ -134,7 +134,7 @@
 </article>
 
 <article class="term-card" data-search="convolution 摺積 積分 滑動 加權 面積">
-<h2>摺積（convolution）</h2>
+<h3>摺積（convolution）</h3>
 <p><strong>白話：</strong>把 h 反過來、滑過 x，每滑到一格就算一次加權和——這就是有記憶的系統在時間域算輸出的方式。比喻到此為止，精確定義看下一段。</p>
 <p><strong>位置／角色：</strong><a href="04-線性非時變與摺積.html">第 04 章</a>；寫成程式就是兩層迴圈的乘加，DSP 晶片的乘加指令就是為它而生的。</p>
 <p><strong>機制：</strong>y(t) = x(t) ∗ h(t) = ∫<sub>−∞</sub><sup>∞</sup> x(τ)h(t − τ) dτ。符號 ∗ 讀作「摺積」（asterisk operator），不是乘號；τ 讀作「tau」，是積分變數。h(t − τ) 裡的負號同時做了「反轉」與「平移」兩件事。性質上交換律、結合律、分配律都成立，而且面積相乘：輸出的面積等於兩者面積的乘積。錨定實例：A = 1、T<sub>1</sub> = 1 s 的矩形脈衝通過 τ = 0.5 s 的一階系統，y(1) = 0.432332（峰值）、y(2) = 0.058510，三個面積分別是 1.000000／0.500000／0.500000。</p>
@@ -142,7 +142,7 @@
 </article>
 
 <article class="term-card" data-search="convolution sum 摺積和 離散 fir 移動平均 moving average">
-<h2>摺積和（convolution sum）</h2>
+<h3>摺積和（convolution sum）</h3>
 <p><strong>白話：</strong>摺積的離散版本，把積分換成求和。</p>
 <p><strong>位置／角色：</strong><a href="11-離散時間訊號與差分方程.html">第 11 章</a>；第 15 章的 FIR 濾波器每一拍跑的就是這條式子。</p>
 <p><strong>機制：</strong>y[n] = x[n] ∗ h[n] = ∑<sub>k=−∞</sub><sup>∞</sup> x[k]h[n − k]，k 是求和用的樣本序號。長度 L<sub>x</sub> 的訊號摺上長度 L<sub>h</sub> 的脈衝響應，輸出長度是 L<sub>x</sub> + L<sub>h</sub> − 1。M 點移動平均等價於 h[n] 是 M 個值為 1/M 的矩形序列。</p>
@@ -150,7 +150,7 @@
 </article>
 
 <article class="term-card" data-search="causality 因果性 因果 realtime 即時">
-<h2>因果性（causality）</h2>
+<h3>因果性（causality）</h3>
 <p><strong>白話：</strong>輸出只能取決於現在與過去，不能偷看未來。</p>
 <p><strong>位置／角色：</strong><a href="03-系統的六個性質.html">第 03 章</a>與<a href="04-線性非時變與摺積.html">第 04 章</a>；即時處理的系統一定要因果，離線處理（整個檔案已經在硬碟上）就不必。</p>
 <p><strong>機制：</strong>對 LTI 系統，因果 ⇔ h(t) = 0（t &lt; 0）、h[n] = 0（n &lt; 0）。這讓摺積的積分下限從 −∞ 收成 0，也是單邊拉氏轉換寫成 ∫<sub>0</sub><sup>∞</sup> 的理由。</p>
@@ -158,7 +158,7 @@
 </article>
 
 <article class="term-card" data-search="bibo stability 穩定 有界輸入 有界輸出 絕對可積">
-<h2>BIBO 穩定（bounded-input bounded-output stability）</h2>
+<h3>BIBO 穩定（bounded-input bounded-output stability）</h3>
 <p><strong>白話：</strong>只要輸入不爆，輸出就不會爆。</p>
 <p><strong>位置／角色：</strong><a href="03-系統的六個性質.html">第 03 章</a>與<a href="04-線性非時變與摺積.html">第 04 章</a>的判準；第 07、08 章看極點、第 14 章看單位圓，講的都是同一件事的不同座標。</p>
 <p><strong>機制：</strong>BIBO 是 bounded-input bounded-output（有界輸入有界輸出）。充要條件是脈衝響應絕對可積或絕對可加：∫<sub>−∞</sub><sup>∞</sup> |h(t)| dt &lt; ∞、∑<sub>n=−∞</sub><sup>∞</sup> |h[n]| &lt; ∞。錨定實例：一階 IIR a = 0.8 時 ∑|h[n]| = 5.000000（同時也是直流增益），有限，所以穩定。</p>
@@ -166,7 +166,7 @@
 </article>
 
 <article class="term-card" data-search="interconnection series parallel feedback 串聯 並聯 回授 系統互聯">
-<h2>系統互聯（series, parallel &amp; feedback interconnection）</h2>
+<h3>系統互聯（series, parallel &amp; feedback interconnection）</h3>
 <p><strong>白話：</strong>把好幾個小系統接起來之後，整體的 h 長什麼樣。</p>
 <p><strong>位置／角色：</strong><a href="04-線性非時變與摺積.html">第 04 章</a>；喇叭分頻網路是並聯、多級放大器是串聯、控制迴路是回授。</p>
 <p><strong>機制：</strong>串聯 h<sub>eq</sub> = h<sub>1</sub> ∗ h<sub>2</sub>（頻域就是 H<sub>1</sub>·H<sub>2</sub> 相乘）；並聯 h<sub>eq</sub> = h<sub>1</sub> + h<sub>2</sub>；負回授的閉迴路轉移函數是 H/(1 + HG)。串聯可以交換順序，因為摺積有交換律，但前提是每一級都真的是 LTI。</p>
@@ -174,7 +174,7 @@
 </article>
 
 <article class="term-card" data-search="fourier series 傅立葉級數 週期 諧波 投影">
-<h2>傅立葉級數（Fourier series）</h2>
+<h3>傅立葉級數（Fourier series）</h3>
 <p><strong>白話：</strong>任何週期訊號都能寫成基頻與其整數倍頻率的弦波疊加起來。</p>
 <p><strong>位置／角色：</strong><a href="05-傅立葉級數.html">第 05 章</a>；電力品質的諧波分析、樂器音色分析用的都是它。</p>
 <p><strong>機制：</strong>x(t) = ∑<sub>k=−∞</sub><sup>∞</sup> a<sub>k</sub>·exp(j k ω<sub>0</sub> t)，係數 a<sub>k</sub> = (1/T)∫<sub>T</sub> x(t)·exp(−j k ω<sub>0</sub> t) dt，其中 ω<sub>0</sub> = 2π/T。這條係數式其實是「投影」：把 x 投影到第 k 根複指數軸上。錨定實例：振幅 A = 1 的方波，|b<sub>1</sub>| = 1.273240、|b<sub>3</sub>| = 0.424413、|b<sub>5</sub>| = 0.254648。</p>
@@ -182,7 +182,7 @@
 </article>
 
 <article class="term-card" data-search="fundamental harmonics 基頻 諧波 thd 音色">
-<h2>基頻與諧波（fundamental &amp; harmonics）</h2>
+<h3>基頻與諧波（fundamental &amp; harmonics）</h3>
 <p><strong>白話：</strong>基頻是週期訊號裡最低的那個頻率，諧波是它的整數倍。</p>
 <p><strong>位置／角色：</strong><a href="05-傅立葉級數.html">第 05 章</a>；電力品質的總諧波失真、樂器音色判斷都用這一組詞。市電 50 Hz 的第 3 次諧波就在 150 Hz。</p>
 <p><strong>機制：</strong>基本週期 T 對應基頻 f<sub>0</sub> = 1/T（Hz）與 ω<sub>0</sub> = 2π/T（rad/s）。第 n 次諧波的頻率是 n·f<sub>0</sub>，本課諧波序號一律寫 n。方波只有奇次諧波，振幅按 1/n 遞減：|b<sub>3</sub>|/|b<sub>1</sub>| = 0.424413/1.273240，正好是 1/3。</p>
@@ -190,7 +190,7 @@
 </article>
 
 <article class="term-card" data-search="parseval 帕塞瓦 能量守恆 功率 百分比">
-<h2>帕塞瓦定理（Parseval's theorem）</h2>
+<h3>帕塞瓦定理（Parseval's theorem）</h3>
 <p><strong>白話：</strong>訊號的能量（或功率）在時間域算和在頻率域算，是同一個數。</p>
 <p><strong>位置／角色：</strong><a href="05-傅立葉級數.html">第 05 章</a>與<a href="06-傅立葉轉換.html">第 06 章</a>；要回答「前幾次諧波抓到多少能量」就靠它。</p>
 <p><strong>機制：</strong>週期版 P = ∑<sub>k</sub> |a<sub>k</sub>|²；能量版 E = ∫|x(t)|² dt = (1/2π)∫|X(jω)|² dω。它保證換域不會憑空生出或吃掉能量。錨定實例：方波取到 N = 5 次諧波，累積功率 0.933056，佔總功率 93.305552 %；只取基頻是 81.056947 %。</p>
@@ -198,17 +198,17 @@
 </article>
 
 <article class="term-card" data-search="orthogonal basis 正交基底 內積 inner product 分解">
-<h2>正交基底（orthogonal basis）</h2>
+<h3>正交基底（orthogonal basis）</h3>
 <p><strong>白話：</strong>一組互不干擾的「方向」。任何訊號都能沿這些方向分解，而且每個方向的分量可以各自算，互不影響。</p>
 <p><strong>位置／角色：</strong><a href="05-傅立葉級數.html">第 05 章</a>；它把傅立葉級數從「魔術」變成線性代數。</p>
 <p><strong>機制：</strong>兩個訊號正交的意思是內積為 0。對複指數而言，∫<sub>T</sub> exp(j k ω<sub>0</sub> t)·exp(−j m ω<sub>0</sub> t) dt 在 k ≠ m 時為 0、在 k = m 時為 T。正因為正交，係數 a<sub>k</sub> 才能用一條積分單獨算出來，不必解一大堆聯立方程。</p>
-<p><strong>不要混淆：</strong>正交不是「無關」，也不是統計上的「獨立」。正交是內積為 0 的幾何性質，獨立是機率性質，兩者不能互推。另外弦波不是唯一的正交基底（小波、DCT 也是），選弦波的理由是它剛好是 LTI 系統的本徵函數。</p>
+<p><strong>不要混淆：</strong>正交不是「無關」，也不是統計上的「獨立」。正交是內積為 0 的幾何性質，獨立是機率性質，兩者不能互推。另外弦波不是唯一的正交基底（小波、DCT 也是）；選傅立葉基底的理由是複指數剛好是 LTI 系統的本徵函數。</p>
 </article>
 
 <article class="term-card" data-search="gibbs 吉布斯現象 過衝 overshoot 振鈴 ringing">
-<h2>吉布斯現象（Gibbs phenomenon）</h2>
-<p><strong>白話：</strong>用有限多項傅立葉級數去逼近有跳躍的波形時，跳躍處旁邊一定會冒出一個約 9 % 的過衝，項數加再多也不會消失。</p>
-<p><strong>位置／角色：</strong><a href="05-傅立葉級數.html">第 05 章</a>；第 15 章用窗口法設計 FIR 時的旁瓣、影像壓縮邊緣的振鈴，都是同一回事。</p>
+<h3>吉布斯現象（Gibbs phenomenon）</h3>
+<p><strong>白話：</strong>用有限多項傅立葉級數去逼近有跳躍的波形時，跳躍處旁邊一定會冒出約為<strong>跳躍高度 9 %</strong> 的過衝，項數加再多也不會消失；對 ±A 方波，等於超出 A 約 18 %。</p>
+<p><strong>位置／角色：</strong><a href="05-傅立葉級數.html">第 05 章</a>；窗口法設計 FIR 留給 DSP 專科，影像壓縮邊緣的振鈴則是同類的有限頻寬效應。</p>
 <p><strong>機制：</strong>過衝高度趨近跳躍量的 8.949 %，不隨項數 N 減小；增加 N 只讓過衝變窄、往跳躍點擠過去。原因是截斷級數等於在頻域乘上一個矩形窗，時域對應摺上一個 Dirichlet 核（週期化的 sinc），而 sinc 的旁瓣衰減得不夠快。</p>
 <p><strong>不要混淆：</strong>吉布斯過衝不是計算誤差，也不是取樣造成的，它是「用有限頻寬表示無限陡的邊緣」的必然結果。加窗可以壓下它，代價是過渡帶變寬——這是同一個取捨在第 05 章與第 13 章的兩次現身。</p>
 </article>
@@ -219,7 +219,7 @@
 <div class="term-list">
 
 <article class="term-card" data-search="fourier transform ctft 傅立葉轉換 頻譜分析儀 非週期">
-<h2>傅立葉轉換（Fourier transform）</h2>
+<h3>傅立葉轉換（Fourier transform）</h3>
 <p><strong>白話：</strong>把非週期訊號攤開成連續的頻率成分，看它由哪些頻率、各佔多少組成。</p>
 <p><strong>位置／角色：</strong><a href="06-傅立葉轉換.html">第 06 章</a>；頻譜分析儀螢幕上顯示的東西，就是它的量值。</p>
 <p><strong>機制：</strong>X(jω) = ∫<sub>−∞</sub><sup>∞</sup> x(t)e<sup>−jωt</sup> dt，反轉換 x(t) = (1/2π)∫ X(jω)e<sup>jωt</sup> dω。ω 讀作「omega」，是角頻率，單位 rad/s，與 Hz 的換算是 ω = 2πf。虛數單位在數學課寫 i，電機一律寫 j，因為 i 留給電流。錨定實例：A = 1、寬 T = 1 ms 的矩形脈衝，X(0) = 1.000000 × 10<sup>−3</sup>、|X(500)| = 6.366198 × 10<sup>−4</sup>、第一零點在 1000.000000 Hz。</p>
@@ -227,7 +227,7 @@
 </article>
 
 <article class="term-card" data-search="spectrum 頻譜 振幅譜 相位譜 magnitude phase">
-<h2>頻譜（spectrum）</h2>
+<h3>頻譜（spectrum）</h3>
 <p><strong>白話：</strong>訊號裡各個頻率各有多少、相位各是多少。</p>
 <p><strong>位置／角色：</strong><a href="06-傅立葉轉換.html">第 06 章</a>定義，<a href="10-調變與頻譜搬移.html">第 10 章</a>講怎麼搬移它，<a href="13-離散頻譜分析.html">第 13 章</a>講怎麼用 DFT 估它。</p>
 <p><strong>機制：</strong>週期訊號的頻譜是一根根離散的譜線（傅立葉級數的 a<sub>k</sub>），非週期能量訊號的頻譜是連續的密度函數 X(jω)。振幅譜 |X(jω)| 與相位譜 ∠X(jω)（∠ 讀作「相角」，單位 rad 或 °）合起來才是完整資訊。</p>
@@ -235,7 +235,7 @@
 </article>
 
 <article class="term-card" data-search="bandwidth 頻寬 3db 半功率 佔用頻寬">
-<h2>頻寬（bandwidth）</h2>
+<h3>頻寬（bandwidth）</h3>
 <p><strong>白話：</strong>訊號或系統「有效佔用」的頻率範圍有多寬。</p>
 <p><strong>位置／角色：</strong><a href="06-傅立葉轉換.html">第 06 章</a>、<a href="09-濾波器與群延遲.html">第 09 章</a>與<a href="10-調變與頻譜搬移.html">第 10 章</a>。量級對照：AM 廣播一個頻道 10 kHz、電話語音用 8000 Hz 取樣。</p>
 <p><strong>機制：</strong>最常用的定義是 −3 dB 頻寬：增益掉到 0.707107（功率剩一半，−3.010300 dB）的那個頻率。另一種是第一零點頻寬。錨定實例：寬 1 ms 的矩形脈衝，第一零點在 1000.000000 Hz、3 dB 頻寬 442.946000 Hz。</p>
@@ -243,7 +243,7 @@
 </article>
 
 <article class="term-card" data-search="convolution theorem 摺積定理 對偶 duality 相乘">
-<h2>摺積定理（convolution theorem）</h2>
+<h3>摺積定理（convolution theorem）</h3>
 <p><strong>白話：</strong>時間域裡難算的摺積，換到頻率域就變成單純的相乘。</p>
 <p><strong>位置／角色：</strong><a href="06-傅立葉轉換.html">第 06 章</a>；這是整門課「為什麼要換域」的最終答案。</p>
 <p><strong>機制：</strong>x ∗ h ⇔ X·H；反過來 x·g ⇔ (1/2π)X ∗ G。也就是說一個域的摺積等於另一個域的相乘，兩邊是對偶的。第 10 章的調變（時間域乘上 cos）之所以在頻域造成搬移，正是這條定理。</p>
@@ -251,7 +251,7 @@
 </article>
 
 <article class="term-card" data-search="sinc function sinc 函式 旁瓣 sidelobe 歸一化">
-<h2>sinc 函式（sinc function）</h2>
+<h3>sinc 函式（sinc function）</h3>
 <p><strong>白話：</strong>矩形脈衝的頻譜長相：中間一個主瓣，兩邊一串愈來愈小的旁瓣。</p>
 <p><strong>位置／角色：</strong><a href="06-傅立葉轉換.html">第 06 章</a>；<a href="12-取樣與混疊.html">第 12 章</a>的理想還原公式也是它。</p>
 <p><strong>機制：</strong>本課一律用歸一化版 sinc(x) = sin(πx)/(πx)，sinc(0) = 1。有些教科書用 sin(x)/x，本課全程不用那一版。寬 T 的矩形脈衝，其轉換為 A·T·sinc(fT)，第一零點在 f = 1/T。理想低通的脈衝響應也是 sinc，這正是理想濾波器非因果的根源。</p>
@@ -259,7 +259,7 @@
 </article>
 
 <article class="term-card" data-search="laplace transform 拉氏轉換 拉普拉斯 s平面 sigma">
-<h2>拉氏轉換（Laplace transform）</h2>
+<h3>拉氏轉換（Laplace transform）</h3>
 <p><strong>白話：</strong>傅立葉轉換的擴充版，多給一個「衰減」的自由度，讓會發散的訊號也算得動。</p>
 <p><strong>位置／角色：</strong><a href="07-拉氏轉換與轉移函數.html">第 07 章</a>；電路學的 Z(jω) 是單一元件的比值，本課的 H(s) 是整個系統的比值。</p>
 <p><strong>機制：</strong>拉氏（Laplace，全名拉普拉斯）單邊轉換 H(s) = ∫<sub>0</sub><sup>∞</sup> h(t)e<sup>−st</sup> dt，其中 s = σ + jω（σ 讀作「sigma」，是實部，單位 1/s，代表指數衰減率）。把 s 限制在虛軸 s = jω 就退回傅立葉轉換，所以頻率響應是 H(s) 在虛軸上的一道切片。</p>
@@ -267,7 +267,7 @@
 </article>
 
 <article class="term-card" data-search="roc region of convergence 收斂域 右側 左側 穩定">
-<h2>收斂域（region of convergence, ROC）</h2>
+<h3>收斂域（region of convergence, ROC）</h3>
 <p><strong>白話：</strong>那個積分（或級數）究竟在 s 平面／z 平面的哪一塊才收斂。</p>
 <p><strong>位置／角色：</strong><a href="07-拉氏轉換與轉移函數.html">第 07 章</a>與第 14 章。</p>
 <p><strong>機制：</strong>ROC 是 region of convergence（收斂域）。對右側訊號（因果），ROC 是某條垂直線的右邊（s 平面）或某個半徑的外面（z 平面）；左側訊號則相反。系統穩定 ⇔ ROC 包含虛軸（連續）或包含單位圓（離散）。</p>
@@ -275,7 +275,7 @@
 </article>
 
 <article class="term-card" data-search="transfer function 轉移函數 h(s) h(z) 比值 有理式">
-<h2>轉移函數（transfer function）</h2>
+<h3>轉移函數（transfer function）</h3>
 <p><strong>白話：</strong>輸出與輸入在 s 域（或 z 域）的比值，一個式子就裝下整個系統。</p>
 <p><strong>位置／角色：</strong><a href="07-拉氏轉換與轉移函數.html">第 07 章</a>定義，第 08、09、14、15 章一路使用。</p>
 <p><strong>機制：</strong>H(s) = Y(s) / X(s)，它同時也等於 h(t) 的拉氏轉換。寫成有理式時，分母的根是極點、分子的根是零點。離散版是 H(z) = Y(z) / X(z)。把 s = jω 代進去就得到頻率響應 H(jω)。</p>
@@ -283,15 +283,15 @@
 </article>
 
 <article class="term-card" data-search="pole 極點 分母 衰減 時間常數 半徑">
-<h2>極點（pole）</h2>
+<h3>極點（pole）</h3>
 <p><strong>白話：</strong>讓轉移函數變成無限大的那些 s（或 z）。它們決定系統自己會怎麼振、怎麼衰減。</p>
 <p><strong>位置／角色：</strong><a href="07-拉氏轉換與轉移函數.html">第 07 章</a>與<a href="08-極零點與二階系統.html">第 08 章</a>（s 平面），第 14 章（z 平面）。</p>
 <p><strong>機制：</strong>極點是分母的根。連續系統的極點 s = σ + jω 中，σ 決定衰減速度（時間常數 τ = 1/|σ|），ω 決定振盪角頻率；穩定要求所有極點的 σ &lt; 0。錨定實例：極點 s = −2 ± j10、K = 1，τ = 0.500000 s、5τ = 2.500000 s、振盪 1.591549 Hz、h(0.5) = 0.104353、包絡 0.367879。</p>
-<p><strong>不要混淆：</strong>極點是分母的根，不是「系統的頻率」。它的<strong>實部管衰減多快、虛部管振多快</strong>；離散系統要看的是<strong>半徑與角度</strong>——r = 0.9、θ = 45°、f<sub>s</sub> = 8000 Hz 時共振落在 1000.000000 Hz，半徑愈接近 1 衰減愈慢。</p>
+<p><strong>不要混淆：</strong>極點是分母的根，不是「系統的頻率」。它的<strong>實部管衰減多快、虛部管振多快</strong>；離散系統要看的是<strong>半徑與角度</strong>——r = 0.9、θ = 45°、f<sub>s</sub> = 8000 Hz 時極點角對應 1000.000000 Hz，只有 r 接近 1 時才近似真正峰值位置；半徑愈接近 1 衰減愈慢。</p>
 </article>
 
 <article class="term-card" data-search="zero 零點 分子 凹口 notch 非最小相位">
-<h2>零點（zero）</h2>
+<h3>零點（zero）</h3>
 <p><strong>白話：</strong>讓轉移函數變成 0 的那些 s（或 z）。它們決定哪些頻率會被吃掉。</p>
 <p><strong>位置／角色：</strong><a href="08-極零點與二階系統.html">第 08 章</a>；第 15 章的移動平均濾波器就靠零點做出凹口。</p>
 <p><strong>機制：</strong>零點是分子的根。零點落在虛軸上（或單位圓上）時，該頻率的增益正好為 0，形成凹口。錨定實例：M = 8 的移動平均在 f<sub>s</sub> = 8000 Hz 下第一零點在 1000.000000 Hz，那個頻率被完全濾掉。零點也會改變相位斜率，因此連帶影響群延遲。</p>
@@ -299,7 +299,7 @@
 </article>
 
 <article class="term-card" data-search="frequency response 頻率響應 h(jw) 增益 相位 vna">
-<h2>頻率響應（frequency response）</h2>
+<h3>頻率響應（frequency response）</h3>
 <p><strong>白話：</strong>對每一個頻率，系統把振幅乘多少、把相位推多少。</p>
 <p><strong>位置／角色：</strong><a href="00-訊號與系統世界觀.html">第 00 章</a>就出場，是整門課的主角；網路分析儀量的就是它。</p>
 <p><strong>機制：</strong>把 s = jω 代入 H(s) 就得到 H(jω)，它同時也等於 h(t) 的傅立葉轉換。一階系統 H(jf) = (1) / (1 + j f/f<sub>c</sub>)，|H| = 1/√(1 + r²)、∠H = −arctan(r)，其中 r = f/f<sub>c</sub>。錨定實例：f = f<sub>c</sub> = 1000 Hz 時 |H| = 0.707107（−3.010300 dB）、相位 −45.000000°、相位延遲 125.000000 µs、群延遲 79.577472 µs。</p>
@@ -307,7 +307,7 @@
 </article>
 
 <article class="term-card" data-search="damping ratio natural frequency 阻尼比 自然頻率 zeta 二階 共振">
-<h2>阻尼比與自然頻率（damping ratio &amp; natural frequency）</h2>
+<h3>阻尼比與自然頻率（damping ratio &amp; natural frequency）</h3>
 <p><strong>白話：</strong>二階系統振得多兇（ζ）、振得多快（ω<sub>n</sub>）。</p>
 <p><strong>位置／角色：</strong><a href="08-極零點與二階系統.html">第 08 章</a>；電路學的 RLC 用 α 與 ω<sub>0</sub>，本課用 ζ 與 ω<sub>n</sub>，兩套符號可以互相換算。</p>
 <p><strong>機制：</strong>ζ 讀作「zeta」，是阻尼比，沒有單位；ω<sub>n</sub> 讀作「omega n」，是自然頻率，單位 rad/s。標準式 H(s) = ω<sub>n</sub>² / (s² + 2ζω<sub>n</sub>s + ω<sub>n</sub>²)，極點 s = −ζω<sub>n</sub> ± jω<sub>n</sub>√(1 − ζ²)。錨定實例：ζ = 0.5、ω<sub>n</sub> = 10，極點 −5 ± j8.660254、ω<sub>d</sub> = 8.660254、超越量 M<sub>p</sub> = 16.303353 %、t<sub>p</sub> = 0.362760 s、t<sub>s</sub> = 0.800000 s、共振 ω<sub>r</sub> = 7.071068、M<sub>r</sub> = 1.154701。</p>
@@ -320,7 +320,7 @@
 <div class="term-list">
 
 <article class="term-card" data-search="ideal filter 理想濾波器 低通 高通 帶通 帶止 非因果">
-<h2>理想濾波器（ideal filter）</h2>
+<h3>理想濾波器（ideal filter）</h3>
 <p><strong>白話：</strong>通帶完全不衰減、阻帶完全擋掉、過渡帶寬度為零的濾波器——它不存在。</p>
 <p><strong>位置／角色：</strong><a href="09-濾波器與群延遲.html">第 09 章</a>的起點，用來說明「為什麼真的濾波器一定有取捨」。四種基本型：低通、高通、帶通、帶止。</p>
 <p><strong>機制：</strong>理想低通的 H(jω) 是一個矩形，對應的 h(t) 是 sinc；而 sinc 在 t &lt; 0 也不為零，違反因果性。把它截斷再往右移可以變成因果的，代價是通帶出現漣波、過渡帶展開成有限寬度。</p>
@@ -328,7 +328,7 @@
 </article>
 
 <article class="term-card" data-search="butterworth 巴特沃斯 最平坦 階數 order 抗混疊">
-<h2>巴特沃斯濾波器（Butterworth filter）</h2>
+<h3>巴特沃斯濾波器（Butterworth filter）</h3>
 <p><strong>白話：</strong>通帶最平坦的那一族，代價是過渡帶不夠陡。</p>
 <p><strong>位置／角色：</strong><a href="09-濾波器與群延遲.html">第 09 章</a>；感測器前端的抗混疊濾波常選它。</p>
 <p><strong>機制：</strong>|H(jf)|² = (1) / (1 + (f/f<sub>c</sub>)<sup>2n</sup>)，n 是階數，每加一階阻帶斜率多 20 dB/decade。錨定實例：f<sub>c</sub> = 1000 Hz，要求在 3000 Hz 衰減 40 dB，算出 n<sub>min</sub> = 4.191761，取 5 階；5 階在 3000 Hz 實際衰減 47.712199 dB、在 2000 Hz 為 −30.107239 dB；4 階只有 38.170362 dB，不合格。</p>
@@ -336,7 +336,7 @@
 </article>
 
 <article class="term-card" data-search="chebyshev bessel elliptic cauer 柴比雪夫 貝索 橢圓 漣波 ripple">
-<h2>柴比雪夫／貝索／橢圓濾波器（Chebyshev / Bessel / elliptic filter）</h2>
+<h3>柴比雪夫／貝索／橢圓濾波器（Chebyshev / Bessel / elliptic filter）</h3>
 <p><strong>白話：</strong>三種與巴特沃斯互補的取向：更陡但有漣波、相位最線性但最不陡、最陡但兩邊都有漣波。</p>
 <p><strong>位置／角色：</strong><a href="09-濾波器與群延遲.html">第 09 章</a>的設計家族比較。</p>
 <p><strong>機制：</strong>柴比雪夫（Chebyshev）第一型容許通帶有等漣波，換來比同階巴特沃斯更陡的過渡帶；貝索（Bessel）以最大平坦<strong>群延遲</strong>為目標，波形保真度最好但衰減最慢；橢圓（elliptic，又稱 Cauer）通帶阻帶都有漣波，同階陡峭度最高。同一組規格下所需階數大致是橢圓 &lt; 柴比雪夫 &lt; 巴特沃斯 &lt; 貝索。</p>
@@ -344,7 +344,7 @@
 </article>
 
 <article class="term-card" data-search="group delay 群延遲 tau g 波形變形 相位延遲">
-<h2>群延遲（group delay）</h2>
+<h3>群延遲（group delay）</h3>
 <p><strong>白話：</strong>一包窄頻訊號的「包絡」被系統推遲了多久。</p>
 <p><strong>位置／角色：</strong><a href="09-濾波器與群延遲.html">第 09 章</a>；音訊、雷達與高速數位鏈路都盯著它看。</p>
 <p><strong>機制：</strong>τ<sub>g</sub> = −d∠H/dω，單位 s（∠H 用 rad、ω 用 rad/s）；τ<sub>g</sub> 讀作「tau sub g」。一階系統的閉合式是 τ<sub>g</sub> = (1/ω<sub>c</sub>) / (1 + (ω/ω<sub>c</sub>)²)。錨定實例：f = f<sub>c</sub> = 1000 Hz 時群延遲 79.577472 µs，而相位延遲是 125.000000 µs；M = 8 的移動平均群延遲恰為 3.5 樣本（4.375000 × 10<sup>−4</sup> s）。</p>
@@ -352,7 +352,7 @@
 </article>
 
 <article class="term-card" data-search="linear phase 線性相位 對稱 fir 常數群延遲">
-<h2>線性相位（linear phase）</h2>
+<h3>線性相位（linear phase）</h3>
 <p><strong>白話：</strong>相位對頻率是一條直線，所有頻率成分被延遲一樣久，波形形狀完全不變。</p>
 <p><strong>位置／角色：</strong><a href="09-濾波器與群延遲.html">第 09 章</a>與第 15 章；FIR 做得到，IIR 做不到（除非離線正反各跑一次）。</p>
 <p><strong>機制：</strong>相位寫成 ∠H(ω) = −ω·τ<sub>g</sub> 且 τ<sub>g</sub> 為常數時就是線性相位。係數對稱（或反對稱）的 FIR，h[n] = h[M − 1 − n]，天生給出嚴格線性相位，群延遲固定為 (M − 1)/2 樣本；M = 8 時就是 3.5 樣本。</p>
@@ -360,7 +360,7 @@
 </article>
 
 <article class="term-card" data-search="modulation 調變 am 載波 carrier 頻譜搬移">
-<h2>調變（modulation）</h2>
+<h3>調變（modulation）</h3>
 <p><strong>白話：</strong>把低頻的訊息搬到某個高頻載波上，好讓天線做得出來、也好讓很多台共用同一片空氣。</p>
 <p><strong>位置／角色：</strong><a href="10-調變與頻譜搬移.html">第 10 章</a>；AM 廣播、對講機、Wi-Fi 都是同一件事的不同版本。</p>
 <p><strong>機制：</strong>時間域乘上載波：y(t) = x(t)·cos(ω<sub>c</sub>t)。依摺積定理，頻域就是把 X 搬到 ±ω<sub>c</sub>（ω<sub>c</sub> 讀作「omega c」，是載波角頻率）。調幅（amplitude modulation, AM）的完整式是 A[1 + m·x<sub>n</sub>(t)]·cos(ω<sub>c</sub>t)，x<sub>n</sub> 是歸一化後的訊息。</p>
@@ -368,7 +368,7 @@
 </article>
 
 <article class="term-card" data-search="modulation index 調變指數 過調變 效率 efficiency">
-<h2>調變指數（modulation index）</h2>
+<h3>調變指數（modulation index）</h3>
 <p><strong>白話：</strong>訊息把載波振幅「壓」得多深，通常寫成 m。</p>
 <p><strong>位置／角色：</strong><a href="10-調變與頻譜搬移.html">第 10 章</a>；它決定 AM 發射機的功率效率與失真。</p>
 <p><strong>機制：</strong>m = 訊息峰值 / 載波振幅。總功率 P<sub>t</sub> = P<sub>c</sub>(1 + m²/2)，每個邊帶的功率是 P<sub>c</sub>·m²/4。錨定實例：P<sub>c</sub> = 100 W、m = 0.5 時 P<sub>t</sub> = 112.500000 W、每邊帶 6.250000 W、功率效率 11.111111 %。</p>
@@ -376,7 +376,7 @@
 </article>
 
 <article class="term-card" data-search="sideband 邊帶 上邊帶 下邊帶 ssb 佔用頻寬">
-<h2>邊帶（sideband）</h2>
+<h3>邊帶（sideband）</h3>
 <p><strong>白話：</strong>調變之後，載波兩側各長出一份訊息的頻譜。</p>
 <p><strong>位置／角色：</strong><a href="10-調變與頻譜搬移.html">第 10 章</a>；AM 廣播一個頻道 10 kHz 就是這樣定出來的。</p>
 <p><strong>機制：</strong>訊息最高頻率為 f<sub>m</sub> 時，上邊帶落在 f<sub>c</sub> + f<sub>m</sub>、下邊帶落在 f<sub>c</sub> − f<sub>m</sub>，佔用頻寬 2f<sub>m</sub>。錨定實例：f<sub>c</sub> = 1000 kHz、f<sub>m</sub> = 5 kHz，邊帶落在 1005 kHz 與 995 kHz，頻寬 10 kHz。</p>
@@ -384,7 +384,7 @@
 </article>
 
 <article class="term-card" data-search="envelope detection 包絡檢測 二極體 同步檢測 rc">
-<h2>包絡檢測（envelope detection）</h2>
+<h3>包絡檢測（envelope detection）</h3>
 <p><strong>白話：</strong>用一顆二極體加一組 RC，把 AM 訊號的「外框」描出來，直接還原訊息。</p>
 <p><strong>位置／角色：</strong><a href="10-調變與頻譜搬移.html">第 10 章</a>；最便宜的 AM 收音機就是這樣做的。</p>
 <p><strong>機制：</strong>整流之後接一個時間常數適中的 RC 低通：要比載波週期長（濾掉載波），又要比訊息最快的變化短（跟得上包絡）。條件寫成 1/f<sub>c</sub> ≪ RC ≪ 1/f<sub>m</sub>。</p>
@@ -392,7 +392,7 @@
 </article>
 
 <article class="term-card" data-search="difference equation 差分方程 遞迴 recursive 狀態 迴圈">
-<h2>差分方程（difference equation）</h2>
+<h3>差分方程（difference equation）</h3>
 <p><strong>白話：</strong>離散系統的「遞迴公式」：用過去的輸出、加上現在與過去的輸入，算出現在的輸出。</p>
 <p><strong>位置／角色：</strong><a href="11-離散時間訊號與差分方程.html">第 11 章</a>；寫成程式就是一個帶狀態的迴圈。</p>
 <p><strong>機制：</strong>∑<sub>k=0</sub><sup>N</sup> a<sub>k</sub>y[n − k] = ∑<sub>m=0</sub><sup>M</sup> b<sub>m</sub>x[n − m]。錨定實例：一階 IIR y[n] = 0.8y[n − 1] + x[n]，步階輸入下 n = 5 時 y = 3.689280、h[5] = 0.327680、直流增益 5.000000、n<sub>τ</sub> = 4.481420 樣本（n<sub>τ</sub> 讀作「n sub tau」，指振幅衰減到 1/e 所需的樣本數）。第 14 章的二階例是 y[n] = 1.272792y[n − 1] − 0.810000y[n − 2] + x[n]。</p>
@@ -400,7 +400,7 @@
 </article>
 
 <article class="term-card" data-search="fir finite impulse response 有限脈衝響應 移動平均 恆穩定">
-<h2>FIR 濾波器（finite impulse response filter）</h2>
+<h3>FIR 濾波器（finite impulse response filter）</h3>
 <p><strong>白話：</strong>脈衝響應只有有限多項的濾波器，算完就結束，不吃自己的輸出。</p>
 <p><strong>位置／角色：</strong>第 15 章；音訊等化、通訊接收機的匹配濾波常用它。</p>
 <p><strong>機制：</strong>FIR 是 finite impulse response（有限脈衝響應）。y[n] = ∑<sub>m=0</sub><sup>M−1</sup> b<sub>m</sub>x[n − m]，沒有回授。因為只有有限項，∑|h[n]| 必然有限，所以恆穩定；係數對稱時相位嚴格線性。錨定實例：M = 8 的移動平均在 f<sub>s</sub> = 8000 Hz 下，500 Hz 處 |H| = 0.640729（−3.866514 dB）、第一零點 1000.000000 Hz、群延遲 3.5 樣本。</p>
@@ -408,7 +408,7 @@
 </article>
 
 <article class="term-card" data-search="iir infinite impulse response 無限脈衝響應 回授 biquad 二階節">
-<h2>IIR 濾波器（infinite impulse response filter）</h2>
+<h3>IIR 濾波器（infinite impulse response filter）</h3>
 <p><strong>白話：</strong>有回授的濾波器，脈衝響應理論上永遠拖著尾巴不歸零。</p>
 <p><strong>位置／角色：</strong><a href="11-離散時間訊號與差分方程.html">第 11 章</a>與第 15 章；即時控制與低功耗場合常選它。</p>
 <p><strong>機制：</strong>IIR 是 infinite impulse response（無限脈衝響應）。因為有回授項，少少幾階就能做出很陡的過渡帶；代價是必須檢查穩定性（極點要在單位圓內），而且相位一定非線性。錨定實例：一階 IIR a = 0.8 在 f<sub>s</sub> = 8000 Hz 下，500 Hz 處 |H| = 0.497222（−6.068991 dB）、−3 dB 頻率 285.301514 Hz、∑|h[n]| = 5.000000。</p>
@@ -421,7 +421,7 @@
 <div class="term-list">
 
 <article class="term-card" data-search="sampling theorem nyquist shannon 取樣定理 還原 sinc 內插">
-<h2>取樣定理（sampling theorem, Nyquist–Shannon）</h2>
+<h3>取樣定理（sampling theorem, Nyquist–Shannon）</h3>
 <p><strong>白話：</strong>只要取樣得夠快，離散的樣本就完整保存了原本連續訊號的全部資訊，可以一點不差地還原回去。</p>
 <p><strong>位置／角色：</strong><a href="12-取樣與混疊.html">第 12 章</a>；CD 用 44.1 kHz、電話用 8000 Hz，都是照這一條定出來的。</p>
 <p><strong>機制：</strong>訊號頻寬上限為 W 時，條件是 f<sub>s</sub> &gt; 2W（f<sub>s</sub> 讀作「f sub s」，取樣頻率，單位 Hz）。還原用 sinc 內插：x(t) = ∑<sub>n</sub> x[nT<sub>s</sub>]·sinc((t − nT<sub>s</sub>)/T<sub>s</sub>)。錨定實例：f = 3000 Hz、f<sub>s</sub> = 8000 Hz 時未混疊，T<sub>s</sub> = 1.250000 × 10<sup>−4</sup> s、x[3] = 0.707107。</p>
@@ -429,7 +429,7 @@
 </article>
 
 <article class="term-card" data-search="nyquist rate frequency 奈奎斯特速率 奈奎斯特頻率 fs/2">
-<h2>奈奎斯特速率與奈奎斯特頻率（Nyquist rate &amp; Nyquist frequency）</h2>
+<h3>奈奎斯特速率與奈奎斯特頻率（Nyquist rate &amp; Nyquist frequency）</h3>
 <p><strong>白話：</strong>兩個都叫「奈奎斯特」，一個是訊號要求的最低取樣率，一個是取樣系統能表示的最高頻率。</p>
 <p><strong>位置／角色：</strong><a href="12-取樣與混疊.html">第 12 章</a>；規格書上最常被混用的兩個字。</p>
 <p><strong>機制：</strong>奈奎斯特速率 = 2W，單位 Hz，由<strong>訊號頻寬</strong>決定。奈奎斯特頻率 = f<sub>s</sub>/2，單位 Hz，由<strong>取樣率</strong>決定。f<sub>s</sub> = 8000 Hz 時奈奎斯特頻率是 4000 Hz；若訊號頻寬 3400 Hz，奈奎斯特速率就是 6800 Hz。</p>
@@ -437,7 +437,7 @@
 </article>
 
 <article class="term-card" data-search="aliasing 混疊 假頻 視在頻率 不可逆">
-<h2>混疊（aliasing）</h2>
+<h3>混疊（aliasing）</h3>
 <p><strong>白話：</strong>取樣不夠快時，高頻會偽裝成低頻，而且一旦發生就再也分不出來。</p>
 <p><strong>位置／角色：</strong><a href="12-取樣與混疊.html">第 12 章</a>；示波器螢幕上那條「漂亮的低頻波」常常就是它。</p>
 <p><strong>機制：</strong>頻率 f 的訊號在取樣率 f<sub>s</sub> 下，會與 f ± k·f<sub>s</sub>（k 為整數）的所有頻率產生完全相同的樣本，折算回 0 到 f<sub>s</sub>/2 之間的那一個就是視在頻率。錨定實例：f = 5000 Hz、f<sub>s</sub> = 8000 Hz 時視在頻率為 3000.000000 Hz。</p>
@@ -445,7 +445,7 @@
 </article>
 
 <article class="term-card" data-search="anti-aliasing filter 抗混疊濾波器 類比 前置 過取樣">
-<h2>抗混疊濾波器（anti-aliasing filter）</h2>
+<h3>抗混疊濾波器（anti-aliasing filter）</h3>
 <p><strong>白話：</strong>在 ADC 前面先把超過奈奎斯特頻率的成分擋掉，因為它們一旦進去就救不回來了。</p>
 <p><strong>位置／角色：</strong><a href="12-取樣與混疊.html">第 12 章</a>的取樣鏈；每一顆 ADC 前面都應該有一個。</p>
 <p><strong>機制：</strong>它是一個類比低通，轉角頻率設在略低於 f<sub>s</sub>/2，阻帶衰減要壓到量化雜訊之下。需要的階數可用巴特沃斯的估算式反算（第 09 章的做法）。提高取樣率（過取樣）能讓這顆類比濾波器輕鬆很多，剩下的交給數位濾波器處理。</p>
@@ -453,7 +453,7 @@
 </article>
 
 <article class="term-card" data-search="zero-order hold zoh 零階保持 dac 階梯 sinc 下垂">
-<h2>零階保持（zero-order hold, ZOH）</h2>
+<h3>零階保持（zero-order hold, ZOH）</h3>
 <p><strong>白話：</strong>DAC 把每個樣本值「撐住」一整個取樣週期，畫出來是階梯狀。</p>
 <p><strong>位置／角色：</strong><a href="12-取樣與混疊.html">第 12 章</a>的還原端；所有實際的 DAC 都是這樣輸出的。</p>
 <p><strong>機制：</strong>ZOH 是 zero-order hold（零階保持）。它等效於摺上一個寬 T<sub>s</sub> 的矩形，因此頻率響應是 sinc 的形狀，高頻會被額外壓低。錨定實例：f = 3000 Hz、f<sub>s</sub> = 8000 Hz 時 ZOH 衰減 0.784213（−2.111316 dB）。</p>
@@ -461,7 +461,7 @@
 </article>
 
 <article class="term-card" data-search="dtft discrete-time fourier transform 離散時間傅立葉轉換 2pi 週期">
-<h2>離散時間傅立葉轉換（discrete-time Fourier transform, DTFT）</h2>
+<h3>離散時間傅立葉轉換（discrete-time Fourier transform, DTFT）</h3>
 <p><strong>白話：</strong>對一串無限長的離散樣本做的傅立葉轉換，結果是一個以 2π 為週期的連續頻率函數。</p>
 <p><strong>位置／角色：</strong><a href="13-離散頻譜分析.html">第 13 章</a>；理解「離散頻譜為什麼是週期的」的關鍵。</p>
 <p><strong>機制：</strong>DTFT 是 discrete-time Fourier transform（離散時間傅立葉轉換）。X(e<sup>jω</sup>) = ∑<sub>n=−∞</sub><sup>∞</sup> x[n]e<sup>−jωn</sup>，ω 的單位是 rad/sample，週期為 2π。這個週期性正是取樣造成頻譜週期複製的直接後果。</p>
@@ -469,7 +469,7 @@
 </article>
 
 <article class="term-card" data-search="dft discrete fourier transform 離散傅立葉轉換 bin 矩陣">
-<h2>離散傅立葉轉換（discrete Fourier transform, DFT）</h2>
+<h3>離散傅立葉轉換（discrete Fourier transform, DFT）</h3>
 <p><strong>白話：</strong>拿有限的 N 個樣本，算出 N 個頻率點的成分——這是電腦真正在算的東西。</p>
 <p><strong>位置／角色：</strong><a href="13-離散頻譜分析.html">第 13 章</a>；所有頻譜分析軟體背後都是它。</p>
 <p><strong>機制：</strong>DFT 是 discrete Fourier transform（離散傅立葉轉換）。X[k] = ∑<sub>n=0</sub><sup>N−1</sup> x[n]·exp(−j 2π k n / N)，k 是 bin 序號（本課 bin 序號一律寫 k）。它等價於一個 N × N 的矩陣乘法，複雜度 O(N²)：N = 1024 時是 1048576 次運算。</p>
@@ -477,7 +477,7 @@
 </article>
 
 <article class="term-card" data-search="fft fast fourier transform 快速傅立葉轉換 遞迴 加速">
-<h2>快速傅立葉轉換（fast Fourier transform, FFT）</h2>
+<h3>快速傅立葉轉換（fast Fourier transform, FFT）</h3>
 <p><strong>白話：</strong>算 DFT 的快速演算法，把 O(N²) 降成 O(N log N)。</p>
 <p><strong>位置／角色：</strong><a href="13-離散頻譜分析.html">第 13 章</a>；它是整個數位訊號處理能商用化的原因。</p>
 <p><strong>機制：</strong>FFT 是 fast Fourier transform（快速傅立葉轉換）。作法是把 N 點 DFT 遞迴拆成兩個 N/2 點 DFT，重複利用旋轉因子。錨定實例：N = 1024 時直接 DFT 需 1048576 次運算、FFT 約 5120 次，加速 204.800000 倍。</p>
@@ -485,7 +485,7 @@
 </article>
 
 <article class="term-card" data-search="frequency resolution 頻率解析度 delta f 窗長 零填充 zero padding">
-<h2>頻率解析度（frequency resolution）</h2>
+<h3>頻率解析度（frequency resolution）</h3>
 <p><strong>白話：</strong>兩根靠得多近的譜線還分得開。</p>
 <p><strong>位置／角色：</strong><a href="13-離散頻譜分析.html">第 13 章</a>；它決定你能不能把市電 50 Hz 與旁邊 51 Hz 的干擾分開。</p>
 <p><strong>機制：</strong>Δf = f<sub>s</sub>/N（Δf 讀作「delta f」，單位 Hz）。錨定實例：N = 1024、f<sub>s</sub> = 8000 Hz 時 Δf = 7.812500 Hz、窗長 T<sub>win</sub> = 0.128000 s（T<sub>win</sub> 讀作「T sub win」，是觀測窗的時間長度）。f = 1000 Hz 剛好落在 k = 128，整數週期、無洩漏；f = 1010 Hz 落在 k = 129、bin 中心 1007.812500 Hz、誤差 2.187500 Hz。</p>
@@ -493,23 +493,23 @@
 </article>
 
 <article class="term-card" data-search="spectral leakage windowing 譜洩漏 加窗 hann hamming blackman 旁瓣">
-<h2>譜洩漏與加窗（spectral leakage &amp; windowing）</h2>
+<h3>譜洩漏與加窗（spectral leakage &amp; windowing）</h3>
 <p><strong>白話：</strong>訊號在觀測窗裡沒有剛好切在整數個週期上，能量就會漏到旁邊的 bin；加窗是把窗的兩端壓下去，換取少漏一點。</p>
-<p><strong>位置／角色：</strong><a href="13-離散頻譜分析.html">第 13 章</a>；第 15 章用窗口法設計 FIR 用的是同一組工具。</p>
+<p><strong>位置／角色：</strong><a href="13-離散頻譜分析.html">第 13 章</a>；窗口法設計 FIR 使用同一組工具，但細節留給 DSP 專科。</p>
 <p><strong>機制：</strong>截斷等於乘上一個窗函數，頻域對應摺上窗的頻譜，窗的旁瓣就是洩漏的來源。本課固定使用這一組最高旁瓣值：矩形（rect）−13.3 dB、漢寧（Hann）−31.5 dB、漢明（Hamming）−42.7 dB、布拉克曼（Blackman）−58.1 dB。錨定實例：f = 1000 Hz 在 N = 1024、f<sub>s</sub> = 8000 Hz 下是整數週期，無洩漏；1010 Hz 就不是。</p>
 <p><strong>不要混淆：</strong>加窗買到的是旁瓣壓低，賣掉的是主瓣變寬（解析度變差），它不是「免費變準」。也不要把洩漏的裙擺當成那些頻率真的存在：換一個窗再看一次，裙擺會變，真的譜線不會。</p>
 </article>
 
 <article class="term-card" data-search="z-transform unit circle z轉換 單位圓 半徑 角度 極點">
-<h2>Z 轉換與單位圓（Z-transform &amp; unit circle）</h2>
+<h3>Z 轉換與單位圓（Z-transform &amp; unit circle）</h3>
 <p><strong>白話：</strong>離散世界的拉氏轉換；s 平面的虛軸在這裡變成一個單位圓。</p>
 <p><strong>位置／角色：</strong>第 14 章；數位濾波器的穩定性與頻率響應都在這張圖上讀。</p>
-<p><strong>機制：</strong>X(z) = ∑<sub>n=−∞</sub><sup>∞</sup> x[n]z<sup>−n</sup>，z = r·exp(jω)。把 z 限制在 |z| = 1（單位圓）就得到 DTFT。穩定 ⇔ 所有極點 |z| &lt; 1。極點的半徑 r 決定衰減多快、角度 θ 決定共振在哪個頻率。錨定實例：r = 0.9、θ = 45°、f<sub>s</sub> = 8000 Hz 時共振 1000.000000 Hz、h[5] = −0.835079、n<sub>τ</sub> = 9.491222 樣本（1.186403 ms）、|H| 峰值 7.432941、直流 1.861477、4000 Hz 處 0.324381。</p>
+<p><strong>機制：</strong>X(z) = ∑<sub>n=−∞</sub><sup>∞</sup> x[n]z<sup>−n</sup>，z = r·exp(jω)。把 z 限制在 |z| = 1（單位圓）就得到 DTFT。因果有理系統穩定 ⇔ 所有極點 |z| &lt; 1。極點的半徑 r 決定衰減多快、角度 θ 給出極點角對應頻率。錨定實例：r = 0.9、θ = 45°、f<sub>s</sub> = 8000 Hz 時 f<sub>θ</sub> = 1000.000000 Hz、h[5] = −0.835079、n<sub>τ</sub> = 9.491222 樣本（1.186403 ms）、|H| 在極點角為 7.432941、直流為 1.861477、4000 Hz 處為 0.324381。</p>
 <p><strong>不要混淆：</strong>單位圓對應的是「繞一圈等於 f<sub>s</sub>」，走到 180° 就是奈奎斯特頻率 4000 Hz，再走下去是負頻率的鏡像，不是更高的頻率——這就是離散頻譜週期性在圖上的樣子。另外 X(z) 用圓括號（z 是連續複變數），x[n] 用方括號。</p>
 </article>
 
 <article class="term-card" data-search="multirate decimation interpolation 多速率 抽取 內插 44.1 48 khz">
-<h2>多速率處理（multirate processing：抽取與內插）</h2>
+<h3>多速率處理（multirate processing：抽取與內插）</h3>
 <p><strong>白話：</strong>在同一條處理鏈裡用不同的取樣率，該慢的地方就慢下來，省運算也省功耗。</p>
 <p><strong>位置／角色：</strong>第 15 章；音訊 44.1 kHz 與 48 kHz 之間的轉換、通訊接收機的降頻鏈都靠它。</p>
 <p><strong>機制：</strong>抽取（decimation）先低通、再每 M 點取 1 點，低通是必要的，否則直接製造混疊；內插（interpolation）先在每兩點之間補 L − 1 個零、再低通，低通用來去掉補零產生的映像。有理倍率 L/M 的轉換就是先內插再抽取。</p>
@@ -517,7 +517,7 @@
 </article>
 
 <article class="term-card" data-search="random process power spectral density 隨機過程 功率譜密度 psd 雜訊 noise">
-<h2>隨機過程與功率譜密度（random process &amp; power spectral density）</h2>
+<h3>隨機過程與功率譜密度（random process &amp; power spectral density）</h3>
 <p><strong>白話：</strong>訊號本身是隨機的（雜訊、語音、通道衰落），只能談統計性質；功率譜密度說的是「平均而言每個頻率上有多少功率」。</p>
 <p><strong>位置／角色：</strong><strong>本課不展開，留給通訊系統／控制系統／數位訊號處理。</strong>字典留這張卡，是因為讀者在筆記與規格書上一定會撞到它。</p>
 <p><strong>機制：</strong>隨機過程是「每個時刻都是一個隨機變數」的集合。廣義平穩時，功率譜密度 S(f)（單位 W/Hz）是自相關函數的傅立葉轉換；LTI 系統對它的作用是 S<sub>y</sub>(f) = |H(f)|²·S<sub>x</sub>(f)。</p>
@@ -525,7 +525,7 @@
 </article>
 
 <article class="term-card" data-search="state space 狀態空間 可控 可觀測 mimo 控制系統">
-<h2>狀態空間（state space）</h2>
+<h3>狀態空間（state space）</h3>
 <p><strong>白話：</strong>不寫一個高階的轉移函數，改用一組一階方程描述系統內部的狀態怎麼演化。</p>
 <p><strong>位置／角色：</strong><strong>本課不展開，留給通訊系統／控制系統／數位訊號處理</strong>，主要歸控制系統（可控性、可觀測性、極點配置）。</p>
 <p><strong>機制：</strong>連續版寫成 dx/dt = Ax + Bu、y = Cx + Du，x 是狀態向量。它與轉移函數的關係是 H(s) = C(sI − A)<sup>−1</sup>B + D。優點是天生支援多輸入多輸出，也比較容易推廣到時變與非線性。</p>
@@ -533,10 +533,10 @@
 </article>
 
 <article class="term-card" data-search="polyphase decomposition 多相分解 子濾波器 效率 dsp">
-<h2>多相分解（polyphase decomposition）</h2>
+<h3>多相分解（polyphase decomposition）</h3>
 <p><strong>白話：</strong>把一個濾波器的係數按「第幾個相位」拆成幾組，讓抽取與內插不必浪費力氣去算那些反正要丟掉的結果。</p>
 <p><strong>位置／角色：</strong><strong>本課不展開，留給通訊系統／控制系統／數位訊號處理</strong>；實作細節屬於數位訊號處理專科，第 15 章只點名。</p>
-<p><strong>機制：</strong>把 h[n] 依 n 對 M 的餘數拆成 M 個子濾波器 h<sub>m</sub>[n] = h[mM + n]，抽取時先分流再各自濾波，運算量降為原本的 1/M。內插同理，省掉所有對補零樣本的乘法。</p>
+<p><strong>機制：</strong>把 h[n] 依 n 對 M 的餘數拆成 M 個子濾波器 h<sub>m</sub>[n] = h[nM + m]（m = 0…M − 1），抽取時先分流再各自濾波，運算量降為原本的 1/M。內插同理，省掉所有對補零樣本的乘法。</p>
 <p><strong>不要混淆：</strong>多相分解不改變輸出，它只是重排運算順序，不是另一種濾波器設計法。也不要以為它能省掉抗混疊低通——低通照樣要設計，多相只是把它拆開來算。</p>
 </article>
 

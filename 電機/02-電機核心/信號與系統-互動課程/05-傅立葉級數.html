@@ -15,7 +15,7 @@
 <h2>白話直覺：換一組座標軸，讓系統的作用退化成兩個數字</h2>
 <p>訊號從哪來？就當它是一個週期 T 的波形，例如市電 50 Hz 的電壓、開關電源輸出的方波、或是弦樂器的一個穩定音。系統對它做了什麼？上一章已經知道系統會把輸入摺積掉，時間域裡輸出的每一點都是過去無限多點的加權和，很難一眼看穿。這件事在哪個域最好描述？在頻率域，因為對 LTI 系統送進一個複指數，出來的還是同一個複指數，只是被乘上一個複數。可以暫時把這件事想成稜鏡分光；比喻到此為止，精確的說法是：{exp(j k ω<sub>0</sub> t)} 是 LTI 算子的本徵函數集，摺積在這組基底上退化成逐項相乘。</p>
 <p>換域的代價是什麼？第一，你必須接受複數，而且每個係數帶著相位，只看振幅會丟資訊；第二，這組工具只對週期訊號有效，非週期的要等下一章；第三，級數是無限項，實際上一定要截斷，截斷就會在不連續點附近留下永遠消不掉的過衝。儀器量到什麼？頻譜分析儀量得到各諧波的振幅與頻率，量不到它們之間的相對相位。</p>
-<p>順帶把符號講定：虛數單位本課一律寫 j。數學課寫 i，電機寫 j，因為 i 已經留給電流了。這個約定全課不變，第 06 章之後的每一個複數都照這個寫。</p>
+<p>本章沿用<a href="名詞與概念字典.html">字典</a>的符號約定：虛數單位一律寫 j。</p>
 <p class="note">來源：09-信號與系統-上 第 5 章。</p>
 
 <h2>推導：正交性當篩子，對稱性省一半工</h2>
@@ -23,7 +23,7 @@
 <p><strong>級數與係數。</strong>週期 T 的訊號寫成 x(t) = ∑<sub>k=−∞</sub><sup>∞</sup> a<sub>k</sub>·exp(j k ω<sub>0</sub> t)，其中 ω<sub>0</sub> = 2π/T 是基頻角頻率（rad/s）、f<sub>0</sub> = 1/T 是基頻（Hz）、k 是整數。係數 a<sub>k</sub> = (1/T)∫<sub>T</sub> x(t)·exp(−j k ω<sub>0</sub> t) dt，積分只要涵蓋任一個完整週期即可。</p>
 <p><strong>（a）正交性：係數公式為什麼有效。</strong>算 ∫<sub>T</sub> exp(j k ω<sub>0</sub> t)·exp(−j m ω<sub>0</sub> t) dt。當 k = m 時被積函數恆為 1，積分是 T；當 k ≠ m 時被積函數是 exp(j(k − m)ω<sub>0</sub> t)，在整數個週期上積分正好抵消為 0。把級數整條代進係數公式，只有第 k 項活下來，其餘全被積掉。<strong>係數積分就是內積，a<sub>k</sub> 是 x 在正交基底上的座標</strong>；這和第 02 章 δ 的篩選性是同一種思路——用一個「只在想要的地方不為零」的東西把答案篩出來。</p>
 <p><strong>（b）方波的係數。</strong>實訊號可改寫成三角式 x(t) = a<sub>0</sub> + ∑<sub>n=1</sub><sup>∞</sup> [A<sub>n</sub>cos(nω<sub>0</sub>t) + B<sub>n</sub>sin(nω<sub>0</sub>t)]，第 n 諧波的頻率是 n·f<sub>0</sub>。對稱性可以省掉一半工：奇函數只有 sin 項、偶函數只有 cos 項、半波對稱只有奇次諧波。取振幅 A、奇對稱的方波，前半週期為 +A、後半為 −A，則 B<sub>n</sub> = (2/T)∫<sub>0</sub><sup>T</sup> x(t)sin(nω<sub>0</sub>t) dt = (4A/T)∫<sub>0</sub><sup>T/2</sup> sin(nω<sub>0</sub>t) dt。積出來是 (4A/T)·[1 − cos(nπ)]/(nω<sub>0</sub>)，n 為奇數時中括號等於 2、偶數時等於 0，代入 ω<sub>0</sub> = 2π/T 化簡得 <strong>B<sub>n</sub> = 4A/(nπ)（n 為奇數）</strong>，偶次諧波全部為零。</p>
-<p><strong>（c）為什麼方波掉得慢、三角波掉得快。</strong>方波的 |B<sub>n</sub>| 正比於 1/n，三角波正比於 1/n²，鋸齒波正比於 1/n（而且偶次諧波不為零）。規律是：<strong>波形愈不連續，高頻愈多</strong>。方波本身有跳躍（零階不連續），三角波只有斜率跳躍（一階不連續），愈晚出現的不連續，係數掉得愈快。這條規律在第 06 章會長成「時域愈尖銳、頻域愈寬」。不連續還帶來另一個後果：吉布斯現象（Gibbs phenomenon）——在跳躍點附近，無論取多少項都會留下約 9 % 的過衝，只是隨項數增加而愈來愈窄。</p>
+<p><strong>（c）為什麼方波掉得慢、三角波掉得快。</strong>方波的 |B<sub>n</sub>| 正比於 1/n，三角波正比於 1/n²，鋸齒波正比於 1/n（而且偶次諧波不為零）。規律是：<strong>波形愈不連續，高頻愈多</strong>。方波本身有跳躍（零階不連續），三角波只有斜率跳躍（一階不連續），愈晚出現的不連續，係數掉得愈快。這條規律在第 06 章會長成「時域愈尖銳、頻域愈寬」。不連續還帶來另一個後果：吉布斯現象（Gibbs phenomenon）——在跳躍點附近，無論取多少項都會留下約為<strong>跳躍高度 8.95 %</strong> 的過衝；對從 −A 跳到 +A 的方波，這等於超出 A 約 17.9 %，只是隨項數增加而愈來愈窄。</p>
 <p><strong>（d）帕塞瓦驗算。</strong>週期版帕塞瓦（Parseval）定理說平均功率 P = ∑<sub>k</sub>|a<sub>k</sub>|²，三角式下 P = ∑<sub>n</sub> B<sub>n</sub>²/2（本課三個波形都是奇函數、沒有直流）。那個 1/2 來自 sin² 在一個週期上的平均值。方波的總功率可以直接在時域算：|x| 恆等於 A，所以 P = A²；三角波與鋸齒波都是 A²/3。有了總功率，就能算前 N 個諧波佔多少百分比。</p>
 
 <h2>數值實例：方波保留到第五諧波，買到多少功率</h2>
@@ -36,7 +36,7 @@
 <tr><td>累積功率</td><td>B<sub>1</sub>²/2 + B<sub>3</sub>²/2 + B<sub>5</sub>²/2</td><td><strong>0.933056</strong></td></tr>
 <tr><td>佔總功率</td><td>0.933056 / 1.000000</td><td><strong>93.305552 %</strong></td></tr>
 </tbody></table>
-<p>邊界對照：N = <strong>1</strong>（只留基波）→ 累積功率 <strong>0.810569</strong>、<strong>81.056947 %</strong>，這個數字就是 8/π²；N = <strong>3</strong> → <strong>0.900633</strong>、<strong>90.063274 %</strong>；N = <strong>15</strong> → <strong>0.974703</strong>、<strong>97.470251 %</strong>（<strong>加了 5 倍的諧波只多買到 4 個百分點——這就是方波難合成的原因</strong>）。換三角波（總功率 <strong>0.333333</strong>）：N = 1 → <strong>98.553430 %</strong>、N = 3 → <strong>99.770139 %</strong>、N = 5 → <strong>99.927824 %</strong>（<strong>三角波幾乎就是一根基波</strong>）。換鋸齒波（總功率 <strong>0.333333</strong>，<strong>偶次諧波不為 0</strong>）：|B<sub>1</sub>| = <strong>0.636620</strong>、|B<sub>2</sub>| = <strong>0.318310</strong>、N = 1 → <strong>60.792710 %</strong>、N = 5 → <strong>88.976886 %</strong>、N = 15 → <strong>96.079248 %</strong>。<strong>振幅 A 只縮放功率（P ∝ A²），百分比完全不變</strong>。</p>
+<p>邊界對照：N = <strong>1</strong>（只留基波）→ 累積功率 <strong>0.810569</strong>、<strong>81.056947 %</strong>，這個數字就是 8/π²；N = <strong>3</strong> → <strong>0.900633</strong>、<strong>90.063274 %</strong>；N = <strong>15</strong> → <strong>0.974703</strong>、<strong>97.470251 %</strong>（<strong>相對預設的 N = 5，諧波數加到 3 倍，只多買到約 4.16 個百分點——這就是方波難合成的原因</strong>）。換三角波（總功率 <strong>0.333333</strong>）：N = 1 → <strong>98.553430 %</strong>、N = 3 → <strong>99.770139 %</strong>、N = 5 → <strong>99.927824 %</strong>（<strong>三角波幾乎就是一根基波</strong>）。換鋸齒波（總功率 <strong>0.333333</strong>，<strong>偶次諧波不為 0</strong>）：|B<sub>1</sub>| = <strong>0.636620</strong>、|B<sub>2</sub>| = <strong>0.318310</strong>、N = 1 → <strong>60.792710 %</strong>、N = 5 → <strong>88.976886 %</strong>、N = 15 → <strong>96.079248 %</strong>。<strong>振幅 A 只縮放功率（P ∝ A²），百分比完全不變</strong>。</p>
 <p>量級對照：市電是 50 Hz，一台方波輸出的逆變器等於同時送出 50、150、250 Hz…一整串諧波，第 15 諧波已經到 750 Hz；把基頻換成 1000 Hz，第 15 諧波就是 15000 Hz，已經逼近人耳上限，也早就超過一路電話語音 8 kHz 取樣系統能表示的範圍。「拆到第幾項」不是數學問題，是頻寬預算問題。</p>
 
 <section class="workspace"><h2>自由實驗：三種波形，前 N 個諧波各買到多少功率</h2>

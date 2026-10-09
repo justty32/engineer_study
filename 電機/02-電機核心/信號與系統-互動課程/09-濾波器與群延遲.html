@@ -4,7 +4,7 @@
 <main>
 <p class="eyebrow">09・要多陡就要多少階，代價寫在相位上</p>
 <h1>濾波器與群延遲：把「濾掉不要的頻率」變成一組可以算的規格</h1>
-<p class="lead">濾波器不是一個開關，它是一份預算表：通帶邊緣在哪、阻帶要壓多低、過渡帶留多寬，這三個要求一填，最小階數就被決定了。而每加一階就多一對極點，相位轉得更多、群延遲更不平坦，波形也就更走樣。</p>
+<p class="lead">濾波器不是一個開關，它是一份預算表：通帶邊緣在哪、阻帶要壓多低、過渡帶留多寬，這三個要求一填，最小階數就被決定了。而每加一階就多一個極點，相位轉得更多、群延遲更不平坦，波形也就更走樣。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="08-極零點與二階系統.html">08 極零點與二階系統</a>的頻率響應與共振峰，以及<a href="../電路學-互動課程/12-一階濾波器與頻率響應.html">電路學的一階濾波器與頻率響應</a>那個 −3 dB 轉角。</p>
 
 <h2>痛點：為什麼濾波器不能「直接把不要的頻率設成零」</h2>
@@ -23,7 +23,7 @@
 <p><strong>（b）四個設計家族的取捨。</strong>巴特沃斯（Butterworth）通帶最平坦，代價是過渡帶不夠陡；柴比雪夫（Chebyshev）允許通帶或阻帶出現漣波，換來同階數下更陡的下降；貝索（Bessel）放棄陡峭度，換群延遲最平坦、波形最不失真；橢圓（elliptic）兩邊都放漣波，同階數最陡但相位最糟。要最平坦選巴特沃斯，要最陡選橢圓，要波形不變形選貝索，要在陡與階數之間妥協選柴比雪夫。</p>
 <p><strong>（c）巴特沃斯的振幅式與每階 20 dB。</strong>n 階巴特沃斯的振幅是 |H(f)| = 1/√(1 + (f/f<sub>c</sub>)<sup>2n</sup>)，其中 f<sub>c</sub> 是通帶邊緣，定義成 |H| 掉到 1/√2 ＝ 0.707107（也就是 −3.010300 dB）的那個頻率。f 遠大於 f<sub>c</sub> 時分母的 1 可以忽略，|H| ≈ (f<sub>c</sub>/f)<sup>n</sup>，取 dB 得 −20n·log<sub>10</sub>(f/f<sub>c</sub>)。頻率每差十倍，log 項加 1，所以衰減 <strong>每階每十倍頻 20 dB</strong>，n 階就是 20n dB/decade。</p>
 <p><strong>（d）階數公式怎麼來。</strong>規格要求在阻帶邊緣 f<sub>s</sub> 至少衰減 A<sub>s</sub> dB，也就是 10·log<sub>10</sub>(1 + (f<sub>s</sub>/f<sub>c</sub>)<sup>2n</sup>) ≥ A<sub>s</sub>。兩邊先化成 (f<sub>s</sub>/f<sub>c</sub>)<sup>2n</sup> ≥ 10<sup>A<sub>s</sub>/10</sup> − 1，再取以 10 為底的對數並解 n，得 n<sub>min</sub> = log<sub>10</sub>(10<sup>A<sub>s</sub>/10</sup> − 1) / (2·log<sub>10</sub>(f<sub>s</sub>/f<sub>c</sub>))，取上整就是實際要用的階數。階數只能是整數，所以幾乎一定會多給一點餘裕。</p>
-<p><strong>（e）一階系統群延遲的閉合式。</strong>一階低通的相位是 ∠H = −arctan(ω/ω<sub>c</sub>)，其中 ω<sub>c</sub> = 2πf<sub>c</sub>。對 ω 微分再取負號，得 τ<sub>g</sub> = (1/ω<sub>c</sub>)/(1 + (ω/ω<sub>c</sub>)²)。在直流時 τ<sub>g</sub> = 1/ω<sub>c</sub>，在 ω = ω<sub>c</sub> 時剛好掉到一半。<strong>同一顆濾波器，直流成分與轉角頻率成分被延後的時間差了一倍，這個「不平坦」就是波形失真的來源</strong>，而且階數愈高，相位轉得愈多，群延遲的起伏就愈大。</p>
+<p><strong>（e）n 階巴特沃斯的群延遲。</strong>一階低通可直接得到 τ<sub>g</sub> = (1/ω<sub>c</sub>)/(1 + (ω/ω<sub>c</sub>)²)。n 階時把標準巴特沃斯的 n 個左半平面極點相位相加，再對 ω 做數值微分，就能得到整顆濾波器的群延遲。互動元件會列出目前 n 階設計在直流與 f<sub>c</sub> 的值；兩者差距會隨階數增加，直接顯示「階數愈高，延遲愈不平坦」。</p>
 
 <h2>數值實例：40 dB 的阻帶要求要幾階</h2>
 <p>巴特沃斯低通，通帶邊緣（−3 dB）f<sub>c</sub> = 1000 Hz、阻帶邊緣 f<sub>s</sub> = 3000 Hz、阻帶要求 A<sub>s</sub> = 40 dB，實際採用 n = 5，觀測 f = 2000 Hz。</p>
@@ -34,13 +34,13 @@
 <tr><td>5 階在 2000 Hz</td><td>|H| = 1/√(1 + 2<sup>10</sup>)</td><td><strong>0.031235（−30.107239 dB）</strong></td></tr>
 <tr><td>在 f<sub>c</sub> 處</td><td>|H| = 1/√2</td><td><strong>0.707107（−3.010300 dB）</strong></td></tr>
 <tr><td>下降斜率</td><td>20n dB/decade</td><td><strong>100 dB/decade</strong></td></tr>
-<tr><td>一階系統的群延遲（f<sub>c</sub> = 1000 Hz）</td><td>直流 1/(2πf<sub>c</sub>)；f = f<sub>c</sub> 時減半</td><td><strong>159.154943 µs → 79.577472 µs</strong>（<strong>差 79.577472 µs</strong>）</td></tr>
+<tr><td>5 階巴特沃斯的群延遲（f<sub>c</sub> = 1000 Hz）</td><td>把 5 個左半平面極點的相位相加後對 ω 微分</td><td><strong>直流 515.036215 µs；f<sub>c</sub> 處 791.340015 µs</strong>（<strong>差 276.303800 µs</strong>）</td></tr>
 </tbody></table>
 <p>邊界對照：只用 <strong>4 階</strong> → 3000 Hz 只衰減 <strong>38.170362 dB</strong>，<strong>不到 40，不合格</strong>（這就是為什麼要取上整）。要求提高到 f<sub>s</sub> = <strong>2000 Hz</strong>（阻帶更靠近）、A<sub>s</sub> = 40 dB → n<sub>min</sub> = <strong>6.643784 → 7 階</strong>，7 階在 2000 Hz 給 <strong>42.144464 dB</strong>——<strong>阻帶邊緣往通帶靠近一點，階數就從 5 跳到 7</strong>。放寬成 f<sub>s</sub> = <strong>10000 Hz</strong>、A<sub>s</sub> = <strong>60 dB</strong> → n<sub>min</sub> = <strong>3.000000</strong>（剛好整數），3 階給 <strong>60.000004 dB</strong>。5 階在 500 Hz → <strong>0.999512（−0.004239 dB）</strong>，<strong>通帶內幾乎沒有損失，這就是「最平坦」的意思</strong>。</p>
 <p>量級對照：f<sub>c</sub> = 1000 Hz 差不多是一路電話語音的中段，而電話取樣率 8000 Hz 之前那顆抗混疊濾波器要在 3400 Hz 到 4000 Hz 之間做完全部衰減，過渡帶比本例窄得多，階數自然更高。群延遲 159.154943 µs 換算成距離大約是聲音在空氣中走 5 公分，對聽感無所謂；但同樣的不平坦落在數位通訊的符號率上，就足以讓相鄰符號互相干擾。</p>
 
 <section class="workspace"><h2>自由實驗：把規格與階數的帳算給自己看</h2>
-<p>系統是 n 階巴特沃斯低通。前三個滑桿是規格（通帶邊緣、阻帶邊緣、阻帶要求衰減），第四個滑桿是你實際打算採用的階數，第五個滑桿決定站在哪個頻率觀測。程式會算出規格反推的最小階數、採用階數在阻帶邊緣的實際衰減、觀測頻率的增益與 dB，以及一階系統的群延遲。要看的是：把阻帶邊緣往通帶拉近，最小階數會跳得多快。</p>
+<p>系統是 n 階巴特沃斯低通。前三個滑桿是規格（通帶邊緣、阻帶邊緣、阻帶要求衰減），第四個滑桿是你實際打算採用的階數，第五個滑桿決定站在哪個頻率觀測。程式會算出規格反推的最小階數、採用階數在阻帶邊緣的實際衰減、觀測頻率的增益與 dB，以及該 n 階系統在直流與 f<sub>c</sub> 的群延遲。要看的是：把阻帶邊緣往通帶拉近，最小階數會跳得多快，以及階數增加時群延遲差距怎麼變大。</p>
 <div class="controls">
 <label for="flt-fc">通帶邊緣（−3 dB）f<sub>c</sub>（Hz）<input id="flt-fc" type="range" min="100" max="5000" step="100" value="1000"></label>
 <label for="flt-fs">阻帶邊緣 f<sub>s</sub>（Hz）<input id="flt-fs" type="range" min="200" max="20000" step="100" value="3000"></label>
@@ -48,7 +48,7 @@
 <label for="flt-n">實際採用的階數 n<input id="flt-n" type="range" min="1" max="10" step="1" value="5"></label>
 <label for="flt-f">觀測頻率 f（Hz）<input id="flt-f" type="range" min="0" max="20000" step="100" value="2000"></label>
 </div>
-<div id="filterorder-output" class="output" aria-live="polite">f<sub>s</sub>/f<sub>c</sub> = 3.000000、n<sub>min</sub> = 4.191761 → 取上整需要 5 階。<strong>規格達成</strong>：採用 5 階在 f<sub>s</sub> 給 47.712199 dB，超過要求的 40.000000 dB。目前 |H(2000.000000 Hz)| = 0.031235（−30.107239 dB），下降斜率 100 dB/decade。階數愈高愈陡（每階 20 dB/decade），但<strong>每加一階就多一對極點</strong>，相位轉得更多、群延遲更不平坦、元件容差的影響也更大。同樣是 f<sub>c</sub> = 1000.000000 Hz 的一階系統，直流成分被延後 159.154943 µs，f<sub>c</sub> 處只延後 79.577472 µs——<strong>兩個頻率的成分不同步抵達，方波的角就是這樣被磨圓的</strong>。要最平坦選巴特沃斯、要最陡選橢圓、要波形不變形選貝索、要在陡與階數之間妥協選柴比雪夫。把阻帶邊緣滑到低於通帶邊緣時規格就不成立，因為沒有過渡帶可言；把階數滑到小於所需值時會直接告訴你差幾 dB，而補救只有加階數、放寬阻帶邊緣、降低要求三選一。</div>
+<div id="filterorder-output" class="output" aria-live="polite">f<sub>s</sub>/f<sub>c</sub> = 3.000000、n<sub>min</sub> = 4.191761 → 取上整需要 5 階。<strong>規格達成</strong>：採用 5 階在 f<sub>s</sub> 給 47.712199 dB，超過要求的 40.000000 dB。目前 |H(2000.000000 Hz)| = 0.031235（−30.107239 dB），下降斜率 100 dB/decade。階數愈高愈陡（每階 20 dB/decade），但<strong>每加一階就多一個極點</strong>，相位轉得更多、群延遲更不平坦、元件容差的影響也更大。這個 5 階巴特沃斯在直流的群延遲是 515.036215 µs，在 f<sub>c</sub> 處是 791.340015 µs，相差 276.303800 µs——<strong>兩個頻率的成分不同步抵達，方波的角就是這樣被磨圓的</strong>。要最平坦選巴特沃斯、要最陡選橢圓、要波形不變形選貝索、要在陡與階數之間妥協選柴比雪夫。把阻帶邊緣滑到低於通帶邊緣時規格就不成立，因為沒有過渡帶可言；把階數滑到小於所需值時會直接告訴你差幾 dB，而補救只有加階數、放寬阻帶邊緣、降低要求三選一。</div>
 </section>
 
 <h2>不要混淆</h2>

@@ -3,8 +3,8 @@
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-訊號與系統世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">14・s 平面的無限長虛軸被捲成一個圓</p>
-<h1>Z 轉換與單位圓：看極點的半徑與角度就說得出穩定性、共振頻率與衰減速度</h1>
-<p class="lead">第 07 章用極點在左半平面或右半平面判斷連續系統穩不穩，離散世界把同一件事換成「在不在單位圓內」。這章把半徑 r 與角度 θ 翻譯成四件可驗算的事：穩定性、共振在幾 Hz、幾個樣本後衰減到三成七、差分方程長什麼樣。</p>
+<h1>Z 轉換與單位圓：看極點的半徑與角度就說得出穩定性、近似共振位置與衰減速度</h1>
+<p class="lead">第 07 章用極點在左半平面或右半平面判斷連續系統穩不穩，離散世界把同一件事換成「在不在單位圓內」。這章把半徑 r 與角度 θ 翻譯成四件可驗算的事：穩定性、極點角對應幾 Hz、幾個樣本後衰減到三成七、差分方程長什麼樣；r 接近 1 時，極點角才近似真正的共振峰位置。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="13-離散頻譜分析.html">13 離散頻譜分析</a>的離散頻譜與 2π 週期性、<a href="07-拉氏轉換與轉移函數.html">07 拉氏轉換與轉移函數</a>的極點與轉移函數，以及<a href="../../../共通基礎/數學/互動課程/09-複變入門.html">工程數學先修的複數與極式</a>。</p>
 
 <h2>痛點：又一個轉換，而且這次多了一個叫「收斂域」的東西</h2>
@@ -22,33 +22,33 @@
 <p><strong>s 平面怎麼捲成 z 平面。</strong>連續時間的模態是 e<sup>st</sup>，以 T<sub>s</sub> 為間隔取樣後第 n 個樣本是 [exp(sT<sub>s</sub>)]<sup>n</sup>；對照離散模態 z<sup>n</sup> 就得到 z = exp(sT<sub>s</sub>)。把 s = σ + jω 拆成大小與角度：|z| = exp(σT<sub>s</sub>)，所以 σ &lt; 0（左半平面）對應 |z| &lt; 1（單位圓內）、σ = 0（虛軸）對應 |z| = 1、σ &gt; 0（右半平面）對應 |z| &gt; 1。角度是 ∠z = ωT<sub>s</sub>，ω 每增加一個 f<sub>s</sub> 就多轉 2π 繞回原處。<strong>s 平面那條無限長的虛軸被捲成一個有限長的圓周，這就是離散頻譜為什麼是週期的幾何解釋</strong>。</p>
 <p><strong>轉移函數與共軛極點。</strong>離散系統的轉移函數是 H(z) = (∑<sub>m</sub> b<sub>m</sub>z<sup>−m</sup>) / (∑<sub>k</sub> a<sub>k</sub>z<sup>−k</sup>)，分母的根就是極點。係數是實數時複極點必成對共軛出現：p = r·exp(jθ) 與 p<sup>∗</sup> = r·exp(−jθ)。對 H(z) = 1/[(1 − pz<sup>−1</sup>)(1 − p<sup>∗</sup>z<sup>−1</sup>)] 做部分分式，得 h[n] = (p<sup>n+1</sup> − p<sup>∗n+1</sup>)/(p − p<sup>∗</sup>)，用尤拉公式化簡成 h[n] = r<sup>n</sup>·sin((n + 1)θ)/sin θ；θ = 0 或 180° 時 sin θ = 0，取極限得 r<sup>n</sup>(n + 1)cos(nθ)。<strong>不是 r<sup>n</sup>cos(θn)</strong>——那是兩個模態直接相加除以 2，對應的初始條件並不是 δ[n]；拿差分方程對 δ[n] 遞迴一遍就分得出來：h[2] 應該是 r² = 0.810000，cos 式卻給 0。<strong>r 只管包絡衰減、θ 只管振盪快慢</strong>：r &lt; 1 遞減、r = 1 永不衰減、r &gt; 1 指數成長，所以<strong>因果系統穩定的充要條件就是所有極點落在單位圓內</strong>。</p>
 <p><strong>差分方程的係數怎麼來。</strong>分母寫成兩個因式相乘：(1 − pz<sup>−1</sup>)(1 − p<sup>∗</sup>z<sup>−1</sup>)，交叉項是 −(p + p<sup>∗</sup>)z<sup>−1</sup> = −2r·cos θ·z<sup>−1</sup>，常數項是 p·p<sup>∗</sup>z<sup>−2</sup> = r²z<sup>−2</sup>，所以分母是 1 − 2r·cos θ·z<sup>−1</sup> + r²z<sup>−2</sup>。把 H(z) = Y(z)/X(z) 交叉相乘再換回時域，得到 <strong>y[n] = 2r·cos θ·y[n − 1] − r²·y[n − 2] + x[n]</strong>：兩個實數係數、兩個記憶格，就是一個共振器。</p>
-<p><strong>共振峰的幾何意義。</strong>把 z = e<sup>jω</sup> 代進 H(z)，取模長可以整理成實數式 |H(e<sup>jω</sup>)| = 1 / √((1 − 2r·cos(θ − ω) + r²)(1 − 2r·cos(θ + ω) + r²))。這兩個因式各是「單位圓上的觀測點到其中一個極點的距離平方」。<strong>分母是距離的乘積，距離愈近，|H| 愈大</strong>；ω 掃到 θ 時觀測點離極點最近，於是出現共振峰，而 r 愈接近 1 最短距離愈小，峰就愈高愈尖，品質因數 Q 愈高。共振頻率換算成 f<sub>peak</sub> = (θ/360°)·f<sub>s</sub>。</p>
+<p><strong>共振峰的幾何意義。</strong>把 z = e<sup>jω</sup> 代進 H(z)，取模長可以整理成實數式 |H(e<sup>jω</sup>)| = 1 / √((1 − 2r·cos(θ − ω) + r²)(1 − 2r·cos(θ + ω) + r²))。這兩個因式各是「單位圓上的觀測點到其中一個極點的距離平方」。<strong>分母是兩個距離的乘積，不能只看其中一個</strong>；ω = θ 只保證觀測點最靠近其中一個極點，另一個距離仍會改變。因此 f<sub>θ</sub> = (θ/360°)·f<sub>s</sub> 是<strong>極點角對應頻率</strong>，只在 r 接近 1、峰很尖時近似真正的共振頻率。</p>
 <p><strong>衰減常數。</strong>包絡 r<sup>n</sup> 掉到 1/e（36.8 %）時，取對數解 n·ln r = −1 得到 n<sub>τ</sub> = −1/ln r 個樣本，再除以 f<sub>s</sub> 就是秒。r = 0 不可以取對數，因為極點退化到原點，系統沒有記憶。反轉換有四條路：長除法、部分分式加查表（最常用）、圍道積分取留數（連回複變），以及把差分方程當迴圈跑。</p>
 
 <h2>數值實例：一對共軛極點 r = 0.9、θ = 45°、f<sub>s</sub> = 8000 Hz，觀測 n = 5</h2>
 <table><thead><tr><th>量</th><th>算式</th><th>結果</th></tr></thead><tbody>
 <tr><td>脈衝響應</td><td>h[5] = 0.9<sup>5</sup>·sin(270°)/sin(45°) = 0.590490 × (−1.414214)</td><td><strong>−0.835079</strong></td></tr>
 <tr><td>穩定判定</td><td>r = 0.9 &lt; 1</td><td><strong>穩定（極點在單位圓內）</strong></td></tr>
-<tr><td>共振頻率</td><td>f<sub>peak</sub> = (45/360) × 8000</td><td><strong>1000.000000 Hz</strong></td></tr>
+<tr><td>極點角對應頻率</td><td>f<sub>θ</sub> = (45/360) × 8000</td><td><strong>1000.000000 Hz（r 接近 1 時才近似共振頻率）</strong></td></tr>
 <tr><td>衰減常數</td><td>n<sub>τ</sub> = −1/ln(0.9)</td><td><strong>9.491222 個樣本 ＝ 1.186403 ms</strong></td></tr>
 <tr><td>差分方程</td><td>y[n] = 2 × 0.9 × cos45°·y[n−1] − 0.81·y[n−2] + x[n]</td><td><strong>y[n] = 1.272792·y[n−1] − 0.810000·y[n−2] + x[n]</strong></td></tr>
-<tr><td>|H| 在共振點</td><td>ω = θ</td><td><strong>7.432941</strong></td></tr>
+<tr><td>|H| 在極點角</td><td>ω = θ</td><td><strong>7.432941</strong></td></tr>
 <tr><td>|H| 在直流</td><td>ω = 0</td><td><strong>1.861477</strong></td></tr>
 <tr><td>|H| 在 f<sub>s</sub>/2</td><td>ω = π（4000 Hz）</td><td><strong>0.324381</strong></td></tr>
 <tr><td>峰／直流比</td><td>7.432941 / 1.861477</td><td><strong>3.993034 倍</strong></td></tr>
 </tbody></table>
-<p>邊界對照：r = <strong>0.99</strong> → |H| 峰值 <strong>71.065111</strong>、n<sub>τ</sub> = <strong>99.499162 個樣本</strong>（<strong>極點逼近單位圓，峰高了將近十倍、拖尾長了十倍</strong>）；h[5] = <strong>−1.344903</strong>。r = <strong>0.5</strong> → |H| 峰值只有 <strong>1.788854</strong>、n<sub>τ</sub> = <strong>1.442695</strong>（<strong>幾乎沒有共振</strong>）。r = <strong>1.0</strong> → <strong>邊界穩定</strong>，|H| 在共振點<strong>發散</strong>，h[5] = <strong>−1.414214</strong>（永不衰減）。r = <strong>1.05</strong> → <strong>不穩定</strong>，h[5] = <strong>−1.804935</strong>、h[20] = <strong>−2.653298</strong>（1.05<sup>20</sup> = <strong>2.653298</strong>，且 sin(21 × 45°)/sin 45° = −1）。θ = <strong>0°</strong>（實極點）→ |H| 在直流是 <strong>100.000000</strong>（＝1/(1 − r)²）、共振頻率 <strong>0.000000 Hz</strong>——<strong>這就是一個低通</strong>。θ = <strong>180°</strong> → 共振在 <strong>4000.000000 Hz</strong>、直流只有 <strong>0.277008</strong>——<strong>這是一個高通</strong>。θ = <strong>90°</strong> → 共振 <strong>2000.000000 Hz</strong>、|H| 峰值 <strong>5.263158</strong>、直流與 f<sub>s</sub>/2 都是 <strong>0.552486</strong>。</p>
+<p>邊界對照：r = <strong>0.99</strong> → |H| 在極點角為 <strong>71.065111</strong>、n<sub>τ</sub> = <strong>99.499162 個樣本</strong>（<strong>極點逼近單位圓，響應高了將近十倍、拖尾長了十倍</strong>）；h[5] = <strong>−1.344903</strong>。r = <strong>0.5</strong> → |H| 在極點角只有 <strong>1.788854</strong>、n<sub>τ</sub> = <strong>1.442695</strong>。r = <strong>1.0</strong> → <strong>非 BIBO 穩定</strong>，因果系統的收斂域不含單位圓，不能把單位圓上的代入值當成頻率響應；h[5] = <strong>−1.414214</strong>（永不衰減）。r = <strong>1.05</strong> → <strong>不穩定</strong>，h[5] = <strong>−1.804935</strong>、h[20] = <strong>−2.653298</strong>（1.05<sup>20</sup> = <strong>2.653298</strong>，且 sin(21 × 45°)/sin 45° = −1）。θ = <strong>0°</strong>（實極點）→ |H| 在直流是 <strong>100.000000</strong>（＝1/(1 − r)²），是低通；θ = <strong>180°</strong> → 增益偏向 <strong>4000.000000 Hz</strong>，直流只有 <strong>0.277008</strong>，是高通；θ = <strong>90°</strong> → 極點角對應 <strong>2000.000000 Hz</strong>、|H| 在極點角為 <strong>5.263158</strong>，直流與 f<sub>s</sub>/2 都是 <strong>0.552486</strong>。</p>
 <p>量級對照：f<sub>s</sub> = 8000 Hz 是電話品質的取樣率，θ = 45° 對應的 1000 Hz 正是本課的參考轉角頻率。r = 0.9 的拖尾是 9.49 個樣本、約 1.19 ms；換成 CD 的 44.1 kHz，拖尾仍是 9.49 個樣本，卻只剩 0.215 ms——<strong>同一組係數在不同 f<sub>s</sub> 下，濾的頻率與拖的時間全部跟著變</strong>。</p>
 
 <section class="workspace"><h2>自由實驗：拉動極點的半徑與角度</h2>
-<p>系統是一對共軛極點 p = r·exp(±jθ) 組成的二階共振器，輸入打一個 δ[n]，輸出是 h[n] = r<sup>n</sup>·sin((n + 1)θ)/sin θ。半徑 r 決定衰減、角度 θ 決定振盪頻率、f<sub>s</sub> 把角度換算成 Hz、n 決定看第幾個樣本。要看的是四件事同時變化：穩定判定、共振頻率、拖尾長度，以及頻率響應在共振點、直流與 f<sub>s</sub>/2 三處的高低差。</p>
+<p>系統是一對共軛極點 p = r·exp(±jθ) 組成的二階共振器，輸入打一個 δ[n]，輸出是 h[n] = r<sup>n</sup>·sin((n + 1)θ)/sin θ。半徑 r 決定衰減、角度 θ 決定振盪頻率、f<sub>s</sub> 把角度換算成 Hz、n 決定看第幾個樣本。要看的是四件事同時變化：穩定判定、極點角對應頻率、拖尾長度，以及頻率響應在極點角、直流與 f<sub>s</sub>/2 三處的高低差。</p>
 <div class="controls">
 <label for="zpl-r">極點半徑 r<input id="zpl-r" type="range" min="0" max="1.2" step="0.01" value="0.9"></label>
 <label for="zpl-theta">極點角度 θ（°）<input id="zpl-theta" type="range" min="0" max="180" step="1" value="45"></label>
 <label for="zpl-n">觀測樣本 n<input id="zpl-n" type="range" min="0" max="40" step="1" value="5"></label>
 <label for="zpl-fs">取樣頻率 f<sub>s</sub>（Hz）<input id="zpl-fs" type="range" min="1000" max="48000" step="1000" value="8000"></label>
 </div>
-<div id="zplane-output" class="output" aria-live="polite">極點 z = 0.900000·exp(±j45.000000°)，h[5] = −0.835079。<strong>穩定</strong>：極點在單位圓內，h[n] 以 r<sup>n</sup> 衰減，大約 n<sub>τ</sub> = 9.491222 個樣本（1.186403 ms）後掉到 36.8 %。共振頻率 1000.000000 Hz。差分方程：y[n] = 1.272792·y[n−1] − 0.810000·y[n−2] + x[n]。|H| 在共振點 7.432941、在直流 1.861477、在 f<sub>s</sub>/2（4000.000000 Hz）0.324381，峰／直流比 3.993034 倍。|H| 的分母就是「單位圓上的觀測點到極點的距離」——<strong>距離愈近值愈大</strong>，所以 r 愈接近 1，共振峰愈高愈尖，代價是拖尾愈長。連續時間看「在不在左半平面」，離散時間看「在不在單位圓內」——z = exp(sT<sub>s</sub>) 把無限長的虛軸捲成一個圓，這就是離散頻譜為什麼是週期的幾何理由。把 r 滑到 1 會看到邊界穩定與發散的峰值，滑過 1 會看到指數成長，滑到 0 則退化成沒有記憶的系統。</div>
+<div id="zplane-output" class="output" aria-live="polite">極點 z = 0.900000·exp(±j45.000000°)，h[5] = −0.835079。<strong>穩定</strong>：極點在單位圓內，h[n] 以 r<sup>n</sup> 衰減，大約 n<sub>τ</sub> = 9.491222 個樣本（1.186403 ms）後掉到 36.8 %。極點角對應頻率 f<sub>θ</sub> = 1000.000000 Hz（r 接近 1 時才近似峰值位置）。差分方程：y[n] = 1.272792·y[n−1] − 0.810000·y[n−2] + x[n]。|H| 在極點角為 7.432941、在直流為 1.861477、在 f<sub>s</sub>/2（4000.000000 Hz）為 0.324381，極點角／直流比 3.993034 倍。|H| 的分母就是「單位圓上的觀測點到極點的距離」——<strong>距離愈近值愈大</strong>，所以 r 愈接近 1，響應通常愈高愈尖，代價是拖尾愈長。連續時間看「在不在左半平面」，離散時間看「在不在單位圓內」——z = exp(sT<sub>s</sub>) 把無限長的虛軸捲成一個圓，這就是離散頻譜為什麼是週期的幾何理由。把 r 滑到 1 會看到非 BIBO 穩定，滑過 1 會看到指數成長，滑到 0 則退化成沒有記憶的系統。</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -56,7 +56,7 @@
 <li>z<sup>−1</sup> 是「延遲一個樣本」的算子，不是「除以 z」這種代數巧合。差分方程的每一格記憶都變成一個 z<sup>−1</sup>，遞迴式因此變成有理式。</li>
 <li>收斂域不是裝飾。<strong>沒有它，同一個 H(z) 可以是穩定的因果系統，也可以是不穩定的反因果系統</strong>；反轉換時先問「收斂域在哪」，再決定要展成右側序列還是左側序列。</li>
 <li>「極點在單位圓內」是<strong>離散</strong>時間的穩定條件，不能拿去判斷連續時間系統——連續那邊看的是左半平面。兩者靠 z = exp(sT<sub>s</sub>) 對應，但判準本身不能互換。</li>
-<li>θ 的單位是「每個樣本的弧度」，不是 Hz。要換成實際頻率必須乘上 f<sub>s</sub>/2π——<strong>同一組係數在不同 f<sub>s</sub> 下濾的是不同頻率</strong>，8 kHz 設計好的共振器搬到 48 kHz，共振點會跑到六倍遠。</li>
+<li>θ 代表每個樣本轉過的角度，本頁滑桿與輸出以度表示。要換成實際頻率可用 f<sub>θ</sub> = (θ/360°)f<sub>s</sub>；但這只是極點角對應頻率，r 接近 1 時才近似真正峰值位置。<strong>同一組係數換一個 f<sub>s</sub>，濾的頻率也會跟著變</strong>。</li>
 <li>|H| 的峰值高度不是增益設定值，而是極點到單位圓距離的結果；想調峰高只能動 r，動 θ 只會平移峰的位置。r = 1 也不是「剛剛好可以用」的設計點，而是要刻意避開——理論上是理想振盪器，實作上捨入誤差就足以把它推到圈外變成發散。</li>
 </ul>
 
