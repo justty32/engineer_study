@@ -15,7 +15,7 @@
 
 ## 第二輪（HANDOFF-2，2026-10-09）
 
-- 基準 wf-lint：broken=2 biglist=269 residue {{=3
+- 基準 wf-lint：broken=2 biglist=269 residue 雙大括號=3
 - 列：43×9、44×8、45×2、46×6、47×1＝26 列
 - 交跨課隊：43 main-site-link×2、44 網路協定 site-footer＋title（頁尾）；43／44 topbar 只做課內 aria-label
 - 工人線：ml、os、linux、re、net-syn→net-ev（序列）、sec-a、sec-b、iot-nav→iot-a／iot-b、paper
