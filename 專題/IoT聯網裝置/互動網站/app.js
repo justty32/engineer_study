@@ -644,7 +644,7 @@
         setText(outputs.required, "—");
         setText(outputs.esrDroop, "—");
         setText(outputs.totalDroop, "—");
-        setText(outputs.verdict, "請輸入大於 0 的電流、時間、ESR、電容量與允許壓降。");
+        setText(outputs.verdict, "電流、時間與 ESR 不可小於 0；電容量與允許壓降必須大於 0。");
         return;
       }
       var durationSeconds = duration / 1000;
@@ -677,6 +677,7 @@
   var FIRMWARE_STATES = ["OFF", "BOOT", "INIT", "REGISTERING", "ONLINE", "BACKOFF", "HARD_RESET", "SLEEP"];
   var FIRMWARE_EVENT_LABELS = {
     power: "上電",
+    "boot-ok": "開機完成",
     "init-ok": "初始化成功",
     "register-ok": "註冊成功",
     timeout: "逾時",
@@ -738,7 +739,7 @@
       } else if (eventName === "power" && state === "HARD_RESET") {
         next = "BOOT";
         reason = "硬重啟完成並重新開機";
-      } else if (eventName === "init-ok" && state === "BOOT") {
+      } else if (eventName === "boot-ok" && state === "BOOT") {
         next = "INIT";
       } else if (eventName === "init-ok" && state === "INIT") {
         next = "REGISTERING";
@@ -757,7 +758,8 @@
       } else if (eventName === "sleep" && state === "ONLINE") {
         next = "SLEEP";
       } else if (eventName === "wake" && state === "SLEEP") {
-        next = "BOOT";
+        next = "ONLINE";
+        reason = "保留模組註冊的低功耗嗚醒，回到連線狀態";
       } else {
         invalid(eventName, reason);
         return;

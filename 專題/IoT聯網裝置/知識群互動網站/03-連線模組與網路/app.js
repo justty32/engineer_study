@@ -17,6 +17,7 @@
     "session", "data-budget", "keepalive", "supervisor"
   ];
   var STORAGE_KEY = "engineerStudy.iotConnectivity.v1";
+  var ANNOUNCE_UPDATES = true;
 
   var DEFAULTS = {
     "bearer-choice": {
@@ -26,7 +27,7 @@
     "host-link": {
       "host-baud": 115200, "host-bits-byte": 10, "host-payload-bytes": 512,
       "host-message-rate": 10, "host-burst-rate": 20000, "host-burst-ms": 100,
-      "host-buffer-bytes": 2048
+      "host-module-fifo-bytes": 1024, "host-drain-rate": 8000, "host-buffer-bytes": 2048
     },
     "at-engine": {
       "at-state": "wait", "at-line": "urc", "at-command-pending": "yes",
@@ -60,7 +61,7 @@
 
   var OUTPUTS = {
     "bearer-choice": ["bearer-verdict", "bearer-runner-up", "bearer-tradeoff", "bearer-status"],
-    "host-link": ["host-capacity", "host-steady-rate", "host-utilization", "host-burst-excess", "host-buffer-headroom", "host-status"],
+    "host-link": ["host-capacity", "host-steady-rate", "host-utilization", "host-burst-excess", "host-module-headroom", "host-rx-excess", "host-buffer-headroom", "host-status"],
     "at-engine": ["at-classification", "at-action", "at-next-state", "at-status"],
     backoff: ["backoff-nominal", "backoff-min", "backoff-max", "backoff-cumulative", "backoff-status"],
     session: ["session-first", "session-second", "session-count", "session-next", "session-status"],
@@ -92,8 +93,8 @@
   var SESSION_ORDER = Object.keys(SESSION_LABELS);
 
   var SUPERVISOR_LABELS = {
-    "supervisor-log": "保存 log／reset cause",
-    "supervisor-timeout": "Timeout 與最後命令",
+    "supervisor-log": "保存 log／最後命令",
+    "supervisor-timeout": "Timeout",
     "supervisor-backoff": "有上限的 backoff",
     "supervisor-soft-reset": "Soft reset",
     "supervisor-hard-reset": "Hard reset／power cycle",
@@ -144,10 +145,14 @@
     else if (range === "wide" && infrastructure === "operator") verdict = "NB-IoT";
     else if (range === "wide" && infrastructure === "private") verdict = "LoRaWAN";
     else if (range === "campus" && payload === "small" && infrastructure === "private" && downlink === "rare") verdict = "LoRaWAN";
-    else if (range === "campus" && infrastructure === "private") verdict = "Thread";
+    else if (range === "campus" && infrastructure === "operator" && payload === "small" && downlink === "rare") verdict = "NB-IoT";
+    else if (range === "campus" && infrastructure === "operator") verdict = "LTE-M";
+    else if (range === "campus" && infrastructure === "private") verdict = "Wi-Fi";
     else if (range === "room" && power === "coin") verdict = "BLE";
     else verdict = "Wi-Fi";
-    var runnerMap = { "NB-IoT": "LTE-M", "LTE-M": "NB-IoT", "LoRaWAN": "Thread", Thread: "LoRaWAN", BLE: "Thread", "Wi-Fi": "LTE-M" };
+    var runnerMap = { "NB-IoT": "LTE-M", "LTE-M": "NB-IoT", "LoRaWAN": "Thread", Thread: "LoRaWAN", BLE: "Thread" };
+    var runnerUp = verdict === "Wi-Fi" ? (range === "room" ? "BLE／Thread" : range === "campus" ? "LoRaWAN／Thread" : "LTE-M") : runnerMap[verdict];
+    var powerWarning = verdict === "Wi-Fi" && power === "coin";
     var tradeoffs = {
       "BLE": "以低功耗與短距離換取有限覆蓋；需確認 gateway 與下行需求。",
       "Thread": "以私有網狀覆蓋換取部署與 border router 成本；需確認節點密度。",
@@ -158,8 +163,8 @@
     };
     return {
       range: range, payload: payload, power: power, infrastructure: infrastructure, downlink: downlink,
-      verdict: verdict, runnerUp: runnerMap[verdict], tradeoff: tradeoffs[verdict],
-      status: "ok", blocked: false
+      verdict: verdict, runnerUp: runnerUp, tradeoff: tradeoffs[verdict] + (powerWarning ? " 鈕扣電池難以承擔 Wi-Fi 的峰值與平均功耗，應重做電源預算。" : ""),
+      status: powerWarning ? "warn" : "ok", blocked: false, powerWarning: powerWarning
     };
   }
 
@@ -170,24 +175,31 @@
     var messageRate = requireNumber(values, "host-message-rate", "message rate", "nonnegative");
     var burstRate = requireNumber(values, "host-burst-rate", "burst rate", "nonnegative");
     var burstMs = requireNumber(values, "host-burst-ms", "burst duration", "nonnegative");
+    var moduleFifo = requireNumber(values, "host-module-fifo-bytes", "模組 TX FIFO", "positive");
+    var drainRate = requireNumber(values, "host-drain-rate", "主機應用消化速率", "nonnegative");
     var buffer = requireNumber(values, "host-buffer-bytes", "buffer", "positive");
     var capacity = baud / bits;
     var steady = payload * messageRate;
     var utilization = steady / capacity;
-    var burstExcess = Math.max(0, (burstRate - capacity) * (burstMs / 1000));
-    var headroom = buffer - burstExcess;
-    var blocked = steady > capacity || headroom < 0;
-    var warning = !blocked && burstRate > capacity;
+    var duration = burstMs / 1000;
+    var moduleExcess = Math.max(0, (burstRate - capacity) * duration);
+    var moduleHeadroom = moduleFifo - moduleExcess;
+    var hostArrivalRate = Math.min(burstRate, capacity);
+    var hostExcess = Math.max(0, (hostArrivalRate - drainRate) * duration);
+    var hostHeadroom = buffer - hostExcess;
+    var blocked = steady > capacity || moduleHeadroom < 0 || hostHeadroom < 0;
+    var warning = !blocked && (moduleExcess > 0 || hostExcess > 0);
     return finiteResult({
       baud: baud, bits: bits, capacity: capacity, steadyRate: steady, utilization: utilization,
-      burstExcess: burstExcess, bufferHeadroom: headroom, blocked: blocked, warning: warning,
+      burstExcess: moduleExcess, moduleHeadroom: moduleHeadroom, hostArrivalRate: hostArrivalRate,
+      hostExcess: hostExcess, bufferHeadroom: hostHeadroom, blocked: blocked, warning: warning,
       status: blocked ? "error" : warning ? "warn" : "ok"
     });
   }
 
   function calculateAtEngine(values) {
     var state = requireChoice(values, "at-state", "AT state", ["idle", "wait", "data"]);
-    var line = requireChoice(values, "at-line", "AT line", ["ok", "error", "urc", "payload", "prompt"]);
+    var line = requireChoice(values, "at-line", "AT line", ["ok", "error", "urc", "payload", "prompt", "exit-data"]);
     var pending = requireChoice(values, "at-command-pending", "pending command", ["yes", "no"]);
     var handler = requireChoice(values, "at-urc-handler", "URC handler", ["yes", "no"]);
     var guard = requireChoice(values, "at-transparent-guard", "transparent guard", ["yes", "no"]);
@@ -202,6 +214,15 @@
       action = "缺少 transparent guard，阻擋資料路徑";
       blocked = true;
       status = "error";
+    } else if (state === "data") {
+      classification = line === "exit-data" ? "透傳結束事件" : "透明資料";
+      action = line === "exit-data" ? "Payload 送畢或完成逃脫序列，離開透傳模式" : "不解析內容，直接送入透明資料管道";
+      nextState = line === "exit-data" ? "idle" : "data";
+    } else if (line === "exit-data") {
+      classification = "透傳結束事件";
+      action = "目前不在透傳模式，不需要離開";
+      warning = true;
+      status = "warn";
     } else if (line === "urc") {
       classification = "URC";
       if (handler === "no") {
@@ -268,7 +289,7 @@
     var uncappedCount = threshold > 0 ? Math.min(attempt + 1, threshold) : 0;
     for (var index = 0; index < uncappedCount; index += 1) cumulative += cappedDelay(base, index, cap);
     if (attempt >= threshold) cumulative += (attempt - threshold + 1) * cap;
-    var exhausted = attempt > maxRetries;
+    var exhausted = attempt >= maxRetries;
     return finiteResult({
       base: base, attempt: attempt, cap: cap, jitter: jitter, maxRetries: maxRetries,
       nominal: nominal, minimum: minimum, maximum: maximum, cumulative: cumulative,
@@ -289,7 +310,8 @@
     return {
       situation: situation, first: scenario[0], second: scenario[1], count: count,
       total: SESSION_ORDER.length, next: nextId ? SESSION_LABELS[nextId] : "所有會話 gate 已完成",
-      nextId: nextId, complete: !nextId, blocked: Boolean(nextId), status: nextId ? "error" : "ok"
+      nextId: nextId, complete: !nextId, blocked: false,
+      status: nextId ? (SESSION_ORDER.indexOf(nextId) < 3 ? "error" : "warn") : "ok"
     };
   }
 
@@ -322,13 +344,15 @@
     var reports = requireNumber(values, "keepalive-reports", "reports", "positive");
     var reconnect = requireNumber(values, "keepalive-reconnect-bytes", "reconnect bytes", "nonnegative");
     var reachability = requireChoice(values, "keepalive-reachability", "可達性", ["frequent", "rare"]);
-    var wakes = Math.ceil(hours * 3600 / seconds);
+    if (hours > 24) throw new Error("每日保持會話時數不可超過 24 小時");
+    var sessionWakes = Math.ceil(hours * 3600 / seconds);
+    var wakes = sessionWakes;
     var keepaliveBytes = wakes * roundtrip;
     var reconnectBytes = reports * reconnect;
     var byteWinner = keepaliveBytes < reconnectBytes ? "keepalive" : keepaliveBytes > reconnectBytes ? "reconnect" : "tie";
     return finiteResult({
       seconds: seconds, hours: hours, roundtripBytes: roundtrip, reports: reports,
-      reconnectBytesPerReport: reconnect, reachability: reachability, wakes: wakes,
+      reconnectBytesPerReport: reconnect, reachability: reachability, sessionWakes: sessionWakes, wakes: wakes,
       keepaliveBytes: keepaliveBytes, reconnectBytes: reconnectBytes, byteWinner: byteWinner,
       verdict: reachability === "rare" ? "評估 PSM／eDRX／批次上傳" : "評估持續會話",
       status: reachability === "rare" ? "warn" : "ok"
@@ -355,7 +379,7 @@
       situation: situation, first: scenarios[0], second: scenarios[1], count: count,
       total: SUPERVISOR_ORDER.length, blocker: missing.length ? SUPERVISOR_LABELS[missing[0]] : "必要 supervisor gate 已完成",
       missing: missing, complete: missing.length === 0, blocked: missing.length !== 0,
-      status: missing.length ? "error" : "ok"
+      status: missing.length ? "warn" : "ok"
     };
   }
 
@@ -389,7 +413,7 @@
       element.classList.add("status-" + (stateName === "ok" ? "ok" : stateName === "warn" ? "warn" : stateName === "error" ? "error" : "neutral"));
     }
     if (element.dataset) element.dataset.state = stateName;
-    if (element.setAttribute) {
+    if (ANNOUNCE_UPDATES && element.setAttribute) {
       element.setAttribute("role", "status");
       element.setAttribute("aria-live", "polite");
     }
@@ -447,7 +471,7 @@
   }
 
   function renderBearer(doc, result) {
-    state(doc, "bearer-verdict", result.verdict, result.status);
+    text(doc, "bearer-verdict", result.verdict);
     text(doc, "bearer-runner-up", result.runnerUp);
     text(doc, "bearer-tradeoff", result.tradeoff);
     state(doc, "bearer-status", "初篩完成", result.status);
@@ -459,15 +483,18 @@
     text(doc, "host-steady-rate", format(result.steadyRate, 2, "B/s"));
     text(doc, "host-utilization", format(result.utilization * 100, 2, "%"));
     text(doc, "host-burst-excess", format(result.burstExcess, 2, "B"));
+    text(doc, "host-module-headroom", format(result.moduleHeadroom, 2, "B"));
+    text(doc, "host-rx-excess", format(result.hostExcess, 2, "B"));
     text(doc, "host-buffer-headroom", format(result.bufferHeadroom, 2, "B"));
     state(doc, "host-status", result.blocked ? "容量或緩衝阻擋" : result.warning ? "Burst 警告" : "介面預算通過", result.status);
-    feedback(doc, "host-feedback", result.blocked ? "先提高介面容量或 buffer，並檢查 RTS/CTS、DMA／環形緩衝；平均速率通過不代表 burst 安全。" : result.warning ? "Burst 超過 UART 容量但 buffer 尚足，建議 RTS/CTS、DMA／環形緩衝或更快介面。" : "steady 與 burst 預算目前通過，仍需以 driver 與模組 FIFO 實測。", result.status);
+    feedback(doc, "host-feedback", result.blocked ? "分別檢查模組 TX FIFO／RTS-CTS 與主機 RX buffer／應用消化速率；兩端任一負裕度都會丟資料。" : result.warning ? "模組 burst 或主機應用消化速率形成暫時積壓；目前 FIFO 與 RX buffer 仍有裕度，但要以高水位計數器實測。" : "模組側與主機側預算目前通過，仍需以 driver、FIFO 與 buffer 高水位實測。", result.status);
   }
 
   function renderAt(doc, result) {
     text(doc, "at-classification", result.classification);
     text(doc, "at-action", result.action);
-    text(doc, "at-next-state", result.nextState);
+    var stateLabels = { idle: "閒置", wait: "等待回應", data: "透明資料" };
+    text(doc, "at-next-state", stateLabels[result.nextState] || result.nextState);
     state(doc, "at-status", result.blocked ? "解析阻擋" : result.warning ? "非預期回覆" : "狀態通過", result.status);
     feedback(doc, "at-feedback", result.line === "urc" && !result.blocked ? "URC 已獨立分流；不可因 URC 到達而完成 pending command。" : result.action, result.status);
   }
@@ -478,7 +505,7 @@
     text(doc, "backoff-max", format(result.maximum, 1, "s"));
     text(doc, "backoff-cumulative", format(result.cumulative, 1, "s"));
     state(doc, "backoff-status", result.exhausted ? "Retry 已耗盡" : "Backoff 通過", result.status);
-    feedback(doc, "backoff-feedback", result.exhausted ? "attempt 已超過 max retries，停止無限重試並交給 supervisor。" : "每次 delay 有 cap，jitter 用來分散同時重連；仍需記錄 attempt、原因與最後一次錯誤。", result.status);
+    feedback(doc, "backoff-feedback", result.exhausted ? "重試索引 n 已達最大重試次數，停止無限重試並交給 supervisor。" : "n=0 代表首次重試；每次等待有上限，隨機拖延用來分散同時重連。", result.status);
   }
 
   function renderSession(doc, result) {
@@ -493,6 +520,7 @@
   function renderData(doc, result) {
     text(doc, "data-wire-message", format(result.wireMessage, 1, "B/message"));
     text(doc, "data-daily", format(result.daily, 1, "B/day"));
+    text(doc, "data-period-label", format(result.days, 0, "日資料量"));
     text(doc, "data-period", format(result.period, 1, "B"));
     text(doc, "data-baseline", format(result.baseline, 1, "B"));
     text(doc, "data-saving", format(result.saving, 2, "%"));
@@ -504,8 +532,8 @@
     text(doc, "keepalive-wakes", format(result.wakes, 0, "次"));
     text(doc, "keepalive-bytes", format(result.keepaliveBytes, 0, "B"));
     text(doc, "reconnect-bytes", format(result.reconnectBytes, 0, "B"));
-    text(doc, "keepalive-byte-winner", result.byteWinner);
-    state(doc, "keepalive-verdict", result.verdict, result.status);
+    text(doc, "keepalive-byte-winner", { keepalive: "持續會話較少", reconnect: "每次重連較少", tie: "兩者相同" }[result.byteWinner]);
+    text(doc, "keepalive-verdict", result.verdict);
     state(doc, "keepalive-status", result.reachability === "rare" ? "低可達性需評估睡眠" : "可達性策略完成", result.status);
     feedback(doc, "keepalive-feedback", "Bytes 比較不等於能耗比較；radio 喚醒、PSM／eDRX、批次上傳與實際電流剖面仍需另行驗證。" + (result.reachability === "rare" ? " 目前是 rare，請評估 PSM、eDRX 或批次上傳。" : " frequent 可先評估持續會話。"), result.status);
   }
@@ -521,7 +549,7 @@
 
   function readModule(doc, key) {
     var numeric = {
-      "host-link": ["host-baud", "host-bits-byte", "host-payload-bytes", "host-message-rate", "host-burst-rate", "host-burst-ms", "host-buffer-bytes"],
+      "host-link": ["host-baud", "host-bits-byte", "host-payload-bytes", "host-message-rate", "host-burst-rate", "host-burst-ms", "host-module-fifo-bytes", "host-drain-rate", "host-buffer-bytes"],
       backoff: ["backoff-base", "backoff-attempt", "backoff-cap", "backoff-jitter", "backoff-max-retries"],
       "data-budget": ["data-payload", "data-encoding-ratio", "data-overhead", "data-messages-day", "data-delivery-factor", "data-days"],
       keepalive: ["keepalive-seconds", "keepalive-session-hours", "keepalive-roundtrip-bytes", "keepalive-reports", "keepalive-reconnect-bytes"]
@@ -531,8 +559,11 @@
       "at-engine": ["at-state", "at-line", "at-command-pending", "at-urc-handler", "at-transparent-guard"],
       session: ["session-case"], keepalive: ["keepalive-reachability"], supervisor: ["supervisor-case"]
     };
-    if (numeric[key]) return readNumbers(doc, numeric[key]);
-    if (selects[key]) return readSelects(doc, selects[key]);
+    var numberResult = numeric[key] ? readNumbers(doc, numeric[key]) : { ok: true, value: {} };
+    var selectResult = selects[key] ? readSelects(doc, selects[key]) : { ok: true, value: {} };
+    if (!numberResult.ok) return numberResult;
+    if (!selectResult.ok) return selectResult;
+    if (numeric[key] || selects[key]) return { ok: true, value: Object.assign({}, numberResult.value, selectResult.value) };
     return { ok: false, error: "未知模組" };
   }
 
@@ -546,11 +577,8 @@
     else if (key === "backoff") result = safeRun(calculateBackoff, input.value);
     else if (key === "session") result = safeRun(calculateSession, input.value, checks(doc, "[data-session-check]"));
     else if (key === "data-budget") result = safeRun(calculateDataBudget, input.value);
-    else if (key === "keepalive") {
-      var keepaliveInput = readModule(doc, key);
-      if (keepaliveInput.ok) keepaliveInput.value["keepalive-reachability"] = get(doc, "keepalive-reachability").value;
-      result = keepaliveInput.ok ? safeRun(calculateKeepalive, keepaliveInput.value) : keepaliveInput;
-    } else result = safeRun(calculateSupervisor, input.value, checks(doc, "[data-supervisor-check]"));
+    else if (key === "keepalive") result = safeRun(calculateKeepalive, input.value);
+    else result = safeRun(calculateSupervisor, input.value, checks(doc, "[data-supervisor-check]"));
     if (!result.ok) { clearModule(doc, key, result.error); return; }
     if (key === "bearer-choice") renderBearer(doc, result.value);
     if (key === "host-link") renderHost(doc, result.value);
@@ -650,7 +678,21 @@
   function init(doc, browserRoot) {
     if (!doc) return;
     var rootObject = browserRoot || (typeof window !== "undefined" ? window : null);
+    all(doc, ".eyebrow, .section-kicker, .panel-tag").forEach(function (element) {
+      if (/^[\x00-\x7F\s]+$/.test(element.textContent || "")) element.setAttribute("lang", "en");
+    });
+    function syncTopbarHeight() {
+      var topbar = all(doc, ".topbar")[0];
+      if (topbar && doc.documentElement && typeof topbar.getBoundingClientRect === "function") {
+        doc.documentElement.style.setProperty("--topbar-height", Math.ceil(topbar.getBoundingClientRect().height) + "px");
+      }
+    }
+    syncTopbarHeight();
+    if (rootObject && typeof rootObject.addEventListener === "function") rootObject.addEventListener("resize", syncTopbarHeight);
     var completed = loadProgress(rootObject);
+    var liveElements = all(doc, "[aria-live]");
+    liveElements.forEach(function (element) { element.removeAttribute("aria-live"); });
+    ANNOUNCE_UPDATES = false;
     var sections = all(doc, "[data-module]");
     var initial = sections.length ? sections[0].getAttribute("data-module") : MODULE_KEYS[0];
     activate(doc, MODULE_KEYS.indexOf(initial) >= 0 ? initial : MODULE_KEYS[0]);
@@ -671,6 +713,7 @@
     });
     var resetProgress = get(doc, "reset-progress");
     if (resetProgress) resetProgress.addEventListener("click", function () {
+      if (rootObject && typeof rootObject.confirm === "function" && !rootObject.confirm("確定要清除全部學習進度嗎？")) return;
       completed = {};
       saveProgress(rootObject, completed);
       updateProgress(doc, completed);
@@ -702,6 +745,8 @@
     });
     updateProgress(doc, completed);
     MODULE_KEYS.forEach(function (key) { runModule(doc, key); });
+    ANNOUNCE_UPDATES = true;
+    liveElements.forEach(function (element) { element.setAttribute("aria-live", "polite"); });
   }
 
   return {

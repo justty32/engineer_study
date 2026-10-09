@@ -869,6 +869,20 @@ body:not(.page-index) {
   line-height: 1.65;
 }
 
+.lane-question.is-current {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 28%, transparent);
+}
+
+.lane-question-next {
+  margin: 12px 0 0;
+  font-size: 0.92rem;
+}
+
+.lane-question-next a {
+  color: var(--teal-dark);
+  font-weight: 700;
+}
+
 /* ---------- 這條線全部 N 篇 ---------- */
 
 .lane-all {

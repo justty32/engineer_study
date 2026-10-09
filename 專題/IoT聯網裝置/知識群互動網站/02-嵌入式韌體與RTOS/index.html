@@ -193,7 +193,7 @@
                 <div class="field"><label for="sync-kind">資料情境</label><select id="sync-kind"><option value="event">事件</option><option value="data" selected>資料</option><option value="shared-resource">共享資源</option></select></div>
                 <div class="field"><label for="sync-producer">Producer</label><select id="sync-producer"><option value="isr" selected>ISR</option><option value="task">Task</option></select></div>
                 <div class="field"><label for="sync-consumers">Consumer 數量</label><select id="sync-consumers"><option value="one" selected>單一</option><option value="many">多個</option></select></div>
-                <div class="field"><label for="sync-primitive">同步原語</label><select id="sync-primitive"><option value="notification">Notification</option><option value="binary-semaphore">Binary semaphore</option><option value="queue" selected>Queue</option><option value="mutex">Mutex</option></select></div>
+                <div class="field"><label for="sync-primitive">同步原語</label><select id="sync-primitive"><option value="notification">Notification</option><option value="binary-semaphore">Binary semaphore</option><option value="event-group">Event group</option><option value="queue" selected>Queue</option><option value="stream-buffer">Stream buffer</option><option value="message-buffer">Message buffer</option><option value="mutex">Mutex</option></select></div>
                 <div class="field"><label for="sync-priority-inheritance">Priority inheritance</label><select id="sync-priority-inheritance"><option value="yes" selected>有</option><option value="no">無</option></select></div>
                 <div class="field"><label for="sync-lock-order">Lock order</label><select id="sync-lock-order"><option value="fixed" selected>固定</option><option value="unordered">未固定</option><option value="none">沒有巢狀鎖</option></select></div>
               </div>
@@ -205,7 +205,7 @@
               <div class="comparison-row"><span>建議原語</span><strong id="sync-verdict">—</strong></div>
               <div class="next-step"><span>第一個阻擋項</span><strong id="sync-blocker">—</strong></div>
               <div id="sync-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待檢查</span></div>
-              <p id="sync-feedback" class="feedback" aria-live="polite">資料通常需要 queue；共享資源需要 mutex 與 priority inheritance。ISR 不可走會阻塞的路徑。</p>
+              <p id="sync-feedback" class="feedback" aria-live="polite">資料通常用 queue，也可依資料邊界選 stream/message buffer 或帶值 notification；多 consumer 事件要用 event group 或 broadcast。共享資源需要 mutex 與 priority inheritance。</p>
             </div>
           </div>
         </section>

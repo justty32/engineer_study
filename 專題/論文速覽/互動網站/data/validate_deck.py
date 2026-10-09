@@ -11,6 +11,7 @@ import os
 import re
 import sys
 import urllib.parse
+from pathlib import Path
 
 PR_ROOT = os.environ.get('PR_ROOT', '/home/lorkhan/repo/paper_readings')
 GH_BASE = 'https://github.com/justty32/paper_readings/blob/main/'
@@ -65,7 +66,7 @@ def check_url(rep, url, where, allow_arxiv=False):
 def check_deck(path):
     rep = Report(path)
     try:
-        deck = json.load(open(path, encoding='utf-8'))
+        deck = json.loads(Path(path).read_text(encoding='utf-8'))
     except Exception as e:  # noqa: BLE001
         rep.err(f'JSON 解析失敗：{e}')
         return rep
@@ -87,10 +88,12 @@ def check_deck(path):
     minutes = 0
     for li, lane in enumerate(deck['lanes']):
         w = f'lane[{li}]'
-        for k in ('id', 'name', 'minutes', 'paper_count', 'deep_doc', 'gist', 'highlights', 'question', 'all_papers'):
+        required = ('id', 'name', 'minutes', 'paper_count', 'deep_doc', 'gist', 'highlights', 'question', 'all_papers')
+        missing = [k for k in required if k not in lane]
+        for k in missing:
             if k not in lane:
                 rep.err(f'{w} 缺欄位 {k}')
-        if rep.errors:
+        if missing:
             continue
         w = f'lane[{lane["id"]}]'
         if not re.fullmatch(r'[a-z0-9-]+', str(lane['id'])):
@@ -169,10 +172,12 @@ def check_deck(path):
         roles = {}
         for hi, hl in enumerate(hls):
             hw = f'{w}.highlights[{hi}]'
-            for k in ('arxiv_id', 'title_zh', 'title_en', 'year', 'role', 'one_liner', 'core', 'number', 'why', 'links'):
+            required_hl = ('arxiv_id', 'title_zh', 'title_en', 'year', 'role', 'one_liner', 'core', 'number', 'why', 'links')
+            missing_hl = [k for k in required_hl if k not in hl]
+            for k in missing_hl:
                 if k not in hl:
                     rep.err(f'{hw} 缺欄位 {k}')
-            if rep.errors and 'arxiv_id' not in hl:
+            if 'arxiv_id' in missing_hl:
                 continue
             hid = hl['arxiv_id']
             if hid not in row_ids:

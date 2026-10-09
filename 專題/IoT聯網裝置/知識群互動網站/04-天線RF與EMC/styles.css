@@ -30,6 +30,18 @@ body {
   line-height: 1.5;
 }
 
+.skip-link {
+  position: fixed;
+  z-index: 20;
+  top: -80px;
+  left: 12px;
+  padding: 10px 14px;
+  color: var(--ink);
+  background: var(--panel);
+}
+
+.skip-link:focus { top: 12px; }
+
 header {
   position: fixed;
   inset: 0 auto 0 0;

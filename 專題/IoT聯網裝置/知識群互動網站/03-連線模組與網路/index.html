@@ -8,8 +8,8 @@
   <script src="./app.js" defer></script>
 </head>
 <body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
   <a class="skip-link" href="#main-content">跳至主要內容</a>
+  <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
   <div class="app-shell">
     <header class="topbar">
       <div class="brand-block">
@@ -26,7 +26,7 @@
 
     <div class="app-body">
       <nav class="module-nav" aria-label="學習模組導覽">
-        <span class="nav-label">Modules</span>
+        <span class="nav-label">模組</span>
         <button class="nav-item is-active" type="button" data-nav="bearer-choice"><span class="nav-index">01</span><span>Bearer 選型</span><span class="nav-mark" aria-hidden="true">○</span></button>
         <button class="nav-item" type="button" data-nav="host-link"><span class="nav-index">02</span><span>Host 介面容量</span><span class="nav-mark" aria-hidden="true">○</span></button>
         <button class="nav-item" type="button" data-nav="at-engine"><span class="nav-index">03</span><span>AT / URC 引擎</span><span class="nav-mark" aria-hidden="true">○</span></button>
@@ -44,10 +44,10 @@
           <p class="heading-note">調整條件觀察因果關係，再用完成按鈕記錄學習進度。</p>
         </div>
 
-        <section class="panel result-panel" aria-label="八個連線模組的操作前導讀">
-          <div class="panel-heading"><h3>連線不是一個布林值，而是一串可失敗的狀態</h3><span class="panel-tag">READ FIRST</span></div>
+        <details class="panel result-panel preface" aria-label="八個連線模組的操作前導讀">
+          <summary class="panel-heading"><strong>連線不是一個布林值，而是一串可失敗的狀態</strong><span class="panel-tag">先讀</span></summary>
           <p>把「已連線」拆成 host 能和模組交談、模組完成網路註冊、取得 IP、建立傳輸層連線、完成 TLS／應用會話。每一層都要有自己的 timeout、重試上限與觀測證據；否則上層只會得到含糊的 offline。</p>
-          <details open><summary>01 Bearer：先選物理承載，再談協定</summary><p>承載網路（bearer）解決的是「位元怎麼跨過場域」：Wi-Fi 適合已有基地台與較高資料量；蜂巢式連線提供廣域覆蓋但有註冊、資費與模組功耗；低功耗廣域網路（Low-Power Wide-Area Network, LPWAN）用低資料率換距離與電池壽命。選型器只做距離、資料量、供電、部署與下行需求的初篩，不能證明特定位置有覆蓋。真正證據是現場 RSSI／RSRP／SNR、附網成功率、延遲分布與電流剖面。</p></details>
+          <details open><summary>01 Bearer：先選物理承載，再談協定</summary><p>承載網路（bearer）解決的是「位元怎麼跨過場域」：Wi-Fi 適合已有存取點（AP）與較高資料量；蜂巢式連線提供廣域覆蓋但有註冊、資費與模組功耗；低功耗廣域網路（Low-Power Wide-Area Network, LPWAN）用低資料率換距離與電池壽命。選型器只做距離、資料量、供電、部署與下行需求的初篩，不能證明特定位置有覆蓋。真正證據是現場 RSSI／RSRP／SNR、附網成功率、延遲分布與電流剖面。</p></details>
           <details><summary>02 Host link：平均吞吐夠，burst 仍可能塞爆 buffer</summary><p>UART 每個資料 byte 通常還含 start、stop，可能另有 parity。若採 8N1，一個 byte 需 10 bit，115200 baud 的理想上限約 115200/10 = 11520 B/s，約 11.25 KiB/s。若模組在 20 ms 內吐出 1 KiB，瞬間需求約 50 KiB/s，即使長期平均只有 2 KiB/s，沒有硬體流量控制（hardware flow control）或足夠 buffer 仍會溢位。</p><p>邏輯分析儀能證明 UART 線上的 byte 與 RTS/CTS 時序；韌體的 overrun counter 能證明接收器漏資料。只看應用層平均流量不能排除 burst。</p></details>
           <details><summary>03 AT／URC：同一條文字流上有同步回覆，也有非同步事件</summary><p>AT command 的回覆屬於目前交易；非請求結果碼（Unsolicited Result Code, URC）可能隨時插入，像同一 socket 混入 server-push。可靠 parser 先以行界線與 token 分類，再把 command response 交給等待者、URC 派到事件處理器。不要用「送命令後讀到 OK 為止」的單一阻塞函式，因為 URC 可能被誤吞。</p><p>打開 timestamped raw UART log 可重播解析順序；它能證明 MCU 收到哪些字元，不能證明空中網路真的完成資料傳遞。</p></details>
           <details><summary>04 指數退避：讓大量裝置不要同時重試</summary><p>有上限的指數退避 d<sub>n</sub> = min(cap, base × 2<sup>n</sup>)。若 base = 1 s、cap = 30 s，n = 0…5 的等待為 1、2、4、8、16、30 s，累積 61 s。再加入隨機抖動（jitter），可避免斷網後數千台裝置在同一秒重連。這個模型假設 n 的起點與重置條件已定義；成功一次是否清零必須寫進狀態機。</p><p>操作 retry 與 cap，觀察單次等待和累積離線時間。後端連線速率圖能看到 herd 是否被攤平，但不能證明單機耗電可接受，還要量每次註冊的電荷。</p></details>
@@ -56,14 +56,14 @@
           <details><summary>07 Keepalive、重連與 PSM：少傳 byte 不必然省電</summary><p>Keepalive 太密會反覆喚醒 radio；太疏可能讓 NAT／網路狀態過期，下一筆資料付出完整重連成本。省電模式（Power Saving Mode, PSM）讓蜂巢模組長時間不可達；延伸不連續接收（extended Discontinuous Reception, eDRX）則週期性醒來聽下行。兩者都是延遲、可達性與能量的交易。</p><p>同時記錄 modem 狀態、封包時間戳與電流波形，才能把「操作 → radio 醒來 → 傳輸 → 電荷增加」串起來。封包較少不能單獨證明能量較低。</p></details>
           <details><summary>08 Supervisor：局部復原優先，升級要有次數與證據</summary><p>Supervisor 是連線狀態的單一擁有者。典型升級鏈是重送應用交易 → 重建 socket → 重新啟用 bearer → 重置模組 → 最後才重置整機；每一步都有 timeout、重試上限與冷卻時間。無上限重試會同時耗電、塞 log、壓垮後端並掩蓋永久設定錯誤。</p><p>保留 reset cause、最後成功層級、錯誤碼與每階段耗時，可判斷故障集中在哪層。單一「網路錯誤」計數器只能證明失敗次數，不能提供根因。</p></details>
           <p class="feedback"><b>不要混淆：</b>訊號強 ≠ 可用吞吐；附網成功 ≠ 應用在線；keepalive ≠ 自動恢復；封包 byte 數 ≠ 能量；timeout ≠ 一定是遠端沒回。</p>
-        </section>
+        </details>
 
         <section class="module-section is-current" id="module-bearer-choice" data-module="bearer-choice" aria-labelledby="bearer-choice-title">
           <div class="module-header"><div><span class="module-number">01</span><h3 id="bearer-choice-title">Bearer 選型與連線取捨</h3></div><button class="complete-button" type="button" data-complete="bearer-choice">標記完成</button></div>
           <div class="module-grid">
             <div class="panel input-panel">
               <div class="panel-heading"><h4>場景條件</h4><span class="panel-tag">INPUTS</span></div>
-              <p class="panel-intro">先用代理變數做第一輪篩選，不把結果當成覆蓋、認證或採購保證。</p>
+              <p class="panel-intro">先用代理變數做第一輪篩選，不把結果當成覆蓋、認證或採購保證。Wi-Fi 依賴的是存取點（AP）；「基地台」是蜂巢網路用語。</p>
               <div class="field-grid">
                 <div class="field"><label for="bearer-range">距離範圍</label><select id="bearer-range"><option value="room">房間內</option><option value="campus">園區內</option><option value="wide" selected>廣域</option></select></div>
                 <div class="field"><label for="bearer-payload">Payload 大小</label><select id="bearer-payload"><option value="small" selected>小</option><option value="medium">中</option><option value="high">高</option></select></div>
@@ -93,15 +93,17 @@
             <div class="panel input-panel">
               <div class="panel-heading"><h4>UART 預算</h4><span class="panel-tag">INPUTS</span></div>
               <div class="field-grid two-col">
-                <div class="field"><label for="host-baud">Baud rate <span>bit/s</span></label><input id="host-baud" type="number" value="115200" min="0.01" step="1" inputmode="numeric"></div>
-                <div class="field"><label for="host-bits-byte">每 byte 位元數 <span>bit</span></label><input id="host-bits-byte" type="number" value="10" min="0.01" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="host-baud">Baud rate <span>bit/s</span></label><input id="host-baud" type="number" value="115200" min="1" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="host-bits-byte">每 byte 位元數 <span>bit</span></label><input id="host-bits-byte" type="number" value="10" min="1" step="1" inputmode="decimal"></div>
                 <div class="field"><label for="host-payload-bytes">Payload <span>B</span></label><input id="host-payload-bytes" type="number" value="512" min="0" step="1" inputmode="numeric"></div>
                 <div class="field"><label for="host-message-rate">訊息速率 <span>/s</span></label><input id="host-message-rate" type="number" value="10" min="0" step="1" inputmode="decimal"></div>
                 <div class="field"><label for="host-burst-rate">Burst 速率 <span>B/s</span></label><input id="host-burst-rate" type="number" value="20000" min="0" step="1" inputmode="numeric"></div>
                 <div class="field"><label for="host-burst-ms">Burst 時間 <span>ms</span></label><input id="host-burst-ms" type="number" value="100" min="0" step="1" inputmode="decimal"></div>
-                <div class="field field-span"><label for="host-buffer-bytes">接收緩衝區 <span>B</span></label><input id="host-buffer-bytes" type="number" value="2048" min="0.01" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="host-module-fifo-bytes">模組 TX FIFO <span>B</span></label><input id="host-module-fifo-bytes" type="number" value="1024" min="1" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="host-drain-rate">主機應用消化速率 <span>B/s</span></label><input id="host-drain-rate" type="number" value="8000" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="host-buffer-bytes">主機 RX 緩衝區 <span>B</span></label><input id="host-buffer-bytes" type="number" value="2048" min="1" step="1" inputmode="numeric"></div>
               </div>
-              <div class="formula-box"><span class="formula-label">容量模型</span><code>R_UART = baud / bits_byte</code><small>平均足夠不代表 burst 不會讓接收端溢位。</small></div>
+              <div class="formula-box"><span class="formula-label">兩段容量模型</span><code>module excess = (burst − UART)⁺ × t；host excess = (arrival − drain)⁺ × t</code><small>模組側看 TX FIFO，主機側看 RX buffer；RTS/CTS 可抑制模組側積壓。</small></div>
               <button class="reset-button" type="button" data-reset-module="host-link">↺ 重設本模組</button>
             </div>
             <div class="panel result-panel">
@@ -110,11 +112,13 @@
                 <div class="metric metric-accent-blue"><span>介面容量</span><strong id="host-capacity">— B/s</strong></div>
                 <div class="metric metric-accent-green"><span>穩態資料率</span><strong id="host-steady-rate">— B/s</strong></div>
                 <div class="metric metric-accent-yellow"><span>利用率</span><strong id="host-utilization">— %</strong></div>
-                <div class="metric metric-accent-orange"><span>Burst 超額</span><strong id="host-burst-excess">— B</strong></div>
-                <div class="metric metric-accent-blue metric-span-two"><span>緩衝餘裕</span><strong id="host-buffer-headroom">— B</strong></div>
+                <div class="metric metric-accent-orange"><span>模組側超額</span><strong id="host-burst-excess">— B</strong></div>
+                <div class="metric metric-accent-blue"><span>模組 TX FIFO 裕度</span><strong id="host-module-headroom">— B</strong></div>
+                <div class="metric metric-accent-orange"><span>主機側積壓</span><strong id="host-rx-excess">— B</strong></div>
+                <div class="metric metric-accent-blue"><span>主機 RX buffer 裕度</span><strong id="host-buffer-headroom">— B</strong></div>
               </div>
               <div id="host-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
-              <p id="host-feedback" class="feedback" aria-live="polite">預設條件應能承受穩態流量與 burst，仍可評估 RTS/CTS、DMA 或環形緩衝。</p>
+              <p id="host-feedback" class="feedback" aria-live="polite">預設條件的穩態流量通過，但 burst 會在模組側與主機側形成暫時積壓警告。</p>
             </div>
           </div>
         </section>
@@ -126,7 +130,7 @@
               <div class="panel-heading"><h4>收到一行資料</h4><span class="panel-tag">STATE INPUTS</span></div>
               <div class="field-grid">
                 <div class="field"><label for="at-state">目前狀態</label><select id="at-state"><option value="idle">Idle</option><option value="wait" selected>Wait response</option><option value="data">Transparent data</option></select></div>
-                <div class="field"><label for="at-line">收到的行類型</label><select id="at-line"><option value="ok">OK</option><option value="error">ERROR</option><option value="urc" selected>URC</option><option value="payload">Payload</option><option value="prompt">Prompt</option></select></div>
+                <div class="field"><label for="at-line">收到的行類型</label><select id="at-line"><option value="ok">OK</option><option value="error">ERROR</option><option value="urc" selected>URC</option><option value="payload">Payload</option><option value="prompt">Prompt</option><option value="exit-data">Payload 送畢／逃脫序列完成</option></select></div>
                 <div class="field"><label for="at-command-pending">命令是否 pending</label><select id="at-command-pending"><option value="yes" selected>是</option><option value="no">否</option></select></div>
                 <div class="field"><label for="at-urc-handler">URC handler</label><select id="at-urc-handler"><option value="yes" selected>已註冊</option><option value="no">未註冊</option></select></div>
                 <div class="field"><label for="at-transparent-guard">透傳 guard</label><select id="at-transparent-guard"><option value="yes" selected>已建立</option><option value="no">未建立</option></select></div>
@@ -155,9 +159,9 @@
             <div class="panel input-panel">
               <div class="panel-heading"><h4>重試參數</h4><span class="panel-tag">INPUTS</span></div>
               <div class="field-grid two-col">
-                <div class="field"><label for="backoff-base">基礎等待 <span>s</span></label><input id="backoff-base" type="number" value="2" min="0.01" step="0.1" inputmode="decimal"></div>
-                <div class="field"><label for="backoff-attempt">目前 attempt <span>整數</span></label><input id="backoff-attempt" type="number" value="4" min="0" step="1" inputmode="numeric"></div>
-                <div class="field"><label for="backoff-cap">等待上限 <span>s</span></label><input id="backoff-cap" type="number" value="60" min="0.01" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="backoff-base">基礎等待 <span>s</span></label><input id="backoff-base" type="number" value="2" min="0.1" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="backoff-attempt">重試索引 n（0 是首次） <span>整數</span></label><input id="backoff-attempt" type="number" value="4" min="0" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="backoff-cap">等待上限 <span>s</span></label><input id="backoff-cap" type="number" value="60" min="1" step="1" inputmode="decimal"></div>
                 <div class="field"><label for="backoff-jitter">Jitter <span>%</span></label><input id="backoff-jitter" type="number" value="20" min="0" max="100" step="1" inputmode="decimal"></div>
                 <div class="field field-span"><label for="backoff-max-retries">最大重試次數 <span>整數</span></label><input id="backoff-max-retries" type="number" value="6" min="0" step="1" inputmode="numeric"></div>
               </div>
@@ -167,7 +171,7 @@
             <div class="panel result-panel">
               <div class="panel-heading"><h4>等待預算</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
               <div class="metric-grid two-col">
-                <div class="metric metric-accent-blue"><span>Nominal delay</span><strong id="backoff-nominal">— s</strong></div>
+                <div class="metric metric-accent-blue"><span>標稱等待</span><strong id="backoff-nominal">— s</strong></div>
                 <div class="metric metric-accent-yellow"><span>Jitter 最小</span><strong id="backoff-min">— s</strong></div>
                 <div class="metric metric-accent-yellow"><span>Jitter 最大</span><strong id="backoff-max">— s</strong></div>
                 <div class="metric metric-accent-green metric-span-two"><span>累積等待</span><strong id="backoff-cumulative">— s</strong></div>
@@ -197,10 +201,10 @@
             <div class="panel result-panel">
               <div class="panel-heading"><h4>重建順序</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
               <div class="diagnosis-list">
-                <div class="diagnosis-row"><span>第一缺口</span><strong id="session-first">—</strong></div>
+                <div class="diagnosis-row"><span>情境第一步</span><strong id="session-first">—</strong></div>
                 <div class="diagnosis-row"><span>第二觀察</span><strong id="session-second">—</strong></div>
                 <div class="diagnosis-row"><span>完成 gate</span><strong id="session-count">— / 6</strong></div>
-                <div class="diagnosis-row"><span>下一步</span><strong id="session-next">—</strong></div>
+                <div class="diagnosis-row"><span>第一缺口</span><strong id="session-next">—</strong></div>
               </div>
               <div id="session-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待檢查</span></div>
               <p id="session-feedback" class="feedback" aria-live="polite">固定順序為 registration → IP → time/DNS → socket → TLS → app session。</p>
@@ -215,11 +219,11 @@
               <div class="panel-heading"><h4>資料模型</h4><span class="panel-tag">INPUTS</span></div>
               <div class="field-grid two-col">
                 <div class="field"><label for="data-payload">Payload <span>B</span></label><input id="data-payload" type="number" value="100" min="0" step="1" inputmode="numeric"></div>
-                <div class="field"><label for="data-encoding-ratio">編碼比例 <span>0–2</span></label><input id="data-encoding-ratio" type="number" value="0.6" min="0.0001" max="2" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="data-encoding-ratio">編碼比例 <span>0–2</span></label><input id="data-encoding-ratio" type="number" value="0.6" min="0.1" max="2" step="0.1" inputmode="decimal"></div>
                 <div class="field"><label for="data-overhead">額外 overhead <span>B</span></label><input id="data-overhead" type="number" value="40" min="0" step="1" inputmode="numeric"></div>
                 <div class="field"><label for="data-messages-day">每日訊息數 <span>count</span></label><input id="data-messages-day" type="number" value="24" min="0" step="1" inputmode="numeric"></div>
                 <div class="field"><label for="data-delivery-factor">交付倍率 <span>≥1</span></label><input id="data-delivery-factor" type="number" value="1.1" min="1" step="0.1" inputmode="decimal"></div>
-                <div class="field"><label for="data-days">計算天數 <span>day</span></label><input id="data-days" type="number" value="30" min="0.01" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="data-days">計算天數 <span>日</span></label><input id="data-days" type="number" value="30" min="1" step="1" inputmode="numeric"></div>
               </div>
               <div class="formula-box"><span class="formula-label">資料預算</span><code>wire = payload × ratio + overhead</code><small>還要留意 IP/TCP/TLS、握手與營運商計量規則。</small></div>
               <button class="reset-button" type="button" data-reset-module="data-budget">↺ 重設本模組</button>
@@ -227,9 +231,9 @@
             <div class="panel result-panel">
               <div class="panel-heading"><h4>流量估算</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
               <div class="metric-grid two-col">
-                <div class="metric metric-accent-blue"><span>Wire / message</span><strong id="data-wire-message">— B</strong></div>
+                <div class="metric metric-accent-blue"><span>每則線上資料量</span><strong id="data-wire-message">— B</strong></div>
                 <div class="metric metric-accent-green"><span>每日資料量</span><strong id="data-daily">— B/day</strong></div>
-                <div class="metric metric-accent-blue"><span>計算期間</span><strong id="data-period">— B/30d</strong></div>
+                <div class="metric metric-accent-blue"><span id="data-period-label">計算期間</span><strong id="data-period">— B</strong></div>
                 <div class="metric metric-accent-yellow"><span>未編碼 baseline</span><strong id="data-baseline">— B</strong></div>
                 <div class="metric metric-accent-green metric-span-two"><span>相對節省</span><strong id="data-saving">— %</strong></div>
               </div>
@@ -245,10 +249,10 @@
             <div class="panel input-panel">
               <div class="panel-heading"><h4>會話與可達性</h4><span class="panel-tag">INPUTS</span></div>
               <div class="field-grid two-col">
-                <div class="field"><label for="keepalive-seconds">Keepalive 間隔 <span>s</span></label><input id="keepalive-seconds" type="number" value="300" min="0.01" step="1" inputmode="numeric"></div>
-                <div class="field"><label for="keepalive-session-hours">會話長度 <span>h</span></label><input id="keepalive-session-hours" type="number" value="24" min="0.01" step="1" inputmode="decimal"></div>
+                <div class="field"><label for="keepalive-seconds">Keepalive 間隔 <span>s</span></label><input id="keepalive-seconds" type="number" value="300" min="1" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="keepalive-session-hours">每日保持會話時數 <span>h/day</span></label><input id="keepalive-session-hours" type="number" value="24" min="1" max="24" step="1" inputmode="decimal"></div>
                 <div class="field"><label for="keepalive-roundtrip-bytes">往返資料 <span>B</span></label><input id="keepalive-roundtrip-bytes" type="number" value="100" min="0" step="1" inputmode="numeric"></div>
-                <div class="field"><label for="keepalive-reports">每日報告數 <span>count</span></label><input id="keepalive-reports" type="number" value="24" min="0.01" step="1" inputmode="numeric"></div>
+                <div class="field"><label for="keepalive-reports">每日報告數 <span>次</span></label><input id="keepalive-reports" type="number" value="24" min="1" step="1" inputmode="numeric"></div>
                 <div class="field"><label for="keepalive-reconnect-bytes">每次重連 <span>B</span></label><input id="keepalive-reconnect-bytes" type="number" value="5000" min="0" step="1" inputmode="numeric"></div>
                 <div class="field"><label for="keepalive-reachability">可達性需求</label><select id="keepalive-reachability"><option value="frequent" selected>頻繁可達</option><option value="rare">很少可達</option></select></div>
               </div>
@@ -258,10 +262,10 @@
             <div class="panel result-panel">
               <div class="panel-heading"><h4>持續會話 vs 重連</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
               <div class="metric-grid two-col">
-                <div class="metric metric-accent-blue"><span>每日喚醒次數</span><strong id="keepalive-wakes">—</strong></div>
-                <div class="metric metric-accent-blue"><span>Keepalive bytes</span><strong id="keepalive-bytes">— B</strong></div>
-                <div class="metric metric-accent-orange"><span>Reconnect bytes</span><strong id="reconnect-bytes">— B</strong></div>
-                <div class="metric metric-accent-green"><span>Bytes winner</span><strong id="keepalive-byte-winner">—</strong></div>
+                <div class="metric metric-accent-blue"><span>每日 Keepalive 次數</span><strong id="keepalive-wakes">—</strong></div>
+                <div class="metric metric-accent-blue"><span>Keepalive 每日資料量</span><strong id="keepalive-bytes">— B</strong></div>
+                <div class="metric metric-accent-orange"><span>重連每日資料量</span><strong id="reconnect-bytes">— B</strong></div>
+                <div class="metric metric-accent-green"><span>資料量較少者</span><strong id="keepalive-byte-winner">—</strong></div>
                 <div class="metric metric-accent-yellow metric-span-two"><span>策略判斷</span><strong id="keepalive-verdict">—</strong></div>
               </div>
               <div id="keepalive-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
@@ -277,7 +281,7 @@
               <div class="panel-heading"><h4>故障 gate</h4><span class="panel-tag">CHECKLIST</span></div>
               <div class="field choice-field"><label for="supervisor-case">故障情境</label><select id="supervisor-case"><option value="no-response" selected>模組無回應</option><option value="deregister">掉註冊</option><option value="socket-drop">Socket 掉線</option><option value="buffer-overflow">Buffer overflow</option></select></div>
               <div class="checklist">
-                <label class="check-row"><input id="supervisor-log" type="checkbox" data-supervisor-check checked><span><strong>保存 log / 最後命令</strong><small>保留診斷證據與 URC 時序</small></span></label>
+                <label class="check-row"><input id="supervisor-log" type="checkbox" data-supervisor-check checked><span><strong>保存 log／最後命令</strong><small>保留診斷證據與 URC 時序</small></span></label>
                 <label class="check-row"><input id="supervisor-timeout" type="checkbox" data-supervisor-check checked><span><strong>Timeout</strong><small>每個命令與會話有上限</small></span></label>
                 <label class="check-row"><input id="supervisor-backoff" type="checkbox" data-supervisor-check checked><span><strong>Capped backoff</strong><small>重試不形成無限風暴</small></span></label>
                 <label class="check-row"><input id="supervisor-soft-reset" type="checkbox" data-supervisor-check><span><strong>Soft reset</strong><small>先嘗試可觀測的模組重置</small></span></label>

@@ -10,7 +10,7 @@
       "name": "技能庫的生命週期與治理",
       "minutes": 10,
       "paper_count": 45,
-      "deep_doc": "https://github.com/justty32/paper_readings/blob/main/deep/aicore_reliable_function_landscape/06_2026-07-27_擴充：+143_篇——§8.1_三個缺口答了多少.md",
+    "deep_doc": "https://github.com/justty32/paper_readings/blob/main/deep/aicore_reliable_function_landscape/07_2026-07-27_擴充：+143_篇——§8.1_三個缺口答了多少.md",
       "gist": {
         "summary": "技能庫不是只進不出的提示集合，而是要經歷蒐證、提案、驗證准入、檢索、維護與退役的活資產。早期路線把成功案例抽象成可執行工具；近期又把技能視為帶版本、權限、依賴與載入路徑的套件。證據顯示它能累積也能收斂，但大型庫仍會因選錯技能而反噬。",
         "points": [
@@ -125,12 +125,12 @@
           "title_en": "More Skills, Worse Agents? Skill Shadowing Degrades Performance When Expanding Skill Libraries",
           "year": "2026-05",
           "role": "誠實冷水",
-          "one_liner": "技能庫擴大時通過率最多掉 21%，主因是技能陰影讓智能體選錯技能。",
+      "one_liner": "技能庫擴大時通過率最多下降 21 個百分點（約 52%→31%），主因是技能陰影讓智能體選錯技能。",
           "plain": "等於書架塞滿長得很像的操作手冊後，問題不是讀太慢，而是更常先拿錯那一本。",
-          "core": "把退化拆成技能陰影與上下文開銷：前者是選錯技能，後者是選對後仍被過長提示拖累。最大庫讓通過率最多下降 21%；只有技能陰影的影響可和隨機波動區分，論文只診斷，沒有提出修法。",
+      "core": "把退化拆成技能陰影與上下文開銷：前者是選錯技能，後者是選對後仍被過長提示拖累。最大庫讓通過率約從 52% 降至 31%，下降 21 個百分點；只有技能陰影的影響可和隨機波動區分。",
           "number": {
             "label": "最大庫退化",
-            "value": "最多 -21%",
+        "value": "下降 21 個百分點",
             "note": "作者自報"
           },
           "why": "它證明多餘技能不是留著無害；治理首先要修選擇與退役，而非只縮短提示。",
@@ -641,7 +641,7 @@
           }
         }
       ],
-      "question": "若路由判錯一次的代價很高，你會選事前分流、事後級聯，還是無損但更吃算力的驗證？",
+    "question": "若要維持固定目標模型的輸出分布，哪種加速方式符合條件？若要降低任務錯誤，又需哪些外部驗證？",
       "all_papers": [
         {
           "arxiv_id": "2406.18665",
@@ -978,7 +978,7 @@
       "name": "受約束解碼與規格對齊",
       "minutes": 10,
       "paper_count": 42,
-      "deep_doc": "https://github.com/justty32/paper_readings/blob/main/deep/aicore_reliable_function_landscape/07_§5_約束器與規格對齊：語法見頂、代價有定理、規格缺口被填補.md",
+    "deep_doc": "https://github.com/justty32/paper_readings/blob/main/deep/aicore_reliable_function_landscape/09_§5_約束器與規格對齊：語法見頂、代價有定理、規格缺口被填補.md",
       "gist": {
         "summary": "這條線問：如何讓模型只產出可執行、又符合意圖的答案？受約束解碼與增量解析能逐步攔下非法文字片段，但格式合法不代表語意正確，驗證器本身也會誤判。前沿因此轉向規格對齊：量測模型、護欄、驗證器與真實需求的落差，再回頭修補。",
         "points": [

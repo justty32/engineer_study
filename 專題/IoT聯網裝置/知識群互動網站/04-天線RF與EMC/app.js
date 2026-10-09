@@ -114,7 +114,7 @@
   }
 
   var LAYOUT_LABELS = {
-    "layout-impedance": "controlled impedance", "layout-ground": "continuous ground", "layout-short": "short/no stub", "layout-vias": "ground vias/connector launch", "layout-pi": "π match", "layout-keepout": "antenna keep-out", "layout-guideline": "vendor/module guideline"
+    "layout-impedance": "受控阻抗（controlled impedance）", "layout-ground": "連續參考地（continuous ground）", "layout-short": "短走線／無支線（short/no stub）", "layout-vias": "接地導通孔與連接器轉接（ground vias/connector launch）", "layout-pi": "π 型匹配（π match）", "layout-keepout": "天線禁佈區（antenna keep-out）", "layout-guideline": "廠商／模組佈局指南（vendor/module guideline）"
   };
   var LAYOUT_ORDER = Object.keys(LAYOUT_LABELS);
   function checkMap(checks, id) { return checks && checks[id] === true; }

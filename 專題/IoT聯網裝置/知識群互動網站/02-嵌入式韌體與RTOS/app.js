@@ -19,7 +19,6 @@
     "scheduler", "synchronization", "low-power", "reliability"
   ];
   var STORAGE_KEY = "engineerStudy.iotFirmwareRtos.v1";
-  var RM_BOUND = 3 * (Math.pow(2, 1 / 3) - 1);
 
   var DEFAULTS = {
     architecture: {
@@ -208,7 +207,8 @@
   function calculateScheduler(values) {
     var utilization = 0;
     var stackUsed = requireNumber(values, "kernel-ram", "Kernel RAM", "nonnegative");
-    [1, 2, 3].forEach(function (index) {
+    var taskIndexes = [1, 2, 3];
+    taskIndexes.forEach(function (index) {
       var c = requireNumber(values, "task" + index + "-c", "Task " + index + " 執行時間", "nonnegative");
       var t = requireNumber(values, "task" + index + "-t", "Task " + index + " 週期", "positive");
       var stack = requireNumber(values, "task" + index + "-stack", "Task " + index + " stack", "nonnegative");
@@ -218,14 +218,16 @@
     });
     var ramBudget = requireNumber(values, "ram-budget", "RAM 預算", "positive");
     var ramHeadroom = ramBudget - stackUsed;
-    var rmPass = utilization <= RM_BOUND;
+    var taskCount = taskIndexes.length;
+    var rmBound = taskCount * (Math.pow(2, 1 / taskCount) - 1);
+    var rmPass = utilization <= rmBound;
     var edfPass = utilization <= 1;
     var ramBlocked = ramHeadroom < 0;
     var blocked = ramBlocked || !edfPass;
     var status = blocked ? "error" : !rmPass ? "warn" : "ok";
     return resultNumbersAreFinite({
       utilization: utilization, utilizationRatio: utilization, utilizationPercent: utilization * 100,
-      rmBound: RM_BOUND, rmBoundRatio: RM_BOUND, rmBoundPercent: RM_BOUND * 100,
+      taskCount: taskCount, rmBound: rmBound, rmBoundRatio: rmBound, rmBoundPercent: rmBound * 100,
       rmPass: rmPass, edfPass: edfPass, ramUsed: stackUsed, ramHeadroom: ramHeadroom,
       ramBlocked: ramBlocked, blocked: blocked, status: status
     });
@@ -241,16 +243,17 @@
     if (["event", "data", "shared-resource"].indexOf(kind) < 0) throw new Error("同步情境無效");
     if (["isr", "task"].indexOf(producer) < 0) throw new Error("生產者無效");
     if (["one", "many"].indexOf(consumers) < 0) throw new Error("消費者數量無效");
-    if (["notification", "binary-semaphore", "queue", "mutex"].indexOf(primitive) < 0) throw new Error("同步原語無效");
+    if (["notification", "binary-semaphore", "event-group", "queue", "stream-buffer", "message-buffer", "mutex"].indexOf(primitive) < 0) throw new Error("同步原語無效");
     if (["yes", "no"].indexOf(inheritance) < 0) throw new Error("Priority inheritance 選項無效");
     if (["fixed", "unordered", "none"].indexOf(lockOrder) < 0) throw new Error("Lock order 選項無效");
     var blocker = null;
     if (lockOrder === "unordered") blocker = "Lock order 不固定，可能形成 deadlock";
     else if (producer === "isr" && primitive === "mutex") blocker = "ISR 不可使用 mutex 或阻塞路徑";
-    else if (kind === "data" && primitive !== "queue") blocker = "data 情境必須使用 queue";
+    else if (kind === "data" && ["queue", "stream-buffer", "message-buffer", "notification"].indexOf(primitive) < 0) blocker = "資料情境通常使用 queue；也可依邊界與消費者數量選 stream/message buffer 或帶值 notification";
+    else if (kind === "data" && consumers === "many" && primitive === "notification") blocker = "帶值 notification 只適合單一 consumer；多 consumer 資料請用 queue 或對應的 buffer 設計";
     else if (kind === "shared-resource" && primitive !== "mutex") blocker = "shared-resource 情境必須使用 mutex";
     else if (kind === "shared-resource" && inheritance !== "yes") blocker = "shared-resource 的 mutex 必須啟用 priority inheritance";
-    else if (kind === "event" && consumers === "many" && primitive !== "binary-semaphore") blocker = "多 consumer event 在本教材簡化為 binary semaphore";
+    else if (kind === "event" && consumers === "many" && primitive !== "event-group") blocker = "多個 consumer 要同時收到事件時應用 event group 或 broadcast；binary semaphore 每次只喚醒一個等待者";
     else if (kind === "event" && consumers === "one" && ["notification", "binary-semaphore"].indexOf(primitive) < 0) blocker = "單一 consumer event 應使用 notification 或 binary semaphore";
     var verdict = blocker ? "阻擋" : "同步配置可用";
     return {

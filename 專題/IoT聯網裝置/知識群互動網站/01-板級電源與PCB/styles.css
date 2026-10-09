@@ -1,4 +1,5 @@
 :root {
+  --topbar-height: 92px;
   --ink: #243035;
   --muted: #637174;
   --faint: #879294;
@@ -47,7 +48,7 @@ a { color: var(--cyan); }
 .topbar .button-quiet { border-color: #657679; }
 
 .app-body { display: grid; grid-template-columns: 218px minmax(0, 1fr); align-items: start; }
-.module-nav { position: sticky; top: 92px; display: flex; flex-direction: column; gap: 4px; min-height: calc(100vh - 92px); padding: 22px 12px; border-right: 1px solid #4b595c; background: var(--nav); }
+.module-nav { position: sticky; top: var(--topbar-height); display: flex; flex-direction: column; gap: 4px; min-height: calc(100vh - var(--topbar-height)); padding: 22px 12px; border-right: 1px solid #4b595c; background: var(--nav); }
 .nav-label { padding: 0 10px 8px; color: #8d9a9c; font-size: 10px; font-weight: 700; text-transform: uppercase; }
 .nav-item { display: grid; grid-template-columns: 28px minmax(0, 1fr) 14px; align-items: center; gap: 4px; width: 100%; min-height: 38px; padding: 7px 9px; border: 1px solid transparent; border-radius: 4px; background: transparent; color: var(--nav-muted); text-align: left; }
 .nav-item:hover, .nav-item.is-active { border-color: #669a94; color: var(--white); background: var(--nav-2); }
@@ -112,6 +113,8 @@ code { color: var(--ink); font-family: ui-monospace, SFMono-Regular, Consolas, m
 .status-ok { border-color: var(--green); background: rgba(135, 201, 156, 0.08); color: var(--green); }
 .status-warn { border-color: var(--amber); background: rgba(233, 184, 110, 0.08); color: var(--amber); }
 .status-error { border-color: var(--red); background: rgba(227, 123, 118, 0.08); color: var(--red); }
+.status-neutral { border-color: var(--line-strong); background: var(--surface-2); color: var(--muted); }
+.preface > .panel-heading { cursor: pointer; list-style-position: inside; }
 .power-bars { display: grid; gap: 13px; margin-bottom: 15px; }
 .power-bar-row { display: grid; grid-template-columns: 92px minmax(0, 1fr) 90px; align-items: center; gap: 10px; min-height: 30px; color: var(--muted); font-size: 11px; }
 .bar-track { display: block; height: 13px; overflow: hidden; border: 1px solid var(--line-strong); background: #e5ebe9; }

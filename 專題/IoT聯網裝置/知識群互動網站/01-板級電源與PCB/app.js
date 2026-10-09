@@ -26,7 +26,7 @@
       "load-radio-peak": 2000, "load-clean": 20, "load-core": 10
     },
     regulator: {
-      "reg-vin": 5, "reg-vin-min": 4.5, "reg-vout": 3.3,
+      "reg-vin": 5, "reg-vin-min": 4.5, "reg-vin-max": 5, "reg-vout": 3.3,
       "reg-current": 0.2, "reg-dropout": 0.2, "reg-theta": 50,
       "reg-ta": 25, "buck-efficiency": 90, "noise-priority": "balanced"
     },
@@ -97,7 +97,8 @@
       ["load-core", "Core 負載", "nonnegative"]
     ],
     regulator: [
-      ["reg-vin", "輸入電壓", "positive"], ["reg-vin-min", "最低輸入電壓", "positive"],
+      ["reg-vin", "標稱輸入電壓", "positive"], ["reg-vin-min", "最低輸入電壓", "positive"],
+      ["reg-vin-max", "最高輸入電壓", "positive"],
       ["reg-vout", "輸出電壓", "positive"], ["reg-current", "輸出電流", "positive"],
       ["reg-dropout", "Dropout 電壓", "nonnegative"], ["reg-theta", "熱阻", "positive"],
       ["reg-ta", "環境溫度", "finite"], ["buck-efficiency", "Buck 效率", "efficiency"],
@@ -111,7 +112,7 @@
       ["battery-capacity", "電池容量", "positive"], ["battery-derating", "電池折扣", "derating"]
     ],
     decoupling: [
-      ["pulse-step", "電流步階", "nonnegative"], ["pulse-duration", "脈衝時間", "nonnegative"],
+      ["pulse-step", "電流步階", "positive"], ["pulse-duration", "脈衝時間", "nonnegative"],
       ["pulse-esr", "ESR", "nonnegative"], ["pulse-capacitance", "電容量", "positive"],
       ["pulse-allowable", "允許壓降", "positive"]
     ],
@@ -196,6 +197,7 @@
   function calculateRegulator(values) {
     var vin = valueOf(values, "reg-vin", "輸入電壓", "positive");
     var vinMin = valueOf(values, "reg-vin-min", "最低輸入電壓", "positive");
+    var vinMax = valueOf(values, "reg-vin-max", "最高輸入電壓", "positive");
     var vout = valueOf(values, "reg-vout", "輸出電壓", "positive");
     var current = valueOf(values, "reg-current", "輸出電流", "positive");
     var dropout = valueOf(values, "reg-dropout", "Dropout 電壓", "nonnegative");
@@ -204,8 +206,10 @@
     var efficiency = valueOf(values, "buck-efficiency", "Buck 效率", "efficiency") / 100;
     var priority = values && values["noise-priority"];
     if (["balanced", "quiet", "efficiency"].indexOf(priority) < 0) throw new Error("雜訊取捨選項無效");
-    if (vin <= vout) throw new Error("輸入電壓必須高於輸出電壓");
-    var ldoLoss = (vin - vout) * current;
+    if (vinMin > vin) throw new Error("最低輸入電壓不可高於標稱輸入電壓");
+    if (vin > vinMax) throw new Error("標稱輸入電壓不可高於最高輸入電壓");
+    if (vin <= vout || vinMax <= vout) throw new Error("標稱與最高輸入電壓必須高於輸出電壓");
+    var ldoLoss = (vinMax - vout) * current;
     var ldoEfficiency = vout / vin * 100;
     var ldoJunction = ta + theta * ldoLoss;
     var headroom = vinMin - vout - dropout;
@@ -214,7 +218,8 @@
     return {
       ldoLoss: ldoLoss, ldoEfficiency: ldoEfficiency, ldoJunction: ldoJunction,
       headroom: headroom, buckLoss: buckLoss, buckJunction: buckJunction,
-      priority: priority, dropoutRisk: headroom < 0
+      priority: priority, dropoutRisk: headroom < 0,
+      ldoThermalState: ldoJunction > 125 ? "error" : ldoJunction > 100 ? "warn" : "ok"
     };
   }
 
@@ -244,7 +249,7 @@
   }
 
   function calculateDecoupling(values) {
-    var current = valueOf(values, "pulse-step", "電流步階", "nonnegative");
+    var current = valueOf(values, "pulse-step", "電流步階", "positive");
     var duration = valueOf(values, "pulse-duration", "脈衝時間", "nonnegative");
     var esr = valueOf(values, "pulse-esr", "ESR", "nonnegative");
     var capacitance = valueOf(values, "pulse-capacitance", "電容量", "positive");
@@ -331,7 +336,10 @@
       first: RELEASE_DIAGNOSIS[failure][0], second: RELEASE_DIAGNOSIS[failure][1],
       count: count, total: ids.length, esdOk: esdOk,
       complete: count === ids.length && esdOk,
-      esdMessage: esdOk ? "ESD 由 connector 先經保護再進 IC" : "ESD 路徑未在 connector 端先保護，可能先經過敏感 IC"
+      esdMessage: esdOk ? "ESD 由介面端先經保護再進 IC" :
+        location === "ic" ? "ESD 保護放在 IC 旁過晚，介面到保護元件的走線已先承受衝擊" :
+          location === "none" ? "尚未配置 ESD 保護，敏感 IC 可能直接承受衝擊" :
+            "ESD 路徑繞過保護元件後才進 IC，保護配置無法截流"
     };
   }
 
@@ -371,7 +379,7 @@
   }
 
   function setFeedback(doc, id, message, state) {
-    setText(doc, id, message);
+    setText(doc, id, String(message).replace(/^[✓!×]\s*/, ""));
     setState(doc, id, state);
   }
 
@@ -453,12 +461,17 @@
     setText(doc, "dropout-headroom", format(result.headroom, 3, "V"));
     setText(doc, "buck-loss", format(result.buckLoss, 3, "W"));
     setText(doc, "buck-junction", format(result.buckJunction, 1, "°C"));
-    var verdict = result.priority === "quiet" ? "偏向 LDO" : result.priority === "efficiency" ? "偏向 buck" : "吵雜域用 buck，clean rail 再評估 LDO";
+    var thermalRisk = result.ldoThermalState !== "ok";
+    var verdict = result.ldoThermalState === "error" ? "LDO 過熱，優先改用 buck 或重做熱設計" :
+      result.ldoThermalState === "warn" ? "LDO 熱裕度偏低，需重做熱設計" :
+        result.dropoutRisk ? "LDO 壓差不足，請改電源條件或架構" :
+          result.priority === "quiet" ? "熱與 dropout 通過，可偏向 LDO" : result.priority === "efficiency" ? "偏向 buck" : "吵雜域用 buck，低雜訊電源軌再評估 LDO";
+    var state = result.ldoThermalState === "error" ? "error" : result.dropoutRisk || thermalRisk ? "warn" : "ok";
     setText(doc, "regulator-verdict", verdict);
-    setState(doc, "regulator-verdict", result.dropoutRisk ? "warn" : "ok");
-    setText(doc, "regulator-status", result.dropoutRisk ? "Dropout 風險" : "Headroom 足夠");
-    setState(doc, "regulator-status", result.dropoutRisk ? "warn" : "ok");
-    setFeedback(doc, "regulator-feedback", result.dropoutRisk ? "! Vin,min − Vout − dropout < 0，可能無法穩壓；請提高輸入或改用低壓差方案。仍需同時比較熱與效率。" : "✓ LDO 損耗、理想效率、接面溫度與 dropout headroom 已列出；balanced 模式建議吵雜域使用 buck，clean rail 才考慮 LDO。", result.dropoutRisk ? "warn" : "ok");
+    setState(doc, "regulator-verdict", state);
+    setText(doc, "regulator-status", result.ldoThermalState === "error" ? "LDO 接面溫度超過 125 °C" : result.ldoThermalState === "warn" ? "LDO 接面溫度超過 100 °C" : result.dropoutRisk ? "Dropout 風險" : "熱與壓差初步通過");
+    setState(doc, "regulator-status", state);
+    setFeedback(doc, "regulator-feedback", result.ldoThermalState === "error" ? "LDO 最壞情況接面溫度已超過 125 °C，不可因低雜訊優先而繼續採用。" : result.ldoThermalState === "warn" ? "LDO 最壞情況接面溫度已超過 100 °C，需查 datasheet 上限、降額與實際 PCB 熱阻。" : result.dropoutRisk ? "Vin,min − Vout − dropout < 0，可能無法穩壓；請提高輸入或改用低壓差方案。" : "LDO 損耗以最高輸入電壓估算；LDO 效率為忽略 Iq 的理想值。Buck 沿用同一 θJA 且損耗只以輸出功率與效率估算，僅供比較。", state);
   }
 
   function renderBattery(doc, result) {
@@ -614,10 +627,14 @@
       if (button.classList) button.classList.toggle("is-complete", done);
       var mark = safeAll(button, ".nav-mark, [data-nav-mark]")[0];
       if (mark) mark.textContent = done ? "●" : "○";
+      if (typeof button.setAttribute === "function") {
+        var title = safeAll(button, "span")[1];
+        button.setAttribute("aria-label", (title ? title.textContent : "學習模組") + (done ? "（已完成）" : "（未完成）"));
+      }
     });
   }
 
-  function activateModule(doc, key) {
+  function activateModule(doc, key, moveFocus) {
     if (MODULE_KEYS.indexOf(key) < 0) return;
     safeAll(doc, "[data-module]").forEach(function (section) {
       var active = section.getAttribute("data-module") === key;
@@ -633,6 +650,16 @@
       }
       if (button.dataset) button.dataset.active = active ? "true" : "false";
     });
+    if (moveFocus) {
+      var activeSection = safeGet(doc, "module-" + key);
+      if (activeSection && typeof activeSection.scrollIntoView === "function") activeSection.scrollIntoView({ block: "start" });
+      var headingId = activeSection && activeSection.getAttribute("aria-labelledby");
+      var heading = headingId ? safeGet(doc, headingId) : null;
+      if (heading && typeof heading.focus === "function") {
+        heading.setAttribute("tabindex", "-1");
+        heading.focus({ preventScroll: true });
+      }
+    }
   }
 
   function bindActivatable(element, handler) {
@@ -665,13 +692,24 @@
   function init(doc, root) {
     if (!doc) return;
     var browserRoot = root || (typeof window !== "undefined" ? window : null);
+    safeAll(doc, ".eyebrow, .section-kicker, .panel-tag").forEach(function (element) {
+      if (/^[\x00-\x7F\s]+$/.test(element.textContent || "")) element.setAttribute("lang", "en");
+    });
+    function syncTopbarHeight() {
+      var topbar = safeAll(doc, ".topbar")[0];
+      if (topbar && doc.documentElement && typeof topbar.getBoundingClientRect === "function") {
+        doc.documentElement.style.setProperty("--topbar-height", Math.ceil(topbar.getBoundingClientRect().height) + "px");
+      }
+    }
+    syncTopbarHeight();
+    if (browserRoot && typeof browserRoot.addEventListener === "function") browserRoot.addEventListener("resize", syncTopbarHeight);
     var completed = readProgress(browserRoot);
     var sections = safeAll(doc, "[data-module]");
     var initial = sections.length ? sections[0].getAttribute("data-module") : MODULE_KEYS[0];
     if (MODULE_KEYS.indexOf(initial) >= 0) activateModule(doc, initial);
     safeAll(doc, "[data-nav]").forEach(function (button) {
       if (String(button.tagName || "").toLowerCase() === "button") button.setAttribute("type", "button");
-      bindActivatable(button, function () { activateModule(doc, button.getAttribute("data-nav")); });
+      bindActivatable(button, function () { activateModule(doc, button.getAttribute("data-nav"), true); });
     });
     safeAll(doc, "[data-complete]").forEach(function (button) {
       if (String(button.tagName || "").toLowerCase() === "button") button.setAttribute("type", "button");
@@ -698,13 +736,14 @@
     Object.keys(inputToModule).forEach(function (id) {
       var input = safeGet(doc, id);
       if (!input || typeof input.addEventListener !== "function") return;
-      ["input", "change"].forEach(function (eventName) { input.addEventListener(eventName, function () { runModule(doc, inputToModule[id]); }); });
+      var eventName = input.type === "checkbox" || String(input.tagName || "").toLowerCase() === "select" ? "change" : "input";
+      input.addEventListener(eventName, function () { runModule(doc, inputToModule[id]); });
     });
     [
       ["[data-schematic-check]", "schematic"], ["[data-rf-check]", "rf-layout"], ["[data-release-check]", "release"]
     ].forEach(function (entry) {
       safeAll(doc, entry[0]).forEach(function (input) {
-        ["input", "change"].forEach(function (eventName) { input.addEventListener(eventName, function () { runModule(doc, entry[1]); }); });
+        if (!Object.prototype.hasOwnProperty.call(inputToModule, input.id)) input.addEventListener("change", function () { runModule(doc, entry[1]); });
       });
     });
     updateProgress(doc, browserRoot, completed);

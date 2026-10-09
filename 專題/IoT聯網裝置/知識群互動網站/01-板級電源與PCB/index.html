@@ -8,8 +8,8 @@
   <script src="./app.js" defer></script>
 </head>
 <body>
-<a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
   <a class="skip-link" href="#main-content">跳至主要內容</a>
+  <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
   <div class="app-shell">
     <header class="topbar">
       <div class="brand-block">
@@ -20,7 +20,7 @@
       <div class="progress-panel">
         <div class="progress-heading">
           <span>學習進度</span>
-          <span id="progress-label">0 / 8 模組</span>
+          <span id="progress-label">0 / 8 個模組完成</span>
         </div>
         <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" aria-label="網站學習進度">
           <span id="progress-fill" class="progress-fill"></span>
@@ -31,7 +31,7 @@
 
     <div class="app-body">
       <nav class="module-nav" aria-label="學習模組導覽">
-        <span class="nav-label">Modules</span>
+        <span class="nav-label">模組</span>
         <button class="nav-item is-active" type="button" data-nav="power-tree"><span class="nav-index">01</span><span>電源樹與裕度</span><span class="nav-mark" aria-hidden="true">○</span></button>
         <button class="nav-item" type="button" data-nav="regulator"><span class="nav-index">02</span><span>穩壓器熱效率</span><span class="nav-mark" aria-hidden="true">○</span></button>
         <button class="nav-item" type="button" data-nav="battery"><span class="nav-index">03</span><span>睡眠漏電與電池</span><span class="nav-mark" aria-hidden="true">○</span></button>
@@ -52,19 +52,19 @@
           <p class="heading-note">調整參數後觀察因果關係，再用完成按鈕記錄學習進度。</p>
         </div>
 
-        <section class="panel result-panel" aria-label="八個模組的操作前導讀">
-          <div class="panel-heading"><h3>操作前先建立一條完整因果鏈</h3><span class="panel-tag">READ FIRST</span></div>
+        <details class="panel result-panel preface" aria-label="八個模組的操作前導讀">
+          <summary class="panel-heading"><strong>操作前先建立一條完整因果鏈</strong><span class="panel-tag">先讀</span></summary>
           <p>板級硬體不像函式呼叫，錯誤常會跨區傳播：負載突然取電，電源路徑的阻抗先造成壓降，晶片可能重置，最後才在韌體 log 裡表現成「網路斷線」。因此每個計算都要接回實物量測；計算用來預測，示波器、電流探棒、熱像與設計檔才是核對預測的證據。</p>
           <details open><summary>01 電源樹（Power Tree）：平均值管熱，峰值管會不會重置</summary><p>把電源樹想成有容量限制的服務依賴圖：每個電源軌（rail）有電壓、連續電流、瞬間電流與上電順序。設計電流 I<sub>design</sub> = I<sub>load</sub> × (1 + m)，其中 I 以 A 或 mA 表示、m 是無單位裕度。例：Radio 峰值 2.0 A、裕度 30%，需要 2.0 × 1.30 = 2.6 A 的峰值能力；這不表示它會連續耗 2.6 A。</p><p><b>怎麼玩與看證據：</b>先只提高 Radio 峰值，觀察峰值功率是否上升而平均功率變化較小。實板以示波器同時量 rail 電壓與模組 enable／發射訊號，能證明壓陷與發射在時間上相關；只看電源供應器面板的慢速平均電流，不能排除微秒級壓陷。</p></details>
           <details><summary>02 穩壓器：LDO 的簡單，通常用熱來付款</summary><p>低壓差線性穩壓器（Low-Dropout Regulator, LDO）近似損耗 P<sub>loss</sub> = (V<sub>in</sub> − V<sub>out</sub>) × I；接面溫升近似 ΔT = P<sub>loss</sub> × θ<sub>JA</sub>。以 5 V 降到 3.3 V、0.2 A、θ<sub>JA</sub> = 50 °C/W 為例，損耗為 0.34 W、理想化溫升約 17 °C。假設環境 25 °C，接面約 42 °C。此模型假設穩態、熱阻與實際 PCB 條件相符，不能取代封裝散熱曲線。切換式降壓轉換器（buck converter）效率高，但會引入切換漣波與高 di/dt 迴路。</p><p><b>不要混淆：</b>dropout 是維持調節所需的最小壓差，不是 LDO 的固定輸出誤差；效率高也不等於雜訊低。熱電偶或熱像可看到溫升，示波器頻譜可看到漣波，但熱像不能證明瞬態穩定度。</p></details>
-          <details><summary>03 電池：壽命由時間加權平均決定，睡眠漏電可能反客為主</summary><p>平均電流 I<sub>avg</sub> = Σ(I<sub>state</sub> × t<sub>state</sub>/T) + I<sub>hidden</sub>。例：睡眠 0.01 mA 占 99%、運作 30 mA 占 0.9%、發射 200 mA 占 0.1%，三者貢獻約 0.0099 + 0.27 + 0.20 = 0.4799 mA；再加 Iq 0.005 mA 與漏電 0.002 mA，約 0.487 mA。若 2000 mAh 電池只取 80%，理想壽命約 1600/0.487 ≈ 3285 h，約 137 日。</p><p>這只是假設容量可線性使用的初估。低溫、老化、電池內阻、截止電壓與發射脈衝都會縮短壽命。電流分析儀可積分每個狀態的電荷；只量一次睡眠電流不能證明整個 duty cycle 正確。</p></details>
-          <details><summary>04 去耦（Decoupling）：電容是在穩壓器趕到之前就近供電</summary><p>教學式 ΔV ≈ ΔI × ESR + ΔI × Δt/C，把瞬間壓降拆成等效串聯電阻（Equivalent Series Resistance, ESR）項與放電項。例：ΔI = 0.5 A、ESR = 0.05 Ω、Δt = 0.2 ms、C = 470 µF，兩項分別為 0.025 V 與約 0.213 V，總壓降約 0.238 V。這是假設電流矩形且忽略等效串聯電感（ESL）、穩壓器控制迴路和走線阻抗的下限模型。</p><p>拖曳 ESR、容量與脈衝時間時，分辨哪一項在主導。示波器探棒要用短地彈簧跨在負載旁量；長鱷魚地線本身會拾取尖峰，看到的振鈴未必全是板上訊號。</p></details>
+          <details><summary>03 電池：壽命由時間加權平均決定，睡眠漏電可能反客為主</summary><p>平均電流 I<sub>avg</sub> = Σ(I<sub>state</sub> × t<sub>state</sub>/T) + I<sub>hidden</sub>。例：睡眠 0.01 mA 佔 99%、運作 30 mA 佔 0.9%、發射 200 mA 佔 0.1%，三者貢獻約 0.0099 + 0.27 + 0.20 = 0.4799 mA；再加 Iq 0.005 mA 與漏電 0.002 mA，約 0.487 mA。若 2000 mAh 電池只取 80%，理想壽命約 1600/0.487 ≈ 3285 h，約 137 日。</p><p>這只是假設容量可線性使用的初估。低溫、老化、電池內阻、截止電壓與發射脈衝都會縮短壽命。電流分析儀可積分每個狀態的電荷；只量一次睡眠電流不能證明整個 duty cycle 正確。</p></details>
+          <details><summary>04 去耦（Decoupling）：電容是在穩壓器趕到之前就近供電</summary><p>教學式 ΔV ≈ ΔI × ESR + ΔI × Δt/C，把瞬間壓降拆成等效串聯電阻（Equivalent Series Resistance, ESR）項與放電項。例：ΔI = 0.5 A、ESR = 0.05 Ω、Δt = 0.2 ms、C = 470 µF，兩項分別為 0.025 V 與約 0.213 V，總壓降約 0.238 V。這是假設電流矩形且忽略等效串聯電感（ESL）、穩壓器控制迴路和走線阻抗的下限模型。</p><p>調整 ESR、容量與脈衝時間時，分辨哪一項在主導。示波器探棒要用短地彈簧跨在負載旁量；長鱷魚地線本身會拾取尖峰，看到的振鈴未必全是板上訊號。</p></details>
           <details><summary>05 原理圖與 BOM：ERC 找規則錯，不懂產品意圖</summary><p>電氣規則檢查（Electrical Rules Check, ERC）像型別檢查器：能抓未連接、輸出互打等形式問題，但不知道 RESET 是否會在慢上電時誤觸發，也不知道料件是否買得到。操作 gate 時，取消一項就把它翻成失敗鏈，例如「未核封裝 → 焊墊錯位 → 無法焊接 → AOI 或首件裝配發現」。BOM、封裝庫版本、原理圖 PDF 與 ERC 報告共同提供可追溯證據；單獨一份無錯誤 ERC 報告不能證明板子可製造。</p></details>
           <details><summary>06 疊層與回流：訊號永遠沿完整迴路傳能量</summary><p>高速訊號的回流電流傾向走在鄰近參考平面、緊貼訊號路徑下方，因為那裡迴路電感最低。跨越地平面裂縫會迫使回流繞路，使迴路面積變大，進而增加輻射、串擾與參考電位擾動。這裡的「高速」主要由邊緣上升時間決定，不只看 clock 頻率。近場探棒能定位哪段走線輻射較強；它不能直接等同正式遠場法規結果。</p></details>
           <details><summary>07 RF 與天線：50 Ω 是傳輸條件，不是萬用電阻值</summary><p>射頻（Radio Frequency, RF）饋線的幾何、介質與參考平面共同形成特性阻抗。天線淨空區（keep-out）、外殼、電池與人手都會改變近場分布和共振。π 匹配網路預留焊墊只是調諧入口，不代表未量測就已匹配。向量網路分析儀（Vector Network Analyzer, VNA）量到 S<sub>11</sub> 可證明測試平面上的反射；它不能單獨證明整機輻射效率、接收靈敏度或各方向覆蓋。</p></details>
           <details><summary>08 Release 與 bring-up：第一次上電要把未知數一次只放進一個</summary><p>Bring-up 的安全順序是目視與短路檢查 → 限流供電 → 逐軌量電壓與啟動順序 → 確認 reset／clock → 連接除錯器 → 才執行完整韌體。若一上電就燒正式韌體、接所有外設，故障變數會同時增加。電源供應器的限流事件、各 rail 波形、reset cause、料號與板號應一起寫進紀錄。『能開機一次』只能證明該樣板在該條件成功，不能證明溫度、容差與量產分布都有裕度。</p></details>
           <p class="feedback"><b>總結不要混淆：</b>平均功耗 ≠ 峰值供電；電容量 ≠ 所有頻率下的低阻抗；ERC／DRC 通過 ≠ 電氣功能正確；VNA 匹配良好 ≠ 無線鏈路一定良好。</p>
-        </section>
+        </details>
 
         <section class="module-section is-current" id="module-power-tree" data-module="power-tree" aria-labelledby="power-tree-title">
           <div class="module-header">
@@ -82,7 +82,8 @@
                 <div class="field"><label for="load-clean">Clean rail <span>mA</span></label><input id="load-clean" type="number" value="20" min="0" step="1" inputmode="decimal"></div>
                 <div class="field"><label for="load-core">Core rail <span>mA</span></label><input id="load-core" type="number" value="10" min="0" step="1" inputmode="decimal"></div>
               </div>
-              <div class="rail-list" aria-label="電源域電壓"><div><span>Digital</span><strong>3.3 V</strong></div><div><span>Radio</span><strong>3.8 V</strong></div><div><span>Clean</span><strong>3.3 V</strong></div><div><span>Core</span><strong>1.8 V</strong></div></div>
+              <div class="rail-list" role="group" aria-label="電源域電壓"><div><span>Digital</span><strong>3.3 V</strong></div><div><span>Radio</span><strong>3.8 V</strong></div><div><span>Clean</span><strong>3.3 V</strong></div><div><span>Core</span><strong>1.8 V</strong></div></div>
+              <p class="inline-note">Radio 以 3.8 V 代表蜂巢式模組常見的約 3.4–4.2 V 供電範圍；正式設計仍以所選模組 datasheet 為準。</p>
               <div class="formula-box"><span class="formula-label">教學模型</span><code>I_design = I × (1 + 裕度 / 100)</code><small>Radio 峰值不能用平均值取代；Clean rail 與高電流 Radio 分域。</small></div>
               <button class="reset-button" type="button" data-reset-module="power-tree">↺ 重設本模組</button>
             </div>
@@ -108,8 +109,9 @@
             <div class="panel input-panel">
               <div class="panel-heading"><h4>穩壓器條件</h4><span class="panel-tag">INPUTS</span></div>
               <div class="field-grid two-col">
-                <div class="field"><label for="reg-vin">輸入電壓 <span>V</span></label><input id="reg-vin" type="number" value="5" min="0.01" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="reg-vin">標稱輸入 <span>V</span></label><input id="reg-vin" type="number" value="5" min="0.01" step="0.1" inputmode="decimal"></div>
                 <div class="field"><label for="reg-vin-min">最低輸入 <span>V</span></label><input id="reg-vin-min" type="number" value="4.5" min="0.01" step="0.1" inputmode="decimal"></div>
+                <div class="field"><label for="reg-vin-max">最高輸入 <span>V</span></label><input id="reg-vin-max" type="number" value="5" min="0.1" step="0.1" inputmode="decimal"></div>
                 <div class="field"><label for="reg-vout">輸出電壓 <span>V</span></label><input id="reg-vout" type="number" value="3.3" min="0.01" step="0.1" inputmode="decimal"></div>
                 <div class="field"><label for="reg-current">負載電流 <span>A</span></label><input id="reg-current" type="number" value="0.2" min="0.0001" step="0.01" inputmode="decimal"></div>
                 <div class="field"><label for="reg-dropout">Dropout <span>V</span></label><input id="reg-dropout" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div>
@@ -117,12 +119,12 @@
                 <div class="field"><label for="reg-ta">環境溫度 <span>°C</span></label><input id="reg-ta" type="number" value="25" step="1" inputmode="decimal"></div>
                 <div class="field"><label for="buck-efficiency">Buck 效率 <span>%</span></label><input id="buck-efficiency" type="number" value="90" min="0.01" max="100" step="1" inputmode="decimal"></div>
               </div>
-              <div class="field choice-field"><label for="noise-priority">優先順序</label><select id="noise-priority"><option value="balanced" selected>平衡</option><option value="quiet">低雜訊</option><option value="efficiency">效率</option></select></div>
+              <div class="field choice-field"><label for="noise-priority">雜訊／效率取捨</label><select id="noise-priority"><option value="balanced" selected>平衡</option><option value="quiet">低雜訊</option><option value="efficiency">效率</option></select></div>
               <button class="reset-button" type="button" data-reset-module="regulator">↺ 重設本模組</button>
             </div>
             <div class="panel result-panel">
               <div class="panel-heading"><h4>比較結果</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
-              <div class="metric-grid two-col"><div class="metric"><span>LDO 損耗</span><strong id="ldo-loss">— W</strong></div><div class="metric"><span>LDO 效率</span><strong id="ldo-efficiency">— %</strong></div><div class="metric"><span>LDO 接面溫度</span><strong id="ldo-junction">— °C</strong></div><div class="metric"><span>Dropout headroom</span><strong id="dropout-headroom">— V</strong></div><div class="metric"><span>Buck 損耗</span><strong id="buck-loss">— W</strong></div><div class="metric"><span>Buck 接面溫度</span><strong id="buck-junction">— °C</strong></div></div>
+              <div class="metric-grid two-col"><div class="metric"><span>LDO 最壞情況損耗</span><strong id="ldo-loss">— W</strong></div><div class="metric"><span>LDO 理想效率</span><strong id="ldo-efficiency">— %</strong></div><div class="metric"><span>LDO 接面溫度</span><strong id="ldo-junction">— °C</strong></div><div class="metric"><span>Dropout 壓差裕度</span><strong id="dropout-headroom">— V</strong></div><div class="metric"><span>Buck 簡化損耗</span><strong id="buck-loss">— W</strong></div><div class="metric"><span>Buck 比較溫度</span><strong id="buck-junction">— °C</strong></div></div>
               <div class="comparison-row"><span class="comparison-label">建議</span><span id="regulator-verdict">—</span></div>
               <div id="regulator-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
               <p id="regulator-feedback" class="feedback" aria-live="polite">LDO 將壓差轉成熱；buck 的效率優勢伴隨切換雜訊與佈局要求。</p>
@@ -146,7 +148,7 @@
             </div>
             <div class="panel result-panel">
               <div class="panel-heading"><h4>壽命估算</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
-              <div class="metric-grid two-col"><div class="metric"><span>Duty 平均電流</span><strong id="duty-average">— mA</strong></div><div class="metric"><span>隱性負載</span><strong id="hidden-current">— mA</strong></div><div class="metric"><span>總平均電流</span><strong id="total-average">— mA</strong></div><div class="metric"><span>估算壽命</span><strong id="battery-hours">— h</strong></div><div class="metric"><span>估算日數</span><strong id="battery-days">— d</strong></div><div class="metric"><span>隱性負載占比</span><strong id="leakage-share">— %</strong></div></div>
+              <div class="metric-grid two-col"><div class="metric"><span>Duty 平均電流</span><strong id="duty-average">— mA</strong></div><div class="metric"><span>隱性負載</span><strong id="hidden-current">— mA</strong></div><div class="metric"><span>總平均電流</span><strong id="total-average">— mA</strong></div><div class="metric"><span>估算壽命</span><strong id="battery-hours">— h</strong></div><div class="metric"><span>估算日數</span><strong id="battery-days">— 日</strong></div><div class="metric"><span>隱性負載佔比</span><strong id="leakage-share">— %</strong></div></div>
               <div id="battery-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
               <p id="battery-feedback" class="feedback" aria-live="polite">睡眠比例高時，Iq、LED、上拉與未關閉周邊可能成為主要耗電來源。</p>
             </div>
@@ -158,7 +160,7 @@
           <div class="module-grid">
             <div class="panel input-panel">
               <div class="panel-heading"><h4>瞬態條件</h4><span class="panel-tag">INPUTS</span></div>
-              <div class="field-grid two-col"><div class="field"><label for="pulse-step">電流步階 <span>A</span></label><input id="pulse-step" type="number" value="0.5" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="pulse-duration">脈衝時間 <span>ms</span></label><input id="pulse-duration" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="pulse-esr">電容 ESR <span>Ω</span></label><input id="pulse-esr" type="number" value="0.05" min="0" step="0.01" inputmode="decimal"></div><div class="field"><label for="pulse-capacitance">電容量 <span>µF</span></label><input id="pulse-capacitance" type="number" value="470" min="0.01" step="10" inputmode="decimal"></div><div class="field field-span"><label for="pulse-allowable">允許壓降 <span>V</span></label><input id="pulse-allowable" type="number" value="0.3" min="0.01" step="0.1" inputmode="decimal"></div></div>
+              <div class="field-grid two-col"><div class="field"><label for="pulse-step">電流步階 <span>A</span></label><input id="pulse-step" type="number" value="0.5" min="0.01" step="0.01" inputmode="decimal"></div><div class="field"><label for="pulse-duration">脈衝時間 <span>ms</span></label><input id="pulse-duration" type="number" value="0.2" min="0" step="0.1" inputmode="decimal"></div><div class="field"><label for="pulse-esr">電容 ESR <span>Ω</span></label><input id="pulse-esr" type="number" value="0.05" min="0" step="0.01" inputmode="decimal"></div><div class="field"><label for="pulse-capacitance">電容量 <span>µF</span></label><input id="pulse-capacitance" type="number" value="470" min="0.01" step="10" inputmode="decimal"></div><div class="field field-span"><label for="pulse-allowable">允許壓降 <span>V</span></label><input id="pulse-allowable" type="number" value="0.3" min="0.01" step="0.1" inputmode="decimal"></div></div>
               <div class="formula-box"><span class="formula-label">教學模型</span><code>ΔV = ΔI × ESR + ΔI × Δt / C</code><small>電容要靠近模組；正式設計仍要看 ESL 與 regulator 動態響應。</small></div>
               <button class="reset-button" type="button" data-reset-module="decoupling">↺ 重設本模組</button>
             </div>
@@ -166,7 +168,7 @@
               <div class="panel-heading"><h4>電源完整性估算</h4><span class="panel-tag panel-tag-live">LIVE</span></div>
               <div class="metric-grid two-col"><div class="metric"><span>ESR 壓降</span><strong id="esr-drop">— V</strong></div><div class="metric"><span>電容性壓降</span><strong id="capacitive-drop">— V</strong></div><div class="metric"><span>總壓降</span><strong id="total-drop">— V</strong></div><div class="metric"><span>目標阻抗</span><strong id="target-impedance">— Ω</strong></div><div class="metric"><span>有效阻抗</span><strong id="effective-impedance">— Ω</strong></div><div class="metric"><span>最低電容量</span><strong id="minimum-capacitance">— µF</strong></div></div>
               <div id="decoupling-status" class="status-box status-ok" data-state="ok" aria-live="polite"><span>等待計算</span></div>
-              <p id="decoupling-feedback" class="feedback" aria-live="polite">把高頻 100 nF、中頻 1–10 µF 與低頻 bulk 視為不同頻段的分工。</p>
+              <p id="decoupling-feedback" class="feedback" aria-live="polite">本模組只練習單顆 bulk 電容的瞬態估算；100 nF、1–10 µF 與 bulk 分別處理不同頻段，完整配置請對照「硬體：PCB 設計實務」筆記。</p>
             </div>
           </div>
         </section>

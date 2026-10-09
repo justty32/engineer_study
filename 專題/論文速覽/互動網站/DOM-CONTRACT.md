@@ -32,7 +32,8 @@
   <nav id="plan-bar" class="plan-bar" aria-label="30 分鐘計畫"></nav>
   <div class="timer" role="group" aria-label="計時器">
     <button type="button" id="timer-toggle" class="timer-btn">開始 30 分鐘</button>
-    <output id="timer-display" class="timer-display" aria-live="polite"></output>
+    <output id="timer-display" class="timer-display"></output>
+    <span id="timer-announcement" class="visually-hidden" aria-live="polite"></span>
   </div>
 </header>
 <main id="lanes" class="lanes"></main>
@@ -63,7 +64,7 @@
 
 錯誤／未載入訊息：JS 在 `#lanes` 內放一段 `p.lane-message`（資料為 `{}`、空 lanes 或 JSON 壞掉時），CSS 置中淡色顯示。
 
-JS 行為：`#theme-toggle` 切換 `light/dark`，`aria-pressed="true"` 表示目前深色，文字顯示「深色」／「淺色」（顯示目前狀態）。`#timer-toggle` 按下後文字變「停止計時」，`#timer-display` 每秒更新「已用 mm:ss／30:00」，超時後加 class `is-over` 並顯示「已超過 mm:ss」。`#deep-list-empty` 在清單非空時加 `hidden` 屬性。
+JS 行為：`#theme-toggle` 切換 `light/dark`，`aria-pressed="true"` 表示目前深色，文字顯示「深色」／「淺色」（顯示目前狀態）。`#timer-toggle` 按下後文字變「停止計時」，`#timer-display` 每秒更新「已用 mm:ss／30:00」，但不設 live region；`#timer-announcement` 只播報開始、停止與到時。超時後 `#timer-display` 加 class `is-over` 並顯示「已超過 mm:ss」。`#deep-list-empty` 在清單非空時加 `hidden` 屬性。
 
 ### JS 渲染進 `#plan-bar` 的結構
 
@@ -136,7 +137,7 @@ JS 行為：`#theme-toggle` 切換 `light/dark`，`aria-pressed="true"` 表示�
   </article>
   <!-- …共 4 張 card-paper … -->
 
-  <aside class="lane-question">
+  <aside class="lane-question" id="question-arc" data-nav-index="5" tabindex="-1">
     <p class="card-kicker">車上想一想</p>
     <p class="lane-question-text">…</p>
   </aside>
@@ -170,7 +171,7 @@ JS 行為：`#theme-toggle` 切換 `light/dark`，`aria-pressed="true"` 表示�
 
 - `.card-paper.is-read`：已讀；checkbox 勾選，`.check-text` 文字「已讀 ✓」。
 - `.card-paper.is-deep`：深讀；`.deep-toggle` `aria-pressed="true"`、文字「已標記深讀 ★」。
-- `.card.is-current`：底列「上一張／下一張」目前停留的卡（gist 卡與 paper 卡同列一序，`data-nav-index` 從 0 起全頁連號）。
+- `[data-nav-index].is-current`：底列「上一張／下一張」目前停留的全景卡、必讀卡或思考題；`data-nav-index` 從 0 起全頁連號。
 - `.lane-all` 表格在手機上以 `.table-wrap { overflow-x: auto }` 橫向捲動，任何情況不可讓頁面橫向溢出。
 
 ### JS 渲染進 `#threads-list` 與 `#deep-list-items`
@@ -184,6 +185,8 @@ JS 行為：`#theme-toggle` 切換 `light/dark`，`aria-pressed="true"` 表示�
 
 <li class="deep-item"><a href="#card-1911.01547"><span class="deep-item-title">…</span><span class="deep-item-id">1911.01547</span></a></li>
 ```
+
+「車上想一想」也是翻頁停靠點；每線最後一張必讀卡的下一張會到本區，再下一張才進入下條主線。最後一線的問題另有「閱讀跨線索」與「查看深讀清單」入口；全清單不納入翻頁序列。
 
 ### 鍵盤
 

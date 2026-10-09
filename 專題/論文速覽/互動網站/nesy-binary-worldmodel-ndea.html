@@ -12,6 +12,7 @@
 </head>
 <body>
 <a class="skip-link" href="#lanes">跳到內容</a>
+<noscript><p class="lane-message">此閱讀頁需要 JavaScript 載入內容與進度；請啟用 JavaScript，或<a href="./index.html">回 deck 總覽</a>。</p></noscript>
 <header class="deck-header">
   <nav class="topbar" aria-label="站內導覽">
     <a class="topbar-link" href="./index.html">← deck 總覽</a>
@@ -24,7 +25,8 @@
   <nav id="plan-bar" class="plan-bar" aria-label="30 分鐘計畫"></nav>
   <div class="timer" role="group" aria-label="計時器">
     <button type="button" id="timer-toggle" class="timer-btn">開始 30 分鐘</button>
-    <output id="timer-display" class="timer-display" aria-live="polite"></output>
+    <output id="timer-display" class="timer-display"></output>
+    <span id="timer-announcement" class="visually-hidden" aria-live="polite"></span>
   </div>
 </header>
 <main id="lanes" class="lanes"></main>

@@ -10,12 +10,12 @@ const SETS = {
   lifecycle: ['lifecycle-identify', 'lifecycle-quarantine', 'lifecycle-revoke', 'lifecycle-rotate', 'lifecycle-patch', 'lifecycle-verify', 'lifecycle-wipe', 'lifecycle-audit']
 };
 const LABELS = {
-  'identity-unique': 'unique identity', 'identity-key-nonexport': 'non-exportable private key', 'identity-cert-chain': 'certificate trust chain', 'identity-mutual-auth': 'mutual authentication', 'identity-rotation': 'rotation', 'identity-revocation': 'revocation',
-  'boot-root-key': 'immutable root/key', 'boot-bootloader-signature': 'bootloader signature', 'boot-app-signature': 'application signature', 'boot-antirollback': 'anti-rollback', 'boot-debug-lock': 'debug lock', 'boot-fail-closed': 'fail closed', 'boot-recovery': 'signed recovery',
-  'update-authenticity': 'signature authenticity', 'update-integrity': 'integrity/hash', 'update-inactive-slot': 'inactive slot', 'update-atomic-switch': 'atomic switch', 'update-health-confirm': 'boot health confirmation', 'update-rollback': 'rollback', 'update-staged-rollout': 'staged rollout/pause', 'update-observability': 'observability',
-  'provisioning-station-auth': 'station authorization', 'provisioning-unique-id': 'unique serial/MAC', 'provisioning-key-nonexport': 'non-exportable key', 'provisioning-cert-bind': 'certificate binding', 'provisioning-readback': 'readback/online challenge', 'provisioning-quarantine': 'failure quarantine', 'provisioning-audit': 'audit trace', 'provisioning-debug-lock': 'debug lock',
-  'production-test-points': 'test points/SWD', 'production-fct': 'ICT/FCT', 'production-secure-update': 'secure boot/OTA evidence', 'production-rf-emc': 'RF/EMC prescan', 'production-fixture': 'production fixture', 'production-provisioning': 'provisioning', 'production-traceability': 'traceability', 'production-change-control': 'change control',
-  'lifecycle-identify': 'identify scope', 'lifecycle-quarantine': 'quarantine', 'lifecycle-revoke': 'revoke identity', 'lifecycle-rotate': 'rotate affected credentials', 'lifecycle-patch': 'patch', 'lifecycle-verify': 'verify recovery', 'lifecycle-wipe': 'wipe local data', 'lifecycle-audit': 'retain audit evidence'
+  'identity-unique': '唯一裝置身分（unique identity）', 'identity-key-nonexport': '不可匯出私鑰（non-exportable private key）', 'identity-cert-chain': '憑證信任鏈（certificate trust chain）', 'identity-mutual-auth': '雙向認證（mutual authentication）', 'identity-rotation': '憑證輪替（rotation）', 'identity-revocation': '憑證撤銷（revocation）',
+  'boot-root-key': '不可變信任根／金鑰（immutable root/key）', 'boot-bootloader-signature': '開機載入程式簽章（bootloader signature）', 'boot-app-signature': '應用程式簽章（application signature）', 'boot-antirollback': '防回滾（anti-rollback）', 'boot-debug-lock': '除錯鎖定（debug lock）', 'boot-fail-closed': '失敗時關閉（fail closed）', 'boot-recovery': '簽章復原映像（signed recovery）',
+  'update-authenticity': '簽章真實性（signature authenticity）', 'update-integrity': '完整性／雜湊（integrity/hash）', 'update-inactive-slot': '非作用槽（inactive slot）', 'update-atomic-switch': '原子切換（atomic switch）', 'update-health-confirm': '開機健康確認（boot health confirmation）', 'update-rollback': '回滾（rollback）', 'update-staged-rollout': '分階段佈署／暫停（staged rollout/pause）', 'update-observability': '可觀測性（observability）',
+  'provisioning-station-auth': '工站授權（station authorization）', 'provisioning-unique-id': '唯一序號／MAC', 'provisioning-key-nonexport': '不可匯出金鑰（non-exportable key）', 'provisioning-cert-bind': '憑證綁定（certificate binding）', 'provisioning-readback': '讀回／線上挑戰（readback/online challenge）', 'provisioning-quarantine': '失敗品隔離（failure quarantine）', 'provisioning-audit': '稽核軌跡（audit trace）', 'provisioning-debug-lock': '除錯鎖定（debug lock）',
+  'production-test-points': '測試點／SWD', 'production-fct': 'ICT／FCT', 'production-secure-update': '安全啟動／OTA 證據', 'production-rf-emc': 'RF／EMC 預掃', 'production-fixture': '量產治具（production fixture）', 'production-provisioning': '產線佈建（provisioning）', 'production-traceability': '可追溯性（traceability）', 'production-change-control': '變更控制（change control）',
+  'lifecycle-identify': '辨識影響範圍', 'lifecycle-quarantine': '隔離裝置', 'lifecycle-revoke': '撤銷身分', 'lifecycle-rotate': '輪替受影響憑證', 'lifecycle-patch': '修補', 'lifecycle-verify': '驗證復原', 'lifecycle-wipe': '清除本地資料', 'lifecycle-audit': '保留稽核證據'
 };
 const valid = (value, values) => typeof value === 'string' && values.includes(value);
 const objectInput = input => input && typeof input === 'object' ? input : {};
@@ -24,7 +24,7 @@ const checked = (input, ids) => ids.filter(id => input[id]).length;
 const gate = (input, ids, required, feedback) => {
   if (!checks(input, ids)) return { valid: false };
   const missing = ids.filter(id => required.includes(id) && !input[id]);
-  return { valid: true, first: missing[0] ? LABELS[missing[0]] : 'none', second: missing[1] ? LABELS[missing[1]] : 'none', count: checked(input, ids), blocker: missing[0] ? LABELS[missing[0]] : 'none', status: missing.length ? '⛔ 阻擋' : '✓ 通過', feedback: missing.length ? `第一缺口：${LABELS[missing[0]]}。${feedback}` : `Gate 通過。${feedback}` };
+  return { valid: true, first: missing[0] ? LABELS[missing[0]] : '無', second: missing[1] ? LABELS[missing[1]] : '無', count: checked(input, ids), blocker: missing[0] ? LABELS[missing[0]] : '無', status: missing.length ? '阻擋' : '通過', feedback: missing.length ? `第一缺口：${LABELS[missing[0]]}。${feedback}` : `Gate 通過。${feedback}` };
 };
 
 function calculateThreatModel(input = {}) {
@@ -39,7 +39,7 @@ function calculateThreatModel(input = {}) {
   else [first, second] = ['TLS 身分驗證', '最小權限與更新'];
   const priority = impact === 'safety' ? '高影響' : '一般影響';
   const feedback = `初篩警告：${impact === 'safety' ? '要求 safe state 與故障證據。' : ''}結果不表示已完成 threat model。`;
-  return { valid: true, priority, firstControl: first, secondControl: second, status: '⚠ 初篩警告', feedback };
+  return { valid: true, priority, firstControl: first, secondControl: second, status: '初篩警告', feedback };
 }
 
 function calculateDeviceIdentity(input = {}) {
@@ -63,7 +63,7 @@ function calculateOtaBudget(input = {}) {
   const transfer = input.image * input.deliveryFactor;
   const seconds = transfer / input.rate;
   const blocked = headroom < 0;
-  return { valid: true, required, headroom, transfer, transferSeconds: seconds, verdict: blocked ? '容量不足' : input.slots < 2 ? '警告：沒有 A/B rollback' : '容量通過', status: blocked ? '⛔ 阻擋' : input.slots < 2 ? '⚠ 警告' : '✓ 通過', feedback: blocked ? '容量不足，無法配置所需映像與保留空間。' : `${input.slots < 2 ? '警告：沒有 A/B rollback。' : ''}教學預算不含檔案系統、對齊、delta update、TLS/協定 overhead、斷點續傳、flash wear 與真實網路功耗。` };
+  return { valid: true, required, headroom, transfer, transferSeconds: seconds, verdict: blocked ? '容量不足' : input.slots < 2 ? '警告：沒有 A/B rollback' : '容量通過', status: blocked ? '阻擋' : input.slots < 2 ? '警告' : '通過', feedback: blocked ? '容量不足，無法配置所需映像與保留空間。' : `${input.slots < 2 ? '警告：沒有 A/B rollback。' : ''}教學預算不含檔案系統、對齊、delta update、TLS/協定 overhead、斷點續傳、flash wear 與真實網路功耗。` };
 }
 function calculateUpdateRecovery(input = {}) {
   input = objectInput(input);
@@ -79,7 +79,7 @@ function calculateProvisioningLine(input = {}) {
 }
 function calculateProductionGate(input = {}) {
   input = objectInput(input);
-  const lengths = { EVT: 2, DVT: 4, PVT: 7, MP: 8 };
+  const lengths = { EVT: 1, DVT: 4, PVT: 7, MP: 8 };
   if (!Object.prototype.hasOwnProperty.call(lengths, input.stage)) return { valid: false };
   return gate(input.checks, SETS.production, SETS.production.slice(0, lengths[input.stage]), '通過只是該階段的學習 gate，不等於良率達標、認證完成或可直接出貨。');
 }

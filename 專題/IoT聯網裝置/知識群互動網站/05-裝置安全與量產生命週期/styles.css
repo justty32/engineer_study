@@ -32,6 +32,18 @@ body {
   line-height: 1.5;
 }
 
+.skip-link {
+  position: fixed;
+  z-index: 20;
+  top: -80px;
+  left: 12px;
+  padding: 10px 14px;
+  color: var(--ink);
+  background: var(--panel);
+}
+
+.skip-link:focus { top: 12px; }
+
 button, input, select { font: inherit; letter-spacing: 0; }
 
 button, select, input[type="number"] { min-height: 38px; }

@@ -23,24 +23,31 @@
     lanes: [],           // [{id, name, minutes, ids:[arxiv_id], planItem, planProgress}]
     highlightById: {},   // arxiv_id -> highlight
     glossaryByLane: {},  // lane_id -> [{term, plain}]
-    cards: [],           // 依 data-nav-index 排序的 .card 節點
+    cards: [],           // 依 data-nav-index 排序的卡片與思考題停靠點
     current: -1,         // 目前卡 index
     navLockUntil: 0,     // 程式化捲動期間忽略 IntersectionObserver
     timerId: null,
     timerStart: null,
-    observer: null
+    observer: null,
+    observerResizeTimer: null,
+    observerResizeBound: false,
+    timerExpiredAnnounced: false
   };
 
   /* -------------------------------------------------------- localStorage */
 
   var memoryStore = {};   // localStorage 不可用時的降級容器
+  var persistentStoreFailed = false;
 
   function storeGet(key) {
+    if (Object.prototype.hasOwnProperty.call(memoryStore, key)) return memoryStore[key];
+    if (persistentStoreFailed) return undefined;
     try {
       var v = window.localStorage.getItem(key);
       return v === null ? undefined : v;
     } catch (e) {
-      return Object.prototype.hasOwnProperty.call(memoryStore, key) ? memoryStore[key] : undefined;
+      persistentStoreFailed = true;
+      return undefined;
     }
   }
 
@@ -48,14 +55,18 @@
     memoryStore[key] = value;
     try {
       window.localStorage.setItem(key, value);
-    } catch (e) { /* 私密模式／配額滿：只保留記憶體 */ }
+    } catch (e) {
+      persistentStoreFailed = true;   // 私密模式／配額滿：本 session 統一改讀記憶體
+    }
   }
 
   function storeRemove(key) {
     delete memoryStore[key];
     try {
       window.localStorage.removeItem(key);
-    } catch (e) { /* 忽略 */ }
+    } catch (e) {
+      persistentStoreFailed = true;
+    }
   }
 
   function loadIdList(key) {
@@ -482,10 +493,24 @@
     return card;
   }
 
-  function renderLaneQuestion(lane, matchers) {
+  function renderLaneQuestion(lane, matchers, navIndex, isLastLane) {
     var aside = el('aside', 'lane-question');
+    aside.id = 'question-' + lane.id;
+    aside.setAttribute('data-nav-index', String(navIndex));
+    aside.setAttribute('tabindex', '-1');
     aside.appendChild(el('p', 'card-kicker', '車上想一想'));
     aside.appendChild(para('lane-question-text', lane.question, matchers));
+    if (isLastLane) {
+      var next = el('p', 'lane-question-next');
+      var threads = el('a', null, '閱讀跨線索');
+      threads.setAttribute('href', '#threads-title');
+      next.appendChild(threads);
+      next.appendChild(document.createTextNode('／'));
+      var deep = el('a', null, '查看深讀清單');
+      deep.setAttribute('href', '#deep-list-title');
+      next.appendChild(deep);
+      aside.appendChild(next);
+    }
     return aside;
   }
 
@@ -572,7 +597,9 @@
       section.appendChild(renderPaperCard(hl, i + 1, highlights.length, lane, navCounter.n++, matchers));
     }
 
-    if (isNonEmptyString(lane.question)) section.appendChild(renderLaneQuestion(lane, matchers));
+    if (isNonEmptyString(lane.question)) {
+      section.appendChild(renderLaneQuestion(lane, matchers, navCounter.n++, index === laneTotal - 1));
+    }
     if (asArray(lane.all_papers).length) section.appendChild(renderLaneAll(lane));
 
     return section;
@@ -849,7 +876,7 @@
   /* ------------------------------------------------------ 上一張／下一張 */
 
   function collectCards() {
-    var nodes = document.querySelectorAll('.card[data-nav-index]');
+    var nodes = document.querySelectorAll('[data-nav-index]');
     var list = [];
     for (var i = 0; i < nodes.length; i++) list.push(nodes[i]);
     list.sort(function (a, b) {
@@ -965,7 +992,11 @@
     if (typeof window.IntersectionObserver !== 'function') return;
     if (state.observer) state.observer.disconnect();
 
-    // rootMargin 上偏：只讓「剛通過視口上緣」的卡進入這條窄帶
+    // IntersectionObserver 的百分比以 root 寬度為基準；改用視口高度算像素邊界。
+    var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 1;
+    var topMargin = Math.round(viewportHeight * 0.12);
+    var bottomMargin = Math.round(viewportHeight * 0.76);
+    var rootMargin = '-' + topMargin + 'px 0px -' + bottomMargin + 'px 0px';
     var observer = new window.IntersectionObserver(function (entries) {
       if (Date.now() < state.navLockUntil) return;
       var best = null;
@@ -978,10 +1009,21 @@
       var idx = Number(best.target.getAttribute('data-nav-index'));
       if (!isFinite(idx) || idx === state.current) return;
       setCurrent(idx, {});
-    }, { rootMargin: '-12% 0px -76% 0px', threshold: 0 });
+    }, { rootMargin: rootMargin, threshold: 0 });
 
     for (var i = 0; i < state.cards.length; i++) observer.observe(state.cards[i]);
     state.observer = observer;
+
+    if (!state.observerResizeBound) {
+      window.addEventListener('resize', function () {
+        if (state.observerResizeTimer !== null) window.clearTimeout(state.observerResizeTimer);
+        state.observerResizeTimer = window.setTimeout(function () {
+          state.observerResizeTimer = null;
+          setupObserver();
+        }, 150);
+      });
+      state.observerResizeBound = true;
+    }
   }
 
   /* -------------------------------------------------------------- 計時器 */
@@ -1006,6 +1048,10 @@
     if (elapsed > total) {
       display.classList.add('is-over');
       display.textContent = '已超過 ' + mmss(elapsed - total);
+      if (!state.timerExpiredAnnounced) {
+        setText('timer-announcement', timerTotalLabel() + ' 計時已到');
+        state.timerExpiredAnnounced = true;
+      }
     } else {
       display.classList.remove('is-over');
       display.textContent = '已用 ' + mmss(elapsed) + '／' + timerTotalLabel();
@@ -1032,8 +1078,10 @@
 
   function startTimer(startedAt) {
     state.timerStart = startedAt;
+    state.timerExpiredAnnounced = false;
     storeSet(state.keys.timer, String(startedAt));
     setTimerButton(true);
+    setText('timer-announcement', '計時已開始');
     tickTimer();
     startTimerLoop();
   }
@@ -1043,6 +1091,7 @@
     stopTimerLoop();
     storeRemove(state.keys.timer);
     setTimerButton(false);
+    setText('timer-announcement', '計時已停止');
     var display = byId('timer-display');
     if (display) {
       display.textContent = '';
@@ -1148,12 +1197,14 @@
     setupObserver();
 
     var idx = currentFromHash();
+    var restoreScroll = false;
     if (idx === -1) {
       var saved = Number(storeGet(state.keys.pos));
       idx = isFinite(saved) && saved >= 0 ? saved : 0;
+      restoreScroll = isFinite(saved) && saved > 0;
     }
     state.current = -1;
-    setCurrent(idx, {});
+    setCurrent(idx, { scroll: restoreScroll });
     // 觀察器建立後的第一批回呼會在載入當下觸發，先鎖住以免覆蓋還原的位置
     state.navLockUntil = Date.now() + NAV_LOCK_MS;
   }
