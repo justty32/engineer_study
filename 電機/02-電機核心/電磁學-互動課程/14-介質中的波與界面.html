@@ -18,15 +18,15 @@
 <p class="note">來源：08-電磁學-下 §15.1–§15.2、第 16 章。</p>
 
 <h2>推導：把導電損耗收進複數 ε，再拆回可直接計算的實數式</h2>
-<p>時諧場（time&#45;harmonic field）以相量表示：<b>E</b>(<b>r</b>, t) = Re{<strong>E</strong>(<b>r</b>)e<sup>jωt</sup>}。這裡必須分清標記：<code>&lt;b&gt;</code> 是空間向量、<code>&lt;strong&gt;</code> 是複數相量，兩者不得互換。虛數單位一律寫 j；數學課寫 i，電機寫 j，因為 i 留給電流。相量把時間微分換成乘上 jω，但最後可觀察的場仍取實部。</p>
-<p>安培定律在材料中為 ∇×<strong>H</strong> = σ<strong>E</strong> + jωε<strong>E</strong>。把右側提出 jω，得到 jω(ε − jσ/ω)<strong>E</strong>，因此定義複介電常數 ε<sub>c</sub> = ε − jσ/ω。傳導電流於是被吸收進複數 ε，無損公式可原樣延伸。損耗比 p = tan δ = σ/(ωε)，表示傳導電流密度與位移電流密度的大小比。</p>
-<p>傳播常數（propagation constant）<strong>γ</strong> = α + jβ = jω√(µε<sub>c</sub>)。α 是衰減常數，單位 Np/m；β 是相位常數，單位 rad/m。波可寫 E = E<sub>0</sub>e<sup>−αz</sup>cos(ωt − βz)，所以 α 管振幅，β 管相位。為避免只給近似，令 q = arctan(p)、u = (1 + p²)<sup>1/4</sup>、v = c/√(ε<sub>r</sub>µ<sub>r</sub>)，則：</p>
-<p><strong>γ</strong> = (ω/v)⋅u∠(90° − q/2)，α = (ω/v)⋅u⋅sin(q/2)，β = (ω/v)⋅u⋅cos(q/2)。</p>
-<p>複數本質阻抗為 <strong>η</strong> = √(µ/ε<sub>c</sub>)，其精確實數化結果是 |<strong>η</strong>| = [η<sub>0</sub>√(µ<sub>r</sub>/ε<sub>r</sub>)]/u、∠<strong>η</strong> = q/2。這組 α、β、η 通式對任意 p 都精確。當 p → ∞，q → 90°、u → √p，便得到 α ≈ β ≈ √(ωµσ/2)；趨膚深度（skin depth）δ = 1/α ≈ √(2/(ωµσ))。當 p ≪ 1，則 α ≈ (σ/2)√(µ/ε)、β ≈ ω√(µε)。</p>
+<p>時諧場（time&#45;harmonic field）以相量表示：<b>E</b>(<b>r</b>, t) = Re{<strong class="phasor">E</strong>(<b>r</b>)e<sup>jωt</sup>}。這裡必須分清標記：一般粗體（如 <b>E</b>）是空間向量，粗體加底線並以主題色標示（如 <strong class="phasor">E</strong>）是複數相量，兩者不得互換。虛數單位一律寫 j；數學課寫 i，電機寫 j，因為 i 留給電流。相量把時間微分換成乘上 jω，但最後可觀察的場仍取實部。</p>
+<p>安培定律在材料中為 ∇×<strong class="phasor">H</strong> = σ<strong class="phasor">E</strong> + jωε<strong class="phasor">E</strong>。把右側提出 jω，得到 jω(ε − jσ/ω)<strong class="phasor">E</strong>，因此定義複介電常數 ε<sub>c</sub> = ε − jσ/ω。傳導電流於是被吸收進複數 ε，無損公式可原樣延伸。損耗比 p = tan δ = σ/(ωε)，表示傳導電流密度與位移電流密度的大小比。</p>
+<p>傳播常數（propagation constant）<strong class="phasor">γ</strong> = α + jβ = jω√(µε<sub>c</sub>)。α 是衰減常數，單位 Np/m；β 是相位常數，單位 rad/m。波可寫 E = E<sub>0</sub>e<sup>−αz</sup>cos(ωt − βz)，所以 α 管振幅，β 管相位。為避免只給近似，令 q = arctan(p)、u = (1 + p²)<sup>1/4</sup>、v = c/√(ε<sub>r</sub>µ<sub>r</sub>)，則：</p>
+<p><strong class="phasor">γ</strong> = (ω/v)⋅u∠(90° − q/2)，α = (ω/v)⋅u⋅sin(q/2)，β = (ω/v)⋅u⋅cos(q/2)。</p>
+<p>複數本質阻抗為 <strong class="phasor">η</strong> = √(µ/ε<sub>c</sub>)，其精確實數化結果是 |<strong class="phasor">η</strong>| = [η<sub>0</sub>√(µ<sub>r</sub>/ε<sub>r</sub>)]/u、∠<strong class="phasor">η</strong> = q/2。這組 α、β、η 通式對任意 p 都精確。當 p → ∞，q → 90°、u → √p，便得到 α ≈ β ≈ √(ωµσ/2)；趨膚深度（skin depth）δ = 1/α ≈ √(2/(ωµσ))。當 p ≪ 1，則 α ≈ (σ/2)√(µ/ε)、β ≈ ω√(µε)。</p>
 <p>每走一個 δ，場振幅乘 e<sup>−1</sup>，剩 36.8 %；功率與振幅平方成正比，剩 13.5 %。厚度 t 的吸收衰減是 t/δ Np，換成分貝為 (t/δ) × 20 log<sub>10</sub>e = (t/δ) × 8.685890 dB。趨膚深度不是硬邊界，深處仍有場與電流，只是按指數變小。</p>
-<p>垂直入射時，界面切向場要求入射加反射等於透射：E<sub>i</sub> + E<sub>r</sub> = E<sub>t</sub>；磁場方向使 (E<sub>i</sub> − E<sub>r</sub>)/<strong>η</strong><sub>1</sub> = E<sub>t</sub>/<strong>η</strong><sub>2</sub>。聯立得到 <strong>Γ</strong> = (<strong>η</strong><sub>2</sub> − <strong>η</strong><sub>1</sub>)/(<strong>η</strong><sub>2</sub> + <strong>η</strong><sub>1</sub>) 與 <strong>T</strong> = 1 + <strong>Γ</strong>。|<strong>Γ</strong>| 是振幅比，|<strong>Γ</strong>|² 才是功率反射率，回波損耗為 −20 log<sub>10</sub>|<strong>Γ</strong>| dB。</p>
+<p>垂直入射時，界面切向場要求入射加反射等於透射：E<sub>i</sub> + E<sub>r</sub> = E<sub>t</sub>；磁場方向使 (E<sub>i</sub> − E<sub>r</sub>)/<strong class="phasor">η</strong><sub>1</sub> = E<sub>t</sub>/<strong class="phasor">η</strong><sub>2</sub>。聯立得到 <strong class="phasor">Γ</strong> = (<strong class="phasor">η</strong><sub>2</sub> − <strong class="phasor">η</strong><sub>1</sub>)/(<strong class="phasor">η</strong><sub>2</sub> + <strong class="phasor">η</strong><sub>1</sub>) 與 <strong class="phasor">T</strong> = 1 + <strong class="phasor">Γ</strong>。|<strong class="phasor">Γ</strong>| 是振幅比，|<strong class="phasor">Γ</strong>|² 才是功率反射率，回波損耗為 −20 log<sub>10</sub>|<strong class="phasor">Γ</strong>| dB。</p>
 <p>斜入射的完整菲涅耳公式留給光學與微波課。本課只保留低損介質的兩個邊界角：布魯斯特角 θ<sub>B</sub> = arctan(n<sub>2</sub>/n<sub>1</sub>) 只讓 TM 偏振零反射；臨界角 sin θ<sub>c</sub> = n<sub>2</sub>/n<sub>1</sub> 只在密介質射向疏介質時存在。</p>
-<p>屏蔽總效果不能只看材料厚度。波若從接縫、孔洞或未良好搭接的邊界繞入，理想平板的反射與吸收計算可能很好，整個機殼仍會洩漏；孔洞尺寸接近波長時尤其不能當成完整導體面。反過來，低頻磁場的波阻抗與近場組成不同，單靠高導電薄箔的反射也未必有效。α 與 δ 回答材料內的衰減，<strong>Γ</strong> 回答理想界面的反射，結構幾何則是另一層工程條件。</p>
+<p>屏蔽總效果不能只看材料厚度。波若從接縫、孔洞或未良好搭接的邊界繞入，理想平板的反射與吸收計算可能很好，整個機殼仍會洩漏；孔洞尺寸接近波長時尤其不能當成完整導體面。反過來，低頻磁場的波阻抗與近場組成不同，單靠高導電薄箔的反射也未必有效。α 與 δ 回答材料內的衰減，<strong class="phasor">Γ</strong> 回答理想界面的反射，結構幾何則是另一層工程條件。</p>
 
 <h2>數值實例：一百微米銅箔的吸收，以及真空到電路板的反射</h2>
 <p>趨膚模式預設為銅（σ = 5.952380952 × 10<sup>7</sup> S/m、ε<sub>r</sub> = 1）、f = 10<sup>6</sup> Hz = 1 MHz、屏蔽厚度 t = 100 µm。</p>
@@ -37,10 +37,10 @@
 <tr><td>δ = 1/α</td><td>6.523411 × 10<sup>−5</sup> m ＝ 65.234115 µm</td></tr>
 <tr><td>良導體近似</td><td>√(2/(ωµ<sub>0</sub>σ)) = 6.523411 × 10<sup>−5</sup> m</td></tr>
 <tr><td>100 µm 衰減</td><td>1.532940 Np ＝ 13.314950 dB</td></tr>
-<tr><td>|<strong>η</strong>| 與相位</td><td>3.642080 × 10<sup>−4</sup> Ω，45.000000°</td></tr>
+<tr><td>|<strong class="phasor">η</strong>| 與相位</td><td>3.642080 × 10<sup>−4</sup> Ω，45.000000°</td></tr>
 </tbody></table>
 <p>f = 10<sup>3</sup> Hz 時 δ = 2062.883834 µm ＝ 2.06 mm，100 µm 銅箔只衰減 0.421056 dB；低頻磁屏蔽常須改用高 µ<sub>r</sub> 材料。f = 10<sup>9</sup> Hz 時 δ = 2.062884 µm，100 µm 衰減 421.055684 dB。海水在 1 MHz 時 p = 887.659400、α = 3.971598 1/m、δ = 0.251788 m，良導體近似為 0.251646 m，差 0.06 %。</p>
-<p>界面模式取真空到 FR-4（ε<sub>r</sub> = 4.4、σ = 0）垂直入射：<strong>η</strong><sub>2</sub> = 179.599130 Ω、<strong>Γ</strong> = −0.354343、<strong>T</strong> = 0.645657、|<strong>Γ</strong>|² = 0.125559 ＝ 12.5559 %、回波損耗 9.011534 dB、等效 VSWR = 2.097618。θ<sub>1</sub> = 30° 時折射角 13.790100°；反向臨界角 28.472134°；布魯斯特角 64.511401°。同樣公式套到 1 MHz 銅，|<strong>Γ</strong>| = 0.999998633、功率反射率 0.999997266，也就是 99.9997 % 幾乎全反射。高頻曝露另有法規限值，本章數值只用於場與屏蔽模型，不作人體安全判定。</p>
+<p>界面模式取真空到 FR-4（ε<sub>r</sub> = 4.4、σ = 0）垂直入射：<strong class="phasor">η</strong><sub>2</sub> = 179.599130 Ω、<strong class="phasor">Γ</strong> = −0.354343、<strong class="phasor">T</strong> = 0.645657、|<strong class="phasor">Γ</strong>|² = 0.125559 ＝ 12.5559 %、回波損耗 9.011534 dB、等效 VSWR = 2.097618。θ<sub>1</sub> = 30° 時折射角 13.790100°；反向臨界角 28.472134°；布魯斯特角 64.511401°。同樣公式套到 1 MHz 銅，|<strong class="phasor">Γ</strong>| = 0.999998633、功率反射率 0.999997266，也就是 99.9997 % 幾乎全反射。高頻曝露另有法規限值，本章數值只用於場與屏蔽模型，不作人體安全判定。</p>
 
 <section class="workspace"><h2>自由實驗：切換趨膚與界面兩種材料判讀</h2>
 <p>真空側的平面波抵達所選材料；趨膚模式看波進入後的指數衰減，界面模式看反射、透射與低損時的折射角。切換模式時，回饋會說明哪些滑桿有效。</p>
@@ -59,7 +59,7 @@
 <li>趨膚深度是振幅降到 1/e 的尺度，不是電流到了該深度突然變成零；更深處仍有較小電流。</li>
 <li>Np 與 dB 都是對數衰減單位，1 Np = 8.685890 dB；把數值直接視為相等會差約 8.7 倍。</li>
 <li>α = β 只在良導體極限近似成立；海水等中間材料必須使用任意 p 的完整通式。</li>
-<li><strong>Γ</strong> 是複數振幅比，|<strong>Γ</strong>|² 才是功率比；負實數還表示反射相位翻轉 180°。</li>
+<li><strong class="phasor">Γ</strong> 是複數振幅比，|<strong class="phasor">Γ</strong>|² 才是功率比；負實數還表示反射相位翻轉 180°。</li>
 <li>布魯斯特角只適用於 TM 偏振；TE 波沒有相同的零反射角，臨界角也只存在於密到疏的方向。</li>
 </ul>
 

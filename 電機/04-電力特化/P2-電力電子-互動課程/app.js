@@ -707,12 +707,6 @@ function trade() {
 /* ---------- 5. 字典 ---------- */
 function dictionary() {
   if (!$("term-search")) { return; }
-  var headings = document.querySelectorAll(".term-card h2"), hi, h3;
-  for (hi = 0; hi < headings.length; hi += 1) {
-    h3 = document.createElement("h3");
-    while (headings[hi].firstChild) { h3.appendChild(headings[hi].firstChild); }
-    headings[hi].parentNode.replaceChild(h3, headings[hi]);
-  }
   var draw = function () {
     var q = String(pick("term-search")).toLowerCase().trim();
     var cards = document.getElementsByClassName("term-card");

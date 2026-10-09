@@ -537,7 +537,7 @@ function dictionary() {
   var draw=function(){
     var q=pick('term-search').toLowerCase().trim(),cards=document.getElementsByClassName('term-card');
     var shown=0,i,c,hay;
-    for(i=0;i<cards.length;i+=1){c=cards[i];hay=((c.getAttribute('data-search')||'')+' '+((c.querySelector&&c.querySelector('h2'))?c.querySelector('h2').textContent:'')).toLowerCase();
+    for(i=0;i<cards.length;i+=1){c=cards[i];hay=((c.getAttribute('data-search')||'')+' '+((c.querySelector&&c.querySelector('h3'))?c.querySelector('h3').textContent:'')).toLowerCase();
       if(q===''||hay.indexOf(q)!==-1){c.removeAttribute('hidden');shown+=1;}else{c.setAttribute('hidden','hidden');}}
     put('term-count','顯示 '+int0(shown)+' / 50 張');
   };

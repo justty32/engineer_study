@@ -24,7 +24,7 @@
 <h2>第 1 組｜驅動器世界觀與直流驅動（第 00–01 章，9 張）</h2>
 <div class="term-list">
 <article class="term-card" data-search="motor drive 馬達驅動器 power stage controller sensor 功率級 控制器 感測">
-<h2>馬達驅動器（motor drive）</h2>
+<h3>馬達驅動器（motor drive）</h3>
 <p><strong>白話：</strong>把轉矩、轉速或位置命令，翻成繞組電壓與電流的整套裝置；它同時要供能、量測並修正誤差。</p>
 <p><strong>位置／角色：</strong><a href="00-驅動器世界觀與轉矩夾角.html">第 00 章</a>先拆成功率級、感測與控制器三塊，後續各章再逐一打開。</p>
 <p><strong>機制：</strong>控制器依回授算命令，功率級讓電流通過繞組，再由磁場產生轉矩。以 K<sub>t</sub> = 0.500000 N·m/A、10.000000 A、γ = 90° 為例，輸出是 5.000000 N·m。</p>
@@ -32,7 +32,7 @@
 </article>
 
 <article class="term-card" data-search="torque constant magnetic field angle K_t gamma γ 轉矩常數 磁場夾角 每安培轉矩">
-<h2>轉矩常數與磁場夾角（torque constant K<sub>t</sub>, angle γ）</h2>
+<h3>轉矩常數與磁場夾角（torque constant K<sub>t</sub>, angle γ）</h3>
 <p><strong>白話：</strong>K<sub>t</sub> 表示每安培最多能換到多少轉矩；γ 表示定子與轉子磁場錯開多少，垂直時最有效。</p>
 <p><strong>位置／角色：</strong><a href="00-驅動器世界觀與轉矩夾角.html">第 00 章</a>用它建立全課的能量轉換直覺，<a href="05-BLDC六步換相與霍爾.html">第 05 章</a>再看夾角如何週期變動。</p>
 <p><strong>機制：</strong>T = K<sub>t</sub> × I × sin γ。K<sub>t</sub> = 0.500000 N·m/A、I = 10.000000 A 時，90° 得 5.000000 N·m，60° 只得 4.330127 N·m。</p>
@@ -40,7 +40,7 @@
 </article>
 
 <article class="term-card" data-search="current speed position loop cascade three loops 電流迴路 速度迴路 位置迴路 三層迴路 bandwidth">
-<h2>三層迴路（current／speed／position loop）</h2>
+<h3>三層迴路（current／speed／position loop）</h3>
 <p><strong>白話：</strong>內層先管電流，中層管轉速，外層管位置；越靠內反應越快，外層把命令逐層交給內層完成。</p>
 <p><strong>位置／角色：</strong><a href="00-驅動器世界觀與轉矩夾角.html">第 00 章</a>畫出全貌，<a href="03-速度與位置迴路串級.html">第 03 章</a>用串級模型檢查快慢分工。</p>
 <p><strong>機制：</strong>範例的三層頻率依序為 500.000000 Hz、50.000000 Hz、5.000000 Hz；相鄰十倍分離時，速度命令超越量為 4.352513 %。</p>
@@ -48,7 +48,7 @@
 </article>
 
 <article class="term-card" data-search="H bridge H-bridge full bridge four switches polarity H 橋 全橋 正反轉">
-<h2>H 橋（H-bridge）</h2>
+<h3>H 橋（H-bridge）</h3>
 <p><strong>白話：</strong>四個開關圍住馬達繞組，選不同對角線導通，就能把直流鏈電壓以正向、反向或零電壓加到繞組。</p>
 <p><strong>位置／角色：</strong><a href="01-H橋與平均電壓.html">第 01 章</a>用 H 橋串起平均電壓、電流方向、四象限與煞車模式。</p>
 <p><strong>機制：</strong>24.000000 V 直流鏈在單極性 D = 0.750000 時產生 18.000000 V 平均電壓；以 1000.000000 rpm 運轉時，穩態電流是 7.528024 A。</p>
@@ -56,7 +56,7 @@
 </article>
 
 <article class="term-card" data-search="pulse width modulation PWM average value switching frequency f_sw 脈寬調變 平均電壓 切換頻率">
-<h2>脈寬調變（pulse-width modulation, PWM）</h2>
+<h3>脈寬調變（pulse-width modulation, PWM）</h3>
 <p><strong>白話：</strong>在每個很短的週期內切換開與關，藉由開啟時間比例改變馬達看到的平均電壓。</p>
 <p><strong>位置／角色：</strong><a href="01-H橋與平均電壓.html">第 01 章</a>只採平均值模型；開關元件、死區與損耗不在本課範圍。</p>
 <p><strong>機制：</strong>開關以 f<sub>sw</sub> 反覆通斷，馬達繞組的電感把它濾成平均電壓 V<sub>avg</sub> = D × V<sub>dc</sub>。20.000000 kHz 的一拍是 50.000000 µs。</p>
@@ -64,7 +64,7 @@
 </article>
 
 <article class="term-card" data-search="duty cycle D 工作週期 average voltage V_avg on time ratio">
-<h2>工作週期（duty cycle, D）</h2>
+<h3>工作週期（duty cycle, D）</h3>
 <p><strong>白話：</strong>每個 PWM 週期中，開關處於指定狀態的時間比例；D = 0.750000 就是四分之三時間開啟。</p>
 <p><strong>位置／角色：</strong><a href="01-H橋與平均電壓.html">第 01 章</a>把它當作 H 橋平均電壓的直接控制量，<a href="09-SVPWM扇區與作用時間.html">第 09 章</a>再算三相各自的比例。</p>
 <p><strong>機制：</strong>單極性模型 V<sub>avg</sub> = D × V<sub>dc</sub>；D = 0.750000、V<sub>dc</sub> = 24.000000 V 得 18.000000 V，對應穩態電流 7.528024 A。</p>
@@ -72,7 +72,7 @@
 </article>
 
 <article class="term-card" data-search="current ripple peak to peak delta I ΔI f_sw L 電流漣波 峰對峰 切換">
-<h2>電流漣波（current ripple）</h2>
+<h3>電流漣波（current ripple）</h3>
 <p><strong>白話：</strong>平均電流上疊著的快速三角形起伏，來自開關電壓反覆改變，而繞組電感來不及讓電流瞬間跳動。</p>
 <p><strong>位置／角色：</strong><a href="01-H橋與平均電壓.html">第 01 章</a>用它判斷平均值模型是否可信，也連到轉矩平順度。</p>
 <p><strong>機制：</strong>24.000000 V、D = 0.750000、20.000000 kHz、L = 2.000000 mH 時，峰對峰漣波是 0.112500 A，占 7.528024 A 平均電流的 1.494416 %。</p>
@@ -80,7 +80,7 @@
 </article>
 
 <article class="term-card" data-search="four quadrant operation Q1 Q2 Q3 Q4 motoring generating 四象限 電動 再生 正轉 反轉">
-<h2>四象限運轉（four-quadrant operation）</h2>
+<h3>四象限運轉（four-quadrant operation）</h3>
 <p><strong>白話：</strong>用轉速正負與轉矩正負分成四種狀態，說清楚馬達往哪轉、是在輸出機械能還是把能量送回電源側。</p>
 <p><strong>位置／角色：</strong><a href="01-H橋與平均電壓.html">第 01 章</a>由轉速（反電動勢）與電流判象限，<a href="11-再生煞車與能量.html">第 11 章</a>接著追查回流能量。</p>
 <p><strong>機制：</strong>預設點 V ≥ 0、I ≥ 0 是 Q1 正轉電動；轉速升到 2500.000000 rpm 時，電流成為 −8.179939 A，機械功率 −214.150296 W，進入 Q2。</p>
@@ -88,7 +88,7 @@
 </article>
 
 <article class="term-card" data-search="electrical time constant tau_e τ_e L R RL 電氣時間常數 暫態">
-<h2>電氣時間常數（electrical time constant, τ<sub>e</sub>）</h2>
+<h3>電氣時間常數（electrical time constant, τ<sub>e</sub>）</h3>
 <p><strong>白話：</strong>繞組電流改變快慢的天然尺度，等於電感除以電阻；數值越大，電流越不願意快速改變。</p>
 <p><strong>位置／角色：</strong><a href="01-H橋與平均電壓.html">第 01 章</a>用它檢查平均值模型，<a href="02-電流迴路PI設計.html">第 02 章</a>再由控制器抵消這個受控體極點。</p>
 <p><strong>機制：</strong>L = 2.000000 mH、R = 1.000000 Ω 時，τ<sub>e</sub> = 2.000000 ms，是 50.000000 µs 切換週期的 40.000000 倍，漣波因而較小。</p>
@@ -99,7 +99,7 @@
 <h2>第 2 組｜迴路與控制器（第 02–03 章，9 張）</h2>
 <div class="term-list">
 <article class="term-card" data-search="proportional integral controller PI K_p K_i 比例 積分 控制器 電流迴路">
-<h2>比例—積分控制器（PI controller）</h2>
+<h3>比例—積分控制器（PI controller）</h3>
 <p><strong>白話：</strong>比例項立刻依誤差出力，積分項累積長期誤差；兩者合作，讓反應夠快且穩態誤差回到零。</p>
 <p><strong>位置／角色：</strong><a href="02-電流迴路PI設計.html">第 02 章</a>設計電流 PI，<a href="03-速度與位置迴路串級.html">第 03 章</a>再把同一結構用在速度控制。</p>
 <p><strong>機制：</strong>R = 1.000000 Ω、L = 2.000000 mH、頻寬 500.000000 Hz 時，K<sub>p</sub> = 6.283185 V/A，K<sub>i</sub> = 3141.592654 V/(A·s)。</p>
@@ -107,7 +107,7 @@
 </article>
 
 <article class="term-card" data-search="pole zero cancellation zero pole R L K_i K_p 零極點抵消 受控體極點">
-<h2>零極點抵消（pole-zero cancellation）</h2>
+<h3>零極點抵消（pole-zero cancellation）</h3>
 <p><strong>白話：</strong>把 PI 的零點放在馬達繞組極點同一位置，使兩個動態在理想模型中互相消去，留下容易掌握的一階響應。</p>
 <p><strong>位置／角色：</strong><a href="02-電流迴路PI設計.html">第 02 章</a>用 R/L 決定零點，這是直接計算電流迴路增益的核心。</p>
 <p><strong>機制：</strong>K<sub>i</sub> / K<sub>p</sub> = R / L = 500.000000 rad/s；抵消後閉迴路時間常數為 0.318310 ms，10–90 % 上升時間為 0.699398 ms。</p>
@@ -115,7 +115,7 @@
 </article>
 
 <article class="term-card" data-search="bandwidth frequency response f_c omega_c ω_c 頻寬 反應速度 Hz rad/s">
-<h2>頻寬（bandwidth）</h2>
+<h3>頻寬（bandwidth）</h3>
 <p><strong>白話：</strong>控制器還能有效追上命令變化的速度範圍；頻寬越高，反應通常越快，但更接近取樣、電壓與雜訊限制。</p>
 <p><strong>位置／角色：</strong><a href="02-電流迴路PI設計.html">第 02 章</a>選電流頻寬，<a href="03-速度與位置迴路串級.html">第 03 章</a>用倍數安排內外層。</p>
 <p><strong>機制：</strong>f<sub>c</sub> = 500.000000 Hz 對應 ω<sub>c</sub> = 3141.592654 rad/s；與 20.000000 kHz PWM 相差 40.000000 倍，延遲相位是 13.500000°。</p>
@@ -123,7 +123,7 @@
 </article>
 
 <article class="term-card" data-search="sampling delay phase margin PM T_s 取樣延遲 相位裕度 stability">
-<h2>取樣延遲與相位裕度（sampling delay, phase margin）</h2>
+<h3>取樣延遲與相位裕度（sampling delay, phase margin）</h3>
 <p><strong>白話：</strong>數位控制從量測、計算到更新輸出都要時間；延遲讓修正動作落後，相位裕度則量出離振盪還有多少安全空間。</p>
 <p><strong>位置／角色：</strong><a href="02-電流迴路PI設計.html">第 02 章</a>以 1.5 個取樣週期近似整段延遲，檢查目標頻寬能否實現。</p>
 <p><strong>機制：</strong>20.000000 kHz 的 T<sub>s</sub> 是 50.000000 µs，1.5 T<sub>s</sub> 為 75.000000 µs；在 500.000000 Hz 頻寬吃掉 13.500000°，餘下 76.500000°。</p>
@@ -131,7 +131,7 @@
 </article>
 
 <article class="term-card" data-search="voltage saturation anti-windup 電壓飽和 反積分飽和 integrator clamp V_dc">
-<h2>電壓飽和與反積分飽和（voltage saturation, anti-windup）</h2>
+<h3>電壓飽和與反積分飽和（voltage saturation, anti-windup）</h3>
 <p><strong>白話：</strong>控制器要求的電壓超過硬體能給的上限時，輸出被夾住；此時還要阻止積分器繼續累積不可能完成的命令。</p>
 <p><strong>位置／角色：</strong><a href="02-電流迴路PI設計.html">第 02 章</a>看電流步階的第一拍，<a href="08-dq電壓方程與弱磁.html">第 08 章</a>再看高速時的向量上限。</p>
 <p><strong>機制：</strong>10.000000 A 步階第一拍要求 62.831853 V，但直流鏈只有 24.000000 V；不飽和最大步階僅 3.819719 A，超過後響應不再是一階。</p>
@@ -139,7 +139,7 @@
 </article>
 
 <article class="term-card" data-search="cascade control nested loop 串級控制 inner outer 內層 外層">
-<h2>串級控制（cascade control）</h2>
+<h3>串級控制（cascade control）</h3>
 <p><strong>白話：</strong>外層不直接驅動開關，而是把自己的輸出當成內層命令；位置叫速度，速度叫轉矩電流，電流再叫電壓。</p>
 <p><strong>位置／角色：</strong><a href="03-速度與位置迴路串級.html">第 03 章</a>把三層連起來，觀察命令追蹤與負載擾動如何穿過各層。</p>
 <p><strong>機制：</strong>電流迴路 500.000000 Hz、速度迴路 50.000000 Hz、位置迴路 5.000000 Hz；速度層 2 % 整定時間為 25.751270 ms。</p>
@@ -147,7 +147,7 @@
 </article>
 
 <article class="term-card" data-search="bandwidth separation ratio N omega_c omega_s 頻寬分離 倍數 內外迴路">
-<h2>頻寬分離（bandwidth separation）</h2>
+<h3>頻寬分離（bandwidth separation）</h3>
 <p><strong>白話：</strong>讓內層比外層快數倍，使外層看見的內層接近立即完成，而不用同時處理兩套互相糾纏的動態。</p>
 <p><strong>位置／角色：</strong><a href="03-速度與位置迴路串級.html">第 03 章</a>掃描分離倍數 N，比較速度步階的超越量與負載掉速。</p>
 <p><strong>機制：</strong>N = 10 時超越量 4.352513 %；N = 1 時升至 24.621566 %。前者讓內層近似理想，後者使內層落後滲進外層。</p>
@@ -155,7 +155,7 @@
 </article>
 
 <article class="term-card" data-search="reference prefilter tau_f 前置濾波器 command shaping 速度命令">
-<h2>前置濾波器（reference prefilter）</h2>
+<h3>前置濾波器（reference prefilter）</h3>
 <p><strong>白話：</strong>先把過於突然的命令修成較平順的形狀，再交給回授控制器，減少命令引起的尖峰與超越。</p>
 <p><strong>位置／角色：</strong><a href="03-速度與位置迴路串級.html">第 03 章</a>把它放在速度命令前；它只改命令路徑，不碰負載擾動路徑。</p>
 <p><strong>機制：</strong>速度角頻寬 314.159265 rad/s 時，τ<sub>f</sub> = 2 / ω<sub>s</sub> = 6.366198 ms；搭配 ζ = 0.707107 的設計，超越量為 4.352513 %。</p>
@@ -163,7 +163,7 @@
 </article>
 
 <article class="term-card" data-search="load disturbance stiffness 負載擾動 剛性 speed dip recovery 速度掉落">
-<h2>負載擾動與剛性（load disturbance, stiffness）</h2>
+<h3>負載擾動與剛性（load disturbance, stiffness）</h3>
 <p><strong>白話：</strong>負載突然加重是從系統外插進來的擾動；剛性描述轉軸面對這股額外轉矩時，速度或位置能維持得多緊。</p>
 <p><strong>位置／角色：</strong><a href="03-速度與位置迴路串級.html">第 03 章</a>在速度穩定後加入負載，分別量最大掉速與恢復時間。</p>
 <p><strong>機制：</strong>J = 0.010000 kg·m²、50.000000 Hz 速度迴路在 1 rad/s 命令下加入 1.000000 N·m 時，最大掉速 0.217064 rad/s（21.706381 %），16.201973 ms 後回到 2 % 內。</p>
@@ -174,7 +174,7 @@
 <h2>第 3 組｜步進與無刷直流（第 04–05 章，9 張）</h2>
 <div class="term-list">
 <article class="term-card" data-search="stepper motor open loop pulse 步進馬達 開迴路 脈衝 定位">
-<h2>步進馬達（stepper motor）</h2>
+<h3>步進馬達（stepper motor）</h3>
 <p><strong>白話：</strong>驅動器依序切換各相電流，讓轉子一次前進一個離散位置；控制器通常數脈衝推定位置，不一定量回實際角度。</p>
 <p><strong>位置／角色：</strong><a href="04-步進馬達與微步.html">第 04 章</a>用它比較命令解析度、負載偏移、轉折速度與失步。</p>
 <p><strong>機制：</strong>每圈 200 全步、16 微步、16000.000000 微步/s 時，每圈 3200 微步，轉速為 300.000000 rpm，機械角速度 31.415927 rad/s。</p>
@@ -182,7 +182,7 @@
 </article>
 
 <article class="term-card" data-search="step angle microstepping theta_step theta_mu θ 步距角 微步 resolution sine current">
-<h2>步距角與微步（step angle, microstepping）</h2>
+<h3>步距角與微步（step angle, microstepping）</h3>
 <p><strong>白話：</strong>步距角是每個全步的機械角；微步以兩相近似正弦電流，把一個全步切成更小的命令增量，使運動較平順。</p>
 <p><strong>位置／角色：</strong><a href="04-步進馬達與微步.html">第 04 章</a>同時算角度、脈衝率與每一微步能增加多少轉矩。</p>
 <p><strong>機制：</strong>200 全步得到 1.800000°；16 微步後每格 0.112500°。但每格增量轉矩只有 0.039207 N·m，也就是保持轉矩的 9.801714 %。</p>
@@ -190,7 +190,7 @@
 </article>
 
 <article class="term-card" data-search="holding torque step loss pull out 保持轉矩 失步 static error load">
-<h2>保持轉矩與失步（holding torque, step loss）</h2>
+<h3>保持轉矩與失步（holding torque, step loss）</h3>
 <p><strong>白話：</strong>保持轉矩是靜止通電時能抵住的最大負載；實際可用轉矩若低於負載，轉子便跟不上命令而漏掉步數。</p>
 <p><strong>位置／角色：</strong><a href="04-步進馬達與微步.html">第 04 章</a>以負載造成的靜態偏移，說明為何開迴路定位有極限。</p>
 <p><strong>機制：</strong>可用轉矩 0.400000 N·m、負載 0.100000 N·m 時，偏移 0.289550°，等於 2.573780 個微步；到 3000.000000 rpm 時可用轉矩只剩 0.055280 N·m，便會失步。</p>
@@ -198,7 +198,7 @@
 </article>
 
 <article class="term-card" data-search="corner speed current rise inductance back EMF 轉折速度 電流上升 高速轉矩">
-<h2>轉折速度（corner speed）</h2>
+<h3>轉折速度（corner speed）</h3>
 <p><strong>白話：</strong>步進馬達加速到某點後，每個全步留給電流上升的時間太短，電流達不到額定值，轉矩開始明顯下滑。</p>
 <p><strong>位置／角色：</strong><a href="04-步進馬達與微步.html">第 04 章</a>把電感、電流、供電電壓與反電動勢一起放進速度上限估算。</p>
 <p><strong>機制：</strong>24.000000 V、3.000000 mH、2.000000 A 的範例，轉折速度為 951.022810 rpm；升到 48.000000 V 時提高為 1902.045621 rpm。</p>
@@ -206,7 +206,7 @@
 </article>
 
 <article class="term-card" data-search="brushless DC motor BLDC permanent magnet 無刷直流馬達 trapezoidal 六步">
-<h2>無刷直流馬達（brushless DC motor, BLDC）</h2>
+<h3>無刷直流馬達（brushless DC motor, BLDC）</h3>
 <p><strong>白話：</strong>轉子用永久磁鐵、定子用電子開關輪流通電的馬達；機械接點被霍爾位置資訊與功率開關取代。</p>
 <p><strong>位置／角色：</strong><a href="05-BLDC六步換相與霍爾.html">第 05 章</a>用六步表把轉子位置轉成通電相，並計算轉矩起伏。</p>
 <p><strong>機制：</strong>K<sub>t</sub> = 0.500000 N·m/A、I = 10.000000 A、θ = 15° 時，夾角 75°，瞬時轉矩 4.829629 N·m；六步平均為 4.774648 N·m。</p>
@@ -214,7 +214,7 @@
 </article>
 
 <article class="term-card" data-search="Hall sensor H_A H_B H_C 霍爾感測器 hall code 100 rotor position">
-<h2>霍爾感測器（Hall sensor）</h2>
+<h3>霍爾感測器（Hall sensor）</h3>
 <p><strong>白話：</strong>三個開關型位置感測器把一圈電氣角切成六格，以三位元碼告訴控制器轉子目前落在哪一格。</p>
 <p><strong>位置／角色：</strong><a href="05-BLDC六步換相與霍爾.html">第 05 章</a>用霍爾碼查扇區與通電相；它也是低成本電子換相的時間基準。</p>
 <p><strong>機制：</strong>θ = 15° 時讀到 100，落在扇區 1，驅動 B+ C−；θ 到 30° 時切成 110 與 B+ A−。正常序列每次只改一個位元。</p>
@@ -222,7 +222,7 @@
 </article>
 
 <article class="term-card" data-search="six step commutation BLDC 六步換相 hall table sector phase A B C">
-<h2>六步換相（six-step commutation）</h2>
+<h3>六步換相（six-step commutation）</h3>
 <p><strong>白話：</strong>控制器依六個轉子位置區間輪流選兩相導通、另一相浮接，讓定子磁場持續領先轉子並產生同方向轉矩。</p>
 <p><strong>位置／角色：</strong><a href="05-BLDC六步換相與霍爾.html">第 05 章</a>列出完整的霍爾碼、扇區、通電相與磁場方向表。</p>
 <p><strong>機制：</strong>理想夾角在 60° 到 120° 間掃動，最低轉矩係數 0.866025，平均係數 0.954930；5.000000 N·m 峰值對應平均 4.774648 N·m。</p>
@@ -230,7 +230,7 @@
 </article>
 
 <article class="term-card" data-search="electrical angle pole pairs theta p 電氣角 極對數 mechanical angle rotor poles">
-<h2>電氣角與極對數（electrical angle, pole pairs）</h2>
+<h3>電氣角與極對數（electrical angle, pole pairs）</h3>
 <p><strong>白話：</strong>機械角描述軸真正轉了多少；電氣角描述磁極週期走到哪裡。轉子每多一對磁極，機械一圈就多走一個電氣週期。</p>
 <p><strong>位置／角色：</strong><a href="05-BLDC六步換相與霍爾.html">第 05 章</a>用電氣角查六步表，<a href="08-dq電壓方程與弱磁.html">第 08 章</a>用它換算電氣角速度。</p>
 <p><strong>機制：</strong>p = 7 時機械轉 1°，電氣角走 7°，機械一圈有 42 次換相；p = 4、3000.000000 rpm 時，ω<sub>e</sub> = 1256.637061 rad/s。</p>
@@ -238,7 +238,7 @@
 </article>
 
 <article class="term-card" data-search="torque ripple pulsation cogging 六步 轉矩漣波 average minimum maximum">
-<h2>轉矩漣波（torque ripple）</h2>
+<h3>轉矩漣波（torque ripple）</h3>
 <p><strong>白話：</strong>平均轉矩上週期性起伏的部分；它讓速度、振動與聲音跟著波動，即使長時間平均負載看起來正確。</p>
 <p><strong>位置／角色：</strong><a href="05-BLDC六步換相與霍爾.html">第 05 章</a>由磁場夾角算六步固有起伏，並觀察霍爾偏移如何放大它。</p>
 <p><strong>機制：</strong>理想六步峰值 5.000000 N·m、最低 4.330127 N·m、平均 4.774648 N·m，依規格定義得到 14.029787 % 漣波。</p>
@@ -249,7 +249,7 @@
 <h2>第 4 組｜感應機純量控制（第 06 章，6 張）</h2>
 <div class="term-list">
 <article class="term-card" data-search="scalar control V/f 純量控制 volts per hertz induction motor 感應機">
-<h2>純量控制（scalar control, V/f）</h2>
+<h3>純量控制（scalar control, V/f）</h3>
 <p><strong>白話：</strong>不追轉子角，只依命令頻率安排端電壓，讓每赫茲分到的感應電勢大致固定，進而維持磁通。</p>
 <p><strong>位置／角色：</strong><a href="06-感應機Vf純量控制.html">第 06 章</a>用它說明低成本感應馬達調速，以及開迴路速度誤差。</p>
 <p><strong>機制：</strong>30.000000 Hz、低頻補償 3.000000 V、半額定負載時，磁通比 1.013953，命令同步速 900.000000 rpm，實際為 873.738006 rpm。</p>
@@ -257,7 +257,7 @@
 </article>
 
 <article class="term-card" data-search="variable frequency drive VFD 變頻器 induction inverter frequency voltage">
-<h2>變頻器（variable-frequency drive, VFD）</h2>
+<h3>變頻器（variable-frequency drive, VFD）</h3>
 <p><strong>白話：</strong>把固定來源轉成可調頻率與電壓，供感應馬達調速的驅動設備；面板命令最後仍要變成三相開關動作。</p>
 <p><strong>位置／角色：</strong><a href="06-感應機Vf純量控制.html">第 06 章</a>聚焦它的 V/f 查表、低頻補償與基頻以上的限制。</p>
 <p><strong>機制：</strong>範例額定相電壓 220.000000 V、基頻 60.000000 Hz；到 90.000000 Hz 後電壓已封頂，磁通比降到 0.674419，拉出轉矩剩 1.137101 倍額定。</p>
@@ -265,7 +265,7 @@
 </article>
 
 <article class="term-card" data-search="torque boost low frequency compensation V_0 I R_s 低頻補償 電壓提升">
-<h2>低頻補償（torque boost）</h2>
+<h3>低頻補償（torque boost）</h3>
 <p><strong>白話：</strong>低頻時端電壓本來就小，定子電阻壓降占比變大；額外加一點電壓，才讓真正建立磁通的感應電勢不致不足。</p>
 <p><strong>位置／角色：</strong><a href="06-感應機Vf純量控制.html">第 06 章</a>比較不同 V<sub>0</sub> 在低頻、不同負載下的磁通結果。</p>
 <p><strong>機制：</strong>3.000000 Hz 且不補償時，磁通比只有 0.790698；加入 3.000000 V 後升到 1.055814。若加到 10.000000 V，磁通比會過高至 1.674419。</p>
@@ -273,7 +273,7 @@
 </article>
 
 <article class="term-card" data-search="constant torque constant power region base frequency 定轉矩區 定功率區 weak field V f">
-<h2>定轉矩區與定功率區（constant-torque region, constant-power region）</h2>
+<h3>定轉矩區與定功率區（constant-torque region, constant-power region）</h3>
 <p><strong>白話：</strong>基頻以下能讓磁通維持近似固定，額定電流可換到近似固定轉矩；基頻以上電壓封頂，速度升高時轉矩只好下降。</p>
 <p><strong>位置／角色：</strong><a href="06-感應機Vf純量控制.html">第 06 章</a>從 V/f 曲線看兩區交界，<a href="08-dq電壓方程與弱磁.html">第 08 章</a>再看永磁馬達版本。</p>
 <p><strong>機制：</strong>60.000000 Hz 額定點磁通比 1.000000；到 120.000000 Hz 時降為 0.500000，拉出轉矩剩 0.625000 倍額定，已低於 1.000000 倍負載。</p>
@@ -281,7 +281,7 @@
 </article>
 
 <article class="term-card" data-search="slip induction motor synchronous speed rotor speed 滑差 感應馬達 同步速 s">
-<h2>滑差（slip）</h2>
+<h3>滑差（slip）</h3>
 <p><strong>白話：</strong>感應馬達的旋轉磁場必須比轉子跑得快，兩者的速度差才會感應出電流並產生轉矩；滑差就是這個差距的比例。</p>
 <p><strong>位置／角色：</strong><a href="06-感應機Vf純量控制.html">第 06 章</a>把滑差當作開迴路速度誤差，並連到<a href="../../02-電機核心/電機機械-互動課程/07-感應機滑差與功率流.html">感應機滑差與功率流</a>。</p>
 <p><strong>機制：</strong>同步速 900.000000 rpm、滑差轉速 26.261994 rpm 時，實際轉速 873.738006 rpm，滑差為 0.029180，速度誤差 2.917999 %。</p>
@@ -289,7 +289,7 @@
 </article>
 
 <article class="term-card" data-search="pull out torque breakdown torque 拉出轉矩 induction motor stall phi squared">
-<h2>拉出轉矩（pull-out torque）</h2>
+<h3>拉出轉矩（pull-out torque）</h3>
 <p><strong>白話：</strong>感應馬達在指定電壓與頻率下能提供的最大穩定轉矩；負載再加大，轉速會快速崩落而失速。</p>
 <p><strong>位置／角色：</strong><a href="06-感應機Vf純量控制.html">第 06 章</a>用磁通平方估算它，判斷弱磁區還能不能帶動指定負載。</p>
 <p><strong>機制：</strong>額定磁通時是 2.500000 倍額定；3.000000 Hz 且不補償時只剩 1.563007 倍；120.000000 Hz 弱磁時更降到 0.625000 倍。</p>
@@ -300,7 +300,7 @@
 <h2>第 5 組｜向量控制（第 07–09 章，11 張）</h2>
 <div class="term-list">
 <article class="term-card" data-search="Clarke transform abc alpha beta α β 克拉克 變換 三相 二相">
-<h2>Clarke 變換（Clarke transform）</h2>
+<h3>Clarke 變換（Clarke transform）</h3>
 <p><strong>白話：</strong>把三相平衡電流投影到固定的 α、β 兩軸；因為三相總和為零，本來就只有兩個獨立自由度。</p>
 <p><strong>位置／角色：</strong><a href="07-Clarke與Park轉換.html">第 07 章</a>先用它把 abc 三個量壓成靜止平面向量，再交給 Park 旋轉座標。</p>
 <p><strong>機制：</strong>範例三相為 −5.000000 A、10.000000 A、−5.000000 A，變換後 i<sub>α</sub> = −5.000000 A、i<sub>β</sub> = 8.660254 A，向量長度仍是 10.000000 A。</p>
@@ -308,7 +308,7 @@
 </article>
 
 <article class="term-card" data-search="Park transform dq theta θ 帕克 變換 rotating frame 旋轉座標">
-<h2>Park 變換（Park transform）</h2>
+<h3>Park 變換（Park transform）</h3>
 <p><strong>白話：</strong>把 αβ 座標跟著轉子角一起旋轉，使原本持續轉動的電流向量，在 d、q 軸上看成固定數值。</p>
 <p><strong>位置／角色：</strong><a href="07-Clarke與Park轉換.html">第 07 章</a>用它把交流量改寫成 PI 容易控制的直流量，角度則來自感測或估測。</p>
 <p><strong>機制：</strong>θ = 30°、電流向量領先 90° 時，i<sub>d</sub> = 0.000000 A、i<sub>q</sub> = 10.000000 A；θ 改成 0° 或 90°，這兩值仍不變。</p>
@@ -316,7 +316,7 @@
 </article>
 
 <article class="term-card" data-search="dq reference frame direct quadrature d axis q axis dq 座標 直軸 交軸">
-<h2>dq 座標（dq reference frame）</h2>
+<h3>dq 座標（dq reference frame）</h3>
 <p><strong>白話：</strong>d 軸沿著轉子磁場，q 軸領先 90°；一個管磁場方向分量，另一個管垂直分量，讓兩種作用可以分開描述。</p>
 <p><strong>位置／角色：</strong><a href="07-Clarke與Park轉換.html">第 07 章</a>建立座標，<a href="08-dq電壓方程與弱磁.html">第 08 章</a>在同一座標寫電壓與極限。</p>
 <p><strong>機制：</strong>表面式永磁馬達在 i<sub>d</sub> = 0.000000 A、i<sub>q</sub> = 10.000000 A 時，電流全部用於產生 6.000000 N·m 轉矩。</p>
@@ -324,7 +324,7 @@
 </article>
 
 <article class="term-card" data-search="field oriented control FOC magnetic orientation 磁場導向控制 vector control i_d i_q">
-<h2>磁場導向控制（field-oriented control, FOC）</h2>
+<h3>磁場導向控制（field-oriented control, FOC）</h3>
 <p><strong>白話：</strong>利用轉子角把電流拆成磁場與轉矩兩個方向，再各自閉迴路控制，讓交流馬達呈現近似直流馬達的分工。</p>
 <p><strong>位置／角色：</strong><a href="07-Clarke與Park轉換.html">第 07 章</a>完成座標轉換，<a href="08-dq電壓方程與弱磁.html">第 08 章</a>處理去耦、電壓極限與弱磁。</p>
 <p><strong>機制：</strong>p = 4、ψ<sub>f</sub> = 0.100000 Wb、i<sub>q</sub> = 10.000000 A 時，T = 1.5 × p × ψ<sub>f</sub> × i<sub>q</sub> = 6.000000 N·m。</p>
@@ -332,7 +332,7 @@
 </article>
 
 <article class="term-card" data-search="permanent magnet flux linkage psi_f ψ_f 永磁磁鏈 Wb back EMF torque">
-<h2>永磁磁鏈（permanent-magnet flux linkage, ψ<sub>f</sub>）</h2>
+<h3>永磁磁鏈（permanent-magnet flux linkage, ψ<sub>f</sub>）</h3>
 <p><strong>白話：</strong>轉子永久磁鐵穿過定子繞組所形成的鏈結量；它同時決定速度升高時的反電動勢，以及每安培可產生的轉矩。</p>
 <p><strong>位置／角色：</strong><a href="08-dq電壓方程與弱磁.html">第 08 章</a>把 ψ<sub>f</sub> 放入 q 軸電壓與轉矩式，並看負 i<sub>d</sub> 如何抵銷部分總磁鏈。</p>
 <p><strong>機制：</strong>ψ<sub>f</sub> = 0.100000 Wb、ω<sub>e</sub> = 1256.637061 rad/s 時，反電動勢為 125.663706 V；配合 10.000000 A q 軸電流得 6.000000 N·m。</p>
@@ -340,7 +340,7 @@
 </article>
 
 <article class="term-card" data-search="decoupling feedforward cross coupling omega L i 去耦 前饋 dq voltage">
-<h2>去耦與前饋（decoupling, feedforward）</h2>
+<h3>去耦與前饋（decoupling, feedforward）</h3>
 <p><strong>白話：</strong>先由模型算出速度造成的交叉電壓，直接加到控制器輸出，讓 d、q 兩個 PI 少替彼此的影響收拾誤差。</p>
 <p><strong>位置／角色：</strong><a href="08-dq電壓方程與弱磁.html">第 08 章</a>由穩態 dq 電壓方程辨認交叉項與反電動勢項。</p>
 <p><strong>機制：</strong>3000.000000 rpm、L = 2.000000 mH、i<sub>q</sub> = 10.000000 A 時，ω<sub>e</sub>L i<sub>q</sub> = 25.132741 V，使 v<sub>d</sub> 成為 −25.132741 V。</p>
@@ -348,7 +348,7 @@
 </article>
 
 <article class="term-card" data-search="field weakening voltage limit circle current limit circle 弱磁 電壓極限圓 電流極限圓 base speed negative i_d">
-<h2>弱磁（field weakening）</h2>
+<h3>弱磁（field weakening）</h3>
 <p><strong>白話：</strong>高速時反電動勢吃掉可用電壓，控制器注入負 d 軸電流，降低定子看見的總磁鏈，換取更高可達轉速。</p>
 <p><strong>位置／角色：</strong><a href="08-dq電壓方程與弱磁.html">第 08 章</a>同時檢查電壓極限圓與電流極限圓，決定 i<sub>d</sub>、i<sub>q</sub> 如何取捨。</p>
 <p><strong>機制：</strong>300.000000 V 直流鏈、i<sub>q</sub> = 10.000000 A 時，i<sub>d</sub> 從 0.000000 A 改為 −10.000000 A，基速由 3939.828277 rpm 推到 4837.738908 rpm。</p>
@@ -356,7 +356,7 @@
 </article>
 
 <article class="term-card" data-search="maximum torque per ampere MTPA 每安培最大轉矩 current limit saliency i_d i_q">
-<h2>每安培最大轉矩（maximum torque per ampere, MTPA）</h2>
+<h3>每安培最大轉矩（maximum torque per ampere, MTPA）</h3>
 <p><strong>白話：</strong>在有限電流下挑選 d、q 分配，使每一安培換到最多轉矩，減少不產生有效轉矩的電流與銅損。</p>
 <p><strong>位置／角色：</strong><a href="08-dq電壓方程與弱磁.html">第 08 章</a>以表面式永磁同步馬達說明最簡單情形，並標出內藏式的模型邊界。</p>
 <p><strong>機制：</strong>本課 L<sub>d</sub> = L<sub>q</sub> = 2.000000 mH，所以 MTPA 是 i<sub>d</sub> = 0.000000 A；i<sub>q</sub> = 10.000000 A 時輸出 6.000000 N·m、銅損 75.000000 W。</p>
@@ -364,7 +364,7 @@
 </article>
 
 <article class="term-card" data-search="space vector pulse width modulation SVPWM 空間向量脈寬調變 voltage utilization switching vectors">
-<h2>空間向量脈寬調變（space-vector PWM, SVPWM）</h2>
+<h3>空間向量脈寬調變（space-vector PWM, SVPWM）</h3>
 <p><strong>白話：</strong>在一個切換週期內混合兩個相鄰有效向量與零向量，讓伏秒平均等於控制器要求的三相電壓向量。</p>
 <p><strong>位置／角色：</strong><a href="09-SVPWM扇區與作用時間.html">第 09 章</a>把 v<sub>d</sub>、v<sub>q</sub> 的命令落成三相工作週期。</p>
 <p><strong>機制：</strong>V<sub>ref</sub> = 100.000000 V、α = 20°、V<sub>dc</sub> = 300.000000 V 時，T<sub>1</sub> = 37.111360 µs、T<sub>2</sub> = 19.746542 µs、T<sub>0</sub> = 43.142098 µs。</p>
@@ -372,7 +372,7 @@
 </article>
 
 <article class="term-card" data-search="sector dwell time T_1 T_2 T_0 扇區 作用時間 adjacent vector zero vector">
-<h2>扇區與作用時間（sector, dwell time）</h2>
+<h3>扇區與作用時間（sector, dwell time）</h3>
 <p><strong>白話：</strong>電壓平面分成六個 60° 扇區；參考向量落在哪區，就用該區兩個邊界向量各作用一段時間，再以零向量補滿週期。</p>
 <p><strong>位置／角色：</strong><a href="09-SVPWM扇區與作用時間.html">第 09 章</a>先找扇區與區內角，再查開關碼並排出三相時間。</p>
 <p><strong>機制：</strong>α = 20° 位於扇區 1，區內角 20°；100.000000 µs 中兩個相鄰向量分別用 37.111360 µs、19.746542 µs，零向量餘 43.142098 µs。</p>
@@ -380,7 +380,7 @@
 </article>
 
 <article class="term-card" data-search="modulation index overmodulation m 調變指數 過調變 linear region T_0 voltage limit">
-<h2>調變指數與過調變（modulation index, overmodulation）</h2>
+<h3>調變指數與過調變（modulation index, overmodulation）</h3>
 <p><strong>白話：</strong>調變指數比較要求的向量與線性區上限；超過 1 時，兩個有效向量已把週期用完，零向量時間會算成負值。</p>
 <p><strong>位置／角色：</strong><a href="09-SVPWM扇區與作用時間.html">第 09 章</a>用它判斷命令能否由目前直流鏈在線性區實現。</p>
 <p><strong>機制：</strong>100.000000 V 對 173.205081 V 上限得到 m = 0.577350；升到 180.000000 V 時 m = 1.039230，T<sub>0</sub> = −2.344224 µs，已不可線性實現。</p>
@@ -391,7 +391,7 @@
 <h2>第 6 組｜感測與能量（第 10–11 章，6 張）</h2>
 <div class="term-list">
 <article class="term-card" data-search="incremental encoder quadrature four times 4x decoding A B 增量編碼器 四倍頻 線數 計數">
-<h2>增量編碼器與四倍頻（incremental encoder, 4× decoding）</h2>
+<h3>增量編碼器與四倍頻（incremental encoder, 4× decoding）</h3>
 <p><strong>白話：</strong>兩條相差四分之一週期的 A、B 訊號隨軸轉動產生邊緣；同時計數兩線的上升與下降緣，可把每線變成四個位置計數。</p>
 <p><strong>位置／角色：</strong><a href="10-編碼器與速度估測.html">第 10 章</a>由位置計數算角度，再比較兩種速度估測法。</p>
 <p><strong>機制：</strong>1000 線經四倍頻得到每圈 4000 計數，角度解析度 0.090000°；在 300.000000 rpm、1.000000 ms 內會走過 20.000000 個計數。</p>
@@ -399,7 +399,7 @@
 </article>
 
 <article class="term-card" data-search="M method T method count frequency period M 法 T 法 speed estimation encoder low speed high speed">
-<h2>M 法與 T 法（M method, T method）</h2>
+<h3>M 法與 T 法（M method, T method）</h3>
 <p><strong>白話：</strong>M 法固定時間窗數進來幾個邊緣，適合高速；T 法量相鄰邊緣隔多久，適合低速，兩者可依交叉速度切換。</p>
 <p><strong>位置／角色：</strong><a href="10-編碼器與速度估測.html">第 10 章</a>比較兩法的量化來源，並給出選法判準。</p>
 <p><strong>機制：</strong>1000 線、1.000000 ms、300.000000 rpm 時，M 法誤差 5.000000 %，T 法誤差 0.200000 %；交叉速度為 1500.000000 rpm，因此選 T 法。</p>
@@ -407,7 +407,7 @@
 </article>
 
 <article class="term-card" data-search="quantization error encoder count rpm torque chatter 量化誤差 計數 速度抖動">
-<h2>量化誤差（quantization error）</h2>
+<h3>量化誤差（quantization error）</h3>
 <p><strong>白話：</strong>連續角度被離散刻線與整數計數表示，讀值只能一格一格跳；速度計算會把這一格放大成週期性的估測誤差。</p>
 <p><strong>位置／角色：</strong><a href="10-編碼器與速度估測.html">第 10 章</a>把一個計數的速度跳動送進速度 PI，觀察它如何變成轉矩命令。</p>
 <p><strong>機制：</strong>1000 線、1.000000 ms 時，M 法每一計數是 15.000000 rpm；乘上速度 K<sub>p</sub> = 3.141593 後，形成 4.934802 N·m 的轉矩命令跳動。</p>
@@ -415,7 +415,7 @@
 </article>
 
 <article class="term-card" data-search="regenerative braking kinetic energy energy flow 再生煞車 動能 直流鏈 battery">
-<h2>再生煞車（regenerative braking）</h2>
+<h3>再生煞車（regenerative braking）</h3>
 <p><strong>白話：</strong>減速時讓馬達改當發電來源，把轉動慣量中的動能經逆變器送回直流鏈，再由電池、電容或電阻接手。</p>
 <p><strong>位置／角色：</strong><a href="11-再生煞車與能量.html">第 11 章</a>從轉速與慣量算能量，再判斷直流鏈能否安全吸收。</p>
 <p><strong>機制：</strong>J = 0.050000 kg·m²、3000.000000 rpm 煞停釋出 2467.401100 J；效率 0.900000 時有 2220.660990 J 回到直流鏈。</p>
@@ -423,7 +423,7 @@
 </article>
 
 <article class="term-card" data-search="brake chopper DC link capacitor C R_b 煞車斬波器 直流鏈電容 braking resistor V_trip">
-<h2>煞車斬波器與直流鏈電容（brake chopper, DC-link capacitor）</h2>
+<h3>煞車斬波器與直流鏈電容（brake chopper, DC-link capacitor）</h3>
 <p><strong>白話：</strong>電容先短暫接住回流能量造成的電壓上升；到達門檻後，斬波器接通煞車電阻，把多餘能量轉成熱。</p>
 <p><strong>位置／角色：</strong><a href="11-再生煞車與能量.html">第 11 章</a>比較電容容量、跳脫電壓、電阻功率與煞車時間。</p>
 <p><strong>機制：</strong>1000.000000 µF 從 300.000000 V 升到 380.000000 V 只能吸 27.200000 J；面對 2220.660990 J，約 12.248605 ms 就到門檻。</p>
@@ -431,7 +431,7 @@
 </article>
 
 <article class="term-card" data-search="sensorless control direct torque control DTC 無感測控制 直接轉矩控制 observer back EMF future topic">
-<h2>無感測控制與直接轉矩控制（sensorless control, direct torque control, DTC）</h2>
+<h3>無感測控制與直接轉矩控制（sensorless control, direct torque control, DTC）</h3>
 <p><strong>白話：</strong>無感測控制從電壓與電流估轉子狀態；DTC 則直接依磁通與轉矩誤差選擇電壓向量，屬於本課主線之外的兩條進階路徑。</p>
 <p><strong>位置／角色：</strong><a href="11-再生煞車與能量.html">第 11 章</a>只列概念與去向；前者延伸第 07、10 章的角度來源，後者對照第 07–09 章的 FOC 鏈。</p>
 <p><strong>機制：</strong>閉迴路把估測的 (i<sub>d</sub>, i<sub>q</sub>) 調到 (0, 10) A 時，45° 角度誤差會使真實 i<sub>q</sub> 降到 7.071068 A，轉矩少 29.289322 %，顯示估測品質會直接影響輸出。</p>
