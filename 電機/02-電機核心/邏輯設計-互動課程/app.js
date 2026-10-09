@@ -209,7 +209,10 @@ function twoscomp() {
 
     let judge = "";
     if (V === 1) {
-      judge += "<p><strong>V = 1，有號溢位。</strong>兩個同號數運算卻得到異號結果，超出 −128…127；真值應該是 " + int0(trueVal) + "，但 8 個位元裝不下。</p>";
+      const whyV = op === "sub"
+        ? "被減數與減數異號，而結果與被減數異號"
+        : "兩個同號數相加卻得到異號結果";
+      judge += "<p><strong>V = 1，有號溢位。</strong>" + whyV + "，超出 −128…127；真值應該是 " + int0(trueVal) + "，但 8 個位元裝不下。</p>";
     }
     if (C === 1 && op === "add") {
       judge += "<p><strong>C = 1。</strong>無號進位：結果超過 255，第 9 個位元掉出去了。</p>";
@@ -220,7 +223,7 @@ function twoscomp() {
     if (C === 0 && op === "sub") {
       judge += "<p><strong>C = 0。</strong>減法的 C = 0 代表需要借位，無號意義下 A &lt; B。</p>";
     }
-    if (V === 0 && C === 0) {
+    if (V === 0 && ((op === "add" && C === 0) || (op === "sub" && C === 1))) {
       judge += "<p>兩種解讀都在範圍內：無號沒有進位、有號沒有溢位。</p>";
     }
     if (Z === 1) judge += "<p>Z = 1：結果的 8 個位元全是 0。</p>";
@@ -264,7 +267,10 @@ function boolgate() {
     and: "A · B = (A NAND B) NAND (A NAND B)",
     or: "A + B = (A NAND A) NAND (B NAND B)",
     not: "¬A = A NAND A",
-    xor: "A ⊕ B = (A NAND (A NAND B)) NAND (B NAND (A NAND B))"
+    xor: "A ⊕ B = (A NAND (A NAND B)) NAND (B NAND (A NAND B))",
+    nand: "A NAND B（本身就是）",
+    nor: "A NOR B = ((A NAND A) NAND (B NAND B)) NAND ((A NAND A) NAND (B NAND B))",
+    xnor: "A XNOR B = (A ⊕ B) NAND (A ⊕ B)"
   };
   const LAW = {
     demorgan1: { text: "¬(A + B) = ¬A · ¬B", n: 2, l: (a, b) => !(a || b), r: (a, b) => (!a) && (!b) },
@@ -321,7 +327,7 @@ function boolgate() {
     if (gk === "xor") extra += "<p>XOR 不是基本閘，它是 <code>A · ¬B + ¬A · B</code>，用 4 個 NAND 可以組出來。</p>";
 
     $("boolgate-output").innerHTML =
-      "<p>這個 widget 有兩區：上面看閘（用到 A、B，NOT 只用 A），下面驗恆等式（狄摩根／吸收／共識用 A、B，分配律才會用到 C）。</p>" +
+      "<p>這個 widget 有兩區：上面看閘（用到 A、B，NOT 只用 A），下面驗恆等式（狄摩根／吸收／消去用 A、B，分配律才會用到 C）。</p>" +
       "<p><strong>一、" + g.name + "</strong>：目前輸入 A = " + bit(a) + (g.one ? "" : "、B = " + bit(b)) +
       " → 輸出 <strong>" + bit(out) + "</strong></p>" + t1 +
       "<p><strong>二、驗證恆等式 <code>" + law.text + "</code></strong>（" + int0(rows) + " 列全展開）</p>" + t2 +
@@ -389,7 +395,7 @@ function canonical() {
       "最大項集合 <code>ΠM(" + zeros.join(", ") + ")</code>，共 " + int0(zeros.length) + " 項。" +
       "兩個索引集合的元素個數相加 " + int0(ones.length) + " + " + int0(zeros.length) + " = <strong>8</strong>，必定等於列數。</p>" +
       body + judge +
-      "<p><strong>為什麼：</strong>標準型是機械產生的，所以一定寫得出來；但它把每一列都當成獨立的一項，所以一定不是最省。</p>";
+      "<p><strong>為什麼：</strong>標準型是機械產生的，所以一定寫得出來；它把每一列都當成獨立的一項，所以通常不是最省，但單一最小項與無法合併的奇偶函數是例外。</p>";
   };
   bind(ids, draw);
   draw();
@@ -450,25 +456,26 @@ function kmapSolve(cells) {
     if (hit.length === 1 && essential.indexOf(hit[0]) < 0) essential.push(hit[0]);
   });
   essential.forEach(p => onSet.forEach(m => { if (covers(p, m)) covered[m] = 1; }));
-  const chosen = essential.slice();
-  /* 貪婪補齊 */
-  let remain = onSet.filter(m => !covered[m]);
-  while (remain.length > 0) {
-    let best = null, bestN = -1;
-    pis.forEach(p => {
-      if (chosen.indexOf(p) >= 0) return;
-      const n = remain.filter(m => covers(p, m)).length;
-      if (n === 0) return;
-      if (n > bestN) { best = p; bestN = n; return; }
-      if (n === bestN && best !== null) {
-        const dl = litCount(p) - litCount(best);
-        if (dl < 0 || (dl === 0 && p < best)) best = p;
-      }
-    });
-    if (best === null) break;
-    chosen.push(best);
-    remain = remain.filter(m => !covers(best, m));
-  }
+  /* 4 變數的質蘊涵項數很小：窮舉剩餘組合，先最小化項數，再最小化字面數。 */
+  const candidates = pis.filter(p => essential.indexOf(p) < 0);
+  let chosen = null;
+  const search = (i, extra) => {
+    if (chosen && essential.length + extra.length > chosen.length) return;
+    if (i === candidates.length) {
+      const trial = sortPis(essential.concat(extra));
+      if (!onSet.every(m => trial.some(p => covers(p, m)))) return;
+      const score = [trial.length, trial.reduce((s, p) => s + litCount(p), 0), trial.join(",")];
+      const bestScore = chosen && [chosen.length, chosen.reduce((s, p) => s + litCount(p), 0), chosen.join(",")];
+      if (!chosen || score[0] < bestScore[0] ||
+          (score[0] === bestScore[0] && (score[1] < bestScore[1] ||
+          (score[1] === bestScore[1] && score[2] < bestScore[2])))) chosen = trial;
+      return;
+    }
+    search(i + 1, extra);
+    search(i + 1, extra.concat(candidates[i]));
+  };
+  search(0, []);
+  if (!chosen) chosen = essential.slice();
   const finalPis = sortPis(chosen);
   const toAlg = p => {
     const parts = [];
@@ -536,7 +543,7 @@ function kmap() {
         const only = onSet.filter(m => r.cov(p, m) && r.pis.filter(q => r.cov(q, m)).length === 1);
         why = "<strong>必要</strong>（m" + int0(only[0]) + " 只被它覆蓋）";
       } else {
-        why = isUsed ? "非必要，由貪婪步驟選入" : "非必要，這次沒有用到";
+        why = isUsed ? "非必要，由精確覆蓋搜尋選入" : "非必要，這次沒有用到";
       }
       const usedDc = dcSet.filter(m => r.cov(p, m));
       piList += "<li><code>" + p + "</code> → <code>" + r.alg(p) + "</code>（" + int0(r.lit(p)) + " 字面）——" + why +
@@ -550,7 +557,7 @@ function kmap() {
     } else if (r.essential.length === r.pis.length && r.pis.length === r.chosen.length) {
       judge += "<p><strong>" + int0(r.pis.length) + " 個質蘊涵項全部必要，沒有再化簡的空間。</strong></p>";
     } else if (r.chosen.length > r.essential.length) {
-      judge += "<p>必要質蘊涵項不足以覆蓋全部最小項，第三步做了<strong>貪婪挑選</strong>——這一步有選擇，不同的選法會得到不同的式子。<strong>本課用的是規格鎖定的貪婪規則，它保證覆蓋正確，但不保證項數或字面數最少</strong>：在 cyclic（循環覆蓋）的情形下，貪婪解可能比真正的最小覆蓋多出項次。要確定最小解必須另解覆蓋問題（例如 Petrick 法或窮舉最小覆蓋），那超出本課範圍。</p>";
+      judge += "<p>必要質蘊涵項不足以覆蓋全部最小項，第三步會窮舉剩餘質蘊涵項的組合，依序選出<strong>項數最少、字面數最少</strong>的精確覆蓋；若成本仍相同，再用固定排序選一個，讓同一張圖每次都得到相同答案。</p>";
     }
     if (r.pis.length === 8 && r.literals === 32) {
       judge += "<p>8 個質蘊涵項全是單格，完全化簡不掉——<strong>這是卡諾圖的最壞情形</strong>：相鄰格永遠一個 1 一個 0，沒有任何兩格可以合併。</p>";
@@ -601,7 +608,9 @@ function muxdec() {
       for (let i = 0; i < 8; i++) outs.push((en && i === sel) ? src : 0);
       body = "<p>選擇線 = <code>" + selBits + "</code>；" + (block === "demux" ? "資料端取 D<sub>0</sub> = " + int0(d[0]) : "資料端固定接 1") + "</p>" +
         "<p>八條輸出 Y<sub>0</sub>–Y<sub>7</sub> = <strong>" + outs.join(", ") + "</strong></p>";
-      judge = "<p>解多工器與解碼器的輸出在這組設定下一模一樣，因為<strong>解碼器就是資料端固定接 1 的解多工器</strong>；差別只在資料端接什麼。</p>";
+      judge = block === "dec" || d[0] === 1
+        ? "<p>解多工器與解碼器的輸出在這組設定下一模一樣，因為<strong>解碼器就是資料端固定接 1 的解多工器</strong>。</p>"
+        : "<p>資料端 D<sub>0</sub> = 0，所以被選中的那條也是 0；解碼器同一條則會輸出 1，這正是兩者的差別。</p>";
     } else {
       head = "這個元件用到<strong>8 條資料線與 EN</strong>（選擇線完全不影響）。";
       let idx = -1;
@@ -612,7 +621,7 @@ function muxdec() {
       for (let i = 0; i < 8; i++) if (d[i]) ones.push("D" + i);
       body = "<p>為 1 的輸入：" + (ones.length ? ones.join("、") : "（沒有）") + "</p>" +
         "<p>輸出碼 = <code>" + code + "</code>、GS（group select）= <strong>" + int0(gs) + "</strong></p>";
-      if (ones.length > 1) {
+      if (en && ones.length > 1) {
         judge = "<p>有 " + int0(ones.length) + " 條輸入同時為 1，優先編碼器只回報<strong>索引最大</strong>的那一條（D<sub>" + int0(idx) + "</sub>），其餘被忽略。</p>";
       }
       if (code === "000") {
@@ -625,9 +634,14 @@ function muxdec() {
     let edge = "";
     if (!en) edge += "<p>EN 未致能：全部輸出為 0。<strong>這時的 <code>000</code> 不是「選中 0」，是根本沒致能。</strong></p>";
 
+    const why = block === "mux"
+      ? "多工器的布林式是標準 SOP，資料線就是各項的係數，所以它是一張查表。"
+      : (block === "demux" ? "解多工器用選擇線把一筆資料送到唯一一條輸出。"
+        : (block === "dec" ? "解碼器把輸入碼展開成 one-hot 輸出，每條就是一個最小項。"
+          : "優先編碼器在多條輸入同時為 1 時只回報優先級最高者，GS 用來區分有效的 000 與沒有輸入。"));
     $("muxdec-output").innerHTML =
       "<p>" + head + "</p>" + body + judge + edge +
-      "<p><strong>為什麼：</strong>多工器的布林式就是一個標準 SOP，只是乘積項的係數變成可設定的資料線——所以它是一張查表。</p>";
+      "<p><strong>為什麼：</strong>" + why + "</p>";
   };
   bind(ids, draw);
   draw();
@@ -695,7 +709,14 @@ function adder() {
     }
 
     if (arith) {
-      const allProp = carries[1] === 1 && carries[2] === 1 && carries[3] === 1 && carries[4] === 1;
+      const p = [];
+      const g = [];
+      for (let i = 0; i < 4; i++) {
+        const ai = (a >> i) & 1, bi = (opnd >> i) & 1;
+        p.push(ai ^ bi);
+        g.push(ai & bi);
+      }
+      const allProp = (g[0] === 1 || (cin === 1 && p[0] === 1)) && p[1] === 1 && p[2] === 1 && p[3] === 1;
       judge += allProp
         ? "<p>進位從第 0 位一路走到第 3 位，<strong>這是漣波架構的最壞情形</strong>：四級全部串起來。</p>"
         : "<p>進位鏈在中途就停了，實際延遲比最壞情形短——<strong>但電路必須照最壞情形設計</strong>，因為你不能挑輸入。</p>";
@@ -704,7 +725,7 @@ function adder() {
         const t = op === "sub" ? s4(a) - s4(b) : s4(a) + s4(b);
         judge += "<p><strong>V = 1，有號溢位</strong>：真值應該是 " + int0(t) + "，超出 4 位元有號的 −8…7，所以 <code>" + bits(sum, 4) + "</code> 這個結果以有號來讀是錯的。</p>";
       }
-      if (C === 1 && op === "add") judge += "<p>C = 1：無號意義下 " + int0(a) + " + " + int0(b) + " 超過 15，第 5 個位元掉出去了。</p>";
+      if (C === 1 && op === "add") judge += "<p>C = 1：無號意義下 " + int0(a) + " + " + int0(b) + " + " + int0(cin) + " = " + int0(a + b + cin) + " 超過 15，第 5 個位元掉出去了。</p>";
       if (C === 1 && op === "sub") judge += "<p>C = 1：減法時代表<strong>不需要借位</strong>，無號意義下 A ≥ B。</p>";
     }
 
@@ -720,7 +741,7 @@ function adder() {
       (style === "cla" ? "超前進位" : "漣波進位") + "</strong> 延遲 <strong>" + num6(delay) + " ns</strong>（f<sub>max</sub> = " + num6(fmax) + " MHz）、" + int0(gates) + " 個閘；" +
       "另一種架構 " + (style === "cla" ? "漣波進位" : "超前進位") + " 延遲 " + num6(other) + " ns（" + num6(otherFmax) + " MHz）、" + int0(style === "cla" ? 20 : 26) + " 個閘。" +
       "加速比 " + num6(((2 * 4 + 1) * tpd) / (4 * tpd)) + " 倍，閘數多 30 %。</p>" + edge +
-      "<p><strong>為什麼：</strong>CLA 把每一位的進位都直接從 A、B 算出來，不等前一位，所以延遲不隨位元數成長——代價是進位邏輯的閘數隨位元數平方成長。</p>";
+      "<p><strong>為什麼：</strong>CLA 把每一位的進位都直接從 A、B 算出來，不等前一位；在理想無限扇入模型下延遲不隨位元數成長，實務分組後約隨 log n 成長。</p>";
   };
   bind(ids, draw);
   draw();
@@ -778,7 +799,7 @@ function hazard() {
       "<li>輸出總延遲 = t<sub>gate</sub> + 負載延遲 = <strong>" + num6(ttotal) + " ns</strong></li>" +
       "<li>動態功耗 P = α · C · V<sub>DD</sub>² · f（α = 1）= " + num6(ctot) + " pF × " + num6(vdd) + "² V² × " + int0(freq) + " MHz = <strong>" + power(p) + "</strong></li>" +
       "</ul>" +
-      "<p>量級對照：217.800000 µW 大約是一顆 LED 亮度的千分之一；但一顆晶片上有<strong>幾億個</strong>這種節點。</p>" + edge +
+      "<p>量級對照：" + power(p) + " 約是一顆 2 V、20 mA 指示 LED 耗電（約 40 mW）的 <strong>" + num6(p / 0.04) + " 倍</strong>；但一顆晶片上有<strong>幾億個</strong>這種節點。</p>" + edge +
       "<p><strong>為什麼：</strong>功耗與電壓成平方關係，所以降壓是最有效的省電手段——這就是製程一路從 5 V 降到 0.8 V 的原因。</p>";
   };
   bind(ids, draw);
@@ -800,6 +821,10 @@ function ffwave() {
   };
   const draw = () => {
     const t = pick("ff-type"), info = INFO[t];
+    for (let i = 0; i < 8; i++) {
+      $("ff-a" + i).setAttribute("aria-label", info.a + " 第 " + i + " 拍");
+      $("ff-b" + i).setAttribute("aria-label", info.b + " 第 " + i + " 拍");
+    }
     let q = chk("ff-q0") ? 1 : 0;
     const a = [], b = [];
     for (let i = 0; i < 8; i++) { a.push(chk("ff-a" + i) ? 1 : 0); b.push(chk("ff-b" + i) ? 1 : 0); }
@@ -811,7 +836,7 @@ function ffwave() {
       else if (t === "jkff") { q = ((a[i] === 1 && prev === 0) || (b[i] === 0 && prev === 1)) ? 1 : 0; }
       else if (t === "dlatch") { q = b[i] === 1 ? a[i] : prev; }
       else { /* srlatch */
-        if (a[i] === 1 && b[i] === 1) { forbidden.push(i); q = prev; }
+        if (a[i] === 1 && b[i] === 1) { forbidden.push(i); q = 0; }
         else q = (a[i] === 1) ? 1 : (b[i] === 1 ? 0 : prev);
       }
       qs.push(q);
@@ -825,7 +850,7 @@ function ffwave() {
       } else if (t === "dlatch") {
         why = b[i] ? "EN = 1 → 透通，Q 直接等於 D = " + a[i] : "EN = 0 → 鎖住，保持前一拍的 " + q;
       } else {
-        why = (a[i] === 1 && b[i] === 1) ? "S = R = 1 → <strong>禁止組合</strong>，本課約定保持前一個值（" + q + "）；真實電路在這裡的行為不保證"
+        why = (a[i] === 1 && b[i] === 1) ? "S = R = 1 → <strong>禁止組合</strong>，NOR 型的 Q = ¬Q = 0；兩者放開後的狀態不確定"
           : (a[i] === 1 ? "S = 1 → 設定，Q = 1" : (b[i] === 1 ? "R = 1 → 清除，Q = 0" : "S = R = 0 → 保持 " + q));
       }
       reasons.push("<li>第 " + i + " 拍：" + why + "</li>");
@@ -862,6 +887,7 @@ function ffwave() {
       "<table><thead>" + head + "</thead><tbody>" + rowA + rowB + rowQ + "</tbody></table>" +
       "<p><strong>逐拍理由：</strong></p><ul>" + reasons.join("") + "</ul>" + judge + edge +
       "<p><strong>為什麼：</strong>正反器只在時脈邊緣看一次資料，所以邊緣之間發生什麼都不重要——第 08 章的突波就是這樣被同步設計吃掉的。</p>";
+    if ($("ffwave-summary")) $("ffwave-summary").textContent = info.name + "：Q 序列 " + qs.join(", ") + "。";
   };
   bind(ids, draw);
   draw();
@@ -983,7 +1009,7 @@ function fsm() {
         (mooreHits.length ? mooreHits.join("、") : "（窗內沒有）") + " 拍宣告。<strong>Moore 慢一拍</strong>——因為 Moore 的輸出是狀態的函數，得等時脈邊緣把狀態推進去。</p>";
       for (let k = 1; k < hits.length; k++) {
         if (hits[k] - hits[k - 1] === 3) {
-          judge += "<p>第 " + hits[k - 1] + " 拍與第 " + hits[k] + " 拍這兩次<strong>共用了中間那個 1</strong>，這就是「允許重疊」的意思。</p>";
+          judge += "<p>第 " + hits[k - 1] + " 拍與第 " + hits[k] + " 拍的兩次偵測<strong>共用第 " + hits[k - 1] + " 拍那個 1</strong>（前一次結尾也是後一次開頭），這就是「允許重疊」的意思。</p>";
           break;
         }
       }
@@ -1009,6 +1035,7 @@ function fsm() {
       "<li>Mealy 偵測到 <strong>" + int0(hits.length) + "</strong> 次；Moore 在這 12 格窗內宣告 <strong>" + int0(mooreHits.length) + "</strong> 次</li>" +
       "</ul>" + judge +
       "<p><strong>為什麼：</strong>狀態的意義就是「已經對上了規格的哪一段前綴」——想清楚這句話，狀態表就自己寫出來了。</p>";
+    if ($("fsm-summary")) $("fsm-summary").textContent = "Mealy 偵測 " + hits.length + " 次，Moore 在 12 拍窗內偵測 " + mooreHits.length + " 次。";
   };
   bind(ids, draw);
   draw();
@@ -1031,19 +1058,22 @@ function regmem() {
       head = "這個模式只用 <strong>8 個串列輸入格</strong>（模數滑桿、記憶體種類、位址線與字寬都不影響）。";
       let reg = 0;
       let rows = "<table><thead><tr><th>拍</th><th>串列輸入</th><th>移位後內容 Q<sub>3</sub>Q<sub>2</sub>Q<sub>1</sub>Q<sub>0</sub></th><th>十進位</th></tr></thead><tbody>";
-      let hit1101 = -1;
+      let hit1101 = -1, seen1101Bits = -1;
+      const regSeq = [];
       for (let i = 0; i < 8; i++) {
         const sin = chk("rm-sin" + i) ? 1 : 0;
         reg = ((reg >> 1) | (sin << 3)) & 15;
-        if (reg === 13 && hit1101 < 0) hit1101 = i;
+        regSeq.push(bits(reg, 4));
+        if (reg === 11 && hit1101 < 0) hit1101 = i;
+        if (reg === 13 && seen1101Bits < 0) seen1101Bits = i;
         rows += "<tr><td>" + i + "</td><td>" + sin + "</td><td><strong><code>" + bits(reg, 4) + "</code></strong></td><td>" + int0(reg) + "</td></tr>";
       }
       rows += "</tbody></table>";
       body = rows;
       judge = "<p>每一拍：新的位元從 Q<sub>3</sub> 進來，其餘全部往右挪一格——<strong>這四件事在同一個時脈邊緣同時發生</strong>，所以不會像軟體迴圈那樣互相覆蓋。這是硬體「併發思維」的第一個例子。</p>";
-      if (hit1101 >= 0) {
-        judge += "<p>第 " + int0(hit1101) + " 拍的內容正是 <code>1101</code>——<strong>第 11 章那台狀態機在找的樣式</strong>。序列偵測器可以用「移位暫存器 + 一個 4 輸入 AND 閘」實作：多用 4 個正反器，換到完全不用想狀態表。</p>";
-      }
+      if (seen1101Bits >= 0) judge += "<p>第 " + int0(seen1101Bits) + " 拍雖顯示 Q<sub>3</sub>…Q<sub>0</sub> = <code>1101</code>，但時間由舊到新要從 Q<sub>0</sub> 讀回 Q<sub>3</sub>，所以輸入前綴是 <code>1011</code>，不是第 11 章的 <code>1101</code>。</p>";
+      if (hit1101 >= 0) judge += "<p>第 " + int0(hit1101) + " 拍的 Q<sub>0</sub>…Q<sub>3</sub> = <code>1101</code>，才是時間順序的偵測命中；邏輯應接 Q<sub>0</sub> · Q<sub>1</sub> · ¬Q<sub>2</sub> · Q<sub>3</sub>。</p>";
+      if ($("regmem-summary")) $("regmem-summary").textContent = "移位後內容依序為 " + regSeq.join(", ") + "。";
       let allZero = true;
       for (let i = 0; i < 8; i++) if (chk("rm-sin" + i)) allZero = false;
       if (allZero) judge += "<p>串列輸入全不勾：內容一直是 <code>0000</code>，進去什麼就存什麼，暫存器本身不做任何判斷。</p>";
@@ -1057,12 +1087,13 @@ function regmem() {
       body = "<ul>" +
         "<li>模 " + int0(mod) + " 計數器的正反器數 = ⌈log<sub>2</sub>" + int0(mod) + "⌉ = <strong>" + int0(ffs) + "</strong></li>" +
         "<li>未使用狀態 = 2<sup>" + int0(ffs) + "</sup> − " + int0(mod) + " = <strong>" + int0(unused) + "</strong> 個</li>" +
-        "<li>漣波計數器最壞延遲 = " + int0(ffs) + " × " + num6(TFF) + " ns = <strong>" + num6(delay) + " ns</strong>（" + num6(1000 / delay) + " MHz）</li>" +
+        "<li>漣波計數器輸出全部穩定時間 = " + int0(ffs) + " × " + num6(TFF) + " ns = <strong>" + num6(delay) + " ns</strong>；若要同步解碼，時脈週期不得短於此值</li>" +
         "<li>同步計數器：所有正反器同時收到時脈，<strong>延遲不隨位元數成長</strong>，代價是要多一組進位邏輯</li>" +
         "</ul>";
       judge = "<p>" + int0(mod) + " 個計數值要 " + int0(ffs) + " 個正反器，多出來的 " + int0(unused) +
         " 個狀態上電時可能掉進去——<strong>安全的計數器必須讓它們都能回到 0</strong>。</p>";
       if (unused === 0) judge += "<p>未使用狀態 0：<strong>剛好用滿是最省的模數</strong>，這就是二進位計數器最常見的原因。</p>";
+      if ($("regmem-summary")) $("regmem-summary").textContent = "模 " + mod + " 計數器需要 " + ffs + " 個正反器，輸出穩定時間 " + num6(delay) + " ns。";
 
     } else {
       head = "這個模式只用 <strong>記憶體種類、位址線條數與字寬</strong>三項（串列輸入格與模數滑桿都不影響）。";
@@ -1079,7 +1110,7 @@ function regmem() {
       else if (tech === "dram") cellLine = "<li>DRAM 位元胞 1 顆電晶體 + 1 顆電容（1T1C）→ 共 <strong>" + int0(cells) + " 顆電晶體 ＋ " + int0(cells) + " 顆電容</strong></li>" +
         "<li>更新（refresh）：" + int0(rows) + " 列必須在 64 ms 內全刷完 → 每 <strong>" + num6(64000 / rows) + " µs</strong> 刷一列</li>";
       else if (tech === "rom") cellLine = "<li>非揮發，斷電不掉資料、<strong>不需要更新</strong>；但 Flash 的寫入次數有限（典型 10<sup>4</sup>–10<sup>5</sup> 次），而且是整塊擦除</li>";
-      else cellLine = "<li>CAM 以 SRAM 6T 為底（等效 " + int0(cells * 6) + " 顆電晶體），<strong>每個位元再多一組比較電路，面積至少是 SRAM 的兩倍</strong>；換到的是一個週期內比對整片內容</li>";
+      else cellLine = "<li>CAM 以 SRAM 6T 為底（等效 " + int0(cells * 6) + " 顆電晶體），<strong>每個位元再多一組比較電路，常見 NOR 型面積約是 SRAM 的 1.5–2 倍以上</strong>；換到的是一個週期內比對整片內容</li>";
       body = "<ul>" +
         "<li>種類：<strong>" + TECH[tech] + "</strong>；位址線 " + int0(addr) + " 條、字寬 " + int0(word) + " 位元</li>" +
         "<li>容量 = 2<sup>" + int0(addr) + "</sup> × " + int0(word) + " = <strong>" + int0(cells) + " 位元</strong> = <strong>" + int0(bytes) + " 位元組</strong> = <strong>" + cap + "</strong></li>" +
@@ -1089,11 +1120,16 @@ function regmem() {
       if (tech === "sram" && cells * 6 > 1e9) {
         judge = "<p>這個規模的 SRAM 要 " + int0(cells * 6) + " 顆電晶體——<strong>只能用 DRAM</strong>。這就是主記憶體一定是 DRAM 的原因。</p>";
       }
+      if ($("regmem-summary")) $("regmem-summary").textContent = TECH[tech] + "：容量 " + int0(bytes) + " 位元組（" + cap + "）。";
     }
 
+    const why = mode === "shift"
+      ? "移位暫存器在同一個時脈邊緣同時更新所有位元，不會像軟體迴圈那樣依序覆寫。"
+      : (mode === "counter" ? "漣波計數器的輸出要等每級 t_cq 依序累積才全部穩定。"
+        : "位址解碼拆成列與行之後，閘數從 2^n 降到約 2 × 2^(n/2)，這是大型記憶體的共通結構。");
     $("regmem-output").innerHTML =
       "<p>" + head + "</p>" + body + judge +
-      "<p><strong>為什麼：</strong>位址解碼拆成列與行之後，閘數從 2<sup>n</sup> 降到 2 × 2<sup>n/2</sup>，這是所有大型記憶體的共通結構。</p>";
+      "<p><strong>為什麼：</strong>" + why + "</p>";
   };
   bind(ids, draw);
   draw();
@@ -1119,15 +1155,18 @@ function pld() {
     const crossFpga = nre / (PRICE.fpga - PRICE.asic);
     const crossCpld = nre / (PRICE.cpld - PRICE.asic);
     const mark = k => tech === k ? "　← 你選的方案" : "";
+    const options = [
+      { name: "ASIC", cost: costAsic / vol },
+      { name: "FPGA", cost: costFpga / vol }
+    ];
+    if (cpldOk) options.push({ name: "CPLD", cost: costCpld / vol });
+    options.sort((a, b) => a.cost - b.cost);
 
-    let judge = "";
-    if (vol < crossFpga) {
-      judge += "<p>產量 " + int0(vol) + " 顆<strong>還沒到 " + num6(crossFpga) + " 顆</strong>，NRE 攤不掉，FPGA 或 CPLD 比較划算。</p>";
-    } else {
-      judge += "<p>產量 " + int0(vol) + " 顆<strong>已經過了 " + num6(crossFpga) + " 顆</strong>，ASIC 的單顆成本優勢開始壓過 NRE。</p>";
-    }
+    let judge = "<p>直接比較可行方案的平均成本，目前最低是 <strong>" + options[0].name + "（" + num6(options[0].cost) + " 美元/顆）</strong>。</p>";
     if (!cpldOk) {
-      judge += "<p>需要 " + int0(nlut) + " 個 LUT，<strong>超過 CPLD 的 " + int0(CPLD_MACROCELL) + " 個巨集單元</strong>，只剩 FPGA 或 ASIC。</p>";
+      judge += "<p>本課把 1 LUT 粗估為 1 巨集單元；需要 " + int0(nlut) + " 個 LUT，<strong>超過 CPLD 的 " + int0(CPLD_MACROCELL) + " 個巨集單元</strong>，只剩 FPGA 或 ASIC。</p>";
+    } else {
+      judge += "<p>CPLD 可行性是把 1 LUT 粗估為 1 巨集單元，<strong>只用來比較量級</strong>；CPLD 實際用乘積項與巨集單元，不是 LUT。</p>";
     }
     if (nin <= lut) {
       judge += "<p>函數的輸入數 " + int0(nin) + " 不超過 LUT 的輸入數 " + int0(lut) + "，<strong>一個 LUT 就夠了</strong>；剩下的組態位元都浪費掉——FPGA 的資源利用率天生就不會滿。</p>";
@@ -1163,6 +1202,7 @@ function pld() {
 function dictionary() {
   if (!$("term-search")) return;
   const cards = document.querySelectorAll(".term-card");
+  const groups = document.querySelectorAll(".term-group-heading");
   const draw = () => {
     const q = $("term-search").value.toLocaleLowerCase("zh-Hant").trim();
     let n = 0;
@@ -1172,6 +1212,12 @@ function dictionary() {
       const show = q === "" || hay.indexOf(q) >= 0;
       c.hidden = !show;
       if (show) n++;
+    }
+    for (let i = 0; i < groups.length; i++) {
+      const list = groups[i].nextElementSibling;
+      const anyVisible = list && Array.from(list.querySelectorAll(".term-card")).some(c => !c.hidden);
+      groups[i].hidden = !anyVisible;
+      if (list) list.hidden = !anyVisible;
     }
     $("term-count").textContent = "顯示 " + n + " 個條目";
   };
@@ -1203,7 +1249,7 @@ function selfcheck() {
     return { t: t, ans: ans, tol: tol, why: why, fix: fix, ref: R[ch][0], refName: R[ch][1] };
   };
   const Q = {
-    "q00-1": q("q00-1", "sel", "a", 0,
+    "q00-1": q("q00-1", "sel", "d", 0,
       "數位的價值不在「只有兩個電壓」，而在只需判斷高於或低於門檻：小雜訊在每一級都被重新拉回 V_OH 或 V_OL，不會累積。",
       "電晶體其實可以工作在連續區（那就是類比放大器）；省電與好算都是結果，不是原因。"),
     "q00-2": q("q00-2", "num", 0.79, 0.005,
@@ -1218,7 +1264,7 @@ function selfcheck() {
     "q01-2": q("q01-2", "num", 4, 0.5,
       "G = B ⊕ (B >> 1) = 7 ⊕ 3 = 0000 0111 ⊕ 0000 0011 = 0000 0100，十進位 4。",
       "格雷碼不是「另一個數的算術值」，它是編碼；要算數必須先轉回二進位。"),
-    "q01-3": q("q01-3", "sel", "a", 0,
+    "q01-3": q("q01-3", "sel", "c", 0,
       "7 → 8 時二進位 0000 0111 → 0000 1000 有 4 個位元同時翻轉；格雷碼 4 → 12 只差 1 個位元。",
       "格雷碼的定義就是相鄰值只差一個位元，這正是旋轉編碼器不用純二進位的原因。"),
     "q02-1": q("q02-1", "num", -111, 0.5,
@@ -1227,7 +1273,7 @@ function selfcheck() {
     "q02-2": q("q02-2", "num", 55, 0.5,
       "100 − 45 = 100 + 211 = 311，311 − 256 = 55（0011 0111），進位掉出去所以 C = 1，代表不需要借位。",
       "減法的 C = 1 不代表出了問題，它代表無號意義下 A ≥ B。"),
-    "q02-3": q("q02-3", "sel", "a", 0,
+    "q02-3": q("q02-3", "sel", "b", 0,
       "100 與 45 都是正數，相加卻得到最高位為 1 的 1001 0001（有號 −111），超出 −128…127，所以 V = 1。",
       "這一次 C = 0：以無號看 145 < 256 完全沒事。C 與 V 問的是不同問題。"),
     "q03-1": q("q03-1", "sel", "b", 0,
@@ -1236,7 +1282,7 @@ function selfcheck() {
     "q03-2": q("q03-2", "num", 2, 0.5,
       "XOR 的真值表只有 01 與 10 兩列輸出 1；1 ⊕ 1 = 0，這正是它與 OR 的差別。",
       "答 3 通常是把 XOR 當成 OR；答 1 則是把它當成 AND。"),
-    "q03-3": q("q03-3", "sel", "a", 0,
+    "q03-3": q("q03-3", "sel", "c", 0,
       "NAND 是通用閘：¬A = A NAND A、A · B = (A NAND B) NAND (A NAND B)、A + B = (A NAND A) NAND (B NAND B)，三個構造齊全就能組出任何函數。",
       "「通用」是說能組出所有函數，不是說最省；接成序向邏輯只要再加回授即可。"),
     "q04-1": q("q04-1", "num", 4, 0.5,
@@ -1245,9 +1291,9 @@ function selfcheck() {
     "q04-2": q("q04-2", "num", 4, 0.5,
       "ΠM(0, 1, 2, 4) 有 4 個為 0 的列，所以標準 POS 是 4 個和項。兩個索引集合相加必定等於 8。",
       "最大項對應的是函數為 0 的列，不是為 1 的列。"),
-    "q04-3": q("q04-3", "sel", "a", 0,
+    "q04-3": q("q04-3", "sel", "d", 0,
       "多數決的最簡 SOP 是 A · B + B · C + A · C：6 個字面、4 個閘，而且不再需要任何反相器（標準型要 8 個閘）。",
-      "逐列驗證：000–010 全 0，011、101、110、111 各有一項為 1，與真值表完全相同。"),
+      "逐列驗證：000、001、010、100 為 0，011、101、110、111 各有一項為 1，與真值表完全相同。"),
     "q05-1": q("q05-1", "num", 3, 0.5,
       "on-set {5,6,7,8,9} 加上不關心 {10…15}，Quine–McCluskey 合併後剩 3 個質蘊涵項：1---（A）、-1-1（B · D）、-11-（B · C）。",
       "不關心項會讓圈變大、質蘊涵項變少；把它們當成必須覆蓋的 1 會多算。"),
@@ -1267,13 +1313,13 @@ function selfcheck() {
       "輸入全 0 與「只有 D_0 是 1」都會輸出 000，GS 是唯一能區分這兩種情況的訊號。",
       "致能與 GS 是兩回事：EN 決定要不要工作，GS 回報「到底有沒有輸入為 1」。"),
     "q07-1": q("q07-1", "num", 9, 0.05,
-      "4 位元漣波：每個全加器從 C_in 到 C_out 是 2 個閘延遲，最後的和再 1 個 → 4 × 2 + 1 = 9 個閘延遲 = 9.000000 ns（111.111111 MHz）。",
+      "4 位元漣波：先算 P_0 的 XOR 要 1 個閘延遲，C_0 到 C_4 經 4 級、每級 2 個，所以 1 + 4 × 2 = 9 個閘延遲 = 9.000000 ns（111.111111 MHz）。",
       "進位必須一級一級傳，這就是漣波的名字由來；位元數加倍延遲就加倍。"),
     "q07-2": q("q07-2", "num", 4, 0.05,
       "CLA：P、G 各 1 個閘延遲、展開的進位邏輯 2 個、和的 XOR 1 個 = 4 個閘延遲 = 4.000000 ns（250.000000 MHz），加速 2.25 倍。",
       "CLA 不是「不用進位」，它只是不等前一位算完；代價是閘數 20 → 26。"),
-    "q07-3": q("q07-3", "sel", "a", 0,
-      "1001 + 0111：四位全部產生進位，和 0000、C_4 = 1、C_3 = 1 → V = 1 ⊕ 1 = 0。無號 9 + 7 = 16 溢出，有號 −7 + 7 = 0 完全正確。",
+    "q07-3": q("q07-3", "sel", "c", 0,
+      "1001 + 0111：第 0 位產生進位、第 1–3 位傳遞進位，四個進位輸出都是 1；和 0000、C_4 = 1、C_3 = 1 → V = 1 ⊕ 1 = 0。無號 9 + 7 = 16 溢出，有號 −7 + 7 = 0 完全正確。",
       "這一組正是漣波的最壞情形：進位從第 0 位一路走到第 3 位。"),
     "q08-1": q("q08-1", "num", 1, 0.02,
       "F 在 2 × t_gate = 1.000000 ns 掉到 0、在 t_inv + 2 × t_gate = 2.000000 ns 回到 1，寬度恰好等於 t_inv = 1.000000 ns。",
@@ -1281,13 +1327,13 @@ function selfcheck() {
     "q08-2": q("q08-2", "num", 217.8, 0.5,
       "C_total = 4 × 0.05 = 0.200000 pF，P = 1 × 0.2 pF × 3.3² V² × 100 MHz = 217.800000 µW。",
       "功耗與電壓成平方關係；單位換算 pF 乘 1e−12、MHz 乘 1e6 不能漏。"),
-    "q08-3": q("q08-3", "sel", "a", 0,
+    "q08-3": q("q08-3", "sel", "d", 0,
       "加入冗餘項 B · C：這一項在 B = C = 1 時恆為 1、與 A 無關，所以 A 怎麼變它都撐住輸出。",
       "代價是多 1 個 AND 閘、OR 從 2 輸入變 3 輸入；最簡 SOP 反而會把這一項刪掉。"),
     "q09-1": q("q09-1", "sel", "a", 0,
       "閂鎖是位準觸發（EN = 1 時透通），正反器是邊緣觸發（只在時脈邊緣取樣一次）。",
       "閂鎖其實更小更快；差別不在速度，而在時序能不能被標準工具分析。"),
-    "q09-2": q("q09-2", "sel", "a", 0,
+    "q09-2": q("q09-2", "sel", "b", 0,
       "S = 1、R = 1 時兩個輸出被同時強制成同一個值，Q 與 ¬Q 不再互補；同時放開會進入不可預測的競賽。",
       "JK 的 11 是翻轉不是禁止——JK 正是為了解決 SR 的這個問題而來。"),
     "q09-3": q("q09-3", "num", 0, 0.1,
@@ -1299,17 +1345,17 @@ function selfcheck() {
     "q10-2": q("q10-2", "num", 215.053763, 0.5,
       "f_max = 1000 / 4.65 = 215.053763 MHz（週期用 ns 時，頻率 MHz = 1000 / T）。",
       "f_max 不是「這顆晶片的速度」，它是這一條路徑的上限。"),
-    "q10-3": q("q10-3", "sel", "a", 0,
+    "q10-3": q("q10-3", "sel", "c", 0,
       "保持限制是 t_cq + t_min ≥ t_h + t_skew，整條式子裡完全沒有 T_clk，所以降頻一點用都沒有。",
       "救法只有兩種：在短路徑上插延遲緩衝器（增加 t_min），或修時脈樹減少偏斜。"),
     "q11-1": q("q11-1", "num", 4, 0.5,
-      "Mealy 的 4 個狀態 T0–T3 分別代表「已對上 0 / 1 / 11 / 110 個字元」，偵測成功掛在轉移上。",
+      "Mealy 的 4 個狀態 T0–T3 分別代表「已對上的前綴是空字串、1、11、110」，偵測成功掛在轉移上。",
       "狀態的意義就是「已經對上了規格的哪一段前綴」。"),
     "q11-2": q("q11-2", "num", 5, 0.5,
       "Moore 需要 5 個狀態：「已經對上 1101」這件事必須自己佔一個狀態 S4 才能當輸出。",
       "這也是 Moore 慢一拍的原因——要等時脈邊緣把狀態推進去才看得到輸出。"),
     "q11-3": q("q11-3", "num", 3, 0.5,
-      "110110101101 送進 Mealy 偵測器，在第 3、6、11 拍各宣告一次，共 3 次；第 3 與第 6 次共用了中間那個 1（允許重疊）。",
+      "110110101101 送進 Mealy 偵測器，在第 3、6、11 拍各宣告一次，共 3 次；第 3 拍與第 6 拍的兩次偵測共用第 3 拍那個 1（前一次結尾也是後一次開頭）。",
       "Moore 在這 12 格窗內只看得到 2 次，第三次的輸出落在第 12 拍，窗外。"),
     "q12-1": q("q12-1", "num", 4, 0.5,
       "⌈log_2 10⌉ = 4 個正反器，並且有 2⁴ − 10 = 6 個未使用狀態（10–15）。",
@@ -1317,7 +1363,7 @@ function selfcheck() {
     "q12-2": q("q12-2", "num", 65536, 1,
       "2¹⁶ × 8 = 524288 位元 = 65536 位元組 = 64 KiB；用 SRAM 6T 就是 3145728 顆電晶體。",
       "位址線給的是「有幾格」，字寬給的是「每格幾位元」，兩者相乘才是容量。"),
-    "q12-3": q("q12-3", "sel", "a", 0,
+    "q12-3": q("q12-3", "sel", "d", 0,
       "DRAM 用一顆電容儲存電荷，電荷會經漏電流流失，所以 64 ms 內必須把每一列讀出再寫回（256 列就是每 250 µs 刷一列）。",
       "更新與「斷電失憶」是兩件事：DRAM 通電時就得一直刷，那才是 refresh。"),
     "q13-1": q("q13-1", "num", 16, 0.5,
@@ -1348,7 +1394,7 @@ function selfcheck() {
     let ok;
     if (item.t === "sel") ok = raw === item.ans;
     else {
-      const v = Number(raw.replace("−", "-"));
+      const v = Number(raw);
       ok = isFinite(v) && Math.abs(v - item.ans) <= item.tol;
     }
     const shown = String(item.ans).replace("-", "−");
@@ -1386,4 +1432,3 @@ if (typeof module !== "undefined") {
     kmapSolve: kmapSolve
   };
 }
-

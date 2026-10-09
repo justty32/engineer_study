@@ -19,7 +19,7 @@
 <p class="note">來源：11-計算機組織與微處理機 §1、§7.1。</p>
 
 <h2>推導：三個因子為什麼相乘，以及 20 % 的兩種算法</h2>
-<p><strong>（a）為什麼是相乘不是相加。</strong>把三個因子連同單位寫出來：<code>(指令數 / 程式) × (拍數 / 指令) × (秒數 / 拍)</code>。中間的「指令」與「拍」上下對消，剩下的就是 `秒數 / 程式`，也就是執行時間。所以</p>
+<p><strong>（a）為什麼是相乘不是相加。</strong>把三個因子連同單位寫出來：<code>(指令數 / 程式) × (拍數 / 指令) × (秒數 / 拍)</code>。中間的「指令」與「拍」上下對消，剩下的就是 <code>秒數 / 程式</code>，也就是執行時間。所以</p>
 <p><code>執行時間 ＝ IC × CPI × T<sub>c</sub></code></p>
 <p>其中 IC 是指令數（單位：條）、CPI 是每指令拍數（單位：拍每條）、T<sub>c</sub> 是時脈週期（單位：秒），而 T<sub>c</sub> ＝ 1 / f，f 是時脈頻率。這是量綱推出來的，不是背下來的規則；也因為相乘，任一因子改成 k 倍，時間就是 k 倍。本課用的是一階教學模型，真實處理器的 CPI 會隨程式、資料與快取狀態變動，不是常數。</p>
 <p><strong>（b）同樣是 20 %，除以 1.2 和乘以 0.8 不是同一件事。</strong>把 CPI 減 20 %，等於時間乘上 0.8，加速比 ＝ 1 / 0.8 ＝ 1.250000。把時脈加 20 %，T<sub>c</sub> 變成原來的 1 / 1.2 ≈ 0.833333，加速比 ＝ 1.200000。差別的來源是：<strong>時間與時脈成反比，與 CPI 成正比</strong>，一個是分母上的 20 %，一個是分子上的 20 %。分母加兩成永遠比分子減兩成划算得少，這是算術，不是工程直覺。</p>
@@ -48,7 +48,7 @@
 <label for="pf-freq">時脈頻率（GHz）<input id="pf-freq" type="range" min="0.1" max="5" step="0.1" value="2"></label>
 <label for="pf-opt">要比較的最佳化<select id="pf-opt"><option value="none">不做最佳化</option><option value="ic">指令數減 20 %</option><option value="cpi">CPI 減 20 %</option><option value="clock">時脈加 20 %</option><option value="all">三項各改 20 %</option></select></label>
 </div>
-<div id="perfeq-output" class="output" aria-live="polite">目前設定：IC ＝ 100 百萬條、CPI ＝ 1.50、時脈 ＝ 2.0 GHz。T<sub>c</sub> ＝ <strong>0.500000 ns</strong>，執行時間 ＝ <strong>75.000000 ms</strong>，MIPS ＝ <strong>1333.333333</strong>。目前選的是「不做最佳化」，所以最佳化後時間仍是 <strong>75.000000 ms</strong>，加速比 <strong>1.000000</strong>。判讀：這台機器每秒發出十三億三千萬條指令，但那只說明它發指令的速率，沒有說明每條指令做了多少事，所以不能拿這個數字去跟另一種 ISA 的機器比。為什麼：<strong>三個因子相乘，所以只改一個永遠只拿到那一個的份。</strong>邊界提醒：把 CPI 拉到 4 以上，瓶頸幾乎一定在記憶體而不在時脈；把 IC 拉到 1，管線填充與快取冷啟動會主導，這條式子的平均值意義就變弱了。</div>
+<div id="perfeq-output" class="output" aria-live="polite">載入中…</div>
 </section>
 
 <h2>不要混淆</h2>

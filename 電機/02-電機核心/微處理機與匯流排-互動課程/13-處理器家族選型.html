@@ -14,7 +14,7 @@
 <h2>白話直覺：六個家族，各自為某一種工作量而生</h2>
 <p>通用 CPU 為分支密集與單執行緒效能而生，軟體生態最好；微控制器（microcontroller, MCU）把 CPU、記憶體與 I/O 放在同一顆裡，低功耗、延遲確定；DSP（digital signal processor）為乘加累積（multiply-accumulate, MAC）最佳化；GPU 為大量執行緒的資料級平行而生，功耗高；NPU（neural processing unit）為神經網路推論的矩陣運算最佳化，能效最好；FPGA 是可重組邏輯，適合固定管線串流，開發成本高但做得到硬即時。</p>
 <p>比喻只用一次：這六個像六種車，載重、油耗、價錢各有偏重。比喻立刻收回——真正的差別不在「快慢」，而在<strong>它把電晶體花在哪裡</strong>：CPU 花在分支預測、亂序與快取，NPU 花在成排的低精度乘加陣列，FPGA 花在可寫入的查找表與繞線。</p>
-<p>因果鏈走一遍。<strong>工作量從哪來</strong>：每秒要做多少次運算，而且是哪一種運算。<strong>做了什麼決定</strong>：選一個家族，等於選了一組「這種運算我做得多好」的效率係數。<strong>花掉多少</strong>：達成需求要幾顆晶片、合計多少瓦、乘上產量共多少錢。<strong>邊界在哪</strong>：功耗預算與延遲要求會直接把某些家族劃掉，<strong>確定性延遲只有 MCU、DSP、FPGA 給得起</strong>，CPU、GPU、NPU 有作業系統排程與批次處理，最壞情況沒有上界。<strong>儀器量到什麼</strong>：牆鐘時間與功率計，兩個一除就是實測的每瓦運算量。</p>
+<p>因果鏈走一遍。<strong>工作量從哪來</strong>：每秒要做多少次運算，而且是哪一種運算。<strong>做了什麼決定</strong>：選一個家族，等於選了一組「這種運算我做得多好」的效率係數。<strong>花掉多少</strong>：達成需求要幾顆晶片、合計多少瓦、乘上產量共多少錢。<strong>邊界在哪</strong>：功耗預算與延遲要求會直接把某些家族劃掉；這裡的簡化模型假設通用作業系統下的 CPU、GPU、NPU 有排程與批次處理，不給最壞延遲上界；專用的即時 CPU 核若搭配 RTOS、鎖定快取與可分析的執行路徑，仍可用於硬即時。<strong>儀器量到什麼</strong>：牆鐘時間與功率計，兩個一除就是實測的每瓦運算量。</p>
 <p class="note">來源：11-計算機組織與微處理機 §8。</p>
 
 <h2>推導：四條式子與一條會翻轉結論的交叉線</h2>
@@ -57,12 +57,12 @@
 <div class="controls">
 <label for="cp-family">要看的家族<select id="cp-family"><option value="all">六個家族全部列出</option><option value="cpu">通用 CPU</option><option value="mcu">MCU</option><option value="dsp">DSP</option><option value="gpu">GPU</option><option value="npu">NPU</option><option value="fpga">FPGA</option></select></label>
 <label for="cp-work">工作負載類型<select id="cp-work"><option value="matrix">矩陣乘法／推論</option><option value="control">控制流密集（分支多）</option><option value="mac">MAC 密集（FIR 濾波）</option><option value="stream">固定管線串流</option></select></label>
-<label for="cp-ops">每秒需要的運算量（Gops/s）<input id="cp-ops" type="range" min="0.1" max="1000" step="0.1" value="10"></label>
-<label for="cp-power">功耗預算（W）<input id="cp-power" type="range" min="0.05" max="300" step="0.05" value="5"></label>
-<label for="cp-volume">產量（顆）<input id="cp-volume" type="range" min="100" max="1000000" step="100" value="10000"></label>
-<label for="cp-latency">可容忍延遲（µs）<input id="cp-latency" type="range" min="0.1" max="10000" step="0.1" value="100"></label>
+<label for="cp-ops">每秒需要的運算量（Gops/s）<input id="cp-ops" type="number" min="0.1" max="1000" step="0.1" value="10"></label>
+<label for="cp-power">功耗預算（W）<input id="cp-power" type="number" min="0.05" max="300" step="0.05" value="5"></label>
+<label for="cp-volume">產量（顆）<input id="cp-volume" type="number" min="100" max="1000000" step="100" value="10000"></label>
+<label for="cp-latency">可容忍延遲（µs）<input id="cp-latency" type="number" min="0.1" max="10000" step="0.1" value="100"></label>
 </div>
-<div id="chippick-output" class="output" aria-live="polite">這個模式（矩陣乘法／推論）只換掉六個家族的效率係數，其餘四支滑桿照樣全部影響結果。需求 10 Gops/s、預算 5 W、產量 10000 顆、可容忍延遲 100 µs。CPU：實際可達 25.000 Gops/s、1 顆、65.000000 W、3000000 美元、0.384615 Gops/W，不可行（超出功耗預算 13.000000 倍）。MCU：0.050、200 顆、10.000000 W、6000000 美元、1.000000 Gops/W，不可行（超出 2.000000 倍）。DSP：8.000、2 顆、4.000000 W、300000 美元、4.000000 Gops/W，可行。GPU：17000.000、1 顆、300.000000 W、15000000 美元、56.666667 Gops/W，不可行。NPU：3800.000、1 顆、5.000000 W、400000 美元、760.000000 Gops/W，可行。FPGA：300.000、1 顆、25.000000 W、2050000 美元、12.000000 Gops/W，不可行。建議：DSP（兩者都滿足需求時比的是總成本，DSP 比 NPU 便宜 100000 美元）。NPU 的能效贏 190 倍卻沒被選上，因為總成本較高。峰值只是入場券，效率係數、功耗與產量才決定誰真的能用。</div>
+<div id="chippick-output" class="output" aria-live="polite">載入中…</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -70,7 +70,7 @@
 <li><strong>Gops/s 的「ops」在不同家族不是同一種運算。</strong>NPU 算的是低精度整數乘加，CPU 算的是通用指令，<strong>跨家族比峰值本來就不公平</strong>，這正是要乘效率係數的原因。</li>
 <li><strong>能效好不等於總成本低。</strong>能效只決定會不會被功耗預算刷掉；都過關之後，比的是單價乘顆數乘產量再加 NRE。</li>
 <li><strong>FPGA 不是「比較慢的 ASIC」。</strong>它是用查找表模擬邏輯的另一種架構，換到的是「還能改」。</li>
-<li><strong>「確定性延遲」不是「延遲很低」。</strong>它指最壞情況有上界。CPU 的平均延遲可能更低，但它沒有上界，硬即時場合不能用。</li>
+<li><strong>「確定性延遲」不是「延遲很低」。</strong>它指最壞情況有上界。通用作業系統下的 CPU 平均延遲可能更低，卻不保證上界；專用即時 CPU 核搭配 RTOS 與可分析設定時仍能用於硬即時。</li>
 </ul>
 
 <h2>可觀察證據：拿什麼量、量到什麼</h2>

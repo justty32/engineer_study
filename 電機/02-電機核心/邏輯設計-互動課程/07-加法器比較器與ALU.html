@@ -19,7 +19,7 @@
 
 <h2>推導：把進位與延遲一條一條寫出來</h2>
 <p><strong>（a）全加器的式子。</strong>和是三個輸入的奇偶性，所以 <code>S = A ⊕ B ⊕ C<sub>in</sub></code>。進位可以寫成 <code>C<sub>out</sub> = A · B + C<sub>in</sub> · (A ⊕ B)</code>，讀法是：兩個輸入都是 1 就一定進位（這是產生，generate），或者剛好只有一個是 1 而且低位有進位送上來（這是傳遞，propagate）。所以定義 <code>G<sub>i</sub> = A<sub>i</sub> · B<sub>i</sub></code>、<code>P<sub>i</sub> = A<sub>i</sub> ⊕ B<sub>i</sub></code>，進位遞迴式就是 <code>C<sub>i+1</sub> = G<sub>i</sub> + P<sub>i</sub> · C<sub>i</sub></code>。</p>
-<p><strong>（b）本課鎖定的延遲模型。</strong>以「閘延遲」為單位：一個 FA 從 C<sub>in</sub> 到 C<sub>out</sub> 是 <strong>2 個閘延遲</strong>（一層 AND、一層 OR），從 C<sub>in</sub> 到 S 是 <strong>1 個閘延遲</strong>（一個 XOR）。四級串起來時，進位要走完四個 FA 才輪到最高位算和，所以 4 位元漣波的最壞路徑 = 4 × 2 + 1 = <strong>9 個閘延遲</strong>。符號說明：t<sub>pd</sub> 是單一閘的傳播延遲，單位 ns；本課假設所有同類閘延遲相同、不隨輸入組合變化，真實電路不是這樣。</p>
+<p><strong>（b）本課鎖定的延遲模型。</strong>以「閘延遲」為單位：先算第 0 位的 P<sub>0</sub> = A<sub>0</sub> ⊕ B<sub>0</sub>，要 1 個閘延遲；進位再經過 4 個 FA，每級從 C<sub>in</sub> 到 C<sub>out</sub> 是 2 個閘延遲（一層 AND、一層 OR）。因此關鍵輸出 C<sub>4</sub> 的最壞路徑 = 1 + 4 × 2 = <strong>9 個閘延遲</strong>。符號說明：t<sub>pd</sub> 是單一閘的傳播延遲，單位 ns；本課假設所有同類閘延遲相同、不隨輸入組合變化，真實電路不是這樣。</p>
 <p><strong>（c）CLA 為什麼是固定的 4 個閘延遲。</strong>把遞迴式往下代入：<code>C<sub>2</sub> = G<sub>1</sub> + P<sub>1</sub> · G<sub>0</sub> + P<sub>1</sub> · P<sub>0</sub> · C<sub>0</sub></code>，再往上代都是同一個形狀——一層 AND 後接一層 OR，兩層而已，跟位元數無關。算 P、G 要 1 個閘延遲，進位邏輯 2 個閘延遲，最後算和的 XOR 1 個閘延遲，合計 <strong>4 個閘延遲</strong>。代價藏在寬度裡：位數越高，那些 AND 項的輸入數越多、數量也越多。</p>
 <p><strong>（d）本課鎖定的閘數計法。</strong>漣波每個 FA = 2 個 XOR + 2 個 AND + 1 個 OR = <strong>5 個閘</strong>，4 位元共 <strong>20 個閘</strong>。CLA = 4 個 P 的 XOR + 4 個 G 的 AND（<strong>8 個</strong>） + 進位邏輯的 AND 閘 1 + 2 + 3 + 4 = 10 個與 OR 閘 4 個（<strong>14 個</strong>） + 4 個和的 XOR（<strong>4 個</strong>）= <strong>26 個閘</strong>。</p>
 <p><strong>（e）溢位為什麼是 <code>V = C<sub>4</sub> ⊕ C<sub>3</sub></code>。</strong>承第 02 章：有號溢位的意思是「結果跑出可表示範圍」。最高位進位 C<sub>4</sub> 與次高位進位 C<sub>3</sub> 相同時，符號位的變化是正常的進位傳遞；兩者不同時，符號位被下面送上來的進位翻掉了，這正是溢位。無號的進位旗標 C 則直接看 C<sub>4</sub>——同一個電路、同一組位元，兩個旗標各講各的故事。</p>
@@ -56,7 +56,7 @@
 <label for="ad-style">進位電路架構<select id="ad-style"><option value="ripple">漣波進位（ripple-carry）</option><option value="cla">超前進位（carry look-ahead）</option></select></label>
 <label for="ad-tpd">單閘傳播延遲 t_pd（ns）<input id="ad-tpd" type="range" min="0.1" max="5" step="0.1" value="1"></label>
 </div>
-<div id="adder-output" class="output" aria-live="polite">這個運算用到 A、B、C_in。A = 9 = <code>1001</code>（無號 9、有號 −7），B = 7 = <code>0111</code>（無號 7、有號 7），C_in = 0。進位鏈 C<sub>0</sub>–C<sub>4</sub> = 0, 1, 1, 1, 1；和 = <code>0000</code>，無號 0、有號 0。旗標 C = 1、V = 0、N = 0、Z = 1。進位從第 0 位一路走到第 3 位，這是漣波架構的最壞情形。漣波延遲 9.000000 ns（111.111111 MHz、20 閘），超前進位 4.000000 ns（250.000000 MHz、26 閘）。CLA 把每一位的進位都直接從 A、B 算出來，不等前一位，所以延遲不隨位元數成長——代價是進位邏輯的閘數隨位元數平方成長。</div>
+<div id="adder-output" class="output" aria-live="polite">這個運算用到 A、B、C_in。A = 9 = <code>1001</code>（無號 9、有號 −7），B = 7 = <code>0111</code>（無號 7、有號 7），C_in = 0。進位鏈 C<sub>0</sub>–C<sub>4</sub> = 0, 1, 1, 1, 1；和 = <code>0000</code>，無號 0、有號 0。旗標 C = 1、V = 0、N = 0、Z = 1。第 0 位產生進位，第 1–3 位傳遞進位，這是漣波架構的最壞情形。漣波延遲 9.000000 ns（111.111111 MHz、20 閘），超前進位 4.000000 ns（250.000000 MHz、26 閘）。CLA 把每一位的進位都直接從 A、B 算出來，不等前一位，理想無限扇入模型下延遲不隨位元數成長；實務分組後約隨 log n 成長，代價是進位邏輯的閘數增加。</div>
 </section>
 
 <h2>不要混淆</h2>

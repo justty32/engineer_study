@@ -47,18 +47,18 @@
 <tr><td>距離判定</td><td>0.2 ≤ 0.3</td><td><strong>通過</strong></td></tr>
 </tbody></table>
 <p>同一筆 64 KiB 換到六種介面：PCIe 4.0 ×4 <strong>8.320000 µs</strong>、USB 3.2 Gen 1 <strong>131.072000 µs</strong>、SPI 50 MHz <strong>10.485760 ms</strong>、I²C 400 kHz <strong>1.474560 s</strong>、CAN 500 kbit/s <strong>1.818624 s</strong>、UART 115200 <strong>5.688889 s</strong>。<strong>PCIe 比 UART 快 683760.683761 倍</strong>。量級對照：一拍 0.500000 ns（2.0 GHz），L1 命中 1 拍，主記憶體 200 拍才 100 ns，而 UART 那 5.688889 s 夠 CPU 跑一百多億拍。</p>
-<p>邊界對照：切到 <strong>PCIe</strong>、裝置 4、長度 1 m，兩項不通過——它是點對點，掛 4 個要 switch，1 m 也遠超 0.3 m。切到 <strong>CAN</strong>、長度 40 m、裝置 32，全部通過，<strong>六種裡只有它拉得到 40 m 又掛幾十個節點</strong>，代價是 0.036036 MB/s。切到 <strong>SPI</strong>、裝置 8，線數 <strong>11 條</strong>，這是它的天花板。</p>
+<p>邊界對照：切到 <strong>PCIe</strong>、裝置 4、長度 1 m，兩項不通過——它是點對點，掛 4 個要 switch，1 m 也遠超 0.3 m。切到 <strong>CAN</strong>、長度 40 m、裝置 32，距離與裝置數兩項通過，但在預設需求 1 MB/s 下速率不通過；把需求降到 0.03 MB/s 時才三項全過。<strong>六種裡只有它拉得到 40 m 又掛幾十個節點</strong>，代價是 0.036036 MB/s。切到 <strong>SPI</strong>、裝置 8，線數 <strong>11 條</strong>，這是它的天花板。</p>
 
 <section class="workspace"><h2>自由實驗：六種介面的速率、線數與三項判定</h2>
 <p>場景是：你有一筆固定大小的資料要搬，手上有六種介面可選，板子上要掛幾個裝置、線拉多長、應用要求多快都由你決定。左邊選家族，右邊四支滑桿給條件。要看的是三件事：有效位元組率跟原始位元率差多少、這筆資料傳完要多久、以及速率、裝置數、距離三項判定有沒有全部通過。</p>
 <div class="controls">
-<label for="bs-family">介面家族<select id="bs-family"><option value="spi">SPI 50 MHz</option><option value="i2c">I²C 400 kHz</option><option value="uart">UART 115200</option><option value="can">CAN 500 kbit/s</option><option value="usb">USB 3.2 Gen 1</option><option value="pcie">PCIe 4.0 x4</option></select></label>
+<label for="bs-family">介面家族<select id="bs-family"><option value="spi">SPI 50 MHz</option><option value="i2c">I²C 400 kHz</option><option value="uart">UART 115200</option><option value="can">CAN 500 kbit/s</option><option value="usb">USB 3.2 Gen 1</option><option value="pcie">PCIe 4.0 ×4</option></select></label>
 <label for="bs-payload">要傳的資料量（KiB）<input id="bs-payload" type="range" min="1" max="1024" step="1" value="64"></label>
 <label for="bs-nodes">要掛的裝置數<input id="bs-nodes" type="range" min="1" max="32" step="1" value="4"></label>
 <label for="bs-len">線路長度（公尺）<input id="bs-len" type="range" min="0.1" max="50" step="0.1" value="0.2"></label>
-<label for="bs-need">需求速率（MB/s）<input id="bs-need" type="range" min="0.01" max="1000" step="0.01" value="1"></label>
+<label for="bs-need">需求速率（MB/s）<input id="bs-need" type="number" min="0.01" max="1000" step="0.01" value="1"></label>
 </div>
-<div id="buspick-output" class="output" aria-live="polite">SPI 50 MHz：原始位元率 50 Mbit/s、編碼效率 100 %，有效位元組率 6.250000 MB/s。傳 64 KiB（65536 位元組）要 10.485760 ms。訊號線數 3 ＋ 4 ＝ 7 條。速率判定：6.250000 ≥ 1.000000，通過。裝置數判定：4 ≤ 8，通過。距離判定：0.2 ≤ 0.3 m，通過。同一筆 64 KiB：PCIe 4.0 x4 8.320000 µs、USB 3.2 Gen 1 131.072000 µs、SPI 10.485760 ms、I²C 1.474560 s、CAN 1.818624 s、UART 5.688889 s。SPI 每多一個從機就要多一條晶片選擇線，線數會隨裝置數增加，這是它的擴充性天花板。有效位元組率不是原始位元率除以 8，中間還要扣掉線路編碼與協定開銷。</div>
+<div id="buspick-output" class="output" aria-live="polite">載入中…</div>
 </section>
 
 <h2>不要混淆</h2>

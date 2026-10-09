@@ -8,6 +8,7 @@
 <div class="flow"><span>效能三因子</span><span>ISA 契約</span><span>浮點與端序</span><span>五階段管線</span><span>冒險與旁路</span><span>分支預測</span><span>亂序與推測</span><span>SIMD 與上限</span><span>快取四維度</span><span>MESI</span><span>TLB 代價</span><span>輪詢中斷 DMA</span><span>匯流排家族</span><span>處理器選型</span></div>
 <p class="note">每章只有一個自由實驗，改一個控制就立即看到結果與原因，沒有計分、沒有進度條、沒有解鎖。練習題全部集中在自我檢核頁，答錯不擋路、可以無限重做。</p>
 <p class="warning">本課是既有課「計算機組織」的深化層：機制在那邊，取捨與量化在這邊。每一章開頭都會告訴你哪一頁是前置，讀不下去時請先回去把那一頁看完，本課不會把同一套機制再講一次。</p>
+<p class="note"><strong>最小前置清單：</strong>計算機組織 04、05、07、08、09；邏輯設計 02、10、13。不用先重讀兩門課全部 28 頁。</p>
 <section class="chapter-list">
 <a class="chapter-card" href="00-微處理機世界觀與效能公式.html"><h2><span class="number">00</span> 微處理機世界觀與效能公式</h2><p>快是一條可以算的式子：指令數、每指令拍數、時脈週期三者相乘。</p></a>
 <a class="chapter-card" href="01-ISA契約與定址模式.html"><h2><span class="number">01</span> ISA 契約與定址模式</h2><p>指令集是契約，只承諾做什麼、不承諾怎麼做；指令數少不等於工作量少。</p></a>
@@ -17,10 +18,10 @@
 <a class="chapter-card" href="05-分支預測與管線清空.html"><h2><span class="number">05</span> 分支預測與管線清空</h2><p>猜錯的代價是整條管線的內容作廢，猜對的方法是看歷史。</p></a>
 <a class="chapter-card" href="06-超純量亂序與推測執行.html"><h2><span class="number">06</span> 超純量、亂序與推測執行</h2><p>一拍發射好幾條之後，瓶頸換成程式本身能取出多少平行度。</p></a>
 <a class="chapter-card" href="07-SIMD與平行加速上限.html"><h2><span class="number">07</span> SIMD 與平行加速上限</h2><p>一條指令算八組資料；再怎麼加速，序列的那一段都不會消失。</p></a>
-<a class="chapter-card" href="08-快取設計四維度.html"><h2><span class="number">08</span> 快取設計四維度</h2><p>容量、區塊大小、相聯度、替換策略：換一種設計，命中率差多少。</p></a>
+<a class="chapter-card" href="08-快取設計四維度.html"><h2><span class="number">08</span> 快取設計四維度</h2><p>對映方式、替換策略、寫策略、區塊大小：換一種設計，命中率差多少。</p></a>
 <a class="chapter-card" href="09-多核一致性MESI.html"><h2><span class="number">09</span> 多核一致性 MESI</h2><p>兩顆核心寫同一條快取行，正確性有了，效能沒了。</p></a>
 <a class="chapter-card" href="10-TLB與頁缺失的代價.html"><h2><span class="number">10</span> TLB 與頁缺失的代價</h2><p>每一次存取其實查了兩次；沒有 TLB 的機器慢十七倍。</p></a>
-<a class="chapter-card" href="11-輪詢中斷與DMA.html"><h2><span class="number">11</span> 輪詢、中斷與 DMA</h2><p>同一個裝置事件，三種處理方式吃掉的 CPU 差好幾十倍。</p></a>
+<a class="chapter-card" href="11-輪詢中斷與DMA.html"><h2><span class="number">11</span> 輪詢、中斷與 DMA</h2><p>同一個裝置事件，三種處理方式吃掉的 CPU 可差到十幾倍，而且名次會翻轉。</p></a>
 <a class="chapter-card" href="12-匯流排家族PCIe到CAN.html"><h2><span class="number">12</span> 匯流排家族：PCIe 到 CAN</h2><p>傳同樣 64 KiB，六種介面的時間差六個數量級。</p></a>
 <a class="chapter-card" href="13-處理器家族選型.html"><h2><span class="number">13</span> 處理器家族選型</h2><p>把全課的取捨收攏成一張表：效能、功耗、單價與開發成本。</p></a>
 <a class="chapter-card" href="名詞與概念字典.html"><h2><span class="number">查</span> 名詞與概念字典</h2><p>60 張卡片，繁中與英文對照、白話、機制與邊界。</p></a>

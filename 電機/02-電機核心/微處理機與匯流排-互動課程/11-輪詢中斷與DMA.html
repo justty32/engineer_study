@@ -9,7 +9,7 @@
 
 <h2>痛點：教科書說中斷比輪詢好，可是我的量測不是這樣</h2>
 <p>「我做高速資料擷取，一開始用中斷，每來一筆就進一次中斷服務常式，事件率拉高之後 CPU 直接被吃光；改成輪詢反而順了。可是換到低速的按鍵裝置，同樣改成輪詢又變得超級浪費。到底哪一種才對？」</p>
-<p>兩種量測都沒錯，錯的是「哪一種比較好」這個問題本身。三條成本式吃的是<strong>不同的自變數</strong>：輪詢只跟你多久問一次有關，中斷只跟對方多久叫你一次有關，直接記憶體存取兩者都不太看。自變數不同，曲線一定會交叉；交叉點在哪得把數字代進去才知道。</p>
+<p>兩種量測都沒錯，錯的是「哪一種比較好」這個問題本身。三條成本式吃的是<strong>不同的自變數</strong>：輪詢的固定查詢開銷只看輪詢頻率，中斷與 DMA 的每事件固定開銷都看事件率；只有輪詢與中斷還要由 CPU 付每位元組的搬移成本。自變數不同，曲線一定會交叉；交叉點在哪得把數字代進去才知道。</p>
 
 <h2>白話直覺：三種姿勢各自在買什麼</h2>
 <p>輪詢（polling）＝ CPU 主動且週期性地去讀裝置的狀態暫存器。中斷（interrupt）＝ 裝置有事才拉一條線通知 CPU，CPU 存好現場、跳進中斷服務常式、處理完再返回。直接記憶體存取（direct memory access, DMA）＝ 板上另一個控制器代替 CPU 搬資料，CPU 只負責下設定，搬完收一次完成中斷。三種方式讀寫裝置暫存器時多半都走記憶體對映 I/O（memory-mapped I/O）：裝置的暫存器被映射進位址空間，用一般的載入儲存指令就能存取。</p>
@@ -42,16 +42,16 @@
 <p>場景是一個外接裝置，每秒觸發固定次數的事件，每次事件要把若干位元組搬進記憶體。同一個工作量分別用輪詢、中斷與 DMA 處理，成本全部換算成每秒拍數與 CPU 佔用率。要看的是三者的名次會在哪裡交換，以及輪詢頻率一旦低於事件率會發生什麼事。</p>
 <div class="controls">
 <label for="io-mode">要比較的方式<select id="io-mode"><option value="all">三種都比較</option><option value="poll">只看輪詢</option><option value="irq">只看中斷</option><option value="dma">只看 DMA</option></select></label>
-<label for="io-rate">裝置事件率（次/秒）<input id="io-rate" type="range" min="1" max="100000" step="1" value="1000"></label>
+<label for="io-rate">裝置事件率（次/秒）<input id="io-rate" type="number" min="1" max="100000" step="1" value="1000"></label>
 <label for="io-bytes">每次事件搬移的位元組數<input id="io-bytes" type="range" min="1" max="4096" step="1" value="512"></label>
 <label for="io-pollc">每次輪詢查詢的拍數<input id="io-pollc" type="range" min="5" max="200" step="5" value="20"></label>
-<label for="io-pollf">輪詢頻率（次/秒）<input id="io-pollf" type="range" min="100" max="1000000" step="100" value="10000"></label>
+<label for="io-pollf">輪詢頻率（次/秒）<input id="io-pollf" type="number" min="100" max="1000000" step="100" value="10000"></label>
 <label for="io-isr">中斷服務常式拍數（含進出）<input id="io-isr" type="range" min="100" max="5000" step="50" value="800"></label>
 <label for="io-dma">DMA 設定＋完成中斷拍數<input id="io-dma" type="range" min="200" max="5000" step="50" value="1200"></label>
 <label for="io-clock">時脈（GHz）<input id="io-clock" type="range" min="0.5" max="5" step="0.1" value="2"></label>
 <label for="io-perbyte">程式化搬移每位元組拍數<input id="io-perbyte" type="range" min="1" max="20" step="1" value="4"></label>
 </div>
-<div id="iomode-output" class="output" aria-live="polite">目前是「三種都比較」，九個控制全部都會用到。事件率 1000 次/秒、每次 512 位元組、2.0 GHz。<strong>輪詢每秒 2248000 拍 ＝ 0.112400 %；中斷每秒 2848000 拍 ＝ 0.142400 %；DMA 每秒 1200000 拍 ＝ 0.060000 %。</strong>吞吐量 512000 位元組/秒。輪詢最壞事件延遲 <strong>100.000000 µs</strong>，中斷延遲 <strong>0.100000 µs</strong>。<strong>目前佔用率最低的是 DMA</strong>，因為它的成本裡沒有位元組數這一項。為什麼：輪詢的成本看的是查詢頻率，中斷看的是事件率，DMA 兩者都不看——所以答案會隨事件率翻轉。邊界提醒：事件率調到 1 時輪詢幾乎全部白做，中斷明顯划算；把每次位元組數拉到 4096 且事件率拉到 100000，程式化搬移會吃掉大半個 CPU，這就是 DMA 存在的理由；若把輪詢頻率調到低於事件率，兩次查詢之間會來不只一個事件，會漏資料；佔用率一旦超過 100 % 表示 CPU 已經被吃光，實際上會開始漏事件或延遲暴增。</div>
+<div id="iomode-output" class="output" aria-live="polite">載入中…</div>
 </section>
 
 <h2>不要混淆</h2>

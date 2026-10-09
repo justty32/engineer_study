@@ -3,7 +3,7 @@
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-微處理機世界觀與效能公式.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">06・機器加寬很容易，讓程式餵得飽才是難的那一半</p>
-<h1>超純量、亂序與推測執行：四個限制取最小值，只改非瓶頸那一項不會有任何改變</h1>
+<h1>超純量、亂序與推測執行：三個上限取最小值，命名空間先折進視窗</h1>
 <p class="lead">硬體可以同時發射多條指令、不按程式順序執行、甚至在分支定案前就先做。這章把發射寬度、指令視窗、平均停留拍數與程式平行度放上同一個天平，看清加寬為什麼常常沒用。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="04-管線冒險旁路與插泡.html">04 管線冒險、旁路與插泡</a>的資料相依，與<a href="05-分支預測與管線清空.html">05 分支預測與管線清空</a>的誤判代價。<strong>前置：</strong>一條指令從取指到寫回的完整流程屬機制層，見<a href="../../../專題/計算機組織/互動課程/04-處理器資料路徑與指令週期.html">計算機組織〈04 處理器資料路徑與指令週期〉</a>；本章只談加寬之後的取捨。</p>
 
@@ -38,7 +38,7 @@
 <p>邊界對照逐條看。關掉<strong>重新命名</strong>：可取平行度掉到 1.5，IPC <strong>1.500000</strong>、CPI <strong>0.666667</strong>，比原本<strong>少了 40.000000 %</strong>，這是假相依的價碼。關掉<strong>推測執行</strong>：IPC <strong>1.800000</strong>。兩個都關：<strong>1.500000</strong>。發射寬度 4 加到 8 而其他不動：IPC 仍是 <strong>2.500000</strong>，<strong>加寬完全沒有效果</strong>。</p>
 <p>再看三組。視窗 4、平均停留 64 拍：視窗上限只剩 <strong>0.062500</strong>，IPC <strong>0.062500</strong>、CPI <strong>16.000000</strong>，<strong>機器幾乎都在等</strong>，這是記憶體密集程式的量級。實體 40、架構 32：空間剩 8，有效視窗壓成 8、視窗上限 <strong>0.500000</strong>，IPC <strong>0.500000</strong>；<strong>買了 64 條的視窗只用得到 8 條</strong>，該加的是實體暫存器。實體 32、架構 32：空間 0，此時顯示「沒有任何重新命名空間，機器完全停住」，而不是無限大或無意義的值。</p>
 
-<section class="workspace"><h2>自由實驗：四個限制取最小值，找出真正的瓶頸</h2>
+<section class="workspace"><h2>自由實驗：三個上限取最小值，找出真正的瓶頸</h2>
 <p>場景是一支固定的程式跑在一台規格可任意調整的超純量機器上。工作量是那支程式能取出的獨立工作，機器這一側可改發射寬度、指令視窗、實體與架構暫存器數，也可開關重新命名與推測執行。要看的是：三個候選限制各是多少、誰最小、以及把最小那一項改善之後 IPC 會變成多少。</p>
 <div class="controls">
 <label for="oo-width">發射寬度（每拍最多發射幾條）<input id="oo-width" type="range" min="1" max="8" step="1" value="4"></label>
@@ -50,7 +50,7 @@
 <label for="oo-phys">實體暫存器數<input id="oo-phys" type="range" min="32" max="256" step="8" value="128"></label>
 <label for="oo-arch">架構暫存器數<input id="oo-arch" type="range" min="8" max="32" step="8" value="16"></label>
 </div>
-<div id="ooo-output" class="output" aria-live="polite">可取平行度 2.500000；重新命名空間 128 − 16 = 112 個；有效視窗 min(64, 112) = 64；視窗上限 64 / 16 = 4.000000；有效 IPC min(4, 2.5, 4) = 2.500000；CPI 0.400000。瓶頸是<strong>可取平行度</strong>。<strong>加寬發射或加大視窗都不會有效果，瓶頸在程式本身。</strong>若把 ILP 改善到 4.000000，IPC 會變成 4.000000，屆時發射寬度與視窗上限會同時成為新的瓶頸。四個限制取最小值，所以只改非瓶頸的那一項不會有任何改變。</div>
+<div id="ooo-output" class="output" aria-live="polite">可取平行度 2.500000；重新命名空間 128 − 16 = 112 個；有效視窗 min(64, 112) = 64；視窗上限 64 / 16 = 4.000000；有效 IPC min(4, 2.5, 4) = 2.500000；CPI 0.400000。瓶頸是<strong>可取平行度</strong>。<strong>加寬發射或加大視窗都不會有效果，瓶頸在程式本身。</strong>若把 ILP 改善到 4.000000，IPC 會變成 4.000000，屆時發射寬度與視窗上限會同時成為新的瓶頸。命名空間先限制有效視窗，再由發射寬度、程式 ILP 與視窗上限這三項取最小值。</div>
 </section>
 
 <h2>不要混淆</h2>

@@ -25,6 +25,7 @@
 <p><strong>（d）結構冒險為什麼在現代機器上少見。</strong>經典例子是只有一個記憶體埠：第 i 條走記憶體階段那一拍，第 i ＋ 3 條正好在取指，兩者都要碰記憶體。現代處理器把指令快取與資料快取分開，取指與資料存取各走一邊，撞車就消失了。本章保留這個選項，是要讓你看見它多出來的那一拍<strong>性質完全不同</strong>：不是資料等不到，是兩級搶資源。</p>
 
 <h2>數值實例：鎖定的五條指令序列</h2>
+<details><summary>先自己排一次逐拍表再展開</summary><p>先把每條指令的 IF、ID、EX、MEM、WB 順著排開；遇到載入使用相依時，凍結消費者的 ID 與下一條的 IF 一拍，再對照下表。</p></details>
 <p>本課鎖定這一組序列：</p>
 <pre><code>1  lw   x2, 0(x1)      從記憶體讀一個字進 x2
 2  add  x3, x2, x4     用 x2
@@ -34,12 +35,12 @@
 <p>預設設定是 5 條指令、相依距離 1、啟用旁路、單一記憶體埠未勾選。逐拍表如下（數字是拍號）：</p>
 <table><thead><tr><th>指令</th><th>IF</th><th>ID</th><th>泡</th><th>EX</th><th>MEM</th><th>WB</th></tr></thead><tbody>
 <tr><td>1 <code>lw</code></td><td>1</td><td>2</td><td>—</td><td>3</td><td>4</td><td>5</td></tr>
-<tr><td>2 <code>add</code></td><td>2</td><td>3</td><td><strong>4</strong></td><td>5</td><td>6</td><td>7</td></tr>
-<tr><td>3 <code>sub</code></td><td>3</td><td>4–5</td><td>—</td><td>6</td><td>7</td><td>8</td></tr>
-<tr><td>4 <code>and</code></td><td>4–5</td><td>6</td><td>—</td><td>7</td><td>8</td><td>9</td></tr>
+<tr><td>2 <code>add</code></td><td>2</td><td>3–4</td><td><strong>4</strong></td><td>5</td><td>6</td><td>7</td></tr>
+<tr><td>3 <code>sub</code></td><td>3–4</td><td>5</td><td>—</td><td>6</td><td>7</td><td>8</td></tr>
+<tr><td>4 <code>and</code></td><td>5</td><td>6</td><td>—</td><td>7</td><td>8</td><td>9</td></tr>
 <tr><td>5 <code>or</code></td><td>6</td><td>7</td><td>—</td><td>8</td><td>9</td><td>10</td></tr>
 </tbody></table>
-<p>第 3、第 4 條的解碼與取指各佔兩拍，不是它們有冒險，是被前面那一拍泡往後推的結果。旁路路徑有四條：指令 1 的記憶體階段接指令 2 的執行階段，指令 2、3、4 的執行階段各接下一條。只有第一條走記憶體階段的輸出，所以只有它要插泡。</p>
+<p>第 2 條在 ID 凍結一拍，同時第 3 條也凍結在 IF；停頓解除後，後面指令整體往後推一拍。旁路路徑有四條：指令 1 的記憶體階段接指令 2 的執行階段，指令 2、3、4 的執行階段各接下一條。只有第一條走記憶體階段的輸出，所以只有它要插泡。</p>
 <table><thead><tr><th>設定</th><th>泡數</th><th>總拍數</th><th>CPI</th><th>穩態 CPI</th></tr></thead><tbody>
 <tr><td>距離 1、有旁路（預設）</td><td><strong>1</strong></td><td><strong>10</strong></td><td><strong>2.000000</strong></td><td><strong>1.200000</strong></td></tr>
 <tr><td>距離 1、無旁路</td><td><strong>8</strong></td><td><strong>17</strong></td><td><strong>3.400000</strong></td><td><strong>2.600000</strong></td></tr>
@@ -48,7 +49,7 @@
 <tr><td>距離 3、有或無旁路</td><td><strong>0</strong></td><td><strong>9</strong></td><td><strong>1.800000</strong></td><td><strong>1.000000</strong></td></tr>
 <tr><td>距離 1、有旁路 ＋ 單一記憶體埠</td><td><strong>2</strong></td><td><strong>11</strong></td><td><strong>2.200000</strong></td><td><strong>1.400000</strong></td></tr>
 </tbody></table>
-<p>旁路帶來的加速（距離 1）＝ 17 / 10 ＝ <strong>1.700000 倍</strong>。CPI 是總拍數除以指令數，含第 03 章那 4 拍填充；穩態 CPI 是 1 ＋ 泡數 / 指令數。只有 5 條指令時填充佔大半，CPI 2.000000 很糟，穩態其實只有 1.200000。</p>
+<p>旁路帶來的加速（距離 1）＝ 17 / 10 ＝ <strong>1.700000 倍</strong>。CPI 是總拍數除以指令數，含第 03 章那 4 拍填充；穩態 CPI 是 1 ＋ 泡數 / 指令數。只有 5 條指令時填充佔四成，CPI 2.000000 很糟，穩態其實只有 1.200000。</p>
 <p><strong>量級對照。</strong>在 2.0 GHz、一拍 0.500000 ns 的機器上，這 8 拍泡是 4 ns；一次 L1 快取失誤賠 50 拍、主記憶體存取 200 拍。冒險的停頓是一拍一拍的量級，記憶體是幾十到幾百拍。</p>
 <p><strong>邊界對照一：指令數拉到 12、距離 1。</strong>無旁路 22 拍泡共 38 拍（CPI 3.166667），有旁路仍只有 1 拍泡共 17 拍（CPI 1.416667）。指令越多旁路越值錢：無旁路的泡數隨指令數線性成長。</p>
 <p><strong>邊界對照二：指令數 2、距離 3。</strong>此時湊不出任何一對相依，總拍數 6、CPI 3.000000。這個 CPI 高得嚇人，原因不是冒險，是只有 2 條指令卻要付 4 拍填充。</p>

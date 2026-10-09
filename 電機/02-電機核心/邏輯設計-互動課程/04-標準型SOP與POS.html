@@ -1,10 +1,10 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 標準型SOP與POS｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 標準型 SOP 與 POS｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
 <p class="eyebrow">04・任何真值表都能機械地翻成式子</p>
-<h1>標準型 SOP 與 POS：一定寫得出來的起點，也一定不是最省的終點</h1>
-<p class="lead">拿到一張真值表，不必靈感也不必試誤，照兩條固定規則就能寫出電路的式子。這章給的是那兩條規則，以及一個同樣重要的壞消息：機械產生的式子必然比最短的答案貴。</p>
+<h1>標準型 SOP 與 POS：一定寫得出來的起點，通常不是最省的終點</h1>
+<p class="lead">拿到一張真值表，不必靈感也不必試誤，照兩條固定規則就能寫出電路的式子。這章給的是那兩條規則，以及一個同樣重要的限制：機械產生的式子通常比最短的答案貴，單一最小項與無法合併的奇偶函數是例外。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="03-布林代數與邏輯閘.html">03 布林代數與邏輯閘</a>的真值表，以及 ¬、·、+ 三種基本運算。</p>
 
 <h2>痛點：表寫完了，然後呢</h2>
@@ -64,7 +64,7 @@
 </tbody></table>
 <label for="cn-form">要顯示的標準型<select id="cn-form"><option value="sop">只看積之和 SOP</option><option value="pos">只看和之積 POS</option><option value="both" selected>兩種都看</option></select></label>
 </div>
-<div id="canonical-output" class="output" aria-live="polite">這個模式顯示哪幾種標準型；8 個勾選格永遠都在用。目前 <strong>Σm(3, 5, 6, 7)</strong>、<strong>ΠM(0, 1, 2, 4)</strong>；兩個索引集合的元素個數相加必定等於 8，這裡是 4 + 4 = 8。標準 SOP：F = ¬A · B · C + A · ¬B · C + A · B · ¬C + A · B · C，字面數 4 × 3 = 12，閘數 3 個 NOT + 4 個 3 輸入 AND + 1 個 4 輸入 OR = 8。標準 POS：F = (A + B + C) · (A + B + ¬C) · (A + ¬B + C) · (¬A + B + C)，字面數 4 × 3 = 12，閘數 3 個 NOT + 4 個 3 輸入 OR + 1 個 4 輸入 AND = 8。為 1 與為 0 的列各 4 列，所以兩種一樣長，挑哪一種當起點都可以。標準型是機械產生的，所以一定寫得出來；但它把每一列都當成獨立的一項，所以一定不是最省——第 05 章會把它壓成 F = A · B + B · C + A · C，只要 4 個閘。</div>
+<div id="canonical-output" class="output" aria-live="polite">這個模式顯示哪幾種標準型；8 個勾選格永遠都在用。目前 <strong>Σm(3, 5, 6, 7)</strong>、<strong>ΠM(0, 1, 2, 4)</strong>；兩個索引集合的元素個數相加必定等於 8，這裡是 4 + 4 = 8。標準 SOP：F = ¬A · B · C + A · ¬B · C + A · B · ¬C + A · B · C，字面數 4 × 3 = 12，閘數 3 個 NOT + 4 個 3 輸入 AND + 1 個 4 輸入 OR = 8。標準 POS：F = (A + B + C) · (A + B + ¬C) · (A + ¬B + C) · (¬A + B + C)，字面數 4 × 3 = 12，閘數 3 個 NOT + 4 個 3 輸入 OR + 1 個 4 輸入 AND = 8。為 1 與為 0 的列各 4 列，所以兩種一樣長，挑哪一種當起點都可以。標準型是機械產生的，所以一定寫得出來；它把每一列都當成獨立的一項，所以通常不是最省，但單一最小項與奇偶函數是例外——第 05 章會把這個多數決例壓成 F = A · B + B · C + A · C，只要 4 個閘。</div>
 </section>
 
 <h2>不要混淆</h2>

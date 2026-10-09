@@ -20,7 +20,7 @@
 
 <h2>推導：四個設計決定各自買到什麼</h2>
 <p><strong>（a）固定長度為什麼讓管線變簡單。</strong>取指階段必須在解碼之前就知道「下一條在哪裡」。長度固定時答案是 <code>PC + 4</code>，一個加法器就解決，還能同時取好幾條。變長編碼必須先看第一個位元組才知道要再讀幾個，於是 x86 前端要多一級長度解碼，而且很難平行取多條——這一級不做事，卻要吃電晶體與清空深度。</p>
-<p><strong>（b）碼密度高為什麼不一定快。</strong>同一件事 CISC 用 4 個位元組、RISC 用 12 個，指令快取裝得下的程式碼多三倍。但那一條 CISC 指令進了核心仍被拆成同樣多的微運算，<strong>真正決定拍數的是微運算數，不是指令數</strong>：碼密度講體積，微運算數講時間。</p>
+<p><strong>（b）碼密度高為什麼不一定快。</strong>同一件事 CISC 用 4 個位元組、RISC 用 12 個，指令快取裝得下的程式碼多三倍。但那一條 CISC 指令進了核心後 micro-op 不一定比 RISC 少，例如記憶體間接仍是 2 個 micro-op；<strong>真正決定拍數的是微運算數，不是指令數</strong>：碼密度講體積，微運算數講時間。</p>
 <p><strong>（c）索引定址值不值得做成一條指令。</strong>有效位址的算式是</p>
 <p><code>EA ＝ 基底 ＋ 索引 × 縮放 ＋ 位移</code></p>
 <p>基底與索引是暫存器的值（單位：位元組位址），縮放倍率只能是 1、2、4、8（元素大小），位移是編碼在指令裡的常數。陣列走訪是最常見的樣式，把這個乘加搬進 AGU，ALU 就不必參與位址計算。</p>
@@ -58,7 +58,7 @@
 <label for="is-index">索引暫存器的值<input id="is-index" type="range" min="0" max="64" step="1" value="5"></label>
 <label for="is-scale">縮放倍率<select id="is-scale"><option value="1">1（位元組陣列）</option><option value="2">2（16 位元陣列）</option><option value="4" selected>4（32 位元陣列）</option><option value="8">8（64 位元陣列）</option></select></label>
 </div>
-<div id="isa-output" class="output" aria-live="polite">目前是<strong>索引加縮放</strong>，兩邊都看；這個模式用到基底、位移、索引與縮放倍率四個控制，全部都會影響結果。有效位址 ＝ 1024 ＋ 5 × 4 ＋ 16 ＝ <strong>1060</strong>（<code>0x424</code>），資料記憶體存取 <strong>1 次</strong>。RISC：<strong>3 條指令、12 位元組、3 個 micro-op</strong>；CISC：<strong>1 條指令、4 位元組、1 個 micro-op</strong>；碼密度比 ＝ 12 / 4 ＝ <strong>3.000000</strong>。判讀：這是 CISC 贏最多的一列，指令數、位元組數、micro-op 數三個指標同時指向同一邊，所以此時「一條抵三條」這句話成立。為什麼：<strong>碼密度比講的是體積，micro-op 數講的才是拍數，兩個指標會給你相反的結論。</strong>邊界提醒：切到「暫存器」模式，兩邊的 micro-op 都是 1，CISC 只剩體積優勢；切到「記憶體間接」，CISC 的 1 條指令會展開成 2 個 micro-op 與 2 次資料記憶體存取；把位移拉到超過 127，CISC 這條指令要多花 3 個位元組。</div>
+<div id="isa-output" class="output" aria-live="polite">載入中…</div>
 </section>
 
 <h2>不要混淆</h2>

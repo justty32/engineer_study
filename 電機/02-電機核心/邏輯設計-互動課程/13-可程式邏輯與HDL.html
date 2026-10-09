@@ -19,7 +19,7 @@
 
 <h2>推導：組態位元、夏農展開、成本交叉點</h2>
 <p><strong>（a）為什麼 k 輸入 LUT 要 2<sup>k</sup> 個組態位元。</strong>它必須能實作 k 個輸入的<strong>任何</strong>函數。k 個輸入有 2<sup>k</sup> 種組合，每一種對應真值表的一列，該列的輸出存一個位元。k 輸入函數共有 2<sup>2<sup>k</sup></sup> 種，剛好等於 2<sup>k</sup> 個位元的所有排列。所以 k 每加 1 成本就加倍——這就是主流 FPGA 停在 4 到 6 輸入的原因。</p>
-<p><strong>（b）用 k-LUT 實作任意 n 輸入函數最壞要幾顆。</strong>n ≤ k 時一顆就夠。n > k 時用夏農展開（Shannon expansion）：F ＝ ¬x · F|<sub>x=0</sub> + x · F|<sub>x=1</sub>，把一個變數固定成 0 與 1 各得一個子函數，再用一個二選一選起來。每展開一個變數，問題砍成兩半再加一個選擇，遞迴到剩下變數不超過 k 為止，總數 2<sup>n−k+1</sup> − 1 顆。這是最壞情形；真實函數常有結構，化簡後會少很多。</p>
+<p><strong>（b）用 k-LUT 實作任意 n 輸入函數最壞要幾顆。</strong>n ≤ k 時一顆就夠。n > k 時用夏農展開（Shannon expansion）：F ＝ ¬x · F|<sub>x=0</sub> + x · F|<sub>x=1</sub>，把一個變數固定成 0 與 1 各得一個子函數，再用一個二選一選起來。此選擇器需要 3 個輸入，所以公式前提是 k ≥ 3。每展開一個變數，問題砍成兩半再加一個選擇，遞迴到剩下變數不超過 k 為止，總數 2<sup>n−k+1</sup> − 1 顆。這是最壞情形；真實函數常有結構，化簡後會少很多。</p>
 <p><strong>（c）成本模型。</strong>ASIC 總成本 ＝ NRE ＋ 單價 × 產量；FPGA 總成本 ＝ 單價 × 產量，沒有 NRE。兩者相等時移項得交叉點產量 ＝ NRE ÷（FPGA 單價 − ASIC 單價）。單位：NRE 是美元，單價是美元每顆。本課固定 ASIC 2 美元、FPGA 50 美元、CPLD 5 美元，並假設單價不隨產量變動——真實報價有階梯折扣，這裡簡化成直線好讓交叉點看得清楚。</p>
 <p><strong>（d）為什麼 HDL 是「描述」不是「程式」。</strong>硬體描述語言（hardware description language, HDL）主要有 Verilog 與 VHDL。寫下兩行賦值，在硬體裡是兩條<strong>同時存在</strong>的接線；同一個時脈邊緣上所有非阻塞賦值一起取舊值、一起生效，這與第 12 章移位暫存器四件事同時發生是同一回事。軟體背景最容易踩的雷就是把它讀成順序執行。描述有三個抽象層：行為層（behavioral）只講功能、暫存器轉移層（register transfer level, RTL）講每個時脈邊緣哪些暫存器收什麼結果、閘級（gate-level）直接列出閘與連線。</p>
 <p><strong>（e）為什麼時序收斂才是真正的難點。</strong>流程是 HDL → 合成（synthesis）→ 佈局繞線（place and route）→ 時序驗證 → 燒錄或製造。功能對了只是第一關：佈局繞線之後，<a href="10-時脈與時序限制.html">第 10 章</a>那條 T<sub>clk</sub> ≥ t<sub>cq</sub> + t<sub>logic</sub> + t<sub>su</sub> + t<sub>jitter</sub> − t<sub>skew</sub> 要對全設計數萬條路徑同時成立才叫收斂。大型專案後期幾乎都耗在這一步。</p>
@@ -30,7 +30,7 @@
 <tr><td>一個 4-LUT 的組態位元</td><td>2<sup>4</sup></td><td><strong>16</strong></td></tr>
 <tr><td>實作 6 輸入函數最壞需要的 LUT</td><td>2<sup>6−4+1</sup> − 1 ＝ 2<sup>3</sup> − 1</td><td><strong>7</strong></td></tr>
 <tr><td>總組態位元</td><td>7 × 16</td><td><strong>112</strong></td></tr>
-<tr><td>CPLD 可行性</td><td>7 ≤ 512 巨集單元</td><td><strong>可行</strong></td></tr>
+<tr><td>CPLD 可行性</td><td>7 個 LUT 粗估為 7 個巨集單元，7 ≤ 512</td><td><strong>可行（僅作量級比較）</strong></td></tr>
 <tr><td>ASIC 總成本</td><td>5000000 + 2 × 10000</td><td><strong>5020000 美元 → 502.000000 美元/顆</strong></td></tr>
 <tr><td>FPGA 總成本</td><td>50 × 10000</td><td><strong>500000 美元 → 50.000000 美元/顆</strong></td></tr>
 <tr><td>CPLD 總成本</td><td>5 × 10000</td><td><strong>50000 美元 → 5.000000 美元/顆</strong></td></tr>
@@ -39,13 +39,13 @@
 <tr><td>ASIC 與 CPLD 的交叉點</td><td>5000000 ÷ (5 − 2)</td><td><strong>1666666.666667 顆</strong></td></tr>
 </tbody></table>
 <p>讀法是：一萬顆離十萬顆的交叉點還差一個數量級，500 萬美元的 NRE 攤到每顆就是 500 美元，比整顆 CPLD 貴一百倍。量級對照請記住——單閘延遲約 1 ns、正反器 t<sub>cq</sub> 約 0.40 ns、64 KiB SRAM 約 3.1 M 顆電晶體、ASIC 的 NRE 約 500 萬美元。</p>
-<p>邊界對照：<strong>產量拉到 10<sup>7</sup></strong> → ASIC 總成本 25000000 美元（<strong>2.500000 美元/顆</strong>）、FPGA 500000000 美元（50.000000 美元/顆），<strong>ASIC 便宜 20 倍，NRE 完全攤掉了</strong>。<strong>目標函數 12 個輸入、LUT 只有 2 個輸入</strong> → 最壞 2<sup>11</sup> − 1 ＝ <strong>2047 個 LUT</strong>，遠超過 512 個巨集單元，<strong>CPLD 不可行</strong>；組態位元 2047 × 4 ＝ <strong>8188</strong>。<strong>目標函數 2 個輸入、6-LUT</strong> → n ≤ k，<strong>1 個 LUT、64 個組態位元</strong>，其中大部分位元都浪費掉了——<strong>這是 FPGA 的常態，資源利用率天生就不會滿</strong>。</p>
+<p>邊界對照：<strong>產量拉到 10<sup>7</sup></strong> → ASIC 總成本 25000000 美元（<strong>2.500000 美元/顆</strong>）、FPGA 500000000 美元（50.000000 美元/顆），<strong>ASIC 便宜 20 倍，NRE 完全攤掉了</strong>。<strong>目標函數 12 個輸入、LUT 只有 3 個輸入</strong> → 最壞 2<sup>10</sup> − 1 ＝ <strong>1023 個 LUT</strong>，粗估後超過 512 個巨集單元，<strong>CPLD 不可行</strong>；組態位元 1023 × 8 ＝ <strong>8184</strong>。<strong>目標函數 2 個輸入、6-LUT</strong> → n ≤ k，<strong>1 個 LUT、64 個組態位元</strong>，其中大部分位元都浪費掉了——<strong>這是 FPGA 的常態，資源利用率天生就不會滿</strong>。</p>
 
 <section class="workspace"><h2>自由實驗：LUT 數量與三種方案的成本交叉點</h2>
 <p>左邊兩支滑桿決定硬體要花多少 LUT：LUT 的輸入數 k 決定一顆能吞多大的函數，目標函數的輸入數 n 決定要拆幾層。右邊兩支決定錢：產量與 ASIC 的一次性工程費。方案選單只是把你的選擇標出來，三種方案的成本一律同時算給你看，這樣才看得到交叉點在哪一邊。</p>
 <div class="controls">
 <label for="pl-tech">你想採用的方案<select id="pl-tech"><option value="cpld">CPLD</option><option value="fpga" selected>FPGA</option><option value="asic">ASIC</option></select></label>
-<label for="pl-lut">LUT 的輸入數 k<input id="pl-lut" type="range" min="2" max="6" step="1" value="4"></label>
+<label for="pl-lut">LUT 的輸入數 k<input id="pl-lut" type="range" min="3" max="6" step="1" value="4"></label>
 <label for="pl-nin">目標函數的輸入變數數 n<input id="pl-nin" type="range" min="2" max="12" step="1" value="6"></label>
 <label for="pl-volexp">產量（10 的幾次方顆）<input id="pl-volexp" type="range" min="0" max="7" step="1" value="4"></label>
 <label for="pl-nre">ASIC 的一次性工程費 NRE（百萬美元）<input id="pl-nre" type="range" min="0.1" max="50" step="0.1" value="5"></label>

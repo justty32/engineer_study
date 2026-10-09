@@ -52,6 +52,31 @@ var fmtPrec = function (x) {
   var parts = s.split("e");
   return minus(parts[0]) + " × 10<sup>" + supNum(Number(parts[1])) + "</sup>";
 };
+/* 用十進位字串與 IEEE 754 位元的精確有理數比較，避免先被 JS double 捨入。 */
+var decimalFraction = function (raw) {
+  var m = String(raw).trim().match(/^([+-]?)(\d*)(?:\.(\d*))?(?:[eE]([+-]?\d+))?$/);
+  if (!m || (!m[2] && !m[3])) { return null; }
+  var digits = (m[2] || "") + (m[3] || "");
+  var n = BigInt(digits || "0");
+  if (m[1] === "-") { n = -n; }
+  var scale = (m[3] || "").length - Number(m[4] || 0);
+  if (scale < 0) { n *= 10n ** BigInt(-scale); return { n: n, d: 1n }; }
+  return { n: n, d: 10n ** BigInt(scale) };
+};
+var binaryFraction = function (bits, expBits, mantBits, bias) {
+  var sign = bits.charAt(0) === "1" ? -1n : 1n;
+  var ef = parseInt(bits.slice(1, 1 + expBits), 2);
+  var frac = BigInt("0b" + bits.slice(1 + expBits));
+  if (ef === 0 && frac === 0n) { return { n: 0n, d: 1n }; }
+  var mant = ef === 0 ? frac : ((1n << BigInt(mantBits)) + frac);
+  var e = (ef === 0 ? 1 - bias : ef - bias) - mantBits;
+  if (e >= 0) { return { n: sign * mant * (1n << BigInt(e)), d: 1n }; }
+  return { n: sign * mant, d: 1n << BigInt(-e) };
+};
+var decimalMatchesBits = function (raw, bits, expBits, mantBits, bias) {
+  var a = decimalFraction(raw), b = binaryFraction(bits, expBits, mantBits, bias);
+  return !!a && a.n * b.d === b.n * a.d;
+};
 var hex = function (v, w) {
   var s = (v >>> 0).toString(16).toUpperCase();
   while (s.length < w) { s = "0" + s; }
@@ -345,8 +370,9 @@ function isa() {
       h += "<p><strong>邊界</strong>：有效位址算成負值，真實機器會依位元寬度回繞，"
         + "本課直接顯示負值並提醒這是設定不合理。</p>";
     }
-    h += "<p><strong>為什麼</strong>：碼密度比講的是體積，micro-op 數講的才是拍數，"
-      + "兩個指標會給你相反的結論。</p>";
+    var sameDirection = (density >= 1) === (risc[2] >= cisc[2]);
+    h += "<p><strong>為什麼</strong>：碼密度比講的是體積，micro-op 數才接近核心實際要做的工作量；這個模式下兩項"
+      + (sameDirection ? "指向同一邊，但仍是兩種不同指標" : "指向不同邊，不能只看指令長度") + "。</p>";
     put("isa-output", h);
   };
   bind(ids, draw);
@@ -430,12 +456,16 @@ function fp754() {
       h += "<p><strong>實際儲存值</strong>：" + fmtPrec(stored) + "</p>";
     }
     if (sp === "normal" && isFinite(stored)) {
+      var exact = decimalMatchesBits(raw, bits, expBits, mantBits, bias);
       var err = Math.abs(stored - want);
-      h += "<p><strong>絕對誤差</strong>：" + (zc(err) === 0 ? "0" : sci(err)) + "。";
-      if (zc(err) === 0) {
+      h += "<p><strong>絕對誤差</strong>：";
+      if (exact) {
+        h += "0。";
         h += "這個值剛好可以精確表示，因為它是 2 的次方的有限和。</p>";
+      } else if (f64 && err === 0) {
+        h += "小於 JS Number 能直接相減顯示的尺度。十進位輸入與 binary64 位元的精確有理數不相等，因此不是零；本機的 double 無法再用另一個 double 顯示這個差。</p>";
       } else {
-        h += "差這麼多，來源是<strong>尾數位元不夠</strong>，跟運算次數無關——"
+        h += sci(err) + "。差這麼多，來源是<strong>尾數位元不夠</strong>，跟運算次數無關——"
           + "這個格式一開始就存不下那個數。</p>";
       }
     } else if (sp === "normal" && !isFinite(stored) && !isNaN(stored)) {
@@ -456,8 +486,10 @@ function fp754() {
     if (sp === "normal" && isFinite(want) && want !== 0 && stored === 0) {
       h += "<p><strong>邊界</strong>：下溢成零，中間那些數在這個格式裡不存在。</p>";
     }
-    h += "<p><strong>為什麼</strong>：浮點的精度是相對的——同樣 " + int0(mantBits)
-      + " 個尾數位元，在 12 附近可分辨到 10<sup>−7</sup>，在 10<sup>7</sup> 附近就只剩個位數。</p>";
+    h += "<p><strong>為什麼</strong>：浮點的精度是相對的——" + (f64
+      ? "binary64 在 12 附近的間隔約為 10<sup>−15</sup>"
+      : "binary32 在 12 附近的間隔約為 10<sup>−6</sup>")
+      + "；數值量級越大，相鄰可表示數的絕對間隔也越大。</p>";
     put("fp754-output", h);
   };
   bind(ids, draw);
@@ -521,7 +553,6 @@ function pipe5() {
 function pipehaz() {
   if (!$("ph-n")) { return; }
   var ids = ["ph-n", "ph-dep", "ph-forward", "ph-struct"];
-  var SEQ = ["lw   x2, 0(x1)", "add  x3, x2, x4", "sub  x5, x3, x6", "and  x7, x5, x8", "or   x9, x7, x2"];
   var draw = function () {
     var N = val("ph-n"), d = Number(pick("ph-dep"));
     var fwd = chk("ph-forward"), st = chk("ph-struct");
@@ -535,7 +566,7 @@ function pipehaz() {
     } else {
       for (i = d + 1; i <= N; i += 1) { stallAt[i] += per; }
     }
-    if (st) { stallAt[Math.min(4, N)] += 1; }
+    if (st && N >= 4) { stallAt[4] += 1; }
     var stalls = 0;
     for (i = 1; i <= N; i += 1) { stalls += stallAt[i]; }
     var C = [];
@@ -550,11 +581,13 @@ function pipehaz() {
       + row(["指令", "IF", "ID", "泡", "EX", "MEM", "WB"], true);
     for (i = 1; i <= shown; i += 1) {
       var ex = i + 2 + cum(i);
-      var ifA = i + cum(i - 3), ifB = i + cum(i - 2);
-      var idA = i + 1 + cum(i - 2), idB = ex - 1 - stallAt[i];
+      var ifA = i + cum(i - 2);
+      var idA = i + 1 + cum(i - 1), idB = ex - 1;
+      var ifB = idA - 1;
       var bub = "—";
       if (stallAt[i] > 0) { bub = "<strong>" + span(ex - stallAt[i], ex - 1) + "</strong>"; }
-      h += row(["<code>" + esc(String(i) + "  " + SEQ[i - 1]) + "</code>",
+      var depText = (i > d) ? ("（依賴 I" + int0(i - d) + "）") : "（來源）";
+      h += row(["<code>I" + int0(i) + " " + depText + "</code>",
         span(ifA, ifB), span(idA, Math.max(idA, idB)), bub, int0(ex), int0(ex + 1), int0(ex + 2)]);
     }
     h += "</table>";
@@ -672,7 +705,9 @@ function branch() {
       var b2 = branchSim(pat, rep, "bit2", init);
       if (r.mis < b2.mis) {
         h += "<p><strong>靜態預測在這個樣式上贏</strong>（" + int0(r.mis) + " 對 " + int0(b2.mis)
-          + " 次誤判），因為計數器要付暖機成本：第一輪會為了把狀態推到飽和而多錯幾次。</p>";
+          + " 次誤判），" + (pat === "alt"
+            ? "因為交替樣式落在這個計數器的盲區，不是暖機成本。</p>"
+            : "因為計數器要付暖機成本：第一輪會為了把狀態推到飽和而多錯幾次。</p>");
       }
     }
     if (pen === 20) {
@@ -701,7 +736,7 @@ function ooo() {
     var rename = chk("oo-rename"), spec = chk("oo-spec");
     var phys = val("oo-phys"), arch = val("oo-arch");
     var space = phys - arch;
-    if (space <= 0) {
+    if (rename && space <= 0) {
       put("ooo-output", "<p><strong>沒有任何重新命名空間，機器完全停住。</strong>"
         + "實體暫存器 " + int0(phys) + " 減架構暫存器 " + int0(arch) + " ＝ " + int0(space)
         + "，在飛的指令沒有地方放結果，視窗一條都填不進去。</p>"
@@ -712,7 +747,7 @@ function ooo() {
     var ilp = ilp0;
     if (!rename) { ilp = Math.min(ilp, 1.5); }
     if (!spec) { ilp = Math.min(ilp, 1.8); }
-    var eff = Math.min(win, space);
+    var eff = rename ? Math.min(win, space) : win;
     var wl = eff / lat;
     var ipc = Math.min(w, Math.min(ilp, wl));
     var cpi = 1 / ipc;
@@ -722,7 +757,7 @@ function ooo() {
     var rest = [];
     for (i = 0; i < cand.length; i += 1) { if (cand[i].k !== bn.k) { rest.push(cand[i].v); } }
     var next = Math.min(rest[0], rest[1]);
-    var h = "<table><caption>四個限制放在同一個天平上</caption>" + row(["量", "結果"], true)
+    var h = "<table><caption>三個上限放在同一個天平上（命名空間先折進視窗）</caption>" + row(["量", "結果"], true)
       + row(["可取平行度", num6(ilp)])
       + row(["重新命名空間（實體 − 架構）", int0(space) + " 個"])
       + row(["有效視窗 min(視窗, 命名空間)", int0(eff)])
@@ -752,7 +787,7 @@ function ooo() {
     if (lat === 64) {
       h += "<p><strong>邊界</strong>：平均停留 64 拍是記憶體密集程式的量級，這時視窗才是真正的限制。</p>";
     }
-    h += "<p><strong>為什麼</strong>：四個限制取最小值，所以只改非瓶頸的那一項不會有任何改變。</p>";
+    h += "<p><strong>為什麼</strong>：命名空間先限制有效視窗，再由發射寬度、程式 ILP 與視窗上限取最小值；只改非瓶頸項不會改變 IPC。</p>";
     put("ooo-output", h);
   };
   bind(ids, draw);
@@ -771,7 +806,7 @@ function amdahl() {
     var iters = Math.ceil(N / W);
     var simd = N / iters;
     var effi = simd / W * 100;
-    var tail = N - (iters - 1) * W;
+    var tail = N % W;
     var sEff = (level === "dlp") ? simd : s;
     var denomS = (1 - p) + p / sEff + ov / 100;
     var S = 1 / denomS;
@@ -788,7 +823,7 @@ function amdahl() {
       + row(["向量迴圈次數 ⌈N / W⌉", int0(iters) + " 次"])
       + row(["SIMD 有效加速 N / ⌈N / W⌉", num6(simd) + " 倍"])
       + row(["通道使用效率", num6(effi) + " %"])
-      + row(["尾數元素", int0(tail) + " 筆"])
+      + row(["尾數（不滿的那一批）", int0(tail) + " 筆"])
       + row(["這一段實際用的 s", num6(sEff) + " 倍"])
       + row(["Amdahl 總加速 S", num6(S) + " 倍"])
       + "</table>";
@@ -900,7 +935,7 @@ function cache() {
       var b = Math.floor(seq[i].addr / line);
       if (!blkset[b]) { blkset[b] = 1; comp += 1; }
     }
-    var fullR = cacheSim(seq, size, line, Math.floor(size / line), repl, write);
+    var fullR = cacheSim(seq, size, line, Math.floor(size / line), "lru", write);
     var fullMiss = fullR.invalid ? r.miss : fullR.miss;
     var capacity = fullMiss - comp;
     var conflictRaw = r.miss - fullMiss;
@@ -988,6 +1023,12 @@ function mesi() {
       put("mesi-output", h);
       return;
     }
+    if (sq === "pingpong" && !falseShare) {
+      h += "<p>兩個變數已落在不同快取行，原本的八步 ping-pong 轉移不再適用，因此不列那張表。兩核心各自在自己的行上維持 M，穩態每輪 4 次存取共 <strong>4 拍</strong>。</p>";
+      h += "<p><strong>為什麼</strong>：一致性以快取行為單位；距離達到行大小後，兩個寫入不再讓對方的行失效。</p>";
+      put("mesi-output", h);
+      return;
+    }
     h += "<table><caption>MESI 狀態轉移（到第 " + int0(step) + " 步）</caption>"
       + row(["步", "動作", "匯流排交易", "P0 狀態", "P1 狀態", "成本"], true);
     for (i = 0; i < step && i < 8; i += 1) {
@@ -1006,7 +1047,7 @@ function mesi() {
       h += "<p><strong>這是偽共享</strong>：兩個核心寫的是不同變數（距離 " + int0(offset)
         + " 位元組），但硬體以整行 " + int0(lineSz) + " 位元組為單位，無法分辨，於是兩邊互相失效。</p>";
     }
-    if (!falseShare) {
+    if (!falseShare && (sq === "pingpong" || sq === "private")) {
       h += "<p>兩個變數落在<strong>不同行</strong>（距離 " + int0(offset) + " ≥ 行大小 "
         + int0(lineSz) + "），各自維持 M，穩態回到 4 拍——加一點填充就解決了。</p>";
     }
@@ -1070,7 +1111,7 @@ function tlbcost() {
     if (missAmort > bnVal) { bnName = "TLB 失誤"; bnVal = missAmort; }
     if (pfAmort > bnVal) { bnName = "頁缺失"; bnVal = pfAmort; }
     h += "<p><strong>瓶頸</strong>：" + bnName + "（" + num6(bnVal) + " 拍）。</p>";
-    if (pfAmort > trans / 2) {
+    if (pfAmort > tot / 2) {
       h += "<p><strong>頁缺失已經主導</strong>，這時候調 TLB 或快取都沒用——"
         + "唯一的答案是不要缺頁：縮小工作集或加記憶體。</p>";
     }
@@ -1078,9 +1119,10 @@ function tlbcost() {
       h += "<p>TLB 全中時轉譯只剩查詢成本，這是最好的情況。"
         + "對照組：假想完全沒有 TLB（每次都走頁表）＝ " + num6(walk + pfAmort + data) + " 拍。</p>";
     } else {
+      var noTlbRatio = (walk + pfAmort + data) / tot;
       h += "<p>對照組：假想<strong>完全沒有 TLB</strong>（每次存取都走頁表）＝ "
-        + num6(walk + pfAmort + data) + " 拍，是現在的 " + num6((walk + pfAmort + data) / tot)
-        + " 倍——TLB 是整個虛擬記憶體能被接受的唯一原因。</p>";
+        + num6(walk + pfAmort + data) + " 拍，是現在的 " + num6(noTlbRatio) + " 倍——"
+        + (noTlbRatio >= 2 ? "TLB 在這個設定下大幅降低轉譯成本。" : "目前瓶頸在其他項，TLB 帶來的倍率不到 2。") + "</p>";
     }
     if (pfrate === 0) {
       h += "<p><strong>邊界</strong>：頁缺失率 0 是理想化假設，真實系統至少有冷啟動的強制缺頁。</p>";
@@ -1089,7 +1131,7 @@ function tlbcost() {
       h += "<p><strong>邊界</strong>：這已經是顛簸的量級，唯一的解法是縮小工作集或加記憶體。</p>";
     }
     h += "<p><strong>為什麼</strong>：把時間換算成拍數才比得動——50 µs 在 2 GHz 下是十萬拍，"
-      + "等於一萬條指令的機會成本。</p>";
+      + "依處理器的 CPI 或 IPC 而定，約是數萬到數十萬條指令的機會成本。</p>";
     put("tlbcost-output", h);
   };
   bind(ids, draw);
@@ -1151,8 +1193,8 @@ function iomode() {
     if (bytes === 4096 && rate === 100000) {
       h += "<p><strong>邊界</strong>：程式化搬移已經吃掉大半個 CPU，這是 DMA 存在的理由。</p>";
     }
-    h += "<p><strong>為什麼</strong>：輪詢的成本看的是查詢頻率，中斷看的是事件率，"
-      + "DMA 兩者都不看——所以答案會隨事件率翻轉，沒有哪一種永遠比較好。</p>";
+    h += "<p><strong>為什麼</strong>：輪詢的固定查詢開銷看輪詢頻率，中斷與 DMA 的固定開銷看事件率；"
+      + "搬移成本則只有輪詢與中斷要由 CPU 付。因此答案會隨事件率與資料量翻轉，沒有哪一種永遠比較好。</p>";
     put("iomode-output", h);
   };
   bind(ids, draw);
@@ -1202,13 +1244,18 @@ function buspick() {
     }
     h += "</table>";
     if (!okRate || !okNodes || !okLen) {
-      var alt = "CAN 2.0B 500 kbit/s";
-      if (!okRate) { alt = (need > 500) ? "PCIe 4.0 ×4" : "USB 3.2 Gen 1"; }
-      else if (!okNodes) { alt = "I²C 400 kHz 或 CAN 2.0B"; }
-      else if (!okLen) { alt = (len > 15) ? "CAN 2.0B（40 m）" : "UART 115200（15 m）"; }
+      var alternatives = [];
+      for (i = 0; i < BUS_ORDER.length; i += 1) {
+        k = BUS_ORDER[i];
+        if (effRate(k) >= need * 1e6 && nodes <= BUS[k].nodes && len <= BUS[k].dist) {
+          alternatives.push(BUS[k].name);
+        }
+      }
       h += "<p><strong>這個組合不通過</strong>："
         + (!okRate ? "速率不足；" : "") + (!okNodes ? "裝置數超過；" : "")
-        + (!okLen ? "距離超過；" : "") + "可以改看 <strong>" + alt + "</strong>。</p>";
+        + (!okLen ? "距離超過；" : "")
+        + (alternatives.length ? ("可以改看 <strong>" + alternatives.join("、") + "</strong>。")
+                               : "<strong>六個家族裡沒有單一介面同時滿足三項條件</strong>。") + "</p>";
     }
     if (fam === "spi") {
       h += "<p>SPI 的線數會<strong>隨從機數增加</strong>：每個從機要一條獨立的晶片選擇線，"
@@ -1285,7 +1332,7 @@ function chippick() {
         for (i = 0; i < ok.length; i += 1) {
           if (ok[i] !== best && (!second || ok[i].tc < second.tc)) { second = ok[i]; }
         }
-        h += "<p>有 " + int0(ok.length) + " 個家族都可行，<strong>兩者都滿足需求時比的是總成本</strong>："
+        h += "<p>有 " + int0(ok.length) + " 個家族都可行，<strong>都滿足需求時比的是總成本</strong>："
           + best.name + " 比 " + second.name + " 便宜 " + int0(second.tc - best.tc) + " 美元。</p>";
       }
       var bestEE = ok[0];
@@ -1302,8 +1349,8 @@ function chippick() {
         + ((lat < 10 && !near.det) ? "，而且它沒有確定性延遲" : "") + "。</p>";
     }
     if (lat < 10) {
-      h += "<p>這個延遲要求<strong>排除了 CPU、GPU 與 NPU</strong>，它們沒有確定性延遲："
-        + "有作業系統排程與批次處理，最壞情況沒有上界。只有 MCU、DSP、FPGA 給得起硬即時。</p>";
+      h += "<p>在本課的「通用作業系統與批次處理」模型下，這個延遲要求<strong>排除了 CPU、GPU 與 NPU</strong>；"
+        + "專用即時 CPU 核搭配 RTOS、鎖定快取與可分析路徑也能做硬即時，只是不在這張簡化表內。</p>";
     }
     for (i = 0; i < rows.length; i += 1) {
       if (rows[i].n >= 10) {
@@ -1369,11 +1416,11 @@ var QUIZ_CH = {
 var QUIZ = [
   { id: "q00-1", t: "num", ans: 75, tol: 0.5,
     why: "IC × CPI × T_c ＝ 100 × 10⁶ × 1.5 × 0.5 ns ＝ 75.000000 ms。",
-    err: "常見錯因：忘了把 T_c 從 GHz 換成 ns。" },
+    err: "常見錯因：忘了把 2.0 GHz 換成 T_c ＝ 0.5 ns。" },
   { id: "q00-2", t: "num", ans: 1333.333333, tol: 1,
     why: "MIPS ＝ f / (CPI × 10⁶) ＝ 2 × 10⁹ / 1.5 / 10⁶ ＝ 1333.333333。",
     err: "常見錯因：把 IC 也乘進去了——MIPS 這個指標裡沒有指令數這一項。" },
-  { id: "q00-3", t: "sel", ans: "a",
+  { id: "q00-3", t: "sel", ans: "b",
     why: "時間與時脈成反比，加 20 % 只等於乘 1 / 1.2 ≈ 0.833333，而 CPI 減 20 % 是乘 0.8。",
     err: "常見錯因：把「加 20 %」與「減 20 %」當成對稱。" },
   { id: "q01-1", t: "num", ans: 1060, tol: 0.5,
@@ -1382,16 +1429,16 @@ var QUIZ = [
   { id: "q01-2", t: "num", ans: 3, tol: 0.05,
     why: "碼密度比 ＝ RISC 位元組 / CISC 位元組 ＝ 12 / 4 ＝ 3.000000。",
     err: "常見錯因：把比值倒過來。" },
-  { id: "q01-3", t: "sel", ans: "a",
+  { id: "q01-3", t: "sel", ans: "c",
     why: "外面是 CISC 編碼、裡面解碼成類 RISC 的 micro-op，兩件事是不同層次的敘述，同時成立。",
     err: "常見錯因：以為兩種說法互相反駁。" },
-  { id: "q02-1", t: "sel", ans: "a",
+  { id: "q02-1", t: "sel", ans: "d",
     why: "12.375 ＝ 1.100011 × 2³，指數欄位 3 ＋ 127 ＝ 130 ＝ 1000 0010，合起來是 0x41460000。",
     err: "常見錯因：指數欄位忘了加偏移量 127。" },
   { id: "q02-2", t: "num", ans: 3, tol: 0.5,
     why: "指數欄位 130 減偏移量 127 ＝ 3。",
     err: "常見錯因：直接填了指數欄位的 130。" },
-  { id: "q02-3", t: "sel", ans: "a",
+  { id: "q02-3", t: "sel", ans: "c",
     why: "0.1 在二進位是無限循環小數，截到 24 個有效位元一定有殘差，存進去變成 0.100000001490116…。",
     err: "常見錯因：以為誤差是運算造成的——這個格式一開始就存不下那個數。" },
   { id: "q03-1", t: "num", ans: 228.8, tol: 0.05,
@@ -1400,7 +1447,7 @@ var QUIZ = [
   { id: "q03-2", t: "num", ans: 4.458042, tol: 0.005,
     why: "1020 / 228.8 ＝ 4.458042 倍，追不上級數 5，因為 t_latch 不會被切分。",
     err: "常見錯因：直接用級數 5 當答案。" },
-  { id: "q03-3", t: "sel", ans: "a",
+  { id: "q03-3", t: "sel", ans: "b",
     why: "管線沒有縮短單條指令的延遲，反而多付了每級暫存器的負擔：k × T_p ＞ T_1。",
     err: "常見錯因：把吞吐量與延遲混為一談。" },
   { id: "q04-1", t: "num", ans: 10, tol: 0.5,
@@ -1409,7 +1456,7 @@ var QUIZ = [
   { id: "q04-2", t: "num", ans: 17, tol: 0.5,
     why: "沒有旁路時每一對相依要插 3 − 1 ＝ 2 拍，4 對共 8 拍，5 ＋ 4 ＋ 8 ＝ 17 拍。",
     err: "常見錯因：每對只算 1 拍泡而不是 2 拍。" },
-  { id: "q04-3", t: "sel", ans: "a",
+  { id: "q04-3", t: "sel", ans: "c",
     why: "載入的資料要到 MEM 結束才拿得到，比下一條的 EX 需要的時間晚一拍，旁路只能接到再下一拍。",
     err: "常見錯因：以為旁路能把時間往前搬——它只是改走一條比較短的線。" },
   { id: "q05-1", t: "num", ans: 5, tol: 0.5,
@@ -1418,16 +1465,16 @@ var QUIZ = [
   { id: "q05-2", t: "num", ans: 8, tol: 0.5,
     why: "1 位元預測器在每輪的 N 錯一次、下一輪第一個 T 又錯一次，4 輪共 8 次。",
     err: "常見錯因：只算了每輪最後那個不跳。" },
-  { id: "q05-3", t: "sel", ans: "a",
-    why: "1 位元預測器永遠猜上一次的結果，而 T N 交替時每一次都跟上一次相反，所以全錯。",
-    err: "常見錯因：以為換初始值就能救——換了只是把錯的位置整批平移。" },
+  { id: "q05-3", t: "sel", ans: "d",
+    why: "初始猜不跳時，第一個 T 猜錯；之後 1 位元預測器永遠猜上一次的結果，而 T N 交替時每一次都跟上一次相反，所以 8 次全錯。",
+    err: "常見錯因：忽略題目的初始狀態；若初始猜跳，第一個 T 會猜對，結果是錯 7 / 8。" },
   { id: "q06-1", t: "num", ans: 2.5, tol: 0.05,
     why: "IPC ＝ min(發射寬度 4, 可取 ILP 2.5, 視窗上限 64 / 16 ＝ 4) ＝ 2.500000，瓶頸是程式本身。",
     err: "常見錯因：直接填發射寬度 4。" },
   { id: "q06-2", t: "num", ans: 1.5, tol: 0.05,
     why: "沒有重新命名時假相依把可取平行度壓到 1.5，IPC 也跟著變成 1.500000。",
     err: "常見錯因：以為重新命名不影響——WAR 與 WAW 會回來。" },
-  { id: "q06-3", t: "sel", ans: "a",
+  { id: "q06-3", t: "sel", ans: "c",
     why: "WAR 與 WAW 只是兩條指令剛好用了同一個名字，換個實體暫存器就沒了。",
     err: "常見錯因：以為它能消掉所有相依——RAW 真相依換不掉。" },
   { id: "q07-1", t: "num", ans: 3.333333, tol: 0.005,
@@ -1445,7 +1492,7 @@ var QUIZ = [
   { id: "q08-2", t: "num", ans: 87.5, tol: 0.5,
     why: "二路組相聯讓兩個區塊各佔一路，只剩兩次強制失誤，命中 14 / 16 ＝ 87.500000 %。",
     err: "常見錯因：忘了兩次強制失誤——第一次碰到的區塊一定不在快取裡。" },
-  { id: "q08-3", t: "sel", ans: "a",
+  { id: "q08-3", t: "sel", ans: "b",
     why: "同容量全相聯只失誤 2 次，所以 16 − 2 ＝ 14 次是衝突失誤，換成組相聯就能消掉。",
     err: "常見錯因：把「容量不夠」當成唯一解釋。" },
   { id: "q09-1", t: "num", ans: 100, tol: 0.5,
@@ -1454,7 +1501,7 @@ var QUIZ = [
   { id: "q09-2", t: "num", ans: 4, tol: 0.5,
     why: "各自維持 M 狀態，四次都是本地命中，每次 1 拍，共 4 拍——差 25.000000 倍。",
     err: "常見錯因：以為多核一定要付一致性成本。" },
-  { id: "q09-3", t: "sel", ans: "a",
+  { id: "q09-3", t: "sel", ans: "d",
     why: "E 讓「讀了之後接著寫」這個最常見的樣式省下一次 BusUpgr 廣播。",
     err: "常見錯因：把 E 跟 S 當成同一件事——S 表示可能有別人持有。" },
   { id: "q10-1", t: "num", ans: 2.1, tol: 0.02,
@@ -1463,7 +1510,7 @@ var QUIZ = [
   { id: "q10-2", t: "num", ans: 6.1, tol: 0.02,
     why: "轉譯 2.1 ＋ 資料 (1 ＋ 0.05 × 60 ＝ 4.0) ＝ 6.100000 拍。",
     err: "常見錯因：把兩項相乘而不是相加。" },
-  { id: "q10-3", t: "sel", ans: "a",
+  { id: "q10-3", t: "sel", ans: "b",
     why: "一次頁缺失是十萬拍，攤下來仍佔總成本 1.639344 %，率再高一百倍就完全主導。",
     err: "常見錯因：只看機率不看懲罰量級。" },
   { id: "q11-1", t: "num", ans: 0.06, tol: 0.005,
@@ -1472,8 +1519,8 @@ var QUIZ = [
   { id: "q11-2", t: "num", ans: 0.1424, tol: 0.005,
     why: "中斷 ＝ 1000 × (800 ＋ 512 × 4) ＝ 2848000 拍/秒，除以 2 × 10⁹ ＝ 0.142400 %。",
     err: "常見錯因：忘了每位元組 4 拍的搬移成本。" },
-  { id: "q11-3", t: "sel", ans: "a",
-    why: "輪詢的成本只看輪詢頻率不看事件率，事件率低時大部分查詢都白查。",
+  { id: "q11-3", t: "sel", ans: "b",
+    why: "輪詢的固定查詢成本照輪詢頻率支付；事件率低時大部分查詢都白做，而中斷的固定成本只在事件發生時支付。",
     err: "常見錯因：以為輪詢一定比較省——它在高事件率下才划算。" },
   { id: "q12-1", t: "num", ans: 8.32, tol: 0.05,
     why: "有效位元組率 ＝ 64 × 10⁹ × 128/130 / 8 ＝ 7876.923077 MB/s，65536 / 該值 ＝ 8.320000 µs。",
@@ -1482,7 +1529,7 @@ var QUIZ = [
     why: "8N1 每個位元組要 10 個位元，有效位元組率 ＝ 115200 × 0.8 / 8 ＝ 11520 位元組/秒，"
       + "65536 / 11520 ＝ 5.688889 秒。",
     err: "常見錯因：用 8 個位元而不是 10 個位元算一個位元組。" },
-  { id: "q12-3", t: "sel", ans: "a",
+  { id: "q12-3", t: "sel", ans: "c",
     why: "一個標準訊框要 111 個位元才送 64 位元資料，仲裁、CRC 與確認都吃頻寬，效率只有 57.657658 %。",
     err: "常見錯因：把原始位元率當成資料率。" },
   { id: "q13-1", t: "num", ans: 2, tol: 0.5,
@@ -1491,7 +1538,7 @@ var QUIZ = [
   { id: "q13-2", t: "num", ans: 4, tol: 0.05,
     why: "2 顆 × 2 W ＝ 4.000000 W，剛好在 5 W 的預算內。",
     err: "常見錯因：只算一顆的功耗。" },
-  { id: "q13-3", t: "sel", ans: "a",
+  { id: "q13-3", t: "sel", ans: "b",
     why: "兩者都滿足需求時比的是總成本，NPU 單價高、產量 10000 顆時總價貴 100000 美元。",
     err: "常見錯因：把能效當成唯一指標。" }
 ];

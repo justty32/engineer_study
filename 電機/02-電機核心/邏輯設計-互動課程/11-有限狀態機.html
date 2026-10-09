@@ -45,7 +45,7 @@
 <tr><th>Moore 消化前的狀態</th><td>S0</td><td>S1</td><td>S2</td><td>S3</td><td><strong>S4</strong></td><td>S2</td><td>S3</td><td><strong>S4</strong></td><td>S0</td><td>S1</td><td>S2</td><td>S3</td></tr>
 <tr><th>Moore 輸出</th><td>0</td><td>0</td><td>0</td><td>0</td><td><strong>1</strong></td><td>0</td><td>0</td><td><strong>1</strong></td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
 </tbody></table>
-<p><strong>輸出定義。</strong>Mealy 的第 n 拍輸出 = f(消化第 n 個輸入<strong>前</strong>的狀態, 第 n 個輸入)；Moore 的第 n 拍輸出 = f(消化第 n 個輸入<strong>前</strong>的狀態)。所以 Mealy 在第 3 拍就宣告偵測到，Moore 要到第 4 拍進了 S4 才宣告。第三次偵測（輸入第 8 到 11 位的 1101）的 Moore 輸出落在第 12 拍，超出這 12 格的窗，所以表上只看得到兩次。第 3 拍與第 6 拍相距 3 拍，代表這兩次共用了中間那個 1，這就是允許重疊。</p>
+<p><strong>輸出定義。</strong>Mealy 的第 n 拍輸出 = f(消化第 n 個輸入<strong>前</strong>的狀態, 第 n 個輸入)；Moore 的第 n 拍輸出 = f(消化第 n 個輸入<strong>前</strong>的狀態)。所以 Mealy 在第 3 拍就宣告偵測到，Moore 要到第 4 拍進了 S4 才宣告。第三次偵測（輸入第 8 到 11 位的 1101）的 Moore 輸出落在第 12 拍，超出這 12 格的窗，所以表上只看得到兩次。第 3 拍與第 6 拍的兩次偵測共用第 3 拍那個 1（前一次結尾也是後一次開頭），這就是允許重疊。</p>
 <table><thead><tr><th>項目</th><th>Mealy</th><th>Moore</th></tr></thead><tbody>
 <tr><td>狀態數</td><td><strong>4</strong></td><td><strong>5</strong></td></tr>
 <tr><td>二進位編碼的正反器數</td><td>⌈log<sub>2</sub>4⌉ = <strong>2</strong></td><td>⌈log<sub>2</sub>5⌉ = <strong>3</strong></td></tr>
@@ -64,7 +64,8 @@
 <tr><th>輸入值</th><td><label for="fs-b0"><input id="fs-b0" type="checkbox" checked>第 0 拍</label></td><td><label for="fs-b1"><input id="fs-b1" type="checkbox" checked>第 1 拍</label></td><td><label for="fs-b2"><input id="fs-b2" type="checkbox">第 2 拍</label></td><td><label for="fs-b3"><input id="fs-b3" type="checkbox" checked>第 3 拍</label></td><td><label for="fs-b4"><input id="fs-b4" type="checkbox" checked>第 4 拍</label></td><td><label for="fs-b5"><input id="fs-b5" type="checkbox">第 5 拍</label></td><td><label for="fs-b6"><input id="fs-b6" type="checkbox" checked>第 6 拍</label></td><td><label for="fs-b7"><input id="fs-b7" type="checkbox">第 7 拍</label></td><td><label for="fs-b8"><input id="fs-b8" type="checkbox" checked>第 8 拍</label></td><td><label for="fs-b9"><input id="fs-b9" type="checkbox" checked>第 9 拍</label></td><td><label for="fs-b10"><input id="fs-b10" type="checkbox">第 10 拍</label></td><td><label for="fs-b11"><input id="fs-b11" type="checkbox" checked>第 11 拍</label></td></tr>
 </tbody></table>
 </div>
-<div id="fsm-output" class="output" aria-live="polite">輸入那 12 格永遠都在用；機器選項只決定下面的詳細狀態表，編碼選項只影響正反器數量的那三行。輸入 ＝ 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1。<strong>Mealy 輸出 ＝ 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1</strong>；<strong>Moore 輸出 ＝ 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0</strong>。詳細狀態表（Mealy）：消化前的狀態依序 T0, T1, T2, T3, T1, T2, T3, T1, T0, T1, T2, T3。狀態數 4，二進位編碼要 2 顆正反器，未使用狀態 0 個，這 12 拍共偵測 3 次。<strong>第 3 拍：剛好對上 1101。Mealy 在這一拍就宣告，Moore 要下一拍才宣告——因為 Moore 的輸出是狀態的函數，得等邊緣把狀態推進去。</strong>第 3 拍與第 6 拍相距 3 拍，這兩次共用了中間那個 1，這就是允許重疊。狀態的意義就是「已經對上了規格的哪一段前綴」，想清楚這句話，狀態表就自己寫出來了。邊界提醒：12 拍全不勾會一直停在 T0，偵測 0 次；12 拍全勾則連續的 1 停在 T2 不動，同樣偵測 0 次；切成 one-hot 會看到正反器數變多、未使用狀態暴增。</div>
+<p id="fsm-summary" aria-live="polite">Mealy 偵測 3 次，Moore 在 12 拍窗內偵測 2 次。</p>
+<div id="fsm-output" class="output">輸入那 12 格永遠都在用；機器選項只決定下面的詳細狀態表，編碼選項只影響正反器數量的那三行。輸入 ＝ 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1。<strong>Mealy 輸出 ＝ 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1</strong>；<strong>Moore 輸出 ＝ 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0</strong>。詳細狀態表（Mealy）：消化前的狀態依序 T0, T1, T2, T3, T1, T2, T3, T1, T0, T1, T2, T3。狀態數 4，二進位編碼要 2 顆正反器，未使用狀態 0 個，這 12 拍共偵測 3 次。<strong>第 3 拍：剛好對上 1101。Mealy 在這一拍就宣告，Moore 要下一拍才宣告——因為 Moore 的輸出是狀態的函數，得等邊緣把狀態推進去。</strong>第 3 拍與第 6 拍相距 3 拍，這兩次共用了中間那個 1，這就是允許重疊。狀態的意義就是「已經對上了規格的哪一段前綴」，想清楚這句話，狀態表就自己寫出來了。邊界提醒：12 拍全不勾會一直停在 T0，偵測 0 次；12 拍全勾則連續的 1 停在 T2 不動，同樣偵測 0 次；切成 one-hot 會看到正反器數變多、未使用狀態暴增。</div>
 </section>
 
 <h2>不要混淆</h2>

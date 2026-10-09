@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 暫存器計數器與記憶體｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>12 暫存器、計數器與記憶體｜邏輯設計</title><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script></head><body>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
 <nav class="topbar" aria-label="主要導覽"><a href="index.html">課程地圖</a><a href="00-數位世界觀.html">00 起點</a><a href="名詞與概念字典.html">字典</a><a href="自我檢核.html">自我檢核</a></nav>
 <main>
@@ -22,7 +22,7 @@
 <p><strong>（b）漣波計數器的延遲為什麼會累積。</strong>計數器（counter）是 T 正反器串起來的特化狀態機。非同步（漣波）計數器把後一級的時脈接到前一級的 Q：第 1 級翻轉完成、輸出真的變了，第 2 級才看到自己的時脈邊緣，所以 n 級最壞延遲是 n × t<sub>ff</sub>。同步計數器讓所有正反器共用時脈同時翻轉，延遲不隨位元數成長，代價是多一組進位邏輯。本課取 t<sub>ff</sub> ＝ t<sub>cq</sub> ＝ 0.40 ns，並假設每級延遲相同——真實元件會隨溫度與製程變動。</p>
 <p><strong>（c）位址解碼為什麼要拆成列與行。</strong>16 條位址線對 65536 個字，單層解碼要 65536 個 16 輸入 AND 閘。改成 8 條做 8 對 256 的列解碼、另外 8 條做 8 對 256 的行解碼，只要 512 個 8 輸入 AND 閘。指數 2<sup>n</sup> 變成兩個平方根的和 2 × 2<sup>n/2</sup>，這就是大型記憶體都長成方陣的原因。挑中的字元線把整列讀到位元線（bit line）上，微弱的電壓差再由感測放大器（sense amplifier）放大成 0 或 1。</p>
 <p><strong>（d）DRAM 為什麼一定要更新。</strong>DRAM 把位元存成電容上的電荷，電荷會經由漏電流流失。典型規格是 64 ms 內必須把每一列讀出來再寫回去，這個動作叫更新（refresh）。整片切成 256 列，64 ms 平均分下去就是每 250 µs 刷一列。更新期間該列不能給正常存取用，這是 DRAM 頻寬天生要繳的稅。</p>
-<p><strong>（e）密度差從哪裡來。</strong>SRAM 用 6 顆電晶體的交叉耦合結構（6T），電源不斷就自己撐住，快、不需更新，但面積大。DRAM 是 1 顆電晶體加 1 顆電容（1T1C），同樣面積約可放進 SRAM 的 4 到 8 倍位元。再往下是非揮發的一族：ROM、PROM、EPROM、EEPROM 與 Flash，斷電資料還在，代價是寫入慢且次數有限。另有內容定址記憶體（content-addressable memory, CAM），給的不是位址而是內容，一個週期內比對整片，代價是每個位元多一組比較電路、面積至少是 SRAM 的兩倍。大型記憶體還會加上錯誤更正碼（error-correcting code, ECC）。</p>
+<p><strong>（e）密度差從哪裡來。</strong>SRAM 用 6 顆電晶體的交叉耦合結構（6T），電源不斷就自己撐住，快、不需更新，但面積大。DRAM 是 1 顆電晶體加 1 顆電容（1T1C），同樣面積約可放進 SRAM 的 4 到 8 倍位元。再往下是非揮發的一族：ROM、PROM、EPROM、EEPROM 與 Flash，斷電資料還在，代價是寫入慢且次數有限。另有內容定址記憶體（content-addressable memory, CAM），給的不是位址而是內容，一個週期內比對整片，代價是每個位元多一組比較電路；常見 NOR 型 CAM 約為 9–10T，面積約是 SRAM 的 1.5–2 倍以上。大型記憶體還會加上錯誤更正碼（error-correcting code, ECC）。</p>
 
 <h2>數值實例：四位元移位八拍、模 10 計數器、64 KiB SRAM</h2>
 <p>移位暫存器取 4 位元、初始內容 <code>0000</code>，串列輸入八拍是 1, 0, 1, 1, 0, 0, 1, 0。每拍新位元從 Q<sub>3</sub> 進來，其餘往右挪一格。</p>
@@ -36,19 +36,19 @@
 <tr><td>6</td><td>1</td><td><strong><code>1001</code></strong></td><td>9</td></tr>
 <tr><td>7</td><td>0</td><td><strong><code>0100</code></strong></td><td>4</td></tr>
 </tbody></table>
-<p><strong>第 3 拍的內容剛好是 <code>1101</code>——正是<a href="11-有限狀態機.html">第 11 章</a>那台狀態機在找的樣式。</strong>序列偵測器因此可以用「移位暫存器 ＋ 一個 4 輸入 AND 閘」實作：多花 4 個正反器，換到不必寫狀態表。</p>
+<p><strong>第 3 拍的內容是 Q<sub>3</sub>Q<sub>2</sub>Q<sub>1</sub>Q<sub>0</sub> = <code>1101</code>，但按時間由舊到新要從 Q<sub>0</sub> 讀回 Q<sub>3</sub>，所以實際輸入前綴是 <code>1011</code>，不是<a href="11-有限狀態機.html">第 11 章</a>要找的 <code>1101</code>。</strong>若要用這個移位方向偵測時間序列 <code>1101</code>，應在 Q<sub>0</sub>Q<sub>1</sub>Q<sub>2</sub>Q<sub>3</sub> = <code>1101</code> 時輸出 1，即接 Q<sub>0</sub> · Q<sub>1</sub> · ¬Q<sub>2</sub> · Q<sub>3</sub>。這種作法用 4 個正反器，比 Mealy 二進位編碼多 2 個，另需反相器與 AND 邏輯。</p>
 <table><thead><tr><th>項目</th><th>結果</th></tr></thead><tbody>
 <tr><td>模 10 計數器的正反器數</td><td>⌈log<sub>2</sub>10⌉ ＝ <strong>4</strong></td></tr>
 <tr><td>未使用狀態</td><td>2<sup>4</sup> − 10 ＝ <strong>6 個</strong>（10、11、12、13、14、15）</td></tr>
-<tr><td>漣波計數器最壞延遲</td><td>4 × 0.40 ＝ <strong>1.600000 ns</strong>（<strong>625.000000 MHz</strong>）</td></tr>
+<tr><td>漣波計數器輸出全部穩定時間</td><td>4 × 0.40 ＝ <strong>1.600000 ns</strong>；若要同步解碼，時脈週期不得短於此值</td></tr>
 <tr><td>同步計數器</td><td>所有正反器同時翻轉，<strong>延遲不隨位元數成長</strong></td></tr>
 <tr><td>SRAM 容量（16 位址線、8 位元字寬）</td><td>2<sup>16</sup> × 8 ＝ <strong>524288 位元 ＝ 65536 位元組 ＝ 64 KiB</strong></td></tr>
 <tr><td>SRAM 電晶體數</td><td>524288 × 6 ＝ <strong>3145728 顆</strong></td></tr>
 <tr><td>位址解碼</td><td>拆成 <strong>8 對 256 列解碼 ＋ 8 對 256 行解碼</strong></td></tr>
 <tr><td>換成 DRAM</td><td>524288 顆電晶體 ＋ 524288 顆電容；256 列、64 ms 內全刷完 → 每 <strong>250 µs</strong> 刷一列</td></tr>
 </tbody></table>
-<p>模 N 計數器要 ⌈log<sub>2</sub>N⌉ 個正反器，留下 2<sup>位元數</sup> − N 個未使用狀態；那 6 個狀態上電時可能被撞進去，安全的計數器必須讓它們都能走回 0。量級對照：64 KiB 的 SRAM 就要 3145728 顆電晶體，DRAM 的更新週期只有 64 ms，這說明了為什麼快取只有幾 MB、主記憶體卻能有幾 GB。</p>
-<p>邊界對照：<strong>模 16</strong> → 4 個正反器、<strong>0 個未使用狀態</strong>，剛好用滿是最省的模數，這正是二進位計數器最常見的原因。<strong>模 2</strong> → 1 個正反器，漣波延遲 0.400000 ns（2500.000000 MHz）。<strong>位址線 24、字寬 64</strong> → 2<sup>24</sup> × 64 ＝ 1073741824 位元 ＝ <strong>134217728 位元組 ＝ 128 MiB</strong>，若用 SRAM 需要 6442450944 顆電晶體——<strong>這就是為什麼主記憶體一定是 DRAM</strong>。</p>
+<p>模 N 計數器要 ⌈log<sub>2</sub>N⌉ 個正反器，留下 2<sup>位元數</sup> − N 個未使用狀態；那 6 個狀態上電時可能被撞進去，安全的計數器必須讓它們都能走回 0。量級對照：64 KiB 的 SRAM 要 3145728 顆電晶體；DRAM 用 1T1C 位元胞取得更高密度，而這個 6T 與 1T1C 的面積差才是快取容量小、主記憶體容量大的根本原因。</p>
+<p>邊界對照：<strong>模 16</strong> → 4 個正反器、<strong>0 個未使用狀態</strong>，剛好用滿是最省的模數，這正是二進位計數器最常見的原因。<strong>模 2</strong> → 1 個正反器，輸出穩定時間 0.400000 ns。<strong>位址線 24、字寬 64</strong> → 2<sup>24</sup> × 64 ＝ 1073741824 位元 ＝ <strong>134217728 位元組 ＝ 128 MiB</strong>，若用 SRAM 需要 6442450944 顆電晶體——<strong>這就是為什麼主記憶體一定是 DRAM</strong>。</p>
 
 <section class="workspace"><h2>自由實驗：一排、一串、一大片</h2>
 <p>同一個實驗有三個模式。移位暫存器模式讓你決定八拍的串列輸入，看四個位元怎麼一拍挪一格；計數器模式讓你拉模數，看要幾個正反器、剩幾個未使用狀態；記憶體模式讓你拉位址線與字寬，看容量、電晶體數與位址解碼怎麼拆。要看的是數字，也是每次附帶的那句原因。</p>
@@ -69,7 +69,8 @@
 <label for="rm-addr">位址線條數<input id="rm-addr" type="range" min="8" max="24" step="1" value="16"></label>
 <label for="rm-word">字寬（位元）<input id="rm-word" type="range" min="4" max="64" step="4" value="8"></label>
 </div>
-<div id="regmem-output" class="output" aria-live="polite">這個模式只用到 8 個串列輸入格，模數、記憶體種類、位址線與字寬都不影響結果。串列輸入 1, 0, 1, 1, 0, 0, 1, 0，初始內容 0000，逐拍內容為 1000、0100、1010、1101、0110、0011、1001、0100。每一拍新的位元從 Q3 進來，其餘全部往右挪一格；這四件事在同一個時脈邊緣同時發生，所以不會互相覆蓋。第 3 拍的內容 1101 正是第 11 章那台狀態機在找的樣式。若把八格全部取消勾選，內容會一直是 0000，這時看不出移位行為，要至少勾一格才有東西可看。</div>
+<p id="regmem-summary" aria-live="polite">移位後內容依序為 1000, 0100, 1010, 1101, 0110, 0011, 1001, 0100。</p>
+<div id="regmem-output" class="output">這個模式只用到 8 個串列輸入格，模數、記憶體種類、位址線與字寬都不影響結果。串列輸入 1, 0, 1, 1, 0, 0, 1, 0，初始內容 0000，逐拍內容為 1000、0100、1010、1101、0110、0011、1001、0100。每一拍新的位元從 Q3 進來，其餘全部往右挪一格；這四件事在同一個時脈邊緣同時發生，所以不會互相覆蓋。第 3 拍雖顯示 Q3…Q0 = 1101，但按時間由舊到新從 Q0 讀回 Q3 是 1011；要偵測時間序列 1101，應檢查 Q0Q1Q2Q3 = 1101。若把八格全部取消勾選，內容會一直是 0000，這時看不出移位行為，要至少勾一格才有東西可看。</div>
 </section>
 
 <h2>不要混淆</h2>

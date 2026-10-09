@@ -22,7 +22,7 @@
 <p><strong>（b）隱含 1 買到什麼。</strong>正規數一律寫成 <code>1.xxx × 2<sup>e</sup></code>，開頭那個 1 是正規化的必然結果，不必存，等於白賺一個位元的精度——binary32 實際有 24 個有效位元，binary64 有 53 個。代價是<strong>這個編碼沒辦法表示 0</strong>，所以只好把「指數全 0」這個編碼挪出來當 0 與非正規數用。</p>
 <p><strong>（c）ULP 怎麼算。</strong><strong>ULP（unit in the last place）</strong>是這個量級下相鄰兩個可表示數的間隔。尾數有 23 個小數位元，所以在去偏移指數為 e 的那一段裡，</p>
 <p><code>ULP ＝ 2<sup>e − 23</sup></code></p>
-<p>e 是去偏移之後的指數（無單位的整數），23 是 binary32 的尾數位元數（binary64 要換成 52）。e 每加 1，間隔就加倍。<strong>所以浮點的精度是相對的，不是絕對的</strong>：在 12 附近可以分辨到 10<sup>−7</sup>，在 10<sup>7</sup> 附近就只剩個位數。本課只算單一次賦值的表示誤差，不處理連續運算的誤差累積模型。</p>
+<p>e 是去偏移之後的指數（無單位的整數），23 是 binary32 的尾數位元數（binary64 要換成 52）。e 每加 1，間隔就加倍。<strong>所以浮點的精度是相對的，不是絕對的</strong>：binary32 在 12 附近可以分辨到約 10<sup>−6</sup>，在 10<sup>7</sup> 附近就只剩個位數。本課只算單一次賦值的表示誤差，不處理連續運算的誤差累積模型。</p>
 <p><strong>（d）0.1 為什麼存不下。</strong>0.1 換成二進位是 <code>0.0001100110011…</code>，1100 這四位無限循環。截到 24 個有效位元一定有殘差，就像十進位寫不完 1 / 3 一樣。這不是實作缺陷，是<strong>底數 2 與底數 10 的質因數不同</strong>：任何分母含有 5 的既約分數，在二進位裡都是無限循環。</p>
 
 <h2>數值實例：12.375 的完整拆解</h2>
@@ -51,7 +51,7 @@
 <label for="fp-special">要看的特例<select id="fp-special"><option value="normal">用上面輸入的值</option><option value="zero">正零</option><option value="denorm">最小非正規數</option><option value="minnorm">最小正規數</option><option value="maxnorm">最大有限值</option><option value="inf">正無限大</option><option value="nan">quiet NaN</option></select></label>
 <label for="fp-endian">記憶體位元組順序<select id="fp-endian"><option value="little">小端序（little-endian）</option><option value="big">大端序（big-endian）</option></select></label>
 </div>
-<div id="fp754-output" class="output" aria-live="polite">目前是 binary32、小端序，特例選的是「用上面輸入的值」，所以輸入值、格式與端序這三個控制都會影響結果。輸入值 12.375。位元樣式：<code>0 1000 0010 100 0110 0000 0000 0000 0000</code>（符號 ／ 指數 ／ 尾數）。指數欄位十進位 <strong>130</strong>，去偏移 130 − 127 ＝ <strong>3</strong>。十六進位 <strong><code>0x41460000</code></strong>，實際儲存值 <strong>12.375</strong>，絕對誤差 <strong>0</strong>，ULP ＝ 2<sup>3−23</sup> ＝ <strong>9.536743 × 10<sup>−7</sup></strong>。記憶體位元組（小端序）：<code>00 00 46 41</code>。判讀：這個值剛好可以精確表示，因為它是 2 的次方的有限和（8 ＋ 4 ＋ 0.25 ＋ 0.125）。為什麼：<strong>浮點的精度是相對的——同樣 23 個尾數位元，在 12 附近可分辨到 10<sup>−7</sup>，在 10<sup>7</sup> 附近就只剩個位數。</strong>邊界提醒：把值改成 0.1，誤差會變成 1.490116 × 10<sup>−9</sup>；填一個大於 3.402823 × 10<sup>38</sup> 的數會溢位成無限大，那是規格定義的行為不是錯誤；切到 NaN 會看到它不等於任何東西，包括它自己。</div>
+<div id="fp754-output" class="output" aria-live="polite">載入中…</div>
 </section>
 
 <h2>不要混淆</h2>
@@ -65,7 +65,7 @@
 <h2>可觀察證據：拿什麼量、量到什麼</h2>
 <p><strong>用什麼量。</strong>在除錯器裡對一個浮點變數下 <code>x/4xb</code>，會逐位元組印出它在記憶體裡的四個位元組；把同一個檔案搬到端序不同的機器上讀，數值會整個亂掉。</p>
 <p><strong>能證明什麼。</strong>能證明這台機器的端序；能證明這個變數實際存了哪四個位元組，因而能證明「你以為的 0.1」與「機器裡的 0.1」不是同一個數。</p>
-<p><strong>不能證明什麼。</strong>證明不了某一次計算的誤差是「格式造成」還是「演算法不穩定」造成——那要把同一段算式改用雙精度重跑一次，看誤差是等比例縮小（格式）還是幾乎不變（演算法）。也證明不了程式的最終結果可以接受，那是數值分析的問題。</p>
+<p><strong>不能證明什麼。</strong>證明不了某一次計算的誤差是格式本身造成，還是數值不穩定放大了捨入誤差。改用雙精度後誤差等比例縮小，只能說來源與捨入有關；幾乎不變才比較像截斷誤差或模型誤差。要判斷演算法穩定性，還要看條件數、誤差如何傳播，或改用數值穩定的演算法對照。</p>
 
 <h2>連到哪門課</h2>
 <p>這一章在三個地方立刻用得上：跨機器交換二進位檔案時要先講好端序；比較兩個浮點數時要用容差而不是相等；估算感測器讀值的有效位數時要知道 binary32 只有 7 位十進位可信。浮點運算單元在管線裡佔幾拍、能不能跟整數指令同時發射，會在第 06 章與第 07 章再出現。</p>

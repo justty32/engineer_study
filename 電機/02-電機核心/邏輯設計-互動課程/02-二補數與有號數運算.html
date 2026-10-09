@@ -27,7 +27,7 @@
 <h2>數值實例：8 位元，A = 100、B = 45</h2>
 <table><thead><tr><th>運算</th><th>位元運算</th><th>結果位元</th><th>無號讀</th><th>有號讀</th><th>C</th><th>V</th><th>N</th><th>Z</th></tr></thead><tbody>
 <tr><td>A + B</td><td><code>0110 0100</code> + <code>0010 1101</code></td><td><strong><code>1001 0001</code></strong></td><td><strong>145</strong></td><td><strong>−111</strong></td><td><strong>0</strong></td><td><strong>1</strong></td><td><strong>1</strong></td><td><strong>0</strong></td></tr>
-<tr><td>A − B</td><td><code>0110 0100</code> + <code>1101 0011</code> + 1</td><td><strong><code>0011 0111</code></strong></td><td><strong>55</strong></td><td><strong>55</strong></td><td><strong>1</strong></td><td><strong>0</strong></td><td><strong>0</strong></td><td><strong>0</strong></td></tr>
+<tr><td>A − B</td><td><code>0110 0100</code> + <code>1101 0010</code> + 1</td><td><strong><code>0011 0111</code></strong></td><td><strong>55</strong></td><td><strong>55</strong></td><td><strong>1</strong></td><td><strong>0</strong></td><td><strong>0</strong></td><td><strong>0</strong></td></tr>
 </tbody></table>
 <p>減法那一列的細節：45 的 8 位元二補數是 2<sup>8</sup> − 45 = 256 − 45 = 211，寫成位元是 <code>1101 0011</code>。於是 100 + 211 = 311，311 − 256 = 55，多出來的 256 就是從最高位掉出去的進位，所以 C = 1。前面推導過，減法時 C = 1 代表不需要借位，也就是 A ≥ B，這裡 100 ≥ 45 成立。</p>
 <p>加法那一列更值得盯著看：100 與 45 都是正數，相加卻得到最高位是 1 的 <code>1001 0001</code>，有號讀成 −111。兩個正數加出負數，這就是有號溢位，V = 1。可是以無號解讀，145 沒超過 255，沒有位元掉出最高位，C = 0。同一組位元，無號說沒事、有號說出錯，兩邊都沒錯，只是問題不同。</p>
