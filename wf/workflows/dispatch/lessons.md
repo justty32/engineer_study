@@ -35,6 +35,13 @@
 1. **整檔改寫一律用單一 Update 操作**（一次完成、原子）。
 2. **每個批次邊界跑 `git status --short | grep -E '^(D |.D)'`，要零命中。** 成本近乎零，上面那次就是這道檢查抓到的。
 
+## 5. 子 agent 用背景計時器等 codex 工人，工人結束時可能不會被喚醒
+
+2026-10-09 審稿修整：兩位 opus 領導用 Monitor／背景等待 codex 工人，工人早已 DONE，領導卻空等數小時，直到調度者 `pgrep` 發現沒有工人在跑才叫醒。
+
+- 交接書寫死：等工人用前景 `while kill -0 <PID>; do sleep 30; done`（分次、每次 ≤600 s），不用 Monitor 長等。
+- 調度者久無回報時先 `pgrep -fa 'codex exec'` 對照工作樹，再 SendMessage 叫醒領導。
+
 ## 交接
 
 - 派線流程 → [dispatch](README.md)；怎麼驅動外部 CLI 線 → [driving-cli-agents](driving-cli-agents.md)。
