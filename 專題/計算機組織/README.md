@@ -4,8 +4,8 @@
 
 - [線上版本：GitHub Pages / 從電晶體到 C++ 執行](https://justty32.github.io/engineer_study/computer-organization/)
 - [開啟互動課程](互動課程/index.html)
-- [課程專案簡報](互動課程/PROJECT-BRIEF.md)
 - [頁面與章節責任](互動課程/README.md)
 - 驗收紀錄（已封存，見 `互動課程/archive/`）
+- 維護者用：[課程專案簡報](互動課程/PROJECT-BRIEF.md)
 
 建議先完整走完本課，再進入 [逆向工程](../逆向工程/互動課程/index.html)。

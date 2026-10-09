@@ -1,6 +1,6 @@
 # 網路安全專題
 
-本專題依 foundations-first 工作流分成兩條課程：
+本專題依「先打基礎、再進攻擊手法」的順序分成兩條課程：
 
 - 線上版本：[網路安全主課](https://justty32.github.io/engineer_study/network-security/)｜[進階攻擊手法](https://justty32.github.io/engineer_study/attack-techniques/)
 

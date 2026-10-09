@@ -7,6 +7,8 @@
 - **Conjure**：在 nvim 裡直接跟 REPL 互動，把游標下的 form 送過去求值、看結果。
 - **parinfer**：在你打字時自動維護括號平衡，讓你不用手動數括號。
 
+Lisp 的 **form** 是一個可求值的完整括號式子；**root form** 是包住目前位置的最外層 form。
+
 ---
 
 ## Conjure 的操作鍵
@@ -28,16 +30,17 @@
 | `lt` | 在新 tab 開 REPL log buffer |
 | `lg` | toggle REPL log（開/關） |
 | `lq` | 關閉 REPL log |
-| `gd` | 跳到定義 |
-| `K` | 查文件 |
+| `le` | 在目前視窗開 log；在 log 內按 `q` 回到原來源（自訂） |
+| `ll` | 開啟或聚焦 log，並跳到最新結果（自訂） |
+| `lh` | 切換 HUD 大小（自訂） |
 | `cc` | 連線到 REPL（Common Lisp / Swank 用） |
 | `cd` | 中斷連線 |
 
-最常用的就是 `,ee`（求值游標下的 form）和 `,ls`（開 log 看結果）。
+`gd`（跳到定義）與 `K`（查文件）是直接按的裸鍵，不加 `,` 前綴。最常用的就是 `,ee`（求值游標下的 form）和 `,ll`（開 log 並看最新結果）。在用 `,ls`、`,lv` 或 `,lt` 開出的 log 內按 `q`，會關閉該 log 視窗或分頁。
 
 ### 關於 log HUD
 
-Conjure 預設會在右上角顯示一個浮動視窗（HUD）即時顯示求值結果。這份設定**把它關掉了**，因為容易擋到程式碼。要看結果，用 `,ls` 開 log buffer 來看。
+這份設定有開啟 Conjure 的浮動結果視窗（HUD），預設寬 55%、高 40%；只有完整 log 視窗不可見時才會跳出，避免重複顯示。按 `,lh` 可在預設大小與較大的 85% × 75% 間切換；要看完整紀錄則按 `,ll`。
 
 ---
 
@@ -49,7 +52,7 @@ parinfer 在這份設定用的是 `smart` 模式：根據你的縮排自動推�
 
 ### 沒有安裝結構編輯 plugin
 
-這份設定**沒有**裝 vim-sexp 之類的結構編輯工具，所以沒有 slurp、barf、括號跳轉等操作。括號平衡完全交給 parinfer 自動處理。
+這份設定**沒有**裝 vim-sexp 之類的結構編輯工具，所以沒有 slurp、barf 等結構編輯操作；Vim 內建的 `%` 仍可跳到對應括號。括號平衡交給 parinfer 自動處理。
 
 ---
 
@@ -159,7 +162,7 @@ treesitter 的 `fennel` parser 會自動安裝，有語法高亮。
 | 連線方式 | stdio，nvim 自己起 s7 子行程 |
 | 前置需求 | 要自己編 s7 的 REPL 執行檔 |
 
-Conjure 內建的 scheme client 預設指向 `mit-scheme`。這份設定把它換成 **s7**（一個輕量的 Scheme 實作，適合嵌入式腳本開發）。
+Conjure 內建的 scheme client 預設指向 `mit-scheme`。這份設定把它換成 **s7**（一個輕量、可嵌進 C 程式作為擴充語言的 Scheme 實作）。
 
 #### 先編出 s7
 
@@ -203,7 +206,7 @@ Conjure 靠「看到 prompt 字串（`> `）」來判斷一次求值是否結束
 
 症狀是：REPL 顯示啟動了，eval 也送出去了，但**結果一行都不會出現**。
 
-解法是用 `stdbuf -o0` 把 s7 的 stdout 改成無緩衝，prompt 就能即時出來。這份設定在有 `stdbuf` 的環境（Linux 有，macOS 要裝 GNU coreutils）會自動加上這個包裝。
+解法是用 `stdbuf -o0` 把 s7 的 stdout 改成無緩衝，prompt 就能即時出來。這份設定在有 `stdbuf` 的環境會自動加上這個包裝。macOS 用 Homebrew 安裝 GNU coreutils 後，指令預設叫 `gstdbuf`；還要把 coreutils 的 `libexec/gnubin` 放進 PATH，或建立 PATH 上名為 `stdbuf` 的符號連結，設定才偵測得到。
 
 注意：必須是 `-o0`（無緩衝），不能是 `-oL`（行緩衝）——因為 prompt 結尾沒有換行，行緩衝同樣不會 flush。
 

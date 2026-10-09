@@ -38,7 +38,7 @@ return M
 
 跟上一章說的一樣：`local M = {}` 當容器，對外公開的函式掛在 `M` 上，私有的 helper 就用 `local function`。模組最後 `return M`，讓 `require` 呼叫端可以拿到那張表。
 
-`keymaps.lua` 頂端只有一行 `require("config.cmera")`——光是 require 就會把整個模組跑一遍，所以 user command 和 autocmd 都在那個當下就註冊好了。不需要再去呼叫任何初始化函式。
+`keymaps.lua` 頂端用 `require` 載入 `config.cmera` 與 `config.codegen`——光是 require 就會把整個模組跑一遍，所以 user command 和 autocmd 都在那個當下就註冊好了。不需要再去呼叫任何初始化函式。
 
 ---
 
@@ -125,7 +125,7 @@ local function run_cm(generator, file, callback)
   vim.system(cmd, { text = true, cwd = cwd }, function(obj)
     vim.schedule(function()
       if obj.code ~= 0 then
-        local err = vim.trim(obj.stderr or obj.stdout or "")
+        local err = vim.trim((obj.stderr ~= "" and obj.stderr) or obj.stdout or "")
         notify("C-Mera 編譯出錯 (Exit " .. obj.code .. "):\n" .. err, "error")
         return
       end
@@ -140,11 +140,11 @@ end
 - 第一個參數是 table `{ "cm", "c++", "/path/to/foo.cmera" }`，不是字串，所以不用擔心空格或特殊字元要怎麼跳脫。
 - `{ text = true }` 讓 stdout/stderr 以字串形式傳回，不用自己處理位元組。
 - `cwd` 設成原始碼所在目錄，這樣 `cm` 找相對路徑的時候才不會跑錯地方。
-- 第三個參數是 callback，`cm` 結束後會在背景執行緒呼叫它。
+- 第三個參數是 callback，`cm` 結束後會在 Neovim 主執行緒的 libuv 事件迴圈中，以 fast event 狀態呼叫它。
 
-**`vim.schedule`** 很重要——`vim.system` 的 callback 是在 luv 的執行緒裡跑的，不能直接呼叫大部分的 Neovim API。包一層 `vim.schedule` 就能排進主執行緒的下一個事件循環，讓你安全地操作 buffer、window。
+**`vim.schedule`** 很重要——fast event 狀態不能直接呼叫大部分的 Neovim API。包一層 `vim.schedule` 就能延到安全時機，讓你操作 buffer、window。
 
-錯誤處理：`obj.code ~= 0` 就代表 `cm` 出錯，把 stderr（或 stdout）丟給使用者看，然後 return。沒有問題才呼叫 `callback(obj)`。
+錯誤處理：`obj.code ~= 0` 就代表 `cm` 出錯，優先把非空的 stderr 丟給使用者看，沒有 stderr 才退回 stdout，然後 return。`text = true` 時沒有輸出的 stderr 是空字串，而 Lua 把空字串視為真值，所以不能直接寫 `obj.stderr or obj.stdout`。沒有問題才呼叫 `callback(obj)`。
 
 ---
 
@@ -166,6 +166,9 @@ local preview = {}
 local function preview_output(generator, content)
   -- ... 省略空內容的檢查 ...
 
+  local lines = vim.split(content:gsub("\r", ""), "\n")
+  local meta = output_meta(generator)
+
   local buf = preview.buf
   if not (buf and vim.api.nvim_buf_is_valid(buf)) then
     buf = vim.api.nvim_create_buf(false, true)
@@ -186,7 +189,7 @@ end
 ```
 
 邏輯是：
-1. 檢查 `preview.buf` 是否還有效，沒有才建新的 scratch buffer（`false, true` = 不列在 buffer list、scratchpad）。
+1. 檢查 `preview.buf` 是否還有效，沒有才建新的 scratch buffer。`nvim_create_buf(false, true)` 會建立不列在 buffer list 的暫存 buffer，並設定 `buftype=nofile`、`bufhidden=hide` 與 `noswapfile`。
 2. 把內容寫進 buffer（`set_lines` 從第 0 行到最後一行全部替換）。
 3. 檢查 `preview.win` 是否還有效，還活著就直接 return——buffer 內容已經更新了，視窗因為指向同一個 buffer，自然就顯示新內容。
 4. 視窗不存在才開視窗。
@@ -214,7 +217,7 @@ else
 end
 ```
 
-有 Snacks 就用它開一個佔右側 45% 寬的浮動視窗，按 `q` 可以關。沒有 Snacks 就退回手動 `vsplit`，然後把 buffer 塞進那個視窗。
+有 Snacks 就用它在右側開一個佔 45% 寬的分割視窗，按 `q` 可以關。`backdrop = false` 只影響浮動視窗，在這個分割視窗設定中沒有作用。沒有 Snacks 就退回手動 `vsplit`，然後把 buffer 塞進那個視窗。
 
 幾個 buffer 選項值得注意：
 - `buftype = "nofile"`：告訴 Neovim 這個 buffer 不對應任何檔案，不會被要求存檔。
@@ -274,7 +277,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 })
 ```
 
-`.cmera` 檔的 filetype 設成 `lisp`（方便 treesitter 高亮），但 LazyVim 看到 lisp 就會想自動格式化。`vim.b[buf].autoformat = false` 針對單一 buffer 關掉它，不影響真正的 Lisp 檔案。
+`.cmera` 檔的 filetype 設成 `lisp`（方便 treesitter 高亮）。`formatting.lua` 已把整個 `lisp` filetype 的 formatter 設成空清單；這裡再設 `vim.b[buf].autoformat = false` 是雙重保險：前者阻止 formatter 選擇，後者針對 `.cmera` buffer 關掉 LazyVim 的自動格式化開關。真正的 Lisp 檔目前也不會整檔格式化，但不會被設定 buffer-local 的 `autoformat = false`。
 
 ---
 
@@ -299,7 +302,7 @@ preview_output(...)  ←→    show_output(...)
 |---|---|---|
 | 視窗方向 | 右側，`position = "right"` | 下方，`position = "bottom"` |
 | buffer 重用 | 有 `preview = {}` 記住同一個視窗，反覆更新 | 每次跑都建新 buffer，`bufhidden = "wipe"` 用完就丟 |
-| Python 路徑 | 不需要 | 先找 repo 裡的 `.venv/python`，找不到才用系統 `python3` |
+| Python 路徑 | 不需要 | 先找 repo 裡的 `.venv/bin/python`，找不到才用系統 `python3` |
 | 額外功能 | 無 | 有 `dry_run`（試跑不寫檔）和 `rollback`（回復備份） |
 | 找 cwd | 檔案所在目錄 | 往上找 `codegen.toml` 或 `.git`，確定 project root |
 
@@ -317,6 +320,6 @@ preview_output(...)  ←→    show_output(...)
 
 **依 filetype 選工具**：在 `detect_lang` 的概念上延伸，根據 `vim.bo.filetype` 選擇要跑的外部指令，做成一個通用的「一鍵跑對應工具」快捷鍵。
 
-**加 autocommand 自動刷新**：在 `BufWritePost` 觸發 `M.preview()`，每次存檔就自動更新 preview 視窗，不用手動按快捷鍵。
+**加 autocommand 自動刷新**：把「已有檔案路徑時執行預覽」抽成不含 `current_file()` 的內部函式，再由 `BufWritePost` 呼叫它。不要直接在 `BufWritePost` 呼叫 `M.preview()`，因為 `current_file()` 會再執行一次 `write`，造成每次存檔多寫一次。
 
 核心就是那個 `preview = {}` 的概念——用一個模組層級的 table 記住視窗狀態，然後每次操作前先檢查它還活著嗎。這個模式在寫任何需要「持續顯示某東西」的插件時都很好用。
