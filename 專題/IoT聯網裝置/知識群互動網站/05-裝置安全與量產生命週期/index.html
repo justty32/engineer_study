@@ -10,7 +10,7 @@
 <body>
 <a class="skip-link" href="#main">跳到主要內容</a>
 <a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
-  <header class="site-header">
+  <header class="site-header topbar">
     <div class="page-heading">
       <p class="eyebrow">IoT 聯網裝置</p>
       <h1>裝置安全與量產生命週期</h1>
@@ -29,11 +29,15 @@
       </ol>
     </nav>
   </header>
+  <nav class="station-nav" aria-label="主要導覽">
+    <a href="../../互動網站/index.html">← 中央工作台</a><a href="../04-天線RF與EMC/index.html">上一站：04</a><a href="../../互動網站/index.html#knowledge-stations">完成七站：回工作台</a>
+    <details><summary>七站清單</summary><ol><li><a href="../07-微控制器與韌體核心/index.html">07 微控制器與韌體核心</a></li><li><a href="../01-板級電源與PCB/index.html">01 板級電源與 PCB</a></li><li><a href="../02-嵌入式韌體與RTOS/index.html">02 嵌入式韌體與 RTOS</a></li><li><a href="../06-板級介面與工業匯流排/index.html">06 板級介面與工業匯流排</a></li><li><a href="../03-連線模組與網路/index.html">03 連線模組與網路</a></li><li><a href="../04-天線RF與EMC/index.html">04 天線 RF 與 EMC</a></li><li><a href="./index.html" aria-current="page">05 裝置安全與量產生命週期</a></li></ol></details>
+  </nav>
 
   <main id="main">
     <section class="progress-panel" aria-labelledby="progress-title" data-progress-key="engineerStudy.iotSecurityProduction.v1">
       <h2 id="progress-title">學習進度</h2>
-      <p id="progress-label" aria-live="polite">已完成 0 / 8 個模組</p>
+      <p id="progress-label" aria-live="polite">0 / 8 個模組完成</p>
       <div class="progress-track" role="progressbar" aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0">
         <span id="progress-fill" class="progress-fill"></span>
       </div>
@@ -73,6 +77,7 @@
             <div><dt>優先級</dt><dd id="threat-priority"></dd></div><div><dt>第一控制</dt><dd id="threat-first-control"></dd></div><div><dt>第二控制</dt><dd id="threat-second-control"></dd></div><div><dt>狀態</dt><dd id="threat-status"></dd></div>
           </dl><p id="threat-feedback"></p></div>
         </div>
+        <details class="self-check"><summary>自我檢核：只因攻擊需要接觸裝置，就能把風險排到最後嗎？</summary><p><b>答案鍵：不能。</b></p><p>解析：風險還取決於影響類型、可複製規模與復原能力；能造成安全危害或大量複製的實體攻擊仍可能是高優先級。</p></details>
         <footer><button type="button" data-complete="threat-model">標記完成</button><button type="button" data-reset-module="threat-model">重設模組</button></footer>
       </section>
 
@@ -88,6 +93,7 @@
         </fieldset></form><div class="results" aria-live="polite"><h3>Gate 結果</h3><dl>
           <div><dt>第一缺口</dt><dd id="identity-first"></dd></div><div><dt>第二缺口</dt><dd id="identity-second"></dd></div><div><dt>已完成</dt><dd id="identity-count"></dd></div><div><dt>阻擋原因</dt><dd id="identity-blocker"></dd></div><div><dt>狀態</dt><dd id="identity-status"></dd></div>
         </dl><p id="identity-feedback"></p></div></div>
+        <details class="self-check"><summary>自我檢核：每台裝置有唯一序號，是否就等於具有密碼學身分？</summary><p><b>答案鍵：不等於。</b></p><p>解析：序號只用來識別；可驗證身分還需要受保護的私鑰、信任鏈、認證，以及輪替與撤銷機制。</p></details>
         <footer><button type="button" data-complete="device-identity">標記完成</button><button type="button" data-reset-module="device-identity">重設模組</button></footer>
       </section>
 
@@ -97,6 +103,7 @@
           <label for="boot-case">啟動情境</label><select id="boot-case" name="boot-case"><option value="normal" selected>正常啟動 normal</option><option value="tampered-image">映像遭竄改 tampered-image</option><option value="downgrade">降版 downgrade</option><option value="debug-attach">除錯連接 debug-attach</option></select>
           <label><input id="boot-root-key" type="checkbox" data-boot-check checked> 不可變信任根／金鑰 immutable root/key</label><label><input id="boot-bootloader-signature" type="checkbox" data-boot-check checked> bootloader 簽章</label><label><input id="boot-app-signature" type="checkbox" data-boot-check checked> 應用程式簽章</label><label><input id="boot-antirollback" type="checkbox" data-boot-check> 防回滾 anti-rollback</label><label><input id="boot-debug-lock" type="checkbox" data-boot-check> 除錯鎖定 debug lock</label><label><input id="boot-fail-closed" type="checkbox" data-boot-check> 失敗關閉 fail closed</label><label><input id="boot-recovery" type="checkbox" data-boot-check> 簽章復原 signed recovery</label>
         </fieldset></form><div class="results" aria-live="polite"><h3>鏈結結果</h3><dl><div><dt>第一缺口</dt><dd id="boot-first"></dd></div><div><dt>第二缺口</dt><dd id="boot-second"></dd></div><div><dt>已完成</dt><dd id="boot-count"></dd></div><div><dt>阻擋原因</dt><dd id="boot-blocker"></dd></div><div><dt>狀態</dt><dd id="boot-status"></dd></div></dl><p id="boot-feedback"></p></div></div>
+        <details class="self-check"><summary>自我檢核：映像 CRC 正確，是否足以證明韌體來自授權發布者？</summary><p><b>答案鍵：不足。</b></p><p>解析：CRC 能發現部分意外損壞，不能證明來源真實性；安全開機需要由信任根驗證數位簽章。</p></details>
         <footer><button type="button" data-complete="secure-boot">標記完成</button><button type="button" data-reset-module="secure-boot">重設模組</button></footer>
       </section>
 
@@ -112,6 +119,7 @@
           <label for="ota-rate-kib-s">傳輸速率 KiB/s</label><input id="ota-rate-kib-s" type="number" value="16" min="0" step="any">
           <label for="ota-delivery-factor">傳輸倍率</label><input id="ota-delivery-factor" type="number" value="1.2" min="1" step="any">
         </fieldset></form><div class="results" aria-live="polite"><h3>預算結果</h3><dl><div><dt>必要容量</dt><dd id="ota-required-kib"></dd></div><div><dt>容量餘裕</dt><dd id="ota-headroom-kib"></dd></div><div><dt>傳輸量</dt><dd id="ota-transfer-kib"></dd></div><div><dt>傳輸時間</dt><dd id="ota-transfer-seconds"></dd></div><div><dt>判定</dt><dd id="ota-verdict"></dd></div><div><dt>狀態</dt><dd id="ota-status"></dd></div></dl><p id="ota-feedback"></p></div></div>
+        <details class="self-check"><summary>自我檢核：A/B OTA 只要目前映像放得下單一槽位，就能開始開發嗎？</summary><p><b>答案鍵：不能只看單一槽位。</b></p><p>解析：還要預留 bootloader、兩個映像槽、scratch、設定資料與成長餘裕，並核對傳輸時間和能源預算。</p></details>
         <footer><button type="button" data-complete="ota-budget">標記完成</button><button type="button" data-reset-module="ota-budget">重設模組</button></footer>
       </section>
 
@@ -121,6 +129,7 @@
           <label for="update-case">故障情境</label><select id="update-case" name="update-case"><option value="power-loss" selected>更新中斷電 power-loss</option><option value="signature-fail">簽章失敗 signature-fail</option><option value="first-boot-fail">首次啟動失敗 first-boot-fail</option><option value="fleet-regression">機群回歸 fleet-regression</option></select>
           <label><input id="update-authenticity" type="checkbox" data-update-check checked> 簽章真實性 authenticity</label><label><input id="update-integrity" type="checkbox" data-update-check checked> 完整性／雜湊 integrity/hash</label><label><input id="update-inactive-slot" type="checkbox" data-update-check checked> 非作用槽 inactive slot</label><label><input id="update-atomic-switch" type="checkbox" data-update-check> 原子切換 atomic switch</label><label><input id="update-health-confirm" type="checkbox" data-update-check> 啟動健康確認 boot health confirmation</label><label><input id="update-rollback" type="checkbox" data-update-check> 回滾 rollback</label><label><input id="update-staged-rollout" type="checkbox" data-update-check> 分階段發布／暫停 staged rollout/pause</label><label><input id="update-observability" type="checkbox" data-update-check> 可觀測性 observability</label>
         </fieldset></form><div class="results" aria-live="polite"><h3>復原結果</h3><dl><div><dt>第一缺口</dt><dd id="update-first"></dd></div><div><dt>第二缺口</dt><dd id="update-second"></dd></div><div><dt>已完成</dt><dd id="update-count"></dd></div><div><dt>阻擋原因</dt><dd id="update-blocker"></dd></div><div><dt>狀態</dt><dd id="update-status"></dd></div></dl><p id="update-feedback"></p></div></div>
+        <details class="self-check"><summary>自我檢核：把新映像寫完後立即刪除舊槽，是否是安全的切換順序？</summary><p><b>答案鍵：不是。</b></p><p>解析：應先驗證非作用槽、原子切換、試開機並通過健康確認；失敗時仍需保留已知可開機版本。</p></details>
         <footer><button type="button" data-complete="update-recovery">標記完成</button><button type="button" data-reset-module="update-recovery">重設模組</button></footer>
       </section>
 
@@ -130,15 +139,18 @@
           <label for="provisioning-case">佈建情境</label><select id="provisioning-case" name="provisioning-case"><option value="new-device" selected>新裝置 new-device</option><option value="rework">返工 rework</option><option value="certificate-rotation">憑證輪替 certificate-rotation</option></select>
           <label><input id="provisioning-station-auth" type="checkbox" data-provisioning-check checked> station 授權 station authorization</label><label><input id="provisioning-unique-id" type="checkbox" data-provisioning-check checked> 唯一序號／MAC unique serial/MAC</label><label><input id="provisioning-key-nonexport" type="checkbox" data-provisioning-check checked> 不可匯出金鑰 non-exportable key</label><label><input id="provisioning-cert-bind" type="checkbox" data-provisioning-check> 憑證綁定 certificate binding</label><label><input id="provisioning-readback" type="checkbox" data-provisioning-check> 回讀／線上挑戰 readback/online challenge</label><label><input id="provisioning-quarantine" type="checkbox" data-provisioning-check> 失敗品隔離 failure quarantine</label><label><input id="provisioning-audit" type="checkbox" data-provisioning-check> 稽核軌跡 audit trace</label><label><input id="provisioning-debug-lock" type="checkbox" data-provisioning-check> 除錯鎖定 debug lock</label>
         </fieldset></form><div class="results" aria-live="polite"><h3>佈建結果</h3><dl><div><dt>第一缺口</dt><dd id="provisioning-first"></dd></div><div><dt>第二缺口</dt><dd id="provisioning-second"></dd></div><div><dt>已完成</dt><dd id="provisioning-count"></dd></div><div><dt>阻擋原因</dt><dd id="provisioning-blocker"></dd></div><div><dt>狀態</dt><dd id="provisioning-status"></dd></div></dl><p id="provisioning-feedback"></p></div></div>
+        <details class="self-check"><summary>自我檢核：後端已有憑證發放紀錄，是否足以證明私鑰已安全寫入該裝置？</summary><p><b>答案鍵：不足。</b></p><p>解析：紀錄只證明系統宣稱執行過；還需 readback 或線上 challenge 證明目標裝置持有對應私鑰。</p></details>
         <footer><button type="button" data-complete="provisioning-line">標記完成</button><button type="button" data-reset-module="provisioning-line">重設模組</button></footer>
       </section>
 
       <section id="production-gate" class="module" data-module="production-gate" aria-labelledby="production-gate-title">
+        <p class="depth-link">入門版見<a href="../../互動網站/index.html#module-production">中央工作台「量產閘門」</a>；本模組再把 EVT、DVT、PVT 與 MP 的證據成熟度、佈建與變更控制拆開。</p>
         <header><p class="module-number">07</p><h2 id="production-gate-title">EVT 到 MP 證據 gate</h2><p>依階段累積測試、更新、佈建、追溯與變更控制證據。</p></header>
         <div class="module-grid"><form class="controls" aria-label="量產階段檢查"><fieldset><legend>量產階段與必要檢查</legend>
           <label for="production-stage">量產階段</label><select id="production-stage" name="production-stage"><option value="EVT">EVT</option><option value="DVT" selected>DVT</option><option value="PVT">PVT</option><option value="MP">MP</option></select>
           <label><input id="production-test-points" type="checkbox" data-production-check checked> 測試點／SWD test points/SWD</label><label><input id="production-fct" type="checkbox" data-production-check checked> ICT／FCT</label><label><input id="production-secure-update" type="checkbox" data-production-check> Secure boot／OTA 證據</label><label><input id="production-rf-emc" type="checkbox" data-production-check> RF／EMC 預掃 prescan</label><label><input id="production-fixture" type="checkbox" data-production-check> 量產治具 production fixture</label><label><input id="production-provisioning" type="checkbox" data-production-check> 佈建 provisioning</label><label><input id="production-traceability" type="checkbox" data-production-check> 追溯性 traceability</label><label><input id="production-change-control" type="checkbox" data-production-check> 變更控制 change control</label>
         </fieldset></form><div class="results" aria-live="polite"><h3>階段結果</h3><dl><div><dt>第一缺口</dt><dd id="production-first"></dd></div><div><dt>第二缺口</dt><dd id="production-second"></dd></div><div><dt>已完成</dt><dd id="production-count"></dd></div><div><dt>阻擋原因</dt><dd id="production-blocker"></dd></div><div><dt>狀態</dt><dd id="production-status"></dd></div></dl><p id="production-feedback"></p></div></div>
+        <details class="self-check"><summary>自我檢核：一台 golden sample 通過全部測試，是否足以證明可進大量生產？</summary><p><b>答案鍵：不足。</b></p><p>解析：量產還要用批次分布、良率、失敗模式、治具節拍、追溯與變更控制證明製程穩定。</p></details>
         <footer><button type="button" data-complete="production-gate">標記完成</button><button type="button" data-reset-module="production-gate">重設模組</button></footer>
       </section>
 
@@ -148,9 +160,11 @@
           <label for="lifecycle-case">事件情境</label><select id="lifecycle-case" name="lifecycle-case"><option value="compromised" selected>遭入侵 compromised</option><option value="certificate-expired">憑證過期 certificate-expired</option><option value="lost-device">裝置遺失 lost-device</option><option value="retire">退役 retire</option></select>
           <label><input id="lifecycle-identify" type="checkbox" data-lifecycle-check checked> 識別影響範圍 identify scope</label><label><input id="lifecycle-quarantine" type="checkbox" data-lifecycle-check checked> 隔離 quarantine</label><label><input id="lifecycle-revoke" type="checkbox" data-lifecycle-check> 撤銷身分 revoke identity</label><label><input id="lifecycle-rotate" type="checkbox" data-lifecycle-check> 輪替受影響憑證 rotate affected credentials</label><label><input id="lifecycle-patch" type="checkbox" data-lifecycle-check> 修補 patch</label><label><input id="lifecycle-verify" type="checkbox" data-lifecycle-check> 驗證復原 verify recovery</label><label><input id="lifecycle-wipe" type="checkbox" data-lifecycle-check> 清除本機資料 wipe local data</label><label><input id="lifecycle-audit" type="checkbox" data-lifecycle-check> 保留稽核證據 retain audit evidence</label>
         </fieldset></form><div class="results" aria-live="polite"><h3>生命週期結果</h3><dl><div><dt>第一缺口</dt><dd id="lifecycle-first"></dd></div><div><dt>第二缺口</dt><dd id="lifecycle-second"></dd></div><div><dt>已完成</dt><dd id="lifecycle-count"></dd></div><div><dt>阻擋原因</dt><dd id="lifecycle-blocker"></dd></div><div><dt>狀態</dt><dd id="lifecycle-status"></dd></div></dl><p id="lifecycle-feedback"></p></div></div>
+        <details class="self-check"><summary>自我檢核：裝置退役時只清除本機金鑰，是否已完成撤銷？</summary><p><b>答案鍵：未完成。</b></p><p>解析：還要讓後端拒絕該身分、解除帳戶與服務綁定；遺失或離線裝置可能永遠收不到本機清除命令。</p></details>
         <footer><button type="button" data-complete="fleet-lifecycle">標記完成</button><button type="button" data-reset-module="fleet-lifecycle">重設模組</button></footer>
       </section>
     </div>
+    <footer class="workspace-footer"><span>從威脅初篩到退役的生命週期教學模型。</span></footer>
   </main>
 </body>
 </html>

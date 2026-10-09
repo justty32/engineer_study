@@ -250,7 +250,7 @@ function init(root = document) {
 
     const count = Object.values(done).filter(Boolean).length;
     const label = root.querySelector('#progress-label');
-    if (label) label.textContent = `已完成 ${count} / ${modules.length} 個模組`;
+    if (label) label.textContent = `${count} / ${modules.length} 個模組完成`;
     const fill = root.querySelector('#progress-fill');
     if (fill) fill.style.width = `${modules.length ? count / modules.length * 100 : 0}%`;
     const track = root.querySelector('.progress-track');

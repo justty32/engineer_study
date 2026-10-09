@@ -21,4 +21,6 @@
 <section class="section"><h2>讀懂互動結果：先問攻擊者站在哪裡</h2><p>切換情境時，先把能力分成只能送封包、可看到回程、位於同一區域網路、控制名稱解析，或能成為實際中繼。能力不同，能觀察與改寫的範圍也不同；「中間人」不是任何網路異常的通稱。</p><div class="grid"><div class="card"><h3>重放的數字直覺</h3><p>假設接收端只接受序號 n 且維護最高序號 n<sub>max</sub>。已處理 n = 4201 後，再收到 n = 4201，因 n ≤ n<sub>max</sub> 而拒絕。若重啟後遺失 n<sub>max</sub>，同一訊息可能再次被接受。此簡化模型假設訊息依序抵達；真實網路需容許有限亂序窗並持久化去重狀態。</p></div><div class="card"><h3>證據的互補</h3><p>封包擷取能顯示握手順序與重傳，但擷取點只看得到其所在路徑。DNS、鄰居表與路由表能顯示當時的控制狀態；憑證日誌能顯示驗證結果。單一抓包不能證明整條端到端路徑沒有其他觀察者。</p></div></div><ul><li><strong>偵察不等於入侵：</strong>探測增加攻擊者知識，未必改變目標狀態。</li><li><strong>重傳不等於重放：</strong>TCP 重傳維持同一傳輸；應用重放是舊動作被再次接受。</li><li><strong>代理不等於惡意中間人：</strong>授權反向代理可終止 TLS；是否越界取決於架構信任與憑證驗證。</li><li><strong>名稱正確不等於端點可信：</strong>DNS 回覆仍須由應用層身分驗證收尾。</li></ul></section>
 <p class="note">看到加密流量仍能觀察端點、時間、大小與方向；看到明文流量也不代表其中一定含秘密。證據結論必須對應資產與協定語意。</p>
 
+<section class="section" data-chapter-quiz="03"><h2>本章自我檢核</h2><p>題目載入中……</p></section>
+
 <div class="pager"><a href="02-輸入解譯器與記憶體.html">← 上一章</a><a href="04-權限可用性與供應鏈.html">下一章 →</a></div></main><footer class="site-footer"><span>03 網路與通訊路徑</span><a href="../../網路協定/互動課程/index.html">網路協定細講課程</a></footer></body></html>

@@ -203,6 +203,7 @@
             </div>
           </div>
           <p class="module-note"><strong>公式邊界：</strong>T<sub>life</sub> = C<sub>batt</sub>η / I<sub>avg</sub> 只代表理想估算，未含溫度、老化、自放電、轉換損耗與電池脈衝能力。</p>
+          <p class="depth-link">要把漏電、整板休眠電流與 RTOS 的喚醒成本拆開驗證，深入見 <a href="../知識群互動網站/01-板級電源與PCB/index.html#module-battery">01 站「睡眠漏電與電池」</a>與 <a href="../知識群互動網站/02-嵌入式韌體與RTOS/index.html#module-low-power">02 站「Tickless 與低功耗」</a>。</p>
         </section>
 
         <section id="module-pulse" class="learning-module" data-module="pulse" aria-labelledby="pulse-title">
@@ -246,6 +247,22 @@
           <div class="module-heading-row"><div><h2 id="production-title">量產閘門</h2><p class="module-intro">把設計驗證、產測、佈建、射頻與追溯證據排進正確的上市路徑。</p></div><button class="outline-button" type="button" data-complete="production">完成量產閘門</button></div>
           <div class="stage-switcher" role="group" aria-label="量產階段"><button class="stage-button is-selected" type="button" data-stage="EVT">EVT<span>功能</span></button><button class="stage-button" type="button" data-stage="DVT">DVT<span>性能</span></button><button class="stage-button" type="button" data-stage="PVT">PVT<span>量產</span></button><button class="stage-button" type="button" data-stage="MP">MP<span>維運</span></button></div>
           <div class="production-layout"><article class="panel production-checklist"><div class="panel-heading"><div><span class="section-tag">GATE CHECKLIST</span><h3>EVT 進入 / 退出證據</h3></div><span class="panel-state state-warning">3 項缺口</span></div><label class="check-row production-row"><input type="checkbox" data-production-task="test-points" data-stage="EVT,DVT,PVT,MP"><span><strong>測試點與 SWD / JTAG 可達</strong><small>DFT 讓燒錄、量測與故障隔離可執行</small></span><em>EVT</em></label><label class="check-row production-row"><input type="checkbox" data-production-task="fct" data-stage="DVT,PVT,MP"><span><strong>FCT 驗證上電、介面與功能</strong><small>ICT 先攔結構問題，FCT 再驗整機行為</small></span><em>DVT</em></label><label class="check-row production-row"><input type="checkbox" data-production-task="firmware" data-stage="PVT,MP"><span><strong>產測韌體與讀回驗證</strong><small>燒錄版本、唯一識別資料要留下結果</small></span><em>PVT</em></label><label class="check-row production-row"><input type="checkbox" data-production-task="provisioning" data-stage="PVT,MP"><span><strong>Provisioning：序號、MAC、金鑰、憑證</strong><small>不可重複，失敗品不得直接流入下一站</small></span><em>PVT</em></label><label class="check-row production-row"><input type="checkbox" data-production-task="rf-emc" data-stage="DVT,PVT,MP"><span><strong>RF / EMC 前測與天線條件</strong><small>頻率、功率、頻譜、天線與屏蔽治具需可追溯</small></span><em>DVT</em></label><label class="check-row production-row"><input type="checkbox" data-production-task="trace-log" data-stage="PVT,MP"><span><strong>可追溯 log 與返修紀錄</strong><small>連回板號、韌體版本、站別、操作者與結果</small></span><em>MP</em></label></article><aside class="panel production-feedback-panel"><div class="panel-heading"><div><span class="section-tag">GATE FEEDBACK</span><h3>階段閘門</h3></div><span class="stage-readout">CURRENT: EVT</span></div><div id="production-feedback" class="gate-feedback"><div class="gate-meter"><span style="width: 25%"></span></div><strong>尚未具備退出 EVT 的完整證據</strong><p>目前缺少可量測的測試點、基本功能驗證與可重現的測試紀錄。先建立能觀察問題的入口，再擴大到性能與量產。</p><dl><div><dt>進入條件</dt><dd>需求、原理圖、關鍵元件與基本 DFT</dd></div><div><dt>退出條件</dt><dd>功能路徑可運作，風險與失效紀錄可回溯</dd></div></dl></div><div class="certification-note"><strong>認證邊界</strong><p>完成清單不代表取得 FCC、CE、NCC 或電信商認證。模組預認證仍受天線、整合條件與目標市場限制。</p></div></aside></div>
+          <p class="depth-link">本模組是入門版；要深入產線佈建、追溯與階段證據，見 <a href="../知識群互動網站/05-裝置安全與量產生命週期/index.html#production-gate">05 站「EVT 到 MP 證據 gate」</a>。</p>
+        </section>
+
+        <section id="knowledge-stations" class="knowledge-stations" aria-labelledby="knowledge-stations-title">
+          <div class="module-kicker"><span class="module-number">NEXT</span><span>DEEP DIVE</span><span class="kicker-line"></span><span>七站深入課程</span></div>
+          <div class="module-heading-row"><div><h2 id="knowledge-stations-title">七站入口</h2><p class="module-intro">中央工作台先建立端到端直覺，七個知識群站再把單一層的機制、限制與驗證證據拆開練習。</p></div></div>
+          <p class="station-order"><strong>建議順序：</strong>07 微控制器與韌體核心 → 01 板級電源與 PCB → 02 嵌入式韌體與 RTOS → 06 板級介面與工業匯流排 → 03 連線模組與網路 → 04 天線 RF 與 EMC → 05 裝置安全與量產生命週期。</p>
+          <div class="station-grid">
+            <a href="../知識群互動網站/07-微控制器與韌體核心/index.html"><strong>07｜微控制器與韌體核心</strong><span>先把 CPU、記憶體、中斷、DMA 與韌體證據接起來。</span></a>
+            <a href="../知識群互動網站/01-板級電源與PCB/index.html"><strong>01｜板級電源與 PCB</strong><span>從電源樹、熱、漏電到回流路徑與 bring-up。</span></a>
+            <a href="../知識群互動網站/02-嵌入式韌體與RTOS/index.html"><strong>02｜嵌入式韌體與 RTOS</strong><span>用期限、CPU、RAM 與同步證據做架構判斷。</span></a>
+            <a href="../知識群互動網站/06-板級介面與工業匯流排/index.html"><strong>06｜板級介面與工業匯流排</strong><span>分清電氣、時序、封包與韌體狀態四層責任。</span></a>
+            <a href="../知識群互動網站/03-連線模組與網路/index.html"><strong>03｜連線模組與網路</strong><span>深入 bearer、host link、AT 狀態、session 與 supervisor。</span></a>
+            <a href="../知識群互動網站/04-天線RF與EMC/index.html"><strong>04｜天線、RF 與 EMC</strong><span>建立波長、鏈路、匹配、佈局與法規邊界的量級直覺。</span></a>
+            <a href="../知識群互動網站/05-裝置安全與量產生命週期/index.html"><strong>05｜裝置安全與量產生命週期</strong><span>把裝置身分、更新、產線佈建、量產閘門與退役連成生命週期。</span></a>
+          </div>
         </section>
 
         <footer class="site-footer"><span>IoT 聯網裝置互動學習網站</span><span>內容來源：engineer_study 專題筆記</span></footer>

@@ -4,6 +4,39 @@ const byId = (id) => document.getElementById(id);
 const listen = (id, event, fn) => { const el = byId(id); if (el) el.addEventListener(event, fn); };
 const number = (id) => Number(byId(id)?.value ?? 0);
 
+const SYN_FRAME = Object.freeze({
+  bytes: "02 00 00 00 00 02 02 00 00 00 00 01 08 00 45 00 00 3c 1a 2b 40 00 40 06 34 3f c0 00 02 0a c6 33 64 14 c0 00 01 bb 11 22 33 44 00 00 00 00 a0 02 fa f0 56 95 00 00 02 04 05 b4 04 02 08 0a 01 02 03 04 00 00 00 00 01 03 03 07".split(" ").map(value => Number.parseInt(value, 16)),
+  fields: [
+    ["eth-destination", "L2", "目的 MAC 位址", 0, 6, "02 00 00 00 00 02", "02:00:00:00:00:02", "指向這一段乙太網路的下一個介面；02 表示本地管理的單播位址。"],
+    ["eth-source", "L2", "來源 MAC 位址", 6, 6, "02 00 00 00 00 01", "02:00:00:00:00:01", "記錄目前鏈路上送出訊框的介面，路由器轉送到新鏈路時會更換。"],
+    ["eth-type", "L2", "EtherType", 12, 2, "08 00", "0x0800：IPv4", "告訴接收端乙太網路負載應交給 IPv4 解析。"],
+    ["ip-version-ihl", "L3", "版本／標頭長度", 14, 1, "45", "IPv4；IHL 5 = 20 B", "高半位 4 是版本，低半位 5 表示五個 32 位元字，本例無 IPv4 選項。"],
+    ["ip-dscp-ecn", "L3", "DSCP／ECN", 15, 1, "00", "預設轉送；未通知壅塞", "本例不要求差異化服務，也未設定明確壅塞通知。"],
+    ["ip-total-length", "L3", "總長度", 16, 2, "00 3c", "60 B", "從 IPv4 標頭開始計算：20 B IPv4 加 40 B TCP，不含外層乙太網路 14 B。"],
+    ["ip-identification", "L3", "識別碼", 18, 2, "1a 2b", "0x1a2b", "原本用來將 IPv4 分片關聯在一起；本訊框設定不可分片。"],
+    ["ip-flags-offset", "L3", "旗標／分片位移", 20, 2, "40 00", "DF = 1；位移 0", "Don't Fragment 旗標已設，而且這不是某個分片。"],
+    ["ip-ttl", "L3", "存活時間", 22, 1, "40", "64 跳", "每個路由器轉送前至少減一，歸零就丟棄，防止路由迴圈無限流動。"],
+    ["ip-protocol", "L3", "上層協定", 23, 1, "06", "6：TCP", "告訴目的主機將 IPv4 負載交給 TCP。"],
+    ["ip-checksum", "L3", "標頭檢查和", 24, 2, "34 3f", "0x343f（驗算通過）", "一的補數檢查和只覆蓋 IPv4 標頭；TTL 改變時中繼設備必須更新它。"],
+    ["ip-source", "L3", "來源 IPv4 位址", 26, 4, "c0 00 02 0a", "192.0.2.10", "來源端點位址；192.0.2.0/24 是文件範例專用範圍。"],
+    ["ip-destination", "L3", "目的 IPv4 位址", 30, 4, "c6 33 64 14", "198.51.100.20", "路由器依這個最終目的位址查轉送表；它也屬於文件範例專用範圍。"],
+    ["tcp-source-port", "L4", "來源埠", 34, 2, "c0 00", "49152", "用戶端在本例選用的暫時埠，與位址、目的埠及協定共同辨認資料流。"],
+    ["tcp-destination-port", "L4", "目的埠", 36, 2, "01 bb", "443", "指向伺服器的程式端點；443 常用於 HTTPS，但埠號本身不證明應用內容。"],
+    ["tcp-sequence", "L4", "序號", 38, 4, "11 22 33 44", "0x11223344（287454020）", "SYN 攜帶這個初始序號，而 SYN 本身會佔用一個序號位置。"],
+    ["tcp-acknowledgment", "L4", "確認號", 42, 4, "00 00 00 00", "0（ACK 未設定）", "這是連線發起端的第一個 SYN，尚無對方序號可確認。"],
+    ["tcp-offset-reserved", "L4", "資料位移／保留位", 46, 1, "a0", "10 字 = 40 B；保留位 0", "資料位移指出 TCP 標頭結束位置；本例 20 B 基本標頭後還有 20 B 選項。"],
+    ["tcp-flags", "L4", "旗標", 47, 1, "02", "SYN = 1；其餘為 0", "這是三次握手的第一步：發起同步序號要求，還不是 SYN-ACK。"],
+    ["tcp-window", "L4", "接收視窗", 48, 2, "fa f0", "64240", "宣告接收端目前的流量控制容量；SYN 中的這個數值尚不套用視窗縮放。"],
+    ["tcp-checksum", "L4", "檢查和", 50, 2, "56 95", "0x5695（驗算通過）", "檢查 TCP 標頭與負載，並把 IPv4 來源、目的、協定與 TCP 長度納入偽標頭計算。"],
+    ["tcp-urgent", "L4", "緊急指標", 52, 2, "00 00", "0（URG 未設定）", "URG 旗標關閉時這個值不用來指示緊急資料邊界。"],
+    ["tcp-option-mss", "L4", "選項：MSS", 54, 4, "02 04 05 b4", "類型 2；長度 4；1460 B", "發起端告知對方，希望接收的 TCP 負載上限為 1460 位元組。"],
+    ["tcp-option-sack", "L4", "選項：SACK permitted", 58, 2, "04 02", "類型 4；長度 2", "表示發起端能處理選擇性確認，日後可告知對方哪些非連續區段已收到。"],
+    ["tcp-option-timestamps", "L4", "選項：Timestamps", 60, 10, "08 0a 01 02 03 04 00 00 00 00", "TSval 0x01020304；TSecr 0", "攜帶本端時間戳值；第一個 SYN 尚無對方時間戳可回顯，所以 TSecr 為 0。"],
+    ["tcp-option-nop", "L4", "選項：NOP", 70, 1, "01", "類型 1：無操作", "佔用一個位元組來對齊後續選項，沒有額外長度欄位。"],
+    ["tcp-option-window-scale", "L4", "選項：Window scale", 71, 3, "03 03 07", "類型 3；長度 3；位移 7", "協商後的後續區段可將接收視窗左移 7 位，也就是乘以 128。"]
+  ].map(([id, layer, name, offset, length, raw, interpreted, description]) => Object.freeze({id, layer, name, offset, length, raw, interpreted, description}))
+});
+
 function setupEnvelope() {
   const payload = byId("payload");
   if (!payload) return;
@@ -160,6 +193,92 @@ function setupTrace() {
   listen("trace-scenario", "change", reveal); listen("trace-evidence", "change", reveal); reveal();
 }
 
+function setupSynFrame() {
+  const dump = byId("syn-frame-dump");
+  const tableBody = byId("syn-field-body");
+  if (!dump || !tableBody) return;
+
+  const fieldAt = (offset) => SYN_FRAME.fields.find(field => offset >= field.offset && offset < field.offset + field.length);
+  const hex = (value, width = 2) => value.toString(16).padStart(width, "0");
+  const checksum = (bytes) => {
+    let sum = 0;
+    for (let index = 0; index < bytes.length; index += 2) sum += (bytes[index] << 8) | (bytes[index + 1] ?? 0);
+    while (sum > 0xffff) sum = (sum & 0xffff) + (sum >>> 16);
+    return (~sum) & 0xffff;
+  };
+
+  for (let start = 0; start < SYN_FRAME.bytes.length; start += 16) {
+    const line = document.createElement("div");
+    line.className = "packet-line";
+    const offset = document.createElement("code");
+    offset.className = "packet-offset";
+    offset.textContent = hex(start, 4);
+    line.append(offset);
+    SYN_FRAME.bytes.slice(start, start + 16).forEach((value, relativeIndex) => {
+      const byteOffset = start + relativeIndex;
+      const field = fieldAt(byteOffset);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "packet-byte";
+      button.dataset.field = field.id;
+      button.dataset.layer = field.layer;
+      button.textContent = hex(value);
+      button.setAttribute("aria-label", `位移 0x${hex(byteOffset, 2)}，${field.name}，數值 0x${hex(value)}`);
+      line.append(button);
+    });
+    dump.append(line);
+  }
+
+  SYN_FRAME.fields.forEach(field => {
+    const row = document.createElement("tr");
+    row.dataset.field = field.id;
+    row.dataset.layer = field.layer;
+    row.tabIndex = 0;
+    row.setAttribute("role", "button");
+    row.setAttribute("aria-label", `高亮${field.layer} ${field.name}`);
+    const end = field.offset + field.length - 1;
+    const values = [field.layer, field.name, `${field.offset}–${end} (0x${hex(field.offset, 2)}–0x${hex(end, 2)})`, `${field.length} B`, field.raw, field.interpreted, field.description];
+    values.forEach(value => { const cell = document.createElement("td"); cell.textContent = value; row.append(cell); });
+    tableBody.append(row);
+  });
+
+  let lockedField = null;
+  let activeLayer = "all";
+  const items = () => document.querySelectorAll("[data-field]");
+  const showField = (fieldId) => items().forEach(item => item.classList.toggle("is-active", item.dataset.field === fieldId));
+  const preview = (fieldId) => showField(fieldId || lockedField);
+  const toggleLock = (fieldId) => { lockedField = lockedField === fieldId ? null : fieldId; showField(lockedField); };
+
+  items().forEach(item => {
+    item.addEventListener("pointerenter", () => preview(item.dataset.field));
+    item.addEventListener("pointerleave", () => preview(null));
+    item.addEventListener("focus", () => preview(item.dataset.field));
+    item.addEventListener("blur", () => preview(null));
+    item.addEventListener("click", () => toggleLock(item.dataset.field));
+    item.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggleLock(item.dataset.field); }
+      if (event.key === "Escape") { lockedField = null; showField(null); item.blur(); }
+    });
+  });
+
+  document.querySelectorAll("[data-packet-layer]").forEach(button => button.addEventListener("click", () => {
+    activeLayer = button.dataset.packetLayer;
+    document.querySelectorAll("[data-packet-layer]").forEach(candidate => candidate.setAttribute("aria-pressed", String(candidate === button)));
+    tableBody.querySelectorAll("tr").forEach(row => { row.hidden = activeLayer !== "all" && row.dataset.layer !== activeLayer; });
+    dump.querySelectorAll(".packet-byte").forEach(byte => byte.classList.toggle("is-filtered-out", activeLayer !== "all" && byte.dataset.layer !== activeLayer));
+    const selected = SYN_FRAME.fields.find(field => field.id === lockedField);
+    if (selected && activeLayer !== "all" && selected.layer !== activeLayer) lockedField = null;
+    showField(lockedField);
+  }));
+
+  const ipv4Header = SYN_FRAME.bytes.slice(14, 34);
+  const tcp = SYN_FRAME.bytes.slice(34);
+  const pseudoHeader = [...SYN_FRAME.bytes.slice(26, 34), 0, SYN_FRAME.bytes[23], 0, tcp.length, ...tcp];
+  const validIpv4 = checksum(ipv4Header) === 0;
+  const validTcp = checksum(pseudoHeader) === 0;
+  byId("syn-frame-verification").textContent = `長度 ${SYN_FRAME.bytes.length} B；IPv4 標頭檢查和 ${validIpv4 ? "通過" : "失敗"}；TCP 偽標頭檢查和 ${validTcp ? "通過" : "失敗"}。`;
+}
+
 function setupDictionary() {
   const search = byId("term-search"); if (!search) return;
   const count = byId("term-count");
@@ -167,4 +286,4 @@ function setupDictionary() {
   search.addEventListener("input", draw); draw();
 }
 
-[setupEnvelope, setupArp, setupRoute, setupTransport, setupDns, setupHttp, setupTls, setupTrace, setupDictionary].forEach(fn => fn());
+[setupEnvelope, setupArp, setupRoute, setupTransport, setupDns, setupHttp, setupTls, setupTrace, setupSynFrame, setupDictionary].forEach(fn => fn());

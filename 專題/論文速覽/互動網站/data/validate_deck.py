@@ -20,6 +20,7 @@ LIMITS = {  # 字數上限（超過為警告，不是錯誤）
     'deck.title': 20, 'deck.intro': 160, 'deck.outro': 120,
     'lane.name': 16, 'gist.summary': 150, 'gist.point': 60, 'gist.open': 100,
     'glossary.term': 30, 'glossary.plain': 60, 'lane.question': 60,
+    'lane.hint': 80, 'lane.example_answer': 180,
     'hl.title_zh': 18, 'hl.role': 8, 'hl.one_liner': 50, 'hl.plain': 80, 'hl.core': 120,
     'hl.number.label': 12, 'hl.number.value': 16, 'hl.why': 60,
     'thread.title': 24, 'thread.text': 120,
@@ -88,7 +89,10 @@ def check_deck(path):
     minutes = 0
     for li, lane in enumerate(deck['lanes']):
         w = f'lane[{li}]'
-        required = ('id', 'name', 'minutes', 'paper_count', 'deep_doc', 'gist', 'highlights', 'question', 'all_papers')
+        required = (
+            'id', 'name', 'minutes', 'paper_count', 'deep_doc', 'gist', 'highlights',
+            'question', 'hint', 'example_answer', 'all_papers',
+        )
         missing = [k for k in required if k not in lane]
         for k in missing:
             if k not in lane:
@@ -103,6 +107,10 @@ def check_deck(path):
         lane_ids.add(lane['id'])
         rep.length('lane.name', lane['name'], w)
         rep.length('lane.question', lane['question'], w)
+        rep.length('lane.hint', lane['hint'], w)
+        rep.length('lane.example_answer', lane['example_answer'], w)
+        if not lane['example_answer'].startswith('前提：') or '示例回答：' not in lane['example_answer']:
+            rep.err(f'{w}.example_answer 必須明寫「前提：」與「示例回答：」')
         minutes += int(lane['minutes'])
         check_url(rep, lane['deep_doc'], f'{w}.deep_doc')
 

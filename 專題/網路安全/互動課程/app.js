@@ -3,6 +3,30 @@
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
+const requireReveal = (box) => {
+  let gate = box.previousElementSibling;
+  if (!gate || !gate.classList.contains("reveal-gate")) {
+    gate = document.createElement("div");
+    gate.className = "reveal-gate";
+    const prompt = document.createElement("p");
+    prompt.textContent = "先在心中預測：這組選項會如何改變狀態、控制或證據？";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = "揭曉結果解讀";
+    button.addEventListener("click", () => {
+      box.hidden = false;
+      button.textContent = "已揭曉；改變選項後可再預測";
+      box.focus({ preventScroll: true });
+    });
+    gate.append(prompt, button);
+    box.parentNode.insertBefore(gate, box);
+  }
+  const button = $("button", gate);
+  box.hidden = true;
+  box.tabIndex = -1;
+  button.textContent = "揭曉結果解讀";
+};
+
 const setResult = (id, data) => {
   const box = document.getElementById(id);
   if (!box) return;
@@ -15,6 +39,7 @@ const setResult = (id, data) => {
     const node = $(`[data-field="${key}"]`, box);
     if (node) node.textContent = value;
   });
+  requireReveal(box);
 };
 
 const initWorld = () => {
@@ -183,4 +208,233 @@ const initDictionary = () => {
   search.addEventListener("input", update); update();
 };
 
-[initWorld, initNetwork, initAccess, initCrypto, initThreat, initAttack, initDefense, initEvidence, initDictionary].forEach(init => init());
+const quizzes = {
+  "00": [
+    {
+      question: "下列哪個敘述最接近可測試的安全要求？",
+      options: ["保護客戶資料", "系統應該很安全", "已驗證客戶只能讀取自己的訂單，拒絕也要留紀錄"],
+      answer: 2,
+      explanation: "第三項同時指定主體、資產、動作、邊界與證據，才能實作與驗證。"
+    },
+    {
+      question: "一個未經授權的人修改庫存數量，最直接破壞哪項安全性質？",
+      options: ["機密性", "完整性", "可用性"],
+      answer: 1,
+      explanation: "未授權修改讓狀態不再可信，首先影響完整性；若導致無法供貨，才可能連帶影響可用性。"
+    },
+    {
+      question: "要調查管理員大量匯出訂單，哪組證據最有用？",
+      options: ["只記錄匯出成功", "操作者身分、查詢範圍、匯出量與目的位置", "只保留網頁標題"],
+      answer: 1,
+      explanation: "調查需要把誰、讀了什麼、多少與去向關聯起來；單一「成功」無法界定影響。"
+    }
+  ],
+  "01": [
+    {
+      question: "只看到目的連接埠是 443，最穩妥的結論是什麼？",
+      options: ["對端一定是合法網站", "通常承載加密網頁流量，但應用與身分還要另行驗證", "封包內容一定可讀"],
+      answer: 1,
+      explanation: "連接埠是多工與慣例欄位，不是可信的應用身分證明。"
+    },
+    {
+      question: "對使用者資料包協定（UDP）的描述，哪一項正確？",
+      options: ["核心會維護與 TCP 相同的可靠位元組流", "應用程式不能自行實作確認與重送", "每份資料報獨立傳送，應用可另行實作可靠性"],
+      answer: 2,
+      explanation: "UDP 本身不提供 TCP 的可靠位元組流，但這不禁止應用層加上確認、重送或排序。"
+    },
+    {
+      question: "觀測點只看到加密流量的來源、目的、大小與時序，不能單獨證明什麼？",
+      options: ["通訊端點", "應用內容與使用者意圖", "封包的長度"],
+      answer: 1,
+      explanation: "加密後仍可觀察部分後設資料，但應用內容與人的意圖需要端點及應用證據。"
+    }
+  ],
+  "02": [
+    {
+      question: "系統確認憑證屬於 alice，但拒絕她修改管理設定。這表示什麼？",
+      options: ["驗證成功、授權失敗", "驗證失敗、授權成功", "稽核紀錄必定失效"],
+      answer: 0,
+      explanation: "驗證回答「是誰」，授權再依資源與動作決定「可不可以做」。"
+    },
+    {
+      question: "一般讀者通過驗證後要讀取他人的個人資料，系統應如何處理？",
+      options: ["因為已驗證所以允許", "再檢查物件擁有者，未通過就拒絕", "只要連接來自內網就允許"],
+      answer: 1,
+      explanation: "角色允許某類動作，不等於對所有物件都有權限；還要做物件層授權。"
+    },
+    {
+      question: "主體是 unknown 時，最合理的驗證狀態是什麼？",
+      options: ["可以任意勾選已驗證", "尚未建立可信主體，不能把聲稱名稱視為已驗證", "自動繼承管理者角色"],
+      answer: 1,
+      explanation: "不明主體不應只靠聲稱名稱取得已驗證狀態或角色。"
+    }
+  ],
+  "03": [
+    {
+      question: "要把收到的檔案與一份可信摘要比對，應優先使用哪類工具？",
+      options: ["密碼雜湊函式", "對稱式加密", "隨機刪除部分內容"],
+      answer: 0,
+      explanation: "可信摘要與重算摘要的比對能提供竄改線索；雜湊本身不提供保密或來源身分。"
+    },
+    {
+      question: "通訊雙方已共享秘密金鑰，想同時保密並偵測竄改，應選什麼？",
+      options: ["無金鑰雜湊", "對稱式已驗證加密", "只做 Base64 編碼"],
+      answer: 1,
+      explanation: "已驗證加密同時提供機密性與完整性驗證；編碼不是安全控制。"
+    },
+    {
+      question: "TLS 使用臨時（EC）DHE 建立共享祕密的主要好處是什麼？",
+      options: ["憑證私鑰直接加密所有應用資料", "日後長期私鑰外洩時，過去錄下的流量仍有前向保密性", "被動抓包一定看得到憑證驗證結果"],
+      answer: 1,
+      explanation: "臨時金鑰交換提供前向保密性；憑證私鑰用來簽署握手內容，不是把流量金鑰直接傳過去。"
+    }
+  ],
+  "04": [
+    {
+      question: "入口是「第三方相依元件」時，下列哪項預防控制最對準路徑？",
+      options: ["多因素驗證", "簽章驗證與來源鎖定", "僅增加密碼長度"],
+      answer: 1,
+      explanation: "相依供應鏈路徑要驗證成品與來源；登入用的多因素驗證不在這條路徑上。"
+    },
+    {
+      question: "只部署集中日誌與異常偵測，對威脅模型代表什麼？",
+      options: ["已阻止所有入口", "有助偵測，仍需對準入口的預防控制", "剩餘風險自動歸零"],
+      answer: 1,
+      explanation: "監測改善可見性，不會自動阻止入口或消除影響。"
+    },
+    {
+      question: "評估「公開網際網路請求影響服務可用性」時，最先要補上哪種驗證？",
+      options: ["容量、限流、排隊與延遲／錯誤率測試", "證明每個來源都是真人", "只檢查頁面顏色"],
+      answer: 0,
+      explanation: "可用性暴露要用請求率、佇列、資源、延遲與錯誤率驗證，並測試限流與降級。"
+    }
+  ],
+  "05": [
+    {
+      question: "不受信任的輸入被當成查詢或命令語法，核心機制是什麼？",
+      options: ["注入與解譯器混淆", "網路位址轉換", "備份還原"],
+      answer: 0,
+      explanation: "注入的核心是資料被解譯器誤當成控制語法，應用參數化介面與明確邊界。"
+    },
+    {
+      question: "攻擊者用遭竊憑證建立工作階段後讀取資料，哪組證據最能串起因果鏈？",
+      options: ["登入、工作階段、授權物件與後續存取", "只有一張系統畫面截圖", "只有網站名稱"],
+      answer: 0,
+      explanation: "憑證冒用的狀態變化橫跨身分、工作階段、授權與資料存取，需要共用識別碼關聯。"
+    },
+    {
+      question: "一個已信任的建置成品在更新路徑中被替換，屬於哪類攻擊？",
+      options: ["供應鏈竄改", "單純的密碼輸入錯誤", "時鐘漂移"],
+      answer: 0,
+      explanation: "惡意內容沿既有信任與更新路徑進入多台系統，是供應鏈竄改的典型狀態變化。"
+    }
+  ],
+  "06": [
+    {
+      question: "組織已有治理、清冊與安全設定，但沒有集中且可關聯的遹測。第一個閉環缺口是什麼？",
+      options: ["偵測", "復原", "宣稱風險為零"],
+      answer: 0,
+      explanation: "沒有可關聯遹測，組織難以發現控制被繞過或失效；後段回應無法補回可見性。"
+    },
+    {
+      question: "哪項證據最能支持「某版本備份能在某環境恢復」？",
+      options: ["備份作業曾顯示成功", "實際還原演練與完整性驗證結果", "備份檔名很完整"],
+      answer: 1,
+      explanation: "備份紀錄只支持作業曾執行；還原演練才能驗證特定版本與環境的可恢復性。"
+    },
+    {
+      question: "為什麼「告警」不等於「安全事件」？",
+      options: ["告警只是待驗證訊號，還要調查對資產與狀態的實際影響", "告警永遠是誤報", "安全事件不需要證據"],
+      answer: 0,
+      explanation: "規則或模型觸發只提供調查起點，要用證據確認狀態變化與影響範圍。"
+    }
+  ],
+  "07": [
+    {
+      question: "日誌記錄工作階段 S 發出大量匯出，屬於什麼？",
+      options: ["直接觀察到系統記錄的動作", "已證明鍵盤前的真人身分", "已證明對端永久保存所有資料"],
+      answer: 0,
+      explanation: "日誌直接支持「系統如此記錄」；真人歸屬與對端後續行為仍是受限的推論。"
+    },
+    {
+      question: "兩個來源的事件時間很接近，但時鐘誤差區間重疊。應如何下結論？",
+      options: ["直接以顯示時間排因果", "單靠時間戳不能可靠排序，要用序號、工作階段或協定因果補強", "把其中一筆刪除"],
+      answer: 1,
+      explanation: "誤差區間重疊時，顯示時間的先後不足以支持真實因果順序。"
+    },
+    {
+      question: "要界定帳號遭冒用後實際讀了哪些資料，哪組來源不可少？",
+      options: ["只有身分驗證日誌", "身分／工作階段、應用動作與資料存取稽核", "只有 DNS 快取"],
+      answer: 1,
+      explanation: "身分日誌說明登入，應用與資料稽核才能用工作階段界定後續讀取範圍。"
+    }
+  ]
+};
+
+const initQuizzes = () => {
+  $$('[data-quiz]').forEach(section => {
+    const chapter = section.dataset.quiz;
+    const questions = quizzes[chapter];
+    if (!questions) return;
+    const form = document.createElement("form");
+    form.className = "quiz-form";
+    questions.forEach((item, questionIndex) => {
+      const fieldset = document.createElement("fieldset");
+      fieldset.className = "quiz-question";
+      const legend = document.createElement("legend");
+      legend.textContent = `${questionIndex + 1}. ${item.question}`;
+      fieldset.append(legend);
+      item.options.forEach((option, optionIndex) => {
+        const label = document.createElement("label");
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = `quiz-${chapter}-${questionIndex}`;
+        radio.value = String(optionIndex);
+        label.append(radio, document.createTextNode(` ${option}`));
+        fieldset.append(label);
+      });
+      const feedback = document.createElement("p");
+      feedback.className = "quiz-feedback";
+      feedback.hidden = true;
+      feedback.setAttribute("aria-live", "polite");
+      fieldset.append(feedback);
+      form.append(fieldset);
+    });
+    const actions = document.createElement("div");
+    actions.className = "quiz-actions";
+    const check = document.createElement("button");
+    check.type = "submit";
+    check.textContent = "檢查作答";
+    const reset = document.createElement("button");
+    reset.type = "reset";
+    reset.textContent = "重新作答";
+    actions.append(check, reset);
+    form.append(actions);
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      questions.forEach((item, questionIndex) => {
+        const selected = $(`input[name="quiz-${chapter}-${questionIndex}"]:checked`, form);
+        const feedback = $$(".quiz-feedback", form)[questionIndex];
+        feedback.hidden = false;
+        if (!selected) {
+          feedback.dataset.tone = "warn";
+          feedback.textContent = "先選一個答案，再檢查。";
+          return;
+        }
+        const correct = Number(selected.value) === item.answer;
+        feedback.dataset.tone = correct ? "correct" : "incorrect";
+        feedback.textContent = `${correct ? "答對。" : `答案：${item.options[item.answer]}。`} ${item.explanation}`;
+      });
+    });
+    form.addEventListener("reset", () => {
+      setTimeout(() => $$(".quiz-feedback", form).forEach(feedback => {
+        feedback.hidden = true;
+        feedback.textContent = "";
+        delete feedback.dataset.tone;
+      }), 0);
+    });
+    section.append(form);
+  });
+};
+
+[initWorld, initNetwork, initAccess, initCrypto, initThreat, initAttack, initDefense, initEvidence, initDictionary, initQuizzes].forEach(init => init());

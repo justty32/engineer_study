@@ -500,6 +500,11 @@
     aside.setAttribute('tabindex', '-1');
     aside.appendChild(el('p', 'card-kicker', '車上想一想'));
     aside.appendChild(para('lane-question-text', lane.question, matchers));
+    aside.appendChild(para('lane-question-hint', lane.hint, matchers, 'lane-question-label', '思考提示'));
+    var example = el('details', 'lane-question-example');
+    example.appendChild(el('summary', null, '有條件的示例回答'));
+    example.appendChild(para('lane-question-example-text', lane.example_answer, matchers));
+    aside.appendChild(example);
     if (isLastLane) {
       var next = el('p', 'lane-question-next');
       var threads = el('a', null, '閱讀跨線索');

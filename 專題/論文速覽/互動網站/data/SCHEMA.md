@@ -9,7 +9,7 @@
 ```text
 deck: deck_id, title, subtitle, total_minutes, intro, lanes[], threads[], outro
 lane: id, name, minutes, paper_count, deep_doc,
-      gist{summary, points[], open}, highlights[4], question, all_papers[]
+      gist{summary, points[], open}, highlights[4], question, hint, example_answer, all_papers[]
 highlight: arxiv_id, title_zh, title_en, year, role, one_liner, plain?, core,
            number{label, value, note}, why, links{arxiv?, summary, translate?, transcript?}
 lane 另有可選 glossary?: [{term: "中文（English）", plain: "≤60 字"}] × 4～8
@@ -51,6 +51,8 @@ thread: title, text, lane_ids[], paper_ids[]
 | `glossary` | {term, plain}[] | 否 | 名詞白話 4～8 條。`term` 形如「中文（English）」（≤ 30 字），`plain` ≤ 60 字。頁面會把卡片正文中出現的 `term`（或「（」前的中文部分，≥ 2 字）標成可點行內按鈕；所以 `term` 的中文部分要是正文真的會用到的寫法 |
 | `highlights` | highlight[] | 是 | 必讀卡，固定 4 張；`arxiv_id` 必須出現在同一 lane 的 `all_papers` |
 | `question` | string | 是 | 「車上想一想」一題開放問題（≤ 60 字） |
+| `hint` | string | 是 | 直接顯示的短提示（≤ 80 字）：提供拆題方向或應比較的證據，不代替讀者作答 |
+| `example_answer` | string | 是 | 摺疊的有條件示例回答（≤ 180 字）；必須明寫「前提：……。示例回答：……」，只示範在該前提下如何判斷，不宣稱唯一正解 |
 | `all_papers` | row[] | 是 | 這條線的全清單（摺疊表格） |
 
 ## highlight（必讀卡）

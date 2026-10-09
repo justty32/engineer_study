@@ -20,6 +20,48 @@
     "schematic", "stackup", "rf-layout", "release"
   ];
   var STORAGE_KEY = "engineerStudy.iotPowerPcb.v1";
+  var SELF_CHECKS = {
+    "power-tree": {
+      question: "某 3.3 V 數位 rail 的預估負載為 75 mA，設計裕度取 20%。設計電流應抓多少？",
+      answer: "90.0 mA（容差 ±0.1 mA）。",
+      explanation: "依 I_design = I × (1 + 裕度／100)，75 × 1.20 = 90 mA。這只處理連續負載裕度，不能拿來取代 Radio 峰值檢查。"
+    },
+    regulator: {
+      question: "LDO 的 dropout 裕度足夠，但最壞接面溫度估成 132 °C，應優先判定可用還是阻擋？",
+      answer: "阻擋，不能只看 dropout。",
+      explanation: "電氣壓差足夠不代表熱安全；接面溫度超過教材的 125 °C 門檻時，應改用較低損耗方案或改善散熱。"
+    },
+    battery: {
+      question: "裝置 99.9% 時間睡眠時，為何仍要把穩壓器 Iq 與板級漏電列入平均電流？",
+      answer: "因為它們在睡眠期間仍持續耗電，可能反而主導壽命。",
+      explanation: "低 duty cycle 會壓低主功能的平均電流，卻不會自動消除常駐漏電；應以整板量測驗證所有隱性負載。"
+    },
+    decoupling: {
+      question: "若瞬態壓降主要來自 ESR 項，單純把同類電容容量加倍，能否保證壓降減半？",
+      answer: "不能。",
+      explanation: "容量加倍只直接降低 ΔI×Δt／C 項；若 ΔI×ESR 主導，還要降低 ESR、縮短路徑或改變並聯配置。"
+    },
+    schematic: {
+      question: "ERC 零錯誤是否足以證明 RESET 上電時序、封裝與替代料都正確？",
+      answer: "不足。",
+      explanation: "ERC 只檢查它能理解的電氣規則；產品意圖、時序、封裝映射與供應鏈證據仍需獨立審查。"
+    },
+    stackup: {
+      question: "低時脈訊號若邊緣很快且跨越參考平面裂縫，是否仍可能有高 SI／EMI 風險？",
+      answer: "是。",
+      explanation: "風險主要受邊緣速度與回流迴路影響；裂縫迫使回流繞路，會放大迴路面積與輻射。"
+    },
+    "rf-layout": {
+      question: "預留 π 匹配焊墊且饋線標稱 50 Ω，是否就能宣告整機天線效率合格？",
+      answer: "不能。",
+      explanation: "這些只建立可調與傳輸條件；外殼、電池、人手與實際天線仍須靠 VNA 與整機無線量測驗證。"
+    },
+    release: {
+      question: "新板第一次上電就接齊所有外設並燒完整韌體，為何不利於 bring-up？",
+      answer: "故障變數同時增加，難以定位第一個失敗環節。",
+      explanation: "應從目視、短路與限流供電開始，再逐軌確認電源、reset、clock 與除錯介面，一次只引入一類未知數。"
+    }
+  };
   var DEFAULTS = {
     "power-tree": {
       "tree-margin": 30, "load-digital": 60, "load-radio-average": 100,
@@ -689,9 +731,36 @@
     if (key === "release") safeAll(doc, "[data-release-check]").forEach(function (input) { if (Object.prototype.hasOwnProperty.call(defaults, input.id)) input.checked = defaults[input.id] === true; });
   }
 
+  function renderSelfChecks(doc) {
+    MODULE_KEYS.forEach(function (key) {
+      var section = safeAll(doc, '[data-module="' + key + '"]')[0];
+      var item = SELF_CHECKS[key];
+      if (!section || !item || safeAll(section, ".self-check").length) return;
+      var details = doc.createElement("details");
+      var summary = doc.createElement("summary");
+      var answer = doc.createElement("p");
+      var answerLabel = doc.createElement("strong");
+      var explanation = doc.createElement("p");
+      var explanationLabel = doc.createElement("strong");
+      details.className = "self-check";
+      summary.textContent = "自我檢核：" + item.question;
+      answerLabel.textContent = "答案鍵：";
+      answer.appendChild(answerLabel);
+      answer.appendChild(doc.createTextNode(item.answer));
+      explanationLabel.textContent = "解析：";
+      explanation.appendChild(explanationLabel);
+      explanation.appendChild(doc.createTextNode(item.explanation));
+      details.appendChild(summary);
+      details.appendChild(answer);
+      details.appendChild(explanation);
+      section.appendChild(details);
+    });
+  }
+
   function init(doc, root) {
     if (!doc) return;
     var browserRoot = root || (typeof window !== "undefined" ? window : null);
+    renderSelfChecks(doc);
     safeAll(doc, ".eyebrow, .section-kicker, .panel-tag").forEach(function (element) {
       if (/^[\x00-\x7F\s]+$/.test(element.textContent || "")) element.setAttribute("lang", "en");
     });

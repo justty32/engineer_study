@@ -55,6 +55,10 @@ fieldset { margin: 0 0 16px; padding: 12px; border: 1px solid #9eaaa7; border-ra
 .result-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
 .result-grid div { padding: 12px; border: 1px solid rgb(0 0 0 / 12%); background: rgb(255 255 255 / 58%); }
 .result-grid strong { display: block; color: var(--muted); font-size: .78rem; letter-spacing: .04em; }
+.reveal-gate { padding: 18px; border: 1px dashed var(--accent); background: var(--panel); }
+.reveal-gate p { margin-top: 0; }
+.reveal-gate button, .quiz-actions button { padding: 9px 14px; border: 1px solid var(--accent); border-radius: 7px; color: var(--panel); background: var(--accent); font-weight: 800; cursor: pointer; }
+.result-box[hidden] { display: none; }
 
 .section { margin-top: 34px; }
 .section h2 { margin-bottom: 8px; font-size: clamp(1.45rem, 3vw, 2rem); }
@@ -83,6 +87,19 @@ fieldset { margin: 0 0 16px; padding: 12px; border: 1px solid #9eaaa7; border-ra
 .term-card dt { margin-top: 8px; font-weight: 800; }
 .term-card dd { margin-left: 0; color: var(--muted); }
 .empty-state { padding: 20px; border: 1px dashed var(--line); }
+
+.quiz { padding: clamp(20px, 4vw, 34px); border: 1px solid var(--line); border-radius: 12px; background: var(--panel); box-shadow: var(--shadow); }
+.quiz > p { color: var(--muted); }
+.quiz-form { display: grid; gap: 18px; margin-top: 18px; }
+.quiz-question { margin: 0; padding: 16px; }
+.quiz-question legend { padding-inline: 6px; font-weight: 800; }
+.quiz-question label { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; }
+.quiz-question input { flex: 0 0 auto; width: 1.1rem; height: 1.1rem; margin-top: .3rem; }
+.quiz-feedback { margin-bottom: 0; padding: 10px 12px; border-left: 4px solid var(--warn); background: var(--warn-soft); }
+.quiz-feedback[data-tone="correct"] { border-color: var(--ok); background: var(--accent-soft); }
+.quiz-feedback[data-tone="incorrect"] { border-color: var(--danger); background: var(--danger-soft); }
+.quiz-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.quiz-actions button[type="reset"] { color: var(--accent); background: transparent; }
 
 .pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 42px; padding-top: 20px; border-top: 1px solid var(--line); }
 .pager a { display: inline-block; padding: 10px 14px; border: 1px solid var(--accent); border-radius: 7px; text-decoration: none; font-weight: 800; }

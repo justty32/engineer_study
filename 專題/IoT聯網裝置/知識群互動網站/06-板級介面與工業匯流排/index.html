@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>30 分鐘搞懂 I²C、SPI、RS-485 與 Modbus</title>
   <link rel="stylesheet" href="./styles.css">
+  <script src="./calc.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body><a class="main-site-link" href="https://justty32.github.io/engineer_study/" aria-label="回到工程學習中央入口">← 回到工程學習主站</a>
@@ -13,11 +14,15 @@
     <div><p class="eyebrow">IOT HARDWARE CRASH COURSE</p><h1>30 分鐘搞懂板級通訊</h1><p>I²C · SPI · RS-485 · Modbus RTU｜給很會 C／C++、但硬體不熟的你</p></div>
     <div class="timer-card"><span>建議節奏</span><strong id="time-label">30:00</strong><button id="timer-toggle" type="button">開始倒數</button></div>
   </header>
+  <nav class="station-nav" aria-label="主要導覽">
+    <a href="../../互動網站/index.html">← 中央工作台</a><a href="../02-嵌入式韌體與RTOS/index.html">上一站：02</a><a href="../03-連線模組與網路/index.html">下一站：03</a>
+    <details><summary>七站清單</summary><ol><li><a href="../07-微控制器與韌體核心/index.html">07 微控制器與韌體核心</a></li><li><a href="../01-板級電源與PCB/index.html">01 板級電源與 PCB</a></li><li><a href="../02-嵌入式韌體與RTOS/index.html">02 嵌入式韌體與 RTOS</a></li><li><a href="./index.html" aria-current="page">06 板級介面與工業匯流排</a></li><li><a href="../03-連線模組與網路/index.html">03 連線模組與網路</a></li><li><a href="../04-天線RF與EMC/index.html">04 天線 RF 與 EMC</a></li><li><a href="../05-裝置安全與量產生命週期/index.html">05 裝置安全與量產生命週期</a></li></ol></details>
+  </nav>
 
   <div class="app-layout">
     <nav class="route" aria-label="30 分鐘學習路徑">
-      <div class="route-head"><span>你的路徑</span><strong id="progress-text">0 / 6</strong></div>
-      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><i id="progress-fill"></i></div>
+      <div class="progress-heading"><span>學習進度</span><strong id="progress-text">0 / 6 個模組完成</strong></div>
+      <div class="progress-track" role="progressbar" aria-label="網站學習進度" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><span id="progress-fill" class="progress-fill"></span></div>
       <button class="route-step active" data-step="basics" type="button"><b>01</b><span>硬體詞翻譯<small>3 分鐘</small></span><em>○</em></button>
       <button class="route-step" data-step="i2c" type="button"><b>02</b><span>I²C：兩條共用線<small>6 分鐘</small></span><em>○</em></button>
       <button class="route-step" data-step="spi" type="button"><b>03</b><span>SPI：快，但要對時<small>6 分鐘</small></span><em>○</em></button>

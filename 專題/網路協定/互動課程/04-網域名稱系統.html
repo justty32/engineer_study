@@ -8,6 +8,7 @@
 <h2>誰問誰</h2><div class="flow"><span>應用／作業系統的 stub 解析器</span><span>遞迴解析器</span><span>根名稱伺服器</span><span>頂級網域名稱伺服器</span><span>權威名稱伺服器</span></div><p>stub 是只會把問題交出去的輕量查詢端。遞迴解析器替用戶端追查答案並快取。根與頂級網域通常提供下一層委派；權威伺服器提供自己負責區域的記錄。這是一條可能路徑，快取可讓查詢在任一較早位置結束。</p>
 <h2>記錄不是只有位址</h2><ul><li><strong>A 記錄</strong>把名稱對到網際網路協定第四版（Internet Protocol version 4, IPv4）位址；<strong>AAAA 記錄</strong>把名稱對到網際網路協定第六版（Internet Protocol version 6, IPv6）位址。A 與 AAAA 是標準記錄型別名稱，不是此處遺漏展開的縮寫。</li><li><strong>正式名稱記錄（Canonical Name record, CNAME record）</strong>把一個名稱別名指向另一個正式名稱。</li><li><strong>名稱伺服器記錄（Name Server record, NS record）</strong>描述某區域由哪些權威伺服器負責。</li></ul>
 <h2>失敗與證據</h2><p>不存在的名稱、逾時、伺服器失敗與有名稱但沒有該型別記錄，是不同結果。先看 DNS 回覆碼、問題名稱、記錄型別、回覆來源、存活時間（Time To Live, TTL）與是否命中快取。名稱解析成功只證明取得資料，不保證目的服務可達或可信。</p>
-<p>查詢工具的答案區可證明某個解析器在該時刻回了哪些記錄；封包擷取可證明查詢是否離開主機、向哪台伺服器發送及收到何種線上回覆；作業系統或瀏覽器快取則可能讓你完全看不到外部查詢。因此「擷取不到 DNS 封包」不能單獨證明應用沒有做名稱解析，它也可能命中較上層快取。</p>
+<p>查詢工具的答案區可證明某個解析器在該時刻回了哪些記錄；封包擷取可證明查詢是否離開主機、向哪台伺服器發送及收到何種線上回覆；作業系統或瀏覽器快取則可能讓你完全看不到外部查詢。因此「擷取不到 DNS 封包」不能單獨證明應用沒有做名稱解析，它也可能命中較上層快取。</p><h3>在本機取得證據</h3><pre><code>dig example.com A
+dig example.com CNAME +noall +answer</code></pre><p><strong>預期輸出樣貌：</strong>完整查詢會有 <code>status: NOERROR</code>、<code>QUESTION SECTION</code> 與 <code>ANSWER SECTION</code>；答案列外形如 <code>example.com. 300 IN A 192.0.2.80</code>，其中位址為文件示意，真實記錄與 TTL 會變動。第二條只顯示 CNAME 答案；沒有輸出可能表示沒有這種記錄，不等於 A 記錄或主機不存在。這些欄位可對照「名稱＋記錄型別」的查詢鍵、回覆狀態與快取期限。</p>
 <h2>不要混淆</h2><p>DNS 把名稱映射成資料；傳輸層再連到某個 IP 位址與埠；傳輸層安全性協定則檢查目前伺服器憑證是否適用於原本要連的名稱。三者相接，但名稱解析不是身分驗證。</p>
 <nav class="pager" aria-label="章節導覽"><a href="03-傳輸控制與使用者資料包.html">← 上一頁：傳輸層</a><a href="05-超文字傳輸協定.html">下一頁：超文字傳輸協定 →</a></nav></main></body></html>

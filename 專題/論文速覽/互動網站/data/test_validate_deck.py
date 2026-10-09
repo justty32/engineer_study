@@ -43,6 +43,8 @@ def valid_lane():
         'gist': {'summary': '摘要。', 'points': ['一。', '二。', '三。'], 'open': '待解問題。'},
         'highlights': highlights,
         'question': '如何驗證？',
+        'hint': '先找可重複的證據。',
+        'example_answer': '前提：可重複測試。示例回答：以獨立測試判斷。',
         'all_papers': rows,
     }
 

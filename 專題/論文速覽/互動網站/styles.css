@@ -869,6 +869,34 @@ body:not(.page-index) {
   line-height: 1.65;
 }
 
+.lane-question-hint {
+  margin: 10px 0 0;
+  line-height: 1.65;
+}
+
+.lane-question-label {
+  margin-right: 0.55em;
+  color: var(--amber);
+  font-weight: 800;
+}
+
+.lane-question-example {
+  margin-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--amber) 48%, transparent);
+  padding-top: 8px;
+}
+
+.lane-question-example summary {
+  color: var(--teal-dark);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.lane-question-example-text {
+  margin: 8px 0 0;
+  line-height: 1.65;
+}
+
 .lane-question.is-current {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 28%, transparent);
 }

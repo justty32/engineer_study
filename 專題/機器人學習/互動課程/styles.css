@@ -14,3 +14,4 @@
 }
 .main-site-link:hover { text-decoration: underline; }
 .range-value{display:inline-block;min-width:5.5rem;margin:.25rem 0 0 .5rem;padding:.15rem .45rem;border-radius:.35rem;background:var(--soft);font-weight:800;text-align:center}button{padding:.55rem .8rem;border:1px solid var(--accent);border-radius:.4rem;color:var(--ink);background:var(--panel);font-weight:800;cursor:pointer}button:hover{background:var(--soft)}
+.quiz-question{margin:1rem 0;padding:1rem;border:1px solid var(--line);border-radius:8px;background:var(--panel)}.quiz-question legend{font-weight:800}.quiz-question>label{display:block;margin:.45rem 0}.quiz-question input{margin-right:.35rem}.quiz-question details{margin-top:.8rem}

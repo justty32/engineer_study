@@ -140,6 +140,11 @@ JS 行為：`#theme-toggle` 切換 `light/dark`，`aria-pressed="true"` 表示�
   <aside class="lane-question" id="question-arc" data-nav-index="5" tabindex="-1">
     <p class="card-kicker">車上想一想</p>
     <p class="lane-question-text">…</p>
+    <p class="lane-question-hint"><span class="lane-question-label">思考提示</span>…</p>
+    <details class="lane-question-example">
+      <summary>有條件的示例回答</summary>
+      <p class="lane-question-example-text">前提：…。示例回答：…。</p>
+    </details>
   </aside>
 
   <details class="lane-all">
@@ -157,7 +162,7 @@ JS 行為：`#theme-toggle` 切換 `light/dark`，`aria-pressed="true"` 表示�
 </section>
 ```
 
-行內名詞標記（JS 在該 lane 的 `.gist-summary`、`.gist-points li`、`.gist-open`、`.card-oneliner`、`.card-plain`、`.card-core`、`.card-why`、`.lane-question-text` 文字中，把出現的 glossary `term`（完整字串，或「（」之前的中文部分、長度 ≥ 2）換成行內按鈕；同一段落同一詞只標第一次）：
+行內名詞標記（JS 在該 lane 的 `.gist-summary`、`.gist-points li`、`.gist-open`、`.card-oneliner`、`.card-plain`、`.card-core`、`.card-why`、`.lane-question-text`、`.lane-question-hint`、`.lane-question-example-text` 文字中，把出現的 glossary `term`（完整字串，或「（」之前的中文部分、長度 ≥ 2）換成行內按鈕；同一段落同一詞只標第一次）：
 
 ```html
 …把 <span class="term" role="button" tabindex="0" data-term="0" aria-expanded="false">測試時訓練</span> 當成…

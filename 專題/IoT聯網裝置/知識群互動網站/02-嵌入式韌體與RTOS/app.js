@@ -19,6 +19,48 @@
     "scheduler", "synchronization", "low-power", "reliability"
   ];
   var STORAGE_KEY = "engineerStudy.iotFirmwareRtos.v1";
+  var SELF_CHECKS = {
+    architecture: {
+      question: "只有一條短週期工作流、沒有阻塞 I/O，也沒有多個獨立 deadline 時，是否必須先導入 RTOS？",
+      answer: "不必。",
+      explanation: "Superloop 或事件迴圈可能更簡單；RTOS 的價值要由並行 deadline、阻塞流程、隔離與團隊維護需求支持。"
+    },
+    "event-loop": {
+      question: "事件迴圈依序執行 4 ms、9 ms、13 ms 三個不可搶占 callback，最後一個事件的最壞完成時間是多少？",
+      answer: "26.0 ms（容差 ±0.1 ms）。",
+      explanation: "不可搶占的最壞情況要累加前面與自身 callback：4 + 9 + 13 = 26 ms；題目數值不同於正文預設值。"
+    },
+    interrupts: {
+      question: "縮短目前 ISR handler，是否一定能消除被全域關中斷造成的起始延遲？",
+      answer: "不一定。",
+      explanation: "反應時間還包含關中斷區間、高優先級 ISR 與進入成本；只縮短本 ISR 無法消除其他來源的 blocking。"
+    },
+    "driver-io": {
+      question: "DMA 顯著降低 CPU 百分比後，為何仍需設計 buffer ownership？",
+      answer: "DMA 與 CPU 仍可能同時存取或重用同一塊記憶體。",
+      explanation: "必須定義完成通知、緩衝區生命週期與一致性，否則會出現覆寫、讀到半包或 cache 不一致。"
+    },
+    scheduler: {
+      question: "週期任務總利用率略高於 RM 充分條件，能否直接斷言一定不可排程？",
+      answer: "不能。",
+      explanation: "RM bound 是充分條件而非必要條件；應再做 response-time analysis，並納入 blocking、jitter 與 deadline。"
+    },
+    synchronization: {
+      question: "一個 ISR 事件要同時通知多個 consumer，binary semaphore 是否能保證每個 consumer 都收到？",
+      answer: "不能。",
+      explanation: "Binary semaphore 一次通常只喚醒一個等待者；多 consumer 廣播應選 event group 或明確的 broadcast 機制。"
+    },
+    "low-power": {
+      question: "啟用 tickless 後，datasheet 的 MCU sleep 電流是否就等於整機睡眠電流？",
+      answer: "不等於。",
+      explanation: "穩壓器 Iq、GPIO、感測器、通訊模組與板級漏電仍存在；tickless 只減少週期 tick 喚醒。"
+    },
+    reliability: {
+      question: "A/B 韌體分區已存在，更新中斷後是否必然能安全復原？",
+      answer: "不必然。",
+      explanation: "還需要映像驗證、啟動成功判準、原子狀態更新與 rollback 路徑；只有兩個 slot 不等於復原流程完整。"
+    }
+  };
 
   var DEFAULTS = {
     architecture: {
@@ -567,7 +609,7 @@
     var label = get(doc, "progress-label");
     var fill = get(doc, "progress-fill");
     var track = all(doc, ".progress-track")[0];
-    if (label) label.textContent = "已完成 " + count + " / " + MODULE_KEYS.length + " 個模組（" + Math.round(count / MODULE_KEYS.length * 100) + "%）";
+    if (label) label.textContent = count + " / " + MODULE_KEYS.length + " 個模組完成";
     if (fill && fill.style) fill.style.width = (count / MODULE_KEYS.length * 100).toFixed(2) + "%";
     if (track && track.setAttribute) {
       track.setAttribute("aria-valuemin", "0"); track.setAttribute("aria-valuemax", String(MODULE_KEYS.length));
@@ -618,9 +660,36 @@
     });
   }
 
+  function renderSelfChecks(doc) {
+    MODULE_KEYS.forEach(function (key) {
+      var section = all(doc, '[data-module="' + key + '"]')[0];
+      var item = SELF_CHECKS[key];
+      if (!section || !item || all(section, ".self-check").length) return;
+      var details = doc.createElement("details");
+      var summary = doc.createElement("summary");
+      var answer = doc.createElement("p");
+      var answerLabel = doc.createElement("strong");
+      var explanation = doc.createElement("p");
+      var explanationLabel = doc.createElement("strong");
+      details.className = "self-check";
+      summary.textContent = "自我檢核：" + item.question;
+      answerLabel.textContent = "答案鍵：";
+      answer.appendChild(answerLabel);
+      answer.appendChild(doc.createTextNode(item.answer));
+      explanationLabel.textContent = "解析：";
+      explanation.appendChild(explanationLabel);
+      explanation.appendChild(doc.createTextNode(item.explanation));
+      details.appendChild(summary);
+      details.appendChild(answer);
+      details.appendChild(explanation);
+      section.appendChild(details);
+    });
+  }
+
   function init(doc, browserRoot) {
     if (!doc) return;
     var rootObject = browserRoot || (typeof window !== "undefined" ? window : null);
+    renderSelfChecks(doc);
     var completed = loadProgress(rootObject);
     var sections = all(doc, "[data-module]");
     var initial = sections.length ? sections[0].getAttribute("data-module") : MODULE_KEYS[0];

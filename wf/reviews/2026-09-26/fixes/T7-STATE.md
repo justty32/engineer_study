@@ -12,3 +12,12 @@
 - 43、45 完成＋commit d7427b0
 - 46、47 完成＋commit（見 git log）
 - 狀態：全部完成，T7-tmp 已刪
+
+## 第二輪（HANDOFF-2，2026-10-09）
+
+- 基準 wf-lint：broken=2 biglist=269 residue {{=3
+- 列：43×9、44×8、45×2、46×6、47×1＝26 列
+- 交跨課隊：43 main-site-link×2、44 網路協定 site-footer＋title（頁尾）；43／44 topbar 只做課內 aria-label
+- 工人線：ml、os、linux、re、net-syn→net-ev（序列）、sec-a、sec-b、iot-nav→iot-a／iot-b、paper
+- 草稿：fixes/T7r2-tmp/<線>.md
+- 第二輪全部完成：11 條工人線收齊，驗證 0 缺漏，處置紀錄已加第二輪段，T7r2-tmp 已刪，已 commit

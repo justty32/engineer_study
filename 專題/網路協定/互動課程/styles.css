@@ -53,6 +53,21 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: .8rem; border-rad
 .pill { display: inline-block; padding: .1rem .45rem; border-radius: 999px; background: var(--accent-soft); color: #114943; font-size: .9rem; }
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; vertical-align: top; border: 1px solid var(--line); padding: .55rem; }
+.layer-filter { display: flex; flex-wrap: wrap; gap: .5rem; margin: .8rem 0; }
+.layer-filter button { margin: 0; }
+.layer-filter button[aria-pressed="false"] { background: var(--panel); color: var(--accent); }
+.packet-dump { overflow-x: auto; margin: 1rem 0; padding: .8rem; border: 1px solid var(--line); border-radius: .45rem; background: var(--code); font: 600 .95rem/1.8 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.packet-line { display: flex; width: max-content; min-width: 100%; gap: .18rem; }
+.packet-offset { flex: 0 0 4.4rem; padding: 0 .5rem 0 0; color: var(--muted); background: transparent; }
+.packet-byte { width: 2.05rem; margin: 0; padding: .05rem .12rem; border-color: transparent; background: transparent; color: var(--ink); font: inherit; }
+.packet-byte:hover, .packet-byte:focus-visible, .packet-byte.is-active { border-color: var(--accent); background: var(--accent); color: var(--panel); }
+.packet-byte.is-filtered-out { opacity: .28; }
+.table-scroll { overflow-x: auto; margin-top: 1rem; }
+.packet-fields { min-width: 70rem; }
+.packet-fields tbody tr { cursor: pointer; }
+.packet-fields tbody tr:focus-visible { outline: 3px solid #e1a400; outline-offset: -3px; }
+.packet-fields tbody tr.is-active td { background: var(--accent-soft); box-shadow: inset 0 2px var(--accent), inset 0 -2px var(--accent); }
+.packet-fields td:nth-child(3), .packet-fields td:nth-child(4), .packet-fields td:nth-child(5) { white-space: nowrap; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
 @media (prefers-color-scheme: dark) {
   :root { --bg:#11181b; --panel:#192327; --ink:#edf4f5; --muted:#b3c1c6; --line:#405158; --accent:#62d4c7; --accent-soft:#173c38; --warn:#ffc56c; --code:#253238; }
   .topbar { background:#071f1e; } .pill { color:#d8fff9; }

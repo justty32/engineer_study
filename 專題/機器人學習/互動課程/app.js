@@ -13,6 +13,124 @@ const num = id => {
 };
 const fmt = (value, digits = 3) => Number(value).toFixed(digits);
 
+const courseNav = [
+  ["index.html", "首頁"],
+  ["00-從控制程式到可學習策略.html", "00 世界觀"],
+  ["00A-機器學習數學先修.html", "00A 數學先修"],
+  ["03-MDP回報價值與策略.html", "03 強化學習"],
+  ["06-安全評估與C++部署.html", "06 部署"],
+  ["07-離線強化學習資料支撐與分布外動作.html", "07 離線學習"],
+  ["08-模型式學習世界模型與滾動規劃.html", "08 模型式學習"],
+  ["名詞與概念字典.html", "字典"]
+];
+
+function navigation() {
+  const nav = document.querySelector("nav.topbar");
+  if (!nav) return;
+  const current = decodeURIComponent(location.pathname.split("/").pop() || "index.html");
+  courseNav.forEach(([href, label]) => {
+    const link = document.createElement("a");
+    link.href = href;
+    link.textContent = label;
+    if (current === href) link.setAttribute("aria-current", "page");
+    nav.append(link);
+  });
+}
+
+const quizzes = {
+  "00": [
+    ["策略提議 0.12 m/s，安全上限為 0.07 m/s，實際命令是多少？", ["0.05 m/s", "0.07 m/s", "0.12 m/s"], 1, "安全層會把提議裁到 0.07 m/s。這是精確裁切題，答案容差為 ±0.001 m/s。"],
+    ["哪一項最適合保留為可稽核的硬限制？", ["透明杯的像素特徵", "關節速度上限", "抓取姿態的影像修正"], 1, "速度上限明確、可檢查，應由獨立安全層保護；學習元件可處理難以列舉的感知變化。"],
+    ["為何 log 要同時保存模型提議與實際命令？", ["辨認安全層是否經常介入", "讓模型參數自動增加", "取代實機回授"], 0, "兩者能區分模型越界與真機真正執行的命令，但仍不能取代狀態回授。"]
+  ],
+  "00A": [
+    ["L(θ)=(θ−3)²，θ=1 時的梯度是多少？", ["−4", "−2", "4"], 0, "dL/dθ=2(θ−3)=−4。答案容差為 ±0.001。"],
+    ["同一題取學習率 η=0.25，更新一步後 θ 是多少？", ["1.5", "2", "2.5"], 1, "θ←1−0.25×(−4)=2。答案容差為 ±0.001。"],
+    ["驗證集的主要用途是什麼？", ["直接更新參數", "檢查未參與更新資料上的表現", "保證真機安全"], 1, "驗證集用來觀察泛化與調整決策，不直接保證閉迴路或實機安全。"]
+  ],
+  "01": [
+    ["速度 0.30 m/s、時間對齊誤差 50 ms，位移尺度約多少？", ["1.5 mm", "15 mm", "150 mm"], 1, "0.30×0.050=0.015 m=15 mm。答案容差為 ±0.1 mm。"],
+    ["哪種切分最容易造成相鄰影格洩漏？", ["按場景切分", "按回合切分", "隨機切單幀"], 2, "相鄰影格高度相似，隨機切單幀會讓同一段序列跨進訓練與測試。"],
+    ["資料契約為何要記座標系？", ["同一組數值在不同座標系代表不同方向", "可讓時間戳省略", "可保證沒有缺值"], 0, "向量數字離開座標系便沒有完整幾何意義；座標系不能取代時間與缺值契約。"]
+  ],
+  "02": [
+    ["若每步獨立錯誤率 3%，20 步至少錯一次約為多少？", ["3.0%", "45.6%", "60.0%"], 1, "1−0.97²⁰≈0.4562，即 45.6%。答案容差為 ±0.1 個百分點。"],
+    ["DAgger 最關鍵的新資料來自哪裡？", ["目前策略真正造訪、需要恢復的狀態", "重複原本成功示範", "只挑最短軌跡"], 0, "DAgger 讓專家標註目前策略會遇到的狀態，補回閉迴路偏離後的資料。"],
+    ["離線動作誤差很低能直接證明什麼？", ["閉迴路一定穩定", "在指定資料上較像專家", "真機不會碰撞"], 1, "它只直接支持固定資料上的模仿程度，閉迴路恢復與安全要另測。"]
+  ],
+  "03": [
+    ["獎勵為 2、−1、4，γ=0.5 時 G₀ 是多少？", ["2.5", "3.0", "5.0"], 0, "G₀=2+0.5×(−1)+0.25×4=2.5。答案容差為 ±0.001。"],
+    ["標準 MDP 五元組中的第五項是什麼？", ["策略", "折扣因子", "神經網路"], 1, "MDP 為 (S,A,P,R,γ)；策略是要在此模型上評估或尋找的決策規則。"],
+    ["為何高回報不等於安全？", ["回報永遠是負數", "平均目標可能漏掉尾端風險與硬限制", "價值函數沒有單位"], 1, "獎勵是人寫下的代理規格，可能被鑽漏洞，也可能掩蓋低機率重大損害。"]
+  ],
+  "04": [
+    ["ε=0.08、危險候選比例 0.25、共 200 次決策，粗略暴露量是多少？", ["2", "4", "16"], 1, "B=0.08×0.25×200=4。答案容差為 ±0.001 次；這是期望計數，不是事故機率。"],
+    ["優勢 A 為負時，樣本更新的直覺是什麼？", ["提高該動作傾向", "降低該動作傾向", "刪除安全層"], 1, "負優勢表示結果低於基準，更新會降低類似狀態下再選該動作的傾向。"],
+    ["訓練曲線平坦可直接證明 Lyapunov 穩定嗎？", ["可以", "不可以", "只要探索率為零就可以"], 1, "最佳化指標不再變化，與受擾動後狀態是否維持有界或回到平衡是不同命題。"]
+  ],
+  "05": [
+    ["速度 0.6 m/s，額外延遲 30 ms，位移尺度約多少？", ["1.8 mm", "18 mm", "180 mm"], 1, "0.6×0.030=0.018 m=18 mm。答案容差為 ±0.1 mm。"],
+    ["領域隨機化範圍包住真值，能證明什麼？", ["該一維真值有被範圍涵蓋", "所有聯合參數都被充分取樣", "真機一定成功"], 0, "一維涵蓋只是支撐線索，不能證明模型形式、聯合組合或任務結果。"],
+    ["系統辨識主要在做什麼？", ["用真機輸入輸出估模型參數", "隨機放大所有參數", "取消實機驗證"], 0, "它用量測讓模擬參數更貼近特定系統，但仍受模型形式與資料範圍限制。"]
+  ],
+  "06": [
+    ["週期 25 ms，感知 7 ms、推論 6 ms、安全檢查 4 ms，剩餘裕量多少？", ["8 ms", "11 ms", "17 ms"], 0, "25−7−6−4=8 ms。答案容差為 ±0.001 ms。"],
+    ["影子模式（shadow mode）的特徵是什麼？", ["策略提議會直接致動", "策略只輸出提議並與現行控制比較", "不記錄輸入"], 1, "影子模式保留真實輸入與提議證據，但不讓新策略直接接管致動。"],
+    ["哪一項是部署前不可省的獨立機制？", ["逾時與安全回退", "只看平均成功率", "只保存模型檔名"], 0, "模型不負責完整系統安全；逾時、限制、停止與回退必須獨立存在並可測。"]
+  ],
+  "07": [
+    ["π(a|s)=0.6、μ(a|s)=0.4，單步重要性比率是多少？", ["0.67", "1.0", "1.5"], 2, "w=π÷μ=0.6÷0.4=1.5。答案容差為 ±0.001。"],
+    ["每軸都落在最小最大值內，為何仍可能 OOD？", ["聯合組合可能從未出現", "最小值一定記錯", "離線資料沒有動作"], 0, "高維支撐取決於狀態條件與欄位聯合分布，逐軸範圍不足以證明有資料。"],
+    ["保守價值估計能取代物理安全層嗎？", ["能", "不能", "只有資料很多時能"], 1, "保守方法抑制證據不足的高估，不會自動理解速度、碰撞或人員安全限制。"]
+  ],
+  "08": [
+    ["ε=3 mm、L=1、H=4 時誤差上界示意是多少？", ["7 mm", "12 mm", "81 mm"], 1, "L=1 時 E=Hε=4×3=12 mm。答案容差為 ±0.001 mm。"],
+    ["每步 4 個候選動作、地平線 5，完整序列共有幾條？", ["20", "256", "1024"], 2, "候選數為 4⁵=1024。答案為整數，容差 0。"],
+    ["MPC 為何通常只執行第一小段？", ["取得新量測後可重新規劃", "世界模型永遠精確", "可省略底層控制器"], 0, "滾動重規劃用新量測截短開迴路誤差，但仍需要估測、安全層與底層控制器。"]
+  ]
+};
+
+function selfChecks() {
+  document.querySelectorAll("[data-quiz]").forEach(section => {
+    const chapter = section.dataset.quiz;
+    const questions = quizzes[chapter] || [];
+    const form = document.createElement("form");
+    form.innerHTML = `<h2>不計分自我檢核</h2><p class="note">先作答，再展開答案與解析。按「清除作答」即可重做；本區不計分，也不儲存進度。</p>`;
+    questions.forEach(([prompt, options, answer, explanation], index) => {
+      const fieldset = document.createElement("fieldset");
+      fieldset.className = "quiz-question";
+      const legend = document.createElement("legend");
+      legend.textContent = `${index + 1}. ${prompt}`;
+      fieldset.append(legend);
+      options.forEach((option, optionIndex) => {
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = `quiz-${chapter}-${index}`;
+        input.value = String(optionIndex);
+        label.append(input, ` ${option}`);
+        fieldset.append(label);
+      });
+      const details = document.createElement("details");
+      const summary = document.createElement("summary");
+      summary.textContent = "查看答案與解析";
+      const answerText = document.createElement("p");
+      answerText.innerHTML = `<strong>答案：${String.fromCharCode(65 + answer)}。</strong> ${explanation}`;
+      details.append(summary, answerText);
+      fieldset.append(details);
+      form.append(fieldset);
+    });
+    const reset = document.createElement("button");
+    reset.type = "reset";
+    reset.textContent = "清除作答，重新練習";
+    form.append(reset);
+    form.addEventListener("reset", () => form.querySelectorAll("details").forEach(details => {
+      details.open = false;
+    }));
+    section.append(form);
+  });
+}
+
 function rangeValues() {
   document.querySelectorAll('input[type="range"]').forEach(input => {
     const output = document.createElement("output");
@@ -231,5 +349,7 @@ function dictionary() {
   draw();
 }
 
+navigation();
 rangeValues();
 [policyStep, gradientStep, split, bc, returns, explore, sim, gate, offline, modelBased, dictionary].forEach(run => run());
+selfChecks();

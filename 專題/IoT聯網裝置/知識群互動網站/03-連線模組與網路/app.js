@@ -18,6 +18,48 @@
   ];
   var STORAGE_KEY = "engineerStudy.iotConnectivity.v1";
   var ANNOUNCE_UPDATES = true;
+  var SELF_CHECKS = {
+    "bearer-choice": {
+      question: "室內已有 AP、資料量高，但供電只有小型鈕扣電池；初篩選到 Wi-Fi 後應直接定案嗎？",
+      answer: "不應直接定案，必須標示供電風險並實測。",
+      explanation: "Wi-Fi 符合基礎設施與吞吐量，但連線與發射峰值可能不適合鈕扣電池；選型要同時檢查供電與 duty cycle。"
+    },
+    "host-link": {
+      question: "模組輸出 burst 超過 UART 線速時，第一個累積超額資料的位置通常在 host RX buffer 嗎？",
+      answer: "不是，先在模組端 TX FIFO 累積或丟失。",
+      explanation: "UART 到 host 的到達率受線速封頂；host buffer 是否溢位則要另比較線上到達率與應用 drain rate。"
+    },
+    "at-engine": {
+      question: "已進入有 guard 的透明傳輸狀態後，收到看似「OK」的位元組應交給命令回應解析器嗎？",
+      answer: "不應，應視為 payload。",
+      explanation: "透明模式下內容不再按 AT 行語意分類，直到長度完成或逃脫序列成功離開資料狀態。"
+    },
+    backoff: {
+      question: "base=3 s、重試索引 n=3、cap=20 s 時，標稱等待是多少？",
+      answer: "20.0 s（容差 ±0.1 s）。",
+      explanation: "min(20, 3×2³) = min(20, 24) = 20 s；先套用 cap，再計算累積等待。"
+    },
+    session: {
+      question: "TLS 握手失敗時，跳過 registration、IP、時間與 DNS，直接無限重建 TLS 是否合理？",
+      answer: "不合理。",
+      explanation: "會話層有依賴順序；應先證明較低層 gate 成立，再處理 socket、TLS 與應用會話。"
+    },
+    "data-budget": {
+      question: "Payload 壓縮 40% 是否代表電信商計量或整機能耗也一定下降 40%？",
+      answer: "不一定。",
+      explanation: "線上資料還包含協定 overhead、交付倍率與握手；能耗又受喚醒、連線時間、覆蓋與重傳影響。"
+    },
+    keepalive: {
+      question: "比較 keepalive 與重連策略時，為何必須先把兩者換算到同一每日期間？",
+      answer: "否則資料量單位不同，大小比較沒有意義。",
+      explanation: "Keepalive 次數要由每日保持會話秒數除以間隔；重連也以每日報告次數累計，兩邊才能公平比較。"
+    },
+    supervisor: {
+      question: "模組無回應時，第一步就 power cycle，且不保存最後命令與 reset cause，主要損失是什麼？",
+      answer: "失去可重現與定位故障的證據。",
+      explanation: "Supervisor 應先保存 log、套 timeout 與有上限退避，再依明確條件升級 soft reset、hard reset 或 watchdog。"
+    }
+  };
 
   var DEFAULTS = {
     "bearer-choice": {
@@ -615,7 +657,7 @@
     var label = get(doc, "progress-label");
     var fill = get(doc, "progress-fill");
     var track = all(doc, ".progress-track")[0];
-    if (label) label.textContent = "已完成 " + count + " / " + MODULE_KEYS.length + " 個模組（" + Math.round(count / MODULE_KEYS.length * 100) + "%）";
+    if (label) label.textContent = count + " / " + MODULE_KEYS.length + " 個模組完成";
     if (fill && fill.style) fill.style.width = (count / MODULE_KEYS.length * 100).toFixed(2) + "%";
     if (track && track.setAttribute) {
       track.setAttribute("aria-valuemin", "0"); track.setAttribute("aria-valuemax", String(MODULE_KEYS.length));
@@ -675,9 +717,36 @@
     });
   }
 
+  function renderSelfChecks(doc) {
+    MODULE_KEYS.forEach(function (key) {
+      var section = all(doc, '[data-module="' + key + '"]')[0];
+      var item = SELF_CHECKS[key];
+      if (!section || !item || all(section, ".self-check").length) return;
+      var details = doc.createElement("details");
+      var summary = doc.createElement("summary");
+      var answer = doc.createElement("p");
+      var answerLabel = doc.createElement("strong");
+      var explanation = doc.createElement("p");
+      var explanationLabel = doc.createElement("strong");
+      details.className = "self-check";
+      summary.textContent = "自我檢核：" + item.question;
+      answerLabel.textContent = "答案鍵：";
+      answer.appendChild(answerLabel);
+      answer.appendChild(doc.createTextNode(item.answer));
+      explanationLabel.textContent = "解析：";
+      explanation.appendChild(explanationLabel);
+      explanation.appendChild(doc.createTextNode(item.explanation));
+      details.appendChild(summary);
+      details.appendChild(answer);
+      details.appendChild(explanation);
+      section.appendChild(details);
+    });
+  }
+
   function init(doc, browserRoot) {
     if (!doc) return;
     var rootObject = browserRoot || (typeof window !== "undefined" ? window : null);
+    renderSelfChecks(doc);
     all(doc, ".eyebrow, .section-kicker, .panel-tag").forEach(function (element) {
       if (/^[\x00-\x7F\s]+$/.test(element.textContent || "")) element.setAttribute("lang", "en");
     });

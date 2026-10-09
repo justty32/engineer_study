@@ -14,4 +14,7 @@ ERROR disk full
 WARN retry scheduled
 error client disconnected
 ERROR retry failed</textarea></label><label class="label"><input type="checkbox" id="grep-ic"> 忽略大小寫（-i）</label><label class="label"><input type="checkbox" id="grep-ext"> 使用擴充語法（-E）</label></div><div class="output" id="grep-output" aria-live="polite"></div></section>
+<section aria-labelledby="predict-07"><h2 id="predict-07">先預測，再揭曉</h2>
+<details><summary>你預測會發生什麼？未加 <code>-E</code> 時，用基本正規表達式 <code>ERROR|WARN</code> 搜尋日誌，會把豎線當成「或」嗎？</summary><p><strong>答案：</strong>不會；它會嘗試匹配含有字面 <code>|</code> 的文字。</p><p><strong>為什麼：</strong>在 grep 的基本正規表達式中，未跳脫的 <code>|</code> 不是替代運算子；常見的「或」寫法要使用 <code>grep -E</code>。</p></details>
+<details><summary>你預測會發生什麼？檔案中有一個完全空白的行，<code>grep '^$' 檔案</code> 能找到它嗎？</summary><p><strong>答案：</strong>能。</p><p><strong>為什麼：</strong><code>^</code> 與 <code>$</code> 分別錨定行首與行尾，兩者相鄰正好描述中間沒有任何字元的空行。</p></details></section>
 <nav class="pager" aria-label="章節導覽"><a href="06-管道與重導向.html">← 上一頁：管道與重導向</a><a href="08-環境變數與shell.html">下一頁：環境變數與 shell →</a></nav></main><footer class="site-footer"><span>07 文字處理與 grep</span><a href="名詞與概念字典.html">查字典</a></footer></body></html>
