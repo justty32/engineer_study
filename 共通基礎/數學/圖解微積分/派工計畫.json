@@ -1,0 +1,44 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "columns": [
+  "id",
+  "owner",
+  "scope",
+  "status"
+ ],
+ "rows": [
+  {
+   "id": "shell",
+   "owner": "calculus_builder",
+   "scope": "lab.css/shared.js/index.html/home.js/glossary.html/glossary.js/sources.html/規格",
+   "status": "已完成並停筆；數學與ELI5審核通過"
+  },
+  {
+   "id": "foundation",
+   "owner": "foundations",
+   "scope": "00-start/limits/derivatives 各 HTML+JS",
+   "status": "已完成並停筆；數學與ELI5審核通過"
+  },
+  {
+   "id": "differential",
+   "owner": "differential",
+   "scope": "rules/applications/engineering 各 HTML+JS",
+   "status": "已完成並停筆；數學與ELI5審核通過"
+  },
+  {
+   "id": "integral",
+   "owner": "integral",
+   "scope": "integrals/fundamental/techniques 各 HTML+JS",
+   "status": "已完成並停筆；數學與ELI5審核通過"
+  },
+  {
+   "id": "advanced",
+   "owner": "advanced",
+   "scope": "series/multivariable/multiple-integrals/vector-fields 各 HTML+JS",
+   "status": "已完成並停筆；數學與ELI5審核通過"
+  }
+ ]
+}

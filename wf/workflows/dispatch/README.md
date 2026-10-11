@@ -72,6 +72,11 @@
 
 | 線 | 可寫目錄 | 唯讀 / 禁區 | 上線時間 |
 |----|---------|------------|---------|
+| calculus-builder | 新站產品與規格；見 [交接](../../handoffs/2026-10-11-calculus-eli5.md) | 舊站、原文、CI、驗收、hosting | 2026-10-11 |
+| calculus-audit | `共通基礎/數學/01-微積分.md` | 網站、其他原文、wf | 2026-10-11 |
+| calculus-qa | 新站 `驗收紀錄.md` | 全部產品只讀 | 2026-10-11 |
+| calculus-clarity | `/tmp/calculus-clarity.txt` | repo 全部只讀 | 2026-10-11 |
+| calculus-publish | Pages CI、中央入口、共通基礎 README | 產品、原文、nvim.log；待放行發布 | 2026-10-11 |
 
 ### 保留給調度者，任何線都不得寫
 

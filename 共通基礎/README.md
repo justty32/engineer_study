@@ -17,6 +17,8 @@
 
 互動課程：[工程數學先修（零基礎互動課）](數學/互動課程/index.html)——把上面六份數學筆記重寫成 14 章可操作的互動頁，每章一個自由實驗，另附名詞字典與自我檢核。線上版：<https://justty32.github.io/engineer_study/engineering-math/>
 
+圖解新站：[微積分小小實驗室（ELI5 圖解）](數學/圖解微積分/dist/index.html)——從變化與累積開始，操作圖形理解函數、極限、微分與積分；另建網站，保留原有工程數學課程。[開啟線上版](https://justty32.github.io/engineer_study/calculus-little-lab/)。
+
 ## 物理
 
 | 筆記 | 主要內容 |

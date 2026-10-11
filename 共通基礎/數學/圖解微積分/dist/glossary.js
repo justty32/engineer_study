@@ -1,0 +1,2 @@
+"use strict";
+(() => {const search=document.getElementById('term-search');if(!search)return;const terms=[...document.querySelectorAll('.term')];search.addEventListener('input',()=>{const q=search.value.trim().toLocaleLowerCase();let n=0;terms.forEach(term=>{const match=term.textContent.toLocaleLowerCase().includes(q);term.hidden=!match;if(match)n++;});document.getElementById('term-count').textContent=q?'找到 '+n+' 個相關解釋':'共 '+n+' 個小解釋';document.getElementById('no-terms').hidden=n>0;});})();

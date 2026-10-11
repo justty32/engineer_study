@@ -1,0 +1,184 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "columns": [
+  "id",
+  "type",
+  "page",
+  "controls",
+  "equation",
+  "criterion",
+  "examples",
+  "boundary",
+  "source"
+ ],
+ "rows": [
+  {
+   "id": "home",
+   "type": "參數實驗",
+   "page": "index.html",
+   "controls": "time:range 0..4 step0.1 default2",
+   "equation": "位置 s=t² m；速度 v=2t m/s；0至t的速度積分=t² m",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "t2:s4,v4；t0:0,0；t4:16,8",
+   "boundary": "只演示平滑位置函數，不能推廣成所有運動",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "coordinate",
+   "type": "參數實驗",
+   "page": "00-start.html",
+   "controls": "slope:range -3..3 step0.5 default1; intercept:-2..2 step0.5 default0; input:-3..3 step0.5 default2",
+   "equation": "y=mx+b；Δx=1時Δy=m",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "m1,b0,x2:y2；m0:y=b；m-3,b2,x-3:y11",
+   "boundary": "零斜率不代表零函數；函數與幾何斜率",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "limit",
+   "type": "參數實驗",
+   "page": "limits.html",
+   "controls": "mode:select hole,jump default hole; distance:range 0.01..1 step0.01 default0.5",
+   "equation": "hole:x≠1時f=x+1,f(1)=3；jump:x<1值1,x≥1值3；左右x=1±h",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "hole h0.5:1.5,2.5但點值3；h0.01:1.99,2.01；jump:1,3",
+   "boundary": "極限不由點值決定，jump兩側不同無雙側極限",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "derivative",
+   "type": "參數實驗",
+   "page": "derivatives.html",
+   "controls": "mode:select square,absolute default square; point:range -2..2 step0.1 default1; step:range 0.01..1 step0.01 default0.5",
+   "equation": "f=x²或abs(x)；右割線[f(a+h)-f(a)]/h；左割線[f(a)-f(a-h)]/h；真導數square=2a,abs a≠0為sign(a)",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "square a1,h0.5:right2.5,left1.5,true2；absolute a0:right1,left-1不可微",
+   "boundary": "h不能直接設0；跨過尖角的割線不能當導數",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "rules",
+   "type": "參數實驗",
+   "page": "rules.html",
+   "controls": "rule:select power,product,chain default chain; input:range 0.2..2 step0.1 default1",
+   "equation": "power x³導數3x²；product x² sin x導數2x sin x+x² cos x；chain sin(x²)導數cos(x²)×2x",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "chain x1:2cos1=1.0806046；power x2:12；product x1:2sin1+cos1=2.223244",
+   "boundary": "三角函數角以弧度；鏈式不可漏內層變化率",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "optimization",
+   "type": "參數實驗",
+   "page": "applications.html",
+   "controls": "shape:select bowl,cube,corner default bowl; point:range -2..2 step0.1 default0",
+   "equation": "bowl=(x-1)²,derivative2(x-1)；cube=x³,derivative3x²；corner=abs(x),derivative sign(x),0不可微；閉區間[-2,2]",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "bowl最小x1值0,最大x-2值9；cube最小-2值-8,最大2值8,x0不是極值；corner最小0最大±2",
+   "boundary": "需考慮駐點、不可微點與端點；二階導數0不能判定",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "engineering",
+   "type": "參數實驗",
+   "page": "engineering.html",
+   "controls": "capacitance:range 1..5 step1 default2; time:range 0..4 step0.1 default2",
+   "equation": "假想電容電壓v=t² V；C以µF，i=C dv/dt=2Ct µA；獨立功率例P(t)=2t W，0至t能量=t² J",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "C2,t2:v4V,i8µA；t0:i0；C5,t4:i40µA；能量t2=4J",
+   "boundary": "理想定值電容，時間以秒，電容模型與功率例是兩個不同教學系統",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "signed-area",
+   "type": "參數實驗",
+   "page": "integrals.html",
+   "controls": "upper:range -1..2 step0.1 default1; strips:range 2..40 step2 default8",
+   "equation": "f(x)=x，下限-1，上限b；右端點和dx sum(-1+k dx)；精確有號積分(b²-1)/2；幾何面積 b≥0時(1+b²)/2，否則(1-b²)/2",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "b1:有號0,幾何1；b2:1.5,2.5；b-1:0,0；b1,n8右和0.25",
+   "boundary": "正負抵消；有限小長條不等於極限；零寬區間",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "ftc",
+   "type": "參數實驗",
+   "page": "fundamental.html",
+   "controls": "upper:range 0..4 step0.1 default2; constant:range -3..3 step1 default0",
+   "equation": "f(t)=t；累積A(x)=∫0^x t dt=x²/2；A′(x)=x；原函數F=x²/2+C；F(x)-F(0)=x²/2",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "x2:A2,斜率2；C3:F2=5,F0=3,差2；x0:0",
+   "boundary": "此例f連續；一般FTC使用連續/可積等明確條件，不能無條件套用",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "techniques",
+   "type": "參數實驗",
+   "page": "techniques.html",
+   "controls": "method:select substitution,parts default substitution; upper:range 0..2 step0.1 default1",
+   "equation": "代換∫0^b 2x cos(x²)dx=sin(b²),u=x²,u界0..b²；分部∫0^b x exp(x)dx=(b-1)exp(b)+1",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "sub b1:sin1=0.841471；parts b1:1；b0:0；parts b2:e²+1",
+   "boundary": "代換連同微分與上下限；分部uv不能漏邊界",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "series",
+   "type": "參數實驗",
+   "page": "series.html",
+   "controls": "mode:select taylor,geometric default taylor; terms:range 1..12 step1 default5; input:range -1.5..1.5 step0.1 default1",
+   "equation": "Taylor exp(x) n項Σk0..n-1 x^k/k!；geometric Σk0..n-1 x^k，abs(x)<1時無限和1/(1-x)",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "Taylor x1,n5:2.708333真值e；geometric x0.5,n5:1.9375極限2；x1部分和n但無有限極限",
+   "boundary": "有限和永遠可算不代表無限級數收斂；一般光滑函數不必等於其Taylor級數",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "gradient",
+   "type": "參數實驗",
+   "page": "multivariable.html",
+   "controls": "x:range -2..2 step0.1 default1; y:range -2..2 step0.1 default1; angle:range 0..360 step15 default0",
+   "equation": "f=x²+y²；梯度(2x,2y)；單位方向u=(cosθ,sinθ)；方向導數2x cosθ+2y sinθ",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "x1,y1,θ0:2；θ45:2sqrt2；x0,y0:0且無唯一最快上升方向",
+   "boundary": "歐氏平面與單位方向，非單位向量數值不能直接比較最快方向",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "double-integral",
+   "type": "參數實驗",
+   "page": "multiple-integrals.html",
+   "controls": "width:range 0..3 step0.25 default2; height:range 0..3 step0.25 default2; cells:range 2..12 step2 default4",
+   "equation": "密度rho=x+y kg/m²，矩形0..a×0..b；質量∫∫rho dA=ab(a+b)/2；中點和對本線性密度恰好精確",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "a2,b2:8kg；a0:0；a3,b1:6kg",
+   "boundary": "此例中點和恰精確，不表示所有函數如此；負密度不適合質量例，這裡非負",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "vector-field",
+   "type": "參數實驗",
+   "page": "vector-fields.html",
+   "controls": "field:select source,rotation,uniform default source; radius:range 0.5..2 step0.25 default1",
+   "equation": "source F=(x,y),div2,curl_z0；rotation F=(-y,x),div0,curl_z2；uniform F=(1,0),div0,curl0；circle半徑r，向外通量source=2πr²其餘0；逆時針環流rotation=2πr²其餘0",
+   "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
+   "examples": "r1 source通量2π環流0；rotation通量0環流2π；uniform都0但場非零",
+   "boundary": "平面光滑場、圓邊界；三維散度/旋度/面積分僅概念銜接，不把二維簡化當通用公式",
+   "source": "本地01-微積分.md相應主題；sources.html官方教材"
+  },
+  {
+   "id": "dictionary",
+   "type": "文字查找",
+   "page": "glossary.html",
+   "controls": "term-search:search;default空字串;接受中文/英文;清空還原",
+   "equation": "將query去頭尾空白、轉小寫，逐筆檢查全文是否包含query",
+   "criterion": "空query顯示32條；未命中0條且顯示提示；用textContent過濾不執行HTML",
+   "examples": "gradient命中梯度1條；找不到的字串0條；清空32條",
+   "boundary": "空輸入與未命中；大小寫不敏感",
+   "source": "本站32條概念解釋與對應教學頁"
+  }
+ ]
+}

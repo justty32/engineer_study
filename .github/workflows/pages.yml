@@ -20,6 +20,9 @@ on:
       - "共通基礎/*/互動課程/*.html"
       - "共通基礎/*/互動課程/*.css"
       - "共通基礎/*/互動課程/*.js"
+      - "共通基礎/數學/圖解微積分/dist/*.html"
+      - "共通基礎/數學/圖解微積分/dist/*.css"
+      - "共通基礎/數學/圖解微積分/dist/*.js"
       - "專題/*/互動課程/*.html"
       - "專題/*/互動課程/*.css"
       - "專題/*/互動課程/*.js"
@@ -124,6 +127,7 @@ jobs:
           專題/機器人數學基礎/互動課程|robot-math
           專題/AI理論白話/互動課程|ai-theory-primer
           共通基礎/數學/互動課程|engineering-math
+          共通基礎/數學/圖解微積分/dist|calculus-little-lab
           共通基礎/物理/互動課程|general-physics
           電機/02-電機核心/電路學-互動課程|circuit-analysis
           電機/02-電機核心/電子學-互動課程|electronics
