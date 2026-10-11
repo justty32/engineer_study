@@ -6,7 +6,8 @@
 
 | 線 | 可寫目錄 | 唯讀 / 禁區 | 上線時間 |
 |----|---------|------------|---------|
-| calculus-visual 團隊 | [明確檔案領地](../../handoffs/2026-10-11-calculus-visual-revision.md) | 其他隊產品、舊站、共享行政、nvim.log 禁改 | 2026-10-11 |
+| electronics-visual 團隊 | [新站及三冊小修領地](../../handoffs/2026-10-11-electronics-visual.md) | 其他產品、舊站、共享行政、git、使用者檔禁改 | 2026-10-11 |
+| circuits-visual 團隊 | [新站及兩冊小修領地](../../handoffs/2026-10-11-circuits-visual.md) | 其他產品、舊站、共享行政、git、使用者檔禁改 | 2026-10-11 |
 | course-program 發布行政 | [總排程與串行發布領地](../../handoffs/2026-10-11-course-program.md) | 未凍結產品、源筆記、.openai、nvim.log 禁改 | 2026-10-11 |
 
 ### 保留給調度者，任何線都不得寫
@@ -22,6 +23,7 @@
 
 | 線 | 完成證據 | 收線時間 |
 |----|---------|---------|
+| calculus-visual 團隊 | [圖解公式、完整計算與雙站部署](../../handoffs/done/2026-10-11-calculus-visual-revision.md) | 2026-10-11 |
 | engineering-math 團隊 | [公式圖解、三冊校正與 GitHub 部署](../../handoffs/done/2026-10-11-engineering-math-visual.md) | 2026-10-11 |
 | linear-calculation v3 團隊 | [公式手算、三線驗收及雙站更新](../../handoffs/done/2026-10-11-linear-algebra-calculation-revision.md) | 2026-10-11 |
 | robotics-math 團隊 | [公式圖解、獨立驗收與 GitHub 部署](../../handoffs/done/2026-10-11-robotics-math-visual.md) | 2026-10-11 |

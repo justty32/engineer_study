@@ -10,9 +10,13 @@
 
 線代隊長 `visual_builder` 統籌 [線代改版](done/2026-10-11-linear-algebra-visual-revision.md)，三線獨立驗收與雙站部署均完成，產品 commit `ca23227`，37 個公開成品對上受驗雜湊，作者與驗收者已退出。root 已據此啟動 `robotics_team`，由隊長自行組隊，建立 [機器人數學新站](done/2026-10-11-robotics-math-visual.md)；領地為 `專題/機器人運動學/圖解機器人數學/`，slug 為 `robotics-math-little-lab`，舊站保留。機器人新站已完成公式／手算與獨立驗收，commit `7b565ec`、Pages 工作 `38111386682` 成功，23 個公開成品雜湊一致；隊員與發布程序已退出。
 
-微積分隊長 `calculus_team` 並行統籌 [微積分改版](2026-10-11-calculus-visual-revision.md)，查官方教材、增加逐步圖解，保留一階 RC／RL 與向量微積分，深度須銜接電磁、電子與電路。現補強公式圖解、逐行手算及遷移練習，暫緩發布；通過新標準並正式凍結與部署完成後，由 root 同時啟動 `electronics_team` 與 `circuits_team`，兩位隊長各自組隊。
+微積分隊長 `calculus_team` 並行統籌 [微積分改版](done/2026-10-11-calculus-visual-revision.md)，查官方教材、增加逐步圖解，保留一階 RC／RL 與向量微積分，深度須銜接電磁、電子與電路。23 課公式圖解、逐行手算及遷移詳解已通過數學／教學／技術三線驗收；產品 `6059d66`、Pages 工作 `38113759616` 成功，53 個公開資產符合受驗雜湊，既有私有 Sites 同步成功。root 據此同時啟動 `electronics_team` 與 `circuits_team`，兩位隊長各自組隊；真人能否獨立解題仍待驗。
 
 教材缺口已滿足另立工程數學隊的條件，`engineering_math_team` 已完成 [圖解工程數學新站](done/2026-10-11-engineering-math-visual.md)，領地為 `共通基礎/數學/圖解工程數學/`。此隊承接二階 ODE／RLC、複數相量、Laplace 初值／LTI、Fourier 與必要 PDE 邊界，依同一標準補足圖解公式及完整手算。既有工程數學站不改。root 已另授此隊唯一寫入 `共通基礎/數學/03-工程數學-上.md`、`03-工程數學-中.md`、`03-工程數學-下.md`，僅限 20 項官方來源確證修正，由另一人獨立覆核並在課程保存持久對照；三份原文已與新站一併精確提交。產品 commit `e061338` 與 Pages 工作 `38112308976` 成功，38 個公開成品符合受驗雜湊，作者與發布程序均已退出；真人近題能力仍待驗。
+
+`electronics_team` 已立案 [圖解電子學](2026-10-11-electronics-visual.md)，領地 `電機/02-電機核心/圖解電子學/`、slug `electronics-little-lab`；只允許同層 `07-電子學-上.md`、`07-電子學-中.md`、`07-電子學-下.md` 經官方來源確證的小修，另人獨立複核。舊電子學站保留。
+
+`circuits_team` 已立案 [圖解電路學](2026-10-11-circuits-visual.md)，領地 `電機/02-電機核心/圖解電路學/`、slug `circuits-little-lab`；只允許同層 `06-電路學-上.md`、`06-電路學-下.md` 同標準小修及獨立複核。舊電路學站保留。兩隊各初始五個名額，自行分配查證、作者與獨立驗收；套用本程序圖解公式／完整計算／近題詳解門檻，僅 GitHub 發布，尚未驗收或部署。
 
 root 只負責派隊、依賴、資源與最終發布放行，不承擔逐頁實作。隊長自行收斂作者、查證與獨立 QA，將完整凍結證據直接交 `visual_publish`，由發布者回 root 短摘要。
 
