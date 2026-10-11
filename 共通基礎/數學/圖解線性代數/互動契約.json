@@ -30,11 +30,11 @@
     }
    ],
    "equation": "A=[[1,k],[0,1]]; v=(1,1); Av=(1+k,1); unit-square image [(0,0),(1,0),(1+k,1),(k,1)]",
-   "criterion": "圖的面積恆為1；向量與平方同步剪切；k=0保持原狀",
+   "criterion": "圖的面積恆為1；向量與平方同步剪切；k=0保持原狀；home-calculation可見逐步代入x=1,y=1,k當前值→新左右1+k/新上下1",
    "examples": "k=1 → Av=(2,1), det=1; k=-2 → Av=(-1,1)",
    "boundary": "負／零／正剪切；不宣稱所有矩陣皆保面積",
    "source": "原文§2,4",
-   "author": "builder"
+   "author": "visual_builder v3"
   },
   {
    "id": "coordinates",
@@ -145,6 +145,7 @@
      "options": [
       "two-blue",
       "one-blue",
+      "two-coral",
       "zero"
      ]
     },
@@ -181,12 +182,12 @@
      "step": 0.5
     }
    ],
-   "equation": "A=[[a,b],[c,d]]; input-preset two-blue→x=(2,1), one-blue→x=(1,1), zero→x=(0,0); Ax=(a*x1+b*x2,c*x1+d*x2); each column is one route card",
-   "criterion": "每欄是一份路線；輸出＝藍路線取x1份＋橘路線取x2份。先看份數，改卡控制可選。",
-   "examples": "default A=[[2,-1],[1,1]],x=(2,1)→(3,3); one-blue→(1,2); zero→(0,0); zero A→(0,0); I with two-blue→(2,1)",
+   "equation": "A=[[a,b],[c,d]]; input-preset two-blue→x=(2,1), one-blue→x=(1,1), two-coral→x=(1,2), zero→x=(0,0); Ax=(a*x1+b*x2,c*x1+d*x2); visible live calculation shows column contributions and both row products",
+   "criterion": "每欄一份路線，份數逐欄倍乘後相加；calculation-live須同步代入/每欄小計/兩橫列中間值；新增遷移題可用two-coral驗算",
+   "examples": "default A=[[2,-1],[1,1]],x=(2,1)→(3,3); one-blue→(1,2); two-coral→(0,3); zero→(0,0); zero A→(0,0); I with two-blue→(2,1)",
    "boundary": "零輸入／零矩陣／identity／負數／同線欄；四滑桿放可選details，預設與reset均回故事同一規則及兩藍一橘",
    "source": "原文§2",
-   "author": "visual_builder/matrix_author"
+   "author": "visual_builder v3 prototype"
   },
   {
    "id": "composition",
@@ -261,11 +262,11 @@
     }
    ],
    "equation": "x+y=3;x+k y=b; row2←row2-row1 gives (k-1)y=b-3; k!=1: y=(b-3)/(k-1),x=3-y; k=1,b=3 infinitely many else no solution",
-   "criterion": "同時看兩條直線與增廣矩陣步驟；step2回代僅唯一時可用",
+   "criterion": "兩條直線與直接方程消去；step僅控制圖中揭露程度，calculation-live正文保留全部代入/相減/非零除法/回代；非終止小數以≈標示，零係數分支不可除零",
    "examples": "k=-1,b=1→(2,1); k=1,b=3無限多；k=1,b=1無解",
    "boundary": "近似比對1e-9；極端解可超出圖窗要文字標註，不可畫假交點",
    "source": "原文§3",
-   "author": "B"
+   "author": "visual_builder v3"
   },
   {
    "id": "rank",

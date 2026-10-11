@@ -34,6 +34,20 @@
     else if (coincident) explanation = "兩條線重疊，第二式沒有新限制。消去得到 0 = 0，所以 y 可以是任意實數 t，x = 3 − t。不能除以 k − 1 = 0；這裡有無限多解。";
     else explanation = "兩條線平行且不同。消去竟要求 " + key + "，這是不可能成立的條件，所以無解；不能除以 k − 1 = 0。";
     $("feedback").textContent = explanation;
+    const f = LA.fmt, signed = n => n < 0 ? "(" + f(n) + ")" : f(n);
+    const relation = n => Math.abs(Number(f(n).replace(/,/g, "")) - n) < epsilon ? " = " : " ≈ ";
+    const lines = [
+      ["原條件", "x + y = 3；" + equation(k, b)],
+      ["第二式 − 第一式：同時減左右兩邊", "(x + (" + f(k) + ")y) − (x + y) = " + f(b) + " − 3"],
+      ["x 抵消；y 的係數與右邊常數各自相減", "(" + f(k) + " − 1)y = " + f(right) + " → " + key]
+    ];
+    if (unique) {
+      lines.push(["兩邊同除非零係數", "y = " + signed(right) + "/" + signed(coefficient) + relation(y) + f(y)]);
+      lines.push(["回代第一式（計算使用未四捨五入的值）", "x = 3 − [" + signed(right) + "/" + signed(coefficient) + "]" + relation(x) + f(x)]);
+      lines.push(["把未四捨五入的答案代回兩式", "x + y = 3；x + (" + f(k) + ")y = " + f(b) + "，兩條都成立。"]);
+    } else lines.push(["先判斷，不能除以 0", coincident ? "0 = 0；令 y = t，x = 3 − t，t 可取任意實數。" : "0 = " + f(right) + " 是矛盾，沒有同時符合兩式的答案。"]);
+    $("calculation-live").innerHTML = lines.map(([why, line]) => '<p><span class="line-reason">' + why + '</span><span class="math-line">' + line + '</span></p>').join("");
+
     const q = LA.plane({ cx: 225, cy: 232, scale: 32, extent: 5, tickStep: 2, showOrigin: false });
     let html = '<defs><clipPath id="system-clip"><rect x="65" y="72" width="320" height="320"/></clipPath></defs>';
     html += LA.text(22, 28, "藍：x + y = 3", "svg-label") + LA.text(22, 51, "珊瑚：" + equation(k, b), "svg-label");

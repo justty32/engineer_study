@@ -1,7 +1,7 @@
 "use strict";
 (() => {
  const el=id=>document.getElementById(id);
- const presets={'two-blue':[2,1],'one-blue':[1,1],zero:[0,0]};
+ const presets={'two-blue':[2,1],'one-blue':[1,1],'two-coral':[1,2],zero:[0,0]};
  function update(){
   const a=Number(el('a').value),b=Number(el('b').value),c=Number(el('c').value),d=Number(el('d').value);
   const first=[a,c],second=[b,d],v=presets[el('input-preset').value],w=[a*v[0]+b*v[1],c*v[0]+d*v[1]];
@@ -49,6 +49,14 @@
   else if(a===0&&b===0&&c===0&&d===0)why+='兩張卡都不移動，所以所有輸入都到原點。';
   else if(a*d-b*c===0)why+='兩張卡提供不了兩個獨立方向，部分輸入資訊會被壓掉。';
   if(w[0]===0&&w[1]===0)why+='目前輸出長度為 0，沒有指定方向。';
+  const signed=n=>n<0?'('+LA.fmt(n)+')':LA.fmt(n),f=LA.fmt;
+  const lines=[
+   ['代入路線卡與份數',f(v[0])+' × '+LA.vec(first)+' + '+f(v[1])+' × '+LA.vec(second)],
+   ['先把每份的兩個方向都乘好',LA.vec([v[0]*a,v[0]*c])+' + '+LA.vec([v[1]*b,v[1]*d])],
+   ['左右：第一橫列乘兩個份數',signed(a)+' × '+f(v[0])+' + '+signed(b)+' × '+f(v[1])+' = '+signed(a*v[0])+' + '+signed(b*v[1])+' = '+f(w[0])],
+   ['上下：第二橫列乘兩個份數',signed(c)+' × '+f(v[0])+' + '+signed(d)+' × '+f(v[1])+' = '+signed(c*v[0])+' + '+signed(d*v[1])+' = '+f(w[1])]
+  ];
+  el('calculation-live').innerHTML=lines.map(([why,formula])=>'<p><span class="line-reason">'+why+'</span><span class="math-line">'+formula+'</span></p>').join('');
   el('feedback').textContent=why;
  }
  LA.bind(['a','b','c','d','input-preset'],update,{a:2,b:-1,c:1,d:1,'input-preset':'two-blue'});

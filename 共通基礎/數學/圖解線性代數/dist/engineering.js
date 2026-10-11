@@ -45,8 +45,10 @@
     svg += text(777, 412, '步數 k', 'svg-small', 'end');
     svg += text(208, 412, 'A = ' + model.matrix, 'svg-label', 'middle');
     el('drawing').innerHTML = svg;
-    el('result-primary').textContent = '(' + point.map(v => fmt(v, 4)).join(', ') + ')';
-    el('result-secondary').textContent = fmt(lengths[k], 4);
+    const pointRounded = point.some(v => Math.abs(v - Number(v.toFixed(4))) > 1e-10);
+    const lengthRounded = Math.abs(lengths[k] - Number(lengths[k].toFixed(4))) > 1e-10;
+    el('result-primary').textContent = (pointRounded ? '≈ ' : '') + '(' + point.map(v => fmt(v, 4)).join(', ') + ')';
+    el('result-secondary').textContent = (lengthRounded ? '≈ ' : '') + fmt(lengths[k], 4);
     el('feedback').textContent = model.why + (k === 0 ? ' 現在是第 0 步，各模式都從 (1, 1) 開始。' : '') + ' 本實驗是假設矩陣固定、沒有外力的離散模型。';
     el('plot-desc').textContent = model.name + '，第 ' + k + ' 步為 (' + point.map(v => fmt(v, 4)).join(', ') + ')，離原點 ' + fmt(lengths[k], 4) + '。左圖位置軌跡，右圖每一步的長度。';
   }

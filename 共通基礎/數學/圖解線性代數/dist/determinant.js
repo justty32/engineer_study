@@ -16,7 +16,8 @@
     } else {
       const inverse = [[d / det, -b / det], [-c / det, a / det]];
       const recovered = LA.mat(inverse, out);
-      inverseText = "A⁻¹ = " + LA.matrix(inverse) + "；A⁻¹" + LA.vec(out) + " = " + LA.vec(recovered);
+      const inverseRounded = inverse.flat().some(value => Math.abs(value - Number(value.toFixed(2))) > 1e-10);
+      inverseText = "A⁻¹ " + (inverseRounded ? "≈ " : "= ") + LA.matrix(inverse) + "；A⁻¹" + LA.vec(out) + " = " + LA.vec(recovered);
       $("feedback").textContent = "ad − bc = " + LA.fmt(a * d) + " − (" + LA.fmt(b * c) + ") = " + LA.fmt(det) + "。面積倍率是絕對值 " + LA.fmt(area) + "；" + (det > 0 ? "正號表示保留定向。" : "負號表示翻轉定向，面積仍是正的。") + "因為行列式不為零，反矩陣存在，可把輸出 " + LA.vec(out) + " 唯一送回 " + LA.vec(recovered) + "。";
     }
     $("inverse-value").textContent = inverseText;

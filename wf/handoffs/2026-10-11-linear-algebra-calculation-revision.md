@@ -21,3 +21,19 @@
 兩位作者滾動接手，geometry完成投影／最小平方／QR後退出，matrix處理對角化／SVD／行列式／工程。隊長完成其餘8章、首頁與共用樣式。visual_math已獨立通過首13章，修復特徵值有號倍率與箭頭比例兩項；v3證據另存/tmp/linear-calculation-math，未覆v2。visual_pedagogy改按算題遷移審查，LS首次轉置的記法橋已補，正收全頁渲染。
 
 正式發布仍待全部15章數學／教學與適當技術QA、產品37檔新manifest；root排程精確Git與既有Sites更新。產品未freeze前不得把v2manifest冒作v3。
+
+## 內容封版與三線證據
+
+15章計算層已全部完成；兩位章作者已停筆退出。數學正式PASS（15章＋3支持頁），報告在 `/tmp/linear-calculation-math/final-review.txt`，逐頁版本與教材對應分別在同目錄 `review-manifest.json`、`reference-check.txt`。本輪修正有號特徵值與長度倍率的區別、新圖箭頭比例；7份已實讀MIT沿用，不宣稱本輪重新網讀。
+
+教學正式PASS，報告在 `/tmp/linear-calculation-pedagogy/final-review.txt`，逐頁能力範圍在 `coverage.csv`，候選37檔指紋在 `final-reviewed-hashes.json`。15章全文算例與全部提示詳解均已讀、完整渲染切片均已看。首次轉置、首屏手算入口、PCA為何選最大特徵值三項缺口已修復閉環。本結論是教材可跟算與遷移步驟的審查，沒有把學生學習結果當成已測得事實。
+
+目前只剩visual_qa的受影響技術驗收；產品候選freeze不再加內容。獨立站產品仍是dist內37檔；精確發布準備範圍保存在 `/tmp/linear-calculation-prototype/release-scope.json`，最終SHA以QA產出為準。原v2公開版本與歷史驗收不改寫。
+
+## 最終封版與發布交接
+
+2026-10-11：v3三線正式PASS，未解產品缺陷0。QA完成18頁三寬度、638相對連結/片段、15章完整主例與展開詳解、5支變動JavaScript的67組獨立情境×PC/320，以及離線、無JS主文和鍵盤檢查。未重跑不受影響的舊數學全參數組合；舊v2/v1歷史完整保留於本站驗收紀錄。
+
+正式產品manifest為 `/tmp/linear-calculation-qa/product-sha256.txt`，37行，檔名相對於dist；檔案本身SHA256為 `a38f27c3a67c69783f59540a4f25742daaee09ca21cd9570e4ae2686718521cc`。受驗起訖產品零變更；最後比較v2只變更預期23檔、14檔不變。正式技術範圍與結果已寫 `共通基礎/數學/圖解線性代數/驗收紀錄.md`。
+
+可提交精確範圍為 `/tmp/linear-calculation-prototype/release-scope.json`：37產品檔、7份本地文件及本handoff，共45路徑；不含.openai、其他課程或共享行政檔。建置進度.md已刪除；兩章作者、數學/教學/QA皆已退出，QA自有server/headless亦關閉。隊長不commit/push，產品從此不再寫入。root排程publisher精確提交GitHub，再由hosting_operator從已push Git blob更新既有Sites，避免混入並行工作。

@@ -58,6 +58,48 @@
    "owner": "visual_builder/matrix_author",
    "files": "dist/matrices.html,dist/matrices.js",
    "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "id": "v3-builder",
+   "role": "計算教學總隊與基礎作者",
+   "owner": "visual_builder",
+   "files": "shared CSS/JS、支持頁、規格；00-start/vectors/basis/matrices/composition/systems/rank/eigen HTML+JS",
+   "status": "完成；產品37檔已freeze，全部作者/審者/QA退出；精確45路徑交root/publisher"
+  },
+  {
+   "id": "v3-geometry",
+   "role": "投影與資料計算作者",
+   "owner": "geometry_author",
+   "files": "projection/least-squares/qr HTML+JS",
+   "status": "三頁完成停筆並退出；本輪僅改HTML"
+  },
+  {
+   "id": "v3-matrix",
+   "role": "分解與工程計算作者",
+   "owner": "matrix_author",
+   "files": "diagonalization/svd/engineering/determinant HTML+JS",
+   "status": "四頁完成停筆退出；HTML＋兩JS近似符號修正"
+  },
+  {
+   "id": "v3-math",
+   "role": "獨立數學與教材查證",
+   "owner": "visual_math",
+   "files": "產品唯讀；/tmp/linear-calculation-math/",
+   "status": "正式15章＋3支持頁PASS，C01/C02修復，退出；證據/tmp/linear-calculation-math/"
+  },
+  {
+   "id": "v3-pedagogy",
+   "role": "獨立算例遷移教學審查",
+   "owner": "visual_pedagogy",
+   "files": "產品唯讀；/tmp/linear-calculation-pedagogy/",
+   "status": "正式15章與全部提示/詳解PASS，C-P01..03閉環；82切片實看，已退出"
+  },
+  {
+   "id": "v3-qa",
+   "role": "獨立技術/版面與改動互動驗收",
+   "owner": "visual_qa",
+   "files": "產品唯讀；驗收紀錄.md唯一writer；/tmp/linear-calculation-qa/",
+   "status": "正式PASS；37檔起訖零差異；v3驗收永久入冊並保留v2/v1；退出"
   }
  ]
 }

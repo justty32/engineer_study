@@ -1,0 +1,167 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "page",
+  "problem",
+  "formula",
+  "worked_steps",
+  "diagram_mapping",
+  "transfer",
+  "owner",
+  "status"
+ ],
+ "rows": [
+  {
+   "page": "00-start",
+   "problem": "已知起點(1,1)、終點(4,3)，求位移與直線距離",
+   "formula": "v=Q−P；‖v‖=√(vx²+vy²)",
+   "worked_steps": "(4−1,3−1)=(3,2)；√(3²+2²)=√13≈3.61",
+   "diagram_mapping": "起終點地址的兩個欄位對照減法；同長寬方格與直角三角形對應平方和",
+   "transfer": "P=(-1,2),Q=(2,6)→v=(3,4),長度5",
+   "owner": "visual_builder",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "vectors",
+   "problem": "兩張路線u=(2,0)、v=(1,2)，各一份到哪",
+   "formula": "au+bv=(aux+bvx,auy+bvy)",
+   "worked_steps": "1(2,0)+1(1,2)=(2+1,0+2)=(3,2)",
+   "diagram_mapping": "每一份箭頭對一個乘數；圖上左右/上下小計對同分量相加",
+   "transfer": "2u−v=(4−1,0−2)=(3,−2)",
+   "owner": "visual_builder",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "basis",
+   "problem": "方向u=(1,0),v=(1,1)，目標(1,2)，求各幾份",
+   "formula": "au+bv=w → a+b=wx,b=wy",
+   "worked_steps": "b=2；a=1−2=−1；−1(1,0)+2(1,1)=(1,2)",
+   "diagram_mapping": "目標高度先決定斜卡份數，再用水平卡補差；係數不是點真的換位置",
+   "transfer": "目標(3,1)→b=1,a=2；代回(3,1)",
+   "owner": "visual_builder",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "matrices",
+   "problem": "A=[[2,-1],[1,1]],x=(2,1)，求Ax",
+   "formula": "Ax=x1欄1+x2欄2；yi=ai1x1+ai2x2",
+   "worked_steps": "2(2,1)+1(-1,1)=(4,2)+(-1,1)=(4−1,2+1)=(3,3)",
+   "diagram_mapping": "兩欄路線卡/份數與a11,a12,a21,a22逐項對映；左右/上下兩行算式連回終點",
+   "transfer": "同A,輸入(1,2)→(2−2,1+2)=(0,3)",
+   "owner": "visual_builder",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "composition",
+   "problem": "先剪切再轉90度，輸入(1,1)，求終點並比較反序",
+   "formula": "R(Sv)=(RS)v；S=[[1,1],[0,1]],R=[[0,-1],[1,0]]",
+   "worked_steps": "Sv=(2,1)；R(2,1)=(-1,2)；Rv=(-1,1)；S(-1,1)=(0,1)",
+   "diagram_mapping": "兩排每個中間箭頭直接標同時正在算的兩列點積；乘積每格由橫列×直欄來",
+   "transfer": "輸入(2,0)：先S再R→(0,2)；反序→(2,2)",
+   "owner": "visual_builder",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "systems",
+   "problem": "總共3份且第一種多1份，求x與y",
+   "formula": "x+y=3；x−y=1；第二式−第一式",
+   "worked_steps": "(x−x)+(−y−y)=1−3→−2y=−2→y=1；x=3−1=2；兩式代回3/1",
+   "diagram_mapping": "圖上刪相同x與運算式消去同項；保留第一條條件，兩線交點驗算",
+   "transfer": "x+y=5,x−y=1→y=2,x=3；雙式代回",
+   "owner": "visual_builder",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "rank",
+   "problem": "A=[[1,1],[0,0]]哪些輸入變零？還剩幾方向？",
+   "formula": "Ax=(x1+x2,0)；Ax=0→x2=−x1",
+   "worked_steps": "兩欄同(1,0)，只需1欄→rank1；x=t(1,−1)→nullity1；1+1=2",
+   "diagram_mapping": "欄被重複與0列直接對應可達線；自由參數t對應零空間整條線",
+   "transfer": "B=[[1,2],[2,4]]，第二列−2第一列=0；rank1，kernel=t(−2,1)",
+   "owner": "visual_builder",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "determinant",
+   "problem": "A=[[2,1],[0,3]]，面積倍率？輸出(3,3)怎麼找回輸入？",
+   "formula": "det=ad−bc；A⁻¹=(1/det)[[d,-b],[-c,a]]",
+   "worked_steps": "2×3−1×0=6；A⁻¹=[[1/2,-1/6],[0,1/3]]；乘(3,3)=(3/2−1/2,1)=(1,1)",
+   "diagram_mapping": "兩個對角乘積標回矩陣位置；逆式分母由消去得到(ad−bc)x；倒帶圖逐步標分數",
+   "transfer": "B=[[1,1],[0,2]],y=(3,4)；det2，x=(1,2)，代回y",
+   "owner": "matrix_author",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "projection",
+   "problem": "v=(3,2)，沿水平尺a=(2,0)找最近落點",
+   "formula": "p=ta；a·(v−ta)=0→t=(a·v)/(a·a)",
+   "worked_steps": "a·v=2×3+0×2=6；a·a=2²+0²=4；t=6/4=1.5；p=(3,0),r=(0,2)；a·r=0",
+   "diagram_mapping": "圖上尺長2、取1.5份與分母4互連；先投影落點再驗殘差垂直",
+   "transfer": "a=(1,1),v=(3,1)→t4/2=2,p=(2,2),r=(1,−1)",
+   "owner": "geometry_author",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "least-squares",
+   "problem": "資料(0,1),(1,3),(2,3)，求最佳直線y=mx+c",
+   "formula": "r=y−Xβ；最佳Xᵀr=0，X=[[1,0],[1,1],[1,2]],β=(c,m)",
+   "worked_steps": "Σr=7−3c−3m=0；Σxr=9−3c−5m=0；相減2m=2→m1,c4/3；SSE=1/9+4/9+1/9=2/3",
+   "diagram_mapping": "三資料點/三殘差/兩條列加總式的每個數字一一標出；平方塊仍同尺度",
+   "transfer": "middle改4→Σy8,Σxy10→m1,c5/3,SSE8/3",
+   "owner": "geometry_author",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "eigen",
+   "problem": "A=diag(2,1/2)，自己找不轉向的箭頭與倍率",
+   "formula": "Av=λv且v≠0→det(A−λI)=0",
+   "worked_steps": "(2−λ)(1/2−λ)=0→λ2或1/2；λ2時y0選v(1,0)；λ1/2時x0選v(0,1)；逐個代回",
+   "diagram_mapping": "圖上同直線判準對應方程兩分量；每個λ分支畫可選方向，零向量排除",
+   "transfer": "diag(3,−1)→λ3/−1、(1,0)/(0,1)，反向仍同線",
+   "owner": "visual_builder",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "diagonalization",
+   "problem": "A=[[2,-3/2],[0,1/2]],x=(2,1)，連做兩次",
+   "formula": "P=[[1,1],[0,1]],D=diag(2,1/2)；A²x=PD²P⁻¹x",
+   "worked_steps": "λ2→v1(1,0),λ1/2→v2(1,1)；P⁻¹x=(1,1)；D²(1,1)=(4,1/4)；P乘回=(17/4,1/4)",
+   "diagram_mapping": "兩欄特徵方向連到P；中間份數卡與座標計算同位置；完整PDP⁻¹回乘驗A",
+   "transfer": "同A，起點(3,1)兩次→P⁻¹x=(2,1)→(8,1/4)→(33/4,1/4)",
+   "owner": "matrix_author",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "qr",
+   "problem": "a1=(1,0,0),a2=(1,2,0)，求Q、R並拼回",
+   "formula": "q1=a1/‖a1‖；r12=q1·a2；u2=a2−r12q1；q2=u2/‖u2‖",
+   "worked_steps": "r11=1,q1=(1,0,0),r12=1,u2=(0,2,0),r22=2,q2=(0,1,0)；Q3×2,R[[1,1],[0,2]]；QR各欄重建",
+   "diagram_mapping": "扣影子/剩垂直/長度2除2等圖每一支標公式所用向量與數值",
+   "transfer": "a1=(0,2,0),a2=(2,1,0)→Q欄(0,1,0)/(1,0,0)，R[[2,1],[0,2]]",
+   "owner": "geometry_author",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "svd",
+   "problem": "A=diag(1,2)，自己算出一組SVD，不只看預設圖",
+   "formula": "AᵀA vi=σi²vi；ui=Avi/σi；A=UΣVᵀ",
+   "worked_steps": "AᵀA=diag(1,4)，λ4/1→σ2/1；v1=(0,1),v2=(-1,0)；u1=(0,1),u2=(-1,0)；U=V=R90，Σ=diag(2,1)，乘回diag(1,2)",
+   "diagram_mapping": "圓上兩個正交方向與ATA特徵方向連動；每次平方/開根號/除σ皆標在變形箭頭旁",
+   "transfer": "A=diag(3,1)→ATA diag(9,1),σ3/1,U=V=I；重建及A(2,1)=(6,1)",
+   "owner": "matrix_author",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  },
+  {
+   "page": "engineering",
+   "problem": "每步保留左右8成、上下半數，4步後讀值？混合兩訊號如何拆？",
+   "formula": "xk=A^k x0；MIMO y1=s1+s2,y2=s1−s2",
+   "worked_steps": "x1=(.8,.5),x2=(.64,.25),x3=(.512,.125),x4=(.4096,.0625)；接收(3,-1)→s1=(3−1)/2=1,s2=(3+1)/2=2",
+   "diagram_mapping": "同刻度條與乘冪每一中間值對應；MIMO加減圖把還原兩步直接畫出；PCA補平均/投影計算",
+   "transfer": "接收(5,1)→s1=3,s2=2，代回；同縮小機器第5步(.32768,.03125)",
+   "owner": "matrix_author",
+   "status": "v3-frozen; math/pedagogy/technical-QA-pass"
+  }
+ ]
+}
