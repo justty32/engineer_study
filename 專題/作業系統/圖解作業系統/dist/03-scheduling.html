@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 排程指標｜圖解作業系統</title><link rel="stylesheet" href="lab.css"><script defer src="app.js"></script></head>
+<body data-page="03-scheduling">
+<a class="skip-link" href="#main">跳到課程內容</a>
+<aside class="sidebar"><a class="brand" href="index.html">圖解作業系統</a><nav aria-label="課程導覽"><a href="index.html">課程地圖</a><a href="02-fork.html">上一課：fork、exec、wait</a><a href="03-scheduling.html" aria-current="page">03 排程指標</a><a href="04-round-robin.html">下一課：時間片輪轉</a><a href="glossary.html">名詞與概念字典</a></nav><a class="site-link" href="https://justty32.github.io/engineer_study/">工程學習主站</a></aside>
+<main id="main" class="lesson">
+<header class="lesson-header"><p class="eyebrow">03・先看時間線，再談快不快</p><h1>誰先使用 CPU，會改變誰的等待？</h1><p class="lead">三個工作總共需要 9 ms，換個順序仍然要做 9 ms，卻可能讓短工作早很多完成。本課逐段排出先到先服務與最短工作優先，再分別計算第一次獲得 CPU、全部完成與排隊等候的時間。</p></header>
+<p class="prerequisite"><strong>這章假設已懂：</strong><a href="01-process.html">就緒、執行、阻塞與 CPU 切換</a>。算術只需加減與平均。</p>
+<nav class="section-nav" aria-label="本課段落"><a href="#metrics">認識時間指標</a><a href="#worked-example">完整演算</a><a href="#experiment">比較兩種排法</a><a href="#practice">自己試一題</a></nav>
+
+<section id="metrics" class="concept"><h2>「反應快」和「全部做完快」是不同問題</h2>
+<p><strong>到達時間（arrival time）</strong>是工作進入本題可排程集合的時刻；<strong>CPU 執行區段（CPU burst）</strong>是它需要連續做的 CPU 工作。本課每個行程只有一段 burst，沒有 I/O 阻塞。先把 A<sub>i</sub> 記為第 i 個行程的到達時刻、B<sub>i</sub> 為所需 CPU 時間、S<sub>i</sub> 為第一次開始執行時刻、C<sub>i</sub> 為完成時刻；四者都以 ms 表示。下標 i 可是行程 A、B、C 的名字；符號 A<sub>i</sub> 的 A 是 arrival，不是固定指行程 A。</p>
+<p><strong>回應時間（response time, R）</strong>量「到達後多久第一次取得 CPU」，本課定義 R<sub>i</sub> = S<sub>i</sub> − A<sub>i</sub>。它不等於網站使用者從點擊到畫面完成的整段端到端時間。<strong>周轉時間（turnaround time, T）</strong>量「從到達到全部完成」，T<sub>i</sub> = C<sub>i</sub> − A<sub>i</sub>。</p>
+<p><strong>等待時間（waiting time, W）</strong>是待在就緒狀態等 CPU 的總時間。本課沒有阻塞，也忽略其他成本，因此一個行程的周轉時間只分成 CPU 執行與就緒等待兩部分：T<sub>i</sub> = B<sub>i</sub> + W<sub>i</sub>，移項得到 W<sub>i</sub> = C<sub>i</sub> − A<sub>i</sub> − B<sub>i</sub>。若有阻塞，這個減法還包含阻塞時間，不能直接叫等待時間。</p>
+<figure class="diagram"><svg viewBox="0 0 640 255" role="img" aria-labelledby="metric-title metric-desc"><title id="metric-title">到達、第一次執行、完成三個時間點</title><desc id="metric-desc">示意工作在一毫秒到達、五毫秒首次執行、八毫秒完成。回應和就緒等待均四毫秒，CPU執行三毫秒，周轉七毫秒。這裡是單次不被搶占的執行。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><path d="M70 95H580 M100 70V125 M340 70V125 M520 70V125"/><rect x="100" y="100" width="240" height="50" stroke-dasharray="5 4"/><rect x="340" y="100" width="180" height="50"/><path d="M100 175V192H520V175 M100 215V232H340V215"/></g>
+<g fill="currentColor" text-anchor="middle" font-size="19"><text x="100" y="38">到達 Aᵢ = 1</text><text x="340" y="38">首次 Sᵢ = 5</text><text x="520" y="38">完成 Cᵢ = 8</text><text x="220" y="132">等 CPU：4 ms</text><text x="430" y="132">執行 Bᵢ = 3 ms</text><text x="310" y="183" font-size="17">周轉 Tᵢ = 8 − 1 = 7 ms</text><text x="220" y="222" font-size="17">回應 Rᵢ = 5 − 1 = 4 ms</text></g>
+</svg><figcaption>本課的非搶占、單 burst 模型中，第一次開始後一路做完，所以 R = W。換成輪轉後通常不相等。</figcaption></figure>
+<p>檢查極端很有用：到達後立刻跑，S = A，所以 R = 0 ms；只有一個行程且沒有其他成本時，W = 0、T = B。若算出負的 R 或 W，先查是否把尚未到達的工作排進 CPU。若 C 小於 S + B，則把尚未完成的 CPU 工作漏算了。</p>
+</section>
+
+<section class="concept"><h2>這一課的兩條選人規則</h2>
+<p><strong>先到先服務（First-Come, First-Served, FCFS）</strong>每次選最早進入就緒佇列者。<strong>最短工作優先（Shortest Job First, SJF）</strong>每次 CPU 空出來時，在<strong>已到達、尚未完成</strong>的工作中，選所需 CPU 時間最短者。本課兩者都採<strong>非搶占（non-preemptive）</strong>：工作一旦開始，就做到這段 burst 結束；新到的短工作只會排隊，不能立刻把正在跑的工作換下。</p>
+<p class="warning">教學假設鎖定：單 CPU、每行程單一 burst、無 I/O、零情境切換成本，已知所有 burst 長度只是 toy 的資訊優勢。現實排程器通常只能估計未來 CPU 用量。同時到達按 A／B／C 排序；SJF 相同 burst 時先比較到達時刻，再按名稱。沒有任何已到達工作時，CPU 空閒直到下一個到達。</p>
+<p>在「全部同時到達、執行時間已知」等條件下，把短工作放前面可降低平均周轉／等待。這不能推出 SJF 對任意到達時間、互動需求或公平性都最好；長工作也可能因短工作持續出現而久候。本課先固定輸入，算出可檢查的取捨。</p>
+</section>
+
+<section id="worked-example" class="worked-example"><h2>完整演算：同一批 A、B、C，排兩次</h2>
+<p><strong>題目：</strong>比較 FCFS 與非搶占 SJF 的 CPU 時間線、每個行程的 R／T／W，以及三項平均值。<strong>選法：</strong>先模擬 CPU 每次空出時的可選集合，得到 S 與 C，再代入公式。先套平均公式、卻沒有時間線，很容易把尚未到達的工作排進去。</p>
+<div class="table-scroll"><table><caption>原創教學輸入；到達與 CPU 時間的單位皆為 ms</caption><thead><tr><th>行程</th><th>到達 A<sub>i</sub></th><th>CPU B<sub>i</sub></th></tr></thead><tbody><tr><td>A</td><td>0</td><td>5</td></tr><tr><td>B</td><td>1</td><td>3</td></tr><tr><td>C</td><td>2</td><td>1</td></tr></tbody></table></div>
+<h3>FCFS：A → B → C</h3>
+<ol><li>t = 0 ms：只有 A 到達，選 A；S<sub>A</sub> = 0。A 使用 5 ms，C<sub>A</sub> = 0 + 5 = 5。</li><li>t = 1、2 ms：B、C 依序到達，在 A 後面排隊；這些事件不打斷 A。</li><li>t = 5 ms：就緒順序 [B, C]，選 B；S<sub>B</sub> = 5，C<sub>B</sub> = 5 + 3 = 8。</li><li>t = 8 ms：剩 C；S<sub>C</sub> = 8，C<sub>C</sub> = 8 + 1 = 9。全部完成。</li></ol>
+<figure class="diagram"><svg viewBox="0 0 640 145" role="img" aria-labelledby="fcfs-title fcfs-desc"><title id="fcfs-title">FCFS 甘特時間線</title><desc id="fcfs-desc">A從零至五毫秒，B從五至八毫秒，C從八至九毫秒。B在一毫秒到達、C在二毫秒到達，兩者等待A完成。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><rect x="50" y="55" width="300" height="45"/><rect x="350" y="55" width="180" height="45"/><rect x="530" y="55" width="60" height="45"/></g><g fill="currentColor" font-size="19" text-anchor="middle"><text x="50" y="35">0</text><text x="350" y="35">5</text><text x="530" y="35">8</text><text x="590" y="35">9 ms</text><text x="200" y="84">A：5 ms</text><text x="440" y="84">B：3 ms</text><text x="560" y="84">C</text><text x="320" y="130" font-size="17">FCFS 依到達順序；B 先於 C 等待</text></g>
+</svg><figcaption>時間線總長 9 ms；各格寬度對應真正執行時間。</figcaption></figure>
+<div class="table-scroll"><table><caption>FCFS：每個減法都保留</caption><thead><tr><th>行程</th><th>S / C</th><th>回應 R = S − A</th><th>周轉 T = C − A</th><th>等待 W = T − B</th></tr></thead><tbody><tr><td>A</td><td>0 / 5</td><td>0 − 0 = 0</td><td>5 − 0 = 5</td><td>5 − 5 = 0</td></tr><tr><td>B</td><td>5 / 8</td><td>5 − 1 = 4</td><td>8 − 1 = 7</td><td>7 − 3 = 4</td></tr><tr><td>C</td><td>8 / 9</td><td>8 − 2 = 6</td><td>9 − 2 = 7</td><td>7 − 1 = 6</td></tr></tbody></table></div>
+<p class="formula">平均 R = (0 + 4 + 6) ÷ 3 = 10/3 ≈ 3.33 ms。<br>平均 T = (5 + 7 + 7) ÷ 3 = 19/3 ≈ 6.33 ms。<br>平均 W = (0 + 4 + 6) ÷ 3 = 10/3 ≈ 3.33 ms。</p>
+<h3>SJF：A → C → B，A 不會中途被換下</h3>
+<ol><li>t = 0 ms：可選集合只有 {A}。即使知道 C 的 burst 最短，C 也尚未到達；選 A，S<sub>A</sub> = 0。</li><li>t = 1、2 ms：B、C 到達；非搶占規則讓 A 繼續做完，因此 C<sub>A</sub> = 5。</li><li>t = 5 ms：可選 {B: 3 ms, C: 1 ms}，選 C；S<sub>C</sub> = 5，C<sub>C</sub> = 5 + 1 = 6。</li><li>t = 6 ms：選 B；S<sub>B</sub> = 6，C<sub>B</sub> = 6 + 3 = 9。全部完成。</li></ol>
+<figure class="diagram"><svg viewBox="0 0 640 145" role="img" aria-labelledby="sjf-title sjf-desc"><title id="sjf-title">非搶占 SJF 甘特時間線</title><desc id="sjf-desc">A從零至五毫秒，C從五至六毫秒，B從六至九毫秒。t0只有A可選；t5才比較B與C的CPU時間。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><rect x="50" y="55" width="300" height="45"/><rect x="350" y="55" width="60" height="45"/><rect x="410" y="55" width="180" height="45"/></g><g fill="currentColor" font-size="19" text-anchor="middle"><text x="50" y="35">0</text><text x="350" y="35">5</text><text x="410" y="35">6</text><text x="590" y="35">9 ms</text><text x="200" y="84">A：5 ms</text><text x="380" y="84">C</text><text x="500" y="84">B：3 ms</text><text x="320" y="130" font-size="17">t = 5 才選短工作 C；A 的 5 ms 不被打斷</text></g>
+</svg><figcaption>這裡的 SJF 不會在 t = 2 ms 把 A 搶下；那是另一種搶占規則。</figcaption></figure>
+<div class="table-scroll"><table><caption>SJF：表格仍按行程名稱排列，執行順序見時間線</caption><thead><tr><th>行程</th><th>S / C</th><th>回應 R = S − A</th><th>周轉 T = C − A</th><th>等待 W = T − B</th></tr></thead><tbody><tr><td>A</td><td>0 / 5</td><td>0 − 0 = 0</td><td>5 − 0 = 5</td><td>5 − 5 = 0</td></tr><tr><td>B</td><td>6 / 9</td><td>6 − 1 = 5</td><td>9 − 1 = 8</td><td>8 − 3 = 5</td></tr><tr><td>C</td><td>5 / 6</td><td>5 − 2 = 3</td><td>6 − 2 = 4</td><td>4 − 1 = 3</td></tr></tbody></table></div>
+<p class="formula">平均 R = (0 + 5 + 3) ÷ 3 = 8/3 ≈ 2.67 ms。<br>平均 T = (5 + 8 + 4) ÷ 3 = 17/3 ≈ 5.67 ms。<br>平均 W = (0 + 5 + 3) ÷ 3 = 8/3 ≈ 2.67 ms。</p>
+<p><strong>答案：</strong>本例 SJF 讓 C 早 9 − 6 = 3 ms 完成，但 B 晚 9 − 8 = 1 ms 完成；平均周轉改善 (3 − 1) ÷ 3 = 2/3 ms，並非每個工作都更快。兩者全部完成時刻均為 9 ms，總 CPU 工作量仍是 5 + 3 + 1 = 9 ms。</p>
+<p><strong>回代檢查：</strong>每行都有 T = W + B，例如 SJF 的 B 是 8 = 5 + 3 ms；全部 T 加總，FCFS 為 19、SJF 為 17 ms，均等於等待總量再加 CPU 總量：19 = 10 + 9、17 = 8 + 9。每個 S ≥ 到達時間，時間線無重疊、無遺漏；只有一顆 CPU 的條件也成立。</p>
+</section>
+
+<section id="experiment"><h2>比較兩種排法：同一時刻看可選集合</h2><p>依序重播 FCFS，再重播 SJF。到 t = 5 ms 之前，兩者做法相同；差異發生在 CPU 空出且 B、C 都已到達的選擇點。狀態文字保留在下面，無 JavaScript 也能重算。</p>
+<section class="widget" data-trace id="trace-03"><h3>六個排程決策快照</h3>
+<div class="diagram"><svg viewBox="0 0 640 245" role="img" aria-labelledby="sched-trace-title sched-trace-desc"><title id="sched-trace-title">FCFS 與 SJF 的逐步 CPU 區段</title><desc id="sched-trace-desc">上列FCFS依序選A零至五、B五至八、C八至九；下列SJF依序選A零至五、C五至六、B六至九。高亮的格子對應目前決策步驟。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><g data-state="0"><rect x="100" y="50" width="270" height="45"/><text x="235" y="80" fill="currentColor" stroke="none" font-size="19" text-anchor="middle">A：0–5</text></g><g data-state="1"><rect x="370" y="50" width="162" height="45"/><text x="451" y="80" fill="currentColor" stroke="none" font-size="19" text-anchor="middle">B：5–8</text></g><g data-state="2"><rect x="532" y="50" width="54" height="45"/><text x="559" y="80" fill="currentColor" stroke="none" font-size="19" text-anchor="middle">C</text></g><g data-state="3"><rect x="100" y="155" width="270" height="45"/><text x="235" y="185" fill="currentColor" stroke="none" font-size="19" text-anchor="middle">A：0–5</text></g><g data-state="4"><rect x="370" y="155" width="54" height="45"/><text x="397" y="185" fill="currentColor" stroke="none" font-size="19" text-anchor="middle">C</text></g><g data-state="5"><rect x="424" y="155" width="162" height="45"/><text x="505" y="185" fill="currentColor" stroke="none" font-size="19" text-anchor="middle">B：6–9</text></g></g>
+<g fill="currentColor" font-size="17"><text x="25" y="80">FCFS</text><text x="25" y="185">SJF</text><text x="100" y="35">0</text><text x="365" y="35">5</text><text x="527" y="35">8</text><text x="580" y="35">9</text><text x="100" y="140">0</text><text x="365" y="140">5</text><text x="419" y="140">6</text><text x="580" y="140">9</text><text x="155" y="231">每列總長 9 ms；選人時只看已到達工作</text></g>
+</svg></div><div class="controls"><button type="button" data-action="prev">前一步</button><button type="button" data-action="next">下一步</button><button type="button" data-action="reset">重設</button></div><p class="status" data-trace-status aria-live="polite">FCFS 初始：0 ms 只有 A，可選集合是 {A}。</p>
+<ol class="trace-steps"><li data-step="0">FCFS：0 ms 選 A，連續執行到 5 ms。B 在 1 ms、C 在 2 ms 到達，排在後面。</li><li data-step="1">FCFS：5 ms 佇列 [B, C]，選較早到達的 B，跑到 8 ms；B 等待 5 − 1 = 4 ms。</li><li data-step="2">FCFS：8 ms 選 C，9 ms 完成；C 等待 8 − 2 = 6 ms，總等待 10 ms。</li><li data-step="3">SJF 重新開始：0 ms 仍只有 A，跑到 5 ms；非搶占規則不讓中途到達的 C 打斷 A。</li><li data-step="4">SJF：5 ms 比較 B 的 3 ms 與 C 的 1 ms，選 C 跑到 6 ms；C 等待 5 − 2 = 3 ms。</li><li data-step="5">SJF：6 ms 選 B，9 ms 完成；B 等待 6 − 1 = 5 ms，總等待 8 ms，CPU 總量仍為 9 ms。</li></ol>
+</section></section>
+
+<section id="practice"><h2>自己試一題：三個行程同時到達</h2>
+<p>A、B、C 都在 0 ms 到達，CPU 時間分別改成 3、2、1 ms，其餘假設不變。FCFS 同到達依 A／B／C 排；SJF 每次選最短。請算兩條時間線、每個行程 R／T／W，以及平均等待時間。這次 SJF 一開始就能選 C。</p>
+<details><summary>提示 1：先寫 S 與 C</summary><p>FCFS 是 A 0–3、B 3–5、C 5–6；SJF 是 C 0–1、B 1–3、A 3–6。表格若按 A、B、C 排，記得 SJF 的 A 開始時刻應填 3。</p></details>
+<details><summary>提示 2：到達都是零，公式如何簡化？</summary><p>R = S，T = C，W = C − burst。本課非搶占且無阻塞，所以 W 也等於首次開始時間 S。</p></details>
+<details><summary>完整解：逐個行程代入</summary><p>FCFS：A 的 R = 0、T = 3、W = 3 − 3 = 0；B 的 R = 3、T = 5、W = 5 − 2 = 3；C 的 R = 5、T = 6、W = 6 − 1 = 5，單位皆 ms。平均 W = (0 + 3 + 5) ÷ 3 = 8/3 ≈ 2.67 ms；平均 R 同為 8/3 ms，平均 T = (3 + 5 + 6) ÷ 3 = 14/3 ≈ 4.67 ms。</p><p>SJF：A 的 R = 3、T = 6、W = 6 − 3 = 3；B 的 R = 1、T = 3、W = 3 − 2 = 1；C 的 R = 0、T = 1、W = 1 − 1 = 0 ms。平均 W = (3 + 1 + 0) ÷ 3 = 4/3 ≈ 1.33 ms；平均 R 同為 4/3 ms，平均 T = (6 + 3 + 1) ÷ 3 = 10/3 ≈ 3.33 ms。</p><p>檢查：兩種排程的 CPU 工作皆為 3 + 2 + 1 = 6 ms，完成整批仍是 6 ms。FCFS 的 T 總量 14 = W 總量 8 + CPU 6；SJF 的 10 = 4 + 6。SJF 降低平均，但 A 比原來晚 3 ms 完成，取捨仍然存在。</p></details>
+</section>
+
+<section class="concept"><h2>用真實紀錄時，先檢查模型適不適用</h2><p>排程事件可記錄首次切入、所有執行區段與退出時刻；要計算就緒等待，還需要知道喚醒與阻塞區間。只拿完成時間減到達時間再減 CPU 時間，對有 I/O 的程式會把裝置等待混進去。真實排程還會考慮多核心、優先權、估計 burst 與切換成本；下課先放開「一路做到完」這個限制，觀察時間片輪轉如何改變 R 與 W。</p></section>
+<section class="sources"><h2>來源與教學條件</h2><p><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched.pdf">OSTEP，第 7 章 Scheduling: Introduction，§7.1–7.4、§7.6</a>支持工作負載假設、FCFS／SJF、周轉與回應定義；本地銜接：舊課〈02 行程排程〉。本文輸入、圖與全部平均值均為原創重算；W = C − A − B 明確限於本課無阻塞模型。</p></section>
+<nav class="pager" aria-label="章節導覽"><a href="02-fork.html">← 02 fork、exec、wait</a><a href="04-round-robin.html">04 時間片輪轉 →</a></nav>
+</main></body></html>

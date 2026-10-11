@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>12 TLB 與位址轉換｜圖解作業系統</title><link rel="icon" href="data:,"><link rel="stylesheet" href="lab.css"><script src="app.js" defer></script></head>
+<body data-page="12-translation">
+<a class="skip-link" href="#main">跳到課程內容</a>
+<aside class="sidebar" aria-label="課程導覽"><a class="brand" href="index.html">圖解作業系統</a><nav><a href="index.html">全部課程</a><a href="11-paging.html">11 分頁與頁表</a><a href="12-translation.html" aria-current="page">12 TLB 與位址轉換</a><a href="13-page-fault.html">13 缺頁與寫入時複製</a><a href="glossary.html">名詞字典</a><a href="https://justty32.github.io/engineer_study/">工程學習主站</a></nav></aside>
+<main id="main" class="lesson">
+<header class="lesson-header"><p class="eyebrow">12 ／ 把頁號換掉，保留頁內位置</p><h1>TLB 與位址轉換</h1><p class="lead">程式要讀取位址 0x1234 的一個位元組，記憶體卻把這一頁放在編號 9 的頁框。處理器要查哪張表、保留哪部分數字，才能找到真正的位置？</p></header>
+<p class="prerequisite"><strong>這章假設已懂：</strong><a href="11-paging.html">頁、頁框與頁表</a>。本章會重新示範整除、餘數及十六進位換算；不需要先背位元運算。</p>
+<nav class="section-nav" aria-label="本頁導覽"><a href="#worked-example">完整演算</a><a href="#va-lab">位址實驗</a><a href="#practice">自己試一題</a></nav>
+
+<section class="concept" id="concept"><h2>為什麼只換頁號，不能整個位址照抄？</h2>
+<p>把一頁想成一排 1024 個有編號的格子，排號與格號都從 0 起算。程式說「排號 4 中的格號 564」，實體記憶體可以把整排放在別處，但排內格號 564 仍是同一份資料。回到真實機制：虛擬位址（virtual address, VA）由行程使用；實體位址（physical address, PA）指向實體記憶體。頁表保存兩邊頁號的對應，頁的資料不會因為一次位址轉換就整份搬動。</p>
+<p>虛擬頁號（virtual page number, VPN）選頁表中的一筆；實體頁框號（page frame number, PFN）指定資料位於哪個實體頁框。頁內偏移（offset）則指出頁內第幾個位元組。頁與頁框一樣大，所以轉換時<strong>偏移保持不變</strong>。VPN、PFN 是沒有單位的編號；偏移和本課的位址都以位元組（byte，符號 B）計。</p>
+<p>本章刻意使用小模型：16 位元的 VA、每頁 1 KiB = 1024 B = 2<sup>10</sup> B，頁框號限定 0–63。16 位元共有 65,536 個位址，從 0 到 65,535；每頁內有 1024 個位置，故偏移占低 10 位元，剩下的高 6 位元表示 64 個可能的 VPN。</p>
+<figure><div class="diagram" tabindex="0"><svg viewBox="0 0 720 280" role="img" aria-labelledby="va-bits-title va-bits-desc" font-size="18"><title id="va-bits-title">同一虛擬位址拆成六位元頁號及十位元偏移</title><desc id="va-bits-desc">十六進位 0x1234 等於十進位 4660。二進位高六位 000100 是頁號四，低十位 1000110100 是偏移五百六十四。頁表把頁號四換成頁框號九後，偏移仍是五百六十四，形成實體位址 9780。</desc><defs><marker id="va-bit-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs><g fill="none" stroke="currentColor" stroke-width="2"><rect x="40" y="61" width="240" height="74" rx="8"/><rect x="280" y="61" width="400" height="74" rx="8"/><path d="M160 148V193M480 148V193" marker-end="url(#va-bit-arrow)"/></g><g fill="currentColor" text-anchor="middle"><text x="360" y="30">VA = 0x1234 = 4660 B（同一個數值）</text><text x="160" y="89">VPN：6 bit</text><text x="160" y="118">000100₂ = 4</text><text x="480" y="89">offset：10 bit</text><text x="480" y="118">1000110100₂ = 564 B</text><text x="160" y="222">查表得到 PFN = 9</text><text x="480" y="222">偏移仍為 564 B</text><text x="360" y="264">PA = 9 × 1024 B + 564 B = 9780 B = 0x2634 B</text></g></svg></div><figcaption>方框寬度依 6：10 配比；箭頭表示轉換步驟。0x 是十六進位前綴，右下角的 ₂ 表示二進位，兩者都不是另一種位址單位。</figcaption></figure>
+<p class="callout">十六進位每一位對應 4 個二進位位元，但頁界線在第 10 位，不剛好落在十六進位字元邊界。因此不能直接把 0x1234 的「12」當頁號、「34」當偏移。本例正確拆分是 VPN 4、offset 0x234 = 564 B。</p>
+</section>
+
+<section class="concept" id="tlb"><h2>TLB 是查表結果的快取，失誤後仍可能順利存取</h2>
+<p>記憶體管理單元（memory management unit, MMU）參與位址轉換和權限檢查。轉譯後備緩衝區（translation lookaside buffer, TLB）保存近期用過的轉換資訊，例如這個位址空間的 VPN 4 對到 PFN 9，以及存取權限。它快取的是<strong>轉換關係</strong>；資料快取保存的則是指令或資料，兩者不是同一層。</p>
+<p>TLB 命中（hit）表示找到可用的快取轉換；仍須符合這次讀、寫或執行的權限。TLB 失誤（miss）表示快取中沒有可用資訊，要進一步取得頁表項目（page table entry, PTE）。若該頁已在實體記憶體中、且讀取被允許，就可以填入 TLB 並完成存取，完全不需要缺頁處理。</p>
+<figure><div class="diagram" tabindex="0"><svg viewBox="0 0 720 400" role="img" aria-labelledby="va-route-title va-route-desc" font-size="17"><title id="va-route-title">一次讀取在 TLB 失誤後的正常路線</title><desc id="va-route-desc">輸入虛擬頁四和偏移五百六十四，TLB 失誤後查單層頁表。頁表項目表示駐留、可讀且頁框九，於是合成實體位址 9780。若頁面不駐留、未映射或沒有讀取權限，走例外處理，不宣稱有可讀的實體位址。</desc><defs><marker id="va-route-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs><g fill="none" stroke="currentColor" stroke-width="2"><rect x="40" y="20" width="290" height="60" rx="8"/><rect x="40" y="118" width="290" height="64" rx="8"/><rect x="40" y="229" width="290" height="74" rx="8"/><rect x="402" y="229" width="275" height="74" rx="8"/><path d="M185 80V116M185 182V227M332 267H400" marker-end="url(#va-route-arrow)"/><path d="M80 303V348H401" marker-end="url(#va-route-arrow)"/></g><g fill="currentColor"><text x="60" y="45">讀取 VA：VPN 4</text><text x="60" y="68">offset 564 B</text><text x="60" y="146">TLB 沒有可用項目</text><text x="60" y="170">失誤 → 取得頁表項目</text><text x="58" y="209">本例用單層頁表</text><text x="58" y="257">VPN 4 → PFN 9</text><text x="58" y="285">resident = 1；read = 允許</text><text x="420" y="257">可繼續：PA 9780 B</text><text x="420" y="285">填入可用轉換，再讀資料</text><text x="411" y="345">其他狀態 → 例外處理</text><text x="411" y="372">不輸出可存取的 PA</text><text x="45" y="377">下方分支：不駐留／未映射／權限不符</text></g></svg></div><figcaption>上方到右方是本例的成功路線；下方是不同 PTE 狀態的分支。resident 表示頁面駐留於實體記憶體，不代表已獲得本次操作的權限。</figcaption></figure>
+<p>這張圖是<strong>單層頁表的教學模型</strong>。真實系統可能用多層頁表；TLB 失誤後由硬體走訪頁表或由軟體協助，取決於架構與系統設計，不能從這張圖推成「所有處理器一定自動查一次 RAM」。本章也不計 TLB 查詢、頁表讀取或資料快取的時間。</p>
+</section>
+
+<section id="worked-example" class="worked-example"><h2>完整演算：讀取 0x1234，真正要去哪裡？</h2>
+<p><strong>題目：</strong>一個行程要讀取 VA = 0x1234 的一個位元組。頁大小 1 KiB，TLB 失誤；頁表指出 VPN 4 已駐留、允許讀取，對到 PFN 9。求 VPN、頁內偏移及可讀的 PA，並判斷這次是否發生缺頁。</p>
+<p><strong>已知：</strong>位址為 16 位元；每頁 1024 B；這次是讀取；映射、駐留與權限都符合條件。<strong>所求：</strong>頁號與頁內位置、實體位址，以及失誤的性質。<strong>選法理由：</strong>每頁固定 1024 B，所以用整除找「跨過幾整頁」，用餘數找「還走了多少 byte」，再查表換頁號。</p>
+<ol><li><strong>先把同一個 VA 寫成十進位。</strong><p class="formula">0x1234 = 1 × 16³ + 2 × 16² + 3 × 16 + 4 = 4096 + 512 + 48 + 4 = 4660 B。</p></li>
+<li><strong>整除得到 VPN。</strong><p class="formula">VPN = ⌊4660 B ÷ 1024 B⌋ = 4。</p><p>跨過 4 整頁已走過 4096 B；下一頁（VPN 5）的起點是 5120 B，超過本次位址，所以不能進位成 5。</p></li>
+<li><strong>餘數得到 offset。</strong><p class="formula">offset = 4660 B − 4 × 1024 B = 564 B = 0x234 B。</p><p>564 落在 0–1023 B 內，符合一頁可容納的範圍。</p></li>
+<li><strong>查 VPN 4 的項目，先判斷能不能讀。</strong><p>TLB 沒找到，但頁表已給出 resident = 1、read = 允許、PFN = 9。因此本次可以使用 PFN 9；這是 TLB 失誤後正常完成轉換，不是缺頁。</p></li>
+<li><strong>頁框起點加偏移。</strong><p class="formula">頁框 9 起點 = 9 × 1024 B = 9216 B = 0x2400 B。<br>PA = 9216 B + 564 B = 9780 B = 0x2634 B。</p></li>
+<li><strong>回代檢查兩件事。</strong><p>4 × 1024 + 564 = 4660，重建了原 VA；9780 mod 1024 = 564，轉換前後頁內偏移相同。若偏移變了，就是把同頁的另一個位元組當成目標。</p></li></ol>
+<p class="callout"><strong>答案：</strong>VPN = 4、offset = 564 B、PA = 9780 B = 0x2634 B。本例 TLB 失誤 1 次、缺頁 0 次。頁號和頁框號不相同並不表示有錯；這正是頁表提供的對應。</p>
+<h3>遇到不能直接存取的狀態，就停在狀態判斷</h3>
+<div class="table-scroll"><table><caption>保持同一個 VA，改變映射狀態</caption><thead><tr><th scope="col">條件</th><th scope="col">能否立刻用 PA 讀資料</th><th scope="col">下一步</th></tr></thead><tbody>
+<tr><td>已駐留、可讀，TLB 命中</td><td>可以，使用有效且一致的轉換</td><td>以 PFN 和原 offset 存取</td></tr>
+<tr><td>已駐留、可讀，TLB 失誤</td><td>查得項目後可以</td><td>補上轉換；不必缺頁</td></tr>
+<tr><td>位址區間合法，但頁不駐留</td><td>不可以</td><td>由缺頁處理建立可用映射；可能清零配置、或讀取後備資料</td></tr>
+<tr><td>未映射，或本次操作不被允許</td><td>不可以</td><td>核心檢查是否合法；無法修復時回報存取錯誤</td></tr>
+</tbody></table></div>
+<p>在最後兩列，機械地代入一個 PFN 算出數字，並不會賦予存取權限；本課不把它當作「可存取 PA」。缺頁（page fault）也不必然需要磁碟輸入輸出（disk I/O），下一章會把清零配置、寫入時複製及讀磁碟分開。</p>
+<p><strong>不變量：</strong>成功轉換必須同時滿足映射有效、頁面駐留和權限允許；0 ≤ offset &lt; 1024 B；PA 與 VA 除以 1024 後的餘數相同。映射改變時，系統也必須處理相關的舊 TLB 項目，不能繼續把過期轉換當成命中。</p>
+</section>
+
+<section class="widget" id="va-lab" data-va><h2>位址轉換實驗</h2><p>改值立即重算。</p><div data-lab-mount></div><noscript><p>互動需 JavaScript，上方完整演算仍可讀。</p></noscript></section>
+
+<section id="practice"><h2>自己試一題：換一個頁號與頁框</h2>
+<p>仍用 16 位元 VA、每頁 1 KiB。現在讀取 VA = 0x2ABC = 10940 B；TLB 失誤，對應頁已駐留且可讀，頁表給出的 PFN = 3。請算 VPN、offset 與 PA，再回答：若只把 PTE 改成「不駐留」，能否仍宣稱這個 PA 可讀？</p>
+<details><summary>提示一：先找整頁邊界</summary><p>10 × 1024 = 10240；11 × 1024 = 11264。10940 落在兩者之間，所以取較小的整數頁號。十六進位拆字元不是本題的頁界線。</p></details>
+<details><summary>提示二：偏移沿用，頁號由表替換</summary><p>先算 10940 − 10240，再把剩下的 byte 數加到頁框 3 的起點 3 × 1024 B。</p></details>
+<details><summary>完整解與回代</summary><p class="formula">VPN = ⌊10940/1024⌋ = 10。<br>offset = 10940 − 10 × 1024 = 700 B = 0x2BC B。<br>PA = 3 × 1024 + 700 = 3772 B = 0x0EBC B。</p><p>回代：10 × 1024 + 700 = 10940；3772 mod 1024 = 700。TLB 失誤後查表仍成功，因此缺頁 0 次。若改成不駐留，當前不能完成資料讀取，要先走缺頁處理；3772 只是在原先成功條件下成立的答案。</p></details>
+<h3>邊界再檢查</h3><p>VA = 0 時，VPN 0、offset 0；VA = 65535 = 0xFFFF 時，VPN 63、offset 1023。兩者仍要有合法 PTE 才能轉換。VA = 65536 已超過本模型的 16 位元範圍，不應悄悄截成 0。</p>
+</section>
+
+<section class="sources"><h2>模型邊界與可觀察證據</h2><p>頁表與 TLB 是不同的狀態；使用者工具顯示一段虛擬映射，無法單憑那段範圍證明每個頁都駐留，更無法證明某次 TLB 命中。要研究硬體實作，需查處理器手冊與對應計數器，且把資料快取未命中與位址轉換事件分開。以上數值為本課自行設計的教學例。</p><p>本地銜接：舊課〈05 記憶體與位址空間〉。一手教材：<a href="https://pages.cs.wisc.edu/~remzi/OSTEP/vm-paging.pdf">OSTEP 第 18 章，Paging: Introduction</a>（頁號、偏移與頁表）、<a href="https://pages.cs.wisc.edu/~remzi/OSTEP/vm-tlbs.pdf">第 19 章，Paging: Faster Translations (TLBs)</a>（§19.1 基本流程、TLB 失誤處理與權限檢查）。</p></section>
+<nav class="pager" aria-label="相鄰章節"><a href="11-paging.html">← 11 分頁與頁表</a><a href="13-page-fault.html">13 缺頁與寫入時複製 →</a></nav>
+</main></body></html>

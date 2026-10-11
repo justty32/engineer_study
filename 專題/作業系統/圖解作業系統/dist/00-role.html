@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 OS 角色｜圖解作業系統</title><link rel="stylesheet" href="lab.css"><script defer src="app.js"></script></head>
+<body data-page="00-role">
+<a class="skip-link" href="#main">跳到課程內容</a>
+<aside class="sidebar"><a class="brand" href="index.html">圖解作業系統</a><nav aria-label="課程導覽"><a href="index.html">課程地圖</a><a href="00-role.html" aria-current="page">00 OS 角色</a><a href="01-process.html">下一課：行程狀態</a><a href="glossary.html">名詞與概念字典</a></nav><a class="site-link" href="https://justty32.github.io/engineer_study/">工程學習主站</a></aside>
+<main id="main" class="lesson">
+<header class="lesson-header"><p class="eyebrow">00・一份硬體如何服務多個程式</p><h1>作業系統在安排什麼？</h1><p class="lead">你同時打開編輯器與音樂播放器，它們都要算東西、存資料、等裝置。作業系統把這些請求變成受控的硬體操作；本課用兩個程式、單一 CPU，追出誰在做事、誰在等。</p></header>
+<p class="prerequisite"><strong>這章假設已懂：</strong>程式會依序執行指令，變數保存資料。其餘從零開始；名詞可隨時查<a href="glossary.html">字典</a>。</p>
+<nav class="section-nav" aria-label="本課段落"><a href="#roles">認識三個角色</a><a href="#worked-example">完整演算</a><a href="#experiment">逐步觀察</a><a href="#practice">自己試一題</a></nav>
+
+<section id="roles" class="concept"><h2>先認識程式、作業系統、硬體</h2>
+<p><strong>程式（program）</strong>是指令與資料，例如「讀檔後把文字顯示出來」。<strong>中央處理器（Central Processing Unit, CPU）</strong>負責執行指令；<strong>記憶體（memory）</strong>存放執行中需要的資料；磁碟與鍵盤等<strong>輸入／輸出裝置（Input/Output device, I/O device）</strong>負責與外界交換資料。CPU 做一次加法，和磁碟完成一次讀取，是不同部件在做事。</p>
+<p><strong>作業系統（Operating System, OS）</strong>管理資源並提供服務。其中具有特權、負責核心管理工作的程式碼叫<strong>核心（kernel）</strong>。一般程式提出受控請求，核心檢查請求、安排裝置，再回傳結果。核心也是由 CPU 執行的程式碼；圖中的三層是職責，不是三顆各自工作的 CPU。</p>
+<figure class="diagram"><svg viewBox="0 0 640 345" role="img" aria-labelledby="role-title role-desc">
+<title id="role-title">程式透過核心使用硬體</title><desc id="role-desc">上層程式 A 和 B 提出請求，中層核心檢查權限並安排資源，下層是單一 CPU、記憶體與裝置。箭頭表示受控請求路徑，不表示三層同時執行。</desc>
+<defs><marker id="role-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="currentColor"/></marker></defs>
+<g fill="none" stroke="currentColor" stroke-width="2"><rect x="30" y="20" width="260" height="65" rx="10"/><rect x="350" y="20" width="260" height="65" rx="10"/><rect x="60" y="135" width="520" height="75" rx="10"/><rect x="30" y="270" width="170" height="60" rx="10"/><rect x="235" y="270" width="170" height="60" rx="10"/><rect x="440" y="270" width="170" height="60" rx="10"/><path d="M160 85V130 M480 85V130 M115 210V263 M320 210V263 M525 210V263" marker-end="url(#role-arrow)"/></g>
+<g fill="currentColor" font-size="20" text-anchor="middle"><text x="160" y="48">程式 A</text><text x="160" y="72" font-size="16">計算 → 請求讀檔</text><text x="480" y="48">程式 B</text><text x="480" y="72" font-size="16">計算 → 顯示結果</text><text x="320" y="164">核心：提供介面、安排資源、檢查權限</text><text x="320" y="191" font-size="16">核心程式碼也需要使用下面這顆 CPU</text><text x="115" y="307">單一 CPU</text><text x="320" y="307">記憶體</text><text x="525" y="307">I/O 裝置</text></g>
+</svg><figcaption>程式描述要做的事；核心決定受控操作如何進行；硬體執行實際動作。</figcaption></figure>
+<p>把這個安排想成共用工作室：大家提出工作、管理者安排設備。類比到此為止。真正讓程式不能隨便改核心資料的，是 CPU 的權限模式、記憶體存取檢查與核心的政策；只靠一份「大家請排隊」約定，攔不住有錯誤或惡意的程式。</p>
+</section>
+
+<section class="concept"><h2>抽象、共享、保護，各回答一個問題</h2>
+<p><strong>抽象（abstraction）</strong>回答「程式用什麼介面提出需求？」例如檔案讓程式用名稱與位元組位置讀資料，不必每次都自行控制磁碟。<strong>系統呼叫（system call）</strong>是一般程式進入核心、請求服務的受控入口；它有參數、成功結果與錯誤結果，不保證每次請求都成功。</p>
+<p><strong>共享（sharing）</strong>回答「有限資源何時分給誰？」本課把 CPU 簡化成一次只能執行一條指令流的單一執行資源。OS 可在 A 等磁碟時讓 B 使用 CPU。兩者在同一段時間內都前進，稱為<strong>並行（concurrency）</strong>；這裡沒有兩個程式同一瞬間在兩顆 CPU 上執行的<strong>平行（parallelism）</strong>。不過磁碟本身可在 CPU 執行 B 時處理 A 的請求。</p>
+<p><strong>保護（protection）</strong>回答「這個操作有沒有權限？」A 可以改自己獲准存取的記憶體；若碰到未授權位址，硬體把錯誤交給核心處理。核心可以終止 A，讓 B 繼續。這是隔離的目標與機制；核心自身的漏洞或硬體故障仍可能影響整台機器，隔離不等於任何故障都能完全擋住。</p>
+<p class="callout">讀檔一次就同時涉及三件事：檔案介面隱藏裝置細節；權限檢查決定能否讀；等待裝置時把 CPU 交給其他工作。三個詞描述同一個操作的不同面向。</p>
+</section>
+
+<section id="worked-example" class="worked-example"><h2>完整演算：A 等磁碟時，B 能做多少事？</h2>
+<p><strong>題目與已知：</strong>A、B 都在 t = 0 ms 準備好。A 先用 CPU 2 ms，發出讀取並等裝置 2 ms，再用 CPU 1 ms 後結束。B 只需 CPU 3 ms。先執行 A；A 等待時改執行 B，B 執行到完成才換回 A。單位 ms 是毫秒，1 ms = 0.001 s。</p>
+<p><strong>所求：</strong>各時段由誰用 CPU、何時全做完，以及 A 在裝置完成後是否立刻能跑。<strong>選法：</strong>分開畫 CPU 與裝置兩條時間線，因為裝置等待時間不能直接加到 CPU 已做的工作上。教學模型忽略核心處理與切換的時間；讀取固定成功、固定耗時，不模擬其他背景工作。</p>
+<figure class="diagram"><svg viewBox="0 0 640 265" role="img" aria-labelledby="role-time-title role-time-desc">
+<title id="role-time-title">兩條時間線：CPU 與 A 的磁碟讀取</title><desc id="role-time-desc">CPU 在零至二毫秒跑 A，二至五跑 B，五至六跑 A；磁碟在二至四處理 A 的讀取。四至五，A 已可執行但 CPU 仍在跑 B。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><rect x="100" y="55" width="160" height="45"/><rect x="260" y="55" width="240" height="45"/><rect x="500" y="55" width="80" height="45"/><rect x="260" y="130" width="160" height="45"/><rect x="420" y="205" width="80" height="40" stroke-dasharray="5 4"/><path d="M100 35V48 M260 35V48 M420 35V48 M500 35V48 M580 35V48"/></g>
+<g fill="currentColor" font-size="18" text-anchor="middle"><text x="100" y="25">0</text><text x="260" y="25">2</text><text x="420" y="25">4</text><text x="500" y="25">5</text><text x="580" y="25">6 ms</text><text x="48" y="84">CPU</text><text x="180" y="84">A：2 ms</text><text x="380" y="84">B：3 ms</text><text x="540" y="84">A：1</text><text x="48" y="159">裝置</text><text x="340" y="159">A 的讀取：2 ms</text><text x="227" y="231">A 已能跑，仍等 CPU →</text><text x="460" y="231">1 ms</text></g>
+</svg><figcaption>讀取在 t = 4 ms 完成，A 到 t = 5 ms 才再次取得 CPU。</figcaption></figure>
+<div class="table-scroll"><table><caption>事件後的完整狀態</caption><thead><tr><th>時間</th><th>CPU 與裝置</th><th>A / B 的狀態與原因</th></tr></thead><tbody>
+<tr><td>0 ms</td><td>選 A 使用 CPU</td><td>A 開始計算；B 已能執行，等 CPU。</td></tr>
+<tr><td>0–2 ms</td><td>CPU 執行 A 2 ms</td><td>A 完成讀取前的計算；B 仍等待。</td></tr>
+<tr><td>2 ms</td><td>A 請求讀取；CPU 改跑 B</td><td>A 缺少讀取結果而暫停；裝置開始 2 ms 的工作。</td></tr>
+<tr><td>2–4 ms</td><td>CPU 跑 B；裝置處理 A</td><td>這 2 ms 同時推進兩個部件，不能相加成 4 ms 經過時間。</td></tr>
+<tr><td>4 ms</td><td>裝置通知核心讀取已完成</td><td>A 恢復可執行資格；B 仍使用 CPU，還需 1 ms。</td></tr>
+<tr><td>4–5 ms</td><td>CPU 繼續跑 B</td><td>A 等 CPU 1 ms；B 在 5 ms 完成。</td></tr>
+<tr><td>5–6 ms</td><td>CPU 跑 A 剩下的 1 ms</td><td>A 在 6 ms 完成，所有工作結束。</td></tr>
+</tbody></table></div>
+<p class="formula">CPU 工作總量 = A 的 (2 + 1) + B 的 3 = 6 ms。經過時間 = 6 − 0 = 6 ms。</p>
+<p><strong>答案：</strong>全做完是 t = 6 ms。A 讀取完成後再等 1 ms 才取得 CPU。這段 CPU 沒有空閒，因此本 toy 的 CPU 忙碌比例 = 6 ÷ 6 = 100%。<strong>回代檢查：</strong>A 的生命歷程是 CPU 3 + 等裝置 2 + 等 CPU 1 = 6 ms；B 是等 CPU 2 + CPU 3 = 5 ms，與圖中各自完成時刻一致。</p>
+<p class="warning">如果讀取請求因權限而失敗，裝置工作可能根本不開始，程式會收到錯誤結果。若沒有 B，A 等裝置的 2 ms 可能讓 CPU 空閒。若 B 執行更久又不讓出 CPU，A 準備好之後也可能等更久；下一課把這些狀態正式命名。</p>
+</section>
+
+<section id="experiment"><h2>逐步觀察：誰改變了誰的狀態？</h2>
+<p>先讀完上方解答，再用前一步／下一步重播。每一步的文字都保留；圖中高亮只是指出這次正在追的部件。重設回到 t = 0，不改變本題條件。</p>
+<section class="widget" data-trace id="trace-00"><h3>從請求到回到 CPU</h3>
+<div class="diagram"><svg viewBox="0 0 640 245" role="img" aria-labelledby="role-trace-title role-trace-desc"><title id="role-trace-title">A 與 B 的服務追蹤</title><desc id="role-trace-desc">五個快照依序為 A 計算、A 讀取而 B 計算、讀取完成仍由 B 計算、B 結束換 A、全部結束。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><g data-state="0"><rect x="25" y="20" width="175" height="75" rx="8"/><text x="112" y="49" text-anchor="middle" fill="currentColor" stroke="none" font-size="19">0：A 用 CPU</text><text x="112" y="75" text-anchor="middle" fill="currentColor" stroke="none" font-size="16">B 等待</text></g><g data-state="1"><rect x="232" y="20" width="175" height="75" rx="8"/><text x="320" y="49" text-anchor="middle" fill="currentColor" stroke="none" font-size="19">2：A 等讀取</text><text x="320" y="75" text-anchor="middle" fill="currentColor" stroke="none" font-size="16">B 用 CPU</text></g><g data-state="2"><rect x="439" y="20" width="175" height="75" rx="8"/><text x="527" y="49" text-anchor="middle" fill="currentColor" stroke="none" font-size="19">4：A 已能跑</text><text x="527" y="75" text-anchor="middle" fill="currentColor" stroke="none" font-size="16">B 仍用 CPU</text></g><g data-state="3"><rect x="125" y="150" width="175" height="75" rx="8"/><text x="212" y="179" text-anchor="middle" fill="currentColor" stroke="none" font-size="19">5：換 A</text><text x="212" y="205" text-anchor="middle" fill="currentColor" stroke="none" font-size="16">B 已結束</text></g><g data-state="4"><rect x="345" y="150" width="175" height="75" rx="8"/><text x="432" y="179" text-anchor="middle" fill="currentColor" stroke="none" font-size="19">6：全部結束</text><text x="432" y="205" text-anchor="middle" fill="currentColor" stroke="none" font-size="16">CPU 工作 6 ms</text></g></g>
+</svg></div>
+<div class="controls"><button type="button" data-action="prev">前一步</button><button type="button" data-action="next">下一步</button><button type="button" data-action="reset">重設</button></div>
+<p class="status" data-trace-status aria-live="polite">初始：t = 0 ms，CPU 選 A，B 等待。</p>
+<ol class="trace-steps"><li data-step="0">t = 0：CPU 執行 A，B 已準備好。單一 CPU 同一時間只服務一條指令流。</li><li data-step="1">t = 2：A 提出讀取並等待結果，核心安排 B 使用 CPU。裝置與 CPU 各做自己的工作。</li><li data-step="2">t = 4：裝置完成通知使 A 重新能跑；本題政策仍讓 B 跑到完成，因此 CPU 所屬者未變。</li><li data-step="3">t = 5：B 完成，核心選 A 繼續讀取之後的計算。裝置完成與取得 CPU 是兩個事件。</li><li data-step="4">t = 6：A 完成。CPU 使用量 3 + 3 = 6 ms，與整條時間線長度相同。</li></ol>
+</section></section>
+
+<section id="practice"><h2>自己試一題：短 B 做完，A 還在等</h2>
+<p>A、B 仍在 0 ms 到達且先跑 A。改成 A 使用 CPU 1 ms、等裝置 3 ms、再用 CPU 1 ms；B 只用 CPU 2 ms。仍忽略切換成本。請畫 CPU 時間線，求全部完成時間、CPU 空閒時間與忙碌比例。</p>
+<details><summary>提示 1：先標裝置的起訖</summary><p>A 在 t = 1 ms 提出讀取，裝置結束時刻是 1 + 3 = 4 ms。這個終點不因 B 提早完成而改變。</p></details>
+<details><summary>提示 2：比較 B 完成與讀取完成</summary><p>B 從 1 ms 開始，做 2 ms，於 3 ms 結束。3 ms 時 A 還缺資料，因此暫時沒有可執行的工作。</p></details>
+<details><summary>完整解：包含空檔的時間線</summary><p>CPU：A 0–1 → B 1–3 → 空閒 3–4 → A 4–5 ms。全部完成在 5 ms，空閒 1 ms。CPU 工作量 = A 的 2 + B 的 2 = 4 ms，忙碌比例 = 4 ÷ 5 = 80%。回代：工作 4 + 空閒 1 = 經過 5 ms；A 的 CPU 2 + 裝置等待 3 = 5 ms。這次裝置完成時 CPU 正空閒，A 可以立刻被選上；原因是當時的資源狀態，並非裝置完成一律保證立刻執行。</p></details>
+</section>
+
+<section class="concept"><h2>在真實系統看得到什麼？</h2><p>行程清單會顯示許多正在等待或執行的工作；排程事件紀錄能指出某個 CPU 何時換了工作；系統呼叫追蹤能顯示讀取的請求與結果。只看「兩個程式都開著」無法證明它們同時使用 CPU；只看 CPU 忙碌比例，也無法知道某個讀取花多久。觀察工具必須對準問題。</p></section>
+<section class="sources"><h2>來源與教學模型</h2><p>概念依據：<a href="https://pages.cs.wisc.edu/~remzi/OSTEP/intro.pdf">OSTEP，第 2 章 Introduction，§2.1–2.4</a>；本地銜接：舊課〈00 為什麼需要作業系統〉。圖、兩組時間線與練習均為本課原創 toy；固定讀取耗時與零切換成本只供拆解因果，不代表真實效能。</p></section>
+<nav class="pager" aria-label="章節導覽"><a href="index.html">← 課程地圖</a><a href="01-process.html">01 行程狀態 →</a></nav>
+</main></body></html>

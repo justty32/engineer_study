@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 條件變數與號誌｜圖解作業系統</title><link rel="stylesheet" href="lab.css"><script defer src="app.js"></script></head><body data-page="08-condition"><a class="skip-link" href="#main">跳到課程內容</a><aside class="sidebar"><a class="brand" href="index.html">圖解作業系統</a><nav aria-label="課程導覽"><a href="00-role.html">00 OS 角色</a>
+<a href="01-process.html">01 行程狀態</a>
+<a href="02-fork.html">02 fork、exec、wait</a>
+<a href="03-scheduling.html">03 排程指標</a>
+<a href="04-round-robin.html">04 時間片輪轉</a>
+<a href="05-feedback.html">05 回饋佇列</a>
+<a href="06-threads.html">06 執行緒與平行</a>
+<a href="07-mutex.html">07 競態與互斥</a>
+<a href="08-condition.html" aria-current="page">08 條件變數與號誌</a>
+<a href="09-deadlock.html">09 死結與安全狀態</a>
+<a href="10-address-space.html">10 位址空間</a>
+<a href="11-paging.html">11 分頁與頁表</a>
+<a href="12-translation.html">12 TLB 與位址轉換</a>
+<a href="13-page-fault.html">13 缺頁與寫入時複製</a>
+<a href="14-replacement.html">14 頁面替換</a>
+<a href="15-file-descriptors.html">15 檔案描述元</a>
+<a href="16-file-system.html">16 檔案系統配置</a>
+<a href="17-durability.html">17 崩潰與持久性</a>
+<a href="18-io.html">18 I/O 與中斷</a>
+<a href="19-system-call.html">19 系統呼叫跨層</a></nav><a href="glossary.html">名詞與概念字典</a><a href="https://justty32.github.io/engineer_study/">工程學習主站</a></aside><main id="main" class="lesson">
+<header class="lesson-header"><p class="eyebrow">08 · 等條件成立，再繼續工作</p><h1>條件變數與號誌</h1><p class="lead">餐檯還沒有餐點時，取餐的人要睡著等；餐點放上去後，才值得醒來再看。本課把這件事落到緩衝區、互斥鎖與等待佇列，逐步分清「通知有人可以再檢查」和「保存一張可用許可」。</p></header>
+<p class="prerequisite"><strong>這章假設已懂：</strong><a href="07-mutex.html">07 互斥鎖如何保護共享狀態</a>；執行緒阻塞時會停止執行，醒來後仍要等排程。</p>
+<nav class="section-nav" aria-label="章內導覽"><a href="#worked-example">完整演算</a><a href="#semaphore">號誌的完整追蹤</a><a href="#practice">自己試一題</a></nav>
+<section class="concept"><h2>要等待的是共享狀態</h2>
+<p>有界緩衝區（bounded buffer）只有 N 格。本例 N = 2，<code>count</code> 是已有資料的格數。生產者 P 要在 <code>count &lt; 2</code> 時放入；消費者 C 要在 <code>count &gt; 0</code> 時取出。這兩個可判斷真假的式子叫<strong>條件判斷式（predicate）</strong>。<code>count</code>、佇列內容與判斷都由同一把互斥鎖（mutex）m 保護。</p>
+<p><strong>條件變數（condition variable）</strong>讓執行緒等候狀態可能改變。C 持有 m，發現沒有資料，呼叫 <code>wait(notEmpty, m)</code>。這個等待操作會把「釋放 m 並加入等待」接成對通知者不可插入漏洞的原子步驟；醒來後先重新取得 m，<code>wait</code> 才返回。重新拿鎖可能還要等，通知不會把鎖直接交給 C。</p>
+<figure class="diagram"><svg viewBox="0 0 780 250" role="img" aria-labelledby="cv-flow-title cv-flow-desc"><title id="cv-flow-title">條件等待的三段生命週期</title><desc id="cv-flow-desc">消費者拿鎖並檢查條件，空時原子釋放鎖與等待。生產者持鎖改狀態並通知，消費者醒來重新取得鎖，再回到條件檢查。</desc><defs><marker id="cv-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#28647b"/></marker></defs><g fill="#edf6fa" stroke="#28647b" stroke-width="2"><rect x="20" y="30" width="210" height="100" rx="12"/><rect x="285" y="30" width="210" height="100" rx="12"/><rect x="550" y="30" width="210" height="100" rx="12"/></g><g fill="#153b4a" font-size="18" text-anchor="middle"><text x="125" y="62">持有 m，檢查 count</text><text x="125" y="95">空：準備 wait</text><text x="390" y="62">釋放 m ＋ 進入等待</text><text x="390" y="95">此交接不可留空隙</text><text x="655" y="62">醒來，重新取得 m</text><text x="655" y="95">再檢查 count</text><text x="390" y="205">P 在鎖內放入資料、通知，然後解鎖</text><text x="390" y="233">通知使等待者有機會繼續；count 才是能否取出的依據</text></g><g fill="none" stroke="#28647b" stroke-width="3" marker-end="url(#cv-arrow)"><path d="M230 80H280"/><path d="M495 80H545"/><path d="M655 135V165H125V135"/></g></svg><figcaption>鎖保護判斷與修改；條件變數協調睡眠。圖中的等待交接與重新拿鎖，都是 <code>wait</code> 的語意。</figcaption></figure>
+<h3>為什麼要用 while</h3><p>通知後，別的消費者可能先拿到鎖並取走唯一資料；等待也可能無資料變動就返回，稱為虛假喚醒（spurious wakeup）。因此 <code>if</code> 只檢查一次不夠。<strong>每次 wait 返回，都在鎖內重新跑 while。</strong>若條件仍不成立，就再次等待。</p>
+<div class="two-col"><div><h3>消費者 C</h3><pre><code>lock(m)
+while count == 0:
+    wait(notEmpty, m)
+item = remove()
+count = count - 1
+signal(notFull)
+unlock(m)</code></pre></div><div><h3>生產者 P</h3><pre><code>lock(m)
+while count == 2:
+    wait(notFull, m)
+insert(item)
+count = count + 1
+signal(notEmpty)
+unlock(m)</code></pre></div></div>
+<p><code>signal</code>（也常稱 notify）通知一位等待者；本例在持鎖修改狀態後通知。條件變數不保存「通知額度」：沒有人等待時的 signal，不會讓未來的 wait 自動通過。如果 P 先放了資料，後來的 C 能通過，是因為 <code>count &gt; 0</code>，它根本不用 wait。</p></section>
+<section id="worked-example" class="worked-example"><h2>完整演算：空餐檯如何交出一份餐點</h2>
+<p><strong>題目：</strong>容量 2，初始空，C 先執行，P 之後放入 x。求 C 何時可取走 x、誰持鎖，以及最後的緩衝區狀態。這是自行設計的交錯範例，只追蹤一個 P 與一個 C，不假設特定作業系統的排程順序。</p>
+<p><strong>已知：</strong>N = 2，count = 0，m 無持有者。<strong>選法：</strong>依「拿鎖→檢查→必要時等待→修改→通知→解鎖」追蹤；檢查時和修改時都記錄鎖的主人。</p>
+<ol><li>C 取得 m，讀到 count = 0，所以不能取餐。</li><li>C 呼叫 wait。m 被釋放，C 加入 notEmpty 的等待佇列；此時 P 才能取得 m。</li><li>P 取得 m，確認 0 &lt; 2，放入 x，使 count：0 → 1。</li><li>P 呼叫 signal(notEmpty)。C 可開始離開條件等待，但 m 仍由 P 持有；C 尚不能從 wait 返回並操作緩衝區。</li><li>P 解鎖；假設接下來 C 成功重新取得 m。C 的 wait 返回，while 重查 1 == 0 為假。</li><li>C 取走 x，count：1 → 0，通知 notFull，然後釋放 m。</li></ol>
+<p class="formula">答案：C 取得 x；最終 count = 0 格，空位 = 2 格，m 無持有者。</p>
+<p><strong>回代檢查：</strong>每個可觀察狀態都有 0 ≤ count ≤ 2；只有持有 m 的執行緒讀寫受保護狀態。signal 之後到 P 解鎖之前，鎖的主人仍是 P。若 P 沒有產生資料，C 必須保持等待；「醒來」本身不能當作「已有資料」的證明。</p></section>
+<section class="widget" id="trace-08-cv" data-trace><h2>自由重播：把喚醒和拿鎖分開看</h2><p>每按一步，對照 count、鎖主人與等待位置；可退回「已通知、尚未解鎖」那一步比較。</p>
+<figure class="diagram"><svg viewBox="0 0 780 430" role="img" aria-labelledby="cv-st-title cv-st-desc"><title id="cv-st-title">條件變數的七個狀態快照</title><desc id="cv-st-desc">初始空；C 持鎖看見空；C 等待並釋放鎖；P 放入 x；P 通知但仍持鎖；C 重新取得鎖並重查；C 取完解鎖。每格文字列出 count 與鎖主人。</desc>
+<g data-state="0"><rect x="15" y="15" width="365" height="85" rx="10" fill="#edf6fa" stroke="#28647b"/><text x="30" y="47" fill="#153b4a" font-size="18">0 初始：count 0，m 空閒</text><text x="30" y="78" fill="#153b4a" font-size="17">緩衝區 [空, 空]</text></g>
+<g data-state="1"><rect x="400" y="15" width="365" height="85" rx="10" fill="#edf6fa" stroke="#28647b"/><text x="415" y="47" fill="#153b4a" font-size="18">1 C 檢查：count 0，m → C</text><text x="415" y="78" fill="#153b4a" font-size="17">條件未成立，還不能取</text></g>
+<g data-state="2"><rect x="15" y="120" width="365" height="85" rx="10" fill="#edf6fa" stroke="#28647b"/><text x="30" y="152" fill="#153b4a" font-size="18">2 C 等待：count 0，m 空閒</text><text x="30" y="183" fill="#153b4a" font-size="17">notEmpty 等待者：C</text></g>
+<g data-state="3"><rect x="400" y="120" width="365" height="85" rx="10" fill="#edf6fa" stroke="#28647b"/><text x="415" y="152" fill="#153b4a" font-size="18">3 P 放入：count 1，m → P</text><text x="415" y="183" fill="#153b4a" font-size="17">緩衝區 [x, 空]</text></g>
+<g data-state="4"><rect x="15" y="225" width="365" height="85" rx="10" fill="#fff4dc" stroke="#8b650d"/><text x="30" y="257" fill="#553c08" font-size="18">4 P 已通知：count 1，m → P</text><text x="30" y="288" fill="#553c08" font-size="17">C 還不能帶著 m 返回</text></g>
+<g data-state="5"><rect x="400" y="225" width="365" height="85" rx="10" fill="#edf6fa" stroke="#28647b"/><text x="415" y="257" fill="#153b4a" font-size="18">5 P 解鎖，C 重拿：m → C</text><text x="415" y="288" fill="#153b4a" font-size="17">重查 count 1，可以取</text></g>
+<g data-state="6"><rect x="15" y="330" width="750" height="85" rx="10" fill="#edf6fa" stroke="#28647b"/><text x="30" y="362" fill="#153b4a" font-size="18">6 C 取出 x、通知 notFull、解鎖：count 0，m 空閒</text><text x="30" y="393" fill="#153b4a" font-size="17">最後 [空, 空]；0 ≤ count ≤ 2 仍成立</text></g></svg><figcaption>框線高亮只表示目前追蹤位置，各步內容始終保留。</figcaption></figure>
+<div class="controls"><button type="button" data-action="prev">上一步</button><button type="button" data-action="next">下一步</button><button type="button" data-action="reset">重設</button></div><p class="status" data-trace-status aria-live="polite">初始：count = 0，m 空閒，還沒有人取得資料。</p>
+<ol class="trace-steps"><li data-step="0">初始 count = 0，m 空閒；等待的依據是 count，不是過去收到幾次通知。</li><li data-step="1">C 拿到 m，檢查 count = 0；保持互斥，所以判斷不會和另一個持鎖修改同時發生。</li><li data-step="2">C 的 wait 原子釋放 m 並等待；P 因而有機會進入並改變條件。</li><li data-step="3">P 持有 m，插入 x，count 由 0 變 1；仍在 0 到 2 的範圍內。</li><li data-step="4">P 通知 C，但 m 仍由 P 持有；通知不等於 C 已拿到鎖。</li><li data-step="5">P 解鎖後 C 重新取得 m，wait 返回再檢查；count = 1，所以 while 結束。</li><li data-step="6">C 取走 x，count 由 1 回 0，通知 notFull 並解鎖；空間上限與互斥皆維持。</li></ol></section>
+<section id="semaphore"><h2>號誌會保存可用許可</h2><p><strong>號誌（semaphore）</strong>維持可用許可的計數。<code>wait(s)</code> 取得一個許可；沒有許可時阻塞。<code>post(s)</code> 增加一個許可，或使等待者能取得它。這裡用「可用許可數不小於 0」的抽象表示；不同實作的內部整數可能另編碼等待者數量。</p>
+<p>同一個容量 2 的緩衝區可以用 <code>slots = 2</code> 記空位許可、<code>items = 0</code> 記資料許可，再以 <code>mutex = 1</code> 的二元號誌保護佇列修改。P 先 wait(slots)，再 wait(mutex)，放資料後 post(mutex)、post(items)。C 先 wait(items)，再 wait(mutex)，取資料後 post(mutex)、post(slots)。本段的 mutex 是一個二元號誌，與通常有持有者限制的 mutex API 不應完全等同。</p>
+<p class="warning">不要持著保護佇列的 mutex 等待 items 或 slots。若空佇列中的 C 先持有 mutex 再等 items，P 就拿不到 mutex 放資料，兩者可能互等。</p>
+<p><strong>第二個完整例：</strong>P 先產生 x，C 稍後才來。因為 post(items) 會留下許可，所以 C 可以在沒有當場收到通知的情況下取得它。下表每列是前一列之後的一個操作；數字是操作完成後的可用許可數。</p>
+<div class="table-scroll"><table><caption>一次生產與一次消費的完整號誌追蹤</caption><thead><tr><th>步驟</th><th>操作</th><th>slots</th><th>items</th><th>mutex</th><th>count</th></tr></thead><tbody>
+<tr><td>0</td><td>初始</td><td>2</td><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>P：wait(slots)</td><td>1</td><td>0</td><td>1</td><td>0</td></tr><tr><td>2</td><td>P：wait(mutex)</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>3</td><td>P：放入 x</td><td>1</td><td>0</td><td>0</td><td>1</td></tr><tr><td>4</td><td>P：post(mutex)</td><td>1</td><td>0</td><td>1</td><td>1</td></tr><tr><td>5</td><td>P：post(items)，C 還沒來</td><td>1</td><td>1</td><td>1</td><td>1</td></tr><tr><td>6</td><td>C：wait(items)</td><td>1</td><td>0</td><td>1</td><td>1</td></tr><tr><td>7</td><td>C：wait(mutex)</td><td>1</td><td>0</td><td>0</td><td>1</td></tr><tr><td>8</td><td>C：取出 x</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>9</td><td>C：post(mutex)</td><td>1</td><td>0</td><td>1</td><td>0</td></tr><tr><td>10</td><td>C：post(slots)</td><td>2</td><td>0</td><td>1</td><td>0</td></tr></tbody></table></div>
+<p><strong>答案與檢查：</strong>最後 slots = 2、items = 0、mutex = 1、count = 0。只有在沒有操作進行到一半、沒有許可被預先取走時，才直接用 <code>slots + items = 2</code>、<code>items = count</code> 核對。在步驟 1，P 已預約一個空位但還沒放資料，slots + items = 1；少的一張在 P 手上，不能誤判為資料遺失。</p></section>
+<section id="practice"><h2>自己試一題：醒來時資料被別人拿走</h2><p>容量仍是 2。C1 在空佇列等待；P 放入一份 x 並通知 C1、解鎖。C1 重新取得鎖之前，C2 先拿鎖取走 x、使 count = 0 並解鎖。求 C1 醒來後該做什麼。另有號誌初值 slots = 2、items = 0、mutex = 1，若 P 完整產生兩份，尚無 C 消費，第三次生產停在哪裡？</p>
+<details><summary>提示 1：先列真正的共享狀態</summary><p>C1 重新取得鎖時 count 已是 0。通知不能保證 count 永遠保持 1。</p></details>
+<details><summary>提示 2：號誌把兩份資料轉成哪些許可</summary><p>每次完整生產耗用一個 slots，增加一個 items；第三次要先取得 slots。</p></details>
+<details><summary>完整解與檢查</summary><p>C1 的 wait 返回後重跑 while，0 == 0 成立，因此再 wait；這會再次釋放 m，讓後續 P 能補資料。若用了 if 並直接 remove，就會從空佇列取資料，破壞 count ≥ 0。</p><p>兩次完整生產後：slots = 0、items = 2、mutex = 1、count = 2。第三次 P 在 wait(slots) 阻塞，尚未拿 mutex。C 因而仍能取得 items、拿 mutex、取出一份，再 post(slots) 讓 P 有機會繼續。靜止檢查為 slots + items = 0 + 2 = 2、items = count = 2。</p></details></section>
+<section class="sources"><h2>來源與模型邊界</h2><p>原始課程來源：舊站 04「同步與競態」。等待、while 重查與生產者／消費者模型依 <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/threads-cv.pdf">OSTEP〈Condition Variables〉的 Definition and Routines、Producer/Consumer Problem</a>；計數許可與有界緩衝區依 <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/threads-sema.pdf">OSTEP〈Semaphores〉的 Definition、Producer/Consumer Problem</a>。本頁數字與排程順序為教學自訂，沒有公平性或喚醒次序保證。</p><p>實務除錯可記錄執行緒編號、持鎖時的 count 與 wait/signal 事件來比對；未持鎖的快照可能彼此不一致。只有看到某執行緒正在睡眠，不能證明同步程式正確。</p></section>
+<nav class="pager" aria-label="相鄰課程"><a href="07-mutex.html">← 07 競態與互斥</a><a href="09-deadlock.html">09 死結與安全狀態 →</a></nav></main></body></html>

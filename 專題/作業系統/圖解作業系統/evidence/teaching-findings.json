@@ -1,0 +1,162 @@
+{
+ "contract": "wf-table/1",
+ "source": "../TEACHING-REVIEW.md",
+ "extracted": "2026-10-11",
+ "reviewer_role": "未參與寫作的獨立教學審核員",
+ "finding_count": 14,
+ "unresolved_count": 0,
+ "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28",
+ "per_page_sha256_verification": "20 課逐頁 reviewed_sha256 已與封版成品核對，全部一致。",
+ "columns": [
+  "id",
+  "chapter",
+  "severity",
+  "status",
+  "location",
+  "finding",
+  "required_change",
+  "verification"
+ ],
+ "rows": [
+  {
+   "id": "T01",
+   "chapter": "04",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "把時間軸換成三種量",
+   "finding": "「是从到達」含簡體字。",
+   "required_change": "改為「從」。",
+   "verification": "複核當前 04 的回應時間定義，均使用「從到達」。"
+  },
+  {
+   "id": "T02",
+   "chapter": "12",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "lead、排格子比喻、VPN整除步驟",
+   "finding": "「第9個頁框」「第5頁起點5120」把零起算編號寫成序數，零基讀者可能以為第5頁應從4096起。",
+   "required_change": "改「編號9的頁框」「VPN=5那頁」，並明示頁號/頁內偏移从0起算。",
+   "verification": "當前 12 lead 用編號 9，類比排／格從 0 起算，VPN5 起點 5120 與索引一致，不再用第幾個混淆編號。"
+  },
+  {
+   "id": "T03",
+   "chapter": "08",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "號誌段",
+   "finding": "「保护」應為「保護」。",
+   "required_change": "修正列出字詞並自檢全頁正文與SVG。",
+   "verification": "複核 08 先備及正文均使用保護，原簡體片語不再出現。"
+  },
+  {
+   "id": "T04",
+   "chapter": "16",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "正文與SVG文字/desc",
+   "finding": "「名称/项/容纳/参照/到达」等簡體需統一繁中。",
+   "required_change": "修正列出字詞並自檢全頁正文與SVG。",
+   "verification": "複核 16 目錄名稱、資料項目、容納、參照與到達；全文角色、圖中文字及狀態均用繁中，原列片語不再出現。"
+  },
+  {
+   "id": "T05",
+   "chapter": "00",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "保護段與練習提示",
+   "finding": "「获准/装置」應為「獲准/裝置」。",
+   "required_change": "修正列出字詞並自檢全頁正文與SVG。",
+   "verification": "複核 00 權限段的獲准、正文與圖中裝置，原列片語不再出現。"
+  },
+  {
+   "id": "T06",
+   "chapter": "01",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "主例與context switch定義",
+   "finding": "「每个/本题」應繁中；「內容切換」需與04既用「情境切換」統一。",
+   "required_change": "修正列出字詞並自檢全頁正文與SVG。",
+   "verification": "複核 01 每個／本題與情境切換定義；03/04 及字典一致，字典保留內容／上下文別名。"
+  },
+  {
+   "id": "T07",
+   "chapter": "09",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "策略段最後",
+   "finding": "活鎖首次出現只有詞名，沒有英文或白話定義；並有重设/画成/课程簡體。",
+   "required_change": "補livelock為持續重試但沒有實質進展，飢餓簡述或回連05；修繁中。",
+   "verification": "複核 09 策略段已補 livelock 的持續重試無進展及 starvation 的一直得不到資源，重設／畫成／課程亦已繁中。"
+  },
+  {
+   "id": "T08",
+   "chapter": "17",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "fsync表與journal主例之前",
+   "finding": "中繼資料與交易為後續兩筆redo的核心角色，首次尚缺英文/簡短定義；多處簡體待自檢。",
+   "required_change": "補metadata管理資訊、transaction為本例一起提交與恢復的一組變更，全文繁中。",
+   "verification": "複核 17 定義 metadata 為管理資訊、transaction 為一起提交與恢復的一組變更 T；定義先於 redo 主例，足以理解 inode 與配置表為何須共同恢復。"
+  },
+  {
+   "id": "T09",
+   "chapter": "18",
+   "severity": "中",
+   "status": "已修正並複核",
+   "location": "前置段與重播圖說",
+   "finding": "前置01-process-state.html不存在，另有若頁名不同的建置註記。數值主例16通知與圖1完成通知的對應可更直接。",
+   "required_change": "修01-process.html並刪建置註記，說圖省略前面分塊通知只畫最後完成。",
+   "verification": "複核 18 先備已連 01-process.html；建置 fallback 註記已移除。圖前明示只畫第16次最後通知、前15次省略且 A 仍阻塞，與64KiB主例一致。"
+  },
+  {
+   "id": "T10",
+   "chapter": "glossary",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "context switch/TLB/offset/VA/page詞條",
+   "finding": "與正文的情境切換/轉譯後備緩衝區/頁內偏移名稱不一致且欠別名；全課1KiB說法與13的4KiB不同。",
+   "required_change": "統一主名並補可搜尋別名，位數頁大小限制到11–12例。",
+   "verification": "實讀重建後字典：情境切換含內容／上下文別名，轉址快取含轉譯後備緩衝區，頁內偏移含頁內位移；VA與頁大小說法已限定11–12課範例。"
+  },
+  {
+   "id": "T11",
+   "chapter": "14",
+   "severity": "中",
+   "status": "已修正並複核",
+   "location": "增加頁框／真實系統段",
+   "finding": "舊06的顛簸概念目前漏掉；只有fault不等成本，尚未交代工作集不足造成反覆換入換出。",
+   "required_change": "加working set及thrashing因果與觀察率，修比較/Belady anomaly。",
+   "verification": "實讀最新 14 工作集整節與六列 LRU 對照：2頁框6次缺頁、3頁框3次缺頁，明示非顛簸充分證據；以缺頁率、換入換出、等候成本及工作進展判斷，並保留髒頁寫回成本。舊06遺漏已補足。"
+  },
+  {
+   "id": "T12",
+   "chapter": "11",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "eyebrow/trace/圖說",
+   "finding": "兩處用地址而其他課用位址；外部碎裂缺首次英文。",
+   "required_change": "統一位址，補external fragmentation。",
+   "verification": "複核 11 標題大位址、正文位址算術及 external fragmentation 首次英文；例題數值與頁框映射未改。"
+  },
+  {
+   "id": "T13",
+   "chapter": "04/12/08/17",
+   "severity": "低",
+   "status": "已修正並複核",
+   "location": "手機可橫捲圖",
+   "finding": "初版圖右側需橫捲但欠明確提示/focus，04/08圖說隨容器一起被裁。",
+   "required_change": "圖表補捲動提示與Tab/方向鍵操作；圖說保留視窗寬。",
+   "verification": "獨立看最新 04/12 scroll-fix 與 08/17 頂層390px左右捲動圖，提示明示可橫捲及鍵盤方向鍵；04/08 圖說保持可視寬。technical_qa 實際Tab/ArrowRight 110項 focused checks 通過，視覺與行為證據相符。"
+  },
+  {
+   "id": "T14",
+   "chapter": "15",
+   "severity": "low",
+   "status": "已修正並複核",
+   "location": "中繼資料首次出現與 close 持久性警語",
+   "finding": "metadata 在 15 已先於 17 出現，欠一句管理資訊的定義；持久性連結指向不存在的 17-persistence.html。",
+   "required_change": "在 inode 說明內補 metadata 英文與類型／大小／位置等角色，改連正式 17-durability.html。",
+   "verification": "實讀最新 15 第8行已定義 metadata，第19行 close 警語已連 17-durability.html；正文有足夠的後續學習入口。"
+  }
+ ]
+}

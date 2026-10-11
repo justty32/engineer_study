@@ -1,0 +1,1426 @@
+{
+ "contract": "wf-table/1",
+ "source": "../BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "page_path"
+ ],
+ "columns": [
+  "id",
+  "type",
+  "page_path",
+  "question",
+  "controls",
+  "default",
+  "formula",
+  "criterion",
+  "example",
+  "boundaries",
+  "steps"
+ ],
+ "rows": [
+  {
+   "id": "trace-00",
+   "type": "state-trace",
+   "page_path": "../dist/00-role.html",
+   "question": "從請求到回到 CPU",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 4,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "t = 0：CPU 執行 A，B 已準備好。單一 CPU 同一時間只服務一條指令流。"
+    },
+    "last": {
+     "token": "4",
+     "text": "t = 6：A 完成。CPU 使用量 3 + 3 = 6 ms，與整條時間線長度相同。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "t = 0：CPU 執行 A，B 已準備好。單一 CPU 同一時間只服務一條指令流。"
+    },
+    {
+     "token": "1",
+     "text": "t = 2：A 提出讀取並等待結果，核心安排 B 使用 CPU。裝置與 CPU 各做自己的工作。"
+    },
+    {
+     "token": "2",
+     "text": "t = 4：裝置完成通知使 A 重新能跑；本題政策仍讓 B 跑到完成，因此 CPU 所屬者未變。"
+    },
+    {
+     "token": "3",
+     "text": "t = 5：B 完成，核心選 A 繼續讀取之後的計算。裝置完成與取得 CPU 是兩個事件。"
+    },
+    {
+     "token": "4",
+     "text": "t = 6：A 完成。CPU 使用量 3 + 3 = 6 ms，與整條時間線長度相同。"
+    }
+   ]
+  },
+  {
+   "id": "trace-01",
+   "type": "state-trace",
+   "page_path": "../dist/01-process.html",
+   "question": "A 與 B 的狀態快照",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 6,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "0 ms：派送 A，A 從就緒成為執行，B 留在就緒佇列。"
+    },
+    "last": {
+     "token": "6",
+     "text": "7 ms：B 結束；CPU 工作總量 7 ms，兩者都離開可排程集合。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "0 ms：派送 A，A 從就緒成為執行，B 留在就緒佇列。"
+    },
+    {
+     "token": "1",
+     "text": "2 ms：A 發出讀取並等待，保存 A 的繼續位置；A 阻塞，改派送 B。"
+    },
+    {
+     "token": "2",
+     "text": "4 ms：I/O 完成使 A 阻塞 → 就緒；B 尚未用完本題給的時間，繼續執行。"
+    },
+    {
+     "token": "3",
+     "text": "5a：計時器使 B 執行 → 就緒；保存 rTmp = 99，就緒順序成為 [A, B]。"
+    },
+    {
+     "token": "4",
+     "text": "5b：選 A，還原 rTmp = 7；A 就緒 → 執行，B 等待。"
+    },
+    {
+     "token": "5",
+     "text": "6 ms：A 結束；選 B 並還原 rTmp = 99，B 完成自己的最後一段。"
+    },
+    {
+     "token": "6",
+     "text": "7 ms：B 結束；CPU 工作總量 7 ms，兩者都離開可排程集合。"
+    }
+   ]
+  },
+  {
+   "id": "trace-02",
+   "type": "state-trace",
+   "page_path": "../dist/02-fork.html",
+   "question": "父 100 與子 101",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 5,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "只有父 100，x = 10；新子行程數是 0。"
+    },
+    "last": {
+     "token": "5",
+     "text": "父 waitpid 得到 101，解碼正常退出碼 7，回收子紀錄；父 x 始終是 10。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "只有父 100，x = 10；新子行程數是 0。"
+    },
+    {
+     "token": "1",
+     "text": "fork 成功：父回傳 101，子回傳 0；新增一個身分，兩邊 x 都是 10。"
+    },
+    {
+     "token": "2",
+     "text": "子把自己的 x 改成 20，父仍為 10；獨立私有資料的不變量成立。"
+    },
+    {
+     "token": "3",
+     "text": "子 exec 成功：PID 101 保留，worker 取代舊映像；不再回到子原程式的下一行。"
+    },
+    {
+     "token": "4",
+     "text": "worker 正常退出 7；101 留作待回收紀錄，沒有可執行的子程式碼。"
+    },
+    {
+     "token": "5",
+     "text": "父 waitpid 得到 101，解碼正常退出碼 7，回收子紀錄；父 x 始終是 10。"
+    }
+   ]
+  },
+  {
+   "id": "trace-03",
+   "type": "state-trace",
+   "page_path": "../dist/03-scheduling.html",
+   "question": "六個排程決策快照",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 5,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "FCFS：0 ms 選 A，連續執行到 5 ms。B 在 1 ms、C 在 2 ms 到達，排在後面。"
+    },
+    "last": {
+     "token": "5",
+     "text": "SJF：6 ms 選 B，9 ms 完成；B 等待 6 − 1 = 5 ms，總等待 8 ms，CPU 總量仍為 9 ms。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "FCFS：0 ms 選 A，連續執行到 5 ms。B 在 1 ms、C 在 2 ms 到達，排在後面。"
+    },
+    {
+     "token": "1",
+     "text": "FCFS：5 ms 佇列 [B, C]，選較早到達的 B，跑到 8 ms；B 等待 5 − 1 = 4 ms。"
+    },
+    {
+     "token": "2",
+     "text": "FCFS：8 ms 選 C，9 ms 完成；C 等待 8 − 2 = 6 ms，總等待 10 ms。"
+    },
+    {
+     "token": "3",
+     "text": "SJF 重新開始：0 ms 仍只有 A，跑到 5 ms；非搶占規則不讓中途到達的 C 打斷 A。"
+    },
+    {
+     "token": "4",
+     "text": "SJF：5 ms 比較 B 的 3 ms 與 C 的 1 ms，選 C 跑到 6 ms；C 等待 5 − 2 = 3 ms。"
+    },
+    {
+     "token": "5",
+     "text": "SJF：6 ms 選 B，9 ms 完成；B 等待 6 − 1 = 5 ms，總等待 8 ms，CPU 總量仍為 9 ms。"
+    }
+   ]
+  },
+  {
+   "id": "feedback-lab",
+   "type": "state-trace",
+   "page_path": "../dist/05-feedback.html",
+   "question": "重播升降級：每一步都看見正在改哪個帳本",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 4,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "A 在 Q0 跑 0–2 ms，剩 6 ms。因高層配額用完而降級；Q0 仍有 B，下一位不能選低層 A。"
+    },
+    "last": {
+     "token": "4",
+     "text": "A 在 Q0 跑 9–11 ms 後完成。剩餘總需求為 0；累計 CPU 使用 8 + 3 = 11 ms。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "A 在 Q0 跑 0–2 ms，剩 6 ms。因高層配額用完而降級；Q0 仍有 B，下一位不能選低層 A。"
+    },
+    {
+     "token": "1",
+     "text": "B 在 Q0 跑 2–4 ms，剩 1 ms，也降級。Q0 為空，Q1 依序是 A(6)、B(1)。"
+    },
+    {
+     "token": "2",
+     "text": "A 在 Q1 跑 4–8 ms，剩 2 ms。先排回 B 後面，再做 t = 8 的提升；Q0 成為 B(1)、A(2)。剩餘總需求為 3 ms。"
+    },
+    {
+     "token": "3",
+     "text": "B 在 Q0 只跑 1 ms，於 t = 9 完成。完成者不再降級或排隊，A 的剩餘需求仍為 2 ms。"
+    },
+    {
+     "token": "4",
+     "text": "A 在 Q0 跑 9–11 ms 後完成。剩餘總需求為 0；累計 CPU 使用 8 + 3 = 11 ms。"
+    }
+   ]
+  },
+  {
+   "id": "threads-lab",
+   "type": "state-trace",
+   "page_path": "../dist/06-threads.html",
+   "question": "重播四核心工作：現在還剩哪一段？",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 2,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "t = 0 s：固定工作量是串行 4 s 加可平行的 12 核心秒；相依關係要求串行段先完成。"
+    },
+    "last": {
+     "token": "2",
+     "text": "t = 7 s：四個核心各做了 3 s，平行工作全部完成。總經過時間 4 + 3 = 7 s；工作量仍為 4 + 4 × 3 = 16 核心秒。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "t = 0 s：固定工作量是串行 4 s 加可平行的 12 核心秒；相依關係要求串行段先完成。"
+    },
+    {
+     "token": "1",
+     "text": "t = 4 s：串行段已完成。把剩餘 12 核心秒均分，四個核心各接 3 s，現在可以同時執行。"
+    },
+    {
+     "token": "2",
+     "text": "t = 7 s：四個核心各做了 3 s，平行工作全部完成。總經過時間 4 + 3 = 7 s；工作量仍為 4 + 4 × 3 = 16 核心秒。"
+    }
+   ]
+  },
+  {
+   "id": "mutex-lab",
+   "type": "state-trace",
+   "page_path": "../dist/07-mutex.html",
+   "question": "重播有鎖更新：B 什麼時候才讀得到共享值？",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 5,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "A 取得 m 後 LOAD，rA = 0、x = 0；B 雖請求 m，仍須等待，不能先在鎖外讀 x。"
+    },
+    "last": {
+     "token": "5",
+     "text": "B STORE 令 x = 2，接著 UNLOCK；兩段加一都完成，x = 2，更新沒有遺失。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "A 取得 m 後 LOAD，rA = 0、x = 0；B 雖請求 m，仍須等待，不能先在鎖外讀 x。"
+    },
+    {
+     "token": "1",
+     "text": "A 執行 ADD，rA = 1、x = 0；計算只改暫存值，A 仍持鎖。"
+    },
+    {
+     "token": "2",
+     "text": "A STORE 令 x = 1，接著 UNLOCK；第一段加一已完成，x = 1 符合不變量。"
+    },
+    {
+     "token": "3",
+     "text": "B 成功取得同一把 m 後 LOAD，rB = 1、x = 1；讀取的是前一段已發布的更新。"
+    },
+    {
+     "token": "4",
+     "text": "B 執行 ADD，rB = 2、x = 1；B 仍持鎖，尚未寫回。"
+    },
+    {
+     "token": "5",
+     "text": "B STORE 令 x = 2，接著 UNLOCK；兩段加一都完成，x = 2，更新沒有遺失。"
+    }
+   ]
+  },
+  {
+   "id": "trace-08-cv",
+   "type": "state-trace",
+   "page_path": "../dist/08-condition.html",
+   "question": "自由重播：把喚醒和拿鎖分開看",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 6,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "初始 count = 0，m 空閒；等待的依據是 count，不是過去收到幾次通知。"
+    },
+    "last": {
+     "token": "6",
+     "text": "C 取走 x，count 由 1 回 0，通知 notFull 並解鎖；空間上限與互斥皆維持。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "初始 count = 0，m 空閒；等待的依據是 count，不是過去收到幾次通知。"
+    },
+    {
+     "token": "1",
+     "text": "C 拿到 m，檢查 count = 0；保持互斥，所以判斷不會和另一個持鎖修改同時發生。"
+    },
+    {
+     "token": "2",
+     "text": "C 的 wait 原子釋放 m 並等待；P 因而有機會進入並改變條件。"
+    },
+    {
+     "token": "3",
+     "text": "P 持有 m，插入 x，count 由 0 變 1；仍在 0 到 2 的範圍內。"
+    },
+    {
+     "token": "4",
+     "text": "P 通知 C，但 m 仍由 P 持有；通知不等於 C 已拿到鎖。"
+    },
+    {
+     "token": "5",
+     "text": "P 解鎖後 C 重新取得 m，wait 返回再檢查；count = 1，所以 while 結束。"
+    },
+    {
+     "token": "6",
+     "text": "C 取走 x，count 由 1 回 0，通知 notFull 並解鎖；空間上限與互斥皆維持。"
+    }
+   ]
+  },
+  {
+   "id": "trace-09",
+   "type": "state-trace",
+   "page_path": "../dist/09-deadlock.html",
+   "question": "自由重播：有持有者，到出現環",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 4,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "L1、L2 均空閒；此時沒有受困工作。"
+    },
+    "last": {
+     "token": "4",
+     "text": "B 請求 L1 被 A 擋住，新增 B → A；兩人都不能執行到解鎖，在指定單實例模型中已死結。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "L1、L2 均空閒；此時沒有受困工作。"
+    },
+    {
+     "token": "1",
+     "text": "A 取得 L1；L1 只有一位持有者，互斥仍成立。"
+    },
+    {
+     "token": "2",
+     "text": "B 取得 L2；目前沒有請求被擋住，不能因各持一把就宣稱死結。"
+    },
+    {
+     "token": "3",
+     "text": "A 請求 L2 被 B 擋住，新增 A → B；只有一條邊，尚未成環。"
+    },
+    {
+     "token": "4",
+     "text": "B 請求 L1 被 A 擋住，新增 B → A；兩人都不能執行到解鎖，在指定單實例模型中已死結。"
+    }
+   ]
+  },
+  {
+   "id": "trace-10",
+   "type": "state-trace",
+   "page_path": "../dist/10-address-space.html",
+   "question": "自由重播：把檢查放在加法前",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 4,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "收到 VA 600 B，使用目前行程的 base 4096 B、bound 1024 B。"
+    },
+    "last": {
+     "token": "4",
+     "text": "4696 − 4096 = 600，且 4096 ≤ 4696 ≤ 5119；位移量與合法區間皆對得上。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "收到 VA 600 B，使用目前行程的 base 4096 B、bound 1024 B。"
+    },
+    {
+     "token": "1",
+     "text": "600 是非負整數，通過下界檢查；仍需上界檢查。"
+    },
+    {
+     "token": "2",
+     "text": "600 < 1024，所以 VA 位於長度 1024 B 的區間內；兩個邊界條件都通過。"
+    },
+    {
+     "token": "3",
+     "text": "將 base 加到 VA：4096 + 600 = 4696 B；本模型因此允許讀取 PA 4696 B。"
+    },
+    {
+     "token": "4",
+     "text": "4696 − 4096 = 600，且 4096 ≤ 4696 ≤ 5119；位移量與合法區間皆對得上。"
+    }
+   ]
+  },
+  {
+   "id": "trace-11",
+   "type": "state-trace",
+   "page_path": "../dist/11-paging.html",
+   "question": "自由重播：哪部分換掉，哪部分保留",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 4,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "VA 2300 B 在 16 位元範圍內；頁大小 1024 B 決定商與餘數。"
+    },
+    "last": {
+     "token": "4",
+     "text": "加上原偏移 252 B，PA = 5372 B；除以 1024 的餘數仍是 252，轉換保留頁內位置。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "VA 2300 B 在 16 位元範圍內；頁大小 1024 B 決定商與餘數。"
+    },
+    {
+     "token": "1",
+     "text": "2300 除以 1024 得商 2、餘 252；0 ≤ 252 < 1024，所以偏移合法。"
+    },
+    {
+     "token": "2",
+     "text": "以 VPN 2 查 PTE[2]，題設檢查通過，得到 PFN 5；這個映射來自頁表，不是位址算術。"
+    },
+    {
+     "token": "3",
+     "text": "PFN 5 乘上每框 1024 B，得到實體頁框起點 5120 B。"
+    },
+    {
+     "token": "4",
+     "text": "加上原偏移 252 B，PA = 5372 B；除以 1024 的餘數仍是 252，轉換保留頁內位置。"
+    }
+   ]
+  },
+  {
+   "id": "fault-trace",
+   "type": "state-trace",
+   "page_path": "../dist/13-page-fault.html",
+   "question": "重播：看每個事件改了哪個狀態",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 5,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "步驟 0：只有合法匿名區間。因為還沒存取 A，不需要替 A 配置資料頁框。"
+    },
+    "last": {
+     "token": "5",
+     "text": "步驟 5：父讀到 42、子讀到 99，證明私有寫入已分離；總計 2 次缺頁、0 次磁碟讀取。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "步驟 0：只有合法匿名區間。因為還沒存取 A，不需要替 A 配置資料頁框。"
+    },
+    {
+     "token": "1",
+     "text": "步驟 1：父寫入造成第一次缺頁。核心取得清零頁框 7，再重試寫入；值變 42，磁碟讀取仍為 0。"
+    },
+    {
+     "token": "2",
+     "text": "步驟 2：fork 建立父子映射的共用關係，兩者都改成唯讀並標記 COW；資料還沒有複製。"
+    },
+    {
+     "token": "3",
+     "text": "步驟 3：子只讀取，所以可從共用頁取得 42。讀取權限足夠，不觸發 COW 複製。"
+    },
+    {
+     "token": "4",
+     "text": "步驟 4：子要求寫入，核心先複製 4096 B 到頁框 12，再讓子寫成 99；父的資料不受改動。"
+    },
+    {
+     "token": "5",
+     "text": "步驟 5：父讀到 42、子讀到 99，證明私有寫入已分離；總計 2 次缺頁、0 次磁碟讀取。"
+    }
+   ]
+  },
+  {
+   "id": "replacement-trace",
+   "type": "state-trace",
+   "page_path": "../dist/14-replacement.html",
+   "question": "逐次比較：哪一步開始分歧？",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 11,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "第 1 次要頁 1：兩者都從空頁框開始，載入 F0，各 1 次缺頁。"
+    },
+    "last": {
+     "token": "11",
+     "text": "第 12 次要頁 5：FIFO 還留著 5，命中、總計 9 次缺頁；LRU 換出 2 再載入 5，總計 10 次缺頁。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "第 1 次要頁 1：兩者都從空頁框開始，載入 F0，各 1 次缺頁。"
+    },
+    {
+     "token": "1",
+     "text": "第 2 次要頁 2：不駐留，用空槽 F1，不需犧牲任何頁，各 2 次缺頁。"
+    },
+    {
+     "token": "2",
+     "text": "第 3 次要頁 3：用最後空槽 F2；頁框 [1, 2, 3]，各 3 次缺頁。"
+    },
+    {
+     "token": "3",
+     "text": "第 4 次要頁 4：頁框已滿，頁 1 同時最早載入、最久未用，所以兩者都換 1，各 4 次缺頁。"
+    },
+    {
+     "token": "4",
+     "text": "第 5 次要頁 1：上一步已換出 1；兩者換出 2，頁框 [4, 1, 3]，各 5 次缺頁。"
+    },
+    {
+     "token": "5",
+     "text": "第 6 次要頁 2：兩者換出 3，頁框 [4, 1, 2]，各 6 次缺頁。"
+    },
+    {
+     "token": "6",
+     "text": "第 7 次要頁 5：兩者換出 4，頁框 [5, 1, 2]，各 7 次缺頁。"
+    },
+    {
+     "token": "7",
+     "text": "第 8 次要頁 1：兩者都命中，頁框不變；FIFO 順序仍 1,2,5，LRU 更新為 2,5,1。"
+    },
+    {
+     "token": "8",
+     "text": "第 9 次要頁 2：再次都命中；FIFO 順序仍 1,2,5，LRU 更新為 5,1,2。下次犧牲頁已不同。"
+    },
+    {
+     "token": "9",
+     "text": "第 10 次要頁 3：都缺頁。FIFO 換 1 得 [5,3,2]；LRU 換 5 得 [3,1,2]，各累計 8 次缺頁。"
+    },
+    {
+     "token": "10",
+     "text": "第 11 次要頁 4：FIFO 換 2 得 [5,3,4]；LRU 換 1 得 [3,4,2]，各累計 9 次缺頁。"
+    },
+    {
+     "token": "11",
+     "text": "第 12 次要頁 5：FIFO 還留著 5，命中、總計 9 次缺頁；LRU 換出 2 再載入 5，總計 10 次缺頁。"
+    }
+   ]
+  },
+  {
+   "id": "fd-trace",
+   "type": "state-trace",
+   "page_path": "../dist/15-file-descriptors.html",
+   "question": "重播主例後半：fork 後改動的是同一份位置",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 4,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "起點：父 fd 3、4 指 A，fd 5 指 B。兩次 open 建立不同 OFD，offset 分別為 3 B、2 B。"
+    },
+    "last": {
+     "token": "4",
+     "text": "子 close(4)：移除子的那個表項目。父 3、父 4、子 3 仍指 A，所以 A 沒有失去全部參照，offset 仍為 6 B。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "起點：父 fd 3、4 指 A，fd 5 指 B。兩次 open 建立不同 OFD，offset 分別為 3 B、2 B。"
+    },
+    {
+     "token": "1",
+     "text": "fork：子繼承 fd 3、4、5，指到原本 A、B。複製 fd 表沒有另建兩套 offset，也沒有消耗內容。"
+    },
+    {
+     "token": "2",
+     "text": "子用 fd 4 讀 2 B：沿 A 的 offset 3 B 取得 DE，把 A 更新到 5 B；父下一次也會從 5 B 接著讀。"
+    },
+    {
+     "token": "3",
+     "text": "父用 fd 3 讀 1 B：從共享的 A offset 5 B 取得 F，A 變成 6 B；B 仍是 2 B。"
+    },
+    {
+     "token": "4",
+     "text": "子 close(4)：移除子的那個表項目。父 3、父 4、子 3 仍指 A，所以 A 沒有失去全部參照，offset 仍為 6 B。"
+    }
+   ]
+  },
+  {
+   "id": "trace-16",
+   "type": "state-trace",
+   "page_path": "../dist/16-file-system.html",
+   "question": "逐步重播：名字消失與檔案回收的差別",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 4,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "初始：report.txt 與 backup.txt 指向 inode 42，L=2；fd 3 保持唯一開啟參照，O=1。"
+    },
+    "last": {
+     "token": "4",
+     "text": "close(fd 3) 後最後開啟參照消失：L=0、O=0，滿足本模型回收條件。可以釋放 inode 與區塊；這不代表實體位元組已被安全抹除。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "初始：report.txt 與 backup.txt 指向 inode 42，L=2；fd 3 保持唯一開啟參照，O=1。"
+    },
+    {
+     "token": "1",
+     "text": "unlink(report.txt) 成功：只移除第一個目錄項，L 由 2 變 1，O 維持 1。backup.txt 仍能重新開啟檔案。"
+    },
+    {
+     "token": "2",
+     "text": "unlink(backup.txt) 成功：L 由 1 變 0，O 仍為 1。兩個名字都查不到，但開啟參照保住 inode 與資料。"
+    },
+    {
+     "token": "3",
+     "text": "以 fd 3 讀取：沿既有開啟參照存取內容，讀取位移前進；L=0、O=1 均不變。讀取不會自動創造新檔名。"
+    },
+    {
+     "token": "4",
+     "text": "close(fd 3) 後最後開啟參照消失：L=0、O=0，滿足本模型回收條件。可以釋放 inode 與區塊；這不代表實體位元組已被安全抹除。"
+    }
+   ]
+  },
+  {
+   "id": "trace-17",
+   "type": "state-trace",
+   "page_path": "../dist/17-durability.html",
+   "question": "逐步重播：日誌的提交分界",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 5,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "S0：D 空閒，inode 未指到 D。沒有提交；當機後維持舊狀態。"
+    },
+    "last": {
+     "token": "5",
+     "text": "S5：正式 inode 與配置表都持久，才可以安全回收日誌。當機後正式位置已一致；不得把回收提前到 S4。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "S0：D 空閒，inode 未指到 D。沒有提交；當機後維持舊狀態。"
+    },
+    {
+     "token": "1",
+     "text": "S1：先讓 D 的新資料持久化。inode 與配置表仍舊；沒有提交，當機恢復舊中繼資料。"
+    },
+    {
+     "token": "2",
+     "text": "S2：日誌中兩筆新中繼資料完整持久。提交尚未持久，因此不能重播成新狀態。"
+    },
+    {
+     "token": "3",
+     "text": "S3：提交紀錄也已持久。現在能靠日誌把兩處正式位置恢復成新狀態；D 的資料已在 S1 先完成。"
+    },
+    {
+     "token": "4",
+     "text": "S4：只把 inode 寫回正式位置就當機，正式配置表還舊。保留的已提交日誌讓恢復程序重播兩筆，修復暫時不一致。"
+    },
+    {
+     "token": "5",
+     "text": "S5：正式 inode 與配置表都持久，才可以安全回收日誌。當機後正式位置已一致；不得把回收提前到 S4。"
+    }
+   ]
+  },
+  {
+   "id": "trace-18",
+   "type": "state-trace",
+   "page_path": "../dist/18-io.html",
+   "question": "逐步重播：裝置工作與 CPU 工作重疊",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 5,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "A 執行 read，核心確認快取未命中，需要裝置資料。此時尚未因等待而切到 B。"
+    },
+    "last": {
+     "token": "5",
+     "text": "排程器選 A，A 恢復核心內的 read 路徑，完成必要資料複製及位移更新後返回使用者模式。A 再次執行。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "A 執行 read，核心確認快取未命中，需要裝置資料。此時尚未因等待而切到 B。"
+    },
+    {
+     "token": "1",
+     "text": "核心／驅動設定 DMA 並提交請求；A 因資料未備妥而阻塞。排程器可選其他就緒行程。"
+    },
+    {
+     "token": "2",
+     "text": "CPU 執行 B；裝置／控制器同時搬資料到核心管理的緩衝區。A 仍阻塞，沒有占著 CPU 忙等。"
+    },
+    {
+     "token": "3",
+     "text": "傳輸完成並發生中斷；核心確認完成與資料可用，將 A 加入就緒佇列。中斷處理是 CPU 工作，A 此時尚未必然開始執行。"
+    },
+    {
+     "token": "4",
+     "text": "中斷處理結束，CPU 可先返回 B。A 已就緒，等待排程器選中；「資料備妥」與「拿到 CPU」是兩個時刻。"
+    },
+    {
+     "token": "5",
+     "text": "排程器選 A，A 恢復核心內的 read 路徑，完成必要資料複製及位移更新後返回使用者模式。A 再次執行。"
+    }
+   ]
+  },
+  {
+   "id": "trace-19",
+   "type": "state-trace",
+   "page_path": "../dist/19-system-call.html",
+   "question": "逐步重播：一次快取命中的成功 read",
+   "controls": {
+    "index": {
+     "min": 0,
+     "max": 5,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "index": 0,
+    "state": "0"
+   },
+   "formula": "next: i=min(N−1,i+1); prev: i=max(0,i−1); reset: i=0；高亮data-state包含data-step token的SVG群。逐步機制與狀態見steps。",
+   "criterion": "所有文字步驟和SVG始終可見；當前文字li具有aria-current=step；SVG僅高亮匹配狀態；首步prev及末步next停用；每步why等於該步完整文字，且應與本課靜態例解和不變量一致。",
+   "example": {
+    "first": {
+     "token": "0",
+     "text": "A 的函式庫包裝準備 read 呼叫參數：fd=3、buf、count=4096 B。尚未進入核心，檔案位移為 0 B。"
+    },
+    "last": {
+     "token": "5",
+     "text": "核心返回 A 的使用者模式，程式收到 4096 B。這次共跨過兩次模式邊界，但情境切換次數為 0。"
+    }
+   },
+   "boundaries": {
+    "first": "prev停用",
+    "last": "next停用",
+    "reset": "回第0步",
+    "no_javascript": "完整SVG、步驟、例題、練習解保留"
+   },
+   "steps": [
+    {
+     "token": "0",
+     "text": "A 的函式庫包裝準備 read 呼叫參數：fd=3、buf、count=4096 B。尚未進入核心，檔案位移為 0 B。"
+    },
+    {
+     "token": "1",
+     "text": "受控入口保存返回所需狀態，A 的控制流進入核心模式。這是模式切換；執行緒仍是 A。"
+    },
+    {
+     "token": "2",
+     "text": "核心驗證描述元與參數，確認開啟物件可讀。使用者緩衝區仍需在實際複製時使用安全存取機制。"
+    },
+    {
+     "token": "3",
+     "text": "在本例快取命中，位移 0 起有完整 4096 B 可讀，無須提交裝置 I/O，所以 A 不阻塞，也不切到其他執行緒。"
+    },
+    {
+     "token": "4",
+     "text": "核心成功將 4096 B 複製給使用者緩衝區，成功讀取後位移從 0 變 4096 B；準備回傳 4096。"
+    },
+    {
+     "token": "5",
+     "text": "核心返回 A 的使用者模式，程式收到 4096 B。這次共跨過兩次模式邊界，但情境切換次數為 0。"
+    }
+   ]
+  },
+  {
+   "id": "rr-lab",
+   "type": "round-robin-simulation",
+   "page_path": "../dist/04-round-robin.html",
+   "question": "改到達時間、CPU工作量與時間片，如何改變就緒佇列和T/R/W？",
+   "controls": {
+    "jobs": [
+     "A",
+     "B",
+     "C"
+    ],
+    "arrival_ms": {
+     "min": 0,
+     "max": 20,
+     "step": 1
+    },
+    "burst_ms": {
+     "min": 1,
+     "max": 20,
+     "step": 1
+    },
+    "quantum_ms": {
+     "min": 1,
+     "max": 10,
+     "step": 1
+    },
+    "actions": [
+     "prev",
+     "next",
+     "reset"
+    ]
+   },
+   "default": {
+    "jobs": [
+     {
+      "id": "A",
+      "arrival": 0,
+      "burst": 5
+     },
+     {
+      "id": "B",
+      "arrival": 1,
+      "burst": 3
+     },
+     {
+      "id": "C",
+      "arrival": 2,
+      "burst": 1
+     }
+    ],
+    "quantum": 2,
+    "index": 0
+   },
+   "formula": "執行min(q,剩餘CPU時間)；片內和片末到達先依arrival/id加入原佇列尾，再把本片未完成行程排尾。空佇列跳到下次arrival且記錄idle。T=C−arrival，R=first−arrival，W=T−burst（僅本單CPU、無阻塞I/O、零切換成本模型）。",
+   "criterion": "CPU區間不重疊；執行總長等於burst總和；每片≤q；所有工作不早於到達執行；每步queue與remaining正確；sum(T)=sum(W)+sum(burst)。完整指標表明示為走完排程後的結果。",
+   "example": {
+    "schedule": [
+     "A0–2",
+     "B2–4",
+     "C4–5",
+     "A5–7",
+     "B7–8",
+     "A8–9"
+    ],
+    "queue_after": [
+     [
+      "B",
+      "C",
+      "A"
+     ],
+     [
+      "C",
+      "A",
+      "B"
+     ],
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "A"
+     ],
+     [
+      "A"
+     ],
+     []
+    ],
+    "completion": [
+     9,
+     8,
+     5
+    ],
+    "turnaround": [
+     9,
+     7,
+     3
+    ],
+    "response": [
+     0,
+     1,
+     2
+    ],
+    "waiting": [
+     4,
+     4,
+     2
+    ]
+   },
+   "boundaries": {
+    "min": "全部arrival0、burst1、q1 => A0–1,B1–2,C2–3",
+    "max": "arrival20、burst20、q10 => idle0–20，完成總時刻80",
+    "idle": "三者arrival5 => idle0–5後開始",
+    "invalid": "空白、非有限、非整數、越界顯示原因，隱藏舊結果，步進停用",
+    "reset": "三個預設行程+q2+index0"
+   },
+   "steps": "執行時依參數確定性生成，最多60個CPU區間及空檔，完整逐片表常駐。"
+  },
+  {
+   "id": "va-lab",
+   "type": "virtual-address-translation",
+   "page_path": "../dist/12-translation.html",
+   "question": "TLB是否命中、頁是否駐留與權限如何決定一次位址轉換？",
+   "controls": {
+    "va": {
+     "min": 0,
+     "max": 65535,
+     "step": 1,
+     "formats": [
+      "decimal",
+      "0x-hex"
+     ]
+    },
+    "pfn": {
+     "min": 0,
+     "max": 63,
+     "step": 1
+    },
+    "tlb": [
+     "miss",
+     "hit"
+    ],
+    "state": [
+     "resident",
+     "nonresident",
+     "unmapped"
+    ],
+    "permission": [
+     "allow",
+     "deny"
+    ],
+    "page_size_B": 1024,
+    "va_bits": 16
+   },
+   "default": {
+    "va": "0x1234",
+    "pfn": 9,
+    "tlb": "miss",
+    "state": "resident",
+    "permission": "allow"
+   },
+   "formula": "VPN=floor(VA/1024),offset=VA%1024；有效TLBhit需resident；未命中查單層頁表。unmapped先停止，否則deny停止，否則nonresident停止；其他情況PA=PFN×1024+offset。Number安全整數，無bitwise運算。",
+   "criterion": "0≤offset<1024，VA=VPN×1024+offset；有效映射且允許存取才輸出可讀PA；TLBmiss且resident仍成功；非resident搭requestedhit說明改走miss；fault不保證diskIO。",
+   "example": {
+    "va_decimal": 4660,
+    "va_hex": "0x1234",
+    "vpn": 4,
+    "offset_B": 564,
+    "pfn": 9,
+    "pa_decimal_B": 9780,
+    "pa_hex": "0x2634",
+    "vpn_bits": "000100",
+    "offset_bits": "1000110100"
+   },
+   "boundaries": {
+    "zero": "VA0/PFN0 => VPN0,offset0,PA0",
+    "maximum": "VA65535/PFN63 => VPN63,offset1023,PA65535",
+    "page_boundary": "VA1023=>VPN0/offset1023；VA1024=>VPN1/offset0",
+    "unmapped": "不輸出可存取PA；無必然磁碟I/O",
+    "protection": "不輸出可存取PA；有效TLBhit仍可能權限失敗",
+    "nonresident": "核心處理，可能讀後備儲存或配置零頁",
+    "invalid": "空白/負值/小數/Infinity/NaN/錯誤hex/越界顯示原因，隱藏舊結果",
+    "reset": "回0x1234,PFN9,miss,resident,allow"
+   },
+   "steps": [
+    "拆6-bit VPN與10-bit offset",
+    "查TLB",
+    "必要時查單層頁表",
+    "檢查存在與權限",
+    "算PA或呈現失敗原因"
+   ]
+  },
+  {
+   "id": "glossary-search",
+   "type": "live-filter",
+   "page_path": "../dist/glossary.html",
+   "question": "用中文、英文或縮寫找回相關名詞與概念。",
+   "controls": {
+    "query": {
+     "type": "string",
+     "min_length": 0,
+     "max_length": "瀏覽器文字輸入限制"
+    },
+    "matching": "不分大小寫的子字串"
+   },
+   "default": {
+    "query": "",
+    "visible_count": 46
+   },
+   "formula": "q=trim(input).toLocaleLowerCase(); match=entry.textContent.toLocaleLowerCase().includes(q)",
+   "criterion": "操作即更新可見詞條和計數；清空顯示全部；noJS全詞條可讀，搜尋框隱藏。",
+   "example": {
+    "query": "TLB",
+    "matches": "包含TLB的全部詞條與易混概念"
+   },
+   "boundaries": {
+    "empty": "顯示全部",
+    "unknown": "0條並顯示改用中文/英文/縮寫建議",
+    "case": "tlb與TLB相同",
+    "no_javascript": "詞條全部保留"
+   },
+   "steps": "輸入→逐項匹配→hidden屬性→更新aria-live計數"
+  }
+ ]
+}

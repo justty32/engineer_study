@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 行程狀態｜圖解作業系統</title><link rel="stylesheet" href="lab.css"><script defer src="app.js"></script></head>
+<body data-page="01-process">
+<a class="skip-link" href="#main">跳到課程內容</a>
+<aside class="sidebar"><a class="brand" href="index.html">圖解作業系統</a><nav aria-label="課程導覽"><a href="index.html">課程地圖</a><a href="00-role.html">上一課：OS 角色</a><a href="01-process.html" aria-current="page">01 行程狀態</a><a href="02-fork.html">下一課：fork、exec、wait</a><a href="glossary.html">名詞與概念字典</a></nav><a class="site-link" href="https://justty32.github.io/engineer_study/">工程學習主站</a></aside>
+<main id="main" class="lesson">
+<header class="lesson-header"><p class="eyebrow">01・暫停之後，從原位置繼續</p><h1>行程：把程式的「做到哪裡」保存起來</h1><p class="lead">CPU 改去做 B，之後怎麼知道 A 該從哪一行繼續？核心替每個執行實例保存身分與狀態，並區分「能跑但還沒輪到」與「缺資料，現在不能跑」。</p></header>
+<p class="prerequisite"><strong>這章假設已懂：</strong><a href="00-role.html">00 課的 CPU、記憶體、核心與 I/O 角色</a>；不需要懂組合語言。</p>
+<nav class="section-nav" aria-label="本課段落"><a href="#model">程式與行程</a><a href="#worked-example">完整演算</a><a href="#experiment">重播狀態</a><a href="#practice">自己試一題</a></nav>
+
+<section id="model" class="concept"><h2>同一份程式，可以有多個執行實例</h2>
+<p><strong>程式（program）</strong>是儲存的指令與初始資料；<strong>行程（process，亦稱程序）</strong>是執行中的實例。你啟動同一個小程式兩次，可以得到兩個行程：指令內容相同，各自做到的位置與變數值不同。每個行程有<strong>行程識別碼（Process Identifier, PID）</strong>；PID 是用來指認它的號碼，不代表優先權、執行速度或永久不變的全球身分。</p>
+<p>CPU 的<strong>暫存器（register）</strong>是處理器內少量、快速的狀態儲存位置；<strong>程式計數器（Program Counter, PC）</strong>指出接下來要執行的位置。核心也要記住行程的<strong>位址空間（address space）</strong>：它能看到哪些程式碼與資料位址，以及對應的記憶體管理資訊。</p>
+<p><strong>行程控制區塊（Process Control Block, PCB）</strong>是教科書對核心管理紀錄的通稱，包含 PID、狀態、保存的執行位置、暫存器快照與資源資訊等。實作可能分散在多個結構；保存暫存器也可能放在核心堆疊。重點是核心有辦法找回完整執行狀態，並非所有系統都真的只有一個名叫 PCB 的盒子。</p>
+<figure class="diagram"><svg viewBox="0 0 640 315" role="img" aria-labelledby="process-title process-desc"><title id="process-title">程式檔案與兩個行程實例</title><desc id="process-desc">同一份程式啟動成 PID 100 與 PID 101。兩者各有變數和保存位置。CPU 只持有目前行程的活動暫存器，切換時保存舊值並還原新值。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><rect x="180" y="10" width="280" height="45" rx="8"/><path d="M265 55L155 90 M375 55L485 90"/><rect x="25" y="90" width="270" height="115" rx="8"/><rect x="345" y="90" width="270" height="115" rx="8"/><path d="M160 205L250 252 M480 205L390 252"/><rect x="160" y="255" width="320" height="45" rx="8"/></g>
+<g fill="currentColor" font-size="19" text-anchor="middle"><text x="320" y="39">磁碟上的同一份程式</text><text x="160" y="120">行程 100：x = 7</text><text x="160" y="150">PC 指向 A 的下一步</text><text x="160" y="178" font-size="16">核心紀錄：PID、狀態、快照</text><text x="480" y="120">行程 101：x = 99</text><text x="480" y="150">PC 指向 B 的下一步</text><text x="480" y="178" font-size="16">核心紀錄：PID、狀態、快照</text><text x="320" y="285">CPU：目前行程的活動暫存器</text></g>
+</svg><figcaption>相同程式碼不代表同一份執行狀態。一般私有資料各自獨立；明確建立的共享記憶體另當別論。</figcaption></figure>
+</section>
+
+<section class="concept"><h2>三個核心狀態：就緒、執行、阻塞</h2>
+<p><strong>就緒（ready）</strong>表示所需條件都齊了，只等 CPU。<strong>執行（running）</strong>表示目前取得 CPU。<strong>阻塞（blocked）</strong>表示缺某件事，例如磁碟讀取還沒完成，即使給它 CPU，也無法沿著這段等待之後的程式繼續。這裡的 blocked 是等待事件，不是「正在 CPU 上空轉」。</p>
+<p><strong>排程器（scheduler）</strong>從就緒工作中挑下一個；<strong>派送（dispatch）</strong>讓選上的工作真正開始執行。執行中的行程若用完被分配的一小段時間，核心可以暫停它，將它放回就緒狀態。這個時間界線通常由硬體計時器提醒核心。</p>
+<figure class="diagram"><svg viewBox="0 0 640 325" role="img" aria-labelledby="state-title state-desc"><title id="state-title">三個狀態與合法轉移</title><desc id="state-desc">就緒經派送成為執行；執行因時間到回到就緒，或因等待 I/O 成為阻塞；阻塞因事件完成回到就緒。沒有從阻塞直接跳至執行的箭頭。新建進入就緒，執行結束後離開。</desc>
+<defs><marker id="state-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="currentColor"/></marker></defs>
+<g fill="none" stroke="currentColor" stroke-width="2"><rect x="50" y="95" width="145" height="65" rx="8"/><rect x="430" y="95" width="145" height="65" rx="8"/><rect x="250" y="245" width="145" height="65" rx="8"/><path d="M195 113H425 M430 145H200 M490 162L390 240 M250 270L125 166 M20 65L60 91 M575 126H618" marker-end="url(#state-arrow)"/></g>
+<g fill="currentColor" text-anchor="middle" font-size="20"><text x="122" y="135">就緒 ready</text><text x="502" y="135">執行 running</text><text x="323" y="284">阻塞 blocked</text><text x="310" y="91" font-size="17">選上並派送 →</text><text x="312" y="178" font-size="17">← 時間到，仍能跑</text><text x="490" y="222" font-size="17">等待 I/O</text><text x="141" y="245" font-size="17">事件完成</text><text x="55" y="45" font-size="17">新建</text><text x="585" y="85" font-size="17">結束 →</text></g>
+</svg><figcaption>圖中的「事件完成」只恢復可執行資格；還需要走一次就緒 → 執行。</figcaption></figure>
+<p><strong>中斷（interrupt）</strong>是硬體通知 CPU 需要處理某個事件的機制。裝置完成時，核心處理通知並把等待該事件的行程移回就緒。之後是否立刻改跑它，要看排程決策。即使核心因中斷短暫使用 CPU，也不表示必然換成另一個行程；它可能處理完就回原行程。</p>
+<p><strong>情境切換（context switch）</strong>把 CPU 的執行對象從一個行程或執行緒換成另一個。核心先保存舊執行狀態，再還原新狀態。保存的 PC 與暫存器防止 A 回來時誤用 B 的「做到哪裡」。真實系統的切換需要時間，還可能影響快取；下列例題將成本設為零，以便只追狀態。</p>
+</section>
+
+<section id="worked-example" class="worked-example"><h2>完整演算：I/O 完成後，A 為何還沒跑？</h2>
+<p><strong>已知：</strong>單 CPU；A 與 B 在 0 ms 都就緒，先選 A。A 需要 CPU 2 ms、I/O 等待 2 ms、再 CPU 1 ms。B 需要 CPU 4 ms。B 從 2 ms 開始執行，到 5 ms 時因計時器到期回就緒；此時選 A，A 完成後再選 B。無其他事件，切換與中斷處理時間忽略。</p>
+<p><strong>所求：</strong>每個事件後的狀態、就緒佇列、CPU 歸屬，以及 A 的暫存器如何恢復。<strong>選法：</strong>先按時間排事件，再套用狀態圖，每次只改受該事件影響的欄位。<strong>就緒佇列（ready queue）</strong>是核心記錄能執行、正在等 CPU 的工作集合；下表用左邊優先的順序表示本題安排。</p>
+<div class="table-scroll"><table><caption>事件與派送完成後的快照；「—」表示空集合</caption><thead><tr><th>時間／事件</th><th>A</th><th>B</th><th>CPU／就緒佇列</th><th>保存或恢復什麼</th></tr></thead><tbody>
+<tr><td>0：選 A</td><td>執行</td><td>就緒</td><td>A／[B]</td><td>A 從起點執行。</td></tr>
+<tr><td>2：A 等讀取，選 B</td><td>阻塞</td><td>執行</td><td>B／—</td><td>A 快照：PC = 讀取後續位置、示意暫存器 rTmp = 7。</td></tr>
+<tr><td>4：I/O 完成</td><td>就緒</td><td>執行</td><td>B／[A]</td><td>A 等待條件消失；尚未把 A 的暫存器還原到 CPU。</td></tr>
+<tr><td>5a：B 時間到</td><td>就緒</td><td>就緒</td><td>核心處理／[A, B]</td><td>保存 B：PC = B 下一步、rTmp = 99。</td></tr>
+<tr><td>5b：選 A</td><td>執行</td><td>就緒</td><td>A／[B]</td><td>還原 A 的 PC 與 rTmp = 7，繼續自己的工作。</td></tr>
+<tr><td>6：A 結束，選 B</td><td>結束</td><td>執行</td><td>B／—</td><td>還原 B 的 PC 與 rTmp = 99。</td></tr>
+<tr><td>7：B 結束</td><td>結束</td><td>結束</td><td>空閒／—</td><td>無可執行工作。</td></tr>
+</tbody></table></div>
+<p>5a 與 5b 是同一個 t = 5 ms 內先後發生的邏輯步驟；零成本模型沒有替它們加經過時間。rTmp 是為了說明保存／恢復而取的示意暫存器名稱；本題假設它不被讀取的回傳結果覆寫，不對應任何特定 CPU 的真實暫存器配置。</p>
+<ol><li>A 在 0–2 ms 執行，共用 CPU 2 ms。</li><li>A 在 2–4 ms 阻塞，B 同時在 CPU 前進。t = 4 ms 的裝置中斷只讓 A 成為就緒。</li><li>A 在 4–5 ms 等 CPU 1 ms；B 於 2–5 ms 已做 3 ms，還剩 4 − 3 = 1 ms。</li><li>t = 5 ms 保存 B、還原 A；A 在 5–6 ms 做完剩下 1 ms。</li><li>B 在 6–7 ms 做完最後 1 ms。兩行程於 7 ms 前都已退出。</li></ol>
+<p class="formula">A：執行 3 + 阻塞 2 + 就緒等待 1 = 6 ms。B：執行 4 + 就緒等待 (2 + 1) = 7 ms。</p>
+<p><strong>答案與檢查：</strong>A 於 6 ms、B 於 7 ms 完成。CPU 時間總和 3 + 4 = 7 ms，沒有空檔；每個穩定快照至多一個行程是執行狀態，就緒佇列也不包含阻塞或正在執行的行程。A 恢復的是 7，B 恢復的是 99，狀態沒有串到對方身上。</p>
+</section>
+
+<section id="experiment"><h2>逐步重播：先改狀態，再決定 CPU</h2><p>特別對照 t = 4 與 t = 5：前者改的是 A 的資格，後者才更換 CPU 上的執行對象。按鈕自由來回，所有步驟始終可讀。</p>
+<section class="widget" data-trace id="trace-01"><h3>A 與 B 的狀態快照</h3>
+<div class="diagram"><svg viewBox="0 0 640 290" role="img" aria-labelledby="process-trace-title process-trace-desc"><title id="process-trace-title">七個行程狀態快照</title><desc id="process-trace-desc">零毫秒 A 執行 B 就緒；二毫秒 A 阻塞 B 執行；四毫秒 A 就緒 B 執行；五毫秒先兩者就緒，再派送 A；六毫秒 A 結束 B 執行；七毫秒兩者結束。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><g data-state="0"><rect x="20" y="20" width="185" height="65" rx="8"/><text x="112" y="46" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">0 ms：CPU = A</text><text x="112" y="70" fill="currentColor" stroke="none" font-size="16" text-anchor="middle">A 執行／B 就緒</text></g><g data-state="1"><rect x="226" y="20" width="185" height="65" rx="8"/><text x="318" y="46" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">2 ms：CPU = B</text><text x="318" y="70" fill="currentColor" stroke="none" font-size="16" text-anchor="middle">A 阻塞／B 執行</text></g><g data-state="2"><rect x="433" y="20" width="185" height="65" rx="8"/><text x="525" y="46" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">4 ms：CPU = B</text><text x="525" y="70" fill="currentColor" stroke="none" font-size="16" text-anchor="middle">A 就緒／B 執行</text></g><g data-state="3"><rect x="20" y="115" width="185" height="65" rx="8"/><text x="112" y="141" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">5a：保存 B</text><text x="112" y="165" fill="currentColor" stroke="none" font-size="16" text-anchor="middle">A 就緒／B 就緒</text></g><g data-state="4"><rect x="226" y="115" width="185" height="65" rx="8"/><text x="318" y="141" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">5b：CPU = A</text><text x="318" y="165" fill="currentColor" stroke="none" font-size="16" text-anchor="middle">A 執行／B 就緒</text></g><g data-state="5"><rect x="433" y="115" width="185" height="65" rx="8"/><text x="525" y="141" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">6 ms：CPU = B</text><text x="525" y="165" fill="currentColor" stroke="none" font-size="16" text-anchor="middle">A 結束／B 執行</text></g><g data-state="6"><rect x="226" y="215" width="185" height="60" rx="8"/><text x="318" y="241" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">7 ms：全部完成</text><text x="318" y="264" fill="currentColor" stroke="none" font-size="16" text-anchor="middle">CPU 可空閒</text></g></g>
+</svg></div><div class="controls"><button type="button" data-action="prev">前一步</button><button type="button" data-action="next">下一步</button><button type="button" data-action="reset">重設</button></div><p class="status" data-trace-status aria-live="polite">初始：A 執行，B 就緒；CPU 上只有 A。</p>
+<ol class="trace-steps"><li data-step="0">0 ms：派送 A，A 從就緒成為執行，B 留在就緒佇列。</li><li data-step="1">2 ms：A 發出讀取並等待，保存 A 的繼續位置；A 阻塞，改派送 B。</li><li data-step="2">4 ms：I/O 完成使 A 阻塞 → 就緒；B 尚未用完本題給的時間，繼續執行。</li><li data-step="3">5a：計時器使 B 執行 → 就緒；保存 rTmp = 99，就緒順序成為 [A, B]。</li><li data-step="4">5b：選 A，還原 rTmp = 7；A 就緒 → 執行，B 等待。</li><li data-step="5">6 ms：A 結束；選 B 並還原 rTmp = 99，B 完成自己的最後一段。</li><li data-step="6">7 ms：B 結束；CPU 工作總量 7 ms，兩者都離開可排程集合。</li></ol>
+</section></section>
+
+<section id="practice"><h2>自己試一題：沒有 I/O，也會離開 CPU</h2>
+<p>單 CPU 上只有 P、Q，0 ms 都就緒，先選 P。P 需要 3 ms CPU，Q 需要 1 ms；時間片為 2 ms，無 I/O，切換成本零。P 用完時間片後排在 Q 後面。求 P、Q 的狀態順序、完成時刻，並回答 P 在 2 ms 是否阻塞。</p>
+<details><summary>提示 1：離開 CPU 的原因是什麼？</summary><p>P 已做 2 ms，還剩 1 ms。它沒有缺資料或等待事件，只是使用時間到期，因此應回到就緒。</p></details>
+<details><summary>提示 2：逐一扣掉剩餘工作</summary><p>2 ms 時選 Q，Q 只需 1 ms，於 3 ms 完成。再還原 P 的狀態，執行它剩下的 1 ms。</p></details>
+<details><summary>完整解與不變量</summary><p>CPU：P 0–2 → Q 2–3 → P 3–4 ms。P：就緒 → 執行 → 就緒 → 執行 → 結束；Q：就緒 → 執行 → 結束。Q 在 3 ms、P 在 4 ms 完成。P 在 2–3 ms 是就緒，完全沒有阻塞；兩者 CPU 工作 3 + 1 = 4 ms，與總時間一致。P 的 3 ms 執行 + 1 ms 就緒等待 = 4 ms。這題顯示「沒有正在執行」還要分辨等待 CPU 或等待事件，不能一概叫阻塞。</p></details>
+</section>
+
+<section class="concept"><h2>狀態清單是快照，不是完整歷史</h2><p>系統上的行程查詢可看到 PID、名稱與當時狀態；排程追蹤則可重建切入、切出與喚醒事件。不同系統的狀態碼會細分或合併概念，例如 Linux 的 R 包含正在執行與可執行，不能只靠一個 R 判定當時一定佔著 CPU。等待中的行程仍占有部分記憶體與管理紀錄；「CPU 沒用到它」不等於「它已被刪掉」。</p></section>
+<section class="sources"><h2>來源與模型邊界</h2><p><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-intro.pdf">OSTEP，第 4 章 The Abstraction: The Process，§4.1、§4.4–4.5</a>支持機器狀態、三狀態與核心資料結構；Linux R 狀態碼見 <a href="https://gitlab.com/procps-ng/procps/-/raw/master/man/ps.1">procps-ng ps(1)，PROCESS STATE CODES</a>。本地銜接：舊課〈01 行程是什麼〉。本文快照、暫存器名稱與時間安排是原創教學例，省略執行緒、多核心及切換成本。</p></section>
+<nav class="pager" aria-label="章節導覽"><a href="00-role.html">← 00 OS 角色</a><a href="02-fork.html">02 fork、exec、wait →</a></nav>
+</main></body></html>

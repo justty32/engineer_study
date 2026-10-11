@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>05 回饋佇列｜圖解作業系統</title><link rel="stylesheet" href="lab.css"><script src="app.js" defer></script></head>
+<body data-page="05-feedback">
+<a class="skip-link" href="#main">跳到本課內容</a>
+<aside class="sidebar"><a class="brand" href="index.html">圖解作業系統</a><nav aria-label="課程導航"><a href="index.html">課程地圖</a><a href="04-round-robin.html">04 時間片輪轉</a><a href="05-feedback.html" aria-current="page">05 回饋佇列</a><a href="06-threads.html">06 執行緒與平行</a><a href="glossary.html">名詞與概念字典</a></nav><a href="https://justty32.github.io/engineer_study/">工程學習主站</a></aside>
+<main id="main" class="lesson">
+<header class="lesson-header"><p class="eyebrow">05・從剛才的用量，調整下一輪的位置</p><h1>回饋佇列：先給機會，再看用了多少 CPU</h1><p class="lead">排程器事先不知道一個工作會跑多久。它可以先把新工作放在高優先層，觀察它累積用了多少 CPU，再移到較低層；等待較久的工作則定期獲得重新競爭的機會。</p></header>
+<p class="prerequisite"><strong>這章假設已懂：</strong><a href="04-round-robin.html">04 的時間片、就緒佇列與片末重新排隊</a>。本章沿用單 CPU 與毫秒（ms），再加上一個「佇列層級」。</p>
+<nav class="section-nav" aria-label="本課段落"><a href="#worked-example">完整演算</a><a href="#feedback-lab">重播升降級</a><a href="#practice">自己試一題</a></nav>
+
+<section class="concept" aria-labelledby="feedback-idea">
+<h2 id="feedback-idea">不知道誰是短工作，怎麼先照顧短工作？</h2>
+<p>多層回饋佇列（Multi-Level Feedback Queue, MLFQ）依工作已表現出的行為調整優先層。新工作先得到短短一次機會；若用掉高層的 CPU 配額仍沒做完，就移到低層。這樣，短工作有機會在高層完成，長工作仍能在高層空下來時繼續。</p>
+<p>「回饋」指<strong>已使用的 CPU 時間會改變之後的排隊位置</strong>。它不能預知工作未來還有多長。層級數、各層時間片、提升週期都是政策選擇，沒有一套數字代表所有作業系統。</p>
+<h3>本課鎖定的兩層教學規則</h3>
+<ol>
+<li><strong>Q0 高層：</strong>新到達者進入 Q0；時間片為 2 ms，同一次高層停留的累計 CPU 配額也為 2 ms。用完配額仍沒完成者移到 Q1。</li>
+<li><strong>Q1 低層：</strong>時間片為 4 ms；用完仍沒完成就排回 Q1 尾端。Q0 優先於 Q1；同層依時間片輪轉。</li>
+<li><strong>優先權提升（priority boost）：</strong>在 t = 8、16、24… ms，暫停當前工作，把所有尚未完成者提升到 Q0，重設高層累計用量與時間片。若有 Q0 等候者，先保留其順序，再接 Q1 等候者；當前工作先按當下層級放回隊尾，再依此順序提升。</li>
+<li>完成優先於重新排隊。在同一邊界先處理完成／片末重新排隊，再處理提升。因此 t = 8 ms 的 A 先回 Q1 尾端，然後整隊提升；這個順序也是本課規約。</li>
+<li>新到達的高層工作可以搶占（preempt）低層工作，即暫停它並先跑高層。低層受這種搶占時保留未用完的時間片；定期提升則重設。主例所有工作同時到達，且沒有 I/O，切換成本為 0。</li>
+</ol>
+<figure class="diagram">
+<svg viewBox="0 0 680 265" role="img" aria-labelledby="feedback-level-title feedback-level-desc">
+<title id="feedback-level-title">本課兩層回饋規則與每 8 毫秒的提升</title><desc id="feedback-level-desc">新工作進入高層 Q0。Q0 累計用完 2 毫秒 CPU 而未完成便降至 Q1，Q1 每次最多 4 毫秒。每 8 毫秒所有未完成工作提升到 Q0 並重設高層配額。</desc>
+<rect x="25" y="25" width="440" height="68" rx="10" fill="#e6efff" stroke="#315ca8"/><text x="45" y="52" fill="#172b4d">Q0 高層：新工作從這裡開始</text><text x="45" y="78" fill="#172b4d">時間片 2 ms；累計 CPU 配額 2 ms</text>
+<path d="M180 94 V162 M173 152 L180 162 L187 152" stroke="currentColor" fill="none" stroke-width="2"/><text x="196" y="133" fill="currentColor">配額用完且未完成：降級</text>
+<rect x="25" y="170" width="440" height="68" rx="10" fill="#fff0ce" stroke="#936200"/><text x="45" y="197" fill="#4a3500">Q1 低層：Q0 無人時執行</text><text x="45" y="224" fill="#4a3500">每片 4 ms；未完就回本層隊尾</text>
+<path d="M470 205 H505 V60 H474 M484 53 L474 60 L484 67" fill="none" stroke="currentColor" stroke-width="2"/><text x="521" y="107" fill="currentColor">每 8 ms</text><text x="521" y="134" fill="currentColor">全部提升</text><text x="521" y="161" fill="currentColor">配額重設</text>
+</svg><figcaption>箭頭是排隊層級的改變。降級不會把已完成的工作量清零；重設的是「本層已用配額」，不是剩餘 CPU 需求。</figcaption>
+</figure>
+</section>
+
+<section id="worked-example" class="worked-example" aria-labelledby="feedback-work-title">
+<h2 id="feedback-work-title">完整演算：A 要 8 ms，B 要 3 ms</h2>
+<p><strong>已知：</strong>A、B 都在 t = 0 ms 到達，初始順序 A 再 B，CPU 需求分別為 8、3 ms；採前述 Q0／Q1 與 8 ms 提升規則。<strong>所求：</strong>每次執行的層級、剩餘量、完成時刻與等待時間。</p>
+<p><strong>選法理由：</strong>只維護一條 RR 佇列已經不夠。我們必須同時記 Q0、Q1、每個工作的剩餘 CPU 需求，以及下一次提升時刻；下一個事件可能是完成、配額用完或提升。</p>
+<p>表中 <code>A(6)</code> 表示 A 還需要 6 ms。兩層佇列均按隊首到隊尾列出；執行中的工作從佇列取走。每段長度不能跨過下一次提升事件。</p>
+<div class="table-scroll"><table>
+<caption>完整主例；所有時刻與剩餘量皆為 ms</caption>
+<thead><tr><th scope="col">起點與派送前佇列</th><th scope="col">這一段 CPU</th><th scope="col">片末剩餘 (A,B)</th><th scope="col">事件與後續排隊</th></tr></thead>
+<tbody>
+<tr><td>t = 0；Q0: A(8), B(3)；Q1: 空</td><td>Q0 的 A：0 → 2</td><td>(6,3)</td><td>A 用完 2 ms 高層配額，降至 Q1；Q0: B(3)，Q1: A(6)</td></tr>
+<tr><td>t = 2；Q0: B(3)；Q1: A(6)</td><td>Q0 的 B：2 → 4</td><td>(6,1)</td><td>B 用完高層配額，降至 Q1 尾端；Q1: A(6), B(1)</td></tr>
+<tr><td>t = 4；Q0: 空；Q1: A(6), B(1)</td><td>Q1 的 A：4 → 8</td><td>(2,1)</td><td>A 用完 4 ms，先回尾端成 B(1), A(2)；t = 8 提升後 Q0: B(1), A(2)，Q1: 空</td></tr>
+<tr><td>t = 8；Q0: B(1), A(2)；Q1: 空</td><td>Q0 的 B：8 → 9</td><td>(2,0)</td><td>B 完成，不降級；Q0: A(2)</td></tr>
+<tr><td>t = 9；Q0: A(2)；Q1: 空</td><td>Q0 的 A：9 → 11</td><td>(0,0)</td><td>A 完成；兩層皆空</td></tr>
+</tbody></table></div>
+<p>t = 8 ms 同時遇到低層片末和全體提升。先依規約把 A 放到正在等的 B 後面，再提升，故 B 先跑；不應因 A 剛好在 CPU 上，就讓 A 插回提升後的隊首。t = 11 ms 雖然 A 剛好也用了 2 ms 高層配額，但它已完成，無須再放入 Q1。</p>
+<h3>答案與回代</h3>
+<p>A 首次在 0 ms 執行，11 ms 完成：回應 R<sub>A</sub> = 0 − 0 = <strong>0 ms</strong>，周轉 T<sub>A</sub> = 11 − 0 = <strong>11 ms</strong>，等待 W<sub>A</sub> = 11 − 8 = <strong>3 ms</strong>。B 首次在 2 ms 執行，9 ms 完成：R<sub>B</sub> = 2 − 0 = <strong>2 ms</strong>，T<sub>B</sub> = 9 − 0 = <strong>9 ms</strong>，W<sub>B</sub> = 9 − 3 = <strong>6 ms</strong>。平均回應、周轉、等待分別為 1、10、4.5 ms。</p>
+<p>回看執行量：A = 2 + 4 + 2 = 8 ms，B = 2 + 1 = 3 ms，總計 <strong>11 ms</strong>，沒有閒置或切換成本，故最後完成於 t = 11 ms。A 等 [2,4) 與 [8,9)，合計 3 ms；B 等 [0,2) 與 [4,8)，合計 6 ms，與減法結果一致。</p>
+<p class="callout">這組例子中，取消 t = 8 ms 的提升仍會得到相同執行字母順序，但 8 ms 之後執行的層級不同。提升是改變未來競爭位置的機制，不保證每組有限工作都會立刻縮短完成時間。</p>
+</section>
+
+<section class="concept" aria-labelledby="feedback-limits">
+<h2 id="feedback-limits">累計配額與定期提升，各解決一個什麼問題？</h2>
+<p><strong>時間片</strong>限制一次連續執行多久；<strong>配額（allotment）</strong>限制一個工作在本層總共能用多少 CPU。主例 Q0 的兩個數字碰巧相同，概念仍不同。若某工作先跑 1.5 ms 就主動讓出（yield），之後又跑 0.5 ms，累計已達 2 ms，仍應降級；讓出 CPU 不會把帳本重新歸零。</p>
+<p>若每次讓出都清零，長工作可能反覆在片末前讓出，持續留在高層。累計用量的規則會把 1.5 + 0.5 算成 2 ms，避免這種鑽配額漏洞的方式。這個帶有讓出行為的說明是規則延伸，主例本身沒有 I/O 或主動讓出。</p>
+<p>若高層工作持續到來，低層工作可能長期得不到 CPU，稱為飢餓（starvation）。定期提升讓它重新回到高層競爭；等待上限仍要看到達模式與同層規則，不能光憑「有提升」就承諾所有工作固定幾毫秒內完成。</p>
+<p>提升非常頻繁時，降到低層者很快又上來，層級區分效果減少；提升間隔很長時，低層者可能等很久。只有一個工作時，高低層切換仍可發生，但 CPU 沒有其他對手可輪流服務。實際追蹤需包含優先層與配額事件；只看到完成時刻，無法分辨主例那兩種層級安排。</p>
+</section>
+
+<section class="widget" id="feedback-lab" data-trace>
+<h2>重播升降級：每一步都看見正在改哪個帳本</h2>
+<p>前進、後退或重設，對照主例的五段 CPU 執行。圖上每格都有時段與層級；高亮只是目前觀察位置，所有推導始終保留在前文。</p>
+<figure class="diagram"><svg viewBox="0 0 680 220" role="img" aria-labelledby="feedback-trace-title feedback-trace-desc">
+<title id="feedback-trace-title">主例的五段執行與高低層</title><desc id="feedback-trace-desc">A 在 Q0 執行 0 到 2，B 在 Q0 執行 2 到 4，A 在 Q1 執行 4 到 8；8 時提升後，B 在 Q0 執行 8 到 9，A 在 Q0 執行 9 到 11。圖依固定順序重播。</desc>
+<g data-state="0"><rect x="20" y="30" width="118" height="88" rx="8" fill="#e6efff" stroke="#315ca8"/><text x="35" y="55" fill="#172b4d">A／Q0</text><text x="35" y="79" fill="#172b4d">0 → 2 ms</text><text x="35" y="104" fill="#172b4d">剩 6 ms</text></g>
+<g data-state="1"><rect x="151" y="30" width="118" height="88" rx="8" fill="#e6efff" stroke="#315ca8"/><text x="166" y="55" fill="#172b4d">B／Q0</text><text x="166" y="79" fill="#172b4d">2 → 4 ms</text><text x="166" y="104" fill="#172b4d">剩 1 ms</text></g>
+<g data-state="2"><rect x="282" y="30" width="118" height="88" rx="8" fill="#fff0ce" stroke="#936200"/><text x="297" y="55" fill="#4a3500">A／Q1</text><text x="297" y="79" fill="#4a3500">4 → 8 ms</text><text x="297" y="104" fill="#4a3500">剩 2 ms</text></g>
+<g data-state="3"><rect x="413" y="30" width="118" height="88" rx="8" fill="#e6efff" stroke="#315ca8"/><text x="428" y="55" fill="#172b4d">B／Q0</text><text x="428" y="79" fill="#172b4d">8 → 9 ms</text><text x="428" y="104" fill="#172b4d">完成</text></g>
+<g data-state="4"><rect x="544" y="30" width="118" height="88" rx="8" fill="#e6efff" stroke="#315ca8"/><text x="559" y="55" fill="#172b4d">A／Q0</text><text x="559" y="79" fill="#172b4d">9 → 11 ms</text><text x="559" y="104" fill="#172b4d">完成</text></g>
+<text x="20" y="157" fill="currentColor">等寬卡片表示步驟順序，並非比例時間軸。</text><text x="20" y="195" fill="currentColor">t = 8 ms：Q1 先排為 B、A，再全部提升到 Q0。</text>
+</svg><figcaption>每張卡的「剩餘」是該段結束後的 CPU 需求；提升會重設配額，剩餘需求仍接續扣除。</figcaption></figure>
+<div class="controls"><button type="button" data-action="prev">上一步</button><button type="button" data-action="next">下一步</button><button type="button" data-action="reset">重設</button></div>
+<p class="status" data-trace-status aria-live="polite">步驟 1：A 用完 Q0 的 2 ms 配額，還剩 6 ms，因此降到 Q1。</p>
+<ol class="trace-steps">
+<li data-step="0">A 在 Q0 跑 0–2 ms，剩 6 ms。因高層配額用完而降級；Q0 仍有 B，下一位不能選低層 A。</li>
+<li data-step="1">B 在 Q0 跑 2–4 ms，剩 1 ms，也降級。Q0 為空，Q1 依序是 A(6)、B(1)。</li>
+<li data-step="2">A 在 Q1 跑 4–8 ms，剩 2 ms。先排回 B 後面，再做 t = 8 的提升；Q0 成為 B(1)、A(2)。剩餘總需求為 3 ms。</li>
+<li data-step="3">B 在 Q0 只跑 1 ms，於 t = 9 完成。完成者不再降級或排隊，A 的剩餘需求仍為 2 ms。</li>
+<li data-step="4">A 在 Q0 跑 9–11 ms 後完成。剩餘總需求為 0；累計 CPU 使用 8 + 3 = 11 ms。</li>
+</ol>
+<noscript><p>啟用 JavaScript 可高亮步驟；上面的文字與圖已呈現全部狀態。</p></noscript>
+</section>
+
+<section id="practice" aria-labelledby="feedback-practice-title">
+<h2 id="feedback-practice-title">自己試一題：加入第三個短工作，提升會切斷哪一片？</h2>
+<p><strong>題目：</strong>A、B、C 都在 0 ms 到達，初始順序 A、B、C，CPU 需求為 8、3、1 ms。仍用 Q0 配額 2 ms、Q1 時間片 4 ms、每 8 ms 提升的規則。求完整時間軸、各完成時刻與等待時間；特別說明 t = 8 ms 的事件。</p>
+<details><summary>提示一：高層前三段</summary><p>A 跑 0–2，B 跑 2–4，C 只需 1 ms，於 5 ms 完成。接著 Q1 依序有 A(6)、B(1)。</p></details>
+<details><summary>提示二：Q1 的 4 ms 不是保證能一次跑滿</summary><p>A 從 5 ms 開始，即使 Q1 時間片尚未滿 4 ms，到 8 ms 仍遇到提升事件。它只用 3 ms，剩 3 ms；先放到等待的 B 後面，再一起提升。</p></details>
+<details><summary>完整解答與回代</summary>
+<div class="table-scroll"><table><caption>新增 C 後的全部執行區間</caption><thead><tr><th scope="col">區間（ms）與層級</th><th scope="col">片末剩餘 (A,B,C)，ms</th><th scope="col">原因與下個佇列</th></tr></thead><tbody>
+<tr><td>A：0–2，Q0</td><td>(6,3,1)</td><td>A 降級；Q0: B,C；Q1: A</td></tr><tr><td>B：2–4，Q0</td><td>(6,1,1)</td><td>B 降級；Q0: C；Q1: A,B</td></tr><tr><td>C：4–5，Q0</td><td>(6,1,0)</td><td>C 完成；Q1: A,B</td></tr><tr><td>A：5–8，Q1</td><td>(3,1,0)</td><td>提升打斷本片；A 先回 B 後面，再提升為 Q0: B,A</td></tr><tr><td>B：8–9，Q0</td><td>(3,0,0)</td><td>B 完成；Q0: A</td></tr><tr><td>A：9–11，Q0</td><td>(1,0,0)</td><td>A 用完重設後的 2 ms 高層配額；降至 Q1</td></tr><tr><td>A：11–12，Q1</td><td>(0,0,0)</td><td>A 完成</td></tr>
+</tbody></table></div>
+<p>完成時刻 c = (12,9,5) ms。三者都在 0 到達，所以周轉 T = (12,9,5) ms；等待 W = (12 − 8, 9 − 3, 5 − 1) = <strong>(4,6,4) ms</strong>。平均等待 = 14/3 ms ≈ 4.667 ms。首次執行為 (0,2,4) ms，故平均回應 = (0 + 2 + 4) ÷ 3 = 2 ms。</p>
+<p>A 實際使用 2 + 3 + 2 + 1 = 8 ms，B 使用 2 + 1 = 3 ms，C 使用 1 ms；總計 12 ms，等於 8 + 3 + 1。A 在 11 ms 降級後立刻繼續，因為已沒有其他就緒工作；換層不必然代表換成另一個行程。</p>
+</details>
+</section>
+<section class="sources" aria-labelledby="feedback-sources"><h2 id="feedback-sources">來源與模型範圍</h2><p>回饋佇列、累計配額與提升的原理：<a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched-mlfq.pdf">OSTEP 第 8 章 Scheduling: The Multi-Level Feedback Queue，§8.6（章內第 10 頁）</a>。本課的兩層、2／4 ms、8 ms 提升週期、事件排序與算例都是明示教學選擇，不代表特定現代系統的預設排程器。</p></section>
+<nav class="pager" aria-label="前後課"><a href="04-round-robin.html">← 04 時間片輪轉</a><a href="06-threads.html">06 執行緒與平行 →</a></nav>
+</main></body></html>

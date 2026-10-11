@@ -35,6 +35,9 @@ on:
       - "專題/機器人運動學/圖解機器人數學/dist/*.html"
       - "專題/機器人運動學/圖解機器人數學/dist/*.css"
       - "專題/機器人運動學/圖解機器人數學/dist/*.js"
+      - "專題/作業系統/圖解作業系統/dist/*.html"
+      - "專題/作業系統/圖解作業系統/dist/*.css"
+      - "專題/作業系統/圖解作業系統/dist/*.js"
       - "專題/網路安全/攻擊手法細講/*.html"
       - "專題/網路安全/攻擊手法細講/*.css"
       - "專題/網路安全/攻擊手法細講/*.js"
@@ -137,6 +140,7 @@ jobs:
           專題/逆向工程/互動課程|reverse-engineering
           專題/計算機組織/互動課程|computer-organization
           專題/作業系統/互動課程|operating-systems
+          專題/作業系統/圖解作業系統/dist|operating-systems-little-lab
           專題/Linux/互動課程|linux
           專題/機器人運動學/互動課程|robot-arm-kinematics
           專題/機器人路徑規劃/互動課程|robot-motion-planning

@@ -1,0 +1,138 @@
+{
+ "contract": "wf-table/1",
+ "source": "驗收紀錄.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "path"
+ ],
+ "final_digest": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28",
+ "digest_algorithm": "SHA256 of sorted lines: <file SHA256><two spaces><path relative to dist><LF>",
+ "publication_slug": "operating-systems-little-lab",
+ "columns": [
+  "path",
+  "bytes",
+  "sha256"
+ ],
+ "rows": [
+  {
+   "path": "dist/00-role.html",
+   "bytes": 15404,
+   "sha256": "3f59ad5f3e9a0f6b78d4af544171e55f5054f89d299ebc37ce106451183a3b37"
+  },
+  {
+   "path": "dist/01-process.html",
+   "bytes": 17088,
+   "sha256": "fd50f77019f587936fff88c1d9f1ce2135219324b164fabc1030ed424affe7d9"
+  },
+  {
+   "path": "dist/02-fork.html",
+   "bytes": 19021,
+   "sha256": "20671c046dfa44d161690c7ef720b445d9bd92a65f4383e8067a4bb775efa311"
+  },
+  {
+   "path": "dist/03-scheduling.html",
+   "bytes": 17767,
+   "sha256": "d0f6b2cd99bd6439624696bae07131cf66b77fb1c95be1ec1493de7d4d950fa6"
+  },
+  {
+   "path": "dist/04-round-robin.html",
+   "bytes": 16325,
+   "sha256": "c1e10673ec9775d95dae62f576c5c32dc3a588c0767120074a466bd9a5d3fed2"
+  },
+  {
+   "path": "dist/05-feedback.html",
+   "bytes": 16294,
+   "sha256": "b5bd1e4ac7d0bc44ea60a14b8345ab58ff88d7afd1774346c3f12ab2c6db79b3"
+  },
+  {
+   "path": "dist/06-threads.html",
+   "bytes": 17112,
+   "sha256": "99619fa1e697d8dcde489810b44934e69add987f7b77de26b9318a409de546ff"
+  },
+  {
+   "path": "dist/07-mutex.html",
+   "bytes": 18828,
+   "sha256": "27ed98dbec837cd5a6b4e6561bbc0018b9a5cd423552fcd3daddc31a9ba5abbd"
+  },
+  {
+   "path": "dist/08-condition.html",
+   "bytes": 16609,
+   "sha256": "dd28b1e337f519bec365f2d3cbba72c265a587ac20dfaaf202fce92e835725ca"
+  },
+  {
+   "path": "dist/09-deadlock.html",
+   "bytes": 17339,
+   "sha256": "d342aa87142d4e377d508920c13da1b1c0af6f8893036599129a7416efd681d4"
+  },
+  {
+   "path": "dist/10-address-space.html",
+   "bytes": 15400,
+   "sha256": "54ae584917e115b6ffb275b27f23aed3435850de9280b8181959a02ddc454f16"
+  },
+  {
+   "path": "dist/11-paging.html",
+   "bytes": 16913,
+   "sha256": "38a6146fb9daafdcaff0eadc3eb3eeb041b62e5491a61093ce9cb1fa957c3931"
+  },
+  {
+   "path": "dist/12-translation.html",
+   "bytes": 14206,
+   "sha256": "63ac68a753248450f829ad4b94f0976a4fe86a31f31e4df338653f952922d497"
+  },
+  {
+   "path": "dist/13-page-fault.html",
+   "bytes": 17427,
+   "sha256": "ba5f86b7868ecab861824253a4304dbc30d061f16f26b2528fd86fa31ab3ec10"
+  },
+  {
+   "path": "dist/14-replacement.html",
+   "bytes": 22198,
+   "sha256": "a74d8bd5cd9cdc473e1f39edd27c648935aff9992ab88d6d2944b1bcc31f8967"
+  },
+  {
+   "path": "dist/15-file-descriptors.html",
+   "bytes": 17661,
+   "sha256": "ba9b512e7de12583dbc1258b0b99aea3d314606b01b921d422c4b3c7ca314cb6"
+  },
+  {
+   "path": "dist/16-file-system.html",
+   "bytes": 16137,
+   "sha256": "4fd476e7b15cd1a8dc8ff7aa826514faae64dab6f7fe735762ece881a3dffb7f"
+  },
+  {
+   "path": "dist/17-durability.html",
+   "bytes": 18249,
+   "sha256": "4adf1b0aa6539a86d9b20076e13d4507d95b3ad4803c9252a20e67aacc937dbf"
+  },
+  {
+   "path": "dist/18-io.html",
+   "bytes": 15730,
+   "sha256": "d35d3c0c4594d2964b0b2844e6e2008362f0f89bbdd5ec4baa96bf1dbe6ef1db"
+  },
+  {
+   "path": "dist/19-system-call.html",
+   "bytes": 19373,
+   "sha256": "558ebf8679ca4d6a96032e7040fcd26e1484a19fa62a5d6daa34728075853ac2"
+  },
+  {
+   "path": "dist/app.js",
+   "bytes": 21688,
+   "sha256": "a471f39ff7794ce837870d66bd85458f979a06ceb14244afffb9e46ca99d5ec5"
+  },
+  {
+   "path": "dist/glossary.html",
+   "bytes": 20312,
+   "sha256": "eb1567e4eafeb2ac44b0ab575c2aa5ed76b66e6f58bfe469e5838d72e2c59581"
+  },
+  {
+   "path": "dist/index.html",
+   "bytes": 5134,
+   "sha256": "11a92eebc29d9da5052a60780bedd2f5bcc0607a2d9c7fa87f2f03e7df03faaf"
+  },
+  {
+   "path": "dist/lab.css",
+   "bytes": 15202,
+   "sha256": "160a1507e426bfba8d6f5f691077ce3e64300129bea3fa7bf56bf5bec22b59b3"
+  }
+ ]
+}

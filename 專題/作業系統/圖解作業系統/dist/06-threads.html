@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>06 執行緒與平行｜圖解作業系統</title><link rel="stylesheet" href="lab.css"><script src="app.js" defer></script></head>
+<body data-page="06-threads">
+<a class="skip-link" href="#main">跳到本課內容</a>
+<aside class="sidebar"><a class="brand" href="index.html">圖解作業系統</a><nav aria-label="課程導航"><a href="index.html">課程地圖</a><a href="05-feedback.html">05 回饋佇列</a><a href="06-threads.html" aria-current="page">06 執行緒與平行</a><a href="07-mutex.html">07 競態與互斥</a><a href="glossary.html">名詞與概念字典</a></nav><a href="https://justty32.github.io/engineer_study/">工程學習主站</a></aside>
+<main id="main" class="lesson">
+<header class="lesson-header"><p class="eyebrow">06・多個工作者，仍有必須排成一列的步驟</p><h1>執行緒與平行：四個核心，為什麼只快約 2.29 倍？</h1><p class="lead">同一行程可以有多條執行路線，分別處理畫面、資料與計算。多核心能讓其中一些路線同時跑，但工作中必須依序完成的部分仍然需要時間。</p></header>
+<p class="prerequisite"><strong>這章假設已懂：</strong><a href="04-round-robin.html">04 的單 CPU 輪流執行</a>，以及行程被暫停後能從原狀態接續。平行效能只需要時間加減與除法。</p>
+<nav class="section-nav" aria-label="本課段落"><a href="#worked-example">完整演算</a><a href="#threads-lab">重播四核心工作</a><a href="#practice">自己試一題</a></nav>
+
+<section class="concept" aria-labelledby="thread-state">
+<h2 id="thread-state">同一個行程裡，哪些共用，哪些各自保留？</h2>
+<p>執行緒（thread）是一條可被暫停、再從原處繼續的執行路線。同一行程的執行緒共享位址空間（address space），因此能讀寫同一份程式資料與動態配置區，也就是堆積（heap）。它們各自有程式計數器（program counter, PC）、暫存器（registers）狀態與堆疊（stack）：分別記錄「下一條指令在哪裡」「目前算到哪裡」「這條呼叫路線有哪些區域資料」。</p>
+<p>可以把它想成多人在同一個工作室做事：桌上的材料共用，每人各有自己做事的步驟。但在真實機制中，「各自的堆疊」指分開管理與使用，<strong>不代表硬體隔離</strong>；堆疊本身仍在共享位址空間內，其他執行緒若取得有效位址，可能存取其中資料。共享使合作容易，也使錯誤寫入與同步問題需要特別處理。</p>
+<figure class="diagram"><svg viewBox="0 0 680 285" role="img" aria-labelledby="threads-space-title threads-space-desc">
+<title id="threads-space-title">一個行程的共享位址空間與兩條執行緒狀態</title><desc id="threads-space-desc">程式碼、全域資料、堆積以及 A、B 各自使用的堆疊都在同一個行程位址空間內。A 與 B 各自另有程式計數器與暫存器狀態；兩個堆疊並非硬體隔離。</desc>
+<rect x="20" y="20" width="640" height="182" rx="12" fill="none" stroke="currentColor" stroke-width="2"/><text x="40" y="48" fill="currentColor">同一行程的位址空間：執行緒可共享存取</text>
+<rect x="40" y="66" width="600" height="46" rx="8" fill="#e8f7ed" stroke="#327348"/><text x="63" y="96" fill="#153b23">共同使用：程式碼、全域資料、heap</text>
+<rect x="40" y="130" width="282" height="50" rx="8" fill="#e6efff" stroke="#315ca8"/><text x="59" y="161" fill="#172b4d">A 使用的 stack</text>
+<rect x="358" y="130" width="282" height="50" rx="8" fill="#fff0ce" stroke="#936200"/><text x="377" y="161" fill="#4a3500">B 使用的 stack</text>
+<rect x="40" y="223" width="282" height="43" rx="8" fill="#e6efff" stroke="#315ca8"/><text x="56" y="250" fill="#172b4d">A 的 PC 與暫存器狀態</text>
+<rect x="358" y="223" width="282" height="43" rx="8" fill="#fff0ce" stroke="#936200"/><text x="374" y="250" fill="#4a3500">B 的 PC 與暫存器狀態</text>
+</svg><figcaption>圖的邊框表示位址空間邊界；兩個 stack 都畫在框內，提醒「各自使用」不等於「互相看不到」。</figcaption></figure>
+<h3>並行與平行，差別在「同一瞬間」</h3>
+<p><strong>並行（concurrency）</strong>表示多件工作在同一段時間內交錯推進：一個核心輪流跑 A、B，也能讓兩件事都有進展。<strong>平行（parallelism）</strong>表示同一瞬間有多件工作真的在執行，例如四個核心各算不同資料。建立四條執行緒不會憑空增加核心；反過來，有四核心但工作只有一條無法拆開的依賴鏈，也無法全部用上。</p>
+<p>讓畫面執行緒有機會回應，與讓一批固定計算更快做完，是不同目標。本課接著只計算後者：把同一批固定工作交給更多核心，經過時間能縮短多少。</p>
+</section>
+
+<section id="worked-example" class="worked-example" aria-labelledby="amdahl-work-title">
+<h2 id="amdahl-work-title">完整演算：16 秒工作，四分之三可以平分</h2>
+<p><strong>題目與已知：</strong>同一批工作在一個核心上要 T<sub>1</sub> = 16 秒（s）。其中 p = 0.75，也就是 75% 的單核心執行時間，可以均分給 N = 4 個同樣快的核心；其餘部分必須依序執行。求四核心的理想經過時間 T<sub>4</sub> 與加速比 S。</p>
+<p><strong>條件：</strong>固定工作量、可平行部分均分、核心速度相同，有足夠的執行緒承接工作；不計建立執行緒、同步、排程或通訊成本，也忽略快取與記憶體頻寬的干擾。本式<strong>不包含記憶體容量或頻寬隨核心數增加的效益</strong>，也不把問題規模一起放大。</p>
+<p><strong>選法理由：</strong>整份工作不能直接除以 4，因為串行部分仍由一個執行路線依序完成。先拆成「不能平分」和「可以平分」兩段，再將兩段經過時間相加，這就是阿姆達爾定律（Amdahl's law）的固定工作量模型。</p>
+<div class="table-scroll"><table><caption>先替每個符號指定角色與單位</caption><thead><tr><th scope="col">符號</th><th scope="col">意義</th><th scope="col">本例</th></tr></thead><tbody><tr><td>T<sub>1</sub></td><td>同一工作在一核心上的基準時間</td><td>16 s</td></tr><tr><td>p</td><td>基準時間中可平行部分的比例</td><td>0.75，無單位</td></tr><tr><td>N</td><td>能承接均分工作的核心數</td><td>4 個核心</td></tr><tr><td>T<sub>N</sub></td><td>N 核心的理想經過時間</td><td>待求，s</td></tr><tr><td>S</td><td>基準時間除以新時間</td><td>待求，無單位，常說幾倍</td></tr></tbody></table></div>
+<h3>逐步拆時間，不跳過中間的 4 秒與 3 秒</h3>
+<ol>
+<li>串行比例 = 1 − p = 1 − 0.75 = 0.25；串行時間 = 16 × 0.25 = <strong>4 s</strong>。增加核心不會把這段縮成 1 s。</li>
+<li>可平行部分在一核心上的時間 = 16 × 0.75 = <strong>12 s</strong>。這是可分出去的總工作量所對應的基準時間。</li>
+<li>把這 12 s 的工作均分給 4 核心，每核心承接 12 ÷ 4 = <strong>3 s</strong> 的工作。四核心同時跑，所以這個階段經過 3 s。</li>
+<li>兩階段先後完成，T<sub>4</sub> = 4 + 3 = <strong>7 s</strong>。</li>
+<li>加速比 S = T<sub>1</sub> ÷ T<sub>4</sub> = <strong>16/7 ≈ 2.286 倍</strong>。時間變成原來的 7/16，並沒有變成四分之一。</li>
+</ol>
+<figure class="diagram"><svg viewBox="0 0 680 250" role="img" aria-labelledby="amdahl-time-title amdahl-time-desc">
+<title id="amdahl-time-title">單核心 16 秒與四核心 7 秒，串行段都保留 4 秒</title><desc id="amdahl-time-desc">在同一時間比例上，單核心由串行 4 秒加可平行工作 12 秒組成，於 16 秒完成；四核心先串行 4 秒，再由四個核心各執行 3 秒，同時於第 7 秒完成。</desc>
+<text x="20" y="28" fill="currentColor">同一批工作；橫向比例每格 1 秒</text>
+<text x="20" y="62" fill="currentColor">1 核心</text><rect x="104" y="42" width="136" height="40" fill="#fff0ce" stroke="#936200"/><rect x="240" y="42" width="408" height="40" fill="#e6efff" stroke="#315ca8"/><text x="121" y="68" fill="#4a3500">串行 4 s</text><text x="359" y="68" fill="#172b4d">可平行工作 12 s</text>
+<text x="20" y="112" fill="currentColor">4 核心</text><rect x="104" y="95" width="136" height="104" fill="#fff0ce" stroke="#936200"/><text x="120" y="144" fill="#4a3500">串行 4 s</text><text x="120" y="170" fill="#4a3500">僅一核做</text>
+<g fill="#e6efff" stroke="#315ca8"><rect x="240" y="95" width="102" height="26"/><rect x="240" y="121" width="102" height="26"/><rect x="240" y="147" width="102" height="26"/><rect x="240" y="173" width="102" height="26"/></g>
+<g fill="#172b4d"><text x="250" y="114">核 1：3 s</text><text x="250" y="140">核 2：3 s</text><text x="250" y="166">核 3：3 s</text><text x="250" y="192">核 4：3 s</text></g>
+<text x="369" y="147" fill="currentColor">第 7 秒已完成全部工作</text>
+<g fill="currentColor" text-anchor="middle"><text x="104" y="230">0</text><text x="240" y="230">4</text><text x="342" y="230">7</text><text x="648" y="230">16 s</text></g>
+</svg><figcaption>四核心區的四條藍色長條在同一時間重疊；把它們前後相接成 12 秒，就會把平行誤算回串行。</figcaption></figure>
+<h3>從這組數字整理出公式</h3>
+<p class="formula">T<sub>N</sub> = T<sub>1</sub>(1 − p) + T<sub>1</sub>p/N = T<sub>1</sub>[(1 − p) + p/N]</p>
+<p class="formula">S = T<sub>1</sub>/T<sub>N</sub> = 1/[(1 − p) + p/N]</p>
+<p>代入 p = 3/4、N = 4：分母 = 1/4 + (3/4)/4 = 1/4 + 3/16 = 4/16 + 3/16 = 7/16；所以 S = 1 ÷ (7/16) = <strong>16/7</strong>，與 16 s ÷ 7 s 相同。p 是這一批工作的基準時間比例，不是執行緒數量的比例，也不是程式永遠不變的屬性。</p>
+<h3>回代與三個邊界</h3>
+<p>工作量檢查：串行使用一核心 4 s，平行使用四核心各 3 s，總工作量仍對應 4 + 4 × 3 = 16 個「核心秒」。經過時間是 7 s，兩者計量不同。再回代 7 s × (16/7) = 16 s，回到原基準。</p>
+<div class="table-scroll"><table><caption>理想模型的邊界，先看公式是否合理</caption><thead><tr><th scope="col">條件</th><th scope="col">代入</th><th scope="col">結果的意思</th></tr></thead><tbody><tr><td>p = 0</td><td>S = 1/(1 + 0/N) = 1</td><td>完全無法平行，加核心沒有加速</td></tr><tr><td>p = 1</td><td>S = 1/(0 + 1/N) = N</td><td>完全可平分，且無額外成本時理想加速 N 倍</td></tr><tr><td>N = 1</td><td>S = 1/[(1 − p) + p] = 1</td><td>只有一核心，回到基準時間</td></tr><tr><td>本例 p = 0.75，N 趨近無限</td><td>T<sub>N</sub> 趨近 4 s；S 趨近 1/0.25 = 4</td><td>串行的 4 秒形成固定工作量的上限</td></tr></tbody></table></div>
+<p>最後一列要求 p &lt; 1；若 p = 1，這個無成本理想模型沒有有限的核心數加速上限。真機會受到額外成本、資料依賴與資源競爭限制，不能把理想式當成實測保證。</p>
+</section>
+
+<section class="widget" id="threads-lab" data-trace>
+<h2>重播四核心工作：現在還剩哪一段？</h2>
+<p>把工作停在起點、串行完成、全部完成三個時間點，對照剩餘工作。後退只是在回看模型快照，並不代表真實程式能倒轉時間。</p>
+<figure class="diagram"><svg viewBox="0 0 680 190" role="img" aria-labelledby="threads-trace-title threads-trace-desc"><title id="threads-trace-title">四核心模型的三個時間快照</title><desc id="threads-trace-desc">t 為 0 秒時有串行 4 秒與平行 12 核心秒待做；t 為 4 秒時串行完成，尚有 12 核心秒均分給四核心；t 為 7 秒時四核心各完成 3 秒的工作，剩餘為零。</desc>
+<g data-state="0"><rect x="20" y="30" width="200" height="135" rx="9" fill="#fff0ce" stroke="#936200"/><text x="35" y="58" fill="#4a3500">t = 0 s：起點</text><text x="35" y="88" fill="#4a3500">串行待做：4 s</text><text x="35" y="118" fill="#4a3500">平行待做：</text><text x="35" y="143" fill="#4a3500">12 核心秒</text></g>
+<g data-state="1"><rect x="240" y="30" width="200" height="135" rx="9" fill="#e6efff" stroke="#315ca8"/><text x="255" y="58" fill="#172b4d">t = 4 s</text><text x="255" y="88" fill="#172b4d">串行已完成</text><text x="255" y="118" fill="#172b4d">平行待做：</text><text x="255" y="143" fill="#172b4d">4 核心各 3 s</text></g>
+<g data-state="2"><rect x="460" y="30" width="200" height="135" rx="9" fill="#e8f7ed" stroke="#327348"/><text x="475" y="58" fill="#153b23">t = 7 s</text><text x="475" y="88" fill="#153b23">全部完成</text><text x="475" y="118" fill="#153b23">剩餘：0</text><text x="475" y="143" fill="#153b23">加速 16/7 倍</text></g>
+</svg><figcaption>核心秒表示把各核心的工作時間相加；秒表示讀者從開始等到結束的經過時間。</figcaption></figure>
+<div class="controls"><button type="button" data-action="prev">上一步</button><button type="button" data-action="next">下一步</button><button type="button" data-action="reset">重設</button></div>
+<p class="status" data-trace-status aria-live="polite">步驟 1：t = 0 s，串行段尚未完成，平行段必須等它交出結果。</p>
+<ol class="trace-steps"><li data-step="0">t = 0 s：固定工作量是串行 4 s 加可平行的 12 核心秒；相依關係要求串行段先完成。</li><li data-step="1">t = 4 s：串行段已完成。把剩餘 12 核心秒均分，四個核心各接 3 s，現在可以同時執行。</li><li data-step="2">t = 7 s：四個核心各做了 3 s，平行工作全部完成。總經過時間 4 + 3 = 7 s；工作量仍為 4 + 4 × 3 = 16 核心秒。</li></ol>
+<noscript><p>JavaScript 可切換高亮；圖與上述快照在停用時仍完整可讀。</p></noscript>
+</section>
+
+<section class="concept" aria-labelledby="threads-measure"><h2 id="threads-measure">實際量測時，要固定什麼？</h2><p>比較同一批輸入、同一份演算法的一核心與多核心經過時間，才能算 T<sub>1</sub>/T<sub>N</sub>。若加核心時同時放大資料量，就已換了問題，不能直接拿這份固定工作量推導下結論。若實測慢於理想值，可以再查工作是否均分、是否等鎖、是否受記憶體頻寬限制。</p><p>看到四條執行緒只證明有四條執行路線；要知道是否同時執行，需要帶時間的每核心或每執行緒追蹤。即使確有平行，也可能被串行階段限制。下一課會處理共享資料時，為何有些更新必須受控地排隊。</p></section>
+
+<section id="practice" aria-labelledby="threads-practice-title"><h2 id="threads-practice-title">自己試一題：兩核心與八核心，差多少？</h2><p><strong>題目：</strong>固定工作在一核心需 10 s，p = 0.8。沿用均分且無額外成本的理想條件，求 N = 2 與 N = 8 時的經過時間與加速比；再求核心數趨近無限的上限。</p>
+<details><summary>提示一：先保留不能變短的部分</summary><p>串行比例為 1 − 0.8 = 0.2，串行時間是 10 × 0.2 = 2 s；可平行部分在一核心需要 8 s。</p></details>
+<details><summary>提示二：只把 8 除以核心數</summary><p>使用 T<sub>N</sub> = 2 + 8/N，接著用 10/T<sub>N</sub> 求加速比。不要把整個 10 除以 N。</p></details>
+<details><summary>完整解答與回代</summary><p>N = 2：平行段 = 8/2 = 4 s，所以 T<sub>2</sub> = 2 + 4 = <strong>6 s</strong>，S<sub>2</sub> = 10/6 = <strong>5/3 ≈ 1.667 倍</strong>。回代工作量：2 + 2 × 4 = 10 核心秒；6 × (5/3) = 10 s。</p><p>N = 8：平行段 = 8/8 = 1 s，所以 T<sub>8</sub> = 2 + 1 = <strong>3 s</strong>，S<sub>8</sub> = 10/3 ≈ <strong>3.333 倍</strong>。回代：2 + 8 × 1 = 10 核心秒；3 × (10/3) = 10 s。</p><p>N 趨近無限：8/N 趨近 0，經過時間趨近 <strong>2 s</strong>，加速比趨近 10/2 = <strong>5 倍</strong>。八核心相較兩核心把經過時間從 6 s 降到 3 s，剛好再快 2 倍；相較一核心則是 10/3 倍，兩個比較的基準不同。</p></details></section>
+<section class="sources" aria-labelledby="threads-sources"><h2 id="threads-sources">來源與模型範圍</h2><p>執行緒共享與獨立狀態：<a href="https://pages.cs.wisc.edu/~remzi/OSTEP/threads-intro.pdf">OSTEP 第 26 章 Concurrency: An Introduction，開頭第 1–2 頁</a>。固定問題規模與加速式：<a href="https://hpc.llnl.gov/documentation/tutorials/introduction-parallel-computing-tutorial">LLNL Introduction to Parallel Computing，Amdahl's Law 與 Scalability 段落</a>。16 s 與 10 s 的工作均為原創理想算例；未加入記憶體擴充或實測硬體效果。</p></section>
+<nav class="pager" aria-label="前後課"><a href="05-feedback.html">← 05 回饋佇列</a><a href="07-mutex.html">07 競態與互斥 →</a></nav>
+</main></body></html>

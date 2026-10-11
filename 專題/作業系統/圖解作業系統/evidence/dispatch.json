@@ -1,0 +1,157 @@
+{
+ "contract": "wf-table/1",
+ "source": "../派工計畫.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "agent",
+  "role",
+  "write_scope",
+  "status",
+  "model"
+ ],
+ "rows": [
+  {
+   "agent": "/root/operating_systems_team",
+   "role": "隊長",
+   "write_scope": [
+    "PROJECT-BRIEF.md",
+    "BUILD-SPEC.md",
+    "派工計畫.md",
+    "建置進度.md",
+    "README.md",
+    "evidence/chapter-contracts.json",
+    "evidence/dispatch.json",
+    "evidence/delivery-scope.json",
+    "唯一handoff"
+   ],
+   "status": "完成建置協調與封版交付；等待 root 發布放行",
+   "model": "實際繼承；未覆寫模型"
+  },
+  {
+   "agent": "/root/operating_systems_team/sources",
+   "role": "來源查證",
+   "write_scope": [
+    "evidence/sources.json",
+    "evidence/coverage.json",
+    "evidence/errata.json",
+    "SOURCE-NOTES.md"
+   ],
+   "status": "完成並 final 停筆；無未結案項；驗收綁同一公開摘要",
+   "model": "實際繼承；未覆寫模型"
+  },
+  {
+   "agent": "/root/operating_systems_team/builder",
+   "role": "網站建置",
+   "write_scope": [
+    "dist/app.js",
+    "dist/lab.css",
+    "dist/index.html",
+    "dist/glossary.html",
+    "evidence/widget-specs.json",
+    "BUILDER-NOTES.md",
+    "tools/build-support.py"
+   ],
+   "status": "完成並 final 停筆；無未結案項；驗收綁同一公開摘要",
+   "model": "實際繼承；未覆寫模型"
+  },
+  {
+   "agent": "/root/operating_systems_team/author_00_03",
+   "role": "章節作者",
+   "write_scope": [
+    "dist/00-role.html",
+    "dist/01-process.html",
+    "dist/02-fork.html",
+    "dist/03-scheduling.html"
+   ],
+   "status": "完成並 final 停筆；無未結案項；驗收綁同一公開摘要",
+   "model": "實際繼承；未覆寫模型"
+  },
+  {
+   "agent": "/root/operating_systems_team/author_04_07",
+   "role": "章節作者",
+   "write_scope": [
+    "dist/04-round-robin.html",
+    "dist/05-feedback.html",
+    "dist/06-threads.html",
+    "dist/07-mutex.html"
+   ],
+   "status": "完成並 final 停筆；無未結案項；驗收綁同一公開摘要",
+   "model": "實際繼承；未覆寫模型"
+  },
+  {
+   "agent": "/root/operating_systems_team/author_08_11",
+   "role": "章節作者",
+   "write_scope": [
+    "dist/08-condition.html",
+    "dist/09-deadlock.html",
+    "dist/10-address-space.html",
+    "dist/11-paging.html"
+   ],
+   "status": "完成並 final 停筆；無未結案項；驗收綁同一公開摘要",
+   "model": "實際繼承；未覆寫模型"
+  },
+  {
+   "agent": "/root/operating_systems_team/author_12_15",
+   "role": "章節作者",
+   "write_scope": [
+    "dist/12-translation.html",
+    "dist/13-page-fault.html",
+    "dist/14-replacement.html",
+    "dist/15-file-descriptors.html"
+   ],
+   "status": "完成並 final 停筆；無未結案項；驗收綁同一公開摘要",
+   "model": "實際繼承；未覆寫模型"
+  },
+  {
+   "agent": "/root/operating_systems_team/author_16_19",
+   "role": "章節作者",
+   "write_scope": [
+    "dist/16-file-system.html",
+    "dist/17-durability.html",
+    "dist/18-io.html",
+    "dist/19-system-call.html"
+   ],
+   "status": "完成並 final 停筆；無未結案項；驗收綁同一公開摘要",
+   "model": "實際繼承；未覆寫模型"
+  },
+  {
+   "agent": "/root/operating_systems_team/mechanism_review",
+   "role": "獨立演算與機制審核",
+   "write_scope": [
+    "MECHANISM-REVIEW.md",
+    "evidence/mechanism-review.json",
+    "evidence/mechanism-findings.json",
+    "tools/check-mechanisms.py"
+   ],
+   "status": "完成並 final 停筆；無未結案項；驗收綁同一公開摘要",
+   "model": "實際繼承；未覆寫模型"
+  },
+  {
+   "agent": "/root/operating_systems_team/teaching_review",
+   "role": "獨立教學審核",
+   "write_scope": [
+    "TEACHING-REVIEW.md",
+    "evidence/teaching-review.json",
+    "evidence/teaching-findings.json"
+   ],
+   "status": "完成並 final 停筆；無未結案項；驗收綁同一公開摘要",
+   "model": "實際繼承；未覆寫模型"
+  },
+  {
+   "agent": "/root/operating_systems_team/technical_qa",
+   "role": "獨立技術及封版驗收",
+   "write_scope": [
+    "TECHNICAL-REVIEW.md",
+    "evidence/technical-review.json",
+    "evidence/technical-findings.json",
+    "tools/qa-site.mjs",
+    "tools/check-static.py",
+    "tools/final-manifest.py",
+    "公開資產manifest.json",
+    "驗收紀錄.md"
+   ],
+   "status": "完成並 final 停筆；無未結案項；驗收綁同一公開摘要",
+   "model": "實際繼承；未覆寫模型"
+  }
+ ]
+}

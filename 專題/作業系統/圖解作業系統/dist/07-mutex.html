@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>07 競態與互斥｜圖解作業系統</title><link rel="stylesheet" href="lab.css"><script src="app.js" defer></script></head>
+<body data-page="07-mutex">
+<a class="skip-link" href="#main">跳到本課內容</a>
+<aside class="sidebar"><a class="brand" href="index.html">圖解作業系統</a><nav aria-label="課程導航"><a href="index.html">課程地圖</a><a href="06-threads.html">06 執行緒與平行</a><a href="07-mutex.html" aria-current="page">07 競態與互斥</a><a href="08-condition.html">08 條件變數與號誌</a><a href="glossary.html">名詞與概念字典</a></nav><a href="https://justty32.github.io/engineer_study/">工程學習主站</a></aside>
+<main id="main" class="lesson">
+<header class="lesson-header"><p class="eyebrow">07・兩人都做了加一，為什麼卻少算一次？</p><h1>競態與互斥：保護整段讀、改、寫</h1><p class="lead">兩條執行緒共享同一個計數器，如果各自先讀到舊值，再把自己的答案寫回，後寫的人可能蓋掉前一人的更新。要維持計數正確，需要讓整段更新遵守同一套同步規則。</p></header>
+<p class="prerequisite"><strong>這章假設已懂：</strong><a href="06-threads.html">06 的共享資料與各自執行狀態</a>。本課先用可逐步計算的教學偽碼建立機制，再區分它與真實 C/C++ 程式。</p>
+<nav class="section-nav" aria-label="本課段落"><a href="#worked-example">完整演算</a><a href="#mutex-lab">重播有鎖更新</a><a href="#practice">自己試一題</a></nav>
+
+<section class="concept" aria-labelledby="mutex-why"><h2 id="mutex-why">一句「加一」，為什麼會出問題？</h2>
+<p>要把共享值增加 1，工作者需要知道原值、算出新值，再把結果存回去。如果 A、B 都先看到 0，就可能各自算出 1，最後都寫入 1。這叫更新遺失（lost update）：兩個增加動作都執行過，結果卻只保留一次的效果。</p>
+<p><strong>競態條件（race condition）</strong>廣泛指正確性依賴事件時序的情況。這裡要保護的<strong>臨界區（critical section）</strong>是「讀取共享值 → 計算 → 寫回」整段。<strong>互斥鎖（mutual exclusion lock, mutex）</strong>讓同一時間至多一個持有者進入受保護區段；其他遵守同一把鎖的執行緒必須等它釋放。</p>
+<p>鎖像同一張工作單的修改權：拿到權利的人才能讀取原數字並更新，交回後下一人再讀。真實機制還包括語言與執行期的同步、可見性與順序保證；不能只在紙上寫「我先做」就獲得這些保證。</p>
+<aside class="warning"><h3>先畫清楚模型邊界：這不是 C/C++ 的執行結果預測</h3><p>下方採明確的玩具模型（toy model）：所有指令按一個全域順序逐步執行，每個 LOAD、ADD、STORE 都是不可拆開的一步；每條執行緒保持自己的指令順序，且沒有編譯器重排。這些規則讓我們能手算指定交錯。</p><p>在真實 <strong>C 與 C++</strong> 中，不同執行緒對同一記憶體位置做衝突存取，至少一者非原子，且缺少適用的先行發生（happens-before）關係，就可能構成<strong>資料競態（data race）</strong>；資料競態會導致<strong>未定義行為（undefined behavior, UB）</strong>。所以對普通共享整數直接無同步地執行 <code>counter++</code>，不能保證結果是 1、2 或某個「最壞值」。本課的 1 與 2 只屬於明示偽碼模型；不能當作有資料競態的 C/C++ 數值界限。</p></aside>
+</section>
+
+<section id="worked-example" class="worked-example" aria-labelledby="mutex-work-title">
+<h2 id="mutex-work-title">完整演算：兩條執行緒各做一次加一</h2>
+<p><strong>已知：</strong>共享計數器 x 初值為 0；A、B 各有自己的暫存值 rA、rB，各執行下面三個步驟一次。x 的單位是「已記錄的次數」，沒有時間單位。<strong>所求：</strong>指定交錯後的 x，以及把整段更新交給同一把互斥鎖後的 x。</p>
+<p><strong>選法理由：</strong>直接寫 0 + 1 + 1 = 2，暗中假設第二人讀到第一人的新值。要檢查這個假設，必須逐步記錄共享 x 與每個人手上的私有暫存值。</p>
+<pre><code>教學偽碼，每行都是模型中的一個步驟：
+A: LOAD rA ← x       B: LOAD rB ← x
+A: ADD  rA ← rA + 1  B: ADD  rB ← rB + 1
+A: STORE x ← rA      B: STORE x ← rB</code></pre>
+<p>LOAD 是讀入自己的暫存值；ADD 只改自己的暫存值，不會直接改 x；STORE 才把暫存值寫回共享 x。符號「—」表示該暫存值尚未讀入，而不是 0。</p>
+<h3>無鎖的六步交錯：兩次寫入都寫了 1</h3>
+<div class="table-scroll"><table><caption>指定順序 A 讀、B 讀、A 加、B 加、A 寫、B 寫；每列為該步完成後</caption><thead><tr><th scope="col">步驟</th><th scope="col">動作</th><th scope="col">rA</th><th scope="col">rB</th><th scope="col">共享 x（次）</th><th scope="col">為什麼</th></tr></thead><tbody>
+<tr><td>初值</td><td>尚未執行</td><td>—</td><td>—</td><td>0</td><td>還沒有記錄任何增加</td></tr>
+<tr><td>1</td><td>A LOAD</td><td>0</td><td>—</td><td>0</td><td>A 記下當時的 x = 0</td></tr>
+<tr><td>2</td><td>B LOAD</td><td>0</td><td>0</td><td>0</td><td>A 尚未寫回，B 也讀到 0</td></tr>
+<tr><td>3</td><td>A ADD</td><td>1</td><td>0</td><td>0</td><td>A 自己算出 0 + 1，x 不變</td></tr>
+<tr><td>4</td><td>B ADD</td><td>1</td><td>1</td><td>0</td><td>B 也自己算出 0 + 1</td></tr>
+<tr><td>5</td><td>A STORE</td><td>1</td><td>1</td><td>1</td><td>第一次寫回 1</td></tr>
+<tr><td>6</td><td>B STORE</td><td>1</td><td>1</td><td>1</td><td>B 用舊讀值算出的 1 蓋回去</td></tr>
+</tbody></table></div>
+<figure class="diagram"><svg viewBox="0 0 680 265" role="img" aria-labelledby="mutex-lost-title mutex-lost-desc"><title id="mutex-lost-title">兩個暫存值各從共享零算到一，再寫回同一個共享位置</title><desc id="mutex-lost-desc">A 與 B 都先從共享 x 等於 0 讀取，各自得到暫存值 0，再各自加一成為 1。A 與 B 依序 STORE，最後共享 x 仍等於 1；指定玩具交錯遺失一次更新。</desc>
+<rect x="230" y="15" width="220" height="48" rx="8" fill="#e8f7ed" stroke="#327348"/><text x="261" y="46" fill="#153b23">起點：共享 x = 0</text>
+<path d="M270 64 L162 105 M410 64 L518 105" fill="none" stroke="currentColor" stroke-width="2"/>
+<rect x="25" y="108" width="284" height="63" rx="8" fill="#e6efff" stroke="#315ca8"/><text x="43" y="134" fill="#172b4d">A 讀 0，再加 1</text><text x="43" y="158" fill="#172b4d">rA = 1</text>
+<rect x="371" y="108" width="284" height="63" rx="8" fill="#fff0ce" stroke="#936200"/><text x="389" y="134" fill="#4a3500">B 也讀 0，再加 1</text><text x="389" y="158" fill="#4a3500">rB = 1</text>
+<path d="M164 173 L270 206 M516 173 L410 206" fill="none" stroke="currentColor" stroke-width="2"/>
+<rect x="230" y="207" width="220" height="44" rx="8" fill="#ffe8e1" stroke="#9b4930"/><text x="256" y="235" fill="#572616">兩次寫回後 x = 1</text>
+</svg><figcaption>兩條線表示兩份暫存計算流，不能把它們想成共享 x 被連續增加兩次。這張圖只描述表中的指定偽碼交錯。</figcaption></figure>
+<p><strong>無鎖模型答案：</strong>最終 x = <strong>1 次</strong>，而預期記錄 2 次，差了 1 次。若改成 A 的三步全完成後才跑 B，B 就讀到 1，再寫回 2；這說明指定模型的結果依賴交錯，並沒有提供真實 C/C++ 的結果範圍。</p>
+
+<h3>用同一把鎖，把讀、加、寫包在一起</h3>
+<pre><code>每條執行緒皆遵守相同規則：
+LOCK m
+LOAD r ← x
+ADD  r ← r + 1
+STORE x ← r
+UNLOCK m</code></pre>
+<p>初始 m 未被持有，這次指定 A 先成功取得。B 可以提出取鎖請求，但要等 A 釋放後才成功；等待方式由實作決定，可能阻塞或短暫自旋。以下只追蹤「能不能進入」，不計等待耗時。</p>
+<div class="table-scroll"><table><caption>有鎖的完整追蹤；每列是操作後狀態，括號內暫存值屬各自執行緒</caption><thead><tr><th scope="col">步驟</th><th scope="col">動作</th><th scope="col">鎖持有者</th><th scope="col">rA、rB</th><th scope="col">x（次）</th></tr></thead><tbody>
+<tr><td>1</td><td>A LOCK 成功</td><td>A</td><td>—、—</td><td>0</td></tr><tr><td>2</td><td>A LOAD</td><td>A</td><td>0、—</td><td>0</td></tr><tr><td>3</td><td>B 請求 LOCK，尚未取得</td><td>A</td><td>0、—</td><td>0</td></tr><tr><td>4</td><td>A ADD</td><td>A</td><td>1、—</td><td>0</td></tr><tr><td>5</td><td>A STORE</td><td>A</td><td>1、—</td><td>1</td></tr><tr><td>6</td><td>A UNLOCK</td><td>無</td><td>1、—</td><td>1</td></tr><tr><td>7</td><td>B LOCK 成功</td><td>B</td><td>1、—</td><td>1</td></tr><tr><td>8</td><td>B LOAD</td><td>B</td><td>1、1</td><td>1</td></tr><tr><td>9</td><td>B ADD</td><td>B</td><td>1、2</td><td>1</td></tr><tr><td>10</td><td>B STORE</td><td>B</td><td>1、2</td><td>2</td></tr><tr><td>11</td><td>B UNLOCK</td><td>無</td><td>1、2</td><td>2</td></tr>
+</tbody></table></div>
+<p><strong>有鎖答案：</strong>兩條執行緒完成後，x = 0 + 1 + 1 = <strong>2 次</strong>。條件是所有會衝突的存取都遵守同一把鎖、初值設定已完成、各自更新一次，且觀察最終值時兩者都已結束。鎖不會自動攔截沒有遵守規則的其他存取。</p>
+<h3>用不變量回代，檢查保護範圍</h3>
+<p>這裡的不變量（invariant）是：<strong>每完成並離開 k 次受保護的加一區段，x = k</strong>。初始 k = 0，x = 0；第一人獨占區段，從 0 寫成 1；第二人只能在第一人釋放後進入，從 1 寫成 2。若 B 先取得鎖，順序反過來但仍是 0 → 1 → 2。</p>
+<p>只鎖住 STORE 仍不夠。A、B 可以在鎖外各自讀到 0、算出 1，再依序取得鎖寫入 1，依然重現遺失更新。要讓「讀到哪個舊值」與「寫回哪個新值」保持關聯，就必須把相關讀、改、寫一起保護。</p>
+</section>
+
+<section class="widget" id="mutex-lab" data-trace>
+<h2>重播有鎖更新：B 什麼時候才讀得到共享值？</h2>
+<p>逐步看共享 x 與暫存值的分別。下圖將相鄰的取鎖／釋放操作合併為六個快照；逐次鎖操作仍完整列在上表。</p>
+<figure class="diagram"><svg viewBox="0 0 680 310" role="img" aria-labelledby="mutex-trace-title mutex-trace-desc"><title id="mutex-trace-title">互斥保護下的六個讀改寫快照</title><desc id="mutex-trace-desc">A 持鎖讀到 0、加成 1、寫回 1 並釋放；接著 B 才取得鎖讀到 1、加成 2、寫回 2 並釋放。兩列代表先 A 後 B 的受控更新。</desc>
+<g data-state="0"><rect x="20" y="20" width="200" height="125" rx="8" fill="#e6efff" stroke="#315ca8"/><text x="35" y="48" fill="#172b4d">1. A 持鎖讀取</text><text x="35" y="76" fill="#172b4d">rA = 0，x = 0</text><text x="35" y="105" fill="#172b4d">B 尚不能進入</text></g>
+<g data-state="1"><rect x="240" y="20" width="200" height="125" rx="8" fill="#e6efff" stroke="#315ca8"/><text x="255" y="48" fill="#172b4d">2. A 持鎖計算</text><text x="255" y="76" fill="#172b4d">rA = 1，x = 0</text><text x="255" y="105" fill="#172b4d">共享值還沒改</text></g>
+<g data-state="2"><rect x="460" y="20" width="200" height="125" rx="8" fill="#e6efff" stroke="#315ca8"/><text x="475" y="48" fill="#172b4d">3. A 寫回、釋放</text><text x="475" y="76" fill="#172b4d">x = 1</text><text x="475" y="105" fill="#172b4d">鎖可再被取得</text></g>
+<g data-state="3"><rect x="20" y="170" width="200" height="125" rx="8" fill="#fff0ce" stroke="#936200"/><text x="35" y="198" fill="#4a3500">4. B 持鎖讀取</text><text x="35" y="226" fill="#4a3500">rB = 1，x = 1</text><text x="35" y="255" fill="#4a3500">讀到 A 的更新</text></g>
+<g data-state="4"><rect x="240" y="170" width="200" height="125" rx="8" fill="#fff0ce" stroke="#936200"/><text x="255" y="198" fill="#4a3500">5. B 持鎖計算</text><text x="255" y="226" fill="#4a3500">rB = 2，x = 1</text><text x="255" y="255" fill="#4a3500">共享值還沒改</text></g>
+<g data-state="5"><rect x="460" y="170" width="200" height="125" rx="8" fill="#e8f7ed" stroke="#327348"/><text x="475" y="198" fill="#153b23">6. B 寫回、釋放</text><text x="475" y="226" fill="#153b23">x = 2</text><text x="475" y="255" fill="#153b23">完成兩次加一</text></g>
+</svg><figcaption>每格是該組動作完成後的狀態。由左至右看完 A 的一列，再看 B 的一列；數字與持鎖文字共同表示順序。</figcaption></figure>
+<div class="controls"><button type="button" data-action="prev">上一步</button><button type="button" data-action="next">下一步</button><button type="button" data-action="reset">重設</button></div>
+<p class="status" data-trace-status aria-live="polite">步驟 1：A 取得鎖並讀到 0；B 的取鎖請求尚未成功，因此尚未讀取 x。</p>
+<ol class="trace-steps"><li data-step="0">A 取得 m 後 LOAD，rA = 0、x = 0；B 雖請求 m，仍須等待，不能先在鎖外讀 x。</li><li data-step="1">A 執行 ADD，rA = 1、x = 0；計算只改暫存值，A 仍持鎖。</li><li data-step="2">A STORE 令 x = 1，接著 UNLOCK；第一段加一已完成，x = 1 符合不變量。</li><li data-step="3">B 成功取得同一把 m 後 LOAD，rB = 1、x = 1；讀取的是前一段已發布的更新。</li><li data-step="4">B 執行 ADD，rB = 2、x = 1；B 仍持鎖，尚未寫回。</li><li data-step="5">B STORE 令 x = 2，接著 UNLOCK；兩段加一都完成，x = 2，更新沒有遺失。</li></ol>
+<noscript><p>JavaScript 只增加目前快照高亮；六個狀態與全部演算仍可直接閱讀。</p></noscript>
+</section>
+
+<section class="concept" aria-labelledby="mutex-use"><h2 id="mutex-use">能用這個模型判斷什麼，不能推論什麼？</h2><p>由單一執行緒連做兩次加一，或 A 的一次加一全部完成後 B 才開始自己的一次加一，教學模型都得到 2；這只能說該次順序沒有暴露遺失更新。即使測一千次都正確，也不能證明真實程式沒有資料競態。</p><p>單核心也可以在 LOAD 與 STORE 之間切換執行緒，所以不必有多核心才需要同步。相對地，多核心上不同執行緒若只修改互不衝突的資料，也不必為了「有多條執行緒」就把全部工作塞進同一把鎖。</p><p>原子操作（atomic operation）能為特定操作提供不可分割與指定的記憶體順序保證。若只要增加原子計數器，可以使用語言提供的原子讀改寫操作；但「原子讀取之後再原子寫入」並不自動等於一個原子加法，也不自動維持跨多個欄位的不變量。<code>volatile</code> 也不是執行緒互斥或同步工具。</p><p>實務診斷可記錄每次取鎖、讀值、寫回與釋放的事件，並使用資料競態偵測工具找出未同步的衝突存取。追蹤只觀察有限執行，偵測器也有適用限制；要判斷設計是否正確，仍應逐一確認共享不變量與所有相關存取使用的同步規則。鎖持有太久可能讓其他執行緒久等；多把鎖的取得順序不一致，則可能造成後面課程要處理的死結。</p></section>
+
+<section id="practice" aria-labelledby="mutex-practice-title"><h2 id="mutex-practice-title">自己試一題：三人各加二，鎖應該包哪裡？</h2><p><strong>題目：</strong>沿用明確 LOAD／ADD／STORE 模型，x 初值為 0，A、B、C 各做一次「加 2」。先讓三人都 LOAD，再三人都 ADD 2，最後依 A、B、C 順序 STORE。求最終 x；若三人用同一把鎖保護完整三步，依 A、B、C 完成，結果又是多少？若只鎖 STORE 呢？</p>
+<details><summary>提示一：把共享值與三份暫存值分開</summary><p>三個 LOAD 全在任何 STORE 前發生，所以三份暫存值都來自 x = 0。ADD 2 不會直接改共享 x。</p></details>
+<details><summary>提示二：檢查下一人何時才可以 LOAD</summary><p>整段受鎖保護時，B 只能在 A 已寫回並釋放後讀取；只保護 STORE 則沒有這個限制。</p></details>
+<details><summary>完整解答與回代</summary>
+<div class="table-scroll"><table><caption>指定無鎖交錯的九個操作</caption><thead><tr><th scope="col">步驟</th><th scope="col">動作</th><th scope="col">rA、rB、rC</th><th scope="col">x（次）</th></tr></thead><tbody><tr><td>1</td><td>A LOAD</td><td>0、—、—</td><td>0</td></tr><tr><td>2</td><td>B LOAD</td><td>0、0、—</td><td>0</td></tr><tr><td>3</td><td>C LOAD</td><td>0、0、0</td><td>0</td></tr><tr><td>4</td><td>A ADD 2</td><td>2、0、0</td><td>0</td></tr><tr><td>5</td><td>B ADD 2</td><td>2、2、0</td><td>0</td></tr><tr><td>6</td><td>C ADD 2</td><td>2、2、2</td><td>0</td></tr><tr><td>7</td><td>A STORE</td><td>2、2、2</td><td>2</td></tr><tr><td>8</td><td>B STORE</td><td>2、2、2</td><td>2</td></tr><tr><td>9</td><td>C STORE</td><td>2、2、2</td><td>2</td></tr></tbody></table></div>
+<p>指定無鎖交錯得到 <strong>2 次</strong>，預期為 3 × 2 = 6 次，少了 4 次。完整三步受同一把鎖保護時：A 取得鎖，讀 0 → 算 2 → 寫 2 → 釋放；B 取得鎖，讀 2 → 算 4 → 寫 4 → 釋放；C 取得鎖，讀 4 → 算 6 → 寫 6 → 釋放。最後 <strong>x = 6 次</strong>，且每完成 k 段後 x = 2k，回代 k = 3 得 6。</p><p>只鎖 STORE 時，前三個 LOAD 仍能全部讀到 0。之後 A、B、C 即使依序取得鎖、STORE、釋放，三人仍都寫入 2，所以這個交錯仍得到 <strong>2 次</strong>。鎖要保護的是整個更新所需的不變量；這些數值依然只是在已定義的教學模型內成立。</p>
+</details></section>
+<section class="sources" aria-labelledby="mutex-sources"><h2 id="mutex-sources">來源與模型範圍</h2><p>互斥與臨界區：<a href="https://pages.cs.wisc.edu/~remzi/OSTEP/threads-locks.pdf">OSTEP 第 28 章 Locks，§28.1（章內第 1–2 頁）</a>。資料競態與未定義行為：<a href="https://eel.is/c++draft/intro.races#17">C++ 委員會工作草案 intro.races 第 17 段</a>、<a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3096.pdf">C23 委員會草案 N3096，§5.1.2.4 第 35 段（正文第 18 頁）</a>。兩組交錯、圖與數值為原創偽碼教材，不是對帶有資料競態的 C/C++ 程式做執行保證。</p></section>
+<nav class="pager" aria-label="前後課"><a href="06-threads.html">← 06 執行緒與平行</a><a href="08-condition.html">08 條件變數與號誌 →</a></nav>
+</main></body></html>

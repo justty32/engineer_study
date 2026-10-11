@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 fork、exec、wait｜圖解作業系統</title><link rel="stylesheet" href="lab.css"><script defer src="app.js"></script></head>
+<body data-page="02-fork">
+<a class="skip-link" href="#main">跳到課程內容</a>
+<aside class="sidebar"><a class="brand" href="index.html">圖解作業系統</a><nav aria-label="課程導覽"><a href="index.html">課程地圖</a><a href="01-process.html">上一課：行程狀態</a><a href="02-fork.html" aria-current="page">02 fork、exec、wait</a><a href="03-scheduling.html">下一課：排程指標</a><a href="glossary.html">名詞與概念字典</a></nav><a class="site-link" href="https://justty32.github.io/engineer_study/">工程學習主站</a></aside>
+<main id="main" class="lesson">
+<header class="lesson-header"><p class="eyebrow">02・建立、換程式、收尾</p><h1>三個不同動作：fork、exec、wait</h1><p class="lead">你在命令列啟動工具時，需要一個執行實例、把工具載進去，以及在它結束後取回結果。本課追蹤一組父子行程，分清「多一個行程」、「同一個行程換程式」和「回收退出紀錄」。</p></header>
+<p class="prerequisite"><strong>這章假設已懂：</strong><a href="01-process.html">行程、PID、執行狀態與私有記憶體</a>。這一課介紹 Unix 類系統的介面模型，不要求先會 C 的系統程式設計。</p>
+<nav class="section-nav" aria-label="本課段落"><a href="#model">三個動作</a><a href="#worked-example">完整演算</a><a href="#experiment">生命週期重播</a><a href="#practice">自己試一題</a></nav>
+
+<section id="model" class="concept"><h2>fork 多一個行程；exec 讓現有行程換程式</h2>
+<p><strong>分叉建立行程（fork）</strong>成功後，原行程叫<strong>父行程（parent process）</strong>，新行程叫<strong>子行程（child process）</strong>。兩者都從呼叫 fork 之後繼續，但回傳值不同：父行程得到子行程 PID，子行程得到 0。因此同一份程式可以用回傳值選擇各自的後續工作。先跑父或先跑子由排程決定，呼叫順序本身沒有保證。</p>
+<p>fork 後，普通私有記憶體的內容最初相同，但之後父子各自修改不會直接改到對方。例如兩者起初 x = 10，子把 x 改成 20，父仍看見 10。實作可用<strong>寫入時複製（copy-on-write, COW）</strong>延後實際複製資料頁；這種節省成本的方法維持上述私有資料語意。已明確共享的記憶體、以及部分繼承資源有不同規則，不能把「私有 x 獨立」推成「所有資源都互不相關」。</p>
+<p><strong>替換程式映像（exec）</strong>是一組介面的統稱，例如 <code>execve</code>。它把呼叫者的程式碼、資料與堆疊等換成新程式的初始狀態；<strong>PID 保留，不新增行程</strong>。成功時開始跑新程式，不會回到舊程式的下一行。常見用法是子行程 fork 後呼叫 exec；一個行程也可以不經 fork 就直接 exec。</p>
+<figure class="diagram"><svg viewBox="0 0 640 335" role="img" aria-labelledby="fork-model-title fork-model-desc"><title id="fork-model-title">fork 與 exec 對身分及記憶體的影響</title><desc id="fork-model-desc">父行程 PID100 的 x 為10。fork 建立 PID101 子行程，子先有 x10，後改成20，父仍為10。子 exec 後 PID仍101，但程式換成worker，舊變數x消失。</desc>
+<defs><marker id="fork-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="currentColor"/></marker></defs>
+<g fill="none" stroke="currentColor" stroke-width="2"><rect x="30" y="20" width="240" height="70" rx="8"/><rect x="30" y="155" width="240" height="70" rx="8"/><rect x="365" y="20" width="245" height="70" rx="8"/><rect x="365" y="155" width="245" height="70" rx="8"/><rect x="365" y="265" width="245" height="55" rx="8"/><path d="M150 90V147 M270 53H357 M487 90V147 M487 225V257" marker-end="url(#fork-arrow)"/></g>
+<g fill="currentColor" text-anchor="middle" font-size="19"><text x="150" y="48">父 PID 100</text><text x="150" y="75">x = 10</text><text x="150" y="183">fork 回傳 101</text><text x="150" y="209">父的 x 仍為 10</text><text x="487" y="48">子 PID 101</text><text x="487" y="75">fork 回傳 0；x = 10</text><text x="487" y="183">子修改 x = 20</text><text x="487" y="209">不改父的私有 x</text><text x="487" y="288">exec → worker</text><text x="487" y="310" font-size="16">PID 仍 101；舊 x 不存在</text><text x="319" y="37" font-size="16">fork</text><text x="537" y="250" font-size="16">換程式</text></g>
+</svg><figcaption>用 PID 追身分，用記憶體內容追程式狀態，才不會把 exec 畫成第三個行程。</figcaption></figure>
+</section>
+
+<section class="concept"><h2>退出之後，為何還要 wait？</h2>
+<p>子行程<strong>退出（exit）</strong>後不再執行，核心釋放大部分資源，但通常留下 PID、退出狀態等少量紀錄供父行程查收。這個「已退出、尚未收取紀錄」的狀態叫<strong>殭屍行程（zombie process）</strong>。它不會再使用 CPU 執行原程式，也不能被喚醒繼續算。</p>
+<p><strong>等待並回收（wait / waitpid）</strong>讓父行程取得子行程狀態並完成回收。<code>waitpid(101, &amp;status, 0)</code> 指定等待 PID 101；本課的選項 0 表示沒有要求非阻塞。如果子尚未退出，父會等待；如果子已是殭屍，便可直接收取退出紀錄。成功回傳的是<strong>被收回的子 PID</strong>，退出碼放在另外的 status 變數裡，要按格式解讀。</p>
+<p><code>WIFEXITED(status)</code> 判斷是不是正常退出，成立後才用 <code>WEXITSTATUS(status)</code> 取退出碼。例如子正常退出碼是 7，waitpid 成功回傳 101，解碼後得到 7；三者用途不同，不能把回傳的 101 當成退出碼。若子被訊號終止，應走對應訊號分支，不能照正常退出解讀。</p>
+<p class="callout">本課採一般「父行程最後會等待子行程」情境，未設定自動回收子行程的特殊處置。父行程若先退出，系統也有接管孤兒行程與回收的規則；這與「子已退出但父尚未 wait」的殭屍概念不同。</p>
+</section>
+
+<section id="worked-example" class="worked-example"><h2>完整演算：PID 100 啟動 worker，收回退出碼 7</h2>
+<p><strong>已知：</strong>父 PID = 100，普通私有整數 x = 10；fork 成功建立子 PID = 101。子把 x 改成 20，再成功 exec 成 worker；worker 正常退出碼 7。為了看清殭屍，本題指定「子先做到退出，父之後才呼叫 waitpid」。編號表示事件順序，不假定每步恰好花 1 ms。</p>
+<p><strong>所求：</strong>父子 fork 回傳值、每步的 PID／記憶體／生命週期，以及最後父拿到什麼。<strong>選法：</strong>建立父、子兩欄，fork 時加子欄，exec 只更新子欄內容，wait 回收時才移除子欄的退出紀錄。</p>
+<div class="table-scroll"><table><caption>一種合法排程的完整父子追蹤</caption><thead><tr><th>步驟</th><th>父 PID 100</th><th>子 PID 101</th><th>檢查點</th></tr></thead><tbody>
+<tr><td>0：尚未 fork</td><td>x = 10，正在原程式</td><td>不存在</td><td>只有一個行程身分。</td></tr>
+<tr><td>1：fork 成功</td><td>fork 回傳 101；x = 10</td><td>fork 回傳 0；x = 10</td><td>兩者各自從 fork 之後繼續。</td></tr>
+<tr><td>2：子修改 x</td><td>x 仍為 10</td><td>x = 20</td><td>普通私有資料互不覆寫。</td></tr>
+<tr><td>3：子 exec 成功</td><td>仍執行原程式；x = 10</td><td>PID 保留 101；程式換成 worker；舊 x 消失</td><td>沒有第三個行程；不回舊程式下一行。</td></tr>
+<tr><td>4：worker 退出 7</td><td>尚未收取子狀態</td><td>不再可執行，留下殭屍紀錄</td><td>保留 PID 101 與可解讀成退出碼 7 的狀態。</td></tr>
+<tr><td>5：父呼叫 waitpid</td><td>回傳 101；正常退出判斷成立；解碼得到 7；x = 10</td><td>退出紀錄已回收</td><td>子已退出，所以此處不需要等它繼續執行。</td></tr>
+</tbody></table></div>
+<p><strong>答案：</strong>最終父仍是 PID 100、x = 10，取得子 PID 101 與退出碼 7。建立的新行程總數只有 1；exec 次數 1；回收的子退出紀錄 1。<strong>回代不變量：</strong>fork 前後父 PID 不變，exec 前後子 PID 不變；父的私有 x 未被子改動；退出後的子不再出現在 CPU 排程中。</p>
+<p>如果改成父先呼叫 waitpid，父就先等待，讓子繼續 exec 與退出；子退出後使父可再執行，父完成取回狀態。這時殭屍階段可能非常短，不保證你來得及在行程清單看到。兩種順序都能得到同一退出碼，差別在誰何時等待。</p>
+<figure class="diagram"><svg viewBox="0 0 640 275" role="img" aria-labelledby="wait-title wait-desc"><title id="wait-title">退出與回收分成兩個事件</title><desc id="wait-desc">子行程從可執行的worker，經exit成為不可執行但保留退出狀態的殭屍，再由父waitpid回收。父在waitpid取得子PID101與解碼退出碼7。</desc>
+<defs><marker id="wait-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="currentColor"/></marker></defs>
+<g fill="none" stroke="currentColor" stroke-width="2"><rect x="25" y="30" width="175" height="105" rx="8"/><rect x="232" y="30" width="175" height="105" rx="8"/><rect x="440" y="30" width="175" height="105" rx="8"/><path d="M200 80H225 M407 80H433 M320 137V195" marker-end="url(#wait-arrow)"/><rect x="135" y="205" width="370" height="55" rx="8"/></g>
+<g fill="currentColor" text-anchor="middle" font-size="18"><text x="112" y="58">worker 執行中</text><text x="112" y="88">PID 101</text><text x="112" y="117">可被排程</text><text x="319" y="58">exit(7) 之後</text><text x="319" y="88">殭屍 PID 101</text><text x="319" y="117">只留退出紀錄</text><text x="527" y="58">waitpid 回收後</text><text x="527" y="88">子紀錄移除</text><text x="527" y="117">PID 可日後再用</text><text x="320" y="185" font-size="16">父取回狀態</text><text x="320" y="239">回傳 PID 101；解碼後退出碼 = 7</text></g>
+</svg><figcaption>殭屍已經退出，waitpid 收走的是退出紀錄；它沒有把子行程「殺第二次」。</figcaption></figure>
+</section>
+
+<section class="concept"><h2>失敗分支也要畫出來</h2>
+<div class="table-scroll"><table><caption>一般錯誤回傳的語意；errno 表示錯誤原因</caption><thead><tr><th>操作</th><th>失敗時可觀察結果</th><th>程式該如何分流</th></tr></thead><tbody>
+<tr><td>fork</td><td>父得到 −1；沒有建立子行程。</td><td>處理資源等錯誤，不走 child = 0 分支，也不假設有可等待的新子 PID。</td></tr>
+<tr><td>execve</td><td>一般可回復的失敗回傳 −1 並設定 errno；仍是原 PID、仍執行舊程式。</td><td>明確處理載入失敗，例如子退出 127；不可把走到下一行當成功。</td></tr>
+<tr><td>waitpid</td><td>錯誤回傳 −1，例如沒有符合的子行程，或等待被訊號中斷。</td><td>不能把未成功取得的 status 當有效答案；被中斷可依程式政策重試。</td></tr>
+</tbody></table></div>
+<p>execve 在少數已拆除舊映像、又無法完成新映像的極端失敗情況，可能無法回到舊程式而被終止；上表描述常見、能正常回傳錯誤的分支。本課不模擬這種資源耗盡邊界。waitpid 若另外使用非阻塞選項 <code>WNOHANG</code>，回傳 0 表示目前沒有可回收的符合子狀態；本題選項是 0，沒有啟用它。</p>
+<p>把控制流縮成以下示意碼，重點是三個分支。<code>_exit(127)</code> 在這個程式中選用 127 表示載入失敗；這是呼叫者的錯誤處理政策，並非 exec 自動回傳了 127。實際父程式須先檢查 waitpid 成功，再判讀正常退出或訊號終止。</p>
+<pre><code>x = 10;
+child = fork();
+if (child == -1) {
+    處理建立失敗；                 // 沒有新子行程
+} else if (child == 0) {
+    x = 20;
+    execve(worker_path, argv, envp);
+    記錄載入錯誤；                 // 成功 exec 不會到這裡
+    _exit(127);
+} else {
+    result = waitpid(child, &amp;status, 0);
+    若等待被中斷，依政策重試；
+    若成功且 WIFEXITED(status)，取 WEXITSTATUS(status)；
+}</code></pre>
+</section>
+
+<section id="experiment"><h2>生命週期重播：數的是身分，還是程式？</h2><p>重播成功範例，逐步比對 PID、x 與退出紀錄。每一步都是上表的一個事件，重設返回尚未 fork。</p>
+<section class="widget" data-trace id="trace-02"><h3>父 100 與子 101</h3>
+<div class="diagram"><svg viewBox="0 0 640 255" role="img" aria-labelledby="fork-trace-title fork-trace-desc"><title id="fork-trace-title">六步父子生命週期</title><desc id="fork-trace-desc">只有父、fork建立子、子改私有x、子exec、子exit、父wait回收。每步明示行程身分或退出紀錄。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><g data-state="0"><rect x="20" y="20" width="185" height="85" rx="8"/><text x="112" y="48" fill="currentColor" stroke="none" font-size="18" text-anchor="middle">0：只有父 100</text><text x="112" y="78" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">父 x = 10</text></g><g data-state="1"><rect x="226" y="20" width="185" height="85" rx="8"/><text x="318" y="48" fill="currentColor" stroke="none" font-size="18" text-anchor="middle">1：fork → 子 101</text><text x="318" y="78" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">父回 101／子回 0</text></g><g data-state="2"><rect x="433" y="20" width="185" height="85" rx="8"/><text x="525" y="48" fill="currentColor" stroke="none" font-size="18" text-anchor="middle">2：子改 x</text><text x="525" y="78" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">父 10／子 20</text></g><g data-state="3"><rect x="20" y="145" width="185" height="85" rx="8"/><text x="112" y="173" fill="currentColor" stroke="none" font-size="18" text-anchor="middle">3：exec worker</text><text x="112" y="203" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">PID 101 不變</text></g><g data-state="4"><rect x="226" y="145" width="185" height="85" rx="8"/><text x="318" y="173" fill="currentColor" stroke="none" font-size="18" text-anchor="middle">4：退出 7</text><text x="318" y="203" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">殭屍：不再執行</text></g><g data-state="5"><rect x="433" y="145" width="185" height="85" rx="8"/><text x="525" y="173" fill="currentColor" stroke="none" font-size="18" text-anchor="middle">5：waitpid</text><text x="525" y="203" fill="currentColor" stroke="none" font-size="17" text-anchor="middle">父取得 7 並回收</text></g></g>
+</svg></div><div class="controls"><button type="button" data-action="prev">前一步</button><button type="button" data-action="next">下一步</button><button type="button" data-action="reset">重設</button></div><p class="status" data-trace-status aria-live="polite">初始：只有父 PID 100，私有 x = 10。</p>
+<ol class="trace-steps"><li data-step="0">只有父 100，x = 10；新子行程數是 0。</li><li data-step="1">fork 成功：父回傳 101，子回傳 0；新增一個身分，兩邊 x 都是 10。</li><li data-step="2">子把自己的 x 改成 20，父仍為 10；獨立私有資料的不變量成立。</li><li data-step="3">子 exec 成功：PID 101 保留，worker 取代舊映像；不再回到子原程式的下一行。</li><li data-step="4">worker 正常退出 7；101 留作待回收紀錄，沒有可執行的子程式碼。</li><li data-step="5">父 waitpid 得到 101，解碼正常退出碼 7，回收子紀錄；父 x 始終是 10。</li></ol>
+</section></section>
+
+<section id="practice"><h2>自己試一題：exec 找不到工具</h2>
+<p>父 PID 200、x = 3。fork 成功建立子 201，子將 x 改成 9；execve 因指定程式不存在而正常回傳錯誤，子錯誤分支呼叫 _exit(127)。父呼叫 waitpid(201, &amp;status, 0) 並成功收回正常退出狀態。請給出父子 fork 回傳值、exec 失敗後的子 PID／x、父的 x、waitpid 回傳值與解碼退出碼。</p>
+<details><summary>提示 1：exec 失敗有沒有換掉舊程式？</summary><p>這是能回傳的載入失敗，execve 回傳 −1；子仍是 PID 201，仍能執行舊程式的錯誤分支，x 仍是 9。</p></details>
+<details><summary>提示 2：把兩個「回傳值」分欄</summary><p>fork 的回傳值用來辨認父子，waitpid 的回傳值用來辨認收回哪個子；退出碼要另外從 status 解碼。</p></details>
+<details><summary>完整解與失敗邊界</summary><p>父 fork 得 201，子 fork 得 0。子 execve 得 −1，PID = 201、x = 9，接著由錯誤分支 _exit(127)。父 x = 3，waitpid 成功回傳 201，WIFEXITED 為真，WEXITSTATUS 得 127。子退出後只保留狀態，父收回後紀錄移除；總共只新增一個行程。若本題改成 fork 本身失敗，父 fork 得 −1，子 201 根本不存在，子 exec 與子退出都不會發生；不能繼續套用前面的 201／127 答案。</p></details>
+</section>
+
+<section class="concept"><h2>什麼紀錄足以驗證這個流程？</h2><p>父子 PID 與父 PID 關係能驗證建立了哪個身分；程式映像的變更事件可驗證 exec；退出／等待事件與解碼狀態可驗證回收。只看名稱改變無法證明新增了行程；沒有在行程清單看到殭屍也無法證明沒有退出紀錄，因為它可能已被迅速回收。本課用確定順序的 trace 看清機制，不要求在宿主機製造殭屍。</p></section>
+<section class="sources"><h2>來源與邊界</h2><p><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-api.pdf">OSTEP，第 5 章 Process API，§5.1–5.3</a>說明 fork、wait、exec；精確回傳與失敗語意見 Linux man-pages 維護者原稿：<a href="https://raw.githubusercontent.com/mkerrisk/man-pages/master/man2/fork.2">fork(2)：RETURN VALUE</a>、<a href="https://raw.githubusercontent.com/mkerrisk/man-pages/master/man2/execve.2">execve(2)：RETURN VALUE、NOTES</a>、<a href="https://raw.githubusercontent.com/mkerrisk/man-pages/master/man2/wait.2">wait(2)：RETURN VALUE、NOTES</a>。本地銜接：舊課〈01 行程是什麼〉；父子數字與流程是原創例題。此處限單執行緒父行程與普通私有記憶體，多執行緒 fork、訊號與完整繼承資源規則不在本課展開。</p></section>
+<nav class="pager" aria-label="章節導覽"><a href="01-process.html">← 01 行程狀態</a><a href="03-scheduling.html">03 排程指標 →</a></nav>
+</main></body></html>

@@ -1,0 +1,245 @@
+{
+ "contract": "wf-table/1",
+ "source": "../SOURCE-NOTES.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "old_path"
+ ],
+ "columns": [
+  "id",
+  "kind",
+  "old_path",
+  "old_locator",
+  "old_claim",
+  "finding",
+  "new_lessons",
+  "source_ids",
+  "action"
+ ],
+ "rows": [
+  {
+   "id": "E01",
+   "kind": "真錯誤",
+   "old_path": "../../互動課程/01-行程是什麼.html",
+   "old_locator": "第 6、8 行；app.js 第 18 行 mem draw",
+   "old_claim": "code+data+heap+stack 的 240 KB 總量被標成 heap＋stack 預留區用量。",
+   "finding": "算式 240 與餘量 784 正確；錯在標籤範圍同時包含 code/data 卻只命名 heap/stack。",
+   "new_lessons": [
+    "01",
+    "10"
+   ],
+   "source_ids": [
+    "memory-layout"
+   ],
+   "action": "新課不延用錯標的總量框，明示 code/data/heap/stack 各區用途；若另做容量圖，須把全區總量與 heap/stack 個別容量分開命名。"
+  },
+  {
+   "id": "E02",
+   "kind": "真錯誤",
+   "old_path": "../../互動課程/01-行程是什麼.html",
+   "old_locator": "第 10 行 Linux 延伸",
+   "old_claim": "ps 的 R 被只解釋為正在執行。",
+   "finding": "procps-ng 一手原稿明確涵蓋 running 或 runnable；R 快照不能證明當下佔 CPU。",
+   "new_lessons": [
+    "01"
+   ],
+   "source_ids": [
+    "linux-process-state"
+   ],
+   "action": "新課寫可執行或正在執行，並與抽象 running/ready 分開。"
+  },
+  {
+   "id": "E03",
+   "kind": "不足",
+   "old_path": "../../互動課程/02-行程排程.html",
+   "old_locator": "FCFS/RR 範例與 app.js 排程器",
+   "old_claim": "三行程皆於 0 到達，展示等待/周轉而未加入 response 與到達佇列。",
+   "finding": "原數字與 RR 執行片段計算正確；新情境需要明確的模型假設與同刻事件規則。",
+   "new_lessons": [
+    "03",
+    "04",
+    "05"
+   ],
+   "source_ids": [
+    "schedule-metrics",
+    "rr-ties-model",
+    "mlfq-allotment"
+   ],
+   "action": "增加 response、SJF、idle、RR 到達先入隊再重排、MLFQ 累計 allotment。"
+  },
+  {
+   "id": "E04",
+   "kind": "精化",
+   "old_path": "../../互動課程/03-執行緒與並行.html",
+   "old_locator": "Amdahl 範例與 app.js",
+   "old_claim": "理想速度上限忽略額外成本，比例隨工作負載而異。",
+   "finding": "原 90%/4 核≈3.08、75%/4 核≈2.29 正確；再明寫固定總工作量可避免誤套弱擴展。",
+   "new_lessons": [
+    "06"
+   ],
+   "source_ids": [
+    "amdahl"
+   ],
+   "action": "標固定工作量、比例以原串行時間計算與成本假設。"
+  },
+  {
+   "id": "E05",
+   "kind": "不足",
+   "old_path": "../../互動課程/04-同步與競態.html",
+   "old_locator": "最壞交錯追蹤、volatile 與可觀察證據",
+   "old_claim": "受控 read/add/write 模型每條 n≥2 時可有最終值 2。",
+   "finding": "該交錯與數字成立，不應改判成 n 或 n+1；不足是未清楚限制為抽象模型。真實 C/C++ 非原子 data race 為 UB，不能保證數值下界。",
+   "new_lessons": [
+    "07"
+   ],
+   "source_ids": [
+    "cpp-race",
+    "c-race",
+    "mutex"
+   ],
+   "action": "保留逐步交錯，明示語言 UB；volatile 不建立跨執行緒同步或複合原子性。"
+  },
+  {
+   "id": "E06",
+   "kind": "已核正確",
+   "old_path": "../../互動課程/05-記憶體與位址空間.html",
+   "old_locator": "TLB 段與自我檢核",
+   "old_claim": "TLB miss 不等於 page fault。",
+   "finding": "原頁已明確區分且 VPN/offset 算例正確；不得列為新站糾錯。",
+   "new_lessons": [
+    "11",
+    "12"
+   ],
+   "source_ids": [
+    "paging",
+    "tlb",
+    "resident-fault"
+   ],
+   "action": "延伸 PTE、權限、PFN 與 PA，不宣稱修正原觀念。"
+  },
+  {
+   "id": "E07",
+   "kind": "已核正確",
+   "old_path": "../../互動課程/06-虛擬記憶體與分頁置換.html",
+   "old_locator": "預設參照字串、Belady 段；app.js 置換器",
+   "old_claim": "FIFO 3 頁框 9 fault、4 頁框 10；LRU 3 頁框 10。",
+   "finding": "原結果正確，且明寫 LRU 不保證每個字串優於 FIFO。Belady 僅說 FIFO 可以增加，不說每次都增加。",
+   "new_lessons": [
+    "14"
+   ],
+   "source_ids": [
+    "replacement"
+   ],
+   "action": "保留兩種演算法各自的 victim 規則與固定預設驗算。"
+  },
+  {
+   "id": "E08",
+   "kind": "不足",
+   "old_path": "../../互動課程/06-虛擬記憶體與分頁置換.html",
+   "old_locator": "page fault/按需載入段",
+   "old_claim": "聚焦不在 RAM 時的載入，並提及 dirty victim、swap 與顛簸。",
+   "finding": "沒有證據證明原文斷言所有 fault 都需磁碟；新增 lazy zero/COW/權限 fault 是擴充。",
+   "new_lessons": [
+    "13",
+    "14"
+   ],
+   "source_ids": [
+    "pagefault-kinds",
+    "cow",
+    "lazy-code",
+    "replacement-cost"
+   ],
+   "action": "新增可處理/不可處理分支與 disk/no-disk；新課仍須承接髒頁和顛簸成本，由教學審核確認是否已完成。"
+  },
+  {
+   "id": "E09",
+   "kind": "已核正確",
+   "old_path": "../../互動課程/07-檔案系統.html",
+   "old_locator": "hard link/unlink 與檔案生命週期",
+   "old_claim": "最後名稱移除後，尚開啟的參照仍可使用資料。",
+   "finding": "原文生命週期說明正確；12 direct/4-byte pointer 是已聲明的教學模型，不是錯誤泛化。",
+   "new_lessons": [
+    "15",
+    "16"
+   ],
+   "source_ids": [
+    "hardlink",
+    "unlink",
+    "ofd"
+   ],
+   "action": "新增 fd/OFD，維持 inode/link count/open reference 分層。"
+  },
+  {
+   "id": "E10",
+   "kind": "精化",
+   "old_path": "../../互動課程/08-輸入輸出與中斷.html",
+   "old_locator": "頻寬數字與單位說明",
+   "old_claim": "明示以 1 MB=1024 KB 計算，也提醒更精確為 MiB/KiB。",
+   "finding": "在原明示口徑下 10000 μs、256 次、512 μs、5.12% 正確；單位改寫可消除與裝置十進位標示混淆。",
+   "new_lessons": [
+    "18"
+   ],
+   "source_ids": [
+    "io"
+   ],
+   "action": "新課一律 KiB/MiB；保留 buffer 吞吐/延遲與 DMA 仍有設定收尾。"
+  },
+  {
+   "id": "E11",
+   "kind": "已核正確",
+   "old_path": "../../互動課程/09-系統呼叫與核心邊界.html",
+   "old_locator": "為什麼/不要混淆與成本算例",
+   "old_claim": "模式切換不一定換行程，library call 不一定進核心。",
+   "finding": "原觀念與數值正確；跨層路徑、短讀與 EOF 是新增深度。",
+   "new_lessons": [
+    "19"
+   ],
+   "source_ids": [
+    "syscall-book",
+    "syscall-code",
+    "read-api"
+   ],
+   "action": "新增 read 的完整請求及返回路徑。"
+  },
+  {
+   "id": "E12",
+   "kind": "精化",
+   "old_path": "../../互動課程/10-死結.html",
+   "old_locator": "四條件開關、雙鎖等待及策略段",
+   "old_claim": "四必要條件允許同時存在時有死結風險，仍需看實際循環等待。",
+   "finding": "政策允許與當下圖必須分開；原雙鎖相互持有等待確實死結。單實例圖上明確封閉循環可判定，多實例不能只憑有環。",
+   "new_lessons": [
+    "09"
+   ],
+   "source_ids": [
+    "deadlock",
+    "deadlock-strategies",
+    "bankers-safe"
+   ],
+   "action": "互動用實際等待邊；銀行家另示需求上限及 unsafe/已死結差別。"
+  },
+  {
+   "id": "E13",
+   "kind": "不足",
+   "old_path": "../../互動課程/00-為什麼需要作業系統.html",
+   "old_locator": "原 11 課整體範圍（與 README、archive/BUILD-SPEC 比對）",
+   "old_claim": "舊站用短文與數值工具介紹 OS 核心主題。",
+   "finding": "fork/exec/wait、MLFQ、condition variable、fd/OFD、journal 並非原獨立主題；缺少它們不代表既有說明有錯。",
+   "new_lessons": [
+    "02",
+    "05",
+    "08",
+    "15",
+    "17"
+   ],
+   "source_ids": [
+    "process-api",
+    "mlfq-allotment",
+    "condvar",
+    "ofd",
+    "journal"
+   ],
+   "action": "以新章擴充機制與條件，保留全部舊 11 課關鍵主題。"
+  }
+ ]
+}

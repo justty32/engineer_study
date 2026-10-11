@@ -1,0 +1,61 @@
+{
+ "contract": "wf-table/1",
+ "source": "../MECHANISM-REVIEW.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "page_path"
+ ],
+ "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28",
+ "columns": [
+  "id",
+  "status",
+  "severity",
+  "page_path",
+  "location",
+  "claim",
+  "expected",
+  "resolution"
+ ],
+ "rows": [
+  {
+   "id": "M01",
+   "status": "closed",
+   "severity": "中",
+   "page_path": "../dist/12-translation.html",
+   "location": "31（另lead8）",
+   "claim": "第5頁的起點是5120B",
+   "expected": "0-based VPN4 是第5頁，起點4096B；5120B是VPN5即下一頁起點。",
+   "resolution": "作者已修，reviewer delta重讀line8/13/31確認編號及下一頁VPN5；數值未變。"
+  },
+  {
+   "id": "M02",
+   "status": "closed",
+   "severity": "高",
+   "page_path": "../dist/app.js",
+   "location": "初版55（SyntaxError報67）",
+   "claim": "nested template完成分支缺反引號導致整檔JS不能解析",
+   "expected": "所有互動可初始化，node --check通過",
+   "resolution": "builder已修；node/app2498對照與Chromium兩原型無pageerrors，delta複驗通過。"
+  },
+  {
+   "id": "M03",
+   "status": "closed",
+   "severity": "中",
+   "page_path": "../dist/07-mutex.html",
+   "location": "能用這個模型判斷什麼段",
+   "claim": "只有一條執行緒也得到2，未明示兩次總工作量",
+   "expected": "若單thread依主例只加一次為1；須明示單thread連做兩次才得2",
+   "resolution": "作者已改單句為單thread連做兩次，reviewer delta覆讀確認；其他演算不變。"
+  },
+  {
+   "id": "M04",
+   "status": "closed",
+   "severity": "中",
+   "page_path": "../dist/14-replacement.html",
+   "location": "舊06範圍承接及errata E08 action",
+   "claim": "初版13/14未保留舊課顛簸範圍，來源action不能先稱已保留",
+   "expected": "補working set/反覆pagefault機制、明示toy且不能僅以faultcount診斷實機thrashing",
+   "resolution": "14新增完整6列LRU兩frames6fault/三frames3fault3hit，獨立算器逐列重算正確；補觀測成本/工作進展/fault不必disk，E08承接已完成。"
+  }
+ ]
+}

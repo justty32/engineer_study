@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>13 缺頁與寫入時複製｜圖解作業系統</title><link rel="icon" href="data:,"><link rel="stylesheet" href="lab.css"><script src="app.js" defer></script></head>
+<body data-page="13-page-fault"><a class="skip-link" href="#main">跳到課程內容</a>
+<aside class="sidebar" aria-label="課程導覽"><a class="brand" href="index.html">圖解作業系統</a><nav><a href="index.html">全部課程</a><a href="12-translation.html">12 TLB 與位址轉換</a><a href="13-page-fault.html" aria-current="page">13 缺頁與寫入時複製</a><a href="14-replacement.html">14 頁面替換</a><a href="glossary.html">名詞字典</a><a href="https://justty32.github.io/engineer_study/">工程學習主站</a></nav></aside>
+<main id="main" class="lesson"><header class="lesson-header"><p class="eyebrow">13 ／ 停下來，補好條件，再重試同一條指令</p><h1>缺頁與寫入時複製</h1><p class="lead">程式第一次寫入一頁，可能先停一下，核心補好頁面後再繼續。這次「缺頁」究竟需要清零、複製資料，還是從磁碟讀回來？</p></header>
+<p class="prerequisite"><strong>這章假設已懂：</strong><a href="12-translation.html">頁表、權限與 TLB 失誤</a>；<a href="02-fork.html">fork 建立子行程</a>。本章頁大小改用 4 KiB = 4096 B，所有計數只追蹤題目指定頁面的存取。</p>
+<nav class="section-nav" aria-label="本頁導覽"><a href="#worked-example">完整演算</a><a href="#fault-trace">重播處理步驟</a><a href="#practice">自己試一題</a></nav>
+
+<section class="concept"><h2>缺頁的意思是「這次存取目前不能直接完成」</h2>
+<p>缺頁（page fault）是一種由記憶體存取觸發、交給核心處理的例外。這個名稱容易讓人想到「資料不在記憶體」，但許多架構也會以缺頁例外回報頁面的保護條件不符。真正的原因要看造成例外的位址、操作類型和頁表狀態，不能只看名稱。</p>
+<p>核心先查：這個位址區間是否屬於行程？要求的讀、寫、執行是否在區間允許的權限內？若合法，是否只是尚未配置頁框、資料在後備儲存，或刻意設成唯讀來攔下第一次寫入？只有可以修復的情況，才建立新映射、處理舊 TLB 資訊，讓程式<strong>重試造成例外的存取指令</strong>。若不能修復，就回報錯誤；不會任意送一頁空白記憶體掩蓋非法存取。</p>
+<p>「指令還沒完成」很關鍵：本課追蹤單一 byte 的一般記憶體讀寫。寫入觸發例外時，先前步驟的資料仍在；核心修復後，那次寫入才得到原本要求的結果。這是受控的暫停與重試，不代表程式必然崩潰。</p>
+<h3>三種合法原因，對應三種不同工作</h3>
+<div class="table-scroll"><table><caption>本課區分的缺頁原因</caption><thead><tr><th scope="col">原因</th><th scope="col">核心要做的事</th><th scope="col">本例需要磁碟讀取嗎</th></tr></thead><tbody>
+<tr><td>延遲配置（lazy allocation）</td><td>行程已保留合法匿名區間；首次寫入才分配並清零頁框，再建立映射</td><td>不用；資料由零開始</td></tr>
+<tr><td>寫入時複製（copy-on-write, COW）</td><td>兩行程共用唯讀頁；其中一方要寫時，建立它自己的副本</td><td>不用；資料已在實體記憶體中</td></tr>
+<tr><td>需要的內容只在後備儲存</td><td>例如檔案頁不在頁面快取，從儲存裝置把資料讀入頁框</td><td>要；本例明定沒有可用的記憶體副本</td></tr>
+</tbody></table></div>
+<p>匿名記憶體（anonymous memory）沒有以某個一般檔案的既有內容作為初始資料。首次提供給行程的內容要符合清零等規則，不能暴露前一個使用者留下的資料。本章用「首次寫入時取得已清零的私有頁框」示範；實際系統也可能先讓讀取共用零頁，直到寫入才另配頁框。</p>
+<p>COW 的唯讀是核心刻意安排的攔截條件：行程的該區間本來允許私有寫入，只是暫時不讓硬體直接寫共用頁。這和程式嘗試改寫本來就不允許寫入的唯讀資料不同，後者不能隨意用 COW 放行。</p>
+</section>
+
+<section class="concept"><h2>父子暫時共用內容，寫入者才需要分開</h2>
+<p><code>fork()</code> 建立子行程時，父子需要看到相同的初始記憶體內容，之後又能各自修改。若立刻複製每一頁，而子行程稍後直接執行另一個程式，許多複製會白做。COW 讓兩者先指向相同頁框，讀取時共用，真正寫入時才分開。</p>
+<figure><div class="diagram" tabindex="0"><svg viewBox="0 0 740 360" role="img" aria-labelledby="cow-map-title cow-map-desc" font-size="18"><title id="cow-map-title">子行程寫入前後的頁表與資料分離</title><desc id="cow-map-desc">寫入前，父與子都以唯讀加 COW 標記映射到頁框七，偏移八的資料為四十二。子寫入九十九時，核心複製整頁到頁框十二，只改子頁表為可寫，然後重試。父仍讀到四十二，子讀到九十九。</desc><defs><marker id="cow-map-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs><g fill="none" stroke="currentColor" stroke-width="2"><rect x="30" y="67" width="250" height="52" rx="8"/><rect x="30" y="167" width="250" height="52" rx="8"/><rect x="373" y="93" width="300" height="99" rx="8"/><path d="M280 93H326V124H371M280 193H326V162H371" marker-end="url(#cow-map-arrow)"/><path d="M28 245H712" stroke-dasharray="5 5"/><rect x="30" y="275" width="305" height="58" rx="8"/><rect x="395" y="275" width="305" height="58" rx="8"/></g><g fill="currentColor"><text x="30" y="33">寫入前：兩個頁表，指向同一份 4096 B 資料</text><text x="45" y="100">父：頁 A → 7，唯讀 COW</text><text x="45" y="200">子：頁 A → 7，唯讀 COW</text><text x="399" y="130">PFN 7，共用中的頁框</text><text x="399" y="166">offset 8 B：值為 42</text><text x="40" y="268">子寫入 99 後</text><text x="44" y="310">父 → PFN 7：仍為 42</text><text x="409" y="310">子 → PFN 12：已為 99</text><text x="395" y="354">先複製 4096 B，再改 offset 8 的 1 B</text></g></svg></div><figcaption>PFN 是頁框編號，7 與 12 只是本課指定的例子；A 是同一個虛擬頁的名稱。箭頭表示頁表映射，不是把父行程的整個記憶體交給子行程。</figcaption></figure>
+<p>核心必須知道哪些頁框仍被共用，才能避免誤改另一個行程的資料。本例子行程寫入時，PFN 7 確實仍有父、子兩個映射，所以需要副本。若只剩單一擁有者，系統可能直接恢復可寫，不必再複製；本題沒有採用那個分支。</p>
+</section>
+
+<section id="worked-example" class="worked-example"><h2>完整演算：兩次缺頁，為什麼磁碟讀取是零次？</h2>
+<p><strong>題目：</strong>父行程保留一個可讀寫的匿名頁 A，尚未配置頁框。父先把 A 的 offset 8 B 寫成數值 42，接著以 COW 方式 fork。子先讀同一位置，再寫成 99，最後父子各讀一次。求每一步的頁框、資料值、累計缺頁次數與磁碟讀取次數。</p>
+<p><strong>已知：</strong>每頁 4096 B；父首次寫入得到 PFN 7；子需要私有副本時得到 PFN 12；有足夠空閒頁框，不發生置換。42 和 99 都可放進一個 byte。<strong>所求：</strong>每一步是否要修復映射、誰能看見哪個值、搬了多少 byte。<strong>選法理由：</strong>缺頁取決於當前頁表與這次操作，所以逐次追蹤「操作前條件 → 核心處理 → 操作後狀態」，不能只看到讀寫就各算一次缺頁。</p>
+<div class="table-scroll"><table><caption>指定頁 A 的完整操作序列；所有資料值都取 offset 8 B</caption><thead><tr><th scope="col">步驟與操作</th><th scope="col">處理後映射與資料</th><th scope="col">本步缺頁</th><th scope="col">累計缺頁／磁碟讀取</th></tr></thead><tbody>
+<tr><td>0. 父保留合法匿名頁 A</td><td>尚未配置頁框；保留區間不等於已存取資料</td><td>0</td><td>0／0 次</td></tr>
+<tr><td>1. 父寫 A[8] = 42</td><td>缺頁後取得清零的 PFN 7，建立可寫映射；重試後值為 42</td><td>1：延遲配置</td><td>1／0 次</td></tr>
+<tr><td>2. fork，以 COW 共用</td><td>父、子 A 都指 PFN 7，標成唯讀且記錄 COW；值仍 42</td><td>0</td><td>1／0 次</td></tr>
+<tr><td>3. 子讀 A[8]</td><td>共用頁允許讀，回傳 42；映射不變</td><td>0</td><td>1／0 次</td></tr>
+<tr><td>4. 子寫 A[8] = 99</td><td>寫入例外；複製 PFN 7 到 PFN 12，子改指可寫的 PFN 12；重試後子為 99</td><td>1：COW</td><td>2／0 次</td></tr>
+<tr><td>5. 父、子各讀 A[8]</td><td>父從 PFN 7 得 42；子從 PFN 12 得 99</td><td>0</td><td>2／0 次</td></tr>
+</tbody></table></div>
+<p>步驟 1 的清零，是準備一頁 4096 B 的安全初始內容，再重試 1 B 的寫入。步驟 4 的 COW，先複製一整頁 4096 B，再完成子行程要求的 1 B 修改。磁碟沒有提供這兩頁的資料，因此<strong>2 次缺頁、0 次磁碟讀取</strong>完全相容。</p>
+<p class="formula">最後這一對父子映射使用的資料頁框 = 2 個。<br>資料頁框容量 = 2 × 4096 B = 8192 B = 8 KiB。<br>本例 COW 複製量 = 1 × 4096 B = 4 KiB；不是只複製被修改的 1 B。</p>
+<p>容量只算頁 A 的資料頁框，不含頁表、核心物件或其他程式頁。計數也只涵蓋表中指定的存取；真實 <code>fork()</code> 的其他管理工作與背景活動不在這份 trace 裡。</p>
+<p><strong>不變量：</strong>當 A 仍共用時，不能讓任一方直接寫共用頁框；子寫入完成後，父原本的 42 必須保留。重試的指令只能在新映射及相關 TLB 狀態處理妥當後繼續。若子再次寫同頁的另一個 byte，只要新頁仍駐留且可寫，本模型就不再因 COW 缺頁。</p>
+</section>
+
+<section class="widget" id="fault-trace" data-trace><h2>重播：看每個事件改了哪個狀態</h2><p>沿固定操作往前或往後查看；所有步驟與原因都保持可讀。重新播放從「保留但尚未配置」開始。</p>
+<div class="diagram" tabindex="0"><svg viewBox="0 0 740 355" role="img" aria-labelledby="fault-trace-title fault-trace-desc" font-size="17"><title id="fault-trace-title">延遲配置與 COW 的六個操作後快照</title><desc id="fault-trace-desc">零為保留未配置，一為父首次寫入後頁框七，二為父子共用頁框七，三為子讀到四十二，四為子寫入後取得頁框十二，五為父四十二與子九十九。每個快照對應下方同編號步驟。</desc><g fill="none" stroke="currentColor" stroke-width="2"><path d="M237 80H268M474 80H507M610 129V200M507 257H477M267 257H237"/></g><g data-state="0"><rect x="22" y="27" width="214" height="102" rx="9" fill="none" stroke="currentColor"/><text x="36" y="53">0 保留 A</text><text x="36" y="85">沒有資料頁框</text><text x="36" y="111">fault 累計 0</text></g><g data-state="1"><rect x="266" y="27" width="214" height="102" rx="9" fill="none" stroke="currentColor"/><text x="280" y="53">1 父寫 42</text><text x="280" y="85">PFN 7，可寫</text><text x="280" y="111">fault 累計 1</text></g><g data-state="2"><rect x="507" y="27" width="211" height="102" rx="9" fill="none" stroke="currentColor"/><text x="521" y="53">2 fork</text><text x="521" y="85">父、子共用 7</text><text x="521" y="111">唯讀且 COW</text></g><g data-state="3"><rect x="507" y="203" width="211" height="108" rx="9" fill="none" stroke="currentColor"/><text x="521" y="231">3 子讀 42</text><text x="521" y="265">讀取被允許</text><text x="521" y="292">fault 累計 1</text></g><g data-state="4"><rect x="266" y="203" width="214" height="108" rx="9" fill="none" stroke="currentColor"/><text x="280" y="231">4 子寫 99</text><text x="280" y="265">子 → PFN 12</text><text x="280" y="292">fault 累計 2</text></g><g data-state="5"><rect x="22" y="203" width="214" height="108" rx="9" fill="none" stroke="currentColor"/><text x="36" y="231">5 分別讀取</text><text x="36" y="265">父 42；子 99</text><text x="36" y="292">共 2 次，disk 0</text></g><text x="30" y="344">順序：上排向右，下排向左；fault = 缺頁次數，disk = 磁碟讀取次數。</text></svg></div>
+<div class="controls"><button type="button" data-action="prev">上一步</button><button type="button" data-action="next">下一步</button><button type="button" data-action="reset">回到起點</button></div><p class="status" data-trace-status aria-live="polite">步驟 0：區間合法，但還沒有資料頁框；保留區間本身不代表已存取這一頁。</p>
+<ol class="trace-steps"><li data-step="0">步驟 0：只有合法匿名區間。因為還沒存取 A，不需要替 A 配置資料頁框。</li><li data-step="1">步驟 1：父寫入造成第一次缺頁。核心取得清零頁框 7，再重試寫入；值變 42，磁碟讀取仍為 0。</li><li data-step="2">步驟 2：fork 建立父子映射的共用關係，兩者都改成唯讀並標記 COW；資料還沒有複製。</li><li data-step="3">步驟 3：子只讀取，所以可從共用頁取得 42。讀取權限足夠，不觸發 COW 複製。</li><li data-step="4">步驟 4：子要求寫入，核心先複製 4096 B 到頁框 12，再讓子寫成 99；父的資料不受改動。</li><li data-step="5">步驟 5：父讀到 42、子讀到 99，證明私有寫入已分離；總計 2 次缺頁、0 次磁碟讀取。</li></ol><noscript><p>JavaScript 關閉時，上圖與全部步驟仍可直接閱讀。</p></noscript></section>
+
+<section><h2>換成磁碟上的資料，處理路線才真的多出讀取</h2><p>另看獨立情境：合法檔案映射頁 D 的內容在儲存裝置上，尚未駐留，頁面快取也沒有那份內容。有空閒頁框時，第一次讀 D 會觸發缺頁，核心發出讀取，把本例的 4096 B 內容填入頁框，更新映射後重試。此時是 <strong>1 次缺頁，1 次頁面讀入</strong>；裝置實際如何合併或拆分 I/O 不在本頁模型中。</p><p>如果頁面快取已保存內容，核心可能只需要建立映射，不必再讀裝置。若行程碰到根本不屬於自己的位址，核心也不會把「隨便讀一頁磁碟」當作修復。因此缺頁數不能直接當磁碟讀取數，更不能只憑缺頁多就判定系統正在交換資料。</p></section>
+
+<section id="practice"><h2>自己試一題：同頁第二次寫，還要再複製嗎？</h2><p>頁大小仍為 4096 B。有足夠空閒頁框。父子已以 COW 共用頁 A，父仍持有其映射；子另有合法可寫的匿名頁 B，但 B 尚未配置。子依序：① 寫 A[8] = 7；② 寫 A[12] = 9；③ 寫 B[0] = 1。兩次 A 存取都在同一頁。求新增的缺頁數、新配置的資料頁框數與容量、COW 複製量、磁碟讀取數。</p>
+<details><summary>提示一：先檢查每次寫入之前的頁表</summary><p>第一次寫 A 之前仍是共用唯讀。成功處理後，整個 A 頁都已是子自己的可寫映射；第二次雖然改不同 byte，仍查同一個 PTE。</p></details>
+<details><summary>提示二：B 的初始資料從哪裡來？</summary><p>B 是合法匿名頁，題目沒有既有檔案或交換資料要讀回。它需要清零配置；這和把 A 複製一份是不同工作。</p></details>
+<details><summary>完整解與不變量檢查</summary><ol><li>寫 A[8]：COW 缺頁 1 次，另配 1 個頁框，複製 4096 B；父仍保留原頁。</li><li>寫 A[12]：子映射已可寫且駐留，新增缺頁 0 次、配置 0 頁、複製 0 B。</li><li>寫 B[0]：延遲配置缺頁 1 次，另配 1 個清零頁框，不必讀磁碟。</li></ol><p class="formula">新增缺頁 = 1 + 0 + 1 = 2 次。<br>新配置容量 = 2 × 4096 B = 8192 B = 8 KiB。<br>COW 複製量 = 4096 B = 4 KiB；磁碟讀取 = 0 次。</p><p>清零 B 的 4096 B 不算 COW 複製量。父的 A 保持原內容；兩次子寫入只能改到子的私有副本。這兩個檢查比單記「兩次缺頁」更能確認機制。</p></details></section>
+
+<section class="sources"><h2>可觀察證據與來源</h2><p>系統的次要缺頁與主要缺頁計數可協助區分不需 I/O 與需要讀入資料的處理，但分類細節依系統而定。單一總數無法告訴你這次是清零、COW 或非法存取；還要配合操作、映射權限和事件紀錄。本課沒有把 TLB 失誤列入缺頁計數。</p><p>一手教材：<a href="https://pdos.csail.mit.edu/6.1810/2025/xv6/book-riscv-rev5.pdf">MIT xv6 book，第 5 章 §5.1–§5.4，印刷頁 51–54</a>（缺頁、延遲配置與 COW 概念）；<a href="https://pages.cs.wisc.edu/~remzi/OSTEP/vm-beyondphys.pdf">OSTEP 第 21 章 §21.5，印刷頁 6–7</a>（駐留、保護與缺頁流程）。xv6 教材用來說明機制，不表示其原版 fork 已實作本課的 COW；本頁數值與 trace 為自行設計。</p></section>
+<nav class="pager" aria-label="相鄰章節"><a href="12-translation.html">← 12 TLB 與位址轉換</a><a href="14-replacement.html">14 頁面替換 →</a></nav></main></body></html>

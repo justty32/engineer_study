@@ -2,6 +2,8 @@
 
 本專題把「程式跑起來之後，底下那層到底在做什麼」拆開來講：從為什麼需要作業系統，走到行程、排程、執行緒、同步、位址空間、虛擬記憶體、檔案系統、I/O 與中斷、系統呼叫邊界與死結。
 
+- [圖解作業系統：完整演算與逐步狀態圖](https://justty32.github.io/engineer_study/operating-systems-little-lab/)（20 課，含例題、檢查與練習詳解）
+- [圖解課程本機入口](圖解作業系統/dist/index.html)｜[來源查證與原站勘誤](圖解作業系統/SOURCE-NOTES.md)
 - [線上版本：GitHub Pages / 作業系統（零基礎）](https://justty32.github.io/engineer_study/operating-systems/)
 - [開啟互動課程](互動課程/index.html)（11 章，每章一個自由實驗，另附名詞與概念字典）
 - 建置契約（已封存，見 `互動課程/archive/`）

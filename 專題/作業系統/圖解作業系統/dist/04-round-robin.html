@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>04 時間片輪轉｜圖解作業系統</title>
+  <link rel="stylesheet" href="lab.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-page="04-round-robin">
+<a class="skip-link" href="#main">跳到本課內容</a>
+<aside class="sidebar">
+  <a class="brand" href="index.html">圖解作業系統</a>
+  <nav aria-label="課程導航">
+    <a href="index.html">課程地圖</a>
+    <a href="03-scheduling.html">03 排程指標</a>
+    <a href="04-round-robin.html" aria-current="page">04 時間片輪轉</a>
+    <a href="05-feedback.html">05 回饋佇列</a>
+    <a href="glossary.html">名詞與概念字典</a>
+  </nav>
+  <a href="https://justty32.github.io/engineer_study/">工程學習主站</a>
+</aside>
+<main id="main" class="lesson">
+  <header class="lesson-header">
+    <p class="eyebrow">04・一個人先做一小段，再換下一位</p>
+    <h1>時間片輪轉：把 CPU 輪流借出去</h1>
+    <p class="lead">長工作還沒做完時，短工作能不能先得到一點 CPU？可以：每次最多執行一小段，沒做完就排回隊尾。這個簡單規則會改變每個人第一次獲得服務、最後完成與排隊等待的時間。</p>
+  </header>
+  <p class="prerequisite"><strong>這章假設已懂：</strong><a href="03-scheduling.html">03 的到達、CPU 執行時間與排程指標</a>。這裡把中央處理器（Central Processing Unit, CPU）視為一次只能服務一個行程的工作者。</p>
+  <nav class="section-nav" aria-label="本課段落"><a href="#worked-example">完整演算</a><a href="#rr-lab">自己改時間片</a><a href="#practice">自己試一題</a></nav>
+
+  <section class="concept" aria-labelledby="rr-idea">
+    <h2 id="rr-idea">為什麼工作沒做完，也要把 CPU 交出去？</h2>
+    <p>想像影印機前排著長短不同的文件；若第一人一口氣印完厚書，後面只印一張的人也得等。時間片輪轉（Round Robin, RR）讓每人先用一小段時間，輪到隊尾再繼續。真實系統中，被輪流服務的是可執行的行程；核心保存被暫停者的執行狀態，稍後接續。影印機的比喻只說明輪流，沒有包含保存狀態的成本。</p>
+    <p><strong>時間片（time quantum）q</strong> 是一次連續執行的上限，單位為毫秒（ms）。若行程只剩 1 ms 而 q = 2 ms，它只跑 1 ms 就完成，剩下的 1 ms 不必空等。<strong>就緒佇列（ready queue）</strong> 是已到達、能執行但正在等 CPU 的順序；取走最前面的行程並交給 CPU，叫派送（dispatch）。</p>
+    <p>本課用單 CPU、沒有輸入／輸出（Input/Output, I/O）阻塞、情境切換成本為 0 的教學模型。到達時刻相同時按 A、B、C 排；每片結束時，先把片內與片末的新到達者依到達時間排入原佇列尾，再把尚未完成的當前行程放到尾端。這是本課固定的平手規約，並非所有 RR 實作唯一的規則。</p>
+    <figure class="diagram">
+      <svg viewBox="0 0 680 245" role="img" aria-labelledby="rr-queue-title rr-queue-desc">
+        <title id="rr-queue-title">t = 2 ms 時，B 與 C 排在重新入隊的 A 前面</title>
+        <desc id="rr-queue-desc">A 從 0 執行到 2，剩 3 毫秒。B 在 1 到達，C 在 2 到達；先把 B、C 入隊，再放回 A，形成隊首 B 剩 3、C 剩 1、隊尾 A 剩 3。</desc>
+        <text x="24" y="30" fill="currentColor">片末 t = 2 ms：A 已用 2 ms，還剩 3 ms</text>
+        <rect x="24" y="54" width="270" height="54" rx="10" fill="#e6efff" stroke="#315ca8"/>
+        <text x="42" y="77" fill="#172b4d">B 在 t = 1 到達，先排入</text>
+        <text x="42" y="98" fill="#172b4d">C 在 t = 2 到達，接著排入</text>
+        <rect x="326" y="54" width="328" height="54" rx="10" fill="#fff0ce" stroke="#936200"/>
+        <text x="344" y="87" fill="#4a3500">A 尚未完成，最後才放回隊尾</text>
+        <text x="24" y="146" fill="currentColor">隊首／下一位</text>
+        <text x="535" y="146" fill="currentColor">隊尾</text>
+        <rect x="24" y="159" width="176" height="52" rx="8" fill="#e6efff" stroke="#315ca8"/>
+        <text x="49" y="191" fill="#172b4d">B：剩 3 ms</text>
+        <path d="M209 185 H237 M229 179 L237 185 L229 191" fill="none" stroke="currentColor" stroke-width="2"/>
+        <rect x="247" y="159" width="176" height="52" rx="8" fill="#e8f7ed" stroke="#327348"/>
+        <text x="271" y="191" fill="#153b23">C：剩 1 ms</text>
+        <path d="M432 185 H460 M452 179 L460 185 L452 191" fill="none" stroke="currentColor" stroke-width="2"/>
+        <rect x="470" y="159" width="184" height="52" rx="8" fill="#fff0ce" stroke="#936200"/>
+        <text x="497" y="191" fill="#4a3500">A：剩 3 ms</text>
+      </svg>
+      <figcaption>方框中的數字是「還需要多少 CPU 時間」，不是到達時刻；箭頭只表示排隊順序。</figcaption>
+    </figure>
+  </section>
+
+  <section id="worked-example" class="worked-example" aria-labelledby="rr-work-title">
+    <h2 id="rr-work-title">完整演算：A、B、C 輪流跑，誰何時完成？</h2>
+    <p><strong>題目：</strong>三個行程的到達時刻與 CPU 需求如下，取 q = 2 ms。請畫出執行順序，求各行程的回應、周轉、等待時間及三者平均。</p>
+    <div class="table-scroll"><table>
+      <caption>已知量；每個行程只有一段 CPU 工作，途中不阻塞</caption>
+      <thead><tr><th scope="col">行程</th><th scope="col">到達時刻 a（ms）</th><th scope="col">CPU 需求 b（ms）</th></tr></thead>
+      <tbody><tr><th scope="row">A</th><td>0</td><td>5</td></tr><tr><th scope="row">B</th><td>1</td><td>3</td></tr><tr><th scope="row">C</th><td>2</td><td>1</td></tr></tbody>
+    </table></div>
+    <p><strong>選法理由：</strong>RR 會把沒做完的工作重新排隊，只看原始到達順序無法算出完成時間。因此用一張表維護「現在時刻、就緒順序、剩餘 CPU 時間」，每次派送前重看隊首。</p>
+    <p>令 r 是被派送者當下的剩餘時間，這次執行長度為 min(q, r)，也就是取 q 與 r 中較小者。每次執行後，時刻加上這個長度，r 則扣掉同樣長度；r = 0 就完成，不再入隊。下面的 <code>B(3)</code> 表示 B 還需 3 ms；「派送前」尚未取走隊首。</p>
+    <div class="table-scroll"><table>
+      <caption>完整六次派送；括號與剩餘向量的單位皆為 ms</caption>
+      <thead><tr><th scope="col">派送時刻（ms）</th><th scope="col">派送前佇列：首 → 尾</th><th scope="col">CPU 區間（ms）</th><th scope="col">片末 r(A,B,C)</th><th scope="col">片末事件與下次佇列</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>A(5)</td><td>A：0 → 2</td><td>(3,3,1)</td><td>B、C 先入隊，再排回 A：B(3), C(1), A(3)</td></tr>
+        <tr><td>2</td><td>B(3), C(1), A(3)</td><td>B：2 → 4</td><td>(3,1,1)</td><td>B 剩 1，排回：C(1), A(3), B(1)</td></tr>
+        <tr><td>4</td><td>C(1), A(3), B(1)</td><td>C：4 → 5</td><td>(3,1,0)</td><td>C 完成：A(3), B(1)</td></tr>
+        <tr><td>5</td><td>A(3), B(1)</td><td>A：5 → 7</td><td>(1,1,0)</td><td>A 剩 1，排回：B(1), A(1)</td></tr>
+        <tr><td>7</td><td>B(1), A(1)</td><td>B：7 → 8</td><td>(1,0,0)</td><td>B 完成：A(1)</td></tr>
+        <tr><td>8</td><td>A(1)</td><td>A：8 → 9</td><td>(0,0,0)</td><td>A 完成；佇列空</td></tr>
+      </tbody>
+    </table></div>
+    <p>最容易排錯的是 t = 2 ms：C 剛好在 A 的片末到達，依本課規約，C 要在 A 重新排入以前先入隊。另一個易錯點在 t = 4 ms：C 只需 1 ms，於 t = 5 ms 完成；不能把它硬填滿到 t = 6 ms。</p>
+    <figure class="diagram">
+      <svg viewBox="0 0 680 200" role="img" aria-labelledby="rr-gantt-title rr-gantt-desc">
+        <title id="rr-gantt-title">六段 CPU 時間軸，總長 9 毫秒</title>
+        <desc id="rr-gantt-desc">依序為 A 從 0 到 2、B 從 2 到 4、C 從 4 到 5、A 從 5 到 7、B 從 7 到 8、A 從 8 到 9。A 首跑 0 完成 9，B 首跑 2 完成 8，C 首跑 4 完成 5。</desc>
+        <text x="25" y="28" fill="currentColor">每段寬度對應 CPU 執行時間；橫軸 t 的單位是 ms</text>
+        <rect x="25" y="53" width="140" height="54" fill="#fff0ce" stroke="#936200"/>
+        <rect x="165" y="53" width="140" height="54" fill="#e6efff" stroke="#315ca8"/>
+        <rect x="305" y="53" width="70" height="54" fill="#e8f7ed" stroke="#327348"/>
+        <rect x="375" y="53" width="140" height="54" fill="#fff0ce" stroke="#936200"/>
+        <rect x="515" y="53" width="70" height="54" fill="#e6efff" stroke="#315ca8"/>
+        <rect x="585" y="53" width="70" height="54" fill="#fff0ce" stroke="#936200"/>
+        <g fill="#172b4d" text-anchor="middle"><text x="95" y="86">A</text><text x="235" y="86">B</text><text x="340" y="86">C</text><text x="445" y="86">A</text><text x="550" y="86">B</text><text x="620" y="86">A</text></g>
+        <g fill="currentColor" text-anchor="middle"><text x="25" y="132">0</text><text x="165" y="132">2</text><text x="305" y="132">4</text><text x="375" y="132">5</text><text x="515" y="132">7</text><text x="585" y="132">8</text><text x="655" y="132">9</text></g>
+        <text x="25" y="174" fill="currentColor">片段長度：2 + 2 + 1 + 2 + 1 + 1 = 9 ms</text>
+      </svg>
+      <figcaption>同一個字母可以出現多次：那是同一行程被暫停後繼續執行，CPU 需求沒有重新開始計算。</figcaption>
+    </figure>
+
+    <h3>把時間軸換成三種量</h3>
+    <p>先記首次執行時刻 f 與完成時刻 c，再計算。<strong>回應時間（response time）R</strong> 是從到達等到第一次取得 CPU；<strong>周轉時間（turnaround time）T</strong> 是從到達到全部完成；<strong>等待時間（waiting time）W</strong> 是總共在就緒佇列等了多久。以下時間差都以 ms 計。</p>
+    <p class="formula">R = f − a；T = c − a；本課無阻塞模型中，W = T − b。</p>
+    <div class="table-scroll"><table>
+      <caption>逐行代入，不把「首次執行」誤當「完成」</caption>
+      <thead><tr><th scope="col">行程</th><th scope="col">f、c（ms）</th><th scope="col">R（ms）</th><th scope="col">T（ms）</th><th scope="col">W（ms）</th></tr></thead>
+      <tbody><tr><th scope="row">A</th><td>0、9</td><td>0 − 0 = 0</td><td>9 − 0 = 9</td><td>9 − 5 = 4</td></tr><tr><th scope="row">B</th><td>2、8</td><td>2 − 1 = 1</td><td>8 − 1 = 7</td><td>7 − 3 = 4</td></tr><tr><th scope="row">C</th><td>4、5</td><td>4 − 2 = 2</td><td>5 − 2 = 3</td><td>3 − 1 = 2</td></tr></tbody>
+    </table></div>
+    <p><strong>答案：</strong>平均回應時間 = (0 + 1 + 2) ÷ 3 = <strong>1 ms</strong>；平均周轉時間 = (9 + 7 + 3) ÷ 3 = <strong>19/3 ms ≈ 6.333 ms</strong>；平均等待時間 = (4 + 4 + 2) ÷ 3 = <strong>10/3 ms ≈ 3.333 ms</strong>。上述答案都以 q = 2 ms 及已聲明的到達規約為條件。</p>
+    <h3>回代：怎麼知道沒有漏一段時間？</h3>
+    <p>A 使用 2 + 2 + 1 = 5 ms，B 使用 2 + 1 = 3 ms，C 使用 1 ms；CPU 總使用時間等於原始需求 5 + 3 + 1 = <strong>9 ms</strong>，最後剩餘時間全為 0。因本例 t = 0 起始終有人可執行且切換成本為 0，最後完成時刻也正好是 t = 9 ms。</p>
+    <p>再直接看排隊區間：A 等待 [2,5) 與 [7,8)，共 3 + 1 = 4 ms；B 等待 [1,2) 與 [4,7)，共 1 + 3 = 4 ms；C 等待 [2,4)，共 2 ms。這與 W = T − b 一致。若模型加入阻塞 I/O，周轉時間還包含阻塞，不能再把 T − b 全部當成就緒等待。</p>
+  </section>
+
+  <section class="concept" aria-labelledby="rr-tradeoff">
+    <h2 id="rr-tradeoff">把時間片調大或調小，改變了什麼？</h2>
+    <p>q 很大、大到每次取出的工作都能一口氣做完時，這組無 I/O 模型就像先到先服務（First-Come, First-Served, FCFS）。若本例改為 q = 5 ms，順序是 A 0–5、B 5–8、C 8–9，回應時間變成 (0,4,6) ms，平均 10/3 ms。q = 2 ms 讓 B、C 更早第一次跑到，卻不保證每一個平均指標都最佳。</p>
+    <p>q 越小，每次最多連續佔用 CPU 的時間越短，但常需更多派送與情境切換（context switch）。本課把切換成本設為 0，故互動的完成時間不會包含這筆真實成本；不能據此推論「q 越小，真機必定越快」。只有一個就緒行程時，即使時間片用完，它也可能立刻再次執行；片段數不等於必定換到不同的行程。</p>
+    <p>實務上可用帶有排程事件的追蹤紀錄，對照每個行程何時進入就緒、何時開始與停止執行，重建本課這種表。單張 CPU 使用率快照沒有各次到達與派送事件，不能單獨證明回應時間，也不能證明系統使用本課的簡化 RR 規則。</p>
+  </section>
+
+  <section class="widget" id="rr-lab" data-rr>
+    <h2>自己改時間片</h2>
+    <p>改值立即重算。先保留三個行程的資料，只把 q 從 2 改成 5，對照第一次執行時間；再改到達時刻，觀察佇列何時才有資格加入新行程。模型與片末規約和前文相同。</p>
+    <div data-lab-mount></div>
+    <noscript><p>互動需要 JavaScript；上方的完整演算保留全部步驟，仍可離線閱讀與手算。</p></noscript>
+  </section>
+
+  <section id="practice" aria-labelledby="rr-practice-title">
+    <h2 id="rr-practice-title">自己試一題：同樣的規則，換一組到達與工作量</h2>
+    <p><strong>題目：</strong>A 在 0 ms 到達、需 3 ms；B 在 1 ms 到達、需 2 ms；C 在 2 ms 到達、需 1 ms。q = 1 ms，其餘條件與主例相同。求完整時間軸、三人的 R、T、W 與平均，並檢查 CPU 總工作量。</p>
+    <details><summary>提示一：t = 1 ms 的隊首是誰？</summary><p>A 剩 2 ms；先讓剛到達的 B 入隊，再把 A 放回尾端，因此佇列是 B(2), A(2)。</p></details>
+    <details><summary>提示二：先畫完時間軸，再做減法</summary><p>在 t = 2 ms，原本排隊的 A 還在前面，接著排新到的 C，最後排回 B。不要讓新到者插到原佇列隊首。算完首次與完成時刻後，使用 R = f − a、T = c − a、W = T − b。</p></details>
+    <details><summary>完整解答與回代</summary>
+      <div class="table-scroll"><table>
+        <caption>六次派送；剩餘時間單位 ms</caption>
+        <thead><tr><th scope="col">派送前佇列</th><th scope="col">執行區間（ms）</th><th scope="col">片末 r(A,B,C)</th></tr></thead>
+        <tbody><tr><td>A(3)</td><td>A：0 → 1</td><td>(2,2,1)</td></tr><tr><td>B(2), A(2)</td><td>B：1 → 2</td><td>(2,1,1)</td></tr><tr><td>A(2), C(1), B(1)</td><td>A：2 → 3</td><td>(1,1,1)</td></tr><tr><td>C(1), B(1), A(1)</td><td>C：3 → 4</td><td>(1,1,0)</td></tr><tr><td>B(1), A(1)</td><td>B：4 → 5</td><td>(1,0,0)</td></tr><tr><td>A(1)</td><td>A：5 → 6</td><td>(0,0,0)</td></tr></tbody>
+      </table></div>
+      <p>首次時刻 f = (0,1,3) ms，完成時刻 c = (6,5,4) ms。A：R = 0 − 0 = 0、T = 6 − 0 = 6、W = 6 − 3 = 3 ms；B：R = 1 − 1 = 0、T = 5 − 1 = 4、W = 4 − 2 = 2 ms；C：R = 3 − 2 = 1、T = 4 − 2 = 2、W = 2 − 1 = 1 ms。</p>
+      <p>平均 R = (0 + 0 + 1) ÷ 3 = 1/3 ms ≈ 0.333 ms；平均 T = (6 + 4 + 2) ÷ 3 = 4 ms；平均 W = (3 + 2 + 1) ÷ 3 = 2 ms。六段各 1 ms，共 6 ms，與需求 3 + 2 + 1 = 6 ms 相等；每個人的 T 也都等於 W + b。</p>
+    </details>
+  </section>
+
+  <section class="sources" aria-labelledby="rr-sources-title">
+    <h2 id="rr-sources-title">來源與模型範圍</h2>
+    <p>排程指標與 RR 原理：<a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched.pdf">OSTEP 第 7 章 Scheduling: Introduction，§7.2、§7.6–7.7</a>。本頁兩組數字、佇列圖與平手規約為原創教學例；無 I/O 時 W = T − b 來自本課時間分解，未把此式套用到有阻塞的所有行程。</p>
+  </section>
+  <nav class="pager" aria-label="前後課"><a href="03-scheduling.html">← 03 排程指標</a><a href="05-feedback.html">05 回饋佇列 →</a></nav>
+</main>
+</body>
+</html>

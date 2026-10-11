@@ -1,0 +1,238 @@
+{
+ "contract": "wf-table/1",
+ "source": "../SOURCE-NOTES.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "old_path"
+ ],
+ "columns": [
+  "id",
+  "old_path",
+  "old_topics",
+  "old_widget",
+  "new_lessons",
+  "preserve",
+  "additions",
+  "source_ids",
+  "verification"
+ ],
+ "rows": [
+  {
+   "id": "old-00",
+   "old_path": "../../互動課程/00-為什麼需要作業系統.html",
+   "old_topics": "抽象、資源共享、保護；程式使用 CPU/記憶體/裝置",
+   "old_widget": "情境→OS 服務對照",
+   "new_lessons": [
+    "00",
+    "19"
+   ],
+   "preserve": "保留 OS 角色與三類資源；不要把單 CPU 多工說成平行。",
+   "additions": "增加跨層 read 路徑與模式邊界。",
+   "source_ids": [
+    "os-role",
+    "syscall-book"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  },
+  {
+   "id": "old-01",
+   "old_path": "../../互動課程/01-行程是什麼.html",
+   "old_topics": "程式與行程、PID、狀態；code/data/heap/stack；Linux ps",
+   "old_widget": "四區段容量相加",
+   "new_lessons": [
+    "01",
+    "02",
+    "10"
+   ],
+   "preserve": "保留虛擬空間配置不等於 RAM、狀態切換、Linux 可觀察證據；修正兩個標籤問題。",
+   "additions": "新增 fork/exec/wait 返回與失敗、zombie、base/bounds。",
+   "source_ids": [
+    "process-state",
+    "memory-layout",
+    "linux-process-state",
+    "process-api",
+    "fork-api",
+    "exec-api",
+    "wait-api",
+    "relocation"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  },
+  {
+   "id": "old-02",
+   "old_path": "../../互動課程/02-行程排程.html",
+   "old_topics": "FCFS/RR、等待與周轉、時間片成本",
+   "old_widget": "三行程全同時到達排程表",
+   "new_lessons": [
+    "03",
+    "04",
+    "05"
+   ],
+   "preserve": "保留 FCFS/RR 的既有正確數值及時間片與切換成本取捨。",
+   "additions": "新增到達時間、response、SJF、明訂 RR 同刻事件排序、MLFQ 累計配額與 boost。",
+   "source_ids": [
+    "schedule-metrics",
+    "sjf-policy",
+    "rr-policy",
+    "rr-ties-model",
+    "mlfq-allotment"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  },
+  {
+   "id": "old-03",
+   "old_path": "../../互動課程/03-執行緒與並行.html",
+   "old_topics": "共享位址空間、個別執行狀態、並行/平行、Amdahl",
+   "old_widget": "可平行比例與核心數速度上限",
+   "new_lessons": [
+    "06"
+   ],
+   "preserve": "保留共享 heap/global/fd、各自 PC/register/stack；原 Amdahl 數值正確。",
+   "additions": "補固定工作量與理想忽略額外成本；同位址空間的 stack 不是 OS 隔離邊界。",
+   "source_ids": [
+    "thread-state",
+    "pthread-shared",
+    "amdahl"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  },
+  {
+   "id": "old-04",
+   "old_path": "../../互動課程/04-同步與競態.html",
+   "old_topics": "讀改寫交錯、lost update、mutex、volatile 限制",
+   "old_widget": "兩執行緒計數與最壞交錯",
+   "new_lessons": [
+    "07",
+    "08"
+   ],
+   "preserve": "保留受控交錯與互斥；原抽象最壞值 2 的追蹤有效。",
+   "additions": "明示抽象模型與 C/C++ data race UB 邊界；新增 condition variable、while predicate、semaphore。",
+   "source_ids": [
+    "mutex",
+    "cpp-race",
+    "c-race",
+    "condvar",
+    "semaphore",
+    "semaphore-api"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  },
+  {
+   "id": "old-05",
+   "old_path": "../../互動課程/05-記憶體與位址空間.html",
+   "old_topics": "虛擬/實體位址、分頁、VPN/offset、TLB",
+   "old_widget": "以頁大小拆分 VA",
+   "new_lessons": [
+    "10",
+    "11",
+    "12"
+   ],
+   "preserve": "保留既有 TLB miss 不等於 page fault 的正確說明與數字。",
+   "additions": "增加合法/權限/駐留分支、VPN→PFN→PA、只有合法成功翻譯才輸出 PA。",
+   "source_ids": [
+    "relocation",
+    "paging",
+    "tlb",
+    "resident-fault"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  },
+  {
+   "id": "old-06",
+   "old_path": "../../互動課程/06-虛擬記憶體與分頁置換.html",
+   "old_topics": "按需載入、FIFO/LRU、Belady、髒頁寫回、顛簸",
+   "old_widget": "參照字串逐步置換",
+   "new_lessons": [
+    "13",
+    "14"
+   ],
+   "preserve": "保留 FIFO 三頁框 9 次/四頁框 10 次、LRU 三頁框 10 次；LRU 並非每個字串都勝 FIFO。保留工作集與髒頁成本。",
+   "additions": "新增 demand-zero/lazy/COW 與不需磁碟的 fault；PTE 與處理路徑。",
+   "source_ids": [
+    "pagefault-kinds",
+    "cow",
+    "lazy-code",
+    "replacement",
+    "replacement-cost",
+    "linux-fault-counters"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  },
+  {
+   "id": "old-07",
+   "old_path": "../../互動課程/07-檔案系統.html",
+   "old_topics": "路徑/inode、metadata/data、hard link/unlink、配置區塊",
+   "old_widget": "檔案容量換算區塊與間接索引",
+   "new_lessons": [
+    "15",
+    "16",
+    "17"
+   ],
+   "preserve": "保留名稱不等於 inode、最後 unlink 與開啟參照、整塊配置模型且標示 sparse 例外。",
+   "additions": "新增 fd/OFD 共享 offset、write/close/fsync/rename 邊界與 journal。",
+   "source_ids": [
+    "ofd",
+    "dup",
+    "fork-fd",
+    "inode",
+    "hardlink",
+    "unlink",
+    "fsync",
+    "rename",
+    "journal"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  },
+  {
+   "id": "old-08",
+   "old_path": "../../互動課程/08-輸入輸出與中斷.html",
+   "old_topics": "polling、interrupt、DMA、buffer 批次吞吐/延遲",
+   "old_widget": "傳輸量/chunk/頻寬/固定中斷成本",
+   "new_lessons": [
+    "18"
+   ],
+   "preserve": "保留 CPU 設定與完成收尾、DMA 不保證零中斷、批次吞吐與延遲取捨。",
+   "additions": "明寫 KiB/MiB、裝置/控制器/記憶體/CPU 分工，irq完成不等於立即排到行程。",
+   "source_ids": [
+    "io",
+    "process-state"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  },
+  {
+   "id": "old-09",
+   "old_path": "../../互動課程/09-系統呼叫與核心邊界.html",
+   "old_topics": "library/API/syscall、權限邊界、模式切換成本",
+   "old_widget": "批次資料量與呼叫成本",
+   "new_lessons": [
+    "19"
+   ],
+   "preserve": "保留系統呼叫不必等於行程切換、函式不必發出 syscall。",
+   "additions": "增加 read 的 fd/OFD→inode/cache/driver→返回資料、短讀/EOF/錯誤與返回使用者。",
+   "source_ids": [
+    "syscall-book",
+    "syscall-code",
+    "read-api",
+    "ofd-code"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  },
+  {
+   "id": "old-10",
+   "old_path": "../../互動課程/10-死結.html",
+   "old_topics": "四必要條件、鎖順序、預防/避免/偵測復原、飢餓與活鎖",
+   "old_widget": "條件開關與雙鎖等待",
+   "new_lessons": [
+    "09"
+   ],
+   "preserve": "保留雙鎖實例與固定鎖順序；保留避免/復原、活鎖與飢餓的差異。",
+   "additions": "用當下單實例資源等待圖判定；新增有需求上限的單資源銀行家安全序列，unsafe 不等於 deadlock。",
+   "source_ids": [
+    "deadlock",
+    "deadlock-strategies",
+    "bankers-safe"
+   ],
+   "verification": "已讀舊頁主文、數字題、自我檢核與對應 app.js；新課欄是覆蓋要求，成稿完成度另由 teaching-review 驗收。"
+  }
+ ]
+}

@@ -1,0 +1,608 @@
+{
+ "contract": "wf-table/1",
+ "source": "../MECHANISM-REVIEW.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "page_path"
+ ],
+ "errata_review": {
+  "status": "13列分類已核對；E08工作集/顛簸新段已補且獨立複驗",
+  "confirmed_errors": [
+   "E01 code+data+heap+stack總量錯標heap+stack，240/784加減本身無誤",
+   "E02 Linux R含runnable，舊文只寫running不完整且誤導"
+  ],
+  "not_misclassified": [
+   "E03原RR (P1=6,P2=3,P3=8,q3) completes12/6/17 waits6/3/9正確；新版補arrival/response",
+   "E04 Amdahl0.9,N4=>40/13≈3.08；0.75=>16/7≈2.29原數值正確",
+   "E05明示toy每thread n≥2可終2：Aload0,B前n−1次,Astore1,Bload1,A其餘n−1次得n,Bstore2；C/C++不受此界限",
+   "E06原9000=2×4096+808且已寫TLB miss≠fault，非糾錯",
+   "E07原FIFO3f9/FIFO4f10/LRU3f10獨立重算成立",
+   "E08原文聚焦非resident但未普稱fault必disk，新COW/lazy為擴充；14已補工作集2/3frames對照與顛簸判準，承接舊範圍。",
+   "E09原unlink/OFD保留語義正確，12direct/4Bpointer明示toy",
+   "E10舊明示二進位口徑1024/(100×1024)=.01s=10000us，256×2=512us=5.12%，改KiB屬精化",
+   "E11舊1024KiB/1、2、4KiB→1024/512/256calls成本同us、mode/context概念正確",
+   "E12policy允許四條件vs當下singleinstance實際cycle需精化；原雙鎖trace真死結",
+   "E13新增獨立章屬內容擴充，非原觀念皆錯"
+  ]
+ },
+ "validation": {
+  "date": "2026-10-11",
+  "chapters_reviewed": 20,
+  "app_comparison": {
+   "rr_cases": 2191,
+   "va_cases": 252,
+   "invalid_cases": 55,
+   "total": 2498,
+   "status": "pass",
+   "expected": "獨立Python逐ms／divmod算器；不使用app產生expected"
+  },
+  "trace_specs": {
+   "widgets": 18,
+   "states": 106,
+   "status": "pass",
+   "checks": "資料契約steps與HTML逐token/text/範圍相符；瀏覽器逐步current/status/SVG/端點/prev/reset"
+  },
+  "prototype_ui": {
+   "rr": "default/blank/reset通過",
+   "va": "12分支、7無效、reset通過；單位等式delta DOM通過"
+  },
+  "glossary_widget": {
+   "entries": 46,
+   "empty": 46,
+   "tlb": 2,
+   "uppercase_trimmed_tlb": 2,
+   "unknown": 0,
+   "clear": 46,
+   "status": "pass"
+  },
+  "widgets_total": 21,
+  "pageerrors": 0,
+  "delta_scope": "00/01/08/11繁中及名詞；09livelock/starvation；16/17中繼資料/交易橋接；18最後第16通知圖說；14工作集；07M03；15lseek來源；VA單位及SVG可及性。均已聚焦覆核。",
+  "app_sha256": "a471f39ff7794ce837870d66bd85458f979a06ceb14244afffb9e46ca99d5ec5",
+  "widget_specs_sha256": "c070b8c82f1e1cbd70ac71a63ee492a5c0268817c84071bcbdc3b6c61ef0006e",
+  "glossary_sha256": "eb1567e4eafeb2ac44b0ab575c2aa5ed76b66e6f58bfe469e5838d72e2c59581",
+  "final_digest": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28",
+  "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28",
+  "process_cleanup": "瀏覽器於 finally 呼叫 close；未啟動 HTTP server；收尾 ps 檢查無本審核的 Chromium、Playwright 或 server 殘留。",
+  "artifact_checks": "兩份 evidence tabledb 連結、UTF-8、獨立算器摘要皆通過；wf-lint 既有 reviews 兩筆斷鏈未變動。"
+ },
+ "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28",
+ "columns": [
+  "id",
+  "status",
+  "page_path",
+  "scope",
+  "example_count",
+  "practice_count",
+  "calculation",
+  "expected",
+  "actual",
+  "boundaries",
+  "source_evidence",
+  "digest"
+ ],
+ "rows": [
+  {
+   "id": "00-role",
+   "status": "通過",
+   "page_path": "../dist/00-role.html",
+   "scope": "主例、練習、三SVG、五步trace",
+   "example_count": "1",
+   "practice_count": "1",
+   "calculation": "主例CPU A0–2 B2–5 A5–6；device2–4；A=CPU3+blocked2+ready1=6，B=ready2+CPU3=5。",
+   "expected": "完成6ms；CPU6/6=100%。練習A0–1 B1–3 idle3–4 A4–5，完成5，idle1，CPU4/5=80%。",
+   "actual": "#worked-example完整事件表、CPU/device圖、#practice均符合；trace0/2/4/5/6一致。 Headless逐步 5 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "單CPU/裝置可同時工作；I/O完成恢復ready資格不保證dispatch；切換/核心成本0；權限失敗可不啟device；隔離非任意故障絕對保證。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP intro.pdf §2.1–2.4。",
+    "source_registry_ids": [
+     "os-role"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "3f59ad5f3e9a0f6b78d4af544171e55f5054f89d299ebc37ce106451183a3b37",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "01-process",
+   "status": "通過",
+   "page_path": "../dist/01-process.html",
+   "scope": "主例、練習、狀態圖/快照圖/trace",
+   "example_count": "1",
+   "practice_count": "1",
+   "calculation": "CPU A0–2 B2–5 A5–6 B6–7；A CPU3+blocked2+ready1=6；B CPU4+ready3=7；總CPU7。",
+   "expected": "A6 B7；t4 Aready而B跑；t5a A/Bready而核心處理；5b A跑；rTmp A7/B99。練習P0–2 Q2–3 P3–4，Q3/P4，P在2–3是ready非blocked。",
+   "actual": "#worked-example7列與三狀態SVG及trace逐項符合；#practice4ms守恆成立。 Headless逐步 7 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "PCB為概念可能分散；暫存器toy非ABI；同時至多1running；interrupt不必contextswitch；Linux R含running/runnable；zero cost下5a/5b不增time。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP cpu-intro.pdf §4.1/4.4–4.5；Linux R之claim待sources核實。",
+    "source_registry_ids": [
+     "process-state",
+     "process-code",
+     "memory-layout",
+     "linux-process-state"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "fd50f77019f587936fff88c1d9f1ce2135219324b164fabc1030ed424affe7d9",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "02-fork",
+   "status": "通過",
+   "page_path": "../dist/02-fork.html",
+   "scope": "成功主例、失敗練習、三SVG/六步trace",
+   "example_count": "1",
+   "practice_count": "1",
+   "calculation": "父PID100 fork→父返回101/子0；子x10→20僅自身；exec保留101換image；exit7留zombie；wait返回101而WEXITSTATUS7。",
+   "expected": "新process1,exec1,reap1；父x10不變。練習父200/x3 子201/x9；exec失敗−1維持201/x9，_exit127由caller政策；父wait201/exit127/x3。fork失敗無新child。",
+   "actual": "#worked-example0–5、生命期SVG、錯誤表/示意碼、#practice全部相符。 Headless逐步 6 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "parent/child先後無保證，指定child先只是例子；zombie不跑CPU；wait先檢success/WIFEXITED再解碼；WNOHANG0不混wait成功PID；exec成功不返回/一般失敗可返回/極端不可回復失敗有說明；ordinaryprivate vs inheritedshared；限單thread父。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP cpu-api.pdf §5.1–5.3；mkerrisk fork/execve/wait RETURN VALUE/NOTES；sources fork-api列核對。",
+    "source_registry_ids": [
+     "process-api",
+     "fork-api",
+     "exec-api",
+     "wait-api",
+     "fork-fd",
+     "process-code"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "20671c046dfa44d161690c7ef720b445d9bd92a65f4383e8067a4bb775efa311",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "03-scheduling",
+   "status": "通過",
+   "page_path": "../dist/03-scheduling.html",
+   "scope": "FCFS/SJF雙主例及雙練習、指標圖/兩甘特圖/trace",
+   "example_count": "2",
+   "practice_count": "2",
+   "calculation": "A0/5 B1/3 C2/1。FCFS A0–5 B5–8 C8–9；R=W(0,4,6),T(5,7,7)。SJF A0–5 C5–6 B6–9；R=W(0,5,3),T(5,8,4)。",
+   "expected": "FCFS avgR/W10/3≈3.33,T19/3≈6.33；SJF avgR/W8/3≈2.67,T17/3≈5.67；T平均改善2/3。練習allarr0,bursts3/2/1:FCFS C3/5/6,RW0/3/5(avg8/3),Tavg14/3；SJF C6/3/1,RW3/1/0(avg4/3),Tavg10/3。",
+   "actual": "#worked-example逐行代入/圖/六步trace與#practice全符合；sumCPU9或6，sumT=sumW+sumCPU。 Headless逐步 6 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "nonpreemptive SJF只能選已到達，t2不能抢A；同長先arrival再name；idle若無可選；W=T−B僅無blockedIO/othercost；R=W只nonpreemptive单burst；SJF全同到達最優不泛化到所有目標。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP cpu-sched.pdf §7.1–7.4/7.6；每個first/complete與各減法獨立重算。",
+    "source_registry_ids": [
+     "schedule-metrics",
+     "sjf-policy"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "d0f6b2cd99bd6439624696bae07131cf66b77fb1c95be1ec1493de7d4d950fa6",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "04-round-robin",
+   "status": "通過",
+   "page_path": "../dist/04-round-robin.html",
+   "scope": "主例、比較例、遷移練習、兩圖、模型限制",
+   "example_count": "2",
+   "practice_count": "1",
+   "calculation": "RR逐ms獨立模擬；R=f−a，T=c−a，W=T−b，無blocked I/O",
+   "expected": "主例軌跡A0–2,B2–4,C4–5,A5–7,B7–8,A8–9；C=(9,8,5),R=(0,1,2),T=(9,7,3),W=(4,4,2)。q5則A0–5 B5–8 C8–9，R=(0,4,6)。練習q1:A0–1 B1–2 A2–3 C3–4 B4–5 A5–6；C=(6,5,4),R=(0,0,1),T=(6,4,2),W=(3,2,1)。",
+   "actual": "lines62–114、119、131–143符合；SVG desc39–40、87–98符合；sumCPU9與練習6。 app2191獨立案例及invalid32；headless default/blank/reset通過，pageerrors0。",
+   "boundaries": "片末到達先於current重入、既有queue在新到達前、同時A/B/C、零切換、單CPU、無IO皆明示；q5反例非任意平均指標最佳；平均=精確分數≈小數。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP cpu-sched.pdf §7.2/7.6/7.7；預期值由tools/check-mechanisms.py獨立重算。",
+    "source_registry_ids": [
+     "schedule-metrics",
+     "rr-policy",
+     "rr-ties-model"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "c1e10673ec9775d95dae62f576c5c32dc3a588c0767120074a466bd9a5d3fed2",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "05-feedback",
+   "status": "通過",
+   "page_path": "../dist/05-feedback.html",
+   "scope": "主例/練習、兩層规则圖、五段trace",
+   "example_count": "1",
+   "practice_count": "1",
+   "calculation": "q0=2/allotment2,q1=4,boost8；A8/B3→A0–2 B2–4 A4–8 B8–9 A9–11。練習A8/B3/C1→A0–2 B2–4 C4–5 A5–8 B8–9 A9–11 A11–12。",
+   "expected": "主例C=(11,9),R=(0,2),T=(11,9),W=(3,6),平均R1/T10/W4.5。練習C=(12,9,5),W=(4,6,4),avgW14/3≈4.667,avgR2；sumCPU12。",
+   "actual": "#worked-example五列、時間計算、trace和#practice七列均相符。t8主例片末+boost先requeue；練習5–8未滿片boost中斷並放B後；t11降級立刻繼續。 Headless逐步 5 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "boost重設配額非剩餘CPU，完成先於降級；preempt低層保留未用片但boostreset；yield累計1.5+.5=2不重設；高層持續到達可starvation，boost不承諾固定完成上限；toy非真OS默認。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP cpu-sched-mlfq.pdf §8.6；逐事件獨立重算與排隊等待區間回代。",
+    "source_registry_ids": [
+     "mlfq-allotment"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "b5bd1e4ac7d0bc44ea60a14b8345ab58ff88d7afd1774346c3f12ab2c6db79b3",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "06-threads",
+   "status": "通過",
+   "page_path": "../dist/06-threads.html",
+   "scope": "Amdahl主例與練習、多核比例圖/共享堆疊圖/trace",
+   "example_count": "1",
+   "practice_count": "1",
+   "calculation": "T4=16(1−.75)+16×.75/4=4+3=7s；S=16/7≈2.286；work4+4×3=16core-s。",
+   "expected": "p0→S1,p1→SN,N1→S1；p.75/N∞→T4s/S4。練習T1=10,p.8:N2→T6/S5/3≈1.667，N8→T3/S10/3≈3.333；N∞→T2/S5。N8比N2快2倍。",
+   "actual": "#worked-example逐步、四邊界、#practice及SVG比例/three-state trace數值相符。 Headless逐步 3 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "固定work/samecores/perfectbalance/nooverhead；p<1才有限∞limit；執行緒stack各用但同addressspace非硬體隔離；並行非必平行；work(core-s)與walltime(s)分清。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP threads-intro.pdf pp1–2；LLNL parallel tutorial Amdahl/Scalability；Fraction理想式獨立核算。",
+    "source_registry_ids": [
+     "thread-state",
+     "pthread-shared",
+     "amdahl"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "99619fa1e697d8dcde489810b44934e69add987f7b77de26b9318a409de546ff",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "07-mutex",
+   "status": "通過",
+   "page_path": "../dist/07-mutex.html",
+   "scope": "無鎖6steps/有鎖11steps主例、練習9steps/有鎖/僅STORE鎖、兩SVG及六步trace",
+   "example_count": "2",
+   "practice_count": "3",
+   "calculation": "x0；Aload0 Bload0 Aadd1 Badd1 Astore1 Bstore1→x1。fullmutexA0→1，Bload1→2，所以x2；onlySTORE lock仍可load同0→x1。",
+   "expected": "練習三人加2:先allload0,alladd2,allstore2→x2；完整鎖則0→2→4→6，x6且x=2k；只鎖STORE仍x2。",
+   "actual": "#worked-example兩表/圖/trace與#practice逐格值符合。M03單thread工作量句已delta確認明示連做兩次，結果2正確。 Headless逐步 6 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "toy全域SC逐步/無reorder不冒稱C/C++ race結果；C/C++nonatomic unsynchronized衝突UB；所有相關access遵同一鎖、初值完成與final讀取在結束後；volatile非同步；atomicload+atomicstore非atomicRMW；stack非隔離見06。",
+   "source_evidence": {
+    "reviewer_notes": "Reviewer獨立web讀C++ draft intro.races §17（data race UB）；C N3096 §5.1.2.4p35由sources核；OSTEP threads-locks §28.1。",
+    "source_registry_ids": [
+     "mutex",
+     "cpp-race",
+     "c-race"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "27ed98dbec837cd5a6b4e6561bbc0018b9a5cd423552fcd3daddc31a9ba5abbd",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "08-condition",
+   "status": "通過",
+   "page_path": "../dist/08-condition.html",
+   "scope": "條件等待與號誌兩主例、兩子練習、兩SVG和trace",
+   "example_count": "2",
+   "practice_count": "2",
+   "calculation": "CV狀態(count,owner): (0,none)→(0,C)→(0,none;Cwait)→(1,P)→(1,P;signal)→(1,C)→(0,none)。semaphore逐操作±1。",
+   "expected": "CV最後C取x,count0；signal後鎖仍P。sema(slots,items,mutex,count):初始(2,0,1,0)，P完成(1,1,1,1)，C完成(2,0,1,0)。練習C1重查count0再次wait；兩產物後(0,2,1,2)，第三P阻塞slots且未拿mutex。",
+   "actual": "lines26–49,51–60,61–71所有狀態與算式符合；sema11列逐列核過。 Headless逐步 7 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "同mutex保護predicate；while處理被他人取走與spurious；原子release+wait，返回先reacquire；notify無permit；sema中途slots+items可以小於容量，正文已正確限靜止時。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP threads-cv Definition/Routines與Producer/Consumer；threads-sema Definition/Producer/Consumer（來源員精確核對待併）。 Reviewer已獨立web open threads-cv.pdf，19頁，原子wait及while說明與作者來源表相合。",
+    "source_registry_ids": [
+     "condvar",
+     "semaphore",
+     "semaphore-api"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "dd28b1e337f519bec365f2d3cbba72c265a587ac20dfaaf202fce92e835725ca",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "09-deadlock",
+   "status": "通過",
+   "page_path": "../dist/09-deadlock.html",
+   "scope": "鎖主例、多實例反例、安全序列主例與練習、三SVG/trace",
+   "example_count": "3",
+   "practice_count": "1",
+   "calculation": "wait-for edges={}→{}→{}→{A→B}→{A→B,B→A}。多實例R2/S1, C→B→A可完成。安全主例Total3,Alloc(1,1),Need(2,1),Available1；Work1→2→3(B,A)。",
+   "expected": "最後雙向等待才死結；固定L1<L2消環。先給A後Alloc(2,1),Need(1,1),Avail0不安全未必死結。練習Total4/Alloc(1,2),Need(2,1),Work1→3→4(B,A)安全；先給A後Alloc2/2 Need1/1 Avail0不安全。",
+   "actual": "#worked-example、#safe（安全序列段）、#practice與所有圖/trace逐狀態符合；Need含最大總量非額外。 Headless逐步 5 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "Coffman為必要條件，程式可能允許不等當下死結；single-instance且無取消強搶模型cycle才足夠；多實例保留數量；unsafe依max無保證而非必已deadlocked。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP threads-bugs.pdf §32.3（Coffman/lockorder）；安全序列自行逐項守恆核算，來源員需補Banker精確支持。",
+    "source_registry_ids": [
+     "deadlock",
+     "deadlock-strategies",
+     "bankers-safe"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "d342aa87142d4e377d508920c13da1b1c0af6f8893036599129a7416efd681d4",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "10-address-space",
+   "status": "通過",
+   "page_path": "../dist/10-address-space.html",
+   "scope": "base/bound主例/另行程例、練習、三SVG及trace",
+   "example_count": "2",
+   "practice_count": "1",
+   "calculation": "0≤600<1024，4096+600=4696；range4096..5119長1024。第二行程12288+600=12888。",
+   "expected": "VA1024越界不輸合法5120；端點0→4096、1023→5119。練習base8192/bound512:VA0→8192，511→8703，512fault；PA8704−8192=512故越界。",
+   "actual": "#worked-example、不同VA小節、#practice與threeSVG及五步trace全一致。 Headless逐步 5 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "bound明示length非上界；先rangecheck再相加；不處理overflow但toy數值safe；連續base/bound非所有現代CPU；heap/stack圖非保證方向/比例；maps不能直接證明RAM量/PA。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP vm-intro.pdf、vm-mechanism.pdf §15.3；端點與長度逐項回代。",
+    "source_registry_ids": [
+     "relocation",
+     "memory-layout"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "54ae584917e115b6ffb275b27f23aed3435850de9280b8181959a02ddc454f16",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "11-paging",
+   "status": "通過",
+   "page_path": "../dist/11-paging.html",
+   "scope": "轉譯/頁表大小/碎裂3主例、2KiB比較、2子練習、四SVG/trace",
+   "example_count": "4",
+   "practice_count": "2",
+   "calculation": "2300=2×1024+252;5×1024+252=5372；binary000010|0011111100；2^16/2^10=64頁,6+10bits；64×4=256B頁表；ceil2500/1024=3,3072−2500=572。",
+   "expected": "2KiB頁:32PTE/128B,2500需2頁4096B尾1596。2048尾0，2049尾1023。練習VA4095→VPN3/off1023，PFN8→9215；4097需5頁5120B尾1023，完整頁表仍256B。",
+   "actual": "所有worked、位元及映射圖、尾頁圖、#practice逐值符合；PFN3/5/7邊界3K..4K−1等均正確。 Headless逐步 5 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "16bit VA不推出PA寬；4B PTE含status不能全部當PFN；single-level完整64entries非只usedpages；exclusive/pagealigned配置才尾頁碎裂公式；權限/駐留通過才能PA；更大頁取捨非一律改善。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP vm-paging.pdf §18.1/18.2；divmod/ceil/二進位獨立重算。",
+    "source_registry_ids": [
+     "paging"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "38a6146fb9daafdcaff0eadc3eb3eeb041b62e5491a61093ce9cb1fa957c3931",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "12-translation",
+   "status": "通過",
+   "page_path": "../dist/12-translation.html",
+   "scope": "主例、遷移練習、邊界、兩圖、TLB分支",
+   "example_count": "1",
+   "practice_count": "1",
+   "calculation": "divmod(VA,1024)，PA=PFN×1024+offset；16−10=6位VPN",
+   "expected": "0x1234=4660=4×1024+564；PA=9×1024+564=9780=0x2634。練習0x2ABC=10940=10×1024+700；PFN3→3772=0x0EBC。VA0→VPN0/off0；65535→63/1023。",
+   "actual": "lines16–17、27–45、50–55各值正確；M01已delta複驗：line31下一頁（VPN5）起點5120，lead編號9頁框。 app252獨立案例及invalid23；headless12分支/7invalid/reset通過，pageerrors0。",
+   "boundaries": "TLBmiss不等缺頁；hit仍需權限/一致映射；nonresident/unmapped/deny不可讀PA；缺頁可無diskIO；16bit單層toy明示，越界65536不截位；VPN/PFN無單位。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP vm-paging.pdf及vm-tlbs.pdf §19.1；Python divmod/hex獨立核算。",
+    "source_registry_ids": [
+     "paging",
+     "tlb",
+     "resident-fault"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "63ac68a753248450f829ad4b94f0976a4fe86a31f31e4df338653f952922d497",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "13-page-fault",
+   "status": "通過",
+   "page_path": "../dist/13-page-fault.html",
+   "scope": "lazy/COW主例、disk分支例、練習、兩SVG/trace",
+   "example_count": "2",
+   "practice_count": "1",
+   "calculation": "fault累計0→1(lazy)→1(fork)→1(read)→2(COW)→2(read)；disk0；2×4096=8192B=8KiB，copy1×4096=4KiB。",
+   "expected": "父A8=42在PFN7；子A8=99在PFN12。磁碟情境無pagecache→1fault/1頁讀入。練習writeA8→1fault/copy4096/newframe1；writeA12→0；writeB0→1fault/zero/newframe1，合计2fault/new2frame8KiB/copy4KiB/disk0。",
+   "actual": "#worked-example六列、COW分離SVG、trace及#practice完整解一致。 Headless逐步 6 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "單byte普通存取+重試faulting指令；COW合法區域writes vs非法唯讀區分；TLB狀態處理後才重試；PFN7確有父子共享；單擁有者可不copy；只計指定頁、足freeframes/noeviction；zero不是disk也不是COWcopy。",
+   "source_evidence": {
+    "reviewer_notes": "MIT xv6 book §5.1–5.4印刷51–54與OSTEP vm-beyondphys.pdf §21.5；頁明示不把原版xv6 fork冒稱COW。",
+    "source_registry_ids": [
+     "resident-fault",
+     "pagefault-kinds",
+     "cow",
+     "lazy-code",
+     "replacement-cost",
+     "linux-fault-counters"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "ba5f86b7868ecab861824253a4304dbc30d061f16f26b2528fd86fa31ab3ec10",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "14-replacement",
+   "status": "通過",
+   "page_path": "../dist/14-replacement.html",
+   "scope": "FIFO/LRU主例24列、FIFO4-frame變體、練習12列、兩SVG及12步trace；工作集2/3frames兩組補例",
+   "example_count": "5",
+   "practice_count": "2",
+   "calculation": "獨立FIFO載入queue與LRU每次更新recency模擬references1,2,3,4,1,2,5,1,2,3,4,5。三frames FIFO9fault/3hit,LRU10/2；四frames FIFO10fault。 補例LRU[1,2,3,1,2,3]：2frames依序[1],[1,2],[3,2],[3,1],[2,1],[2,3]，6fault；3frames前三fault後三hit，3fault。",
+   "expected": "前9次frames皆[5,1,2]；step10 FIFO[5,3,2]/LRU[3,1,2]，11[5,3,4]/[3,4,2]，12[5,3,4]hit/[3,4,5]fault。75%與10/12≈83.3%。練習2,3,2,4,2,3兩frames:FIFO5fault(終[3,2]),LRU4fault(終[2,3])。",
+   "actual": "兩主表每列frame/victim/order/hit與圖、十二步trace全一致；練習六列雙策略符合；四frames FFFFHHFFFFFF共10。 Headless逐步 12 個狀態：status與SVG高亮、prev/next端點、reset通過。 新line41六列已獨立算器逐列核對，定義working set隨觀察範圍而變；sixfault非實機thrashing充分證據，fault非diskIO。",
+   "boundaries": "frame槽次序非queue order；FIFO hit不更動,LRU hit刷新；固定合法讀/empty/no-prefetch；fault+hit=refcount；LRU不同容量stack property非永遠比FIFO優；fault次數非disk延遲；dirtybacking分開。 工作集大於可用frames可反覆fault，須連同等待成本與實際工作進展診斷，非只累計數字。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP vm-beyondphys-policy.pdf §22.3/22.5–6；獨立replacement()逐列算，非作者函式。",
+    "source_registry_ids": [
+     "replacement",
+     "replacement-cost"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "a74d8bd5cd9cdc473e1f39edd27c648935aff9992ab88d6d2944b1bcc31f8967",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "15-file-descriptors",
+   "status": "通過",
+   "page_path": "../dist/15-file-descriptors.html",
+   "scope": "open/dup/read/fork/close10steps主例、lseek/fork練習、兩SVG及五步trace",
+   "example_count": "1",
+   "practice_count": "1",
+   "calculation": "A=OFD(fd3,fd4),B=OFD(fd5);讀2→AB/A2,讀1→C/A3,fd5讀2→AB/B2；fork共享A3/B2；child讀2→DE/A5,parent讀1→F/A6；childclose4不移offset。",
+   "expected": "最後A6/B2；A還有父3/4與子3。練習X(fd7/8)Y(fd9)：abc→X3,ab→Y2,lseek−1→X2,cd→X4,fork後child e→X5,parent f→X6，Y2。",
+   "actual": "#worked-example10列/圖/後半trace和#practice六步字元與位置皆符。 Headless逐步 5 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "open獨立OFD、dup/fork共享OFD與offset，fdflag不同於statusflag；read按actualreturned量非request；EOF0不增offset；lseek改position不改content；close移該fd不關別人不歸零也不保durable；固定成功serialops/regularseekablefile。",
+   "source_evidence": {
+    "reviewer_notes": "Reviewer獨立web讀mkerrisk dup.2(2021-03-22) DESCRIPTION52–78支持sharedOFD/offset而FD_CLOEXEC不共享；sources ofd/fork-fd/read-api/close核官方原稿定位。",
+    "source_registry_ids": [
+     "ofd",
+     "dup",
+     "fork-fd",
+     "read-api",
+     "ofd-code",
+     "lseek-api"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "ba9b512e7de12583dbc1258b0b99aea3d314606b01b921d422c4b3c7ca314cb6",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "16-file-system",
+   "status": "通過",
+   "page_path": "../dist/16-file-system.html",
+   "scope": "容量主例、unlink生命期trace、遷移練習、三SVG",
+   "example_count": "2",
+   "practice_count": "1",
+   "calculation": "ceil(52/4)=13 data；13>12→1 indirect；14×4=56KiB。4096B/4B=1024 entries，(12+1024)×4096=4243456B=4144KiB=4.046875MiB。",
+   "expected": "52KiB:13data+1index,尾0；最大1036data+1index。練習53KiB:14data+1index=60KiB，尾14×4−53=3KiB。L/O trace(2,1)→(1,1)→(0,1)→(0,1)→(0,0)。",
+   "actual": "lines9、12–17及20–24全部符合；指標表剩1023slots。 Headless逐步 5 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "只計data/index，排除inode/directory/bitmap/journal；0B無區塊，48KiB直接剛好，>4144KiB不可表示；稀疏/extent/COW非本模型；unlink最後name而O1仍可讀，排除mmap等額外參照；close不等安全抹除。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP file-intro §39.1/39.12–14；mkerrisk unlink.2 DESCRIPTION。",
+    "source_registry_ids": [
+     "inode",
+     "hardlink",
+     "unlink"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "4fd476e7b15cd1a8dc8ff7aa826514faae64dab6f7fe735762ece881a3dffb7f",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "17-durability",
+   "status": "通過",
+   "page_path": "../dist/17-durability.html",
+   "scope": "shortwrite主例、journal S0–S5、replace流程、練習、兩SVG/trace",
+   "example_count": "3",
+   "practice_count": "2",
+   "calculation": "8192−3072=5120；5120−4096=1024；1024−1024=0，sum8192。journal durable commit不存在S0–2→舊meta；存在S3–5→新meta；先data再journal body再commit再checkpoint再回收。",
+   "expected": "shortwrite3次；S4部分正式位置仍redo全部T；練習bitmap先更新同样redo兩筆。filefsync後rename再dirfsync且都成功才涵蓋新內容/名稱durability；write+close不足。",
+   "actual": "#worked-example六列、trace及#practice一致；兩圖name→inode替換保留oldfd；shortwrite3行加減正確。 Headless逐步 6 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "新分配data、完整提交可辨識、裝置遵flush、同目錄同FS獨有temp無其他writers等條件明示；dirfsync不替代filefsync；rename後dirfsync失敗不保證持久或rollback；shortwrite/zero progress/EINTR/延遲IOerrors皆分開。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP file-journaling.pdf §42.3；Linux write/close NOTES、fsync/rename DESCRIPTION；raw官方man sources待來源員節點。 Reviewer獨立web open raw fsync.2(2021-03-22) DESCRIPTION lines67–90：file同步不保證direntry；rename.2(2021-08-27) DESCRIPTION66–89：舊fd不變且newpath原子替換。",
+    "source_registry_ids": [
+     "write-durable",
+     "close-durable",
+     "fsync",
+     "rename",
+     "journal",
+     "journal-code"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "4adf1b0aa6539a86d9b20076e13d4507d95b3ad4803c9252a20e67aacc937dbf",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "18-io",
+   "status": "通過",
+   "page_path": "../dist/18-io.html",
+   "scope": "數值主例/8KiB比較/1與64KiB極端、練習、兩SVG/trace",
+   "example_count": "4",
+   "practice_count": "1",
+   "calculation": "65536/16777216=1/256s=3.90625ms=3906.25us；N=64/4=16,H=16×5=80us；H/T=0.02048=2.048%。",
+   "expected": "8KiB:8通知/40us/1.024%；1KiB:64/320us/8.192%；64KiB:1/5us/0.128%。練習128KiB/32MiBps=1/256s；16×3=48us；48/3906.25×100%=1.2288%。",
+   "actual": "#worked-example所有精確小數與回代、分塊段、#practice一致；DMA+中斷圖/ready後B可繼續trace無錯。 Headless逐步 6 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "notification vs data movement分離、DMA可搭poll或interrupt；A blocked無忙等；IRQ不能直接等同dispatch；service/transfertime比例非實測CPU利用率；不能將重疊時間直接相加當端到端延遲；KiB/MiB和ms/us轉換明確。",
+   "source_evidence": {
+    "reviewer_notes": "OSTEP file-devices.pdf §36.3–5；Fraction獨立時間與百分比計算。",
+    "source_registry_ids": [
+     "io"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "d35d3c0c4594d2964b0b2844e6e2008362f0f89bbdd5ec4baa96bf1dbe6ef1db",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  },
+  {
+   "id": "19-system-call",
+   "status": "通過",
+   "page_path": "../dist/19-system-call.html",
+   "scope": "完整16calls主例/8KiB與1B比較/短讀練習、三SVG/trace",
+   "example_count": "3",
+   "practice_count": "1",
+   "calculation": "64KiB/4KiB=16calls；16×2us=32us；k次完成4k,剩64−4k,成本2k。8KiB→8calls/16us；1B→65536calls/131072us=131.072ms。",
+   "expected": "練習10KiB實返1/4/4/1→done1/5/9/10、left9/5/1/0、cost2/4/6/8us，4calls；理想4/4/2→3calls6us，差1call2us。四往返8modeboundaries/0contextswitch。",
+   "actual": "#worked-example16列、兩比較、#practice四列/答案/圖與六步trace一致；cachehitread4096進offset0→4096。 Headless逐步 6 個狀態：status與SVG高亮、prev/next端點、reset通過。",
+   "boundaries": "mode!=contextswitch，trap架構相關；一般函式非必syscall；fd沿OFD不重找pathname；安全copy須處理actualaccess失敗；n>0一般file短讀非必錯/EOF0；知長度達標停止不另EOFcall；成本非總延遲。",
+   "source_evidence": {
+    "reviewer_notes": "MIT xv6 §4.1–4.4印刷44–48/trap.c；Linux read.2 DESCRIPTION/RETURN VALUE；calls/bytes/units獨立逐列核算。",
+    "source_registry_ids": [
+     "read-api",
+     "syscall-book",
+     "syscall-code"
+    ],
+    "registry": "sources.json；各節點由獨立來源員查證，reviewer另開者已於notes明示。"
+   },
+   "digest": {
+    "page_sha256": "558ebf8679ca4d6a96032e7040fcd26e1484a19fa62a5d6daa34728075853ac2",
+    "binding": "已核對逐頁 SHA-256 並綁定 QA 封版公開資產 digest。",
+    "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28"
+   }
+  }
+ ]
+}

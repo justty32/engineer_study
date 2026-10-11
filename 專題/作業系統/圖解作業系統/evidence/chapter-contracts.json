@@ -1,0 +1,154 @@
+{
+ "contract": "wf-table/1",
+ "source": "../BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "id",
+  "title",
+  "legacy",
+  "owner",
+  "example"
+ ],
+ "rows": [
+  {
+   "id": "00-role",
+   "title": "OS 角色",
+   "legacy": "00",
+   "owner": "author_00_03",
+   "example": "硬體／核心／程式角色與受保護服務 trace"
+  },
+  {
+   "id": "01-process",
+   "title": "行程狀態",
+   "legacy": "01",
+   "owner": "author_00_03",
+   "example": "ready/running/blocked及保存執行狀態"
+  },
+  {
+   "id": "02-fork",
+   "title": "fork、exec、wait",
+   "legacy": "01",
+   "owner": "author_00_03",
+   "example": "父子返回值與狀態生命週期"
+  },
+  {
+   "id": "03-scheduling",
+   "title": "排程指標",
+   "legacy": "02",
+   "owner": "author_00_03",
+   "example": "FCFS/SJF無I/O單CPU完整指標"
+  },
+  {
+   "id": "04-round-robin",
+   "title": "時間片輪轉",
+   "legacy": "02",
+   "owner": "author_04_07",
+   "example": "A0/5 B1/3 C2/1 q2，C9/8/5 W4/4/2"
+  },
+  {
+   "id": "05-feedback",
+   "title": "回饋佇列",
+   "legacy": "02",
+   "owner": "author_04_07",
+   "example": "明示兩層MLFQ規則與boost範圍"
+  },
+  {
+   "id": "06-threads",
+   "title": "執行緒與平行",
+   "legacy": "03",
+   "owner": "author_04_07",
+   "example": "Amdahl p=.75 N4 S=16/7"
+  },
+  {
+   "id": "07-mutex",
+   "title": "競態與互斥",
+   "legacy": "04",
+   "owner": "author_04_07",
+   "example": "toy LOAD/ADD/STORE，真C/C++ race UB"
+  },
+  {
+   "id": "08-condition",
+   "title": "條件變數與號誌",
+   "legacy": "04",
+   "owner": "author_08_11",
+   "example": "while predicate與原子release/sleep/reacquire"
+  },
+  {
+   "id": "09-deadlock",
+   "title": "死結與安全狀態",
+   "legacy": "10",
+   "owner": "author_08_11",
+   "example": "Coffman、single-instance cycle、unsafe不等deadlock"
+  },
+  {
+   "id": "10-address-space",
+   "title": "位址空間",
+   "legacy": "05",
+   "owner": "author_08_11",
+   "example": "VA600 base4096 bound1024=>PA4696 B"
+  },
+  {
+   "id": "11-paging",
+   "title": "分頁與頁表",
+   "legacy": "05",
+   "owner": "author_08_11",
+   "example": "16bit/1KiB=>64pages；2500B需3頁浪費572B"
+  },
+  {
+   "id": "12-translation",
+   "title": "TLB 與位址轉換",
+   "legacy": "05",
+   "owner": "author_12_15",
+   "example": "VA0x1234 PFN9=>PA0x2634，6+10bit"
+  },
+  {
+   "id": "13-page-fault",
+   "title": "缺頁與寫入時複製",
+   "legacy": "06",
+   "owner": "author_12_15",
+   "example": "lazy zero/COW/disk分支trace"
+  },
+  {
+   "id": "14-replacement",
+   "title": "頁面替換",
+   "legacy": "06",
+   "owner": "author_12_15",
+   "example": "經典12references 3frames FIFO9 LRU10"
+  },
+  {
+   "id": "15-file-descriptors",
+   "title": "檔案描述元",
+   "legacy": "07",
+   "owner": "author_12_15",
+   "example": "fd/OFD/inode、dup/fork sharedoffset"
+  },
+  {
+   "id": "16-file-system",
+   "title": "檔案系統配置",
+   "legacy": "07",
+   "owner": "author_16_19",
+   "example": "12direct+1024single indirect；13data+1index"
+  },
+  {
+   "id": "17-durability",
+   "title": "崩潰與持久性",
+   "legacy": "07",
+   "owner": "author_16_19",
+   "example": "write/close/fsync/rename及journal crashpoints"
+  },
+  {
+   "id": "18-io",
+   "title": "I/O 與中斷",
+   "legacy": "08",
+   "owner": "author_16_19",
+   "example": "64KiB/16MiB/s=3.90625ms；16×5µs=80µs"
+  },
+  {
+   "id": "19-system-call",
+   "title": "系統呼叫跨層",
+   "legacy": "09",
+   "owner": "author_16_19",
+   "example": "read路徑；16calls×2µs=32µs"
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "contract": "wf-table/1",
+ "source": "../TECHNICAL-REVIEW.md",
+ "extracted": "2026-10-11",
+ "final_public_sha256": "4f590b6366fe086376adce858198f5020bebbb8da70db4135f9d7c22bb952e28",
+ "columns": [
+  "id",
+  "status",
+  "severity",
+  "location",
+  "finding",
+  "resolution"
+ ],
+ "rows": [
+  {
+   "id": "Q01",
+   "status": "closed",
+   "severity": "中",
+   "location": "04 sidebar",
+   "finding": "主站使用跨出dist的相對href，本地存在但獨立發布不成立。",
+   "resolution": "作者改為公開主站https://justty32.github.io/engineer_study/，已讀取現稿驗證。"
+  },
+  {
+   "id": "Q02",
+   "status": "已釐清",
+   "severity": "低",
+   "location": "04/12 long element screenshot",
+   "finding": "長元件截圖將sticky nav疊入表單；需分辨真實視圖。",
+   "resolution": "改攝實際1440x900 viewport；section nav位於頂端0–62px，widget自y100起，控制項未遮蔽。原長圖不作layout判據。"
+  },
+  {
+   "id": "Q03",
+   "status": "closed",
+   "severity": "中",
+   "location": "窄螢幕 .diagram 與 .table-scroll",
+   "finding": "SVG最小寬造成容器內捲動，欠明確提示與鍵盤操作提示。",
+   "resolution": "builder新增捲動提示、tabindex=0、region標籤與focus ring，圖說sticky保留可視寬；focused 110 checks全過，390右端viewport親看確認，ArrowRight實際增加scrollLeft。"
+  },
+  {
+   "id": "Q04",
+   "status": "closed",
+   "severity": "中",
+   "location": "15-file-descriptors.html",
+   "finding": "持久性頁的檔名誤連17-persistence.html",
+   "resolution": "作者改17-durability.html；最新全站靜態連結檢查通過。"
+  }
+ ]
+}
