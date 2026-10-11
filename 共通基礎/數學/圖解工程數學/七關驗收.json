@@ -1,0 +1,89 @@
+{
+ "contract": "wf-table/1",
+ "source": "驗收總結.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "columns": [
+  "id",
+  "gate",
+  "status",
+  "finding",
+  "evidence_files"
+ ],
+ "rows": [
+  {
+   "id": "G1",
+   "gate": "課綱與先備／後續對應",
+   "status": "通過",
+   "finding": "19頁課綱與實際檔案對應；從微積分一階到二階/相量/Laplace/Fourier/PDE，明示電路、電子、電磁、機器人銜接，無未發布站404依賴。",
+   "evidence_files": [
+    "課綱與銜接.json",
+    "PROJECT-BRIEF.md",
+    "BUILD-SPEC.md"
+   ]
+  },
+  {
+   "id": "G2",
+   "gate": "官方教材與原文核證",
+   "status": "通過",
+   "finding": "19條在用官方教材索引；另保留1條失效歷史Brunel並明列替代，不作產品依據。20項原文校正依授權僅改上中下3冊；作者外逐項核證、三冊hash一致。",
+   "evidence_files": [
+    "教材與主張索引.json",
+    "原文查證與修訂.json",
+    "原文獨立複核.json",
+    "原文修訂複核.md"
+   ]
+  },
+  {
+   "id": "G3",
+   "gate": "ELI5圖解與完整計算",
+   "status": "通過",
+   "finding": "19/19現版教學覆蓋；每教學課具同例圖/公式/中間值/單位/驗算/近題，核心可見。隊長未寫產品正文；11課pedagogy、另5課與3支持隊長審。新增5圖鏈及FS精確等號已複驗。",
+   "evidence_files": [
+    "教學驗收.json",
+    "隊長教學複核.json",
+    "計算原型複核.json",
+    "計算教學對應.json"
+   ]
+  },
+  {
+   "id": "G4",
+   "gate": "獨立數學／圖形／量綱",
+   "status": "通過",
+   "finding": "19頁最新資產均有精確SHA數學驗收；首批互動與後續增量分開留證據。新增投影面積、同頻近題、受迫相加、2回饋分支及FS精確式已獨立複驗，無未結數學項。",
+   "evidence_files": [
+    "數學與圖形驗收.json"
+   ]
+  },
+  {
+   "id": "G5",
+   "gate": "全頁技術、三尺寸、離線",
+   "status": "通過",
+   "finding": "19頁×1440/390/320全部驗；鍵盤/重設/端點/離線file/HTTP/禁JS/UTF8/連結/console與外部runtime，兩回饋語意問題修後定點過，38成品hash吻合。未做真人學習或實體觸控。",
+   "evidence_files": [
+    "驗收紀錄.md",
+    "瀏覽器驗收.json"
+   ]
+  },
+  {
+   "id": "G6",
+   "gate": "舊站與工作流保全",
+   "status": "通過（保留歷史基線）",
+   "finding": "舊工程站23檔與baseline ca23227510d75de697936bf6c5f9b0c9c107177c SHA全同；sync-styles17同/0漂移。wf-lint既有broken2與biglist269，不聲稱整庫零警告；本課未增加斷鏈。",
+   "evidence_files": [
+    "驗收總結.md"
+   ]
+  },
+  {
+   "id": "G7",
+   "gate": "封版、精確交付與團隊收線",
+   "status": "通過（待中央實際發布）",
+   "finding": "產品38檔與數學/教學/瀏覽器受審版本一致；所有章節作者、builder、research、pedagogy、browser QA已正式final。臨時建置進度已移除。精確發布清單交root/publisher，團隊不自行git/部署或夾帶其他課。",
+   "evidence_files": [
+    "發布封版清單.json",
+    "派工計畫.json",
+    "產品作者狀態.json"
+   ]
+  }
+ ]
+}

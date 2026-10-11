@@ -1,0 +1,167 @@
+{
+ "contract": "wf-table/1",
+ "source": "PROJECT-BRIEF.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "page",
+  "question",
+  "prerequisite",
+  "reasoning",
+  "next_course",
+  "example"
+ ],
+ "rows": [
+  {
+   "page": "00-state",
+   "question": "同一個位置，下一秒卻不同",
+   "prerequisite": "導數是瞬時變化率；回連微積分 derivatives",
+   "reasoning": "位置相同→速度不同→一秒後位置不同→位置與速度各一張初值卡；下一章加入力改變速度",
+   "next_course": "機器人狀態；二階 ODE",
+   "example": "理想無外力兩車在 x=0 m，一車 v=0、一車 v=1 m/s；1 s 後分別在0與1 m"
+  },
+  {
+   "page": "second-order",
+   "question": "放手之後，為什麼會擺回來",
+   "prerequisite": "00-state；指數與正弦",
+   "reasoning": "恢復力與阻力→加速度→二階方程；三類阻尼與兩個初值",
+   "next_course": "RLC、機器人柔性機構",
+   "example": "m=1 kg、k=4 N/m、b=2 N·s/m、x0=1 m、v0=0"
+  },
+  {
+   "page": "forced",
+   "question": "一邊推、一邊放手留下的擺動",
+   "prerequisite": "second-order",
+   "reasoning": "完整響應=滿足外力的特解+調整初值的自然解；正弦受迫與共振限制",
+   "next_course": "交流與振動",
+   "example": "m=1、b=2、k=4；F=1 N 步階；x0=v0=0，再切同頻正弦"
+  },
+  {
+   "page": "rlc",
+   "question": "電壓怎麼越過目標又回來",
+   "prerequisite": "second-order；微積分一階 RC/RL",
+   "reasoning": "串聯閉合回路→R耗能、L與C儲能→vC二階初值",
+   "next_course": "電路二階暫態；電子濾波",
+   "example": "L=1 H、C=0.25 F、R=2 Ω、Vs=1 V；vC0=0、i0=0"
+  },
+  {
+   "page": "complex",
+   "question": "把一支箭頭轉四分之一圈",
+   "prerequisite": "向量座標；正弦弧度",
+   "reasoning": "實虛座標→j旋轉→加法與乘法→歐拉公式",
+   "next_course": "相量、機器人平面旋轉",
+   "example": "1+j 乘 j 變 -1+j；乘2變2+2j"
+  },
+  {
+   "page": "phasors",
+   "question": "只記大小和起跑角，就能還原同頻波嗎",
+   "prerequisite": "complex；forced",
+   "reasoning": "旋轉箭頭投影→同頻公共時間因子→微分jω→阻抗",
+   "next_course": "電路正弦穩態；電子頻率響應",
+   "example": "R=1 kΩ、C=1 μF、ω=1000 rad/s、Vs峰值1 V；Vc幅值1/√2 V、相位-45°"
+  },
+  {
+   "page": "laplace",
+   "question": "先讓後面的值變輕，再把整段加起來",
+   "prerequisite": "微積分 improper integral；exp",
+   "reasoning": "權重e^-σt→積分→收斂→複數s；單邊慣例",
+   "next_course": "初值解法",
+   "example": "f(t)=e^-t，σ=1時面積1/2；σ=-1不收斂"
+  },
+  {
+   "page": "initial-values",
+   "question": "微分換成代數時，起跑資料去了哪裡",
+   "prerequisite": "laplace；second-order",
+   "reasoning": "分部積分保留初值→Y(s)→部分分式→回到時域驗初值",
+   "next_course": "切換電路與暫態",
+   "example": "y″+3y′+2y=0，y0=1、v0=0；y=2e^-t-e^-2t"
+  },
+  {
+   "page": "transfer",
+   "question": "同一台機器，如何記住輸入變成輸出的規則",
+   "prerequisite": "initial-values；phasors",
+   "reasoning": "線性與時間不變→零初值→H(s)→極點與衰減→頻率響應條件",
+   "next_course": "控制、電路、電子",
+   "example": "y′+y=u，零初值H=1/(s+1)；非零初值另加y0/(s+1)"
+  },
+  {
+   "page": "convolution",
+   "question": "每一小下推力留下的尾巴怎麼加起來",
+   "prerequisite": "transfer；積分",
+   "reasoning": "單次脈衝反應→不同時刻平移→乘輸入量→相加成積分",
+   "next_course": "LTI訊號與電路",
+   "example": "h(t)=e^-t u(t)，輸入0≤t<1為1；t<1輸出1-e^-t，t≥1為(e-1)e^-t"
+  },
+  {
+   "page": "fourier-series",
+   "question": "一個方波能用幾支旋轉節奏湊出來",
+   "prerequisite": "complex；微積分級數",
+   "reasoning": "基本頻率→奇數諧波→係數積分→部分和→跳躍中點與Gibbs",
+   "next_course": "週期激勵與訊號",
+   "example": "週期1 s、±1 V奇方波；4/π(sin2πt+sin6πt/3+sin10πt/5)"
+  },
+  {
+   "page": "fourier-transform",
+   "question": "只響一次，頻率不再一根根排隊",
+   "prerequisite": "fourier-series；積分",
+   "reasoning": "單脈衝→連續頻率→面積與X(0)→時間縮放→單位與收斂",
+   "next_course": "脈衝、頻寬、電磁波包",
+   "example": "A=1 V、T=1 s、對稱矩形脈衝；X(ω)=AT sinc(ωT/2)，X0=1 V·s"
+  },
+  {
+   "page": "pde",
+   "question": "同一時間，不同位置也在變",
+   "prerequisite": "微積分偏導",
+   "reasoning": "一個點的時間曲線→整條空間剖面→局部交換→熱/波/靜場模型",
+   "next_course": "電磁場與傳輸分布",
+   "example": "u(x,t)=sin(πx)e^-π²t，0≤x≤1，κ=1，端點0"
+  },
+  {
+   "page": "separation",
+   "question": "整條曲線可否保留形狀，只改大小",
+   "prerequisite": "pde；second-order；fourier-series",
+   "reasoning": "試X(x)T(t)→除開→同一常數→端點篩出正弦→初形配係數",
+   "next_course": "腔體與熱擴散入門",
+   "example": "u=sin(πx)e^-κπ²t＋0.5sin(2πx)e^-4κπ²t，L=1"
+  },
+  {
+   "page": "boundaries",
+   "question": "方程相同，邊緣怎麼固定會改變答案",
+   "prerequisite": "pde；微積分電位與梯度",
+   "reasoning": "值/法向導數/混合資料→唯一性限制→無電荷一維平行板→E=-gradV",
+   "next_course": "電磁邊值問題",
+   "example": "0≤x≤1 m，V(0)=0、V(1)=10 V，V=10x V/m；E=-10 V/m"
+  },
+  {
+   "page": "engineering",
+   "question": "看到新問題，先選哪一套工具",
+   "prerequisite": "完成至少一條主線",
+   "reasoning": "題目給什麼→要整段時間或同頻穩態→集中或分布→選模型→檢查條件",
+   "next_course": "電路、電子、電磁、機器人",
+   "example": "RLC開關用初值ODE/Laplace；同頻用相量；空間邊界用PDE"
+  },
+  {
+   "page": "index",
+   "question": "眼前問題是在追時間、拆節奏，還是解空間？",
+   "prerequisite": "無",
+   "reasoning": "三個具體小場景→主線選擇→先備入口",
+   "next_course": "16個教學頁",
+   "example": "小車下一秒、RC同頻波、兩端電位"
+  },
+  {
+   "page": "glossary",
+   "question": "這個詞在圖上指的是哪個動作？",
+   "prerequisite": "各教學頁均可返回",
+   "reasoning": "可搜尋名詞、白話定義、機制與易混界線",
+   "next_course": "回到概念所在教學頁",
+   "example": "初始條件、暫態、相量、收斂域、邊界條件"
+  },
+  {
+   "page": "sources",
+   "question": "這些模型和限制依據哪份教材？",
+   "prerequisite": "無",
+   "reasoning": "課群與主張對應→官方教材章節→限制與原創範圍",
+   "next_course": "官方開放教材深入閱讀",
+   "example": "MIT 18.03SC 阻尼與Laplace、後續官方Fourier/PDE教材"
+  }
+ ]
+}

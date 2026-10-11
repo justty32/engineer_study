@@ -1,0 +1,49 @@
+{
+ "contract": "wf-table/1",
+ "source": "PROJECT-BRIEF.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "id",
+  "role",
+  "owner",
+  "territory",
+  "status"
+ ],
+ "rows": [
+  {
+   "id": "lead",
+   "role": "隊長／整合教學",
+   "owner": "engineering_math_team",
+   "territory": "PROJECT-BRIEF.md；課綱與銜接.json；派工計畫.json；計算教學對應.json；原文獨立複核.json／原文修訂複核.md；建置進度.md；本隊handoff",
+   "status": "完成課綱、20原文獨立複核、5教學與3支持頁獨立教學、最後純字句差異複核及七關封版；交中央串行發布"
+  },
+  {
+   "id": "research",
+   "role": "官方教材／獨立數學",
+   "owner": "engineering_math_team/research_audit",
+   "territory": "教材與主張索引.json；數學與圖形驗收.json；/tmp/engineering-math-audit/；dist只讀；原文20項與3原筆記已修完暫freeze",
+   "status": "已final收線：19頁精確版本數學／圖形／單位通過，新增5推導與2回饋分支已增量核；數學問題全閉合"
+  },
+  {
+   "id": "builder",
+   "role": "作者隊長／產品實作",
+   "owner": "engineering_math_team/builder",
+   "territory": "dist/；BUILD-SPEC.md；互動契約.json；README.md；產品作者狀態JSON；不含驗收紀錄與.openai",
+   "status": "已final收線：19頁、16互動交件；4章節作者均完成退出；所有獨立缺口修復，dist不再寫入"
+  },
+  {
+   "id": "qa",
+   "role": "獨立瀏覽器與技術驗收",
+   "owner": "/root/engineering_math_team/browser_qa",
+   "territory": "驗收紀錄.md；/tmp/engineering-math-qa/；產品唯讀",
+   "status": "已final收線：19頁三尺寸/鍵盤/離線/禁JS/HTTP/端點與三檔定點複驗全通過，38成品hash一致；無未結產品缺陷"
+  },
+  {
+   "id": "pedagogy",
+   "role": "獨立圖解公式／跟算教學驗收",
+   "owner": "engineering_math_team/pedagogy",
+   "territory": "教學驗收.json；/tmp/engineering-math-pedagogy/；dist只讀；11主課second-order至fourier-transform",
+   "status": "已final收線：11課教學通過；FS最後精確／近似一行授隊長獨立覆核已關，保留完整歷史與hash"
+  }
+ ]
+}

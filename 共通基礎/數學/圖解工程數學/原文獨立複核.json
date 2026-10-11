@@ -1,0 +1,318 @@
+{
+ "contract": "wf-table/1",
+ "source": "原文修訂複核.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "file_path",
+  "correction_table_path"
+ ],
+ "columns": [
+  "id",
+  "classification",
+  "file_path",
+  "section",
+  "reviewer",
+  "status",
+  "review_note",
+  "evidence_ids",
+  "reviewed_sha256",
+  "correction_table_path"
+ ],
+ "rows": [
+  {
+   "id": "N01",
+   "classification": "真正錯誤",
+   "file_path": "../03-工程數學-上.md",
+   "section": "為什麼這兩塊放一起",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "對照 ES.1803 定義；y′=y² 是非線性 ODE，靜態樑方程以空間為自變數，修文未把 ODE 限為時間／線性。",
+   "evidence_ids": [
+    "MIT-ODE-IVP"
+   ],
+   "reviewed_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N02",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-上.md",
+   "section": "1.3 二階常係數線性 ODE",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "由特徵根與能量導數 −b v² 核 m>0、k>0、b>0；b=0 明列無阻尼，避免根型單獨決定物理穩定。",
+   "evidence_ids": [
+    "MIT-DAMP",
+    "MIT-DAMP-CASES"
+   ],
+   "reviewed_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N03",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-上.md",
+   "section": "1.3 RLC 串聯電路",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "獨立從 Vs=L di/dt+Ri+vC、i=C dvC/dt 推得 LC vC″+RC vC′+vC=Vs；vC′(0+)=iL(0+)/C，未遺漏步階微分的脈衝。",
+   "evidence_ids": [
+    "MIT-RLC",
+    "MIT-INITIAL"
+   ],
+   "reviewed_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N04",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.1 定義",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "核對 MIT 單邊積分慣例；正文一致用常規 0+，且可見說明排除原點脈衝。",
+   "evidence_ids": [
+    "MIT-INITIAL"
+   ],
+   "reviewed_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N05",
+   "classification": "教學澄清",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.1 直覺",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "加權積分與反演係數不同；改文只說 F(s) 是乘權重後的積分，未把任一 s 點當成指數振幅。",
+   "evidence_ids": [
+    "MIT-LAPLACE",
+    "MIT-INITIAL",
+    "MIT-FT"
+   ],
+   "reviewed_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N06",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.2 核心性質",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "獨立以分部積分得 sF−f(0+) 與 s²F−sf(0+)−f′(0+)；右極限與常規導數約定一致。",
+   "evidence_ids": [
+    "MIT-INITIAL"
+   ],
+   "reviewed_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N07",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.3 常見轉換對",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "δ(t)→1 明列另採 0− 分布慣例，沒有混稱常規 0+ 積分包含原點脈衝。",
+   "evidence_ids": [
+    "MIT-LAPLACE",
+    "MIT-INITIAL"
+   ],
+   "reviewed_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N08",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.5 轉移函數與系統穩定性",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "核 MIT 6.241 第13、15章；H 極點先約分、BIBO 與 A 內部穩定分開。退修後補其他模態在開左半平面，虛軸 Jordan 一階條件完整。",
+   "evidence_ids": [
+    "MIT-BIBO"
+   ],
+   "reviewed_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N09",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.6 終值與初值定理",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "核 UW Lecture4：檢查 sF 極點，F=1/s 允許常數終值；sin t 沒有終值，1/(s−2) 的形式代入也不可使用。",
+   "evidence_ids": [
+    "UW-LAPLACE-THEOREMS",
+    "MIT-INITIAL"
+   ],
+   "reviewed_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N10",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-上.md",
+   "section": "與電機/通訊的連結",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "由電容電流與電感電壓微分式核出初值項符號；只在零初值使用純阻抗關係，單位分別為 A、V。",
+   "evidence_ids": [
+    "MIT-RLC",
+    "MIT-INITIAL"
+   ],
+   "reviewed_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N11",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-中.md",
+   "section": "3.2 相量",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "把 Re{V exp(jωt)} 微分驗得 jωV；同頻、LTI、穩態及峰值慣例可見，未抹去自然暫態。",
+   "evidence_ids": [
+    "MIT-COMPLEX",
+    "MIT-FORCED",
+    "MIT-RLC"
+   ],
+   "reviewed_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N12",
+   "classification": "真正錯誤",
+   "file_path": "../03-工程數學-中.md",
+   "section": "3.3 複函數與解析性",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "獨立核 Berkeley CR 定理。反例 f(z)=|z|² 僅在原點複可微，不能稱其在原點解析；開鄰域及連續一階偏導的充分條件已寫清。",
+   "evidence_ids": [
+    "BERKELEY-ANALYTIC"
+   ],
+   "reviewed_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N13",
+   "classification": "真正錯誤",
+   "file_path": "../03-工程數學-中.md",
+   "section": "4.2 傅立葉級數",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "實讀 MIT12.864 PDF p16 Parseval 及 ES.1803 §22.5–22.6；V² 需除 Ω 才為 W，週期總能量與平均功率分開；Gibbs 不是越加越完全消失。",
+   "evidence_ids": [
+    "MIT-FS-POWER",
+    "MIT-FS-GIBBS"
+   ],
+   "reviewed_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N14",
+   "classification": "教學澄清",
+   "file_path": "../03-工程數學-中.md",
+   "section": "4.3 傅立葉轉換",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "實讀 MIT6.003 Fourier Lecture16；由定義核 V·s 與逆式 1/(2π)，X=0 幅角未定，δ 對另列廣義意義。",
+   "evidence_ids": [
+    "MIT-FT"
+   ],
+   "reviewed_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N15",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-中.md",
+   "section": "4.8 取樣定理",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "核 MIT6.003 Sampling Lecture21 的嚴格大於條件；代入 t=n/(2W) 得 sin(nπ)=0，等號反例成立。",
+   "evidence_ids": [
+    "MIT-SAMPLING"
+   ],
+   "reviewed_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N16",
+   "classification": "教學澄清",
+   "file_path": "../03-工程數學-中.md",
+   "section": "拉氏 vs 傅立葉",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "實讀 MIT6.003 Lecture16 雙邊拉氏關係。退修後用「若在虛軸收斂」充分條件，未誤寫成普通 FT 的唯一必要條件；單次脈衝不是穩態週期。",
+   "evidence_ids": [
+    "MIT-FT"
+   ],
+   "reviewed_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N17",
+   "classification": "真正錯誤",
+   "file_path": "../03-工程數學-下.md",
+   "section": "6.1 PDE 與 ODE 的根本差別",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "對照 ES.1803 定義；自變數數量與是否含時間不同，修文容許只有空間的 PDE。",
+   "evidence_ids": [
+    "MIT-ODE-IVP",
+    "MIT-HEAT",
+    "UVA-BOUNDARY"
+   ],
+   "reviewed_sha256": "34e4983556616b146bc30d3701661e462d545073a77469444d89f810e85ea72b",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N18",
+   "classification": "真正錯誤",
+   "file_path": "../03-工程數學-下.md",
+   "section": "6.1 初始與邊界條件",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "實讀 ES.1803 §25.9 波方程位移與速度兩初值，對照熱方程一次時間導數及 UVa 靜電邊值問題，未聲稱所有 PDE 都需三種資料。",
+   "evidence_ids": [
+    "MIT-HEAT",
+    "UVA-BOUNDARY"
+   ],
+   "reviewed_sha256": "34e4983556616b146bc30d3701661e462d545073a77469444d89f810e85ea72b",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N19",
+   "classification": "真正錯誤",
+   "file_path": "../03-工程數學-下.md",
+   "section": "6.4(c) 格林函數法",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "核 UVa Green 表示源位置雙變數及邊界積分；有限區間 Dirichlet 核 G=min(x,ξ)[L−max(x,ξ)]/L 不是只依差值，證實一般不可稱卷積。",
+   "evidence_ids": [
+    "UVA-BOUNDARY",
+    "MIT-CONV"
+   ],
+   "reviewed_sha256": "34e4983556616b146bc30d3701661e462d545073a77469444d89f810e85ea72b",
+   "correction_table_path": "原文查證與修訂.json"
+  },
+  {
+   "id": "N20",
+   "classification": "缺條件",
+   "file_path": "../03-工程數學-下.md",
+   "section": "6.5 邊界條件三種類型",
+   "reviewer": "engineering_math_team（施修作者 research_audit 之外的隊長）",
+   "status": "通過；僅限此列主張與受審雜湊",
+   "review_note": "核 UVa 唯一性與 Neumann 相容性；V 加常數不變 E，法向導數與任意磁場切向條件不同；Robin 和分段混合邊界分清。",
+   "evidence_ids": [
+    "MIT-HEAT",
+    "UVA-BOUNDARY"
+   ],
+   "reviewed_sha256": "34e4983556616b146bc30d3701661e462d545073a77469444d89f810e85ea72b",
+   "correction_table_path": "原文查證與修訂.json"
+  }
+ ]
+}

@@ -1,0 +1,829 @@
+{
+ "contract": "wf-table/1",
+ "source": "PROJECT-BRIEF.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "page_path"
+ ],
+ "columns": [
+  "id",
+  "page_path",
+  "status",
+  "reviewer",
+  "scope",
+  "checks",
+  "findings",
+  "reviewed_sha256",
+  "evidence",
+  "limitations",
+  "review_history"
+ ],
+ "rows": [
+  {
+   "id": "initial-values",
+   "page_path": "dist/initial-values.html",
+   "status": "通過（教學驗收）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "沿用已通過prototype：兩初值卡→0+導數規則→移項/因式分解→通分比較兩係數→相減得2/−1→同t1兩項及和→雙初值和ODE驗算。HTML與已驗prototype完全相同；本輪重看圖5及三尺寸。",
+    "near_task": "固定y0=1只改v0=1，逐算A3/B−2、y1=.832968與兩初值；互動相符。",
+    "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+    "interaction": {
+     "single_change": {
+      "id": "velocity",
+      "value": 1
+     },
+     "observed_readouts": "兩個指數係數\nA = 3，B = -2\n一秒後的 y\n0.832968",
+     "reset_returns_default": true
+    }
+   },
+   "findings": [
+    {
+     "id": "P01",
+     "location": "第5步SVG與計算",
+     "issue": "醒目2+(−1)=1標近t1導引，兩個t1讀點缺數字，難把正在算的.735759與−.135335對回圖",
+     "requested_fix": "明確標t1兩帶號讀值與合計.600424；t0和移為有明確指向的小註",
+     "status": "已修後複驗通過"
+    },
+    {
+     "id": "P02",
+     "location": "主練習",
+     "issue": "原例同改y0與v0，不符合單變因遷移",
+     "requested_fix": "固定y0=1，只改v0=1，逐步求A3/B−2與一秒讀值",
+     "status": "已修後複驗通過"
+    },
+    {
+     "id": "P03",
+     "location": "題頭、計算框、SVG",
+     "issue": "題頭說斜體s為變數，但計算框/SVG未一致區別秒s與拉氏變數s",
+     "requested_fix": "變數字形一致斜體，單位直體，避免s+3s^-1混讀",
+     "status": "已修後複驗通過"
+    },
+    {
+     "id": "P04",
+     "location": "第5圖新讀值標籤",
+     "issue": "修訂途中曾把項值標成A/B，與係數A=2、B=−1混淆",
+     "requested_fix": "改成A項/B項",
+     "status": "已修後複驗通過"
+    }
+   ],
+   "reviewed_sha256": {
+    "initial-values.html": "fc9486609ceae7940c01143f6e63432fd908755ae885451fc278928fb9e59195",
+    "initial-values.js": "7df53de747d5ec812b44e2c3758b5c5f32ec81920ef97a7d10c0b3b572f7732e",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/initial-values",
+    "metrics": "/tmp/engineering-math-pedagogy/initial-values/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/initial-values/lesson-text.txt",
+    "actually_viewed": [
+     "320-key-calculation.png",
+     "1440-figure-5.png",
+     "390-figure-5.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。",
+    "prototype_history": {
+     "metrics": "/tmp/engineering-math-pedagogy/iv-prototype-evidence.json",
+     "screenshots_viewed": [
+      "iv-1440-top.png",
+      "iv-1440-step-5.png",
+      "iv-390-step-4.png",
+      "iv-390-practice.png",
+      "iv-320-step-1.png",
+      "iv-320-step-2.png",
+      "iv-320-step-3.png",
+      "iv-320-step-5.png",
+      "iv-320-step-6.png",
+      "iv-320-step5-viewport.png"
+     ],
+     "method": "已有本機Chromium與Playwright-core，file離線載入；讀完完整正文，實看各圖與三尺寸；長元素截圖的skip-link為截圖工件，實際viewport另確認不顯示",
+     "initial_review_sha256": {
+      "initial-values.html": "d16bdcd202485b7771d8c52edec48086bb2d91aeb01c6d2da9f76710e4857707",
+      "initial-values.js": "7df53de747d5ec812b44e2c3758b5c5f32ec81920ef97a7d10c0b3b572f7732e",
+      "lab.css": "301838e0e34e334feaedd74fd7fb1de7c89123c6d6aa56383f9b1c53a70f5997",
+      "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+     },
+     "followup": {
+      "metrics": "/tmp/engineering-math-pedagogy/initial-values/evidence.json",
+      "actually_viewed": [
+       "1440-figure-5.png",
+       "320-figure-3.png",
+       "320-figure-4.png",
+       "320-figure-5.png",
+       "390-practice.png"
+      ],
+      "directory": "/tmp/engineering-math-pedagogy/initial-values/",
+      "change_scope": "從d16版完整讀過的正文/六圖保留證據；ee版重看圖5/練習/s字形，bce版再看圖5 A項/B項，三尺寸DOM與SVG可讀性重檢",
+      "browser_review_html_sha256": "bce401cdbbd39c7a78ea51fd51719c1d85be1717791a21339d086f9617535176",
+      "final_text_only_change": "fc948版只補零線上方/下方；獨立文字確認，沿用bce版三尺寸與圖標檢查。"
+     }
+    }
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。"
+  },
+  {
+   "id": "second-order",
+   "page_path": "dist/second-order.html",
+   "status": "通過（教學驗收）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "力箭頭→−kx/−bv→m x″+b x′+kx=0→α與ωd→兩初值求C/D→半秒力與一秒x/v→初值/合力/能量檢查。正負位置與速度分清，先用實函數，不預支複數。",
+    "near_task": "只改x0=.5，兩係數減半，明列x1=.075287、v1=−.419280與初值；互動同題相符。",
+    "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+    "interaction": {
+     "single_change": {
+      "id": "position",
+      "value": 0.5
+     },
+     "observed_readouts": "1 s 時的位置 x\n0.075 m\n1 s 時的速度 v\n-0.419 m/s",
+     "reset_returns_default": true
+    }
+   },
+   "findings": [],
+   "reviewed_sha256": {
+    "second-order.html": "d8dfcb7d5e19ddccc25e801f08fcb52f93d926572c6913af7444f3d462ed19b5",
+    "second-order.js": "fcb606ca2caec3cb213d5d65f950176b5a01582cfbe4b5ce67a3d68bc37abce1",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/second-order",
+    "metrics": "/tmp/engineering-math-pedagogy/second-order/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/second-order/lesson-text.txt",
+    "actually_viewed": [
+     "320-figure-1.png",
+     "320-figure-3.png",
+     "320-figure-4.png",
+     "390-figure-2.png",
+     "1440-key-calculation.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。"
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。"
+  },
+  {
+   "id": "forced",
+   "page_path": "dist/forced.html",
+   "status": "通過（教學驗收）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "恆力平衡→初值差額→齊次係數→同一秒三點與讀值卡→帶正負相加→兩初值/原方程檢查，圖算鏈通過。",
+    "near_task": "只改x0=.5，特解維持.25、修正改正，完整算得x1=.287644與初值；互動相符。",
+    "responsive": "本次只重查5份更動HTML：1440/390/320均渲染穩定、無頁面overflow/故事圖文字越界/字高小於12px；新增近題圖另獨立掃描並實看三尺寸。JS/shared/css及其餘課HTML SHA均未變，保留既有證據。",
+    "interaction": {
+     "single_change": {
+      "id": "position",
+      "value": 0.5
+     },
+     "observed_readouts": "完整解在 1 s 的位置\n0.288 m\n長時間行為\n0.25 m",
+     "reset_returns_default": true
+    },
+    "incremental_fix_review": "第4圖已在t=1垂線標出特解圓點+.250000 m、修正叉點−.037644 m、總和方點+.212356 m；圖下三張同名讀值卡與接續代算逐項一致。"
+   },
+   "findings": [
+    {
+     "id": "EM-P-FORCED-01",
+     "location": "第4步圖及其同t1計算",
+     "issue": "圖只在藍線放無名點；正文要讀xp、xh的帶號高度相加，圖卻沒有同t1導引、兩項讀點/數值，未達prototype的圖算對照。",
+     "requested_fix": "補t=1導引與xp=.25、xh=−.037644、完整x=.212356各帶名稱點/讀值卡；三線同尺度。",
+     "kind": "圖與正在計算的量缺直接對照",
+     "status": "已修後精確差異複驗通過"
+    }
+   ],
+   "reviewed_sha256": {
+    "forced.html": "018bbe2504aacda0f90e286f7e5013a76b5183eb9abbb84da17933e9aca6a4fb",
+    "forced.js": "9a7fd9e2689b3852c3d388f16515dda01b88b4298a9ff6f3fdff2c3d8db1e8ba",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/forced",
+    "metrics": "/tmp/engineering-math-pedagogy/forced/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/forced/lesson-text.txt",
+    "actually_viewed": [
+     "320-figure-4.png",
+     "1440-figure-4.png",
+     "fix-390-section.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。",
+    "review_history": [
+     {
+      "reviewed_sha256": {
+       "forced.html": "946a34731ac01b4960ec6de7c8826f55c29ad267f9060670b122572a42572a1f",
+       "forced.js": "9a7fd9e2689b3852c3d388f16515dda01b88b4298a9ff6f3fdff2c3d8db1e8ba",
+       "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+       "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+      },
+      "status": "待修後複驗",
+      "checks": {
+       "worked_chain": "恆力平衡xp=.25→與指定初值之差→齊次修正C/D→1s兩帶號項相加→雙初值及ODE檢查；另完整求餘弦A/B並指出共振分母零的例外。文字計算可跟，但第4圖尚欠三讀值對照。",
+       "near_task": "只改x0=.5，特解維持.25、修正改正，完整算得x1=.287644與初值；互動相符。",
+       "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+       "interaction": {
+        "single_change": {
+         "id": "position",
+         "value": 0.5
+        },
+        "observed_readouts": "完整解在 1 s 的位置\n0.288 m\n長時間行為\n0.25 m",
+        "reset_returns_default": true
+       }
+      },
+      "findings": [
+       {
+        "id": "EM-P-FORCED-01",
+        "location": "第4步圖及其同t1計算",
+        "issue": "圖只在藍線放無名點；正文要讀xp、xh的帶號高度相加，圖卻沒有同t1導引、兩項讀點/數值，未達prototype的圖算對照。",
+        "requested_fix": "補t=1導引與xp=.25、xh=−.037644、完整x=.212356各帶名稱點/讀值卡；三線同尺度。",
+        "kind": "圖與正在計算的量缺直接對照",
+        "status": "待修後精確差異複驗"
+       }
+      ],
+      "snapshot_directory": "/tmp/engineering-math-pedagogy/forced/before-five-fixes"
+     }
+    ],
+    "incremental_metrics": "/tmp/engineering-math-pedagogy/five-fixes-evidence.json",
+    "incremental_scope": "對照第一輪完整正文純文字diff，只核5新增區塊；原始四檔SHA及問題歷史保留於review_history。",
+    "text_diff": "/tmp/engineering-math-pedagogy/forced/teaching-fix-diff.txt"
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。"
+  },
+  {
+   "id": "rlc",
+   "page_path": "dist/rlc.html",
+   "status": "通過（教學驗收）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "閉合回路/電壓極性→KVL與i=CvC′→LC/RC係數及單位→初值求A/B→vC1/i1→i=0求首峰時刻/高度→KVL與能量帳。圖上峰值與分段能量都可對應計算。",
+    "near_task": "只改vC0=.5，修正半幅但完整電壓不半幅，vC1=.924713/i1=.104820與初值全列；互動相符。",
+    "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+    "interaction": {
+     "single_change": {
+      "id": "voltage",
+      "value": 0.5
+     },
+     "observed_readouts": "1 s 時的電容電壓\n0.925 V\n1 s 時的串聯電流\n0.105 A",
+     "reset_returns_default": true
+    }
+   },
+   "findings": [],
+   "reviewed_sha256": {
+    "rlc.html": "b6da0e84bac48b6af16a4b3b6456a1b05811171417ae540407641d80d32497d4",
+    "rlc.js": "76b3a3c5559e8789c98e96f971c2015b0cc260c88efb3c844571633f86bdae02",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/rlc",
+    "metrics": "/tmp/engineering-math-pedagogy/rlc/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/rlc/lesson-text.txt",
+    "actually_viewed": [
+     "1440-figure-1.png",
+     "320-figure-3.png",
+     "390-figure-4.png",
+     "320-figure-5.png",
+     "320-key-calculation.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。"
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。"
+  },
+  {
+   "id": "complex",
+   "page_path": "dist/complex.html",
+   "status": "通過（教學驗收）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "分量棒→j分配律→j²=−1→新座標→整個負分量平方求模長→依象限修正arctan→四轉回原位。RLC特徵根另有二次公式完整代算，無暗藏核心。",
+    "near_task": "只改實部1→2，算−1+2j、√5、第二象限角度，與原長度/角度+90°交叉驗證；互動相符。",
+    "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+    "interaction": {
+     "single_change": {
+      "id": "real",
+      "value": 2
+     },
+     "observed_readouts": "結果複數\n-1 + 2j\n結果長度\n長度 2.236",
+     "reset_returns_default": true
+    }
+   },
+   "findings": [],
+   "reviewed_sha256": {
+    "complex.html": "68d62ec972e63f5e0f22a4a39cfa33533138f4addcf1ccbd29708c5db26d2e47",
+    "complex.js": "8f66b9085c3b47ade2b38adf32c64f4e756ee78817c603c28907f48ccd0f8c4a",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/complex",
+    "metrics": "/tmp/engineering-math-pedagogy/complex/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/complex/lesson-text.txt",
+    "actually_viewed": [
+     "320-figure-1.png",
+     "320-figure-2.png",
+     "320-figure-3.png",
+     "390-figure-4.png",
+     "1440-figure-5.png",
+     "320-key-calculation.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。"
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。"
+  },
+  {
+   "id": "phasors",
+   "page_path": "dist/phasors.html",
+   "status": "通過（教學驗收）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "RC回路→μF換F→ωRC→壓降首尾相加→共軛除法→VC座標/峰值/相位→時域投影→一刻/四分之一圈與回路檢查。正弦穩態、峰值慣例與同頻條件可見。",
+    "near_task": "只改ω500，ωRC=.5→.8−.4j→模長.894427、角−26.565°與時域式，乘回分母與t0驗算；互動相符。",
+    "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+    "interaction": {
+     "single_change": {
+      "id": "frequency",
+      "value": 500
+     },
+     "observed_readouts": "輸出峰值\n0.894 V\n輸出相位\n-26.6°",
+     "reset_returns_default": true
+    }
+   },
+   "findings": [],
+   "reviewed_sha256": {
+    "phasors.html": "3629c486a6f455e9d819c10f1503decdff2ab7482ae20b31f9a33df07456c4d2",
+    "phasors.js": "db7f7fe5387449e6bfecc6aed04c653c0ba2d62be2babb0b7894ae6b70d3b318",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/phasors",
+    "metrics": "/tmp/engineering-math-pedagogy/phasors/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/phasors/lesson-text.txt",
+    "actually_viewed": [
+     "320-figure-2.png",
+     "320-figure-3.png",
+     "390-figure-4.png",
+     "1440-figure-5.png",
+     "320-figure-6.png",
+     "320-key-calculation.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。"
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。"
+  },
+  {
+   "id": "laplace",
+   "page_path": "dist/laplace.html",
+   "status": "通過（教學驗收）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "同時刻函數×權重→e^-2t→圖中0..3填色→反導函數逐端點→有限面積.498761→尾巴.001239與無限.5；邊界σ=−1不套除零式，直接積常數。單位與0+條件清楚。",
+    "near_task": "只改σ0，權重1→新反導函數→有限.950213與無限1、尾巴互驗；互動相符。",
+    "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+    "interaction": {
+     "single_change": {
+      "id": "sigma",
+      "value": 0
+     },
+     "observed_readouts": "有限窗面積\n0.95 s\n無限積分\n1 s",
+     "reset_returns_default": true
+    }
+   },
+   "findings": [],
+   "reviewed_sha256": {
+    "laplace.html": "8d2ab469f7d9ccd60233235ddfb2f6ee4b5ba70ec1023d88bfb6961bd851bb5d",
+    "laplace.js": "8f6cc948824bea836df5a8f9830b428fe4aeea3dc879de8e736ddbf116f28667",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/laplace",
+    "metrics": "/tmp/engineering-math-pedagogy/laplace/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/laplace/lesson-text.txt",
+    "actually_viewed": [
+     "320-figure-3.png",
+     "320-figure-4.png",
+     "390-figure-5.png",
+     "1440-figure-6.png",
+     "390-key-calculation.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。"
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。"
+  },
+  {
+   "id": "transfer",
+   "page_path": "dist/transfer.html",
+   "status": "通過（教學驗收）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "空起點卡→零初值H及單位→步階解→一秒讀值→非零初值分項→H分母的極點位置，核心皆接在圖旁且在互動前可見。",
+    "near_task": "只改a2，at2、u0/a=.5、y1=.432332都列出；互動相符。",
+    "responsive": "本次只重查5份更動HTML：1440/390/320均渲染穩定、無頁面overflow/故事圖文字越界/字高小於12px；新增近題圖另獨立掃描並實看三尺寸。JS/shared/css及其餘課HTML SHA均未變，保留既有證據。",
+    "interaction": {
+     "single_change": {
+      "id": "rate",
+      "value": 2
+     },
+     "observed_readouts": "完整 y(1 s)（無量綱）\n0.432\n極點位置\n極點 s = -2 s⁻¹",
+     "reset_returns_default": true
+    },
+    "incremental_fix_review": "第2圖從空起點y0=0，逐行保留sY−y0+aY=U→(s+a)Y=U→H=Y/U；以Y秒/U無量綱驗H秒。非零庫存項另列，再指定步階U=u0/s。第5圖新增分母零→s=−a→叉點與指數尾巴對照。"
+   },
+   "findings": [
+    {
+     "id": "EM-P-TRANSFER-01",
+     "location": "第2步圖旁計算／實驗後H正文",
+     "issue": "本課目標之一H=Y/U的零初值前提與單位尚只在實驗後正文；圖旁直接代步階，讀者看圖未走完從空起點到系統規則的推導。",
+     "requested_fix": "接圖上的空起點y0=0，先(s+a)Y=U→H=Y/U=1/(s+a)，說明H單位秒，再代U=u0/s求步階；非零初值另加項的邊界維持。",
+     "kind": "關鍵公式的條件與選式路徑未接圖",
+     "status": "已修後精確差異複驗通過"
+    }
+   ],
+   "reviewed_sha256": {
+    "transfer.html": "df97d5b5cc65d8ea4ae8cbc92075d7f088fe6235a5bcda3a378196203a91e787",
+    "transfer.js": "98c8b11cc0586cd28a9e3d699f78539d5f2d5e0f8749f8cbbcdbf93239d7568d",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/transfer",
+    "metrics": "/tmp/engineering-math-pedagogy/transfer/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/transfer/lesson-text.txt",
+    "actually_viewed": [
+     "fix-1440-section.png",
+     "fix-390-section.png",
+     "fix-320-section.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。",
+    "review_history": [
+     {
+      "reviewed_sha256": {
+       "transfer.html": "91aad2d6af78cf3465759f633dd6796d8a8eee00a1e78fbb2f016da095b316a0",
+       "transfer.js": "98c8b11cc0586cd28a9e3d699f78539d5f2d5e0f8749f8cbbcdbf93239d7568d",
+       "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+       "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+      },
+      "status": "待修後複驗",
+      "checks": {
+       "worked_chain": "補入/清除流向→y′+ay=u→零初值步階部分分式→一秒.632121與起點→非零初值分成零輸入/零狀態，另有極點及a0邊界。H的推導仍在實驗後正文，未接回圖上空起點。",
+       "near_task": "只改a2，at2、u0/a=.5、y1=.432332都列出；互動相符。",
+       "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+       "interaction": {
+        "single_change": {
+         "id": "rate",
+         "value": 2
+        },
+        "observed_readouts": "完整 y(1 s)（無量綱）\n0.432\n極點位置\n極點 s = -2 s⁻¹",
+        "reset_returns_default": true
+       }
+      },
+      "findings": [
+       {
+        "id": "EM-P-TRANSFER-01",
+        "location": "第2步圖旁計算／實驗後H正文",
+        "issue": "本課目標之一H=Y/U的零初值前提與單位尚只在實驗後正文；圖旁直接代步階，讀者看圖未走完從空起點到系統規則的推導。",
+        "requested_fix": "接圖上的空起點y0=0，先(s+a)Y=U→H=Y/U=1/(s+a)，說明H單位秒，再代U=u0/s求步階；非零初值另加項的邊界維持。",
+        "kind": "關鍵公式的條件與選式路徑未接圖",
+        "status": "待修後精確差異複驗"
+       }
+      ],
+      "snapshot_directory": "/tmp/engineering-math-pedagogy/transfer/before-five-fixes"
+     }
+    ],
+    "incremental_metrics": "/tmp/engineering-math-pedagogy/five-fixes-evidence.json",
+    "incremental_scope": "對照第一輪完整正文純文字diff，只核5新增區塊；原始四檔SHA及問題歷史保留於review_history。",
+    "text_diff": "/tmp/engineering-math-pedagogy/transfer/teaching-fix-diff.txt"
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。"
+  },
+  {
+   "id": "convolution",
+   "page_path": "dist/convolution.html",
+   "status": "通過（教學驗收）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "八矩形→固定t1積分→精確面積→t2仍只積τ0..1→上下限與兩算法互驗，時間角色和積分範圍可由圖追蹤。",
+    "near_task": "只改T=.5，先累積.393469再衰減.5s得到.238651，完整中間值可追；互動相符。",
+    "responsive": "本次只重查5份更動HTML：1440/390/320均渲染穩定、無頁面overflow/故事圖文字越界/字高小於12px；新增近題圖另獨立掃描並實看三尺寸。JS/shared/css及其餘課HTML SHA均未變，保留既有證據。",
+    "interaction": {
+     "single_change": {
+      "id": "duration",
+      "value": 0.5
+     },
+     "observed_readouts": "精確積分（無量綱）\n0.238651\n8 矩形近似（無量綱）\n0.238612",
+     "reset_returns_default": true
+    },
+    "incremental_fix_review": "第5圖清楚區分停輸入的1s垂線與觀察2s圓點；新計算把τ上限維持min(2,1)=1，展開兩端為e^-1與e^-2，差.23254416，並和舊值再衰減互驗。"
+   },
+   "findings": [
+    {
+     "id": "EM-P-CONV-01",
+     "location": "第5步t=2s圖下",
+     "issue": "t2僅用上一秒結果再乘e^-1；未讓讀者照圖辨識觀察時刻雖是2但輸入仍只在0..1，所以不能把積分上限誤寫2。",
+     "requested_fix": "補t2時τ仍從0積到1的公式、反導函數與上下限，得到e^-1−e^-2=.232544，對回圖上停止線及2s讀點。",
+     "kind": "核心積分邊界案例未逐步跟算",
+     "status": "已修後精確差異複驗通過"
+    }
+   ],
+   "reviewed_sha256": {
+    "convolution.html": "c826b178b86e85e4e316ef5894679315c957946a8f4fb0da061ba1ea1cbd1dd1",
+    "convolution.js": "8a414decae82d79566630ac90db8ef471be00001a556a2f5e2f50bc1fb8c502a",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/convolution",
+    "metrics": "/tmp/engineering-math-pedagogy/convolution/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/convolution/lesson-text.txt",
+    "actually_viewed": [
+     "fix-1440-section.png",
+     "fix-390-section.png",
+     "fix-320-section.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。",
+    "review_history": [
+     {
+      "reviewed_sha256": {
+       "convolution.html": "3e7b96afe1d821cf96fb7f6e629d1d7a113d8ad50b07784b76ec684a4383c2f9",
+       "convolution.js": "b654839bc7e91d019ba0aeff76484fdf30c9d6286ef12a080f2d3e92303d99bf",
+       "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+       "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+      },
+      "status": "待修後複驗",
+      "checks": {
+       "worked_chain": "8格輸入面積→時移衰減→固定t1的貢獻密度→逐格高度×寬度→精確0..1積分→輸入停止仍有尾巴。t1計算完整；t2只有舊值再衰減，尚未示範不變積分上限。",
+       "near_task": "只改T=.5，先累積.393469再衰減.5s得到.238651，完整中間值可追；互動相符。",
+       "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+       "interaction": {
+        "single_change": {
+         "id": "duration",
+         "value": 0.5
+        },
+        "observed_readouts": "精確積分（無量綱）\n0.238651\n8 矩形近似（無量綱）\n0.238612",
+        "reset_returns_default": true
+       }
+      },
+      "findings": [
+       {
+        "id": "EM-P-CONV-01",
+        "location": "第5步t=2s圖下",
+        "issue": "t2僅用上一秒結果再乘e^-1；未讓讀者照圖辨識觀察時刻雖是2但輸入仍只在0..1，所以不能把積分上限誤寫2。",
+        "requested_fix": "補t2時τ仍從0積到1的公式、反導函數與上下限，得到e^-1−e^-2=.232544，對回圖上停止線及2s讀點。",
+        "kind": "核心積分邊界案例未逐步跟算",
+        "status": "待修後精確差異複驗"
+       }
+      ],
+      "snapshot_directory": "/tmp/engineering-math-pedagogy/convolution/before-five-fixes"
+     }
+    ],
+    "incremental_metrics": "/tmp/engineering-math-pedagogy/five-fixes-evidence.json",
+    "incremental_scope": "對照第一輪完整正文純文字diff，只核5新增區塊；原始四檔SHA及問題歷史保留於review_history。",
+    "text_diff": "/tmp/engineering-math-pedagogy/convolution/teaching-fix-diff.txt",
+    "boundary_feedback_followup": {
+     "reviewer": "engineering_math_team（非產品作者）；research_audit獨立數學複驗",
+     "scope": "只檢查 t=T 的分支，輸入此刻停止、積分仍保留既有貢獻；t<T/t>T/t0語意一致，數值公式與圖不變",
+     "math_row": "MATH3-convolution",
+     "evidence": "/tmp/engineering-math-builder/batch4-changes.json",
+     "browser": "獨立browser_qa另作定點技術複驗；此列不代替全站技術報告。"
+    }
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。",
+   "review_history": [
+    {
+     "status": "通過（教學驗收）",
+     "reviewed_sha256": {
+      "convolution.html": "c826b178b86e85e4e316ef5894679315c957946a8f4fb0da061ba1ea1cbd1dd1",
+      "convolution.js": "b654839bc7e91d019ba0aeff76484fdf30c9d6286ef12a080f2d3e92303d99bf",
+      "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+      "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+     },
+     "reason": "保留只改t=T回饋分支前版本；整課圖解、推導、近題與布局未變。"
+    }
+   ]
+  },
+  {
+   "id": "fourier-series",
+   "page_path": "dist/fourier-series.html",
+   "status": "通過（教學驗收；FS最後單行由隊長獨立複核）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "方波→乘積兩半週面積→積分與2/T0→4/π峰值→奇諧波同刻相加→頻率棒/跳點/均方，教學圖鏈通過；精確/近似符號單行待修。",
+    "near_task": "只改N2，去掉第五項得.848826，均方.900633，指出單點值不單調而平方和按非負項增長；互動相符。",
+    "responsive": "本次只重查5份更動HTML：1440/390/320均渲染穩定、無頁面overflow/故事圖文字越界/字高小於12px；新增近題圖另獨立掃描並實看三尺寸。JS/shared/css及其餘課HTML SHA均未變，保留既有證據。",
+    "interaction": {
+     "single_change": {
+      "id": "harmonics",
+      "value": 2
+     },
+     "observed_readouts": "t = 1/(4f) 的合成電壓\n0.848826 V\n有限和一週期均方\n0.900633 V²",
+     "reset_returns_default": true
+    },
+    "incremental_fix_review": "第2步新增一週期乘積p=x·sin圖：前半正×正、後半負×負，各面積+1/π V·s；圖下乘2/T0得到4/π V並接兩端積分。圖像已能說明係數從何而來；尚有root指出且本次確見的一處近似數接精確等號需修。"
+   },
+   "findings": [
+    {
+     "id": "EM-P-FS-01",
+     "location": "第2步b1係數來源",
+     "issue": "文字有兩段積分；配圖只有結果正弦。無法從圖看見前半正×正、後半負×負兩塊同為正的投影面積，4/π的來源仍靠公式文字。",
+     "requested_fix": "補x(t)·sin(2πt/T)兩段投影面積圖，各+1/π V·s，再乘2/T得到4/πV；可保留原結果曲線。",
+     "kind": "係數來源欠原理與代算對應圖",
+     "status": "已修後精確差異複驗通過"
+    },
+    {
+     "id": "EM-P-FS-02",
+     "location": "第2步b1數值計算框",
+     "kind": "精確等號與四捨五入近似串接不一致",
+     "issue": "b1≈(2/(1s))(0.31830989+0.31830989)V·s下一行卻接=4/πV，將四捨五入後的兩個面積與精確式用等號連在一起。由root提出、本輪在320/390實際截圖及正文再次確認。",
+     "requested_fix": "先寫精確(2/(1s))[(1/π)+(1/π)]V·s=4/πV≈1.27323954V，或數值鏈全部使用≈；圖和其他內容不需改。",
+     "status": "已修後由隊長獨立核字句通過；research亦確認精確串",
+     "resolution": "b1=(2/(1 s))(1/π+1/π) V·s=(4/π) V≈1.27323954 V；兩段面積先給精確式再給近似小數，未把四捨五入相加接精確等號。"
+    }
+   ],
+   "reviewed_sha256": {
+    "fourier-series.html": "95f79ded937360a21dc3910534a1b7e7965d8163cd85a5c77b42f2d6b6e7bd6f",
+    "fourier-series.js": "b35fa0a506d72b864bb63ca338e93feb8a9a2af8bfd8617ba7118bf47e32b3fb",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/fourier-series",
+    "metrics": "/tmp/engineering-math-pedagogy/fourier-series/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/fourier-series/lesson-text.txt",
+    "actually_viewed": [
+     "320-figure-3.png",
+     "1440-figure-3.png",
+     "fix-320-section.png",
+     "fix-390-section.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。",
+    "review_history": [
+     {
+      "reviewed_sha256": {
+       "fourier-series.html": "ac29e3a4c05898b166c623f6edcef2e3be08a1182d866e9db74d8ee0d362d088",
+       "fourier-series.js": "b35fa0a506d72b864bb63ca338e93feb8a9a2af8bfd8617ba7118bf47e32b3fb",
+       "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+       "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+      },
+      "status": "待修後複驗",
+      "checks": {
+       "worked_chain": "方波→前三奇次項在同t=.25之正負值→和1.103474→正弦峰值頻率棒→Gibbs/跳點/均方。b1兩段積分寫在正文，但第2圖僅顯示係數已算完的正弦，欠投影面積圖。",
+       "near_task": "只改N2，去掉第五項得.848826，均方.900633，指出單點值不單調而平方和按非負項增長；互動相符。",
+       "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+       "interaction": {
+        "single_change": {
+         "id": "harmonics",
+         "value": 2
+        },
+        "observed_readouts": "t = 1/(4f) 的合成電壓\n0.848826 V\n有限和一週期均方\n0.900633 V²",
+        "reset_returns_default": true
+       }
+      },
+      "findings": [
+       {
+        "id": "EM-P-FS-01",
+        "location": "第2步b1係數來源",
+        "issue": "文字有兩段積分；配圖只有結果正弦。無法從圖看見前半正×正、後半負×負兩塊同為正的投影面積，4/π的來源仍靠公式文字。",
+        "requested_fix": "補x(t)·sin(2πt/T)兩段投影面積圖，各+1/π V·s，再乘2/T得到4/πV；可保留原結果曲線。",
+        "kind": "係數來源欠原理與代算對應圖",
+        "status": "待修後精確差異複驗"
+       }
+      ],
+      "snapshot_directory": "/tmp/engineering-math-pedagogy/fourier-series/before-five-fixes"
+     }
+    ],
+    "incremental_metrics": "/tmp/engineering-math-pedagogy/five-fixes-evidence.json",
+    "incremental_scope": "對照第一輪完整正文純文字diff，只核5新增區塊；原始四檔SHA及問題歷史保留於review_history。",
+    "text_diff": "/tmp/engineering-math-pedagogy/fourier-series/teaching-fix-diff.txt",
+    "final_notation_followup": {
+     "reviewer": "engineering_math_team（非產品作者）",
+     "scope": "只核FS兩面積與b1精確/近似單行，圖形/布局及其他產品未變，沿用pedagogy前輪證據",
+     "evidence": "/tmp/engineering-math-builder/batch4-changes.json",
+     "screenshot": "/tmp/em-batch4-fs-calculation-1440.png",
+     "math_confirmation": "research_audit訊息已獨立確認精確(1/π+1/π)→4/π→小數版本；新增圖公式完整數學表另驗。"
+    }
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。",
+   "review_history": [
+    {
+     "status": "待修後複驗（僅精確／近似符號）",
+     "reviewed_sha256": {
+      "fourier-series.html": "8f74b4561ab5b44ecfefdf20fb1baa808ff9ca1d4879e1dc557963554bf99da2",
+      "fourier-series.js": "b35fa0a506d72b864bb63ca338e93feb8a9a2af8bfd8617ba7118bf47e32b3fb",
+      "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+      "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+     },
+     "reason": "保留FS單行精確／近似記號修前版本；圖解與三尺寸已由pedagogy複驗通過。"
+    }
+   ]
+  },
+  {
+   "id": "fourier-transform",
+   "page_path": "dist/fourier-transform.html",
+   "status": "通過（教學驗收）",
+   "reviewer": "engineering_math_team/pedagogy（獨立於作者）",
+   "scope": "11課獨立圖解/跟算驗收；讀完本頁正文，實看關鍵分鏡與計算框、近題對應互動；詳細數學與全站技術由其他角色負責",
+   "checks": {
+    "worked_chain": "矩形加權面積→帶號sinc主例與3π負瓣→固定同ω只改T的雙曲線/兩點→逐行z代入→零頻面積與首零點驗算，遷移比較通過。",
+    "near_task": "只改T2，中央2與首零點π有中間值及驗算；欠固定同一ω時T1/T2貢獻對照，建議π下2/π→0接回近題零點。",
+    "responsive": "本次只重查5份更動HTML：1440/390/320均渲染穩定、無頁面overflow/故事圖文字越界/字高小於12px；新增近題圖另獨立掃描並實看三尺寸。JS/shared/css及其餘課HTML SHA均未變，保留既有證據。",
+    "interaction": {
+     "single_change": {
+      "id": "width",
+      "value": 2
+     },
+     "observed_readouts": "X(0)：時間面積\n2 V·s\n第一零點\n±3.142 rad/s",
+     "reset_returns_default": true
+    },
+    "incremental_fix_review": "近題新增固定ω=π導引，T1藍圓點2/π、T2珊瑚方點0，保持A1；逐行計算z=π/2→2/π≈.63661977與z=π→0，再核零頻面積1/2和新首零點π。原有效3π負瓣主例保留。"
+   },
+   "findings": [
+    {
+     "id": "EM-P-FT-01",
+     "location": "寬度T2近題與固定頻率比較",
+     "issue": "3π負瓣主例可跟算且正確；近題只比移動的首零點與中央值，未比較同一ω下只改T造成的貢獻變化。",
+     "requested_fix": "保留3π主例，近題補ω=π固定不變，T1給X=2/π、T2給0；在同ω標記或近題小圖對照，與零頻面積2及首零點π相接。",
+     "kind": "單變因遷移缺同一頻率參照；不是3π例錯誤",
+     "status": "已修後精確差異複驗通過"
+    }
+   ],
+   "reviewed_sha256": {
+    "fourier-transform.html": "5068f9fdb8f63cc261f96d9a82f01a08ae7d4b4cc30ebfdc8767449d47aadc38",
+    "fourier-transform.js": "fec9457fc97f29f624ec4af9f83b5aa1274e183b32fb79e5518f5b3f920fe71a",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+   },
+   "evidence": {
+    "directory": "/tmp/engineering-math-pedagogy/fourier-transform",
+    "metrics": "/tmp/engineering-math-pedagogy/fourier-transform/evidence.json",
+    "full_text_read": "/tmp/engineering-math-pedagogy/fourier-transform/lesson-text.txt",
+    "actually_viewed": [
+     "fix-1440-same-frequency.png",
+     "fix-390-same-frequency.png",
+     "fix-320-same-frequency.png",
+     "fix-320-section.png"
+    ],
+    "near_task_browser": "/tmp/engineering-math-pedagogy/near-task-evidence.json",
+    "screenshots_note": "長元素截圖僅隱藏原本在視窗外的未聚焦skip-link，避免Playwright裁切工件；實際版面/文字未變。",
+    "review_history": [
+     {
+      "reviewed_sha256": {
+       "fourier-transform.html": "48fcb77f219dd78cb4930ce31db1fe9fa8eae9b06851c812e680d89ef6a03cb5",
+       "fourier-transform.js": "fec9457fc97f29f624ec4af9f83b5aa1274e183b32fb79e5518f5b3f920fe71a",
+       "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+       "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+      },
+      "status": "待修後複驗",
+      "checks": {
+       "worked_chain": "置中矩形→餘弦正負面積抵銷→積分端點→sinc帶號頻譜→X0與首零點及3π負瓣逐行計算→縮窄與單位。3π為完整有效主例；與候選計畫π不同不等於主例錯誤。",
+       "near_task": "只改T2，中央2與首零點π有中間值及驗算；欠固定同一ω時T1/T2貢獻對照，建議π下2/π→0接回近題零點。",
+       "responsive": "1440/390/320實際headless渲染，重點截圖人工查看；頁面無橫向overflow，主要故事SVG文字計算字高不低於12px且未越界，核心calculation未藏details。",
+       "interaction": {
+        "single_change": {
+         "id": "width",
+         "value": 2
+        },
+        "observed_readouts": "X(0)：時間面積\n2 V·s\n第一零點\n±3.142 rad/s",
+        "reset_returns_default": true
+       }
+      },
+      "findings": [
+       {
+        "id": "EM-P-FT-01",
+        "location": "寬度T2近題與固定頻率比較",
+        "issue": "3π負瓣主例可跟算且正確；近題只比移動的首零點與中央值，未比較同一ω下只改T造成的貢獻變化。",
+        "requested_fix": "保留3π主例，近題補ω=π固定不變，T1給X=2/π、T2給0；在同ω標記或近題小圖對照，與零頻面積2及首零點π相接。",
+        "kind": "單變因遷移缺同一頻率參照；不是3π例錯誤",
+        "status": "待修後精確差異複驗"
+       }
+      ],
+      "snapshot_directory": "/tmp/engineering-math-pedagogy/fourier-transform/before-five-fixes"
+     }
+    ],
+    "incremental_metrics": "/tmp/engineering-math-pedagogy/five-fixes-evidence.json",
+    "incremental_scope": "對照第一輪完整正文純文字diff，只核5新增區塊；原始四檔SHA及問題歷史保留於review_history。",
+    "text_diff": "/tmp/engineering-math-pedagogy/fourier-transform/teaching-fix-diff.txt"
+   },
+   "limitations": "通過僅適用所記精確四檔版本及本角色範圍；未聲稱真人學習成效/觸控驗收通過，也不以SVG數量或測試數代替教學判斷。"
+  }
+ ]
+}

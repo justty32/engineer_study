@@ -1,0 +1,1010 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "id",
+  "page",
+  "type",
+  "question",
+  "controls",
+  "formula",
+  "conditions",
+  "outputs",
+  "fixtures",
+  "boundary_cases",
+  "status",
+  "dom",
+  "plot_spec",
+  "readout_labels"
+ ],
+ "rows": [
+  {
+   "id": "00-state-lab",
+   "page": "00-state",
+   "type": "參數實驗",
+   "question": "同一位置，速度不同會往哪走？",
+   "controls": [
+    {
+     "id": "velocity",
+     "label": "起跑速度",
+     "unit": "m/s",
+     "min": -1,
+     "max": 1,
+     "step": 0.5,
+     "default": 1
+    },
+    {
+     "id": "time",
+     "label": "觀察時間",
+     "unit": "s",
+     "min": 0,
+     "max": 2,
+     "step": 0.1,
+     "default": 1
+    }
+   ],
+   "formula": "理想水平無外力小車，x0=0 m；x(t)=x0+v0 t，v(t)=v0，a(t)=0",
+   "conditions": "忽略阻力、合外力為零；這一頁只建立位置與速度兩張初值卡，下一章才加入恢復力與加速度",
+   "outputs": "兩車位置比較、位置/速度初值卡、1秒時間步；先看到同位置不同下一步，才命名狀態與初始條件",
+   "fixtures": "v0=1 m/s、t=1 s：x=1 m；v0=0則x=0；v0=-1、t=2則x=-2 m",
+   "boundary_cases": "v0=0留原處；v0=-1向左；t=0同位置；重設回1 m/s、1 s",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "00-state-lab",
+    "controls": [
+     "velocity",
+     "time"
+    ],
+    "control_values": [
+     "velocity-value",
+     "time-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "自適應寬×345",
+    "兩車共用固定−2至2m座標"
+   ],
+   "readout_labels": [
+    "B位置",
+    "B速度"
+   ]
+  },
+  {
+   "id": "second-order-lab",
+   "page": "second-order",
+   "type": "參數實驗",
+   "question": "放手後阻力改變怎麼回來？",
+   "controls": [
+    {
+     "id": "damping",
+     "label": "阻尼係數",
+     "unit": "N·s/m",
+     "min": 0,
+     "max": 8,
+     "step": 0.5,
+     "default": 2
+    },
+    {
+     "id": "position",
+     "label": "起跑位置",
+     "unit": "m",
+     "min": -1,
+     "max": 1,
+     "step": 0.5,
+     "default": 1
+    },
+    {
+     "id": "velocity",
+     "label": "起跑速度",
+     "unit": "m/s",
+     "min": -1,
+     "max": 1,
+     "step": 0.5,
+     "default": 0
+    }
+   ],
+   "formula": "物理式 m x″+b x′+k x=0，m=1 kg,k=4 N/m；除以m後x″+(b/m)x′+(k/m)x=0。α=b/(2m) [s^-1]，D=α²−k/m [s^-2]；D<0：wd=sqrt(-D)，x=e^-αt[x0 cos(wd t)+(v0+αx0)sin(wd t)/wd]；D=0：x=e^-αt[x0+(v0+αx0)t]；D>0：r1,2=-α±sqrt(D)，c1=(v0-r2x0)/(r1-r2)，c2=x0-c1，x=c1e^r1t+c2e^r2t",
+   "conditions": "m=1 kg,k=4 N/m,b≥0，線性理想模型；根有量綱s^-1",
+   "outputs": "同尺度x(t)、v(t)、能量與阻尼分類；正確顯示兩初值",
+   "fixtures": "b=2,x0=1,v0=0：x=e^-t[cos(√3t)+sin(√3t)/√3]；b=4時x=(1+2t)e^-2t；b=0時cos2t",
+   "boundary_cases": "b=0能量不衰減；b=4重根；b=8過阻尼；x0=v0=0零解",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "second-order-lab",
+    "controls": [
+     "damping",
+     "position",
+     "velocity"
+    ],
+    "control_values": [
+     "damping-value",
+     "position-value",
+     "velocity-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 550",
+    "上位置−1.5至1.5m，下速度−3至3m/s，t0至6s"
+   ],
+   "readout_labels": [
+    "位置x(1s)",
+    "速度v(1s)"
+   ]
+  },
+  {
+   "id": "forced-lab",
+   "page": "forced",
+   "type": "參數實驗",
+   "question": "外力的效果與起跑留下的效果如何相加？",
+   "controls": [
+    {
+     "id": "input",
+     "label": "外力形狀",
+     "options": [
+      "step",
+      "cosine"
+     ],
+     "default": "step"
+    },
+    {
+     "id": "damping",
+     "label": "阻尼係數",
+     "unit": "N·s/m",
+     "min": 0,
+     "max": 6,
+     "step": 0.5,
+     "default": 2
+    },
+    {
+     "id": "frequency",
+     "label": "推力角頻率",
+     "unit": "rad/s",
+     "min": 0.5,
+     "max": 4,
+     "step": 0.5,
+     "default": 2
+    },
+    {
+     "id": "position",
+     "label": "起跑位置",
+     "unit": "m",
+     "min": -1,
+     "max": 1,
+     "step": 0.5,
+     "default": 0
+    },
+    {
+     "id": "velocity",
+     "label": "起跑速度",
+     "unit": "m/s",
+     "min": -1,
+     "max": 1,
+     "step": 0.5,
+     "default": 0
+    }
+   ],
+   "formula": "物理式 m x″+b x′+k x=F(t)，m=1 kg,k=4 N/m，F0=1 N；步階特解xp=F0/k；cos外力特解xp=F0[(k-mω²)cos(ωt)+bωsin(ωt)]/[(k-mω²)²+(bω)²]；完整解xp+齊次解，齊次初值x0-xp(0),v0-xp′(0)。b=0,ω=sqrt(k/m)共振特解xp=F0 t sin(ωt)/(2mω)，其初值皆0",
+   "conditions": "m=1 kg,k=4 N/m；特解不是自動滿足初值；只有b>0暫態衰減；共振理想無阻尼不代表實際可無限增長",
+   "outputs": "特解、自然修正、完整波形三條同尺度曲線；初值與長時間解釋",
+   "fixtures": "步階b=2初值0：x=.25[1-e^-t(cos√3t+sin√3t/√3)]，x∞=.25 m；cos b=2,w=2時xp=.25sin2t；b=0,w=2時x=t sin2t/4",
+   "boundary_cases": "零阻尼共振不可除0；非共振零阻尼自然項不消失；b=4重根；重設步階",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "forced-lab",
+    "controls": [
+     "input",
+     "damping",
+     "frequency",
+     "position",
+     "velocity"
+    ],
+    "control_values": [
+     "input-value",
+     "damping-value",
+     "frequency-value",
+     "position-value",
+     "velocity-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 360",
+    "t0至8s，三曲線共同自動縮放，明文提示"
+   ],
+   "readout_labels": [
+    "完整x(1s)",
+    "長時間行為"
+   ]
+  },
+  {
+   "id": "rlc-lab",
+   "page": "rlc",
+   "type": "參數實驗",
+   "question": "電源開啟後，電容電壓為何越過1V？",
+   "controls": [
+    {
+     "id": "resistance",
+     "label": "電阻",
+     "unit": "Ω",
+     "min": 0,
+     "max": 8,
+     "step": 0.5,
+     "default": 2
+    },
+    {
+     "id": "voltage",
+     "label": "起始電容電壓",
+     "unit": "V",
+     "min": 0,
+     "max": 1,
+     "step": 0.25,
+     "default": 0
+    },
+    {
+     "id": "current",
+     "label": "起始電感電流",
+     "unit": "A",
+     "min": -0.5,
+     "max": 0.5,
+     "step": 0.25,
+     "default": 0
+    }
+   ],
+   "formula": "串聯RLC：L=1 H,C=.25 F,Vs=1 V於t≥0；LC vC″+RC vC′+vC=Vs；初值vC0，vC′0=i0/C；i=C vC′；ER耗散功率=R i²；EC=.5C vC²，EL=.5L i²",
+   "conditions": "理想定值RLC，被動符號慣例，閉合串聯回路，無衝激源故vC及iL連續；元件只是易算教學值",
+   "outputs": "回路含電流方向/電壓極性；vC和i分開具單位座標；兩儲能與耗散功率",
+   "fixtures": "R=2零初值：vC=1-e^-t[cos√3t+sin√3t/√3]；vC″0=4 V/s²；i0=0；穩態vC=1 V,i=0 A",
+   "boundary_cases": "R=0持續振盪，不宣稱收斂；R=4臨界；帶初值不能只用零初值transfer；能量單位J",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "rlc-lab",
+    "controls": [
+     "resistance",
+     "voltage",
+     "current"
+    ],
+    "control_values": [
+     "resistance-value",
+     "voltage-value",
+     "current-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 550",
+    "上vC −.5至2.5V，下i −1至1A，t0至6s"
+   ],
+   "readout_labels": [
+    "電容vC(1s)",
+    "電流i(1s)"
+   ]
+  },
+  {
+   "id": "complex-lab",
+   "page": "complex",
+   "type": "參數實驗",
+   "question": "乘j為何變成轉90度？",
+   "controls": [
+    {
+     "id": "real",
+     "label": "實部",
+     "unit": "",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "default": 1
+    },
+    {
+     "id": "imag",
+     "label": "虛部",
+     "unit": "",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "default": 1
+    },
+    {
+     "id": "operation",
+     "label": "操作",
+     "options": [
+      "j",
+      "2",
+      "minus1"
+     ],
+     "default": "j"
+    }
+   ],
+   "formula": "z=x+jy；jz=-y+jx；2z=2x+j2y；-z=-x-jy；|z|=sqrt(x²+y²)，arg=atan2(y,x)",
+   "conditions": "零複數的角度未定義；平方座標同比例，j²=-1",
+   "outputs": "同一支箭頭的輸入與結果，座標/長度/角度文字；先教旋轉後歐拉公式",
+   "fixtures": "z=1+j，jz=-1+j，模長皆√2；2z=2+2j，角度45°",
+   "boundary_cases": "z=0不顯示虛構角度；負座標象限；各操作重設",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "complex-lab",
+    "controls": [
+     "real",
+     "imag",
+     "operation"
+    ],
+    "control_values": [
+     "real-value",
+     "imag-value",
+     "operation-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 460",
+    "實虛平面−4至4，兩方向等比例"
+   ],
+   "readout_labels": [
+    "結果複數",
+    "結果長度"
+   ]
+  },
+  {
+   "id": "phasors-lab",
+   "page": "phasors",
+   "type": "參數實驗",
+   "question": "同頻波經RC後縮小多少、晚多久？",
+   "controls": [
+    {
+     "id": "frequency",
+     "label": "角頻率",
+     "unit": "rad/s",
+     "min": 100,
+     "max": 2000,
+     "step": 100,
+     "default": 1000
+    },
+    {
+     "id": "phase",
+     "label": "輸入起跑角",
+     "unit": "°",
+     "min": -90,
+     "max": 90,
+     "step": 15,
+     "default": 0
+    }
+   ],
+   "formula": "R=1000 Ω,C=1e-6 F,Vs=1∠phi V（峰值）；H(jw)=1/(1+jwRC)；幅值=1/sqrt(1+(wRC)²)，相位=phi-atan(wRC)；vC(t)=幅值 cos(wt+相位)",
+   "conditions": "理想定值線性RC、共同頻率ω>0、正弦穩態，已衰減的暫態不含在相量；相量採峰值非RMS；f=ω/(2π)",
+   "outputs": "旋轉箭頭靜態投影與同尺度波形，幅值V、相位°、頻率Hz",
+   "fixtures": "w=1000,phi0：幅值.70710678 V，相位-45°，f≈159.15494 Hz；相位改30°則輸出-15°",
+   "boundary_cases": "低頻接近1；高頻縮小且相位趨-90°；不將相量套切換瞬間；ω=0僅限文字極限",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "phasors-lab",
+    "controls": [
+     "frequency",
+     "phase"
+    ],
+    "control_values": [
+     "frequency-value",
+     "phase-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 360",
+    "t0至20ms，電壓−1.1至1.1V"
+   ],
+   "readout_labels": [
+    "輸出峰值",
+    "輸出相位"
+   ]
+  },
+  {
+   "id": "laplace-lab",
+   "page": "laplace",
+   "type": "參數實驗",
+   "question": "衰減權重夠不夠讓面積有限？",
+   "controls": [
+    {
+     "id": "sigma",
+     "label": "衰減權重σ",
+     "unit": "s^-1",
+     "min": -2,
+     "max": 2,
+     "step": 0.25,
+     "default": 1
+    },
+    {
+     "id": "window",
+     "label": "看到多遠",
+     "unit": "s",
+     "min": 1,
+     "max": 6,
+     "step": 0.5,
+     "default": 3
+    }
+   ],
+   "formula": "f(t)=e^(-t/(1 s))；實σ時被積函數e^[-(σ+1 s^-1)t]，有限窗面積(1-e^[-(σ+1)T])/(σ+1)，σ=-1時=T；無限積分1/(σ+1) iff σ>-1；複s延伸F(s)=1/(s+1)",
+   "conditions": "常規函數採0+單邊；原點脈衝另行說明0−慣例，不混用；分段連續及指數階為充分條件",
+   "outputs": "原函數、權重、乘積與面積分步；有限窗數值與無限收斂分開",
+   "fixtures": "σ=1無限=.5 s，T=3有限=(1-e^-6)/2；σ=-1有限=T、無限發散",
+   "boundary_cases": "σ<-1增長；σ=-1等高；σ>-1衰減；不能對不收斂σ顯示1/(σ+1)假答案",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "laplace-lab",
+    "controls": [
+     "sigma",
+     "window"
+    ],
+    "control_values": [
+     "sigma-value",
+     "window-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 360",
+    "t0至T，縱軸按乘積共同縮放，明文提示"
+   ],
+   "readout_labels": [
+    "有限窗面積",
+    "無限積分"
+   ]
+  },
+  {
+   "id": "initial-values-lab",
+   "page": "initial-values",
+   "type": "參數實驗",
+   "question": "代數裡哪兩項留住了初值？",
+   "controls": [
+    {
+     "id": "position",
+     "label": "y(0+)",
+     "unit": "",
+     "min": -1,
+     "max": 2,
+     "step": 0.5,
+     "default": 1
+    },
+    {
+     "id": "velocity",
+     "label": "y′(0+)",
+     "unit": "s^-1",
+     "min": -1,
+     "max": 1,
+     "step": 0.5,
+     "default": 0
+    }
+   ],
+   "formula": "使用 t/(1 s) 的無量綱時間；ODE y″+(3 s^-1)y′+(2 s^-2)y=0；Y=[(s+3 s^-1)y0+v0]/[(s+1 s^-1)(s+2 s^-1)]；A=2y0+(1 s)v0，B=-y0-(1 s)v0；y=Ae^[-t/(1 s)]+Be^[-2t/(1 s)]",
+   "conditions": "t≥0常規初值問題，無原點脈衝；導數公式用0+，不同於含分布0−版本",
+   "outputs": "兩初值卡→s域每項→分式拆分→兩指數相加→代回初值；單位規範",
+   "fixtures": "y0=1,v0=0：A=2,B=-1，y=2e^-t-e^-2t，y′0=0；y0=0,v0=1：e^-t-e^-2t",
+   "boundary_cases": "零初值零解；負係數仍可正合成；不遺漏s*y0與v0；重設",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "initial-values-lab",
+    "controls": [
+     "position",
+     "velocity"
+    ],
+    "control_values": [
+     "position-value",
+     "velocity-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 360",
+    "t0至6s，三曲線y−5至5"
+   ],
+   "readout_labels": [
+    "係數A與B",
+    "y(1s)"
+   ]
+  },
+  {
+   "id": "transfer-lab",
+   "page": "transfer",
+   "type": "參數實驗",
+   "question": "只知道輸入輸出比，夠還原有儲能的系統嗎？",
+   "controls": [
+    {
+     "id": "rate",
+     "label": "衰減速率a",
+     "unit": "s^-1",
+     "min": -1,
+     "max": 2,
+     "step": 0.25,
+     "default": 1
+    },
+    {
+     "id": "initial",
+     "label": "初值y0",
+     "unit": "",
+     "min": 0,
+     "max": 1,
+     "step": 0.25,
+     "default": 0
+    }
+   ],
+   "formula": "y為無量綱，y′+a y=u，a[s^-1]，u(t)=u0=1 s^-1於t≥0；零初值H(s)=1/(s+a)，H單位s；Y=H U+y0/(s+a)；a≠0：y=y0e^-at+(u0/a)(1-e^-at)；a=0：y=y0+u0t",
+   "conditions": "連續時間因果LTI一階模型；a>0才漸近與BIBO穩定；a=0積分器不BIBO穩定；a<0發散；不從被消去極點推內部穩定",
+   "outputs": "零狀態/零輸入兩色曲線與完整輸出；單一極點位置；穩定分類",
+   "fixtures": "a=1,y0=0：1-e^-t；y0=1：恆1；a=0：y0+t；a=-1：y0e^t+e^t-1",
+   "boundary_cases": "a=0分支避免除0；負a避免稱正弦穩態可建立；初值非0顯示附加項；重設",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "transfer-lab",
+    "controls": [
+     "rate",
+     "initial"
+    ],
+    "control_values": [
+     "rate-value",
+     "initial-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 360",
+    "t0至4s，三曲線共同自動縮放，明文提示"
+   ],
+   "readout_labels": [
+    "完整y(1s)",
+    "極點位置"
+   ]
+  },
+  {
+   "id": "convolution-lab",
+   "page": "convolution",
+   "type": "參數實驗",
+   "question": "不同時間的小推力，現在還剩多少？",
+   "controls": [
+    {
+     "id": "duration",
+     "label": "輸入持續時間",
+     "unit": "s",
+     "min": 0.5,
+     "max": 2,
+     "step": 0.5,
+     "default": 1
+    },
+    {
+     "id": "time",
+     "label": "觀察時刻",
+     "unit": "s",
+     "min": 0,
+     "max": 4,
+     "step": 0.25,
+     "default": 1
+    }
+   ],
+   "formula": "τh=1 s；h(t)=exp(-t/τh) for t≥0，0 otherwise，h無量綱；u(t)=u0=1 s^-1 for 0≤t<T，0 elsewhere；y=∫0^min(t,T)u0 exp[-(t-τ)/τh]dτ；t≤T：u0τh(1-e^-t/τh)，t>T：u0τh(e^T/τh-1)e^-t/τh，y無量綱",
+   "conditions": "因果LTI、零初值；分鏡矩形小面積是近似脈衝貢獻，最後積分為精確值",
+   "outputs": "輸入條帶→時移尾巴→同一觀察時刻讀值→合加；近似與精確值分列",
+   "fixtures": "T=1,t=1：1-e^-1=.63212056；t=2：e^-1-e^-2=.23254416",
+   "boundary_cases": "t=0為0；t=T兩式相同；短脈衝區間；t>T輸入雖停輸出仍有尾巴",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "convolution-lab",
+    "controls": [
+     "duration",
+     "time"
+    ],
+    "control_values": [
+     "duration-value",
+     "time-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 550",
+    "上τ0至2s、貢獻密度0至1.1s^-1，下t0至4s、y0至1.1"
+   ],
+   "readout_labels": [
+    "精確積分",
+    "8矩形近似"
+   ]
+  },
+  {
+   "id": "fourier-series-lab",
+   "page": "fourier-series",
+   "type": "參數實驗",
+   "question": "加上第三、第五種節奏，方波怎麼長出來？",
+   "controls": [
+    {
+     "id": "harmonics",
+     "label": "使用幾個奇數諧波",
+     "unit": "個",
+     "min": 1,
+     "max": 9,
+     "step": 1,
+     "default": 3
+    },
+    {
+     "id": "frequency",
+     "label": "基本頻率",
+     "unit": "Hz",
+     "min": 0.5,
+     "max": 2,
+     "step": 0.5,
+     "default": 1
+    }
+   ],
+   "formula": "xN(t)=4/π ∑k=0..N-1 sin[(2k+1)2πft]/(2k+1) V；奇方波每週期前半+1 V後半-1 V",
+   "conditions": "週期分段光滑；無限級數在連續點回原值、跳躍點回左右平均；有限N是近似；Gibbs附近超越不隨N完全消失；係數平方關聯均方/功率非週期總能量",
+   "outputs": "各成分→逐項合加→離散頻率線與大小V→與目標方波比較",
+   "fixtures": "N=3,f=1,t=.25：4/π(1-1/3+1/5)≈1.10347427 V；t=0總和0為跳躍中點",
+   "boundary_cases": "N=1只有正弦；N=9更陡但有超越；頻率改變週期變不改成分幅值；不用FFT假裝連續精確頻譜",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "fourier-series-lab",
+    "controls": [
+     "harmonics",
+     "frequency"
+    ],
+    "control_values": [
+     "harmonics-value",
+     "frequency-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 550",
+    "上t0至2s、V±1.5，下正頻率0至36Hz、正弦峰值0至1.4V"
+   ],
+   "readout_labels": [
+    "t=1/(4f)的合成電壓",
+    "有限和一週期均方"
+   ]
+  },
+  {
+   "id": "fourier-transform-lab",
+   "page": "fourier-transform",
+   "type": "參數實驗",
+   "question": "脈衝擠窄，頻譜為什麼展寬？",
+   "controls": [
+    {
+     "id": "width",
+     "label": "脈衝寬度T",
+     "unit": "s",
+     "min": 0.5,
+     "max": 2,
+     "step": 0.25,
+     "default": 1
+    },
+    {
+     "id": "amplitude",
+     "label": "脈衝高度A",
+     "unit": "V",
+     "min": 0.5,
+     "max": 2,
+     "step": 0.5,
+     "default": 1
+    }
+   ],
+   "formula": "x(t)=A於|t|<T/2其他0；X(ω)=A T sin(ωT/2)/(ωT/2)，ω=0以極限AT；逆變換1/(2π)∫X(ω)e^jωt dω",
+   "conditions": "角頻率慣例rad/s；X單位V·s，X(0)為面積；矩形L1且L2，反轉換跳躍點以平均理解；週期訊號另需級數或廣義δ不可硬套普通積分",
+   "outputs": "矩形面積→各頻率抵銷→連續有正負頻譜→改寬後第一零點；幅值與帶符號值分清",
+   "fixtures": "A=1,T=1：X0=1 V·s、第一零點±2π rad/s；T=.5：X0=.5，第一零點±4π",
+   "boundary_cases": "ω=0可去奇點；T>0固定；縮窄且固定高度改面積，勿說頻譜高度固定；旁瓣非負圖需清楚標|X|",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "fourier-transform-lab",
+    "controls": [
+     "width",
+     "amplitude"
+    ],
+    "control_values": [
+     "width-value",
+     "amplitude-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 540",
+    "上t±2s、電壓0至2.2V，下ω±8πrad/s、X−1至4.2V·s"
+   ],
+   "readout_labels": [
+    "X(0)",
+    "第一零點"
+   ]
+  },
+  {
+   "id": "pde-lab",
+   "page": "pde",
+   "type": "參數實驗",
+   "question": "整條棒子每個位置都在變，怎樣記？",
+   "controls": [
+    {
+     "id": "time",
+     "label": "時間",
+     "unit": "s",
+     "min": 0,
+     "max": 0.5,
+     "step": 0.05,
+     "default": 0.1
+    },
+    {
+     "id": "diffusivity",
+     "label": "熱擴散率κ",
+     "unit": "m²/s",
+     "min": 0.5,
+     "max": 2,
+     "step": 0.5,
+     "default": 1
+    }
+   ],
+   "formula": "u(x,t)=1 K sin(πx/L) exp[-κ(π/L)²t]，L=1 m；u_t=κu_xx；u(0,t)=u(L,t)=0",
+   "conditions": "理想一維均勻棒、固定端點溫度；u是相對端點的溫差K；非完整電磁熱模型",
+   "outputs": "空間曲線與指定點的時間曲線分開→曲率使高處下降→兩偏導的數值相等",
+   "fixtures": "κ=1,t=.1,x=.5：u=e^(-π²*.1)≈.37270784 K；ut=-π²u K/s；兩端0",
+   "boundary_cases": "t=0初形；κ大衰減快；空間與時間軸不混；固定端點不等絕熱端點",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "pde-lab",
+    "controls": [
+     "time",
+     "diffusivity"
+    ],
+    "control_values": [
+     "time-value",
+     "diffusivity-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 550",
+    "上x0至1m，下t0至.5s，兩圖溫差0至1.1K"
+   ],
+   "readout_labels": [
+    "中央溫差",
+    "中央時間變化率"
+   ]
+  },
+  {
+   "id": "separation-lab",
+   "page": "separation",
+   "type": "參數實驗",
+   "question": "兩個形狀一起冷卻，誰先消失？",
+   "controls": [
+    {
+     "id": "time",
+     "label": "時間",
+     "unit": "s",
+     "min": 0,
+     "max": 0.5,
+     "step": 0.05,
+     "default": 0.1
+    },
+    {
+     "id": "second",
+     "label": "第二模態初始幅值",
+     "unit": "K",
+     "min": 0,
+     "max": 1,
+     "step": 0.25,
+     "default": 0.5
+    }
+   ],
+   "formula": "L=1 m,κ=1 m²/s；u=1 K sin(πx/L)e^-κ(π/L)²t+B sin(2πx/L)e^-κ(2π/L)²t；兩模態各滿足熱方程與零端點",
+   "conditions": "線性一維熱方程、同一齊次Dirichlet邊界；分離變數只先找特定可分離解，疊加才擴充初形",
+   "outputs": "X(x)形狀與T(t)倍率拆卡→端點篩出n整數→兩模態衰減→合成剖面",
+   "fixtures": "t=.1：第一幅值.37270784 K，第二初值.5變.00964815 K；n=2衰減速率是n=1四倍",
+   "boundary_cases": "t=0精確初形；B=0單模態；x=0,L永0；不是所有初形只需兩項",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "separation-lab",
+    "controls": [
+     "time",
+     "second"
+    ],
+    "control_values": [
+     "time-value",
+     "second-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 360",
+    "x0至1m，u−1至2K"
+   ],
+   "readout_labels": [
+    "第一模態幅值",
+    "第二模態幅值"
+   ]
+  },
+  {
+   "id": "boundaries-lab",
+   "page": "boundaries",
+   "type": "參數實驗",
+   "question": "只說內部平順，怎麼知道兩端應該幾伏？",
+   "controls": [
+    {
+     "id": "left",
+     "label": "左端電位",
+     "unit": "V",
+     "min": -5,
+     "max": 5,
+     "step": 1,
+     "default": 0
+    },
+    {
+     "id": "right",
+     "label": "右端電位",
+     "unit": "V",
+     "min": 0,
+     "max": 10,
+     "step": 1,
+     "default": 10
+    }
+   ],
+   "formula": "一維無電荷均勻介質，L=1 m；V″=0；V(x)=VL+(VR-VL)x/L；E=-dV/dx=-(VR-VL)/L",
+   "conditions": "靜電、理想平行板中央一維近似、忽略邊緣場；Dirichlet指定V；Neumann只給法向導數時一般須相容性且常數未定，不能一律聲稱唯一",
+   "outputs": "沒有端點時許多直線→固定兩端→唯一斜坡→電場箭頭；同例電位/場與單位",
+   "fixtures": "VL0,VR10：V(.5)=5 V，E=-10 V/m；VL=VR=5：V=5、E=0",
+   "boundary_cases": "兩端相同零場；反向差改變場方向；絕對電位常數不改E；三類邊界介紹不冒稱已解所有PDE",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "boundaries-lab",
+    "controls": [
+     "left",
+     "right"
+    ],
+    "control_values": [
+     "left-value",
+     "right-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 450",
+    "x0至1m，電位−5至10V；圖下電場箭頭"
+   ],
+   "readout_labels": [
+    "中央電位",
+    "均勻電場"
+   ]
+  },
+  {
+   "id": "engineering-lab",
+   "page": "engineering",
+   "type": "參數實驗",
+   "question": "拿到題目，該追整段時間還是只看同頻？",
+   "controls": [
+    {
+     "id": "case",
+     "label": "情境",
+     "options": [
+      "switch-rlc",
+      "sinusoid-rc",
+      "pulse",
+      "field",
+      "robot"
+     ],
+     "default": "switch-rlc"
+    }
+   ],
+   "formula": "固定情境→已知資料→欲求量→條件→模型路線；此為案例推理互動，不以選答案計分",
+   "conditions": "情境路由不能代替各章計算；所有結果可回連已教的例子",
+   "outputs": "顯示狀態/初值/時間或頻率/空間條件；至少一個不適用工具理由與對應已教圖",
+   "fixtures": "switch-rlc路由二階ODE/Laplace；sinusoid-rc路由相量；field路由PDE邊值",
+   "boundary_cases": "每情境先教後操作；無強制答題；重設選RLC；互動不是只有跳頁",
+   "status": "官方教材與契約首輪已獨立核證；DOM已實作；成品待最終逐頁核證",
+   "dom": {
+    "root": "engineering-lab",
+    "controls": [
+     "case"
+    ],
+    "control_values": [
+     "case-value"
+    ],
+    "drawing": "drawing",
+    "outputs": [
+     "result-primary",
+     "result-secondary"
+    ],
+    "feedback": "feedback",
+    "reset": "reset"
+   },
+   "plot_spec": [
+    "660 360",
+    "依情境切換物理座標，具文字標軸"
+   ],
+   "readout_labels": [
+    "適用的模型",
+    "具體小例結果"
+   ]
+  }
+ ]
+}

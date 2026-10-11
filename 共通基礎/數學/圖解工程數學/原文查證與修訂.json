@@ -1,0 +1,771 @@
+{
+ "contract": "wf-table/1",
+ "source": "PROJECT-BRIEF.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "file_path",
+  "source_index_path"
+ ],
+ "authorization": "使用者授權查官方教材並順修錯誤；root授予工程數學隊精確原文修正權，隊長指定research_audit施修N01–N20",
+ "review_boundary": "施修者自查；隊長獨立複查尚未執行",
+ "columns": [
+  "id",
+  "file_path",
+  "section",
+  "line",
+  "original",
+  "replacement",
+  "reason",
+  "source_ids",
+  "evidence_urls",
+  "status",
+  "classification",
+  "source_index_path",
+  "official_evidence",
+  "revised_line",
+  "author_check",
+  "before_sha256",
+  "after_sha256",
+  "evidence_history"
+ ],
+ "rows": [
+  {
+   "id": "N01",
+   "file_path": "../03-工程數學-上.md",
+   "section": "為什麼這兩塊放一起",
+   "line": 13,
+   "original": "ODE 描述「隨時間演化的線性系統」（電路、機械、控制）",
+   "replacement": "ODE 描述未知函數如何隨一個自變數改變，可為線性或非線性；本篇聚焦隨時間演化的線性模型（電路、機械、控制）",
+   "reason": "ODE本身不限線性；自變數也未必為時間。",
+   "source_ids": [
+    "MIT-ODE-IVP"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "真正錯誤",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-ODE-IVP",
+     "title": "Jeremy Orloff — ES.1803 Topic Notes",
+     "url": "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+     "section": "§1.2 定義（印刷 pp.1–2）；§2.6 非線性方程與疊加限制"
+    }
+   ],
+   "revised_line": 13,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "bbce7dc453a63a10d41e55426f1af79ccac9f6f33a098c07fd495e86eeca0bc6",
+   "after_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5"
+  },
+  {
+   "id": "N02",
+   "file_path": "../03-工程數學-上.md",
+   "section": "1.3 二階常係數線性 ODE",
+   "line": 41,
+   "original": "**齊次解（自然響應）**：解特徵方程",
+   "replacement": "以下阻尼名稱限於質量—彈簧—阻尼模型 $a=m>0$、$c=k>0$、$b>0$；$b=0$ 為無阻尼。一般二階方程的實根／重根／複根仍用下列解型，但不能只憑根型就稱為被動阻尼系統。\n\n**齊次解（自然響應）**：解特徵方程",
+   "reason": "x″−3x′+2x=0有兩正實根卻成長；阻尼標籤缺正參數假設。",
+   "source_ids": [
+    "MIT-DAMP",
+    "MIT-DAMP-CASES"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/911bc225e5913ba15517dbd70528c27a_MIT18_03SCF11_s13_1text.pdf",
+    "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/7e212064ad281d00e1dac893b1f722a7_MIT18_03SCF11_s13_2text.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-DAMP",
+     "title": "Damped Harmonic Oscillators",
+     "url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/911bc225e5913ba15517dbd70528c27a_MIT18_03SCF11_s13_1text.pdf",
+     "section": "pp.1–2，m、b、k 的物理模型"
+    },
+    {
+     "source_id": "MIT-DAMP-CASES",
+     "title": "Under, Over and Critical Damping",
+     "url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/7e212064ad281d00e1dac893b1f722a7_MIT18_03SCF11_s13_2text.pdf",
+     "section": "pp.1–5，三類阻尼解型"
+    }
+   ],
+   "revised_line": 41,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "bbce7dc453a63a10d41e55426f1af79ccac9f6f33a098c07fd495e86eeca0bc6",
+   "after_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5"
+  },
+  {
+   "id": "N03",
+   "file_path": "../03-工程數學-上.md",
+   "section": "1.3 RLC 串聯電路",
+   "line": 50,
+   "original": "跟機械的彈簧—質量—阻尼系統完全同形——這就是「電機—機械類比」。",
+   "replacement": "此電流方程由 KVL 微分得到；若 $v_s$ 含理想步階，右側需以脈衝及相應跳躍條件理解，不能直接把步階導數設成零。處理開關初值更方便的是電容電壓式 $LCv_C''+RCv_C'+v_C=v_s$，並給 $v_C(0^+)$ 與 $v_C'(0^+)=i_L(0^+)/C$。這與彈簧—質量—阻尼模型同形。",
+   "reason": "原方程正確但步階微分陷阱與第二初值缺失。",
+   "source_ids": [
+    "MIT-RLC",
+    "MIT-INITIAL"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/64fe6f616cf247e78a9d35ee6b6fe235_MIT18_03S10_chapter_8.pdf",
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-RLC",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.8",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/64fe6f616cf247e78a9d35ee6b6fe235_MIT18_03S10_chapter_8.pdf",
+     "section": "§8.1，印刷 pp.38–39，KVL 及元件式(1)–(3)"
+    },
+    {
+     "source_id": "MIT-INITIAL",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.21",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf",
+     "section": "§21.3–21.4、§21.7，印刷 pp.108–110，原點脈衝與初值"
+    }
+   ],
+   "revised_line": 52,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "bbce7dc453a63a10d41e55426f1af79ccac9f6f33a098c07fd495e86eeca0bc6",
+   "after_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5"
+  },
+  {
+   "id": "N04",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.1 定義",
+   "line": 74,
+   "original": "\\int_0^\\infty f(t)e^{-st}\\,dt",
+   "replacement": "\\int_{0^+}^\\infty f(t)e^{-st}\\,dt",
+   "reason": "配合本篇常規初值主線，明示0+；原點δ另列不同慣例。",
+   "source_ids": [
+    "MIT-INITIAL"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-INITIAL",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.21",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf",
+     "section": "§21.3–21.4，印刷 pp.108–109，0− 與常規導數的 0+ 初值"
+    }
+   ],
+   "revised_line": 76,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "bbce7dc453a63a10d41e55426f1af79ccac9f6f33a098c07fd495e86eeca0bc6",
+   "after_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5"
+  },
+  {
+   "id": "N05",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.1 直覺",
+   "line": 76,
+   "original": "直覺：把 $f(t)$ 拆成「指數衰減（或成長）+ 振盪」的所有可能組合 $e^{st}$ 的「成分大小」$F(s)$。是傅立葉的廣義版（含實部 $\\sigma$）。",
+   "replacement": "直覺：先以 $e^{-\\sigma t}$ 對後面的訊號加權，再用 $e^{-j\\omega t}$ 比較各種旋轉節奏並積分。$F(s)$ 是這個加權積分的結果；不能把每一個 $s$ 的值直接當成一支指數波的振幅。\n\n本篇常規函數採 $0^+$ 單邊積分；$f(0)$ 與 $f'(0)$ 在初值例題中表示右極限，並排除原點脈衝。",
+   "reason": "F為積分轉換量；一般反轉換需沿複平面直線積分，非逐點振幅。",
+   "source_ids": [
+    "MIT-LAPLACE",
+    "MIT-INITIAL",
+    "MIT-FT"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/d40ad07a62996f6dad93b832f8de0e04_MIT18_03SCF11_s27_1text.pdf",
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf",
+    "https://web.mit.edu/6.003/F11/www/handouts/lec16.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "教學澄清",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-LAPLACE",
+     "title": "Definition of Laplace Transform",
+     "url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/d40ad07a62996f6dad93b832f8de0e04_MIT18_03SCF11_s27_1text.pdf",
+     "section": "pp.1–3，單邊積分定義"
+    },
+    {
+     "source_id": "MIT-INITIAL",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.21",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf",
+     "section": "§21.2–21.4，印刷 pp.107–109，積分資訊及左右極限"
+    },
+    {
+     "source_id": "MIT-FT",
+     "title": "Dennis Freeman — 6.003 Lecture 16: Fourier Transform",
+     "url": "https://web.mit.edu/6.003/F11/www/handouts/lec16.pdf",
+     "section": "PDF pp.8–10，正逆轉換及與雙邊 Laplace 的關係"
+    }
+   ],
+   "revised_line": 78,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "bbce7dc453a63a10d41e55426f1af79ccac9f6f33a098c07fd495e86eeca0bc6",
+   "after_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5"
+  },
+  {
+   "id": "N06",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.2 核心性質",
+   "line": 83,
+   "original": "| $f'(t)$ | $sF(s)-f(0)$ |\n| $f''(t)$ | $s^2F(s)-sf(0)-f'(0)$ |",
+   "replacement": "| $f'(t)$（常規導數） | $sF(s)-f(0^+)$ |\n| $f''(t)$（常規導數） | $s^2F(s)-sf(0^+)-f'(0^+)$ |",
+   "reason": "分部積分的邊界項必與0+常規慣例一致。",
+   "source_ids": [
+    "MIT-INITIAL"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-INITIAL",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.21",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf",
+     "section": "§21.4，印刷 pp.108–109，常規導數式(3)；二階式再套同一規則"
+    }
+   ],
+   "revised_line": 87,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "bbce7dc453a63a10d41e55426f1af79ccac9f6f33a098c07fd495e86eeca0bc6",
+   "after_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5"
+  },
+  {
+   "id": "N07",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.3 常見轉換對",
+   "line": 100,
+   "original": "| $\\delta(t)$（單位脈衝） | $1$ |",
+   "replacement": "| $\\delta(t)$（單位脈衝；此列另採含原點脈衝的 $0^-$ 分布慣例） | $1$ |",
+   "reason": "0+常規積分與δ表不能混寫；若全篇改採0−，導數初值也必同步。",
+   "source_ids": [
+    "MIT-LAPLACE",
+    "MIT-INITIAL"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/d40ad07a62996f6dad93b832f8de0e04_MIT18_03SCF11_s27_1text.pdf",
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-LAPLACE",
+     "title": "Definition of Laplace Transform",
+     "url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/d40ad07a62996f6dad93b832f8de0e04_MIT18_03SCF11_s27_1text.pdf",
+     "section": "pp.1–3，含原點脈衝之 0− 定義"
+    },
+    {
+     "source_id": "MIT-INITIAL",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.21",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf",
+     "section": "§21.3，印刷 p.108，δ 的原點慣例"
+    }
+   ],
+   "revised_line": 104,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "bbce7dc453a63a10d41e55426f1af79ccac9f6f33a098c07fd495e86eeca0bc6",
+   "after_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5"
+  },
+  {
+   "id": "N08",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.5 轉移函數與系統穩定性",
+   "line": 117,
+   "original": "- **極點（pole）**：使 $H(s)$ 分母為零的 $s$。極點就是齊次解的指數速率。\n- **零點（zero）**：使分子為零的 $s$。\n- **穩定性條件**：所有極點落在**左半 $s$ 平面**（$\\mathrm{Re}(s)<0$）→ 系統穩定。\n- 極點越靠左，衰減越快；極點落在虛軸上 → 邊界穩定（純振盪）；落在右半平面 → 發散。",
+   "replacement": "- **極點（pole）與零點（zero）**：對有理 $H(s)$ 先約去共同因子，再由分母與分子的根判定。被消去的內部模態不一定能由 $H$ 看見。\n- 對有限維、因果、proper（分子次數不大於分母）的連續時間 LTI 系統，約分後所有極點在開左半平面，等價於**有界輸入有界輸出（BIBO）穩定**。\n- **內部漸近穩定**則要檢查狀態矩陣 $A$ 的全部特徵值，不能只看可能經過零極相消的 $H$。\n- 虛軸模態不保證 BIBO 穩定，例如積分器 $H=1/s$ 遇常數輸入會持續增長。零輸入內部響應至多可為邊界穩定，還須虛軸特徵值的 Jordan 塊皆為一階，且其餘模態在開左半平面；重極點可能帶來隨時間增長的多項式因子。",
+   "reason": "原文混淆內部/BIBO且未排虛軸重模態及相消。",
+   "source_ids": [
+    "MIT-BIBO"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/6-241j-dynamic-systems-and-control-spring-2011/996025f6db0d90b00f11c44fc49b85f9_MIT6_241JS11_textbook.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-BIBO",
+     "title": "Dahleh, Dahleh & Verghese — Lectures on Dynamic Systems and Control",
+     "url": "https://ocw.mit.edu/courses/6-241j-dynamic-systems-and-control-spring-2011/996025f6db0d90b00f11c44fc49b85f9_MIT6_241JS11_textbook.pdf",
+     "section": "Ch.13，PDF pp.123–124；§15.3.1–15.3.2、Example 15.5，PDF pp.157–159"
+    }
+   ],
+   "revised_line": 121,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；N08依隊長獨立複查補其餘模態在開左半平面；修訂版待複核",
+   "before_sha256": "bbce7dc453a63a10d41e55426f1af79ccac9f6f33a098c07fd495e86eeca0bc6",
+   "after_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5"
+  },
+  {
+   "id": "N09",
+   "file_path": "../03-工程數學-上.md",
+   "section": "2.6 終值與初值定理",
+   "line": 126,
+   "original": "- 初值：$f(0^+)=\\lim_{s\\to\\infty} sF(s)$\n- 終值：$f(\\infty)=\\lim_{s\\to 0} sF(s)$（前提：極點全在左半平面）",
+   "replacement": "- 初值：$f(0^+)=\\lim_{s\\to+\\infty} sF(s)$；這裡沿實數 $s$ 取極限，使用具有有限右極限、適當分段光滑與指數階的常規函數，且原點不含脈衝或其導數。\n- 終值：$\\lim_{t\\to\\infty}f(t)=\\lim_{s\\to0^+}sF(s)$。對本篇有理 $F(s)$ 對應的常規訊號，可先檢查 **$sF(s)$** 的全部極點是否在開左半平面；$F(s)$ 本身允許原點單極，例如 $f(t)=1$ 的 $F=1/s$。未通過條件時不可硬套，$f(t)=\\sin t$ 就沒有終值。",
+   "reason": "終值極點條件應套sF，非F；初值須排除原點奇異項。",
+   "source_ids": [
+    "UW-LAPLACE-THEOREMS",
+    "MIT-INITIAL"
+   ],
+   "evidence_urls": [
+    "https://faculty.washington.edu/chx/teaching/fbintro/lec04-laplace-transform/",
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "UW-LAPLACE-THEOREMS",
+     "title": "Xu Chen — University of Washington, Lecture 4: The Laplace Transform",
+     "url": "https://faculty.washington.edu/chx/teaching/fbintro/lec04-laplace-transform/",
+     "section": "Initial and final value theorems，sF(s) 極點檢查及兩個反例"
+    },
+    {
+     "source_id": "MIT-INITIAL",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.21",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf",
+     "section": "§21.5–21.6，印刷 pp.109–110，原點奇異項與初值公式"
+    }
+   ],
+   "revised_line": 130,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "bbce7dc453a63a10d41e55426f1af79ccac9f6f33a098c07fd495e86eeca0bc6",
+   "after_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5"
+  },
+  {
+   "id": "N10",
+   "file_path": "../03-工程數學-上.md",
+   "section": "與電機/通訊的連結",
+   "line": 135,
+   "original": "電容變 $1/(sC)$、電感變 $sL$，整個電路在 $s$ 域就是普通的歐姆定律。",
+   "replacement": "零初值時可用電容阻抗 $1/(sC)$、電感阻抗 $sL$ 進行代數運算；非零初值還要保留初值源，例如 $I_C=sCV_C-Cv_C(0^+)$、$V_L=sLI_L-Li_L(0^+)$。",
+   "reason": "直接阻抗替換會漏掉初始儲能。",
+   "source_ids": [
+    "MIT-RLC",
+    "MIT-INITIAL"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/64fe6f616cf247e78a9d35ee6b6fe235_MIT18_03S10_chapter_8.pdf",
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-RLC",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.8",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/64fe6f616cf247e78a9d35ee6b6fe235_MIT18_03S10_chapter_8.pdf",
+     "section": "§8.1，印刷 p.39，元件式(2)"
+    },
+    {
+     "source_id": "MIT-INITIAL",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.21",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf",
+     "section": "§21.4，印刷 p.109，常規導數公式；元件初值式由二者自行合成"
+    }
+   ],
+   "revised_line": 139,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "bbce7dc453a63a10d41e55426f1af79ccac9f6f33a098c07fd495e86eeca0bc6",
+   "after_sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5"
+  },
+  {
+   "id": "N11",
+   "file_path": "../03-工程數學-中.md",
+   "section": "3.2 相量",
+   "line": 30,
+   "original": "時間域弦波 $v(t)=V\\cos(\\omega t+\\phi)$ 對應一個複數 $\\mathbf{V}=Ve^{j\\phi}$。",
+   "replacement": "對線性時不變電路的**同頻正弦穩態**，$v(t)=V\\cos(\\omega t+\\phi)$ 可用複數相量 $\\mathbf{V}=Ve^{j\\phi}$ 表示；本篇 $V$ 是峰值，RMS 值為 $V/\\sqrt2$。穩態相量不包含切換後的自然暫態，不同頻率須分別計算。",
+   "reason": "明示峰值、同頻與穩態適用範圍。",
+   "source_ids": [
+    "MIT-COMPLEX",
+    "MIT-FORCED",
+    "MIT-RLC"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+    "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/64fe6f616cf247e78a9d35ee6b6fe235_MIT18_03S10_chapter_8.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-COMPLEX",
+     "title": "Jeremy Orloff — ES.1803 Topic Notes",
+     "url": "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+     "section": "§4.3–4.7，印刷 pp.28–34，複數與複指數"
+    },
+    {
+     "source_id": "MIT-FORCED",
+     "title": "Jeremy Orloff — ES.1803 Topic Notes",
+     "url": "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+     "section": "§6.8、§9.2–9.2.1，印刷 pp.55、68–70，同頻響應與暫態"
+    },
+    {
+     "source_id": "MIT-RLC",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.8",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/64fe6f616cf247e78a9d35ee6b6fe235_MIT18_03S10_chapter_8.pdf",
+     "section": "§8.1，印刷 pp.38–39，LTI 電路元件式"
+    }
+   ],
+   "revised_line": 30,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "e3aa00df109b5d17dd0511478d3fd4c07a04fca7f508baa785b04faa71212fd4",
+   "after_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0"
+  },
+  {
+   "id": "N12",
+   "file_path": "../03-工程數學-中.md",
+   "section": "3.3 複函數與解析性",
+   "line": 42,
+   "original": "若在某點處複導數 $f'(z)$ 存在且連續，則稱該函數**解析（analytic / holomorphic）**。\n\n**柯西—黎曼方程式（Cauchy–Riemann）**：解析 ⇔",
+   "replacement": "若 $f$ 在某點的一個開鄰域內處處複可微，則稱它在該點**解析（analytic / holomorphic）**；只有單點的複導數存在還不夠。\n\n**柯西—黎曼方程式（Cauchy–Riemann）**：解析函數必滿足下式；反向判定時，可使用這個充分條件：$u,v$ 在開區域內有連續的一階偏導數，且處處滿足下式，便可推出 $f$ 在該區域解析。",
+   "reason": "解析是鄰域性質；CR反向需要正則性條件。",
+   "source_ids": [
+    "BERKELEY-ANALYTIC"
+   ],
+   "evidence_urls": [
+    "https://math.berkeley.edu/~avizeff/complex_analysis_S26/lecture_5.html"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "真正錯誤",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "BERKELEY-ANALYTIC",
+     "title": "UC Berkeley — Complex Analysis, Lecture 5",
+     "url": "https://math.berkeley.edu/~avizeff/complex_analysis_S26/lecture_5.html",
+     "section": "Lecture 5：頁首 holomorphic on a domain 定義；Theorem（連續一階偏導數及 Cauchy–Riemann 方程式充分條件，正文約第 38–52 行）；其後 |z|² 反例",
+     "checked_by": "engineering_math_team，2026-10-11 獨立 web 實讀"
+    }
+   ],
+   "revised_line": 42,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收；Berkeley 由隊長獨立核讀交接；自行重算 |z|² 僅原點複可微反例；保留 Brunel 查證歷史",
+   "before_sha256": "e3aa00df109b5d17dd0511478d3fd4c07a04fca7f508baa785b04faa71212fd4",
+   "after_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0",
+   "evidence_history": {
+    "source_ids": [
+     "BRUNEL-ANALYTIC"
+    ],
+    "evidence_urls": [
+     "https://people.brunel.ac.uk/~icstmkw/ma3614/ohpma3614_07.pdf"
+    ],
+    "official_evidence": [
+     {
+      "source_id": "BRUNEL-ANALYTIC",
+      "title": "Brunel University — MA3614 Week 07",
+      "url": "https://people.brunel.ac.uk/~icstmkw/ma3614/ohpma3614_07.pdf",
+      "section": "PDF pp.1–2，解析的鄰域定義與連續偏導數下的 CR 充分條件"
+     }
+    ],
+    "note": "保留先前 Brunel 核讀紀錄；2026-10-11 隊長重驗 URL 為 HTTP 404，現行主要證據改用 Berkeley。"
+   }
+  },
+  {
+   "id": "N13",
+   "file_path": "../03-工程數學-中.md",
+   "section": "4.2 傅立葉級數",
+   "line": 85,
+   "original": "$|c_n|^2$ = 第 $n$ 諧波的能量分量。方波、三角波展開後告訴你它含有哪些頻率成分。",
+   "replacement": "若 $x$ 在一週期內平方可積，$\\frac1T\\int_0^T|x(t)|^2dt=\\sum_n|c_n|^2$；因此 $|c_n|^2$ 是雙邊複數展開中第 $n$ 項的**均方貢獻**。非零週期訊號的全時間總能量一般發散；若 $x$ 是跨電阻 $R$ 的電壓，再除以 $R$ 才是平均耗散功率。\n\n上式級數的等號也須指定收斂意義：對分段光滑週期函數，在連續點回到原值，在跳躍處回到左右極限平均；有限部分和在跳躍附近有 Gibbs 超越，增加項數會縮窄該區域，超越比例不會完全消失。",
+   "reason": "週期總能量與平均功率混淆；缺收斂與Gibbs條件。",
+   "source_ids": [
+    "MIT-FS-POWER",
+    "MIT-FS-GIBBS"
+   ],
+   "evidence_urls": [
+    "https://web.mit.edu/12.864/classnotes.pdf",
+    "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "真正錯誤",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-FS-POWER",
+     "title": "MIT 12.864 — Time Series Analysis notes",
+     "url": "https://web.mit.edu/12.864/classnotes.pdf",
+     "section": "§2 式(2.2)–(2.4)，PDF p.16／印刷 p.10，係數與 Parseval 式"
+    },
+    {
+     "source_id": "MIT-FS-GIBBS",
+     "title": "Jeremy Orloff — ES.1803 Topic Notes",
+     "url": "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+     "section": "§22.5–22.6.2，印刷 pp.200–202，跳躍平均與 Gibbs"
+    }
+   ],
+   "revised_line": 85,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "e3aa00df109b5d17dd0511478d3fd4c07a04fca7f508baa785b04faa71212fd4",
+   "after_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0"
+  },
+  {
+   "id": "N14",
+   "file_path": "../03-工程數學-中.md",
+   "section": "4.3 傅立葉轉換",
+   "line": 92,
+   "original": "$X(\\omega)$ 就是訊號在頻率 $\\omega$ 處的「複振幅密度」。$|X(\\omega)|$ 是振幅頻譜、$\\arg X(\\omega)$ 是相位頻譜。",
+   "replacement": "在上述角頻率慣例下，$X(\\omega)$ 是頻率域的複數表示；$x$ 若以 V 計、$t$ 以 s 計，$X$ 的單位是 V·s，反轉換每小段的貢獻為 $X(\\omega)d\\omega/(2\\pi)$。$|X|$ 與 $\\arg X$ 分別是振幅與相位頻譜，$X=0$ 處相位未定。普通積分定義需要收斂；常數和無限延伸的正弦不絕對可積，下方含 $\\delta$ 的轉換對應以廣義函數理解。矩形脈衝的反轉換在跳躍點取兩側平均。",
+   "reason": "避免把FT值直接等同單一正弦振幅；普通積分與δ慣例需區分。",
+   "source_ids": [
+    "MIT-FT"
+   ],
+   "evidence_urls": [
+    "https://web.mit.edu/6.003/F11/www/handouts/lec16.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "教學澄清",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-FT",
+     "title": "Dennis Freeman — 6.003 Lecture 16: Fourier Transform",
+     "url": "https://web.mit.edu/6.003/F11/www/handouts/lec16.pdf",
+     "section": "PDF pp.3–10，矩形脈衝、角頻率正逆定義；單位由積分式自行核算"
+    }
+   ],
+   "revised_line": 94,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "e3aa00df109b5d17dd0511478d3fd4c07a04fca7f508baa785b04faa71212fd4",
+   "after_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0"
+  },
+  {
+   "id": "N15",
+   "file_path": "../03-工程數學-中.md",
+   "section": "4.8 取樣定理",
+   "line": 129,
+   "original": "頻寬 $W$ 的訊號，取樣頻率 $f_s\\ge 2W$ 即可完美還原。\n$f_s<2W$ 會發生**摺疊（aliasing）**——高頻假裝成低頻混進來。",
+   "replacement": "對頻譜嚴格限制在 $|f|\\le W$ 的基頻帶訊號，理想均勻取樣採 $f_s>2W$，並配合理想重建，才可作一般的唯一還原保證。等號 $f_s=2W$ 不能無條件使用：$\\sin(2\\pi Wt)$ 在這個取樣率的所有樣本都為零。\n取樣不足會失去一般還原保證並可能發生**混疊（aliasing）**；實際 ADC 還需抗混疊濾波與轉換帶裕量。",
+   "reason": "臨界等號對最高頻率正弦失敗，且低於界線不代表每一訊號必然混疊。",
+   "source_ids": [
+    "MIT-SAMPLING"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/6-003-signals-and-systems-fall-2011/12e6e5d7567fca2e993ef8563fef5a60_MIT6_003F11_lec21.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-SAMPLING",
+     "title": "Dennis Freeman — 6.003 Lecture 21: Sampling",
+     "url": "https://ocw.mit.edu/courses/6-003-signals-and-systems-fall-2011/12e6e5d7567fca2e993ef8563fef5a60_MIT6_003F11_lec21.pdf",
+     "section": "PDF p.21，The Sampling Theorem；pp.19–24 理想重建；p.54 抗混疊濾波"
+    }
+   ],
+   "revised_line": 131,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "e3aa00df109b5d17dd0511478d3fd4c07a04fca7f508baa785b04faa71212fd4",
+   "after_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0"
+  },
+  {
+   "id": "N16",
+   "file_path": "../03-工程數學-中.md",
+   "section": "拉氏 vs 傅立葉",
+   "line": 143,
+   "original": "**傅立葉（$s=j\\omega$）**：純振盪頻率，分析穩態頻譜 → 信號、通訊、頻譜估計。",
+   "replacement": "**傅立葉**：用純振盪頻率描述訊號，可分析單次脈衝等非週期訊號，不限穩態。若雙邊拉氏積分在虛軸收斂，便可直接取 $s=j\\omega$ 得到傅立葉轉換；若需極限或廣義函數意義，須另述條件。單邊拉氏還涉及因果延拓與初值。",
+   "reason": "傅立葉可分析非穩態脈衝；虛軸直接取值寫成充分條件，避免將絕對收斂ROC誤當普通FT存在的必要條件。",
+   "source_ids": [
+    "MIT-FT"
+   ],
+   "evidence_urls": [
+    "https://web.mit.edu/6.003/F11/www/handouts/lec16.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "教學澄清",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-FT",
+     "title": "Dennis Freeman — 6.003 Lecture 16: Fourier Transform",
+     "url": "https://web.mit.edu/6.003/F11/www/handouts/lec16.pdf",
+     "section": "PDF pp.3–10，非週期脈衝與虛軸包含於雙邊 Laplace ROC 的條件"
+    }
+   ],
+   "revised_line": 145,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收；N16依隊長指出的必要／充分條件界線調整",
+   "before_sha256": "e3aa00df109b5d17dd0511478d3fd4c07a04fca7f508baa785b04faa71212fd4",
+   "after_sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0"
+  },
+  {
+   "id": "N17",
+   "file_path": "../03-工程數學-下.md",
+   "section": "6.1 PDE 與 ODE 的根本差別",
+   "line": 78,
+   "original": "ODE 只對一個變數（時間）求導；PDE 對多個變數（時間 + 空間）求導。",
+   "replacement": "ODE 的未知函數只有一個自變數，常是時間，也可以是空間座標；PDE 的未知函數有多個自變數，可含時間與空間，也可以只有多個空間座標。",
+   "reason": "靜電Laplace方程不含時間；一維靜電式是空間ODE。",
+   "source_ids": [
+    "MIT-ODE-IVP",
+    "MIT-HEAT",
+    "UVA-BOUNDARY"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+    "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+    "https://galileoandeinstein.phys.virginia.edu/Elec_Mag/2022_Lectures/EM_07_Electrostatics_II.html"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "真正錯誤",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-ODE-IVP",
+     "title": "Jeremy Orloff — ES.1803 Topic Notes",
+     "url": "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+     "section": "§1.2，印刷 pp.1–2，ODE 與獨立變數"
+    },
+    {
+     "source_id": "MIT-HEAT",
+     "title": "Jeremy Orloff — ES.1803 Topic Notes",
+     "url": "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+     "section": "§25.3，印刷 pp.218–220，時空熱模型"
+    },
+    {
+     "source_id": "UVA-BOUNDARY",
+     "title": "Michael Fowler — University of Virginia, Electrostatics II",
+     "url": "https://galileoandeinstein.phys.virginia.edu/Elec_Mag/2022_Lectures/EM_07_Electrostatics_II.html",
+     "section": "Uniqueness of the Solution with Dirichlet or Neumann Boundary Conditions，靜電空間邊值問題"
+    }
+   ],
+   "revised_line": 78,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "e2126f3335d1a6c9ded435f34c5dbb82711bb8ea2452f42ce3f309955c7b71d0",
+   "after_sha256": "34e4983556616b146bc30d3701661e462d545073a77469444d89f810e85ea72b"
+  },
+  {
+   "id": "N18",
+   "file_path": "../03-工程數學-下.md",
+   "section": "6.1 初始與邊界條件",
+   "line": 84,
+   "original": "三者一起才能定解。",
+   "replacement": "所需資料取決於方程：熱方程需初始溫度分布與合適邊界；波方程通常需初始位移、初始速度與合適邊界；靜態拉普拉斯方程是邊值問題，沒有時間初始條件。資料的相容性與模型條件也必須滿足。",
+   "reason": "原句讓靜態PDE誤以為也需時間初值。",
+   "source_ids": [
+    "MIT-HEAT",
+    "UVA-BOUNDARY"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+    "https://galileoandeinstein.phys.virginia.edu/Elec_Mag/2022_Lectures/EM_07_Electrostatics_II.html"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "真正錯誤",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-HEAT",
+     "title": "Jeremy Orloff — ES.1803 Topic Notes",
+     "url": "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+     "section": "§25.3–25.4，印刷 pp.218–224，熱方程；§25.9，印刷 pp.231–234，波方程初邊值"
+    },
+    {
+     "source_id": "UVA-BOUNDARY",
+     "title": "Michael Fowler — University of Virginia, Electrostatics II",
+     "url": "https://galileoandeinstein.phys.virginia.edu/Elec_Mag/2022_Lectures/EM_07_Electrostatics_II.html",
+     "section": "Uniqueness of the Solution with Dirichlet or Neumann Boundary Conditions，靜態問題"
+    }
+   ],
+   "revised_line": 84,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "e2126f3335d1a6c9ded435f34c5dbb82711bb8ea2452f42ce3f309955c7b71d0",
+   "after_sha256": "34e4983556616b146bc30d3701661e462d545073a77469444d89f810e85ea72b"
+  },
+  {
+   "id": "N19",
+   "file_path": "../03-工程數學-下.md",
+   "section": "6.4(c) 格林函數法",
+   "line": 125,
+   "original": "先求**單位點源**的響應 $G$，任意源 $f$ 的解就是 $G$ 與 $f$ 的卷積：$u=G*f$。對應系統理論的「脈衝響應」觀念。",
+   "replacement": "先求符合方程與邊界的**單位點源**響應 $G(\\mathbf{x},\\boldsymbol\\xi)$，再對來源位置 $\\boldsymbol\\xi$ 積分，典型源項貢獻為 $u(\\mathbf{x})=\\int G(\\mathbf{x},\\boldsymbol\\xi)f(\\boldsymbol\\xi)\\,d\\boldsymbol\\xi$；非齊次邊界可能另有邊界項。只有平移不變、使 $G$ 只依賴 $\\mathbf{x}-\\boldsymbol\\xi$ 時，才可寫成卷積。",
+   "reason": "一般有邊界的Green核依賴兩個獨立位置，並非必為卷積。",
+   "source_ids": [
+    "UVA-BOUNDARY",
+    "MIT-CONV"
+   ],
+   "evidence_urls": [
+    "https://galileoandeinstein.phys.virginia.edu/Elec_Mag/2022_Lectures/EM_07_Electrostatics_II.html",
+    "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/07ca3d2b4f226e772efb5b8be9703dac_MIT18_03S10_chapter_19.pdf"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "真正錯誤",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "UVA-BOUNDARY",
+     "title": "Michael Fowler — University of Virginia, Electrostatics II",
+     "url": "https://galileoandeinstein.phys.virginia.edu/Elec_Mag/2022_Lectures/EM_07_Electrostatics_II.html",
+     "section": "Introducing Green’s Function；Formal Solution of Electrostatic Boundary-Value Problems with Green’s Functions，二點核與邊界項"
+    },
+    {
+     "source_id": "MIT-CONV",
+     "title": "Haynes Miller — 18.03 Supplementary Notes Ch.19",
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/07ca3d2b4f226e772efb5b8be9703dac_MIT18_03S10_chapter_19.pdf",
+     "section": "§19.1，印刷 pp.98–99，LTI 平移響應成卷積"
+    }
+   ],
+   "revised_line": 125,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "e2126f3335d1a6c9ded435f34c5dbb82711bb8ea2452f42ce3f309955c7b71d0",
+   "after_sha256": "34e4983556616b146bc30d3701661e462d545073a77469444d89f810e85ea72b"
+  },
+  {
+   "id": "N20",
+   "file_path": "../03-工程數學-下.md",
+   "section": "6.5 邊界條件三種類型",
+   "line": 133,
+   "original": "- **Neumann**：邊界上指定法線方向導數。例：絕熱邊界、磁場切向條件。\n- **Robin / 混合型**：兩者線性組合。例：對流散熱邊界。",
+   "replacement": "- **Neumann**：指定外法向導數。例：均勻導熱介質的絕熱邊界 $\\partial T/\\partial n=0$；靜電位的法向導數給出 $E_n=-\\partial V/\\partial n$。\n- **Robin**：指定函數值與外法向導數的線性組合，常用於對流散熱。\n- **混合邊界**也常指不同邊界區段分別指定 Dirichlet 或 Neumann，需交代用語。純 Neumann 的靜電位若存在解，通常仍差一個任意常數，且邊界通量須與內部源量相容。",
+   "reason": "磁場切向條件不能無設定就當純量Neumann範例；Robin與分區混合邊界區分。",
+   "source_ids": [
+    "MIT-HEAT",
+    "UVA-BOUNDARY"
+   ],
+   "evidence_urls": [
+    "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+    "https://galileoandeinstein.phys.virginia.edu/Elec_Mag/2022_Lectures/EM_07_Electrostatics_II.html"
+   ],
+   "status": "已施修；隊長獨立複核通過（見原文獨立複核.json）",
+   "classification": "缺條件",
+   "source_index_path": "教材與主張索引.json",
+   "official_evidence": [
+    {
+     "source_id": "MIT-HEAT",
+     "title": "Jeremy Orloff — ES.1803 Topic Notes",
+     "url": "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+     "section": "§25.7，印刷 pp.226–229，絕熱端點的導數邊界"
+    },
+    {
+     "source_id": "UVA-BOUNDARY",
+     "title": "Michael Fowler — University of Virginia, Electrostatics II",
+     "url": "https://galileoandeinstein.phys.virginia.edu/Elec_Mag/2022_Lectures/EM_07_Electrostatics_II.html",
+     "section": "Uniqueness of the Solution with Dirichlet or Neumann Boundary Conditions，分區混合邊界與兩解差常數"
+    }
+   ],
+   "revised_line": 133,
+   "author_check": "20項逐字唯一定位；UTF-8、LaTeX跳脫與diff自查；不宣稱獨立驗收",
+   "before_sha256": "e2126f3335d1a6c9ded435f34c5dbb82711bb8ea2452f42ce3f309955c7b71d0",
+   "after_sha256": "34e4983556616b146bc30d3701661e462d545073a77469444d89f810e85ea72b"
+  }
+ ]
+}

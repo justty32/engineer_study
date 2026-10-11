@@ -1,0 +1,3 @@
+"use strict";
+(()=>{const L=window.Lab;if(!L||!L.$('phasors-lab'))return;
+L.init(['frequency','phase'],()=>{const w=L.range('frequency'),phi=L.range('phase')*Math.PI/180,lag=Math.atan(w*.001),A=1/Math.hypot(1,w*.001);L.plot(L.$('drawing'),[{fn:t=>Math.cos(w*t/1000+phi),color:'#172a45',dash:'7 5'},{fn:t=>A*Math.cos(w*t/1000+phi-lag)}],{xMax:20,yMin:-1.1,yMax:1.1,xLabel:'時間 t（ms）；固定 0–20 ms',yLabel:'電壓（V）；峰值慣例'});L.text('result-primary',L.fmt(A)+' V');L.text('result-secondary',L.fmt((phi-lag)*180/Math.PI,1)+'°');L.text('feedback','f = ω/(2π) = '+L.fmt(w/(2*Math.PI),2)+' Hz；RC = 1 ms。輸出相對輸入落後 '+L.fmt(lag*180/Math.PI,1)+'°（相當於 '+L.fmt(lag/w*1000)+' ms），輸出峰值為輸入的 '+L.fmt(A)+' 倍。改起跑角只平移兩條波；這裡已排除開關接通後尚未衰減的暫態。');});})();

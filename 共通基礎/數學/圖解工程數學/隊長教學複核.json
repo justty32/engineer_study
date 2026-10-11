@@ -1,0 +1,196 @@
+{
+ "contract": "wf-table/1",
+ "source": "PROJECT-BRIEF.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "page_path"
+ ],
+ "columns": [
+  "id",
+  "page_path",
+  "reviewer",
+  "status",
+  "sha256",
+  "reasoning_review",
+  "worked_calculation",
+  "near_transfer",
+  "viewport_evidence",
+  "limits"
+ ],
+ "rows": [
+  {
+   "id": "00-state",
+   "page_path": "dist/00-state.html",
+   "reviewer": "engineering_math_team；產品作者builder",
+   "status": "圖解與跟算教學通過；最終全站技術QA另驗",
+   "sha256": {
+    "00-state.html": "e9c34f55645fb08d54cd333bda46d702cc19a348d1051f604db9ff45a0edb034",
+    "00-state.js": "a7d3b0b90e8e67903b89a63949a79d5d1473b0e7d7c81573f0b4839070ebf8e9",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+   },
+   "reasoning_review": "同位置照片→補速度卡→1秒後位移→兩初值→時間軌跡；第3圖直接把速度卡、時間和向右位移連到可見代入。無外力與無阻力條件可見，負座標不誤稱負路程。",
+   "worked_calculation": "0m+(1m/s)×1s=1m；秒相消；A固定v0算0；回代t0兩車均0。全程用同一尺度，手機可見雙車與刻度。",
+   "near_transfer": "先固定1s只把v改−.5m/s，得−.5m；再保此速度改總時間2s，得−1m，清楚解釋原點左方與路程。",
+   "viewport_evidence": {
+    "1440": "/tmp/engineering-math-pedagogy/00-state-1440.png",
+    "390": "/tmp/engineering-math-pedagogy/00-state-390.png",
+    "320": "/tmp/engineering-math-pedagogy/00-state-320.png",
+    "method": "隊長實看三尺寸第3分鏡與跟算段；完整文字/公式/近例讀取；前版pilot全課因果與圖軸已複核。",
+    "boundary_feedback_followup": {
+     "reviewer": "engineering_math_team（非產品作者）",
+     "scope": "已讀最後JS差異：t0且v0改為此後兩車維持原點；t0且v非0改下一正時間位置不同。物理前提不變，HTML/SVG/CSS與數值公式未改。",
+     "math_row": "MATH3-00-state",
+     "evidence": "/tmp/engineering-math-builder/batch4-changes.json",
+     "browser": "全站與定點技術另交browser_qa。"
+    }
+   },
+   "limits": "不冒稱真人學習測試；headless全站鍵盤/離線/console/重設由獨立QA接。 原受審 HTML 後僅將「兩秒走得是一秒的兩倍遠」改為「兩秒走的距離是一秒的兩倍」，已讀差異；沿用原三尺寸證據。"
+  },
+  {
+   "id": "pde",
+   "page_path": "dist/pde.html",
+   "reviewer": "engineering_math_team；產品作者builder及其spatial_author，教學與產品作者角色分離",
+   "status": "圖解與跟算教學通過；最終全站技術QA及產品數學另驗",
+   "sha256": {
+    "pde.html": "c416199a89ddbce716a0de0d56036a589e70c666918c2c782a440e5391805913",
+    "pde.js": "aee700d572a01a814ec8d22cce0b3342d99d3b05c3fcd6d4f75e7085e209862b",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+   },
+   "reasoning_review": "逐點初溫→凍結時間看空間→固定中央看時間→曲率決定當地變化；第2圖直接展示衰減率、無量綱指數與中央高度的乘法。候選解先說明待驗與下一課推導，不假裝由圖即得。",
+   "worked_calculation": "κ(π/L)²=9.869604 s⁻¹，t=.1 s 給中央 .37270784 K；ut=−3.67847893 K/s，κuxx同值；端值與t0初形另驗。κ的m²/s與長度L保留，0K是相對溫差。",
+   "near_transfer": "只改到 .2 s→.13891113 K，示指數倍率再乘一次；κt相同例是答案後的延伸，不混充本題條件。",
+   "viewport_evidence": {
+    "1440": "/tmp/engineering-math-pedagogy/pde-calc-1440.png",
+    "390": "/tmp/engineering-math-pedagogy/pde-calc-390.png",
+    "320": "/tmp/engineering-math-pedagogy/pde-calc-320.png"
+   },
+   "limits": "隊長已讀整課圖文、推導、條件、近題，且實看三尺寸關鍵跟算分鏡；不冒稱真人學習測試或完整技術QA。獨立研究者另驗全公式/靜態SVG/互動。"
+  },
+  {
+   "id": "separation",
+   "page_path": "dist/separation.html",
+   "reviewer": "engineering_math_team；產品作者builder及其spatial_author，教學與產品作者角色分離",
+   "status": "圖解與跟算教學通過；最終全站技術QA及產品數學另驗",
+   "sha256": {
+    "separation.html": "c3b85f04d37d1b9311f0a64e8e159282e6bb364148752a3fb0b8f3f2caaa21b3",
+    "separation.js": "3aea8ca20db5e39735e11b828908bc42fbde18ebcbbfd569b612b7f5dd6f68ab",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+   },
+   "reasoning_review": "單一空間形狀×高度→符合端點的第二形狀→逐點相加→不同模態衰減率；第5圖以x=.25導引線與三卡逐項連回公式，清楚區分局部貢獻與模態幅值。除法只在非零區域，最後代回原方程驗零點。",
+   "worked_calculation": "a1=π²、a2=4π² s⁻¹；T1=.37270784 K、T2=.00964815 K；X1=1/√2、X2=1；局部u1=.26354424 K與u2=.00964815 K相加 .27319239 K；ut=−2.98197115 K/s與κuxx一致。",
+   "near_transfer": "只換x=.75 m，第二形狀變−1，總和 .25389609 K。可見反例另比較其初值 .20710678 K、初斜率 +12.76034460 K/s，避免誤推每點都單調冷卻。",
+   "viewport_evidence": {
+    "1440": "/tmp/engineering-math-pedagogy/separation-calc-1440.png",
+    "390": "/tmp/engineering-math-pedagogy/separation-calc-390.png",
+    "320": "/tmp/engineering-math-pedagogy/separation-calc-320.png"
+   },
+   "limits": "隊長已讀整課圖文、推導、條件、近題，且實看三尺寸關鍵跟算分鏡；不冒稱真人學習測試或完整技術QA。獨立研究者另驗全公式/靜態SVG/互動。"
+  },
+  {
+   "id": "boundaries",
+   "page_path": "dist/boundaries.html",
+   "reviewer": "engineering_math_team；產品作者builder及其spatial_author，教學與產品作者角色分離",
+   "status": "圖解與跟算教學通過；最終全站技術QA及產品數學另驗",
+   "sha256": {
+    "boundaries.html": "e22e8c11019a9d918334374d6a6b1faa2020c74ed826bd56d28158ee2da11514",
+    "boundaries.js": "4bb7c3e7ce662e3c7bba791ae1a9e15fcedbd8ccabea0ce677b46246e8fc70fe",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+   },
+   "reasoning_review": "兩端電位→內部不彎但有許多直線→用左右端選截距與斜率→負梯度對電場方向→常數電位反例；第3與4圖旁直接代數解常數和讀坡度。限制靜電、無體積電荷、均勻介質、一維且忽略邊緣。",
+   "worked_calculation": "V″0積分得ax+b，左0V令b0V，右10V於L1m令a10V/m；中點5V，E−10V/m；由−∫E dx返回端差10V並驗V″0。外法向左負右正，純Neumann需相容且差常數。",
+   "near_transfer": "以同一個電位基準偏移−2V（兩端都減2）→中央3V而場仍−10V/m，滑桿可實作；與兩端5V的零差別例清楚分開。",
+   "viewport_evidence": {
+    "1440": "/tmp/engineering-math-pedagogy/boundaries-calc-1440.png",
+    "390": "/tmp/engineering-math-pedagogy/boundaries-calc-390.png",
+    "320": "/tmp/engineering-math-pedagogy/boundaries-calc-320.png"
+   },
+   "limits": "隊長已讀整課圖文、推導、條件、近題，且實看三尺寸關鍵跟算分鏡；不冒稱真人學習測試或完整技術QA。獨立研究者另驗全公式/靜態SVG/互動。"
+  },
+  {
+   "id": "engineering",
+   "page_path": "dist/engineering.html",
+   "reviewer": "engineering_math_team；產品作者builder及其spatial_author，教學與產品作者角色分離",
+   "status": "圖解與跟算教學通過；最終全站技術QA及產品數學另驗",
+   "sha256": {
+    "engineering.html": "8ffa82e2231a9d344ccda76ecd115e0f609df415dbc2d61c0a8f3ee0909ece0a",
+    "engineering.js": "f3f69d60f6f9b2e3c0d88bf03ab9ab1906c4e69ae8d33bf4ff9df250dc5da728",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+   },
+   "reasoning_review": "整合問題保留同一RLC值：回路方向→兩初值卡→完整暫態→1秒電壓和切線電流→長時讀值；第4圖旁有斜率代入與F·V/s換A。後段完整特徵根與常數推導可見；五應用讓讀者依欲求量選工具。",
+   "worked_calculation": "LC=.25s²、RC=.5s；根−1±j√3 s⁻¹；常數特解1V加齊次，A−1V、B−1/√3V由初壓/初斜率求出；τ1三角值逐項得到vC .84942563 V、vC′ .83855926 V/s、i .20963981 A。KVL三項回到1V。",
+   "near_transfer": "只改起初vC=.5V，i仍0，A−.5V、B−.5/√3V，1秒 .92471282 V，0+二階導數2 V/s²；清楚不可直接用零初值H乘輸入省略初態。",
+   "viewport_evidence": {
+    "1440": "/tmp/engineering-math-pedagogy/engineering-calc-1440.png",
+    "390": "/tmp/engineering-math-pedagogy/engineering-calc-390.png",
+    "320": "/tmp/engineering-math-pedagogy/engineering-calc-320.png"
+   },
+   "limits": "隊長已讀整課圖文、推導、條件、近題，且實看三尺寸關鍵跟算分鏡；不冒稱真人學習測試或完整技術QA。獨立研究者另驗全公式/靜態SVG/互動。"
+  },
+  {
+   "id": "index",
+   "page_path": "dist/index.html",
+   "reviewer": "engineering_math_team；支援頁作者builder",
+   "status": "支持頁導覽與可讀性通過；全站功能QA另驗",
+   "sha256": {
+    "index.html": "cd48342a8ac46fd68820c3e6e44371048d9d55d68d6c5b4f2e9a7ec1101fc065",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+   },
+   "reasoning_review": "同位置與不同速度的小車因果入口，接16課、4應用路線；不用術語先考讀者，未承諾取代整科。明列每頁小問題，所有連結去本站實際頁面。",
+   "worked_calculation": "支持頁非新增教學章，不另置算例；索引連回已逐步計算的課程。",
+   "near_transfer": "不適用；支持頁負責導航、查詞與來源。",
+   "viewport_evidence": {
+    "1440": "/tmp/engineering-math-pedagogy/support-index-1440.png",
+    "390": "/tmp/engineering-math-pedagogy/support-index-390.png",
+    "320": "/tmp/engineering-math-pedagogy/support-index-320.png"
+   },
+   "limits": "已讀完整主文，實看三尺寸首頁/字典/來源入口與可讀性；未冒稱所有長頁段落皆逐張截圖。完整連結、鍵盤、斷網由獨立QA另驗。"
+  },
+  {
+   "id": "glossary",
+   "page_path": "dist/glossary.html",
+   "reviewer": "engineering_math_team；支援頁作者builder",
+   "status": "支持頁導覽與可讀性通過；全站功能QA另驗",
+   "sha256": {
+    "glossary.html": "804a0373a6f1dae7da42cfe70d1b8d0c0c80b08e07a999e295684904ad76e004",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "glossary.js": "4caaf3464390b9529b9a9a7ce050f3c49a63095f92ebb1c2c4111fbd77488228"
+   },
+   "reasoning_review": "46詞條用動作/例子解釋，中文英語配對連回相應教學；已讀全詞條，無阻尼與欠阻尼、兩種響應分解、FT量綱、PDE資料條件有區別。搜尋的實際鍵盤/無匹配狀態另交QA。",
+   "worked_calculation": "支持頁非新增教學章，不另置算例；索引連回已逐步計算的課程。",
+   "near_transfer": "不適用；支持頁負責導航、查詞與來源。",
+   "viewport_evidence": {
+    "1440": "/tmp/engineering-math-pedagogy/support-glossary-1440.png",
+    "390": "/tmp/engineering-math-pedagogy/support-glossary-390.png",
+    "320": "/tmp/engineering-math-pedagogy/support-glossary-320.png"
+   },
+   "limits": "已讀完整主文，實看三尺寸首頁/字典/來源入口與可讀性；未冒稱所有長頁段落皆逐張截圖。完整連結、鍵盤、斷網由獨立QA另驗。"
+  },
+  {
+   "id": "sources",
+   "page_path": "dist/sources.html",
+   "reviewer": "engineering_math_team；支援頁作者builder",
+   "status": "支持頁導覽與可讀性通過；全站功能QA另驗",
+   "sha256": {
+    "sources.html": "2cee1a5565a2fcfdd51eecd8c7f901572e15a0f9b4ae2b7e6a4d2b7be84bae6e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+   },
+   "reasoning_review": "先說統一記號與物理模型邊界，再列19條官方章節/支持主張/限制/授權與本課連結；原文錯誤和教材自身疑點未照抄。參考數學事實與原創敘事/圖分清；依據可由每課回查，數學核讀另有research證據。",
+   "worked_calculation": "支持頁非新增教學章，不另置算例；索引連回已逐步計算的課程。",
+   "near_transfer": "不適用；支持頁負責導航、查詞與來源。",
+   "viewport_evidence": {
+    "1440": "/tmp/engineering-math-pedagogy/support-sources-1440.png",
+    "390": "/tmp/engineering-math-pedagogy/support-sources-390.png",
+    "320": "/tmp/engineering-math-pedagogy/support-sources-320.png"
+   },
+   "limits": "已讀完整主文，實看三尺寸首頁/字典/來源入口與可讀性；未冒稱所有長頁段落皆逐張截圖。完整連結、鍵盤、斷網由獨立QA另驗。"
+  }
+ ]
+}

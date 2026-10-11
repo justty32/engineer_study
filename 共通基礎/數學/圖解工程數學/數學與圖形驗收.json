@@ -1,0 +1,2127 @@
+{
+ "contract": "wf-table/1",
+ "scope": "本批精確SHA之獨立數學、圖形與單位驗收；禁止將局部JS通過當整頁通過",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "latest_math_batch": 3,
+ "latest_math_scope": "16 教學頁與 3 支援頁目前精確 SHA 全數數學／SVG／單位通過；批2待增補的5項教學及2個JS端點回饋已完成批3差異複驗，無未關閉數學問題。",
+ "history_note": "所有舊列完整保留；current_hash_match 表示該列受審時間的比對結果，不等於永久對最新版有效。最新結論依每頁最新批次與精確 SHA 判定。",
+ "batch2_totals": {
+  "lesson_pages": 16,
+  "support_pages": 3,
+  "independent_displayed_values": 108,
+  "svg_curve_or_area_records": 72,
+  "svg_coordinate_points_including_unchanged_batch1": 20782,
+  "changed_JS_cases": 13,
+  "inherited_JS_cases": 7302
+ },
+ "batch3_totals": {
+  "changed_lesson_pages": 6,
+  "changed_files": 7,
+  "new_svg_coordinate_points": 573,
+  "targeted_JS_cases": 11,
+  "source_fetches": 0,
+  "history_rows_preserved": 36,
+  "latest_page_assets_all_match": true
+ },
+ "columns": [
+  "id",
+  "page",
+  "reviewer",
+  "checked_date",
+  "status",
+  "assets",
+  "current_hash_match",
+  "source_ids",
+  "runtime_cases",
+  "numerical_check",
+  "max_numeric_difference",
+  "static_svg_check",
+  "findings",
+  "limitations",
+  "artifacts",
+  "batch",
+  "supersedes",
+  "hand_calculations",
+  "displayed_values_checked",
+  "svg_points_checked",
+  "inherited_runtime_evidence",
+  "pending_new_content"
+ ],
+ "rows": [
+  {
+   "id": "MATH-00-state",
+   "page": "00-state",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "本批數學／靜態SVG通過",
+   "assets": [
+    {
+     "file": "dist/00-state.html",
+     "sha256": "104d61ba8a635d815d2ed5a157c417407cf5706b422bbbc1a57624a527b33ace"
+    },
+    {
+     "file": "dist/00-state.js",
+     "sha256": "44962d9adc8e033bea7f54b238c4e2d59f955c39cabbe023c1b34bdc3e1bd77a"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-ODE-IVP"
+   ],
+   "runtime_cases": 105,
+   "numerical_check": "x=v0t與m/s×s=m；所有正負速度與時間端點，X圖面映射。",
+   "max_numeric_difference": 2.220446049250313e-16,
+   "static_svg_check": "五幅手繪圖：兩軌0/+1m與車中心一致；新320 viewBox三張位置圖皆150圖面單位/m；時間圖0/1/2s在x45/160/275，位置0/1/2m在y190/115/40。動態所有105組端點位置與X映射吻合。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-second-order",
+   "page": "second-order",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "本批數學／靜態SVG通過",
+   "assets": [
+    {
+     "file": "dist/second-order.html",
+     "sha256": "316ce8887617d88bbf5868fdf7d1484ab184f2148a08832d0ba965f98b37b0c5"
+    },
+    {
+     "file": "dist/second-order.js",
+     "sha256": "fcb606ca2caec3cb213d5d65f950176b5a01582cfbe4b5ce67a3d68bc37abce1"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-DAMP",
+    "MIT-DAMP-CASES",
+    "MIT-ODE-IVP"
+   ],
+   "runtime_cases": 425,
+   "numerical_check": "直接執行shared homogeneous三分支；對獨立RK4積分x′=v、v′=−bv−4x核t=1；全範圍初值與兩圖界限；手稿ODE、能量E′=−bv²與各數值重算。",
+   "max_numeric_difference": 4.662936703425657e-13,
+   "static_svg_check": "五幅圖：半秒x=0.6597001534m、v=−1.0670143902m/s；彈簧/阻尼力−2.6388006136/+2.1340287809N，車位置100圖面單位/m、力20圖面單位/N吻合。b=2/4/8曲線共964點逐點核；最大差0.000909圖面單位。",
+   "findings": [
+    {
+     "id": "M01",
+     "issue": "欠阻尼零初始狀態誤稱必越過原點",
+     "original_js_sha256": "ff50c463b7486f05037967e50df44a5124928bb878bdcbc420ecbaadb60f1d12",
+     "resolution": "作者新增x0=v0=0恆平衡分支；審查者實際執行b=0/2/8三組回饋確認",
+     "status": "修後複驗通過"
+    }
+   ],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-forced",
+   "page": "forced",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "本批數學／靜態SVG通過",
+   "assets": [
+    {
+     "file": "dist/forced.html",
+     "sha256": "348758565765b3fc018731199f79e5def426594d96cca65d218715955757c982"
+    },
+    {
+     "file": "dist/forced.js",
+     "sha256": "9a7fd9e2689b3852c3d388f16515dda01b88b4298a9ff6f3fdff2c3d8db1e8ba"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-FORCED",
+    "MIT-DAMP-CASES"
+   ],
+   "runtime_cases": 5200,
+   "numerical_check": "對獨立RK4積分x′=v、v′=F−bv−4x核t=1；全5200組驗x(0)、x′(0)、特解+修正；b=0/ω=2另式共振；N、m/s、m條件完整。",
+   "max_numeric_difference": 1.0390586169251037e-09,
+   "static_svg_check": "六幅圖：平衡車中心對0.25m；特解/齊次修正/總解同軸；步階和餘弦圖±0.448m、共振圖明標改為±2.24m。2892點逐點核，最大差0.001601圖面單位；共振包絡±t/4正確。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-rlc",
+   "page": "rlc",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "本批數學／靜態SVG通過",
+   "assets": [
+    {
+     "file": "dist/rlc.html",
+     "sha256": "0c3fd5d999b8033310ba36ae2e9e32c457c9265097ed48e079a8685496577703"
+    },
+    {
+     "file": "dist/rlc.js",
+     "sha256": "76b3a3c5559e8789c98e96f971c2015b0cc260c88efb3c844571633f86bdae02"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-RLC",
+    "MIT-DAMP"
+   ],
+   "runtime_cases": 425,
+   "numerical_check": "對獨立RK4積分vC′=i/C、i′=(1−Ri−vC)/L核t=1；所有425組vC0/i0；vC′(0)=i0/C；儲能J、功率W與源供能等式。",
+   "max_numeric_difference": 3.551603455775876e-13,
+   "static_svg_check": "五幅圖：順時針電流流入被動元件+端，KVL方向一致；vC首次1V時t=1.2092s、i≈0.1492A；1.1630V峰值t=1.8138s。482曲線點最大差0.000909圖面單位。1s能量Ec=0.09019049J、El=0.02197443J、Er=0.10019149J、Ein=0.21235641J；長條寬按精確比例280E/Ein，誤差<0.001圖面單位。",
+   "findings": [
+    {
+     "id": "M02",
+     "issue": "R=0且vC0=1V/i0=0A誤稱必持續振盪",
+     "original_js_sha256": "cb32f473b44e39e376a242d4aa8264a549917b07b9a6bca6546e7a68e22a1c1b",
+     "resolution": "作者先辨初始平衡；審查者執行R=0/2平衡與R=0非平衡三組，讀值與回饋吻合",
+     "status": "修後複驗通過"
+    }
+   ],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-complex",
+   "page": "complex",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/complex.js",
+     "sha256": "8f66b9085c3b47ade2b38adf32c64f4e756ee78817c603c28907f48ccd0f8c4a"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-COMPLEX"
+   ],
+   "runtime_cases": 243,
+   "numerical_check": "乘j/2/−1的座標端點及相同x/y尺度；零複數無方向角。",
+   "max_numeric_difference": 0,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-phasors",
+   "page": "phasors",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/phasors.js",
+     "sha256": "db7f7fe5387449e6bfecc6aed04c653c0ba2d62be2babb0b7894ae6b70d3b318"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-COMPLEX",
+    "MIT-FORCED"
+   ],
+   "runtime_cases": 260,
+   "numerical_check": "正弦輸出代回RC dy/dt+y=input，ms與s換算；峰值、atan落後角與固定圖軸。",
+   "max_numeric_difference": 5.943134332442312e-07,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-laplace",
+   "page": "laplace",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/laplace.js",
+     "sha256": "8f6cc948824bea836df5a8f9830b428fe4aeea3dc879de8e736ddbf116f28667"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-LAPLACE",
+    "MIT-ROC",
+    "MIT-INITIAL"
+   ],
+   "runtime_cases": 187,
+   "numerical_check": "以獨立Simpson積分驗有限窗面積；σ+1正/零/負分支與收斂條件；讀值s單位。",
+   "max_numeric_difference": 0.0004988241308936381,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-initial-values",
+   "page": "initial-values",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/initial-values.js",
+     "sha256": "1a997917ffff9414a71d2b54535de658f73172a1bcfe10009a71ab3d5b0483aa"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-INITIAL"
+   ],
+   "runtime_cases": 35,
+   "numerical_check": "初值相加及初始導數；二階ODE中心差分殘差≤2e−5；y無量綱、v0為s⁻¹。",
+   "max_numeric_difference": 4.532490971431713e-06,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-transfer",
+   "page": "transfer",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/transfer.js",
+     "sha256": "98c8b11cc0586cd28a9e3d699f78539d5f2d5e0f8749f8cbbcdbf93239d7568d"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-BIBO"
+   ],
+   "runtime_cases": 65,
+   "numerical_check": "y(0)=y0、y′+ay=1；a正/零/負分支；H單位s、零初值限制、積分器BIBO反例。",
+   "max_numeric_difference": 1.1717382619735872e-10,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-convolution",
+   "page": "convolution",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/convolution.js",
+     "sha256": "b654839bc7e91d019ba0aeff76484fdf30c9d6286ef12a080f2d3e92303d99bf"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-CONV"
+   ],
+   "runtime_cases": 68,
+   "numerical_check": "以獨立Simpson積分驗精確輸出；t0、t=T與尾波；有限8中點矩形與精確積分明區分。",
+   "max_numeric_difference": 4.995642866045813e-07,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-fourier-series",
+   "page": "fourier-series",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/fourier-series.js",
+     "sha256": "b35fa0a506d72b864bb63ca338e93feb8a9a2af8bfd8617ba7118bf47e32b3fb"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-FS-GIBBS",
+    "MIT-FS-POWER"
+   ],
+   "runtime_cases": 36,
+   "numerical_check": "對實際合成波數值積分一週期平方，核均方讀值；t0跳躍平均；諧波Hz與V峰值分軸；全端點無截頂。",
+   "max_numeric_difference": 4.9194509654793e-07,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-fourier-transform",
+   "page": "fourier-transform",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/fourier-transform.js",
+     "sha256": "fec9457fc97f29f624ec4af9f83b5aa1274e183b32fb79e5518f5b3f920fe71a"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-FT"
+   ],
+   "runtime_cases": 28,
+   "numerical_check": "以獨立Simpson積分原矩形的cos核驗頻譜；ω0與第一零點、面積A×T；V·s與帶符號旁瓣。",
+   "max_numeric_difference": 7.0367769944290615e-09,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-pde",
+   "page": "pde",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/pde.js",
+     "sha256": "b4c8ecd6a1e7b70efa7864adc62873c01a97763e1cbfce6901cff77cd0d60c74"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-HEAT"
+   ],
+   "runtime_cases": 44,
+   "numerical_check": "兩端固定零，中央κu_xx與時間率數值相符；κ(π/L)²單位s⁻¹，修後文字與L=1m相符。",
+   "max_numeric_difference": 1.5678136122687647e-07,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [
+    {
+     "id": "M03",
+     "issue": "uₜ=−κπ²u漏L²導致顯示公式量綱錯",
+     "original_js_sha256": "94536ccd9a9f34638fd4377d69d5e155054b447469b0ad720e5ef765e7055c10",
+     "resolution": "作者改為−κ(π/L)²u（L=1m）；數值算法不變，差異審查及實際回饋複驗",
+     "status": "修後複驗通過"
+    }
+   ],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-separation",
+   "page": "separation",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/separation.js",
+     "sha256": "3aea8ca20db5e39735e11b828908bc42fbde18ebcbbfd569b612b7f5dd6f68ab"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-HEAT"
+   ],
+   "runtime_cases": 55,
+   "numerical_check": "兩模態端點零、線性相加、第一/第二衰減率比4與振幅K；全圖範圍。",
+   "max_numeric_difference": 1.2246467991473532e-16,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-boundaries",
+   "page": "boundaries",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/boundaries.js",
+     "sha256": "4bb7c3e7ce662e3c7bba791ae1a9e15fcedbd8ccabea0ce677b46246e8fc70fe"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "UVA-BOUNDARY"
+   ],
+   "runtime_cases": 121,
+   "numerical_check": "兩端電位與中央線性插值、E=−dV/dx；所有121組端點、方向與V/m。",
+   "max_numeric_difference": 0,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-engineering",
+   "page": "engineering",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "JS數值核證通過；HTML／靜態SVG待ready",
+   "assets": [
+    {
+     "file": "dist/engineering.js",
+     "sha256": "36c5f273b7b03b8199584f9e1a8cdecfc71b69e4343a6f79675bd838ef23e727"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-RLC",
+    "MIT-COMPLEX",
+    "MIT-CONV",
+    "UVA-BOUNDARY"
+   ],
+   "runtime_cases": 5,
+   "numerical_check": "五情境皆執行，RLC/單次脈衝與獨立積分核對；其餘公式依對應課程程式閱讀。",
+   "max_numeric_difference": 7.116529587847253e-14,
+   "static_svg_check": "本批未驗完整HTML及逐幅靜態SVG，不宣稱整頁通過。",
+   "findings": [],
+   "limitations": "執行實際JS計算回呼，DOM/plot由審查stub擷取；不代替瀏覽器事件、排版、離線或網路測試。精確SHA限定；後續手算段與遷移練習新增後需另驗新HTML。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/audit-runtime.cjs",
+    "/tmp/engineering-math-audit/product-batch1/audit-svg.py",
+    "/tmp/engineering-math-audit/product-batch1/audit-regressions.cjs"
+   ]
+  },
+  {
+   "id": "MATH-source-availability",
+   "page": "sources",
+   "reviewer": "research_audit",
+   "checked_date": "2026-10-11",
+   "status": "19主教材連結目前可用",
+   "assets": [
+    {
+     "file": "dist/sources.html",
+     "sha256": "2cee1a5565a2fcfdd51eecd8c7f901572e15a0f9b4ae2b7e6a4d2b7be84bae6e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [],
+   "runtime_cases": 0,
+   "numerical_check": "僅查成品sources頁19個主教材連結，去重15URL；四批每批最多4URL，官方端HEAD均HTTP200、類型PDF或HTML。Brunel404僅留來源台帳歷史，不是成品主連結。",
+   "max_numeric_difference": null,
+   "static_svg_check": "不適用",
+   "findings": [
+    {
+     "url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/911bc225e5913ba15517dbd70528c27a_MIT18_03SCF11_s13_1text.pdf",
+     "http_status": 200,
+     "final_url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/911bc225e5913ba15517dbd70528c27a_MIT18_03SCF11_s13_1text.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/7e212064ad281d00e1dac893b1f722a7_MIT18_03SCF11_s13_2text.pdf",
+     "http_status": 200,
+     "final_url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/7e212064ad281d00e1dac893b1f722a7_MIT18_03SCF11_s13_2text.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/d40ad07a62996f6dad93b832f8de0e04_MIT18_03SCF11_s27_1text.pdf",
+     "http_status": 200,
+     "final_url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/d40ad07a62996f6dad93b832f8de0e04_MIT18_03SCF11_s27_1text.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/fff4420903d82c5c5c483e54566bc5ec_MIT18_03SCF11_s27_2text.pdf",
+     "http_status": 200,
+     "final_url": "https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/fff4420903d82c5c5c483e54566bc5ec_MIT18_03SCF11_s27_2text.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+     "http_status": 200,
+     "final_url": "https://ocw.mit.edu/courses/es-1803-differential-equations-spring-2024/mites_1803_s24_topic_full.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/64fe6f616cf247e78a9d35ee6b6fe235_MIT18_03S10_chapter_8.pdf",
+     "http_status": 200,
+     "final_url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/64fe6f616cf247e78a9d35ee6b6fe235_MIT18_03S10_chapter_8.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/07ca3d2b4f226e772efb5b8be9703dac_MIT18_03S10_chapter_19.pdf",
+     "http_status": 200,
+     "final_url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/07ca3d2b4f226e772efb5b8be9703dac_MIT18_03S10_chapter_19.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://ocw.mit.edu/courses/6-241j-dynamic-systems-and-control-spring-2011/996025f6db0d90b00f11c44fc49b85f9_MIT6_241JS11_textbook.pdf",
+     "http_status": 200,
+     "final_url": "https://ocw.mit.edu/courses/6-241j-dynamic-systems-and-control-spring-2011/996025f6db0d90b00f11c44fc49b85f9_MIT6_241JS11_textbook.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://web.mit.edu/6.003/F11/www/handouts/lec16.pdf",
+     "http_status": 200,
+     "final_url": "https://web.mit.edu/6.003/F11/www/handouts/lec16.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://web.mit.edu/12.864/classnotes.pdf",
+     "http_status": 200,
+     "final_url": "https://web.mit.edu/12.864/classnotes.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://galileoandeinstein.phys.virginia.edu/Elec_Mag/2022_Lectures/EM_07_Electrostatics_II.html",
+     "http_status": 200,
+     "final_url": "https://galileoandeinstein.phys.virginia.edu/Elec_Mag/2022_Lectures/EM_07_Electrostatics_II.html",
+     "content_type": "text/html",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf",
+     "http_status": 200,
+     "final_url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/916ffb3f993faa81d4f51fddd18ef591_MIT18_03S10_chapter_21.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://faculty.washington.edu/chx/teaching/fbintro/lec04-laplace-transform/",
+     "http_status": 200,
+     "final_url": "https://faculty.washington.edu/chx/teaching/fbintro/lec04-laplace-transform/",
+     "content_type": "text/html",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://ocw.mit.edu/courses/6-003-signals-and-systems-fall-2011/12e6e5d7567fca2e993ef8563fef5a60_MIT6_003F11_lec21.pdf",
+     "http_status": 200,
+     "final_url": "https://ocw.mit.edu/courses/6-003-signals-and-systems-fall-2011/12e6e5d7567fca2e993ef8563fef5a60_MIT6_003F11_lec21.pdf",
+     "content_type": "application/pdf",
+     "method": "HEAD"
+    },
+    {
+     "url": "https://math.berkeley.edu/~avizeff/complex_analysis_S26/lecture_5.html",
+     "http_status": 200,
+     "final_url": "https://math.berkeley.edu/~avizeff/complex_analysis_S26/lecture_5.html",
+     "content_type": "text/html; charset=UTF-8",
+     "method": "HEAD"
+    }
+   ],
+   "limitations": "HEAD可用性不等於重新全文核讀或PDF完整下載；主張證據沿用已存來源索引。此项也不是產品執行零外請求的瀏覽器驗收。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch1/source-head-batch1.json",
+    "/tmp/engineering-math-audit/product-batch1/source-head-batch2.json",
+    "/tmp/engineering-math-audit/product-batch1/source-head-batch3.json",
+    "/tmp/engineering-math-audit/product-batch1/source-head-batch4.json"
+   ]
+  },
+  {
+   "id": "MATH2-00-state",
+   "page": "00-state",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/00-state.html",
+     "sha256": "e9c34f55645fb08d54cd333bda46d702cc19a348d1051f604db9ff45a0edb034"
+    },
+    {
+     "file": "dist/00-state.js",
+     "sha256": "44962d9adc8e033bea7f54b238c4e2d59f955c39cabbe023c1b34bdc3e1bd77a"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-ODE-IVP"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "無外力定速度，x=x0+v0t；帶號位置不等於路程；兩張初值卡。",
+   "max_numeric_difference": 0.0,
+   "static_svg_check": "五幅 SVG 與首批逐位元相同；同刻度車中心、0/1/2 s 軌跡與單位正確。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-00-state",
+   "hand_calculations": "1 m/s×1 s=1 m；近題 −0.5 m/s 持續到 1、2 s 得 −0.5、−1 m。",
+   "displayed_values_checked": 2,
+   "svg_points_checked": 0,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-00-state",
+    "cases": 105,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-second-order",
+   "page": "second-order",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/second-order.html",
+     "sha256": "d8dfcb7d5e19ddccc25e801f08fcb52f93d926572c6913af7444f3d462ed19b5"
+    },
+    {
+     "file": "dist/second-order.js",
+     "sha256": "fcb606ca2caec3cb213d5d65f950176b5a01582cfbe4b5ce67a3d68bc37abce1"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-DAMP",
+    "MIT-DAMP-CASES",
+    "MIT-ODE-IVP"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "由 m,b,k 物理式正規化；欠阻尼、臨界、過阻尼、無阻尼分支；不提前依賴未教複根。",
+   "max_numeric_difference": 2.691896258122384e-07,
+   "static_svg_check": "SVG 與首批逐位元相同；曲線、極值與力方向、能量均已核。",
+   "findings": [
+    {
+     "id": "M04",
+     "kind": "教學澄清",
+     "finding": "起始 x=1 m 時稱「原點的合力」會混淆起跑位置與原點。",
+     "resolution": "改為「起跑時的合力」；公式與數字不變。",
+     "status": "修後獨立複驗通過"
+    }
+   ],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-second-order",
+   "hand_calculations": "半秒／一秒位移、速度、加速度與分力；一秒能量；近題位置初值減半。",
+   "displayed_values_checked": 16,
+   "svg_points_checked": 964,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-second-order",
+    "cases": 425,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-forced",
+   "page": "forced",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/forced.html",
+     "sha256": "946a34731ac01b4960ec6de7c8826f55c29ad267f9060670b122572a42572a1f"
+    },
+    {
+     "file": "dist/forced.js",
+     "sha256": "9a7fd9e2689b3852c3d388f16515dda01b88b4298a9ff6f3fdff2c3d8db1e8ba"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-FORCED",
+    "MIT-DAMP-CASES"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "特解加齊次修正配完整初值；修正項並非原初值的零輸入；b=0 共振獨立分支。",
+   "max_numeric_difference": 4.165829625701889e-10,
+   "static_svg_check": "SVG 與首批逐位元相同；三條曲線及 b=0 共振成長正確。圖 4 待作者新增 t=1 s 三項讀值後另核。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-forced",
+   "hand_calculations": "步階與正弦特解／齊次修正／總和，初值代回；近題 x0=.5 m。",
+   "displayed_values_checked": 7,
+   "svg_points_checked": 2892,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-forced",
+    "cases": 5200,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": "待作者五項教學增補後另驗新增內容，非目前數學錯誤"
+  },
+  {
+   "id": "MATH2-rlc",
+   "page": "rlc",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/rlc.html",
+     "sha256": "b6da0e84bac48b6af16a4b3b6456a1b05811171417ae540407641d80d32497d4"
+    },
+    {
+     "file": "dist/rlc.js",
+     "sha256": "76b3a3c5559e8789c98e96f971c2015b0cc260c88efb3c844571633f86bdae02"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-RLC",
+    "MIT-DAMP"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "KVL 與 i=CvC′；vC0 和 i0 決定兩張初值；元件被動符號、R=0 平衡與無阻尼。",
+   "max_numeric_difference": 4.795557839720743e-10,
+   "static_svg_check": "SVG 與首批逐位元相同；電流箭頭、越過 1 V 時仍有電流、能量條比例正確。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-rlc",
+   "hand_calculations": "一秒電壓／電流／KVL；首次穿越與峰值；儲能、供能、耗能與功率；近題 vC0=.5 V。",
+   "displayed_values_checked": 16,
+   "svg_points_checked": 482,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-rlc",
+    "cases": 425,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-complex",
+   "page": "complex",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/complex.html",
+     "sha256": "68d62ec972e63f5e0f22a4a39cfa33533138f4addcf1ccbd29708c5db26d2e47"
+    },
+    {
+     "file": "dist/complex.js",
+     "sha256": "8f66b9085c3b47ade2b38adf32c64f4e756ee78817c603c28907f48ccd0f8c4a"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-COMPLEX"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "乘 j 逆時針；零複數角度未定；幅角用象限；二階特徵根量綱 s⁻¹。",
+   "max_numeric_difference": 4.376269049366499e-07,
+   "static_svg_check": "五圖座標同為每單位 60 SVG 單位；全部起終點與旋轉箭頭方向吻合。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-complex",
+   "hand_calculations": "1+j 與 2+j 模長、乘 j 後象限與幅角；RLC 根之和與積。",
+   "displayed_values_checked": 4,
+   "svg_points_checked": 0,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-complex",
+    "cases": 243,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-phasors",
+   "page": "phasors",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/phasors.html",
+     "sha256": "3629c486a6f455e9d819c10f1503decdff2ab7482ae20b31f9a33df07456c4d2"
+    },
+    {
+     "file": "dist/phasors.js",
+     "sha256": "db7f7fe5387449e6bfecc6aed04c653c0ba2d62be2babb0b7894ae6b70d3b318"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-COMPLEX",
+    "MIT-FORCED"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "峰值、同頻正弦穩態；RC 比值與暫態區別；rad/s、Hz 與 ms 換算。",
+   "max_numeric_difference": 4.54052326404053e-07,
+   "static_svg_check": "相量平面兩軸皆 100 SVG 單位/V；電源=電阻+電容向量；轉動投影與兩條時域波形吻合。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-phasors",
+   "hand_calculations": "ω=1000 之 .5−.5j、1/√2、−45°；四分之一圈投影；近題僅 ω=500。",
+   "displayed_values_checked": 6,
+   "svg_points_checked": 242,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-phasors",
+    "cases": 260,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-laplace",
+   "page": "laplace",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/laplace.html",
+     "sha256": "8d2ab469f7d9ccd60233235ddfb2f6ee4b5ba70ec1023d88bfb6961bd851bb5d"
+    },
+    {
+     "file": "dist/laplace.js",
+     "sha256": "8f6cc948824bea836df5a8f9830b428fe4aeea3dc879de8e736ddbf116f28667"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-LAPLACE",
+    "MIT-ROC",
+    "MIT-INITIAL"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "常規 0+ 單邊，排除原點脈衝；ROC 為 Re(s)>−1 s⁻¹，不能以代數有限值替代收斂。",
+   "max_numeric_difference": 3.6786396151455847e-10,
+   "static_svg_check": "所有衰減曲線、加權曲線與 0..3 s 填色區域逐點吻合；σ=−1 水平線正確。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-laplace",
+   "hand_calculations": "σ=1、T=3 s 的積分與剩餘尾面積；σ=−1 常數發散；近題 σ=0。",
+   "displayed_values_checked": 4,
+   "svg_points_checked": 1331,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-laplace",
+    "cases": 187,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-initial-values",
+   "page": "initial-values",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/initial-values.html",
+     "sha256": "fc9486609ceae7940c01143f6e63432fd908755ae885451fc278928fb9e59195"
+    },
+    {
+     "file": "dist/initial-values.js",
+     "sha256": "7df53de747d5ec812b44e2c3758b5c5f32ec81920ef97a7d10c0b3b572f7732e"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-INITIAL"
+   ],
+   "runtime_cases": 4,
+   "numerical_check": "以 y=x/(1 m) 定義無量綱；一階／二階導數初值項；0+ 慣例與初終值條件。",
+   "max_numeric_difference": 2.4295889844427876e-07,
+   "static_svg_check": "圖標明 A/B 係數與 A/B 項瞬時貢獻；一秒三點和兩條分項曲線正確。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-initial-values",
+   "hand_calculations": "部分分式 A=2y0+(1 s)v0、B=−y0−(1 s)v0；一秒兩項值與總和；近題 v0=1 s⁻¹。",
+   "displayed_values_checked": 5,
+   "svg_points_checked": 755,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-initial-values",
+    "cases": 35,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-transfer",
+   "page": "transfer",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/transfer.html",
+     "sha256": "91aad2d6af78cf3465759f633dd6796d8a8eee00a1e78fbb2f016da095b316a0"
+    },
+    {
+     "file": "dist/transfer.js",
+     "sha256": "98c8b11cc0586cd28a9e3d699f78539d5f2d5e0f8749f8cbbcdbf93239d7568d"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-BIBO"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "零初值 LTI 的 H=1/(s+a)，H 單位 s；u0=1 s⁻¹；BIBO 與內部穩定不混淆。",
+   "max_numeric_difference": 1.6183063777930329e-09,
+   "static_svg_check": "零輸入、零狀態、完整輸出圖逐點正確；a=0 積分器及 a<0 成長曲線尺度正確。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-transfer",
+   "hand_calculations": "零狀態 Laplace、a≠0 部分分式、.63212056；近題 a=2 得 .43233236。",
+   "displayed_values_checked": 2,
+   "svg_points_checked": 1687,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-transfer",
+    "cases": 65,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": "待作者五項教學增補後另驗新增內容，非目前數學錯誤"
+  },
+  {
+   "id": "MATH2-convolution",
+   "page": "convolution",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/convolution.html",
+     "sha256": "3e7b96afe1d821cf96fb7f6e629d1d7a113d8ad50b07784b76ec684a4383c2f9"
+    },
+    {
+     "file": "dist/convolution.js",
+     "sha256": "b654839bc7e91d019ba0aeff76484fdf30c9d6286ef12a080f2d3e92303d99bf"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-CONV"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "因果零狀態 LTI；h 無量綱、u 為 s⁻¹；Δτ 面積不可省略；有限小片為近似。",
+   "max_numeric_difference": 4.1965134978116936e-09,
+   "static_svg_check": "三個延後尾巴、八格矩形寬高、積分核與完整輸出曲線吻合。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-convolution",
+   "hand_calculations": "八個中點矩形貢獻與和、精確積分差；t=2 s 尾響應；近題只縮 T 到 .5 s。",
+   "displayed_values_checked": 13,
+   "svg_points_checked": 1446,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-convolution",
+    "cases": 68,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": "待作者五項教學增補後另驗新增內容，非目前數學錯誤"
+  },
+  {
+   "id": "MATH2-fourier-series",
+   "page": "fourier-series",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/fourier-series.html",
+     "sha256": "ac29e3a4c05898b166c623f6edcef2e3be08a1182d866e9db74d8ee0d362d088"
+    },
+    {
+     "file": "dist/fourier-series.js",
+     "sha256": "b35fa0a506d72b864bb63ca338e93feb8a9a2af8bfd8617ba7118bf47e32b3fb"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-FS-GIBBS",
+    "MIT-FS-POWER"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "正頻正弦峰值係數與雙邊複數係數不同；週期均方 V² 非總能量；跳躍平均與 Gibbs 條件。",
+   "max_numeric_difference": 4.735162706381857e-09,
+   "static_svg_check": "N=1,2,3,9 波形及 1/3/5 Hz 頻率線高度正確；A 振幅不誤當瞬時值。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-fourier-series",
+   "hand_calculations": "b1 兩半週積分、bn 奇偶；一二三諧波符號與 quarter 值；三項／近題兩項均方。",
+   "displayed_values_checked": 8,
+   "svg_points_checked": 5005,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-fourier-series",
+    "cases": 36,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": "待作者五項教學增補後另驗新增內容，非目前數學錯誤"
+  },
+  {
+   "id": "MATH2-fourier-transform",
+   "page": "fourier-transform",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/fourier-transform.html",
+     "sha256": "48fcb77f219dd78cb4930ce31db1fe9fa8eae9b06851c812e680d89ef6a03cb5"
+    },
+    {
+     "file": "dist/fourier-transform.js",
+     "sha256": "fec9457fc97f29f624ec4af9f83b5aa1274e183b32fb79e5518f5b3f920fe71a"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-FT"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "角頻率慣例逆變換 1/(2π)；X 為 V·s、帶號 sinc 非模長；週期訊號需分布說明。",
+   "max_numeric_difference": 3.816209293017181e-09,
+   "static_svg_check": "矩形支撐、正負 cosine 填色、T=1/.5 的 sinc 每點核算；X 縱軸與 ω 橫軸單位明確。",
+   "findings": [
+    {
+     "id": "M05",
+     "kind": "近題控制變因",
+     "finding": "原近題同時 T=2、A=.5 改兩個變因。",
+     "resolution": "近題只 T=2、A=1，X(0)=2 V·s、第一零點 ±π；等面積比較留作延伸。",
+     "status": "修後獨立複驗通過"
+    },
+    {
+     "id": "M06",
+     "kind": "圖軸澄清",
+     "finding": "「X 軸範圍」易被讀作水平軸。",
+     "resolution": "明寫頻譜縱軸 X 與橫軸 ω，單位分開。",
+     "status": "修後獨立複驗通過"
+    }
+   ],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-fourier-transform",
+   "hand_calculations": "ω=2π 之中央正面積與兩側負面積相消；ω=3π 負瓣；近題僅 T=2、A 維持 1。",
+   "displayed_values_checked": 4,
+   "svg_points_checked": 3453,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-fourier-transform",
+    "cases": 28,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": "待作者五項教學增補後另驗新增內容，非目前數學錯誤"
+  },
+  {
+   "id": "MATH2-pde",
+   "page": "pde",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/pde.html",
+     "sha256": "c416199a89ddbce716a0de0d56036a589e70c666918c2c782a440e5391805913"
+    },
+    {
+     "file": "dist/pde.js",
+     "sha256": "aee700d572a01a814ec8d22cce0b3342d99d3b05c3fcd6d4f75e7085e209862b"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-HEAT"
+   ],
+   "runtime_cases": 4,
+   "numerical_check": "u 是溫差 K；κ 單位 m²/s；固定端溫非絕熱；κ 增大不保證當刻 |ut| 增大。",
+   "max_numeric_difference": 3.3316056580190434e-09,
+   "static_svg_check": "空間與時間坐標分開；兩端 0 K、中央標值與所有曲線核算吻合。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-pde",
+   "hand_calculations": "一階正模態中央 t=.1 與 .2 s；ut=κuxx，L² 因子完整。",
+   "displayed_values_checked": 3,
+   "svg_points_checked": 404,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-pde",
+    "cases": 44,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-separation",
+   "page": "separation",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/separation.html",
+     "sha256": "c3b85f04d37d1b9311f0a64e8e159282e6bb364148752a3fb0b8f3f2caaa21b3"
+    },
+    {
+     "file": "dist/separation.js",
+     "sha256": "3aea8ca20db5e39735e11b828908bc42fbde18ebcbbfd569b612b7f5dd6f68ab"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-HEAT"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "非零乘積分離及端點特徵值；幅值衰減不推出每點下降；初形、邊界與疊加正確。",
+   "max_numeric_difference": 4.2303165415091826e-09,
+   "static_svg_check": "模式幅值 B=.5 K 不誤作每點貢獻；正負局部項與相加曲線全部核算。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-separation",
+   "hand_calculations": "兩模態幅值、x=.25 局部貢獻；近題 x=.75 初值 .20710678、後值 .25389609、初導數 +12.76034460。",
+   "displayed_values_checked": 8,
+   "svg_points_checked": 1111,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-separation",
+    "cases": 55,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-boundaries",
+   "page": "boundaries",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/boundaries.html",
+     "sha256": "e22e8c11019a9d918334374d6a6b1faa2020c74ed826bd56d28158ee2da11514"
+    },
+    {
+     "file": "dist/boundaries.js",
+     "sha256": "4bb7c3e7ce662e3c7bba791ae1a9e15fcedbd8ccabea0ce677b46246e8fc70fe"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "UVA-BOUNDARY"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "無電荷均勻靜電一維；E=−V′；Neumann 外法向與相容性／常數；Robin 係數量綱。",
+   "max_numeric_difference": 0.0,
+   "static_svg_check": "任意仿射候選、端值選出的直線與常電位例正確；外法向左負右正。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-boundaries",
+   "hand_calculations": "VL0/VR10 中央 5 V、E−10 V/m；近題共同下移 2 V 得中央 3 V、場不變。",
+   "displayed_values_checked": 3,
+   "svg_points_checked": 505,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-boundaries",
+    "cases": 121,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-engineering",
+   "page": "engineering",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/engineering.html",
+     "sha256": "8ffa82e2231a9d344ccda76ecd115e0f609df415dbc2d61c0a8f3ee0909ece0a"
+    },
+    {
+     "file": "dist/engineering.js",
+     "sha256": "f3f69d60f6f9b2e3c0d88bf03ab9ab1906c4e69ae8d33bf4ff9df250dc5da728"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-RLC",
+    "MIT-COMPLEX",
+    "MIT-CONV",
+    "UVA-BOUNDARY"
+   ],
+   "runtime_cases": 5,
+   "numerical_check": "五種工程情境的資料、欲求量與模型條件；各工具適用界線；機械與電路單位不混。",
+   "max_numeric_difference": 4.854112389818255e-09,
+   "static_svg_check": "RLC 三幅曲線及一秒切線斜率 .838559259 V/s 正確；與 RLC 主頁同例。",
+   "findings": [
+    {
+     "id": "M07",
+     "kind": "精確與近似記法",
+     "finding": "精確波形式係數使用有限位小數。",
+     "resolution": "改為 (1/√2 V)cos[…]，數值結果不變。",
+     "status": "修後獨立複驗通過"
+    }
+   ],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-engineering",
+   "hand_calculations": "RLC 根、A/B、二階導數及 KVL；近題 vC0=.5 V；RC 精確峰值 1/√2 V、脈衝與靜電數值。",
+   "displayed_values_checked": 7,
+   "svg_points_checked": 505,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-engineering",
+    "cases": 5,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-index",
+   "page": "index",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/index.html",
+     "sha256": "cd48342a8ac46fd68820c3e6e44371048d9d55d68d6c5b4f2e9a7ec1101fc065"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [],
+   "runtime_cases": 0,
+   "numerical_check": "學習路徑與四種工程入口；二階→複數→相量→Laplace→系統→頻譜→PDE 的先備清楚。",
+   "max_numeric_difference": 0,
+   "static_svg_check": "兩幅首頁圖的車中心與 0/+1 m 同刻度吻合。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "",
+   "hand_calculations": "首頁同起點的兩車：1 s 後為 0 與 1 m。",
+   "displayed_values_checked": 0,
+   "svg_points_checked": 0,
+   "inherited_runtime_evidence": {},
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-glossary",
+   "page": "glossary",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/glossary.html",
+     "sha256": "804a0373a6f1dae7da42cfe70d1b8d0c0c80b08e07a999e295684904ad76e004"
+    },
+    {
+     "file": "dist/glossary.js",
+     "sha256": "4caaf3464390b9529b9a9a7ce050f3c49a63095f92ebb1c2c4111fbd77488228"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [],
+   "runtime_cases": 0,
+   "numerical_check": "46 條詞義與正文條件一致；含 0+/0−、BIBO、峰值/RMS、Gibbs、純 Neumann 與熱擴散。",
+   "max_numeric_difference": 0,
+   "static_svg_check": "無數值 SVG。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "",
+   "hand_calculations": "詞條公式／單位逐條核讀，無獨立數值實驗。",
+   "displayed_values_checked": 0,
+   "svg_points_checked": 0,
+   "inherited_runtime_evidence": {},
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH2-sources",
+   "page": "sources",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批2目前版本數學／圖形／單位通過",
+   "assets": [
+    {
+     "file": "dist/sources.html",
+     "sha256": "2cee1a5565a2fcfdd51eecd8c7f901572e15a0f9b4ae2b7e6a4d2b7be84bae6e"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [],
+   "runtime_cases": 0,
+   "numerical_check": "19 主來源的主張、模型條件、教材章節與符號慣例對照索引；不把失效歷史 Brunel 作必讀。",
+   "max_numeric_difference": 0,
+   "static_svg_check": "無數值 SVG；19 主 URL 的先前可用性結果沿用，不因無關 HTML 增補重新外查。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch2/audit-calculations.py",
+    "/tmp/engineering-math-audit/product-batch2/calculation-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-static.py",
+    "/tmp/engineering-math-audit/product-batch2/static-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch2/audit-changed-js.cjs",
+    "/tmp/engineering-math-audit/product-batch2/changed-js-results.json"
+   ],
+   "batch": 2,
+   "supersedes": "MATH-source-availability",
+   "hand_calculations": "主張條件與核讀教材相符；沒有新增來源需求。",
+   "displayed_values_checked": 0,
+   "svg_points_checked": 0,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH-source-availability",
+    "cases": 0,
+    "reason": "僅 initial-values 顯示精度、pde 條件文字與 engineering 單位文字變更，其餘公式及 shared.js 不變；沿用首批 7302 組，不重算無關分支。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH3-forced",
+   "page": "forced",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批3新增教學／邊界回饋獨立複驗通過",
+   "assets": [
+    {
+     "file": "dist/forced.html",
+     "sha256": "018bbe2504aacda0f90e286f7e5013a76b5183eb9abbb84da17933e9aca6a4fb"
+    },
+    {
+     "file": "dist/forced.js",
+     "sha256": "9a7fd9e2689b3852c3d388f16515dda01b88b4298a9ff6f3fdff2c3d8db1e8ba"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-FORCED",
+    "MIT-DAMP-CASES"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "特解加齊次修正配完整初值；修正項並非原初值的零輸入；b=0 共振獨立分支。",
+   "max_numeric_difference": 4.636847847905301e-07,
+   "static_svg_check": "三點使用同一物理映射 xSVG=54+31t、ySVG=124.5−145x/.896。位置誤差小於 .00000051 SVG 單位；原三曲線逐位元未變。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch3/audit-delta.py",
+    "/tmp/engineering-math-audit/product-batch3/delta-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch3/audit-delta-js.cjs",
+    "/tmp/engineering-math-audit/product-batch3/delta-js-results.json"
+   ],
+   "batch": 3,
+   "supersedes": "MATH2-forced",
+   "hand_calculations": "三點同 t=1 s：特解 +.25 m、修正 −.0376435912865 m、總和 +.2123564087135 m；讀值卡與圓／叉／方對應。",
+   "displayed_values_checked": "增量逐行核讀；具體推導見 hand_calculations",
+   "svg_points_checked": 3,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH2-forced",
+    "reason": "僅5HTML與00/conv回饋分支改動；其餘公式及 shared.js/CSS 與批2相同。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH3-transfer",
+   "page": "transfer",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批3新增教學／邊界回饋獨立複驗通過",
+   "assets": [
+    {
+     "file": "dist/transfer.html",
+     "sha256": "df97d5b5cc65d8ea4ae8cbc92075d7f088fe6235a5bcda3a378196203a91e787"
+    },
+    {
+     "file": "dist/transfer.js",
+     "sha256": "98c8b11cc0586cd28a9e3d699f78539d5f2d5e0f8749f8cbbcdbf93239d7568d"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-BIBO"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "零初值 LTI 的 H=1/(s+a)，H 單位 s；u0=1 s⁻¹；BIBO 與內部穩定不混淆。",
+   "max_numeric_difference": 0,
+   "static_svg_check": "本批僅新增圖旁推導，原 SVG 逐位元未變；極點與時域衰減條件一致。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch3/audit-delta.py",
+    "/tmp/engineering-math-audit/product-batch3/delta-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch3/audit-delta-js.cjs",
+    "/tmp/engineering-math-audit/product-batch3/delta-js-results.json"
+   ],
+   "batch": 3,
+   "supersedes": "MATH2-transfer",
+   "hand_calculations": "一般 U、零初值：(s+a)Y=U→Y=H U，H=1/(s+a)。Y 單位 s，U 無量綱，H 單位 s。非零初值另加 y0/(s+a)。a=1 s⁻¹ 的極點為 −1 s⁻¹。",
+   "displayed_values_checked": "增量逐行核讀；具體推導見 hand_calculations",
+   "svg_points_checked": 0,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH2-transfer",
+    "reason": "僅5HTML與00/conv回饋分支改動；其餘公式及 shared.js/CSS 與批2相同。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH3-convolution",
+   "page": "convolution",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批3新增教學／邊界回饋獨立複驗通過",
+   "assets": [
+    {
+     "file": "dist/convolution.html",
+     "sha256": "c826b178b86e85e4e316ef5894679315c957946a8f4fb0da061ba1ea1cbd1dd1"
+    },
+    {
+     "file": "dist/convolution.js",
+     "sha256": "8a414decae82d79566630ac90db8ef471be00001a556a2f5e2f50bc1fb8c502a"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-CONV"
+   ],
+   "runtime_cases": 6,
+   "numerical_check": "因果零狀態 LTI；h 無量綱、u 為 s⁻¹；Δτ 面積不可省略；有限小片為近似。",
+   "max_numeric_difference": 0,
+   "static_svg_check": "本批原 SVG 逐位元未變；新增運算與既有 t=2 s 圓點同值。另測 t=0、0<t<T、t=T、t>T，含三個不同停止時間。",
+   "findings": [
+    {
+     "id": "M10",
+     "detected_by": "browser_qa",
+     "kind": "端點回饋",
+     "resolution": "t=T 為輸入此刻停止；u(t≥T)=0，歷史貢獻仍在。",
+     "status": "research_audit 6案例複驗關閉"
+    }
+   ],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch3/audit-delta.py",
+    "/tmp/engineering-math-audit/product-batch3/delta-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch3/audit-delta-js.cjs",
+    "/tmp/engineering-math-audit/product-batch3/delta-js-results.json"
+   ],
+   "batch": 3,
+   "supersedes": "MATH2-convolution",
+   "hand_calculations": "觀察 t=2 s 時只積分 τ=0..1 s；含單位的反導數與上下端代入得 e⁻¹−e⁻²≈.23254416。t=T 回饋明確宣告此刻輸入停止而輸出尚存。",
+   "displayed_values_checked": "增量逐行核讀；具體推導見 hand_calculations",
+   "svg_points_checked": 0,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH2-convolution",
+    "reason": "僅5HTML與00/conv回饋分支改動；其餘公式及 shared.js/CSS 與批2相同。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH3-fourier-series",
+   "page": "fourier-series",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批3新增教學／邊界回饋獨立複驗通過",
+   "assets": [
+    {
+     "file": "dist/fourier-series.html",
+     "sha256": "95f79ded937360a21dc3910534a1b7e7965d8163cd85a5c77b42f2d6b6e7bd6f"
+    },
+    {
+     "file": "dist/fourier-series.js",
+     "sha256": "b35fa0a506d72b864bb63ca338e93feb8a9a2af8bfd8617ba7118bf47e32b3fb"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-FS-GIBBS",
+    "MIT-FS-POWER"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "正頻正弦峰值係數與雙邊複數係數不同；週期均方 V² 非總能量；跳躍平均與 Gibbs 條件。",
+   "max_numeric_difference": 4.971441944690014e-05,
+   "static_svg_check": "新圖兩瓣每點各自比對 |sin(2πt)|；縱軸 V、面積 V·s，明寫不是原合成電壓；原 SVG 均未變。",
+   "findings": [
+    {
+     "id": "M08",
+     "detected_by": "root",
+     "kind": "精確與近似記法",
+     "resolution": "精確兩半面積 1/π+1/π 接 =4/π；最後才近似小數。",
+     "status": "research_audit 獨立複驗關閉"
+    }
+   ],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch3/audit-delta.py",
+    "/tmp/engineering-math-audit/product-batch3/delta-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch3/audit-delta-js.cjs",
+    "/tmp/engineering-math-audit/product-batch3/delta-js-results.json"
+   ],
+   "batch": 3,
+   "supersedes": "MATH2-fourier-series",
+   "hand_calculations": "投影 p=x sin 正負相乘後兩半皆正，各面積 1/π V·s，乘 2/T0 得 4/π V。精確等號串只含精確值，最後才≈1.27323954 V。",
+   "displayed_values_checked": "增量逐行核讀；具體推導見 hand_calculations",
+   "svg_points_checked": 166,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH2-fourier-series",
+    "reason": "僅5HTML與00/conv回饋分支改動；其餘公式及 shared.js/CSS 與批2相同。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH3-fourier-transform",
+   "page": "fourier-transform",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批3新增教學／邊界回饋獨立複驗通過",
+   "assets": [
+    {
+     "file": "dist/fourier-transform.html",
+     "sha256": "5068f9fdb8f63cc261f96d9a82f01a08ae7d4b4cc30ebfdc8767449d47aadc38"
+    },
+    {
+     "file": "dist/fourier-transform.js",
+     "sha256": "fec9457fc97f29f624ec4af9f83b5aa1274e183b32fb79e5518f5b3f920fe71a"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-FT"
+   ],
+   "runtime_cases": 0,
+   "numerical_check": "角頻率慣例逆變換 1/(2π)；X 為 V·s、帶號 sinc 非模長；週期訊號需分布說明。",
+   "max_numeric_difference": 4.98814745526488e-05,
+   "static_svg_check": "新兩條 sinc 曲線與兩個標點逐點核算；橫軸0..2π、縱軸−.5..2.2，同頻率垂線與物理單位一致；原 SVG 均未變。",
+   "findings": [],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch3/audit-delta.py",
+    "/tmp/engineering-math-audit/product-batch3/delta-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch3/audit-delta-js.cjs",
+    "/tmp/engineering-math-audit/product-batch3/delta-js-results.json"
+   ],
+   "batch": 3,
+   "supersedes": "MATH2-fourier-transform",
+   "hand_calculations": "固定 A=1 V 和 ω=π rad/s，只把 T=1→2 s：Xπ=2/π V·s→0，X0=1→2 V·s；公式代入、第一零點條件正確。",
+   "displayed_values_checked": "增量逐行核讀；具體推導見 hand_calculations",
+   "svg_points_checked": 404,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH2-fourier-transform",
+    "reason": "僅5HTML與00/conv回饋分支改動；其餘公式及 shared.js/CSS 與批2相同。"
+   },
+   "pending_new_content": ""
+  },
+  {
+   "id": "MATH3-00-state",
+   "page": "00-state",
+   "reviewer": "research_audit（獨立於產品作者）",
+   "checked_date": "2026-10-11",
+   "status": "批3新增教學／邊界回饋獨立複驗通過",
+   "assets": [
+    {
+     "file": "dist/00-state.html",
+     "sha256": "e9c34f55645fb08d54cd333bda46d702cc19a348d1051f604db9ff45a0edb034"
+    },
+    {
+     "file": "dist/00-state.js",
+     "sha256": "a7d3b0b90e8e67903b89a63949a79d5d1473b0e7d7c81573f0b4839070ebf8e9"
+    },
+    {
+     "file": "dist/shared.js",
+     "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0"
+    },
+    {
+     "file": "dist/lab.css",
+     "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+    }
+   ],
+   "current_hash_match": true,
+   "source_ids": [
+    "MIT-ODE-IVP"
+   ],
+   "runtime_cases": 5,
+   "numerical_check": "無外力定速度，x=x0+v0t；帶號位置不等於路程；兩張初值卡。",
+   "max_numeric_difference": 0,
+   "static_svg_check": "HTML 與全部 SVG 沿用批2，僅 JS 回饋分支改動，計算公式不變。",
+   "findings": [
+    {
+     "id": "M09",
+     "detected_by": "browser_qa",
+     "kind": "邊界回饋",
+     "resolution": "零時間且零速度的未來保持原點；非零速度另分支。",
+     "status": "research_audit 5案例複驗關閉"
+    }
+   ],
+   "limitations": "精確 SHA 限定；DOM/plot 擷取不代替瀏覽器事件、排版、離線或網路驗收。作者後續新增圖或手算必須另做差異複驗。",
+   "artifacts": [
+    "/tmp/engineering-math-audit/product-batch3/audit-delta.py",
+    "/tmp/engineering-math-audit/product-batch3/delta-geometry-results.json",
+    "/tmp/engineering-math-audit/product-batch3/audit-delta-js.cjs",
+    "/tmp/engineering-math-audit/product-batch3/delta-js-results.json"
+   ],
+   "batch": 3,
+   "supersedes": "MATH2-00-state",
+   "hand_calculations": "t=0,v=0 明說此後兩車都留原點；t=0,v≠0 明說下個正時間位置不同；另外核零速度正時間與負速度案例。",
+   "displayed_values_checked": "增量逐行核讀；具體推導見 hand_calculations",
+   "svg_points_checked": 0,
+   "inherited_runtime_evidence": {
+    "row_id": "MATH2-00-state",
+    "reason": "僅5HTML與00/conv回饋分支改動；其餘公式及 shared.js/CSS 與批2相同。"
+   },
+   "pending_new_content": ""
+  }
+ ]
+}

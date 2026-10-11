@@ -1,0 +1,163 @@
+{
+ "contract": "wf-table/1",
+ "source": "PROJECT-BRIEF.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "page_path"
+ ],
+ "columns": [
+  "id",
+  "page_path",
+  "worked_task",
+  "required_lines",
+  "answer_check",
+  "near_task",
+  "status"
+ ],
+ "rows": [
+  {
+   "id": "00-state",
+   "page_path": "dist/00-state.html",
+   "worked_task": "由 x0=0 m、v=1 m/s 求1秒後位置。",
+   "required_lines": "圖上起點+帶方向的位移；x=x0+vt；1 m/s×1 s=1 m；區分位移與路程。",
+   "answer_check": "代回 t=0 與速度；檢查方向。",
+   "near_task": "固定t=1s只改v=−0.5m/s，得−0.5m；再保持速度延長至2s得−1m，分開方向座標與路程。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "second-order",
+   "page_path": "dist/second-order.html",
+   "worked_task": "m=1 kg、k=4 N/m、b=2 N·s/m，x0=1 m、v0=0，求1 s位置速度。",
+   "required_lines": "從三股力到 ODE；求α=1 s^-1、ωd=√3 rad/s；由兩初值求餘弦/正弦係數；代t=1逐算指數與三角值。主線用實函數，不預支尚未教的複根。",
+   "answer_check": "驗兩初值及力方程，能量不能增加。",
+   "near_task": "只改起點x0=0.5 m，速度仍0；用線性判斷並計算半幅。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "forced",
+   "page_path": "dist/forced.html",
+   "worked_task": "同一車從0/0出發，t>=0加1 N恆力，求1 s位置。",
+   "required_lines": "選特解F0/k=0.25 m；初值差額−0.25 m與0 m/s；求齊次兩係數；同時刻特解+修正。另算餘弦A/B及共振例外。",
+   "answer_check": "完整初值0/0與起始加速度1 m/s²；不要把修正當原初值自由響應。",
+   "near_task": "只改x0=0.5 m，保留外力；特解不變、修正改變。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "rlc",
+   "page_path": "dist/rlc.html",
+   "worked_task": "L=1 H、C=.25 F、R=2Ω、Vs=1 V，零初值，求1 s vC/i及首次峰值。",
+   "required_lines": "圖上回路/電壓極性→KVL→vC二階式；除LC得係數；求α/ωd；由vC0/i0求A/B；算vC再微分乘C求i；峰值由i=0找首個正t。複根記法待complex頁回接，不能只報波形。",
+   "answer_check": "兩初值、回路電壓和儲能/功率單位；初始平衡例外。",
+   "near_task": "改vC0=.5 V、i0=0，算1 s輸出。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "complex",
+   "page_path": "dist/complex.html",
+   "worked_task": "z=1+j乘j後到哪裡，模長與角度怎麼改？",
+   "required_lines": "圖箭頭分量↔1+j；分配律j(1+j)=j+j²=−1+j；長度平方和與atan方向象限；補以RLC特徵式r²+2r+4=0求−1±j√3說明未教記號。",
+   "answer_check": "四次乘j回原點向量；零向量幅角未定。",
+   "near_task": "固定實部2、只把虛部改成+1：z=2+j，jz=−1+2j、模長√5；與主例1+j對照。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "phasors",
+   "page_path": "dist/phasors.html",
+   "worked_task": "R=1000Ω、C=1μF、ω=1000rad/s、Vs峰值1V，求vC相量及時域式。",
+   "required_lines": "換μF；ωRC=1；H=1/(1+j)乘共軛得(1−j)/2；模長√(.5²+.5²)、角度−45°；由圖投影回.7071cos(1000t−π/4)V。",
+   "answer_check": "分母與共軛乘積2；電壓大小/相位/峰值慣例；ω與Hz分開。",
+   "near_task": "改ω=500rad/s，H=.8−.4j，求峰值與相位。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "laplace",
+   "page_path": "dist/laplace.html",
+   "worked_task": "f=e^(−t/(1s))，σ=1s^-1，計算T=3s截斷積分與無限積分。",
+   "required_lines": "圖上訊號×權重→e^(−2t/(1s))；積分上下限每步；有限值(1s)/2(1−e^-6)與無限值.5s；收斂條件σ>−1s^-1。",
+   "answer_check": "σ=−1時有限積分T仍存在、無限積分發散；不能直接代分式。",
+   "near_task": "改σ=0，求T=3s與無限值。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "initial-values",
+   "page_path": "dist/initial-values.html",
+   "worked_task": "y無量綱，y″+3s^-1 y′+2s^-2y=0，y0=1、v0=0，求y(t)與y(1s)。",
+   "required_lines": "每項0+拉氏含初值；移項；Y=(s+3s^-1)/[(s+1s^-1)(s+2s^-1)]；A+B=1、2A+B=3求2/−1；反變換與t=1計算。",
+   "answer_check": "y0、v0、ODE三項代回；初值與s變數/秒單位區分。",
+   "near_task": "固定y0=1，只改v0=1s^-1，逐式求A=3、B=−2，算3e^-t−2e^-2t在t=1s的值，檢查兩初值。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "transfer",
+   "page_path": "dist/transfer.html",
+   "worked_task": "y′+ay=u，a=1s^-1，u=1s^-1步階，y0=0，求H與1s輸出。",
+   "required_lines": "圖上零初值條件→(s+a)Y=U；H=1/(s+a)單位s；步階U=u0/s；部分分式與y=u0/a(1−e^-at)；計算.6321。",
+   "answer_check": "用y0非0指出H缺初值項；a=0極限要另算u0t。",
+   "near_task": "改a=2s^-1，算1s輸出.5(1−e^-2)。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "convolution",
+   "page_path": "dist/convolution.html",
+   "worked_task": "u=1s^-1只在0到1s輸入，h=e^(−t/(1s))，求t=1、2s輸出。",
+   "required_lines": "圖上每塊過去輸入×剩餘倍率×dτ；t=1積0..1，t=2仍只積0..1；展開指數積分及上下限；得到1−e^-1與e^-1−e^-2。",
+   "answer_check": "輸入關掉後仍有尾巴，y連續；積分因dτ消掉1/s。",
+   "near_task": "只改脈衝寬T=.5s，算t=1s輸出。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "fourier-series",
+   "page_path": "dist/fourier-series.html",
+   "worked_task": "±1V、T=1s方波，求前三個奇次正弦係數及t=.25s近似。",
+   "required_lines": "係數投影圖→分兩段積分；bn=4/(nπ)V奇n/偶n0；逐算b1,b3,b5；t=.25s的sin值1,−1,1；加得1.10347V。",
+   "answer_check": "跳點左右平均與有限和超越；係數的V不混均方V²。",
+   "near_task": "只留前兩個奇次項，算同一時刻並對照方波1V。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "fourier-transform",
+   "page_path": "dist/fourier-transform.html",
+   "worked_task": "高1V、寬1s、以0為中心脈衝，求X(0)、X(π rad/s)、首零點。",
+   "required_lines": "圖上非零區間−T/2..T/2→積分；奇sin抵消、偶cos積兩倍；推2A sin(ωT/2)/ω；ω0用極限AT；代π得2/π V·s。",
+   "answer_check": "逆式1/(2π)、角頻率單位；有正負的實頻譜不是永遠正的幅度。",
+   "near_task": "寬改2s高仍1V，算同一ω=π頻譜與零頻面積。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "pde",
+   "page_path": "dist/pde.html",
+   "worked_task": "L=1m、κ=1m²/s、初形1K sin(πx/L)，求x=.5m,t=.1s溫差與變化率。",
+   "required_lines": "圖上固定位置/固定時間↔ut/uxx；算πx/L；衰減指數κ(π/L)²t；逐算u與ut=−κ(π/L)²u。",
+   "answer_check": "端點0、t0初形；ut與κuxx都是K/s。",
+   "near_task": "保持κ=1m²/s，只把時間從.1s改成.2s，中央溫差.13891113K；κ2、t.1僅為答案後κt相同的延伸。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "separation",
+   "page_path": "dist/separation.html",
+   "worked_task": "初形sin(πx/L)K+.5sin(2πx/L)K，求x=.25m,t=.1s溫差。",
+   "required_lines": "圖形×時間倍率；分離後常數與端點篩模態；以正交投影驗A1=1K,A2=.5K；逐算兩模態同點值再相加。",
+   "answer_check": "兩模態係數來源不是憑空設；n2衰減率為n1的4倍，總初形/邊界符合。",
+   "near_task": "保持B=.5K與t=.1s，只把x從.25m改成.75m，第二形狀變−1、總和.25389609K；另明示右側可先升溫的反例。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "boundaries",
+   "page_path": "dist/boundaries.html",
+   "worked_task": "0..1m無電荷區，左0V右10V，求電位式、中點電位與E方向。",
+   "required_lines": "圖兩端值→V″=0兩次積分V=ax+b；用兩邊界解b0/a10V/m；V(.5)=5V；E=−a=−10V/m。",
+   "answer_check": "端點代回；統一加電位常數不改電場；Neumann相容性與常數自由度。",
+   "near_task": "只改共同電位基準偏移−2V：左右成−2V/8V，中央3V、E仍−10V/m；控制均可操作。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  },
+  {
+   "id": "engineering",
+   "page_path": "dist/engineering.html",
+   "worked_task": "選一個具體開關RLC題，從題目資料選工具並完整算出指定時刻量。",
+   "required_lines": "題目先列已知L/C/R/源形/初值/求量；圖判集中、暫態；寫KVL與二階初值，調用本課推得式逐代；計算vC/i並驗算。不能只連路線卡。",
+   "answer_check": "為何不能只用正弦穩態相量；條件是否足夠。",
+   "near_task": "RLC元件與1V步階不變，只改vC(0+)=.5V且i0仍0，求vC(1s)=.92471282V並反查初始二階導數2V/s²。",
+   "status": "成品已實作且精確版本通過獨立教學、數學與瀏覽器驗收；主題與近題以本列及受審HTML為準。"
+  }
+ ]
+}

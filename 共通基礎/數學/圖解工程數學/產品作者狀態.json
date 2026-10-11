@@ -1,0 +1,224 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "builder_checkpoint": {
+  "task": "第四批3個精確小修完成，待獨立數學/browser確認；builder本輪釋槽",
+  "active_authors": [],
+  "reviewers": [
+   "父隊已通過00/prototype，PDE4修正已交回",
+   "research_audit核第二批全教學頁",
+   "pedagogy待隊長安排剩餘11課"
+  ],
+  "next": [
+   "處理獨立審查實質回饋",
+   "確定全站38檔freeze manifest",
+   "由未參與實作的QA跑全19頁/離線/鍵盤/縮減動態/手機",
+   "GitHub Pages only；中央處理Git/發布"
+  ],
+  "tests": [
+   "/tmp/em-widget-check.cjs:131狀態",
+   "/tmp/em-specific-check.cjs:17解析fixture",
+   "/tmp/em-batch-check.cjs:三尺寸/controls/reset",
+   "/tmp/em-text-size.cjs:故事SVG320實字",
+   "/tmp/em-support-check.cjs:三support/字典"
+  ],
+  "known": "最新38檔候選manifest已更新；限定diff與hash /tmp/engineering-math-builder/batch4-changes.json；10條件狀態自測與FS三尺寸通過；正式驗收記錄由隊長/研究/QA持有。"
+ },
+ "columns": [
+  "page",
+  "writer",
+  "status",
+  "files",
+  "note"
+ ],
+ "rows": [
+  {
+   "page": "00-state",
+   "writer": "builder",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "00-state.html",
+    "00-state.js"
+   ],
+   "note": "00微調文字已回報新版SHA；prototype保留核可分鏡與單改初速練習；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "second-order",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "second-order.html",
+    "second-order.js"
+   ],
+   "note": "所有章節作者已退出；修改集中builder；逐頁最新SHA隨ready訊息交隊長与research；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "forced",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "forced.html",
+    "forced.js"
+   ],
+   "note": "只改本頁HTML，JS/shared/CSS不變。最新SHA /tmp/em-batch3-ready.json；本回合完成即釋槽。；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "rlc",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "rlc.html",
+    "rlc.js"
+   ],
+   "note": "所有章節作者已退出；修改集中builder；逐頁最新SHA隨ready訊息交隊長与research；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "complex",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "complex.html",
+    "complex.js"
+   ],
+   "note": "所有章節作者已退出；修改集中builder；逐頁最新SHA隨ready訊息交隊長与research；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "phasors",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "phasors.html",
+    "phasors.js"
+   ],
+   "note": "所有章節作者已退出；修改集中builder；逐頁最新SHA隨ready訊息交隊長与research；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "laplace",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "laplace.html",
+    "laplace.js"
+   ],
+   "note": "所有章節作者已退出；修改集中builder；逐頁最新SHA隨ready訊息交隊長与research；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "initial-values",
+   "writer": "builder",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "initial-values.html",
+    "initial-values.js"
+   ],
+   "note": "00微調文字已回報新版SHA；prototype保留核可分鏡與單改初速練習；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "transfer",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "transfer.html",
+    "transfer.js"
+   ],
+   "note": "只改本頁HTML，JS/shared/CSS不變。最新SHA /tmp/em-batch3-ready.json；本回合完成即釋槽。；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "convolution",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "convolution.html",
+    "convolution.js"
+   ],
+   "note": "只改本頁HTML，JS/shared/CSS不變。最新SHA /tmp/em-batch3-ready.json；本回合完成即釋槽。；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "fourier-series",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "fourier-series.html",
+    "fourier-series.js"
+   ],
+   "note": "只改本頁HTML，JS/shared/CSS不變。最新SHA /tmp/em-batch3-ready.json；本回合完成即釋槽。；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "fourier-transform",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "fourier-transform.html",
+    "fourier-transform.js"
+   ],
+   "note": "只改本頁HTML，JS/shared/CSS不變。最新SHA /tmp/em-batch3-ready.json；本回合完成即釋槽。；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "pde",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "pde.html",
+    "pde.js"
+   ],
+   "note": "保持目前版面；builder接任何後續回饋。精確受審hash由隊長記驗收。；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "separation",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "separation.html",
+    "separation.js"
+   ],
+   "note": "保持目前版面；builder接任何後續回饋。精確受審hash由隊長記驗收。；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "boundaries",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "boundaries.html",
+    "boundaries.js"
+   ],
+   "note": "保持目前版面；builder接任何後續回饋。精確受審hash由隊長記驗收。；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "engineering",
+   "writer": "builder（原作者已交回）",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "engineering.html",
+    "engineering.js"
+   ],
+   "note": "保持目前版面；builder接任何後續回饋。精確受審hash由隊長記驗收。；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "index",
+   "writer": "builder",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "index.html"
+   ],
+   "note": "首頁四條用途路線／46詞條搜尋／19項官方來源；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "glossary",
+   "writer": "builder",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "glossary.html"
+   ],
+   "note": "首頁四條用途路線／46詞條搜尋／19項官方來源；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  },
+  {
+   "page": "sources",
+   "writer": "builder",
+   "status": "成品已經獨立數學、教學及瀏覽器驗收通過；封版交中央發布",
+   "files": [
+    "sources.html"
+   ],
+   "note": "首頁四條用途路線／46詞條搜尋／19項官方來源；最終精確版本以發布封版清單.json為準，作者均已收線。"
+  }
+ ]
+}

@@ -1,0 +1,3 @@
+"use strict";
+(()=>{const L=window.Lab;if(!L||!L.$('initial-values-lab'))return;
+L.init(['position','velocity'],()=>{const y0=L.range('position'),v0=L.range('velocity'),A=2*y0+v0,B=-y0-v0,a=t=>A*Math.exp(-t),b=t=>B*Math.exp(-2*t);L.plot(L.$('drawing'),[{fn:a,color:'#cf604b'},{fn:b,color:'#172a45',dash:'7 5'},{fn:t=>a(t)+b(t)}],{yMin:-5,yMax:5,yLabel:'y 與兩個指數項（無量綱）'});L.text('result-primary','A = '+L.fmt(A)+'，B = '+L.fmt(B));L.text('result-secondary',L.fmt(a(1)+b(1),6));L.text('feedback','A+B = '+L.fmt(A+B)+' = y(0+)；−A/(1 s)−2B/(1 s) = '+L.fmt(-A-2*B)+' s⁻¹ = y′(0+)。分子 [(s+3 s⁻¹)y₀+v₀] 正是保留初值的地方；兩個指數項可能正負相消，不能漏掉其中一項。');});})();

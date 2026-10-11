@@ -1,0 +1,82 @@
+{
+ "contract": "wf-table/1",
+ "source": "PROJECT-BRIEF.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "page_path",
+  "teaching_review_path"
+ ],
+ "columns": [
+  "id",
+  "page_path",
+  "reviewer",
+  "status",
+  "reviewed_sha256",
+  "official_claims",
+  "math_review",
+  "numeric_fixture",
+  "teaching_review_path",
+  "limits"
+ ],
+ "rows": [
+  {
+   "id": "initial-values-calculation-prototype",
+   "page_path": "dist/initial-values.html",
+   "reviewer": "engineering_math_team；產品施作為builder，教學/圖面另由pedagogy獨立驗收",
+   "status": "計算原型通過；可擴展同一教學結構，不代表全課完成",
+   "reviewed_sha256": {
+    "initial-values.html": "fc9486609ceae7940c01143f6e63432fd908755ae885451fc278928fb9e59195",
+    "initial-values.js": "7df53de747d5ec812b44e2c3758b5c5f32ec81920ef97a7d10c0b3b572f7732e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+   },
+   "official_claims": [
+    "MIT單邊拉氏與常規初值0+慣例",
+    "ES.1803線性常係數初值問題與部分分式方法",
+    "UW初值/終值可用條件；主張位置見教材與主張索引.json"
+   ],
+   "math_review": [
+    "由m=1kg、b=3N·s/m、k=2N/m除質量，再以y=x/(1m)無量綱化；每項單位一致，與前章參數不同已明說。",
+    "常規導數兩次分部積分保留−sy0−v0，移項與因式分解完整；Y的單位為秒。",
+    "A+B=1與2A+B=3相減，得到A=2/B=−1；反變換回實數指數之後，起點1/斜率0及ODE精確成立。",
+    "1秒兩圖值為0.7357588823428847與−0.1353352832366127，和為0.600423599106272；圖標已修為A項/B項，未把時間貢獻冒充係數。",
+    "單改v0=1s^-1，y0保持1；A=3/B=−2、y(1s)=0.8329677570411016，兩初值再次符合。",
+    "收斂／常規右極限／無原點脈衝條件可見；初終值定理的適用條件沒有省略。"
+   ],
+   "numeric_fixture": {
+    "reviewer": "engineering_math_team",
+    "scope": "initial-values calculation prototype only; independent closed-form arithmetic, not browser QA",
+    "physical_normalization": {
+     "m_kg": 1,
+     "b_Ns_per_m": 3,
+     "k_N_per_m": 2,
+     "position_scale_m": 1,
+     "y_dimensionless": true
+    },
+    "at_t1s": {
+     "exp_minus_1": 0.36787944117144233,
+     "exp_minus_2": 0.1353352832366127,
+     "A_contribution": 0.7357588823428847,
+     "B_contribution": -0.1353352832366127,
+     "y": 0.600423599106272,
+     "dy_per_s": -0.46508831586965926,
+     "ddy_per_s2": 0.19441774939643386,
+     "damping_term_per_s2": -1.3952649476089778,
+     "spring_term_per_s2": 1.200847198212544,
+     "residual_per_s2": 0.0
+    },
+    "near_one_initial_changed": {
+     "y0": 1,
+     "dy0_per_s": 1,
+     "A": 3,
+     "B": -2,
+     "at_t1s": 0.8329677570411016,
+     "checked_y0": 1,
+     "checked_dy0_per_s": 1
+    }
+   },
+   "teaching_review_path": "教學驗收.json",
+   "limits": "隊長實讀全部新增算式，獨立閉式算術/代回核證；pedagogy實看三尺寸。未宣稱真人學習已通過，亦不代替其餘15課或最後全站技術QA。"
+  }
+ ]
+}

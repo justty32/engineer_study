@@ -1,0 +1,3 @@
+"use strict";
+(()=>{const L=window.Lab;if(!L||!L.$('laplace-lab'))return;
+L.init(['sigma','window'],()=>{const s=L.range('sigma'),T=L.range('window'),a=s+1,area=Math.abs(a)<1e-10?T:-Math.expm1(-a*T)/a,yMax=Math.max(1,Math.exp(-a*T))*1.1;L.plot(L.$('drawing'),[{fn:t=>Math.exp(-t),color:'#172a45',dash:'7 5'},{fn:t=>Math.exp(-a*t)}],{xMax:T,yMin:0,yMax,xLabel:'時間 t（s）；上限 T 隨控制調整',yLabel:'原函數與加權乘積（無量綱）'});L.text('result-primary',L.fmt(area)+' s');L.text('result-secondary',a>0?L.fmt(1/a)+' s':'發散');L.text('feedback','被積函數是 exp[−('+L.fmt(a)+' s⁻¹)t]。'+(a>0?'它會衰減；有限窗面積 '+L.fmt(area)+' s 尚未包含 T 之後的尾巴，無限面積才是 '+L.fmt(1/a)+' s。':a===0?'它恆等於 1：看 T 秒就得到 T 秒的面積，T→∞ 會發散。':'它隨時間增長，雖然每個有限窗都有面積，無限積分卻發散；此時不能用 1/(σ+1) 當答案。')+' 圖的時間窗與縱軸會依目前觀察範圍縮放。');});})();

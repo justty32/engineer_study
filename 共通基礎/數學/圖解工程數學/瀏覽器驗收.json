@@ -1,0 +1,2280 @@
+{
+ "contract": "wf-table/1",
+ "source": "驗收紀錄.md",
+ "extracted": "2026-10-11",
+ "status": "獨立瀏覽器19頁全通過；兩處回饋缺陷與FS記法已修正並定點複驗，無本輪未結產品缺陷。",
+ "environment": "既有 Playwright Core + headless Chromium 1243；未安裝依賴、未用 GUI、未發布；file offline 及臨時 127.0.0.1 HTTP server",
+ "link_columns": [
+  "page_path"
+ ],
+ "script_hashes": {
+  "browser.cjs": "0ae221cc3b9ba9e470a476b3ce9f746a4e4fbf6967466140bd2621445f1c9a13",
+  "static.py": "d6486ab3d24d5ebcf60d385036c2fe1379e8df37346cd711187583a7883d8169",
+  "supplement.cjs": "90f655a98313384c2fad02cfebb343778fb51c45eac6fd11da4962f4a861c107",
+  "live-views.cjs": "5c5e671e142f5c011bba751eb6a5e42a7214df1718860759ff9503c8b909391d",
+  "montage.py": "e158d9e27af16861c9d4e933d6c5d772707ca35838be5e52cfd018e5fd4e3a67",
+  "retest-boundaries.cjs": "b6516651a74d0ef3163371d88c87892119701585f970916f5f8184d7c92e186b"
+ },
+ "final_counts": {
+  "initial_page_viewports": 57,
+  "initial_interaction_states": 396,
+  "local_http_page_viewports": 57,
+  "http_dynamic_svg_states": 234,
+  "independent_default_readouts": 28,
+  "targeted_page_viewports": 9,
+  "targeted_control_states": 60,
+  "additional_boundary_branch_states": 45,
+  "no_javascript_pages": 19
+ },
+ "columns": [
+  "id",
+  "page_path",
+  "status",
+  "hashes",
+  "viewports",
+  "interactions",
+  "accessibility",
+  "offline",
+  "visual",
+  "numeric",
+  "issues",
+  "evidence"
+ ],
+ "rows": [
+  {
+   "id": "00-state",
+   "page_path": "dist/00-state.html",
+   "status": "通過",
+   "hashes": {
+    "00-state.html": "e9c34f55645fb08d54cd333bda46d702cc19a348d1051f604db9ff45a0edb034",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "00-state.js": "a7d3b0b90e8e67903b89a63949a79d5d1473b0e7d7c81573f0b4839070ebf8e9"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 6,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0,
+    "rounds": "初輪三尺寸＋小修後三尺寸定點複驗"
+   },
+   "interactions": {
+    "state_cases": 18,
+    "controls": [
+     {
+      "id": "velocity",
+      "label": "起跑速度",
+      "unit": "m/s",
+      "min": -1,
+      "max": 1,
+      "step": 0.5,
+      "default": 1
+     },
+     {
+      "id": "time",
+      "label": "觀察時間",
+      "unit": "s",
+      "min": 0,
+      "max": 2,
+      "step": 0.1,
+      "default": 1
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "velocity": -1,
+       "time": 2
+      },
+      "primary": "-2 m",
+      "secondary": "-1 m/s",
+      "feedback": "B 車每秒向左走 1 m；經過 2 s，位置 = 0 + (-1) × 2 = -2 m。速度卡沒有改變，因為模型中沒有合外力。"
+     },
+     {
+      "value": {
+       "velocity": 0,
+       "time": 0
+      },
+      "primary": "0 m",
+      "secondary": "0 m/s",
+      "feedback": "時間還沒往前：兩車都在 0 m，速度也都是 0 m/s。在這個無外力模型中，此後兩車都會維持在原點。"
+     }
+    ],
+    "retest_state_cases": 18,
+    "boundary_branch_retests": 18
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 3,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "00-state",
+     "readout": "primary",
+     "actual": "1 m",
+     "independent": 1,
+     "difference": 0.0,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "00-state",
+     "readout": "secondary",
+     "actual": "1 m/s",
+     "independent": 1,
+     "difference": 0.0,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "已修正且獨立複驗：t=0、v=0 明說兩車此後留原點；v=±1 說下一個正時間不同。三尺寸共18個零時/正時分支案例通過。",
+   "evidence": {
+    "raw": "stable14/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "00-state-triptych-story3.png",
+    "live": "live/00-state-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa",
+    "retest_raw": "00-state,convolution,fourier-series/raw-results.json",
+    "boundary_retest": "retest-boundaries.json"
+   }
+  },
+  {
+   "id": "boundaries",
+   "page_path": "dist/boundaries.html",
+   "status": "通過",
+   "hashes": {
+    "boundaries.html": "e22e8c11019a9d918334374d6a6b1faa2020c74ed826bd56d28158ee2da11514",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "boundaries.js": "4bb7c3e7ce662e3c7bba791ae1a9e15fcedbd8ccabea0ce677b46246e8fc70fe"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 21,
+    "controls": [
+     {
+      "id": "left",
+      "label": "左端電位",
+      "unit": "V",
+      "min": -5,
+      "max": 5,
+      "step": 1,
+      "default": 0
+     },
+     {
+      "id": "right",
+      "label": "右端電位",
+      "unit": "V",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 10
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "left": 5,
+       "right": 5
+      },
+      "primary": "5 V",
+      "secondary": "0 V/m",
+      "feedback": "左端 5 V、右端 5 V，把所有可能直線中的這一條選出來。斜率 dV/dx = 0 V/m，所以電場 E=−dV/dx = 0 V/m。兩端相同時，常數電位仍可不為零，但電場是零。 這是忽略平行板邊緣場的中央一維靜電近似。"
+     },
+     {
+      "value": {
+       "left": 5,
+       "right": 0
+      },
+      "primary": "2.5 V",
+      "secondary": "5 V/m",
+      "feedback": "左端 5 V、右端 0 V，把所有可能直線中的這一條選出來。斜率 dV/dx = -5 V/m，所以電場 E=−dV/dx = 5 V/m。把兩端一起加同一個常數，斜率與電場都不變。 這是忽略平行板邊緣場的中央一維靜電近似。"
+     },
+     {
+      "value": {
+       "left": -2,
+       "right": 8
+      },
+      "primary": "3 V",
+      "secondary": "-10 V/m",
+      "feedback": "左端 -2 V、右端 8 V，把所有可能直線中的這一條選出來。斜率 dV/dx = 10 V/m，所以電場 E=−dV/dx = -10 V/m。把兩端一起加同一個常數，斜率與電場都不變。 這是忽略平行板邊緣場的中央一維靜電近似。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 4,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "boundaries",
+     "readout": "primary",
+     "actual": "5 V",
+     "independent": 5,
+     "difference": 0.0,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "boundaries",
+     "readout": "secondary",
+     "actual": "-10 V/m",
+     "independent": -10,
+     "difference": 0.0,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "stable14/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "boundaries-triptych-story4.png",
+    "live": "live/boundaries-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "complex",
+   "page_path": "dist/complex.html",
+   "status": "通過",
+   "hashes": {
+    "complex.html": "68d62ec972e63f5e0f22a4a39cfa33533138f4addcf1ccbd29708c5db26d2e47",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "complex.js": "8f66b9085c3b47ade2b38adf32c64f4e756ee78817c603c28907f48ccd0f8c4a"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 30,
+    "controls": [
+     {
+      "id": "real",
+      "label": "實部",
+      "unit": "",
+      "min": -2,
+      "max": 2,
+      "step": 0.5,
+      "default": 1
+     },
+     {
+      "id": "imag",
+      "label": "虛部",
+      "unit": "",
+      "min": -2,
+      "max": 2,
+      "step": 0.5,
+      "default": 1
+     },
+     {
+      "id": "operation",
+      "label": "操作",
+      "options": [
+       "j",
+       "2",
+       "minus1"
+      ],
+      "default": "j"
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "real": 0,
+       "imag": 0,
+       "operation": "j"
+      },
+      "primary": "0 + 0j",
+      "secondary": "長度 0",
+      "feedback": "零複數仍在原點，長度為 0；沒有一個可定義的方向角。"
+     },
+     {
+      "value": {
+       "real": -2,
+       "imag": -2,
+       "operation": "2"
+      },
+      "primary": "-4 − 4j",
+      "secondary": "長度 5.657",
+      "feedback": "乘 2：兩個座標一起加倍，方向不變，長度加倍。 結果方向角 -135°；實軸與虛軸每格長度相同。"
+     },
+     {
+      "value": {
+       "real": 1,
+       "imag": -1,
+       "operation": "minus1"
+      },
+      "primary": "-1 + 1j",
+      "secondary": "長度 1.414",
+      "feedback": "乘 −1：兩個座標反號，相當於旋轉 180°。 結果方向角 135°；實軸與虛軸每格長度相同。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 3,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "complex",
+     "readout": "primary",
+     "actual": "-1 + 1j",
+     "independent": -1,
+     "difference": 0.0,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "complex",
+     "readout": "secondary",
+     "actual": "長度 1.414",
+     "independent": 1.4142135623730951,
+     "difference": 0.00021356237309522186,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "stable14/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "complex-triptych-story3.png",
+    "live": "live/complex-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "convolution",
+   "page_path": "dist/convolution.html",
+   "status": "通過",
+   "hashes": {
+    "convolution.html": "c826b178b86e85e4e316ef5894679315c957946a8f4fb0da061ba1ea1cbd1dd1",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "convolution.js": "8a414decae82d79566630ac90db8ef471be00001a556a2f5e2f50bc1fb8c502a"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 6,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0,
+    "rounds": "初輪三尺寸＋小修後三尺寸定點複驗"
+   },
+   "interactions": {
+    "state_cases": 24,
+    "controls": [
+     {
+      "id": "duration",
+      "label": "輸入持續時間",
+      "unit": "s",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.5,
+      "default": 1
+     },
+     {
+      "id": "time",
+      "label": "觀察時刻",
+      "unit": "s",
+      "min": 0,
+      "max": 4,
+      "step": 0.25,
+      "default": 1
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "duration": 1,
+       "time": 0
+      },
+      "primary": "0",
+      "secondary": "0",
+      "feedback": "只加總 τ=0 到 0 s 的輸入，每個小面積再依距今多久乘上衰減。尚未累積任何時間，輸出為零。 右側近似用 8 個中點矩形，精確值用積分；兩者差 0，不能把有限小格直接叫精確脈衝。"
+     },
+     {
+      "value": {
+       "duration": 1,
+       "time": 1
+      },
+      "primary": "0.632121",
+      "secondary": "0.631709",
+      "feedback": "只加總 τ=0 到 1 s 的輸入，每個小面積再依距今多久乘上衰減。輸入在此刻停止，新的輸入已為零，已有的貢獻仍留下尾巴。 右側近似用 8 個中點矩形，精確值用積分；兩者差 0.000411，不能把有限小格直接叫精確脈衝。"
+     },
+     {
+      "value": {
+       "duration": 1,
+       "time": 2
+      },
+      "primary": "0.232544",
+      "secondary": "0.232393",
+      "feedback": "只加總 τ=0 到 1 s 的輸入，每個小面積再依距今多久乘上衰減。輸入已在 1 s 停止，但較早的回應還留著尾巴。 右側近似用 8 個中點矩形，精確值用積分；兩者差 0.000151，不能把有限小格直接叫精確脈衝。"
+     },
+     {
+      "value": {
+       "duration": 0.5,
+       "time": 4
+      },
+      "primary": "0.011882",
+      "secondary": "0.01188",
+      "feedback": "只加總 τ=0 到 0.5 s 的輸入，每個小面積再依距今多久乘上衰減。輸入已在 0.5 s 停止，但較早的回應還留著尾巴。 右側近似用 8 個中點矩形，精確值用積分；兩者差 0.000002，不能把有限小格直接叫精確脈衝。"
+     }
+    ],
+    "retest_state_cases": 24,
+    "boundary_branch_retests": 27
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 5,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "convolution",
+     "readout": "primary",
+     "actual": "0.632121",
+     "independent": 0.6321205588285577,
+     "difference": 4.4117144237798556e-07,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "convolution",
+     "readout": "secondary",
+     "actual": "0.631709",
+     "independent": 0.631709209478519,
+     "difference": 2.0947851908648119e-07,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "已修正且獨立複驗：t=T 明說輸入在此刻停止；T=.5/1/2 與 t=T−.25/T/T+.25，三尺寸27例數值及回饋通過。",
+   "evidence": {
+    "raw": "remaining5/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "convolution-triptych-story5.png",
+    "live": "live/convolution-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa",
+    "retest_raw": "00-state,convolution,fourier-series/raw-results.json",
+    "boundary_retest": "retest-boundaries.json"
+   }
+  },
+  {
+   "id": "engineering",
+   "page_path": "dist/engineering.html",
+   "status": "通過",
+   "hashes": {
+    "engineering.html": "8ffa82e2231a9d344ccda76ecd115e0f609df415dbc2d61c0a8f3ee0909ece0a",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "engineering.js": "f3f69d60f6f9b2e3c0d88bf03ab9ab1906c4e69ae8d33bf4ff9df250dc5da728"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 30,
+    "controls": [
+     {
+      "id": "case",
+      "label": "情境",
+      "options": [
+       "switch-rlc",
+       "sinusoid-rc",
+       "pulse",
+       "field",
+       "robot"
+      ],
+      "default": "switch-rlc"
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "case": "switch-rlc"
+      },
+      "primary": "二階初值問題／拉氏",
+      "secondary": "vC(1 s) = 0.849 V",
+      "feedback": "開關剛閉合，要追整段暫態。先交 vC(0)=0 V、iL(0)=0 A 兩張卡，並寫 LC vC″+RC vC′+vC=1 V。相量只保留同頻穩態，不能還原這段起跑。"
+     },
+     {
+      "value": {
+       "case": "sinusoid-rc"
+      },
+      "primary": "峰值相量",
+      "secondary": "0.707 V ∠−45°",
+      "feedback": "ω=1000 rad/s、R=1 kΩ、C=1 μF；已等待暫態衰減，只問振幅與相位。H(jω)=1/(1+jωRC) 可直接得到結果；若重新問接通瞬間，必須回到初值問題。"
+     },
+     {
+      "value": {
+       "case": "pulse"
+      },
+      "primary": "摺積與傅立葉轉換",
+      "secondary": "y(2 s) = 0.233",
+      "feedback": "輸入是從 0 到 1 s 的單次矩形，系統 h(t)=e^(−t/(1 s))。摺積算各次貢獻的尾巴，傅立葉轉換看連續頻率內容；不能假裝這個單次事件本來就每秒重複。"
+     },
+     {
+      "value": {
+       "case": "field"
+      },
+      "primary": "靜電邊值問題",
+      "secondary": "E = −10 V/m",
+      "feedback": "左端 0 V、右端 10 V、間距 1 m。內部無電荷，V″=0，再用兩端邊界決定 V=(10 V)x/L。這裡沒有開關時間歷程，時間初值不能取代空間邊界。"
+     },
+     {
+      "value": {
+       "case": "robot"
+      },
+      "primary": "狀態與二階動態",
+      "secondary": "x(1 s) = 0.151 m",
+      "feedback": "已知位置 1 m、速度 0 m/s、m=1 kg、k=4 N/m、b=2 N·s/m。先用兩張狀態卡追蹤放手響應；若之後研究輸入輸出，零初值才可只用轉移函數。真實機器人還有致動器限制與多軸耦合。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 4,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "stable14/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "engineering-triptych-story4.png",
+    "live": "live/engineering-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "forced",
+   "page_path": "dist/forced.html",
+   "status": "通過",
+   "hashes": {
+    "forced.html": "018bbe2504aacda0f90e286f7e5013a76b5183eb9abbb84da17933e9aca6a4fb",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "forced.js": "9a7fd9e2689b3852c3d388f16515dda01b88b4298a9ff6f3fdff2c3d8db1e8ba"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 39,
+    "controls": [
+     {
+      "id": "input",
+      "label": "外力形狀",
+      "options": [
+       "step",
+       "cosine"
+      ],
+      "default": "step"
+     },
+     {
+      "id": "damping",
+      "label": "阻尼係數",
+      "unit": "N·s/m",
+      "min": 0,
+      "max": 6,
+      "step": 0.5,
+      "default": 2
+     },
+     {
+      "id": "frequency",
+      "label": "推力角頻率",
+      "unit": "rad/s",
+      "min": 0.5,
+      "max": 4,
+      "step": 0.5,
+      "default": 2
+     },
+     {
+      "id": "position",
+      "label": "起跑位置",
+      "unit": "m",
+      "min": -1,
+      "max": 1,
+      "step": 0.5,
+      "default": 0
+     },
+     {
+      "id": "velocity",
+      "label": "起跑速度",
+      "unit": "m/s",
+      "min": -1,
+      "max": 1,
+      "step": 0.5,
+      "default": 0
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "input": "cosine",
+       "damping": 0,
+       "frequency": 2,
+       "position": 0,
+       "velocity": 0
+      },
+      "primary": "0.227 m",
+      "secondary": "無有限穩態",
+      "feedback": "修正的起點是 0 m、速度 0 m/s，所以相加後回到指定的 0 m、0 m/s。此處走無阻尼共振公式 t sin(2t)/4，振幅隨時間增長；不拿零分母硬除。 縱軸依三條曲線共同縮放。"
+     },
+     {
+      "value": {
+       "input": "cosine",
+       "damping": 0,
+       "frequency": 1,
+       "position": 1,
+       "velocity": -1
+      },
+      "primary": "-0.552 m",
+      "secondary": "自然項不消失",
+      "feedback": "修正的起點是 0.667 m、速度 -1 m/s，所以相加後回到指定的 1 m、-1 m/s。無阻尼時，齊次修正不會衰減，不能只保留特解。 縱軸依三條曲線共同縮放。"
+     },
+     {
+      "value": {
+       "input": "step",
+       "damping": 4,
+       "position": 0,
+       "velocity": 0
+      },
+      "primary": "0.148 m",
+      "secondary": "0.25 m",
+      "feedback": "修正的起點是 -0.25 m、速度 0 m/s，所以相加後回到指定的 0 m、0 m/s。阻尼大於零時，齊次修正逐漸衰減，留下外力持續維持的部分。 縱軸依三條曲線共同縮放。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 4,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "forced",
+     "readout": "primary",
+     "actual": "0.212 m",
+     "independent": 0.2123564087135281,
+     "difference": 0.0003564087135281002,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "remaining5/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "forced-triptych-story4.png",
+    "live": "live/forced-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "fourier-series",
+   "page_path": "dist/fourier-series.html",
+   "status": "通過",
+   "hashes": {
+    "fourier-series.html": "95f79ded937360a21dc3910534a1b7e7965d8163cd85a5c77b42f2d6b6e7bd6f",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "fourier-series.js": "b35fa0a506d72b864bb63ca338e93feb8a9a2af8bfd8617ba7118bf47e32b3fb"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 6,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0,
+    "rounds": "初輪三尺寸＋小修後三尺寸定點複驗"
+   },
+   "interactions": {
+    "state_cases": 18,
+    "controls": [
+     {
+      "id": "harmonics",
+      "label": "使用幾個奇數諧波",
+      "unit": "個",
+      "min": 1,
+      "max": 9,
+      "step": 1,
+      "default": 3
+     },
+     {
+      "id": "frequency",
+      "label": "基本頻率",
+      "unit": "Hz",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.5,
+      "default": 1
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "harmonics": 1,
+       "frequency": 0.5
+      },
+      "primary": "1.27324 V",
+      "secondary": "0.810569 V²",
+      "feedback": "用了 n=1 到 1 的 1 個奇數諧波，第一成分峰值固定 4/π≈1.273 V。基頻 0.5 Hz → 週期 2 s；改頻率只改節奏，不改各成分幅值。t=0 的合成值為 0，是跳躍兩側 ±1 V 的平均。此處列均方值，不是無限時間總能量；多加諧波也不會完全消除跳躍附近的 Gibbs 超越。"
+     },
+     {
+      "value": {
+       "harmonics": 9,
+       "frequency": 2
+      },
+      "primary": "1.03526 V",
+      "secondary": "0.977507 V²",
+      "feedback": "用了 n=1 到 17 的 9 個奇數諧波，第一成分峰值固定 4/π≈1.273 V。基頻 2 Hz → 週期 0.5 s；改頻率只改節奏，不改各成分幅值。t=0 的合成值為 0，是跳躍兩側 ±1 V 的平均。此處列均方值，不是無限時間總能量；多加諧波也不會完全消除跳躍附近的 Gibbs 超越。"
+     }
+    ],
+    "retest_state_cases": 18,
+    "boundary_branch_retests": 0
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 2,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "fourier-series",
+     "readout": "primary",
+     "actual": "1.103474 V",
+     "independent": 1.1034742721038078,
+     "difference": 2.721038077080351e-07,
+     "tolerance": 5.1e-05,
+     "pass": true
+    },
+    {
+     "page": "fourier-series",
+     "readout": "secondary",
+     "actual": "0.933056 V²",
+     "independent": 0.9330555222529952,
+     "difference": 4.777470048455967e-07,
+     "tolerance": 5.1e-05,
+     "pass": true
+    }
+   ],
+   "issues": "root 指定之等號小修已複驗：b1 先以 1/π+1/π 精確相加成4/π，再以≈列小數；三尺寸第2格可見算式排版通過。",
+   "evidence": {
+    "raw": "remaining5/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "fourier-series-triptych-story2.png",
+    "live": "live/fourier-series-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa",
+    "retest_raw": "00-state,convolution,fourier-series/raw-results.json",
+    "boundary_retest": "retest-boundaries.json",
+    "final_visual": "fs-final-calculation-triptych.png"
+   }
+  },
+  {
+   "id": "fourier-transform",
+   "page_path": "dist/fourier-transform.html",
+   "status": "通過",
+   "hashes": {
+    "fourier-transform.html": "5068f9fdb8f63cc261f96d9a82f01a08ae7d4b4cc30ebfdc8767449d47aadc38",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "fourier-transform.js": "fec9457fc97f29f624ec4af9f83b5aa1274e183b32fb79e5518f5b3f920fe71a"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 18,
+    "controls": [
+     {
+      "id": "width",
+      "label": "脈衝寬度T",
+      "unit": "s",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.25,
+      "default": 1
+     },
+     {
+      "id": "amplitude",
+      "label": "脈衝高度A",
+      "unit": "V",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.5,
+      "default": 1
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "width": 0.5,
+       "amplitude": 1
+      },
+      "primary": "0.5 V·s",
+      "secondary": "±12.566 rad/s",
+      "feedback": "X(0) 是面積 A×T = 0.5 V·s；第一零點在 ±2π/T = ±12.566 rad/s（±2 Hz）。固定高度縮窄脈衝，面積會減少而主瓣變寬；圖的時間與頻率尺度保持固定。頻譜旁瓣可為負，是相消後的帶符號轉換值。"
+     },
+     {
+      "value": {
+       "width": 2,
+       "amplitude": 2
+      },
+      "primary": "4 V·s",
+      "secondary": "±3.142 rad/s",
+      "feedback": "X(0) 是面積 A×T = 4 V·s；第一零點在 ±2π/T = ±3.142 rad/s（±0.5 Hz）。固定高度縮窄脈衝，面積會減少而主瓣變寬；圖的時間與頻率尺度保持固定。頻譜旁瓣可為負，是相消後的帶符號轉換值。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 3,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "fourier-transform",
+     "readout": "primary",
+     "actual": "1 V·s",
+     "independent": 1,
+     "difference": 0.0,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "fourier-transform",
+     "readout": "secondary",
+     "actual": "±6.283 rad/s",
+     "independent": 6.283185307179586,
+     "difference": 0.00018530717958586962,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "remaining5/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "fourier-transform-triptych-story3.png",
+    "live": "live/fourier-transform-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "glossary",
+   "page_path": "dist/glossary.html",
+   "status": "通過",
+   "hashes": {
+    "glossary.html": "804a0373a6f1dae7da42cfe70d1b8d0c0c80b08e07a999e295684904ad76e004",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "glossary.js": "4caaf3464390b9529b9a9a7ce050f3c49a63095f92ebb1c2c4111fbd77488228"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 12,
+    "controls": [],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": []
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": "top",
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "stable14/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "glossary-triptych-top.png",
+    "live": "首輪 top 截圖",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "index",
+   "page_path": "dist/index.html",
+   "status": "通過",
+   "hashes": {
+    "index.html": "cd48342a8ac46fd68820c3e6e44371048d9d55d68d6c5b4f2e9a7ec1101fc065",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 0,
+    "controls": [],
+    "covered": "支援頁無數值互動；驗導覽與本地連結。",
+    "combinations": []
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 1,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "index,initial-values,laplace,pde,phasors,rlc,second-order,separation,sources/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "index-triptych-story1.png",
+    "live": "live/index-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "initial-values",
+   "page_path": "dist/initial-values.html",
+   "status": "通過",
+   "hashes": {
+    "initial-values.html": "fc9486609ceae7940c01143f6e63432fd908755ae885451fc278928fb9e59195",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "initial-values.js": "7df53de747d5ec812b44e2c3758b5c5f32ec81920ef97a7d10c0b3b572f7732e"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 21,
+    "controls": [
+     {
+      "id": "position",
+      "label": "y(0+)",
+      "unit": "",
+      "min": -1,
+      "max": 2,
+      "step": 0.5,
+      "default": 1
+     },
+     {
+      "id": "velocity",
+      "label": "y′(0+)",
+      "unit": "s^-1",
+      "min": -1,
+      "max": 1,
+      "step": 0.5,
+      "default": 0
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "position": 0,
+       "velocity": 0
+      },
+      "primary": "A = 0，B = 0",
+      "secondary": "0",
+      "feedback": "A+B = 0 = y(0+)；−A/(1 s)−2B/(1 s) = 0 s⁻¹ = y′(0+)。分子 [(s+3 s⁻¹)y₀+v₀] 正是保留初值的地方；兩個指數項可能正負相消，不能漏掉其中一項。"
+     },
+     {
+      "value": {
+       "position": 1,
+       "velocity": 1
+      },
+      "primary": "A = 3，B = -2",
+      "secondary": "0.832968",
+      "feedback": "A+B = 1 = y(0+)；−A/(1 s)−2B/(1 s) = 1 s⁻¹ = y′(0+)。分子 [(s+3 s⁻¹)y₀+v₀] 正是保留初值的地方；兩個指數項可能正負相消，不能漏掉其中一項。"
+     },
+     {
+      "value": {
+       "position": -1,
+       "velocity": -1
+      },
+      "primary": "A = -3，B = 2",
+      "secondary": "-0.832968",
+      "feedback": "A+B = -1 = y(0+)；−A/(1 s)−2B/(1 s) = -1 s⁻¹ = y′(0+)。分子 [(s+3 s⁻¹)y₀+v₀] 正是保留初值的地方；兩個指數項可能正負相消，不能漏掉其中一項。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 5,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "initial-values",
+     "readout": "secondary",
+     "actual": "0.600424",
+     "independent": 0.600423599106272,
+     "difference": 4.008937279920133e-07,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "index,initial-values,laplace,pde,phasors,rlc,second-order,separation,sources/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "initial-values-triptych-story5.png",
+    "live": "live/initial-values-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "laplace",
+   "page_path": "dist/laplace.html",
+   "status": "通過",
+   "hashes": {
+    "laplace.html": "8d2ab469f7d9ccd60233235ddfb2f6ee4b5ba70ec1023d88bfb6961bd851bb5d",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "laplace.js": "8f6cc948824bea836df5a8f9830b428fe4aeea3dc879de8e736ddbf116f28667"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 21,
+    "controls": [
+     {
+      "id": "sigma",
+      "label": "衰減權重σ",
+      "unit": "s^-1",
+      "min": -2,
+      "max": 2,
+      "step": 0.25,
+      "default": 1
+     },
+     {
+      "id": "window",
+      "label": "看到多遠",
+      "unit": "s",
+      "min": 1,
+      "max": 6,
+      "step": 0.5,
+      "default": 3
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "sigma": -1,
+       "window": 3
+      },
+      "primary": "3 s",
+      "secondary": "發散",
+      "feedback": "被積函數是 exp[−(0 s⁻¹)t]。它恆等於 1：看 T 秒就得到 T 秒的面積，T→∞ 會發散。 圖的時間窗與縱軸會依目前觀察範圍縮放。"
+     },
+     {
+      "value": {
+       "sigma": -2,
+       "window": 6
+      },
+      "primary": "402.429 s",
+      "secondary": "發散",
+      "feedback": "被積函數是 exp[−(-1 s⁻¹)t]。它隨時間增長，雖然每個有限窗都有面積，無限積分卻發散；此時不能用 1/(σ+1) 當答案。 圖的時間窗與縱軸會依目前觀察範圍縮放。"
+     },
+     {
+      "value": {
+       "sigma": 0,
+       "window": 3
+      },
+      "primary": "0.95 s",
+      "secondary": "1 s",
+      "feedback": "被積函數是 exp[−(1 s⁻¹)t]。它會衰減；有限窗面積 0.95 s 尚未包含 T 之後的尾巴，無限面積才是 1 s。 圖的時間窗與縱軸會依目前觀察範圍縮放。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 4,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "laplace",
+     "readout": "primary",
+     "actual": "0.499 s",
+     "independent": 0.4987606239116668,
+     "difference": 0.00023937608833318746,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "laplace",
+     "readout": "secondary",
+     "actual": "0.5 s",
+     "independent": 0.5,
+     "difference": 0.0,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "index,initial-values,laplace,pde,phasors,rlc,second-order,separation,sources/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "laplace-triptych-story4.png",
+    "live": "live/laplace-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "pde",
+   "page_path": "dist/pde.html",
+   "status": "通過",
+   "hashes": {
+    "pde.html": "c416199a89ddbce716a0de0d56036a589e70c666918c2c782a440e5391805913",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "pde.js": "aee700d572a01a814ec8d22cce0b3342d99d3b05c3fcd6d4f75e7085e209862b"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 21,
+    "controls": [
+     {
+      "id": "time",
+      "label": "時間",
+      "unit": "s",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.05,
+      "default": 0.1
+     },
+     {
+      "id": "diffusivity",
+      "label": "熱擴散率κ",
+      "unit": "m²/s",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.5,
+      "default": 1
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "time": 0,
+       "diffusivity": 2
+      },
+      "primary": "1 K",
+      "secondary": "-19.739 K/s",
+      "feedback": "在 x=0.5 m、t=0 s，uₜ = −κ(π/L)²u（L=1 m）= -19.739 K/s；κuₓₓ 也等於同一值。κ=2 m²/s；κ 越大，衰減率 κ(π/L)² 越大，同一正時間的溫差越小；瞬時下降速度的絕對值未必較大。兩端始終保持溫差 0 K，這是固定溫度邊界，並不是絕熱。上圖橫軸是位置，下圖才是時間。"
+     },
+     {
+      "value": {
+       "time": 0.5,
+       "diffusivity": 0.5
+      },
+      "primary": "0.084805 K",
+      "secondary": "-0.418 K/s",
+      "feedback": "在 x=0.5 m、t=0.5 s，uₜ = −κ(π/L)²u（L=1 m）= -0.418 K/s；κuₓₓ 也等於同一值。κ=0.5 m²/s；κ 越大，衰減率 κ(π/L)² 越大，同一正時間的溫差越小；瞬時下降速度的絕對值未必較大。兩端始終保持溫差 0 K，這是固定溫度邊界，並不是絕熱。上圖橫軸是位置，下圖才是時間。"
+     },
+     {
+      "value": {
+       "time": 0.5,
+       "diffusivity": 2
+      },
+      "primary": "0.000052 K",
+      "secondary": "-0.001 K/s",
+      "feedback": "在 x=0.5 m、t=0.5 s，uₜ = −κ(π/L)²u（L=1 m）= -0.001 K/s；κuₓₓ 也等於同一值。κ=2 m²/s；κ 越大，衰減率 κ(π/L)² 越大，同一正時間的溫差越小；瞬時下降速度的絕對值未必較大。兩端始終保持溫差 0 K，這是固定溫度邊界，並不是絕熱。上圖橫軸是位置，下圖才是時間。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 2,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "pde",
+     "readout": "primary",
+     "actual": "0.372708 K",
+     "independent": 0.37270783885343794,
+     "difference": 1.6114656203880529e-07,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "pde",
+     "readout": "secondary",
+     "actual": "-3.678 K/s",
+     "independent": -3.678478926668394,
+     "difference": 0.0004789266683942195,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "index,initial-values,laplace,pde,phasors,rlc,second-order,separation,sources/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "pde-triptych-story2.png",
+    "live": "live/pde-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "phasors",
+   "page_path": "dist/phasors.html",
+   "status": "通過",
+   "hashes": {
+    "phasors.html": "3629c486a6f455e9d819c10f1503decdff2ab7482ae20b31f9a33df07456c4d2",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "phasors.js": "db7f7fe5387449e6bfecc6aed04c653c0ba2d62be2babb0b7894ae6b70d3b318"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 21,
+    "controls": [
+     {
+      "id": "frequency",
+      "label": "角頻率",
+      "unit": "rad/s",
+      "min": 100,
+      "max": 2000,
+      "step": 100,
+      "default": 1000
+     },
+     {
+      "id": "phase",
+      "label": "輸入起跑角",
+      "unit": "°",
+      "min": -90,
+      "max": 90,
+      "step": 15,
+      "default": 0
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "frequency": 1000,
+       "phase": 30
+      },
+      "primary": "0.707 V",
+      "secondary": "-15°",
+      "feedback": "f = ω/(2π) = 159.15 Hz；RC = 1 ms。輸出相對輸入落後 45°（相當於 0.785 ms），輸出峰值為輸入的 0.707 倍。改起跑角只平移兩條波；這裡已排除開關接通後尚未衰減的暫態。"
+     },
+     {
+      "value": {
+       "frequency": 100,
+       "phase": -90
+      },
+      "primary": "0.995 V",
+      "secondary": "-95.7°",
+      "feedback": "f = ω/(2π) = 15.92 Hz；RC = 1 ms。輸出相對輸入落後 5.7°（相當於 0.997 ms），輸出峰值為輸入的 0.995 倍。改起跑角只平移兩條波；這裡已排除開關接通後尚未衰減的暫態。"
+     },
+     {
+      "value": {
+       "frequency": 2000,
+       "phase": 90
+      },
+      "primary": "0.447 V",
+      "secondary": "26.6°",
+      "feedback": "f = ω/(2π) = 318.31 Hz；RC = 1 ms。輸出相對輸入落後 63.4°（相當於 0.554 ms），輸出峰值為輸入的 0.447 倍。改起跑角只平移兩條波；這裡已排除開關接通後尚未衰減的暫態。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 4,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "phasors",
+     "readout": "primary",
+     "actual": "0.707 V",
+     "independent": 0.7071067811865475,
+     "difference": 0.0001067811865474999,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "phasors",
+     "readout": "secondary",
+     "actual": "-45°",
+     "independent": -45,
+     "difference": 0.0,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "index,initial-values,laplace,pde,phasors,rlc,second-order,separation,sources/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "phasors-triptych-story4.png",
+    "live": "live/phasors-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "rlc",
+   "page_path": "dist/rlc.html",
+   "status": "通過",
+   "hashes": {
+    "rlc.html": "b6da0e84bac48b6af16a4b3b6456a1b05811171417ae540407641d80d32497d4",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "rlc.js": "76b3a3c5559e8789c98e96f971c2015b0cc260c88efb3c844571633f86bdae02"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 30,
+    "controls": [
+     {
+      "id": "resistance",
+      "label": "電阻",
+      "unit": "Ω",
+      "min": 0,
+      "max": 8,
+      "step": 0.5,
+      "default": 2
+     },
+     {
+      "id": "voltage",
+      "label": "起始電容電壓",
+      "unit": "V",
+      "min": 0,
+      "max": 1,
+      "step": 0.25,
+      "default": 0
+     },
+     {
+      "id": "current",
+      "label": "起始電感電流",
+      "unit": "A",
+      "min": -0.5,
+      "max": 0.5,
+      "step": 0.25,
+      "default": 0
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "resistance": 0,
+       "voltage": 1,
+       "current": 0
+      },
+      "primary": "1 V",
+      "secondary": "0 A",
+      "feedback": "1 s 時：電容儲能 0.125 J，電感儲能 0 J；電阻耗散功率 R i² = 0 W。初始斜率 vC′(0+) = i₀/C = 0 V/s。起始已在平衡狀態：電容始終 1 V、電流始終 0 A，沒有振盪。 上下圖使用不同物理單位，不能直接比較線的高低。"
+     },
+     {
+      "value": {
+       "resistance": 0,
+       "voltage": 0,
+       "current": 0
+      },
+      "primary": "1.416 V",
+      "secondary": "0.455 A",
+      "feedback": "1 s 時：電容儲能 0.251 J，電感儲能 0.103 J；電阻耗散功率 R i² = 0 W。初始斜率 vC′(0+) = i₀/C = 0 V/s。R=0 不耗能，理想模型會持續振盪；不能說它最後停在 1 V。 上下圖使用不同物理單位，不能直接比較線的高低。"
+     },
+     {
+      "value": {
+       "resistance": 4,
+       "voltage": 0,
+       "current": -0.5
+      },
+      "primary": "0.323 V",
+      "secondary": "0.203 A",
+      "feedback": "1 s 時：電容儲能 0.013 J，電感儲能 0.021 J；電阻耗散功率 R i² = 0.165 W。初始斜率 vC′(0+) = i₀/C = -2 V/s。R>0 時暫態衰減，最後 vC=1 V、i=0 A。 上下圖使用不同物理單位，不能直接比較線的高低。"
+     },
+     {
+      "value": {
+       "resistance": 2,
+       "voltage": 1,
+       "current": -0.5
+      },
+      "primary": "0.581 V",
+      "secondary": "0.134 A",
+      "feedback": "1 s 時：電容儲能 0.042 J，電感儲能 0.009 J；電阻耗散功率 R i² = 0.036 W。初始斜率 vC′(0+) = i₀/C = -2 V/s。R>0 時暫態衰減，最後 vC=1 V、i=0 A。 上下圖使用不同物理單位，不能直接比較線的高低。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 4,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "rlc",
+     "readout": "primary",
+     "actual": "0.849 V",
+     "independent": 0.8494256348541124,
+     "difference": 0.0004256348541124,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "rlc",
+     "readout": "secondary",
+     "actual": "0.21 A",
+     "independent": 0.20963981483316593,
+     "difference": 0.00036018516683405943,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "index,initial-values,laplace,pde,phasors,rlc,second-order,separation,sources/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "rlc-triptych-story4.png",
+    "live": "live/rlc-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "second-order",
+   "page_path": "dist/second-order.html",
+   "status": "通過",
+   "hashes": {
+    "second-order.html": "d8dfcb7d5e19ddccc25e801f08fcb52f93d926572c6913af7444f3d462ed19b5",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "second-order.js": "fcb606ca2caec3cb213d5d65f950176b5a01582cfbe4b5ce67a3d68bc37abce1"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 30,
+    "controls": [
+     {
+      "id": "damping",
+      "label": "阻尼係數",
+      "unit": "N·s/m",
+      "min": 0,
+      "max": 8,
+      "step": 0.5,
+      "default": 2
+     },
+     {
+      "id": "position",
+      "label": "起跑位置",
+      "unit": "m",
+      "min": -1,
+      "max": 1,
+      "step": 0.5,
+      "default": 1
+     },
+     {
+      "id": "velocity",
+      "label": "起跑速度",
+      "unit": "m/s",
+      "min": -1,
+      "max": 1,
+      "step": 0.5,
+      "default": 0
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "damping": 0,
+       "position": 0,
+       "velocity": 0
+      },
+      "primary": "0 m",
+      "secondary": "0 m/s",
+      "feedback": "無阻尼：起點 x₀=0 m、v₀=0 m/s；1 s 時能量 E = ½mv² + ½kx² = 0 J。初始位置與速度都是零，沒有外力，所以小車一直停在平衡位置。 圖的時間與縱軸固定，位置、速度分軸顯示。"
+     },
+     {
+      "value": {
+       "damping": 0,
+       "position": 1,
+       "velocity": 0
+      },
+      "primary": "-0.416 m",
+      "secondary": "-1.819 m/s",
+      "feedback": "無阻尼：起點 x₀=1 m、v₀=0 m/s；1 s 時能量 E = ½mv² + ½kx² = 2 J。沒有耗能項，總機械能不隨時間衰減。 圖的時間與縱軸固定，位置、速度分軸顯示。"
+     },
+     {
+      "value": {
+       "damping": 4,
+       "position": 1,
+       "velocity": 0
+      },
+      "primary": "0.406 m",
+      "secondary": "-0.541 m/s",
+      "feedback": "臨界阻尼：起點 x₀=1 m、v₀=0 m/s；1 s 時能量 E = ½mv² + ½kx² = 0.476 J。在本固定 m、k 下恰為重根；不振盪。 圖的時間與縱軸固定，位置、速度分軸顯示。"
+     },
+     {
+      "value": {
+       "damping": 8,
+       "position": 1,
+       "velocity": -1
+      },
+      "primary": "0.546 m",
+      "secondary": "-0.293 m/s",
+      "feedback": "過阻尼：起點 x₀=1 m、v₀=-1 m/s；1 s 時能量 E = ½mv² + ½kx² = 0.639 J。兩個實衰減率不同，阻力太大會讓返回變慢。 圖的時間與縱軸固定，位置、速度分軸顯示。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 4,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "second-order",
+     "readout": "primary",
+     "actual": "0.151 m",
+     "independent": 0.15057436514588762,
+     "difference": 0.00042563485411237223,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "second-order",
+     "readout": "secondary",
+     "actual": "-0.839 m/s",
+     "independent": -0.8385592593326637,
+     "difference": 0.00044074066733623685,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "index,initial-values,laplace,pde,phasors,rlc,second-order,separation,sources/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "second-order-triptych-story4.png",
+    "live": "live/second-order-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "separation",
+   "page_path": "dist/separation.html",
+   "status": "通過",
+   "hashes": {
+    "separation.html": "c3b85f04d37d1b9311f0a64e8e159282e6bb364148752a3fb0b8f3f2caaa21b3",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "separation.js": "3aea8ca20db5e39735e11b828908bc42fbde18ebcbbfd569b612b7f5dd6f68ab"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 21,
+    "controls": [
+     {
+      "id": "time",
+      "label": "時間",
+      "unit": "s",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.05,
+      "default": 0.1
+     },
+     {
+      "id": "second",
+      "label": "第二模態初始幅值",
+      "unit": "K",
+      "min": 0,
+      "max": 1,
+      "step": 0.25,
+      "default": 0.5
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "time": 0,
+       "second": 1
+      },
+      "primary": "1 K",
+      "secondary": "1 K",
+      "feedback": "第一模態衰減率 π²≈9.87 s⁻¹，第二為 4π²≈39.478 s⁻¹，快四倍。時間 0 s 時，兩個初始幅值 1 K 與 1 K 分別剩 1 K、1 K。兩個正弦在 x=0、1 m 都是零，所以相加後仍滿足同一邊界；任意初形未必只需兩項。"
+     },
+     {
+      "value": {
+       "time": 0.1,
+       "second": 0
+      },
+      "primary": "0.372708 K",
+      "secondary": "0 K",
+      "feedback": "第一模態衰減率 π²≈9.87 s⁻¹，第二為 4π²≈39.478 s⁻¹，快四倍。時間 0.1 s 時，兩個初始幅值 1 K 與 0 K 分別剩 0.372708 K、0 K。兩個正弦在 x=0、1 m 都是零，所以相加後仍滿足同一邊界；任意初形未必只需兩項。"
+     },
+     {
+      "value": {
+       "time": 0.5,
+       "second": 1
+      },
+      "primary": "0.007192 K",
+      "secondary": "0 K",
+      "feedback": "第一模態衰減率 π²≈9.87 s⁻¹，第二為 4π²≈39.478 s⁻¹，快四倍。時間 0.5 s 時，兩個初始幅值 1 K 與 1 K 分別剩 0.007192 K、0 K。兩個正弦在 x=0、1 m 都是零，所以相加後仍滿足同一邊界；任意初形未必只需兩項。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 5,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "separation",
+     "readout": "primary",
+     "actual": "0.372708 K",
+     "independent": 0.37270783885343794,
+     "difference": 1.6114656203880529e-07,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "separation",
+     "readout": "secondary",
+     "actual": "0.009648 K",
+     "independent": 0.00964815145550839,
+     "difference": 1.5145550839000543e-07,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "index,initial-values,laplace,pde,phasors,rlc,second-order,separation,sources/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "separation-triptych-story5.png",
+    "live": "live/separation-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "sources",
+   "page_path": "dist/sources.html",
+   "status": "通過",
+   "hashes": {
+    "sources.html": "2cee1a5565a2fcfdd51eecd8c7f901572e15a0f9b4ae2b7e6a4d2b7be84bae6e",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 0,
+    "controls": [],
+    "covered": "支援頁無數值互動；驗導覽與本地連結。",
+    "combinations": []
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 1,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "index,initial-values,laplace,pde,phasors,rlc,second-order,separation,sources/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "sources-triptych-story1.png",
+    "live": "首輪 top 截圖",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  },
+  {
+   "id": "transfer",
+   "page_path": "dist/transfer.html",
+   "status": "通過",
+   "hashes": {
+    "transfer.html": "df97d5b5cc65d8ea4ae8cbc92075d7f088fe6235a5bcda3a378196203a91e787",
+    "shared.js": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+    "lab.css": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+    "transfer.js": "98c8b11cc0586cd28a9e3d699f78539d5f2d5e0f8749f8cbbcdbf93239d7568d"
+   },
+   "viewports": {
+    "widths": [
+     1440,
+     390,
+     320
+    ],
+    "height": 900,
+    "actual_loads": 3,
+    "page_overflow": 0,
+    "console_errors": 0,
+    "external_runtime_requests": 0,
+    "duplicate_ids": 0
+   },
+   "interactions": {
+    "state_cases": 21,
+    "controls": [
+     {
+      "id": "rate",
+      "label": "衰減速率a",
+      "unit": "s^-1",
+      "min": -1,
+      "max": 2,
+      "step": 0.25,
+      "default": 1
+     },
+     {
+      "id": "initial",
+      "label": "初值y0",
+      "unit": "",
+      "min": 0,
+      "max": 1,
+      "step": 0.25,
+      "default": 0
+     }
+    ],
+    "covered": "預設、各滑桿鍵盤 Home/End、各選項、具數學意義組合、Enter 重設並核原數值/回饋；字典搜尋包含英文、繁中、查無結果與清空。",
+    "combinations": [
+     {
+      "value": {
+       "rate": 0,
+       "initial": 1
+      },
+      "primary": "2",
+      "secondary": "極點 s = 0 s⁻¹",
+      "feedback": "完整輸出 = 零輸入 1 + 零狀態 1（t=1 s）。H(s)=1/(s+a) 的單位是秒，因為輸入 u 的單位為 s⁻¹。a=0 是積分器，固定有界輸入仍讓 y 線性增長，因此不具 BIBO 穩定性。 初值非零，必須加 y₀/(s+a)，不能只寫 Y=HU。"
+     },
+     {
+      "value": {
+       "rate": -1,
+       "initial": 0
+      },
+      "primary": "1.718",
+      "secondary": "極點 s = 1 s⁻¹",
+      "feedback": "完整輸出 = 零輸入 0 + 零狀態 1.718（t=1 s）。H(s)=1/(s+a) 的單位是秒，因為輸入 u 的單位為 s⁻¹。極點在右半平面，初值與輸入效果可指數增長，沒有會自行建立的正弦穩態。 初值為零時，才可直接寫 Y=HU。"
+     },
+     {
+      "value": {
+       "rate": 1,
+       "initial": 1
+      },
+      "primary": "1",
+      "secondary": "極點 s = -1 s⁻¹",
+      "feedback": "完整輸出 = 零輸入 0.368 + 零狀態 0.632（t=1 s）。H(s)=1/(s+a) 的單位是秒，因為輸入 u 的單位為 s⁻¹。極點在左半平面，初值項衰減；這個模型漸近穩定且 BIBO 穩定。 初值非零，必須加 y₀/(s+a)，不能只寫 Y=HU。"
+     }
+    ]
+   },
+   "accessibility": {
+    "result": "通過",
+    "evidence": "Tab 首項為可見跳主文連結；Enter 後 #main，再 Tab 從主文繼續。手機章節 summary Enter 開合、Tab 可達連結；控制有 label、focus outline；滑桿 Home/End、選單 ArrowDown、按鈕 Enter；溢出圖容器有名稱與 tabindex 且 ArrowRight 可水平移動。原生錨點不要求 activeElement 變 main。"
+   },
+   "offline": {
+    "result": "通過",
+    "modes": [
+     "file:// + offline:true",
+     "JavaScript 關閉仍有教學文字/靜態 SVG/noscript 導覽",
+     "127.0.0.1 本地 HTTP 載入與互動"
+    ],
+    "local_links": "HTML 與注入導覽的本地目標及 fragment 均存在；每頁實際點頁內導航到另一頁。"
+   },
+   "visual": {
+    "result": "通過",
+    "critical_story": 5,
+    "scope": "人工逐頁看關鍵分鏡/計算之1440、390、320圖面；全部16實驗另看320橫捲右端，FT近題比較三尺寸。全部預設及234端點/選項動態SVG字界機械檢查無超框。未冒稱真人學習或實體觸控測試。",
+    "capture_note": "長元素 screenshot 出現負 top 固定 skip-link 的擷取偽影；另以未改樣式 live 視窗截圖驗證未聚焦時 link 在 top=-100、不遮內容。"
+   },
+   "numeric": [
+    {
+     "page": "transfer",
+     "readout": "primary",
+     "actual": "0.632",
+     "independent": 0.6321205588285577,
+     "difference": 0.00012055882855765976,
+     "tolerance": 0.00051,
+     "pass": true
+    },
+    {
+     "page": "transfer",
+     "readout": "secondary",
+     "actual": "極點 s = -1 s⁻¹",
+     "independent": -1,
+     "difference": 0.0,
+     "tolerance": 0.00051,
+     "pass": true
+    }
+   ],
+   "issues": "無此輪未結缺陷。",
+   "evidence": {
+    "raw": "remaining5/raw-results.json",
+    "http": "supplement-results.json",
+    "static": "static-results.json",
+    "figures": "transfer-triptych-story5.png",
+    "live": "live/transfer-{1440,390,320}-viewport.png",
+    "temp_root": "/tmp/engineering-math-qa"
+   }
+  }
+ ]
+}

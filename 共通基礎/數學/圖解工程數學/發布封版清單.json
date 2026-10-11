@@ -1,0 +1,323 @@
+{
+ "contract": "wf-table/1",
+ "source": "驗收總結.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "columns": [
+  "path",
+  "sha256",
+  "role"
+ ],
+ "rows": [
+  {
+   "path": "wf/handoffs/2026-10-11-engineering-math-visual.md",
+   "sha256": "4a9a48c9c3f272af9b9cb89d60c2de829ea66539d0acba8a2d2e483560d72dd9",
+   "role": "team-handoff"
+  },
+  {
+   "path": "共通基礎/數學/03-工程數學-上.md",
+   "sha256": "8c26753e101bde4a66178c06f3e4b845f9d306309fc35e7784db095add4804d5",
+   "role": "authorized-original-note"
+  },
+  {
+   "path": "共通基礎/數學/03-工程數學-下.md",
+   "sha256": "34e4983556616b146bc30d3701661e462d545073a77469444d89f810e85ea72b",
+   "role": "authorized-original-note"
+  },
+  {
+   "path": "共通基礎/數學/03-工程數學-中.md",
+   "sha256": "e321b9e3aae2cdc215ba593ca324954f1037191d882cca505351638047cabfb0",
+   "role": "authorized-original-note"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/BUILD-SPEC.md",
+   "sha256": "f21ca9df0edc1043dafcb2a7751124d0d1cd2cd8952ecf7a76b748869395acaf",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/PROJECT-BRIEF.md",
+   "sha256": "a5170f22d10bec0de526be8aaea517b62715b47ab22f426d8073749002776a3e",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/README.md",
+   "sha256": "dd8e324fcfd095a3452cd1580fa95ee3ec7c5b8237d5018dc89e0462663909de",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/00-state.html",
+   "sha256": "e9c34f55645fb08d54cd333bda46d702cc19a348d1051f604db9ff45a0edb034",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/00-state.js",
+   "sha256": "a7d3b0b90e8e67903b89a63949a79d5d1473b0e7d7c81573f0b4839070ebf8e9",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/boundaries.html",
+   "sha256": "e22e8c11019a9d918334374d6a6b1faa2020c74ed826bd56d28158ee2da11514",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/boundaries.js",
+   "sha256": "4bb7c3e7ce662e3c7bba791ae1a9e15fcedbd8ccabea0ce677b46246e8fc70fe",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/complex.html",
+   "sha256": "68d62ec972e63f5e0f22a4a39cfa33533138f4addcf1ccbd29708c5db26d2e47",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/complex.js",
+   "sha256": "8f66b9085c3b47ade2b38adf32c64f4e756ee78817c603c28907f48ccd0f8c4a",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/convolution.html",
+   "sha256": "c826b178b86e85e4e316ef5894679315c957946a8f4fb0da061ba1ea1cbd1dd1",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/convolution.js",
+   "sha256": "8a414decae82d79566630ac90db8ef471be00001a556a2f5e2f50bc1fb8c502a",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/engineering.html",
+   "sha256": "8ffa82e2231a9d344ccda76ecd115e0f609df415dbc2d61c0a8f3ee0909ece0a",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/engineering.js",
+   "sha256": "f3f69d60f6f9b2e3c0d88bf03ab9ab1906c4e69ae8d33bf4ff9df250dc5da728",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/forced.html",
+   "sha256": "018bbe2504aacda0f90e286f7e5013a76b5183eb9abbb84da17933e9aca6a4fb",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/forced.js",
+   "sha256": "9a7fd9e2689b3852c3d388f16515dda01b88b4298a9ff6f3fdff2c3d8db1e8ba",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/fourier-series.html",
+   "sha256": "95f79ded937360a21dc3910534a1b7e7965d8163cd85a5c77b42f2d6b6e7bd6f",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/fourier-series.js",
+   "sha256": "b35fa0a506d72b864bb63ca338e93feb8a9a2af8bfd8617ba7118bf47e32b3fb",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/fourier-transform.html",
+   "sha256": "5068f9fdb8f63cc261f96d9a82f01a08ae7d4b4cc30ebfdc8767449d47aadc38",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/fourier-transform.js",
+   "sha256": "fec9457fc97f29f624ec4af9f83b5aa1274e183b32fb79e5518f5b3f920fe71a",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/glossary.html",
+   "sha256": "804a0373a6f1dae7da42cfe70d1b8d0c0c80b08e07a999e295684904ad76e004",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/glossary.js",
+   "sha256": "4caaf3464390b9529b9a9a7ce050f3c49a63095f92ebb1c2c4111fbd77488228",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/index.html",
+   "sha256": "cd48342a8ac46fd68820c3e6e44371048d9d55d68d6c5b4f2e9a7ec1101fc065",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/initial-values.html",
+   "sha256": "fc9486609ceae7940c01143f6e63432fd908755ae885451fc278928fb9e59195",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/initial-values.js",
+   "sha256": "7df53de747d5ec812b44e2c3758b5c5f32ec81920ef97a7d10c0b3b572f7732e",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/lab.css",
+   "sha256": "ed629da7d50d3c7974f2e72d9e22cf5af8ee360df9f8622e38247b84d129959e",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/laplace.html",
+   "sha256": "8d2ab469f7d9ccd60233235ddfb2f6ee4b5ba70ec1023d88bfb6961bd851bb5d",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/laplace.js",
+   "sha256": "8f6cc948824bea836df5a8f9830b428fe4aeea3dc879de8e736ddbf116f28667",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/pde.html",
+   "sha256": "c416199a89ddbce716a0de0d56036a589e70c666918c2c782a440e5391805913",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/pde.js",
+   "sha256": "aee700d572a01a814ec8d22cce0b3342d99d3b05c3fcd6d4f75e7085e209862b",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/phasors.html",
+   "sha256": "3629c486a6f455e9d819c10f1503decdff2ab7482ae20b31f9a33df07456c4d2",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/phasors.js",
+   "sha256": "db7f7fe5387449e6bfecc6aed04c653c0ba2d62be2babb0b7894ae6b70d3b318",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/rlc.html",
+   "sha256": "b6da0e84bac48b6af16a4b3b6456a1b05811171417ae540407641d80d32497d4",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/rlc.js",
+   "sha256": "76b3a3c5559e8789c98e96f971c2015b0cc260c88efb3c844571633f86bdae02",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/second-order.html",
+   "sha256": "d8dfcb7d5e19ddccc25e801f08fcb52f93d926572c6913af7444f3d462ed19b5",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/second-order.js",
+   "sha256": "fcb606ca2caec3cb213d5d65f950176b5a01582cfbe4b5ce67a3d68bc37abce1",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/separation.html",
+   "sha256": "c3b85f04d37d1b9311f0a64e8e159282e6bb364148752a3fb0b8f3f2caaa21b3",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/separation.js",
+   "sha256": "3aea8ca20db5e39735e11b828908bc42fbde18ebcbbfd569b612b7f5dd6f68ab",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/shared.js",
+   "sha256": "9a7e72c76737e851d39d6e182f4f4fd20483a83a87d03b6032a7039e97d418d0",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/sources.html",
+   "sha256": "2cee1a5565a2fcfdd51eecd8c7f901572e15a0f9b4ae2b7e6a4d2b7be84bae6e",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/transfer.html",
+   "sha256": "df97d5b5cc65d8ea4ae8cbc92075d7f088fe6235a5bcda3a378196203a91e787",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/dist/transfer.js",
+   "sha256": "98c8b11cc0586cd28a9e3d699f78539d5f2d5e0f8749f8cbbcdbf93239d7568d",
+   "role": "website-product"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/七關驗收.json",
+   "sha256": "9854c0be85ecdc96520e544750c7c108f07185ee45a33c1cbe95293f92626580",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/互動契約.json",
+   "sha256": "5cd408057d1e424ef43c7ac64902b1474730e7c0f13789f644c266b0f125c716",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/原文修訂複核.md",
+   "sha256": "6f74cd47893483e6ec300bb79004ff99346bde5f2b7cb94dae9a635c5b0831f7",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/原文查證與修訂.json",
+   "sha256": "303527b9d440b970d8c723daf89a4fce5397b52c9a8e162bbd788a8921fc9228",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/原文獨立複核.json",
+   "sha256": "bea7d21f66cd162c92271ac2ed9a3de9526f0d5ec914fa914e0b78bd89d02308",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/教學驗收.json",
+   "sha256": "08cb279a0cb3a3ddb10b10bb1d3d71e29e2cbab0d78870084b857160c8573bc4",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/教材與主張索引.json",
+   "sha256": "3c6b4791b2d76417f6fa97d14f762636cc79918c9ccd5dfc69f925802e4a0fe6",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/數學與圖形驗收.json",
+   "sha256": "98b845d3205e56152e686931d89d534fbd7c6a8cabc6421103b5583241dc6ba4",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/派工計畫.json",
+   "sha256": "889b10cb0ae7bad8d1e302cb4b9f133887082d5883ebc92e16026f992b0d9d06",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/瀏覽器驗收.json",
+   "sha256": "06f9b419784436ee9ea488fbeb41ab2197a935b8759cf60d790cfdb5eafc0a25",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/產品作者狀態.json",
+   "sha256": "3abdc6e24fd9a8bfd0101ce5356d7ca4ae6b48ca15d5f59940158c7915f2fca7",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/計算原型複核.json",
+   "sha256": "4d11b0b02cf64a59b7fb015bdb6def944dce039264efb7e28ea8cf72cded97d4",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/計算教學對應.json",
+   "sha256": "740aa20e01eb7628ace97ac176df0fd7df6fdab7051463d0e7fd296ab6b8ce8d",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/課綱與銜接.json",
+   "sha256": "cc5a76b82df895d394ad14d53475128e224005526b3c6d545670c5425c1e05e0",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/隊長教學複核.json",
+   "sha256": "f3cadd9a72c110e14cb3c97a9f06fbbc2092dec0a9e91251e686a6407b08c808",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/驗收紀錄.md",
+   "sha256": "b716e3a2132868b68bd01cedd3c28630f9fec1c98c8105e731907c3f948bbe8b",
+   "role": "specification-and-evidence"
+  },
+  {
+   "path": "共通基礎/數學/圖解工程數學/驗收總結.md",
+   "sha256": "dd207b6eae1afe41f511a2a6103532f09d6df0d76d4c7384c6ca8c59e909728b",
+   "role": "specification-and-evidence"
+  }
+ ]
+}

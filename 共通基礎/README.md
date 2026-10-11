@@ -21,6 +21,8 @@
 
 圖解新站：[線性代數小小實驗室（ELI5 圖解）](數學/圖解線性代數/dist/index.html)——從箭頭與方格開始，操作圖形理解向量、矩陣、解方程式、投影與特徵方向。[開啟線上版](https://justty32.github.io/engineer_study/linear-algebra-little-lab/)。
 
+圖解新站：[圖解工程數學](數學/圖解工程數學/dist/index.html)——由位置與速度出發，用圖對照公式、逐行計算二階方程、RLC、相量、拉氏與傅立葉，附驗算和詳解練習。[開啟線上版](https://justty32.github.io/engineer_study/engineering-math-little-lab/)。
+
 ## 物理
 
 | 筆記 | 主要內容 |
