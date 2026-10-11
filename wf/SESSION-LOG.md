@@ -11,10 +11,9 @@
 
 ## 最新進度
 
-- [interactive-study-site] 多隊圖解課程程序進行中：機器人數學已公開部署；線代 v3、微積分及工程數學仍補強圖解公式及完整手算；微積分暫緩發布，正式部署後才啟動電子學與電路學 → [總排程](handoffs/2026-10-11-course-program.md)。
+- [interactive-study-site] 多隊圖解課程程序進行中：線代 v3 與機器人數學已部署；微積分及工程數學仍進行公式計算補強與驗收；微積分暫緩發布，正式部署後才啟動電子學與電路學 → [總排程](handoffs/2026-10-11-course-program.md)。
 
 
-- [interactive-study-site] 線代 v3 公式計算補強現役；v2 部署與歷史保持，新版需按題目逐行算到能自行應用 → [線代 v3 交接](handoffs/2026-10-11-linear-algebra-calculation-revision.md)。
 
 - [interactive-study-site] 微積分補公式圖解、逐行手算與詳解練習，暫緩發布；保留銜接電磁／電子／電路深度 → [微積分交接](handoffs/2026-10-11-calculus-visual-revision.md)。
 

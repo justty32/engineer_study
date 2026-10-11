@@ -6,7 +6,7 @@
 
 使用者最新要求「用圖講公式與完整計算過程，能自己算題」。所有現役課與未啟動的電子／電路隊均套用此發布標準：具體題目、圖與符號／公式對應、適用條件與選式理由、逐行代入／計算／檢查，以及有詳解的遷移練習。圖數、概念審查或互動可操作，不能代替能否自己計算的教材驗收。
 
-`visual_builder` 已重新啟動 [線代 v3 公式計算補強](2026-10-11-linear-algebra-calculation-revision.md)，沿用線代圖解站領地，排除 `.openai/`；v2 部署與完成歷史保持，v3 尚未發布。
+`visual_builder` 已完成 [線代 v3 公式計算補強](done/2026-10-11-linear-algebra-calculation-revision.md)，沿用線代圖解站領地，排除 `.openai/`；v2／v1 歷史保持。v3 產品 `e2c7c80` 已部署至 GitHub 與既有 Sites，37 個公開成品符合受驗雜湊，完整手算與附解類題通過三線審查；真人能否獨立解題仍待驗。
 
 線代隊長 `visual_builder` 統籌 [線代改版](done/2026-10-11-linear-algebra-visual-revision.md)，三線獨立驗收與雙站部署均完成，產品 commit `ca23227`，37 個公開成品對上受驗雜湊，作者與驗收者已退出。root 已據此啟動 `robotics_team`，由隊長自行組隊，建立 [機器人數學新站](done/2026-10-11-robotics-math-visual.md)；領地為 `專題/機器人運動學/圖解機器人數學/`，slug 為 `robotics-math-little-lab`，舊站保留。機器人新站已完成公式／手算與獨立驗收，commit `7b565ec`、Pages 工作 `38111386682` 成功，23 個公開成品雜湊一致；隊員與發布程序已退出。
 

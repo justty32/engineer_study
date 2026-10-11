@@ -4,7 +4,7 @@
 
 ## 領地與進度
 
-本站 [圖解線性代數](../../共通基礎/數學/圖解線性代數/README.md)（.openai除外）與本handoff由隊長持有；共享workflow／中央／git／部署由root和publisher。原始02-線性代數.md先唯讀，新確證錯誤另申領。nvim.log／prompt.md禁讀改。其他隊平行工作不得混入提交。
+本站 [圖解線性代數](../../../共通基礎/數學/圖解線性代數/README.md)（.openai除外）與本handoff由隊長持有；共享workflow／中央／git／部署由root和publisher。原始02-線性代數.md先唯讀，新確證錯誤另申領。nvim.log／prompt.md禁讀改。其他隊平行工作不得混入提交。
 
 先做 matrices prototype，再以 systems／projection／eigen或SVD試驗有完整求解的例子；可用槽緊，先隊長做規格與樣板，後續滾動派作者／獨立審者，不一次喚四人。逐章規格與進度見 `共通基礎/數學/圖解線性代數/計算教學契約.json` 與建置期間的建置進度.md。
 
@@ -37,3 +37,11 @@
 正式產品manifest為 `/tmp/linear-calculation-qa/product-sha256.txt`，37行，檔名相對於dist；檔案本身SHA256為 `a38f27c3a67c69783f59540a4f25742daaee09ca21cd9570e4ae2686718521cc`。受驗起訖產品零變更；最後比較v2只變更預期23檔、14檔不變。正式技術範圍與結果已寫 `共通基礎/數學/圖解線性代數/驗收紀錄.md`。
 
 可提交精確範圍為 `/tmp/linear-calculation-prototype/release-scope.json`：37產品檔、7份本地文件及本handoff，共45路徑；不含.openai、其他課程或共享行政檔。建置進度.md已刪除；兩章作者、數學/教學/QA皆已退出，QA自有server/headless亦關閉。隊長不commit/push，產品從此不再寫入。root排程publisher精確提交GitHub，再由hosting_operator從已push Git blob更新既有Sites，避免混入並行工作。
+
+## 雙站部署完成與收線
+
+[GitHub 公開版](https://justty32.github.io/engineer_study/linear-algebra-little-lab/) 已更新至 v3。產品 commit `e2c7c801c2aba39ac21d1ca1f23ee7218ed809b4`，[部署工作 38111886664](https://github.com/justty32/engineer_study/actions/runs/38111886664) 成功；2026-10-11T04:32:56Z 的 44 次 HTTP 核對全數 200，37 成品符合本輪受驗 manifest，中央 HTML／CSS 一致，5 個舊入口正常。45 條授權 scope 中實際 31 個變更入 commit，112 個受保護舊資產與基線相同；其他隊產品、原文及使用者檔案未入提交。
+
+[既有 Sites 鏡像](https://linear-algebra-little-lab.bronzetern2.chatgpt.site) 於 2026-10-11T04:33:36.223894Z 回傳 succeeded，owner-private 不變。project `appgprj_6acaeba52be88191b1baa402a3ae277c`，source `e707210006bbacb3708e07a1cfbabcee9454abc6`，deployment `appgdep_6acb118fefc8819180c0797973325de2`。37 檔從已 push 產品 Git blobs 提取，與隔離 source、封包及 QA 逐檔相符；完整版本識別與封包 SHA 見 [驗收紀錄](../../../共通基礎/數學/圖解線性代數/驗收紀錄.md)。公開證據在 `/tmp/linear-calculation-publication/`，鏡像證據在 `/tmp/hosting-operator/linear-v3-deployment.json`。
+
+v2／v1 歷史完整保留。已更新原線代真人待驗列，共通 9 課不增加；是否能依例自行算相似題仍需使用者驗，不將教學審查當成實測學習成果。作者、審查與 QA 已退出，自有瀏覽器／server／GitHub 核對／Sites 程序皆結束。微積分、工程數學仍現役，電子／電路仍待微積分正式部署，不結束整體目標。

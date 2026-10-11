@@ -76,15 +76,4 @@
 - **怎麼找我**：collaboration `/root/engineering_math_team`。
 - **訂閱主題**：無。
 
-### `linear-calculation-v3-team`
-- **狀態**：現役
-- **我是誰**：visual_builder 重啟線代公式計算補強，統籌作者與獨立驗收。
-- **團隊**：線代 v3。
-- **上游**：隊長對 root；子線對隊長。
-- **領地**：線代圖解站，排除 `.openai/`，詳 [交接](../../handoffs/2026-10-11-linear-algebra-calculation-revision.md)；v2 歷史不改。
-- **答得出什麼**：題目、圖與公式對照、逐行手算、檢查與詳解練習。
-- **答不出什麼**：真人是否會算、跨隊及發布時機。
-- **怎麼找我**：collaboration `/root/visual_builder`。
-- **訂閱主題**：無。
-
 已收線成員見 [2026-10-11 ELI5 團隊歷史](ROSTER-HISTORY-2026-10-11.md)。

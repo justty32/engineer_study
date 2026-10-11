@@ -89,3 +89,14 @@
 - **答不出什麼**：真人體驗、共享行政與發布時機。
 - **怎麼找我**：collaboration `/root/robotics_team`。
 - **訂閱主題**：無。
+
+### `linear-calculation-v3-team`
+- **狀態**：已收線（2026-10-11）
+- **我是誰**：visual_builder 重啟線代公式計算補強，統籌作者與獨立驗收。
+- **團隊**：線代 v3。
+- **上游**：隊長對 root；子線對隊長。
+- **領地**：線代圖解站，排除 `.openai/`，詳 [交接](../../handoffs/done/2026-10-11-linear-algebra-calculation-revision.md)；v2 歷史不改。
+- **答得出什麼**：題目、圖與公式對照、逐行手算、檢查與詳解練習。
+- **答不出什麼**：真人是否會算、跨隊及發布時機。
+- **怎麼找我**：collaboration `/root/visual_builder`。
+- **訂閱主題**：無。
