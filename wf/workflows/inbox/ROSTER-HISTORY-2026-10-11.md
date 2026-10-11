@@ -78,3 +78,14 @@
 - **答不出什麼**：未查證的結論、真人是否看懂。
 - **怎麼找我**：collaboration `/root` 與 `visual_builder`、`visual_pedagogy`、`visual_math`、`visual_qa`、`visual_publish`。
 - **訂閱主題**：無。
+
+### `robotics-math-visual-team`
+- **狀態**：已收線（2026-10-11）
+- **我是誰**：robotics_team 為機器人數學圖解新站隊長，自組作者及獨立審查／QA。
+- **團隊**：機器人數學圖解新站。
+- **上游**：隊長對 root；子線對隊長。
+- **領地**：`專題/機器人運動學/圖解機器人數學/`，詳 [交接](../../handoffs/done/2026-10-11-robotics-math-visual.md)；舊站與其他隊唯讀。
+- **答得出什麼**：機器人數學圖解公式、手算應用、詳解練習及查核。
+- **答不出什麼**：真人體驗、共享行政與發布時機。
+- **怎麼找我**：collaboration `/root/robotics_team`。
+- **訂閱主題**：無。

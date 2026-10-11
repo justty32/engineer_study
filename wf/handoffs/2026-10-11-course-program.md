@@ -4,17 +4,23 @@
 
 ## 總排程
 
-線代隊長 `visual_builder` 統籌 [線代改版](done/2026-10-11-linear-algebra-visual-revision.md)，三線獨立驗收與雙站部署均完成，產品 commit `ca23227`，37 個公開成品對上受驗雜湊，作者與驗收者已退出。root 已據此啟動 `robotics_team`，由隊長自行組隊，建立 [機器人數學新站](2026-10-11-robotics-math-visual.md)；領地為 `專題/機器人運動學/圖解機器人數學/`，slug 為 `robotics-math-little-lab`，舊站保留。
+使用者最新要求「用圖講公式與完整計算過程，能自己算題」。所有現役課與未啟動的電子／電路隊均套用此發布標準：具體題目、圖與符號／公式對應、適用條件與選式理由、逐行代入／計算／檢查，以及有詳解的遷移練習。圖數、概念審查或互動可操作，不能代替能否自己計算的教材驗收。
 
-微積分隊長 `calculus_team` 並行統籌 [微積分改版](2026-10-11-calculus-visual-revision.md)，查官方教材、增加逐步圖解，保留一階 RC／RL 與向量微積分，深度須銜接電磁、電子與電路。微積分正式凍結與部署完成後，由 root 同時啟動 `electronics_team` 與 `circuits_team`，兩位隊長各自組隊。
+`visual_builder` 已重新啟動 [線代 v3 公式計算補強](2026-10-11-linear-algebra-calculation-revision.md)，沿用線代圖解站領地，排除 `.openai/`；v2 部署與完成歷史保持，v3 尚未發布。
 
-教材缺口已滿足另立工程數學隊的條件，`engineering_math_team` 現已啟動 [圖解工程數學新站](2026-10-11-engineering-math-visual.md)，領地為 `共通基礎/數學/圖解工程數學/`。此隊承接二階 ODE／RLC、複數相量、Laplace 初值／LTI、Fourier 與必要 PDE 邊界；既有工程數學站不改。
+線代隊長 `visual_builder` 統籌 [線代改版](done/2026-10-11-linear-algebra-visual-revision.md)，三線獨立驗收與雙站部署均完成，產品 commit `ca23227`，37 個公開成品對上受驗雜湊，作者與驗收者已退出。root 已據此啟動 `robotics_team`，由隊長自行組隊，建立 [機器人數學新站](done/2026-10-11-robotics-math-visual.md)；領地為 `專題/機器人運動學/圖解機器人數學/`，slug 為 `robotics-math-little-lab`，舊站保留。機器人新站已完成公式／手算與獨立驗收，commit `7b565ec`、Pages 工作 `38111386682` 成功，23 個公開成品雜湊一致；隊員與發布程序已退出。
+
+微積分隊長 `calculus_team` 並行統籌 [微積分改版](2026-10-11-calculus-visual-revision.md)，查官方教材、增加逐步圖解，保留一階 RC／RL 與向量微積分，深度須銜接電磁、電子與電路。現補強公式圖解、逐行手算及遷移練習，暫緩發布；通過新標準並正式凍結與部署完成後，由 root 同時啟動 `electronics_team` 與 `circuits_team`，兩位隊長各自組隊。
+
+教材缺口已滿足另立工程數學隊的條件，`engineering_math_team` 現已啟動 [圖解工程數學新站](2026-10-11-engineering-math-visual.md)，領地為 `共通基礎/數學/圖解工程數學/`。此隊承接二階 ODE／RLC、複數相量、Laplace 初值／LTI、Fourier 與必要 PDE 邊界，依同一標準補足圖解公式及完整手算。既有工程數學站不改。root 已另授此隊唯一寫入 `共通基礎/數學/03-工程數學-上.md`、`03-工程數學-中.md`、`03-工程數學-下.md`，僅限 20 項官方來源確證修正，由另一人獨立覆核並在課程保存持久對照；該隊正式發布的精確 scope 應包含這三份原文。
 
 root 只負責派隊、依賴、資源與最終發布放行，不承擔逐頁實作。隊長自行收斂作者、查證與獨立 QA，將完整凍結證據直接交 `visual_publish`，由發布者回 root 短摘要。
 
 ## 領地與串行發布
 
-root 只做發布放行，Sites 操作已委派 `hosting_operator`，僅寫隔離 checkout 與 `/tmp/`，不改工程 repo，等待各隊正式 freeze 後才部署。`visual_publish` 獨佔 `wf/SESSION-LOG.md`、`wf/workflows/dispatch/README.md`、`wf/workflows/inbox/ROSTER.md` 與本檔，亦獨佔中央入口 `互動學習網站/index.html`、`.github/workflows/pages.yml`、`共通基礎/README.md` 等接線檔；新課就緒後串行接線，不需逐次轉移。產品驗收、WAIT_USER 等收尾檔仍由 root 明確轉移後才寫。
+root 只做發布放行，所有課程由既有 GitHub Pages 管線公開部署。新建的機器人、工程數學及後續電子／電路站僅需 GitHub，不另建私有 Sites 鏡像；沒有 Sites URL 不構成新站未完成。既有線代／微積分的私有 Sites 鏡像仍由 `hosting_operator` 更新，僅寫隔離 checkout 與 `/tmp/`，等待正式 freeze 後才部署。
+
+`visual_publish` 獨佔 `wf/SESSION-LOG.md`、dispatch 的 README／CLAIMS、`wf/workflows/inbox/ROSTER.md` 與本檔，亦獨佔中央入口 `互動學習網站/index.html`、`.github/workflows/pages.yml`、來源 README 等接線檔；新課就緒後串行接線，不需逐次轉移。產品驗收、WAIT_USER 等收尾檔仍由 root 明確轉移後才寫。
 
 每隊自行建立 handoff 與互斥檔案領地，產品檔一檔一作者。不得寫其他隊、舊站、源筆記或 `.openai/`，除非該隊交接明列其範圍。`nvim.log` 全程禁讀、禁改、禁提交。所有隊共享 git，發布由 `visual_publish` 串行精確 staging；其他隊未完成的 dirty 檔可保留，不得夾帶進另一隊 commit。
 
@@ -22,10 +28,10 @@ root 只做發布放行，Sites 操作已委派 `hosting_operator`，僅寫隔�
 
 ## 固定交付與驗收
 
-1. 隊長交代具體學習情境、逐步圖解如何補跳步，並保留公式、數字與模型適用條件；圖數和測試數不代表真人已看懂。
+1. 每個教學頁交出具體題、圖與符號／公式對應、適用條件與選式理由、逐行代入／計算／檢查，以及附詳解的遷移練習；獨立驗收須核算推導與答案。圖數、概念 review 和測試數不代表讀者會算或真人已看懂。
 2. 官方教材查核有精確來源與結論；教學審查、數學查核及獨立技術 QA 分開記錄，已知缺陷修妥才凍結。
 3. 凍結包含精確提交範圍、受驗產品 manifest 與自身 SHA256、作者停筆確認、PC／手機／鍵盤／離線結果及真人待驗限制。
 4. root 明確放行後才精確 commit／push／部署；逐個公開新成品 HTTP 200 並對上受驗雜湊，中央入口與指定舊站僅做 smoke，不重測所有網站。
-5. GitHub 與 Sites 的實際 URL、產品 commit、部署識別與結果落檔，各隊行程退出後更新現役／歷史及下一隊依賴；全程序仍有工作時不得標示整體完成。
+5. GitHub 的實際 URL、產品 commit、部署識別與結果落檔；既有線代／微積分另記 Sites 鏡像結果，新站無此要求。各隊行程退出後更新現役／歷史及下一隊依賴；全程序仍有工作時不得標示整體完成。
 
 `wf-lint` 已有兩筆 2026-09-26 歷史引文斷鏈，本程序不為全綠改寫歷史；本輪不得新增斷鏈。發布暫存及基線見 `/tmp/linear-visual-publication/`，持久證據由各隊驗收與完成 handoff 保存。

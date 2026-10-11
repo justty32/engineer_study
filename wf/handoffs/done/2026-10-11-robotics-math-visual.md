@@ -35,3 +35,11 @@ builder、其基礎作者、research_audit、qa均已final退出；全部自有h
 可由root的visual_publish接手提交的新領地共32檔：23部署資產，加PROJECT-BRIEF、BUILD-SPEC、README、課程契約、派工計畫、教材對照、驗收紀錄、驗收數據、成品清單九個規劃／來源／驗收文件；暫存 `建置進度.md` 已依約移除。另包含本唯一handoff。所有檔案已停止寫入，產品dist位元組以最終清單為準。
 
 root已指定GitHub Pages公開發布，無Sites project或.openai變動。僅visual_publish可接共享git、中央入口、Pages流程及共享行政；本handoff寫權隨正式ready移交其追加部署證據，本站README亦可由其補公開網址與驗收入口。不要夾帶其他隊尚在編輯的產品。發布後由publisher核公開23資產與頁面、記commit／workflow／公開URL；任何產品位元組變動須更新清單並補相應驗收。若有公開站問題，由root重新派定單檔writer，不直接多人改。
+
+## 發布完成與收線
+
+[公開課程](https://justty32.github.io/engineer_study/robotics-math-little-lab/) 已由 GitHub Pages 上線。產品 commit `7b565ec16be6866c940ea128ee053f1ccfe89f6d`，[部署工作 38111386682](https://github.com/justty32/engineer_study/actions/runs/38111386682) 成功。2026-10-11T04:23:40Z 的 30 次 HTTP 檢查全部 200：23 成品逐檔符合最終受驗雜湊，中央 HTML／CSS 一致，5 個舊入口 smoke 正常。舊三機器人站 63 檔在產品 commit 與基線相同；中央 40→41 課、既有 slug 全保留。
+
+本次只提交 32 課程檔、中央、Pages、來源 README 與本 handoff 共 36 檔，其他隊產品及原筆記 dirty 留在工作樹。新站依政策只部署 GitHub，沒有 Sites/.openai，不將缺少私有鏡像視為未完成。精確 scope、公開核對與 run 證據在 `/tmp/robotics-math-publication/`；持久結論見 [驗收紀錄](../../../專題/機器人運動學/圖解機器人數學/驗收紀錄.md)。
+
+已完成作者／研究／QA 及發布行程收束；真實 PC 能否照圖使用公式算相似題、手機觸控與其他瀏覽器仍列待驗。共享程序保留線代 v3、微積分與工程數學現役；電子／電路仍待微積分正式部署後啟動，整體目標尚未完成。

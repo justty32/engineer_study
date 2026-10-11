@@ -6,9 +6,9 @@
 
 | 線 | 可寫目錄 | 唯讀 / 禁區 | 上線時間 |
 |----|---------|------------|---------|
+| linear-calculation v3 團隊 | [線代公式計算領地](../../handoffs/2026-10-11-linear-algebra-calculation-revision.md) | .openai、v2 歷史、其他隊產品、nvim.log 禁改 | 2026-10-11 |
 | calculus-visual 團隊 | [明確檔案領地](../../handoffs/2026-10-11-calculus-visual-revision.md) | 其他隊產品、舊站、共享行政、nvim.log 禁改 | 2026-10-11 |
-| engineering-math 團隊 | [明確檔案領地](../../handoffs/2026-10-11-engineering-math-visual.md) | 舊站、其他隊產品、共享行政、nvim.log 禁改 | 2026-10-11 |
-| robotics-math 團隊 | [明確檔案領地](../../handoffs/2026-10-11-robotics-math-visual.md) | 舊站、其他隊產品、共享行政、nvim.log 禁改 | 2026-10-11 |
+| engineering-math 團隊 | [領地與三份原文的 20 項修正](../../handoffs/2026-10-11-engineering-math-visual.md) | 舊站、其他隊產品、共享行政、nvim.log 禁改 | 2026-10-11 |
 | course-program 發布行政 | [總排程與串行發布領地](../../handoffs/2026-10-11-course-program.md) | 未凍結產品、源筆記、.openai、nvim.log 禁改 | 2026-10-11 |
 
 ### 保留給調度者，任何線都不得寫
@@ -24,6 +24,7 @@
 
 | 線 | 完成證據 | 收線時間 |
 |----|---------|---------|
+| robotics-math 團隊 | [公式圖解、獨立驗收與 GitHub 部署](../../handoffs/done/2026-10-11-robotics-math-visual.md) | 2026-10-11 |
 | linear-visual 團隊 | [逐步圖解 v2 驗收與雙站部署](../../handoffs/done/2026-10-11-linear-algebra-visual-revision.md) | 2026-10-11 |
 | iot-builder／iot-source-audit／iot-qa／iot-reference／iot-publish | [IoT ELI5 驗收與部署證據](../../handoffs/done/2026-10-11-iot-eli5.md) | 2026-10-11 |
 | calculus-builder／calculus-audit／calculus-qa／calculus-clarity／calculus-publish | [微積分 ELI5 驗收與部署證據](../../handoffs/done/2026-10-11-calculus-eli5.md) | 2026-10-11 |
