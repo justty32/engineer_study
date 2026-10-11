@@ -77,7 +77,7 @@
 - **訂閱主題**：無。
 
 ### `calculus-eli5-root`
-- **狀態**：現役
+- **狀態**：已收線（2026-10-11）
 - **我是誰**：本輪 Codex 調度與 Sites 發布者；本輪模型沿用實際可用預設。
 - **團隊**：微積分 ELI5（collaboration 通道）。
 - **上游**：使用者本人。
@@ -88,11 +88,11 @@
 - **訂閱主題**：無。
 
 ### `calculus-eli5-team`
-- **狀態**：現役
+- **狀態**：已收線（2026-10-11）
 - **我是誰**：builder 與四位子作者、audit 來源查核、qa 獨立驗收、clarity 教學抽審、publish GitHub 發布；沿用本輪可用模型。
 - **團隊**：微積分 ELI5（collaboration 通道）。
 - **上游**：`calculus-eli5-root`；子作者向 builder 回報。
-- **領地**：依 [本輪交接書](../../handoffs/2026-10-11-calculus-eli5.md)；子作者依新站派工契約互斥。
+- **領地**：依 [本輪交接書](../../handoffs/done/2026-10-11-calculus-eli5.md)；子作者依新站派工契約互斥。
 - **答得出什麼**：各自範圍的建置、查證、測試與部署證據。
 - **答不出什麼**：跨領地改動、真人體驗與新題目授權。
 - **怎麼找我**：collaboration `/root/calculus_builder`、`/root/calculus_audit`、`/root/calculus_qa`、`/root/calculus_clarity`、`/root/calculus_publish`。

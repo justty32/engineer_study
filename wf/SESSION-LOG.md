@@ -11,7 +11,7 @@
 
 ## 最新進度
 
-- [interactive-study-site] 2026-10-11 微積分 ELI5 新站 33 成品檔完成，獨立 QA 1,547 項及 30 項局部複查通過，作者停筆；root 已放行 GitHub／Sites 發布，等待公開成品雜湊核對與收線 → [交接書](handoffs/2026-10-11-calculus-eli5.md)。
+- [interactive-study-site] 線性代數 ELI5 新站待使用者啟動，尚未開始；微積分已完成發布 → [微積分完成證據](handoffs/done/2026-10-11-calculus-eli5.md)。
 
 
 - [interactive-study-site] 第二批三課（電力電子／馬達驅動與控制／數位通訊）已上線；第三批候選 DSP／IC1／A2 待派 → 立案前先看 [workflows/interactive-study-site/README.md](workflows/interactive-study-site/README.md) 與 [decisions](workflows/decisions.md) 的譯名裁決。
