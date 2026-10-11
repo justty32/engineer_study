@@ -1,4 +1,4 @@
-# 實機驗收 — 專題 IoT 聯網裝置主站與知識群七站
+# 實機驗收 — 專題 IoT 聯網裝置主站、知識群七站與圖解新站
 
 ← [WAIT_USER](../WAIT_USER.md)｜[INDEX](../INDEX.md)｜同系列：[電機核心](實機驗收-電機核心.md)、[共通通訊電力](實機驗收-共通通訊電力.md)、[專題資安機器人AI](實機驗收-專題資安機器人AI.md)
 
@@ -23,3 +23,4 @@ Agent 具備靜態內容檢查、HTTP 導覽檢查，以及 headless Chrome（�
 | IoT 裝置安全、佈建、量產與生命週期互動站 | — | [`iot-security-production/`](https://justty32.github.io/engineer_study/iot-security-production/) | 模組導覽、OTA 數字輸入、情境 gate、重設與進度保存可操作，且沒有頁面水平溢位或文字重疊 | — | 以手機實際開啟確認左列各項 |
 | 30 分鐘板級介面與工業匯流排網站 | [index](../../專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/index.html)、[硬體原理補課](../../專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/hardware-principles.html)，以及 GPIO／I²C／SPI／RS-485／讀電路圖／做電路設計六個獨立頁 | — | 導覽、自由實驗、按鈕與文字沒有重疊或水平溢位 | agent 目前僅完成靜態驗收，尚未取得實際瀏覽器渲染證據 | 開啟本機各頁，以桌面與手機確認左列各項 |
 | 微控制器與韌體核心課程 | [index](../../專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心/index.html) | — | 九頁導覽、零基礎 bit／clock 實驗、字典搜尋、startup／memory、register、interrupt／DMA、timer／ADC、狀態機與 fault 互動沒有重疊或水平溢位 | agent 目前僅完成靜態驗收，尚未取得實際瀏覽器渲染證據 | 開啟本機頁面，以桌面與手機確認左列各項 |
+| 物聯網小小實驗室（ELI5 圖解新站） | [index](../../專題/IoT聯網裝置/圖解物聯網/dist/index.html) | [GitHub Pages](https://justty32.github.io/engineer_study/iot-little-lab/)、[Sites](https://iot-little-lab.bronzetern2.chatgpt.site) | 十頁導航、首頁植物實驗、七課圖解互動、搜尋字典、重設與學習進度保存；手機長圖可局部橫移 | 457 項互動與導覽檢查、桌面／390px 共 20 次載入、179 個相對連結通過；320px／390px 首頁開關文字複驗通過；無主頁水平溢位或執行期外部請求 | 以真人桌面與手機觸控確認滑桿、開關、圖面橫移、控制捷徑、重設與進度保存的操作舒適度 |

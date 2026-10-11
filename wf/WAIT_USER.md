@@ -13,6 +13,6 @@
 |------|------|------|
 | 實機驗收：電機核心八門課 | 8 | [wait-user/實機驗收-電機核心.md](wait-user/實機驗收-電機核心.md) |
 | 實機驗收：共通基礎／通訊／電力（含電力電子、馬達驅動、數位通訊） | 7 | [wait-user/實機驗收-共通通訊電力.md](wait-user/實機驗收-共通通訊電力.md) |
-| 實機驗收：專題 IoT 八站 | 8 | [wait-user/實機驗收-專題IoT.md](wait-user/實機驗收-專題IoT.md) |
+| 實機驗收：專題 IoT 九站 | 9 | [wait-user/實機驗收-專題IoT.md](wait-user/實機驗收-專題IoT.md) |
 | 實機驗收：專題資安／機器人／AI 白話／論文速覽／中央入口 | 7 | [wait-user/實機驗收-專題資安機器人AI.md](wait-user/實機驗收-專題資安機器人AI.md) |
 | 中英名詞對照表缺詞補齊與用語統一 | 7 | [wait-user/對照表缺詞.md](wait-user/對照表缺詞.md) |

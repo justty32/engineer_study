@@ -11,7 +11,7 @@
 
 ## 最新進度
 
-- [interactive-study-site] 2026-10-11 新建 IoT ELI5 圖解網站，保留所有舊站；使用者授權 push／部署及順手修正查證後的原文錯誤 → 多 agent 建置、獨立驗收與發布（`專題/IoT聯網裝置/圖解物聯網/`）。
+- [interactive-study-site] 2026-10-11 IoT ELI5 圖解新站 PC 預覽已 commit／push（`ca92033`），Sites 與 GitHub Pages 已上線，22 個公開成品檔 HTTP／SHA256 驗證通過 → 手機修整後的 headless 複驗及正式收尾進行中（`專題/IoT聯網裝置/圖解物聯網/`）。
 
 - [interactive-study-site] 第二批三課（電力電子／馬達驅動與控制／數位通訊）已上線；第三批候選 DSP／IC1／A2 待派 → 立案前先看 [workflows/interactive-study-site/README.md](workflows/interactive-study-site/README.md) 與 [decisions](workflows/decisions.md) 的譯名裁決。
 - [審稿] 2026-09-26 全站審稿 52 份齊；電機（01–05、23–35）＋專題（20–22、38–47）兩輪修整完成並 push（2026-10-09，延後 165 條已全數結案，見 [fixes/延後彙整.csv](reviews/2026-09-26/fixes/延後彙整.csv)）；其餘學科 md、共通基礎 36–37、wf 49–52 的報告尚未修 → 待使用者決定是否續修。

@@ -13,31 +13,31 @@
    "id": "builder",
    "role": "建置指揮官",
    "scope": "所有HTML、CSS、共用JS與文件；排除驗收紀錄",
-   "status": "整合與QA中"
+   "status": "已完成；獨立驗收見驗收紀錄"
   },
   {
    "id": "A",
    "role": "章節作者",
    "scope": "dist/sensors.js；dist/brain.js",
-   "status": "模組完成；待整合驗收"
+   "status": "已完成；獨立驗收見驗收紀錄"
   },
   {
    "id": "B",
    "role": "章節作者",
    "scope": "dist/power.js",
-   "status": "模組完成；待整合驗收"
+   "status": "已完成；獨立驗收見驗收紀錄"
   },
   {
    "id": "C",
    "role": "章節作者",
    "scope": "dist/network.js；dist/messages.js",
-   "status": "模組完成；待整合驗收"
+   "status": "已完成；獨立驗收見驗收紀錄"
   },
   {
    "id": "D",
    "role": "章節作者",
    "scope": "dist/security.js；dist/reliability.js",
-   "status": "模組完成；待整合驗收"
+   "status": "已完成；獨立驗收見驗收紀錄"
   }
  ]
 }
