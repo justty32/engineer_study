@@ -1,0 +1,43 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "id",
+  "role",
+  "scope",
+  "status"
+ ],
+ "rows": [
+  {
+   "id": "builder",
+   "role": "建置指揮官",
+   "scope": "所有HTML、CSS、共用JS與文件；排除驗收紀錄",
+   "status": "整合與QA中"
+  },
+  {
+   "id": "A",
+   "role": "章節作者",
+   "scope": "dist/sensors.js；dist/brain.js",
+   "status": "模組完成；待整合驗收"
+  },
+  {
+   "id": "B",
+   "role": "章節作者",
+   "scope": "dist/power.js",
+   "status": "模組完成；待整合驗收"
+  },
+  {
+   "id": "C",
+   "role": "章節作者",
+   "scope": "dist/network.js；dist/messages.js",
+   "status": "模組完成；待整合驗收"
+  },
+  {
+   "id": "D",
+   "role": "章節作者",
+   "scope": "dist/security.js；dist/reliability.js",
+   "status": "模組完成；待整合驗收"
+  }
+ ]
+}

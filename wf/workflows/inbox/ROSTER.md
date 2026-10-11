@@ -42,3 +42,36 @@
 - **答不出什麼**：實機瀏覽器／觸控驗收與 push（都要使用者）；其他 repo 的內容。
 - **怎麼找我**：`wf/inbox/mail/engineer_study-lead/`（升級後佈局；單一收件匣佈局投 `wf/inbox/`）。
 - **訂閱主題**：無。
+
+### `iot-eli5-root`
+- **狀態**：現役
+- **我是誰**：本輪 Codex 調度與發布者；使用者授權多 agent、push／部署、新站自訂設計。
+- **團隊**：IoT ELI5（collaboration 通道）。
+- **上游**：使用者本人。
+- **領地**：工作流狀態、部署 CI、總入口與來源 index；產品寫入另派。
+- **答得出什麼**：本輪範圍、發布、驗收與 agent 邊界。
+- **答不出什麼**：未查證硬體結論、真人觸控體驗。
+- **怎麼找我**：collaboration `/root`。
+- **訂閱主題**：無。
+
+### `iot-eli5-team`
+- **狀態**：現役
+- **我是誰**：builder 管理線、source-audit 原文查證、reference 教材查詢、qa 獨立驗收；均繼承本輪可用模型。
+- **團隊**：IoT ELI5（collaboration 通道）。
+- **上游**：`iot-eli5-root`。
+- **領地**：依 [本輪交接書](../../handoffs/2026-10-11-iot-eli5.md) 與 [dispatch](../dispatch/README.md)；builder 子線依新站派工契約互斥。
+- **答得出什麼**：各自範圍的建置、證據與待修缺陷。
+- **答不出什麼**：發布授權與跨領地改動。
+- **怎麼找我**：collaboration `/root/iot_builder`、`/root/iot_source_audit`、`/root/iot_reference`、`/root/iot_qa`。
+- **訂閱主題**：無。
+
+### `iot-publish`
+- **狀態**：現役
+- **我是誰**：本輪發布與工作流收尾子 agent；root 明確放行後才 commit／push。
+- **團隊**：IoT ELI5（collaboration 通道）。
+- **上游**：`iot-eli5-root`。
+- **領地**：root 授權的本輪工作流收尾檔；builder／qa 交接後的新站部署紀錄。
+- **答得出什麼**：GitHub Pages 發布、遠端成品一致性與工作流收尾證據。
+- **答不出什麼**：產品程式、原文判讀、真人觸控體驗與 Sites 發布。
+- **怎麼找我**：collaboration `/root/iot_publish`。
+- **訂閱主題**：無。

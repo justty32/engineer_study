@@ -29,6 +29,9 @@ on:
       - "專題/IoT聯網裝置/互動網站/*.html"
       - "專題/IoT聯網裝置/互動網站/*.css"
       - "專題/IoT聯網裝置/互動網站/*.js"
+      - "專題/IoT聯網裝置/圖解物聯網/dist/*.html"
+      - "專題/IoT聯網裝置/圖解物聯網/dist/*.css"
+      - "專題/IoT聯網裝置/圖解物聯網/dist/*.js"
       - "專題/IoT聯網裝置/知識群互動網站/*/*.html"
       - "專題/IoT聯網裝置/知識群互動網站/*/*.css"
       - "專題/IoT聯網裝置/知識群互動網站/*/*.js"
@@ -98,6 +101,7 @@ jobs:
             copy_course "$source_dir" "$public_dir"
           done <<'COURSES'
           專題/IoT聯網裝置/互動網站|iot-device
+          專題/IoT聯網裝置/圖解物聯網/dist|iot-little-lab
           電機/04-電力特化/P1-電力系統-互動網站|power-systems
           專題/IoT聯網裝置/知識群互動網站/01-板級電源與PCB|iot-power-pcb
           專題/IoT聯網裝置/知識群互動網站/02-嵌入式韌體與RTOS|iot-firmware-rtos

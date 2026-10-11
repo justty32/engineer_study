@@ -1,0 +1,97 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "id",
+  "type",
+  "range",
+  "defaults",
+  "formula",
+  "criteria_examples",
+  "sources_limits",
+  "owner"
+ ],
+ "rows": [
+  {
+   "id": "home",
+   "type": "端到端狀態機",
+   "range": "濕度=20/60；網路=開/關；電源=開/關",
+   "defaults": "乾燥20，網路開，電源開",
+   "formula": "有電時讀濕度；濕度<35→需水；手機僅在電源與網路皆開且按傳送才更新，斷線保留最後值並標示舊資料",
+   "criteria_examples": "乾燥傳送顯示20需水；斷網改60本機可更新而手機仍20；斷電停止讀取與傳送",
+   "sources_limits": "首頁數值為教學規則，不是真感測器量測",
+   "owner": "builder"
+  },
+  {
+   "id": "sensors",
+   "type": "參數實驗",
+   "range": "濕潤程度0–100教學刻度，step5；接線開/關",
+   "defaults": "40/100，接線開",
+   "formula": "理想教學感測器 V=3.3*h/100 V；8-bit ADC code=round(255*h/100)。斷線顯示無有效讀值，非0。",
+   "criteria_examples": "h=0→0V/0；h=100→3.3V/255；h=40→1.32V/102；斷線→無讀值",
+   "sources_limits": "index 系統分層；E1 嵌入式系統基礎 ADC；線性比例與8-bit皆教學假設",
+   "owner": "A"
+  },
+  {
+   "id": "brain",
+   "type": "規則閾值",
+   "range": "濕潤程度0–100教學刻度 step5；提醒閾值10–80 step5；感測有效開/關",
+   "defaults": "濕度30 閾值35 有效",
+   "formula": "有效且h<threshold→亮需水燈；h>=threshold→不提醒；無效→停止判斷，顯示檢查感測器",
+   "criteria_examples": "30<35需水；35=35不提醒；閾值10/h30不提醒；無效不可推論乾燥",
+   "sources_limits": "韌體-架構與電源管理 第2章；MCU 按規則比較數值，不會自己懂植物",
+   "owner": "A"
+  },
+  {
+   "id": "power",
+   "type": "平均電流參數實驗",
+   "range": "回報週期10–300秒 step10；電池容量500–3000mAh step500；供電回路開/關",
+   "defaults": "60秒 2000mAh 回路開",
+   "formula": "每週期互斥：量測0.2s×15mA+傳送1s×120mA+睡眠(T-1.2)s×0.02mA；Iavg=(123+0.02*(T-1.2))/T；壽命天=容量/Iavg/24。回路開路時不估運轉壽命",
+   "criteria_examples": "T60→2.0696mA→40.27天；T300→0.42992mA→193.83天；T10→12.3176mA→6.77天；開路→未運作",
+   "sources_limits": "硬體-電源與電池 第8/9章；電流與時長為教學假設，電池端同一量測點，不含老化自放電",
+   "owner": "B"
+  },
+  {
+   "id": "network",
+   "type": "可達性狀態機",
+   "range": "模式Wi-Fi/手機閘道；區域連線開/關；上網開/關；服務開/關",
+   "defaults": "Wi-Fi 全開",
+   "formula": "區域連線&&上網&&服務→送達；第一個斷點說明。手機閘道表示BLE需手機中繼，不說BLE直接上網",
+   "criteria_examples": "區域開/上網關→到路由器但不到雲；網路全開/服務關→有上網但服務不可用",
+   "sources_limits": "韌體-連線模組整合 第1/5章；不模擬射頻距離與實際封包",
+   "owner": "C"
+  },
+  {
+   "id": "messages",
+   "type": "MQTT主題分送與重送",
+   "range": "訂閱plant/moisture或room/temp；QoS0/1；首次確認遺失開/關；寄出按鈕",
+   "defaults": "plant/moisture QoS1 確認正常",
+   "formula": "送 plant/moisture:20；相符先分送1次。QoS1第一次PUBACK遺失後斷線，按恢復既有會話才重送，本示例第二次分送可達2次；QoS0沒有PUBACK與此重送，例中首次封包到達；不相符0次。",
+   "criteria_examples": "相符Q1正常1次；相符Q1丟ACK寄出先1次，再恢復會話2次；相符Q0仍1次；異主題0次。這是重複的可能路徑，不保證每次都重複；收據不是實體動作完成。",
+   "sources_limits": "E5 IoT與邊緣運算 MQTT；OASIS待source-audit確認；固定重送是可能路徑不是每次必然",
+   "owner": "C"
+  },
+  {
+   "id": "security",
+   "type": "安全更新閘門",
+   "range": "來源官方/陌生；完整/遭修改；驗簽開/關",
+   "defaults": "官方 完整 驗簽開",
+   "formula": "可信官方且完整→簽章有效，可安裝；其餘且驗簽開→拒絕；驗簽關→無法建立來源與完整性信任，不標成安全",
+   "criteria_examples": "官方完整驗簽開通過；陌生完整拒絕；官方被改拒絕；關驗簽→可能放行但無信任保證",
+   "sources_limits": "韌體架構 第7章；簽章驗證以預先信任公鑰為前提；不把TLS等同secure boot，不把CRC等同簽章",
+   "owner": "D"
+  },
+  {
+   "id": "reliability",
+   "type": "斷線緩存與回報",
+   "range": "連線開/關；產生讀值/重連送出；重試步進；重設",
+   "defaults": "連線開 空緩存 0重試",
+   "formula": "離線產生固定讀值序列[20,25,30,35,40]加入最多3筆緩存；滿時丟最舊且告知；連線產生即送；恢復連線自動flush；第n次失敗名義退避min(2*2^(n-1),60)s；不加亂數",
+   "criteria_examples": "4筆離線→保留後3、丟1；連線恢復→3筆送出緩存0；退避2,4,8,16,32,60",
+   "sources_limits": "韌體-連線模組整合 第6章與韌體架構 第6章；模擬RAM queue，頁面重載不持久化，實機應加jitter",
+   "owner": "D"
+  }
+ ]
+}

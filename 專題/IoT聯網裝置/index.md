@@ -6,6 +6,8 @@
 
 ## 互動學習網站
 
+- [物聯網小小實驗室：ELI5 圖解新站（GitHub Pages）](https://justty32.github.io/engineer_study/iot-little-lab/)｜[本機入口](圖解物聯網/dist/index.html)
+
 - [開啟 IoT 聯網裝置互動工作台（GitHub Pages）](https://justty32.github.io/engineer_study/iot-device/)
 - [7 站知識群互動網站路線圖](知識群互動網站-路線圖.md)
 - [30 分鐘板級介面與工業匯流排：I²C、SPI、RS-485、Modbus RTU](知識群互動網站/06-板級介面與工業匯流排/index.html)
