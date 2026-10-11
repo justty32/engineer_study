@@ -1,0 +1,49 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "id",
+  "role",
+  "owner",
+  "files",
+  "status"
+ ],
+ "rows": [
+  {
+   "id": "FRAME",
+   "role": "共享框架",
+   "owner": "linear_builder",
+   "files": "dist/index.html,home.js,shared.js,lab.css,glossary.html,glossary.js,sources.html；BRIEF/SPEC/契約/README",
+   "status": "已完成"
+  },
+  {
+   "id": "A",
+   "role": "基礎",
+   "owner": "linear_builder/foundations",
+   "files": "00-start,vectors,basis,matrices 各 HTML+JS",
+   "status": "已完成"
+  },
+  {
+   "id": "B",
+   "role": "變換與解",
+   "owner": "linear_builder/systems",
+   "files": "composition,systems,rank,determinant 各 HTML+JS",
+   "status": "已完成"
+  },
+  {
+   "id": "C",
+   "role": "投影與特徵",
+   "owner": "linear_builder/projection",
+   "files": "projection,least-squares,eigen 各 HTML+JS",
+   "status": "已完成"
+  },
+  {
+   "id": "D",
+   "role": "分解與工程",
+   "owner": "linear_builder/decompositions",
+   "files": "diagonalization,qr,svd,engineering 各 HTML+JS",
+   "status": "已完成"
+  }
+ ]
+}

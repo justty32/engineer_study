@@ -1,0 +1,596 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "id",
+  "type",
+  "page",
+  "controls",
+  "equation",
+  "criterion",
+  "examples",
+  "boundary",
+  "source",
+  "author"
+ ],
+ "rows": [
+  {
+   "id": "home",
+   "type": "自由因果實驗",
+   "page": "index",
+   "controls": [
+    {
+     "id": "shear",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.25
+    }
+   ],
+   "equation": "A=[[1,k],[0,1]]; v=(1,1); Av=(1+k,1); unit-square image [(0,0),(1,0),(1+k,1),(k,1)]",
+   "criterion": "圖的面積恆為1；向量與平方同步剪切；k=0保持原狀",
+   "examples": "k=1 → Av=(2,1), det=1; k=-2 → Av=(-1,1)",
+   "boundary": "負／零／正剪切；不宣稱所有矩陣皆保面積",
+   "source": "原文§2,4",
+   "author": "builder"
+  },
+  {
+   "id": "coordinates",
+   "type": "自由因果實驗",
+   "page": "00-start",
+   "controls": [
+    {
+     "id": "x",
+     "type": "range",
+     "default": 3,
+     "min": -4,
+     "max": 4,
+     "step": 1
+    },
+    {
+     "id": "y",
+     "type": "range",
+     "default": 2,
+     "min": -4,
+     "max": 4,
+     "step": 1
+    }
+   ],
+   "equation": "v=(x,y); length=sqrt(x²+y²)",
+   "criterion": "箭頭終點、水平垂直分量、長度同步，等比例坐標",
+   "examples": "(3,2) 長度√13≈3.61；(0,0)長度0；(-4,3)長度5",
+   "boundary": "零向量方向未定；負座標",
+   "source": "原文§1，零基礎補充",
+   "author": "A"
+  },
+  {
+   "id": "combination",
+   "type": "自由因果實驗",
+   "page": "vectors",
+   "controls": [
+    {
+     "id": "a",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "b",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    }
+   ],
+   "equation": "u=(2,0),v=(1,2); w=a u+b v=(2a+b,2b)",
+   "criterion": "顯示首尾相接與兩分量，負係數翻轉箭頭",
+   "examples": "a=b=1 →(3,2)；a=1,b=-1 →(1,-2)；0,0→(0,0)",
+   "boundary": "a或b為零；負係數；兩者零；畫面涵蓋x ±6,y ±4",
+   "source": "原文§1",
+   "author": "A"
+  },
+  {
+   "id": "basis",
+   "type": "自由因果實驗",
+   "page": "basis",
+   "controls": [
+    {
+     "id": "mode",
+     "type": "select",
+     "default": "independent",
+     "options": [
+      "independent",
+      "collinear",
+      "zero"
+     ]
+    },
+    {
+     "id": "a",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "b",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    }
+   ],
+   "equation": "u=(1,0); v independent=(1,1),collinear=(2,0),zero=(0,0); w=a u+b v; rank=2 or1",
+   "criterion": "非共線組可生成平面且座標唯一；共線/零欄只有x軸，換係數可能同結果",
+   "examples": "independent a=b=1→(2,1),rank2；collinear→(3,0),rank1；zero→(1,0),rank1",
+   "boundary": "圖上滑桿有界僅示範，完整span係數可任意實數；向量空間公理不能只寫封閉",
+   "source": "原文§1",
+   "author": "A"
+  },
+  {
+   "id": "matrix",
+   "type": "自由因果實驗",
+   "page": "matrices",
+   "controls": [
+    {
+     "id": "a",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "b",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "c",
+     "type": "range",
+     "default": 0,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "d",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    }
+   ],
+   "equation": "A=[[a,b],[c,d]],x=(1,1); Ax=(a+b,c+d); e1 image=(a,c),e2 image=(b,d)",
+   "criterion": "每欄就是一支單位箭頭的去處，輸出=兩欄相加",
+   "examples": "default [[1,1],[0,1]] →(2,1); zero A→(0,0); I→(1,1)",
+   "boundary": "零/identity/negative/collinear；m×n將n個輸入送到m個輸出",
+   "source": "原文§2",
+   "author": "A"
+  },
+  {
+   "id": "composition",
+   "type": "自由因果實驗",
+   "page": "composition",
+   "controls": [
+    {
+     "id": "first",
+     "type": "select",
+     "default": "shear",
+     "options": [
+      "shear",
+      "rotate",
+      "scale"
+     ]
+    },
+    {
+     "id": "second",
+     "type": "select",
+     "default": "rotate",
+     "options": [
+      "shear",
+      "rotate",
+      "scale"
+     ]
+    },
+    {
+     "id": "order",
+     "type": "select",
+     "default": "BA",
+     "options": [
+      "BA",
+      "AB"
+     ]
+    }
+   ],
+   "equation": "S=[[1,1],[0,1]],R=[[0,-1],[1,0]],D=[[2,0],[0,1]],v=(1,1); BA means second(first(v)); AB reverses",
+   "criterion": "畫出起點→中間→終點；標明右矩陣先做。補充線性兩條件與平移反例",
+   "examples": "S then R: v→(2,1)→(-1,2); reverse R then S→(-1,1)→(0,1)",
+   "boundary": "同操作可交換；一般不同不交換；線性T(0)=0必要不充分",
+   "source": "原文§2；線性定義補充",
+   "author": "B"
+  },
+  {
+   "id": "systems",
+   "type": "自由因果實驗",
+   "page": "systems",
+   "controls": [
+    {
+     "id": "k",
+     "type": "range",
+     "default": -1,
+     "min": -1,
+     "max": 3,
+     "step": 0.5
+    },
+    {
+     "id": "rhs",
+     "type": "range",
+     "default": 1,
+     "min": -3,
+     "max": 7,
+     "step": 1
+    },
+    {
+     "id": "step",
+     "type": "range",
+     "default": 0,
+     "min": 0,
+     "max": 2,
+     "step": 1
+    }
+   ],
+   "equation": "x+y=3;x+k y=b; row2←row2-row1 gives (k-1)y=b-3; k!=1: y=(b-3)/(k-1),x=3-y; k=1,b=3 infinitely many else no solution",
+   "criterion": "同時看兩條直線與增廣矩陣步驟；step2回代僅唯一時可用",
+   "examples": "k=-1,b=1→(2,1); k=1,b=3無限多；k=1,b=1無解",
+   "boundary": "近似比對1e-9；極端解可超出圖窗要文字標註，不可畫假交點",
+   "source": "原文§3",
+   "author": "B"
+  },
+  {
+   "id": "rank",
+   "type": "自由因果實驗",
+   "page": "rank",
+   "controls": [
+    {
+     "id": "mode",
+     "type": "select",
+     "default": "flat",
+     "options": [
+      "full",
+      "flat",
+      "zero"
+     ]
+    },
+    {
+     "id": "x",
+     "type": "range",
+     "default": 1,
+     "min": -3,
+     "max": 3,
+     "step": 1
+    },
+    {
+     "id": "y",
+     "type": "range",
+     "default": 1,
+     "min": -3,
+     "max": 3,
+     "step": 1
+    }
+   ],
+   "equation": "full A=[[1,1],[0,1]],flat A=[[1,1],[0,0]],zero A=0; rank2/1/0; nullity=2-rank; flat nullspace span(1,-1)",
+   "criterion": "輸出可到達方向數與消失的輸入方向一起呈現；Ax=0的集合就是零空間",
+   "examples": "flat v=(1,1)→(2,0),rank1,nullity1; v=(1,-1)→0; zero rank0,nullity2",
+   "boundary": "零矩陣；滿秩；rank+nullity=輸入維度n；列秩等於欄秩",
+   "source": "原文§3，零空間補充",
+   "author": "B"
+  },
+  {
+   "id": "determinant",
+   "type": "自由因果實驗",
+   "page": "determinant",
+   "controls": [
+    {
+     "id": "a",
+     "type": "range",
+     "default": 2,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "b",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "c",
+     "type": "range",
+     "default": 0,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "d",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    }
+   ],
+   "equation": "det=ad-bc; unit square image columns; inverse exists iff det!=0; inverse=1/det[[d,-b],[-c,a]]; fixed x=(1,1), y=A x, inverse y=x when possible",
+   "criterion": "面積=abs(det)，定向正負；零不可逆，反算不除零",
+   "examples": "default det2,output(3,1),inverse[[.5,-.5],[0,1]]；swap axes det-1；zero det0",
+   "boundary": "實2×2方陣；秩不足不能唯一倒帶；數值近零會敏感但不等於精確零",
+   "source": "原文§4,5",
+   "author": "B"
+  },
+  {
+   "id": "projection",
+   "type": "自由因果實驗",
+   "page": "projection",
+   "controls": [
+    {
+     "id": "theta",
+     "type": "range",
+     "default": 0,
+     "min": 0,
+     "max": 180,
+     "step": 15
+    },
+    {
+     "id": "x",
+     "type": "range",
+     "default": 3,
+     "min": -3,
+     "max": 3,
+     "step": 1
+    },
+    {
+     "id": "y",
+     "type": "range",
+     "default": 2,
+     "min": -3,
+     "max": 3,
+     "step": 1
+    }
+   ],
+   "equation": "u=(cosθ,sinθ),v=(x,y); dot=v·u; p=(v·u)u;r=v-p; r·u≈0",
+   "criterion": "有號投影係數可能負，殘差與直線垂直；θ=180同一投影直線",
+   "examples": "θ0,v(3,2)→p(3,0),r(0,2),dot3；θ90→p(0,2),dot2；θ180→same p,dot-3",
+   "boundary": "unit u neverzero；vzero；複數改共軛內積；正交不等於一般統計獨立",
+   "source": "原文§8",
+   "author": "C"
+  },
+  {
+   "id": "least",
+   "type": "自由因果實驗",
+   "page": "least-squares",
+   "controls": [
+    {
+     "id": "middle",
+     "type": "range",
+     "default": 2,
+     "min": -1,
+     "max": 5,
+     "step": 0.5
+    },
+    {
+     "id": "slope",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 3,
+     "step": 0.25
+    },
+    {
+     "id": "intercept",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 4,
+     "step": 0.25
+    }
+   ],
+   "equation": "data (0,1),(1,h),(2,3); model y=m x+c; e_i=y_i-(m x_i+c); SSE=sum e²; optimal m*=1,c*=(h+1)/3; show optimal line and coefficients separately (no fit button).",
+   "criterion": "殘差垂直線及平方小圖；顯示目前SSE與最佳線/最佳SSE；無fit按鈕避免range精確值契約衝突",
+   "examples": "h=2,m=1,c=1→SSE0,best c1,SSE0；h=3,m=1,c=1→SSE1,best c4/3,SSE2/3；h=2,m=0,c=0→SSE14",
+   "boundary": "三筆直線設計矩陣[1,x]滿欄秩，唯一最佳；h改變時目前旋鈕保持；最小平方總有解，滿欄秩才係數唯一；缺秩可用SVD偽逆取最小範數解",
+   "source": "原文§10",
+   "author": "C"
+  },
+  {
+   "id": "eigen",
+   "type": "自由因果實驗",
+   "page": "eigen",
+   "controls": [
+    {
+     "id": "mode",
+     "type": "select",
+     "default": "diagonal",
+     "options": [
+      "diagonal",
+      "shear",
+      "rotation"
+     ]
+    },
+    {
+     "id": "theta",
+     "type": "range",
+     "default": 45,
+     "min": 0,
+     "max": 345,
+     "step": 15
+    }
+   ],
+   "equation": "A diagonal=[[2,0],[0,.5]],shear=[[1,1],[0,1]],rotation=[[0,-1],[1,0]]; v=(cosθ,sinθ);w=A v; eigen iff cross(v,w)≈0; lambda=v·w when eigen",
+   "criterion": "原向量非零；同直線可反向或歸零；旋轉90度實數平面無實特徵向量",
+   "examples": "diag θ0 lambda2,θ90 lambda.5,θ45不是；shear θ0 lambda1；rotation alwaysno",
+   "boundary": "只研究實方向；複數特徵值仍可存在；本家族不涵蓋負/零λ但正文補例",
+   "source": "原文§6",
+   "author": "C"
+  },
+  {
+   "id": "diagonalization",
+   "type": "自由因果實驗",
+   "page": "diagonalization",
+   "controls": [
+    {
+     "id": "lambda1",
+     "type": "range",
+     "default": 2,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "lambda2",
+     "type": "range",
+     "default": 0.5,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "power",
+     "type": "range",
+     "default": 2,
+     "min": 0,
+     "max": 5,
+     "step": 1
+    }
+   ],
+   "equation": "P=[[1,1],[0,1]],D=diag(l1,l2);A=PDP^-1=[[l1,l2-l1],[0,l2]]; v=(2,1),coords=P^-1v=(1,1);A^k v=(l1^k+l2^k,l2^k); k0 defineA^0=I even λ0",
+   "criterion": "原座標→特徵座標→各自倍乘→換回；完整兩獨立方向才可對角化",
+   "examples": "default k2→(4.25,.25);k0→(2,1);l1=l2=0,k1→(0,0)",
+   "boundary": "0^0在k0以矩陣零次=I處理；重根可或不可對角化；shear Jordan反例正文；輸出最大64 autoScale",
+   "source": "原文§7",
+   "author": "D"
+  },
+  {
+   "id": "qr",
+   "type": "自由因果實驗",
+   "page": "qr",
+   "controls": [
+    {
+     "id": "tilt",
+     "type": "range",
+     "default": 1,
+     "min": -2,
+     "max": 2,
+     "step": 0.5
+    },
+    {
+     "id": "height",
+     "type": "range",
+     "default": 1,
+     "min": 0,
+     "max": 2,
+     "step": 0.5
+    }
+   ],
+   "equation": "a1=(1,0,0),a2=(t,h,0); if h>0 q1=(1,0,0),q2=(0,1,0),R=[[1,t],[0,h]],thinQ3×2; projection=(t,0,0),residual=(0,h,0);h=0 columnsdependent GramSchmidt cannotnormalize zero, thin Q completion possible butnotunique",
+   "criterion": "原欄→減影子→剩垂直部分→單位化；顯示Q^TQ=I2,Q Q^T≠I3；三維向量z=0畫xy切面",
+   "examples": "t1,h1→R[[1,1],[0,1]],rank2；t-2,h2→projection(-2,0,0),residual(0,2,0)；h0不可從殘差得到q2",
+   "boundary": "不宣稱QR不存在；滿欄秩教學算法失效但可另補正交向量；QR完整/精簡尺寸解說",
+   "source": "原文§9",
+   "author": "D"
+  },
+  {
+   "id": "svd",
+   "type": "自由因果實驗",
+   "page": "svd",
+   "controls": [
+    {
+     "id": "phi",
+     "type": "range",
+     "default": 30,
+     "min": -90,
+     "max": 90,
+     "step": 15
+    },
+    {
+     "id": "sigma2",
+     "type": "range",
+     "default": 1,
+     "min": 0,
+     "max": 2,
+     "step": 0.25
+    },
+    {
+     "id": "theta",
+     "type": "range",
+     "default": -30,
+     "min": -90,
+     "max": 90,
+     "step": 15
+    },
+    {
+     "id": "stage",
+     "type": "select",
+     "default": "output",
+     "options": [
+      "input",
+      "right",
+      "stretch",
+      "output"
+     ]
+    }
+   ],
+   "equation": "σ1=2,σ2=s; V=R(phi),U=R(theta);A=U diag(2,s) V^T; stages v=(1,1),V^Tv,ΣV^Tv,UΣV^Tv; unit circle→ellipse; singular values2,s; rank2 when s>0 else1",
+   "criterion": "先V^T轉輸入方向、再非負拉伸、再U轉輸出；不要把V和V^T順序寫反",
+   "examples": "phi0,theta0,s1→A diag(2,1),output(2,1)；phi30,theta-30,s1→output≈(2.549,-1.049)（QA重算）；s0 rank1",
+   "boundary": "s1 max2確保排序；s0塌成線，不能求逆；實矩陣皆有SVD，複數用共軛轉置；截斷是近似不是無損",
+   "source": "原文§9",
+   "author": "D"
+  },
+  {
+   "id": "engineering",
+   "type": "自由因果實驗",
+   "page": "engineering",
+   "controls": [
+    {
+     "id": "mode",
+     "type": "select",
+     "default": "decay",
+     "options": [
+      "decay",
+      "grow",
+      "flip",
+      "shear"
+     ]
+    },
+    {
+     "id": "steps",
+     "type": "range",
+     "default": 4,
+     "min": 0,
+     "max": 8,
+     "step": 1
+    }
+   ],
+   "equation": "x0=(1,1); discrete x_(k+1)=A x_k; decaydiag(.8,.5),growdiag(1.2,.5),flipdiag(-.8,.5),shear[[1,1],[0,1]]; closed form(.8^k,.5^k),(1.2^k,.5^k),((-.8)^k,.5^k),(1+k,1)",
+   "criterion": "同時軌跡與每步長度；離散所有eigen abs<1才漸近穩定；連續所有實部<0分開說",
+   "examples": "default decayk4=(.4096,.0625)；flipk1=(-.8,.5)；sheark4=(5,1) despite eigen1 repeated",
+   "boundary": "k0x0；λabsolute=1邊界不能只看值判定有界，要看Jordan；工程例理想無外力常係數；振動需Kφ=ω²Mφ、PCA先中心化",
+   "source": "原文工程應用,§6,7,9",
+   "author": "D"
+  }
+ ]
+}

@@ -11,7 +11,7 @@
 
 ## 最新進度
 
-- [interactive-study-site] 線性代數 ELI5 新站尚未開始；使用者指定先 compact，compact 後等使用者叫開始再啟動，延續授權與現況已備妥 → [compact 後交接](handoffs/2026-10-11-linear-algebra-after-compact.md)。
+- [interactive-study-site] 使用者已於 compact 後啟動線性代數 ELI5 新站；進行來源查核、規格與分工，保留舊站，完成後直接 push／部署 → [本輪交接](handoffs/2026-10-11-linear-algebra-eli5.md)。
 
 
 - [interactive-study-site] 第二批三課（電力電子／馬達驅動與控制／數位通訊）已上線；第三批候選 DSP／IC1／A2 待派 → 立案前先看 [workflows/interactive-study-site/README.md](workflows/interactive-study-site/README.md) 與 [decisions](workflows/decisions.md) 的譯名裁決。

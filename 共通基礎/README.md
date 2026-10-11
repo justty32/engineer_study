@@ -19,6 +19,8 @@
 
 圖解新站：[微積分小小實驗室（ELI5 圖解）](數學/圖解微積分/dist/index.html)——從變化與累積開始，操作圖形理解函數、極限、微分與積分；另建網站，保留原有工程數學課程。[開啟線上版](https://justty32.github.io/engineer_study/calculus-little-lab/)。
 
+圖解新站：[線性代數小小實驗室（ELI5 圖解）](數學/圖解線性代數/dist/index.html)——從箭頭與方格開始，操作圖形理解向量、矩陣、解方程式、投影與特徵方向。[開啟線上版](https://justty32.github.io/engineer_study/linear-algebra-little-lab/)。
+
 ## 物理
 
 | 筆記 | 主要內容 |

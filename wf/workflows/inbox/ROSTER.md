@@ -97,3 +97,14 @@
 - **答不出什麼**：跨領地改動、真人體驗與新題目授權。
 - **怎麼找我**：collaboration `/root/calculus_builder`、`/root/calculus_audit`、`/root/calculus_qa`、`/root/calculus_clarity`、`/root/calculus_publish`。
 - **訂閱主題**：無。
+
+### `linear-algebra-eli5-team`
+- **狀態**：現役
+- **我是誰**：Codex root 調度／Sites；builder 與子作者建置、audit 查核、qa 獨立驗收、clarity 教學抽審、publish 接線發布；沿用實際可用模型。
+- **團隊**：線性代數 ELI5（collaboration 通道）。
+- **上游**：使用者 → root；各子線向 root，章節作者向 builder。
+- **領地**：依 [本輪交接](../../handoffs/2026-10-11-linear-algebra-eli5.md)，產品檔單一作者。
+- **答得出什麼**：各自範圍的建置、教材查證、驗收與部署證據。
+- **答不出什麼**：真人體驗與未查證的數學結論。
+- **怎麼找我**：collaboration `/root`、`/root/linear_builder`、`/root/linear_audit`、`/root/linear_qa`、`/root/linear_clarity`、`/root/linear_publish`。
+- **訂閱主題**：無。
