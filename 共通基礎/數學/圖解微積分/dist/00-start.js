@@ -6,8 +6,8 @@
     const [m, b, x] = controls.map(control => Number(control.value));
     const y = m * x + b;
     const next = m * (x + 1) + b;
-    const { X, Y, axes } = Calc.plot({ xmin: -4.5, xmax: 4.5, ymin: -15, ymax: 15, x: 65, y: 35, w: 695, h: 315, xticks: [-4, -2, 0, 2, 4], yticks: [-12, -6, 0, 6, 12], xlabel: '輸入 x', ylabel: '輸出 y' });
-    byId('coordinate-drawing').innerHTML = `${axes}<path d="${Calc.path(t => m * t + b, -4, 4, X, Y)}" class="curve"/><path d="M${X(x)},${Y(y)}H${X(x + 1)}V${Y(next)}" fill="none" stroke="#b88a13" stroke-width="4"/><circle cx="${X(0)}" cy="${Y(b)}" r="5" fill="#203957"/><circle cx="${X(x)}" cy="${Y(y)}" r="7" fill="#f4db66" stroke="#203957" stroke-width="2"/><circle cx="${X(x + 1)}" cy="${Y(next)}" r="6" fill="#db7e69" stroke="#203957" stroke-width="2"/><text x="80" y="391" class="svg-label">● 黃點 (${Calc.fmt(x)}, ${Calc.fmt(y)})</text><text x="355" y="391" class="svg-label">向右 Δx = 1；垂直 Δy = ${Calc.fmt(m)}</text>`;
+    const { X, Y, axes } = Calc.plot({ xmin: -4.5, xmax: 4.5, ymin: -15, ymax: 15, x: 65, y: 35, w: 695, h: 280, xticks: [-4, -2, 0, 2, 4], yticks: [-12, -6, 0, 6, 12], xlabel: '輸入 x', ylabel: '輸出 y' });
+    byId('coordinate-drawing').innerHTML = `${axes}<path d="${Calc.path(t => m * t + b, -4, 4, X, Y)}" class="curve"/><path d="M${X(x)},${Y(y)}H${X(x + 1)}V${Y(next)}" fill="none" stroke="#b88a13" stroke-width="4"/><circle cx="${X(0)}" cy="${Y(b)}" r="5" fill="#203957"/><circle cx="${X(x)}" cy="${Y(y)}" r="7" fill="#f4db66" stroke="#203957" stroke-width="2"/><circle cx="${X(x + 1)}" cy="${Y(next)}" r="6" fill="#db7e69" stroke="#203957" stroke-width="2"/><text x="80" y="404" class="svg-label">● 黃點 (${Calc.fmt(x)}, ${Calc.fmt(y)})</text><text x="355" y="404" class="svg-label">向右 Δx = 1；垂直 Δy = ${Calc.fmt(m)}</text>`;
     ['slope', 'intercept', 'input'].forEach((id, i) => { byId(`${id}-value`).textContent = Calc.fmt([m, b, x][i]); });
     byId('rule-value').textContent = `y = ${Calc.fmt(m)}x ${b < 0 ? '−' : '+'} ${Calc.fmt(Math.abs(b))}`;
     byId('output-y').textContent = Calc.fmt(y);

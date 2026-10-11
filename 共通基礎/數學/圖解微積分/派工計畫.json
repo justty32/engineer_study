@@ -2,43 +2,153 @@
  "contract": "wf-table/1",
  "source": "BUILD-SPEC.md",
  "extracted": "2026-10-11",
- "link_columns": [],
+ "link_columns": [
+  "review_reference"
+ ],
  "columns": [
   "id",
   "owner",
   "scope",
-  "status"
+  "status",
+  "phase",
+  "review_reference"
  ],
  "rows": [
   {
    "id": "shell",
    "owner": "calculus_builder",
    "scope": "lab.css/shared.js/index.html/home.js/glossary.html/glossary.js/sources.html/規格",
-   "status": "已完成並停筆；數學與ELI5審核通過"
+   "status": "v1歷史記錄；不代表v2改版已驗收。已完成並停筆；數學與ELI5審核通過",
+   "phase": "v1歷史",
+   "review_reference": "驗收紀錄.md"
   },
   {
    "id": "foundation",
    "owner": "foundations",
    "scope": "00-start/limits/derivatives 各 HTML+JS",
-   "status": "已完成並停筆；數學與ELI5審核通過"
+   "status": "v1歷史記錄；不代表v2改版已驗收。已完成並停筆；數學與ELI5審核通過",
+   "phase": "v1歷史",
+   "review_reference": "驗收紀錄.md"
   },
   {
    "id": "differential",
    "owner": "differential",
    "scope": "rules/applications/engineering 各 HTML+JS",
-   "status": "已完成並停筆；數學與ELI5審核通過"
+   "status": "v1歷史記錄；不代表v2改版已驗收。已完成並停筆；數學與ELI5審核通過",
+   "phase": "v1歷史",
+   "review_reference": "驗收紀錄.md"
   },
   {
    "id": "integral",
    "owner": "integral",
    "scope": "integrals/fundamental/techniques 各 HTML+JS",
-   "status": "已完成並停筆；數學與ELI5審核通過"
+   "status": "v1歷史記錄；不代表v2改版已驗收。已完成並停筆；數學與ELI5審核通過",
+   "phase": "v1歷史",
+   "review_reference": "驗收紀錄.md"
   },
   {
    "id": "advanced",
    "owner": "advanced",
    "scope": "series/multivariable/multiple-integrals/vector-fields 各 HTML+JS",
-   "status": "已完成並停筆；數學與ELI5審核通過"
+   "status": "v1歷史記錄；不代表v2改版已驗收。已完成並停筆；數學與ELI5審核通過",
+   "phase": "v1歷史",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "visual-foundations",
+   "owner": "calculus_team/builder/foundations_author",
+   "scope": "dist/00-start.html、limits.html、derivatives.html、rules.html；僅HTML，其他檔禁止",
+   "status": "作者完成並停筆；整合版等待父隊發布，三審與人工項目見驗收紀錄",
+   "phase": "v2圖解改版",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "visual-builder",
+   "owner": "calculus_team/builder",
+   "scope": "規格、資料表、README、共用CSS/JS與全部章節JS；index/glossary/sources已整合；排除.openai與驗收紀錄",
+   "status": "作者完成並停筆；整合版等待父隊發布，三審與人工項目見驗收紀錄",
+   "phase": "v2圖解改版",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "visual-foundations_author",
+   "owner": "calculus_team/builder/foundations_author",
+   "scope": "僅dist/00-start,limits,derivatives,rules,elementary-functions,local-linear,charge-current,first-order的HTML，JS/CSS/json歸builder",
+   "status": "作者完成並停筆；整合版等待父隊發布，三審與人工項目見驗收紀錄",
+   "phase": "v2圖解改版",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "visual-accumulation_author",
+   "owner": "calculus_team/builder/accumulation_author",
+   "scope": "僅dist/applications,integrals,fundamental,techniques,series的HTML，JS/CSS/json歸builder；續4頁multivariable/multiple-integrals/coordinates/engineering HTML",
+   "status": "作者完成並停筆；整合版等待父隊發布，三審與人工項目見驗收紀錄",
+   "phase": "v2圖解改版",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "visual-fields_author",
+   "owner": "calculus_team/builder/fields_author",
+   "scope": "僅dist/vector-fields,line-integrals,potential,flux的HTML，JS/CSS/json歸builder；續div-curl/gauss-stokes HTML",
+   "status": "作者完成並停筆；整合版等待父隊發布，三審與人工項目見驗收紀錄",
+   "phase": "v2圖解改版",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "calculation-builder",
+   "owner": "calculus_team/builder",
+   "scope": "計算橋接規格/23課缺口表/共用樣式；不批量寫HTML；概念53檔manifest保留",
+   "status": "v3指定領地完成並停筆；獨立數學/教學/QA結果引用驗收紀錄；不以作者自查取代正式驗收",
+   "phase": "v3計算橋接",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "calculation-foundations-prototype",
+   "owner": "calculus_team/builder/foundations_author",
+   "scope": "僅dist/derivatives.html計算原型；不得改JS/CSS或其他頁",
+   "status": "v3指定領地完成並停筆；獨立數學/教學/QA結果引用驗收紀錄；不以作者自查取代正式驗收",
+   "phase": "v3計算橋接",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "calculation-foundations-first-order",
+   "owner": "calculus_team/builder/foundations_author",
+   "scope": "僅dist/first-order.html；RC＋RL可見完整實算；其他HTML/CSS/JS不改",
+   "status": "v3歷史失敗派工：舊stream中斷，first-order唯一寫權已移交第13列並完成；此列不代表當前未完成工作",
+   "phase": "v3計算橋接",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "calculation-rc-rl-fresh",
+   "owner": "calculus_team/builder/rc_rl_calculation_author",
+   "scope": "僅dist/first-order.html；由已停止的stream失敗作者明確移交，RC/RL各完整可見算例",
+   "status": "v3指定領地完成並停筆；獨立數學/教學/QA結果引用驗收紀錄；不以作者自查取代正式驗收",
+   "phase": "v3計算橋接",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "calculation-accumulation-representatives",
+   "owner": "calculus_team/builder/accumulation_calculation_author",
+   "scope": "9 HTML：integrals/fundamental代表，續applications/techniques/series/multivariable/multiple-integrals/coordinates/engineering；其餘不得改",
+   "status": "v3指定領地完成並停筆；獨立數學/教學/QA結果引用驗收紀錄；不以作者自查取代正式驗收",
+   "phase": "v3計算橋接",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "calculation-fields-six",
+   "owner": "calculus_team/builder/fields_calculation_author",
+   "scope": "僅vector-fields/line-integrals/potential/flux/div-curl/gauss-stokes六HTML，舊writer停止後明確移交",
+   "status": "v3指定領地完成並停筆；獨立數學/教學/QA結果引用驗收紀錄；不以作者自查取代正式驗收",
+   "phase": "v3計算橋接",
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "id": "calculation-foundations-six",
+   "owner": "calculus_team/builder/foundations_bridge_author",
+   "scope": "僅00-start/limits/elementary-functions/rules/local-linear/charge-current六HTML；不動已ready derivatives/first-order",
+   "status": "v3指定領地完成並停筆；獨立數學/教學/QA結果引用驗收紀錄；不以作者自查取代正式驗收",
+   "phase": "v3計算橋接",
+   "review_reference": "驗收紀錄.md"
   }
  ]
 }

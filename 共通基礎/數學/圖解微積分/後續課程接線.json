@@ -1,0 +1,32 @@
+{
+ "contract": "wf-table/1",
+ "source": "README.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "columns": [
+  "course",
+  "skills_taught",
+  "prerequisite_pages",
+  "outside_scope",
+  "entry_check",
+  "next_team_responsibility"
+ ],
+ "rows": [
+  {
+   "course": "電子學",
+   "skills_taught": "曲線斜率、弧度/指數/對數、工作點與小變化的局部線性估計、電流與通過電荷、初值與時間常數、理想儲能及被動符號。",
+   "prerequisite_pages": "[elementary-functions](dist/elementary-functions.html)、[rules](dist/rules.html)、[local-linear](dist/local-linear.html)、[charge-current](dist/charge-current.html)、[first-order](dist/first-order.html)、[engineering](dist/engineering.html)",
+   "outside_scope": "尚未教半導體載子與PN接面、完整二極體/BJT/MOS機制、偏壓設計、小訊號等效電路與回授。MIT二極體式只作局部近似的條件化銜接，不算已教整門電子學。",
+   "entry_check": "在f=x²的a=1工作點，輸入增0.1應能指出切線估1.2、真值1.21、誤差0.01；在同顆C2µF、t2s、v=t²V例能連出i8µA/p32µW/W16µJ，並說明電流流入正端。",
+   "next_team_responsibility": "另建圖解電子學課，不覆蓋舊課；以官方教材核對載子→PN→元件→偏壓→小訊號→放大與回授，每個新模型先畫真實機制與適用條件。完整高階頻率分析所需相量/Laplace/Fourier由工程數學隊接。"
+  },
+  {
+   "course": "電路學",
+   "skills_taught": "量與單位、輸入/輸出圖、時間導數與有向累積、被動符號、Q_pass與i的關係、區域存量的流入減流出、理想C/L條件、含初值的一階RC/RL。",
+   "prerequisite_pages": "[00-start](dist/00-start.html)、[derivatives](dist/derivatives.html)、[integrals](dist/integrals.html)、[fundamental](dist/fundamental.html)、[charge-current](dist/charge-current.html)、[first-order](dist/first-order.html)、[engineering](dist/engineering.html)",
+   "outside_scope": "尚未完整教拓樸、節點/支路/迴路、KCL/KVL列系統、節點電壓與迴路電流法、等效源、交流功率。二階RLC、完整相量、Laplace、Fourier由工程數學隊承擔數學骨架。",
+   "entry_check": "能區分截面有向通過帳Q_pass與區域存量q，說出dq/dt=流入−流出；理想1V源/R1kΩ/C1mF、v(0)=0，應能用τ1s在1s算v≈0.6321V並解釋剩餘壓差使斜率下降。",
+   "next_team_responsibility": "另建圖解電路學課，不覆蓋舊課；先教完整閉合回路、量測與方向，再以守恆列KCL/KVL、串並聯與等效、節點/迴路法、暫態與交流。RLC/相量等電路直覺可教，數學求解與工程數學隊接線。"
+  }
+ ]
+}

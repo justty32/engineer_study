@@ -1,0 +1,332 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "review_reference"
+ ],
+ "phase": "v2概念圖解歷史",
+ "scope_note": "本表的ready/hash屬概念版歷史證據；v3計算橋接當前版本及正式審查另見計算教學計畫與驗收紀錄，不覆寫概念基線。",
+ "columns": [
+  "page",
+  "question",
+  "visual_steps",
+  "owner",
+  "status",
+  "ready_hashes",
+  "review_reference"
+ ],
+ "rows": [
+  {
+   "page": "index",
+   "question": "兩種問題：此刻變多快？一路加多少？",
+   "visual_steps": "同一水箱在1秒與2秒的變化；對照累積水量與每秒流量",
+   "owner": "builder",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "index.html": "4d537afe5821f7dd81b8a306f1e79e6d0f005a2ccb21eb73ab6793547f29e86b",
+    "home.js": "21e872f1deb6bdda53f24dada3f9fc36c224162389a937904f30fe4635a48a51"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "00-start",
+   "question": "怎麼把兩分鐘、兩公升畫成一個點？",
+   "visual_steps": "空箱→每分鐘1 L→0/1/2分鐘表→(2,2)→每右1上1→規則",
+   "owner": "foundations_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "00-start.html": "d1a20b918c3cf20751d9abc93792eecd4f77b36a4ff36bdfc64eb97cbf6cf88f",
+    "00-start.js": "5c124dac22f871e4234fcc4a5732a8477a42806875bc3464a014315ab05cd9db"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "limits",
+   "question": "走近一個洞，會靠近哪個高度？",
+   "visual_steps": "左右腳步1±0.5→1±0.1→洞的高度2→孤立點3→跳躍反例",
+   "owner": "foundations_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "limits.html": "a29551b455f2cac0fcb2044bf6728b52485a58b6d10368861157a3b701ead2df",
+    "limits.js": "d57f38ae918c09e7c66d9aaf9d5302cbc79a2aff9efa9053f0ada1ef570d6787"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "derivatives",
+   "question": "一瞬間的速度，怎麼從兩次讀數找到？",
+   "visual_steps": "x²上的(1,1)→(1.5,2.25)→差值階梯→縮短間隔→左右夾近2→尖角",
+   "owner": "foundations_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "derivatives.html": "561df31928d567dfb49cd1d29b1814f0c862675a70aa0e8590e4b7e2cbc90af9",
+    "derivatives.js": "9ca5d774d1a161c4c68923893edfd9b598c9171c2f1babf5cb21356a9e7fc934"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "elementary-functions",
+   "question": "倍增、找回輸入、繞圓，為何畫出不同曲線？",
+   "visual_steps": "固定加量對照固定倍率→e作自然成長底數→ln倒著找輸入→單位圓弧長與弧度→投影高度sin→弧度微分條件",
+   "owner": "foundations_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "elementary-functions.html": "49f8b89422eccb1394fac22312906029b651a1808f5da3af3c2ab8cf94eb7bf3",
+    "elementary-functions.js": "8d279e57e3a7a8c7cf962744a2545500dfd92d3f169a07f96bb65655e9ddbdf1"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "rules",
+   "question": "兩台變化機器接起來，倍率怎麼傳？",
+   "visual_steps": "可數整數鏈式小例→內層x²→外層sin→同x=1的兩倍率→乘法不是分別微分相乘",
+   "owner": "foundations_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "rules.html": "4f4e3eb99c1d6cca55770ba191f4b466526dcadb90842de3bcc818c95daf34bb",
+    "rules.js": "691da77a77ed5a9737e474877fc7655d30440ff64a764f04cfcead95a5e5dfd3"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "local-linear",
+   "question": "彎曲的線，放大後可以先當直線嗎？",
+   "visual_steps": "平方點(1,1)→切線斜率2→右移0.1→估1.2→真1.21→誤差0.01→小訊號",
+   "owner": "foundations_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "local-linear.html": "c36b6f1f55fbb9690b39dd6a64d5ab6511259376a484757dcc9cd924f45d3659",
+    "local-linear.js": "3cf4ba54b3a1974bb453d4eab8490e98964f095311413fdcc3ac35627fd9b2fd"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "applications",
+   "question": "最低點一定是斜率0的地方嗎？",
+   "visual_steps": "(x−1)²的左降右升→x1底部→兩端比較→x³平但穿過→絕對值尖角",
+   "owner": "accumulation_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "applications.html": "dfab38241debe902dca66df1f1e51effc8c58f5b4ccfa49c3fae0378551fcda3",
+    "applications.js": "b7cd365d7a318bb125154b18bba9e05aecf9f6550e0c89b12eeb5572372276a1"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "integrals",
+   "question": "正的和負的累積，會怎麼抵消？",
+   "visual_steps": "f=x的−1到0負三角→0到1正三角→有號抵消0→實際面積1→小長條",
+   "owner": "accumulation_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "integrals.html": "2e42f8e0ed682e51aab63f5b11df66aa5bd14417da45e9387fb6fbf1bfab7dce",
+    "integrals.js": "9256cc9c897534c02d907a5826a5fe980e2e25ca6c00c998cff40be2b9ae9a04"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "fundamental",
+   "question": "累積量的斜率，為何就是當下流量？",
+   "visual_steps": "流量t→0到2三角面積2→加一小段寬h→新面積約2h→除h→斜率2",
+   "owner": "accumulation_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "fundamental.html": "3765894356433fb8b09ab740223511d351d25d4ab66560b357766ecde47ac6e8",
+    "fundamental.js": "c4dafee9c4ed883c32fb452e3e86a0b4136a415499f7263f40d93a3b7a320f8b"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "techniques",
+   "question": "看見乘起來的式子，怎麼把積分拆回去？",
+   "visual_steps": "內層x²→微小變化2x dx→換u也換端點→還原sin→乘積法則倒過來",
+   "owner": "accumulation_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "techniques.html": "59377b886b051a80e3d1774d9f57b5cad33c3750d6604080d8056e69f831b524",
+    "techniques.js": "f56e79953bced4caf85e9a99420d0a35e125488101af126bcbfc26c03f358822"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "series",
+   "question": "很多小積木，真的能拼成原來曲線嗎？",
+   "visual_steps": "e^1的1/1/1/2/1/6/1/24→逐項高度→誤差→幾何0.5收斂→x1不收斂",
+   "owner": "accumulation_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "series.html": "9b77be6741f2c075e902e2eb5bf27ee119a1b4748c057d74ed551bb31ee3ecc1",
+    "series.js": "a8489d8452b8b082dc35a743de4cfb6bb64e4243cdcfb00aba5b826f13ac8e47"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "charge-current",
+   "question": "電流表讀的，是存了多少，還是每秒通過多少？",
+   "visual_steps": "指定截面方向→Q=t²mC讀t2累積4→t2.5累積6.25→平均4.5mA→縮短間隔→瞬時4mA→通過量與存量",
+   "owner": "foundations_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "charge-current.html": "c5246e982efe19aa79192fd901ee039cd7204104c2d967f04d49781d413778ab",
+    "charge-current.js": "495fbfb78e22a2ad760520bae06be827edaa555dbd281b2a470356ceabade8ea"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "first-order",
+   "question": "電容充電，為何越接近目標越慢？",
+   "visual_steps": "1V源與RC回路→電阻壓差→初始斜率→一個τ到63.2%→RC與RL同一方程→連續初值",
+   "owner": "foundations_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "first-order.html": "da5e578fa01bf5316bd5fd60fe8de2cceb5df705791b69ea18aa62ca5d085671",
+    "first-order.js": "cd2e4a675a12424feca8ddcd8ff4b0ff69a878b76c09a74c1982d35b23554b4e"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "multivariable",
+   "question": "一張地形圖，向東和向北各爬多快？",
+   "visual_steps": "點(1,1)高2→固定y看x切片→固定x看y切片→兩偏導2→向量(2,2)→方向內積",
+   "owner": "accumulation_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "multivariable.html": "c190f32b5bf0b3a81aa01370e6f267c8dc9c4b47cb79388b8df89d1f85f81783",
+    "multivariable.js": "76fb85117cbb7039ab941bd5b6ef83efa67955beb0a9bfaec15e433d70374d8f"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "multiple-integrals",
+   "question": "每小格密度不同，怎麼算整片有多重？",
+   "visual_steps": "2×2板→分4格→每格中點密度→密度乘面積→加到8kg→一般近似",
+   "owner": "accumulation_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "multiple-integrals.html": "95e1cef88b7e67e2f0634ce8563d2e262af9534f248ce792162506dc92493e91",
+    "multiple-integrals.js": "75f7646c9f60de0e174f3458bdf053006fdbef0a042cdc6d837466079e6e327a"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "coordinates",
+   "question": "圓環切成扇形，為何面積多一個半徑？",
+   "visual_steps": "同角度內外弧不同長→弧長rΔθ→小扇格rΔrΔθ→極座標→圓柱/球座標體積因子",
+   "owner": "accumulation_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "coordinates.html": "af9d5ff632311bd6adb5834e78590a6b0314bc6a23aea4a502969f21ebd6e668",
+    "coordinates.js": "33a725d9ba961ff46dc8187521269d732131f09097299ba98ddabcb41eb572c6"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "vector-fields",
+   "question": "每個位置一支箭頭，到底告訴我們什麼？",
+   "visual_steps": "單點位置與箭頭分開→(1,0)/(0,1)取樣→來源/旋轉/均勻三場→法向與切向",
+   "owner": "fields_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "vector-fields.html": "54211aec1ec2bfe4b2262be5216fb55236157a8670bb487fcc69ea5c966f080d",
+    "vector-fields.js": "e79700b84cd8e677963f332ed8288f91364a5e0ca1e2e2db25228a3ad6f0ac43"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "line-integrals",
+   "question": "沿路走一小段，場幫忙推了多少？",
+   "visual_steps": "均勻場(2,0)→水平段功2→垂直段0→折線總2→反向−2→電位負號與靜電條件",
+   "owner": "fields_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "line-integrals.html": "74272d0152757323f23e659b92d9d37cf720eb7a8299d3f95c85423bce88a4c7",
+    "line-integrals.js": "f5bc2b946ff553d03fcbebe2cc7722a163a2fb75a9711a123af9d1632a9a4883"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "potential",
+   "question": "場向右推，電位為何往右降？",
+   "visual_steps": "先教每單位電荷的能量→E右2→右走1做功2J/C→電位少2V→反向→靜電與感應電場限制",
+   "owner": "fields_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "potential.html": "6930a4e6068072300678adba97aea67a72fbd2b35364edcf312c5a59847aa086",
+    "potential.js": "85d204ebaabbc313f4502da2d5999c871c2e36e13bd7fa0897561567ab7777b9"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "flux",
+   "question": "穿過一張面的是多少，為何傾斜會變少？",
+   "visual_steps": "均勻場2→面積3→正對6→傾斜60°得3→翻面−3→曲面分小片→開閉曲面",
+   "owner": "fields_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "flux.html": "b56c278602a74a7bfb92258dc244f95408b30f63c6b2852fbfd10b73341a57bf",
+    "flux.js": "940886a6de020e2959d9ea98e779f8159a8ec6b445d39a150cb80b155daeff10"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "div-curl",
+   "question": "小盒子漏出多少？小槳輪會怎麼轉？",
+   "visual_steps": "均勻箭頭穿入穿出→F=(x,y)淨外流→除面積→旋轉場局部環流→除面積→零值不等於零場",
+   "owner": "fields_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "div-curl.html": "f2f7044efb1b8b6921017cc6e716f1141da4dd43f6eb25d8507be09e65c2f889",
+    "div-curl.js": "43bc93372d668edd400b3a360c93fb42fad864ce3d00de047fb13a7af7cb0da6"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "gauss-stokes",
+   "question": "為何只看邊界，有時就知道裡面的總和？",
+   "visual_steps": "兩小盒內壁抵消→F=(x,y,z)單位立方體三正向面各1合3→散度3乘體積1→小環內邊抵消→F=(-y,x,0)單位圓2π→旋度2乘面積π→方向與奇點條件",
+   "owner": "fields_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "gauss-stokes.html": "ce8d0d6848f21974db72b2d3845114476b7eb449591f27808a3e0d53d56938eb",
+    "gauss-stokes.js": "6d739ab92bac5044d2972eb0d0571401f977633ddd0c7fbabf425da0a0f76023"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "engineering",
+   "question": "把數學接回三條工程路，先帶走哪些工具？",
+   "visual_steps": "電容v=t²→i=2Ct→p=vi→積分儲能→RC到電路→局部線性化到電子→場積分到電磁",
+   "owner": "accumulation_author",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "engineering.html": "82e8df390a05d6dfdc2f29bd06dd2cdabf1bf191342572b9ee94bfbde94c529d",
+    "engineering.js": "036f1a111e537877ae5c1d2b758b1fc7861101d7d28a3eae96c66881500c897d"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "glossary",
+   "question": "遇到符號，回來把意思接上圖。",
+   "visual_steps": "按變化/累積/多變數/工程回查，不先背術語",
+   "owner": "builder",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "glossary.html": "9f15ab2ff3dfdde2a4a0dac6ee750e8aafc9d984300973b01a7f995ea6133f06",
+    "glossary.js": "1c9da2f04ffc9e14906ce1a5972b88472da23737ace8bbf2c1530e2bbd4cdac1"
+   },
+   "review_reference": "驗收紀錄.md"
+  },
+  {
+   "page": "sources",
+   "question": "這些圖根據什麼教材？在哪些條件下成立？",
+   "visual_steps": "逐課教材對照與簡化模型，不以連結數證明正確",
+   "owner": "builder",
+   "status": "作者完成並停筆；獨立數學、教學與技術驗收及待人工項目以驗收紀錄為準",
+   "ready_hashes": {
+    "sources.html": "0c03755fd65828e71d1c6e9fc9d6dbd5d4950e6ad9c782dc9ea021fc157306f8"
+   },
+   "review_reference": "驗收紀錄.md"
+  }
+ ]
+}

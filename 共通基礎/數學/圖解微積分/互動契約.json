@@ -86,10 +86,10 @@
    "type": "參數實驗",
    "page": "engineering.html",
    "controls": "capacitance:range 1..5 step1 default2; time:range 0..4 step0.1 default2",
-   "equation": "假想電容電壓v=t² V；C以µF，i=C dv/dt=2Ct µA；獨立功率例P(t)=2t W，0至t能量=t² J",
+   "equation": "同一理想定值電容；t以秒數，v=t² V，C以µF，i=2Ct µA，p=vi=2Ct³ µW，W=½Ct⁴ µJ，W(0)=0",
    "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
-   "examples": "C2,t2:v4V,i8µA；t0:i0；C5,t4:i40µA；能量t2=4J",
-   "boundary": "理想定值電容，時間以秒，電容模型與功率例是兩個不同教學系統",
+   "examples": "C2,t2:v4V,i8µA,p32µW,W16µJ；t0全0；C5,t4:i40µA,p640µW,W640µJ",
+   "boundary": "被動符號電流進正端；理想定值電容；v=(1V/s²)t²，有限電流下電壓連續；能量為同一電容",
    "source": "本地01-微積分.md相應主題；sources.html官方教材"
   },
   {
@@ -152,7 +152,7 @@
    "type": "參數實驗",
    "page": "multiple-integrals.html",
    "controls": "width:range 0..3 step0.25 default2; height:range 0..3 step0.25 default2; cells:range 2..12 step2 default4",
-   "equation": "密度rho=x+y kg/m²，矩形0..a×0..b；質量∫∫rho dA=ab(a+b)/2；中點和對本線性密度恰好精確",
+   "equation": "面密度ρ=(1 kg/m³)(x+y)，x/y為長度；程式取x/y的公尺數值算ρ的kg/m²數值。矩形0..a×0..b，a/b以m；質量∫∫ρdA=ab(a+b)/2 kg；中點和對本線性密度恰精確",
    "criterion": "操作同步改圖、數值與why；reset回預設；數值符合計算式",
    "examples": "a2,b2:8kg；a0:0；a3,b1:6kg",
    "boundary": "此例中點和恰精確，不表示所有函數如此；負密度不適合質量例，這裡非負",
@@ -175,10 +175,120 @@
    "page": "glossary.html",
    "controls": "term-search:search;default空字串;接受中文/英文;清空還原",
    "equation": "將query去頭尾空白、轉小寫，逐筆檢查全文是否包含query",
-   "criterion": "空query顯示32條；未命中0條且顯示提示；用textContent過濾不執行HTML",
-   "examples": "gradient命中梯度1條；找不到的字串0條；清空32條",
+   "criterion": "空query顯示50條；未命中0條且顯示提示；用textContent過濾不執行HTML",
+   "examples": "gradient命中梯度1條；找不到的字串0條；清空50條",
    "boundary": "空輸入與未命中；大小寫不敏感",
-   "source": "本站32條概念解釋與對應教學頁"
+   "source": "本站50條概念解釋與對應教學頁"
+  },
+  {
+   "id": "elementary-functions",
+   "type": "參數實驗",
+   "page": "elementary-functions.html",
+   "controls": "function:select exp,log,sin default exp; input:range −2..2 step0.1 default1",
+   "equation": "exp=e^x, slope=e^x；log=lnx,slope1/x且x>0；sinx,slopecosx，弧度",
+   "criterion": "控制器即時更新SVG/三readout/why；reset完整回預設；readout-a/b/c依本列example順序與JS定義。通用DOM main-drawing/main-desc/feedback/reset；數字control可有同id-value output。",
+   "examples": "exp x1:value2.7182818 slope2.7182818；log x1:0,1；x0/負數log未定義；sin0:0,1",
+   "boundary": "不把度直接代入三角微分；ln僅正實數",
+   "source": "教材與銜接索引.json；sources.html；主題：自然指數與對數、弧度"
+  },
+  {
+   "id": "local-linear",
+   "type": "參數實驗",
+   "page": "local-linear.html",
+   "controls": "base:range0..2 step0.1 default1; change:range−1..1 step0.1 default0.1",
+   "equation": "f=x²；在a用L(a+h)=a²+2ah；真值(a+h)²；真值−近似=h²",
+   "criterion": "控制器即時更新SVG/三readout/why；reset完整回預設；readout-a/b/c依本列example順序與JS定義。通用DOM main-drawing/main-desc/feedback/reset；數字control可有同id-value output。",
+   "examples": "a1 h0.1:1.2,1.21,0.01；a0 h1:0,1,1；h0誤差0",
+   "boundary": "本例精確誤差h²；小訊號近似需限制改變量與工作點",
+   "source": "教材與銜接索引.json；sources.html；主題：局部線性化"
+  },
+  {
+   "id": "charge-current",
+   "type": "參數實驗",
+   "page": "charge-current.html",
+   "controls": "time:range0..4 step0.1 default2; interval:range0.1..1 step0.1 default0.5",
+   "equation": "沿正方向累積通過截面Q=t² mC；瞬時i=2t mA；t到t+h平均=2t+h mA",
+   "criterion": "控制器即時更新SVG/三readout/why；reset完整回預設；readout-a/b/c依本列example順序與JS定義。通用DOM main-drawing/main-desc/feedback/reset；數字control可有同id-value output。",
+   "examples": "t2,h0.5:Q4mC,i4mA,平均4.5mA；t0,h1:Q0,i0,平均1",
+   "boundary": "Q為有向通過帳；區域存量變化=流入−流出",
+   "source": "教材與銜接索引.json；sources.html；主題：電荷與電流"
+  },
+  {
+   "id": "first-order",
+   "type": "參數實驗",
+   "page": "first-order.html",
+   "controls": "circuit:select rc,rl default rc; tau:range0.5..3 step0.5 default1; time:range0..5 step0.1 default1; initial:range0..1 step0.1 default0",
+   "equation": "y=1+(y0−1)e^(−t/τ)；dy/dt=(1−y)/τ；RC:R1kΩ,C=τmF；RL:R1Ω,L=τH；source1V",
+   "criterion": "控制器即時更新SVG/三readout/why；reset完整回預設；readout-a/b/c依本列example順序與JS定義。通用DOM main-drawing/main-desc/feedback/reset；數字control可有同id-value output。",
+   "examples": "τ1,t1,y0=0:y0.63212056,slope0.36787944；t0:y=y0；y0=1恆1斜率0",
+   "boundary": "理想定值元件，階躍後固定源；有限電流下電容電壓連續，有限電壓下電感電流連續；本模型不含理想脈衝，初值必須指定；RC狀態V與RL狀態A各自以1V/1A為目標",
+   "source": "教材與銜接索引.json；sources.html；主題：一階RC/RL"
+  },
+  {
+   "id": "coordinates",
+   "type": "參數實驗",
+   "page": "coordinates.html",
+   "controls": "radius:range1..3 step0.5 default1; width:range0.1..1 step0.1 default0.1; angle:range0.1..1 step0.1 default0.1",
+   "equation": "近似rΔrΔθ；精確((r+Δr)²−r²)Δθ/2；角以弧度",
+   "criterion": "控制器即時更新SVG/三readout/why；reset完整回預設；readout-a/b/c依本列example順序與JS定義。通用DOM main-drawing/main-desc/feedback/reset；數字control可有同id-value output。",
+   "examples": "r1,dr0.1,dtheta0.1:近似0.01,真0.0105,差0.0005；r2:0.02,0.0205",
+   "boundary": "小扇形外側較長，近似非精確；球座標採θ極角φ方位",
+   "source": "教材與銜接索引.json；sources.html；主題：座標面積因子"
+  },
+  {
+   "id": "line-integrals",
+   "type": "參數實驗",
+   "page": "line-integrals.html",
+   "controls": "field:select uniform,rotation default uniform; path:select east-north,north-east,straight default east-north; end-x/end-y:range0..3 step0.5 default1",
+   "equation": "無量綱uniform F=(2,0)所有路徑2a；rotation F=(-y,x)先右後上ab、先上後右−ab、直線0",
+   "criterion": "控制器即時更新SVG/三readout/why；reset完整回預設；readout-a/b/c依本列example順序與JS定義。通用DOM main-drawing/main-desc/feedback/reset；數字control可有同id-value output。",
+   "examples": "a=b=1:uniform2；rotation1/−1/0；a或b為0則rotation0",
+   "boundary": "起點(0,0)終點(a,b)，分片光滑路徑，讀者先知道點積",
+   "source": "教材與銜接索引.json；sources.html；主題：向量線積分"
+  },
+  {
+   "id": "potential",
+   "type": "參數實驗",
+   "page": "potential.html",
+   "controls": "position:range−2..2 step0.5 default1; charge:range−2..2 step0.5 default1",
+   "equation": "靜電E=(2,0,0)V/m，V0=0，ΔV=−2x V；q單位nC，W_field=2xq nJ，ΔU=−2xq",
+   "criterion": "控制器即時更新SVG/三readout/why；reset完整回預設；readout-a/b/c依本列example順序與JS定義。通用DOM main-drawing/main-desc/feedback/reset；數字control可有同id-value output。",
+   "examples": "x1,q1:−2V,2nJ,−2nJ；q0:能量0但ΔV不變；x−1:+2V,−2nJ,+2nJ",
+   "boundary": "靜電保守場；電位差不依測試電荷；一般時變感應電場不可套靜電純量模型",
+   "source": "教材與銜接索引.json；sources.html；主題：電位與負梯度"
+  },
+  {
+   "id": "flux",
+   "type": "參數實驗",
+   "page": "flux.html",
+   "controls": "strength:range0..3 step0.5 default2; area:range0..4 step0.5 default3; angle:range0..180 step15 default0",
+   "equation": "均勻場與平面，通量=FAcosθ；θ場與所選法向夾角",
+   "criterion": "控制器即時更新SVG/三readout/why；reset完整回預設；readout-a/b/c依本列example順序與JS定義。通用DOM main-drawing/main-desc/feedback/reset；數字control可有同id-value output。",
+   "examples": "F2,A3,θ0:6；θ60:3；θ90:0；θ180:−6；A0:0",
+   "boundary": "開曲面也有通量；曲面一般要逐點積分；法向定向",
+   "source": "教材與銜接索引.json；sources.html；主題：曲面通量"
+  },
+  {
+   "id": "div-curl",
+   "type": "參數實驗",
+   "page": "div-curl.html",
+   "controls": "field:select source,rotation,uniform defaultsource; half-width:range0.25..1 step0.25 default0.5",
+   "equation": "正方形[−h,h]²，面積4h²；source F=(x,y)div2/curl0，flux8h²/circ0；rotation F=(−y,x)div0/curl2，flux0/circ8h²；uniform F=(1,0)兩者0",
+   "criterion": "控制器即時更新SVG/三readout/why；reset完整回預設；readout-a/b/c依本列example順序與JS定義。通用DOM main-drawing/main-desc/feedback/reset；數字control可有同id-value output。",
+   "examples": "h0.5:area1；source flux2,div2,curl0；rotationcirc2,curl2；uniform兩者0但場非零",
+   "boundary": "本線性場局部值恆定，有限區平均恰等局部；一般需極限",
+   "source": "教材與銜接索引.json；sources.html；主題：散度與旋度"
+  },
+  {
+   "id": "gauss-stokes",
+   "type": "參數實驗",
+   "page": "gauss-stokes.html",
+   "controls": "theorem:select gauss,stokes defaultgauss; size:range0.5..2 step0.5 default1",
+   "equation": "Gauss:F=(x,y,z)，[0,a]³向外通量3a³=div3×volumea³；Stokes:F=(−y,x,0)，向上圓盤半徑a，逆時針環流2πa²=curl_z2×areaπa²",
+   "criterion": "控制器即時更新SVG/三readout/why；reset完整回預設；readout-a/b/c依本列example順序與JS定義。通用DOM main-drawing/main-desc/feedback/reset；數字control可有同id-value output。",
+   "examples": "a1:Gauss3=3；Stokes2π=2π；a2:Gauss24,Stokes8π",
+   "boundary": "場在整個適用區域開鄰域C¹，分片光滑、定向，Gauss閉面向外；Stokes邊界/法向右手一致，不跨奇點",
+   "source": "教材與銜接索引.json；sources.html；主題：Gauss與Stokes"
   }
  ]
 }
