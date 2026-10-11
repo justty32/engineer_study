@@ -1,5 +1,7 @@
 # 圖解電磁學
 
+[GitHub Pages 公開版](https://justty32.github.io/engineer_study/electromagnetics-little-lab/)｜[驗收與部署證據](驗收紀錄.md)
+
 以三冊電磁學筆記全部19章為骨架，28教學頁依序建立電荷、向量與微積分、靜電磁場、波、介面、傳輸線、波導與天線的模型。每頁有解釋圖、可跟做主例、分步提示近題、即時參數實驗及量測限制。
 
 <!-- wf-nav -->

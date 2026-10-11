@@ -45,3 +45,14 @@
 - **答不出什麼**：真人是否學會、其他隊進度或共享發布時機。
 - **怎麼找我**：collaboration `/root/electronics_team`。
 - **訂閱主題**：無。
+
+### `electromagnetics-visual-team`
+- **狀態**：已收線（2026-10-11，GitHub 部署完成）
+- **我是誰**：electromagnetics_team 負責建置與驗收；連線中斷後由 electromagnetics_close 封版，均用實際繼承模型。
+- **團隊**：圖解電磁學；含後代上限 11，另留 root／publisher 各一槽。
+- **上游**：隊長對 root；各子線對隊長。
+- **領地**：`電機/02-電機核心/圖解電磁學/`，以及同層 `08-電磁學-上.md`、`08-電磁學-中.md`、`08-電磁學-下.md` 官方確證的小修與獨立複核；唯一交接 [電磁學交接](../../handoffs/done/2026-10-11-electromagnetics-visual.md)。
+- **答得出什麼**：公式圖解、逐行計算、模型條件、近題詳解及來源／三線證據。
+- **答不出什麼**：真人理解與操作效果、其他站修改或共享發布時機。
+- **怎麼找我**：collaboration 原隊長 `/root/electromagnetics_team`；最後封版 `/root/electromagnetics_close`。
+- **訂閱主題**：無。
