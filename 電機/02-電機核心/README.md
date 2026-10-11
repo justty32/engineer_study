@@ -32,6 +32,7 @@
 | [電子學](電子學-互動課程/index.html) | 07 | <https://justty32.github.io/engineer_study/electronics/> |
 | [圖解電子學：模型條件與完整演算](圖解電子學/dist/index.html) | 07 | <https://justty32.github.io/engineer_study/electronics-little-lab/> |
 | [電磁學](電磁學-互動課程/index.html) | 08 | <https://justty32.github.io/engineer_study/electromagnetics/> |
+| [圖解電磁學：方向、公式與完整演算](圖解電磁學/dist/index.html) | 08 | <https://justty32.github.io/engineer_study/electromagnetics-little-lab/> |
 | [信號與系統](信號與系統-互動課程/index.html) | 09 | <https://justty32.github.io/engineer_study/signals-systems/> |
 | [邏輯設計](邏輯設計-互動課程/index.html) | 10 | <https://justty32.github.io/engineer_study/logic-design/> |
 | [微處理機與匯流排](微處理機與匯流排-互動課程/index.html) | 11 | <https://justty32.github.io/engineer_study/microprocessors/> |

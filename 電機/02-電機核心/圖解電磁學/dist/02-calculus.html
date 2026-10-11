@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>微積分、通量與場的短橋｜圖解電磁學</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="lab.css">
+<script src="app.js" defer></script>
+</head>
+<body data-page="02-calculus">
+<a class="skip-link" href="#main-content">跳到課程內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">來源</a></nav></header>
+<div class="site-layout">
+<aside class="course-nav" aria-label="課程導覽"><a href="index.html">全部課程</a><a href="02-calculus.html" aria-current="page">02 微積分、通量與場的短橋</a><a href="03-coulomb.html">下一章：庫侖定律與疊加</a></aside>
+<main id="main-content">
+<header class="lesson-head">
+<p class="eyebrow">02 ／ 從小片加總到場的局部變化</p>
+<h1>微積分、通量與場的短橋</h1>
+<p class="lead">電場越往右越強。一個長 0.5 m、截面積 0.02 m² 的盒子，右面流出的電通量比左面多多少？這個差額，如何和盒子內每一點的「散度」相等？</p>
+<p class="prereq">先讀<a href="01-vectors.html">向量、座標與投影</a>，會用點積取法向分量即可。本章從差商和小片加總開始，不要求事先熟記微積分。</p>
+</header>
+<section id="understand">
+<h2>先畫面與方向，再談積分符號</h2>
+<p>本章固定場 E = ax x̂，其中 a = 100 V/m²，x 以 m 計。a 是每往 +x 走一公尺，E<sub>x</sub> 增加多少的比例係數。例：x = 0 時 E = 0；x = 0.5 m 時 E = 50 x̂ V/m。場有空間變化，但此例不隨時間改變。</p>
+<figure>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 640 310" role="img" aria-labelledby="box-title box-desc" font-size="16">
+<title id="box-title">線性增加的電場穿過封閉盒子</title>
+<desc id="box-desc">盒子的左面位於 x 等於零，向外法線朝負 x，當地場為零；右面位於 x 等於零點五公尺，法線與五十伏特每公尺電場都朝正 x。四個側面的電場沿面切向，通量為零。</desc>
+<defs><marker id="box-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+<g stroke="currentColor" fill="none" stroke-width="2"><path d="M140 105H405V240H140ZM140 105L195 60H460V195L405 240M405 105L460 60M195 60V195H460M140 240L195 195"/><path d="M255 165H305" stroke-width="3" marker-end="url(#box-arrow)"/><path d="M405 165H505" stroke-width="3" marker-end="url(#box-arrow)"/><path d="M140 120H75" stroke-dasharray="5 4" marker-end="url(#box-arrow)"/><path d="M460 85H525" stroke-dasharray="5 4" marker-end="url(#box-arrow)"/><path d="M140 268H405"/><path d="M560 250H615" marker-end="url(#box-arrow)"/></g>
+<g fill="currentColor"><text x="45" y="105">n 左 = −x̂</text><text x="470" y="64">n 右 = +x̂</text><text x="52" y="225">E 左 = 0</text><text x="455" y="155">E 右 = 50 V/m</text><text x="223" y="292">L = 0.5 m</text><text x="211" y="40">左右面積 A = 0.02 m²</text><text x="551" y="280">+x</text></g>
+</svg>
+</div>
+<figcaption>實線場箭頭隨 x 增大；虛線箭頭是向外法線，僅表示方向。盒子形狀為透視示意，不按實際尺寸比例。</figcaption>
+</figure>
+<p>積分（integral）把很多微小貢獻相加。路徑切成小段 dℓ，面切成小片 dS，體積切成小盒 d𝒱。「d」提醒我們取越來越細的片段；在直角座標下 dℓ = x̂ dx + ŷ dy + ẑ dz，dS = n̂ dS，d𝒱 = dx dy dz。n̂ 是選定的單位法線；封閉面一律取向外。此處用 𝒱 表體積，避免與電位 V 混淆。</p>
+<h3>差商：先算兩點差，再把間距縮小</h3>
+<p>導數（derivative）描述某點附近的變化率。對函數 f(x)，先取間距 h，差商為 [f(x+h) − f(x)]/h，再令 h 趨近 0。若極限存在，就記為 df/dx；h 不能一開始就代成零。偏導數（partial derivative）∂ 則是只改一個座標，其他座標保持不變。</p>
+<p>用本章場檢查：E<sub>x</sub>(x+h) − E<sub>x</sub>(x) = a(x+h) − ax = ah，除以 h 得 a。因此 dE<sub>x</sub>/dx = a = 100 V/m²。線性場的差商在任意非零間距都相同，所以極限也相同。導數的單位是原量除以位置單位，即 (V/m)/m。</p>
+<h3>線積分：沿路加總，算出的單位是伏特</h3>
+<p>沿 +x 從 0 走到 L，小段貢獻 E · dℓ = ax dx。把長度分成 N 段，每段寬 Δx = L/N，在段內取 x<sub>i</sub>，先加 Σ ax<sub>i</sub>Δx，再令段寬趨近零。這就是 ∫<sub>0</sub><sup>L</sup> ax dx。因為 a 是常數，而 x²/2 的導數是 x，可用反導函數 ax²/2 計算上下端之差：</p>
+<div class="equation">∫<sub>0</sub><sup>L</sup> E · dℓ = [ax²/2]<sub>0</sub><sup>L</sup> = aL²/2<br>= (100 V/m²)(0.5 m)²/2 = 12.5 V。</div>
+<p>也可把 E<sub>x</sub> 對 x 的圖視為三角形：底 0.5 m、高 50 V/m，面積為 12.5 V。這裡「圖下面積」的單位由兩軸相乘決定，並非實際幾何面積 m²。若要加總體內電荷，則把每小盒電荷密度 ρ<sub>v</sub>（C/m³）乘 d𝒱，再積分；均勻 ρ<sub>v</sub> 時便得到 Q = ρ<sub>v</sub> × 體積，單位 C。</p>
+<h3>梯度：把電位在各方向的斜率組成箭頭</h3>
+<p>梯度（gradient）∇V = x̂ ∂V/∂x + ŷ ∂V/∂y + ẑ ∂V/∂z，把純量電位的空間斜率組成向量，指向電位上升最快的方向。靜電場沿電位下降方向，E = −∇V。為看清負號，取 V(x) = V<sub>0</sub> − ax²/2，V<sub>0</sub> = 10 V：</p>
+<div class="equation">[V(x+h) − V(x)]/h<br>= −a[(x+h)² − x²]/(2h)<br>= −a(2xh + h²)/(2h) = −ax − ah/2。<br>h → 0：dV/dx = −ax；E<sub>x</sub> = −dV/dx = ax。</div>
+<p>在 x = 0.5 m，電位斜率 −50 V/m，電場 +50 V/m。V(0) = 10 V，V(0.5 m) = 10 V − 12.5 V = −2.5 V。加上任意相同常數 V<sub>0</sub> 都不改變斜率，因此電位零點的選擇不改變 E。</p>
+<p><strong>梯度線積分基本定理（gradient theorem）</strong>說明：對沿路可微、單值的純量 V，把 ∇V 沿路積分，得到終點減起點的電位差。</p>
+<p class="equation">∫<sub>P</sub><sup>Q</sup> ∇V · dℓ = V(Q) − V(P)；靜電下 ∫<sub>P</sub><sup>Q</sup> E · dℓ = V(P) − V(Q)。</p>
+<p>本例右式是 10 V − (−2.5 V) = 12.5 V，與剛才逐段加總相同。起終點重合時為零，這是靜電場繞閉路不做淨功的表達。若有時變磁通，總電場未必能只用 −∇V 描述，不能把這個靜電結論直接套過去。</p>
+<h3>通量與散度：穿過邊界與體內局部淨流出</h3>
+<p>通量（flux）Φ = ∫<sub>S</sub> E · dS，是法向電場乘面積後加總。平面上若 E 均勻，Φ = EA cos α，α 是場與法線的夾角；這直接來自點積。順法線為正，逆法線為負，沿面切向為零。E 的通量單位是 (V/m)m² = V·m，與上一段線積分的 V 不同。</p>
+<p>散度（divergence）描述每單位體積的局部淨向外通量，是向量變純量：</p>
+<p class="equation">∇ · E = ∂E<sub>x</sub>/∂x + ∂E<sub>y</sub>/∂y + ∂E<sub>z</sub>/∂z = a + 0 + 0 = 100 V/m²。</p>
+<p>想像一個極小盒子：相對兩面分別流入與流出，兩面的場差約為「該方向導數 × 邊長」。再乘截面積，就是該導數乘小盒體積；把三對面相加再除以體積，就得到上式。這說明散度測的是淨流出，不是單看某一支箭頭長不長。</p>
+<p><strong>散度定理（divergence theorem）</strong>把每一小盒的散度加總。相鄰小盒的共同面，法線相反而彼此抵消，最後只剩外邊界：</p>
+<p class="equation">∮<sub>∂𝒱</sub> E · dS = ∫<sub>𝒱</sub> (∇ · E) d𝒱。</p>
+<p>∂𝒱 表包住體積的封閉面，∮ 提醒邊界閉合。此處假設場在體積內足夠平滑，面分片光滑；若包含理想點電荷的奇點，要另外用包圍面或分布觀點處理，不能直接當作處處可微。</p>
+</section>
+<section id="calculate">
+<h2>主例：六個面逐一算，再用散度核對</h2>
+<p><strong>已知：</strong>E = ax x̂、a = 100 V/m²；盒子從 x = 0 到 L = 0.5 m，左右面積 A = 0.02 m²。<strong>未知：</strong>封閉面淨向外通量 Φ。場在各個 x 截面上均勻，因此可逐面用點積乘面積。</p>
+<ol>
+<li>左面：x = 0，E<sub>左</sub> = 0，n̂<sub>左</sub> = −x̂。故 Φ<sub>左</sub> = E<sub>左</sub> · (−x̂ A) = 0 V·m。</li>
+<li>右面：E<sub>右</sub> = aL x̂ = (100 V/m²)(0.5 m)x̂ = 50 x̂ V/m，n̂<sub>右</sub> = +x̂。</li>
+<li>右面通量：Φ<sub>右</sub> = (50 V/m)(0.02 m²) cos 0° = 1 V·m。</li>
+<li>前、後、上、下四個側面：法線沿 ±y 或 ±z，與 E 垂直，各面 Φ = EA cos 90° = 0。</li>
+</ol>
+<div class="equation">Φ = Φ<sub>左</sub> + Φ<sub>右</sub> + 四個側面通量<br>= 0 + 1 + 0 = 1 V·m。</div>
+<p>再從體內計算：散度是常數 a，盒子體積為 AL = (0.02 m²)(0.5 m) = 0.01 m³。</p>
+<div class="equation">∫<sub>𝒱</sub> (∇ · E) d𝒱 = aAL<br>= (100 V/m²)(0.02 m²)(0.5 m) = 1 V·m。</div>
+<p><strong>單位檢查：</strong>V/m² × m³ = V·m，兩條路徑一致。<strong>極限檢查：</strong>L 趨近零時，淨通量與體積都趨近零，兩者比值仍為 a。若換成處處同一大小的均勻電場，左右面通量等大反號，淨通量為零；場非零不代表散度非零。</p>
+<h3>旋度：量局部繞圈的傾向</h3>
+<p>旋度（curl）∇ × G 是向量，方向依右手規則，大小描述每單位面積的微小閉路環流。先在 xy 平面看 z 分量：(∇ × G)<sub>z</sub> = ∂G<sub>y</sub>/∂x − ∂G<sub>x</sub>/∂y。這來自小方框上下、左右兩對邊的線積分差，再除以小面積；其他分量由座標循環得到。</p>
+<p class="equation">∇ × G = (∂G<sub>z</sub>/∂y − ∂G<sub>y</sub>/∂z)x̂<br>+ (∂G<sub>x</sub>/∂z − ∂G<sub>z</sub>/∂x)ŷ<br>+ (∂G<sub>y</sub>/∂x − ∂G<sub>x</sub>/∂y)ẑ。</p>
+<p>用輔助向量場 G = −cy x̂ + cx ŷ，c = 10 V/m²，演示旋度；G 的單位是 V/m，它是數學例子，並非前面的靜電場。因 ∂G<sub>y</sub>/∂x = c、∂G<sub>x</sub>/∂y = −c，故 ∇ × G = 2c ẑ = 20 ẑ V/m²。G<sub>z</sub> = 0 且各量不依賴 z，所以另外兩分量為零。</p>
+<figure>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 640 290" role="img" aria-labelledby="curl-title curl-desc" font-size="17">
+<title id="curl-title">逆時針方形閉路與正 z 法線</title>
+<desc id="curl-desc">xy 平面上的單位正方形，從左下角依序向右、向上、向左、向下，為由正 z 方向看去的逆時針路徑。正 z 法線朝讀者。右邊與上邊各貢獻十伏特的環流，另兩邊貢獻零。</desc>
+<defs><marker id="curl-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+<g stroke="currentColor" fill="none" stroke-width="3"><path d="M150 235H340V45H150V235"/><path d="M205 235H275" marker-end="url(#curl-arrow)"/><path d="M340 180V105" marker-end="url(#curl-arrow)"/><path d="M285 45H215" marker-end="url(#curl-arrow)"/><path d="M150 105V180" marker-end="url(#curl-arrow)"/><circle cx="245" cy="140" r="12"/></g>
+<g fill="currentColor"><circle cx="245" cy="140" r="3"/><text x="184" y="269">下邊：0 V，+x</text><text x="355" y="145">右邊：10 V，+y</text><text x="170" y="28">上邊：10 V，−x</text><text x="20" y="135">左邊：0 V</text><text x="45" y="164">−y</text><text x="213" y="182">+z 朝外</text><text x="386" y="250">邊長 ℓ = 1 m</text></g>
+</svg>
+</div>
+<figcaption>閉路走向與法線必須成對選：從 +z 看是逆時針。反走一圈時，法線也要改成 −z，定理兩邊會一起變號。</figcaption>
+</figure>
+<p><strong>史托克斯定理（Stokes' theorem）</strong>說，沿面邊界走一圈的線積分，等於旋度穿過該面的通量；小圈相鄰的邊互相抵消，就只剩最外圈。場須在面附近足夠平滑，面可定向，邊界與法線依右手配對。</p>
+<p class="equation">∮<sub>∂S</sub> G · dℓ = ∫<sub>S</sub> (∇ × G) · dS。</p>
+<p>取 0 ≤ x,y ≤ ℓ，ℓ = 1 m，逆時針走。下邊 y = 0，G<sub>x</sub> = 0，貢獻 0；右邊 x = ℓ，∫<sub>0</sub><sup>ℓ</sup> cℓ dy = cℓ² = 10 V。上邊 y = ℓ，往 −x 走，∫<sub>ℓ</sub><sup>0</sup> (−cℓ) dx = cℓ² = 10 V；左邊 x = 0，G<sub>y</sub> = 0，貢獻 0。總環流 20 V。面積分則為 (20 V/m²)(1 m²) = 20 V，兩邊相等。</p>
+<p>原來的 E = ax x̂，各橫向偏導均為零，旋度為零。它同時有正散度與零旋度，說明「淨流出」與「繞圈」是兩種不同性質。對光滑場，梯度的旋度為零、旋度的散度為零；相反次序的混合偏導相抵，是這兩個恆等式的原因。</p>
+</section>
+<section id="practice">
+<h2>近題：只把盒長改成 0.8 m</h2>
+<p>場的係數 a = 100 V/m²、截面 A = 0.02 m² 與左面 x = 0 均不變。求右面場、淨通量與散度；哪一個量不因盒長改變？</p>
+<details><summary>提示一：先在新右面位置求場</summary><p>E<sub>右</sub> = aL。右面朝 +x，左面場仍是零，四個側面仍與電場垂直。</p></details>
+<details><summary>提示二：散度來自斜率</summary><p>淨通量 Φ = aLA 會隨 L 改變；∂(ax)/∂x = a 由場本身決定，盒子拉長不會改變斜率。</p></details>
+<details><summary>完整詳解與檢查</summary><div class="equation">E<sub>右</sub> = (100 V/m²)(0.8 m) = 80 V/m。<br>Φ = (80 V/m)(0.02 m²) = 1.6 V·m。<br>∇ · E = a = 100 V/m²。<br>體積 AL = (0.02 m²)(0.8 m) = 0.016 m³。<br>aAL = (100 V/m²)(0.016 m³) = 1.6 V·m。</div><p>左右面與體積兩算法一致，V/m² × m³ = V·m。盒長是主例的 1.6 倍，通量也是 1.6 倍；散度仍為 100 V/m²。</p></details>
+</section>
+<section class="lab" id="experiment" data-lab="02">
+<h2>自己改：盒子變長，通量如何增加？</h2>
+<p>保持左面 x = 0 與截面積 0.02 m²，拖動右面。先預測「總量」與「每單位體積的局部量」各怎樣變。</p>
+<label for="lab-input">盒子的 x 向長度 L（m）</label>
+<input id="lab-input" type="range" min="0.1" max="1" step="0.1" value="0.5">
+<output id="lab-value" for="lab-input">0.5 m</output>
+<button id="lab-reset" type="button">回到主例</button>
+<div id="lab-results" aria-live="polite"><p>淨通量 Φ = 1 V·m；散度 ∇ · E = 100 V/m²。</p></div>
+<p id="lab-why">Φ = aLA = 2L V·m（L 的數值以 m 計）；拉長盒子增加總通量，場的局部斜率 a 保持不變。</p>
+<div class="diagram" tabindex="0">
+<svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="calculus-lab-title calculus-lab-desc" font-size="17">
+<title id="calculus-lab-title">盒長與淨通量的線性關係</title>
+<desc id="calculus-lab-desc">橫軸為零至一公尺的盒長，縱軸為零至二伏特公尺的淨通量。目前零點五公尺對應一伏特公尺。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><path d="M85 245H575M85 245V40"/><path d="M85 245L565 45" stroke-width="3"/><path d="M325 245V145H85" stroke-dasharray="5 4"/></g>
+<g fill="currentColor"><circle cx="325" cy="145" r="6"/><text x="25" y="30">Φ（V·m）</text><text x="515" y="284">L（m）</text><text x="63" y="264">0</text><text x="45" y="151">1</text><text x="45" y="51">2</text><text x="307" y="269">0.5</text><text x="558" y="269">1</text><text x="341" y="139">目前：0.5 m，1 V·m</text></g>
+</svg>
+</div>
+<p id="lab-description">直線表示固定 a 與 A 時，淨通量和盒長成正比；散度則在所有設定下維持 100 V/m²。</p>
+</section>
+<section aria-labelledby="calculus-limits">
+<h2 id="calculus-limits">從數學回到電荷與量測</h2>
+<p>通量只是帶方向的加總，並非真的有一股電荷穿過盒面。真空靜電的高斯定律會把 E 的淨通量連到包住的淨電荷；此例的正散度對應正的體電荷密度。描述電荷實際輸運則用電流密度，不能把 E 的通量直接當作電流。</p>
+<p>電壓表可量兩點電位差；在靜電、探棒不嚴重擾動場的條件下，用相近兩點的 −ΔV/Δx 估計 E<sub>x</sub>。差距過大得到的是區間平均，過小則容易受量測雜訊影響。要估通量需取樣整個面上的法向場與面積；單點電場或兩點電壓，不能證明整個區域的散度、旋度都相同。</p>
+<p>來源：<a href="sources.html#source-local-upper">本地《電磁學（上）》第 1.1–1.2 節</a>。本頁把梯度線積分基本定理與散度、史托克斯兩大積分定理分開建立，補上可手算的短橋例題。</p>
+</section>
+<footer class="pager"><a href="01-vectors.html">← 向量、座標與投影</a><a href="03-coulomb.html">下一章：庫侖定律與疊加 →</a></footer>
+</main></div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>高斯定律與對稱｜圖解電磁學</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="lab.css">
+<script src="app.js" defer></script>
+</head>
+<body data-page="05-gauss">
+<a class="skip-link" href="#main-content">跳到主要內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">教材來源</a></nav></header>
+<div class="site-layout">
+<aside class="course-nav" aria-label="課程章節"><a href="index.html">課程地圖</a><a href="04-distributions.html">上一章</a><a href="06-potential.html">下一章</a></aside>
+<main id="main-content">
+<header class="lesson-head">
+<p class="eyebrow">05 · 用對稱把積分變簡單</p>
+<h1>高斯定律與對稱</h1>
+<p class="lead">一條很長、均勻帶電的細線，在旁邊 10 cm 產生多大的場？怎樣選一個封閉面，讓無數段電荷的作用不用逐段積分？</p>
+<p class="prereq">這章假設已懂：<a href="01-vectors.html">內積與法線方向</a>、<a href="02-calculus.html">通量與散度</a>、<a href="04-distributions.html">電荷密度</a>。重點是分清「定律永遠成立」與「能直接求出場」的條件。</p>
+</header>
+<section id="understand">
+<h2>高斯面是計算用的封閉外殼</h2>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 680 335" role="img" aria-labelledby="gauss-title gauss-desc" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="gauss-title">包住長直線電荷的圓柱高斯面</title>
+<desc id="gauss-desc">帶正電的長直線沿 z 軸穿過圓柱中心。側面的電場與外法線同向，穿出通量為正；兩端面的外法線沿正負 z，與徑向電場垂直，所以端面通量為零。圓柱長度為 ell，半徑為 r。圖為透視示意，箭頭只表示方向。</desc>
+<defs><marker id="gauss-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<path d="M180 100 H480 V240 H180 Z" fill="#087e8b" fill-opacity="0.07" stroke="none"/>
+<ellipse cx="180" cy="170" rx="28" ry="70" fill="none" stroke="#087e8b" stroke-width="2"/>
+<ellipse cx="480" cy="170" rx="28" ry="70" fill="none" stroke="#087e8b" stroke-width="2"/>
+<path d="M180 100 H480 M180 240 H480" stroke="#087e8b" stroke-width="2"/>
+<path d="M70 170 H600" stroke="#b85f18" stroke-width="4" marker-end="url(#gauss-arrow)"/>
+<text x="606" y="176">+z</text><text x="76" y="196">+ + +</text><text x="280" y="193">均勻線電荷 λ</text><text x="529" y="196">+ + +</text>
+<path d="M305 100 V45" stroke="#7141a3" stroke-width="3" marker-end="url(#gauss-arrow)"/>
+<path d="M360 240 V292" stroke="#7141a3" stroke-width="3" marker-end="url(#gauss-arrow)"/>
+<text x="320" y="54">側面：E ∥ n̂，穿出</text><text x="374" y="291">E 與外法線</text>
+<path d="M180 130 H110" stroke="#657482" stroke-width="2" marker-end="url(#gauss-arrow)"/>
+<path d="M480 130 H550" stroke="#657482" stroke-width="2" marker-end="url(#gauss-arrow)"/>
+<text x="34" y="114">端面 n̂ = −ẑ</text><text x="497" y="112">端面 n̂ = +ẑ</text>
+<path d="M425 170 V100" stroke="#657482" stroke-width="2" marker-end="url(#gauss-arrow)"/>
+<text x="438" y="143">r</text><path d="M180 270 H480" stroke="#657482" stroke-width="1.5"/>
+<text x="252" y="316">圓柱長度 ℓ；端面 E · n̂ = 0</text><text x="20" y="25">透視示意；向量長度非比例</text>
+</svg>
+</div>
+<p>虛構圓柱不需要用金屬做出來，也不會改變原有場。它只把空間分成裡外，讓我們數出穿過邊界的淨電通量（electric flux）。封閉面的面積向量 dA = n̂ dA 一律朝外；同方向穿出為正，穿入為負，沿著表面滑過的電場沒有穿透分量。</p>
+<div class="equation">Φ<sub>E</sub> = ∮<sub>S</sub> E · n̂ dA = ∮<sub>S</sub> E cos θ dA<br>∮<sub>S</sub> E · dA = Q<sub>內</sub>/ε₀</div>
+<p>S 是封閉面，θ 是 E 與外法線的夾角，Q<sub>內</sub>是面內所有電荷的代數和（C），ε₀ ≈ 8.8541878128 × 10⁻¹² F/m。通量 Φ<sub>E</sub>的單位是 (V/m)m² = V·m；它把場與面積合併，不能直接當成場強的單位。</p>
+<p>高斯定律（Gauss’s law）來自電荷作為電場源的性質。以中心點電荷驗算，同心球面上 E = kq/r²、面積 4πr²，相乘得到 4πkq = q/ε₀；半徑雖然改變，向外擴大的面積恰好補償場的衰減。更一般的封閉面與多源分布仍遵守此定律。</p>
+<h3>零淨通量不能單獨推出零電場</h3>
+<p>外部電荷也可能在面上造成很強的場；它對封閉面的總通量為零，因為有進有出。把一個盒子放進均勻外場，一面的負通量與另一面的正通量抵消，但盒內處處仍有電場。因此 Q<sub>內</sub> = 0 只保證積分為零；還要靠對稱，才可能把結論收緊到 E = 0。</p>
+<p>對無限長、均勻線電荷，沿線平移與繞線旋轉不改變分布，所以 E 只依徑向距離 r 改變，並沿徑向。選同軸圓柱後，整個側面距離相同，E 大小便相同；端面法線沿線，場則垂直於線。這兩個幾何條件才允許把表面積分化為乘法。</p>
+</section>
+<section id="calculate">
+<h2>主例：把側面與兩個端面分開算</h2>
+<p><strong>已知：</strong>真空中的無限長均勻線電荷 λ = +2 nC/m = 2 × 10⁻⁹ C/m，觀測距離 r = 0.10 m。選長度 ℓ = 0.40 m 的同軸高斯圓柱。<strong>未知：</strong>側面場強 E。ℓ 是我們自由選的計算尺寸，最終答案不應依賴它。</p>
+<ol>
+<li>側面外法線與徑向場平行，內積為 E；側面積是周長乘長度。<div class="equation">Φ<sub>側</sub> = E(2πrℓ)<br>2πrℓ = 2π(0.10 m)(0.40 m) ≈ 0.251327 m²</div></li>
+<li>兩端面外法線是 ±ẑ，與徑向場垂直。<div class="equation">Φ<sub>左</sub> = ∫ E cos 90° dA = 0<br>Φ<sub>右</sub> = 0；Φ<sub>總</sub> = E(2πrℓ)</div></li>
+<li>只有落在這段長度內的線電荷算進右式。<div class="equation">Q<sub>內</sub> = λℓ = (2 × 10⁻⁹ C/m)(0.40 m)<br>= 8.0 × 10⁻¹⁰ C</div></li>
+<li>代入高斯定律，再除以側面積。<div class="equation">E(2πrℓ) = λℓ/ε₀<br>E = λ/(2πε₀r)<br>= (2 × 10⁻⁹ C/m) / [2π(8.8541878128 × 10⁻¹² F/m)(0.10 m)]<br>≈ 359.502 V/m，沿徑向向外</div></li>
+</ol>
+<p><strong>檢查：</strong>ℓ 完全約掉，符合長度只是計算選擇。分母 ε₀r 的單位是 F，故 (C/m)/F = V/m。回代通量約為 359.502 × 0.251327 ≈ 90.3527 V·m，與 Q<sub>內</sub>/ε₀相同。當 r 加倍，柱側面積加倍，所以 E 減半；這裡是一次反比，不是點電荷的平方反比。</p>
+<h3>同一法則，換成球面與平面</h3>
+<p><strong>球對稱：</strong>半徑 a 的均勻薄球殼帶總電荷 Q，以同心、半徑 r 的球面計算。球面上場沿法線且大小相同，故 E(4πr²) = Q<sub>內</sub>/ε₀。r &gt; a 時包住全部 Q，得到 E = Q/(4πε₀r²)；0 &lt; r &lt; a 時 Q<sub>內</sub> = 0，才因球對稱得到 E = 0，中心也由對稱得零。殼內零場不是只由「裡面沒電荷」猜出來的。</p>
+<p><strong>平面對稱：</strong>無限大均勻帶電平面，面密度 σ（C/m²）。取跨越平面的薄柱形高斯面，每個端面面積為 A；先取 σ &gt; 0，場垂直於帶電平面，兩端都沿各自外法線，側面通量為零。因此 2EA = σA/ε₀，得到每側場的大小 E = |σ|/(2ε₀)，正電荷向外、負電荷向內。距離不出現在式中，反映了無限平面沒有可比較的邊緣。</p>
+<p>這三種選面各配合一種來源對稱：球殼配球面，長直線配同軸圓柱，無限平面配跨面的薄柱。有限線段的端點附近、有限板的邊緣附近，都不再具有這些完整對稱；高斯定律仍成立，但一個總通量方程不足以找出每一處的場。</p>
+<h3>微分形式：把封閉面縮到一小塊體積</h3>
+<p>散度定理把表面通量改成體積積分。若 ρ 是體電荷密度（C/m³），對任意小體積都滿足下式，就能比較被積函數，得到局部版本。</p>
+<div class="equation">∮ E · dA = ∫ (∇ · E) dV = ∫ (ρ/ε₀) dV<br>∇ · E = ρ/ε₀</div>
+<p>∇ · E 是單位體積的淨流出程度，單位 V/m²；它為零仍允許有穿越的場。理想線電荷或薄面上的密度具有奇異性，實際計算通常用積分式跨過它們，避免把奇異源誤當普通連續函數。</p>
+</section>
+<section id="practice">
+<h2>近題：只把觀測距離改成 0.20 m</h2>
+<p>同一條 λ = +2 nC/m 的無限長線電荷，求兩倍距離處的場。保留原高斯柱長度即可。</p>
+<details><summary>提示一：先用面積比例預測</summary><p>r 加倍而 ℓ 不變，側面積加倍，包住的電荷不變；相同總通量要分布到兩倍面積。</p></details>
+<details><summary>提示二：分母只有一次 r</summary><p>使用 E = λ/(2πε₀r)，不要把點電荷的 r² 分母搬過來。</p></details>
+<details><summary>完整詳解與檢查</summary><div class="equation">E = (2 × 10⁻⁹ C/m) / [2π(8.8541878128 × 10⁻¹² F/m)(0.20 m)]<br>≈ 179.751 V/m，徑向向外<br>Φ = (179.751 V/m)[2π(0.20 m)(0.40 m)] ≈ 90.3527 V·m</div><p>場變成一半，通量仍與主例相同；單位分別是 V/m 與 V·m。只有把半徑代錯，才會得到與包住電荷不一致的通量。</p></details>
+</section>
+<section class="lab" id="experiment" data-lab="05">
+<h2>自由實驗：圓柱面積與場強</h2>
+<p>固定 λ = +2 nC/m，只改變到線的徑向距離，觀察一次反比曲線。</p>
+<label for="lab-input">距離長直線電荷 r（m）</label>
+<input id="lab-input" type="range" min="0.02" max="0.3" step="0.01" value="0.1">
+<output id="lab-value" for="lab-input">0.10 m</output>
+<button id="lab-reset" type="button">回到主例</button>
+<div id="lab-results" aria-live="polite"><p>r = 0.10 m；E ≈ 359.502 V/m，徑向向外。</p></div>
+<p id="lab-why">固定高斯柱長度時，包住的電荷不變；半徑加大讓側面積增加，場強依 1/r 減少。</p>
+<div class="diagram" tabindex="0"><svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="plot-title-05 plot-desc-05" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="plot-title-05">E隨距離改變</title><desc id="plot-desc-05">長直線電荷的場隨徑向距離以一次反比下降。預設零點一公尺時為三百五十九點五零二伏特每公尺。</desc>
+<path d="M72 40 V245 H610" fill="none" stroke="currentColor" stroke-width="2"/>
+<text x="76" y="25">E（V/m）</text><text x="28" y="249">0</text><text x="10" y="59">1941</text>
+<path d="M72.00,69.07 L77.28,90.68 L82.56,107.56 L87.84,121.11 L93.12,132.23 L98.40,141.51 L103.68,149.39 L108.96,156.15 L114.24,162.02 L119.52,167.16 L124.80,171.70 L130.08,175.74 L135.36,179.36 L140.64,182.61 L145.92,185.57 L151.20,188.25 L156.48,190.70 L161.76,192.95 L167.04,195.02 L172.32,196.93 L177.60,198.70 L182.88,200.35 L188.16,201.88 L193.44,203.31 L198.72,204.65 L204.00,205.91 L209.28,207.08 L214.56,208.20 L219.84,209.24 L225.12,210.23 L230.40,211.17 L235.68,212.06 L240.96,212.90 L246.24,213.70 L251.52,214.46 L256.80,215.18 L262.08,215.87 L267.36,216.53 L272.64,217.16 L277.92,217.77 L283.20,218.34 L288.48,218.90 L293.76,219.43 L299.04,219.94 L304.32,220.43 L309.60,220.90 L314.88,221.35 L320.16,221.79 L325.44,222.21 L330.72,222.62 L336.00,223.01 L341.28,223.39 L346.56,223.75 L351.84,224.11 L357.12,224.45 L362.40,224.78 L367.68,225.10 L372.96,225.41 L378.24,225.71 L383.52,226.00 L388.80,226.28 L394.08,226.56 L399.36,226.83 L404.64,227.08 L409.92,227.34 L415.20,227.58 L420.48,227.82 L425.76,228.05 L431.04,228.28 L436.32,228.50 L441.60,228.71 L446.88,228.92 L452.16,229.12 L457.44,229.32 L462.72,229.51 L468.00,229.70 L473.28,229.89 L478.56,230.07 L483.84,230.24 L489.12,230.41 L494.40,230.58 L499.68,230.74 L504.96,230.90 L510.24,231.06 L515.52,231.21 L520.80,231.36 L526.08,231.51 L531.36,231.65 L536.64,231.79 L541.92,231.93 L547.20,232.06 L552.48,232.20 L557.76,232.33 L563.04,232.45 L568.32,232.58 L573.60,232.70 L578.88,232.82 L584.16,232.93 L589.44,233.05 L594.72,233.16 L600.00,233.27" fill="none" stroke="#087e8b" stroke-width="3"/>
+<circle cx="222.86" cy="209.81" r="6" fill="#c14f26"/>
+<text x="280" y="45">預設：0.1 m → 約 359.502 V/m</text>
+<text x="65" y="268">0.02</text><text x="574" y="268">0.3</text><text x="277" y="292">距離（m）</text></svg></div>
+<p id="lab-description">橫軸 r 是距離線的半徑，縱軸 E 是場強。預設點為 0.10 m、約 359.502 V/m；這張曲線不適用於有限線段的端點附近。</p>
+</section>
+<section id="model">
+<h2>量測與極端情況</h2>
+<p>r 趨近零時理想線模型發散；真實導線有半徑，進入材料後必須使用其實際電荷分布。r 很大時，有限長細線整體會逐漸像點電荷，場改呈平方反比，不能把「無限長」的公式一直外推。均勻球殼的殼內零場，也會被外部電荷破壞，除非另外有導體屏蔽條件。</p>
+<p>可用靜電場探棒在長帶電線段的中部附近掃描，比較同距離不同角度是否接近同值，再檢查半徑加倍是否近似減半。儀器量的是局部場分量；要估計封閉面通量，得量多個位置並乘上面積與法線投影，單一點讀值不能證明全表面的通量。</p>
+<p>來源：<a href="sources.html#source-local-upper">本地《電磁學（上）》3.1–3.3：高斯定律</a>。</p>
+</section>
+<footer class="pager"><a href="04-distributions.html" rel="prev">← 上一章</a><a href="index.html">課程地圖</a><a href="06-potential.html" rel="next">下一章 →</a></footer>
+</main>
+</div>
+</body>
+</html>

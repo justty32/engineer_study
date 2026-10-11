@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>電荷、單位與力｜圖解電磁學</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="lab.css">
+<script src="app.js" defer></script>
+</head>
+<body data-page="00-charge">
+<a class="skip-link" href="#main-content">跳到課程內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">來源</a></nav></header>
+<div class="site-layout">
+<aside class="course-nav" aria-label="課程導覽"><a href="index.html">全部課程</a><a href="00-charge.html" aria-current="page">00 電荷、單位與力</a><a href="01-vectors.html">下一章：向量、座標與投影</a></aside>
+<main id="main-content">
+<header class="lesson-head">
+<p class="eyebrow">00 ／ 電磁學的起點</p>
+<h1>電荷、單位與力</h1>
+<p class="lead">把 +3 nC 的小電荷放進向右的電場，它受到多大的力？換成負電荷，究竟是電場轉向，還是受力轉向？</p>
+<p class="prereq">已知前提：會正負數乘法與十的次方即可。可從<a href="index.html">課程首頁</a>了解學習路線；本章不預設你記得電路或微積分。</p>
+</header>
+<section id="understand">
+<h2>先分清楚：誰產生場，誰受到力</h2>
+<p>電荷（electric charge）是物體參與電磁作用的一種性質，記作 q，單位是庫侖 C。正、負表示兩種相反的電性；「負 2 nC」仍是確實存在的電荷量。質子帶正電、電子帶負電，一般物體同時含有兩者。總正電荷與總負電荷相抵時，物體整體呈電中性，內部仍有帶電粒子。</p>
+<p>兩個電荷同號相斥、異號相吸。金屬物體帶負電，常是相對中性狀態多了一些電子；帶正電，常是少了一些電子。摩擦或電源可以搬移、分離電荷。對封閉系統記帳，電荷總量守恆；不能只看某一片金屬就把流入的電荷誤認為憑空產生。</p>
+<p>電源利用化學等能量維持端點之間的電荷分離。把兩片相隔很近的平行金屬板接上電源，遠離邊緣的區域可以近似為均勻電場。圖中的左板帶正電、右板帶負電，板間電場朝 +x。產生電場的板上電荷叫來源電荷；放進去感受作用的小電荷叫試驗電荷（test charge）。</p>
+<figure>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 640 280" role="img" aria-labelledby="charge-title charge-desc" font-size="17">
+<title id="charge-title">平行板之間的電場與正試驗電荷受力</title>
+<desc id="charge-desc">左側正板與右側負板之間，兩條等長電場箭頭向右。另一支箭頭表示中央正三奈庫侖試驗電荷受到向右六微牛頓的力。電場和力為不同物理量，箭頭不共用尺度。</desc>
+<defs><marker id="charge-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+<g stroke="currentColor" fill="none" stroke-width="3">
+<path d="M95 45V235M545 45V235"/>
+<path d="M145 70H485" marker-end="url(#charge-arrow)"/>
+<path d="M145 220H485" marker-end="url(#charge-arrow)"/>
+<path d="M365 140H490" marker-end="url(#charge-arrow)"/>
+<circle cx="315" cy="140" r="25"/>
+<path d="M570 230H620" marker-end="url(#charge-arrow)"/>
+</g>
+<g fill="currentColor"><text x="57" y="80">＋</text><text x="57" y="140">＋</text><text x="57" y="210">＋</text><text x="565" y="80">−</text><text x="565" y="140">−</text><text x="565" y="210">−</text><text x="300" y="146">＋</text><text x="170" y="40">E = 2000 V/m，方向 +x</text><text x="355" y="115">F = 6 μN</text><text x="240" y="188">q = +3 nC</text><text x="585" y="258">+x</text></g>
+</svg>
+</div>
+<figcaption>長箭頭表示板間電場向右，中央箭頭表示試驗電荷的受力。電場與力的單位不同，這兩種箭頭沒有共用比例尺。</figcaption>
+</figure>
+<h3>電場是「每單位正電荷受到的力」</h3>
+<p>力（force）F 是推拉作用，單位是牛頓 N。電場（electric field）E 描述空間某一位置的電作用強弱與方向。操作上的定義，是把足夠小的正試驗電荷放在該處，測得力，再除以它的電荷量：</p>
+<p class="equation">E = F / q，因而 F = qE。</p>
+<p>這裡 F、E 都是向量（vector），有大小也有方向；q 是帶正負號的純量（scalar），沒有空間方向。定義電場時試驗電荷要夠小，避免它改變來源的電荷分布。得到 E 後，就可以用 F = qE 計算正、負試驗電荷的電力；本章只考慮電力，不計重力、磁力或碰撞。</p>
+<p>若 E 朝 +x，正 q 的力朝 +x，負 q 的力朝 −x。把試驗電荷換成負值，不會自動把來源電荷產生的 E 翻轉。方向是本章最重要的區分：同一位置、同一外加場，不同符號電荷可朝相反方向運動。</p>
+<h3>先把前綴換成同一套單位</h3>
+<p>國際單位制（International System of Units, SI）的前綴只是十進位縮寫：k（千）= 10<sup>3</sup>、m（毫）= 10<sup>−3</sup>、μ（微）= 10<sup>−6</sup>、n（奈）= 10<sup>−9</sup>。大小寫有差，例如 m 與 M（百萬）不能互換。m 在數值後也可能表示公尺，要看它是否附在另一單位前面。</p>
+<p class="equation">3 nC = 3 × 10<sup>−9</sup> C；2000 V/m = 2 kV/m；1 μN = 10<sup>−6</sup> N。</p>
+<p>電場可以寫 N/C，也可以寫 V/m。伏特 V 是每庫侖的能量，1 V = 1 J/C；焦耳 J 是力乘位移的單位，1 J = 1 N·m。因此 V/m = J/(C·m) = N/C。這條單位關係把「電位差與能量」接到「場與力」，後面會再建立電位的空間變化。</p>
+</section>
+<section id="calculate">
+<h2>主例：+3 nC 的電荷受到什麼力？</h2>
+<p><strong>已知：</strong>均勻外加電場 E = 2000 x̂ V/m，q = +3 nC。x̂ 表示沿 +x 的單位向量，本身沒有單位。<strong>未知：</strong>電力 F 的大小及方向。</p>
+<p>因為場已經給定，不必先算來源電荷或兩板電壓。直接由電場定義選 F = qE，先把 nC 換成 C，再把數值與方向一起相乘。</p>
+<div class="equation">F = (+3 × 10<sup>−9</sup> C)(2000 x̂ N/C)<br>= (3 × 2) × 10<sup>−9+3</sup> x̂ N<br>= 6 × 10<sup>−6</sup> x̂ N = 6 x̂ μN。</div>
+<p>所以力的大小是 6 μN，方向朝 +x。以帶正負號的 x 分量回答，可寫 F<sub>x</sub> = +6 μN；「大小」本身不寫負值。</p>
+<p><strong>單位檢查：</strong>C × N/C = N，庫侖消掉了。<strong>比例檢查：</strong>固定 E，電荷加倍，力也加倍；q 趨近零時，F 趨近零，但外加 E 仍然存在。q = 0 時不能用 F/q 做除法，F = qE 則直接給出零電力。</p>
+<p>若容易把指數弄錯，可先只算有效數字 3 × 2 = 6，再合併十的次方：十的負九次方乘十的三次方，等於十的負六次方。最後才把 10<sup>−6</sup> 換成 μ。把 nC 當作 C 直接乘，答案會放大十億倍；單位寫在每一行，可以及早發現這類錯誤。</p>
+<p>受力方向也要相對於明確的軸來說。若把紙上的 +x 改畫向左，同一個實際向右的力就會有負分量；物理作用沒有變，變的是座標記法。解題前先畫軸，再寫電場與電荷的角色，通常比背「正向右、負向左」可靠。</p>
+<p>這個數字很小：μN 是百萬分之一牛頓。若實驗中觀察不到位移，不能據此推論電場為零；支撐力、摩擦或儀器解析度都可能遮住這個作用。</p>
+</section>
+<section id="practice">
+<h2>近題：只把電荷改為 −2 nC</h2>
+<p>電場仍為 2000 x̂ V/m。請算 F<sub>x</sub>、力的大小與方向，並判斷外加場是否變向。</p>
+<details><summary>提示一：保留電荷的負號</summary><p>先寫 q = −2 × 10<sup>−9</sup> C，再套 F = qE。負號決定向量方向，不要在代入前取絕對值。</p></details>
+<details><summary>提示二：把分量與大小分開回答</summary><p>數值乘積為 −2 × 2000 × 10<sup>−9</sup> N。負的 x 分量表示朝 −x；大小則是該數的絕對值。</p></details>
+<details><summary>完整詳解與檢查</summary><div class="equation">F = (−2 × 10<sup>−9</sup> C)(2000 x̂ N/C)<br>= −4 × 10<sup>−6</sup> x̂ N = −4 x̂ μN。</div><p>F<sub>x</sub> = −4 μN，大小 4 μN，方向 −x。單位仍為 C × N/C = N。其大小是主例的 2/3，符合電荷量大小的比例；來源與板上電荷未變，所以 E 仍朝 +x。</p></details>
+</section>
+<section class="lab" id="experiment" data-lab="00">
+<h2>自己改：電荷符號與受力方向</h2>
+<p>先預測 q 穿過零時會發生什麼，再拖動。外加電場固定為 2000 x̂ V/m。</p>
+<label for="lab-input">試驗電荷 q（nC）</label>
+<input id="lab-input" type="range" min="-5" max="5" step="0.5" value="3">
+<output id="lab-value" for="lab-input">3 nC</output>
+<button id="lab-reset" type="button">回到主例</button>
+<div id="lab-results" aria-live="polite"><p>F<sub>x</sub> = +6 μN；力的大小 6 μN，方向 +x。</p></div>
+<p id="lab-why">固定電場下 F<sub>x</sub> = 2q，其中 q 用 nC、力用 μN；正負號決定力的方向。</p>
+<div class="diagram" tabindex="0">
+<svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="charge-lab-title charge-lab-desc" font-size="17">
+<title id="charge-lab-title">電荷與 x 方向電力的線性關係</title>
+<desc id="charge-lab-desc">橫軸電荷從負五到正五奈庫侖，縱軸力從負十到正十微牛頓。直線通過原點，目前點是三奈庫侖、六微牛頓。</desc>
+<g stroke="currentColor" fill="none" stroke-width="2"><path d="M80 150H580M330 45V255"/><path d="M90 250L570 50" stroke-width="3"/></g>
+<g fill="currentColor"><circle cx="474" cy="90" r="6"/><text x="350" y="30">Fₓ（μN）</text><text x="520" y="218">q（nC）</text><text x="75" y="178">−5</text><text x="318" y="178">0</text><text x="568" y="178">5</text><text x="294" y="58">10</text><text x="283" y="253">−10</text><text x="365" y="73">目前（3，6）</text></g>
+</svg>
+</div>
+<p id="lab-description">曲線斜率固定為每 nC 產生 2 μN；跨過 q = 0，受力反向，來源電場保持向右。</p>
+</section>
+<section aria-labelledby="charge-limits">
+<h2 id="charge-limits">模型、量測與來源</h2>
+<p>此模型假設試驗電荷很小、場不隨時間改變，且只討論電力。實際平行板靠近邊緣時會有邊緣效應，E 未必處處相同；試驗物若尺寸很大，還要考慮其各處受到的場與電荷重排。</p>
+<p>靜電計可量測儲存或轉移的電荷；校準過的微力感測器可量受力。要用 F/q 推回電場，必須知道 q 並扣除其他力。電壓表直接量兩點的電位差，單一讀值不能告訴你任意位置的電場方向；「有電壓」也不等於已有持續電流。電荷移動時的能量轉移與電荷如何流動，會在電位與電流章接上。</p>
+<p>來源：<a href="sources.html#source-local-upper">本地《電磁學（上）》第 2.1–2.2 節</a>；本頁由電場定義展開單位換算與試驗電荷例題。</p>
+</section>
+<footer class="pager"><a href="index.html">← 課程首頁</a><a href="01-vectors.html">下一章：向量、座標與投影 →</a></footer>
+</main></div>
+</body>
+</html>

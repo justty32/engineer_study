@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>連續電荷與積分｜圖解電磁學</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="lab.css">
+<script src="app.js" defer></script>
+</head>
+<body data-page="04-distributions">
+<a class="skip-link" href="#main-content">跳到主要內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">教材來源</a></nav></header>
+<div class="site-layout">
+<aside class="course-nav" aria-label="課程章節"><a href="index.html">課程地圖</a><a href="03-coulomb.html">上一章</a><a href="05-gauss.html">下一章</a></aside>
+<main id="main-content">
+<header class="lesson-head">
+<p class="eyebrow">04 · 把許多小電荷加起來</p>
+<h1>連續電荷與積分</h1>
+<p class="lead">一個半徑 10 cm 的均勻帶電環，在中心上方 10 cm 會產生多大的電場？每段環都朝不同方向作用，如何相加才不會漏掉投影？</p>
+<p class="prereq">這章假設已懂：<a href="03-coulomb.html">庫侖定律與向量疊加</a>、<a href="02-calculus.html">微小量與定積分</a>。積分只是把疊加拆得更細，源的位置仍須逐段辨認。</p>
+</header>
+<section id="understand">
+<h2>環上每段都有場，只有軸向分量留下</h2>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 680 340" role="img" aria-labelledby="ring-title ring-desc" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="ring-title">帶電環上一對相對電荷元的軸向投影</title>
+<desc id="ring-desc">均勻正帶電環位於 xy 平面，P 位於中心上方的 z 軸。兩個相對電荷元到 P 的距離相同。各電場沿源到 P 的斜線，橫向分量抵消，正 z 分量相加。幾何是透視示意，箭頭僅示方向。</desc>
+<defs><marker id="ring-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<ellipse cx="330" cy="248" rx="190" ry="60" fill="none" stroke="#087e8b" stroke-width="4"/>
+<path d="M330 282 V25" stroke="#657482" stroke-width="2" marker-end="url(#ring-arrow)"/>
+<text x="340" y="26">+z</text><text x="310" y="274">O</text><text x="496" y="319">環在 xy 平面</text>
+<path d="M140 248 L330 112 L520 248 M140 248 H520" fill="none" stroke="#657482" stroke-width="2" stroke-dasharray="6 5"/>
+<circle cx="140" cy="248" r="8" fill="#b85f18"/><circle cx="520" cy="248" r="8" fill="#b85f18"/>
+<text x="84" y="231">dq</text><text x="534" y="231">對側 dq</text><text x="230" y="271">半徑 a</text><text x="195" y="158">R = √(a² + z²)</text>
+<circle cx="330" cy="112" r="5" fill="currentColor"/><text x="342" y="133">P（0, 0, z）</text>
+<path d="M330 112 L416 51" stroke="#087e8b" stroke-width="3" marker-end="url(#ring-arrow)"/>
+<path d="M330 112 L244 51" stroke="#087e8b" stroke-width="3" marker-end="url(#ring-arrow)"/>
+<path d="M330 112 V43" stroke="#b85f18" stroke-width="3" marker-end="url(#ring-arrow)"/>
+<text x="422" y="55">dE</text><text x="175" y="50">對側 dE</text><text x="343" y="72">dE_z</text>
+<path d="M330 78 Q346 82 355 94" stroke="currentColor" fill="none"/>
+<text x="364" y="96">θ</text><text x="25" y="25">透視示意；向量長度非比例</text>
+</svg>
+</div>
+<p>圖中電荷沿環均勻分布。任選一個小電荷元 dq，都能找到直徑另一端等大的 dq；它們在軸上 P 產生的橫向作用相反，軸向作用同向。先用對稱消去兩個分量，再積分剩下的 z 分量，能大幅減少計算；這個消去僅對軸上的觀測點成立。</p>
+<h3>從密度取出真正的電荷量</h3>
+<p>連續電荷分布（continuous charge distribution）把大量微觀電荷用平滑密度描述。線電荷密度（line charge density）λ 是每公尺的電荷（C/m），面電荷密度（surface charge density）σ 是每平方公尺的電荷（C/m²），體電荷密度（volume charge density）ρ 是每立方公尺的電荷（C/m³）。密度可正可負，也可以隨位置改變。</p>
+<div class="equation">線：dq = λ dℓ；面：dq = σ dS；體：dq = ρ dV<br>總電荷 Q = ∫ dq</div>
+<p>dℓ、dS、dV 是源上的微小長度、面積、體積。名稱中的「線、面、體」說明如何切源，不是電場只存在於哪個維度。比如細導線近似用 λ，薄絕緣片用 σ，厚實帶電材料用 ρ；只要切法與單位一致，每一小塊都可先當點電荷。</p>
+<div class="equation">dE = k(dq/R²) R̂；E(P) = ∫<sub>全部源</sub> k(dq/R²) R̂</div>
+<p>這是上一章疊加式在分割愈來愈細時的極限。R 從當前電荷元指向固定 P；沿源移動時，R 的大小與方向通常都會變。不能先把所有 dq 加成 Q，再任意選一個「平均距離」套入點電荷式，因為平方反比與向量投影都可能不同。</p>
+</section>
+<section id="calculate">
+<h2>主例：從 dq 積到帶電環的軸向電場</h2>
+<p><strong>已知：</strong>真空、半徑 a = 0.10 m 的細圓環，均勻電荷 Q = +10 nC = 1.0 × 10⁻⁸ C，P 在 z = +0.10 m。<strong>未知：</strong>E<sub>z</sub>（V/m）。環具有旋轉對稱但不是球對稱，直接把 Q 當中心點電荷會錯；這裡選電荷元積分。</p>
+<ol>
+<li><strong>選積分變數。</strong>沿環用角度 φ，從 0 到 2π 走一圈。弧長 dℓ = a dφ，角度以弧度計、視為無量綱。均勻密度等於總量除以周長。<div class="equation">λ = Q/(2πa) = (1.0 × 10⁻⁸ C)/(2π × 0.10 m)<br>≈ 1.59155 × 10⁻⁸ C/m<br>dq = λa dφ = [Q/(2π)] dφ</div></li>
+<li><strong>寫出幾何。</strong>所有源元與 P 的距離相同；θ 是源到 P 的方向與 +z 的夾角。<div class="equation">R = √(a² + z²)；cos θ = z/R</div></li>
+<li><strong>只留軸向投影。</strong>橫向分量成對抵消，但 dE<sub>z</sub>還要乘 cos θ，不能把 dE 的大小直接加起來。<div class="equation">dE<sub>z</sub> = (k dq/R²) cos θ<br>= kz dq/(a² + z²)<sup>3/2</sup><br>= [kzλa/(a² + z²)<sup>3/2</sup>] dφ</div></li>
+<li><strong>積滿一圈。</strong>a、z、λ 在此積分中都是常數，可提出積分號。<div class="equation">E<sub>z</sub> = [kzλa/(a² + z²)<sup>3/2</sup>] ∫<sub>0</sub><sup>2π</sup> dφ<br>= [kzλa/(a² + z²)<sup>3/2</sup>] [φ]<sub>0</sub><sup>2π</sup><br>= 2πkzλa/(a² + z²)<sup>3/2</sup><br>= kQz/(a² + z²)<sup>3/2</sup></div></li>
+<li><strong>代入公制。</strong><div class="equation">a² + z² = (0.10 m)² + (0.10 m)² = 0.0200 m²<br>(a² + z²)<sup>3/2</sup> = 0.0200 m² × √(0.0200 m²)<br>≈ 0.00282843 m³<br>kQz = (8.9875517923 × 10⁹ N·m²/C²)(1.0 × 10⁻⁸ C)(0.10 m)<br>= 8.9875517923 N·m³/C<br>E<sub>z</sub> ≈ 3177.58 N/C = 3177.58 V/m</div></li>
+</ol>
+<p><strong>檢查：</strong>分子 N·m³/C 除以 m³，得到 N/C；Q、z 都正，方向是 +z。若忘記投影，會得到 kQ/R² ≈ 4493.78 V/m，比正確值大；兩者的比是 z/R = 1/√2。若把環誤當中心點電荷，更會算出約 8987.55 V/m。</p>
+<h3>把「橫向相消」也寫成積分</h3>
+<p>若不靠圖形判斷，可把源座標寫成 (a cos φ, a sin φ, 0)，而 P 的座標是 (0, 0, z)。源到 P 的位移便是 (−a cos φ, −a sin φ, z)。三個分量都除以相同的 R，才得到單位方向；其中負號表示 P 位於該源元的朝中心一側。</p>
+<div class="equation">E<sub>x</sub> = −[kλa²/(a² + z²)<sup>3/2</sup>] ∫<sub>0</sub><sup>2π</sup> cos φ dφ = 0<br>E<sub>y</sub> = −[kλa²/(a² + z²)<sup>3/2</sup>] ∫<sub>0</sub><sup>2π</sup> sin φ dφ = 0</div>
+<p>兩個積分都跨完整一圈，正負面積剛好相消。若只剩半圈，或密度 λ 隨角度改變，這兩行就不能直接宣告為零。此時要把實際上下限與 λ(φ) 放回積分，場可能同時具有橫向及軸向分量。把對稱條件明確寫出，才能知道何時能沿用現成公式。</p>
+<p>主例中所有電荷元的距離相同，所以 R 可提出積分號；這是環軸的特殊便利。換成偏離軸線的 P，即使環仍均勻，每段的距離也不同。遇到較難的幾何時，保留電荷元式再做數值積分，比把不適用的軸上結果硬套到旁邊更可靠。</p>
+<h3>兩個極限能揭露公式是否合理</h3>
+<p>在中心 z = 0，各方向完全對消，所以 E<sub>z</sub> = 0，雖然環上每段都有電荷。當 z 遠大於 a，分母約為 z³，因而 E<sub>z</sub> ≈ kQ/z²；遠方看不清環的細節，才逐漸接近點電荷模型。若走到環下方，z 變負，軸向場也改朝 −z。</p>
+<p>從中心向上，場先增強再減弱：剛離開中心時，對消減少；走得很遠後，距離衰減占優勢。對 E<sub>z</sub> 微分時，把 z 與 (a² + z²)<sup>−3/2</sup> 視為兩個相乘的函數。乘積法則中 d(z)/dz = 1；後者再用連鎖法則，內層 d(z²)/dz = 2z。</p>
+<div class="equation">dE<sub>z</sub>/dz = kQ[(a² + z²)<sup>−3/2</sup> − 3z²(a² + z²)<sup>−5/2</sup>]<br>= kQ[(a² + z²) − 3z²]/(a² + z²)<sup>5/2</sup><br>= kQ(a² − 2z²)/(a² + z²)<sup>5/2</sup></div>
+<p>提公因式後，令分子 a² − 2z² = 0，正半軸峰值在 z = a/√2 ≈ 0.0707 m。導數在此之前為正、之後為負，確認這是最大值。這只定位峰值，不改變上面的積分結果。</p>
+</section>
+<section id="practice">
+<h2>近題：只把高度改成 0.20 m</h2>
+<p>半徑、總電荷與均勻條件不變，求軸上 z = 0.20 m 的電場。先想想：現在已越過峰值，場應往哪個方向變？</p>
+<details><summary>提示一：積分結構不用重做</summary><p>源的幾何仍是同一個環，只把 E<sub>z</sub> = kQz/(a² + z²)<sup>3/2</sup> 的 z 改成 0.20 m；分子和分母都會變。</p></details>
+<details><summary>提示二：拆開三次方根</summary><p>先算 a² + z² = 0.0500 m²，再乘它的平方根，得到約 0.0111803 m³。</p></details>
+<details><summary>完整詳解與檢查</summary><div class="equation">kQz = (8.9875517923 × 10⁹)(1.0 × 10⁻⁸)(0.20) N·m³/C<br>= 17.9751035846 N·m³/C<br>E<sub>z</sub> = 17.9751035846 N·m³/C ÷ (0.0500 m²)<sup>3/2</sup><br>≈ 1607.74 V/m，方向 +z</div><p>高度加倍後，場約為原來的 0.506 倍，並非恰好四分之一，因為 z 還沒有遠大於 a。單位是 N/C，方向仍離開正帶電環所在平面。</p></details>
+</section>
+<section class="lab" id="experiment" data-lab="04">
+<h2>自由實驗：沿環軸找最大場</h2>
+<p>固定 Q = +10 nC、a = 0.10 m。由中心往上移動，留意電場不會從中心一路下降。</p>
+<label for="lab-input">環軸觀測高度 z（m）</label>
+<input id="lab-input" type="range" min="0" max="0.5" step="0.01" value="0.1">
+<output id="lab-value" for="lab-input">0.10 m</output>
+<button id="lab-reset" type="button">回到主例</button>
+<div id="lab-results" aria-live="polite"><p>z = 0.10 m；E<sub>z</sub> ≈ 3177.58 V/m。</p></div>
+<p id="lab-why">環上橫向分量相消，軸向投影相加；0.10 m 已超過約 0.0707 m 的峰值位置。</p>
+<div class="diagram" tabindex="0"><svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="plot-title-04 plot-desc-04" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="plot-title-04">E_z隨距離改變</title><desc id="plot-desc-04">環軸電場在中心為零，向上先增加，在約零點零七零七公尺最大，再隨高度下降。預設高度零點一公尺的場約三千一百七十七點五八伏特每公尺。</desc>
+<path d="M72 40 V245 H610" fill="none" stroke="currentColor" stroke-width="2"/>
+<text x="76" y="25">E_z（V/m）</text><text x="28" y="249">0</text><text x="10" y="59">3736</text>
+<path d="M72.00,245.00 L77.28,222.23 L82.56,199.97 L87.84,178.69 L93.12,158.80 L98.40,140.66 L103.68,124.50 L108.96,110.48 L114.24,98.65 L119.52,89.01 L124.80,81.46 L130.08,75.88 L135.36,72.08 L140.64,69.88 L145.92,69.07 L151.20,69.47 L156.48,70.89 L161.76,73.13 L167.04,76.06 L172.32,79.52 L177.60,83.39 L182.88,87.57 L188.16,91.96 L193.44,96.48 L198.72,101.08 L204.00,105.71 L209.28,110.31 L214.56,114.87 L219.84,119.34 L225.12,123.71 L230.40,127.98 L235.68,132.11 L240.96,136.12 L246.24,139.99 L251.52,143.72 L256.80,147.31 L262.08,150.76 L267.36,154.08 L272.64,157.26 L277.92,160.31 L283.20,163.23 L288.48,166.03 L293.76,168.72 L299.04,171.29 L304.32,173.75 L309.60,176.10 L314.88,178.36 L320.16,180.52 L325.44,182.58 L330.72,184.56 L336.00,186.46 L341.28,188.28 L346.56,190.02 L351.84,191.69 L357.12,193.29 L362.40,194.83 L367.68,196.30 L372.96,197.72 L378.24,199.08 L383.52,200.38 L388.80,201.64 L394.08,202.84 L399.36,204.00 L404.64,205.11 L409.92,206.18 L415.20,207.22 L420.48,208.21 L425.76,209.16 L431.04,210.09 L436.32,210.97 L441.60,211.83 L446.88,212.65 L452.16,213.45 L457.44,214.22 L462.72,214.96 L468.00,215.68 L473.28,216.37 L478.56,217.04 L483.84,217.68 L489.12,218.31 L494.40,218.91 L499.68,219.50 L504.96,220.07 L510.24,220.61 L515.52,221.14 L520.80,221.66 L526.08,222.16 L531.36,222.64 L536.64,223.11 L541.92,223.56 L547.20,224.00 L552.48,224.43 L557.76,224.84 L563.04,225.25 L568.32,225.64 L573.60,226.02 L578.88,226.39 L584.16,226.74 L589.44,227.09 L594.72,227.43 L600.00,227.76" fill="none" stroke="#087e8b" stroke-width="3"/>
+<circle cx="177.60" cy="83.39" r="6" fill="#c14f26"/>
+<text x="300" y="45">預設：0.1 m → 約 3177.579 V/m</text>
+<text x="65" y="268">0</text><text x="574" y="268">0.5</text><text x="277" y="292">距離（m）</text></svg></div>
+<p id="lab-description">橫軸是軸上高度 z，縱軸是有正負意義的 E<sub>z</sub>；本圖只畫 z ≥ 0，因此結果不為負。預設標記為 0.10 m、約 3177.58 V/m。</p>
+</section>
+<section id="model">
+<h2>何時需要換模型與儀器？</h2>
+<p>均勻帶電的絕緣細環是本例模型。金屬環在外加電場或附近物體影響下，電荷未必均勻；粗環也需要面或體積分。有限直線電荷的距離 R 隨源位置改變，積分上下限是兩端點；圓盤則可拆成許多半徑不同的環，再用 dq = σ(2πa da) 沿半徑積分。這些模型都能沿用「切電荷、定距離、投影、加總」的步驟。</p>
+<p>沿軸用靜電場探棒掃描，可比較中心接近零、離開中心後先升再降的趨勢；以靜電計量總電荷，能獨立檢查 Q。單看中心讀值為零不能證明環沒帶電，也不能證明電荷均勻，因為零值可能來自相消。探棒大小、支架帶電與漏電都會破壞理想分布。</p>
+<p>來源：<a href="sources.html#source-local-upper">本地《電磁學（上）》2.3：連續電荷分布</a>；帶電環是該電荷元積分的逐步應用。</p>
+</section>
+<footer class="pager"><a href="03-coulomb.html" rel="prev">← 上一章</a><a href="index.html">課程地圖</a><a href="05-gauss.html" rel="next">下一章 →</a></footer>
+</main>
+</div>
+</body>
+</html>

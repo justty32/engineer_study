@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>庫侖定律與疊加｜圖解電磁學</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="lab.css">
+<script src="app.js" defer></script>
+</head>
+<body data-page="03-coulomb">
+<a class="skip-link" href="#main-content">跳到主要內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">教材來源</a></nav></header>
+<div class="site-layout">
+<aside class="course-nav" aria-label="課程章節"><a href="index.html">課程地圖</a><a href="02-calculus.html">上一章</a><a href="04-distributions.html">下一章</a></aside>
+<main id="main-content">
+<header class="lesson-head">
+<p class="eyebrow">03 · 靜電場的起點</p>
+<h1>庫侖定律與疊加</h1>
+<p class="lead">離一顆帶電小球 30 cm 的位置，放入另一顆小電荷會受到多大的力？若旁邊再加一顆源電荷，兩個作用方向要怎樣合起來？</p>
+<p class="prereq">這章假設已懂：<a href="01-vectors.html">向量與分量</a>、<a href="02-calculus.html">距離與變化率</a>。本章先固定源電荷，再把觀測點的電場算出來。</p>
+</header>
+<section id="understand">
+<h2>先畫源點，再畫觀測點</h2>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 680 340" role="img" aria-labelledby="coulomb-title coulomb-desc" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="coulomb-title">兩顆正電荷在對稱點產生的電場向量</title>
+<desc id="coulomb-desc">兩個正二奈庫侖電荷位於 x 等於正負零點一八公尺，觀測點 P 在 y 等於零點二四公尺。兩個源點到 P 都是零點三公尺。P 處兩個同尺度電場箭頭向左右上方，水平分量抵消，垂直分量相加，合場向正 y。</desc>
+<defs><marker id="coulomb-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<path d="M110 280 H570 M340 300 V28" stroke="#657482" stroke-width="1.5" fill="none" marker-end="url(#coulomb-arrow)"/>
+<text x="570" y="305">+x</text><text x="350" y="25">+y</text>
+<path d="M250 280 L340 160 L430 280" stroke="#657482" stroke-width="2" stroke-dasharray="6 5" fill="none"/>
+<circle cx="250" cy="280" r="15" fill="#087e8b"/><circle cx="430" cy="280" r="15" fill="#087e8b"/>
+<text x="244" y="285" fill="white">+</text><text x="424" y="285" fill="white">+</text>
+<text x="90" y="327">q₁：x = −0.18 m</text><text x="422" y="327">q₂：x = +0.18 m</text>
+<circle cx="340" cy="160" r="5" fill="currentColor"/><text x="352" y="182">P（0, 0.24 m）</text>
+<text x="156" y="211">R₁ = 0.30 m</text><text x="447" y="211">R₂ = 0.30 m</text>
+<path d="M340 160 L388 96" stroke="#087e8b" stroke-width="3" marker-end="url(#coulomb-arrow)"/>
+<path d="M340 160 L292 96" stroke="#b85f18" stroke-width="3" marker-end="url(#coulomb-arrow)"/>
+<path d="M340 160 L340 32" stroke="#7141a3" stroke-width="3" marker-end="url(#coulomb-arrow)"/>
+<text x="393" y="93">E₁</text><text x="261" y="93">E₂</text><text x="355" y="49">合場 E</text>
+<text x="20" y="30">每顆 q = +2 nC</text><text x="20" y="55">場箭頭同尺度；幾何另定尺度</text>
+</svg>
+</div>
+<p>圖中虛線是「從電荷走到觀測點」的幾何位移；在 P 出發的實線箭頭才是 P 處的電場。電場（electric field）描述該點對單位正試驗電荷的作用，單位是 N/C，也等於 V/m。箭頭不是電荷運動軌跡；即使 P 沒放試驗電荷，源電荷仍在那裡產生場。</p>
+<p>把源點位置寫成 <strong>r′</strong>，觀測點位置寫成 <strong>r</strong>，則位移 <strong>R = r − r′</strong>、距離 R = |R|，位移單位向量 R̂ = R/R 沒有單位。源電荷 q 以 C 計；正 q 的場順著 R̂ 離開電荷，負 q 的場逆著 R̂ 指向電荷。判方向時先固定這個「源到觀測」約定，就不容易多放一個負號。</p>
+<h3>何時選庫侖定律？</h3>
+<p>庫侖定律（Coulomb’s law）適用於真空中靜止的點電荷。電荷物體的大小遠小於觀測距離時，可以先用點電荷近似；附近導體若讓電荷重新分布，就必須重新求源分布。此處採 k = 1/(4πε₀) ≈ 8.9875517923 × 10⁹ N·m²/C²。</p>
+<div class="equation">E = (kq/R²) R̂；F = q<sub>t</sub>E</div>
+<p>F 是試驗電荷 q<sub>t</sub>（C）受到的力（N）。定義 E 時想像 q<sub>t</sub>足夠小，不致改變原有源分布。同號相斥、異號相吸，都包含在 q 與 q<sub>t</sub>的正負號內。把試驗電荷加倍會讓力加倍，但固定源所產生的 E 不變。</p>
+<p>平方反比的意思是距離乘以二，場強除以四；並非每遠離一公尺就少同樣數值。多顆固定點電荷遵守疊加原理（superposition）：逐顆算它在同一 P 點的場，再按 x、y、z 分量相加。只有方向相同時，才可以直接把大小相加。</p>
+<div class="equation">E(P) = Σ E<sub>i</sub>(P)；E<sub>x</sub> = Σ E<sub>ix</sub>，E<sub>y</sub> = Σ E<sub>iy</sub></div>
+<h3>把源電荷、試驗電荷與位置分開</h3>
+<p>同一個觀測位置可以換放不同試驗電荷，用不同的力得到同一個場。若源也能自由移動，試驗電荷施加的反作用會改變源的位置；本例假設源由絕緣支架固定，支架承受反作用。這讓「先算固定分布的場，再求試驗電荷受力」成為合理的兩步。</p>
+<p>若觀測點恰好落在某個理想點電荷上，那一項的 R 為零，公式沒有有限值。求一顆電荷受到其他電荷的力時，只加其他源的場，不把它自己的發散場代回。多個源的正負也應保留到各分量：例如把圖中右邊的源改為負，它的場就朝右下方，原本會抵消的水平分量反而相加。</p>
+<p>向量計算可以固定用四個問題自查：源在哪裡、P 在哪裡、從源到 P 的單位方向是什麼、源的正負有沒有翻轉這個方向。完成這些判斷才帶數字，會比算完大小再猜正負可靠。題目若問場強的「大小」，最後才對合成向量取長度，不能對每一項先取絕對值再加。</p>
+</section>
+<section id="calculate">
+<h2>主例：先算一顆，再處理兩顆</h2>
+<p><strong>已知：</strong>真空、源電荷 q = +2 nC = 2 × 10⁻⁹ C，源在原點，P 在正 y 軸 R = 0.30 m。<strong>未知：</strong>P 處電場與 +1 nC 試驗電荷受力。單點源幾何明確，直接選庫侖式，不必做積分。</p>
+<p>把 30 cm 改寫成 0.30 m，是因為 k 的長度單位是 m²。若把數字 30 直接放進分母，算出的場會小一萬倍。奈庫侖的 n 代表 10⁻⁹，也必須轉成 C，才能讓單位確實相消。</p>
+<ol>
+<li>位移 R = 0.30 ŷ m，所以 R̂ = ŷ，且 R² = (0.30 m)² = 0.0900 m²。</li>
+<li><div class="equation">kq = (8.9875517923 × 10⁹ N·m²/C²)(2 × 10⁻⁹ C)<br>= 17.9751035846 N·m²/C</div></li>
+<li><div class="equation">E = (17.9751035846 / 0.0900) ŷ N/C<br>≈ 199.723 ŷ V/m</div></li>
+<li><div class="equation">F = (1 × 10⁻⁹ C)(199.723 ŷ N/C)<br>≈ 1.99723 × 10⁻⁷ ŷ N</div></li>
+</ol>
+<p><strong>檢查：</strong>N·m²/C 除以 m² 得 N/C；乘試驗電荷後回到 N。正源對正試驗電荷的力沿 +y，符合相斥；換成負試驗電荷只反轉 F，不反轉原有 E。</p>
+<h3>圖中的兩顆正電荷：水平抵消，垂直相加</h3>
+<p>現在把源移到 (−0.18, 0) m，並在 (+0.18, 0) m 放另一顆相同電荷；P 改為 (0, 0.24) m。這是另一個完整構型，兩顆到 P 的距離仍相同。</p>
+<div class="equation">R = √[(0.18 m)² + (0.24 m)²] = √(0.0900 m²) = 0.30 m<br>R̂₁ = 0.6 x̂ + 0.8 ŷ；R̂₂ = −0.6 x̂ + 0.8 ŷ</div>
+<p>每個場的大小都等於前面算出的 199.723 V/m。0.6 與 0.8 是位移各分量除以距離所得的投影係數；兩個係數平方和為一，保證單位向量長度為一。</p>
+<div class="equation">E₁ ≈ (119.834 x̂ + 159.779 ŷ) V/m<br>E₂ ≈ (−119.834 x̂ + 159.779 ŷ) V/m<br>E = E₁ + E₂ ≈ 319.557 ŷ V/m</div>
+<p>合場小於兩個大小直接相加的 399.447 V/m，因為水平作用彼此抵消。對稱讓我們預先知道 E<sub>x</sub> = 0，仍須算剩下的垂直分量；對稱本身不能給出 319.557 這個數字。</p>
+</section>
+<section id="practice">
+<h2>近題：只把單點主例的距離改成 0.40 m</h2>
+<p>源與試驗電荷不變，觀測點仍在正 y 軸。求 E 與 F，並先判斷是否小於原結果。</p>
+<details><summary>提示一：先檢查改了哪個量</summary><p>kq 沒變，分母從 0.30² 改為 0.40²。新舊場比等於 (0.30/0.40)²。</p></details>
+<details><summary>提示二：方向獨立處理</summary><p>源仍為正，P 仍在源的 +y 方向，所以 E 仍朝 +y；只需重新算大小。</p></details>
+<details><summary>完整詳解與檢查</summary><div class="equation">E = [17.9751035846 N·m²/C ÷ (0.40 m)²] ŷ<br>≈ 112.344 ŷ V/m<br>F = (1 × 10⁻⁹ C)(112.344 ŷ N/C) ≈ 1.12344 × 10⁻⁷ ŷ N</div><p>比值 112.344/199.723 ≈ 0.5625，恰為 (3/4)²；距離增加、場與力下降，且單位分別為 N/C 與 N。若只除以距離一次，單位也會不對。</p></details>
+</section>
+<section class="lab" id="experiment" data-lab="03">
+<h2>自由實驗：距離與平方反比</h2>
+<p>固定一顆 +2 nC 點電荷，觀測點沿同一條徑向移動。曲線的縱軸是場強大小，方向一直朝外。</p>
+<label for="lab-input">源電荷到觀測點 r（m）</label>
+<input id="lab-input" type="range" min="0.1" max="0.5" step="0.01" value="0.3">
+<output id="lab-value" for="lab-input">0.30 m</output>
+<button id="lab-reset" type="button">回到主例</button>
+<div id="lab-results" aria-live="polite"><p>r = 0.30 m；E ≈ 199.723 V/m，方向沿源到觀測點。</p></div>
+<p id="lab-why">距離在分母平方：由 0.30 m 移到 0.15 m，場強會成為四倍。</p>
+<div class="diagram" tabindex="0"><svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="plot-title-03 plot-desc-03" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="plot-title-03">E隨距離改變</title><desc id="plot-desc-03">固定正二奈庫侖點電荷，距離從零點一增加到零點五公尺，場強以平方反比下降。標記點為零點三公尺、約一百九十九點七二三伏特每公尺。</desc>
+<path d="M72 40 V245 H610" fill="none" stroke="currentColor" stroke-width="2"/>
+<text x="76" y="25">E（V/m）</text><text x="28" y="249">0</text><text x="10" y="59">1941</text>
+<path d="M72.00,69.07 L77.28,82.35 L82.56,94.17 L87.84,104.75 L93.12,114.26 L98.40,122.83 L103.68,130.58 L108.96,137.62 L114.24,144.03 L119.52,149.88 L124.80,155.24 L130.08,160.16 L135.36,164.68 L140.64,168.85 L145.92,172.71 L151.20,176.28 L156.48,179.59 L161.76,182.67 L167.04,185.53 L172.32,188.21 L177.60,190.70 L182.88,193.04 L188.16,195.22 L193.44,197.28 L198.72,199.21 L204.00,201.02 L209.28,202.73 L214.56,204.34 L219.84,205.86 L225.12,207.29 L230.40,208.65 L235.68,209.94 L240.96,211.16 L246.24,212.31 L251.52,213.41 L256.80,214.46 L262.08,215.45 L267.36,216.40 L272.64,217.30 L277.92,218.16 L283.20,218.98 L288.48,219.76 L293.76,220.51 L299.04,221.22 L304.32,221.91 L309.60,222.56 L314.88,223.19 L320.16,223.79 L325.44,224.37 L330.72,224.92 L336.00,225.45 L341.28,225.96 L346.56,226.45 L351.84,226.93 L357.12,227.38 L362.40,227.82 L367.68,228.24 L372.96,228.65 L378.24,229.04 L383.52,229.42 L388.80,229.78 L394.08,230.13 L399.36,230.47 L404.64,230.80 L409.92,231.12 L415.20,231.43 L420.48,231.72 L425.76,232.01 L431.04,232.29 L436.32,232.56 L441.60,232.82 L446.88,233.07 L452.16,233.31 L457.44,233.55 L462.72,233.78 L468.00,234.00 L473.28,234.22 L478.56,234.43 L483.84,234.64 L489.12,234.83 L494.40,235.03 L499.68,235.21 L504.96,235.40 L510.24,235.57 L515.52,235.75 L520.80,235.91 L526.08,236.08 L531.36,236.23 L536.64,236.39 L541.92,236.54 L547.20,236.69 L552.48,236.83 L557.76,236.97 L563.04,237.10 L568.32,237.24 L573.60,237.36 L578.88,237.49 L584.16,237.61 L589.44,237.73 L594.72,237.85 L600.00,237.96" fill="none" stroke="#087e8b" stroke-width="3"/>
+<circle cx="336.00" cy="225.45" r="6" fill="#c14f26"/>
+<text x="300" y="45">預設：0.3 m → 約 199.723 V/m</text>
+<text x="65" y="268">0.1</text><text x="574" y="268">0.5</text><text x="277" y="292">距離（m）</text></svg></div>
+<p id="lab-description">橫軸 r 為距離，縱軸 E 為場強；預設點位於 r = 0.30 m、E ≈ 199.723 V/m。曲線不延伸到源點 r = 0。</p>
+</section>
+<section id="model">
+<h2>模型邊界與量測證據</h2>
+<p>當 R 趨近無限遠，單點源的 E 趨近零；理想公式在 R 趨近零時發散，實體小球此時不能再忽略大小，內部電荷分布也需要另求。若把一組等量同號電荷放在觀測點兩側，且 P 正好位於中點，場會相消成零，但移離中點就通常不為零。</p>
+<p>實驗可用已知微小電荷配合力感測器，量 F 再除以 q<sub>t</sub>，或用校正過的靜電場探棒量特定方向的場。探棒有尺寸且會擾動電荷分布，測一次不能證明源是理想點電荷；改變距離並比較比值，才有助於檢驗平方反比。電場造成電荷受力，電荷移動時才涉及作功與能量改變，下一階段會用電位描述。</p>
+<p>來源：<a href="sources.html#source-local-upper">本地《電磁學（上）》2.1–2.2：庫倫定律與電場</a>。本頁統一寫「庫侖」。</p>
+</section>
+<footer class="pager"><a href="02-calculus.html" rel="prev">← 上一章</a><a href="index.html">課程地圖</a><a href="04-distributions.html" rel="next">下一章 →</a></footer>
+</main>
+</div>
+</body>
+</html>

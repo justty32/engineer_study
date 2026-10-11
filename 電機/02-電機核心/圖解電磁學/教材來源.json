@@ -1,0 +1,169 @@
+{
+ "contract": "wf-table/1",
+ "source": "教材查證.md",
+ "extracted": "2026-10-11",
+ "site_verification": {
+  "checked": "2026-10-11T15:09:08+08:00",
+  "source_count": 12,
+  "source_anchors": "12/12 通過",
+  "bibliography_and_official_urls": "與 dist/sources.html 完全一致"
+ },
+ "columns": [
+  "id",
+  "title",
+  "author",
+  "institution",
+  "edition",
+  "url",
+  "source_anchor",
+  "opened",
+  "verification",
+  "sha256"
+ ],
+ "rows": [
+  {
+   "id": "S-STAELIN",
+   "title": "Electromagnetics and Applications",
+   "author": "David H. Staelin",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 6.013, Spring 2009；課程全文筆記",
+   "url": "https://ocw.mit.edu/courses/6-013-electromagnetics-and-applications-spring-2009/d3be4ea78b036a6362230fb41780cf54_MIT6_013S09_notes.pdf",
+   "source_anchor": "source-staelin",
+   "opened": "2026-10-11",
+   "verification": "已開官方讀本與PDF；逐主張讀取相關正文、公式與印刷頁碼，沒有只採課綱。",
+   "sha256": "339945f81b2daebc5109956f4f9476c6e645094246009b9018d5950baad43e7e"
+  },
+  {
+   "id": "S-802-02",
+   "title": "Coulomb’s Law",
+   "author": "Sen-ben Liao；Peter Dourmashkin；John W. Belcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 8.02 TEAL Course Notes, 2004",
+   "url": "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide02.pdf",
+   "source_anchor": "source-mit802-02",
+   "opened": "2026-10-11",
+   "verification": "已開MIT官方章節PDF，核對相應正文與公式；頁碼採章號-頁號。",
+   "sha256": "6f7d90fd7520c1247c45324b66f5a84db3fab12c95dc33d94bee60198fc5d424"
+  },
+  {
+   "id": "S-802-03",
+   "title": "Electric Potential",
+   "author": "Sen-ben Liao；Peter Dourmashkin；John W. Belcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 8.02 TEAL Course Notes, 2004",
+   "url": "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide03.pdf",
+   "source_anchor": "source-mit802-03",
+   "opened": "2026-10-11",
+   "verification": "已開MIT官方章節PDF，核對相應正文與公式；頁碼採章號-頁號。",
+   "sha256": "bb112363e4a81550fab23a92396269411025c7c22434f3f8b635d45fee6c9009"
+  },
+  {
+   "id": "S-802-04",
+   "title": "Gauss’s Law",
+   "author": "Sen-ben Liao；Peter Dourmashkin；John W. Belcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 8.02 TEAL Course Notes, 2004",
+   "url": "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide04.pdf",
+   "source_anchor": "source-mit802-04",
+   "opened": "2026-10-11",
+   "verification": "已開MIT官方章節PDF，核對相應正文與公式；頁碼採章號-頁號。",
+   "sha256": "46399a38fc3afe0fb21dee2e1708094579b16dfcaa2260bd1e3794083302b0e4"
+  },
+  {
+   "id": "S-802-05",
+   "title": "Capacitance and Dielectrics",
+   "author": "Sen-ben Liao；Peter Dourmashkin；John W. Belcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 8.02 TEAL Course Notes, 2004",
+   "url": "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide05.pdf",
+   "source_anchor": "source-mit802-05",
+   "opened": "2026-10-11",
+   "verification": "已開MIT官方章節PDF，核對相應正文與公式；頁碼採章號-頁號。",
+   "sha256": "90376155722c0c41bb81428de7363bd110802a1e4d08fb169669849a7559d9e1"
+  },
+  {
+   "id": "S-802-06",
+   "title": "Current and Resistance",
+   "author": "Sen-ben Liao；Peter Dourmashkin；John W. Belcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 8.02 TEAL Course Notes, 2004",
+   "url": "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide06.pdf",
+   "source_anchor": "source-mit802-06",
+   "opened": "2026-10-11",
+   "verification": "已由MIT官方章節PDF核對相應正文與公式；頁碼採章號-頁號。guide06曾web逾時，後由官方URL成功下載實讀。",
+   "sha256": "8c39d4a8d80a6f5c0449d0c519a361cc0811a33dd779f89a45897d0f8e038595"
+  },
+  {
+   "id": "S-802-08",
+   "title": "Introduction to Magnetic Fields",
+   "author": "Sen-ben Liao；Peter Dourmashkin；John W. Belcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 8.02 TEAL Course Notes, 2004",
+   "url": "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide08.pdf",
+   "source_anchor": "source-mit802-08",
+   "opened": "2026-10-11",
+   "verification": "已開MIT官方章節PDF，核對相應正文與公式；頁碼採章號-頁號。",
+   "sha256": "e0e9d437e34ade482ec1a22fdd08b5c4d1c94457e6e08935f17560b7f911e98b"
+  },
+  {
+   "id": "S-802-09",
+   "title": "Sources of Magnetic Fields",
+   "author": "Sen-ben Liao；Peter Dourmashkin；John W. Belcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 8.02 TEAL Course Notes, 2004",
+   "url": "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide09.pdf",
+   "source_anchor": "source-mit802-09",
+   "opened": "2026-10-11",
+   "verification": "已開MIT官方章節PDF，核對相應正文與公式；頁碼採章號-頁號。",
+   "sha256": "abe8d7ea7bce7acc396feb5d22a227b97a2a53c21e48977124a2b48c37da0835"
+  },
+  {
+   "id": "S-802-10",
+   "title": "Faraday’s Law of Induction",
+   "author": "Sen-ben Liao；Peter Dourmashkin；John W. Belcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 8.02 TEAL Course Notes, 2004",
+   "url": "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide10.pdf",
+   "source_anchor": "source-mit802-10",
+   "opened": "2026-10-11",
+   "verification": "已開MIT官方章節PDF，核對相應正文與公式；頁碼採章號-頁號。",
+   "sha256": "00dfbcc03ca528916bae5e4ba77022efec4b12afbb3a56e74b3f6514ff707b03"
+  },
+  {
+   "id": "S-802-11",
+   "title": "Inductance and Magnetic Energy",
+   "author": "Sen-ben Liao；Peter Dourmashkin；John W. Belcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 8.02 TEAL Course Notes, 2004",
+   "url": "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide11.pdf",
+   "source_anchor": "source-mit802-11",
+   "opened": "2026-10-11",
+   "verification": "已開MIT官方章節PDF，核對相應正文與公式；頁碼採章號-頁號。",
+   "sha256": "264dff519bc759d101dcf93441e02387620a969ba4e6b58ca85cf78d8ce87327"
+  },
+  {
+   "id": "S-802-13",
+   "title": "Maxwell’s Equations and Electromagnetic Waves",
+   "author": "Sen-ben Liao；Peter Dourmashkin；John W. Belcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "MIT 8.02 TEAL Course Notes, 2004",
+   "url": "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide13.pdf",
+   "source_anchor": "source-mit802-13",
+   "opened": "2026-10-11",
+   "verification": "已開MIT官方章節PDF，核對相應正文與公式；頁碼採章號-頁號。",
+   "sha256": "db98c6acf4fa8d24f0ac8a6eb6c5113bb3f3637c3eed698d99b487afe1439fda"
+  },
+  {
+   "id": "S-HAUS08",
+   "title": "Electromagnetic Fields and Energy, Chapter 8",
+   "author": "Hermann A. Haus；James R. Melcher",
+   "institution": "Massachusetts Institute of Technology",
+   "edition": "1989；MIT OCW RES.6-001 Spring 2008版",
+   "url": "https://ocw.mit.edu/courses/res-6-001-electromagnetic-fields-and-energy-spring-2008/0bf75424fe9d0909caed4f14795d8bc9_08.pdf",
+   "source_anchor": "source-haus08",
+   "opened": "2026-10-11",
+   "verification": "已開官方§8.1 HTML與章8 PDF，實讀章內pp.3–5（PDF第4–6頁）。",
+   "sha256": "57a49e560b8f73549045dfdef3e8029be1cd396f91eb1f80bbc67ae6e70090a2"
+  }
+ ]
+}

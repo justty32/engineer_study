@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>天線與輻射一窺｜圖解電磁學</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="lab.css">
+<script src="app.js" defer></script>
+</head>
+<body data-page="27-antennas">
+<a class="skip-link" href="#main-content">跳到主要內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">教材來源</a></nav></header>
+<div class="site-layout">
+<aside class="course-nav" aria-label="課程章節"><a href="index.html">課程地圖</a><a href="26-waveguides.html">上一章</a><a href="index.html">課程地圖</a></aside>
+<main id="main-content">
+<header class="lesson-head">
+<p class="eyebrow">27 · 從導線電流到空間能流</p>
+<h1>天線與輻射一窺</h1>
+<p class="lead">300 MHz 的半波偶極天線大約多長？若它接受 1 W 功率，距離 10 m 的主要輻射方向上，平均能流與電場振幅各是多少？</p>
+<p class="prereq">這章假設已懂：<a href="18-waves.html">波長與坡印廷能流</a>、<a href="19-phasors.html">峰值、相位與偏振</a>、<a href="24-standing-waves.html">負載與反射</a>。本章建立設計尺度，實體天線仍需量測調諧。</p>
+</header>
+<section id="understand">
+<h2>振盪電流把能量送向空間</h2>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 680 340" role="img" aria-labelledby="antenna-title antenna-desc" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="antenna-title">垂直半波偶極的軸向零點與側向輻射</title>
+<desc id="antenna-desc">中心饋入的兩段導線沿垂直軸排列。包含天線軸的方向圖用左右兩個波瓣示意，沿天線軸理想輻射為零，垂直軸的側向輻射最大。右側觀測點的能量沿水平方向向外，電場垂直於傳播方向。方向圖是定性示意，箭頭不按振幅比例。</desc>
+<defs><marker id="antenna-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<ellipse cx="210" cy="172" rx="90" ry="70" fill="#087e8b" fill-opacity="0.06" stroke="#087e8b" stroke-width="2"/>
+<ellipse cx="390" cy="172" rx="90" ry="70" fill="#087e8b" fill-opacity="0.06" stroke="#087e8b" stroke-width="2"/>
+<path d="M300 64 V155 M300 189 V280" stroke="#b85f18" stroke-width="7"/>
+<circle cx="300" cy="172" r="16" fill="none" stroke="currentColor" stroke-width="2"/>
+<text x="292" y="178">~</text><text x="326" y="177">中心饋入</text>
+<path d="M132 172 H63" stroke="#7141a3" stroke-width="3" marker-end="url(#antenna-arrow)"/>
+<path d="M477 172 H568" stroke="#7141a3" stroke-width="3" marker-end="url(#antenna-arrow)"/>
+<path d="M568 172 V109" stroke="#b85f18" stroke-width="3" marker-end="url(#antenna-arrow)"/>
+<text x="575" y="113">E</text><text x="507" y="198">能流向外</text><text x="530" y="231">P：r = 10 m</text>
+<text x="317" y="72">沿軸：理想零點</text><text x="96" y="273">側向最強；三維繞軸呈環狀</text>
+<text x="30" y="25">方向圖為定性示意；所有箭頭只示方向</text><text x="225" y="321">兩臂總長 ℓ ≈ λ/2</text>
+</svg>
+</div>
+<p>訊號源讓導體內電荷往返加速，時變電流與電荷分布產生向外傳播的場；源提供的能量一部分輻射，一部分在導體與介質耗散。電荷主要留在天線附近往返，不是一路從天線飛到接收器。近處還有與天線交換儲能的近場，遠處才可近似為橫向傳播波。</p>
+<p>半波偶極天線（half-wave dipole）是兩段細導線在中央饋入，總長約半個波長。理想電流在中心最大、兩端趨近零；半個週期後方向反轉。圖中的波瓣表示遠場方向性，不是電荷路徑；三維方向圖近似環狀，天線軸向理想上沒有輻射。</p>
+<h3>73 Ω 說明的是輻射功率，不是所有輸入阻抗</h3>
+<p>細線、中心饋入、自由空間中的理想半波偶極，輻射電阻（radiation resistance）R<sub>r</sub>約為 73 Ω。它把送往空間的平均功率表示成等效電阻；實際輸入另有損耗電阻 R<sub>loss</sub>及電抗 X，不能只把天線當成精確的 73 Ω 純電阻。</p>
+<div class="equation">Z<sub>in</sub> = R<sub>r</sub> + R<sub>loss</sub> + jX<br>P<sub>rad</sub> = I<sub>rms</sub>²R<sub>r</sub> = I<sub>peak</sub>²R<sub>r</sub>/2<br>η<sub>rad</sub> = P<sub>rad</sub>/P<sub>t</sub> = R<sub>r</sub>/(R<sub>r</sub> + R<sub>loss</sub>)</div>
+<p>P<sub>rad</sub>是平均輻射功率，P<sub>t</sub>是天線接受的平均功率，均以 W 計；電流以 A 計。效率 η<sub>rad</sub>是無單位比例。損耗變大會讓相同接受功率中能送往空間的份量下降；電抗 X（Ω）對應週期性交換的儲能，理想情況不消耗平均功率。</p>
+<h3>方向性與增益分清楚</h3>
+<p>方向性 D（directivity）比較某方向的能流與「相同輻射功率均勻散到球面」的能流；增益 G（gain）再把效率算進去。遠場距離 r（m）、平均能流密度 S（W/m²）滿足：</p>
+<div class="equation">D = 4πr²S/P<sub>rad</sub>；G = η<sub>rad</sub>D<br>S = P<sub>t</sub>G/(4πr²)</div>
+<p>D、G 都沒有單位，但隨方向改變。無損半波偶極的側向最大值約為 1.64，即 10 log₁₀(1.64) ≈ 2.15 dBi；dBi 是相對理想各向同性天線的功率比。較大增益通常表示能量更集中，不代表被動天線憑空產生更多總功率。波束寬度描述主波瓣的角度範圍，偏振則描述遠場電場的振動方向。</p>
+</section>
+<section id="calculate">
+<h2>主例：300 MHz 的尺寸與 10 m 處的電場</h2>
+<p><strong>已知：</strong>真空近似，f = 300 MHz = 3.00 × 10⁸ Hz；低損耗半波偶極接受 P<sub>t</sub> = 1 W，沿側向取 G = 1.64，r = 10 m。<strong>未知：</strong>波長 λ、理想總長 ℓ、平均 S 與電場峰值 E₀、均方根值（root mean square, RMS）E<sub>rms</sub>。</p>
+<ol>
+<li>從頻率換算波長，再取一半。<div class="equation">λ = c/f = (299792458 m/s)/(3.00 × 10⁸ s⁻¹)<br>≈ 0.999308193 m<br>ℓ ≈ λ/2 ≈ 0.499654097 m<br>每一臂約 ℓ/2 ≈ 0.249827048 m</div></li>
+<li>把平均功率分到半徑 r 的球面，再乘該方向增益。<div class="equation">4πr² = 4π(10 m)² ≈ 1256.63706 m²<br>S = (1 W)(1.64)/(1256.63706 m²)<br>≈ 0.001305071 W/m² = 1.305071 mW/m²</div></li>
+<li>遠場近似局部平面波，平均能流為 E₀²/(2η₀)。η₀ ≈ 376.7303137 Ω 是真空波阻抗，峰值公式保留二分之一。<div class="equation">E₀ = √(2η₀S)<br>≈ √[2(376.7303137 Ω)(0.001305071 W/m²)]<br>≈ 0.991625 V/m<br>E<sub>rms</sub> = E₀/√2 ≈ 0.701184 V/m</div></li>
+</ol>
+<p><strong>檢查：</strong>Ω·W = V²，開根號後得到 V/m；用 E<sub>rms</sub>²/η₀回代，也得到同一平均 S。若把 0.991625 當均方根再算功率，會高估兩倍。距離加倍時 S 變四分之一，E 只變一半，因為能流與場的平方成正比。</p>
+<p>本例 r 約為 10λ，也遠大於天線總長；以最大尺寸 L<sub>a</sub> ≈ 0.5 m 估計，常用遠場尺度 2L<sub>a</sub>²/λ 約 0.5 m，10 m 符合此例的遠場近似。大型陣列的 L<sub>a</sub>可能很大，不能把「10 m」當成所有天線都足夠遠的固定距離。</p>
+<h3>接收端能拿到多少：Friis 關係</h3>
+<p>在自由空間遠場、阻抗匹配與偏振對準下，接收天線的有效面積（effective aperture）A<sub>e</sub> = G<sub>r</sub>λ²/(4π)。它是「收到的功率除以入射能流」的等效面積，單位 m²，不一定等於金屬的投影面積。把它乘上入射 S，便得到 Friis 傳輸公式。</p>
+<div class="equation">P<sub>r</sub> = S A<sub>e</sub> = P<sub>t</sub>G<sub>t</sub>G<sub>r</sub>[λ/(4πr)]²</div>
+<p>G<sub>t</sub>與 G<sub>r</sub>分別是發射與接收天線朝向對方的增益。若接收端也取 1.64，沿用主例數值，P<sub>r</sub> = (1 W)(1.64)²[0.999308193 m/(4π × 10 m)]² ≈ 0.000170085 W = 0.170085 mW。括號內無單位，結果保留 W；多路徑、遮蔽物、失配與偏振偏差都會使這個理想鏈路估算失準。</p>
+<h3>陣列用相位安排場的相加</h3>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 640 290" role="img" aria-labelledby="array-title array-desc" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="array-title">兩個陣列元件的路徑差投影</title>
+<desc id="array-desc">兩元件沿正 z 排列相隔 d，觀測方向與正 z 夾角 theta 為六十度。從右側元件畫出垂直於觀測方向的等相位參考面，與左側射線交於 F。左元件多走的距離 AF 等於 d cos theta。改變右元件的激發相位，可補償這個路徑差。</desc>
+<defs><marker id="array-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<path d="M150 200 H575" stroke="#657482" stroke-width="2" marker-end="url(#array-arrow)"/>
+<path d="M170 200 L270 27" stroke="#087e8b" stroke-width="2" marker-end="url(#array-arrow)"/>
+<path d="M410 200 L510 27" stroke="#087e8b" stroke-width="2" marker-end="url(#array-arrow)"/>
+<path d="M170 200 L230 96" stroke="#b85f18" stroke-width="5"/>
+<path d="M230 96 L410 200" stroke="#657482" stroke-width="2" stroke-dasharray="5 5"/>
+<path d="M222 200 A52 52 0 0 0 196 155" stroke="currentColor" stroke-width="1.5" fill="none"/>
+<circle cx="170" cy="200" r="7" fill="#7141a3"/><circle cx="410" cy="200" r="7" fill="#7141a3"/>
+<text x="590" y="207">+z</text><text x="219" y="172">θ</text><text x="209" y="88">F</text><text x="99" y="116">d cos θ</text>
+<text x="100" y="239">元件 0：相位 0</text><text x="365" y="239">元件 1：相位 α</text>
+<text x="279" y="276">間距 d</text><text x="318" y="25">平行射線：同一遠場方向</text>
+</svg>
+</div>
+<p>陣列（array）讓多個元件的電場先相加，再由合場算功率；直接把功率相加會漏掉干涉。沿 +z 排列、間距 d（m）的元件，朝與 +z 夾 θ 的遠場方向，鄰元件的路徑差為 d cos θ。若每個元件比前一個多激發相位 α（rad），採 exp(jωt) 慣例時，合成相位差為：</p>
+<div class="equation">Δψ = kd cos θ + α；k = 2π/λ<br>朝 θ₀ 同相相加：α = −kd cos θ₀（可相差整數個 2π）</div>
+<p>例如 d = λ/2 時 kd = π；若希望朝 θ₀ = 60°相加，就設 α = −π cos 60° = −π/2。α = 0 時則在 θ = 90°側向同相。相位只能安排波束方向，元件方向圖與間距仍會限制結果；間距過大可能出現多個強波束，不能只看主波束就判定沒有其他方向的輻射。</p>
+</section>
+<section id="practice">
+<h2>近題：設計頻率改成 600 MHz</h2>
+<p>仍採理想細半波偶極，只改設計頻率，求波長、兩臂總長與單臂長度。</p>
+<details><summary>提示一：頻率加倍，波長反比縮短</summary><p>使用 λ = c/f，先把 600 MHz 換成 6.00 × 10⁸ Hz。</p></details>
+<details><summary>提示二：半波指兩臂合計</summary><p>總長約 λ/2，每一臂約 λ/4；不要把兩根導線各自做成半個波長。</p></details>
+<details><summary>完整詳解與檢查</summary><div class="equation">λ = (299792458 m/s)/(6.00 × 10⁸ s⁻¹) ≈ 0.499654097 m<br>ℓ ≈ λ/2 ≈ 0.249827048 m<br>單臂 ≈ λ/4 ≈ 0.124913524 m</div><p>頻率是主例兩倍，每個長度都是一半，單位由 (m/s)/(1/s) 得 m。這些是起始設計值；端效應與周圍結構仍使實際諧振長度需要調整。</p></details>
+</section>
+<section class="lab" id="experiment" data-lab="27">
+<h2>自由實驗：頻率決定設計尺度</h2>
+<p>改變設計頻率，觀察真空波長與理想半波總長。圖畫總長，沒有把單臂長混入。</p>
+<label for="lab-input">天線設計頻率 f（MHz）</label>
+<input id="lab-input" type="range" min="100" max="1000" step="10" value="300">
+<output id="lab-value" for="lab-input">300 MHz</output>
+<button id="lab-reset" type="button">回到主例</button>
+<div id="lab-results" aria-live="polite"><p>λ ≈ 0.999308 m；理想兩臂總長 ℓ ≈ 0.499654 m。</p></div>
+<p id="lab-why">光速固定，頻率愈高，每個週期能前進的距離愈短，因此波長與半波長都依 1/f 縮小。</p>
+<div class="diagram" tabindex="0"><svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="plot-title-27 plot-desc-27" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="plot-title-27">半波偶極總長隨設計頻率下降</title><desc id="plot-desc-27">頻率從一百到一千兆赫茲，理想半波偶極總長以反比下降。預設三百兆赫茲對應約零點四九九六五四公尺。</desc>
+<path d="M72 40 V245 H610" fill="none" stroke="currentColor" stroke-width="2"/>
+<text x="76" y="25">總長 ℓ（m）</text><text x="28" y="249">0</text><text x="15" y="58">1.65</text>
+<path d="M72.00,72.39 L77.28,86.64 L82.56,98.72 L87.84,109.09 L93.12,118.08 L98.40,125.96 L103.68,132.92 L108.96,139.11 L114.24,144.65 L119.52,149.64 L124.80,154.15 L130.08,158.26 L135.36,162.02 L140.64,165.46 L145.92,168.62 L151.20,171.55 L156.48,174.26 L161.76,176.78 L167.04,179.12 L172.32,181.31 L177.60,183.35 L182.88,185.27 L188.16,187.08 L193.44,188.78 L198.72,190.38 L204.00,191.89 L209.28,193.32 L214.56,194.68 L219.84,195.96 L225.12,197.19 L230.40,198.35 L235.68,199.46 L240.96,200.51 L246.24,201.52 L251.52,202.49 L256.80,203.41 L262.08,204.29 L267.36,205.14 L272.64,205.95 L277.92,206.73 L283.20,207.48 L288.48,208.20 L293.76,208.89 L299.04,209.56 L304.32,210.20 L309.60,210.82 L314.88,211.42 L320.16,212.00 L325.44,212.55 L330.72,213.09 L336.00,213.62 L341.28,214.12 L346.56,214.61 L351.84,215.09 L357.12,215.54 L362.40,215.99 L367.68,216.42 L372.96,216.84 L378.24,217.25 L383.52,217.65 L388.80,218.03 L394.08,218.40 L399.36,218.77 L404.64,219.12 L409.92,219.47 L415.20,219.80 L420.48,220.13 L425.76,220.45 L431.04,220.76 L436.32,221.06 L441.60,221.36 L446.88,221.64 L452.16,221.92 L457.44,222.20 L462.72,222.47 L468.00,222.73 L473.28,222.98 L478.56,223.23 L483.84,223.48 L489.12,223.72 L494.40,223.95 L499.68,224.18 L504.96,224.40 L510.24,224.62 L515.52,224.84 L520.80,225.05 L526.08,225.25 L531.36,225.45 L536.64,225.65 L541.92,225.84 L547.20,226.03 L552.48,226.22 L557.76,226.40 L563.04,226.58 L568.32,226.75 L573.60,226.93 L578.88,227.09 L584.16,227.26 L589.44,227.42 L594.72,227.58 L600.00,227.74" fill="none" stroke="#087e8b" stroke-width="3"/>
+<circle cx="189.33" cy="187.46" r="6" fill="#c14f26"/>
+<text x="250" y="46">300 MHz → ℓ ≈ 0.499654 m</text><text x="60" y="268">100</text><text x="569" y="268">1000</text><text x="263" y="292">頻率 f（MHz）</text></svg></div>
+<p id="lab-description">橫軸是設計頻率，縱軸是兩臂合計的理想長度；預設 300 MHz 時約為 0.499654 m，單臂是這個數值的一半。</p>
+</section>
+<section id="model">
+<h2>從計算尺寸到實際天線</h2>
+<p>頻率趨低時理想半波長會變得很大；若強行保持小尺寸，就離開半波偶極模型。頻率提高時尺寸變短，但接頭、線徑與附近物體的相對影響可能變大。端效應通常使實體諧振偶極比理想 λ/2 略短；精確長度與阻抗需要在實際環境調整。</p>
+<p>向量網路分析儀量輸入阻抗與反射，能看匹配與共振；很低的反射不能單獨證明高輻射效率，功率也可能耗成熱。方向圖與增益要在合適遠場或經轉換的近場量測；校正電場探棒則讀場強，還須確認是峰值或均方根。改變接收天線方向，可檢查偏振是否對準，不能把方向錯誤造成的弱接收全歸咎於發射功率不足。</p>
+<p>來源：<a href="sources.html#source-local-lower">本地《電磁學（下）》19.1–19.3</a>；<a href="sources.html#source-chapter-27">Staelin §10.2–10.4、§11.2 的輻射、增益與陣列公式定位</a>。</p>
+</section>
+<footer class="pager"><a href="26-waveguides.html" rel="prev">← 上一章</a><a href="index.html" rel="next">回到課程地圖 →</a></footer>
+</main>
+</div>
+</body>
+</html>

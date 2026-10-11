@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>駐波、輸入阻抗與史密斯圖｜圖解電磁學</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="lab.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-page="24-standing-waves">
+  <a class="skip-link" href="#main-content">跳到主要內容</a>
+  <header class="site-header">
+    <a class="brand" href="index.html">圖解電磁學</a>
+    <nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a> <a href="sources.html">資料來源</a></nav>
+  </header>
+  <div class="site-layout">
+    <aside class="course-nav" aria-label="課程章節"><a href="index.html">課程首頁</a> <a href="glossary.html">名詞字典</a></aside>
+    <main id="main-content">
+      <header class="lesson-head">
+        <p class="eyebrow">24 · 反射改變沿線電壓與阻抗</p>
+        <h1>駐波、輸入阻抗與史密斯圖</h1>
+        <p class="lead">50 Ω 傳輸線接上 100 Ω 負載，為什麼負載電壓會比入射波大，吸收功率卻變小？若量測點移到四分之一波長外，又會看到多少阻抗？</p>
+        <p class="prereq">已懂<a href="23-transmission-lines.html">上一章的特性阻抗與行進波</a>，以及相量的振幅、相位。本章固定無損線、正弦穩態，所有電壓與電流相量均用峰值。</p>
+      </header>
+
+      <section id="understand" aria-labelledby="understand-title">
+        <h2 id="understand-title">負載把一部分能量送回來</h2>
+        <p>線的特性阻抗 Z<sub>0</sub> 決定單一行進波的電壓／電流比；負載阻抗 Z<sub>L</sub> 決定線端總電壓／總電流比。兩者不同時，反射波必須與入射波疊加，才能同時滿足線與負載的關係。能量由兩導體之間的電磁場傳送，負載電阻把收到的淨能量轉成熱。</p>
+        <figure>
+          <div class="diagram" tabindex="0">
+            <svg viewBox="0 0 640 350" role="img" aria-labelledby="line-title line-desc">
+              <title id="line-title">入射波、反射波與負載的方向約定</title>
+              <desc id="line-desc">傳輸線位於負 z，負載在 z 等於零。入射波朝右正 z 傳播，反射波朝左負 z 傳播。上導體電流參考方向始終向右，負載電壓以上正下負定義。</desc>
+              <defs><marker id="line-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+              <g fill="currentColor" font-size="16">
+                <path d="M55 105 H540 V121 M55 235 H540 V218 M540 121 L530 133 L550 147 L530 161 L550 175 L530 189 L550 203 L540 218" fill="none" stroke="currentColor" stroke-width="3"/>
+                <path d="M125 62 H340" fill="none" stroke="currentColor" stroke-width="3" marker-end="url(#line-arrow)"/>
+                <path d="M340 158 H125" fill="none" stroke="currentColor" stroke-width="3" marker-end="url(#line-arrow)"/>
+                <text x="125" y="42">入射波朝 +z：V+ = 3 Vpeak</text>
+                <text x="90" y="191">反射波朝 −z：V− = 1 Vpeak</text>
+                <path d="M335 93 H443" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#line-arrow)"/>
+                <text x="350" y="81">I 以 +z 為正</text>
+                <text x="568" y="142">＋</text><text x="568" y="217">−</text>
+                <text x="403" y="142">RL = 100 Ω</text>
+                <text x="434" y="206">VL = 4 V</text>
+                <text x="70" y="225">Z0 = 50 Ω</text>
+                <path d="M340 259 H215" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#line-arrow)"/>
+                <text x="85" y="282">下導體提供回流路徑</text>
+                <path d="M55 310 H595" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#line-arrow)"/>
+                <text x="58" y="337">線：z ≤ 0</text><text x="485" y="337">負載 z = 0</text><text x="588" y="290">+z</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>波的傳播方向與電流參考方向分開定義。反射電壓為正相量時，其電流相量相對 +z 為負；線上電壓、電流都要先相加，再算負載功率。</figcaption>
+        </figure>
+        <p>令負載在 z = 0，線位於 z ≤ 0；使用 e<sup>jωt</sup> 的時間約定，j² = −1，ω 是角頻率（rad/s）。β = 2π/λ 是相位常數（rad/m），λ 是線上波長（m）。峰值相量 V<sup>+</sup> 與 V<sup>−</sup> 定義在負載端，瞬時量取相量乘 e<sup>jωt</sup> 的實部。</p>
+        <div class="equation">V(z) = V<sup>+</sup>e<sup>−jβz</sup> + V<sup>−</sup>e<sup>+jβz</sup><br>I(z) = [V<sup>+</sup>e<sup>−jβz</sup> − V<sup>−</sup>e<sup>+jβz</sup>]/Z<sub>0</sub></div>
+        <p>第一項朝 +z，第二項朝 −z。電流反射項的負號來自反向傳播，而整條線的 I 參考方向仍是 +z。把 z = 0 代入，再用 V<sub>L</sub> = Z<sub>L</sub>I<sub>L</sub>，便能求出電壓反射係數（reflection coefficient）：</p>
+        <div class="equation">Z<sub>L</sub>/Z<sub>0</sub> = (V<sup>+</sup> + V<sup>−</sup>)/(V<sup>+</sup> − V<sup>−</sup>) = (1 + Γ<sub>L</sub>)/(1 − Γ<sub>L</sub>)<br>Γ<sub>L</sub> = V<sup>−</sup>/V<sup>+</sup> = (Z<sub>L</sub> − Z<sub>0</sub>)/(Z<sub>L</sub> + Z<sub>0</sub>)</div>
+        <p>Γ<sub>L</sub> 無單位，通常是複數：大小代表反射比例，相位代表電壓相位差。本頁滑桿只用純電阻，因此 Γ 是實數；負值表示反射電壓相位差 180°，不是負的功率。</p>
+      </section>
+
+      <section id="calculate" aria-labelledby="calculate-title">
+        <h2 id="calculate-title">主例：50 Ω 線接 100 Ω 負載</h2>
+        <p><strong>已知：</strong>Z<sub>0</sub> = 50 Ω、R<sub>L</sub> = 100 Ω、V<sup>+</sup> = 3 V<sub>peak</sub>、線無損。<strong>求：</strong>反射波、負載電壓與電流、功率、駐波比，以及距負載 λ/4 處的輸入阻抗。</p>
+        <h3>1．先算反射，再把電壓與電流各自相加</h3>
+        <div class="equation">Γ<sub>L</sub> = (100 Ω − 50 Ω)/(100 Ω + 50 Ω) = 1/3<br>V<sup>−</sup> = (1/3) × 3 V<sub>peak</sub> = 1 V<sub>peak</sub><br>I<sup>+</sup> = 3 V/50 Ω = 0.06 A<sub>peak</sub><br>I<sup>−</sup> = −1 V/50 Ω = −0.02 A<sub>peak</sub>（相對 +z）<br>V<sub>L</sub> = 3 V<sub>peak</sub> + 1 V<sub>peak</sub> = 4 V<sub>peak</sub><br>I<sub>L</sub> = 0.06 A<sub>peak</sub> − 0.02 A<sub>peak</sub> = 0.04 A<sub>peak</sub></div>
+        <p>檢查 V<sub>L</sub>/I<sub>L</sub> = 4 V/0.04 A = 100 Ω，正好滿足負載。若把反射電流誤寫成 +0.02 A，就會破壞這個條件。</p>
+        <h3>2．峰值相量算平均功率，要保留 1/2</h3>
+        <p>正弦穩態的平均功率為 P = ½ Re(VI*)，星號表示複共軛。無損線的 Z<sub>0</sub> 是實數，單一行進波的功率大小可寫成 |V|²/(2Z<sub>0</sub>)。以下 P<sup>−</sup> 記錄向 −z 傳播的正功率大小，淨向 +z 功率因此用相減。</p>
+        <div class="equation">P<sup>+</sup> = (3 V)²/(2 × 50 Ω) = 0.09 W<br>P<sup>−</sup> = (1 V)²/(2 × 50 Ω) = 0.01 W<br>P<sub>L</sub> = (4 V)(0.04 A)/2 = 0.08 W<br>P<sup>+</sup> − P<sup>−</sup> = 0.09 W − 0.01 W = 0.08 W = P<sub>L</sub></div>
+        <p>單位 V²/Ω = VA = W。負載電壓變大同時，負載電流變小；多出的電壓不代表憑空增加能量。這裡所有振幅都是 peak；若改用均方根值（root mean square，RMS）相量，功率式便沒有 1/2。</p>
+        <h3>3．從兩個行進波找沿線峰值包絡</h3>
+        <p>本例 V(z) = 3e<sup>−jβz</sup> + e<sup>+jβz</sup> V。兩項同相時相加成 4 V，反相時剩 2 V。位置改變兩波相對相位，因而形成固定的峰、谷；包絡 |V(z)| 是每個位置隨時間振盪的峰值，不是某一瞬間的電壓。</p>
+        <div class="equation">|V(z)|² = V(z)V(z)*<br>= [9 + 1 + 3e<sup>−j2βz</sup> + 3e<sup>+j2βz</sup>] V²<br>= [10 + 6 cos(2βz)] V²<br>|V(z)| = √[10 + 6 cos(2βz)] V<br>V<sub>max</sub> = |V<sup>+</sup>|(1 + |Γ<sub>L</sub>|) = 3(1 + 1/3) V = 4 V<br>V<sub>min</sub> = |V<sup>+</sup>|(1 − |Γ<sub>L</sub>|) = 3(1 − 1/3) V = 2 V<br>VSWR = V<sub>max</sub>/V<sub>min</sub> = (1 + |Γ<sub>L</sub>|)/(1 − |Γ<sub>L</sub>|) = 2</div>
+        <p>電壓駐波比（voltage standing-wave ratio）無單位；對被動負載，|Γ| ≤ 1。此例最大值在 z = 0、−λ/2，最小值在 −λ/4；相鄰最大與最小相隔 λ/4。只有 |Γ| = 1 時才有完全駐波與零電壓節點。</p>
+        <h3>4．移動量測面，輸入阻抗也跟著變</h3>
+        <p>距負載 ℓ（m）處是 z = −ℓ。將波式在此處的 V 除以 I，便得到朝負載看的輸入阻抗（input impedance）。用 e<sup>±jβℓ</sup> = cos(βℓ) ± j sin(βℓ) 展開並整理，可得常用正切形式：</p>
+        <div class="equation">Z<sub>in</sub>(ℓ) = Z<sub>0</sub>[1 + Γ<sub>L</sub>e<sup>−j2βℓ</sup>]/[1 − Γ<sub>L</sub>e<sup>−j2βℓ</sup>]<br>= Z<sub>0</sub>[Z<sub>L</sub> + jZ<sub>0</sub>tan(βℓ)]/[Z<sub>0</sub> + jZ<sub>L</sub>tan(βℓ)]</div>
+        <p>當 ℓ = λ/4，βℓ = π/2，正切趨向無限；改用第一式便能避開正切的極點。往源端走 λ/4，反射係數轉了半圈：</p>
+        <div class="equation">Γ<sub>in</sub> = (1/3)e<sup>−jπ</sup> = −1/3<br>Z<sub>in</sub>(λ/4) = 50 Ω × (1 − 1/3)/(1 + 1/3) = 25 Ω<br>亦即 Z<sub>in</sub>(λ/4) = Z<sub>0</sub>²/Z<sub>L</sub> = (50 Ω)²/(100 Ω) = 25 Ω</div>
+        <p>也可直接回到行進波檢查方向：z = −λ/4 時，e<sup>−jβz</sup> = j、e<sup>+jβz</sup> = −j。反射電流在波式中原有的負號，此時乘上 −j：</p>
+        <div class="equation">V(−λ/4) = j(3 V) + (−j)(1 V) = j(3 V − 1 V) = j2 V<br>I(−λ/4) = [j(3 V) − (−j)(1 V)]/(50 Ω)<br>= j(0.06 A + 0.02 A) = j0.08 A<br>V(−λ/4)/I(−λ/4) = j2 V/(j0.08 A) = 25 Ω</div>
+        <p>四分之一波長處看到 25 Ω；負載本身仍是 100 Ω。量綱 Ω²/Ω = Ω。若 ℓ = 0，輸入阻抗回到 100 Ω；若 ℓ = λ/2，反射係數轉滿一圈，也回到 100 Ω。</p>
+        <h3>史密斯圖就是把這次移動畫出來</h3>
+        <p>史密斯圖（Smith chart）以 Γ 的複數平面表示阻抗。把阻抗正規化為 ζ = Z/Z<sub>0</sub>，避免與位置 z 混淆，就有 Γ = (ζ − 1)/(ζ + 1)，反解為 ζ = (1 + Γ)/(1 − Γ)。完整史密斯圖另有等電阻圓與等電抗弧，讓人能從 Γ 讀回複阻抗；本圖省略格線。</p>
+        <p>中心 Γ = 0 是匹配 ζ = 1；實軸右端 Γ = +1 是開路，左端 Γ = −1 是短路。本例負載 ζ = 2，落在實軸 +1/3。沿無損線往源端走，Γ<sub>in</sub> = Γ<sub>L</sub>e<sup>−j2βℓ</sup> 沿等 |Γ| 圓順時針旋轉；λ/4 後到 −1/3，讀出 ζ = 0.5，即 25 Ω。圓半徑不變，所以 VSWR 也不變。</p>
+        <figure><div class="diagram" tabindex="0"><svg viewBox="0 0 640 360" role="img" aria-labelledby="smith-title smith-desc">
+          <title id="smith-title">史密斯圖的反射係數平面與本例的半圈旋轉</title><desc id="smith-desc">實軸向右、虛軸向上。單位圓中心是匹配，左端短路、右端開路。反射係數由正三分之一沿半徑三分之一的圓順時針走下半圈，到負三分之一。</desc>
+          <defs><marker id="smith-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+          <g fill="currentColor" font-size="16">
+            <circle cx="320" cy="175" r="130" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="320" cy="175" r="43.333" fill="none" stroke="currentColor" stroke-dasharray="4 4"/>
+            <path d="M140 175 H500" fill="none" stroke="currentColor" marker-end="url(#smith-arrow)"/><path d="M320 325 V20" fill="none" stroke="currentColor" marker-end="url(#smith-arrow)"/>
+            <path d="M363.333 175 A43.333 43.333 0 0 1 276.667 175" fill="none" stroke="currentColor" stroke-width="3" marker-end="url(#smith-arrow)"/>
+            <circle cx="363.333" cy="175" r="5"/><circle cx="276.667" cy="175" r="5"/><circle cx="320" cy="175" r="3"/>
+            <text x="510" y="181">Re Γ</text><text x="334" y="27">Im Γ</text><text x="362" y="66">|Γ| = 1</text>
+            <text x="57" y="170">−1：短路</text><text x="470" y="206">+1：開路</text>
+            <path d="M274 173 L240 122 H134 M366 172 L401 122 H500" fill="none" stroke="currentColor"/>
+            <text x="115" y="101">−1/3：ζ = 0.5</text><text x="409" y="101">+1/3：ζ = 2</text>
+            <text x="329" y="155">0：匹配</text><text x="355" y="251">往源端 λ/4，順時針</text><text x="347" y="281">|Γ| = 1/3 保持不變</text>
+            <text x="44" y="349">Γ 平面示意：省略等電阻圓與等電抗弧格線</text>
+          </g>
+        </svg></div><figcaption>實軸上的 +1/3 對應 100 Ω，轉半圈後的 −1/3 對應 25 Ω。箭頭沿下半圈順時針，表達量測面向源端移動 λ/4。</figcaption></figure>
+      </section>
+
+      <section id="practice" aria-labelledby="practice-title">
+        <h2 id="practice-title">近題：只把負載改成 25 Ω</h2>
+        <p>其餘條件相同。求 Γ<sub>L</sub>、V<sub>L</sub>、I<sub>L</sub>、P<sub>L</sub>、VSWR 與 Z<sub>in</sub>(λ/4)。負載端會變成電壓包絡的峰，還是谷？</p>
+        <details><summary>提示一：反射係數現在帶負號</summary><p>Γ<sub>L</sub> = (25 − 50)/(25 + 50)。先算 V<sup>−</sup>，再用 I<sup>−</sup> = −V<sup>−</sup>/Z<sub>0</sub>；此式的傳播方向負號仍要保留。</p></details>
+        <details><summary>提示二：駐波比只看反射係數的大小</summary><p>把 |Γ| 放進 VSWR。負載平均功率可用 V<sub>L</sub>I<sub>L</sub>/2，再用 P<sup>+</sup> − P<sup>−</sup> 驗一次；四分之一波長的輸入阻抗用 Z<sub>0</sub>²/R<sub>L</sub>。</p></details>
+        <details><summary>完整詳解與檢查</summary><div class="equation">Γ<sub>L</sub> = (25 Ω − 50 Ω)/(25 Ω + 50 Ω) = −1/3<br>V<sup>−</sup> = (−1/3)(3 V) = −1 V<sub>peak</sub><br>I<sup>−</sup> = −(−1 V)/(50 Ω) = +0.02 A<sub>peak</sub><br>V<sub>L</sub> = 3 V − 1 V = 2 V<sub>peak</sub>；　I<sub>L</sub> = 0.06 A + 0.02 A = 0.08 A<sub>peak</sub><br>P<sub>L</sub> = (2 V)(0.08 A)/2 = 0.08 W<br>P<sup>−</sup> = |−1 V|²/(2 × 50 Ω) = 0.01 W<br>VSWR = (1 + 1/3)/(1 − 1/3) = 2<br>Z<sub>in</sub>(λ/4) = (50 Ω)²/(25 Ω) = 100 Ω</div><p>檢查 2 V/0.08 A = 25 Ω，且 0.09 W − 0.01 W = 0.08 W，負載與守恆皆滿足。反射電壓相量為負，反射電流相量為正，兩者的平均功率相對 +z 仍是 −0.01 W。包絡最大 4 V、最小 2 V，現在 z = 0 是谷，−λ/4 是峰。Ω²/Ω = Ω，VSWR 無單位。</p></details>
+      </section>
+
+      <section class="lab" id="experiment" data-lab="24" aria-labelledby="experiment-title">
+        <h2 id="experiment-title">動手改：負載如何改變反射與包絡？</h2>
+        <p>固定 Z<sub>0</sub> = 50 Ω、入射 3 V<sub>peak</sub>。先試 50 Ω，再試 0 Ω，觀察負載功率與電壓節點的變化。</p>
+        <div class="lab-controls"><label for="lab-input">純電阻負載 RL（Ω）</label><input id="lab-input" type="range" min="0" max="200" step="5" value="100"><output id="lab-value" for="lab-input">100 Ω</output><button id="lab-reset" type="button">回到主例</button></div>
+        <div id="lab-results" aria-live="polite"><div class="readout"><small>ΓL（無單位）</small><strong>1/3</strong></div><div class="readout"><small>VL（Vpeak）</small><strong>4</strong></div><div class="readout"><small>IL（Apeak）</small><strong>0.04</strong></div><div class="readout"><small>入射 P+（W）</small><strong>0.09</strong></div><div class="readout"><small>反射 P−（W）</small><strong>0.01</strong></div><div class="readout"><small>負載 PL（W）</small><strong>0.08</strong></div><div class="readout"><small>VSWR（無單位）</small><strong>2</strong></div></div>
+        <p id="lab-why">負載 100 Ω 大於 Z0，反射電壓與入射電壓在負載端同相，所以此處為 4 V 的包絡最大值。反射功率為入射功率的 |Γ|² = 1/9。</p>
+        <div class="diagram" tabindex="0">
+          <svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="lab-plot-title lab-plot-desc">
+            <title id="lab-plot-title">100 Ω 負載的電壓包絡</title>
+            <desc id="lab-plot-desc">橫軸從負半波長到負載零，縱軸為電壓峰值。包絡在負半波長及負載達四伏特，在負四分之一波長降到二伏特。</desc>
+            <g fill="currentColor" font-size="16">
+              <path d="M80 45 V250 H575" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M80 90 H560 M80 170 H560" fill="none" stroke="currentColor" stroke-dasharray="5 5"/>
+              <path d="M80.00 90.00 L86.00 90.09 L92.00 90.37 L98.00 90.83 L104.00 91.48 L110.00 92.30 L116.00 93.30 L122.00 94.48 L128.00 95.84 L134.00 97.36 L140.00 99.04 L146.00 100.89 L152.00 102.89 L158.00 105.03 L164.00 107.32 L170.00 109.74 L176.00 112.28 L182.00 114.94 L188.00 117.71 L194.00 120.57 L200.00 123.51 L206.00 126.52 L212.00 129.59 L218.00 132.70 L224.00 135.84 L230.00 138.98 L236.00 142.10 L242.00 145.20 L248.00 148.23 L254.00 151.18 L260.00 154.02 L266.00 156.73 L272.00 159.26 L278.00 161.60 L284.00 163.71 L290.00 165.56 L296.00 167.12 L302.00 168.36 L308.00 169.26 L314.00 169.82 L320.00 170.00 L326.00 169.82 L332.00 169.26 L338.00 168.36 L344.00 167.12 L350.00 165.56 L356.00 163.71 L362.00 161.60 L368.00 159.26 L374.00 156.73 L380.00 154.02 L386.00 151.18 L392.00 148.23 L398.00 145.20 L404.00 142.10 L410.00 138.98 L416.00 135.84 L422.00 132.70 L428.00 129.59 L434.00 126.52 L440.00 123.51 L446.00 120.57 L452.00 117.71 L458.00 114.94 L464.00 112.28 L470.00 109.74 L476.00 107.32 L482.00 105.03 L488.00 102.89 L494.00 100.89 L500.00 99.04 L506.00 97.36 L512.00 95.84 L518.00 94.48 L524.00 93.30 L530.00 92.30 L536.00 91.48 L542.00 90.83 L548.00 90.37 L554.00 90.09 L560.00 90.00" fill="none" stroke="currentColor" stroke-width="3"/>
+              <circle cx="80" cy="90" r="4"/><circle cx="320" cy="170" r="4"/><circle cx="560" cy="90" r="4"/>
+              <text x="18" y="29">|V|（Vpeak）</text><text x="51" y="96">4</text><text x="51" y="176">2</text><text x="51" y="256">0</text>
+              <text x="83" y="73">最大 4 V</text><text x="281" y="196">最小 2 V</text><text x="454" y="73">最大 4 V</text>
+              <text x="62" y="277">−λ/2</text><text x="298" y="277">−λ/4</text><text x="540" y="277">0</text><text x="582" y="253">z</text>
+            </g>
+          </svg>
+        </div>
+        <p id="lab-description">預設 RL = 100 Ω。沿 z ≤ 0 的電壓峰值包絡最大為 4 V、最小為 2 V；這張圖呈現每個位置的振幅，並非瞬時波形。</p>
+        <noscript><p>目前顯示主例的完整預設結果；啟用 JavaScript 後可即時調整。</p></noscript>
+      </section>
+
+      <section aria-labelledby="scope-title">
+        <h2 id="scope-title">極限、模型與儀器</h2>
+        <p>匹配 R<sub>L</sub> = Z<sub>0</sub> 時，Γ = 0、VSWR = 1，負載吸收 0.09 W。短路 R<sub>L</sub> = 0 時，Γ = −1，負載電壓為 0、電流為 0.12 A<sub>peak</sub>，平均負載功率仍為 0，VSWR 為 ∞。開路極限 R<sub>L</sub> → ∞ 時，Γ → +1，負載電壓趨近 6 V、電流趨近 0，同樣完全反射。滑桿的 200 Ω 是有限電阻，不代表開路。</p>
+        <p>此模型假設均勻無損線與正弦穩態，不包括開關瞬間、多次往返建立穩態的過程，也不包括線損。向量網路分析儀（vector network analyzer，VNA）校正後量到參考面上的複數反射係數 S<sub>11</sub>；移動參考面會改變相位與讀出的阻抗。只量 VSWR 無法分辨本頁 100 Ω 與近題 25 Ω，因為兩者 |Γ| 相同。示波器量的是探頭位置的電壓，探頭本身也可能改變負載。</p>
+        <p class="source-note">來源：<a href="sources.html#source-local-lower">本地《電磁學（下）》第 17.4–17.6 節</a>。下一章再用這些結果設計匹配，並區分穩態反射與暫態往返。</p>
+      </section>
+      <footer class="pager"><a href="23-transmission-lines.html" rel="prev">← 23 傳輸線與行進波</a><a href="25-matching-transients.html" rel="next">25 匹配與暫態 →</a></footer>
+    </main>
+  </div>
+</body>
+</html>

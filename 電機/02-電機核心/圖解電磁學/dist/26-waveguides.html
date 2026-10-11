@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>波導與諧振腔一窺｜圖解電磁學</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="lab.css">
+<script src="app.js" defer></script>
+</head>
+<body data-page="26-waveguides">
+<a class="skip-link" href="#main-content">跳到主要內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">教材來源</a></nav></header>
+<div class="site-layout">
+<aside class="course-nav" aria-label="課程章節"><a href="index.html">課程地圖</a><a href="25-matching-transients.html">上一章</a><a href="27-antennas.html">下一章</a></aside>
+<main id="main-content">
+<header class="lesson-head">
+<p class="eyebrow">26 · 邊界決定哪些波可以前進</p>
+<h1>波導與諧振腔一窺</h1>
+<p class="lead">空心金屬管沒有兩根獨立訊號線，為什麼仍能導引微波？寬 22.86 mm 的矩形管，10 GHz 能否通過，管內波長又有多長？</p>
+<p class="prereq">這章假設已懂：<a href="18-waves.html">波長、相位與能量傳播</a>、<a href="23-transmission-lines.html">沿線行波</a>。本章從導體邊界認識模態，不要求先解完整偏微分方程。</p>
+</header>
+<section id="understand">
+<h2>一個模態，就是一種容許的橫截面場形</h2>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 680 330" role="img" aria-labelledby="guide-title guide-desc" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="guide-title">矩形波導 TE10 模的橫截面電場</title>
+<desc id="guide-desc">矩形橫截面的寬沿 x、高沿 y，波沿正 z 出紙面傳播。在同一個時間與 z 位置，電場沿正 y，幅度在左右導體壁為零、中央最大；五支箭頭按同一尺度畫出正弦分布。這是 TE10 模，沒有縱向電場，但可有縱向磁場。</desc>
+<defs><marker id="guide-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<rect x="120" y="80" width="340" height="160" fill="#087e8b" fill-opacity="0.06" stroke="currentColor" stroke-width="5"/>
+<path d="M155 218 V180" stroke="#087e8b" stroke-width="3" marker-end="url(#guide-arrow)"/>
+<path d="M205 218 V133" stroke="#087e8b" stroke-width="3" marker-end="url(#guide-arrow)"/>
+<path d="M290 218 V98" stroke="#087e8b" stroke-width="3" marker-end="url(#guide-arrow)"/>
+<path d="M375 218 V133" stroke="#087e8b" stroke-width="3" marker-end="url(#guide-arrow)"/>
+<path d="M425 218 V180" stroke="#087e8b" stroke-width="3" marker-end="url(#guide-arrow)"/>
+<path d="M78 240 V73" stroke="#657482" stroke-width="2" marker-end="url(#guide-arrow)"/>
+<path d="M120 271 H475" stroke="#657482" stroke-width="2" marker-end="url(#guide-arrow)"/>
+<text x="45" y="67">+y</text><text x="485" y="278">+x</text><text x="188" y="297">寬 a = 22.86 mm</text>
+<text x="496" y="112">TE₁₀：E_z = 0</text><text x="496" y="148">E_y 中央最大</text><text x="496" y="184">⊙ +z 出紙面</text>
+<text x="19" y="25">同一相位的電場箭頭，同尺度；過半週會反向</text><text x="140" y="56">左右壁上的切向 E_y = 0</text><text x="491" y="226">高 b；假定 a &gt; b</text>
+</svg>
+</div>
+<p>波導（waveguide）利用邊界限制場形，讓波沿指定方向前進。理想導體壁要求切向電場為零。圖中 E<sub>y</sub>沿著左右兩壁的表面，所以到壁上必須降到零；在上下壁它垂直於表面，並不被同一條件強迫為零。能同時滿足所有邊界的場形稱為模態（mode），每一種模態都有自己的截止頻率與傳播常數。</p>
+<p>以 z 為傳播方向，橫電模（transverse electric, TE）指 E<sub>z</sub> = 0；橫磁模（transverse magnetic, TM）指 H<sub>z</sub> = 0；橫電磁模（transverse electromagnetic, TEM）則兩者都為零。TE 通常仍有 H<sub>z</sub>，TM 通常仍有 E<sub>z</sub>，不能因名稱中有「橫」就把所有場都畫成橫向。</p>
+<p>空心矩形管的金屬內壁是一個連通導體，無法建立非零的 TEM 橫向電位差；兩片分離導體的平行板、內外兩導體的同軸線則可支援 TEM。理想 TEM 模沒有幾何截止頻率，能向低頻延伸；平行板與同軸也可能在更高頻率支援其他模態。</p>
+<h3>TE₁₀ 為什麼有截止？</h3>
+<p>矩形寬為 a、高為 b，a &gt; b。TE₁₀的下標代表沿寬度有一個半波起伏、沿高度沒有起伏；圖中的 E<sub>y</sub>因而與 sin(πx/a) 成正比。邊界固定了橫向波數 k<sub>x</sub> = π/a（m⁻¹），不能隨意減小。</p>
+<div class="equation">k₀² = β² + (π/a)²；k₀ = ω/c = 2πf/c<br>β² = (2πf/c)² − (π/a)²<br>β = 0 時：f<sub>c</sub> = c/(2a)</div>
+<p>c = 299792458 m/s 是真空光速，此例把管內空氣近似為真空；f 是頻率（Hz），ω = 2πf（rad/s），β 是沿 z 的相位常數（rad/m）。這個平方關係來自波動方程：總空間變化由橫向場形與縱向傳播共同分攤。頻率太低時，沒有足夠的總波數留下實數 β。</p>
+<p>對 f &gt; f<sub>c</sub>，β 為實數，沿管有相位推進，導波波長 λ<sub>g</sub> = 2π/β。f &lt; f<sub>c</sub>時則改為倏逝場（evanescent field），振幅沿均勻管以 exp(−αz) 衰減，其中 α = (2π/c)√(f<sub>c</sub>² − f²)，單位 m⁻¹；不能把負數硬開實平方根，假裝得到傳播波長。</p>
+<p>恰好 f = f<sub>c</sub>時，β = 0、λ<sub>g</sub>發散，沒有沿 z 的相位推進；此時 α 也為零，不能說成正衰減常數的指數衰減。低於截止才是上述倏逝衰減。</p>
+</section>
+<section id="calculate">
+<h2>主例：10 GHz 是否超過截止？</h2>
+<p><strong>已知：</strong>理想導體、空氣填充，a = 22.86 mm = 0.02286 m，只追蹤 TE₁₀模，f = 10 GHz = 1.00 × 10¹⁰ Hz。<strong>未知：</strong>f<sub>c</sub>、β、λ<sub>g</sub>。先判斷頻率區域，再算波長。</p>
+<ol>
+<li>截止由寬度決定。<div class="equation">f<sub>c</sub> = (299792458 m/s)/(2 × 0.02286 m)<br>≈ 6.557140376 × 10⁹ Hz = 6.55714 GHz</div></li>
+<li>10 GHz 高於截止，可以計算實數傳播。先把根號改寫成無量綱比值。<div class="equation">β = (2πf/c)√[1 − (f<sub>c</sub>/f)²]<br>(f<sub>c</sub>/f)² ≈ (6.55714/10)² ≈ 0.4299609<br>√(1 − 0.4299609) ≈ 0.7550093</div></li>
+<li>代入相位常數與導波波長。<div class="equation">2πf/c = 2π(1.00 × 10¹⁰ s⁻¹)/(299792458 m/s)<br>≈ 209.5845 rad/m<br>β ≈ (209.5845 rad/m)(0.7550093) ≈ 158.2383 rad/m<br>λ<sub>g</sub> = 2π/β ≈ 0.0397071 m = 39.7071 mm</div></li>
+</ol>
+<p><strong>檢查：</strong>同頻真空波長 λ₀ = c/f ≈ 29.9792 mm；λ<sub>g</sub> = λ₀/0.7550093 比 λ₀長，符合 β 小於 k₀。毫米與公尺差一千倍，不能把 22.86 直接放進以 m/s 為單位的截止公式。</p>
+<p>TE₁₀沿高度沒有起伏，所以本例的截止式沒有 b。這不表示高度永遠不重要；其他模態會沿高度變化，它們的截止與激發條件仍受 b 影響。只給寬度時，我們能算這一模的傳播，還不能據此宣稱所有頻率都只剩這一模。</p>
+<h3>相速超過 c，不代表訊息超光速</h3>
+<p>相速 v<sub>p</sub> = ω/β 追蹤同一相位，群速 v<sub>g</sub> = dω/dβ 描述理想無損單模波包的包絡。由 ω² = c²[β² + (π/a)²] 微分得 2ω dω = 2c²β dβ，因此 v<sub>g</sub> = c²β/ω。</p>
+<div class="equation">v<sub>p</sub> = c/√[1 − (f<sub>c</sub>/f)²] ≈ 3.97071 × 10⁸ m/s<br>v<sub>g</sub> = c√[1 − (f<sub>c</sub>/f)²] ≈ 2.26346 × 10⁸ m/s<br>v<sub>p</sub>v<sub>g</sub> = c²</div>
+<p>同相位點只是延伸波形上的標記；本模型的能量與波包傳播仍慢於 c。實際損耗、色散與很寬的脈衝會讓波形變形，不能把這個群速公式無條件搬到所有材料。</p>
+<h3>把兩端也封起來：諧振腔（resonant cavity）</h3>
+<p>波導允許能量沿 z 前進；導體腔把兩端也封住，反射波只能在容許的離散頻率形成駐波。空氣矩形腔尺寸 a、b、d（m）時，三個方向的駐波波數平方相加，得到：</p>
+<div class="equation">f<sub>mnp</sub> = (c/2)√[(m/a)² + (n/b)² + (p/d)²]</div>
+<p>m、n、p 是非負整數的模態指標，但不能任選。以 z 為縱向，TE 模要求 m、n 不同時為零且 p ≥ 1；TM 模要求 m、n ≥ 1、p ≥ 0。例如 TE₁₀₁與 TM₁₁₀可以存在，全部為零不是振盪模。實體腔損耗讓能量逐漸衰減，外部耦合器可供能與取樣；本章只認識邊界選頻的原理。</p>
+</section>
+<section id="practice">
+<h2>近題：只把頻率改成 8 GHz</h2>
+<p>維持同一個波導，求 TE₁₀的導波波長，並判斷它比 10 GHz 時長還是短。</p>
+<details><summary>提示一：截止由結構決定</summary><p>a 沒改，f<sub>c</sub>仍約 6.55714 GHz。8 GHz 仍高於截止，才可使用實數波長公式。</p></details>
+<details><summary>提示二：越接近截止，縱向相位越慢累積</summary><p>使用 λ<sub>g</sub> = (c/f)/√[1 − (f<sub>c</sub>/f)²]；分母比主例更小，所以波長會增大。</p></details>
+<details><summary>完整詳解與檢查</summary><div class="equation">λ₀ = (299792458 m/s)/(8.00 × 10⁹ s⁻¹) ≈ 0.0374741 m<br>√[1 − (6.55714/8)²] ≈ √(1 − 0.6718139) ≈ 0.5728753<br>λ<sub>g</sub> ≈ 0.0374741 m/0.5728753 ≈ 0.0654140 m<br>≈ 65.4140 mm；β = 2π/λ<sub>g</sub> ≈ 96.0526 rad/m</div><p>波長大於 10 GHz 時的 39.7071 mm，也大於同頻真空波長；若再降到 6 GHz，已低於截止，就不能沿用此實數計算。</p></details>
+</section>
+<section class="lab" id="experiment" data-lab="26">
+<h2>自由實驗：跨過截止頻率</h2>
+<p>只追蹤同一個 TE₁₀模。低於或等於截止時，結果區顯示截止狀態，不給有限實數導波波長。</p>
+<label for="lab-input">空氣矩形波導頻率 f（GHz）</label>
+<input id="lab-input" type="range" min="4" max="15" step="0.1" value="10">
+<output id="lab-value" for="lab-input">10.0 GHz</output>
+<button id="lab-reset" type="button">回到主例</button>
+<div id="lab-results" aria-live="polite"><p>f<sub>c</sub> ≈ 6.55714 GHz；10 GHz 可傳播；λ<sub>g</sub> ≈ 39.7071 mm。</p></div>
+<p id="lab-why">10 GHz 高於截止，縱向相位常數為實數；橫向場形占用部分波數，所以導波波長比真空波長長。</p>
+<div class="diagram" tabindex="0"><svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="plot-title-26 plot-desc-26" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="plot-title-26">截止以上的 TE10 導波波長</title><desc id="plot-desc-26">橫軸四到十五吉赫茲。六點五五七吉赫茲以下沒有實數導波波長。從截止以上接近截止時波長趨近無限大，超出圖高；頻率增加時波長下降。預設十吉赫茲對應約三十九點七零七毫米。</desc>
+<defs><clipPath id="waveguide-plot-clip"><rect x="72" y="50" width="528" height="195"/></clipPath></defs>
+<rect x="72" y="50" width="122.74" height="195" fill="#657482" fill-opacity="0.10"/>
+<path d="M72 40 V245 H610" fill="none" stroke="currentColor" stroke-width="2"/>
+<path d="M194.74 50 V245" stroke="#657482" stroke-width="2" stroke-dasharray="5 5"/>
+<text x="75" y="25">λg（mm）</text><text x="25" y="249">0</text><text x="15" y="58">200</text>
+<path d="M194.98,-867.00 L197.23,-99.61 L199.48,-4.32 L201.73,40.05 L203.98,67.06 L206.23,85.71 L208.48,99.59 L210.73,110.44 L212.98,119.23 L215.23,126.54 L217.48,132.75 L219.73,138.11 L221.98,142.79 L224.23,146.94 L226.48,150.64 L228.73,153.97 L230.98,156.99 L233.23,159.74 L235.48,162.27 L237.73,164.60 L239.98,166.76 L242.23,168.76 L244.48,170.63 L246.73,172.37 L248.99,174.01 L251.24,175.56 L253.49,177.01 L255.74,178.38 L257.99,179.69 L260.24,180.92 L262.49,182.10 L264.74,183.22 L266.99,184.28 L269.24,185.30 L271.49,186.28 L273.74,187.21 L275.99,188.11 L278.24,188.97 L280.49,189.80 L282.74,190.59 L284.99,191.36 L287.24,192.10 L289.49,192.81 L291.74,193.50 L293.99,194.17 L296.24,194.81 L298.49,195.43 L300.74,196.04 L302.99,196.62 L305.24,197.19 L307.49,197.74 L309.74,198.28 L311.99,198.80 L314.24,199.30 L316.49,199.80 L318.74,200.28 L320.99,200.74 L323.24,201.20 L325.49,201.64 L327.74,202.07 L329.99,202.49 L332.24,202.90 L334.49,203.30 L336.74,203.70 L338.99,204.08 L341.24,204.45 L343.49,204.82 L345.74,205.18 L347.99,205.53 L350.24,205.87 L352.49,206.21 L354.74,206.54 L356.99,206.86 L359.24,207.17 L361.49,207.48 L363.74,207.79 L365.99,208.08 L368.24,208.37 L370.49,208.66 L372.74,208.94 L374.99,209.22 L377.24,209.49 L379.49,209.75 L381.74,210.01 L383.99,210.27 L386.24,210.52 L388.49,210.77 L390.74,211.01 L392.99,211.25 L395.24,211.49 L397.49,211.72 L399.74,211.95 L401.99,212.17 L404.24,212.39 L406.49,212.61 L408.74,212.82 L410.99,213.03 L413.24,213.24 L415.49,213.45 L417.74,213.65 L419.99,213.84 L422.24,214.04 L424.49,214.23 L426.74,214.42 L428.99,214.61 L431.24,214.79 L433.49,214.97 L435.74,215.15 L437.99,215.33 L440.24,215.50 L442.49,215.68 L444.74,215.85 L446.99,216.01 L449.24,216.18 L451.49,216.34 L453.74,216.50 L455.99,216.66 L458.24,216.82 L460.49,216.97 L462.74,217.13 L464.99,217.28 L467.24,217.43 L469.49,217.57 L471.74,217.72 L473.99,217.86 L476.24,218.00 L478.49,218.15 L480.74,218.28 L483.00,218.42 L485.25,218.56 L487.50,218.69 L489.75,218.82 L492.00,218.95 L494.25,219.08 L496.50,219.21 L498.75,219.34 L501.00,219.46 L503.25,219.59 L505.50,219.71 L507.75,219.83 L510.00,219.95 L512.25,220.07 L514.50,220.19 L516.75,220.30 L519.00,220.42 L521.25,220.53 L523.50,220.64 L525.75,220.75 L528.00,220.87 L530.25,220.97 L532.50,221.08 L534.75,221.19 L537.00,221.30 L539.25,221.40 L541.50,221.50 L543.75,221.61 L546.00,221.71 L548.25,221.81 L550.50,221.91 L552.75,222.01 L555.00,222.11 L557.25,222.20 L559.50,222.30 L561.75,222.39 L564.00,222.49 L566.25,222.58 L568.50,222.68 L570.75,222.77 L573.00,222.86 L575.25,222.95 L577.50,223.04 L579.75,223.13 L582.00,223.21 L584.25,223.30 L586.50,223.39 L588.75,223.47 L591.00,223.56 L593.25,223.64 L595.50,223.72 L597.75,223.81 L600.00,223.89" fill="none" stroke="#087e8b" stroke-width="3" clip-path="url(#waveguide-plot-clip)"/>
+<circle cx="360.00" cy="207.28" r="6" fill="#c14f26"/>
+<text x="89" y="125">截止區</text><text x="238" y="44">近 fc 時 λg → ∞，超出圖高</text>
+<text x="318" y="178">10 GHz：約 39.7071 mm</text><text x="66" y="266">4</text><text x="174" y="266">fc ≈ 6.557</text><text x="583" y="266">15</text><text x="276" y="292">頻率 f（GHz）</text></svg></div>
+<p id="lab-description">橫軸頻率以 GHz 計，縱軸導波波長以 mm 計。虛線是截止；截止左側不畫實數波長，右側靠近虛線時波長超出圖高。預設 10 GHz 的點約為 39.7071 mm。</p>
+</section>
+<section id="model">
+<h2>從單模理想式走向量測</h2>
+<p>f 從上方趨近 f<sub>c</sub>，β 趨近零、λ<sub>g</sub>趨近無限大、群速趨近零；f 遠大於 f<sub>c</sub>時，λ<sub>g</sub>才趨近 λ₀。高頻也可能超過其他模態的截止，因此這條 TE₁₀曲線不代表整段操作範圍都只有一種模態。有限長的截止段仍可能有倏逝耦合，不能把「無傳播模」解讀成所有有限裝置的輸出嚴格為零。</p>
+<p>向量網路分析儀可量穿過一段波導的傳輸幅度與相位，掃頻可看到截止附近的變化；比較不同長度的相位差可估 β。只量到小訊號不能證明是截止，也可能是接頭失配或導體損耗。對腔體可量共振峰與頻寬；它們反映容許模與損耗，仍需確認激發的是哪一個模態。</p>
+<p>來源：<a href="sources.html#source-local-lower">本地《電磁學（下）》18.1–18.3</a>；<a href="sources.html#source-chapter-26">Staelin §9.3–9.4 的模態、截止與腔體公式定位</a>。</p>
+</section>
+<footer class="pager"><a href="25-matching-transients.html" rel="prev">← 上一章</a><a href="index.html">課程地圖</a><a href="27-antennas.html" rel="next">下一章 →</a></footer>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,181 @@
+{
+ "contract": "wf-table/1",
+ "source": "驗收紀錄.md",
+ "extracted": "2026-10-11",
+ "scope": "dist/ 全部檔案；file 相對 dist/",
+ "digest_algorithm": "SHA256(按 file 字典序串接 UTF8(file + NUL + sha256 + LF))",
+ "digest": "fbf122c2047a5f0dcd79855e2d6cc47eede7ed885c3f215eed136b0f8ce3fa9a",
+ "asset_count": 33,
+ "columns": [
+  "file",
+  "bytes",
+  "sha256"
+ ],
+ "rows": [
+  {
+   "file": "00-charge.html",
+   "bytes": 11488,
+   "sha256": "8403e343259faa3ff7ca011c7f7ad86a042ee3fca17d2991ffd31e068bd74b23"
+  },
+  {
+   "file": "01-vectors.html",
+   "bytes": 13753,
+   "sha256": "35cadc34fe97c65c1f8c52c419f3f451cc500619d6a81f743f007156f7f32263"
+  },
+  {
+   "file": "02-calculus.html",
+   "bytes": 17241,
+   "sha256": "8e781394d9b0c1768e17eb4e1433c7b32ca300f70945ddecb9b1ec0441621167"
+  },
+  {
+   "file": "03-coulomb.html",
+   "bytes": 13903,
+   "sha256": "104a9c8328e8ec5097355fcc25ad770a46ffc38ad58f933a5b998539c898dbb3"
+  },
+  {
+   "file": "04-distributions.html",
+   "bytes": 15078,
+   "sha256": "fcf1e8a772296f73a6d7dbaa1f72e38ec7875661e51ef7a122381bc58d1717e9"
+  },
+  {
+   "file": "05-gauss.html",
+   "bytes": 14014,
+   "sha256": "887af68bc5ae66be1ae109a6e9d47f37240b949e86c3d8b6df972db596fb5fd5"
+  },
+  {
+   "file": "06-potential.html",
+   "bytes": 16261,
+   "sha256": "37563a4698387c1599ee4863305903739da94b822371ef54e05ec7d5900450ec"
+  },
+  {
+   "file": "07-conductors.html",
+   "bytes": 11651,
+   "sha256": "7e9fc754d2b843f9689375f746b7233f8fbfe908b1f82ff646ee9b7e2308cd81"
+  },
+  {
+   "file": "08-dielectrics.html",
+   "bytes": 15273,
+   "sha256": "808aa9e542f8532d9f13beed68dd0a7ceb6bb36010f59b9727248e586e1eadb9"
+  },
+  {
+   "file": "09-capacitance.html",
+   "bytes": 12526,
+   "sha256": "0f9d770888383b817c7cbd74520ec511ee08ee244a7f5472eba3f8123b59e640"
+  },
+  {
+   "file": "10-current.html",
+   "bytes": 12674,
+   "sha256": "724dce047841d2fa61f72c3f4ab706a203feaed9f24bee5e4202e596d8dedb65"
+  },
+  {
+   "file": "11-lorentz.html",
+   "bytes": 12680,
+   "sha256": "f95f5ced5eb8b06dbe39cf1640a34b2c4a721704a3f12182e1a459e099fa5c9e"
+  },
+  {
+   "file": "12-magnetostatics.html",
+   "bytes": 11907,
+   "sha256": "6ad916846b73acb59db7729aa615e47e0fe617cb7bec51ad57b55ba2214d9967"
+  },
+  {
+   "file": "13-magnetic-media.html",
+   "bytes": 13361,
+   "sha256": "ca94fbbcbd73a2ab67847a9486947d6271e8c7c2eb770ce9b18eb4cb77ab2d13"
+  },
+  {
+   "file": "14-vector-potential.html",
+   "bytes": 15262,
+   "sha256": "47b9b39a3990213c2dc89983b7e450096db3aa0a4f080b28e2bf1495c648777a"
+  },
+  {
+   "file": "15-induction.html",
+   "bytes": 12999,
+   "sha256": "60f2761bc0a4d8c2ee046460006edc99cf8ef901cceac0ee7dba6526fe4430b0"
+  },
+  {
+   "file": "16-inductance.html",
+   "bytes": 14562,
+   "sha256": "65229e4a46355f820694de14bb65cb647319ed424954033988ddd3e8ef217f0d"
+  },
+  {
+   "file": "17-maxwell.html",
+   "bytes": 14961,
+   "sha256": "f800d636cf35981e42cdec35991d7ccaafce0a35aa0ca4d242a06f29665a2e93"
+  },
+  {
+   "file": "18-waves.html",
+   "bytes": 14269,
+   "sha256": "56ed129ee0036f8ef698d6b6a8263602b62243cbb66135c22b586ce87bd1e301"
+  },
+  {
+   "file": "19-phasors.html",
+   "bytes": 15007,
+   "sha256": "b62766633ade8c376f6ea3cf822ccbb2be6f079446287ba6feab312e4aaa624f"
+  },
+  {
+   "file": "20-lossy-media.html",
+   "bytes": 18181,
+   "sha256": "9b8d137e5b91f9351a18553f089f22575b18d8609d21ba56e81da0cb3f59bb40"
+  },
+  {
+   "file": "21-normal-incidence.html",
+   "bytes": 16444,
+   "sha256": "21ca1c77db8a47a660bd5b043aa0b3cb3b8605acb2f30afdab1f2b46c19d35bc"
+  },
+  {
+   "file": "22-oblique-incidence.html",
+   "bytes": 17134,
+   "sha256": "21d3db55391f24f47af6d78d021011665ce35a37349f9b846c759fc398b682b2"
+  },
+  {
+   "file": "23-transmission-lines.html",
+   "bytes": 15365,
+   "sha256": "a4aa36fd49d84c89b29e8fe88feda82546260c425393564d080d2aa744929788"
+  },
+  {
+   "file": "24-standing-waves.html",
+   "bytes": 20910,
+   "sha256": "0636af49326b5f24f0a6c5b75a27d1f9ed067adc7ba9b51dd1ebf22eaf9da794"
+  },
+  {
+   "file": "25-matching-transients.html",
+   "bytes": 15585,
+   "sha256": "e78945c701d20d2c63f0225a7196bdf2a30bcb456dbf0dd0f03a79acecc5f394"
+  },
+  {
+   "file": "26-waveguides.html",
+   "bytes": 16369,
+   "sha256": "749c87c7c75dbe08247c187eb53a6538dbd1cae8378e7177dd29096c98f3dbba"
+  },
+  {
+   "file": "27-antennas.html",
+   "bytes": 16359,
+   "sha256": "4ca37bc9ef65feb65c0f5c0752310138cbac466f0167076a27dfb4c77932b6c4"
+  },
+  {
+   "file": "app.js",
+   "bytes": 27047,
+   "sha256": "3bf77af0a71ad6282ca6dbded7192f183e4c444f220223911d1078d093ea2b8e"
+  },
+  {
+   "file": "glossary.html",
+   "bytes": 17700,
+   "sha256": "10749f67720df9383f58439d681178c329906f0a725826c577af553d94eb5133"
+  },
+  {
+   "file": "index.html",
+   "bytes": 11479,
+   "sha256": "0e906a29e274ae5d93664b71631b7faa44a2da0cc7649f972d08fe7ec8561044"
+  },
+  {
+   "file": "lab.css",
+   "bytes": 11753,
+   "sha256": "beac78e91f5f6a545d339475d5e2581d10545aa3d81e0746de2351a8a64f3494"
+  },
+  {
+   "file": "sources.html",
+   "bytes": 22740,
+   "sha256": "e42c637ef00451e9bf438c3ae610f8920cf9549a2b06d3141863aa27c79f289d"
+  }
+ ]
+}

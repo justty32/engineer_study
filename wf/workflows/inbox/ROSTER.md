@@ -43,4 +43,26 @@
 - **怎麼找我**：`wf/inbox/mail/engineer_study-lead/`（升級後佈局；單一收件匣佈局投 `wf/inbox/`）。
 - **訂閱主題**：無。
 
+### `electromagnetics-visual-team`
+- **狀態**：現役（四線通過，交發布者）
+- **我是誰**：electromagnetics_team 負責建置與驗收；連線中斷後由 electromagnetics_close 封版，均用實際繼承模型。
+- **團隊**：圖解電磁學；含後代上限 11，另留 root／publisher 各一槽。
+- **上游**：隊長對 root；各子線對隊長。
+- **領地**：`電機/02-電機核心/圖解電磁學/`，以及同層 `08-電磁學-上.md`、`08-電磁學-中.md`、`08-電磁學-下.md` 官方確證的小修與獨立複核；唯一交接 [電磁學交接](../../handoffs/2026-10-11-electromagnetics-visual.md)。
+- **答得出什麼**：公式圖解、逐行計算、模型條件、近題詳解及來源／三線證據。
+- **答不出什麼**：真人理解與操作效果、其他站修改或共享發布時機。
+- **怎麼找我**：collaboration 原隊長 `/root/electromagnetics_team`；最後封版 `/root/electromagnetics_close`。
+- **訂閱主題**：無。
+
+### `electromagnetics-publish`
+- **狀態**：現役（電磁學發布準備，作業系統依序待啟動）
+- **我是誰**：visual_publish，沿用實際繼承模型；本輪共享行政、git 與 GitHub Pages 唯一操作者。
+- **團隊**：圖解電磁學新站。
+- **上游**：root。
+- **領地**：SESSION／CLAIMS／ROSTER 與 [電磁學後接作業系統排程](../../handoffs/2026-10-11-em-os-program.md)；root 放行後串行接線與精確提交，未封版產品不動，OS 尚無產品寫入領地。
+- **答得出什麼**：44 站保護基線、staging 邊界、GitHub 公開資產一致性與部署證據。
+- **答不出什麼**：產品內容判讀、真人理解與實機操作；本輪不建立 Sites。
+- **怎麼找我**：collaboration `/root/visual_publish`。
+- **訂閱主題**：無。
+
 已收線成員見 [2026-10-11 ELI5 團隊歷史](ROSTER-HISTORY-2026-10-11.md)及[計算課程續篇](ROSTER-HISTORY-2026-10-11-2.md)。

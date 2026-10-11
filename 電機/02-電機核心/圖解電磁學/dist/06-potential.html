@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>電位、梯度與電偶極｜圖解電磁學</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="lab.css">
+<script src="app.js" defer></script>
+</head>
+<body data-page="06-potential">
+<a class="skip-link" href="#main-content">跳到主要內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">教材來源</a></nav></header>
+<div class="site-layout">
+<aside class="course-nav" aria-label="課程章節"><a href="index.html">課程地圖</a><a href="05-gauss.html">上一章</a><a href="07-conductors.html">下一章</a></aside>
+<main id="main-content">
+<header class="lesson-head">
+<p class="eyebrow">06 · 從受力轉向能量</p>
+<h1>電位、梯度與電偶極</h1>
+<p class="lead">正電荷附近的「電壓」由誰決定？把一顆微小正電荷從 40 cm 推近到 20 cm，需要多少能量，又如何從電位分布找回受力方向？</p>
+<p class="prereq">這章假設已懂：<a href="03-coulomb.html">點電荷的電場</a>、<a href="02-calculus.html">線積分與微分</a>。本章只處理靜電場；先選參考位置，再談電位的數值。</p>
+</header>
+<section id="understand">
+<h2>等位面告訴你能量，電場指向下降方向</h2>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 660 320" role="img" aria-labelledby="potential-title potential-desc" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="potential-title">正點電荷的等位球面與向外電場</title>
+<desc id="potential-desc">正二奈庫侖源在兩個同心圓中心。圓是等位球面的截面，半徑零點二公尺電位約八十九點八八伏特，半徑零點四公尺約四十四點九四伏特。電場徑向向外，與圓的切線垂直，指向較低電位。圓半徑按比例繪製，箭頭只示方向。</desc>
+<defs><marker id="potential-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<circle cx="160" cy="165" r="120" fill="none" stroke="#657482" stroke-width="2"/>
+<circle cx="160" cy="165" r="60" fill="none" stroke="#087e8b" stroke-width="3"/>
+<circle cx="160" cy="165" r="13" fill="#b85f18"/><text x="154" y="170" fill="white">+</text>
+<path d="M220 165 H298" stroke="#b85f18" stroke-width="3" marker-end="url(#potential-arrow)"/>
+<path d="M220 126 V204" stroke="#657482" stroke-width="2" stroke-dasharray="4 4"/>
+<path d="M220 176 H231 V165" stroke="currentColor" fill="none"/>
+<text x="239" y="153">E 向外</text><text x="182" y="224">切線</text>
+<text x="99" y="86">r = 0.20 m</text><text x="88" y="306">r = 0.40 m</text>
+<text x="325" y="82">內球面：V ≈ 89.8755 V</text><text x="325" y="119">外球面：V ≈ 44.9378 V</text>
+<text x="325" y="174">沿切線走：電位不變</text><text x="325" y="211">沿 E 走：電位下降</text><text x="325" y="248">q = +2 nC；V(∞) = 0</text>
+<text x="20" y="25">球面截面按半徑比例；E 箭頭非比例</text>
+</svg>
+</div>
+<p>電位（electric potential）V 是每單位正試驗電荷的位能，單位 V = J/C。它是純量，所以同一位置不同源的電位可帶正負直接相加；電場 E 則是向量。圖中靠近正源的 V 較高，表示把正試驗電荷慢慢推近，需要外界多供應能量。</p>
+<p>只有兩點的電位差直接對應可量的能量差。若試驗電荷為 q<sub>t</sub>（C），A、B 為起訖點，則位能變化 ΔU（J）與電場作功 W<sub>場</sub>（J）為：</p>
+<div class="equation">V(B) − V(A) = −∫<sub>A</sub><sup>B</sup> E · dℓ<br>ΔU = q<sub>t</sub>[V(B) − V(A)]；W<sub>場</sub> = −ΔU</div>
+<p>這來自力 F = q<sub>t</sub>E 的作功積分；電場若對正電荷做正功，它的位能就降低。準靜態搬運、動能不變且無損耗時，外界作功 W<sub>外</sub> = ΔU。負電荷也用同一式，但 q<sub>t</sub>的負號會改變能量關係，不能把「往低電位移動」直接當成所有電荷的運動方向。</p>
+<h3>零位是約定，梯度才決定場</h3>
+<p>對局限在有限範圍的電荷，通常選 V(∞) = 0。將每一點的 V 同時加上一個常數，任何電位差與電場都不變。無限長線電荷或無限平面的積分到無限遠不收斂，應選有限位置當零位，不能照抄這個參考。</p>
+<p>從很短的位移看，dV = −E · dℓ；沿每個座標方向比較，就得到電位的梯度（gradient）與電場關係。偏微分代表只沿該座標方向觀察電位變化，其餘座標保持固定。</p>
+<div class="equation">E = −∇V = −(∂V/∂x)x̂ − (∂V/∂y)ŷ − (∂V/∂z)ẑ</div>
+<p>梯度指向每公尺電位上升最快的方向，負號讓 E 指向下降最快的方向。等位面（equipotential surface）上的切向位移滿足 dV = 0，因此 E 沒有切向分量，必與該面垂直；E = 0 處則沒有唯一的場方向。只有比較相同電位差的等位面間距，才能由間距判斷哪裡場較強。</p>
+</section>
+<section id="calculate">
+<h2>主例：積分求電位，再微分回電場</h2>
+<p><strong>已知：</strong>真空中 q = +2 nC = 2 × 10⁻⁹ C、r = 0.20 m，V(∞) = 0。<strong>未知：</strong>V 與徑向電場 E<sub>r</sub>。因為點電荷的 E 已知，沿徑向路徑積分最簡單；積分變數用 s，避免與終點 r 混淆。</p>
+<ol>
+<li>沿徑向 dℓ = r̂ ds，故 E · dℓ = (kq/s²) ds。先把參考點放在有限距離 b，再讓 b 趨近無限遠。<div class="equation">V(r) = −lim<sub>b→∞</sub> ∫<sub>b</sub><sup>r</sup> (kq/s²) ds<br>= −lim<sub>b→∞</sub> [−kq/s]<sub>b</sub><sup>r</sup><br>= lim<sub>b→∞</sub> (kq/r − kq/b) = kq/r</div></li>
+<li>先算共同分子，再除以距離。<div class="equation">kq = (8.9875517923 × 10⁹ N·m²/C²)(2 × 10⁻⁹ C)<br>= 17.9751035846 V·m<br>V(0.20 m) = 17.9751035846 V·m / 0.20 m<br>≈ 89.8755 V</div></li>
+<li>電位只有 r 方向改變，所以梯度只剩徑向導數。<div class="equation">E<sub>r</sub> = −dV/dr = −kq d(r⁻¹)/dr<br>= −kq(−r⁻²) = kq/r²<br>= 17.9751035846 V·m / (0.20 m)²<br>≈ 449.378 V/m，徑向向外</div></li>
+</ol>
+<p><strong>檢查：</strong>電位為 V，電位對公尺微分後是 V/m；與庫侖定律完全一致。r 增加時 V 下降，負梯度朝外。場與電位是不同量，89.8755 V 不能直接當成 89.8755 V/m。</p>
+<h3>把電位差換成搬運能量</h3>
+<p>取 q<sub>t</sub> = +1 nC，由 A：r = 0.40 m 慢慢推到 B：r = 0.20 m。先求兩端電位，再乘試驗電荷，不能只取終點的絕對數值。</p>
+<div class="equation">V<sub>A</sub> = 17.9751035846 V·m / 0.40 m ≈ 44.9378 V<br>V<sub>B</sub> − V<sub>A</sub> ≈ 44.9378 V<br>W<sub>外</sub> = ΔU = (1 × 10⁻⁹ C)(44.9378 J/C)<br>≈ 4.49378 × 10⁻⁸ J = 44.9378 nJ<br>W<sub>場</sub> ≈ −44.9378 nJ</div>
+<p>推近時位移向內、電力向外，所以場做負功；外界供能與位能增加相符。若放手讓正電荷往外走，這部分位能便可轉成動能。</p>
+<h3>電偶極：總電荷零，遠方仍有場</h3>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 640 290" role="img" aria-labelledby="dipole-title dipole-desc" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="dipole-title">電偶極的兩個源距離與偶極矩方向</title>
+<desc id="dipole-desc">正負等量電荷上下相隔 d，偶極矩由負電荷指向正電荷。P 在右上方，r 從兩電荷中點量起，theta 從正 z 軸量起。P 到正源與負源的距離分別為 r 加與 r 減。圖為幾何示意，不按遠場條件比例繪製。</desc>
+<defs><marker id="dipole-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<path d="M240 260 V34" stroke="#657482" stroke-width="1.5" marker-end="url(#dipole-arrow)"/>
+<circle cx="240" cy="125" r="13" fill="#b85f18"/><text x="234" y="130" fill="white">+</text>
+<circle cx="240" cy="205" r="13" fill="#087e8b"/><text x="234" y="210" fill="white">−</text>
+<text x="256" y="128">+q</text><text x="256" y="217">−q</text><text x="250" y="41">+z</text>
+<path d="M180 205 V125" stroke="#7141a3" stroke-width="3" marker-end="url(#dipole-arrow)"/>
+<text x="27" y="170">p：由負指向正</text><path d="M210 125 V205" stroke="#657482" stroke-width="1.5"/><text x="194" y="166">d</text>
+<path d="M240 125 L500 65 L240 205" fill="none" stroke="#657482" stroke-dasharray="6 5" stroke-width="2"/>
+<path d="M240 165 L500 65" stroke="#7141a3" stroke-width="2" marker-end="url(#dipole-arrow)"/>
+<path d="M240 100 A65 65 0 0 1 301 141" fill="none" stroke="currentColor"/>
+<text x="291" y="111">θ</text><text x="355" y="160">r</text><text x="376" y="77">r₊</text><text x="421" y="131">r₋</text>
+<circle cx="500" cy="65" r="5" fill="currentColor"/><text x="512" y="68">P</text>
+<text x="20" y="25">幾何示意；遠場公式另要求 r ≫ d</text><text x="282" y="263">原點位於兩電荷中點</text>
+</svg>
+</div>
+<p>電偶極（electric dipole）由相隔 d 的 +q 與 −q 組成。偶極矩（electric dipole moment）p = qd 向量由負指向正，單位 C·m。以中點為原點，r 是到 P 的距離，θ 是 p 與 r 的夾角；r₊、r₋則是 P 到正、負源的實際距離。</p>
+<div class="equation">V = kq(1/r₊ − 1/r₋)</div>
+<p>這是兩個點電荷電位直接相加的精確式。遠場 r ≫ d 時，幾何給出 r₊ ≈ r − (d/2)cos θ、r₋ ≈ r + (d/2)cos θ；用 1/(r ± δ) ≈ 1/r ∓ δ/r² 展開，一次項留下、共同的 1/r 項抵消：</p>
+<div class="equation">V ≈ kqd cos θ/r² = kp cos θ/r²<br>E<sub>r</sub> = −∂V/∂r ≈ 2kp cos θ/r³<br>E<sub>θ</sub> = −(1/r)∂V/∂θ ≈ kp sin θ/r³</div>
+<p>角向小位移的長度是 r dθ，所以每公尺的電位斜率為 (1/r)∂V/∂θ；再用 d(cos θ)/dθ = −sin θ（θ 用弧度），便得到 E<sub>θ</sub>。p 此處表示偶極矩大小，E<sub>θ</sub>沿 θ 增大的方向。偶極電位以 1/r²、場以 1/r³ 衰減，比單點源更快。θ = 90° 的中垂面上 V = 0，卻仍有 E<sub>θ</sub>，再次說明零電位不代表零場。靠近任一源時必須回到精確式，不能用遠場近似。</p>
+<p>放進均勻外加場 E₀ 時，兩端受相反且等大的力，合力為零但通常有力矩 τ = p × E₀，單位 N·m，傾向把 p 轉向 E₀。這把「電荷位置不同」接回可觀察的轉動；若外場不均勻，兩端力大小不同，還可能產生淨力。</p>
+</section>
+<section id="practice">
+<h2>近題：只把單點主例距離改成 0.40 m</h2>
+<p>q = +2 nC 與無限遠零位不變，求該點 V、E，並比較它們各減少多少。</p>
+<details><summary>提示一：比較分母次方</summary><p>點電荷 V 的分母是 r，E 的分母是 r²；同樣把距離加倍，兩者的縮小比例不同。</p></details>
+<details><summary>提示二：微分時常數零位會消失</summary><p>可先由 V = kq/r 計算，再用 E<sub>r</sub> = −dV/dr；不能拿 V 的數值直接加負號就當成 E。</p></details>
+<details><summary>完整詳解與檢查</summary><div class="equation">V = 17.9751035846 V·m / 0.40 m ≈ 44.9378 V<br>E<sub>r</sub> = 17.9751035846 V·m / (0.40 m)²<br>≈ 112.344 V/m，徑向向外</div><p>V 變成主例的一半，E 變成四分之一；E<sub>r</sub>/V = 1/r = 2.5 m⁻¹，單位也吻合。電位仍為正，場仍離開正電荷。</p></details>
+</section>
+<section class="lab" id="experiment" data-lab="06">
+<h2>自由實驗：電位與場的衰減不同</h2>
+<p>固定正點電荷 +2 nC 與 V(∞) = 0，移動觀測點。曲線畫 V，結果同時列 E，方便比較一次與平方反比。</p>
+<label for="lab-input">距離正點電荷 r（m）</label>
+<input id="lab-input" type="range" min="0.05" max="0.5" step="0.01" value="0.2">
+<output id="lab-value" for="lab-input">0.20 m</output>
+<button id="lab-reset" type="button">回到主例</button>
+<div id="lab-results" aria-live="polite"><p>r = 0.20 m；V ≈ 89.8755 V；E ≈ 449.378 V/m。</p></div>
+<p id="lab-why">電位是場沿路累積的能量差，所以 V ∝ 1/r；再取負梯度才得到 E ∝ 1/r²。</p>
+<div class="diagram" tabindex="0"><svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="plot-title-06 plot-desc-06" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="plot-title-06">正點電荷的電位隨距離下降</title><desc id="plot-desc-06">固定正二奈庫侖源與無限遠零位，距離增加時電位以一次反比下降；預設零點二公尺，電位約八十九點八七五五伏特。</desc>
+<path d="M72 40 V245 H610" fill="none" stroke="currentColor" stroke-width="2"/>
+<text x="76" y="25">V（V）</text><text x="28" y="249">0</text><text x="10" y="59">388</text>
+<path d="M72.00,69.07 L77.28,83.60 L82.56,95.91 L87.84,106.48 L93.12,115.64 L98.40,123.67 L103.68,130.76 L108.96,137.07 L114.24,142.72 L119.52,147.80 L124.80,152.41 L130.08,156.60 L135.36,160.42 L140.64,163.93 L145.92,167.16 L151.20,170.14 L156.48,172.90 L161.76,175.46 L167.04,177.85 L172.32,180.08 L177.60,182.17 L182.88,184.13 L188.16,185.96 L193.44,187.70 L198.72,189.33 L204.00,190.87 L209.28,192.33 L214.56,193.71 L219.84,195.02 L225.12,196.27 L230.40,197.45 L235.68,198.58 L240.96,199.66 L246.24,200.69 L251.52,201.67 L256.80,202.61 L262.08,203.51 L267.36,204.37 L272.64,205.20 L277.92,205.99 L283.20,206.76 L288.48,207.49 L293.76,208.20 L299.04,208.88 L304.32,209.53 L309.60,210.16 L314.88,210.77 L320.16,211.36 L325.44,211.93 L330.72,212.48 L336.00,213.01 L341.28,213.53 L346.56,214.03 L351.84,214.51 L357.12,214.98 L362.40,215.43 L367.68,215.87 L372.96,216.30 L378.24,216.72 L383.52,217.12 L388.80,217.51 L394.08,217.89 L399.36,218.26 L404.64,218.62 L409.92,218.98 L415.20,219.32 L420.48,219.65 L425.76,219.97 L431.04,220.29 L436.32,220.60 L441.60,220.90 L446.88,221.19 L452.16,221.48 L457.44,221.76 L462.72,222.03 L468.00,222.30 L473.28,222.56 L478.56,222.82 L483.84,223.06 L489.12,223.31 L494.40,223.55 L499.68,223.78 L504.96,224.01 L510.24,224.23 L515.52,224.45 L520.80,224.66 L526.08,224.87 L531.36,225.08 L536.64,225.28 L541.92,225.47 L547.20,225.67 L552.48,225.86 L557.76,226.04 L563.04,226.22 L568.32,226.40 L573.60,226.58 L578.88,226.75 L584.16,226.92 L589.44,227.08 L594.72,227.25 L600.00,227.41" fill="none" stroke="#087e8b" stroke-width="3"/>
+<circle cx="248.00" cy="201.02" r="6" fill="#c14f26"/>
+<text x="280" y="45">預設：0.20 m → 約 89.8755 V</text>
+<text x="65" y="268">0.05</text><text x="574" y="268">0.50</text><text x="277" y="292">距離 r（m）</text></svg></div>
+<p id="lab-description">橫軸 r 單位為 m，縱軸 V 單位為伏特；預設點為 0.20 m、約 89.8755 V。電場另列在結果區，兩種量不共用數值尺度。</p>
+</section>
+<section id="model">
+<h2>儀器讀到的是兩點的差</h2>
+<p>高輸入阻抗電壓計用兩個端點量電位差，不能直接量一個沒有參考的「絕對電位」。接觸式探棒還可能轉移電荷、改變原分布；帶電孤立小物體常需靜電計或非接觸電位量測。沿方向取相鄰兩點電位差，再用 −ΔV/Δs 估場，只有間距足夠小且擾動可控時才近似當地梯度。</p>
+<p>r 趨近無限遠時，局限點源的 V、E 同時趨近零；r 趨近零則兩者發散，提醒我們點電荷理想化的限制。換一個零位只改 V 的整體偏移，不改 E；若磁場隨時間改變，感應電場一般無法完全寫成單一純量的 −∇V，本章的靜電假設就必須放寬。</p>
+<p>來源：<a href="sources.html#source-local-upper">本地《電磁學（上）》4.1–4.4：電位、電偶極與等位面</a>。導體等位與鏡像法接續於下一章。</p>
+</section>
+<footer class="pager"><a href="05-gauss.html" rel="prev">← 上一章</a><a href="index.html">課程地圖</a><a href="07-conductors.html" rel="next">下一章 →</a></footer>
+</main>
+</div>
+</body>
+</html>

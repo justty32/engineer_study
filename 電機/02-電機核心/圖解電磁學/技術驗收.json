@@ -1,0 +1,1324 @@
+{
+ "contract": "wf-table/1",
+ "source": "技術驗收.md",
+ "extracted": "2026-10-11",
+ "reviewer": "獨立技術QA；未參與產品建置，只讀dist",
+ "status": "PASS（產品範圍）；全庫wf-lint有已知歷史例外",
+ "phase": "最終同版驗收",
+ "dist_digest": "fbf122c2047a5f0dcd79855e2d6cc47eede7ed885c3f215eed136b0f8ce3fa9a",
+ "manifest_sha256": "2ac5079753f49e3573654559229b305bd2ac5842087cc32f0da1bfe9d6152c62",
+ "digest_algorithm": "SHA256(按 file 字典序串接 UTF8(file + NUL + sha256 + LF))",
+ "public_asset_count": 33,
+ "delivery_file_count": 70,
+ "app_sha256": "3bf77af0a71ad6282ca6dbded7192f183e4c444f220223911d1078d093ea2b8e",
+ "limitations": "真人理解、實體觸控、其他瀏覽器與螢幕閱讀器未測試",
+ "columns": [
+  "id",
+  "status",
+  "scope",
+  "evidence",
+  "browser",
+  "evidence_files",
+  "counts",
+  "external_source_navigation",
+  "runtime_external_requests",
+  "oracle_sha256",
+  "visual_observations",
+  "baseline_digest",
+  "broken_links",
+  "runtime_closure",
+  "sha256",
+  "checks",
+  "evidence_batches"
+ ],
+ "rows": [
+  {
+   "id": "environment",
+   "status": "PASS",
+   "scope": "只使用既有 Node 24.14.1、Playwright Core 與 Chromium 153.0.8010.12",
+   "evidence": "未安裝或下載依賴、未操作桌面；headless 與本機 server 均由 QA 自行建立並關閉",
+   "browser": "Chromium 153.0.8010.12"
+  },
+  {
+   "id": "static",
+   "status": "PASS",
+   "scope": "31 HTML／33 公開資產",
+   "evidence": "嚴格 UTF-8、BOM、非法控制字/替代字/私用字、HTML5結構、唯一ID、ARIA引用、JS語法、本地href與fragment；0錯誤",
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/final-static.json"
+   ],
+   "counts": {
+    "html": 31,
+    "assets": 33,
+    "errors": 0
+   }
+  },
+  {
+   "id": "links-runtime",
+   "status": "PASS",
+   "scope": "內部導航與外部執行時資產",
+   "evidence": "31頁由首頁可達；28頁前後章與control契約吻合；沒有md href，瀏覽與操作實測外部runtime請求0；官方來源a[href]是點擊導航",
+   "external_source_navigation": [
+    "https://ocw.mit.edu/courses/6-013-electromagnetics-and-applications-spring-2009/d3be4ea78b036a6362230fb41780cf54_MIT6_013S09_notes.pdf",
+    "https://ocw.mit.edu/courses/res-6-001-electromagnetic-fields-and-energy-spring-2008/0bf75424fe9d0909caed4f14795d8bc9_08.pdf",
+    "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide02.pdf",
+    "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide03.pdf",
+    "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide04.pdf",
+    "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide05.pdf",
+    "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide06.pdf",
+    "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide08.pdf",
+    "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide09.pdf",
+    "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide10.pdf",
+    "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide11.pdf",
+    "https://web.mit.edu/8.02t/www/802TEAL3D/visualizations/coursenotes/modules/guide13.pdf"
+   ],
+   "runtime_external_requests": 0,
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/navigation.json"
+   ]
+  },
+  {
+   "id": "layout",
+   "status": "PASS",
+   "scope": "31頁 × 1440×900／390×844／320×844",
+   "evidence": "93組HTTP畫面沒有整頁橫溢出、正文隱藏裁切或未命名SVG；局部圖允許可鍵盤操作的水平捲動；幾何候選已目視判讀",
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/final-effective-pages.json"
+   ]
+  },
+  {
+   "id": "offline-nojs",
+   "status": "PASS",
+   "scope": "31頁 file://（有JS）及31頁 file://（停用JS）",
+   "evidence": "正文、預設圖、主例與近題直接存在HTML；停用JS時提示/答案可鍵盤展開；00/16靜態軸名重疊已修並在PC與兩手機寬複驗",
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/final-effective-pages.json",
+    "/tmp/electromagnetics-technical-qa/final-nojs-delta.json"
+   ]
+  },
+  {
+   "id": "widgets",
+   "status": "PASS",
+   "scope": "全部28個互動元件",
+   "evidence": "預設/低/高、空字串、NaN、±Infinity、越界、step量化、鍵盤方向/Home/End、空白鍵重設；readout/why/SVG/current-point同模型；重設回同一快照",
+   "counts": {
+    "widgets": 28,
+    "ui_states": 608,
+    "api_hooks": 28
+   },
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/final-effective-controls-states.json"
+   ]
+  },
+  {
+   "id": "independent-numeric",
+   "status": "PASS",
+   "scope": "獨立數學oracle比對API與可見DOM",
+   "evidence": "各84組default/min/max，合計168組狀態／474項量與單位；原值容差max(1e−9,|期望|×1e−7)，顯示值max(1e−9,|期望|×1e−4)；無以產品結果生成期望",
+   "counts": {
+    "states": 168,
+    "quantities": 474
+   },
+   "oracle_sha256": "73f66486e9166299aebaa94d35e2885d6f17e7c6f1cb540a6ed10adfebaf8ef3",
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/numeric.json"
+   ]
+  },
+  {
+   "id": "svg-boundaries",
+   "status": "PASS",
+   "scope": "1242個合法step與15項物理邊界",
+   "evidence": "含零量、同介質、偏振、Snell精確/超臨界、TL匹配/負反射、波導精確截止及兩側；主觀察量primaryKey、曲線與marker一致，無NaN或裁切",
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/plot-boundaries.json",
+    "/tmp/electromagnetics-technical-qa/key-boundaries.json"
+   ]
+  },
+  {
+   "id": "keyboard-a11y",
+   "status": "PASS",
+   "scope": "31頁基本鍵盤與ARIA；44個字典詞條",
+   "evidence": "跳至正文、visible focus、range、reset、details；320寬局部圖水平捲動可鍵盤抵達；字典中英文/大小寫/無結果/清除/類HTML字串測試通過；不等同螢幕閱讀器實測",
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/final-effective-a11y.json"
+   ]
+  },
+  {
+   "id": "visual",
+   "status": "PASS",
+   "scope": "獨立QA實際目視代表圖、主例與靜態fallback",
+   "evidence": "目視重點包含08介質法線與同尺度分量、24入反射/Γ平面、19偏振視角、27方向圖、22全反射、26近截止；06字框候選實際不碰字；07/09/10/11/23 fallback字框略超但字形完整可讀。不是只生成截图",
+   "visual_observations": [
+    {
+     "batch": "representatives-fixed",
+     "file": "08-dielectrics.html",
+     "view": "PC主圖與完整主例；390主例",
+     "observation": "同尺度電場箭頭、切/法向分解、D/P/束縛電荷逐行公式均可讀，窄螢幕以換行保留單位及上下標。",
+     "status": "PASS"
+    },
+    {
+     "batch": "representatives-fixed",
+     "file": "24-standing-waves.html",
+     "view": "PC主圖、widget",
+     "observation": "負載位置、正負方向與峰值讀值可辨；頂部軸名與最大/最小已分開，包絡及負載點可讀。",
+     "status": "PASS"
+    },
+    {
+     "batch": "first",
+     "file": "00-charge.html",
+     "view": "PC主圖",
+     "observation": "電場與正試驗電荷受力兩種箭頭及單位分開，無文字碰撞或裁切。",
+     "status": "PASS"
+    },
+    {
+     "batch": "first",
+     "file": "01-vectors.html",
+     "view": "PC主圖",
+     "observation": "60°角、投影直角與5 N向量圖可辨，標籤未碰撞。",
+     "status": "PASS"
+    },
+    {
+     "batch": "first",
+     "file": "02-calculus.html",
+     "view": "PC主圖",
+     "observation": "盒子左右面積、外法線與場向可辨；虛線法向與實線電場有圖說區分。",
+     "status": "PASS"
+    },
+    {
+     "batch": "first",
+     "file": "03-coulomb.html",
+     "view": "PC主圖、320主例",
+     "observation": "兩對稱電荷、距離及場向可辨；手機公式與單位換行，未裁掉字元。",
+     "status": "PASS"
+    },
+    {
+     "batch": "first",
+     "file": "index.html",
+     "view": "1440×900首屏",
+     "observation": "首屏可直接進入00或兩個代表問題；導覽與物理圖可讀。",
+     "status": "PASS"
+    },
+    {
+     "batch": "second",
+     "file": "04-distributions.html",
+     "view": "PC環積分圖",
+     "observation": "對側電荷元、dE、投影與環平面清楚，無裁切。",
+     "status": "PASS"
+    },
+    {
+     "batch": "second",
+     "file": "06-potential.html",
+     "view": "PC等位面與偶極兩圖",
+     "observation": "球面比例與外向場、正負偶極/原點/觀測距離可辨；自動BBox近接文字實看未碰撞。",
+     "status": "PASS"
+    },
+    {
+     "batch": "second",
+     "file": "24-standing-waves.html",
+     "view": "PC新增Γ平面圖",
+     "observation": "實虛軸、匹配點/開短路及半圈旋轉符號可讀。",
+     "status": "PASS"
+    },
+    {
+     "batch": "magnetostatics",
+     "file": "12-magnetostatics.html",
+     "view": "PC安培路徑及动态曲線",
+     "observation": "迴路正向與+z電流、+x觀測點B朝+y清楚。",
+     "status": "PASS"
+    },
+    {
+     "batch": "third",
+     "file": "07-conductors.html",
+     "view": "PC導體板圖",
+     "observation": "0/12V邊界、中點6V與左向電場對得上標示。",
+     "status": "PASS"
+    },
+    {
+     "batch": "third",
+     "file": "16-inductance.html",
+     "view": "PC耦合線圈圖",
+     "observation": "點端、參考電流、電壓正負及共同磁通均可辨。",
+     "status": "PASS"
+    },
+    {
+     "batch": "third",
+     "file": "20-lossy-media.html",
+     "view": "PC衰減與振幅包絡圖",
+     "observation": "實虛線分別有文字標註，皮深位置與1/e包絡可辨。",
+     "status": "PASS"
+    },
+    {
+     "batch": "fourth",
+     "file": "17-maxwell.html",
+     "view": "PC位移電流圖",
+     "observation": "同一邊界的兩曲面、電荷與D/Id方向均可讀。",
+     "status": "PASS"
+    },
+    {
+     "batch": "fourth",
+     "file": "21-normal-incidence.html",
+     "view": "PC入反透射圖",
+     "observation": "E同尺度箭頭、H正向、入反透射波方向分開表達。",
+     "status": "PASS"
+    },
+    {
+     "batch": "fourth",
+     "file": "25-matching-transients.html",
+     "view": "PC四分之一波匹配圖",
+     "observation": "原線、匹配段、負載與回流導線清楚。",
+     "status": "PASS"
+    },
+    {
+     "batch": "fifth",
+     "file": "18-waves.html",
+     "view": "PC坡印廷方向圖",
+     "observation": "視線+z、+x向右/+y向下及E×H入圖面明確。",
+     "status": "PASS"
+    },
+    {
+     "batch": "critical-images-fixed",
+     "file": "22-oblique-incidence.html",
+     "view": "PC42度全反射widget",
+     "observation": "無實數角的文字已離開曲線，沒有不存在的目前點。",
+     "status": "PASS"
+    },
+    {
+     "batch": "critical-images",
+     "file": "26-waveguides.html",
+     "view": "PC6.6GHz近截止widget",
+     "observation": "399.223mm目前點完整在圖框內，上標/單位清楚。",
+     "status": "PASS"
+    },
+    {
+     "batch": "critical-images-fixed",
+     "file": "26-waveguides.html",
+     "view": "PC6.5GHz低截止widget",
+     "observation": "不適用與衰減常數可讀，截止狀態不蓋曲線。",
+     "status": "PASS"
+    },
+    {
+     "batch": "last",
+     "file": "19-phasors.html",
+     "view": "PC偏振靜圖與動圖",
+     "observation": "+x/+y視角一致、三個時間點與同尺度軌跡可讀。",
+     "status": "PASS"
+    },
+    {
+     "batch": "last",
+     "file": "27-antennas.html",
+     "view": "PC天線方向圖",
+     "observation": "半波總長、定性方向性、電場與能流向外明確。",
+     "status": "PASS"
+    },
+    {
+     "batch": "final-manual",
+     "file": "08-dielectrics.html",
+     "view": "凍結版PC實際view_image",
+     "observation": "新freeze未改此圖；法線、切/法向分量、兩場同尺度箭頭與文字清楚",
+     "status": "PASS",
+     "sha256": "808aa9e542f8532d9f13beed68dd0a7ceb6bb36010f59b9727248e586e1eadb9"
+    },
+    {
+     "batch": "final-manual",
+     "file": "24-standing-waves.html",
+     "view": "凍結版PC實際view_image",
+     "observation": "新freeze未改此圖；入射/反射方向與回流、z原點及負載標示清楚",
+     "status": "PASS",
+     "sha256": "0636af49326b5f24f0a6c5b75a27d1f9ed067adc7ba9b51dd1ebf22eaf9da794"
+    },
+    {
+     "batch": "final-manual",
+     "file": "19-phasors.html",
+     "view": "凍結版PC實際view_image",
+     "observation": "同尺度Ex/Ey，朝+z看且+y向下，T/8/T/4方向與點標清楚",
+     "status": "PASS",
+     "sha256": "b62766633ade8c376f6ea3cf822ccbb2be6f079446287ba6feab312e4aaa624f"
+    },
+    {
+     "batch": "final-manual",
+     "file": "27-antennas.html",
+     "view": "凍結版PC實際view_image",
+     "observation": "定性方向圖、軸上零點、能流向外和兩臂長度標示清楚",
+     "status": "PASS",
+     "sha256": "4ca37bc9ef65feb65c0f5c0752310138cbac466f0167076a27dfb4c77932b6c4"
+    },
+    {
+     "batch": "final-manual",
+     "file": "06-potential.html",
+     "view": "凍結版PC實際view_image",
+     "observation": "+z與頂部說明font bbox候選：實際字形並不相碰",
+     "status": "PASS",
+     "sha256": "37563a4698387c1599ee4863305903739da94b822371ef54e05ec7d5900450ec"
+    },
+    {
+     "batch": "final-manual",
+     "file": "00-charge.html",
+     "view": "1440/390/320停用JS，手機另捲至右端並驗鍵盤",
+     "observation": "軸名與端點數字有清楚間距；PC完整可讀，手機圖以局部水平捲動抵達全圖。原缺陷已修。",
+     "status": "PASS",
+     "sha256": "8403e343259faa3ff7ca011c7f7ad86a042ee3fca17d2991ffd31e068bd74b23"
+    },
+    {
+     "batch": "final-manual",
+     "file": "16-inductance.html",
+     "view": "1440/390/320停用JS，手機另捲至右端並驗鍵盤",
+     "observation": "軸名與端點數字有清楚間距；PC完整可讀，手機圖以局部水平捲動抵達全圖。原缺陷已修。",
+     "status": "PASS",
+     "sha256": "65229e4a46355f820694de14bb65cb647319ed424954033988ddd3e8ef217f0d"
+    },
+    {
+     "batch": "final-manual",
+     "file": "02-calculus.html",
+     "view": "PC停用JS fallback SVG 實際view_image",
+     "observation": "預設圖軸名、端點、單位可讀；文字bbox候選經目視確認字形未重疊或截斷",
+     "status": "PASS",
+     "sha256": "8e781394d9b0c1768e17eb4e1433c7b32ca300f70945ddecb9b1ec0441621167"
+    },
+    {
+     "batch": "final-manual",
+     "file": "07-conductors.html",
+     "view": "PC停用JS fallback SVG 實際view_image",
+     "observation": "預設圖軸名、端點、單位可讀；文字bbox候選經目視確認字形未重疊或截斷",
+     "status": "PASS",
+     "sha256": "7e9fc754d2b843f9689375f746b7233f8fbfe908b1f82ff646ee9b7e2308cd81"
+    },
+    {
+     "batch": "final-manual",
+     "file": "09-capacitance.html",
+     "view": "PC停用JS fallback SVG 實際view_image",
+     "observation": "預設圖軸名、端點、單位可讀；文字bbox候選經目視確認字形未重疊或截斷",
+     "status": "PASS",
+     "sha256": "0f9d770888383b817c7cbd74520ec511ee08ee244a7f5472eba3f8123b59e640"
+    },
+    {
+     "batch": "final-manual",
+     "file": "10-current.html",
+     "view": "PC停用JS fallback SVG 實際view_image",
+     "observation": "預設圖軸名、端點、單位可讀；文字bbox候選經目視確認字形未重疊或截斷",
+     "status": "PASS",
+     "sha256": "724dce047841d2fa61f72c3f4ab706a203feaed9f24bee5e4202e596d8dedb65"
+    },
+    {
+     "batch": "final-manual",
+     "file": "11-lorentz.html",
+     "view": "PC停用JS fallback SVG 實際view_image",
+     "observation": "預設圖軸名、端點、單位可讀；文字bbox候選經目視確認字形未重疊或截斷",
+     "status": "PASS",
+     "sha256": "f95f5ced5eb8b06dbe39cf1640a34b2c4a721704a3f12182e1a459e099fa5c9e"
+    },
+    {
+     "batch": "final-manual",
+     "file": "12-magnetostatics.html",
+     "view": "PC停用JS fallback SVG 實際view_image",
+     "observation": "預設圖軸名、端點、單位可讀；文字bbox候選經目視確認字形未重疊或截斷",
+     "status": "PASS",
+     "sha256": "6ad916846b73acb59db7729aa615e47e0fe617cb7bec51ad57b55ba2214d9967"
+    },
+    {
+     "batch": "final-manual",
+     "file": "13-magnetic-media.html",
+     "view": "PC停用JS fallback SVG 實際view_image",
+     "observation": "預設圖軸名、端點、單位可讀；文字bbox候選經目視確認字形未重疊或截斷",
+     "status": "PASS",
+     "sha256": "ca94fbbcbd73a2ab67847a9486947d6271e8c7c2eb770ce9b18eb4cb77ab2d13"
+    },
+    {
+     "batch": "final-manual",
+     "file": "14-vector-potential.html",
+     "view": "PC停用JS fallback SVG 實際view_image",
+     "observation": "預設圖軸名、端點、單位可讀；文字bbox候選經目視確認字形未重疊或截斷",
+     "status": "PASS",
+     "sha256": "47b9b39a3990213c2dc89983b7e450096db3aa0a4f080b28e2bf1495c648777a"
+    },
+    {
+     "batch": "final-manual",
+     "file": "15-induction.html",
+     "view": "PC停用JS fallback SVG 實際view_image",
+     "observation": "預設圖軸名、端點、單位可讀；文字bbox候選經目視確認字形未重疊或截斷",
+     "status": "PASS",
+     "sha256": "60f2761bc0a4d8c2ee046460006edc99cf8ef901cceac0ee7dba6526fe4430b0"
+    },
+    {
+     "batch": "final-manual",
+     "file": "23-transmission-lines.html",
+     "view": "PC停用JS fallback SVG 實際view_image",
+     "observation": "預設圖軸名、端點、單位可讀；文字bbox候選經目視確認字形未重疊或截斷",
+     "status": "PASS",
+     "sha256": "a4aa36fd49d84c89b29e8fe88feda82546260c425393564d080d2aa744929788"
+    }
+   ],
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/visual-review.json"
+   ]
+  },
+  {
+   "id": "old-site",
+   "status": "PASS",
+   "scope": "既有電磁學-互動課程全部25檔",
+   "evidence": "與本線工作前獨立基線逐檔SHA及精確檔案集合一致；沒有改舊站",
+   "baseline_digest": "9c0e23f359527d9ea27a0600288092b2f7b3f09d0d20e52722f7a446d2f2fea7",
+   "evidence_files": [
+    "保護baseline.json"
+   ]
+  },
+  {
+   "id": "publication",
+   "status": "PASS",
+   "scope": "33個公開資產／70列交付範圍",
+   "evidence": "manifest精確列bytes與SHA；公開總digest同數學/教學/來源報告。交付清單完整含自身、三冊原文與handoff，排除暫存與發布者中央行政檔",
+   "evidence_files": [
+    "公開資產manifest.json",
+    "交付範圍.json"
+   ],
+   "counts": {
+    "public_assets": 33,
+    "delivery_files": 70
+   }
+  },
+  {
+   "id": "wf-lint",
+   "status": "KNOWN_HISTORICAL_FAILURE",
+   "scope": "全庫wf驗收已實際執行",
+   "evidence": "wf-lint exit 1：僅兩條2026-09-26歷史broken link；沒有改歷史檔湊綠。styles --check exit 0。其他BIGLIST/QUERYCMD/residue警示照實保留",
+   "broken_links": [
+    "wf/reviews/2026-09-26/05-電機特化05-09與對照表-md.md → …07-電子學-中.md",
+    "wf/reviews/2026-09-26/06-電子-md.md → ../01-電路與訊號基礎/02-電子學.md"
+   ],
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/wf-lint.txt",
+    "/tmp/electromagnetics-technical-qa/styles.txt"
+   ]
+  },
+  {
+   "id": "closure",
+   "status": "PASS",
+   "scope": "本線全部自有headless/server",
+   "evidence": "每批finally關閉browser與server；逐個記錄埠現時均未監聽",
+   "runtime_closure": {
+    "batches": 43,
+    "allClosed": true,
+    "allRecordedPortsNotListening": true,
+    "processes": [
+     {
+      "evidence": "critical-images-fixed-runtime.json",
+      "pid": 364551,
+      "port": 36951,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "critical-images-runtime.json",
+      "pid": 362927,
+      "port": 35275,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "early-a11y-fixed-runtime.json",
+      "pid": 355174,
+      "port": 39947,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "early-a11y-runtime.json",
+      "pid": 354839,
+      "port": 39477,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "environment-runtime.json",
+      "pid": 346496,
+      "port": 36001,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "fifth-a11y-runtime.json",
+      "pid": 361304,
+      "port": 38015,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "fifth-controls-runtime.json",
+      "pid": 361994,
+      "port": 35359,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "fifth-runtime.json",
+      "pid": 361306,
+      "port": 34579,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "final-a11y-runtime.json",
+      "pid": 374367,
+      "port": 43239,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "final-controls-runtime.json",
+      "pid": 374137,
+      "port": 42671,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "final-delta-a11y-runtime.json",
+      "pid": 376172,
+      "port": 45659,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "final-delta-controls-runtime.json",
+      "pid": 376171,
+      "port": 36059,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "final-delta-runtime.json",
+      "pid": 376170,
+      "port": 43281,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "final-nojs-delta-runtime.json",
+      "pid": 376805,
+      "port": 44411,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "final-nojs-labels-fixed-runtime.json",
+      "pid": 377340,
+      "port": 43609,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "final-nojs-labels-runtime.json",
+      "pid": 377111,
+      "port": 46523,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "final-nojs-visual-runtime.json",
+      "pid": 374722,
+      "port": 40051,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "final-runtime.json",
+      "pid": 369721,
+      "port": 45061,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "first-controls-runtime.json",
+      "pid": 353676,
+      "port": 36583,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "first-extra-images-runtime.json",
+      "pid": 355687,
+      "port": 41517,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "first-runtime.json",
+      "pid": 353677,
+      "port": 42781,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "fourth-a11y-runtime.json",
+      "pid": 359307,
+      "port": 38385,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "fourth-controls-runtime.json",
+      "pid": 359824,
+      "port": 33199,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "fourth-runtime.json",
+      "pid": 359308,
+      "port": 42611,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "last-a11y-runtime.json",
+      "pid": 363745,
+      "port": 44277,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "last-controls-runtime.json",
+      "pid": 364031,
+      "port": 37633,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "last-runtime.json",
+      "pid": 363746,
+      "port": 35861,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "line-a11y-runtime.json",
+      "pid": 363219,
+      "port": 42035,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "line-controls-runtime.json",
+      "pid": 363430,
+      "port": 34025,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "line-runtime.json",
+      "pid": 363220,
+      "port": 38135,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "magnetostatics-controls-runtime.json",
+      "pid": 357218,
+      "port": 35581,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "magnetostatics-runtime.json",
+      "pid": 357219,
+      "port": 36011,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "representative-controls-fixed-runtime.json",
+      "pid": 350445,
+      "port": 40951,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "representative-controls-runtime.json",
+      "pid": 350233,
+      "port": 35985,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "representative-controls-v2-runtime.json",
+      "pid": 350792,
+      "port": 35341,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "representatives-fixed-runtime.json",
+      "pid": 350794,
+      "port": 37065,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "representatives-runtime.json",
+      "pid": 347979,
+      "port": 39673,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "second-a11y-runtime.json",
+      "pid": 356142,
+      "port": 41539,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "second-controls-runtime.json",
+      "pid": 356599,
+      "port": 36637,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "second-runtime.json",
+      "pid": 356143,
+      "port": 43165,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "third-a11y-runtime.json",
+      "pid": 358149,
+      "port": 33565,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "third-controls-runtime.json",
+      "pid": 358535,
+      "port": 41323,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     },
+     {
+      "evidence": "third-runtime.json",
+      "pid": 358163,
+      "port": 42455,
+      "browserClosed": true,
+      "serverClosed": true,
+      "portListening": false
+     }
+    ]
+   },
+   "evidence_files": [
+    "/tmp/electromagnetics-technical-qa/final-closure.json"
+   ]
+  },
+  {
+   "id": "limitations",
+   "status": "NOT_TESTED",
+   "scope": "真人理解/獨立解題、實體手機觸控、其他瀏覽器與螢幕閱讀器、實體儀器",
+   "evidence": "不把無頭瀏覽器或代理閱讀當成真人理解證據；這些是範圍限制，未新增批准門檻"
+  },
+  {
+   "id": "page-00-charge.html",
+   "status": "PASS",
+   "scope": "00-charge.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "8403e343259faa3ff7ca011c7f7ad86a042ee3fca17d2991ffd31e068bd74b23",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-delta-pages"
+   ]
+  },
+  {
+   "id": "page-01-vectors.html",
+   "status": "PASS",
+   "scope": "01-vectors.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "35cadc34fe97c65c1f8c52c419f3f451cc500619d6a81f743f007156f7f32263",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 22,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-02-calculus.html",
+   "status": "PASS",
+   "scope": "02-calculus.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "8e781394d9b0c1768e17eb4e1433c7b32ca300f70945ddecb9b1ec0441621167",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-03-coulomb.html",
+   "status": "PASS",
+   "scope": "03-coulomb.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "104a9c8328e8ec5097355fcc25ad770a46ffc38ad58f933a5b998539c898dbb3",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-04-distributions.html",
+   "status": "PASS",
+   "scope": "04-distributions.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "fcf1e8a772296f73a6d7dbaa1f72e38ec7875661e51ef7a122381bc58d1717e9",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 22,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-05-gauss.html",
+   "status": "PASS",
+   "scope": "05-gauss.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "887af68bc5ae66be1ae109a6e9d47f37240b949e86c3d8b6df972db596fb5fd5",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-06-potential.html",
+   "status": "PASS",
+   "scope": "06-potential.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "37563a4698387c1599ee4863305903739da94b822371ef54e05ec7d5900450ec",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-07-conductors.html",
+   "status": "PASS",
+   "scope": "07-conductors.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "7e9fc754d2b843f9689375f746b7233f8fbfe908b1f82ff646ee9b7e2308cd81",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-08-dielectrics.html",
+   "status": "PASS",
+   "scope": "08-dielectrics.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "808aa9e542f8532d9f13beed68dd0a7ceb6bb36010f59b9727248e586e1eadb9",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 22,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-09-capacitance.html",
+   "status": "PASS",
+   "scope": "09-capacitance.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "0f9d770888383b817c7cbd74520ec511ee08ee244a7f5472eba3f8123b59e640",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-10-current.html",
+   "status": "PASS",
+   "scope": "10-current.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "724dce047841d2fa61f72c3f4ab706a203feaed9f24bee5e4202e596d8dedb65",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-11-lorentz.html",
+   "status": "PASS",
+   "scope": "11-lorentz.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "f95f5ced5eb8b06dbe39cf1640a34b2c4a721704a3f12182e1a459e099fa5c9e",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 23,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-12-magnetostatics.html",
+   "status": "PASS",
+   "scope": "12-magnetostatics.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "6ad916846b73acb59db7729aa615e47e0fe617cb7bec51ad57b55ba2214d9967",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-13-magnetic-media.html",
+   "status": "PASS",
+   "scope": "13-magnetic-media.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "ca94fbbcbd73a2ab67847a9486947d6271e8c7c2eb770ce9b18eb4cb77ab2d13",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-14-vector-potential.html",
+   "status": "PASS",
+   "scope": "14-vector-potential.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "47b9b39a3990213c2dc89983b7e450096db3aa0a4f080b28e2bf1495c648777a",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-15-induction.html",
+   "status": "PASS",
+   "scope": "15-induction.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "60f2761bc0a4d8c2ee046460006edc99cf8ef901cceac0ee7dba6526fe4430b0",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-16-inductance.html",
+   "status": "PASS",
+   "scope": "16-inductance.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "65229e4a46355f820694de14bb65cb647319ed424954033988ddd3e8ef217f0d",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-delta-pages"
+   ]
+  },
+  {
+   "id": "page-17-maxwell.html",
+   "status": "PASS",
+   "scope": "17-maxwell.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "f800d636cf35981e42cdec35991d7ccaafce0a35aa0ca4d242a06f29665a2e93",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-18-waves.html",
+   "status": "PASS",
+   "scope": "18-waves.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "56ed129ee0036f8ef698d6b6a8263602b62243cbb66135c22b586ce87bd1e301",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-19-phasors.html",
+   "status": "PASS",
+   "scope": "19-phasors.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "b62766633ade8c376f6ea3cf822ccbb2be6f079446287ba6feab312e4aaa624f",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 26,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-20-lossy-media.html",
+   "status": "PASS",
+   "scope": "20-lossy-media.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "9b8d137e5b91f9351a18553f089f22575b18d8609d21ba56e81da0cb3f59bb40",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-21-normal-incidence.html",
+   "status": "PASS",
+   "scope": "21-normal-incidence.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "21ca1c77db8a47a660bd5b043aa0b3cb3b8605acb2f30afdab1f2b46c19d35bc",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 22,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-22-oblique-incidence.html",
+   "status": "PASS",
+   "scope": "22-oblique-incidence.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "21d3db55391f24f47af6d78d021011665ce35a37349f9b846c759fc398b682b2",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 23,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-23-transmission-lines.html",
+   "status": "PASS",
+   "scope": "23-transmission-lines.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "a4aa36fd49d84c89b29e8fe88feda82546260c425393564d080d2aa744929788",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-24-standing-waves.html",
+   "status": "PASS",
+   "scope": "24-standing-waves.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "0636af49326b5f24f0a6c5b75a27d1f9ed067adc7ba9b51dd1ebf22eaf9da794",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 25,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-25-matching-transients.html",
+   "status": "PASS",
+   "scope": "25-matching-transients.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "e78945c701d20d2c63f0225a7196bdf2a30bcb456dbf0dd0f03a79acecc5f394",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-26-waveguides.html",
+   "status": "PASS",
+   "scope": "26-waveguides.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "749c87c7c75dbe08247c187eb53a6538dbd1cae8378e7177dd29096c98f3dbba",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 24,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-27-antennas.html",
+   "status": "PASS",
+   "scope": "27-antennas.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "4ca37bc9ef65feb65c0f5c0752310138cbac466f0167076a27dfb4c77932b6c4",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 21,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-glossary.html",
+   "status": "PASS",
+   "scope": "glossary.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "10749f67720df9383f58439d681178c329906f0a725826c577af553d94eb5133",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 0,
+    "keyboard_a11y": 2
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-index.html",
+   "status": "PASS",
+   "scope": "index.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "0e906a29e274ae5d93664b71631b7faa44a2da0cc7649f972d08fe7ec8561044",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 0,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  },
+  {
+   "id": "page-sources.html",
+   "status": "PASS",
+   "scope": "sources.html",
+   "evidence": "此頁三尺寸、file有JS/無JS、ARIA與鍵盤已驗；教學頁另完成互動狀態與獨立數值",
+   "sha256": "e42c637ef00451e9bf438c3ae610f8920cf9549a2b06d3141863aa27c79f289d",
+   "checks": {
+    "layout_and_file": 5,
+    "ui_states": 0,
+    "keyboard_a11y": 1
+   },
+   "evidence_batches": [
+    "final-pages"
+   ]
+  }
+ ]
+}

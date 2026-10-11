@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>向量、座標與投影｜圖解電磁學</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="lab.css">
+<script src="app.js" defer></script>
+</head>
+<body data-page="01-vectors">
+<a class="skip-link" href="#main-content">跳到課程內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">來源</a></nav></header>
+<div class="site-layout">
+<aside class="course-nav" aria-label="課程導覽"><a href="index.html">全部課程</a><a href="01-vectors.html" aria-current="page">01 向量、座標與投影</a><a href="02-calculus.html">下一章：微積分短橋</a></aside>
+<main id="main-content">
+<header class="lesson-head">
+<p class="eyebrow">01 ／ 把方向寫進計算</p>
+<h1>向量、座標與投影</h1>
+<p class="lead">一股 5 N 的力斜向右上，和 +x 夾 60°。沿水平移動的物體究竟感受到多少推力？若場環繞導線，哪種座標能把方向說清楚？</p>
+<p class="prereq">先讀<a href="00-charge.html">電荷、單位與力</a>，知道力與電場都有方向。本章會重建直角三角形、投影與座標，不要求熟記向量公式。</p>
+</header>
+<section id="understand">
+<h2>斜箭頭等於兩支分量箭頭相加</h2>
+<p>向量（vector）的大小與方向都要保留。用 x̂、ŷ、ẑ 表示沿三條正座標軸、長度為 1 的單位向量（unit vector）；它們沒有物理單位。力 A 可寫成 A = A<sub>x</sub>x̂ + A<sub>y</sub>ŷ + A<sub>z</sub>ẑ。分量 A<sub>x</sub> 是有正負號的數，單位與 A 相同；負號表示反向。</p>
+<figure>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 640 325" role="img" aria-labelledby="vector-title vector-desc" font-size="17">
+<title id="vector-title">五牛頓向量在水平與鉛直方向的投影</title>
+<desc id="vector-desc">以每牛頓四十像素的共同尺度繪製，原點到箭頭末端是五牛頓，與正 x 軸夾六十度。水平分量二點五牛頓，鉛直分量約四點三三牛頓，虛線構成直角三角形。</desc>
+<defs><marker id="vector-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+<g stroke="currentColor" fill="none" stroke-width="2">
+<path d="M85 250H360M85 250V30" marker-end="url(#vector-arrow)"/>
+<path d="M85 250L185 76.795" stroke-width="4" marker-end="url(#vector-arrow)"/>
+<path d="M85 250H185M185 250V76.795" stroke-width="3" marker-end="url(#vector-arrow)"/>
+<path d="M85 76.795H185" stroke-dasharray="6 5"/><path d="M173 250V238H185"/>
+<path d="M131 250A46 46 0 0 0 108 210.163"/>
+</g>
+<g fill="currentColor"><text x="52" y="35">+y</text><text x="365" y="255">+x</text><text x="60" y="274">0</text><text x="205" y="80">A = 5 N</text><text x="125" y="219">60°</text><text x="90" y="293">Aₓ = 2.5 N</text><text x="210" y="166">Aᵧ ≈ 4.330 N</text><text x="355" y="310">箭頭共用大小尺度</text></g>
+</svg>
+</div>
+<figcaption>先向右走 A<sub>x</sub>，再向上走 A<sub>y</sub>，終點與斜箭頭相同。分量是投影，不是把箭頭長度平均分配。</figcaption>
+</figure>
+<p>在直角三角形裡，cos θ = 鄰邊／斜邊，sin θ = 對邊／斜邊。本章主例的 θ 從 +x 朝 +y 量，所以 A<sub>x</sub> = |A| cos θ、A<sub>y</sub> = |A| sin θ。直角三角形的畢氏定理也給出 |A| = √(A<sub>x</sub><sup>2</sup> + A<sub>y</sub><sup>2</sup>)，可用來檢查分解是否改變原來大小。</p>
+<h3>點積選出沿指定方向的部分</h3>
+<p>點積（dot product）把兩個向量變成一個純量。若 α 是 A 與 B 的夾角，就先投影 A 到 B 方向，再乘 B 的大小：</p>
+<p class="equation">A · B = |A| |B| cos α = A<sub>x</sub>B<sub>x</sub> + A<sub>y</sub>B<sub>y</sub> + A<sub>z</sub>B<sub>z</sub>。</p>
+<p>分量式來自各座標軸彼此垂直：x̂ · x̂ = 1，x̂ · ŷ = 0，其餘依此類推。故 A · x̂ = A<sub>x</sub>。如果 B 是位移，力與位移的點積就是固定力做的功：W = F · Δr。只沿 x 移動 2 m，圖中力做功 W = (2.5 N)(2 m) = 5 J；鉛直分量與位移垂直，不貢獻此功。</p>
+<h3>叉積保留垂直方向</h3>
+<p>叉積（cross product）A × B 是垂直於兩向量平面的向量，大小 |A||B| sin α，等於兩向量張成的平行四邊形面積，再附上方向。單位是兩者單位相乘。右手四指從第一個向量彎向第二個向量，拇指指出結果；次序對調，方向相反。</p>
+<p class="equation">x̂ × ŷ = ẑ；ŷ × x̂ = −ẑ；x̂ × x̂ = 0。</p>
+<p>例如力臂 r = 2x̂ m，圖中力 F = (2.5x̂ + 4.330ŷ) N。力矩（torque）τ = r × F，是「力臂長 × 垂直力」的向量寫法。展開得 τ ≈ (2 × 2.5)(x̂ × x̂) + (2 × 4.330)(x̂ × ŷ) = 8.660ẑ N·m。平行分量為零，朝 +z 的轉動依右手方向；磁力章也會沿用這個方向規則。</p>
+<h3>三種座標：用對稱性選尺與方向</h3>
+<p>直角座標（Cartesian coordinates）用 (x, y, z) 三個有正負號的長度定位。其基底在各處方向固定；一小段位移為 dℓ = x̂ dx + ŷ dy + ẑ dz，小盒體積 dV = dx dy dz。垂直 x 的小面若選朝 +x，向量面積 dS = x̂ dy dz；面積需要再附上法向量才能表達朝向。</p>
+<p>柱座標（cylindrical coordinates）用 (ρ, φ, z)：ρ 是離 z 軸的垂直距離，φ 在 xy 平面由 +x 朝 +y 量，z 仍是高度。轉換為 x = ρ cos φ、y = ρ sin φ；反向 ρ = √(x² + y²)，φ 由 x、y 的正負判斷象限，不能只看 tan φ = y/x。</p>
+<p>沿徑向、繞圓、向上的小邊分別長 dρ、ρ dφ、dz，所以 dℓ = ρ̂ dρ + φ̂ ρ dφ + ẑ dz，dV = ρ dρ dφ dz。固定 ρ 的圓柱側面，其向外面積元素 dS = ρ̂ ρ dφ dz。這些角度微量用弧度；ρ dφ 就是「半徑 × 小角度」的弧長。</p>
+<p>弧度（radian）用弧長除以半徑定義。一整圈弧長為 2πρ，所以 360° = 2π rad；60° = π/3 rad。使用計算機時先確認度或弧度模式：cos 60° 與 cos(π/3 rad) 都是 1/2，但把數字 60 直接當弧度輸入會得到另一個值。幾何元素中的角度也不能直接以度數代入。</p>
+<p>球座標（spherical coordinates）用 (r, θ, φ)：r 是到原點距離，θ 從 +z 往下量，0 ≤ θ ≤ π；φ 仍是上述方位角。注意此處 θ 是球座標極角，定義與主例在 xy 平面從 +x 量的 θ 不同，讀題時必須先看角度起點。</p>
+<p class="equation">x = r sin θ cos φ；y = r sin θ sin φ；z = r cos θ。<br>r = √(x² + y² + z²)；cos θ = z/r（r &gt; 0）。</p>
+<p>試把位置 (x, y, z) = (3, 4, 2) m 換成柱座標：ρ = √(3² + 4²) m = 5 m；點在第一象限，φ = arctan(4/3) ≈ 53.13°；z 仍是 2 m。若改球座標，r = √(5² + 2²) m = √29 m ≈ 5.385 m，θ = arccos(2/√29) ≈ 68.20°。代回 r cos θ = 2 m，可檢查高度。這些是位置座標，不能把 ρ = 5 m 誤讀成任意向量的徑向分量。</p>
+<p>先把 r 投影到 xy 平面，得到半徑 r sin θ，再投影到 x、y，即得上式。球形小格的三邊長是 dr、r dθ、r sin θ dφ，乘起來得到 dV = r² sin θ dr dθ dφ；固定 r 的球面向外元素則是 dS = r̂ r² sin θ dθ dφ。這讓球面電通量與體內電荷的加總有明確幾何尺寸。</p>
+<figure>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 640 280" role="img" aria-labelledby="coord-title coord-desc" font-size="16">
+<title id="coord-title">柱座標方位角與球座標極角的量法</title>
+<desc id="coord-desc">左圖為 xy 平面，從正 x 轉至徑向線是方位角 phi，圓周小邊長為 rho dphi。右圖為包含 z 軸的剖面，極角 theta 從正 z 量到半徑 r，水平投影為 r sin theta。兩圖是幾何示意，並非同一尺度。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><path d="M55 210H280M55 210V40M55 210L195 70M55 210L225 100"/><path d="M195 70A198 198 0 0 1 225 100M105 210A50 50 0 0 0 90.36 174.64"/><path d="M370 215H595M370 215V35M370 215L510 75"/><path d="M510 75V215" stroke-dasharray="5 4"/><path d="M370 157A58 58 0 0 1 411 174"/></g>
+<g fill="currentColor"><text x="240" y="235">+x</text><text x="30" y="35">+y</text><text x="116" y="190">φ</text><text x="94" y="116">ρ</text><text x="160" y="46">弧長 ρ dφ</text><text x="70" y="261">柱座標：俯視 xy 平面</text><text x="349" y="29">+z</text><text x="392" y="150">θ</text><text x="425" y="99">r</text><text x="420" y="241">r sin θ</text><text x="399" y="274">球座標：含 z 軸剖面</text></g>
+</svg>
+</div>
+<figcaption>柱、球座標的方向基底會隨位置轉動。例如柱座標 φ = 0 時 ρ̂ = x̂，φ = 90° 時 ρ̂ = ŷ；不同位置的「徑向」不能不經轉換就當成同一箭頭相加。示意圖不按共同比例。</figcaption>
+</figure>
+</section>
+<section id="calculate">
+<h2>主例：把 5 N 分解到 x、y</h2>
+<p><strong>已知：</strong>|A| = 5 N，向量在 xy 平面內，從 +x 朝 +y 量 θ = 60°。<strong>未知：</strong>A<sub>x</sub>、A<sub>y</sub>。選投影公式，因為目標是沿固定軸的帶號分量。</p>
+<div class="equation">A<sub>x</sub> = (5 N) cos 60° = (5 N)(1/2) = 2.5 N。<br>A<sub>y</sub> = (5 N) sin 60° = (5 N)(√3/2) ≈ 4.330 N。<br>A ≈ (2.5x̂ + 4.330ŷ) N。</div>
+<p><strong>單位：</strong>sin、cos 沒有單位，分量仍為 N。<strong>大小檢查：</strong>√[(2.5 N)² + (5√3/2 N)²] = √(25 N²) = 5 N。角度在第一象限，兩個分量均為正。θ = 0° 時應只剩水平分量 5 N；θ = 90° 時應只剩鉛直分量 5 N。</p>
+</section>
+<section id="practice">
+<h2>近題：只把角度改成 120°</h2>
+<p>力的大小仍是 5 N。求兩個分量，判斷哪個符號會改變，並檢查總大小。</p>
+<details><summary>提示一：先判斷箭頭在哪一象限</summary><p>120° 是從 +x 朝 +y 轉進第二象限，箭頭朝左上。因此 A<sub>x</sub> 應為負、A<sub>y</sub> 應為正。</p></details>
+<details><summary>提示二：用 180° − 60° 的對稱性</summary><p>cos 120° = −1/2，sin 120° = √3/2。代入與主例相同的投影式，不要把 120° 當成球座標極角。</p></details>
+<details><summary>完整詳解與檢查</summary><div class="equation">A<sub>x</sub> = (5 N)(−1/2) = −2.5 N。<br>A<sub>y</sub> = (5 N)(√3/2) ≈ 4.330 N。<br>|A| = √[(−2.5 N)² + (5√3/2 N)²] = 5 N。</div><p>兩分量單位都是 N。水平分量變號、鉛直分量不變，符合從右上翻到左上的鏡射幾何；大小仍是 5 N。</p></details>
+</section>
+<section class="lab" id="experiment" data-lab="01">
+<h2>自己改：轉方向，保持大小</h2>
+<p>預測 θ 超過 90° 後哪一個分量變負。角度顯示採度，大小固定 5 N。</p>
+<label for="lab-input">向量與 +x 的夾角 θ（°）</label>
+<input id="lab-input" type="range" min="0" max="180" step="5" value="60">
+<output id="lab-value" for="lab-input">60°</output>
+<button id="lab-reset" type="button">回到主例</button>
+<div id="lab-results" aria-live="polite"><p>A<sub>x</sub> = 2.5 N；A<sub>y</sub> ≈ 4.330 N。</p></div>
+<p id="lab-why">以 5 N 為斜邊，水平投影乘 cos θ，鉛直投影乘 sin θ；分量改變，向量大小保持不變。</p>
+<div class="diagram" tabindex="0">
+<svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="vector-lab-title vector-lab-desc" font-size="17">
+<title id="vector-lab-title">目前向量及同尺度的兩個分量</title>
+<desc id="vector-lab-desc">目前五牛頓向量與正 x 夾六十度，水平投影為二點五牛頓，鉛直投影約四點三三牛頓。三個向量採每牛頓三十像素。</desc>
+<g fill="none" stroke="currentColor" stroke-width="2"><path d="M100 220H360M100 220V45"/><path d="M100 220L175 90.096" stroke-width="4"/><path d="M100 220H175V90.096" stroke-dasharray="6 4"/></g>
+<g fill="currentColor"><circle cx="175" cy="90.096" r="6"/><text x="370" y="225">+x（N）</text><text x="70" y="30">+y（N）</text><text x="125" y="251">2.5 N</text><text x="202" y="156">4.330 N</text><text x="202" y="86">5 N，θ = 60°</text><text x="83" y="245">0</text><text x="350" y="280">初始圖：投影幾何，同尺度</text></g>
+</svg>
+</div>
+<p id="lab-description">目前箭頭在第一象限，水平與鉛直投影皆正；拖動後觀察兩分量隨角度的變化。</p>
+</section>
+<section aria-labelledby="vector-limits">
+<h2 id="vector-limits">模型、量測與來源</h2>
+<p>三種座標描述同一個空間，換座標不會改變力、場或能量。直線邊界常用直角座標，長直導線常用柱座標，孤立點電荷常用球座標。ρ = 0 的柱軸、r = 0 的球心有方向座標不唯一的情況，不能把座標奇異直接解讀成物理量必然無限大。</p>
+<p>單軸力感測器量到的是沿敏感軸的投影；量到零可能只是力與該軸垂直。三軸場探棒也必須知道各軸方向與校準，才能組合成完整向量。一個純量讀值無法證明場的全部方向；後續通量計算還需要量測面積及其法線。</p>
+<p>來源：<a href="sources.html#source-local-upper">本地《電磁學（上）》第 1.3 節</a>；本頁補出投影、右手方向及三種座標元素的幾何步驟。</p>
+</section>
+<footer class="pager"><a href="00-charge.html">← 電荷、單位與力</a><a href="02-calculus.html">下一章：微積分、通量與場的短橋 →</a></footer>
+</main></div>
+</body>
+</html>

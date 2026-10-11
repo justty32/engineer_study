@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>介電質與電場邊界｜圖解電磁學</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="lab.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-page="08-dielectrics">
+  <a class="skip-link" href="#main-content">跳到主要內容</a>
+  <header class="site-header">
+    <a class="brand" href="index.html">圖解電磁學</a>
+    <nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a> <a href="sources.html">資料來源</a></nav>
+  </header>
+  <div class="site-layout">
+    <aside class="course-nav" aria-label="課程章節"><a href="index.html">課程首頁</a> <a href="glossary.html">名詞字典</a></aside>
+    <main id="main-content">
+      <header class="lesson-head">
+        <p class="eyebrow">08 · 靜電場遇到材料</p>
+        <h1>介電質與電場邊界</h1>
+        <p class="lead">電場斜穿兩種絕緣材料的接面時，哪些分量保持不變？即使沒有放上自由電荷，接面上仍可能出現什麼電荷？</p>
+        <p class="prereq">已懂電場、法向與切向分量、高斯定律，以及<a href="07-conductors.html">上一章的導體靜電平衡</a>。本章改看電荷不能自由流動的介電質。</p>
+      </header>
+
+      <section id="understand" aria-labelledby="understand-title">
+        <h2 id="understand-title">先看方向，再分清電荷的角色</h2>
+        <p>介電質（dielectric）受電場作用時，分子內的正負電荷稍微錯開，或原有電偶極轉向，形成極化（polarization）。電荷仍受材料束縛；累積在邊界的束縛電荷（bound charge）與可由外部電路供應的自由電荷（free charge），必須分開記帳。</p>
+        <figure>
+          <div class="diagram" tabindex="0">
+            <svg viewBox="0 0 640 370" role="img" aria-labelledby="boundary-title boundary-desc">
+              <title id="boundary-title">介電接面兩側電場與法線方向</title>
+              <desc id="boundary-desc">介面為 z 等於零，介質一在下方，介質二在上方。法線沿正 z 向上。電場一向右三、向上四；電場二向右三、向上二。兩支電場箭頭使用相同比例。</desc>
+              <defs><marker id="field-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+              <g font-size="16" fill="currentColor">
+                <path d="M35 180 H595" fill="none" stroke="currentColor" stroke-width="2"/>
+                <text x="40" y="47">介質 2：εr2 = 4，z &gt; 0</text>
+                <text x="40" y="330">介質 1：εr1 = 2，z &lt; 0</text>
+                <text x="42" y="168">接面 z = 0，ρsf = 0</text>
+                <path d="M242 284 L320 180 M320 180 L398 128" fill="none" stroke="currentColor" stroke-width="4" marker-end="url(#field-arrow)"/>
+                <path d="M242 284 L320 180" fill="none" stroke="currentColor" stroke-width="4" marker-end="url(#field-arrow)"/>
+                <path d="M242 284 H320 V180 M320 180 H398 V128" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4"/>
+                <text x="84" y="251">E1 = 3x̂ + 4ẑ</text>
+                <text x="244" y="308">E1t = 3</text>
+                <text x="329" y="247">E1n = 4</text>
+                <text x="326" y="92">E2 = 3x̂ + 2ẑ</text>
+                <text x="408" y="149">E2n = 2</text>
+                <text x="329" y="204">E2t = 3</text>
+                <path d="M554 260 V98" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#field-arrow)"/>
+                <text x="535" y="79">n̂ = +ẑ</text>
+                <path d="M458 284 H589" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#field-arrow)"/>
+                <text x="563" y="308">+x</text>
+                <text x="40" y="358">電場分量單位 V/m；兩支 E 箭頭同尺度</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>水平是切向 x，上下是法向 z。箭頭顯示較高介電常數一側的法向電場變小，切向仍為 3 V/m；電場因此更偏離法線。</figcaption>
+        </figure>
+        <p>極化向量 <strong>P</strong> 是每單位體積的電偶極矩，單位 C/m²。電位移向量（electric displacement）<strong>D</strong> 把材料的極化反應併入定義，讓高斯定律只數自由電荷：</p>
+        <div class="equation">D = ε<sub>0</sub>E + P；　∮<sub>S</sub>D · dS = Q<sub>f,包住</sub>；　∇ · D = ρ<sub>f</sub></div>
+        <p>S 是封閉面，dS 沿外法線，Q<sub>f</sub> 是自由電荷量（C），ρ<sub>f</sub> 是其體積密度（C/m³）。ε<sub>0</sub> = 8.8541878128 × 10<sup>−12</sup> F/m。D 的單位也是 C/m²，與 E 的 V/m 不同。</p>
+        <p>對線性、均勻、各向同性介質，P 與 E 同方向且成正比。以無單位的電極化率（electric susceptibility）χ<sub>e</sub> 描述材料，就得到本章的材料關係：</p>
+        <div class="equation">P = ε<sub>0</sub>χ<sub>e</sub>E；　ε<sub>r</sub> = 1 + χ<sub>e</sub>；　D = ε<sub>0</sub>ε<sub>r</sub>E = εE</div>
+        <p>ε<sub>r</sub> 是無單位的相對介電常數，ε 是介電常數（permittivity，F/m）。這些是材料的響應模型，遇到非線性或各向異性材料時不能直接沿用單一 ε。</p>
+        <h3>為什麼只接上 E 的切向與 D 的法向？</h3>
+        <p>靜電場的閉路積分為零。取跨接面的細長矩形迴路，讓高度趨近零，上下兩段留下 (E<sub>1t</sub> − E<sub>2t</sub>)Δs = 0，因此切向 E 連續。再用薄扁圓柱包住接面，側面通量隨厚度消失，D 的高斯定律留下 (D<sub>2n</sub> − D<sub>1n</sub>)A = ρ<sub>sf</sub>A。</p>
+        <div class="equation">E<sub>2t</sub> = E<sub>1t</sub>；　n̂ · (D<sub>2</sub> − D<sub>1</sub>) = D<sub>2n</sub> − D<sub>1n</sub> = ρ<sub>sf</sub></div>
+        <p>n̂ 固定由介質 1 指向介質 2；ρ<sub>sf</sub> 是自由表面電荷密度（C/m²）。兩側法向分量都相對這一支 n̂ 定義。只有 ρ<sub>sf</sub> = 0 時，D 的法向才連續；上述推導沒有要求 D 的切向相同。</p>
+      </section>
+
+      <section id="calculate" aria-labelledby="calculate-title">
+        <h2 id="calculate-title">主例：沒有自由電荷，接面仍有束縛電荷</h2>
+        <p><strong>已知：</strong>接面 z = 0，n̂ = +ẑ，ε<sub>r1</sub> = 2、ε<sub>r2</sub> = 4，E<sub>1</sub> = (3x̂ + 4ẑ) V/m，ρ<sub>sf</sub> = 0。<strong>求：</strong>E<sub>2</sub>、兩側 D 與 P、接面淨束縛電荷，以及電場相對法線的角度。</p>
+        <h3>1．用分量選邊界條件</h3>
+        <p>x 分量沿接面，直接用切向 E 連續。z 分量穿過接面，使用法向 D 的跳躍條件，再用 D = εE 換回 E：</p>
+        <div class="equation">E<sub>2x</sub> = E<sub>1x</sub> = 3 V/m<br>ε<sub>0</sub> × 4 × E<sub>2z</sub> − ε<sub>0</sub> × 2 × (4 V/m) = 0<br>E<sub>2z</sub> = (2/4) × 4 V/m = 2 V/m<br>E<sub>2</sub> = (3x̂ + 2ẑ) V/m</div>
+        <h3>2．重建 D，辨認哪個分量會跳</h3>
+        <div class="equation">D<sub>1</sub> = 2ε<sub>0</sub> × (3x̂ + 4ẑ) V/m = ε<sub>0</sub>(6x̂ + 8ẑ) V/m<br>D<sub>2</sub> = 4ε<sub>0</sub> × (3x̂ + 2ẑ) V/m = ε<sub>0</sub>(12x̂ + 8ẑ) V/m<br>D<sub>1n</sub> = D<sub>2n</sub> ≈ 70.834 pC/m²<br>D<sub>1t</sub> ≈ 53.125 pC/m²；　D<sub>2t</sub> ≈ 106.250 pC/m²</div>
+        <p>法向通量對上了；切向 D 因材料的 ε 不同而加倍。不要把「D 法向連續」擴大成「整個 D 向量連續」。</p>
+        <h3>3．由極化的不連續找束縛電荷</h3>
+        <div class="equation">P<sub>1</sub> = ε<sub>0</sub>(2 − 1)(3x̂ + 4ẑ) V/m = ε<sub>0</sub>(3x̂ + 4ẑ) V/m<br>P<sub>2</sub> = ε<sub>0</sub>(4 − 1)(3x̂ + 2ẑ) V/m = ε<sub>0</sub>(9x̂ + 6ẑ) V/m</div>
+        <p>極化偶極在材料內部首尾抵消；每塊材料表面剩下 σ<sub>b</sub> = P · n̂<sub>out</sub>。接面上介質 1 的外法線是 +n̂，介質 2 的外法線是 −n̂，因此兩面加總為下式。均勻區域的 P 不隨位置變化，所以體束縛密度 ρ<sub>b</sub> = −∇ · P = 0。</p>
+        <div class="equation">σ<sub>b,接面</sub> = P<sub>1</sub> · n̂ + P<sub>2</sub> · (−n̂) = (P<sub>1</sub> − P<sub>2</sub>) · n̂<br>= ε<sub>0</sub> × (4 − 6) V/m<br>= −2 × 8.8541878128 × 10<sup>−12</sup> C/m² ≈ −17.708 pC/m²</div>
+        <p>負號表示接面淨束縛電荷為負。兩側各貢獻約 +35.417 與 −53.125 pC/m²，並非沒有電荷；ρ<sub>sf</sub> = 0 只說明沒有自由表面電荷。</p>
+        <h3>4．看角度，檢查單位與極限</h3>
+        <p>θ 從 +z 法線量向電場；本例兩分量都為正，所以可直接用 tan θ = E<sub>t</sub>/E<sub>n</sub>：</p>
+        <div class="equation">θ<sub>1</sub> = arctan(3/4) ≈ 36.87°；　θ<sub>2</sub> = arctan(3/2) ≈ 56.31°<br>ε<sub>0</sub>(E<sub>2n</sub> − E<sub>1n</sub>) = ε<sub>0</sub>(2 − 4) V/m = σ<sub>b,接面</sub></div>
+        <p>最後一行用計入全部電荷的 E 高斯定律反查，與束縛電荷相符。ε<sub>0</sub>E 的量綱為 (F/m)(V/m) = C/m²；角度中的分量比無單位。若兩邊都設 ε<sub>r</sub> = 2，則 E<sub>2</sub> = E<sub>1</sub>、P 不跳、接面淨束縛電荷為零。</p>
+      </section>
+
+      <section id="practice" aria-labelledby="practice-title">
+        <h2 id="practice-title">近題：只把介質 2 換成 εr2 = 8</h2>
+        <p>保留 E<sub>1</sub>、ε<sub>r1</sub> 與零自由表面電荷。求 E<sub>2</sub>、D<sub>2</sub>、接面 σ<sub>b</sub> 與 θ<sub>2</sub>。預測電場會更靠近法線，還是更靠近接面？</p>
+        <details><summary>提示一：先鎖定不變的兩個分量</summary><p>E<sub>2t</sub> 仍是 3 V/m，D<sub>2n</sub> 仍是 ε<sub>0</sub> × 8 V/m。改變 ε<sub>r2</sub> 之後，E<sub>2n</sub> 必須配合調整。</p></details>
+        <details><summary>提示二：P 的係數也會跟著換</summary><p>這次 P<sub>2</sub> = ε<sub>0</sub>(8 − 1)E<sub>2</sub>。接面淨電荷取 P<sub>1n</sub> − P<sub>2n</sub>，不要把法線反過來。</p></details>
+        <details><summary>完整詳解與檢查</summary><p>由 8ε<sub>0</sub>E<sub>2z</sub> = 2ε<sub>0</sub> × 4 V/m，得 E<sub>2z</sub> = 1 V/m，故 E<sub>2</sub> = (3x̂ + ẑ) V/m。</p><div class="equation">D<sub>2</sub> = 8ε<sub>0</sub>(3x̂ + ẑ) V/m = ε<sub>0</sub>(24x̂ + 8ẑ) V/m<br>P<sub>2</sub> = 7ε<sub>0</sub>(3x̂ + ẑ) V/m = ε<sub>0</sub>(21x̂ + 7ẑ) V/m<br>σ<sub>b</sub> = ε<sub>0</sub>(4 − 7) V/m ≈ −26.563 pC/m²<br>θ<sub>2</sub> = arctan(3/1) ≈ 71.57°</div><p>角度增大，更靠近接面。ε<sub>0</sub>E 的單位仍是 C/m²；法向 D 仍約 70.834 pC/m²。另由 ε<sub>0</sub>(E<sub>2n</sub> − E<sub>1n</sub>) = ε<sub>0</sub>(1 − 4) V/m 再次得到相同電荷，符號與邊界條件一致。</p></details>
+      </section>
+
+      <section class="lab" id="experiment" data-lab="08" aria-labelledby="experiment-title">
+        <h2 id="experiment-title">動手改：材料變了，哪個分量回應？</h2>
+        <p>固定介質 1 的電場與 ρ<sub>sf</sub> = 0，只調整介質 2。先預測 E<sub>2n</sub> 與 σ<sub>b</sub>，再拖動滑桿比對。</p>
+        <div class="lab-controls"><label for="lab-input">介質 2 相對介電常數 εr2（無單位）</label><input id="lab-input" type="range" min="1" max="10" step="0.5" value="4"><output id="lab-value" for="lab-input">4</output><button id="lab-reset" type="button">回到主例</button></div>
+        <div id="lab-results" aria-live="polite"><div class="readout"><small>E2（V/m）</small><strong>3x̂ + 2ẑ</strong></div><div class="readout"><small>D1n = D2n（pC/m²）</small><strong>≈ 70.834</strong></div><div class="readout"><small>接面 σb（pC/m²）</small><strong>≈ −17.708</strong></div><div class="readout"><small>相對法線 θ2</small><strong>≈ 56.31°</strong></div></div>
+        <p id="lab-why">切向 E 固定為 3 V/m；零自由表面電荷固定了法向 D，因此 E2n = 8/εr2 V/m。εr2 增加時，法向 E 減少，電場向接面偏轉。</p>
+        <div class="diagram" tabindex="0">
+          <svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="lab-plot-title lab-plot-desc">
+            <title id="lab-plot-title">預設材料的電場分量比較</title>
+            <desc id="lab-plot-desc">以同一原點及尺度比較電場一與電場二。兩者水平分量都是三，向上分量分別是四與二。</desc>
+            <defs><marker id="lab-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/></marker></defs>
+            <g fill="currentColor" font-size="16"><path d="M150 250 H520 M200 270 V45" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#lab-arrow)"/><path d="M200 250 L296 122 M200 250 L296 186" fill="none" stroke="currentColor" stroke-width="4" marker-end="url(#lab-arrow)"/><path d="M200 250 H296 V122" fill="none" stroke="currentColor" stroke-dasharray="5 4"/><text x="315" y="122">E1：Et = 3，En = 4</text><text x="315" y="185">E2：Et = 3，En = 2</text><text x="215" y="48">+n = +z</text><text x="497" y="278">+t = +x</text><text x="40" y="26">分量單位 V/m；同尺度比較，非位置圖</text></g>
+          </svg>
+        </div>
+        <p id="lab-description">預設 εr2 = 4；E1 與 E2 的切向投影相同，法向投影由 4 降為 2 V/m。兩支電場箭頭採同尺度。</p>
+        <noscript><p>目前顯示主例的完整預設結果；啟用 JavaScript 後可即時調整。</p></noscript>
+      </section>
+
+      <section aria-labelledby="scope-title">
+        <h2 id="scope-title">把模型接回量測</h2>
+        <p>這是靜電、平坦接面、線性且各向同性的局部模型。介電常數增加會增強極化；外部電源在建立電場時搬運自由電荷並供應儲能，材料內部的束縛電荷只作局部位移。本例固定的是 E<sub>1</sub>，不能直接解讀成任意電容器在固定電壓下的全部場分布。</p>
+        <p>電位計量到兩點的電位差；在已知均勻場與間距時，可由 E 的相應分量約為 −ΔV/Δs 推回電場。電容計搭配幾何尺寸可估 ε，但單次電容讀值不能直接證明接面的 σ<sub>b</sub> 分布。實物的漏電、頻率響應、邊緣場與量測探頭擾動，均超出本例。</p>
+        <p class="source-note">來源：<a href="sources.html#source-local-upper">本地《電磁學（上）》第 5.1–5.4 節</a>。本頁將極化、電位移、高斯定律與邊界條件合成同一個可重算的例子。</p>
+      </section>
+      <footer class="pager"><a href="07-conductors.html" rel="prev">← 07 導體與靜電平衡</a><a href="09-capacitance.html" rel="next">09 電容與儲能 →</a></footer>
+    </main>
+  </div>
+</body>
+</html>

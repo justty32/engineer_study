@@ -59,6 +59,9 @@ on:
       - "電機/02-電機核心/圖解電子學/dist/*.html"
       - "電機/02-電機核心/圖解電子學/dist/*.css"
       - "電機/02-電機核心/圖解電子學/dist/*.js"
+      - "電機/02-電機核心/圖解電磁學/dist/*.html"
+      - "電機/02-電機核心/圖解電磁學/dist/*.css"
+      - "電機/02-電機核心/圖解電磁學/dist/*.js"
       - "專題/論文速覽/互動網站/*.html"
       - "專題/論文速覽/互動網站/*.css"
       - "專題/論文速覽/互動網站/*.js"
@@ -152,6 +155,7 @@ jobs:
           電機/02-電機核心/電子學-互動課程|electronics
           電機/02-電機核心/圖解電子學/dist|electronics-little-lab
           電機/02-電機核心/電磁學-互動課程|electromagnetics
+          電機/02-電機核心/圖解電磁學/dist|electromagnetics-little-lab
           電機/02-電機核心/信號與系統-互動課程|signals-systems
           電機/02-電機核心/邏輯設計-互動課程|logic-design
           電機/02-電機核心/微處理機與匯流排-互動課程|microprocessors

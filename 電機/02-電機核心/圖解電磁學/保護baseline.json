@@ -1,0 +1,139 @@
+{
+ "contract": "wf-table/1",
+ "source": "技術驗收.md",
+ "extracted": "2026-10-11",
+ "scope": "既有電磁學-互動課程完整檔案，含既有封存檔；只作 SHA 比對，無導航連結",
+ "digest": "9c0e23f359527d9ea27a0600288092b2f7b3f09d0d20e52722f7a446d2f2fea7",
+ "columns": [
+  "file",
+  "bytes",
+  "sha256"
+ ],
+ "rows": [
+  {
+   "file": "電磁學-互動課程/00-電磁世界觀.html",
+   "bytes": 11552,
+   "sha256": "b42b9479a1b1dae0395ba79610380d84d71caf0e4f90183db29d4ca2aad7f8ce"
+  },
+  {
+   "file": "電磁學-互動課程/01-向量場語言.html",
+   "bytes": 11876,
+   "sha256": "dbfb0dbbe51b1597402f0c5572c448afffb5411d18feacad515440f756a1196e"
+  },
+  {
+   "file": "電磁學-互動課程/02-庫侖定律與電場.html",
+   "bytes": 12521,
+   "sha256": "3cd89e307932c45d2794beb2928da610b0c1592ed3167b39f4869cc7feac6b11"
+  },
+  {
+   "file": "電磁學-互動課程/03-高斯定律.html",
+   "bytes": 11999,
+   "sha256": "3a7b8eb3a792bcf31b25b8c7070749ae8f54d45165bfea58825bbd584a622c69"
+  },
+  {
+   "file": "電磁學-互動課程/04-電位與電位梯度.html",
+   "bytes": 12214,
+   "sha256": "d29a38d30aba3ec92b0dc4463cd148cbb35a94ed5b8a8e1b9de286a7e650948d"
+  },
+  {
+   "file": "電磁學-互動課程/05-介電質與邊界條件.html",
+   "bytes": 12805,
+   "sha256": "25f5f7a4aa92e45529056cf71199c18f418488c74b3837627352cc4dcee8329c"
+  },
+  {
+   "file": "電磁學-互動課程/06-電容與電場儲能.html",
+   "bytes": 12148,
+   "sha256": "162d8dc69d3e42fc4ec98b3c1bb62666b8a8089d73f8173a66e67a4af23b77d1"
+  },
+  {
+   "file": "電磁學-互動課程/07-電流密度與焦耳熱.html",
+   "bytes": 11997,
+   "sha256": "9cbd26b431051db25fbca1a1955e4adbf709c4cd19ac403f9f83a093fad8cb97"
+  },
+  {
+   "file": "電磁學-互動課程/08-磁場與羅倫茲力.html",
+   "bytes": 12437,
+   "sha256": "f8e32f1451cd9d5f5fd70351d8506cbb896dd09b4a6fb350dff42fe4eb638cbf"
+  },
+  {
+   "file": "電磁學-互動課程/09-畢歐沙伐與安培定律.html",
+   "bytes": 11718,
+   "sha256": "20a13832f8a0879517a1e0bc40e41bd6adff1a160a973965f7042008a5edb344"
+  },
+  {
+   "file": "電磁學-互動課程/10-磁性材料與磁路.html",
+   "bytes": 12463,
+   "sha256": "e1eb75825bcf7888aa32ae8137f5bccd208cc12b95d22a47d9b1c4fc19233c22"
+  },
+  {
+   "file": "電磁學-互動課程/11-電磁感應.html",
+   "bytes": 13677,
+   "sha256": "b3ad13f7804fda12623bacc2d84dbc14f84624ef663502f0e59d1955bd8f5d64"
+  },
+  {
+   "file": "電磁學-互動課程/12-位移電流與馬克士威方程式.html",
+   "bytes": 12492,
+   "sha256": "92dfc473f5a1cdbb3c3e76c0c67d12b0954f2a5cb669c82518015b24a23aaa3d"
+  },
+  {
+   "file": "電磁學-互動課程/13-電磁波與平面波.html",
+   "bytes": 12331,
+   "sha256": "c3c253ed240f0fa5a057358cd40e31e36f4a3ea15f87394b7540afd702fa6ba8"
+  },
+  {
+   "file": "電磁學-互動課程/14-介質中的波與界面.html",
+   "bytes": 14247,
+   "sha256": "65519e61e7e4704dda43b427844865777de19b3b3f5a75b8d9536808de5ff6b8"
+  },
+  {
+   "file": "電磁學-互動課程/15-傳輸線與駐波.html",
+   "bytes": 15036,
+   "sha256": "c3f885380b38c24a5e23d44825e189330b808474260358d52275baa577f7197b"
+  },
+  {
+   "file": "電磁學-互動課程/PROJECT-BRIEF.md",
+   "bytes": 34730,
+   "sha256": "eb7f8aee7d476b8fca9249453611692acca24bf8ca98c2bcfcf698817f0c646a"
+  },
+  {
+   "file": "電磁學-互動課程/app.js",
+   "bytes": 68525,
+   "sha256": "952e9a3a013fb563f9ef2b606e00b14b1dd6bfc6c653faf8af72095c4033d0da"
+  },
+  {
+   "file": "電磁學-互動課程/archive/BUILD-SPEC.md",
+   "bytes": 200876,
+   "sha256": "c15d32d60fc0d3c1482749c1bcf73edce005dd9ebc32040b97433de77333e06b"
+  },
+  {
+   "file": "電磁學-互動課程/archive/README.md",
+   "bytes": 443,
+   "sha256": "847b0ec045cdf0f8be9ffaa67f603d54760e1a7b3059da1ba5f2c70164e202b9"
+  },
+  {
+   "file": "電磁學-互動課程/archive/驗收紀錄.md",
+   "bytes": 20697,
+   "sha256": "e0babf58ec73250bba61b84f0110dff92d32e708613be1182bafe1e5dd01ba41"
+  },
+  {
+   "file": "電磁學-互動課程/index.html",
+   "bytes": 6383,
+   "sha256": "5cab32ed300e00853e9a8312c3126c09dbf4dca63ec1cd3b168128218f692266"
+  },
+  {
+   "file": "電磁學-互動課程/styles.css",
+   "bytes": 6261,
+   "sha256": "8eb154237c5a643885a155d7ca96b982232f9ff55780d2e014f1656b2d5eeb9a"
+  },
+  {
+   "file": "電磁學-互動課程/名詞與概念字典.html",
+   "bytes": 41975,
+   "sha256": "5afcb62faa20a03399fc6c49cfd41fe5894edce4370c95012c661c4a65d4f95b"
+  },
+  {
+   "file": "電磁學-互動課程/自我檢核.html",
+   "bytes": 23385,
+   "sha256": "f41fc1bbf152a001589fccaceb1edd814872f6793759b5d59bc902aa25e2bbce"
+  }
+ ]
+}

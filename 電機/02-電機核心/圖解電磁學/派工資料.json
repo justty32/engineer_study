@@ -1,0 +1,43 @@
+{
+ "contract": "wf-table/1",
+ "source": "派工計畫.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "id",
+  "agent",
+  "files",
+  "status"
+ ],
+ "rows": [
+  {
+   "id": "representatives",
+   "agent": "author_representatives",
+   "files": "08-dielectrics.html;24-standing-waves.html;07-conductors.html;09-capacitance.html;10-current.html;11-lorentz.html",
+   "status": "建置完成；作者final；指定focused已完成；獨立驗收結論見各審查報告"
+  },
+  {
+   "id": "foundations",
+   "agent": "author_foundations",
+   "files": "00–02 focused；12-magnetostatics.html;13-magnetic-media.html;14-vector-potential.html;15-induction.html",
+   "status": "建置完成；作者final；指定focused已完成；獨立驗收結論見各審查報告"
+  },
+  {
+   "id": "electrostatics",
+   "agent": "author_electrostatics",
+   "files": "03–06 focused；25-matching-transients.html;26-waveguides.html;27-antennas.html",
+   "status": "建置完成；作者final；指定focused已完成；獨立驗收結論見各審查報告"
+  },
+  {
+   "id": "time_waves",
+   "agent": "author_time_waves",
+   "files": "16-inductance.html;17-maxwell.html;18-waves.html;19-phasors.html",
+   "status": "建置完成；作者final；指定focused已完成；獨立驗收結論見各審查報告"
+  },
+  {
+   "id": "interfaces",
+   "agent": "author_interfaces",
+   "files": "20-lossy-media.html;21-normal-incidence.html;22-oblique-incidence.html;23-transmission-lines.html",
+   "status": "建置完成；作者final；指定focused已完成；獨立驗收結論見各審查報告"
+  }
+ ]
+}

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>匹配與暫態反射｜圖解電磁學</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="lab.css">
+<script src="app.js" defer></script>
+</head>
+<body data-page="25-matching-transients">
+<a class="skip-link" href="#main-content">跳到主要內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">教材來源</a></nav></header>
+<div class="site-layout">
+<aside class="course-nav" aria-label="課程章節"><a href="index.html">課程地圖</a><a href="24-standing-waves.html">上一章</a><a href="26-waveguides.html">下一章</a></aside>
+<main id="main-content">
+<header class="lesson-head">
+<p class="eyebrow">25 · 反射如何抵消與停止</p>
+<h1>匹配與暫態反射</h1>
+<p class="lead">50 Ω 線路要接 100 Ω 負載，插入哪一段線可以在指定頻率消除輸入反射？若送入的是快速階躍，負載電壓又會在什麼時候改變？</p>
+<p class="prereq">這章假設已懂：<a href="23-transmission-lines.html">行波與特性阻抗</a>、<a href="24-standing-waves.html">反射係數及輸入阻抗</a>。本章先處理單頻匹配，再用另一條均勻線說明時間先後。</p>
+</header>
+<section id="understand">
+<h2>用一段線改變前端看見的阻抗</h2>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 680 280" role="img" aria-labelledby="matching-title matching-desc" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="matching-title">四分之一波長轉換器連接五十與一百歐姆</title>
+<desc id="matching-desc">五十歐姆主線接上一段特性阻抗約七十點七一歐姆的線，再接一百歐姆電阻。轉換段在設計頻率的長度為該段波長四分之一；從主線看入的阻抗是五十歐姆。上下導線形成訊號與回流路徑，箭頭只標示看入方向。</desc>
+<defs><marker id="matching-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<path d="M60 95 H565 M60 180 H565" stroke="currentColor" stroke-width="3"/>
+<rect x="250" y="65" width="230" height="145" fill="#087e8b" fill-opacity="0.08" stroke="#087e8b" stroke-width="2"/>
+<rect x="553" y="114" width="24" height="47" fill="none" stroke="#b85f18" stroke-width="3"/>
+<path d="M565 95 V114 M565 161 V180" stroke="currentColor" stroke-width="3"/>
+<path d="M132 50 H238" stroke="#7141a3" stroke-width="2" marker-end="url(#matching-arrow)"/>
+<text x="55" y="35">由主線看入：Zin = 50 Ω</text>
+<text x="58" y="135">Z₀ = 50 Ω</text><text x="264" y="132">Zt ≈ 70.7107 Ω</text><text x="590" y="143">R_L</text>
+<text x="533" y="225">100 Ω</text><text x="258" y="245">長度 ℓ = λt/4</text>
+<text x="54" y="245">回流導線</text><text x="286" y="37">在設計頻率 f₀ 成立</text>
+</svg>
+</div>
+<p>特性阻抗是行進波的電壓與電流比，並非這段銅線的直流電阻。插入一段不同特性阻抗的線，波會在兩個交界反射；長度決定反射波返回前端時的相位。阻抗匹配（impedance matching）讓前端的總電壓、電流之比等於主線 Z₀，使主線上的淨反射為零。</p>
+<p>圖中 Z₀ 是主線特性阻抗，Z<sub>t</sub>是轉換段特性阻抗，R<sub>L</sub>是純電阻負載，單位均為 Ω。ℓ 是轉換段長度（m），β = 2π/λ<sub>t</sub>是該段相位常數（rad/m），λ<sub>t</sub>是該段的波長。設計必須使用線內波長，不能不分介質就取真空波長。</p>
+<h3>四分之一波長轉換器為何會「反轉」阻抗？</h3>
+<p>四分之一波長轉換器（quarter-wave transformer）利用線段的相位延遲，讓負載阻抗在輸入端呈現不同數值。</p>
+<p>無損線的輸入阻抗由入射與反射的電壓、電流相加得到。把上一章的正切式分子分母同乘 cos βℓ，可在四分之一波長處直接代入，避免把無限大的正切值當數字算。</p>
+<div class="equation">Z<sub>in</sub> = Z<sub>t</sub> [R<sub>L</sub> cos βℓ + jZ<sub>t</sub> sin βℓ] / [Z<sub>t</sub> cos βℓ + jR<sub>L</sub> sin βℓ]<br>ℓ = λ<sub>t</sub>/4 ⇒ βℓ = π/2 ⇒ cos βℓ = 0、sin βℓ = 1<br>Z<sub>in</sub> = Z<sub>t</sub>(jZ<sub>t</sub>)/(jR<sub>L</sub>) = Z<sub>t</sub>²/R<sub>L</sub></div>
+<p>j 是平方為 −1 的虛數單位。若希望 Z<sub>in</sub> = Z₀，兩邊乘 R<sub>L</sub>並取正根，就得到 Z<sub>t</sub> = √(Z₀R<sub>L</sub>)。這個簡單設計要求 Z₀、R<sub>L</sub>都是正實數；負載若帶電抗，需要先補償，或使用其他匹配結構。</p>
+</section>
+<section id="calculate">
+<h2>主例：50 Ω 接 100 Ω，逐步選出轉換線</h2>
+<p><strong>已知：</strong>Z₀ = 50 Ω、R<sub>L</sub> = 100 Ω，轉換段無損。另指定設計頻率 f₀ = 1.00 GHz、該段相速 v<sub>p</sub> = 2.00 × 10⁸ m/s。<strong>未知：</strong>Z<sub>t</sub>、實體長度 ℓ 與輸入反射。</p>
+<ol>
+<li>阻抗乘積的單位是 Ω²，開根號才回到 Ω。<div class="equation">Z<sub>t</sub> = √[(50 Ω)(100 Ω)] = √(5000 Ω²)<br>≈ 70.7107 Ω</div></li>
+<li>先算線內波長，再取四分之一。<div class="equation">λ<sub>t</sub> = v<sub>p</sub>/f₀ = (2.00 × 10⁸ m/s)/(1.00 × 10⁹ s⁻¹)<br>= 0.200 m；ℓ = 0.200 m/4 = 0.0500 m</div></li>
+<li>回代檢查前端看到的阻抗。<div class="equation">Z<sub>in</sub> = Z<sub>t</sub>²/R<sub>L</sub> = 5000 Ω² / 100 Ω = 50 Ω<br>Γ<sub>in</sub> = (Z<sub>in</sub> − Z₀)/(Z<sub>in</sub> + Z₀) = (50 − 50)/(50 + 50) = 0</div></li>
+</ol>
+<p><strong>檢查：</strong>若直接連接而不加轉換段，Γ = (100 − 50)/(100 + 50) = 1/3；現在設計頻率的輸入反射才降為零。轉換線內仍可有駐波，零輸入反射不代表每個交界都完全沒有反射，也不代表能量消失在一個理想無損元件裡。</p>
+<h3>獨立暫態例：階躍先走到負載，結果才傳回源</h3>
+<p>以下換成一條<strong>均勻 50 Ω 線，沒有四分之一波轉換段</strong>。電壓源在 t = 0 由 0 跳到 V<sub>s</sub> = 6 V，串聯 R<sub>s</sub> = 50 Ω，負載 R<sub>L</sub> = 100 Ω，單程延遲 t<sub>d</sub> = 10 ns，線上初始電壓電流為零。</p>
+<div class="diagram" tabindex="0">
+<svg viewBox="0 0 680 340" role="img" aria-labelledby="bounce-title bounce-desc" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="bounce-title">三伏特初波與一伏特回波的反彈時空圖</title>
+<desc id="bounce-desc">橫向左為源、右為負載，時間向下。零奈秒從源出發的三伏特階躍，十奈秒到負載，使負載升至四伏特並反射一伏特；反射波二十奈秒到源，源端反射係數為零，因此沒有下一趟波。</desc>
+<defs><marker id="bounce-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<path d="M130 45 V305" stroke="#657482" stroke-width="2" marker-end="url(#bounce-arrow)"/>
+<path d="M480 45 V305" stroke="#657482" stroke-width="2" marker-end="url(#bounce-arrow)"/>
+<path d="M130 65 L480 165" stroke="#087e8b" stroke-width="3" marker-end="url(#bounce-arrow)"/>
+<path d="M480 165 L130 265" stroke="#b85f18" stroke-width="3" marker-end="url(#bounce-arrow)"/>
+<text x="60" y="25">源端 ΓS = 0</text><text x="422" y="25">負載 ΓL = 1/3</text>
+<text x="24" y="71">t = 0 ns</text><text x="505" y="169">10 ns：V_L = 4 V</text>
+<text x="20" y="279">20 ns</text><text x="244" y="91">初波 +3 V →</text><text x="250" y="234">← 回波 +1 V</text>
+<text x="160" y="295">到源後不再反射；線上終值 4 V</text><text x="19" y="330">時間向下；斜線是波前位置，不是電壓波形</text>
+</svg>
+</div>
+<ol>
+<li>負載消息尚未返回時，源面對的是 Z₀；初波由分壓決定。<div class="equation">V₀⁺ = V<sub>s</sub>Z₀/(R<sub>s</sub> + Z₀)<br>= (6 V)(50 Ω)/(50 Ω + 50 Ω) = 3 V</div></li>
+<li>10 ns 抵達負載，按負載條件形成回波。<div class="equation">Γ<sub>L</sub> = (R<sub>L</sub> − Z₀)/(R<sub>L</sub> + Z₀) = 1/3<br>V₁⁻ = Γ<sub>L</sub>V₀⁺ = 1 V<br>V<sub>L</sub> = 3 V + 1 V = 4 V<br>I<sub>L</sub> = (3 V − 1 V)/(50 Ω) = 0.040 A</div></li>
+<li>20 ns 回波到源。看反射的增量時，理想源電壓維持不變，其內阻是 R<sub>s</sub>。<div class="equation">Γ<sub>S</sub> = (R<sub>s</sub> − Z₀)/(R<sub>s</sub> + Z₀) = 0<br>新發出的增量 V₁⁺ = Γ<sub>S</sub>V₁⁻ = 0 V</div></li>
+</ol>
+<p>源端沒有下一趟反射，但接收到的 +1 V 仍讓線端電壓由 3 V 升到 4 V，電流由 60 mA 降到 40 mA。「吸收回波」不能解讀成源端電壓不變。直流檢查為 I = 6 V/(50 Ω + 100 Ω) = 40 mA、V<sub>L</sub> = I R<sub>L</sub> = 4 V，與反彈圖終值一致。</p>
+<p>能量也可在終態核對：電源供應 P = V<sub>s</sub>I = (6 V)(0.040 A) = 0.240 W；負載耗散 I²R<sub>L</sub> = 0.160 W，源電阻耗散 I²R<sub>s</sub> = 0.080 W，兩者相加正好等於供應功率。這是直流終值，不放正弦峰值平均才使用的二分之一。波前還在路上時，線上的電場與磁場儲能也在改變，不能提前把終態功率平衡套用到每一個瞬間。</p>
+</section>
+<section id="practice">
+<h2>近題：匹配負載改為 25 Ω</h2>
+<p>保持 Z₀ = 50 Ω、相速與設計頻率不變，重新設計四分之一波長段，求 Z<sub>t</sub>與 Z<sub>in</sub>。</p>
+<details><summary>提示一：這次重新選轉換段</summary><p>需要把 R<sub>L</sub> = 25 Ω 代入 √(Z₀R<sub>L</sub>)，不是沿用舊的 70.7107 Ω 線。</p></details>
+<details><summary>提示二：長度由頻率與相速決定</summary><p>題目指定兩者不變，所以 λ<sub>t</sub>/4 仍為 0.0500 m；阻抗則必須另選。</p></details>
+<details><summary>完整詳解與檢查</summary><div class="equation">Z<sub>t</sub> = √[(50 Ω)(25 Ω)] = √(1250 Ω²) ≈ 35.3553 Ω<br>Z<sub>in</sub> = 1250 Ω²/(25 Ω) = 50 Ω<br>Γ<sub>in</sub> = (50 − 50)/(50 + 50) = 0；ℓ = 0.0500 m</div><p>Z<sub>t</sub>介於主線與負載阻抗之間，回代後單位是 Ω。若保留舊轉換段，Z<sub>in</sub>反而是 5000/25 = 200 Ω，不會匹配。</p></details>
+</section>
+<section class="lab" id="experiment" data-lab="25">
+<h2>自由實驗：依負載重新選線</h2>
+<p>拖動負載後，計算器會重新設計理想 Z<sub>t</sub>；每個點代表另一個轉換器，不是同一實體自動適應所有負載。仍假定設計頻率下電氣長度為 90°。</p>
+<label for="lab-input">待匹配電阻 R<sub>L</sub>（Ω）</label>
+<input id="lab-input" type="range" min="25" max="200" step="5" value="100">
+<output id="lab-value" for="lab-input">100 Ω</output>
+<button id="lab-reset" type="button">回到主例</button>
+<div id="lab-results" aria-live="polite"><p>Z<sub>t</sub> ≈ 70.7107 Ω；Z<sub>in</sub> = 50 Ω。</p></div>
+<p id="lab-why">令 Z<sub>t</sub>² = Z₀R<sub>L</sub>，即可在四分之一波長處把每個正電阻轉成 50 Ω。</p>
+<div class="diagram" tabindex="0"><svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="plot-title-25 plot-desc-25" xmlns="http://www.w3.org/2000/svg" font-size="16">
+<title id="plot-title-25">轉換段特性阻抗隨負載增加</title><desc id="plot-desc-25">橫軸負載二十五到兩百歐姆，縱軸是重新設計的轉換段阻抗。曲線依平方根增加，預設一百歐姆對應約七十點七一歐姆。</desc>
+<path d="M72 40 V245 H610" fill="none" stroke="currentColor" stroke-width="2"/>
+<text x="78" y="25">Zt（Ω）</text><text x="30" y="249">0</text><text x="24" y="58">110</text>
+<path d="M72.00,183.93 L77.28,181.83 L82.56,179.80 L87.84,177.82 L93.12,175.91 L98.40,174.05 L103.68,172.23 L108.96,170.46 L114.24,168.73 L119.52,167.03 L124.80,165.38 L130.08,163.75 L135.36,162.16 L140.64,160.60 L145.92,159.07 L151.20,157.56 L156.48,156.08 L161.76,154.63 L167.04,153.19 L172.32,151.78 L177.60,150.39 L182.88,149.02 L188.16,147.67 L193.44,146.34 L198.72,145.03 L204.00,143.73 L209.28,142.45 L214.56,141.18 L219.84,139.93 L225.12,138.70 L230.40,137.48 L235.68,136.27 L240.96,135.08 L246.24,133.90 L251.52,132.73 L256.80,131.57 L262.08,130.43 L267.36,129.29 L272.64,128.17 L277.92,127.06 L283.20,125.96 L288.48,124.86 L293.76,123.78 L299.04,122.71 L304.32,121.65 L309.60,120.59 L314.88,119.55 L320.16,118.51 L325.44,117.49 L330.72,116.47 L336.00,115.45 L341.28,114.45 L346.56,113.45 L351.84,112.47 L357.12,111.49 L362.40,110.51 L367.68,109.54 L372.96,108.58 L378.24,107.63 L383.52,106.68 L388.80,105.74 L394.08,104.81 L399.36,103.88 L404.64,102.96 L409.92,102.04 L415.20,101.13 L420.48,100.23 L425.76,99.33 L431.04,98.44 L436.32,97.55 L441.60,96.67 L446.88,95.79 L452.16,94.92 L457.44,94.05 L462.72,93.19 L468.00,92.33 L473.28,91.48 L478.56,90.63 L483.84,89.79 L489.12,88.95 L494.40,88.11 L499.68,87.28 L504.96,86.46 L510.24,85.64 L515.52,84.82 L520.80,84.01 L526.08,83.20 L531.36,82.39 L536.64,81.59 L541.92,80.80 L547.20,80.00 L552.48,79.21 L557.76,78.43 L563.04,77.65 L568.32,76.87 L573.60,76.09 L578.88,75.32 L584.16,74.55 L589.44,73.79 L594.72,73.03 L600.00,72.27" fill="none" stroke="#087e8b" stroke-width="3"/>
+<circle cx="298.29" cy="122.86" r="6" fill="#c14f26"/>
+<text x="280" y="46">100 Ω → Zt ≈ 70.7107 Ω</text><text x="64" y="268">25</text><text x="578" y="268">200</text><text x="268" y="292">負載 R_L（Ω）</text></svg></div>
+<p id="lab-description">橫軸為待匹配負載，縱軸為所需轉換段特性阻抗；預設點是 100 Ω 與約 70.7107 Ω。所有點的設計輸入阻抗均為 50 Ω。</p>
+</section>
+<section id="model">
+<h2>頻寬、支節與量測</h2>
+<p>頻率離開 f₀，固定長度不再等於 λ<sub>t</sub>/4，反射抵消就通常不完整，因此單段轉換器屬窄頻設計。當 R<sub>L</sub> = Z₀，Z<sub>t</sub>也等於 Z₀，本來就不需要轉換；R<sub>L</sub>趨近開路或短路時，公式要求極大或極小的特性阻抗，實體結構有可實作範圍。</p>
+<p>支節（stub）是接在主線上的短路或開路分支。它的長度使輸入呈感性或容性，可與經主線移動後的負載電抗互相抵消；因此位置與長度都屬設計變數，不能只背一個萬用長度。暫態若 Γ<sub>L</sub>、Γ<sub>S</sub>都不為零，每次往返的波增量會再乘 Γ<sub>L</sub>Γ<sub>S</sub>；被動有限電阻通常使其逐次衰減，理想完全反射邊界則可能一直往返。</p>
+<p>向量網路分析儀量設計頻率附近的反射與傳輸；時域反射儀（time-domain reflectometer, TDR）或高速示波器則從延遲辨認交界位置。10 ns 到負載、20 ns 回源是因果時間，不能用直流終值取代。探棒頻寬、額外負載與線損都會影響波形；一次漂亮的低反射讀值不能證明全頻段或每種階躍都匹配。</p>
+<p>來源：<a href="sources.html#source-local-lower">本地《電磁學（下）》17.7</a>；<a href="sources.html#source-chapter-25">Staelin §7.3.2、§8.1 的公式定位與條件</a>。</p>
+</section>
+<footer class="pager"><a href="24-standing-waves.html" rel="prev">← 上一章</a><a href="index.html">課程地圖</a><a href="26-waveguides.html" rel="next">下一章 →</a></footer>
+</main>
+</div>
+</body>
+</html>

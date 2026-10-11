@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>畢歐—沙伐與安培定律｜圖解電磁學</title><link rel="icon" href="data:,"><link rel="stylesheet" href="lab.css"><script src="app.js" defer></script></head>
+<body data-page="12-magnetostatics">
+<a class="skip-link" href="#main-content">跳到課程內容</a>
+<header class="site-header"><a class="brand" href="index.html">圖解電磁學</a><nav aria-label="網站導覽"><a href="glossary.html">名詞字典</a><a href="sources.html">來源</a></nav></header>
+<div class="site-layout"><aside class="course-nav" aria-label="課程導覽"><a href="index.html">全部課程</a><a href="12-magnetostatics.html" aria-current="page">12 畢歐—沙伐與安培定律</a><a href="13-magnetic-media.html">下一章：磁性材料</a></aside>
+<main id="main-content">
+<header class="lesson-head"><p class="eyebrow">12 ／ 從穩定電流求磁場</p><h1>畢歐—沙伐與安培定律</h1><p class="lead">一條沿 +z 流過 10 A 的長直導線，在右側 2 cm 處產生多大的磁場？同樣是電流，為什麼繞成線圈後可以把磁場集中起來？</p><p class="prereq">先讀<a href="11-lorentz.html">磁場與羅倫茲力</a>的叉積方向，並會用<a href="02-calculus.html">線積分與史托克斯定理</a>辨認繞行方向。本章電流不隨時間改變，周圍近似真空。</p></header>
+<section id="understand">
+<h2>場繞著導線，力的方向另算</h2>
+<p>靜磁（magnetostatics）指電流分布與場不隨時間改變，導線裡的電荷仍在移動。穩態下每個截面流入與流出的電荷率相同，沒有持續累積；剛接通電源的過渡過程則超出本章假設。</p>
+<p>穩定電流是磁場來源。右手拇指沿傳統電流方向，彎曲四指指出環繞直導線的磁通密度 B 方向。B 的單位是特斯拉 T；它決定運動電荷或電流在給定外場中受到的磁力。這裡要先求來源電流造成的 B，並不是直接求一顆粒子的受力。</p>
+<figure><div class="diagram" tabindex="0">
+<svg viewBox="0 0 640 330" role="img" aria-labelledby="wire-title wire-desc" font-size="17">
+<title id="wire-title">沿正 z 的電流在正 x 點產生正 y 磁場</title><desc id="wire-desc">從正 z 方向看向 xy 平面，導線電流朝紙外，磁場沿逆時針同心圓。觀測點位於右側正 x、距離零點零二公尺，該點磁場朝上正 y。</desc>
+<defs><marker id="wire-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+<g fill="none" stroke="currentColor" stroke-width="2"><circle cx="250" cy="175" r="105" stroke-dasharray="6 5"/><circle cx="250" cy="175" r="13"/><path d="M250 175H565" marker-end="url(#wire-arrow)"/><path d="M355 175V77" stroke-width="4" marker-end="url(#wire-arrow)"/><path d="M250 70H206" marker-end="url(#wire-arrow)"/></g>
+<g fill="currentColor"><circle cx="250" cy="175" r="4"/><circle cx="355" cy="175" r="5"/><text x="385" y="95">B 朝 +y</text><text x="385" y="125">約 100 μT</text><text x="560" y="207">+x</text><text x="210" y="211">I 沿 +z 出紙面</text><text x="271" y="247">r = 0.02 m</text><text x="130" y="42">逆時針正繞向 ↔ +z 面法線</text><text x="158" y="306">虛線是安培路徑，不是金屬線</text></g>
+</svg></div><figcaption>導線截面用「圓中一點」表示朝讀者的 +z 電流。在 +x 點，ẑ × x̂ = ŷ；虛線圓上的 B 與路徑切向一致。箭頭只示方向，幾何不按實際尺寸比例。</figcaption></figure>
+<h3>畢歐—沙伐：每一小段電流的貢獻相加</h3>
+<p>畢歐—沙伐定律（Biot–Savart law）適用於真空中的穩恒電流。來源上的小段長度向量 dℓ′ 沿電流方向，R 向量從該來源段指向觀測點，R 是兩者距離，R̂ 是其單位方向：</p>
+<p class="equation">dB = (μ<sub>0</sub>I/4π) (dℓ′ × R̂)/R²；B = ∫ dB。</p>
+<p>μ<sub>0</sub> 是真空磁導率（vacuum permeability），本課取 μ<sub>0</sub> = 1.25663706212 × 10<sup>−6</sup> T·m/A 作教學計算。叉積使 dB 同時垂直於 dℓ′ 與 R；大小再乘兩者夾角的 sin。單位為 (T·m/A) × A × m/m² = T。各小段的方向可能不同，必須先作向量加總，不能把全部大小直接相加。</p>
+<p>此式把穩定來源對各處的影響加總；電流變化很快、傳播延遲不能忽略時，需要時變場模型。真實電路必須有回流路徑；把其中一段視為無限長，是觀測距離遠小於線段長度、且回流線夠遠時的局部近似。</p>
+<h3>安培：封閉路徑上的總環流</h3>
+<p>真空靜態安培定律（Ampère's law）把 B 沿封閉路徑 C 的線積分，連到穿過該路徑所圍面的帶號電流 I<sub>穿</sub>：</p>
+<p class="equation">∮<sub>C</sub> B · dℓ = μ<sub>0</sub>I<sub>穿</sub>；∇ × B = μ<sub>0</sub>J。</p>
+<p>J 是電流密度（A/m²）；微分式由史托克斯定理得到。面法線與走向用右手配對：從 +z 看是逆時針時，沿 +z 穿面的電流算正，沿 −z 算負。只算真正穿過所選面的電流，不能把附近所有導線電流都相加。</p>
+<p>對無限長直導線，平移與旋轉對稱性讓 B 只依離軸距離 r 決定，方向沿圓周。選半徑 r 的同心圓，整圈 B 大小相同、與 dℓ 同向，因此積分可改為 B 乘圓周長，得到 B(2πr) = μ<sub>0</sub>I。若附近還有其他導線或幾何不對稱，安培定律仍成立，卻不能直接把未知 B 提到積分外。</p>
+<h3>電流繞成圓環：軸上的橫向分量抵消</h3>
+<p>半徑 a 的細圓環位於 xy 平面，從 +z 看電流逆時針，觀測點在軸上高度 z。各來源段到軸上點的距離都為 R = √(a² + z²)，dℓ′ 與 R 垂直。對稱位置的橫向 dB 抵消；軸向投影多乘 a/R。把環長 2πa 加總：</p>
+<div class="equation">B<sub>z</sub> = (μ<sub>0</sub>I/4πR²)(a/R)(2πa)<br>= μ<sub>0</sub>Ia²/[2(a² + z²)<sup>3/2</sup>]。</div>
+<p>在中心 z = 0，B<sub>z</sub> = μ<sub>0</sub>I/(2a)。例如 a = 0.05 m、I = 10 A，B<sub>z</sub> ≈ (1.25663706212 × 10<sup>−6</sup> T·m/A)(10 A)/(0.10 m) ≈ 126 μT，方向 +z。離開中心到 z = a 時，場降成中心的 1/(2√2)；很遠處隨距離三次方下降，與無限長線的 1/r 不同。</p>
+<h3>螺線管與環形線圈：讓多匝共同穿面</h3>
+<p>很長、緊密纏繞的空心螺線管（solenoid）可用長方形安培路徑：管內長邊與 B 平行，管外長邊場近似為零，兩短邊點積為零。若路徑管內長 ℓ，單位長度有 n 匝（m<sup>−1</sup>），穿面電流為 nℓI，因此 Bℓ ≈ μ<sub>0</sub>nℓI，得到 B ≈ μ<sub>0</sub>nI。管內中央較均勻，有限線圈的端部與外部不能當成精確零場。</p>
+<p>環形線圈（toroid）有 N 匝，理想緊密繞線、漏磁可忽略時，在繞組包圍的環形區域內（內半徑 a &lt; r &lt; 外半徑 b）選同心圓，B(2πr) = μ<sub>0</sub>NI，故 B(r) = μ<sub>0</sub>NI/(2πr)。即使每匝電流相同，內側半徑較小，B 仍較大；「環內均勻」只能是薄環的近似。放入磁性材料後，必須再處理材料磁化，下一章用 H 表達自由電流的作用。</p>
+</section>
+<section id="calculate"><h2>主例：10 A 長直線，距離 2 cm</h2>
+<p><strong>已知：</strong>導線沿 z 軸，I = 10 A 朝 +z；觀測點在 x = +0.02 m、y = 0。<strong>未知：</strong>B 的大小與方向。假設觀測點在導線外、遠離端點，周圍真空。選安培圓，利用圓周對稱性解場。</p>
+<div class="equation">B(2πr) = μ<sub>0</sub>I → B = μ<sub>0</sub>I/(2πr)<br>= [(1.25663706212 × 10<sup>−6</sup> T·m/A)(10 A)]/[2π(0.02 m)]<br>≈ 1.00000 × 10<sup>−4</sup> T = 100 μT。</div>
+<p>右手拇指指 +z，觀測點在 +x，所以 B ≈ 100 ŷ μT。<strong>單位檢查：</strong>(T·m/A)A/m = T。<strong>比例檢查：</strong>電流加倍，場加倍；距離加倍，場減半；I = 0 時此來源的場為零。r 趨近零的發散屬理想細線模型，真實導線內部要用實際電流分布重新計算。</p></section>
+<section id="practice"><h2>近題：只把電流改成 5 A</h2><p>電流仍朝 +z，觀測點仍在 +x 的 0.02 m 處。求磁場並檢查它與主例的比例。</p>
+<details><summary>提示一：幾何與方向都沒變</summary><p>使用 B = μ<sub>0</sub>I/(2πr)，r 不變，方向仍由 +z 電流的右手環繞方向決定。</p></details>
+<details><summary>提示二：先預測一半，再代入</summary><p>5 A 是 10 A 的一半，因此 B 應是主例的一半。保留 T·m/A、A、m，確認只剩 T。</p></details>
+<details><summary>完整詳解與檢查</summary><p class="equation">B = [(1.25663706212 × 10<sup>−6</sup> T·m/A)(5 A)]/[2π(0.02 m)]<br>≈ 5.00000 × 10<sup>−5</sup> T = 50 μT。</p><p>方向 +y，故 B ≈ 50 ŷ μT；單位 (T·m/A)A/m = T。大小確為主例一半，未反轉電流，所以方向保持不變。</p></details></section>
+<section class="lab" id="experiment" data-lab="12"><h2>自己改：固定位置，改變電流</h2><p>觀測點固定在導線右側 0.02 m。先預測 I = 20 A 的結果，再拖動驗證。</p><label for="lab-input">長直線電流 I（A）</label><input id="lab-input" type="range" min="0" max="20" step="1" value="10"><output id="lab-value" for="lab-input">10 A</output><button id="lab-reset" type="button">回到主例</button><div id="lab-results" aria-live="polite"><p>B ≈ 100 μT；觀測點的方向為 +y。</p></div><p id="lab-why">r 固定，B = μ<sub>0</sub>I/(2πr) 與電流成正比；每增加 1 A，磁場約增加 10 μT。</p>
+<div class="diagram" tabindex="0"><svg id="lab-plot" viewBox="0 0 640 300" role="img" aria-labelledby="wire-lab-title wire-lab-desc" font-size="17"><title id="wire-lab-title">直線電流與磁場的比例</title><desc id="wire-lab-desc">電流從零到二十安培，磁場從零到約二百微特斯拉。目前十安培對應約一百微特斯拉。</desc><g fill="none" stroke="currentColor" stroke-width="2"><path d="M85 240H565M85 240V40"/><path d="M85 240L565 40" stroke-width="3"/><path d="M325 240V140H85" stroke-dasharray="5 4"/></g><g fill="currentColor"><circle cx="325" cy="140" r="6"/><text x="20" y="28">B（μT）</text><text x="515" y="281">I（A）</text><text x="60" y="264">0</text><text x="35" y="146">100</text><text x="35" y="46">200</text><text x="315" y="264">10</text><text x="554" y="264">20</text><text x="340" y="129">10 A，約 100 μT</text></g></svg></div><p id="lab-description">直線通過原點；此模型只改電流，導線方向、觀測位置與回流線距離假設保持不變。</p></section>
+<section aria-labelledby="wire-limits"><h2 id="wire-limits">模型、量測與來源</h2><p>霍爾探棒可量磁場沿敏感軸的分量，必須對準本例的 +y 方向；電流鉤表則利用包圍導線的磁作用推估電流。把去、回兩條線一起夾入，帶號電流可能抵消，讀值不能當成每條線都沒有電流。</p><p>單一觀測點符合 100 μT，仍不足以證明導線無限長或周圍完全無其他磁場。改距離檢查 1/r 趨勢、翻轉電流觀察變號，能區分來源場與背景偏置。靜磁安培式也不涵蓋快速變動電場的位移電流；時變情形會在馬克士威方程章補齊。</p><p>來源：<a href="sources.html#source-local-middle">本地《電磁學（中）》第 9.1–9.2 節</a>；本課磁導率採建置契約的教學數值，不將 μ<sub>0</sub> 宣稱為精確常數。</p></section>
+<footer class="pager"><a href="11-lorentz.html">← 磁場與羅倫茲力</a><a href="13-magnetic-media.html">下一章：磁性材料、磁路與邊界 →</a></footer>
+</main></div></body></html>
