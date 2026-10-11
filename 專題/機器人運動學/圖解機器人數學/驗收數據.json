@@ -1,0 +1,2661 @@
+{
+ "contract": "wf-table/1",
+ "source": "驗收紀錄.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "status": "最終通過；真人理解與實機觸控待人工",
+ "final_version": "candidate-3",
+ "final_fingerprint": "f38375bedfc3c3ffe763d55b5d6737d4fd4d4625764074975bcbf0baa7b7343e",
+ "audit_note": "candidate-1 全站技術/數學審查；candidate-2 真實差異 focused 複核；candidate-3 僅兩個br插入，22檔相同且正規化全文相同。",
+ "initial_candidate_fingerprint": "31529303ebe18bb75b06284a2d919846a58f695ddfd9eb7960d1139cfd36a0af",
+ "columns": [
+  "category",
+  "page",
+  "viewport",
+  "result",
+  "detail",
+  "version"
+ ],
+ "rows": [
+  {
+   "category": "頁面載入",
+   "page": "00-start.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "angles.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "chains.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "control.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "dynamics.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "forces.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "forward.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "frames.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "glossary.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "index.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "inverse.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "jacobian.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "orientation.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "rotation-2d.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "rotation-3d.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "singularities.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "sources.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "trajectory.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "transforms.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "vectors.html",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "00-start.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "angles.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "chains.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "control.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "dynamics.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "forces.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "forward.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "frames.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "glossary.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "index.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "inverse.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "jacobian.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "orientation.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "rotation-2d.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "rotation-3d.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "singularities.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "sources.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "trajectory.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "transforms.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "vectors.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "00-start.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "angles.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "chains.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "control.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "dynamics.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "forces.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "forward.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "frames.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "glossary.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "index.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "inverse.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "jacobian.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "orientation.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "rotation-2d.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "rotation-3d.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "singularities.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "sources.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "trajectory.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "transforms.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "頁面載入",
+   "page": "vectors.html",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "本站標題、console/pageerror、HTTP、外部執行期請求、整頁橫溢與 reduced-motion；核心算例及 live 計算不藏 details",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "00-start",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "00-start",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "start-x min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "00-start",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "start-x max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "00-start",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "start-y min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "00-start",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "start-y max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "angles",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "angles",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "angle-theta min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "angles",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "angle-theta max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "angles",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "angle-radius min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "angles",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "angle-radius max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "vector-dx min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "vector-dx max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "vector-dy min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "vector-dy max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "vector-scale min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "vector-scale max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"vector-dx\":0,\"vector-dy\":0}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"vector-scale\":0}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"vector-dx\":-3,\"vector-dy\":-4}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "frames",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "frames",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "frame-turn min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "frames",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "frame-turn max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "frames",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "frame-x min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "frames",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "frame-x max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "frames",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "frame-y min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "frames",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "frame-y max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-2d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-2d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "rotate-theta min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-2d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "rotate-theta max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-2d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "rotate-x min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-2d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "rotate-x max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-2d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "rotate-y min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-2d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "rotate-y max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-3d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-3d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "space-rx min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-3d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "space-rx max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-3d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "space-rz min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "rotation-3d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "space-rz max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "transforms",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "transforms",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "transform-turn min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "transforms",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "transform-turn max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "transforms",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "transform-tx min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "transforms",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "transform-tx max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "transforms",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "transform-ty min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "transforms",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "transform-ty max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "chains",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "chains",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "chain-ab min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "chains",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "chain-ab max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "chains",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "chain-bc min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "chains",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "chain-bc max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forward",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forward",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "fk-q1 min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forward",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "fk-q1 max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forward",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "fk-q2 min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forward",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "fk-q2 max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forward",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"fk-q1\":0,\"fk-q2\":90}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forward",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"fk-q1\":30,\"fk-q2\":30}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "ik-x min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "ik-x max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "ik-y min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "ik-y max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"ik-x\":0,\"ik-y\":0}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"ik-x\":2,\"ik-y\":0}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"ik-x\":-2,\"ik-y\":0}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"ik-x\":2.25,\"ik-y\":0}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"ik-x\":0.25,\"ik-y\":0.25}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "jac-q1 min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "jac-q1 max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "jac-q2 min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "jac-q2 max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "jac-v1 min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "jac-v1 max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "jac-v2 min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "jac-v2 max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"jac-v1\":1,\"jac-v2\":-1}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"jac-v1\":0,\"jac-v2\":0}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "singularities",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "singularities",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "sing-q2 min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "singularities",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "sing-q2 max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "traj-duration min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "traj-duration max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "traj-progress min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "traj-progress max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"traj-duration\":1}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"traj-duration\":1,\"traj-progress\":0}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"traj-duration\":1,\"traj-progress\":1}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forces",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forces",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "force-x min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forces",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "force-x max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forces",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "force-y min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "forces",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "force-y max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "dyn-inertia min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "dyn-inertia max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "dyn-damping min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "dyn-damping max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "dyn-speed min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "dyn-speed max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "dyn-torque min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "dyn-torque max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"dyn-inertia\":1,\"dyn-damping\":1,\"dyn-speed\":-2,\"dyn-torque\":0}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"dyn-torque\":2}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "ctrl-damping min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "ctrl-damping max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "ctrl-time min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "ctrl-time max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"ctrl-damping\":0,\"ctrl-time\":1.5707963267948966}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"ctrl-damping\":0,\"ctrl-time\":3.1}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"ctrl-damping\":8,\"ctrl-time\":1}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "quat-angle min",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "quat-angle max",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "quat-sign 1",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "quat-sign -1",
+   "version": "candidate-1"
+  },
+  {
+   "category": "互動獨立重算",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "special {\"quat-sign\":-1}",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "00-start",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "angles",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "vectors",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "frames",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "rotation-2d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "rotation-3d",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "transforms",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "chains",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "forward",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "inverse",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "singularities",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "forces",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "鍵盤焦點",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "真實 Tab/Shift+Tab；:focus-visible、實線外框；方向鍵改值。另重設及詳解開關通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "00-start.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "angles.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "chains.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "control.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "dynamics.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "forces.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "forward.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "frames.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "glossary.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "index.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "inverse.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "jacobian.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "orientation.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "rotation-2d.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "rotation-3d.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "singularities.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "sources.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "trajectory.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "transforms.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "file離線",
+   "page": "vectors.html",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "Playwright offline=true；本地 file:// 載入；所有適用頁互動初始化",
+   "version": "candidate-1"
+  },
+  {
+   "category": "截圖實看",
+   "page": "forward",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "實看完整算例及自由實驗；圖、公式、數值可讀。Jacobian 欄向量單位另列待修",
+   "version": "candidate-1"
+  },
+  {
+   "category": "截圖實看",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "已修正並複核",
+   "detail": "實看完整算例及自由實驗；圖、公式、數值可讀。Jacobian 欄向量單位另列待修；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "截圖實看",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "實看完整算例及自由實驗；圖、公式、數值可讀。Jacobian 欄向量單位另列待修",
+   "version": "candidate-1"
+  },
+  {
+   "category": "截圖實看",
+   "page": "dynamics",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "實看完整算例及自由實驗；圖、公式、數值可讀。Jacobian 欄向量單位另列待修",
+   "version": "candidate-1"
+  },
+  {
+   "category": "截圖實看",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "實看完整算例及自由實驗；圖、公式、數值可讀。Jacobian 欄向量單位另列待修",
+   "version": "candidate-1"
+  },
+  {
+   "category": "截圖實看",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "實看完整算例及自由實驗；圖、公式、數值可讀。Jacobian 欄向量單位另列待修",
+   "version": "candidate-1"
+  },
+  {
+   "category": "手機截圖實看",
+   "page": "forward",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "算式在本地容器換行、正文和圖中標籤未截斷；觸控實機另待人工",
+   "version": "candidate-1"
+  },
+  {
+   "category": "手機截圖實看",
+   "page": "jacobian",
+   "viewport": "390",
+   "result": "已修正並複核",
+   "detail": "算式在本地容器換行、正文和圖中標籤未截斷；觸控實機另待人工；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "手機截圖實看",
+   "page": "trajectory",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "算式在本地容器換行、正文和圖中標籤未截斷；觸控實機另待人工",
+   "version": "candidate-1"
+  },
+  {
+   "category": "手機截圖實看",
+   "page": "orientation",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "算式在本地容器換行、正文和圖中標籤未截斷；觸控實機另待人工",
+   "version": "candidate-1"
+  },
+  {
+   "category": "確認待修",
+   "page": "chains",
+   "viewport": "相關尺寸",
+   "result": "已修正並複核",
+   "detail": "RQA-1：390/320、兩角皆±180°時 B/C 點標籤重疊；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "確認待修",
+   "page": "jacobian",
+   "viewport": "相關尺寸",
+   "result": "已修正並複核",
+   "detail": "RQA-2：完整算例將未乘關節角速度的 j 欄標成 m/s；本例肘速度為零，卻仍畫未加權橘欄；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "確認待修",
+   "page": "experiments.js",
+   "viewport": "相關尺寸",
+   "result": "已修正並複核",
+   "detail": "RQA-3：部分 live 計算四捨五入結果使用等號；需以≈區別；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "保護與共通檢查",
+   "page": "舊網站",
+   "viewport": "不適用",
+   "result": "通過",
+   "detail": "三個舊機器人互動課程 63 檔 SHA-256 均未改：數學基礎21、運動學23、路徑規劃19",
+   "version": "candidate-1"
+  },
+  {
+   "category": "保護與共通檢查",
+   "page": "共用樣式",
+   "viewport": "不適用",
+   "result": "通過",
+   "detail": "sync-styles --check：原17門相同，0漂移",
+   "version": "candidate-1"
+  },
+  {
+   "category": "保護與共通檢查",
+   "page": "工作流",
+   "viewport": "不適用",
+   "result": "通過",
+   "detail": "wf-lint：broken=2，皆為2026-09-26歷史引文斷鏈，未新增",
+   "version": "candidate-1"
+  },
+  {
+   "category": "保護與共通檢查",
+   "page": "靜態內容",
+   "viewport": "不適用",
+   "result": "通過",
+   "detail": "20HTML/23檔 UTF-8、替代字元、重複ID、相對連結與錨點、JS語法及外部執行依賴檢查通過",
+   "version": "candidate-1"
+  },
+  {
+   "category": "保護與共通檢查",
+   "page": "字典",
+   "viewport": "不適用",
+   "result": "通過",
+   "detail": "39詞；Jacobian篩出1詞、無匹配0詞",
+   "version": "candidate-1"
+  },
+  {
+   "category": "保護與共通檢查",
+   "page": "SVG候選",
+   "viewport": "不適用",
+   "result": "通過",
+   "detail": "trajectory 390/all-min 的+24與圖名僅bbox接近，實看字墨未碰；chains四組候選合併成同一已確認缺陷",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "00-start",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "通過",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：無",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "angles",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "通過",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：無",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "vectors",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "通過",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：無",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "frames",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "通過",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：無",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "rotation-2d",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R6；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "rotation-3d",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R6；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "transforms",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R6；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "chains",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R6；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "forward",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "通過",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：無",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "inverse",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R6；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "jacobian",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R2,R3；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "singularities",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R1,R6；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "trajectory",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R6；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "forces",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "通過",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：無",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "dynamics",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R6；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "control",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R6,R7；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "教材數學獨立審查",
+   "page": "orientation",
+   "viewport": "主文／算例／圖式／遷移詳解",
+   "result": "已修正並複核",
+   "detail": "研究員已讀實際主文、完整算例、遷移詳解及公式圖；教材對照四份官方來源。待修項：R4,R5,R6；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "研究員修正要求",
+   "page": "singularities.html",
+   "viewport": "相關尺寸",
+   "result": "已修正並複核",
+   "detail": "R1：應為水平位置對時間的導數（也就是水平速度）為 0。x=2cos a，ẋ=−2sin(a)ȧ；a=0 時 ẋ=0，但若 ȧ≠0，ẍ=−2ȧ² 不為零。保留有限運動與瞬時速度的區分。；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "研究員修正要求",
+   "page": "jacobian.html",
+   "viewport": "相關尺寸",
+   "result": "已修正並複核",
+   "detail": "R2：先回顧 x=L1cosq1+L2cos(q1+q2)、y=L1sinq1+L2sin(q1+q2)，固定 q2、以弧度 q1 求導，展開 ∂x/∂q1=−L1sinq1−L2sin(q1+q2)、∂y/∂q1=L1cosq1+L2cos(q1+q2)。說明內層 q1+q2 對 q1 導數 1，兩段投影各貢獻一項，並將此欄兩項對到圖中的切線/投影，再代 0、π/2。可只完整推第一欄，不必擴成微分教科書。；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "研究員修正要求",
+   "page": "jacobian.html",
+   "viewport": "相關尺寸",
+   "result": "已修正並複核",
+   "detail": "R3：明說圖為各關節單獨 +1 rad/s 的參考速度：j1×(1 rad/s)、j2×(1 rad/s)，仍是 m/s；主算例另註第二欄乘 0 後貢獻為零。或改圖成 m/rad 的 Jacobian 係數圖，再另畫實際速度。勿將 m/rad 與 m/s 靠同數值混用。；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "研究員修正要求",
+   "page": "orientation.html、experiments.js orientation",
+   "viewport": "相關尺寸",
+   "result": "已修正並複核",
+   "detail": "R4：對本課限定 q=(w,0,0,z)、||q||=1、輸入 e_x，給 qpq* 展開後的 v′=(1−2z²,2wz,0)。主例代 w=z=√2/2 得 (0,1,0)；−q 代兩個負值，平方與雙乘積不變。遷移 −90° 代 w=√2/2,z=−√2/2 得 (0,−1,0)。互動也展示 w、z 代入這兩項後才列 tip。說清這個簡式限於本課軸與輸入，非一般三維公式。；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "研究員修正要求",
+   "page": "orientation.html",
+   "viewport": "相關尺寸",
+   "result": "已修正並複核",
+   "detail": "R5：主文用 q=(√2/2,0,0,√2/2)≈(0.7071,0,0,0.7071)。圖卡的三位小數也用 ≈ 或標近似；精確範數為 1 是指根號值。其下捨入誤差提醒可保留。；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "研究員修正要求",
+   "page": "experiments.js",
+   "viewport": "相關尺寸",
+   "result": "已修正並複核",
+   "detail": "R6：保留精確符號公式與原始輸入的 =，從捨入數值開始用 ≈。rotation-2d 的基底數字前就要 ≈；rotation-3d 兩條矩陣乘積到 pair(p1/p2)；transforms/chains 的點/方向/逆轉；inverse 的 cosq2 與 FK捨入角/座標；singularities det；trajectory q/v/a；dynamics α（net 非整數時亦同）；control e/P/D/total；orientation q/tip。不要把所有等號無條件替換。；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "研究員修正要求",
+   "page": "control.html",
+   "viewport": "相關尺寸",
+   "result": "已修正並複核",
+   "detail": "R7：現有 I=1,Kp=4,Kd=4、零初值、固定目標條件已正確限縮。建議補 λ=√(Kp/I)=2 s⁻¹、λt 無單位，q=q_d−e0(1+λt)e^(−λt)、qdot=e0 λ² t e^(−λt)，本例 q_d=e0=1 rad。或至少明說現有數字式只將以秒表示的 t 代入，其中 2 代表 2 s⁻¹。；candidate-2 focused 複核通過，candidate-3 僅兩個不改文字的 HTML 換行。",
+   "version": "candidate-1"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "min；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "max；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "mixed；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "jacobian",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "counterturn；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "reverse-sign；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "orientation",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "negative-angle；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "control",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "singularities",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "trajectory",
+   "viewport": "1440",
+   "result": "通過",
+   "detail": "fast-start；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "min；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "max；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "mixed；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "jacobian",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "jacobian",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "counterturn；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "orientation",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "orientation",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "reverse-sign；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "orientation",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "negative-angle；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "control",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "singularities",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "trajectory",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "trajectory",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "fast-start；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "min；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "max；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "chains",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "mixed；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "jacobian",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "jacobian",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "counterturn；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "orientation",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "orientation",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "reverse-sign；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "orientation",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "negative-angle；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "control",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "singularities",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "trajectory",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "default；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "修後狀態獨立重算",
+   "page": "trajectory",
+   "viewport": "320",
+   "result": "通過",
+   "detail": "fast-start；捕捉數值與獨立向量/矩陣/解析期待值相符，未使用產品函式作真值",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "00-start",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\np = (3, 2) m\n公分：100 × (3, 2) = (300, 200) cm",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "angles",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nθ = 90° × π rad / 180° = π/2 rad ≈ 1.571 rad\ns = rθ = 1 m × (π/2) ≈ 1.571 m\ncos θ ≈ 0，sin θ ≈ 1\n端點 = r(cos θ, sin θ) ≈ (0, 1) m",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "vectors",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nQ = P + k d\n= (1,1) + 1 × (3, 4)\n= (4, 5) m\n長度 = |1| √((3 m)² + (4 m)²)\n平方項單位 m²，開根號回到 m\n≈ 5 m",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "frames",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\n先換方向：R_AB p_B ≈ (0, 1) m\n再加 B 原點：(0, 1) + (2,1)\np_A ≈ (2, 2) m",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "rotation-2d",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nR ≈ [0, -1；1, 0]\nRv ≈ 2 × (0, 1) + 1 × (-1, 0) ≈ (-1, 2)",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "rotation-3d",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nv₀ = (0,1,0)\nRz(90°) Rx(90°) v₀ ≈ (0, 0, 1)\nRx(90°) Rz(90°) v₀ ≈ (-1, 0, 0)",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "transforms",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\np_A = R(1,0) + t ≈ (2, 2) m\nd_A = R(1,0) ≈ (0, 1)\n逆：Rᵀ(p_A−t) ≈ (1, 0) m",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "chains",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\np_B = R_BC (0,1) + (1,0) ≈ (1, 1) m\np_A = R_AB p_B + (2,1) ≈ (1, 2) m\nT_AC = T_AB T_BC（右邊先做）",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "forward",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nq₁ = π/6 rad ≈ 0.524 rad\nq₂ = π/3 rad ≈ 1.047 rad\n第一段 = (cos q₁, sin q₁) m ≈ (0.866, 0.5) m\n第二段 = (cos(q₁+q₂), sin(q₁+q₂)) m ≈ (0, 1) m\nx ≈ 0.866 + 0 ≈ 0.866 m\ny ≈ 0.5 + 1 ≈ 1.5 m",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "inverse",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\ncos q₂ = (r²−2)/2 ≈ 0\n解 1：角度 ≈ (0, 90)°\n用未捨入角度回代 FK(q₁,q₂) ≈ (1, 1) m\n解 2：角度 ≈ (90, -90)°\n用未捨入角度回代 FK(q₁,q₂) ≈ (1, 1) m",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "jacobian",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nJ ≈ [-1, -1；1, 0] m/rad\nq₁ = 0 rad；q₂ = π/2 rad\nv = J × (1, 0) rad/s ≈ (-1, 1) m/s\n單位：(m/rad)×(rad/s)=m/s",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "singularities",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nq₁=0°；q₂=90°\nJ ≈ [-1, -1；1, 0] m/rad\ndet J = sin q₂ ≈ 1 m²/rad²",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "trajectory",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nu=t/T=0.5\nq=3u²−2u³≈0.5 rad\nq̇=(6u−6u²)/T≈0.75 rad/s\nq̈=(6−12u)/T²≈0 rad/s²",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "forces",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nJ = [−1, −1；1, 0] m/rad\nτ₁ = −Fₓ + Fᵧ = 1 N·m\nτ₂ = −Fₓ = 0 N·m",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "dynamics",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nτ_阻尼 = −bω = −1 × (2) ≈ -2 N·m\nIα = τ−bω ≈ 2 N·m\nα = (τ−bω)/I ≈ 2/2 ≈ 1 rad/s²",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "control",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\n誤差 e = 1−q ≈ 0.406 rad\nP 力矩 = 4e ≈ 1.624 N·m\nD 力矩 = −Kᴅq̇ ≈ -2.165 N·m\n總力矩 = τ_P + τ_D ≈ -0.541 N·m",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "共用程式修後預設",
+   "page": "orientation",
+   "viewport": "390",
+   "result": "通過",
+   "detail": "獨立預設重算及演算可見性通過；實際當次演算：\nq = 1 × (cos(θ/2),0,0,sin(θ/2))\n≈ (0.707, 0, 0, 0.707)\n取 w≈0.707，z≈0.707\n僅限本頁 z 軸、單位 q 與輸入 eₓ：\nv′ = (1−2z², 2wz, 0)\nv′ₓ = 1−2z² ≈ 1−2×(0.707)² ≈ 0\nv′ᵧ = 2wz ≈ 2×(0.707)×(0.707) ≈ 1\nv′ ≈ (0, 1, 0)\n計算保留未捨入的 w、z；圖與上方結果只顯示小數近似",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "研究員修後結案",
+   "page": "R1",
+   "viewport": "公式／圖／單位／計算",
+   "result": "通過",
+   "detail": "singularities 第5卡已改為水平位置對時間的導數就是水平速度；有限回縮與瞬時限制保持正確。",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "研究員修後結案",
+   "page": "R2",
+   "viewport": "公式／圖／單位／計算",
+   "result": "通過",
+   "detail": "Jacobian 新段從 FK x/y 兩段投影開始，固定 q2、對弧度 q1 求偏導，內層導數1、兩桿各項、第一欄組成與第二欄第一桿為0均寫明；兩幅新圖的 (0,1)+(−1,0)=(−1,1) 對應正確。",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "研究員修後結案",
+   "page": "R3",
+   "viewport": "公式／圖／單位／計算",
+   "result": "通過",
+   "detail": "worked 欄圖改為 m/rad，說明未乘角速度；主例 qdot2=0 的第二欄貢獻為零。互動維持實際加權速度 m/s，兩類圖已分清。",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "研究員修後結案",
+   "page": "R4",
+   "viewport": "公式／圖／單位／計算",
+   "result": "通過",
+   "detail": "orientation 對限定單位 q=(w,0,0,z)、輸入 ex 明列 v′=(1−2z²,2wz,0)。主 q、−q、遷移−90°均逐項代入，負數平方帶括號；互動也使用 q 的 w/z 計算 tip，8例以獨立 Hamilton 乘積比對，誤差0。",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "研究員修後結案",
+   "page": "R5",
+   "viewport": "公式／圖／單位／計算",
+   "result": "通過",
+   "detail": "orientation 精確根號 q 與小數近似分開；第3卡範數1限定精確值，第4卡 q/−q 小數均標≈。",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "研究員修後結案",
+   "page": "R6",
+   "viewport": "公式／圖／單位／計算",
+   "result": "通過",
+   "detail": "共用受影響10類計算已在格式化數值起點用≈；符號等式和原始輸入等式保留。非整角旋轉/座標鏈/逆解、非整加速度/時間曲線、PD與四元數畫面已核；IK另說未捨入角回代，四元數另說用未捨入w/z計算。",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "研究員修後結案",
+   "page": "R7",
+   "viewport": "公式／圖／單位／計算",
+   "result": "通過",
+   "detail": "control 補 λ=√(Kp/I)=2 s⁻¹、λt消去秒、e0=1rad、q/qdot帶單位代入；正式段限本I/Kp/Kd臨界、固定目標及初速零，不宣稱任意Kd通用。",
+   "version": "candidate-2（candidate-3承接）"
+  },
+  {
+   "category": "最終排版修補",
+   "page": "jacobian",
+   "viewport": "1440×900",
+   "result": "通過",
+   "detail": "僅兩個br插入；整頁不橫溢，逐字Range檢查無q₂拆行，實際截圖讀取清楚",
+   "version": "candidate-3"
+  },
+  {
+   "category": "最終排版修補",
+   "page": "jacobian",
+   "viewport": "390×844",
+   "result": "通過",
+   "detail": "僅兩個br插入；整頁不橫溢，逐字Range檢查無q₂拆行，實際截圖讀取清楚",
+   "version": "candidate-3"
+  },
+  {
+   "category": "最終排版修補",
+   "page": "jacobian",
+   "viewport": "320×800",
+   "result": "通過",
+   "detail": "僅兩個br插入；整頁不橫溢，逐字Range檢查無q₂拆行，實際截圖讀取清楚",
+   "version": "candidate-3"
+  },
+  {
+   "category": "最終範圍與處置",
+   "page": "chains",
+   "viewport": "相關尺寸",
+   "result": "通過",
+   "detail": "±180°兩端原B/C碰字已消。新增180°/0°的B/工具點bbox候選實看文字墨跡分開，非缺陷。",
+   "version": "candidate-3"
+  },
+  {
+   "category": "最終範圍與處置",
+   "page": "orientation",
+   "viewport": "相關尺寸",
+   "result": "通過",
+   "detail": "數學研究員另以獨立Hamilton乘積核8個角度/符號組合；產品實由w/z計算旋轉輸出，差異為0。",
+   "version": "candidate-3"
+  },
+  {
+   "category": "最終範圍與處置",
+   "page": "共同近似記號",
+   "viewport": "相關尺寸",
+   "result": "通過",
+   "detail": "保留精確符號公式與原始輸入等號；從捨入數字開始用≈，未採無條件全域替換。",
+   "version": "candidate-3"
+  },
+  {
+   "category": "最終範圍與處置",
+   "page": "版本承接",
+   "viewport": "相關尺寸",
+   "result": "通過",
+   "detail": "candidate-3相對candidate-2僅jacobian.html有兩個br插入；正規化全HTML文字相同；其餘22資產雜湊未改。",
+   "version": "candidate-3"
+  }
+ ]
+}

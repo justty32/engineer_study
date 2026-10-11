@@ -1,0 +1,131 @@
+{
+ "contract": "wf-table/1",
+ "source": "驗收紀錄.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "version": "candidate-3（獨立驗收通過）",
+ "fingerprint": "f38375bedfc3c3ffe763d55b5d6737d4fd4d4625764074975bcbf0baa7b7343e",
+ "note": "23檔；發布前後應逐檔比對。驗收及教材文件不在dist，不屬執行期資產。",
+ "columns": [
+  "path",
+  "bytes",
+  "sha256"
+ ],
+ "rows": [
+  {
+   "path": "dist/00-start.html",
+   "bytes": 36473,
+   "sha256": "c0830111d4053d369f77be6be5012d7a0a94fd0d6e46cdc8754db0caa5fb562f"
+  },
+  {
+   "path": "dist/angles.html",
+   "bytes": 62021,
+   "sha256": "58ba8276168a28fc8f0eb68f95605f699ebf8142dca652bf13aa83ea77ce72a4"
+  },
+  {
+   "path": "dist/chains.html",
+   "bytes": 29339,
+   "sha256": "3431c83808a11659ffc9340e151238ea973b66f78d82133f83707090c1373a41"
+  },
+  {
+   "path": "dist/control.html",
+   "bytes": 72209,
+   "sha256": "34e35292295e70f1ee8ac372e968531a4c77fa526db98727750ab149cd01e827"
+  },
+  {
+   "path": "dist/dynamics.html",
+   "bytes": 16484,
+   "sha256": "aaf5bbeb53ad8b2f0dba51e7049bb396fdfb47b0417b70851932afaf167c0552"
+  },
+  {
+   "path": "dist/experiments.js",
+   "bytes": 24165,
+   "sha256": "ef9bc0ec6478451548eaf8140e3cf6382e7e0f23df1bc91a7b305551b915e935"
+  },
+  {
+   "path": "dist/forces.html",
+   "bytes": 28579,
+   "sha256": "a3646c13f67ffa513519a6fae81abf3cc058ea5e2ec49c4c121d8789ddb7b39e"
+  },
+  {
+   "path": "dist/forward.html",
+   "bytes": 35359,
+   "sha256": "525a371441990e60124a3fadf5f42ca3996c2ee7328aa7e64405fe7a3e0705f8"
+  },
+  {
+   "path": "dist/frames.html",
+   "bytes": 42557,
+   "sha256": "60dcca3550e14769dc99a3e1624a6678a8e8cd11b20b12fb8dcd6daa97ec1781"
+  },
+  {
+   "path": "dist/glossary.html",
+   "bytes": 12237,
+   "sha256": "da91fa7bc42b8d67d48a19efde72aee70a172fc9b784c226054eda2c41728252"
+  },
+  {
+   "path": "dist/index.html",
+   "bytes": 10581,
+   "sha256": "1e88690d400c878b9a2e4acec0d6eedb4f1d8cf80bd75db956d69c60af3edcc9"
+  },
+  {
+   "path": "dist/inverse.html",
+   "bytes": 34603,
+   "sha256": "a1034fdfde9926bd803dbc5dfc6d32fd643a5c1618c21ed76eee26f06e34ec0b"
+  },
+  {
+   "path": "dist/jacobian.html",
+   "bytes": 41343,
+   "sha256": "5e8476eaaac590d12c68378077da70284d79397f1a0b6250178a899eb0ffa85f"
+  },
+  {
+   "path": "dist/lab.css",
+   "bytes": 7693,
+   "sha256": "36b8b4414109d5b46e3cbb4ec89b017e246738590eff2c11c311a892e29842f2"
+  },
+  {
+   "path": "dist/orientation.html",
+   "bytes": 19188,
+   "sha256": "a1c5cf607f31e164e634db5c510ba7e94f8d19afb3598a7ef2ee0bd319c5683a"
+  },
+  {
+   "path": "dist/rotation-2d.html",
+   "bytes": 37996,
+   "sha256": "7b0b02746b0e4d8d3684f1a34c26492d9eb46892810cb1cb05f90a9a5d9faf3f"
+  },
+  {
+   "path": "dist/rotation-3d.html",
+   "bytes": 19702,
+   "sha256": "cf828a75c4e265ebaa0cfa6fc18a8b200bbc880880b71c06c440ba298ab5d406"
+  },
+  {
+   "path": "dist/singularities.html",
+   "bytes": 33842,
+   "sha256": "c11dca04111a60edb6ea0ee3ced729e02ec3864a09c96c0b7a85dfd072b8dd45"
+  },
+  {
+   "path": "dist/site.js",
+   "bytes": 2361,
+   "sha256": "3f3eb928bf7977991908688065d5cf3ca66a6bcc778130cc32d6b0bd7b9e9e44"
+  },
+  {
+   "path": "dist/sources.html",
+   "bytes": 7889,
+   "sha256": "c3782987cbda2c7032988f1c04bfba52b510df63f80eaf5a15e84463ddc4bc38"
+  },
+  {
+   "path": "dist/trajectory.html",
+   "bytes": 58476,
+   "sha256": "d8459f69e00ffe481b3da79ee1caec097d250c3993fccee27c346dc5feb15bf6"
+  },
+  {
+   "path": "dist/transforms.html",
+   "bytes": 34060,
+   "sha256": "a0c899a92fa867ac78ba1784a801a4bbb822bf27df6cf4bcac3ab4040580a088"
+  },
+  {
+   "path": "dist/vectors.html",
+   "bytes": 43707,
+   "sha256": "4e65061ed170b5f95335256955401401ac6ef394bac82478ec6ea1642cb3efc6"
+  }
+ ]
+}

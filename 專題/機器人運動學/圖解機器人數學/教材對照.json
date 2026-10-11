@@ -1,0 +1,75 @@
+{
+ "contract": "wf-table/1",
+ "source": "README.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "url"
+ ],
+ "columns": [
+  "id",
+  "title",
+  "author",
+  "url",
+  "location",
+  "read_date",
+  "claims",
+  "course_pages",
+  "conditions",
+  "rights",
+  "status"
+ ],
+ "rows": [
+  {
+   "id": "MR2017",
+   "title": "Modern Robotics: Mechanics, Planning, and Control（官方 preprint）",
+   "author": "Kevin M. Lynch、Frank C. Park；Cambridge University Press，2017",
+   "url": "https://hades.mech.northwestern.edu/images/4/4e/MR-tablet.pdf",
+   "location": "§3.2.1 pp.68–76；§3.3.1 pp.89–95；§5.2–5.3 pp.190–192；第6章 pp.219–221；§9.2.2 pp.328–330；§11.4.1 pp.421–424；附錄B.3 pp.581–582（印刷頁碼，PDF 頁序多18）",
+   "read_date": "2026-10-11",
+   "claims": "R_AB 將 B 分量換到 A；固定軸操作左乘。T_AB=[R_AB,t_AB;0,1]，逆為[R_ABᵀ,−R_ABᵀt_AB;0,1]。二連桿末端角度使用 q1+q2。靜力以虛功／功率得到 Jᵀ。cubic s=3u²−2u³。單位四元數 q 與 −q 代表同一旋轉。",
+   "course_pages": "00-start、angles、vectors、frames、rotation-2d、rotation-3d、transforms、chains、forward、inverse、jacobian、singularities、trajectory、forces、dynamics、control、orientation",
+   "conditions": "欄向量（column vector）、右手系；座標換算與主動旋轉分開命名。二連桿 IK 只指定平面位置，不指定姿態；等長桿原點是退化特例。τ=JᵀF 若作馬達靜態需求，F 取機器人對外施力，另加重力等項。cubic 端點速度零但加速度非零。四元數使用 scalar-first (w,x,y,z) 且範數1。",
+   "rights": "官方 preprint 聲明僅個人使用、不得再散布；本專案僅連結、原創解說與公式重推，不收錄 PDF、截圖、原書插圖或長段原文。書目按作者要求列 Cambridge University Press，2017。",
+   "status": "final audit passed：已實讀所列官方材料；candidate-1全17課審查由candidate-2（612a9876）差異複核承接，R1–R7數學／圖式／逐步計算全部通過。終版僅Jacobian純HTML換行由QA確認公式字元不變後承接；技術與版型另由QA驗收，不代表真人理解"
+  },
+  {
+   "id": "MIT-PICK",
+   "title": "Robotic Manipulation，Chapter 3: Basic Pick and Place",
+   "author": "Russ Tedrake",
+   "url": "https://manipulation.mit.edu/pick.html",
+   "location": "Spatial Algebra；Differential kinematics；The Jacobian pseudo-inverse；Are kinematic singularities real?",
+   "read_date": "2026-10-11",
+   "claims": "同一點換座標需轉向再加原點位移。Jacobian 表示當下關節速度至末端速度；二連桿伸直時欠缺水平瞬時速度，但可用有限動作彎回。偽逆提供最小範數最小平方解。",
+   "course_pages": "frames、rotation-3d、transforms、chains、forward、jacobian、singularities、orientation",
+   "conditions": "來源用 Drake monogram 記法，本課另明列等價的 AB 規約。J 的輸入輸出必須指定座標與單位；本文二連桿僅使用平移 2×2 J，不混成 6D twist。偽逆不保證關節／碰撞／速度限制。",
+   "rights": "作者官方公開講義；頁尾 © Russ Tedrake，2020–2026。此次未確認開放再散布授權，不複製原文或圖片。",
+   "status": "final audit passed：已實讀所列官方材料；candidate-1全17課審查由candidate-2（612a9876）差異複核承接，R1–R7數學／圖式／逐步計算全部通過。終版僅Jacobian純HTML換行由QA確認公式字元不變後承接；技術與版型另由QA驗收，不代表真人理解"
+  },
+  {
+   "id": "MIT-FORCE",
+   "title": "Robotic Manipulation，Chapter 8: Manipulator Control",
+   "author": "Russ Tedrake",
+   "url": "https://manipulation.mit.edu/force.html",
+   "location": "The Manipulator-Control Toolbox；Trajectory tracking；Direct force control",
+   "read_date": "2026-10-11",
+   "claims": "環境施在手臂上的接觸力與手臂對環境的力互為反號。PD 的 P 項看位置誤差，D 項看速度誤差；持續重力可造成無補償 PD 靜態偏差。",
+   "course_pages": "forces、dynamics、control",
+   "conditions": "τ_g 在 MIT 記為方程右邊的重力廣義力；若本課以左邊 g(q) 表示，g(q)=−τ_g。理想 PD 收斂敘述只用於指定線性慣量模型、正增益、無飽和／延遲，不能泛指實體手臂。",
+   "rights": "作者官方公開講義；頁尾 © Russ Tedrake，2020–2026。此次未確認開放再散布授權，僅原創教材與來源連結。",
+   "status": "final audit passed：已實讀所列官方材料；candidate-1全17課審查由candidate-2（612a9876）差異複核承接，R1–R7數學／圖式／逐步計算全部通過。終版僅Jacobian純HTML換行由QA確認公式字元不變後承接；技術與版型另由QA驗收，不代表真人理解"
+  },
+  {
+   "id": "MIT-PEND",
+   "title": "Underactuated Robotics，Chapter 2: The Simple Pendulum",
+   "author": "Russ Tedrake",
+   "url": "https://underactuated.mit.edu/pend.html",
+   "location": "Introduction；Nonlinear dynamics with a constant torque；The undamped pendulum",
+   "read_date": "2026-10-11",
+   "claims": "擺的慣性、黏滯阻尼、重力與輸入力矩共同決定角加速度；簡化慣量模型須明示略去哪些力。",
+   "course_pages": "dynamics、control",
+   "conditions": "MIT 擺角從向下方向量起，重力項為 mgl sinθ；若本課角度從水平量起則重力項改成 mgr cosq。擺點質量 I=ml²，實桿慣量不可以直接套點質量式。",
+   "rights": "作者官方公開講義；頁尾 © Russ Tedrake，2024。此次未確認開放再散布授權，僅原創教材與來源連結。",
+   "status": "final audit passed：已實讀所列官方材料；candidate-1全17課審查由candidate-2（612a9876）差異複核承接，R1–R7數學／圖式／逐步計算全部通過。終版僅Jacobian純HTML換行由QA確認公式字元不變後承接；技術與版型另由QA驗收，不代表真人理解"
+  }
+ ]
+}

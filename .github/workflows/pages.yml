@@ -29,6 +29,9 @@ on:
       - "專題/*/互動課程/*.html"
       - "專題/*/互動課程/*.css"
       - "專題/*/互動課程/*.js"
+      - "專題/機器人運動學/圖解機器人數學/dist/*.html"
+      - "專題/機器人運動學/圖解機器人數學/dist/*.css"
+      - "專題/機器人運動學/圖解機器人數學/dist/*.js"
       - "專題/網路安全/攻擊手法細講/*.html"
       - "專題/網路安全/攻擊手法細講/*.css"
       - "專題/網路安全/攻擊手法細講/*.js"
@@ -128,6 +131,7 @@ jobs:
           專題/機器人視覺/互動課程|robot-vision
           專題/機器人學習/互動課程|robot-learning
           專題/機器人數學基礎/互動課程|robot-math
+          專題/機器人運動學/圖解機器人數學/dist|robotics-math-little-lab
           專題/AI理論白話/互動課程|ai-theory-primer
           共通基礎/數學/互動課程|engineering-math
           共通基礎/數學/圖解微積分/dist|calculus-little-lab

@@ -1,0 +1,55 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "role",
+  "writer",
+  "scope",
+  "state"
+ ],
+ "rows": [
+  {
+   "role": "隊長",
+   "writer": "robotics_team",
+   "scope": "PROJECT-BRIEF.md / BUILD-SPEC.md / 課程契約.json / 派工計畫.json / 唯一handoff；暫存建置進度已依約移除",
+   "state": "規格／契約／交接定稿；產品candidate-3凍結，隊長保持可回覆且不續寫"
+  },
+  {
+   "role": "教材與數學審查",
+   "writer": "research_audit",
+   "scope": "教材對照.json；其餘唯讀，研究稿/tmp",
+   "state": "17課完整教材與數學審查＋candidate-2 focused全過；candidate-3純換行由QA承接，已final退出"
+  },
+  {
+   "role": "建置隊",
+   "writer": "builder",
+   "scope": "dist/ 全產品檔與README.md；基礎四課作者已移交整合writer",
+   "state": "candidate-3只Jacobian加兩個br，23產品資產凍結；所有作者及自有行程退出"
+  },
+  {
+   "role": "獨立驗收",
+   "writer": "qa",
+   "scope": "驗收紀錄.md；驗收數據.json、成品清單.json（若建立）；其餘唯讀",
+   "state": "candidate-3獨立驗收通過；330列證據／23檔清單定稿，已final退出並移交文件"
+  },
+  {
+   "role": "發布",
+   "writer": "root/visual_publish",
+   "scope": "共享git與中央導航／Pages接線",
+   "state": "ready：僅root/visual_publish接共享git／中央入口／GitHub Pages／部署紀錄，未發布前不宣稱已上線"
+  },
+  {
+   "role": "Sites",
+   "writer": "root指定hosting",
+   "scope": "本新站不建立Sites project，不變動.openai/",
+   "state": "root已指定GitHub Pages公開發布；Sites工作不適用，無待辦"
+  },
+  {
+   "role": "基礎四課作者",
+   "writer": "builder/foundations_author",
+   "scope": "dist/angles.html、vectors.html、frames.html、rotation-2d.html",
+   "state": "已完成退出；四HTML寫權移交builder，後續再派需明確轉回"
+  }
+ ]
+}

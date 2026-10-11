@@ -1,0 +1,1536 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "page",
+  "title",
+  "question",
+  "prereq",
+  "story",
+  "controls",
+  "formula",
+  "fixtures",
+  "boundary",
+  "source_local",
+  "owner",
+  "status",
+  "calculation_requirement",
+  "exercise"
+ ],
+ "rows": [
+  {
+   "page": "00-start",
+   "title": "用格子告訴手臂去哪裡",
+   "question": "同樣說「往右一點」，機器人怎麼知道多遠？",
+   "prereq": [],
+   "story": [
+    "標出同一張桌面的原點與一格1 m",
+    "從原點先往右3 m",
+    "再往上2 m，筆尖到(3,2)",
+    "用兩個數字壓縮同一路線",
+    "把1 m換成100 cm，物體不移動"
+   ],
+   "controls": [
+    {
+     "id": "start-x",
+     "type": "range",
+     "label": "向右位置",
+     "min": -3,
+     "max": 3,
+     "step": 1,
+     "value": 3,
+     "unit": "m"
+    },
+    {
+     "id": "start-y",
+     "type": "range",
+     "label": "向上位置",
+     "min": -3,
+     "max": 3,
+     "step": 1,
+     "value": 2,
+     "unit": "m"
+    }
+   ],
+   "formula": "p=(x,y) m；(100x,100y) cm 是同一點；起點O固定；直線距離留給vectors，不在本課新增平方根",
+   "fixtures": [
+    {
+     "input": {
+      "x": 3,
+      "y": 2
+     },
+     "expected": {
+      "p_m": [
+       3,
+       2
+      ],
+      "p_cm": [
+       300,
+       200
+      ]
+     }
+    },
+    {
+     "input": {
+      "x": 0,
+      "y": 0
+     },
+     "expected": {
+      "p_m": [
+       0,
+       0
+      ],
+      "p_cm": [
+       0,
+       0
+      ]
+     }
+    }
+   ],
+   "boundary": "負座標是反方向；0是原點；單位轉換不移動點。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "angles",
+   "title": "用轉過的路程理解弧度",
+   "question": "馬達轉90度，為什麼程式要填1.57？",
+   "prereq": [
+    "00-start"
+   ],
+   "story": [
+    "同一支1 m桿先水平",
+    "走四分之一圓到正上方",
+    "把走過圓弧攤成長度π/2 m",
+    "用弧長除以半徑，得到π/2 rad",
+    "半徑加倍時弧長加倍，角度不變",
+    "把同一根斜桿的影子投到水平／垂直尺；cos是水平份數、sin是垂直份數",
+    "角45度時兩個份數同為√2/2，乘桿長才成實際距離"
+   ],
+   "controls": [
+    {
+     "id": "angle-theta",
+     "type": "range",
+     "label": "轉角",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 90,
+     "unit": "°"
+    },
+    {
+     "id": "angle-radius",
+     "type": "range",
+     "label": "桿長",
+     "min": 0.5,
+     "max": 2,
+     "step": 0.5,
+     "value": 1,
+     "unit": "m"
+    }
+   ],
+   "formula": "θ_rad=θ_degπ/180；有向弧長s=rθ_rad；端點(r cosθ,r sinθ)，cos和sin輸入rad",
+   "fixtures": [
+    {
+     "input": {
+      "theta": 90,
+      "radius": 1
+     },
+     "expected": {
+      "radian": "π/2",
+      "signed_arc": "π/2 m",
+      "endpoint": [
+       0,
+       1
+      ]
+     }
+    },
+    {
+     "input": {
+      "theta": -90,
+      "radius": 2
+     },
+     "expected": {
+      "signed_arc": "−π m",
+      "endpoint": [
+       0,
+       -2
+      ]
+     }
+    },
+    {
+     "input": {
+      "theta": 45,
+      "radius": 1
+     },
+     "expected": {
+      "endpoint": [
+       "√2/2",
+       "√2/2"
+      ]
+     }
+    }
+   ],
+   "boundary": "負角順時針；0角弧長0；半徑正值不允許零，說明不以s/r在r=0定角。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "vectors",
+   "title": "把兩個位置接成一支位移箭頭",
+   "question": "點在(4,5)，為什麼位移卻是(3,4)？",
+   "prereq": [
+    "00-start",
+    "angles"
+   ],
+   "story": [
+    "固定起點P=(1,1)與終點Q=(4,5)",
+    "把水平變化3與垂直變化4分開",
+    "將同一箭頭平移到原點，方向長度不變",
+    "用3-4-5三角形量長度",
+    "把箭頭乘0、1、−1，看不動與反向"
+   ],
+   "controls": [
+    {
+     "id": "vector-dx",
+     "type": "range",
+     "label": "向右位移",
+     "min": -4,
+     "max": 4,
+     "step": 1,
+     "value": 3,
+     "unit": "m"
+    },
+    {
+     "id": "vector-dy",
+     "type": "range",
+     "label": "向上位移",
+     "min": -4,
+     "max": 4,
+     "step": 1,
+     "value": 4,
+     "unit": "m"
+    },
+    {
+     "id": "vector-scale",
+     "type": "range",
+     "label": "箭頭份數",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "value": 1,
+     "unit": ""
+    }
+   ],
+   "formula": "P=(1,1)；d=(dx,dy)；Q=P+k d；位移長度=abs(k)sqrt(dx²+dy²)；方向只在非零位移定義",
+   "fixtures": [
+    {
+     "input": {
+      "dx": 3,
+      "dy": 4,
+      "k": 1
+     },
+     "expected": {
+      "Q": [
+       4,
+       5
+      ],
+      "length": 5
+     }
+    },
+    {
+     "input": {
+      "dx": 3,
+      "dy": 4,
+      "k": -1
+     },
+     "expected": {
+      "Q": [
+       -2,
+       -3
+      ],
+      "length": 5
+     }
+    },
+    {
+     "input": {
+      "dx": 0,
+      "dy": 0,
+      "k": 1
+     },
+     "expected": {
+      "direction": "未定義",
+      "length": 0
+     }
+    }
+   ],
+   "boundary": "零向量沒有唯一方向；份數用卡片或文字，不額外畫成物理位置。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "frames",
+   "title": "同一顆螺絲，用兩把尺描述",
+   "question": "相機說在前方1 m，為何世界座標是(2,2)？",
+   "prereq": [
+    "vectors",
+    "angles"
+   ],
+   "story": [
+    "世界桌面A原點固定",
+    "把局部B原點放到A的(2,1)",
+    "B的x軸轉90度指向世界上方",
+    "螺絲沿B的x走1 m，世界到(2,2)",
+    "同一實物不動，只換一組座標數字"
+   ],
+   "controls": [
+    {
+     "id": "frame-turn",
+     "type": "range",
+     "label": "B相對A轉角",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 90,
+     "unit": "°"
+    },
+    {
+     "id": "frame-x",
+     "type": "range",
+     "label": "點在B的x",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "value": 1,
+     "unit": "m"
+    },
+    {
+     "id": "frame-y",
+     "type": "range",
+     "label": "點在B的y",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "value": 0,
+     "unit": "m"
+    }
+   ],
+   "formula": "固定t_AB=(2,1)m；p_A=t_AB+R(θ)p_B；這是同一點的被動座標描述，不把圖上的框轉動誤說點也主動轉動",
+   "fixtures": [
+    {
+     "input": {
+      "turn": 90,
+      "bx": 1,
+      "by": 0
+     },
+     "expected": {
+      "pA": [
+       2,
+       2
+      ]
+     }
+    },
+    {
+     "input": {
+      "turn": 0,
+      "bx": 1,
+      "by": 0
+     },
+     "expected": {
+      "pA": [
+       3,
+       1
+      ]
+     }
+    }
+   ],
+   "boundary": "當使用者改框角且維持B數字時，代表選到另一個實物位置；可見說明這個實驗不是固定實物再換框。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "rotation-2d",
+   "title": "兩根尺轉了，任何箭頭都跟著算",
+   "question": "為什麼旋轉矩陣只要記兩根箭頭？",
+   "prereq": [
+    "frames"
+   ],
+   "story": [
+    "紅x基底與藍y基底先各1份",
+    "將兩根基底一起轉90度",
+    "原向量(2,1)拆成2份x和1份y",
+    "在轉後基底拿同樣份數，終點(-1,2)",
+    "把兩根新基底放入矩陣的兩欄"
+   ],
+   "controls": [
+    {
+     "id": "rotate-theta",
+     "type": "range",
+     "label": "主動旋轉角",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 90,
+     "unit": "°"
+    },
+    {
+     "id": "rotate-x",
+     "type": "range",
+     "label": "原向量x",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "value": 2,
+     "unit": ""
+    },
+    {
+     "id": "rotate-y",
+     "type": "range",
+     "label": "原向量y",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "value": 1,
+     "unit": ""
+    }
+   ],
+   "formula": "固定世界框主動轉向量：R=[[cosθ,−sinθ],[sinθ,cosθ]]；v′=Rv；RᵀR=I detR=1",
+   "fixtures": [
+    {
+     "input": {
+      "theta": 90,
+      "x": 2,
+      "y": 1
+     },
+     "expected": {
+      "out": [
+       -1,
+       2
+      ],
+      "norm": "√5"
+     }
+    },
+    {
+     "input": {
+      "theta": 0,
+      "x": 2,
+      "y": 1
+     },
+     "expected": {
+      "out": [
+       2,
+       1
+      ]
+     }
+    }
+   ],
+   "boundary": "0角恆等，180度反向；長度不變；點旋轉與平移不同。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "rotation-3d",
+   "title": "在空間轉動，先後會改答案",
+   "question": "先抬起再轉身，為何跟先轉身再抬起不同？",
+   "prereq": [
+    "rotation-2d"
+   ],
+   "story": [
+    "畫右手x/y/z世界框，說明螢幕投影",
+    "同一根向量起於e_y=(0,1,0)",
+    "繞固定世界x正轉90度→e_z",
+    "再繞固定世界z正轉90度→仍e_z",
+    "重走另一順序：e_y→−e_x→−e_x",
+    "兩條路徑並排顯示同尺度終點"
+   ],
+   "controls": [
+    {
+     "id": "space-rx",
+     "type": "range",
+     "label": "固定世界x轉角",
+     "min": -180,
+     "max": 180,
+     "step": 30,
+     "value": 90,
+     "unit": "°"
+    },
+    {
+     "id": "space-rz",
+     "type": "range",
+     "label": "固定世界z轉角",
+     "min": -180,
+     "max": 180,
+     "step": 30,
+     "value": 90,
+     "unit": "°"
+    }
+   ],
+   "formula": "v0=e_y；路徑1 v1=Rz(β)Rx(α)e_y=(-sinβ cosα,cosβ cosα,sinα)；路徑2 v2=Rx(α)Rz(β)e_y=(-sinβ,cosα cosβ,sinα cosβ)",
+   "fixtures": [
+    {
+     "input": {
+      "rx": 90,
+      "rz": 90
+     },
+     "expected": {
+      "x_then_z": [
+       0,
+       0,
+       1
+      ],
+      "z_then_x": [
+       -1,
+       0,
+       0
+      ]
+     }
+    },
+    {
+     "input": {
+      "rx": 0,
+      "rz": 90
+     },
+     "expected": {
+      "both": [
+       -1,
+       0,
+       0
+      ]
+     }
+    }
+   ],
+   "boundary": "皆繞固定世界軸；右矩陣先作用；共軸或部分特殊角可交換，不把不交換說成每個例子都不同。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "transforms",
+   "title": "先轉尺，再加原點位置",
+   "question": "方向箭頭也要加上相機的位置嗎？",
+   "prereq": [
+    "frames",
+    "rotation-2d"
+   ],
+   "story": [
+    "沿用B原點在(2,1)、朝向90度",
+    "點B(1,0)先轉成A方向(0,1)",
+    "再加原點位置到A(2,2)",
+    "同一方向dB(1,0)只轉不加原點，得到(0,1)",
+    "把點尾巴加1、方向尾巴加0，收進一張變換表"
+   ],
+   "controls": [
+    {
+     "id": "transform-turn",
+     "type": "range",
+     "label": "B轉角",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 90,
+     "unit": "°"
+    },
+    {
+     "id": "transform-tx",
+     "type": "range",
+     "label": "B原點x",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "value": 2,
+     "unit": "m"
+    },
+    {
+     "id": "transform-ty",
+     "type": "range",
+     "label": "B原點y",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "value": 1,
+     "unit": "m"
+    }
+   ],
+   "formula": "固定p_B=(1,0)m與d_B=(1,0)方向；p_A=Rp_B+t；d_A=Rd_B；2D T=[[R,t],[0,0,1]]；inverse p_B=Rᵀ(p_A−t)",
+   "fixtures": [
+    {
+     "input": {
+      "turn": 90,
+      "tx": 2,
+      "ty": 1
+     },
+     "expected": {
+      "point": [
+       2,
+       2
+      ],
+      "direction": [
+       0,
+       1
+      ],
+      "roundtrip": [
+       1,
+       0
+      ]
+     }
+    },
+    {
+     "input": {
+      "turn": 0,
+      "tx": 0,
+      "ty": 0
+     },
+     "expected": {
+      "point": [
+       1,
+       0
+      ],
+      "direction": [
+       1,
+       0
+      ]
+     }
+    }
+   ],
+   "boundary": "點與方向最後一格1/0；R逆是轉置但T逆不是把整矩陣轉置；t逆要−Rᵀt。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "chains",
+   "title": "一節一節把工具點送回世界",
+   "question": "工具、手臂、世界，三張座標紙怎麼接？",
+   "prereq": [
+    "transforms"
+   ],
+   "story": [
+    "工具C上的點pC=(0,1)",
+    "C框在B的(1,0)且沒有轉角，得到pB=(1,1)",
+    "B框在A的(2,1)且轉90度",
+    "把pB先轉到(-1,1)，再平移成pA=(1,2)",
+    "對齊中間B標籤，T_AB T_BC才可相接",
+    "用逆變換走回原點數字，驗往返"
+   ],
+   "controls": [
+    {
+     "id": "chain-ab",
+     "type": "range",
+     "label": "B相對A角",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 90,
+     "unit": "°"
+    },
+    {
+     "id": "chain-bc",
+     "type": "range",
+     "label": "C相對B角",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 0,
+     "unit": "°"
+    }
+   ],
+   "formula": "t_AB=(2,1),t_BC=(1,0),p_C=(0,1)；p_B=R_BC p_C+t_BC；p_A=R_AB p_B+t_AB；T_AC=T_AB T_BC",
+   "fixtures": [
+    {
+     "input": {
+      "ab": 90,
+      "bc": 0
+     },
+     "expected": {
+      "pB": [
+       1,
+       1
+      ],
+      "pA": [
+       1,
+       2
+      ]
+     }
+    },
+    {
+     "input": {
+      "ab": 0,
+      "bc": 0
+     },
+     "expected": {
+      "pB": [
+       1,
+       1
+      ],
+      "pA": [
+       3,
+       2
+      ]
+     }
+    }
+   ],
+   "boundary": "右側先作用；A/B/C名稱不能只按矩陣尺寸隨意相乘；全鏈資料必須同一時刻。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "forward",
+   "title": "兩支連桿，逐段找到筆尖",
+   "question": "第二顆馬達轉90度，第二支桿指向哪裡？",
+   "prereq": [
+    "angles",
+    "vectors",
+    "chains"
+   ],
+   "story": [
+    "兩支各1m的連桿從原點出發",
+    "第一顆轉0度，肘點在(1,0)",
+    "第二顆相對第一支轉90度，世界方向90度",
+    "第二段位移(0,1)接到肘點",
+    "筆尖(1,1)，把兩段水平/垂直投影各自相加",
+    "第二角是相對角，換q1會帶著後面整支轉",
+    "主要完整算例改q1=30°、q2=60°：先算世界角90°，四段投影標公式各項，逐行帶入得(.866,1.500)m",
+    "主實驗預設接30/60，另加0/90快捷回到直角概念例；練習30/30並提供逐步解答：第二桿60°，d2=(1/2,√3/2)，x=y=(√3+1)/2≈1.366m"
+   ],
+   "controls": [
+    {
+     "id": "fk-q1",
+     "type": "range",
+     "label": "肩關節q₁",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 30,
+     "unit": "°"
+    },
+    {
+     "id": "fk-q2",
+     "type": "range",
+     "label": "肘關節q₂（相對角）",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 60,
+     "unit": "°"
+    }
+   ],
+   "formula": "L1=L2=1m；elbow=(cosq1,sinq1)；tip=elbow+(cos(q1+q2),sin(q1+q2))",
+   "fixtures": [
+    {
+     "input": {
+      "q1": 30,
+      "q2": 60
+     },
+     "expected": {
+      "elbow": [
+       "√3/2",
+       "1/2"
+      ],
+      "tip": [
+       "√3/2",
+       "3/2"
+      ],
+      "approx_tip": [
+       0.8660254037844386,
+       1.5
+      ]
+     }
+    },
+    {
+     "input": {
+      "q1": 0,
+      "q2": 90
+     },
+     "expected": {
+      "elbow": [
+       1,
+       0
+      ],
+      "tip": [
+       1,
+       1
+      ]
+     }
+    },
+    {
+     "input": {
+      "q1": 90,
+      "q2": 0
+     },
+     "expected": {
+      "elbow": [
+       0,
+       1
+      ],
+      "tip": [
+       0,
+       2
+      ]
+     }
+    },
+    {
+     "input": {
+      "q1": 0,
+      "q2": 180
+     },
+     "expected": {
+      "tip": [
+       0,
+       0
+      ]
+     }
+    }
+   ],
+   "boundary": "±180角等價；相對角不等於世界角；本課平面兩桿，不宣稱已解七軸FK。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見",
+   "exercise": {
+    "input": {
+     "q1": 30,
+     "q2": 30
+    },
+    "expected": {
+     "world_angle2": 60,
+     "d1": [
+      "√3/2",
+      "1/2"
+     ],
+     "d2": [
+      "1/2",
+      "√3/2"
+     ],
+     "tip": [
+      "(√3+1)/2",
+      "(√3+1)/2"
+     ],
+     "approx_tip": [
+      1.3660254037844386,
+      1.3660254037844386
+     ]
+    },
+    "why": "兩段水平投影都非零，真正練到通用式的第二項"
+   }
+  },
+  {
+   "page": "inverse",
+   "title": "同一個目標，可以彎出兩種手臂",
+   "question": "筆尖放對了，為什麼手肘還有另一種位置？",
+   "prereq": [
+    "forward"
+   ],
+   "story": [
+    "目標固定(1,1)",
+    "第一種肘點(1,0)，關節(0°,90°)",
+    "另一種肘點(0,1)，關節(90°,−90°)",
+    "兩組各自代回，筆尖仍(1,1)",
+    "外圈半徑2m之外碰不到",
+    "目標正好原點，兩桿折疊，肩角不限"
+   ],
+   "controls": [
+    {
+     "id": "ik-x",
+     "type": "range",
+     "label": "目標x",
+     "min": -2.5,
+     "max": 2.5,
+     "step": 0.25,
+     "value": 1,
+     "unit": "m"
+    },
+    {
+     "id": "ik-y",
+     "type": "range",
+     "label": "目標y",
+     "min": -2.5,
+     "max": 2.5,
+     "step": 0.25,
+     "value": 1,
+     "unit": "m"
+    }
+   ],
+   "formula": "r=hypot(x,y)；r>2不可達；r=0等長桿折疊時q2=π且q1任意；其餘c2=(r²−2)/2,q2=±acos(c2),q1=atan2(y,x)−atan2(sinq2,1+cosq2)；r=2分支合併；normalise角度至(−180,180]且顯示等價性",
+   "fixtures": [
+    {
+     "input": {
+      "x": 1,
+      "y": 1
+     },
+     "expected": {
+      "branches": [
+       [
+        0,
+        90
+       ],
+       [
+        90,
+        -90
+       ]
+      ],
+      "residual": "<1e−12m"
+     }
+    },
+    {
+     "input": {
+      "x": 2,
+      "y": 0
+     },
+     "expected": {
+      "unique_mod_turns": [
+       0,
+       0
+      ]
+     }
+    },
+    {
+     "input": {
+      "x": 0,
+      "y": 0
+     },
+     "expected": {
+      "status": "無限多組肩角"
+     }
+    },
+    {
+     "input": {
+      "x": 2.5,
+      "y": 0
+     },
+     "expected": {
+      "status": "不可達"
+     }
+    }
+   ],
+   "boundary": "無關節限制與碰撞的幾何逆解；不可達不顯示假手臂貼邊。內圈對等長桿半徑0，另用文字說不等長才有洞。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "jacobian",
+   "title": "每個關節的小動作，合成筆尖速度",
+   "question": "肩膀慢慢轉，筆尖為什麼往左上走？",
+   "prereq": [
+    "forward",
+    "vectors"
+   ],
+   "story": [
+    "固定q=(0°,90°)與筆尖(1,1)",
+    "只讓肩轉1 rad/s，瞬時速度(-1,1)m/s",
+    "只讓肘轉1 rad/s，速度(-1,0)m/s",
+    "把兩支速度箭頭放成矩陣兩欄",
+    "各欄乘各自角速度份數再相加",
+    "以很短時間的FK位移比對切線，明說近似"
+   ],
+   "controls": [
+    {
+     "id": "jac-q1",
+     "type": "range",
+     "label": "肩角",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 0,
+     "unit": "°"
+    },
+    {
+     "id": "jac-q2",
+     "type": "range",
+     "label": "肘相對角",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 90,
+     "unit": "°"
+    },
+    {
+     "id": "jac-v1",
+     "type": "range",
+     "label": "肩角速度",
+     "min": -2,
+     "max": 2,
+     "step": 0.25,
+     "value": 1,
+     "unit": "rad/s"
+    },
+    {
+     "id": "jac-v2",
+     "type": "range",
+     "label": "肘角速度",
+     "min": -2,
+     "max": 2,
+     "step": 0.25,
+     "value": 0,
+     "unit": "rad/s"
+    }
+   ],
+   "formula": "J=[[-sin q1−sin(q1+q2),−sin(q1+q2)],[cos q1+cos(q1+q2),cos(q1+q2)]] m/rad；v=J qdot；δ=0.01s有限差分 (FK(q+qdotδ)−FK(q))/δ只做比較",
+   "fixtures": [
+    {
+     "input": {
+      "q1": 0,
+      "q2": 90,
+      "v1": 1,
+      "v2": 0
+     },
+     "expected": {
+      "J": [
+       [
+        -1,
+        -1
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "velocity": [
+       -1,
+       1
+      ]
+     }
+    },
+    {
+     "input": {
+      "q1": 0,
+      "q2": 90,
+      "v1": 1,
+      "v2": -1
+     },
+     "expected": {
+      "velocity": [
+       0,
+       1
+      ]
+     }
+    }
+   ],
+   "boundary": "大時間步不能將J固定當整條路徑；零角速度輸出零；角度微分單位用rad。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "singularities",
+   "title": "手臂伸直，少掉一種瞬時速度",
+   "question": "筆尖明明能慢慢縮回，為什麼公式說向左走不動？",
+   "prereq": [
+    "jacobian"
+   ],
+   "story": [
+    "彎肘90度，兩欄速度箭頭不平行",
+    "每個關節允許−1..1 rad/s，箭頭合成平行四邊形",
+    "把肘角逐漸拉到0度",
+    "兩欄變同一方向，速度區域壓成線",
+    "此刻水平速度達不到，但轉一小段後可往回",
+    "區分速度空間圖與實際可到位置的工作空間"
+   ],
+   "controls": [
+    {
+     "id": "sing-q2",
+     "type": "range",
+     "label": "肘相對角",
+     "min": 0,
+     "max": 180,
+     "step": 5,
+     "value": 90,
+     "unit": "°"
+    }
+   ],
+   "formula": "q1=0，qdot各自−1..1；J同前；四角J*[±1,±1]；detJ=sin q2 m²/rad²；area=4abs(sinq2)；q2=0或180秩1，其餘秩2",
+   "fixtures": [
+    {
+     "input": {
+      "q2": 90
+     },
+     "expected": {
+      "det": 1,
+      "velocity_area": 4,
+      "rank": 2
+     }
+    },
+    {
+     "input": {
+      "q2": 0
+     },
+     "expected": {
+      "columns": [
+       [
+        0,
+        2
+       ],
+       [
+        0,
+        1
+       ]
+      ],
+      "velocity_area": 0,
+      "rank": 1
+     }
+    },
+    {
+     "input": {
+      "q2": 180
+     },
+     "expected": {
+      "rank": 1
+     }
+    }
+   ],
+   "boundary": "圖是允許的瞬時速度，不是末端位置；關節速度有界下不可隨意放大；四元數不會修好機構奇異。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "trajectory",
+   "title": "同一條路，安排何時加速和停下",
+   "question": "手臂終點一樣，為什麼有的動作會猛撞？",
+   "prereq": [
+    "angles",
+    "jacobian"
+   ],
+   "story": [
+    "單關節從0rad轉到1rad，先只畫路線",
+    "給總時間T=2s，把路線分成時刻",
+    "三次時間比例起終速度0，中間加快",
+    "在t=1s讀到角度.5rad、速度.75rad/s",
+    "縮短T時速度按1/T、加速度按1/T²增大",
+    "端點加速度非0，接靜止段仍會跳變"
+   ],
+   "controls": [
+    {
+     "id": "traj-duration",
+     "type": "range",
+     "label": "總時間T",
+     "min": 0.5,
+     "max": 4,
+     "step": 0.5,
+     "value": 2,
+     "unit": "s"
+    },
+    {
+     "id": "traj-progress",
+     "type": "range",
+     "label": "時間佔比u",
+     "min": 0,
+     "max": 1,
+     "step": 0.05,
+     "value": 0.5,
+     "unit": ""
+    }
+   ],
+   "formula": "q0=0,qf=1rad；u=t/T；s=3u²−2u³；q=s；qdot=(6u−6u²)/T；qddot=(6−12u)/T²；峰值速度1.5/T；最大加速度絕對值6/T²",
+   "fixtures": [
+    {
+     "input": {
+      "T": 2,
+      "u": 0.5
+     },
+     "expected": {
+      "t": 1,
+      "q": 0.5,
+      "qdot": 0.75,
+      "qddot": 0
+     }
+    },
+    {
+     "input": {
+      "T": 2,
+      "u": 0
+     },
+     "expected": {
+      "qdot": 0,
+      "qddot": 1.5
+     }
+    },
+    {
+     "input": {
+      "T": 1,
+      "u": 0.5
+     },
+     "expected": {
+      "qdot": 1.5
+     }
+    }
+   ],
+   "boundary": "只保證起終速度0；未施加馬達速度力矩限制；t=0與T的加速度指移動段單側值。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "forces",
+   "title": "同一股末端力，兩顆馬達各負責多少",
+   "question": "往上托1 N，為什麼肘馬達的力矩剛好是0？",
+   "prereq": [
+    "jacobian"
+   ],
+   "story": [
+    "沿用q=(0°,90°)、末端(1,1)",
+    "手臂對外物往上施1N，外物對手臂向下1N",
+    "肩到施力線的水平距離1m，需正力矩1Nm",
+    "肘與末端同一直線，這股力不產生肘力矩",
+    "用每個速度箭頭和力對照功率",
+    "收成τ=JᵀF並明說F的方向角色"
+   ],
+   "controls": [
+    {
+     "id": "force-x",
+     "type": "range",
+     "label": "手臂對外物的水平力Fₓ",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "value": 0,
+     "unit": "N"
+    },
+    {
+     "id": "force-y",
+     "type": "range",
+     "label": "手臂對外物的垂直力Fᵧ",
+     "min": -2,
+     "max": 2,
+     "step": 0.5,
+     "value": 1,
+     "unit": "N"
+    }
+   ],
+   "formula": "固定q=(0,π/2),J=[[-1,-1],[1,0]]；忽略重力慣性，τ_motor=JᵀF=[−Fx+Fy,−Fx]N·m；外物反作用−F；r×F平面z分量=rxFy−ryFx",
+   "fixtures": [
+    {
+     "input": {
+      "Fx": 0,
+      "Fy": 1
+     },
+     "expected": {
+      "torque": [
+       1,
+       0
+      ]
+     }
+    },
+    {
+     "input": {
+      "Fx": 1,
+      "Fy": 0
+     },
+     "expected": {
+      "torque": [
+       -1,
+       -1
+      ]
+     }
+    },
+    {
+     "input": {
+      "Fx": 0,
+      "Fy": 0
+     },
+     "expected": {
+      "torque": [
+       0,
+       0
+      ]
+     }
+    }
+   ],
+   "boundary": "0力時教學模型力矩0，真機仍可能有重力摩擦；力與力矩單位不同；F不可混成環境對手臂的力。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "dynamics",
+   "title": "力矩先改變轉速，再改變角度",
+   "question": "同樣推一下，為什麼較重的轉盤加速較慢？",
+   "prereq": [
+    "forces",
+    "trajectory"
+   ],
+   "story": [
+    "明示從二連桿切換成單固定軸轉盤",
+    "馬達力矩τ推著轉，黏滯阻力bω反著速度",
+    "兩者相減才是淨力矩",
+    "淨力矩除以慣量I得到角加速度",
+    "例I2、b1、ω2、τ4，淨2，α1",
+    "零淨力矩代表此刻不加速，仍可能在轉"
+   ],
+   "controls": [
+    {
+     "id": "dyn-inertia",
+     "type": "range",
+     "label": "轉動慣量I",
+     "min": 0.5,
+     "max": 4,
+     "step": 0.5,
+     "value": 2,
+     "unit": "kg·m²"
+    },
+    {
+     "id": "dyn-damping",
+     "type": "range",
+     "label": "黏滯阻尼b",
+     "min": 0,
+     "max": 3,
+     "step": 0.5,
+     "value": 1,
+     "unit": "N·m·s/rad"
+    },
+    {
+     "id": "dyn-speed",
+     "type": "range",
+     "label": "此刻角速度ω",
+     "min": -3,
+     "max": 3,
+     "step": 0.5,
+     "value": 2,
+     "unit": "rad/s"
+    },
+    {
+     "id": "dyn-torque",
+     "type": "range",
+     "label": "馬達力矩τ",
+     "min": -6,
+     "max": 6,
+     "step": 0.5,
+     "value": 4,
+     "unit": "N·m"
+    }
+   ],
+   "formula": "固定軸剛體，無重力彈性；Iα=τ−bω；阻尼力矩=−bω；ω下一瞬增量≈αΔt只作瞬時近似",
+   "fixtures": [
+    {
+     "input": {
+      "I": 2,
+      "b": 1,
+      "omega": 2,
+      "tau": 4
+     },
+     "expected": {
+      "damping_torque": -2,
+      "net": 2,
+      "alpha": 1
+     }
+    },
+    {
+     "input": {
+      "I": 2,
+      "b": 1,
+      "omega": 2,
+      "tau": 2
+     },
+     "expected": {
+      "alpha": 0
+     }
+    },
+    {
+     "input": {
+      "I": 1,
+      "b": 1,
+      "omega": -2,
+      "tau": 0
+     },
+     "expected": {
+      "alpha": 2
+     }
+    }
+   ],
+   "boundary": "I必須>0；黏滯力矩反速度；正加速度不代表正速度；不推論整隻手臂M(q)為常數。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "control",
+   "title": "看到偏差，再決定怎麼推",
+   "question": "只看離目標多遠，為什麼容易衝過頭？",
+   "prereq": [
+    "dynamics",
+    "trajectory"
+   ],
+   "story": [
+    "目標1rad，現在0rad，誤差1rad",
+    "比例部分Kp=4先給4Nm往前推",
+    "接近目標時仍有速度，微分項−Kdω幫忙煞車",
+    "固定Kp4/I1比較Kd0、1、4、8的時間曲線",
+    "預設Kd4在t1到.594rad、速度.541rad/s",
+    "明示理想模型穩定不等於真機安全"
+   ],
+   "controls": [
+    {
+     "id": "ctrl-damping",
+     "type": "range",
+     "label": "微分增益Kᴅ",
+     "min": 0,
+     "max": 8,
+     "step": 0.5,
+     "value": 4,
+     "unit": "N·m·s/rad"
+    },
+    {
+     "id": "ctrl-time",
+     "type": "range",
+     "label": "觀察時間t",
+     "min": 0,
+     "max": 6,
+     "step": 0.1,
+     "value": 1,
+     "unit": "s"
+    }
+   ],
+   "formula": "I=1kgm²，Kp=4Nm/rad，target=1rad,q(0)=qdot(0)=0；τ=4(1−q)−Kd qdot；e=1−q滿足e″+Kd e′+4e=0。令a=Kd/2；a<2時b=sqrt(4−a²), e=exp(−at)[cos(bt)+a/b sin(bt)],qdot=4 exp(−at)sin(bt)/b；a=2時e=(1+2t)exp(−2t),qdot=4t exp(−2t)；a>2時b=sqrt(a²−4),e=exp(−at)[cosh(bt)+a/b sinh(bt)],qdot=4exp(−at)sinh(bt)/b。加速度=τ（I=1）。",
+   "fixtures": [
+    {
+     "input": {
+      "Kd": 4,
+      "t": 1
+     },
+     "expected": {
+      "q": 0.5939941502901619,
+      "qdot": 0.5413411329464508,
+      "torque": -0.5413411329464508
+     }
+    },
+    {
+     "input": {
+      "Kd": 0,
+      "t": 0
+     },
+     "expected": {
+      "q": 0,
+      "qdot": 0,
+      "torque": 4
+     }
+    },
+    {
+     "input": {
+      "Kd": 0,
+      "t": "π/2"
+     },
+     "expected": {
+      "q": 2,
+      "qdot": 0
+     }
+    }
+   ],
+   "boundary": "Kd0無耗散持續振盪；Kd>0此理想常目標模型漸近收斂；加入飽和、延遲、彈性、重力後不能直接保證。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  },
+  {
+   "page": "orientation",
+   "title": "四個數字，記住一次空間轉動",
+   "question": "四元數正負相反，為什麼模型看起來一模一樣？",
+   "prereq": [
+    "rotation-3d"
+   ],
+   "story": [
+    "先用固定z軸和轉90度描述同一次旋轉",
+    "用半角把轉角放入單位四元數(w,x,y,z)",
+    "90度得到(√2/2,0,0,√2/2)",
+    "全部取負號仍代表同一個旋轉",
+    "箭頭始終從e_x轉到e_y，對照兩組記號",
+    "接回旋轉矩陣，不把四元數當四維空間位置"
+   ],
+   "controls": [
+    {
+     "id": "quat-angle",
+     "type": "range",
+     "label": "繞固定世界z軸角",
+     "min": -180,
+     "max": 180,
+     "step": 15,
+     "value": 90,
+     "unit": "°"
+    },
+    {
+     "id": "quat-sign",
+     "type": "select",
+     "label": "四元數符號",
+     "options": [
+      {
+       "value": "1",
+       "label": "原符號 q"
+      },
+      {
+       "value": "-1",
+       "label": "全部反號 −q"
+      }
+     ],
+     "value": "1"
+    }
+   ],
+   "formula": "Hamilton scalar-first單位四元數q=sign[cos(θ/2),0,0,sin(θ/2)]，固定世界主動旋轉，p′=q(0,p)q*；此頁只展示z軸，e_x輸出(cosθ,sinθ,0)，q與−q同R",
+   "fixtures": [
+    {
+     "input": {
+      "angle": 90,
+      "sign": 1
+     },
+     "expected": {
+      "quaternion": [
+       "√2/2",
+       0,
+       0,
+       "√2/2"
+      ],
+      "tip": [
+       0,
+       1,
+       0
+      ]
+     }
+    },
+    {
+     "input": {
+      "angle": 90,
+      "sign": -1
+     },
+     "expected": {
+      "quaternion": [
+       "−√2/2",
+       0,
+       0,
+       "−√2/2"
+      ],
+      "tip": [
+       0,
+       1,
+       0
+      ]
+     }
+    }
+   ],
+   "boundary": "單位長度、wxyz排列與Hamilton規約明示；不教完整SLERP/twist/SE3，文字橋接舊七軸課；四元數不修好機械奇異。",
+   "source_local": "既有機器人數學基礎／機器人運動學相應章；官方來源見教材對照",
+   "owner": "builder（已停筆；發布由root/visual_publish接手）",
+   "status": "candidate-3數學／圖式／逐步計算與獨立技術驗收通過；產品凍結交發布",
+   "calculation_requirement": "明列給定/求量；圖示公式各項、為何用此式；逐行數值與單位；圖或回代查結果；近似遷移題含提示及詳解；核心計算直接可見"
+  }
+ ]
+}
