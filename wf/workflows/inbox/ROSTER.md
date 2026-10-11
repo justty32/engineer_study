@@ -65,15 +65,4 @@
 - **怎麼找我**：collaboration `/root/visual_publish`。
 - **訂閱主題**：無。
 
-### `engineering-math-visual-team`
-- **狀態**：現役
-- **我是誰**：engineering_math_team 為新圖解工程數學隊長，自組作者、教材查證及獨立 QA，沿用實際可用模型。
-- **團隊**：工程數學圖解新站。
-- **上游**：隊長對 root；子線對隊長。
-- **領地**：`共通基礎/數學/圖解工程數學/` 及數學目錄的 `03-工程數學-上.md`／`03-工程數學-中.md`／`03-工程數學-下.md` 的 20 項官方確證修正（另一人覆核），詳 [交接](../../handoffs/2026-10-11-engineering-math-visual.md)；舊站與其他隊唯讀。
-- **答得出什麼**：二階 ODE／RLC、相量、轉換及 PDE 的圖解公式、手算、詳解與查證。
-- **答不出什麼**：真人體驗、共享行政與發布時機。
-- **怎麼找我**：collaboration `/root/engineering_math_team`。
-- **訂閱主題**：無。
-
 已收線成員見 [2026-10-11 ELI5 團隊歷史](ROSTER-HISTORY-2026-10-11.md)。

@@ -11,13 +11,12 @@
 
 ## 最新進度
 
-- [interactive-study-site] 多隊圖解課程程序進行中：線代 v3 與機器人數學已部署；微積分及工程數學仍進行公式計算補強與驗收；微積分暫緩發布，正式部署後才啟動電子學與電路學 → [總排程](handoffs/2026-10-11-course-program.md)。
+- [interactive-study-site] 多隊圖解課程程序進行中：線代 v3、機器人數學與工程數學已部署；微積分仍進行公式計算補強與驗收；微積分暫緩發布，正式部署後才啟動電子學與電路學 → [總排程](handoffs/2026-10-11-course-program.md)。
 
 
 
 - [interactive-study-site] 微積分補公式圖解、逐行手算與詳解練習，暫緩發布；保留銜接電磁／電子／電路深度 → [微積分交接](handoffs/2026-10-11-calculus-visual-revision.md)。
 
-- [interactive-study-site] 工程數學新站同步補圖解公式與手算；已授三份工程數學上／中／下原文的 20 項官方確證修正及獨立覆核，舊站保留 → [工程數學交接](handoffs/2026-10-11-engineering-math-visual.md)。
 
 
 - [interactive-study-site] 第二批三課（電力電子／馬達驅動與控制／數位通訊）已上線；第三批候選 DSP／IC1／A2 待派 → 立案前先看 [workflows/interactive-study-site/README.md](workflows/interactive-study-site/README.md) 與 [decisions](workflows/decisions.md) 的譯名裁決。
