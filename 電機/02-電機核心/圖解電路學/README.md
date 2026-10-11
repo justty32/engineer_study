@@ -1,5 +1,7 @@
 # 圖解電路學
 
+[GitHub Pages 公開版](https://justty32.github.io/engineer_study/circuits-little-lab/)｜[驗收與部署證據](驗收紀錄.md)
+
 從電壓、電流與功率開始，循序練習直流分析、暫態、拉氏轉換、相量、運放、雙埠、磁耦合與三相。20 個教學頁各有完整主例、近題分步提示與詳解、參數實驗；另有課程地圖、33 項名詞字典與 47 項教材查證。
 
 [開啟課程地圖](dist/index.html)｜[零基礎起點](dist/00-start.html)｜[字典](dist/glossary.html)｜[教材與查證](dist/sources.html)

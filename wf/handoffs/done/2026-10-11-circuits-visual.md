@@ -1,6 +1,6 @@
 # 圖解電路學交接
 
-狀態：建置與三線獨立驗收完成，全部停筆 freeze；2026-10-11。隊長 circuits_team；發布由 root 放行、visual_publish 唯一執行。未執行任何 git 操作。
+狀態：建置、三線獨立驗收與 GitHub 發布完成；2026-10-11。隊長 circuits_team；發布由 root 放行、visual_publish 唯一執行。產品與部署由發布者精確提交。
 
 ## 精確範圍
 
@@ -29,3 +29,11 @@
 舊電路學互動站 24 檔保持原樣，彙整 SHA-256：`fd46298f202913adb83af8ccb1ecdccf7e5887379728c9d342f09b271f309bb6`。
 
 建置、來源、作者、數學、教學與技術代理均已停止寫入；本地 server PID 275860 已退出，8793 連線被拒，所有自有 headless 瀏覽器已關閉。root 放行後，發布線可依清單精確納入、部署並檢查公開網址；不需重跑已通過的全站驗收。
+
+## 公開部署與收線
+
+[公開課程](https://justty32.github.io/engineer_study/circuits-little-lab/) 已部署；產品 commit `aa2a8394a9dc1f4a3d9f6a59769843075bb82fe9`、[Pages 工作 38117831317](https://github.com/justty32/engineer_study/actions/runs/38117831317) 成功。25 成品與中央 2 檔逐 SHA-256 相符，4 個舊課入口正常，共 31 次 HTTP 全數 200。192 個已發布保護資產不變；中央 42→43，既有 slug 保留。
+
+46 條凍結交付與 3 份接線共 49 檔入產品 commit；兩冊原文八項小修已獨立核對，其他隊與使用者檔未入提交。凍結 manifest 保留產品 commit 當時文件與原 handoff 路徑；後續部署記錄和本檔移至 done 不改 25 成品與兩冊原文。完整持久證據見 [驗收紀錄](../../../電機/02-電機核心/圖解電路學/驗收紀錄.md)，機器證據 `/tmp/circuits-visual-publication/`。
+
+只用 GitHub，無 Sites；lab.css 獨立，正本與舊 FAMILY 複本保留。作者／驗收及自有發布程序已退出。真人理解與實體裝置未驗，不新增使用者待辦；電子學仍待串行發布，整體程序未結束。
