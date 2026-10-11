@@ -1,0 +1,413 @@
+{
+ "contract": "wf-table/1",
+ "source": "PROJECT-BRIEF.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "columns": [
+  "kind",
+  "name",
+  "english",
+  "role",
+  "mechanism",
+  "boundary",
+  "chapter"
+ ],
+ "rows": [
+  {
+   "kind": "名詞",
+   "name": "參考地",
+   "english": "ground",
+   "role": "指定電位的零點，讓每個節點電壓有共同基準。",
+   "mechanism": "電壓是兩點之差；同一個0V符號代表同一參考。",
+   "boundary": "地不一定是大地，也不是電荷消失處。",
+   "chapter": "00-circuit-bridge.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "偏壓與工作點",
+   "english": "bias / quiescent point, Q point",
+   "role": "把非線性元件放在可用的直流狀態。",
+   "mechanism": "電源和電阻先決定沒有訊號時的電流與端電壓。",
+   "boundary": "Q點不是小訊號，瞬時量等於Q量加增量。",
+   "chapter": "05-bjt-bias.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "能隙",
+   "english": "band gap",
+   "role": "描述價帶到導帶之間允許能量的分隔。",
+   "mechanism": "電子獲得足夠能量後可進入導帶，留下電洞。",
+   "boundary": "能隙不是幾何上的空間，也不是二極體固定壓降。",
+   "chapter": "01-semiconductor.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "摻雜",
+   "english": "doping",
+   "role": "用施體或受體改變主要載子濃度。",
+   "mechanism": "施體供應電子，受體使電洞成為多數載子。",
+   "boundary": "n型不是整塊材料帶負淨電荷。",
+   "chapter": "01-semiconductor.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "電洞",
+   "english": "hole",
+   "role": "價帶電子缺位所呈現的正電荷載子。",
+   "mechanism": "鄰近電子填入缺位，等效缺位朝相反方向移動。",
+   "boundary": "電洞不是空乏區，也不是質子在晶格中流動。",
+   "chapter": "01-semiconductor.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "漂移與擴散",
+   "english": "drift / diffusion",
+   "role": "兩種形成電流的機制。",
+   "mechanism": "漂移由電場驅動；擴散由載子濃度梯度驅動。",
+   "boundary": "沒有淨電流不等於兩種電流各為零。",
+   "chapter": "01-semiconductor.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "空乏區",
+   "english": "depletion region",
+   "role": "PN交界附近缺少可移動多數載子的區域。",
+   "mechanism": "載子擴散後留下固定離子，形成內建電場。",
+   "boundary": "空乏區並非沒有任何電荷。",
+   "chapter": "02-diode-models.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "熱電壓",
+   "english": "thermal voltage, VT",
+   "role": "把熱能kT換算成電壓kT/q。",
+   "mechanism": "約300K時本課指定25.85mV，出現在指數斜率中。",
+   "boundary": "VT不是門檻電壓Vth，也不是導通0.7V。",
+   "chapter": "02-diode-models.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "負載線",
+   "english": "load line",
+   "role": "由外部電路限制的電壓與電流關係。",
+   "mechanism": "回路VS=IR+VD提供一條線，與元件特性共同決定Q點。",
+   "boundary": "負載線本身不是元件I–V曲線。",
+   "chapter": "02-diode-models.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "整流與漣波",
+   "english": "rectification / ripple",
+   "role": "把交變極性改成單向，再觀察直流上的起伏。",
+   "mechanism": "橋式每半週換一條導通路徑；電容在峰間向負載放電。",
+   "boundary": "濾波電容不能把任意負載下的輸出變成完全無紋波。",
+   "chapter": "03-rectifier.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "限幅與箝位",
+   "english": "clipper / clamper",
+   "role": "限幅限制超出位準的波形；箝位平移直流位準。",
+   "mechanism": "前者把超出量落在電阻，後者利用電容保留電荷。",
+   "boundary": "箝位理想可保留峰對峰值；限幅通常改變它。",
+   "chapter": "04-diode-tools.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "雙極性接面電晶體",
+   "english": "Bipolar Junction Transistor, BJT",
+   "role": "以基極與射極電壓控制集極電流。",
+   "mechanism": "薄基區使注入載子多數抵達集極，少部分形成基極電流。",
+   "boundary": "IC=βIB只在適用工作區成立。",
+   "chapter": "05-bjt-bias.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "順向作用區",
+   "english": "forward-active region",
+   "role": "BJT適合線性放大的偏壓範圍。",
+   "mechanism": "NPN基射接面順偏、集基接面反偏，要求VC>VB。",
+   "boundary": "BJT飽和不是MOS飽和；只驗VCE>.2不足。",
+   "chapter": "05-bjt-bias.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "厄利效應",
+   "english": "Early effect",
+   "role": "BJT集極電流隨集射電壓略微改變。",
+   "mechanism": "集基空乏區改變有效基區寬度，產生有限輸出阻抗。",
+   "boundary": "ro是局部增量電阻，不是直流VCE/IC。",
+   "chapter": "05-bjt-bias.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "金氧半場效電晶體",
+   "english": "Metal-Oxide-Semiconductor Field-Effect Transistor, MOSFET",
+   "role": "閘極電場控制通道電流。",
+   "mechanism": "絕緣閘極調整表面載子，形成反轉通道。",
+   "boundary": "極低直流閘電流不代表切換時不用搬動閘電荷。",
+   "chapter": "06-mos-bias.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "超驅動電壓",
+   "english": "overdrive voltage, VOV",
+   "role": "門檻以上用來建立通道的電壓。",
+   "mechanism": "VOV=VGS−Vth；長通道平方律以此量決定飽和電流。",
+   "boundary": "VOV與VDS比較判區，不能只看VGS大於門檻。",
+   "chapter": "06-mos-bias.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "接面場效電晶體",
+   "english": "Junction Field-Effect Transistor, JFET",
+   "role": "利用反偏閘接面控制既有通道寬度。",
+   "mechanism": "反偏擴大空乏區，壓縮可導電通道。",
+   "boundary": "常見JFET在VGS=0已導通，與增強型MOS不同。",
+   "chapter": "06-mos-bias.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "互補式金氧半",
+   "english": "Complementary Metal-Oxide-Semiconductor, CMOS",
+   "role": "PMOS上拉、NMOS下拉共同構成邏輯。",
+   "mechanism": "切換時替負載電容充放電，穩態理想不形成直通路徑。",
+   "boundary": "中間輸入電壓可讓兩管同時導通。",
+   "chapter": "07-cmos.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "跨導",
+   "english": "transconductance, gm",
+   "role": "輸入小電壓引起輸出電流改變的斜率。",
+   "mechanism": "在Q點求導：BJT gm=ICQ/VT，MOS近似gm=2IDQ/VOV。",
+   "boundary": "單位是S=A/V，並非無單位電壓增益。",
+   "chapter": "08-small-signal.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "小訊號模型",
+   "english": "small-signal model",
+   "role": "用Q點切線描述足夠小的變化。",
+   "mechanism": "非線性函數展開到一次項，所有源與量都代表增量。",
+   "boundary": "小訊號圖不直接給直流工作點，也不能描述任意大訊號。",
+   "chapter": "08-small-signal.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "退化電阻",
+   "english": "degeneration resistor",
+   "role": "放在射極或源極，減小訊號對元件控制電壓的變化。",
+   "mechanism": "電流增加時電阻壓降增加，抵消一部分輸入。",
+   "boundary": "直流偏壓電阻若被大電容旁路，中頻增量效果不同。",
+   "chapter": "09-single-stage.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "米勒效應",
+   "english": "Miller effect",
+   "role": "跨接反相輸入與輸出的電容在輸入端被放大看見。",
+   "mechanism": "兩端反向變動，使電容端電壓變化增加到(1−Av)倍。",
+   "boundary": "不是實體電容面積真的增加。",
+   "chapter": "10-frequency.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "疊接",
+   "english": "cascode",
+   "role": "共射加共基，或共源加共閘的堆疊。",
+   "mechanism": "上管限制下管輸出節點擺動，降低跨接電容的米勒放大。",
+   "boundary": "疊接不是一般兩級串接cascade，且需更多電壓餘裕。",
+   "chapter": "10-frequency.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "輸入與輸出阻抗",
+   "english": "input / output impedance",
+   "role": "描述接線後誰會把誰的訊號拉小。",
+   "mechanism": "輸出阻抗與下一級輸入阻抗形成分壓。",
+   "boundary": "空載增益直接相乘通常高估多級結果。",
+   "chapter": "11-multistage-power.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "推挽與功率級",
+   "english": "push-pull / power stage",
+   "role": "從電源供應正負半週負載電流。",
+   "mechanism": "互補元件輪流或重疊導通；D類利用開關後再濾波。",
+   "boundary": "增益大小不等於效率；效率需平均功率與負載條件。",
+   "chapter": "11-multistage-power.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "差模與共模",
+   "english": "differential / common mode",
+   "role": "差模是兩端之差，共模是兩端的平均。",
+   "mechanism": "差動對把差模轉成兩支路電流分配，理想共模不改變分配。",
+   "boundary": "兩個輸入都變不代表一定是差模。",
+   "chapter": "12-differential.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "共模拒斥比",
+   "english": "Common-Mode Rejection Ratio, CMRR",
+   "role": "量化希望放大的差模相對不想放大的共模。",
+   "mechanism": "CMRR=|Ad/Acm|，以分貝表示為20log10。",
+   "boundary": "高CMRR不保證輸入超共模範圍還能工作。",
+   "chapter": "12-differential.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "電流鏡",
+   "english": "current mirror",
+   "role": "以匹配元件與共同控制電壓複製電流。",
+   "mechanism": "參考支路建立VBE或VGS，再用另一顆元件產生相近電流。",
+   "boundary": "輸出仍要有足夠順從電壓，不能在任意電壓鏡出同電流。",
+   "chapter": "13-current-mirror.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "主動負載",
+   "english": "active load",
+   "role": "以電晶體電流源取代放大級的電阻負載。",
+   "mechanism": "高增量輸出阻抗使同樣電流變化轉成較大電壓變化。",
+   "boundary": "高增量阻抗與有限直流壓降可同時存在。",
+   "chapter": "13-current-mirror.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "負回授",
+   "english": "negative feedback",
+   "role": "取出部分輸出，回到輸入比較相減。",
+   "mechanism": "輸出偏離時改變誤差，讓放大器朝抵消偏離的方向反應。",
+   "boundary": "符號負回授在高頻可能因相位延遲變成不穩定。",
+   "chapter": "14-feedback.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "相位裕度",
+   "english": "phase margin, PM",
+   "role": "在迴路增益大小為1處，到−180°的相位距離。",
+   "mechanism": "在指定開迴路穩定與負回授假設下，評估接近不穩定的程度。",
+   "boundary": "PM不是任意頻率的相位，也不是無條件穩定證明。",
+   "chapter": "14-feedback.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "運算放大器",
+   "english": "operational amplifier, op-amp",
+   "role": "以高差動增益配外部回授實現類比功能。",
+   "mechanism": "輸入差動級、增益級、輸出級與偏壓/補償共同工作。",
+   "boundary": "虛短只在負回授、線性範圍和動態餘裕成立。",
+   "chapter": "15-opamp.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "增益頻寬與轉換速率",
+   "english": "gain-bandwidth product, GBW / slew rate, SR",
+   "role": "GBW限制小訊號頻率響應，SR限制最大電壓變化速率。",
+   "mechanism": "前者近似來自主極點；後者來自有限內部充放電電流。",
+   "boundary": "不能把1V目標的SR需求誤當較小預測波形的需求。",
+   "chapter": "16-opamp-limits.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "品質因數",
+   "english": "quality factor, Q",
+   "role": "描述二階系統的阻尼與共振形狀。",
+   "mechanism": "在固定自然頻率下，Q越高越容易在附近隆起與振鈴。",
+   "boundary": "濾波器Q不是工作點Q，也不是通帶增益K。",
+   "chapter": "17-active-filter.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "遲滯與施密特比較器",
+   "english": "hysteresis / Schmitt trigger",
+   "role": "用依狀態不同的兩個門檻避免小抖動來回切換。",
+   "mechanism": "正回授使目前輸出改變下一次切換門檻。",
+   "boundary": "中間輸入範圍沒有唯一無歷史輸出。",
+   "chapter": "18-comparator.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "振盪與起振",
+   "english": "oscillation / startup",
+   "role": "讓電路不靠外部週期輸入也產生週期輸出。",
+   "mechanism": "選頻回授放大微小擾動，非線性穩幅限制最終振幅。",
+   "boundary": "Barkhausen穩態條件不單獨保證起振，也不決定振幅。",
+   "chapter": "19-oscillator.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "低壓差穩壓器",
+   "english": "Low-Dropout Regulator, LDO",
+   "role": "在輸入略高於輸出時維持目標電壓的線性穩壓器。",
+   "mechanism": "誤差放大器調整串聯功率元件，剩餘壓差轉成熱。",
+   "boundary": "低壓差不代表高壓差時仍高效率。",
+   "chapter": "20-linear-power.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "脈衝寬度調變",
+   "english": "Pulse-Width Modulation, PWM",
+   "role": "調整每週期導通時間比例。",
+   "mechanism": "開關改變電感每週期取得與送出的能量，再用回授穩住輸出。",
+   "boundary": "占空比不是任意拓樸都直接等於輸出輸入比。",
+   "chapter": "21-switching-power.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "連續導通模式",
+   "english": "Continuous Conduction Mode, CCM",
+   "role": "電感電流在整個週期維持非零。",
+   "mechanism": "最小電流大於零，兩狀態伏秒平衡可推得理想Buck的D Vin。",
+   "boundary": "若電流降到零，不能不改模型繼續使用同一傳輸式。",
+   "chapter": "21-switching-power.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "數位類比轉換器",
+   "english": "Digital-to-Analog Converter, DAC",
+   "role": "把數位碼轉成類比電壓或電流。",
+   "mechanism": "位元權重以電阻或電流源加總。",
+   "boundary": "N位有2^N碼，最大碼是2^N−1。",
+   "chapter": "22-dac.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "類比數位轉換器",
+   "english": "Analog-to-Digital Converter, ADC",
+   "role": "把取樣到的類比值分配到有限的碼。",
+   "mechanism": "比較門檻或逐次試碼，最後用N位整數代表一個區間。",
+   "boundary": "解析度不是取樣率，也不自動等於有效精度。",
+   "chapter": "23-adc.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "最小有效位元與量化",
+   "english": "Least Significant Bit, LSB / quantization",
+   "role": "量化步階q代表相鄰碼的類比間隔。",
+   "mechanism": "本課q=Vref/2^N；ADC下緣分箱，中心重建誤差界為q/2。",
+   "boundary": "DAC下緣重建誤差與中心重建誤差不同。",
+   "chapter": "23-adc.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "逐次逼近",
+   "english": "Successive Approximation Register, SAR",
+   "role": "由最高位起用內部DAC與比較器逐位試碼。",
+   "mechanism": "每次比較排除約一半候選範圍，保留或清除當前位元。",
+   "boundary": "逐次逼近不代表輸入在整個轉換期間可以任意改變。",
+   "chapter": "23-adc.html"
+  },
+  {
+   "kind": "名詞",
+   "name": "有效位元數",
+   "english": "Effective Number Of Bits, ENOB",
+   "role": "用真實失真與雜訊表現換算等效解析度。",
+   "mechanism": "在指定量測條件下由訊雜失真比對照理想量化標準。",
+   "boundary": "名義位元數較多不保證ENOB同樣增加。",
+   "chapter": "23-adc.html"
+  }
+ ]
+}

@@ -1,0 +1,184 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "note": "builder的收件狀態，不代替獨立驗收；交件SHA先以CRLF正規化。",
+ "columns": [
+  "id",
+  "file",
+  "author",
+  "status",
+  "sha256"
+ ],
+ "rows": [
+  {
+   "id": "00",
+   "file": "dist/00-circuit-bridge.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "df48af059f1355d78a7a90701c7a0412f99606c9c8b78f8ed34c7b4f78b164a5"
+  },
+  {
+   "id": "01",
+   "file": "dist/01-semiconductor.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "24d47213702c11f74465615c7bbd15b558ef8f1fc4d3234230fa02c1b96eeea4"
+  },
+  {
+   "id": "02",
+   "file": "dist/02-diode-models.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "4a62761adcf125cbbb4859341dd85b2c4b697604bcfffed11fdd61312c108625"
+  },
+  {
+   "id": "03",
+   "file": "dist/03-rectifier.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "6d84e0fa35d9ab960598f132f1176be3459c6e5b41cc51088b6f6313265cd6c1"
+  },
+  {
+   "id": "04",
+   "file": "dist/04-diode-tools.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "595d62b6e8196e16b09b27f8385b841df84b64ea000d03ecc1a0c096426b6b3a"
+  },
+  {
+   "id": "05",
+   "file": "dist/05-bjt-bias.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "c52126ccc39749a2f5a475bc68ea659b01f5a92667c8d1e131c6d43551a54596"
+  },
+  {
+   "id": "06",
+   "file": "dist/06-mos-bias.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "728309cafb04aded4cdab084bb1810f4e6daffa60f68cf0dbe82d2a59133feb3"
+  },
+  {
+   "id": "07",
+   "file": "dist/07-cmos.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "4b9179da69ffea54c47bc31422ca1b2dc3d49fc3ff0d403d68e2b6452f314f31"
+  },
+  {
+   "id": "08",
+   "file": "dist/08-small-signal.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "df32bc27a0423ffd879c483324502add7b7593daf269c248527b554f7127d385"
+  },
+  {
+   "id": "09",
+   "file": "dist/09-single-stage.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "1902e23618d49efd80925ab7bddf48d8004aec45fb09b5ba5bd71cf721d8f95d"
+  },
+  {
+   "id": "10",
+   "file": "dist/10-frequency.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "f81d8a4f2998348e176c5af4ec648ee6fcc826d18659c270dce7cbdecd22c966"
+  },
+  {
+   "id": "11",
+   "file": "dist/11-multistage-power.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "9b386f4a2433289c3402f1d7d39160c700ab6ca59737bf0c18fb6b1da0ade548"
+  },
+  {
+   "id": "12",
+   "file": "dist/12-differential.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "ffbcab2a6e099d983409e27aa4cdbcdcb70306e7edfb50d3d2edf7d05ecf3a33"
+  },
+  {
+   "id": "13",
+   "file": "dist/13-current-mirror.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "1d4d284fee39ec6b1e29c38c4f2f2ec964af10ff3b68f8befd3dc20f1b110834"
+  },
+  {
+   "id": "14",
+   "file": "dist/14-feedback.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "9e4da0eedc0e39299f5dc1dc625ba2b48c49b6972bb07c508c05d3c4cf531121"
+  },
+  {
+   "id": "15",
+   "file": "dist/15-opamp.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "6f5b4289820281eafd5a1d052a445aee5cbdaf95f43be5286404d49c7aa333f6"
+  },
+  {
+   "id": "16",
+   "file": "dist/16-opamp-limits.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "2ad9b7bf8ae376009bc512b59377bff4b3bc40ea36a5bd4e7871e72b2f18e13d"
+  },
+  {
+   "id": "17",
+   "file": "dist/17-active-filter.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "f62a27de213b101219d174e9e00e4d11aa30db5cbffe6485729bc7aa4106c691"
+  },
+  {
+   "id": "18",
+   "file": "dist/18-comparator.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "a899390b01a1d1d8296a3f56e4027c45a7d0ab343572003b7e7e712679ae7041"
+  },
+  {
+   "id": "19",
+   "file": "dist/19-oscillator.html",
+   "author": "author_a",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "bfb5b4b5ed374f5b1f13de4bdc028f64ccfbc2e4296498d9ed0b265f9821b951"
+  },
+  {
+   "id": "20",
+   "file": "dist/20-linear-power.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "dbc25a5e273b5bfb8e2f01a3afd961c7fef11c2048520d33612b824785ac991f"
+  },
+  {
+   "id": "21",
+   "file": "dist/21-switching-power.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "1999edc22752d06d964a362eb3399b990627c0408db942bd4ce7aa53265346a8"
+  },
+  {
+   "id": "22",
+   "file": "dist/22-dac.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "7569b6963e525caae2d572c9e5eca0999fb17bfe863ed599302337c19a655bad"
+  },
+  {
+   "id": "23",
+   "file": "dist/23-adc.html",
+   "author": "author_b",
+   "status": "建置完成，停筆；獨立驗收見審查檔",
+   "sha256": "bbfec33f444b0a00ec69f449e5430b1567b7867d41837b2272de594cec6f3c3a"
+  }
+ ]
+}

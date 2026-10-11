@@ -1,0 +1,117 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "columns": [
+  "package",
+  "chapters",
+  "owner",
+  "write_scope",
+  "status"
+ ],
+ "rows": [
+  {
+   "package": "01",
+   "chapters": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "owner": "author_a",
+   "write_scope": [
+    "dist/00-circuit-bridge.html",
+    "dist/01-semiconductor.html",
+    "dist/02-diode-models.html",
+    "dist/03-rectifier.html"
+   ],
+   "status": "建置完成，作者已交還寫權"
+  },
+  {
+   "package": "02",
+   "chapters": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "owner": "author_b",
+   "write_scope": [
+    "dist/04-diode-tools.html",
+    "dist/05-bjt-bias.html",
+    "dist/06-mos-bias.html",
+    "dist/07-cmos.html"
+   ],
+   "status": "建置完成，作者已交還寫權"
+  },
+  {
+   "package": "03",
+   "chapters": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "owner": "author_a",
+   "write_scope": [
+    "dist/08-small-signal.html",
+    "dist/09-single-stage.html",
+    "dist/10-frequency.html",
+    "dist/11-multistage-power.html"
+   ],
+   "status": "建置完成，作者已交還寫權"
+  },
+  {
+   "package": "04",
+   "chapters": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "owner": "author_b",
+   "write_scope": [
+    "dist/12-differential.html",
+    "dist/13-current-mirror.html",
+    "dist/14-feedback.html",
+    "dist/15-opamp.html"
+   ],
+   "status": "建置完成，作者已交還寫權"
+  },
+  {
+   "package": "05",
+   "chapters": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "owner": "author_a",
+   "write_scope": [
+    "dist/16-opamp-limits.html",
+    "dist/17-active-filter.html",
+    "dist/18-comparator.html",
+    "dist/19-oscillator.html"
+   ],
+   "status": "建置完成，作者已交還寫權"
+  },
+  {
+   "package": "06",
+   "chapters": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "owner": "author_b",
+   "write_scope": [
+    "dist/20-linear-power.html",
+    "dist/21-switching-power.html",
+    "dist/22-dac.html",
+    "dist/23-adc.html"
+   ],
+   "status": "建置完成，作者已交還寫權"
+  }
+ ]
+}

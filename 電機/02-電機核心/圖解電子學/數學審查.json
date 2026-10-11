@@ -1,0 +1,1216 @@
+{
+ "contract": "wf-table/1",
+ "source": "數學審查摘要.md",
+ "extracted": "2026-10-11",
+ "reviewer": "/root/electronics_team/math_review",
+ "scope": "24 章主例、遷移題與原筆記修正獨立複核；不宣稱真人理解通過",
+ "columns": [
+  "id",
+  "kind",
+  "target",
+  "location",
+  "status",
+  "severity",
+  "method",
+  "result",
+  "evidence",
+  "reviewed_sha256",
+  "notes"
+ ],
+ "rows": [
+  {
+   "id": "NOTES-上",
+   "kind": "原筆記完整閱讀與算例",
+   "target": "07-電子學-上.md",
+   "location": "全冊",
+   "status": "PASS：原有主例與已採納最小修正複驗通過；最終SHA一致",
+   "severity": "資訊",
+   "method": "獨立讀完整原文；KCL/KVL/定義與標量根交叉核對",
+   "result": "完整讀完 115 行；少數載子 p=22500 cm⁻³；二極體以指數I–V與電阻KVL獨立二分求根 VD=0.5741473392 V、ID=4.425852661 mA，與原文取位一致。",
+   "evidence": "MIT 6.012 L6 pp.18,20–21；L7 pp.15,24；L11 pp.7,10–11；L13 pp.8–13,18–19,22–26",
+   "reviewed_sha256": "fddf268d8df471c750db7ec260d94d3dfa8992e142678fca7f24df5c06352718",
+   "notes": "原有主例先獨立重算；P01–P12依官方原文裁定後由來源查證者套用，實際git diff逐項複驗通過。審查者未修改原筆記。"
+  },
+  {
+   "id": "NOTES-中",
+   "kind": "原筆記完整閱讀與算例",
+   "target": "07-電子學-中.md",
+   "location": "全冊",
+   "status": "PASS：原有主例與已採納最小修正複驗通過；最終SHA一致",
+   "severity": "資訊",
+   "method": "獨立讀完整原文；KCL/KVL/定義與標量根交叉核對",
+   "result": "完整讀完 153 行；分壓偏壓以基極KVL與KCL重算 IB=12.61230131 µA、IC=1.261230131 mA、VE=1.273842433 V、VC=7.837940567 V、VCE=6.564098134 V、VC−VB=5.864098134 V>0，作用區自洽；NMOS三極區例 ID=2.000 mA。",
+   "evidence": "MIT 6.012 L6 pp.18,20–21；L7 pp.15,24；L11 pp.7,10–11；L13 pp.8–13,18–19,22–26",
+   "reviewed_sha256": "40135d8097c1f4cd2a7f5ce5bd876a8547660ef9bf72df5db638ed9409919393",
+   "notes": "原有主例先獨立重算；P01–P12依官方原文裁定後由來源查證者套用，實際git diff逐項複驗通過。審查者未修改原筆記。"
+  },
+  {
+   "id": "NOTES-下",
+   "kind": "原筆記完整閱讀與算例",
+   "target": "07-電子學-下.md",
+   "location": "全冊",
+   "status": "PASS：原有主例與已採納最小修正複驗通過；最終SHA一致",
+   "severity": "資訊",
+   "method": "獨立讀完整原文；KCL/KVL/定義與標量根交叉核對",
+   "result": "完整讀完 190 行；共射例 VT=25.85 mV 時 gm=38.6847195 mS、Av=−193.423598，原文約40 mS/−200符合粗近似；回授例 Af=99.90009990。",
+   "evidence": "MIT 6.012 L6 pp.18,20–21；L7 pp.15,24；L11 pp.7,10–11；L13 pp.8–13,18–19,22–26",
+   "reviewed_sha256": "4ae4c07b9e9dbe85e5e25b1f473a41929c3a4dc8a37bdf4f81f9abc072b61584",
+   "notes": "原有主例先獨立重算；P01–P12依官方原文裁定後由來源查證者套用，實際git diff逐項複驗通過。審查者未修改原筆記。"
+  },
+  {
+   "id": "SOURCE-READ-01",
+   "kind": "官方來源原文實讀",
+   "target": "MIT 6.012 F2009 L6/L7/L11/L13",
+   "location": "來源者提供的本機官方PDF",
+   "status": "已實讀",
+   "severity": "資訊",
+   "method": "讀 PDF 抽取正文，獨立查看 L13 p.23 原頁公式與電路，避免錯讀抽取字元",
+   "result": "確認低頻線性等效模型來自 Q 點偏導數；完整模型含 gmb；go≈λID及gm≈sqrt(2KID)是近似；BJT forward-active以BE順偏/BC反偏定義。",
+   "evidence": "/tmp/electronics-sources/MIT6_012F09_lec{06,07,11,13}.{pdf,txt}；/tmp/electronics-math-review/mit13-p23.png",
+   "reviewed_sha256": "",
+   "notes": "來源由 sources 串行取得；本人未外搜，未使用來源摘要替代原文。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-01",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-中.md",
+   "location": "5.1",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "必要小修",
+   "method": "實讀官方PDF相關頁；依電路定律與Q點偏導數獨立推導",
+   "result": "原文說復合電流形成IB，未明言只有此機制，故不列真正錯誤；教材明確同列射極注入缺陷δE與基區復合δB，補充兩種分量準確。",
+   "evidence": "MIT L7 pp.19,21,24,26",
+   "reviewed_sha256": "40135d8097c1f4cd2a7f5ce5bd876a8547660ef9bf72df5db638ed9409919393",
+   "notes": "維持原主敘述，將末句改為基極電流含基極向射極注入與補充基區復合所需電流；兩者影響β。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-02",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-中.md",
+   "location": "5.6",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "必要小修",
+   "method": "實讀官方PDF相關頁；依電路定律與Q點偏導數獨立推導",
+   "result": "由電源沿RC、CE、RE回路積分電壓，VCC−ICRC−VCE−IERE=0；原式只適合射極接地，不是普遍錯式。",
+   "evidence": "MIT L7 pp.20–24；L13 pp.8–13；KVL",
+   "reviewed_sha256": "40135d8097c1f4cd2a7f5ce5bd876a8547660ef9bf72df5db638ed9409919393",
+   "notes": "保留VCE=VCC−ICRC，前加射極直接接地；另列有RE時減IERE。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-03",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-中.md",
+   "location": "6.2",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "必要小修",
+   "method": "實讀官方PDF相關頁；依電路定律與Q點偏導數獨立推導",
+   "result": "S與D都是n區，由p型body隔開，並非單一直接PN接面；增強型VT>0時VGS=0無反轉通道，須排除body接面順偏與次臨界漏電。",
+   "evidence": "MIT L11 pp.3,7,11,16",
+   "reviewed_sha256": "40135d8097c1f4cd2a7f5ce5bd876a8547660ef9bf72df5db638ed9409919393",
+   "notes": "以增強型NMOS、正常body接法與未順偏條件，將關斷機制改為未形成反轉通道。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-04",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-中.md",
+   "location": "6.3",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "必要小修",
+   "method": "實讀官方PDF相關頁；依電路定律與Q點偏導數獨立推導",
+   "result": "GCA表明VBS≤0、VDS≥0；平方律是長通道強反轉近似。約定K不含1/2，原數值例2mA正確。",
+   "evidence": "MIT L11 pp.3,7,10–11",
+   "reviewed_sha256": "40135d8097c1f4cd2a7f5ce5bd876a8547660ef9bf72df5db638ed9409919393",
+   "notes": "只在既有表前加長通道增強型NMOS、VDS≥0、正常body接法與忽略次臨界電流。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-05",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-中.md",
+   "location": "8.1",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "必要小修",
+   "method": "實讀官方PDF相關頁；依電路定律與Q點偏導數獨立推導",
+   "result": "一階泰勒只描述Q點附近增量；偏壓用大訊號模型，削波/功率放大也不能一概線性化。",
+   "evidence": "MIT L13 pp.8–13",
+   "reviewed_sha256": "40135d8097c1f4cd2a7f5ce5bd876a8547660ef9bf72df5db638ed9409919393",
+   "notes": "將所有放大均在小訊號分析的全稱改為線性增益常用小訊號；大訊號另需非線性/分段模型。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-06",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-中.md",
+   "location": "5.5、8.2–8.3",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "必要小修",
+   "method": "實讀官方PDF相關頁；依電路定律與Q點偏導數獨立推導",
+   "result": "BJT指定Early模型內gm=IC/VT仍成立，ro=(VA+VCE)/IC≈VA/IC。MOS指定ID=K VOV²(1+λVDS)/2時gm=K VOV(1+λVDS)=2ID/VOV；ro=(1+λVDS)/(λID)，原簡式屬近似。",
+   "evidence": "MIT L13 pp.18–19,22–26；L11 pp.19–23",
+   "reviewed_sha256": "40135d8097c1f4cd2a7f5ce5bd876a8547660ef9bf72df5db638ed9409919393",
+   "notes": "BJT兩處ro改≈；MOS低頻、長通道強反轉飽和、忽略λ對gm修正且body無增量訊號，gm≈K VOV≈√(2KID)、ro≈1/(λID)。不必添加精確式擴張原筆記。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-07",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-下.md",
+   "location": "15.1",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "真正錯誤",
+   "method": "獨立實讀官方完整相關頁；機制與導數核對",
+   "result": "R–2R梯形結構要有R及2R兩種阻值，原稱相同阻值欠缺2:1關係。",
+   "evidence": "ADI MT-015 pp.3–4",
+   "reviewed_sha256": "4ae4c07b9e9dbe85e5e25b1f473a41929c3a4dc8a37bdf4f81f9abc072b61584",
+   "notes": "以R與2R兩種阻值替換相同R值。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-08",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-下.md",
+   "location": "11.1、12.2",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "缺適用條件",
+   "method": "獨立實讀官方完整相關頁；機制與導數核對",
+   "result": "一主極點20dB/decade區域GBW近似常數；反相增益與雜訊增益不同，閉迴路頻寬不可普遍直接以信號增益相除。",
+   "evidence": "ADI MT-033 pp.1,3–7",
+   "reviewed_sha256": "4ae4c07b9e9dbe85e5e25b1f473a41929c3a4dc8a37bdf4f81f9abc072b61584",
+   "notes": "最小補電壓回授、主極點與雜訊增益條件；用臺灣用詞雜訊。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-09",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-中.md",
+   "location": "第7章",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "真正錯誤",
+   "method": "獨立實讀官方完整相關頁；機制與導數核對",
+   "result": "CMOS轉換特性II/III/IV兩管同開，停在中間電位可持續直通；只有有效logic rails穩態才理想一管截止。",
+   "evidence": "MIT L15 pp.5–7,15",
+   "reviewed_sha256": "40135d8097c1f4cd2a7f5ce5bd876a8547660ef9bf72df5db638ed9409919393",
+   "notes": "刪除任何時刻及只有切換瞬間的全稱，補有效邏輯電位及實際漏電。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-10",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-下.md",
+   "location": "13.1",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "缺適用條件",
+   "method": "獨立實讀官方完整相關頁；機制與導數核對",
+   "result": "線性等式只給正弦穩態條件，不決定振幅/可靠起振；TI燈泡例起始A>3、熱後降低增益。",
+   "evidence": "TI SLOA060 pp.4,6–7,10–12",
+   "reviewed_sha256": "4ae4c07b9e9dbe85e5e25b1f473a41929c3a4dc8a37bdf4f81f9abc072b61584",
+   "notes": "保留Barkhausen等式，補小訊號>1起振與非線性穩幅。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-11",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-上.md",
+   "location": "1.3",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "缺適用條件",
+   "method": "獨立實讀官方完整相關頁；機制與導數核對",
+   "result": "熱平衡質量作用律在非簡併近似使用，重摻雜全稱恆成立不宜；不引入更複雜統計公式。",
+   "evidence": "MIT L1 pp.13–15，p.15濃度限制註腳",
+   "reviewed_sha256": "fddf268d8df471c750db7ec260d94d3dfa8992e142678fca7f24df5c06352718",
+   "notes": "僅括號改熱平衡且非簡併近似適用時。"
+  },
+  {
+   "id": "NOTE-REVIEW-P-12",
+   "kind": "原筆記提案獨立複核",
+   "target": "07-電子學-上.md",
+   "location": "2.5",
+   "status": "通過：採納後實際 diff 已複核",
+   "severity": "缺適用條件",
+   "method": "獨立實讀官方完整相關頁；機制與導數核對",
+   "result": "對ID=IS[exp(VD/nVT)−1]求導，gd=(ID+IS)/(nVT)，故rd=nVT/(ID+IS)≈nVT/ID需ID≫IS及Q點附近。",
+   "evidence": "MIT L6 pp.18,20；L13 p.16",
+   "reviewed_sha256": "fddf268d8df471c750db7ec260d94d3dfa8992e142678fca7f24df5c06352718",
+   "notes": "只改≈並補充分順偏與Q點附近。"
+  },
+  {
+   "id": "SPEC-DEFECT-16",
+   "kind": "規格缺陷",
+   "target": "逐章互動契約.json",
+   "location": "id=16 formula",
+   "status": "PASS：修正後獨立複驗並對齊最終SHA",
+   "severity": "中等",
+   "method": "取G=100,f=100kHz反例，獨立對一極輸出正弦求導",
+   "result": "1V目標SR=0.628318531V/μs>.5，但一極Vlin=.099503719V時實際SRlin=.0625200305V/μs<.5；不能以目標速率不符直接否決線性模型。",
+   "evidence": "正式16頁主例/近題與G100、f100kHz反例；最終app case16",
+   "reviewed_sha256": "7f99934e4501858687ec09737daa568b9e986c06dbb0b004926cfa17c288f4ff",
+   "notes": "SRtarget與SRlin已分列；只以SRlin>.5判候選失效。正式頁與最終app均完成修正。"
+  },
+  {
+   "id": "SPEC-DEFECT-20",
+   "kind": "規格缺陷",
+   "target": "逐章互動契約.json",
+   "location": "id=20 formula/Iout=0",
+   "status": "PASS：修正後獨立複驗並對齊最終SHA",
+   "severity": "中等",
+   "method": "由效率定義Pout/Pin與零功率邊界，不先約去I",
+   "result": "Iout=0且忽略Iq時兩功率皆零，效率0/0未定義；電壓比僅在Iout>0才等於效率。",
+   "evidence": "正式20頁零負載段；最終app case20",
+   "reviewed_sha256": "7f99934e4501858687ec09737daa568b9e986c06dbb0b004926cfa17c288f4ff",
+   "notes": "零負載效率已報未定義；功率0、Tj=Ta保留，正式頁與最終app均完成修正。"
+  },
+  {
+   "id": "CHAPTER-00",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/00-circuit-bridge.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "KVL 電源電壓等於 IR；兩端功率流守恆",
+   "result": {
+    "main": {
+     "I_mA": 5,
+     "P_mW": 25
+    },
+    "exercise": {
+     "I_mA": 3,
+     "P_mW": 27
+    },
+    "boundary": "VS=0時I=P=0；R全域>0。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/00-circuit-bridge.html；/tmp/electronics-math-review/figure-00.png",
+   "reviewed_sha256": "df48af059f1355d78a7a90701c7a0412f99606c9c8b78f8ed34c7b4f78b164a5",
+   "notes": "完整主例、近題及補充算例獨立重算；圖式修正與量綱補充增量複驗通過。未呼叫產品計算器，不宣稱真人理解通過。 "
+  },
+  {
+   "id": "CHAPTER-01",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/01-semiconductor.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "電中性聯立質量作用律；電荷×遷移率×濃度做量綱檢查",
+   "result": {
+    "main": {
+     "p_approx_cm-3": 22500.0,
+     "p_charge_neutral_cm-3": 22499.999999949374,
+     "sigma_S_per_cm": 2.1627,
+     "J_A_per_cm2": 21.627000000000002
+    },
+    "exercise": {
+     "p_approx_cm-3": 225000.0,
+     "p_charge_neutral_cm-3": 224999.999949375,
+     "sigma_S_per_cm": 0.21627,
+     "J_A_per_cm2": 4.3254
+    },
+    "boundary": "固定遷移率為教學假設，濃度改變時不可宣稱器件實測值。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/01-semiconductor.html；/tmp/electronics-math-review/figure-01.png",
+   "reviewed_sha256": "24d47213702c11f74465615c7bbd15b558ef8f1fc4d3234230fa02c1b96eeea4",
+   "notes": "完整主例、近題及補充算例獨立重算；圖式修正與量綱補充增量複驗通過。未呼叫產品計算器，不宣稱真人理解通過。 最終僅少數電洞標籤 y204→216。"
+  },
+  {
+   "id": "CHAPTER-02",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/02-diode-models.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "恆壓模型KVL；指數電流與電阻負載線做獨立二分交點",
+   "result": {
+    "main": {
+     "I_A": 0.0043,
+     "PR_W": 0.01849,
+     "PD_W": 0.0030099999999999997,
+     "Pin_W": 0.0215,
+     "exponential_VD_V": 0.5741473391899135,
+     "exponential_I_A": 0.004425852660810086
+    },
+    "exercise": {
+     "I_A": 0.0038235294117647052,
+     "PR_W": 0.009941176470588233,
+     "PD_W": 0.0026764705882352936,
+     "Pin_W": 0.012617647058823527,
+     "exponential_VD_V": 0.5716117278786816,
+     "exponential_I_A": 0.004012335694296056
+    },
+    "boundary": "VS=.5V假定off給VD=.5<.7、I=0，自洽；不能固定仍寫VD=.7。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/02-diode-models.html；/tmp/electronics-math-review/figure-02.png",
+   "reviewed_sha256": "4a62761adcf125cbbb4859341dd85b2c4b697604bcfffed11fdd61312c108625",
+   "notes": "完整主例、近題及補充算例獨立重算；圖式修正與量綱補充增量複驗通過。未呼叫產品計算器，不宣稱真人理解通過。 末次增量僅R極性y78→55；截圖確認避開電流箭頭。 最終 I 標籤 x75,y120→x90,y143；數值、導線及極性不變。"
+  },
+  {
+   "id": "CHAPTER-03",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/03-rectifier.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "電荷守恆 ΔQ=ILΔt=CΔV；峰谷平均",
+   "result": {
+    "main": {
+     "fr_Hz": 100,
+     "dt_s": 0.01,
+     "dQ_C": 0.0001,
+     "ripple_V": 0.1,
+     "Vdc_V": 10.549999999999999
+    },
+    "exercise": {
+     "fr_Hz": 120,
+     "dt_s": 0.008333333333333333,
+     "dQ_C": 8.333333333333333e-05,
+     "ripple_V": 0.1773049645390071,
+     "Vdc_V": 10.511347517730496
+    },
+    "boundary": "f20Hz/C100µF時ΔV2.5V，小漣波近似品質變差。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/03-rectifier.html；/tmp/electronics-math-review/figure-03.png",
+   "reviewed_sha256": "6d84e0fa35d9ab960598f132f1176be3459c6e5b41cc51088b6f6313265cd6c1",
+   "notes": "完整主例、近題及補充算例獨立重算；圖式修正與量綱補充增量複驗通過。未呼叫產品計算器，不宣稱真人理解通過。 "
+  },
+  {
+   "id": "CHAPTER-04",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/04-diode-tools.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "正峰ON令輸出等於參考，負峰OFF零電流；KVL與自洽",
+   "result": {
+    "main": {
+     "positive_V": 2,
+     "negative_V": -3,
+     "Ipeak_mA": 1
+    },
+    "exercise": {
+     "positive_V": 1.5,
+     "negative_V": -4,
+     "Ipeak_mA": 2.5,
+     "Vpp_V": 5.5
+    },
+    "boundary": "A<L全週off。齊納(9−5.1)/390=.01A，扣5mA負載得IZ5mA。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/04-diode-tools.html；/tmp/electronics-math-review/figure-04.png",
+   "reviewed_sha256": "595d62b6e8196e16b09b27f8385b841df84b64ea000d03ecc1a0c096426b6b3a",
+   "notes": "限幅兩狀態自洽、箝位極性、倍壓8.6V、齊納5mA/25.5mW核對；AC源穿線已修。 全部乘除/平方/根號量綱增量複驗通過。未呼叫產品計算器，不宣稱真人理解通過；共用app最終版本已核對。 最後同單位加減括號、V/mA 補全已複核。"
+  },
+  {
+   "id": "CHAPTER-05",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/05-bjt-bias.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "對原82k/18k分壓節點列KCL，數值求IB；檢查BC接面",
+   "result": {
+    "main": {
+     "IB_uA": 12.612301313061508,
+     "IC_mA": 1.2612301313061507,
+     "IE_mA": 1.2738424326192122,
+     "VE_V": 1.2738424326192122,
+     "VB_V": 1.973842432619212,
+     "VC_V": 7.837940566689703,
+     "VCE_V": 6.564098134070491,
+     "VC_minus_VB_V": 5.864098134070491,
+     "valid": true
+    },
+    "exercise": {
+     "IB_uA": 22.201946472019472,
+     "IC_mA": 1.1100973236009735,
+     "IE_mA": 1.1322992700729928,
+     "VE_V": 1.1322992700729928,
+     "VB_V": 1.8322992700729928,
+     "VC_V": 8.336678832116787,
+     "VCE_V": 7.204379562043794,
+     "VC_minus_VB_V": 6.504379562043795,
+     "valid": true
+    },
+    "boundary": {
+     "IB_uA": 6.766777901371895,
+     "IC_mA": 1.353355580274379,
+     "IE_mA": 1.360122358175751,
+     "VE_V": 1.360122358175751,
+     "VB_V": 2.060122358175751,
+     "VC_V": -1.5335558027437894,
+     "VCE_V": -2.8936781609195403,
+     "VC_minus_VB_V": -3.5936781609195405,
+     "valid": false
+    }
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/05-bjt-bias.html；/tmp/electronics-math-review/figure-05.png",
+   "reviewed_sha256": "c52126ccc39749a2f5a475bc68ea659b01f5a92667c8d1e131c6d43551a54596",
+   "notes": "由原82kΩ/18kΩ節點KCL獨立求根，β50近題與β200/RC10k失效候選皆核；VC>VB判準正確。 全部乘除/平方/根號量綱增量複驗通過。未呼叫產品計算器，不宣稱真人理解通過；共用app最終版本已核對。 最後同單位加減括號、V/mA 補全已複核。"
+  },
+  {
+   "id": "CHAPTER-06",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/06-mos-bias.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "由通道積分 K∫(VOV−v)dv 核對平方律與1/2",
+   "result": {
+    "main": {
+     "VOV_V": 1.5,
+     "ID_mA": 2.0,
+     "region": "三極"
+    },
+    "exercise": {
+     "VOV_V": 2,
+     "ID_mA": 4.0,
+     "region": "飽和"
+    },
+    "boundary": {
+     "boundary": {
+      "VOV_V": 1.5,
+      "ID_mA": 2.25,
+      "region": "飽和"
+     },
+     "cutoff": {
+      "ID_mA": 0,
+      "region": "截止"
+     }
+    }
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/06-mos-bias.html；/tmp/electronics-math-review/figure-06.png",
+   "reviewed_sha256": "728309cafb04aded4cdab084bb1810f4e6daffa60f68cf0dbe82d2a59133feb3",
+   "notes": "由通道電荷積分核三極區/飽和連續與K不含1/2慣例；body effect1.1961257V、偏壓1mA/4V與近題4mA/3V核對；VOV標籤位置已修。 全部乘除/平方/根號量綱增量複驗通過。未呼叫產品計算器，不宣稱真人理解通過；共用app最終版本已核對。 最後同單位加減括號、比較式 V 補全已複核。"
+  },
+  {
+   "id": "CHAPTER-07",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/07-cmos.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "電源一次充電∫Vdq=CV²；電容能量CV²/2；RC半值解ln2",
+   "result": {
+    "main": {
+     "P_mW": 0.43559999999999993,
+     "stored_pJ": 108.89999999999998,
+     "t50_ns": 13.862943611198904
+    },
+    "exercise": {
+     "P_mW": 2.178,
+     "stored_pJ": 272.24999999999994,
+     "t50_ns": 34.65735902799726
+    },
+    "boundary": "f0動態功率0，仍非宣稱真器件漏電0；.693近似延遲13.86/34.65ns可接受。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/07-cmos.html；/tmp/electronics-math-review/figure-07.png",
+   "reviewed_sha256": "4b9179da69ffea54c47bc31422ca1b2dc3d49fc3ff0d403d68e2b6452f314f31",
+   "notes": "由∫v dq與電源供能核半能量耗散，不多乘2；α定義為0→1次數；近題完整充放電條件及RC速度限制有明說。 全部乘除/平方/根號量綱增量複驗通過。未呼叫產品計算器，不宣稱真人理解通過；共用app最終版本已核對。 最後 20 pF 標籤左移；app ln(2) 精式與原獨立 RC 指數半值解一致。"
+  },
+  {
+   "id": "CHAPTER-08",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/08-small-signal.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "指數電流比值直接求總量，再減Q點得增量；與切線比較",
+   "result": {
+    "main": {
+     "gm_mS": 38.684719535783366,
+     "rpi_kohm": 2.585,
+     "ro_approx_kohm": 100.0,
+     "linear_increment_mA": 0.19342359767891681,
+     "exp_increment_mA": 0.2133966766874269,
+     "total_mA": 1.213396676687427,
+     "relative_error_vs_exact": 0.0935960171383816
+    },
+    "exercise": {
+     "gm_mS": 77.36943907156673,
+     "rpi_kohm": 1.2925,
+     "ro_approx_kohm": 50.0,
+     "linear_increment_mA": 0.15473887814313345,
+     "exp_increment_mA": 0.16088231969705502,
+     "total_mA": 2.160882319697055,
+     "relative_error_vs_exact": 0.03818593345427771
+    },
+    "boundary": "vbe0時增量0、總量IQ；ro是VA≫VCE的近似。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/figure-08.png；/tmp/electronics-math-review/08-small-signal.html",
+   "reviewed_sha256": "df32bc27a0423ffd879c483324502add7b7593daf269c248527b554f7127d385",
+   "notes": "已完整讀正文與SVG，主例/遷移題/邊界及補充量綱均與獨立重算一致。08末次僅Q點/受控源標籤移位並已目視；10米勒電荷及主極點假設明確；11帶載分壓、正弦平均功率與B類π/4條件正確。未呼叫產品計算器，不宣稱真人理解通過。 最後 viewBox 底部留白加高，無數值變更。"
+  },
+  {
+   "id": "CHAPTER-09",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/09-single-stage.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "退化回路KVL，基極電流與ro忽略，直接解交流ic",
+   "result": {
+    "main": {
+     "Av": -39.729837107667855,
+     "vout_V": -0.19864918553833927,
+     "vbe_mV": 1.027016289233214
+    },
+    "exercise": {
+     "Av": -13.283152534868274,
+     "vout_V": -0.06641576267434136,
+     "vbe_mV": 0.5722824883772415
+    },
+    "boundary": {
+     "Av": -193.42359767891682,
+     "vout_V": -0.9671179883945841,
+     "vbe_mV": 5.0
+    }
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/figure-09.png；/tmp/electronics-math-review/09-single-stage.html",
+   "reviewed_sha256": "1902e23618d49efd80925ab7bddf48d8004aec45fb09b5ba5bd71cf721d8f95d",
+   "notes": "完整讀正文/公式/近題及SVG；08相對增量誤差另算9.3596017%/18.0983696%/3.8185933%；09由增量KVL核對分壓與輸出。未呼叫產品計算器，不宣稱真人理解通過。 新增follower/CB-CG以KCL獨立核：Av=.974801384218、Rin=25.85Ω、Av_CB=+38.68471954；新增圖已實際截圖核對，忽略β/ro/body條件完整。 最後僅增CS/CC/CD/CB/CG全名，正文差異確認無公式/圖變更。 最後補充圖 viewBox 底部留白加高，無數值變更。"
+  },
+  {
+   "id": "CHAPTER-10",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/10-frequency.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "從跨接電容電荷C(vin−vout)取輸入斜率；RC時間常數",
+   "result": {
+    "main": {
+     "Cin_pF": 112.0,
+     "tau_s": 1.12e-06,
+     "fH_Hz": 142102.62776062082,
+     "gain_fH": 35.35533905932737
+    },
+    "exercise": {
+     "Cin_pF": 73.0,
+     "tau_s": 7.299999999999999e-07,
+     "fH_Hz": 218020.46998889776,
+     "gain_fH": 14.14213562373095
+    },
+    "boundary": "米勒倍率102pF是跨接分量，總輸入112pF含Cπ10pF。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/figure-10.png；/tmp/electronics-math-review/10-frequency.html",
+   "reviewed_sha256": "f81d8a4f2998348e176c5af4ec648ee6fcc826d18659c270dce7cbdecd22c966",
+   "notes": "已完整讀正文與SVG，主例/遷移題/邊界及補充量綱均與獨立重算一致。08末次僅Q點/受控源標籤移位並已目視；10米勒電荷及主極點假設明確；11帶載分壓、正弦平均功率與B類π/4條件正確。未呼叫產品計算器，不宣稱真人理解通過。 最後量綱/圖式/措辭增量已逐處核對；10靜態81點以複數阻抗獨立核全部座標（最大幅值取位差1.24e−6 V/V）；12兩側箭頭拆path後看圖通過。 "
+  },
+  {
+   "id": "CHAPTER-11",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/11-multistage-power.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "兩個戴維寧串聯內阻各分壓；正弦RMS功率",
+   "result": {
+    "main": {
+     "v1_V": -0.1,
+     "vo_V": 0.4,
+     "Av": 40.0,
+     "PL_mW": 0.020000000000000004
+    },
+    "exercise": {
+     "v1_V": -0.16,
+     "vo_V": 0.4,
+     "Av": 40.0,
+     "PL_mW": 0.08000000000000002
+    },
+    "boundary": "B類π/4上限需理想互補推挽、正弦最大無失真擺幅；A類效率依負載結構。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/figure-11.png；/tmp/electronics-math-review/11-multistage-power.html",
+   "reviewed_sha256": "9b386f4a2433289c3402f1d7d39160c700ab6ca59737bf0c18fb6b1da0ade548",
+   "notes": "已完整讀正文與SVG，主例/遷移題/邊界及補充量綱均與獨立重算一致。08末次僅Q點/受控源標籤移位並已目視；10米勒電荷及主極點假設明確；11帶載分壓、正弦平均功率與B類π/4條件正確。未呼叫產品計算器，不宣稱真人理解通過。 最後 viewBox 加高與 Rin2 標籤位置變更，電路及數值不變。"
+  },
+  {
+   "id": "CHAPTER-12",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/12-differential.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "電流比與總電流守恆；tanh差量形式獨立核對",
+   "result": {
+    "main": {
+     "I1_mA": 0.5955234959292622,
+     "I2_mA": 0.40447650407073776,
+     "vo1_V": 7.022382520353689,
+     "vo2_V": 7.977617479646311,
+     "vod_V": -0.9552349592926226,
+     "Ad_linear": -96.71179883945841
+    },
+    "exercise": {
+     "I1_mA": 1.0964114019574642,
+     "I2_mA": 0.9035885980425358,
+     "vo1_V": 4.517942990212679,
+     "vo2_V": 5.482057009787321,
+     "vod_V": -0.9641140195746422,
+     "Ad_linear": -193.42359767891682
+    },
+    "boundary": "需在頁面固定共模與尾源compliance，並在全部控制範圍重驗兩管作用區。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/figure-12.png；/tmp/electronics-math-review/12-differential.html",
+   "reviewed_sha256": "ffbcab2a6e099d983409e27aa4cdbcdcb70306e7edfb50d3d2edf7d05ecf3a33",
+   "notes": "12以tanh差流獨立核完整指數分流，包含共模0V/有限β誤差/尾源合規與最差VC−VB=.154627931V。未呼叫產品計算器，不宣稱真人理解通過。 最後量綱/圖式/措辭增量已逐處核對；10靜態81點以複數阻抗獨立核全部座標（最大幅值取位差1.24e−6 V/V）；12兩側箭頭拆path後看圖通過。 "
+  },
+  {
+   "id": "CHAPTER-13",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/13-current-mirror.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "參考點電流102份：100份進collector、每base1份",
+   "result": {
+    "main": {
+     "Iref_mA": 0.86,
+     "IB_uA": 8.431372549019606,
+     "Iout_mA": 0.8431372549019607,
+     "KCL_residual_mA": 1.1102230246251565e-16
+    },
+    "exercise": {
+     "Iref_mA": 0.43,
+     "IB_uA": 4.215686274509803,
+     "Iout_mA": 0.42156862745098034,
+     "KCL_residual_mA": 5.551115123125783e-17
+    },
+    "boundary": "Vout=.5<VB=.7時beta候選失效，不可顯示真實穩流平台。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/figure-13.png；/tmp/electronics-math-review/13-current-mirror.html",
+   "reviewed_sha256": "1d4d284fee39ec6b1e29c38c4f2f2ec964af10ff3b68f8befd3dc20f1b110834",
+   "notes": "額外核比例鏡m=2倍率1.9417475728，Q2集射耗散主例1.6862745098mW/近題1.2647058824mW；Q1 BC零偏邊界及Q2反偏判準有明說。未呼叫產品計算器，不宣稱真人理解通過。 最終依範圍裁決移除 Wilson 概述，不影響比例鏡與 MOS 鏡已驗結論。"
+  },
+  {
+   "id": "CHAPTER-14",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/14-feedback.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "直接算複數L並二分尋找模長1，不用產品展開的二次方程",
+   "result": {
+    "main": {
+     "Af": 9.900990099009901,
+     "fc_Hz": 7861.0535487590005,
+     "PM_deg": 52.557739044881785,
+     "unity_residual": 2.220446049250313e-16
+    },
+    "exercise": {
+     "Af": 9.090909090909092,
+     "fc_Hz": 990.0970871480031,
+     "PM_deg": 90.11291720892142,
+     "unity_residual": 2.220446049250313e-16
+    },
+    "boundary": "Aβ≤1無正頻率0dB交越；兩LHP極點模型不能據低PM直接宣稱必不穩。",
+    "stability_check": "另以閉迴路特徵多項式s²+(ω1+ω2)s+ω1ω2(1+L0)核對：正L0時係數皆正，指定兩LHP極點/無延遲模型於全範圍穩定；PM下降不能宣稱已失穩。L0=1000時兩根=-31730.085801±j196242.446165 s⁻¹。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/figure-14.png；/tmp/electronics-math-review/14-feedback.html",
+   "reviewed_sha256": "9e4da0eedc0e39299f5dc1dc625ba2b48c49b6972bb07c508c05d3c4cf531121",
+   "notes": "另核兩條101點幅/相曲線，從SVG反推頻率，以複數L得座標取位誤差<.0061dB及.0091度。大迴路增益邊界fc=30842.243272Hz/PM18.150052度；二階特徵根證明全控制域穩定。未呼叫產品計算器，不宣稱真人理解通過。 新增四端口 Aβ 各相乘均無因次；串並 L=100 時 Rin,f=101 kΩ、Rout,f=9.90099 Ω；忽略回授網路加載條件已明訂。新四端口圖實拍通過。"
+  },
+  {
+   "id": "CHAPTER-15",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/15-opamp.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "負回授線性區KCL：Rg/Rf兩電流相等",
+   "result": {
+    "main": {
+     "vo_V": 1,
+     "vminus_V": 0.1,
+     "I_mA": 0.01
+    },
+    "exercise": {
+     "vo_V": 1,
+     "vminus_V": 0.2,
+     "I_mA": 0.02
+    },
+    "boundary": "目前控制範圍最高11V，仍小於理想12V rail。"
+   },
+   "evidence": "/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/figure-15.png；/tmp/electronics-math-review/15-opamp.html",
+   "reviewed_sha256": "6f5b4289820281eafd5a1d052a445aee5cbdaf95f43be5286404d49c7aa333f6",
+   "notes": "額外核反相−.2V、加法器−.4V、積分器末值.3V；Rf=0時不計0/0，虛短需要負回授/可用共模及輸出範圍/穩定。互動最高11V未碰rail有明說，削波另用超範圍手算。未呼叫產品計算器，不宣稱真人理解通過。 i+=i−≈0 已移至運放輸入內側，與 10 μA 回授箭頭分開；實拍通過。"
+  },
+  {
+   "id": "CHAPTER-16",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/16-opamp-limits.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "複數一極傳遞得實際振幅，再對該正弦微分；目標分開",
+   "result": {
+    "main": {
+     "fB_Hz": 100000.0,
+     "Vlin_V": 0.9950371902099892,
+     "SRtarget_V_per_us": 0.06283185307179587,
+     "SRlin_V_per_us": 0.06252003053624663,
+     "linear_valid": true
+    },
+    "exercise": {
+     "fB_Hz": 50000.0,
+     "Vlin_V": 0.7071067811865476,
+     "SRtarget_V_per_us": 0.3141592653589793,
+     "SRlin_V_per_us": 0.2221441469079183,
+     "linear_valid": true
+    },
+    "boundary": {
+     "counterexample": {
+      "fB_Hz": 10000.0,
+      "Vlin_V": 0.09950371902099892,
+      "SRtarget_V_per_us": 0.6283185307179586,
+      "SRlin_V_per_us": 0.06252003053624662,
+      "linear_valid": true
+     },
+     "slew_exceeds": {
+      "fB_Hz": 100000.0,
+      "Vlin_V": 0.5547001962252291,
+      "SRtarget_V_per_us": 0.9424777960769379,
+      "SRlin_V_per_us": 0.522792618421799,
+      "linear_valid": false
+     }
+    }
+   },
+   "evidence": "/tmp/electronics-math-review/recompute.py；/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/final-geometry-check.json；/tmp/electronics-math-review/figure-16.png",
+   "reviewed_sha256": "2ad9b7bf8ae376009bc512b59377bff4b3bc40ea36a5bd4e7871e72b2f18e13d",
+   "notes": "正式主例/近題/反例全部與獨立複數阻抗及正弦導數吻合。線性 Vlin 與目標所需 SR 分開；超 SR 不把 min(Vlin,限幅) 當真實正弦輸出。失調、偏置電流單位及小例核對。稠密曲線逐點反算通過。 未呼叫產品計算器或複製產品算法；不宣稱真人理解通過。"
+  },
+  {
+   "id": "CHAPTER-17",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/17-active-filter.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "用電容複阻抗做分壓，再乘理想增益2",
+   "result": {
+    "main": {
+     "fc_Hz": 1591.5494309189535,
+     "magnitude": 1.693466031929661,
+     "phase_deg": -32.14190763534206
+    },
+    "exercise": {
+     "fc_Hz": 3183.098861837907,
+     "magnitude": 1.693466031929661,
+     "phase_deg": -32.14190763534206
+    },
+    "boundary": "Sallen–Key等R/C Q=1/(3−K)只對指定電路；K<3必要穩定。"
+   },
+   "evidence": "/tmp/electronics-math-review/recompute.py；/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/final-geometry-check.json；/tmp/electronics-math-review/figure-17.png",
+   "reviewed_sha256": "f62a27de213b101219d174e9e00e4d11aa30db5cbffe6485729bc7aa4106c691",
+   "notes": "正式主例/近題/相位換時間89.28308及44.64154 μs核對；單頻延後非寬頻固定延遲。Sallen–Key 新圖由兩節點 KCL 得分母 (RCs)²+(3−K)RCs+1，Q=.5及1/√2、K=3−√2吻合；理想運放及不載入假設完整。稠密波形反算通過。 未呼叫產品計算器或複製產品算法；不宣稱真人理解通過。"
+  },
+  {
+   "id": "CHAPTER-18",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/18-comparator.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "正端節點KCL加權輸出與參考，分兩個先前state",
+   "result": {
+    "main": {
+     "VH_V": 3,
+     "VL_V": 2,
+     "width_V": 1,
+     "rising3_2_output_V": 0
+    },
+    "exercise": {
+     "VH_V": 3.5,
+     "VL_V": 1.5,
+     "width_V": 2,
+     "rising3_output_V": 5,
+     "falling3_output_V": 0
+    },
+    "boundary": "等號切換是模擬慣例；中間區取決歷史。"
+   },
+   "evidence": "/tmp/electronics-math-review/recompute.py；/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/final-geometry-check.json；/tmp/electronics-math-review/figure-18.png",
+   "reviewed_sha256": "a899390b01a1d1d8296a3f56e4027c45a7d0ab343572003b7e7e712679ae7041",
+   "notes": "KCL 正回授權重、3/2 V 主例及3.5/1.5 V近題自洽；相同輸入依完整掃描歷史選分支。等號切換是模型慣例、非實體相等時保證。遲滯圖、電阻接線及噪聲2.4–2.6 V例已核。 未呼叫產品計算器或複製產品算法；不宣稱真人理解通過。"
+  },
+  {
+   "id": "CHAPTER-19",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/19-oscillator.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "由串RC與並RC兩阻抗直接分壓，確認實部1/3、虛部0",
+   "result": {
+    "main": {
+     "f0_Hz": 1591.5494309189535,
+     "beta_real": 0.3333333333333333,
+     "beta_imag": 0.0,
+     "loop": 1.0166666666666666
+    },
+    "exercise": {
+     "f0_Hz": 795.7747154594767,
+     "beta_real": 0.3333333333333333,
+     "beta_imag": 0.0,
+     "loop": 0.9833333333333334
+    },
+    "boundary": "A3等式不保證起振；幅度不能由線性Barkhausen求出。"
+   },
+   "evidence": "/tmp/electronics-math-review/recompute.py；/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/final-geometry-check.json；/tmp/electronics-math-review/figure-19.png",
+   "reviewed_sha256": "bfb5b4b5ed374f5b1f13de4bdc028f64ccfbc2e4296498d9ed0b265f9821b951",
+   "notes": "正式 Wien 主例/近題與阻抗分壓重算一致。A>3起振成長、A=3線性邊界與非線性穩幅分開；圖未捏造振幅。LC等效10 μH/100 pF為5.03292 MHz核對。最終555只留概論，已撤可選數例；曲線與Wien計算不變。 未呼叫產品計算器或複製產品算法；不宣稱真人理解通過。"
+  },
+  {
+   "id": "CHAPTER-20",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/20-linear-power.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "先做輸入/輸出能量差，再以Pout/Pin定效率；不先消I",
+   "result": {
+    "main": {
+     "Vout_V": 3.3,
+     "Pin_W": 1.0,
+     "Pout_W": 0.66,
+     "Ploss_W": 0.33999999999999997,
+     "efficiency": 0.66,
+     "Tj_C": 42.0
+    },
+    "exercise": {
+     "Vout_V": 3.3,
+     "Pin_W": 2.6999999999999997,
+     "Pout_W": 0.9899999999999999,
+     "Ploss_W": 1.71,
+     "efficiency": 0.36666666666666664,
+     "Tj_C": 110.5
+    },
+    "boundary": {
+     "Vout_V": 3.3,
+     "Pin_W": 0,
+     "Pout_W": 0.0,
+     "Ploss_W": 0.0,
+     "efficiency": null,
+     "Tj_C": 25.0
+    }
+   },
+   "evidence": "/tmp/electronics-math-review/recompute.py；/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/final-geometry-check.json；/tmp/electronics-math-review/figure-20.png",
+   "reviewed_sha256": "dbc25a5e273b5bfb8e2f01a3afd961c7fef11c2048520d33612b824785ac991f",
+   "notes": "正式能量守恆、dropout、零負載0/0、主例42°C與近題110.5°C均核；12 V/1 A的460°C明說只是模型失效提示。Iq/熱阻/輸出電容動態限制未混為已驗保證。 未呼叫產品計算器或複製產品算法；不宣稱真人理解通過。"
+  },
+  {
+   "id": "CHAPTER-21",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/21-switching-power.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "電感正負伏秒面積相等，兩段斜率×時間核對ΔI",
+   "result": {
+    "main": {
+     "vo_V": 4.800000000000001,
+     "Iavg_A": 0.4800000000000001,
+     "dI_A": 0.28800000000000003,
+     "Imin_A": 0.3360000000000001,
+     "Imax_A": 0.6240000000000001,
+     "inductor_delta_residual_A": 0.0,
+     "Pout_W": 2.3040000000000007,
+     "Iin_A": 0.19200000000000006
+    },
+    "exercise": {
+     "vo_V": 10.0,
+     "Iavg_A": 1.0,
+     "dI_A": 0.5,
+     "Imin_A": 0.75,
+     "Imax_A": 1.25,
+     "inductor_delta_residual_A": 0.0,
+     "Pout_W": 10.0,
+     "Iin_A": 0.5
+    },
+    "boundary": {
+     "vo_V": 0.5000000000000001,
+     "Iavg_A": 0.05000000000000001,
+     "dI_A": 0.045000000000000005,
+     "Imin_A": 0.027500000000000007,
+     "Imax_A": 0.07250000000000001,
+     "inductor_delta_residual_A": 0.0,
+     "Pout_W": 0.025000000000000012,
+     "Iin_A": 0.005000000000000003
+    }
+   },
+   "evidence": "/tmp/electronics-math-review/recompute.py；/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/final-geometry-check.json；/tmp/electronics-math-review/figure-21.png",
+   "reviewed_sha256": "1999edc22752d06d964a362eb3399b990627c0408db942bd4ce7aa53265346a8",
+   "notes": "正式主例/近題/低D例與伏秒/電荷/功率守恆吻合；全控制域ΔI/(2IL)=(1−D)/2≤.45確屬CCM。boost10 V、反相buckboost−8 V與flyback關斷/forward開通傳能已對官方原文。最後4.8 V/12 V僅標籤移位並實拍通過。 未呼叫產品計算器或複製產品算法；不宣稱真人理解通過。"
+  },
+  {
+   "id": "CHAPTER-22",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/22-dac.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "逐位二進位加權和交叉驗Dq與最高碼",
+   "result": {
+    "main": {
+     "q_V": 0.20625,
+     "vo_V": 1.85625,
+     "max_V": 3.09375
+    },
+    "exercise": {
+     "q_V": 0.012890625,
+     "vo_V": 1.65,
+     "max_V": 3.287109375
+    },
+    "boundary": "N2最高D3；改N須同步限制D。"
+   },
+   "evidence": "/tmp/electronics-math-review/recompute.py；/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/final-geometry-check.json；/tmp/electronics-math-review/figure-22.png",
+   "reviewed_sha256": "7569b6963e525caae2d572c9e5eca0999fb17bfe863ed599302337c19a655bad",
+   "notes": "逐位加權核1001→1.85625 V與8位128→1.65 V，最高碼分別少1 LSB。圖以同x垂直跳階且明說碼只能整數；R–2R、電流舵、ΣΔ概述、靜態/動態誤差條件已讀。 未呼叫產品計算器或複製產品算法；不宣稱真人理解通過。"
+  },
+  {
+   "id": "CHAPTER-23",
+   "kind": "逐章主例與遷移題獨立重算",
+   "target": "dist/23-adc.html",
+   "location": "主例、近題、模型條件與關鍵邊界",
+   "status": "PASS：正式頁數值、模型、量綱、圖式與最終SHA通過",
+   "severity": "資訊",
+   "method": "內部閾值計數替代floor；最後箱端點獨立核對",
+   "result": {
+    "main": {
+     "D": 9,
+     "low_V": 1.85625,
+     "high_V": 2.0625,
+     "mid_V": 1.9593749999999999,
+     "error_V": -0.059374999999999956,
+     "half_q_V": 0.103125
+    },
+    "exercise": {
+     "D": 15,
+     "low_V": 3.09375,
+     "high_V": 3.3,
+     "mid_V": 3.196875,
+     "error_V": 0.10312499999999991,
+     "half_q_V": 0.103125
+    },
+    "boundary": {
+     "D": 128,
+     "low_V": 1.65,
+     "high_V": 1.662890625,
+     "mid_V": 1.6564453124999998,
+     "error_V": -0.006445312499999911,
+     "half_q_V": 0.0064453125
+    }
+   },
+   "evidence": "/tmp/electronics-math-review/recompute.py；/tmp/electronics-math-review/independent-values.json；/tmp/electronics-math-review/final-geometry-check.json；/tmp/electronics-math-review/figure-23.png",
+   "reviewed_sha256": "bbfec33f444b0a00ec69f449e5430b1567b7867d41837b2272de594cec6f3c3a",
+   "notes": "1.9 V分箱碼9與四次SAR比較、3.3 V截限碼15均核。中心與下緣重建及兩種誤差界線分開，最後箱含最高端點。取樣率/帶限/抗混疊及SNR近似條件明確；app機器門檻等價判定見ADC-THRESHOLD-EQUIVALENCE。 未呼叫產品計算器或複製產品算法；不宣稱真人理解通過。"
+  },
+  {
+   "id": "FIG-02-WIRE",
+   "kind": "正式產品圖式缺陷",
+   "target": "dist/02-diode-models.html",
+   "location": "首圖 wire path",
+   "status": "PASS：修正後獨立複驗並對齊最終SHA",
+   "severity": "中等",
+   "method": "SVG導線座標與KVL/離散函數幾何逐段核對",
+   "result": "底層導線x235由y70連到210，穿過二極體y120–151，圖上短路路徑與串聯KVL不符。",
+   "evidence": "/tmp/electronics-math-review/figure-02.png",
+   "reviewed_sha256": "4a62761adcf125cbbb4859341dd85b2c4b697604bcfffed11fdd61312c108625",
+   "notes": "已實讀SVG端子及斷線座標並檢視靜態截圖；元件路徑與串聯/橋式模型一致。"
+  },
+  {
+   "id": "PLOT-02-LOADLINE",
+   "kind": "正式產品圖式缺陷",
+   "target": "dist/app.js",
+   "location": "case02 load line",
+   "status": "PASS：修正後原始碼幾何複驗並對齊最終SHA",
+   "severity": "中等",
+   "method": "SVG導線座標與KVL/離散函數幾何逐段核對",
+   "result": "VS=.5時max(0,(VS−VD)/R)在VD>.5畫I0水平尾巴，不符合原負載線KVL。",
+   "evidence": "dist/app.js 原始碼靜態審查",
+   "reviewed_sha256": "a5199a835e9582bc300bc4c8962fd64784a7fbb4249c2321592a0ac725d60400",
+   "notes": "02負載線限制0..VS並另畫恆壓降截止/導通分支；22/23使用同x成對點呈現垂直跳階；14無交越marker=null、PM與fc不定義，並新增幅值曲線。未以產品計算器產生獨立數值證據。"
+  },
+  {
+   "id": "PLOT-22-23-STEPS",
+   "kind": "正式產品圖式缺陷",
+   "target": "dist/app.js",
+   "location": "case22/23 curve floor sampling",
+   "status": "PASS：修正後原始碼幾何複驗並對齊最終SHA",
+   "severity": "中等",
+   "method": "SVG導線座標與KVL/離散函數幾何逐段核對",
+   "result": "有限採樣的floor值再用直線連接，跳碼處出現非模型的斜坡，不能表示理想量化階梯。",
+   "evidence": "dist/app.js 原始碼靜態審查",
+   "reviewed_sha256": "a5199a835e9582bc300bc4c8962fd64784a7fbb4249c2321592a0ac725d60400",
+   "notes": "02負載線限制0..VS並另畫恆壓降截止/導通分支；22/23使用同x成對點呈現垂直跳階；14無交越marker=null、PM與fc不定義，並新增幅值曲線。未以產品計算器產生獨立數值證據。"
+  },
+  {
+   "id": "PLOT-14-MARKER",
+   "kind": "正式產品圖式缺陷",
+   "target": "dist/app.js",
+   "location": "case14 no unity crossing",
+   "status": "PASS：修正後原始碼幾何複驗並對齊最終SHA",
+   "severity": "低",
+   "method": "SVG導線座標與KVL/離散函數幾何逐段核對",
+   "result": "Aβ≤1無正頻率交越，marker被設(1,0)且不在argL曲線，形成假選點。",
+   "evidence": "dist/app.js 原始碼靜態審查",
+   "reviewed_sha256": "a5199a835e9582bc300bc4c8962fd64784a7fbb4249c2321592a0ac725d60400",
+   "notes": "02負載線限制0..VS並另畫恆壓降截止/導通分支；22/23使用同x成對點呈現垂直跳階；14無交越marker=null、PM與fc不定義，並新增幅值曲線。未以產品計算器產生獨立數值證據。"
+  },
+  {
+   "id": "FIG-03-BRIDGE",
+   "kind": "正式產品圖式缺陷",
+   "target": "dist/03-rectifier.html",
+   "location": "首圖 bridge四支路",
+   "status": "PASS：修正後獨立複驗並對齊最終SHA",
+   "severity": "中等",
+   "method": "SVG導線拓撲與靜態headless首圖視檢",
+   "result": "四條菱形邊是完整連續導線，D1–D4只用旁加箭頭指向，原理圖表象將A/B/正負輸出全部短接；且AC源回路未畫。",
+   "evidence": "/tmp/electronics-math-review/figure-03.png",
+   "reviewed_sha256": "6d84e0fa35d9ab960598f132f1176be3459c6e5b41cc51088b6f6313265cd6c1",
+   "notes": "已實讀SVG端子及斷線座標並檢視靜態截圖；元件路徑與串聯/橋式模型一致。"
+  },
+  {
+   "id": "FIG-04-SOURCE",
+   "kind": "正式產品圖式缺陷",
+   "target": "dist/04-diode-tools.html",
+   "location": "首圖 AC 源圓cx45 cy195 r25",
+   "status": "PASS：修正後獨立複驗並對齊最終SHA",
+   "severity": "中等",
+   "method": "SVG座標與靜態截圖交叉核對",
+   "result": "原導線M45 220V90穿過來源，已改從頂端y170接上方，底端y220另接；幾何與輸入電源一致。",
+   "evidence": "/tmp/electronics-math-review/figure-04.png",
+   "reviewed_sha256": "595d62b6e8196e16b09b27f8385b841df84b64ea000d03ecc1a0c096426b6b3a",
+   "notes": "建置者修正，審查者未改產品。"
+  },
+  {
+   "id": "FIG-06-BOUNDARYLABEL",
+   "kind": "正式產品圖式缺陷",
+   "target": "dist/06-mos-bias.html",
+   "location": "首圖 VOV=1.5 V 刻度",
+   "status": "PASS：修正後獨立複驗並對齊最終SHA",
+   "severity": "低",
+   "method": "SVG座標與靜態截圖交叉核對",
+   "result": "原文字x452靠近1V選點，已改x482並置中，與分界虛線一致。",
+   "evidence": "/tmp/electronics-math-review/figure-06.png",
+   "reviewed_sha256": "728309cafb04aded4cdab084bb1810f4e6daffa60f68cf0dbe82d2a59133feb3",
+   "notes": "建置者修正，審查者未改產品。"
+  },
+  {
+   "id": "TEACHING-UNITS-01",
+   "kind": "教學量綱呈現",
+   "target": "dist/04–07、後續HTML及app.js動態代入列",
+   "location": "主例、近題、補充代入式",
+   "status": "PASS：00–23正式量綱及app最終顯示增量通過",
+   "severity": "低",
+   "method": "逐段讀完整代入，區分算值正確與單位呈現",
+   "result": "02二分表、ln代入和mA²·kΩ說明通過；00功率能量、01濃度平方、03漣波主例近題及02近題/rd等仍以裸數乘除後直接接單位。根線要求全站代入帶單位，尚未全數落實。",
+   "evidence": "/tmp/electronics-math-review/diode-bisection.json",
+   "reviewed_sha256": "a5199a835e9582bc300bc4c8962fd64784a7fbb4249c2321592a0ac725d60400",
+   "notes": "數值代入乘除/平方/根號的單位已補；同單位加減括號增量亦已複核。"
+  },
+  {
+   "id": "SOURCE-READ-02",
+   "kind": "官方來源原文實讀",
+   "target": "MIT 6.012 L19/L23、TI SLOA049D",
+   "location": "L19 pp.7–12、17–19；L23 pp.11–14、19；TI pp.3–4、8–10、16–19",
+   "status": "已實讀",
+   "severity": "資訊",
+   "method": "本機PDF抽取正文；差動對電流守恆/tanh、米勒電荷及複數阻抗獨立推導",
+   "result": "L19保留αF且forward-active為前提；產品以忽略基極電流令α≈1須明說。L23由跨接電容電壓(1−Av)vin推輸入電容，固定增益與主極點近似不能當全頻精確模型。TI主動濾波各拓撲之增益/Q/頻率需配合指定元件比。",
+   "evidence": "/tmp/electronics-sources/MIT6_012F09_lec19.txt；MIT6_012F09_lec23.txt；ti-sloa049b.txt",
+   "reviewed_sha256": "",
+   "notes": "未使用作者摘要作為原文查證替代。"
+  },
+  {
+   "id": "SOURCE-READ-PWR",
+   "kind": "官方來源原文實讀與獨立積分",
+   "target": "11 功率級效率",
+   "location": "ADI Class D Audio Amplifiers: What, Why, and How，Linear Amplifiers...段及Choice of Output Transistor Size",
+   "status": "已實讀；條件確認",
+   "severity": "資訊",
+   "method": "讀官方原文；另以每電源半波正弦平均Ipk/π、負載sin²平均1/2獨立積分",
+   "result": "理想互補B類：Pdc=2VCC Ipk/π，Pload=Vpk Ipk/2，η=(π/4)(Vpk/VCC)，Vpk≤VCC故上限π/4=78.5398%。本文A例是固定大偏流拓樸，其25%不能泛化所有A類；D90%是本文比較數據，不能說所有D的理論上限。D導通及閘電容切換損耗均須保留。",
+   "evidence": "https://www.analog.com/en/resources/analog-dialogue/articles/class-d-audio-amplifiers.html；正文L27–45、L74–76",
+   "reviewed_sha256": "",
+   "notes": "父線授權原來源線結束後單線開原文；未另改共享來源表。"
+  },
+  {
+   "id": "FIG-12-ARROWS",
+   "kind": "正式產品圖式缺陷",
+   "target": "dist/12-differential.html",
+   "location": "首圖左右NPN射極及支路電流path",
+   "status": "PASS：修正後獨立複驗並對齊最終SHA",
+   "severity": "低",
+   "method": "靜態首圖截圖與SVG marker-end語意交叉核對",
+   "result": "兩射極箭頭合在同一path，marker-end只作用於最後一段，左NPN箭頭缺失；左右I箭頭也只右側有。",
+   "evidence": "/tmp/electronics-math-review/figure-12.png",
+   "reviewed_sha256": "ffbcab2a6e099d983409e27aa4cdbcdcb70306e7edfb50d3d2edf7d05ecf3a33",
+   "notes": "12拆成各自path後左右箭頭皆可見；10使用81個log頻率點，逐點反推頻率再以複數阻抗核幅值，取位誤差<1.24e−6 V/V。"
+  },
+  {
+   "id": "PLOT-10-RESOLUTION",
+   "kind": "正式產品圖式缺陷",
+   "target": "dist/10-frequency.html",
+   "location": "c10-plot五點直線插值",
+   "status": "PASS：修正後獨立複驗並對齊最終SHA",
+   "severity": "中等",
+   "method": "以log橫軸中點對原式幅值做獨立核算",
+   "result": "f/fH=√10處，(365,118.58)至(500,240.10)的線段中點給幅值20.165V/V；原式50/√11=15.0755672V/V，偏約34%。只有5點使曲線不能忠實顯示此一極模型。",
+   "evidence": "/tmp/electronics-math-review/10-frequency.html",
+   "reviewed_sha256": "f81d8a4f2998348e176c5af4ec648ee6fcc826d18659c270dce7cbdecd22c966",
+   "notes": "12拆成各自path後左右箭頭皆可見；10使用81個log頻率點，逐點反推頻率再以複數阻抗核幅值，取位誤差<1.24e−6 V/V。"
+  },
+  {
+   "id": "FIG-15-INPUT-LABEL",
+   "kind": "正式產品圖式標籤",
+   "target": "dist/15-opamp.html",
+   "location": "首圖「輸入電流≈0」x514y327",
+   "status": "PASS：修正後獨立複驗並對齊最終SHA",
+   "severity": "低",
+   "method": "首圖實際截圖與電流路徑核對",
+   "result": "輸入電流≈0放在Rf的10µA回授箭頭正下方，可能誤以為回授箭頭電流為零。",
+   "evidence": "/tmp/electronics-math-review/figure-15.png",
+   "reviewed_sha256": "6f5b4289820281eafd5a1d052a445aee5cbdaf95f43be5286404d49c7aa333f6",
+   "notes": "已改為i+=i−≈0並移至輸入旁，避開回授10μA箭頭；修後實拍通過。"
+  },
+  {
+   "id": "ADC-THRESHOLD-EQUIVALENCE",
+   "kind": "機器數值慣例等價審查",
+   "target": "dist/app.js",
+   "location": "case23 threshold、code loop、box edge、plot points",
+   "status": "PASS：與本課floor分箱數值契約等價",
+   "severity": "資訊",
+   "method": "源碼差異獨立讀；用門檻計數定義證明，不呼叫產品計算器且不重跑QA全量",
+   "result": "固定Vref=33/10、M=2^N，T_k=33k/(10M)；D=max{k∈[0,M−1]:Vin≥T_k}。實數下等於min(M−1,floor(Vin/(Vref/M)))。機器使用一次除法後的同一門檻作比較、圖形跳點與箱界，無EPS；合法N使分子/分母精確可表示，滿刻度3.3V仍選M−1。",
+   "evidence": "/tmp/electronics-math-review/app-final-delta.diff；父線QA通報Fraction門檻/相鄰IEEE/±q1e−8驗證通過（屬QA證據，不宣稱本線重跑）",
+   "reviewed_sha256": "a5199a835e9582bc300bc4c8962fd64784a7fbb4249c2321592a0ac725d60400",
+   "notes": "本審核只確認本課既定分箱慣例，不追加更細IEEE邊界標準。最初oracle僅主例/近題/代表邊界，沒有拿浮點k*q當作全面機器門檻標準。"
+  },
+  {
+   "id": "APP-FINAL",
+   "kind": "最終共用程式對版",
+   "target": "dist/app.js",
+   "location": "全24模型與renderGraph增量",
+   "status": "PASS：最終模型及顯示差異已獨立讀取",
+   "severity": "資訊",
+   "method": "對已獨立審核快照作完整diff；只核新增/改動，保留24章獨立oracle",
+   "result": "算法增量為ADC同一有理門檻、07 ln(2)精式；16新增1/G輸入峰值顯示與先前採納SRlin判定吻合。其餘為量綱文字、兩極模型穩定條件與標籤位置/背景。無未決模型錯誤。",
+   "evidence": "/tmp/electronics-math-review/app-final-delta.diff；/tmp/electronics-math-review/independent-values.json；父線QA已以該oracle驗150量PASS（未在本線重跑）",
+   "reviewed_sha256": "a5199a835e9582bc300bc4c8962fd64784a7fbb4249c2321592a0ac725d60400",
+   "notes": "數學審查不替代瀏覽器操作/鍵盤/行動裝置QA或真人理解測試。"
+  },
+  {
+   "id": "FINAL-SEAL",
+   "kind": "最終受審版本清單",
+   "target": "全24章、app.js、三冊原筆記",
+   "location": "建置者凍結版",
+   "status": "PASS：28檔SHA對版；無未決數學問題",
+   "severity": "資訊",
+   "method": "HTML逐頁比建置檔案狀態，app比建置者最終SHA，三冊比原已採納修正審查SHA",
+   "result": "24正式章主例/近題/補充例/條件/單位/圖式均完成；歷史缺陷均複驗結案。",
+   "evidence": "/tmp/electronics-math-review/final-reviewed-sha.json；/tmp/electronics-math-review/final-geometry-check.json",
+   "reviewed_sha256": "",
+   "notes": "所有自有headless browser均在finally關閉。未修改產品、原筆記或共享行政檔；不宣稱真人理解通過。"
+  },
+  {
+   "id": "FINAL-CHECKS",
+   "kind": "驗收檢查結果",
+   "target": "數學審查.json；數學審查摘要.md；受審28檔；wf",
+   "location": "最終輸出",
+   "status": "本線檔案檢查PASS；全域wf-lint有範圍外失敗",
+   "severity": "資訊",
+   "method": "tabledb check、UTF-8 decode、摘要相對連結、24章PASS/無待修狀態、28檔SHA再比；執行必驗wf-lint",
+   "result": "本線所有檢查通過。bash wf/tools/wf-lint.sh wf exit1：broken=2（均位於wf/reviews/2026-09-26）；biglist=269、querycmd=3。未修改範圍外行政檔。",
+   "evidence": "wf-lint工具輸出：05-電機特化05-09與對照表-md.md→…07-電子學-中.md；06-電子-md.md→../01-電路與訊號基礎/02-電子學.md",
+   "reviewed_sha256": "",
+   "notes": "全域工作流舊審稿目錄失敗不改變本教材數學PASS結論，已回報領隊；不宣稱全庫lint通過。"
+  }
+ ]
+}

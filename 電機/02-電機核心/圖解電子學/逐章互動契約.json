@@ -1,0 +1,1411 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "dist_base": "dist/",
+ "columns": [
+  "id",
+  "file",
+  "title",
+  "params",
+  "formula",
+  "example",
+  "exercise",
+  "scope",
+  "diagram",
+  "presets",
+  "output_id",
+  "plot_id",
+  "criteria",
+  "static_contract",
+  "prev",
+  "next",
+  "source"
+ ],
+ "rows": [
+  {
+   "id": "00",
+   "file": "00-circuit-bridge.html",
+   "title": "5 V 接上電阻，電流和熱從哪裡來？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c00-a",
+     "type": "number",
+     "label": "電源 VS（V）",
+     "min": 0,
+     "max": 12,
+     "step": 0.5,
+     "default": 5,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c00-b",
+     "type": "number",
+     "label": "電阻 R（kΩ）",
+     "min": 0.1,
+     "max": 10,
+     "step": 0.1,
+     "default": 1,
+     "options": []
+    }
+   ],
+   "formula": "I=VS/R；P=VS·I=I²R。kΩ 與 V 配合得到 mA，V×mA=mW。",
+   "example": "VS=5 V,R=1 kΩ：I=5/1=5 mA；VR=IR=5 V；P=25 mW；供電25 mW=電阻耗散25 mW。",
+   "exercise": "VS=9 V,R=3 kΩ：I=3 mA,P=27 mW；9−3×3=0 V。",
+   "scope": "地是參考點；閉合回路、電荷不耗盡、KCL/KVL、量測電壓並聯/電流串聯；電容i=C dv/dt短橋。",
+   "diagram": "電源正負/接地/串聯R/電流方向；V=IR對應兩端；圖右功率收支。",
+   "presets": [
+    {
+     "a": 5,
+     "b": 1
+    },
+    {
+     "a": 0,
+     "b": 1
+    },
+    {
+     "a": 9,
+     "b": 3
+    }
+   ],
+   "output_id": "c00-output",
+   "plot_id": "c00-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "index.html",
+   "next": "01-semiconductor.html",
+   "source": "原筆記上冊"
+  },
+  {
+   "id": "01",
+   "file": "01-semiconductor.html",
+   "title": "摻入更多施體，少數電洞會剩多少？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c01-a",
+     "type": "number",
+     "label": "施體濃度 ND 的10次方指數（cm⁻³）",
+     "min": 14,
+     "max": 18,
+     "step": 1,
+     "default": 16,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c01-b",
+     "type": "number",
+     "label": "電場 E（V/cm）",
+     "min": 0,
+     "max": 100,
+     "step": 10,
+     "default": 10,
+     "options": []
+    }
+   ],
+   "formula": "熱平衡、完全游離、非簡併教學近似：n≈ND=10^a；ni=1.5e10 cm⁻³；p=ni²/n；σ=q μn n，q=1.602e−19 C，μn=1350 cm²/(V s)；J=σE。忽略電洞導電且固定μ只是教學模型。",
+   "example": "ND=1e16：p=2.25e20/1e16=2.25e4 cm⁻³；σ=1.602e−19×1350×1e16=2.1627 S/cm；E=10：J=21.627 A/cm²。",
+   "exercise": "ND=1e15,E=20：p=2.25e5 cm⁻³,σ=.21627 S/cm,J=4.3254 A/cm²。",
+   "scope": "能帶/價帶/導帶/能隙、摻雜電中性、漂移電子與傳統電流反向、擴散Jn=qDn dn/dx符號；製程七步與節點為世代名而非統一尺寸。",
+   "diagram": "能帶示意＋n/p電荷對＋ND→n→p算式；J-E直線可由斜率讀σ。",
+   "presets": [
+    {
+     "a": 16,
+     "b": 10
+    },
+    {
+     "a": 18,
+     "b": 0
+    },
+    {
+     "a": 15,
+     "b": 20
+    }
+   ],
+   "output_id": "c01-output",
+   "plot_id": "c01-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "00-circuit-bridge.html",
+   "next": "02-diode-models.html",
+   "source": "原筆記上冊"
+  },
+  {
+   "id": "02",
+   "file": "02-diode-models.html",
+   "title": "5 V 與 1 kΩ 串聯二極體，為何不是5 mA？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c02-a",
+     "type": "number",
+     "label": "電源 VS（V）",
+     "min": 0,
+     "max": 10,
+     "step": 0.1,
+     "default": 5,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c02-b",
+     "type": "number",
+     "label": "串聯電阻 R（kΩ）",
+     "min": 0.1,
+     "max": 5,
+     "step": 0.01,
+     "default": 1,
+     "options": []
+    }
+   ],
+   "formula": "恆壓降模型 I=max(0,(VS−.7)/R) mA；導通VD=.7，截止VD=VS。比較理想I=VS/R；分段I=max(0,(VS−.7)/(R+.02))；指數IS=1e−12 A,n=1,VT=.02585 V，求VS=RΩI+VT ln(1+I/IS)。",
+   "example": "I=(5−.7)/1=4.30 mA；VR=4.30 V；5−4.30−.70=0；PR=18.49 mW,PD=3.01 mW，源21.50 mW。指數解VD≈.57415 V,I≈4.4258 mA。",
+   "exercise": "VS=3.3 V,R=.68 kΩ：I=2.6/.68≈3.82353 mA；PR≈9.94118 mW,PD≈2.67647 mW；源≈12.61765 mW。",
+   "scope": "PN形成/空乏區/內建電位V0=VT ln(NAND/ni²)與.7不同；順反偏/崩潰；IS/n/VT；rd=nVT/ID局部斜率；模型選擇。",
+   "diagram": "串聯電路＋負載線兩截距VS與VS/R，恆壓降交點(.7,4.3)；標VD/VR/I並完整KVL。",
+   "presets": [
+    {
+     "a": 5,
+     "b": 1
+    },
+    {
+     "a": 0.5,
+     "b": 1
+    },
+    {
+     "a": 3.3,
+     "b": 0.68
+    }
+   ],
+   "output_id": "c02-output",
+   "plot_id": "c02-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "01-semiconductor.html",
+   "next": "03-rectifier.html",
+   "source": "原筆記上冊"
+  },
+  {
+   "id": "03",
+   "file": "03-rectifier.html",
+   "title": "橋式整流後，電容要多久補一次電？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c03-a",
+     "type": "number",
+     "label": "交流頻率 f（Hz）",
+     "min": 20,
+     "max": 100,
+     "step": 10,
+     "default": 50,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c03-b",
+     "type": "number",
+     "label": "濾波電容 C（μF）",
+     "min": 100,
+     "max": 2200,
+     "step": 10,
+     "default": 1000,
+     "options": []
+    }
+   ],
+   "formula": "正弦峰值Vp=12 V；橋式兩顆每顆.7 V；峰值Vc=10.6 V；固定負載電流IL=10 mA；fr=2f；ΔV≈IL/(frC)；VDC≈Vc−ΔV/2。半波fr=f且只有一顆壓降。",
+   "example": "fr=2×50=100 Hz；Δt=.01 s；ΔQ=ILΔt=.0001 C；ΔV=.0001/.001=.1 V；VDC≈10.6−.05=10.55 V。",
+   "exercise": "f=60 Hz,C=470 μF：fr=120 Hz,ΔV=.01/(120×470e−6)≈.177305 V,VDC≈10.51135 V。",
+   "scope": "半波/全波導通路徑、電容充放電、負載加重漣波增大、量測示波器DC與AC耦合；小漣波和忽略源阻限制。",
+   "diagram": "橋式每半週兩顆導通＋峰頂充電/間隔放電鋸齒；fr與ΔV括號標記。",
+   "presets": [
+    {
+     "a": 50,
+     "b": 1000
+    },
+    {
+     "a": 20,
+     "b": 100
+    },
+    {
+     "a": 60,
+     "b": 470
+    }
+   ],
+   "output_id": "c03-output",
+   "plot_id": "c03-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "02-diode-models.html",
+   "next": "04-diode-tools.html",
+   "source": "原筆記上冊"
+  },
+  {
+   "id": "04",
+   "file": "04-diode-tools.html",
+   "title": "超過 2 V 的訊號，如何限制在同一條線？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c04-a",
+     "type": "number",
+     "label": "輸入正弦峰值 A（V）",
+     "min": 0.5,
+     "max": 5,
+     "step": 0.5,
+     "default": 3,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c04-b",
+     "type": "number",
+     "label": "理想限幅位準 L（V）",
+     "min": 0.5,
+     "max": 4,
+     "step": 0.5,
+     "default": 2,
+     "options": []
+    }
+   ],
+   "formula": "理想有偏壓正向限幅：vin=A sinθ；vout=min(vin,L)，串聯R=1 kΩ；iD=max(0,(vin−L)/R)。若真實diode .7V，參考源取L−.7。",
+   "example": "θ=90°時vin=3 V，vout=2 V，R降1 V，iD=1 mA；θ=270°時vin=−3 V，diode關，vout=−3 V。",
+   "exercise": "A=4 V,L=1.5 V：正峰iD=(4−1.5)/1=2.5 mA；負峰−4 V，峰對峰輸出5.5 V。",
+   "scope": "箝位理想例A=2：負峰箝0，範圍0..4 V，RC≫週期；無負載倍壓A=5每顆.7→約8.6 V；齊納5.1V/Vs9/R390/IL5mA→IZ5mA；LED/光/變容/蕭特基用途和限制；diode OR例。",
+   "diagram": "兩條同軸波形與L水平線；導通/截止路徑；箝位/倍壓另小圖，不能只有名稱。",
+   "presets": [
+    {
+     "a": 3,
+     "b": 2
+    },
+    {
+     "a": 1,
+     "b": 2
+    },
+    {
+     "a": 4,
+     "b": 1.5
+    }
+   ],
+   "output_id": "c04-output",
+   "plot_id": "c04-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "03-rectifier.html",
+   "next": "05-bjt-bias.html",
+   "source": "原筆記上冊"
+  },
+  {
+   "id": "05",
+   "file": "05-bjt-bias.html",
+   "title": "基極分壓 2.16 V，集極真的有 1.46 mA 嗎？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c05-a",
+     "type": "number",
+     "label": "電流增益 β",
+     "min": 50,
+     "max": 200,
+     "step": 10,
+     "default": 100,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c05-b",
+     "type": "number",
+     "label": "集極電阻 RC（kΩ）",
+     "min": 1,
+     "max": 10,
+     "step": 0.1,
+     "default": 3.3,
+     "options": []
+    }
+   ],
+   "formula": "VCC12,R1=82k,R2=18k,RE1k,VBE.7；Vth=2.16,Rth=14.76k；IB=(Vth−.7)/(Rth+(β+1)RE) mA；IC=βIB,IE=(β+1)IB；VE=IE RE,VB=VE+.7,VC=12−IC RC,VCE=VC−VE。僅VC>VB有效，否則提示作用區候選失效，不把候選稱真實Q。",
+   "example": "IB=1.46/115.76=.0126123 mA；IC≈1.26123 mA；VE≈1.27384 V；VB≈1.97384 V；VC≈7.83794 V；VCE≈6.56410 V；VC>VB成立，分壓負載不可忽略。",
+   "exercise": "β=50,RC3.3k：IB=1.46/65.76≈22.20195 μA；IC≈1.110097 mA,VE≈1.132300 V,VC≈8.336679 V,VCE≈7.204380 V。",
+   "scope": "NPN/PNP載子輸運、四工作區以BE/BC判；Ebers–Moll兩接面完整模型概念；Early IC對VCE依賴/ro；β變動負回授；開關飽和不能沿用IC=βIB。",
+   "diagram": "分壓完整電路→戴維寧等效→三支電流與VBC檢查；I_C–VCE負載線含RE近似與候選Q。",
+   "presets": [
+    {
+     "a": 100,
+     "b": 3.3
+    },
+    {
+     "a": 200,
+     "b": 10
+    },
+    {
+     "a": 50,
+     "b": 3.3
+    }
+   ],
+   "output_id": "c05-output",
+   "plot_id": "c05-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "04-diode-tools.html",
+   "next": "06-mos-bias.html",
+   "source": "原筆記中冊"
+  },
+  {
+   "id": "06",
+   "file": "06-mos-bias.html",
+   "title": "閘極 2.5 V，汲極 1 V：該用哪條電流式？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c06-a",
+     "type": "number",
+     "label": "VGS（V）",
+     "min": 0,
+     "max": 4,
+     "step": 0.1,
+     "default": 2.5,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c06-b",
+     "type": "number",
+     "label": "VDS（V）",
+     "min": 0,
+     "max": 5,
+     "step": 0.1,
+     "default": 1,
+     "options": []
+    }
+   ],
+   "formula": "長通道NMOS：K=2 mA/V²,Vth=1V,λ=0,VSB=0；VOV=VGS−1。VOV≤0截止ID=0；0≤VDS<VOV三極ID=K(VOV VDS−VDS²/2)；VDS≥VOV飽和ID=K VOV²/2。",
+   "example": "VOV=2.5−1=1.5 V；1<1.5三極；ID=2×(1.5×1−1²/2)=2 mA；邊界VDS=1.5兩式都2.25 mA。",
+   "exercise": "VGS=3,VDS=3：VOV=2，飽和ID=2×2²/2=4 mA；VDD=5、RD=.5k時VDS=5−4×.5=3 V吻合。",
+   "scope": "MOS結構/反轉通道/PMOS極性；偏壓VDD5,RD1k,VGS2→ID1mA,VDS4V飽和；JFET通常常開；體效應Vth公式參數；λ、速度飽和/次臨界/FinFET/GAA為長通道模型界線。",
+   "diagram": "MOS端子源接地與VGS/VDS雙電壓；ID-VDS曲線與VOV分界；點要落在當前曲線。",
+   "presets": [
+    {
+     "a": 2.5,
+     "b": 1
+    },
+    {
+     "a": 0.8,
+     "b": 5
+    },
+    {
+     "a": 3,
+     "b": 3
+    }
+   ],
+   "output_id": "c06-output",
+   "plot_id": "c06-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "05-bjt-bias.html",
+   "next": "07-cmos.html",
+   "source": "原筆記中冊"
+  },
+  {
+   "id": "07",
+   "file": "07-cmos.html",
+   "title": "反相器不切換時省電，為何頻率加倍功耗也加倍？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c07-a",
+     "type": "number",
+     "label": "負載電容 C（pF）",
+     "min": 10,
+     "max": 100,
+     "step": 10,
+     "default": 20,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c07-b",
+     "type": "number",
+     "label": "頻率 f（MHz）",
+     "min": 0,
+     "max": 100,
+     "step": 10,
+     "default": 10,
+     "options": []
+    }
+   ],
+   "formula": "理想rail-to-rail CMOS,VDD3.3,每周期0→1機率α=.2；Pdyn=αCVDD²f。一次充電源能量CV²，一半存電容，一半耗散PMOS；放電另耗C V²/2。以Ron=1kΩ估t50≈.693RC。",
+   "example": "P=.2×20e−12×3.3²×10e6=.4356 mW；EC=.5×20e−12×3.3²=108.9 pJ；t50≈13.86 ns。",
+   "exercise": "C=50pF,f=20MHz：P=2.178mW；EC=272.25pJ;t50≈34.65ns。",
+   "scope": "PMOS/NMOS真值路徑；穩態理想無直通，切換可兩者同時導通，實際有漏電；轉移曲線/雜訊裕度與速度/功耗權衡。",
+   "diagram": "上拉PMOS/下拉NMOS/共閘與CL；充/放電能量兩格；功耗對f直線。",
+   "presets": [
+    {
+     "a": 20,
+     "b": 10
+    },
+    {
+     "a": 100,
+     "b": 0
+    },
+    {
+     "a": 50,
+     "b": 20
+    }
+   ],
+   "output_id": "c07-output",
+   "plot_id": "c07-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "06-mos-bias.html",
+   "next": "08-small-signal.html",
+   "source": "原筆記中冊"
+  },
+  {
+   "id": "08",
+   "file": "08-small-signal.html",
+   "title": "1 mA 工作點旁的 5 mV，真的只增加 0.193 mA？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c08-a",
+     "type": "number",
+     "label": "ICQ（mA）",
+     "min": 0.1,
+     "max": 3,
+     "step": 0.1,
+     "default": 1,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c08-b",
+     "type": "number",
+     "label": "vbe 增量（mV）",
+     "min": -10,
+     "max": 10,
+     "step": 1,
+     "default": 5,
+     "options": []
+    }
+   ],
+   "formula": "VT25.85mV,β100,VA100V；gm=ICQ/VT（mS）；rπ=β/gm（kΩ）；ro=VA/ICQ（kΩ）；ic_lin=gm vbe；ic_exact=ICQ(expm1(vbe/VT))；總IC=ICQ+ic。",
+   "example": "gm=1/.02585≈38.68472mS,rπ=2.585kΩ,ro=100kΩ；ic≈38.68472×.005=.1934236mA；精確增量≈0.213396677mA，兩者不可當總電流。",
+   "exercise": "ICQ=2mA,vbe=2mV：gm≈77.36944mS,ic_lin≈.1547389mA；exact=2(exp(.002/.02585)−1)≈.16088232mA，算出並比誤差。",
+   "scope": "切線由導數/Taylor一次項；DC電源在增量圖接地、電容依中頻假設；BJT π及MOS gm=2ID/VOV、ro≈1/(λID)；大訊號不全靠小訊號。",
+   "diagram": "指數總IC曲線/工作點/切線；另增量等效rπ gm vbe ro，不混DC。",
+   "presets": [
+    {
+     "a": 1,
+     "b": 5
+    },
+    {
+     "a": 1,
+     "b": 10
+    },
+    {
+     "a": 2,
+     "b": 2
+    }
+   ],
+   "output_id": "c08-output",
+   "plot_id": "c08-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "07-cmos.html",
+   "next": "09-single-stage.html",
+   "source": "原筆記中冊"
+  },
+  {
+   "id": "09",
+   "file": "09-single-stage.html",
+   "title": "射極加 100 Ω，為何增益從 −193 降到 −40？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c09-a",
+     "type": "number",
+     "label": "退化電阻 RE（kΩ）",
+     "min": 0,
+     "max": 1,
+     "step": 0.05,
+     "default": 0.1,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c09-b",
+     "type": "number",
+     "label": "集極電阻 RC（kΩ）",
+     "min": 1,
+     "max": 10,
+     "step": 0.5,
+     "default": 5,
+     "options": []
+    }
+   ],
+   "formula": "ICQ=1mA,VT=.02585V,gm=38.68472mS；忽略ro、負載和基極電流：Av=−gmRC/(1+gmRE)；vin峰值=5mV；vout=Av vin；vbe=vin/(1+gmRE)。",
+   "example": "gmRE=3.868472；Av=−193.423598/4.868472≈−39.72984；vout≈−.198649V；vbe≈1.02701629mV；RE=0得−193.4236。",
+   "exercise": "RE=.2k,RC3k：Av=−3/(.02585+.2)≈−13.28315，5mV→−66.4158mV。",
+   "scope": "BJT CE/CC/CB與MOS CS/CD/CG六組態沿同路對照；follower接近1但提供電流；共基/閘低輸入阻抗；DC偏壓電阻與AC旁路別混；高增益仍受擺幅限制。",
+   "diagram": "CE退化完整增量回路，vin=vbe+ieRE→式子；正輸入/負輸出；六組態小表。",
+   "presets": [
+    {
+     "a": 0.1,
+     "b": 5
+    },
+    {
+     "a": 0,
+     "b": 5
+    },
+    {
+     "a": 0.2,
+     "b": 3
+    }
+   ],
+   "output_id": "c09-output",
+   "plot_id": "c09-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "08-small-signal.html",
+   "next": "10-frequency.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "10",
+   "file": "10-frequency.html",
+   "title": "只有 2 pF 的跨接電容，怎麼變成 102 pF？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c10-a",
+     "type": "number",
+     "label": "反相增益幅值 |Av|",
+     "min": 1,
+     "max": 100,
+     "step": 1,
+     "default": 50,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c10-b",
+     "type": "number",
+     "label": "跨接電容 Cμ（pF）",
+     "min": 1,
+     "max": 10,
+     "step": 1,
+     "default": 2,
+     "options": []
+    }
+   ],
+   "formula": "Av=−a；米勒輸入Cin=Cπ+Cμ(1−Av),Cπ10pF；Rs=10kΩ；fH≈1/(2πRsCin)；一極頻率響應|H(f)|=a/sqrt(1+(f/fH)²)。",
+   "example": "Cin=10+2(1+50)=112pF；τ=1e4×112e−12=1.12μs；fH≈142102.63Hz；f=fH時增益=50/√2≈35.355。",
+   "exercise": "|Av|=20,Cμ=3pF：Cin=10+3×21=73pF；fH≈218020.47Hz。",
+   "scope": "耦合/旁路電容低頻截止、BJT Cπ/Cμ、MOS Cgs/Cgd；疊接令第一級跨接電容另一端擺幅小；不是無限頻寬；增益dB/相位短橋。",
+   "diagram": "跨接電容兩端v與Avv→電荷C(1−Av)v；頻率曲線/−3dB位置。",
+   "presets": [
+    {
+     "a": 50,
+     "b": 2
+    },
+    {
+     "a": 100,
+     "b": 10
+    },
+    {
+     "a": 20,
+     "b": 3
+    }
+   ],
+   "output_id": "c10-output",
+   "plot_id": "c10-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "09-single-stage.html",
+   "next": "11-multistage-power.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "11",
+   "file": "11-multistage-power.html",
+   "title": "兩級空載增益 −20、−5，接上負載怎麼只剩 40？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c11-a",
+     "type": "number",
+     "label": "第二級輸入 Rin2（kΩ）",
+     "min": 1,
+     "max": 100,
+     "step": 1,
+     "default": 10,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c11-b",
+     "type": "number",
+     "label": "末級負載 RL（kΩ）",
+     "min": 0.1,
+     "max": 10,
+     "step": 0.1,
+     "default": 4,
+     "options": []
+    }
+   ],
+   "formula": "Av1_open=−20,Ro1=10k,Av2_open=−5,Ro2=1k；A1loaded=−20 Rin2/(10+Rin2)；A2loaded=−5 RL/(1+RL)；Av乘積；vin峰值10mV。",
+   "example": "A1=−20×10/20=−10；A2=−5×4/5=−4；Av=40；v1=−.1V；vo=.4V；PL=Vpk²/(2RL)=.02mW。",
+   "exercise": "Rin2=40k,RL=1k：A1=−16,A2=−2.5,Av=40；vo=.4V,PL=.08mW。",
+   "scope": "增益dB相加需各級含負載；功率A/B/AB/D能量、交越失真、推挽；B類理想正弦電阻負載上限π/4，A類依供電/負載不同不能單一效率值，D需濾波與切換損。",
+   "diagram": "每級戴維寧源/輸出電阻/下一級輸入電阻；兩次分壓與波形，能量源來自電源。",
+   "presets": [
+    {
+     "a": 10,
+     "b": 4
+    },
+    {
+     "a": 1,
+     "b": 0.1
+    },
+    {
+     "a": 40,
+     "b": 1
+    }
+   ],
+   "output_id": "c11-output",
+   "plot_id": "c11-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "10-frequency.html",
+   "next": "12-differential.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "12",
+   "file": "12-differential.html",
+   "title": "相差 10 mV，尾電流會怎麼分到兩邊？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c12-a",
+     "type": "number",
+     "label": "尾電流 IT（mA）",
+     "min": 0.2,
+     "max": 2,
+     "step": 0.2,
+     "default": 1,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c12-b",
+     "type": "number",
+     "label": "差動電壓 vid（mV）",
+     "min": -100,
+     "max": 100,
+     "step": 5,
+     "default": 10,
+     "options": []
+    }
+   ],
+   "formula": "匹配BJT，理想尾電流，忽略基極電流與Early；VT25.85mV；I1=IT/(1+exp(−vid/VT)),I2=IT−I1；VCC10V,RC5k；Vo1=10−5I1,Vo2=10−5I2；vod=Vo1−Vo2；小訊號Ad=−RC IT/(2VT)。 明訂基極共模0V：VB1=vid/2、VB2=−vid/2；尾電流源接−5V且假定合規，各集極電壓須大於其基極，並檢尾端仍有電壓餘裕。",
+   "example": "vid=.01V，I1≈.59552mA,I2≈.40448mA；vod=−5(I1−I2)≈−.95523V；線性Ad≈−96.7118，預測−.967118V；精確I1=.595523496mA、I2=.404476504mA、Vo1=7.022382520V、Vo2=7.977617480V。",
+   "exercise": "IT=2mA,vid=5mV：I1=2/(1+exp(−.005/.02585)),I2=2−I1；列數值/兩輸出與I1+I2=2mA。 數值I1=1.096411402mA、I2=.903588598mA、Vo1=4.517942990V、Vo2=5.482057010V。",
+   "scope": "共模/差模定義、單端/差動增益差2倍；CMRR=|Ad/Acm|、dB=20log；實際尾源有限ro與共模範圍限制。",
+   "diagram": "左右對稱BJT共尾；IT拆分箭頭；兩曲線總和固定，差動輸出正負明寫。",
+   "presets": [
+    {
+     "a": 1,
+     "b": 10
+    },
+    {
+     "a": 1,
+     "b": 100
+    },
+    {
+     "a": 2,
+     "b": 5
+    }
+   ],
+   "output_id": "c12-output",
+   "plot_id": "c12-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "11-multistage-power.html",
+   "next": "13-current-mirror.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "13",
+   "file": "13-current-mirror.html",
+   "title": "參考支路 0.86 mA，為何鏡出的電流略小？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c13-a",
+     "type": "number",
+     "label": "參考電阻 R（kΩ）",
+     "min": 1,
+     "max": 20,
+     "step": 0.5,
+     "default": 5,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c13-b",
+     "type": "number",
+     "label": "輸出電壓 Vout（V）",
+     "min": 0,
+     "max": 10,
+     "step": 0.5,
+     "default": 2,
+     "options": []
+    }
+   ],
+   "formula": "匹配BJT β100,VCC5V,VBE.7V,忽略Early；Iref=(5−.7)/R；Iout=Iref/(1+2/β)；IB=Iout/β；forward-active須Vout>VB=.7V；無效時只報候選，勿當真實輸出。",
+   "example": "Iref=.86mA；Iout=.86/1.02≈.843137mA；2IB≈.0168627mA；.843137+.0168627=.86；Vout2>.7V成立。",
+   "exercise": "R=10k,Vout=3V：Iref=.43mA，Iout≈.4215686mA，單支IB≈4.215686μA。",
+   "scope": "二極體接法共VBE複製、比例鏡、MOS鏡/順從電壓、主動負載提供高小訊號阻抗，並非輸出電壓無限制。",
+   "diagram": "參考節點Iref=IC1+IB1+IB2，兩晶體；輸出合規區圖與電流平台。",
+   "presets": [
+    {
+     "a": 5,
+     "b": 2
+    },
+    {
+     "a": 5,
+     "b": 0.5
+    },
+    {
+     "a": 10,
+     "b": 3
+    }
+   ],
+   "output_id": "c13-output",
+   "plot_id": "c13-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "12-differential.html",
+   "next": "14-feedback.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "14",
+   "file": "14-feedback.html",
+   "title": "開迴路 1000 倍，回授後為何穩定接近 10 倍？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c14-a",
+     "type": "number",
+     "label": "直流開迴路增益 A0",
+     "min": 10,
+     "max": 10000,
+     "step": 10,
+     "default": 1000,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c14-b",
+     "type": "number",
+     "label": "回授比例 βf",
+     "min": 0.01,
+     "max": 0.1,
+     "step": 0.01,
+     "default": 0.1,
+     "options": []
+    }
+   ],
+   "formula": "Af=A0/(1+A0βf)；教學兩極A(s)=A0/((1+s/(2π100))(1+s/(2π10000)))；L=Aβf；有DC迴路增益>1才有正fc，解(1+(f/100)^2)(1+(f/10000)^2)=(A0βf)^2；PM=180−atan(f/100)−atan(f/10000)（度）。",
+   "example": "L0=100；Af=1000/101≈9.900990；靈敏度1/(1+L0)=1/101；unity fc與PM用模型計算列清楚；此兩極負回授、開迴路無RHP極點，PM只作該模型穩定性指標。 獨立重算fc=7861.053549Hz,PM=52.557739°。",
+   "exercise": "A0=100,βf=.1：Af=100/11≈9.090909，誤差相對理想10為9.0909%；求新fc/PM並比較。 獨立重算fc=990.097087Hz,PM=90.112917°。",
+   "scope": "誤差輸入e=vin−βvo推導；四串並拓樸的取樣/混合及Rin/Rout方向；一極系統增益頻寬近似，不泛稱所有GBW不變；回授相位與起振。",
+   "diagram": "負回授框圖帶減號＋迴路Bode相位和0dB交點/PM括號；兩圖均有公式連結。",
+   "presets": [
+    {
+     "a": 1000,
+     "b": 0.1
+    },
+    {
+     "a": 10000,
+     "b": 0.1
+    },
+    {
+     "a": 100,
+     "b": 0.1
+    }
+   ],
+   "output_id": "c14-output",
+   "plot_id": "c14-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "13-current-mirror.html",
+   "next": "15-opamp.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "15",
+   "file": "15-opamp.html",
+   "title": "0.1 V 感測訊號，怎麼用兩顆電阻放大到 1 V？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c15-a",
+     "type": "number",
+     "label": "輸入 vin（V）",
+     "min": 0,
+     "max": 1,
+     "step": 0.05,
+     "default": 0.1,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c15-b",
+     "type": "number",
+     "label": "回授電阻 Rf（kΩ）",
+     "min": 0,
+     "max": 100,
+     "step": 10,
+     "default": 90,
+     "options": []
+    }
+   ],
+   "formula": "理想非反相，Rg10k，供電±12V；Av=1+Rf/Rg，vo_candidate=Av vin；負回授且未飽和方可v−≈v+，以教學理想rails限制vo=min(12,max(−12,candidate))。",
+   "example": "Av=1+90/10=10；vo=1V；分壓v−=1×10/(90+10)=.1V；iRg=.1/10=.01mA，iRf=.9/90=.01mA，KCL吻合。",
+   "exercise": "vin=.2V,Rf=40k：Av5,vo1V，v−=.2V；兩電阻電流=.02mA。",
+   "scope": "運放內部差動/電壓增益/輸出級/電流鏡；反相−Rf/Rin數值例10k/20k/.1→−.2V；加法器/積分器公式與初值限制；虛短不是實際短路。",
+   "diagram": "三角形±輸入、Rf回接−、Rg到地；每節點已知未知對應KCL；閉迴路轉移直線。",
+   "presets": [
+    {
+     "a": 0.1,
+     "b": 90
+    },
+    {
+     "a": 1,
+     "b": 100
+    },
+    {
+     "a": 0.2,
+     "b": 40
+    }
+   ],
+   "output_id": "c15-output",
+   "plot_id": "c15-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "14-feedback.html",
+   "next": "16-opamp-limits.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "16",
+   "file": "16-opamp-limits.html",
+   "title": "算出 1 V 輸出，為何高頻時卻跟不上？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c16-a",
+     "type": "number",
+     "label": "閉迴路低頻增益 G",
+     "min": 1,
+     "max": 100,
+     "step": 1,
+     "default": 10,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c16-b",
+     "type": "number",
+     "label": "訊號頻率 f（kHz）",
+     "min": 0.1,
+     "max": 200,
+     "step": 0.1,
+     "default": 10,
+     "options": []
+    }
+   ],
+   "formula": "單一主極點GBW=1MHz，fB=GBW/G；要求輸出峰值1V；小訊號幅值=1/sqrt(1+(f/fB)^2)V；SR=.5V/μs；所需SR=2πf×1V；slew正弦峰值上限SR/(2πf)；另算SRlin=2πf×Vlin；若SRlin>SR才判一極預測波形不自洽。SRtarget=2πf×1V只判1V目標能否達成，不能誤判低振幅一極預測失效。 改G時同步選輸入峰值Vin=1/G V，故低頻目標輸出始終1V；並非固定輸入下忽略G。",
+   "example": "G10→fB100kHz；f10kHz→線性幅值≈.995037V；所需SR≈.0628319V/μs<.5；1V正弦速率上限f≈79.5775kHz。",
+   "exercise": "G20,f50kHz：fB50kHz，幅值≈.707107V；所需SR≈.314159V/μs，仍未超.5。",
+   "scope": "失調電壓×雜訊增益、偏壓電流×電阻小例；CMRR/PSRR/雜訊；共模和輸出擺幅/負載電流皆依datasheet，不用供電rails保證。",
+   "diagram": "增益-頻寬曲線和SR斜率比較；正弦切線斜率2πfVp標出。",
+   "presets": [
+    {
+     "a": 10,
+     "b": 10
+    },
+    {
+     "a": 10,
+     "b": 150
+    },
+    {
+     "a": 20,
+     "b": 50
+    }
+   ],
+   "output_id": "c16-output",
+   "plot_id": "c16-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "15-opamp.html",
+   "next": "17-active-filter.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "17",
+   "file": "17-active-filter.html",
+   "title": "1 kHz 訊號通過主動低通後，還有多少振幅？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c17-a",
+     "type": "number",
+     "label": "輸入頻率 f（Hz）",
+     "min": 100,
+     "max": 100000,
+     "step": 100,
+     "default": 1000,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c17-b",
+     "type": "number",
+     "label": "濾波電阻 R（kΩ）",
+     "min": 1,
+     "max": 100,
+     "step": 1,
+     "default": 10,
+     "options": []
+    }
+   ],
+   "formula": "一階RC低通＋理想非反相增益K2，C10nF；fc=1/(2πRC)；H=K/(1+jf/fc)，|H|=K/sqrt(1+(f/fc)^2)，φ=−atan(f/fc)；vin峰值1V。",
+   "example": "RC=.0001s,fc≈1591.549Hz；f/fc=.628319；|H|≈1.693466；φ≈−32.14191°；vo峰值≈1.693466V。",
+   "exercise": "f=2000Hz,R=5k：fc≈3183.099Hz，比值仍.628319，增益和相位與主例相同。",
+   "scope": "二階Sallen–Key等R等C：f0=1/(2πRC),Q=1/(3−K)，K≈1.586得Butterworth Q≈.707；MFB、級聯二階/Butterworth/Chebyshev/Bessel/橢圓取捨不省略；實際GBW需足夠。",
+   "diagram": "RC與運放分層，小訊號H兩步；波形振幅與時間位移；二階小框說Q不等於增益。",
+   "presets": [
+    {
+     "a": 1000,
+     "b": 10
+    },
+    {
+     "a": 100000,
+     "b": 10
+    },
+    {
+     "a": 2000,
+     "b": 5
+    }
+   ],
+   "output_id": "c17-output",
+   "plot_id": "c17-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "16-opamp-limits.html",
+   "next": "18-comparator.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "18",
+   "file": "18-comparator.html",
+   "title": "訊號在門檻附近抖動，為何加兩個門檻就安定？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c18-a",
+     "type": "number",
+     "label": "輸入 vin（V）",
+     "min": 0,
+     "max": 5,
+     "step": 0.1,
+     "default": 3.2,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c18-b",
+     "type": "number",
+     "label": "正回授比例 βf",
+     "min": 0.1,
+     "max": 0.4,
+     "step": 0.1,
+     "default": 0.2,
+     "options": []
+    },
+    {
+     "key": "c",
+     "id": "c18-c",
+     "type": "select",
+     "label": "訊號掃描方向",
+     "min": null,
+     "max": null,
+     "step": null,
+     "default": "rising",
+     "options": [
+      {
+       "value": "rising",
+       "label": "從0 V上升"
+      },
+      {
+       "value": "falling",
+       "label": "從5 V下降"
+      }
+     ]
+    }
+   ],
+   "formula": "反相施密特比較器：vin接−，+端由Vref2.5與vo加權；VOH5,VOL0；VH=β5+(1−β)2.5，VL=β0+(1−β)2.5。上升從high開始：vin≥VH轉low；下降從low開始：vin≤VL轉high。此等號切換為本模擬慣例。",
+   "example": "β=.2→VH=1+2=3V,VL=0+2=2V,遲滯寬1V；vin3.2上升→0V；vin2.5上升仍5V，下降仍0V，歷史決定中間態。",
+   "exercise": "β=.4：VH3.5,VL1.5,寬2V；vin3上升→5V，下降→0V。",
+   "scope": "比較器非運放線性放大；正回授建立記憶，不用虛短；開集極/開汲極需上拉，輸入共模/延遲限制；雜訊振幅小於遲滯且慢變條件。",
+   "diagram": "三角形接法/回授電阻權重，兩條閾值與方向箭頭的遲滯圖，文字說目前分支。",
+   "presets": [
+    {
+     "a": 3.2,
+     "b": 0.2,
+     "c": "rising"
+    },
+    {
+     "a": 2.5,
+     "b": 0.2,
+     "c": "falling"
+    },
+    {
+     "a": 3,
+     "b": 0.4,
+     "c": "rising"
+    }
+   ],
+   "output_id": "c18-output",
+   "plot_id": "c18-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "17-active-filter.html",
+   "next": "19-oscillator.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "19",
+   "file": "19-oscillator.html",
+   "title": "10 kΩ 與 10 nF 的 Wien 橋，為何選出 1.59 kHz？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c19-a",
+     "type": "number",
+     "label": "相等電阻 R（kΩ）",
+     "min": 1,
+     "max": 100,
+     "step": 1,
+     "default": 10,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c19-b",
+     "type": "number",
+     "label": "相等電容 C（nF）",
+     "min": 1,
+     "max": 100,
+     "step": 1,
+     "default": 10,
+     "options": []
+    },
+    {
+     "key": "c",
+     "id": "c19-c",
+     "type": "number",
+     "label": "放大器增益 A",
+     "min": 2.8,
+     "max": 3.2,
+     "step": 0.05,
+     "default": 3.05,
+     "options": []
+    }
+   ],
+   "formula": "Wien橋等R/C，x=ωRC；β(jω)=jx/(1−x²+3jx)；f0=1/(2πRC)，β(f0)=1/3且phase0；L0=A/3。起振需小訊號L0>1，穩態非線性穩幅後有效L≈1；=1僅線性邊界不保證可靠起振。",
+   "example": "R10k,C10n：RC=.0001s，f0≈1591.549Hz；A3.05→L0≈1.016667>1，可由微小擾動成長；不由Barkhausen算振幅。",
+   "exercise": "R20k,C10n,A2.95：f0≈795.7747Hz；L0≈.983333<1，擾動衰減。",
+   "scope": "RC相移；LC Colpitts/Hartley/Clapp f0≈1/(2π√LC)條件；晶體高Q；VCO控制電容與PLL；555保留反覆充放電與方波用途概論，不展開未指定接線的公式數例。",
+   "diagram": "Wien選頻回授＋起振/穩態分離；幅頻曲線峰與相位零；不畫暗示固定真實振幅的假波。",
+   "presets": [
+    {
+     "a": 10,
+     "b": 10,
+     "c": 3.05
+    },
+    {
+     "a": 10,
+     "b": 10,
+     "c": 3
+    },
+    {
+     "a": 20,
+     "b": 10,
+     "c": 2.95
+    }
+   ],
+   "output_id": "c19-output",
+   "plot_id": "c19-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "18-comparator.html",
+   "next": "20-linear-power.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "20",
+   "file": "20-linear-power.html",
+   "title": "5 V 降成 3.3 V，少掉的功率去哪裡？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c20-a",
+     "type": "number",
+     "label": "輸入 Vin（V）",
+     "min": 3,
+     "max": 12,
+     "step": 0.5,
+     "default": 5,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c20-b",
+     "type": "number",
+     "label": "負載電流 Iout（A）",
+     "min": 0,
+     "max": 1,
+     "step": 0.1,
+     "default": 0.2,
+     "options": []
+    }
+   ],
+   "formula": "目標3.3V，教學dropout=.3V；Vout=min(3.3,max(0,Vin−.3))；忽略靜態電流；Pout=Vout I，Ploss=(Vin−Vout)I，η=Vout/Vin；θJA50°C/W,Ta25°C；Tj≈25+50Ploss。 Iout=0且忽略Iq時效率為0/0不定義，只有Iout>0才能用Vout/Vin。",
+   "example": "Vin5,I.2：Pout=.66W,Ploss=.34W,Pin1W；η66%；Tj≈42°C；Vin−Vout1.7>.3有餘裕。",
+   "exercise": "Vin9,I.3：Ploss=(9−3.3)×.3=1.71W,Pout=.99W,η36.6667%,Tj≈110.5°C。",
+   "scope": "線性調整管/誤差放大/參考/回授；LDO壓差/靜態電流/穩定電容和ESR依器件；熱阻只是特定板條件近似，不作保證；量測電壓與溫升。",
+   "diagram": "電源能量分支1W=.66+.34，串聯通道壓降，dropout界線與熱路。",
+   "presets": [
+    {
+     "a": 5,
+     "b": 0.2
+    },
+    {
+     "a": 3,
+     "b": 0.2
+    },
+    {
+     "a": 9,
+     "b": 0.3
+    }
+   ],
+   "output_id": "c20-output",
+   "plot_id": "c20-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "19-oscillator.html",
+   "next": "21-switching-power.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "21",
+   "file": "21-switching-power.html",
+   "title": "12 V 以 40% 時間接通，為何平均是 4.8 V？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c21-a",
+     "type": "number",
+     "label": "輸入 Vin（V）",
+     "min": 5,
+     "max": 24,
+     "step": 1,
+     "default": 12,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c21-b",
+     "type": "number",
+     "label": "導通占空比 D",
+     "min": 0.1,
+     "max": 0.9,
+     "step": 0.1,
+     "default": 0.4,
+     "options": []
+    }
+   ],
+   "formula": "理想Buck,fs100kHz,L100μH,RL10Ω；連續導通穩態Vo=D Vin,IL=Vo/RL；ΔIL=(Vin−Vo)D/(Lfs)；Imin=IL−ΔIL/2；Imin>0才與CCM假設相容；若≤0報CCM候選失效。",
+   "example": "Vo=.4×12=4.8V,IL=.48A；ton4μs,toff6μs；vL,on7.2V/off−4.8V；7.2×4+(−4.8)×6=0 Vμs；ΔI=.288A,min.336A,max.624A。",
+   "exercise": "Vin20,D.5：Vo10V,IL1A,ton5μs,ΔI=.5A,min.75A；Pout10W，理想Pin10W且Iin=.5A。",
+   "scope": "開通/續流回路與電感電流不能跳變；Boost理想CCM Vo=Vin/(1−D)例5/.5=10；反相BuckBoost −D/(1−D)；Flyback/Forward隔離與儲能差別；PWM回授、損耗/紋波。",
+   "diagram": "兩開關狀態各完整電流路徑；vL矩形正負面積相抵與iL三角波。",
+   "presets": [
+    {
+     "a": 12,
+     "b": 0.4
+    },
+    {
+     "a": 5,
+     "b": 0.1
+    },
+    {
+     "a": 20,
+     "b": 0.5
+    }
+   ],
+   "output_id": "c21-output",
+   "plot_id": "c21-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "20-linear-power.html",
+   "next": "22-dac.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "22",
+   "file": "22-dac.html",
+   "title": "4 位元碼 1001，能輸出剛好 3.3 V 嗎？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c22-a",
+     "type": "select",
+     "label": "解析度 N（bit）",
+     "min": null,
+     "max": null,
+     "step": null,
+     "default": 4,
+     "options": [
+      {
+       "value": 2,
+       "label": "2 bit"
+      },
+      {
+       "value": 4,
+       "label": "4 bit"
+      },
+      {
+       "value": 8,
+       "label": "8 bit"
+      }
+     ]
+    },
+    {
+     "key": "b",
+     "id": "c22-b",
+     "type": "number",
+     "label": "輸入十進位碼 D",
+     "min": 0,
+     "max": 255,
+     "step": 1,
+     "default": 9,
+     "options": []
+    }
+   ],
+   "formula": "理想單極DAC,Vref3.3；q=Vref/2^N；有效D整數0..2^N−1；Vo=Dq；最大碼Vmax=Vref−q（非Vref）；N改動時D夾在合法範圍，UI max同步。",
+   "example": "N4→16碼,q=3.3/16=.20625V；D9=1001₂→Vo=9×.20625=1.85625V；位元權重3.3(1/2+0/4+0/8+1/16)同值；最大碼15→3.09375V。",
+   "exercise": "N8,D128：q=3.3/256=.012890625V；Vo=1.65V；最大255→3.287109375V。",
+   "scope": "R-2R用R與2R兩種值，位權電流分流；電流舵/ΣΔ oversampling與濾波；settling、glitch、INL/DNL、基準誤差，不把理想階梯當真器件精度。",
+   "diagram": "四位權重箭頭匯流與階梯碼線；相鄰碼q、最高未達Vref標出。",
+   "presets": [
+    {
+     "a": 4,
+     "b": 9
+    },
+    {
+     "a": 4,
+     "b": 15
+    },
+    {
+     "a": 8,
+     "b": 128
+    }
+   ],
+   "output_id": "c22-output",
+   "plot_id": "c22-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "21-switching-power.html",
+   "next": "23-adc.html",
+   "source": "原筆記下冊"
+  },
+  {
+   "id": "23",
+   "file": "23-adc.html",
+   "title": "1.9 V 進入 4 位元 ADC，為何只得到碼 9？",
+   "params": [
+    {
+     "key": "a",
+     "id": "c23-a",
+     "type": "number",
+     "label": "輸入 Vin（V）",
+     "min": 0,
+     "max": 3.3,
+     "step": 0.05,
+     "default": 1.9,
+     "options": []
+    },
+    {
+     "key": "b",
+     "id": "c23-b",
+     "type": "select",
+     "label": "解析度 N（bit）",
+     "min": null,
+     "max": null,
+     "step": null,
+     "default": 4,
+     "options": [
+      {
+       "value": 2,
+       "label": "2 bit"
+      },
+      {
+       "value": 4,
+       "label": "4 bit"
+      },
+      {
+       "value": 8,
+       "label": "8 bit"
+      }
+     ]
+    }
+   ],
+   "formula": "本課理想單極ADC採下緣分箱：q=3.3/2^N；D=min(2^N−1,floor(Vin/q))，Vin限制0..3.3。碼D涵蓋[Dq,(D+1)q)，最後箱含3.3端點；DAC重建下緣VDAC=Dq；箱中心重建Vmid=(D+.5)q，e=Vin−Vmid，內部|e|≤q/2。",
+   "example": "q=.20625；1.9/.20625≈9.212121→floor9；箱[1.85625,2.0625)；VDAC=1.85625；Vmid=1.959375；e=−.059375V；SAR試碼8→12→10→9並比較。",
+   "exercise": "N4,Vin3.3：計算floor16但截成15；箱[3.09375,3.3]；Vmid3.196875；e=.103125=q/2；不要生成第16碼。",
+   "scope": "取樣/保持先於量化；Nyquist需帶限與抗混疊；Flash 2^N−1比較器、SAR、Pipeline、ΣΔ、積分型各機制和取捨；ENOB/SNR≈6.02N+1.76只理想滿幅正弦/均勻量化假設；SFDR。",
+   "diagram": "量化階梯和輸入落箱、端點開閉；SAR二分四步；取樣率與解析度不是同量。",
+   "presets": [
+    {
+     "a": 1.9,
+     "b": 4
+    },
+    {
+     "a": 3.3,
+     "b": 4
+    },
+    {
+     "a": 1.65,
+     "b": 8
+    }
+   ],
+   "output_id": "c23-output",
+   "plot_id": "c23-plot",
+   "criteria": "數值、圖與文字共用模型；符號單位明確；條件失效要說明，不能宣稱有效結果。",
+   "static_contract": "首屏算圖；主例直接完整；前置回連；近題提示/完整詳解；無JS可讀。",
+   "prev": "22-dac.html",
+   "next": "index.html",
+   "source": "原筆記下冊"
+  }
+ ]
+}

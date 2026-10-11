@@ -1,0 +1,57 @@
+{
+ "contract": "wf-table/1",
+ "source": "PROJECT-BRIEF.md",
+ "extracted": "2026-10-11",
+ "link_columns": [],
+ "columns": [
+  "question",
+  "cause",
+  "evidence",
+  "counterexample",
+  "chapter"
+ ],
+ "rows": [
+  {
+   "question": "為何要先求工作點，才能談增益？",
+   "cause": "電源與偏壓網路先決定元件的直流狀態；該點附近I–V曲線的斜率才決定小變動放大多少。把大寫Q量放進gm，再以小寫訊號乘gm，得到的才是增量。",
+   "evidence": "先用電表量直流端電壓，再以小幅訊號與示波器量增益。",
+   "counterexample": "增益算得漂亮，但Q點落在截止或飽和，便不能套該小訊號模型。",
+   "chapter": "08-small-signal.html"
+  },
+  {
+   "question": "為何圖中的工作區必須在計算後再檢查？",
+   "cause": "選式時先作一個候選假設；解出端電壓後，再把它代回該區的條件。負載與電源可能使電晶體沒有足夠餘裕，候選解會自己否定原假設。",
+   "evidence": "BJT檢VC>VB；MOS檢VDS相對VOV。",
+   "counterexample": "只看VGS已超過門檻，不能就說MOS一定飽和。",
+   "chapter": "06-mos-bias.html"
+  },
+  {
+   "question": "為何加回授會把增益降下來，卻更好用？",
+   "cause": "輸出的一部分回到比較點抵消輸入，元件本身的增益變動被迴路壓低。用較小且可預測的閉迴路增益，交換精度；相位延遲則帶來穩定性代價。",
+   "evidence": "改變開迴路增益，量閉迴路比例與頻率響應。",
+   "counterexample": "直流是負回授不代表所有頻率都不會振盪。",
+   "chapter": "14-feedback.html"
+  },
+  {
+   "question": "為何同一個Vin會有不同比較器輸出？",
+   "cause": "正回授讓輸出參與門檻設定。兩門檻之間，從低值上升和從高值下降會保留各自原狀態，這份歷史就是遲滯的用途。",
+   "evidence": "慢掃輸入並用示波器記錄上升和下降切換電壓。",
+   "counterexample": "一般無遲滯理想比較器只有一個門檻，不具此記憶區。",
+   "chapter": "18-comparator.html"
+  },
+  {
+   "question": "為何穩壓器電壓降得越多，反而越熱？",
+   "cause": "線性元件通過近似同一負載電流，輸入減輸出的電壓差乘電流就是耗散。切換式電源改用電感儲能與兩段回路，不能套同一壓差耗散公式。",
+   "evidence": "量輸入/輸出電壓與電流作功率收支，再看溫升是否與熱阻近似一致。",
+   "counterexample": "無負載且忽略靜態電流時，不能把0/0功率效率當成已定義。",
+   "chapter": "20-linear-power.html"
+  },
+  {
+   "question": "為何最大碼不是參考電壓？",
+   "cause": "N位元有2^N個碼，從零編號只到2^N−1。本課每個步階取Vref/2^N，因此最大DAC輸出少一個步階；ADC最上端則要明確截在最大碼。",
+   "evidence": "列出最小碼、相鄰碼、最高碼，重算步階和端點。",
+   "counterexample": "若重建取箱中心，誤差界是±q/2；用下緣重建時不能照抄同一句。",
+   "chapter": "23-adc.html"
+  }
+ ]
+}

@@ -30,6 +30,7 @@
 | [電路學](電路學-互動課程/index.html) | 06 | <https://justty32.github.io/engineer_study/circuit-analysis/> |
 | [圖解電路學：完整計算與近題詳解](圖解電路學/dist/index.html) | 06 | <https://justty32.github.io/engineer_study/circuits-little-lab/> |
 | [電子學](電子學-互動課程/index.html) | 07 | <https://justty32.github.io/engineer_study/electronics/> |
+| [圖解電子學：模型條件與完整演算](圖解電子學/dist/index.html) | 07 | <https://justty32.github.io/engineer_study/electronics-little-lab/> |
 | [電磁學](電磁學-互動課程/index.html) | 08 | <https://justty32.github.io/engineer_study/electromagnetics/> |
 | [信號與系統](信號與系統-互動課程/index.html) | 09 | <https://justty32.github.io/engineer_study/signals-systems/> |
 | [邏輯設計](邏輯設計-互動課程/index.html) | 10 | <https://justty32.github.io/engineer_study/logic-design/> |
