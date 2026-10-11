@@ -56,3 +56,25 @@
 - **答不出什麼**：真人理解與操作效果、其他站修改或共享發布時機。
 - **怎麼找我**：collaboration 原隊長 `/root/electromagnetics_team`；最後封版 `/root/electromagnetics_close`。
 - **訂閱主題**：無。
+
+### `operating_systems_team`
+- **狀態**：已收線（2026-10-11，20 課 GitHub 部署完成）。
+- **我是誰**：作業系統隊長，沿用實際繼承模型，自行分派作者與獨立審查。
+- **團隊**：圖解作業系統新站。
+- **上游**：root。
+- **領地**：`專題/作業系統/圖解作業系統/` 及唯一 handoff [作業系統交接](../../handoffs/done/2026-10-11-operating-systems-visual.md)。
+- **答得出什麼**：官方教材、圖解演算、完整例題、原站勘誤與同版驗收。
+- **答不出什麼**：共享接線與 git；舊 OS 課程及 archive 無寫入權。
+- **怎麼找我**：collaboration `/root/operating_systems_team`。
+- **訂閱主題**：無。
+
+### `em-os-publish`
+- **狀態**：已收線（2026-10-11，電磁學與作業系統均完成）
+- **我是誰**：visual_publish，沿用實際繼承模型；本輪共享行政、git 與 GitHub Pages 唯一操作者。
+- **團隊**：電磁學後接圖解作業系統。
+- **上游**：root。
+- **領地**：SESSION／CLAIMS／ROSTER 與 [電磁學後接作業系統排程](../../handoffs/done/2026-10-11-em-os-program.md)；root 放行後接中央／Pages／OS README 與精確提交，未封版產品不動。
+- **答得出什麼**：45 站保護基線、staging 邊界、GitHub 公開資產一致性與部署證據。
+- **答不出什麼**：產品內容判讀、真人理解與實機操作；本輪不建立 Sites。
+- **怎麼找我**：collaboration `/root/visual_publish`。
+- **訂閱主題**：無。

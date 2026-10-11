@@ -6,8 +6,6 @@
 
 | 線 | 可寫目錄 | 唯讀 / 禁區 | 上線時間 |
 |----|---------|------------|---------|
-| operating_systems_team | `專題/作業系統/圖解作業系統/`；唯一 handoff [作業系統交接](../../handoffs/2026-10-11-operating-systems-visual.md) | 舊 OS 互動課程及 archive、共享行政／中央／Pages／README／git 禁改；沒有原文 MD 修訂領地 | 2026-10-11 |
-| EM→OS 發布行政 | [電磁學後接作業系統排程](../../handoffs/2026-10-11-em-os-program.md)；共享行政及 root 放行後串行 git／接線 | OS 產品由隊長持有；未凍結產品、舊站與使用者檔禁改 | 2026-10-11 |
 
 ### 保留給調度者，任何線都不得寫
 
@@ -22,6 +20,8 @@
 
 | 線 | 完成證據 | 收線時間 |
 |----|---------|---------|
+| operating_systems_team | [完整圖解演算、來源勘誤及 GitHub 部署](../../handoffs/done/2026-10-11-operating-systems-visual.md) | 2026-10-11 |
+| EM→OS 發布行政 | [電磁學與作業系統完整收線](../../handoffs/done/2026-10-11-em-os-program.md) | 2026-10-11 |
 | electromagnetics-visual 團隊／close 接手線 | [同版封版、公開部署與單課收線](../../handoffs/done/2026-10-11-electromagnetics-visual.md) | 2026-10-11 |
 | course-program 發布行政 | [六門圖解計算課程完整收線](../../handoffs/done/2026-10-11-course-program.md) | 2026-10-11 |
 | electronics-visual 團隊 | [模型圖解、完整演算與 GitHub 部署](../../handoffs/done/2026-10-11-electronics-visual.md) | 2026-10-11 |

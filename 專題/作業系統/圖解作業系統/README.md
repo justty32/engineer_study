@@ -1,5 +1,7 @@
 # 圖解作業系統
 
+[GitHub Pages 公開版](https://justty32.github.io/engineer_study/operating-systems-little-lab/)｜[驗收與部署證據](驗收紀錄.md)
+
 從「程式如何輪流使用硬體」開始，沿著行程、排程、同步、虛擬記憶體、檔案與 I/O，追到一次系統呼叫如何完成。20 課均以原創圖、完整計算或狀態演進、回代檢查與遷移練習建立機制；會寫程式即可開始，不要求先懂作業系統。
 
 - [本機課程首頁](dist/index.html)

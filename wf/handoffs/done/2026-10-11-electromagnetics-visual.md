@@ -46,4 +46,4 @@ root 收到技術終檢與全隊收線證據後，才放行 publisher 依精確 
 
 70 項交付、3 份接線與 4 份本輪共享行政精確入產品 commit，共 77 檔。中央 44→45，既有 slug 保留；既有 44 站共 751 個部署資產 Git blob 及舊電磁學 25 檔 SHA 不變，獨立 lab.css 不動 FAMILY。公開 manifest 與交付範圍保存產品 commit 當時文件／原 handoff 路徑；後續只補部署記錄、README 及收線，不改 33 成品或三冊修文。完整持久結果見 [驗收與部署](../../../電機/02-電機核心/圖解電磁學/驗收紀錄.md)，機器證據在 `/tmp/electromagnetics-visual-publication/`。
 
-原隊長連線中斷、接手者 electromagnetics_close 完成同版封裝的事實保留；原作者、四線、接手者及自有發布程序均已收妥。無 Sites，沒有新增實機待辦。電磁學單課已完成；[EM→OS 接續程序](../2026-10-11-em-os-program.md) 仍 active，作業系統尚待 root 啟動，整體目標未完成。
+原隊長連線中斷、接手者 electromagnetics_close 完成同版封裝的事實保留；原作者、四線、接手者及自有發布程序均已收妥。無 Sites，沒有新增實機待辦。電磁學單課已完成；本課收線當時，[EM→OS 接續程序](2026-10-11-em-os-program.md) 仍 active、作業系統待啟動；後續 OS 已發布收線，完整結果見該完成交接。
