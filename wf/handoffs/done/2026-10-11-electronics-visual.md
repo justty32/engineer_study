@@ -1,6 +1,6 @@
 # 圖解電子學新站交接
 
-2026-10-11：24 章及首頁、字典、來源頁共 27 頁完成，產品已凍結；數學、教學、技術三線未決缺陷均為 0，待父線 `/root` 放行發布。全隊使用實際可用的繼承模型，同時上限 6 人；來源、建置者與兩位作者、三線獨立驗收均已完成，未自行操作 git。
+2026-10-11：24 章及首頁、字典、來源頁共 27 頁完成，已通過數學、教學、技術三線驗收並完成 GitHub 公開部署，未決缺陷為 0。全隊使用實際可用的繼承模型，同時上限 6 人；來源、建置者與兩位作者、三線獨立驗收均已完成，未自行操作 git。
 
 ## 精確交付
 
@@ -23,3 +23,13 @@
 27 頁於 headless Chromium 的 1440／390／320 尺寸、鍵盤、重設與控制邊界、離線、無 JS、HTML／相對連結／UTF-8 均通過。證據在 `/tmp/electronics-math-review/`、`/tmp/electronics-teaching-review/`、`/tmp/electronics-technical-qa/`。代表章 02 的 PC 圖解與完整計算已由父線目視抽驗。
 
 舊電子學 25 資產與 `/tmp/electronics-old-baseline.json` 一致；styles.css 與正本 byte 相同，原 17 門 FAMILY 檢查通過。wf-lint 結束碼 1，僅兩條事前已知的 2026-09-26 歷史引用斷鏈，未改歷史湊綠燈。所有作者已停筆，自有 server／browser 退出；未宣稱真人理解、真機觸控或跨實體瀏覽器驗收。
+
+## 正式部署與收線
+
+[公開圖解電子學](https://justty32.github.io/engineer_study/electronics-little-lab/) 已上線。產品 commit `fcbc6836b10e90b783aeaf2dff93a388a841711d`、[Pages 工作 38118123927](https://github.com/justty32/engineer_study/actions/runs/38118123927) 成功。30 個產品及中央 2 檔逐雜湊相符，4 個新舊入口正常，共 36 次公開 HTTP 全數 200。
+
+50 份凍結交付加 4 份接線精確提交；中央 43→44，原 slug 保留。既有 43 課共 721 個部署資產的 Git blob 與前基線 `09952a1` 相同，舊電子 25 檔 SHA-256 亦符合原基線。新 styles.css 登錄 FAMILY 後 18 下游 --check 全數相同，正本及原 17 複本未改；未執行 --sync。
+
+release 與 QA manifest 保存產品 commit 當時的原 handoff／文件快照；後續只補 README、驗收部署與本檔移至 done，不改 30 成品與三冊原文。機器證據在 `/tmp/electronics-visual-publication/`，持久記錄見 [驗收與部署](../../../電機/02-電機核心/圖解電子學/驗收紀錄.md)。僅 GitHub、無 Sites；作者／審查／QA 與自有發布程序已退出。
+
+本輪六門圖解計算課程全部交付；真人理解／觸控仍未驗，不新增使用者待辦或批准流程。共享行政與總程序一併收線，其他原有工作保持。

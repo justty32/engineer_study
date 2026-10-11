@@ -1,5 +1,7 @@
 # 圖解電子學
 
+[GitHub Pages 公開版](https://justty32.github.io/engineer_study/electronics-little-lab/)｜[驗收與部署證據](驗收紀錄.md)
+
 從回路、半導體與二極體，到偏壓、小訊號、放大器、回授、振盪、電源與 ADC／DAC。24 章皆以原創算圖、完整數值主例、條件重驗與近題詳解串接，`dist/` 可離線開啟。
 
 - [課程首頁](dist/index.html)
