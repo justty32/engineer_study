@@ -1,0 +1,109 @@
+{
+ "contract": "wf-table/1",
+ "source": "教材查證.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "original_path"
+ ],
+ "columns": [
+  "id",
+  "classification",
+  "original_path",
+  "original_location",
+  "original_text",
+  "proposed_text",
+  "reason",
+  "evidence_ids",
+  "review_status"
+ ],
+ "rows": [
+  {
+   "id": "C01",
+   "classification": "缺條件",
+   "original_path": "../06-電路學-上.md",
+   "original_location": "2.6",
+   "original_text": "處理時把其他源歸零",
+   "proposed_text": "只把其他獨立源歸零，相依源與控制關係保留。",
+   "reason": "受控源不是獨立激勵。",
+   "evidence_ids": "SRC05；SRC08",
+   "review_status": "獨立複核N01接受；隊長授權已落實"
+  },
+  {
+   "id": "C02",
+   "classification": "缺條件",
+   "original_path": "../06-電路學-下.md",
+   "original_location": "5.1",
+   "original_text": "其餘源歸零",
+   "proposed_text": "只將獨立源歸零，相依源保留；必要時加測試源求看入電阻。",
+   "reason": "相依源影響Rth與時間常數。",
+   "evidence_ids": "SRC09；SRC10",
+   "review_status": "獨立複核N02接受；隊長授權已落實"
+  },
+  {
+   "id": "C03",
+   "classification": "真錯誤",
+   "original_path": "../06-電路學-下.md",
+   "original_location": "6.1",
+   "original_text": "先以初始條件決定自然響應係數，再加上最後的直流穩態值",
+   "proposed_text": "對有穩定直流終值的步階響應，先寫總解＝直流穩態值＋自然響應，再將初值與初始斜率代入總解求係數；初始斜率由切換後KCL/KVL取得。",
+   "reason": "零初值階躍反例：自然解若先套零初條將錯成0，加V0後破壞vC連續性。",
+   "evidence_ids": "SRC14",
+   "review_status": "獨立複核N03接受；隊長授權已落實"
+  },
+  {
+   "id": "C04",
+   "classification": "缺條件",
+   "original_path": "../06-電路學-下.md",
+   "original_location": "9.1",
+   "original_text": "四種可互換",
+   "proposed_text": "各組參數存在且相應變換可逆時可互換；例如Y=Z^(-1)要求det Z≠0。",
+   "reason": "不同端口變數未必皆可獨立指定。",
+   "evidence_ids": "SRC20",
+   "review_status": "獨立複核N04接受；隊長授權已落實"
+  },
+  {
+   "id": "C05",
+   "classification": "缺條件",
+   "original_path": "../06-電路學-下.md",
+   "original_location": "10",
+   "original_text": "I2/I1=N1/N2",
+   "proposed_text": "電壓均由點到非點量測；I1入一次側點端、I2出二次側點端才有I2/I1=N1/N2；若兩者均入點端則比值加負號。",
+   "reason": "電流方向決定正負，不能省略。",
+   "evidence_ids": "SRC23",
+   "review_status": "獨立複核N05接受；隊長授權已落實"
+  },
+  {
+   "id": "C06",
+   "classification": "澄清",
+   "original_path": "../06-電路學-上.md",
+   "original_location": "2.5",
+   "original_text": "Rth為獨立源歸零後看入電阻",
+   "proposed_text": "補：相依源保留，可加測試源，電流入端口正端時計Rth=Vtest/Itest。",
+   "reason": "原句已限定獨立源並非錯誤；僅補操作方法。",
+   "evidence_ids": "SRC09",
+   "review_status": "獨立複核N07接受；隊長授權已落實"
+  },
+  {
+   "id": "C07",
+   "classification": "缺條件",
+   "original_path": "../06-電路學-上.md",
+   "original_location": "1.1",
+   "original_text": "電感串聯相加、並聯倒數相加（後者假設彼此沒有磁耦合）。",
+   "proposed_text": "電感串聯相加、並聯倒數相加（兩者均假設彼此沒有磁耦合）。",
+   "reason": "耦合串聯含±2M項，不能僅把無互感條件限定於並聯。",
+   "evidence_ids": "SRC25",
+   "review_status": "獨立複核N06接受；隊長授權已落實"
+  },
+  {
+   "id": "C08",
+   "classification": "澄清",
+   "original_path": "../06-電路學-上.md",
+   "original_location": "1.1公式前",
+   "original_text": "未明示元件定值與被動符號慣例。",
+   "proposed_text": "以下採定值理想元件，並以電流流入電壓正端為正方向（被動符號慣例）；p=vi為元件吸收的瞬時功率，p<0表示元件送出功率。",
+   "reason": "元件公式依方向且定值C才能將d(Cv)/dt化成C dv/dt。公式本身未錯。",
+   "evidence_ids": "SRC02；SRC11",
+   "review_status": "獨立複核N08接受；隊長授權已落實"
+  }
+ ]
+}

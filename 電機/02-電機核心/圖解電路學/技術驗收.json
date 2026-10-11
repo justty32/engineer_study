@@ -1,0 +1,2856 @@
+{
+ "contract": "wf-table/1",
+ "source": "驗收紀錄.md",
+ "extracted": "2026-10-11",
+ "link_columns": [
+  "page_path"
+ ],
+ "columns": [
+  "id",
+  "scope",
+  "status",
+  "evidence",
+  "page_path"
+ ],
+ "rows": [
+  {
+   "id": "ENV",
+   "scope": "2026-10-11 獨立技術驗收",
+   "status": "通過",
+   "evidence": {
+    "browser": "既有 Playwright Core + headless Chromium 1243；未下載工具或接觸使用者桌面",
+    "viewports": [
+     "1440×900",
+     "390×844",
+     "320×844"
+    ],
+    "transport": [
+     "本機 HTTP 8793",
+     "file:// 離線、JavaScript 開啟",
+     "file:// 離線、JavaScript 關閉"
+    ],
+    "independence": "未參與建置，數值期望取獨立數學審稿的 APP-FIXTURES，不調用產品 calculate 產生答案。"
+   },
+   "page_path": ""
+  },
+  {
+   "id": "STRUCTURE",
+   "scope": "23 HTML + app.js/lab.css",
+   "status": "通過",
+   "evidence": {
+    "html_count": 23,
+    "errors": [],
+    "checks": "UTF-8 無 BOM/替代碼/控制碼，HTML 語言/viewport，唯一 id/DOM 契約，local href/src/錨點，SVG accessible names，LaTeX 殘留，無外部 runtime 資源；官方來源超連結允許。",
+    "external_hyperlinks": 50
+   },
+   "page_path": ""
+  },
+  {
+   "id": "RUNTIME",
+   "scope": "全站 HTTP/file/no-JS",
+   "status": "通過",
+   "evidence": {
+    "baseline_console": [
+     {
+      "mode": "http",
+      "url": "http://127.0.0.1:8793/00-start.html",
+      "error": "Failed to load resource: the server responded with a status of 404 (File not found)"
+     }
+    ],
+    "diagnosis": "唯一基線 console error 的 console.location 為 http://127.0.0.1:8793/favicon.ico；瀏覽器自動請求圖示回404，已由 FAVICON-DELTA 修復。",
+    "final_fresh_browser_errors": [],
+    "external_requests": [],
+    "layout_checks": 69,
+    "offline_pages": 23,
+    "nojs_pages": 23,
+    "errors": []
+   },
+   "page_path": ""
+  },
+  {
+   "id": "PAGE-00",
+   "scope": "00-start.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "00-start.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "00-start.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "00-start.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "00-start.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "00-start.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "00-start.html",
+     "default": [
+      {
+       "label": "回路電流",
+       "value": "1 A"
+      },
+      {
+       "label": "電阻吸收功率",
+       "value": "6 W"
+      },
+      {
+       "label": "電源吸收功率",
+       "value": "-6 W"
+      }
+     ],
+     "min": [
+      {
+       "label": "回路電流",
+       "value": "3 A"
+      },
+      {
+       "label": "電阻吸收功率",
+       "value": "18 W"
+      },
+      {
+       "label": "電源吸收功率",
+       "value": "-18 W"
+      }
+     ],
+     "max": [
+      {
+       "label": "回路電流",
+       "value": "0.5 A"
+      },
+      {
+       "label": "電阻吸收功率",
+       "value": "3 W"
+      },
+      {
+       "label": "電源吸收功率",
+       "value": "-3 W"
+      }
+     ],
+     "reset": [
+      {
+       "label": "回路電流",
+       "value": "1 A"
+      },
+      {
+       "label": "電阻吸收功率",
+       "value": "6 W"
+      },
+      {
+       "label": "電源吸收功率",
+       "value": "-6 W"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 電阻 R（Ω），縱軸 回路電流（A）。實線為模型掃描，圓點為 12 Ω 時的 0.5 A。",
+     "why": "同樣 6 V，R = 6 Ω 使電流成為 (6 V)/R。電源的負功率等於電阻的正功率，總和為零。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/00-start.html"
+  },
+  {
+   "id": "PAGE-01",
+   "scope": "01-laws.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "01-laws.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "01-laws.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "01-laws.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "01-laws.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "01-laws.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "01-laws.html",
+     "default": [
+      {
+       "label": "回路電流",
+       "value": "2 A"
+      },
+      {
+       "label": "2 Ω 壓降",
+       "value": "4 V"
+      },
+      {
+       "label": "4 Ω 壓降",
+       "value": "8 V"
+      }
+     ],
+     "min": [
+      {
+       "label": "回路電流",
+       "value": "0 A"
+      },
+      {
+       "label": "2 Ω 壓降",
+       "value": "0 V"
+      },
+      {
+       "label": "4 Ω 壓降",
+       "value": "0 V"
+      }
+     ],
+     "max": [
+      {
+       "label": "回路電流",
+       "value": "3 A"
+      },
+      {
+       "label": "2 Ω 壓降",
+       "value": "6 V"
+      },
+      {
+       "label": "4 Ω 壓降",
+       "value": "12 V"
+      }
+     ],
+     "reset": [
+      {
+       "label": "回路電流",
+       "value": "2 A"
+      },
+      {
+       "label": "2 Ω 壓降",
+       "value": "4 V"
+      },
+      {
+       "label": "4 Ω 壓降",
+       "value": "8 V"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 電源 Vₛ（V），縱軸 回路電流（A）。實線為模型掃描，圓點為 18 V 時的 3 A。",
+     "why": "兩電阻共有電流 Vₛ/(2 Ω + 4 Ω)。兩段壓降相加 = 12 V，剛好抵消電源上升。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/01-laws.html"
+  },
+  {
+   "id": "PAGE-02",
+   "scope": "02-divider.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "02-divider.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "02-divider.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "02-divider.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "02-divider.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "02-divider.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "02-divider.html",
+     "default": [
+      {
+       "label": "負載電壓",
+       "value": "6 V"
+      },
+      {
+       "label": "源電流",
+       "value": "3 mA"
+      },
+      {
+       "label": "並聯等效電阻",
+       "value": "2 kΩ"
+      }
+     ],
+     "min": [
+      {
+       "label": "負載電壓",
+       "value": "3.42857 V"
+      },
+      {
+       "label": "源電流",
+       "value": "4.28571 mA"
+      },
+      {
+       "label": "並聯等效電阻",
+       "value": "0.8 kΩ"
+      }
+     ],
+     "max": [
+      {
+       "label": "負載電壓",
+       "value": "7.2 V"
+      },
+      {
+       "label": "源電流",
+       "value": "2.4 mA"
+      },
+      {
+       "label": "並聯等效電阻",
+       "value": "3 kΩ"
+      }
+     ],
+     "reset": [
+      {
+       "label": "負載電壓",
+       "value": "6 V"
+      },
+      {
+       "label": "源電流",
+       "value": "3 mA"
+      },
+      {
+       "label": "並聯等效電阻",
+       "value": "2 kΩ"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 負載 R_L（kΩ），縱軸 負載電壓（V）。實線為模型掃描，圓點為 12 kΩ 時的 7.2 V。",
+     "why": "R_L = 4 kΩ 先與 4 kΩ 並聯；負載變小會拉低並聯電阻，輸出更低，不能沿用無載 8 V。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/02-divider.html"
+  },
+  {
+   "id": "PAGE-03",
+   "scope": "03-nodal.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "03-nodal.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "03-nodal.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "03-nodal.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "03-nodal.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "03-nodal.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "03-nodal.html",
+     "default": [
+      {
+       "label": "節點 A 電壓",
+       "value": "8 V"
+      },
+      {
+       "label": "節點 B 電壓",
+       "value": "4 V"
+      },
+      {
+       "label": "A → B 電流",
+       "value": "2 mA"
+      }
+     ],
+     "min": [
+      {
+       "label": "節點 A 電壓",
+       "value": "0 V"
+      },
+      {
+       "label": "節點 B 電壓",
+       "value": "0 V"
+      },
+      {
+       "label": "A → B 電流",
+       "value": "0 mA"
+      }
+     ],
+     "max": [
+      {
+       "label": "節點 A 電壓",
+       "value": "16 V"
+      },
+      {
+       "label": "節點 B 電壓",
+       "value": "8 V"
+      },
+      {
+       "label": "A → B 電流",
+       "value": "4 mA"
+      }
+     ],
+     "reset": [
+      {
+       "label": "節點 A 電壓",
+       "value": "8 V"
+      },
+      {
+       "label": "節點 B 電壓",
+       "value": "4 V"
+      },
+      {
+       "label": "A → B 電流",
+       "value": "2 mA"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 注入電流 Iₛ（mA），縱軸 節點 A 電壓（V）。實線為模型掃描，圓點為 12 mA 時的 16 V。",
+     "why": "A 流向地 4 mA，加上 A → B 的 2 mA，等於注入 6 mA。箭頭不變，數字同時滿足兩個節點。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/03-nodal.html"
+  },
+  {
+   "id": "PAGE-04",
+   "scope": "04-mesh.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "04-mesh.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "04-mesh.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "04-mesh.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "04-mesh.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "04-mesh.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "04-mesh.html",
+     "default": [
+      {
+       "label": "左網目 i₁",
+       "value": "3.6 A"
+      },
+      {
+       "label": "右網目 i₂",
+       "value": "1.2 A"
+      },
+      {
+       "label": "共支 i₁−i₂",
+       "value": "2.4 A"
+      }
+     ],
+     "min": [
+      {
+       "label": "左網目 i₁",
+       "value": "0 A"
+      },
+      {
+       "label": "右網目 i₂",
+       "value": "0 A"
+      },
+      {
+       "label": "共支 i₁−i₂",
+       "value": "0 A"
+      }
+     ],
+     "max": [
+      {
+       "label": "左網目 i₁",
+       "value": "7.2 A"
+      },
+      {
+       "label": "右網目 i₂",
+       "value": "2.4 A"
+      },
+      {
+       "label": "共支 i₁−i₂",
+       "value": "4.8 A"
+      }
+     ],
+     "reset": [
+      {
+       "label": "左網目 i₁",
+       "value": "3.6 A"
+      },
+      {
+       "label": "右網目 i₂",
+       "value": "1.2 A"
+      },
+      {
+       "label": "共支 i₁−i₂",
+       "value": "2.4 A"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 左電源 Vₛ（V），縱軸 共支 i₁−i₂（A）。實線為模型掃描，圓點為 24 V 時的 4.8 A。",
+     "why": "共用電阻上兩個順時針網目方向相反，真實支路電流要相減。(4 Ω)i₁−(2 Ω)i₂ = 12 V，−(2 Ω)i₁+(6 Ω)i₂ = 0 V。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/04-mesh.html"
+  },
+  {
+   "id": "PAGE-05",
+   "scope": "05-controlled.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "05-controlled.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "05-controlled.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "05-controlled.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "05-controlled.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "05-controlled.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "05-controlled.html",
+     "default": [
+      {
+       "label": "節點 A 電壓",
+       "value": "6 V"
+      },
+      {
+       "label": "節點 B 電壓",
+       "value": "0 V"
+      },
+      {
+       "label": "B → 地電流",
+       "value": "0 mA"
+      }
+     ],
+     "min": [
+      {
+       "label": "節點 A 電壓",
+       "value": "4 V"
+      },
+      {
+       "label": "節點 B 電壓",
+       "value": "4 V"
+      },
+      {
+       "label": "B → 地電流",
+       "value": "1 mA"
+      }
+     ],
+     "max": [
+      {
+       "label": "節點 A 電壓",
+       "value": "8 V"
+      },
+      {
+       "label": "節點 B 電壓",
+       "value": "-4 V"
+      },
+      {
+       "label": "B → 地電流",
+       "value": "-1 mA"
+      }
+     ],
+     "reset": [
+      {
+       "label": "節點 A 電壓",
+       "value": "6 V"
+      },
+      {
+       "label": "節點 B 電壓",
+       "value": "0 V"
+      },
+      {
+       "label": "B → 地電流",
+       "value": "0 mA"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 跨節點電壓 Vₛ（V），縱軸 節點 A 電壓（V）。實線為模型掃描，圓點為 12 V 時的 8 V。",
+     "why": "Va−Vb 固定等於 6 V，超節點仍只注入 3 mA。A、B 對地兩支電流相加仍等於 3 mA。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/05-controlled.html"
+  },
+  {
+   "id": "PAGE-06",
+   "scope": "06-superposition.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "06-superposition.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "06-superposition.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "06-superposition.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "06-superposition.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "06-superposition.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "06-superposition.html",
+     "default": [
+      {
+       "label": "節點總電壓",
+       "value": "6 V"
+      },
+      {
+       "label": "電流源單獨貢獻",
+       "value": "3 V"
+      },
+      {
+       "label": "負載功率",
+       "value": "18 mW"
+      }
+     ],
+     "min": [
+      {
+       "label": "節點總電壓",
+       "value": "3 V"
+      },
+      {
+       "label": "電流源單獨貢獻",
+       "value": "0 V"
+      },
+      {
+       "label": "負載功率",
+       "value": "4.5 mW"
+      }
+     ],
+     "max": [
+      {
+       "label": "節點總電壓",
+       "value": "9 V"
+      },
+      {
+       "label": "電流源單獨貢獻",
+       "value": "6 V"
+      },
+      {
+       "label": "負載功率",
+       "value": "40.5 mW"
+      }
+     ],
+     "reset": [
+      {
+       "label": "節點總電壓",
+       "value": "6 V"
+      },
+      {
+       "label": "電流源單獨貢獻",
+       "value": "3 V"
+      },
+      {
+       "label": "負載功率",
+       "value": "18 mW"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 注入電流 Iₛ（mA），縱軸 節點總電壓（V）。實線為模型掃描，圓點為 6 mA 時的 9 V。",
+     "why": "電壓可疊加 (3 V) + (3 V)；負載功率卻是整個電壓平方再除 2 kΩ，包含交叉項，不能把單源功率相加。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/06-superposition.html"
+  },
+  {
+   "id": "PAGE-07",
+   "scope": "07-equivalents.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "07-equivalents.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "07-equivalents.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "07-equivalents.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "07-equivalents.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "07-equivalents.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "07-equivalents.html",
+     "default": [
+      {
+       "label": "負載功率",
+       "value": "11.52 mW"
+      },
+      {
+       "label": "負載電流",
+       "value": "2.4 mA"
+      },
+      {
+       "label": "負載電壓",
+       "value": "4.8 V"
+      }
+     ],
+     "min": [
+      {
+       "label": "負載功率",
+       "value": "9.52066 mW"
+      },
+      {
+       "label": "負載電流",
+       "value": "4.36364 mA"
+      },
+      {
+       "label": "負載電壓",
+       "value": "2.18182 V"
+      }
+     ],
+     "max": [
+      {
+       "label": "負載功率",
+       "value": "7.1405 mW"
+      },
+      {
+       "label": "負載電流",
+       "value": "1.09091 mA"
+      },
+      {
+       "label": "負載電壓",
+       "value": "6.54545 V"
+      }
+     ],
+     "reset": [
+      {
+       "label": "負載功率",
+       "value": "11.52 mW"
+      },
+      {
+       "label": "負載電流",
+       "value": "2.4 mA"
+      },
+      {
+       "label": "負載電壓",
+       "value": "4.8 V"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 負載 R_L（kΩ），縱軸 負載功率（mW）。實線為模型掃描，圓點為 6 kΩ 時的 7.1405 mW。",
+     "why": "R_L = 2 kΩ 改變電流與分壓兩件事。最大功率在 R_L = 4/3 kΩ，為 12 mW；負載越大並非功率越大。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/07-equivalents.html"
+  },
+  {
+   "id": "PAGE-08",
+   "scope": "08-storage.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "08-storage.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "08-storage.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "08-storage.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "08-storage.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "08-storage.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "08-storage.html",
+     "default": [
+      {
+       "label": "電容儲能",
+       "value": "25 μJ"
+      },
+      {
+       "label": "儲存電荷",
+       "value": "10 μC"
+      },
+      {
+       "label": "1 ms 斜坡電流",
+       "value": "10 mA"
+      }
+     ],
+     "min": [
+      {
+       "label": "電容儲能",
+       "value": "0 μJ"
+      },
+      {
+       "label": "儲存電荷",
+       "value": "0 μC"
+      },
+      {
+       "label": "1 ms 斜坡電流",
+       "value": "0 mA"
+      }
+     ],
+     "max": [
+      {
+       "label": "電容儲能",
+       "value": "100 μJ"
+      },
+      {
+       "label": "儲存電荷",
+       "value": "20 μC"
+      },
+      {
+       "label": "1 ms 斜坡電流",
+       "value": "20 mA"
+      }
+     ],
+     "reset": [
+      {
+       "label": "電容儲能",
+       "value": "25 μJ"
+      },
+      {
+       "label": "儲存電荷",
+       "value": "10 μC"
+      },
+      {
+       "label": "1 ms 斜坡電流",
+       "value": "10 mA"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 電容電壓 v_C（V），縱軸 電容儲能（μJ）。實線為模型掃描，圓點為 10 V 時的 100 μJ。",
+     "why": "相同 2 μF 電容，電荷與電壓成正比，能量則與電壓平方成正比；0 到 5 V 的 1 ms 斜坡需要 10 mA。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/08-storage.html"
+  },
+  {
+   "id": "PAGE-09",
+   "scope": "09-rc.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "09-rc.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "09-rc.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "09-rc.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "09-rc.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "09-rc.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "09-rc.html",
+     "default": [
+      {
+       "label": "電容電壓",
+       "value": "3.1606 V"
+      },
+      {
+       "label": "回路電流",
+       "value": "1.8394 mA"
+      },
+      {
+       "label": "電阻壓降",
+       "value": "1.8394 V"
+      }
+     ],
+     "min": [
+      {
+       "label": "電容電壓",
+       "value": "0 V"
+      },
+      {
+       "label": "回路電流",
+       "value": "5 mA"
+      },
+      {
+       "label": "電阻壓降",
+       "value": "5 V"
+      }
+     ],
+     "max": [
+      {
+       "label": "電容電壓",
+       "value": "4.96631 V"
+      },
+      {
+       "label": "回路電流",
+       "value": "0.03369 mA"
+      },
+      {
+       "label": "電阻壓降",
+       "value": "0.03369 V"
+      }
+     ],
+     "reset": [
+      {
+       "label": "電容電壓",
+       "value": "3.1606 V"
+      },
+      {
+       "label": "回路電流",
+       "value": "1.8394 mA"
+      },
+      {
+       "label": "電阻壓降",
+       "value": "1.8394 V"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 時間 t（ms），縱軸 電容電壓（V）。實線為模型掃描，圓點為 5 ms 時的 4.96631 V。",
+     "why": "時間為 1 個 τ。電容電壓上升，電阻剩下的壓降下降，所以充電電流也下降；兩壓降仍合計 5 V。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/09-rc.html"
+  },
+  {
+   "id": "PAGE-10",
+   "scope": "10-rl.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "10-rl.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "10-rl.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "10-rl.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "10-rl.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "10-rl.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "10-rl.html",
+     "default": [
+      {
+       "label": "電感電流",
+       "value": "0.632121 A"
+      },
+      {
+       "label": "電感電壓",
+       "value": "3.67879 V"
+      },
+      {
+       "label": "電阻壓降",
+       "value": "6.32121 V"
+      }
+     ],
+     "min": [
+      {
+       "label": "電感電流",
+       "value": "0 A"
+      },
+      {
+       "label": "電感電壓",
+       "value": "10 V"
+      },
+      {
+       "label": "電阻壓降",
+       "value": "0 V"
+      }
+     ],
+     "max": [
+      {
+       "label": "電感電流",
+       "value": "0.993262 A"
+      },
+      {
+       "label": "電感電壓",
+       "value": "0.06738 V"
+      },
+      {
+       "label": "電阻壓降",
+       "value": "9.93262 V"
+      }
+     ],
+     "reset": [
+      {
+       "label": "電感電流",
+       "value": "0.632121 A"
+      },
+      {
+       "label": "電感電壓",
+       "value": "3.67879 V"
+      },
+      {
+       "label": "電阻壓降",
+       "value": "6.32121 V"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 時間 t（ms），縱軸 電感電流（A）。實線為模型掃描，圓點為 5 ms 時的 0.993262 A。",
+     "why": "電流從 0 A 連續增長。時間 1 ms 時，越接近 1 A，電阻分掉越多源電壓，電感電流上升速度越小。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/10-rl.html"
+  },
+  {
+   "id": "PAGE-11",
+   "scope": "11-rlc.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "11-rlc.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "11-rlc.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "11-rlc.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "11-rlc.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "11-rlc.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "11-rlc.html",
+     "default": [
+      {
+       "label": "2 ms 的電容電壓",
+       "value": "4.24713 V"
+      },
+      {
+       "label": "阻尼比 ζ",
+       "value": "0.5"
+      },
+      {
+       "label": "衰減因子 α",
+       "value": "500 s⁻¹"
+      }
+     ],
+     "min": [
+      {
+       "label": "2 ms 的電容電壓",
+       "value": "6.29035 V"
+      },
+      {
+       "label": "阻尼比 ζ",
+       "value": "0.1"
+      },
+      {
+       "label": "衰減因子 α",
+       "value": "100 s⁻¹"
+      }
+     ],
+     "max": [
+      {
+       "label": "2 ms 的電容電壓",
+       "value": "2.27752 V"
+      },
+      {
+       "label": "阻尼比 ζ",
+       "value": "1.5"
+      },
+      {
+       "label": "衰減因子 α",
+       "value": "1,500 s⁻¹"
+      }
+     ],
+     "reset": [
+      {
+       "label": "2 ms 的電容電壓",
+       "value": "4.24713 V"
+      },
+      {
+       "label": "阻尼比 ζ",
+       "value": "0.5"
+      },
+      {
+       "label": "衰減因子 α",
+       "value": "500 s⁻¹"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 串聯電阻 R（Ω），縱軸 2 ms 的電容電壓（V）。實線為模型掃描，圓點為 30 Ω 時的 2.27752 V。",
+     "why": "R = 10 Ω 對應 ζ = 0.5，是欠阻尼：能量往返形成衰減振盪。圖比較固定 2 ms 的讀值，不是時間波形。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/11-rlc.html"
+  },
+  {
+   "id": "PAGE-12",
+   "scope": "12-laplace.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "12-laplace.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "12-laplace.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "12-laplace.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "12-laplace.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "12-laplace.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "12-laplace.html",
+     "default": [
+      {
+       "label": "1 ms 的電容電壓",
+       "value": "3.89636 V"
+      },
+      {
+       "label": "自然響應係數",
+       "value": "-3 V"
+      },
+      {
+       "label": "1 ms 的電流",
+       "value": "1.10364 mA"
+      }
+     ],
+     "min": [
+      {
+       "label": "1 ms 的電容電壓",
+       "value": "3.1606 V"
+      },
+      {
+       "label": "自然響應係數",
+       "value": "-5 V"
+      },
+      {
+       "label": "1 ms 的電流",
+       "value": "1.8394 mA"
+      }
+     ],
+     "max": [
+      {
+       "label": "1 ms 的電容電壓",
+       "value": "6.10364 V"
+      },
+      {
+       "label": "自然響應係數",
+       "value": "3 V"
+      },
+      {
+       "label": "1 ms 的電流",
+       "value": "-1.10364 mA"
+      }
+     ],
+     "reset": [
+      {
+       "label": "1 ms 的電容電壓",
+       "value": "3.89636 V"
+      },
+      {
+       "label": "自然響應係數",
+       "value": "-3 V"
+      },
+      {
+       "label": "1 ms 的電流",
+       "value": "1.10364 mA"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 初始電壓 V₀（V），縱軸 1 ms 的電容電壓（V）。實線為模型掃描，圓點為 8 V 時的 6.10364 V。",
+     "why": "初值由微分轉換中的 −V₀ 帶入。總響應是 v(t) = (5 V) + (-3 V)e^(−t/τ)；初值低於源電壓，電容會充電。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/12-laplace.html"
+  },
+  {
+   "id": "PAGE-13",
+   "scope": "13-phasors.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "13-phasors.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "13-phasors.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "13-phasors.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "13-phasors.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "13-phasors.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "13-phasors.html",
+     "default": [
+      {
+       "label": "電流有效值",
+       "value": "2.4 A"
+      },
+      {
+       "label": "電流相位",
+       "value": "-53.1301 °"
+      },
+      {
+       "label": "阻抗大小",
+       "value": "50 Ω"
+      }
+     ],
+     "min": [
+      {
+       "label": "電流有效值",
+       "value": "4 A"
+      },
+      {
+       "label": "電流相位",
+       "value": "0 °"
+      },
+      {
+       "label": "阻抗大小",
+       "value": "30 Ω"
+      }
+     ],
+     "max": [
+      {
+       "label": "電流有效值",
+       "value": "1.40449 A"
+      },
+      {
+       "label": "電流相位",
+       "value": "-69.444 °"
+      },
+      {
+       "label": "阻抗大小",
+       "value": "85.44 Ω"
+      }
+     ],
+     "reset": [
+      {
+       "label": "電流有效值",
+       "value": "2.4 A"
+      },
+      {
+       "label": "電流相位",
+       "value": "-53.1301 °"
+      },
+      {
+       "label": "阻抗大小",
+       "value": "50 Ω"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 電感電抗 X_L（Ω），縱軸 電流有效值（A）。實線為模型掃描，圓點為 80 Ω 時的 1.40449 A。",
+     "why": "感抗增加使阻抗向正虛軸拉長；在 120 Vrms 不變下，電流變小且更落後。時域峰值必須再乘 √2。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/13-phasors.html"
+  },
+  {
+   "id": "PAGE-14",
+   "scope": "14-ac-power.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "14-ac-power.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "14-ac-power.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "14-ac-power.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "14-ac-power.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "14-ac-power.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "14-ac-power.html",
+     "default": [
+      {
+       "label": "平均功率 P",
+       "value": "100 W"
+      },
+      {
+       "label": "無效功率 Q",
+       "value": "173.205 var"
+      },
+      {
+       "label": "視在功率 |S|",
+       "value": "200 VA"
+      }
+     ],
+     "min": [
+      {
+       "label": "平均功率 P",
+       "value": "34.7296 W"
+      },
+      {
+       "label": "無效功率 Q",
+       "value": "-196.962 var"
+      },
+      {
+       "label": "視在功率 |S|",
+       "value": "200 VA"
+      }
+     ],
+     "max": [
+      {
+       "label": "平均功率 P",
+       "value": "34.7296 W"
+      },
+      {
+       "label": "無效功率 Q",
+       "value": "196.962 var"
+      },
+      {
+       "label": "視在功率 |S|",
+       "value": "200 VA"
+      }
+     ],
+     "reset": [
+      {
+       "label": "平均功率 P",
+       "value": "100 W"
+      },
+      {
+       "label": "無效功率 Q",
+       "value": "173.205 var"
+      },
+      {
+       "label": "視在功率 |S|",
+       "value": "200 VA"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 相位差 θ（°），縱軸 平均功率 P（W）。實線為模型掃描，圓點為 80 ° 時的 34.7296 W。",
+     "why": "θ = 60° 是電壓相位減電流相位。Q 為正，電流落後，屬感性。 P²+Q² = (200 VA)²。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/14-ac-power.html"
+  },
+  {
+   "id": "PAGE-15",
+   "scope": "15-frequency.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "15-frequency.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "15-frequency.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "15-frequency.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "15-frequency.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "15-frequency.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "15-frequency.html",
+     "default": [
+      {
+       "label": "電壓增益大小",
+       "value": "0.707107"
+      },
+      {
+       "label": "增益",
+       "value": "-3.0103 dB"
+      },
+      {
+       "label": "相位",
+       "value": "-45 °"
+      }
+     ],
+     "min": [
+      {
+       "label": "電壓增益大小",
+       "value": "0.995037"
+      },
+      {
+       "label": "增益",
+       "value": "-0.043214 dB"
+      },
+      {
+       "label": "相位",
+       "value": "-5.71059 °"
+      }
+     ],
+     "max": [
+      {
+       "label": "電壓增益大小",
+       "value": "0.099504"
+      },
+      {
+       "label": "增益",
+       "value": "-20.0432 dB"
+      },
+      {
+       "label": "相位",
+       "value": "-84.2894 °"
+      }
+     ],
+     "reset": [
+      {
+       "label": "電壓增益大小",
+       "value": "0.707107"
+      },
+      {
+       "label": "增益",
+       "value": "-3.0103 dB"
+      },
+      {
+       "label": "相位",
+       "value": "-45 °"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 頻率比 f/f_c（無因次），縱軸 電壓增益大小（無因次）。實線為模型掃描，圓點為 10  時的 0.099504 。",
+     "why": "f = 1,591.55 Hz 時，電容阻抗縮小；輸出取電容兩端，因此頻率升高時輸出比例下降。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/15-frequency.html"
+  },
+  {
+   "id": "PAGE-16",
+   "scope": "16-opamp.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "16-opamp.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "16-opamp.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "16-opamp.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "16-opamp.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "16-opamp.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "16-opamp.html",
+     "default": [
+      {
+       "label": "輸出電壓",
+       "value": "-2 V"
+      },
+      {
+       "label": "輸入電阻電流",
+       "value": "0.1 mA"
+      },
+      {
+       "label": "反相端電壓",
+       "value": "0 V"
+      }
+     ],
+     "min": [
+      {
+       "label": "輸出電壓",
+       "value": "4 V"
+      },
+      {
+       "label": "輸入電阻電流",
+       "value": "-0.2 mA"
+      },
+      {
+       "label": "反相端電壓",
+       "value": "0 V"
+      }
+     ],
+     "max": [
+      {
+       "label": "輸出電壓",
+       "value": "-4 V"
+      },
+      {
+       "label": "輸入電阻電流",
+       "value": "0.2 mA"
+      },
+      {
+       "label": "反相端電壓",
+       "value": "0 V"
+      }
+     ],
+     "reset": [
+      {
+       "label": "輸出電壓",
+       "value": "-2 V"
+      },
+      {
+       "label": "輸入電阻電流",
+       "value": "0.1 mA"
+      },
+      {
+       "label": "反相端電壓",
+       "value": "0 V"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 輸入 V_in（V），縱軸 輸出電壓（V）。實線為模型掃描，圓點為 2 V 時的 -4 V。",
+     "why": "負回授且輸出 -2 V 位於 ±5 V 內，才使用虛短路。流入 10 kΩ 的電流經 20 kΩ 回授電阻流走，輸出必須反號。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/16-opamp.html"
+  },
+  {
+   "id": "PAGE-17",
+   "scope": "17-twoport.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "17-twoport.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "17-twoport.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "17-twoport.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "17-twoport.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "17-twoport.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "17-twoport.html",
+     "default": [
+      {
+       "label": "輸出電壓 V₂",
+       "value": "8 V"
+      },
+      {
+       "label": "流入埠 1 的 I₁",
+       "value": "0.2 A"
+      },
+      {
+       "label": "流入埠 2 的 I₂",
+       "value": "-0.2 A"
+      }
+     ],
+     "min": [
+      {
+       "label": "輸出電壓 V₂",
+       "value": "5 V"
+      },
+      {
+       "label": "流入埠 1 的 I₁",
+       "value": "0.5 A"
+      },
+      {
+       "label": "流入埠 2 的 I₂",
+       "value": "-0.5 A"
+      }
+     ],
+     "max": [
+      {
+       "label": "輸出電壓 V₂",
+       "value": "9.09091 V"
+      },
+      {
+       "label": "流入埠 1 的 I₁",
+       "value": "0.090909 A"
+      },
+      {
+       "label": "流入埠 2 的 I₂",
+       "value": "-0.090909 A"
+      }
+     ],
+     "reset": [
+      {
+       "label": "輸出電壓 V₂",
+       "value": "8 V"
+      },
+      {
+       "label": "流入埠 1 的 I₁",
+       "value": "0.2 A"
+      },
+      {
+       "label": "流入埠 2 的 I₂",
+       "value": "-0.2 A"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 負載 R_L（Ω），縱軸 輸出電壓 V₂（V）。實線為模型掃描，圓點為 100 Ω 時的 9.09091 V。",
+     "why": "負載變大會讓輸出更接近 10 V，而電流下降。I₂ 箭頭定義為流入黑箱，與負載電流相反，故為 -0.2 A。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/17-twoport.html"
+  },
+  {
+   "id": "PAGE-18",
+   "scope": "18-coupling.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "18-coupling.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "18-coupling.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "18-coupling.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "18-coupling.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "18-coupling.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "18-coupling.html",
+     "default": [
+      {
+       "label": "次側電壓",
+       "value": "24 Vrms"
+      },
+      {
+       "label": "次側負載電流",
+       "value": "1 Arms"
+      },
+      {
+       "label": "輸入等效電阻",
+       "value": "6 Ω"
+      }
+     ],
+     "min": [
+      {
+       "label": "次側電壓",
+       "value": "6 Vrms"
+      },
+      {
+       "label": "次側負載電流",
+       "value": "0.25 Arms"
+      },
+      {
+       "label": "輸入等效電阻",
+       "value": "96 Ω"
+      }
+     ],
+     "max": [
+      {
+       "label": "次側電壓",
+       "value": "36 Vrms"
+      },
+      {
+       "label": "次側負載電流",
+       "value": "1.5 Arms"
+      },
+      {
+       "label": "輸入等效電阻",
+       "value": "2.66667 Ω"
+      }
+     ],
+     "reset": [
+      {
+       "label": "次側電壓",
+       "value": "24 Vrms"
+      },
+      {
+       "label": "次側負載電流",
+       "value": "1 Arms"
+      },
+      {
+       "label": "輸入等效電阻",
+       "value": "6 Ω"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 匝數比 n（無因次），縱軸 次側電壓（Vrms）。實線為模型掃描，圓點為 3  時的 36 Vrms。",
+     "why": "匝數比 2 使電壓乘 n，負載反映到一次側則除 n²。一次側電流 2 A，兩側平均功率同為 24 W。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/18-coupling.html"
+  },
+  {
+   "id": "PAGE-19",
+   "scope": "19-threephase.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "19-threephase.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "19-threephase.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "19-threephase.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "19-threephase.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "19-threephase.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": [],
+    "widget": {
+     "page": "19-threephase.html",
+     "default": [
+      {
+       "label": "三相總功率",
+       "value": "3,600 W"
+      },
+      {
+       "label": "線電壓有效值",
+       "value": "207.846 V"
+      },
+      {
+       "label": "線電流有效值",
+       "value": "10 A"
+      }
+     ],
+     "min": [
+      {
+       "label": "三相總功率",
+       "value": "625 W"
+      },
+      {
+       "label": "線電壓有效值",
+       "value": "86.6025 V"
+      },
+      {
+       "label": "線電流有效值",
+       "value": "4.16667 A"
+      }
+     ],
+     "max": [
+      {
+       "label": "三相總功率",
+       "value": "13,225 W"
+      },
+      {
+       "label": "線電壓有效值",
+       "value": "398.372 V"
+      },
+      {
+       "label": "線電流有效值",
+       "value": "19.1667 A"
+      }
+     ],
+     "reset": [
+      {
+       "label": "三相總功率",
+       "value": "3,600 W"
+      },
+      {
+       "label": "線電壓有效值",
+       "value": "207.846 V"
+      },
+      {
+       "label": "線電流有效值",
+       "value": "10 A"
+      }
+     ],
+     "keyboard": {
+      "outline": "solid",
+      "width": "3px",
+      "visible": true
+     },
+     "details": 3,
+     "skip": {
+      "hash": "#main-content",
+      "active": ""
+     },
+     "minCircle": "75",
+     "maxCircle": "555",
+     "description": "橫軸 相電壓 V_p（Vrms），縱軸 三相總功率（W）。實線為模型掃描，圓點為 230 Vrms 時的 13,225 W。",
+     "why": "三個平衡純阻相支路各取 1,200 W。線電壓是相差 120° 的相量相減，大小為 √3 倍，不能直接把兩個相電壓相加。"
+    },
+    "numerical_method": "固定答案三輸出：default/min/max，以及 keyboard reset 和離線 max/reset；逐值核單位，容許6有效字/最多6小數的顯示捨入。",
+    "static": "無 JS 主文 understand/calculate/practice textContent 與 JS 相同；靜態三輸出及順序與動態預設完全相同，提示仍可鍵盤展開。"
+   },
+   "page_path": "dist/19-threephase.html"
+  },
+  {
+   "id": "PAGE-glossary",
+   "scope": "glossary.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "glossary.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "glossary.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "glossary.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "glossary.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "glossary.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": []
+   },
+   "page_path": "dist/glossary.html"
+  },
+  {
+   "id": "PAGE-index",
+   "scope": "index.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "index.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "index.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "index.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "index.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "index.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": []
+   },
+   "page_path": "dist/index.html"
+  },
+  {
+   "id": "PAGE-sources",
+   "scope": "sources.html",
+   "status": "通過",
+   "evidence": {
+    "http_viewports": [
+     {
+      "page": "sources.html",
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "body": 1440
+     },
+     {
+      "page": "sources.html",
+      "width": 390,
+      "client": 390,
+      "scroll": 390,
+      "body": 390
+     },
+     {
+      "page": "sources.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "offline": [
+     {
+      "page": "sources.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "nojs": [
+     {
+      "page": "sources.html",
+      "width": 320,
+      "client": 320,
+      "scroll": 320,
+      "body": 320
+     }
+    ],
+    "defects": []
+   },
+   "page_path": "dist/sources.html"
+  },
+  {
+   "id": "GLOSSARY",
+   "scope": "字典即時搜尋",
+   "status": "通過",
+   "evidence": {
+    "total": 33,
+    "match": 17,
+    "none": 0,
+    "restored": 33
+   },
+   "page_path": "dist/glossary.html"
+  },
+  {
+   "id": "VISUAL",
+   "scope": "瀏覽器畫面與容器內捲動",
+   "status": "通過",
+   "evidence": {
+    "keyboard_scroll": [
+     {
+      "page": "03-nodal.html",
+      "diagramKeyScroll": true,
+      "before": 0,
+      "after": 26
+     },
+     {
+      "page": "11-rlc.html",
+      "diagramKeyScroll": true,
+      "before": 0,
+      "after": 26
+     },
+     {
+      "page": "19-threephase.html",
+      "diagramKeyScroll": true,
+      "before": 0,
+      "after": 26
+     }
+    ],
+    "screenshots": "本輪 /tmp/circuits-qa/ 暫存：baseline-03-nodal.html-1440.png、baseline-11-rlc.html-390.png、baseline-19-threephase.html-320.png；calculation-03-1440.png、experiment-19-320.png、parallel-11-390.png。",
+    "review": "逐張目視上述6張 headless 截圖：桌面圖到聯立式／消去／守恆計算可讀；390與320標題、導覽、正文、結果卡無互相遮擋；寬電路圖／公式／曲線限制於自身捲動容器，未撐寬頁面。03/11/19主電路容器以鍵盤ArrowRight實測可捲。未冒稱實體觸控驗收。"
+   },
+   "page_path": ""
+  },
+  {
+   "id": "PRESERVE",
+   "scope": "舊電路學互動站與兩冊限定修正",
+   "status": "通過",
+   "evidence": {
+    "old_site": {
+     "files": 24,
+     "sha256": "fd46298f202913adb83af8ccb1ecdccf7e5887379728c9d342f09b271f309bb6",
+     "matches": true
+    },
+    "original_notes": {
+     "06-電路學-上.md": "c2af5cddda68429f4adc56e6d11e0eec8d9a468bd98629ad4c6e14da60ae588a",
+     "06-電路學-下.md": "c465c460845eacc290306645ea3f1b0e21f17ce04e53aa3e466b119c7c53b127"
+    },
+    "original_note_review": "兩原文雜湊與數學驗收 ORIG-POSTCHECK 完整雜湊一致；八項修訂的內容證據由原筆記修正複核另列。"
+   },
+   "page_path": ""
+  },
+  {
+   "id": "FAVICON-DELTA",
+   "scope": "基線後唯一共用 head 修正",
+   "status": "通過",
+   "evidence": {
+    "html_count": 23,
+    "errors": [],
+    "change": "23 HTML各新增<link rel=\"icon\" href=\"data:,\">。逐檔移除這個確切tag後SHA與基線完全相同；app.js/lab.css SHA未變。",
+    "regression": "獨立全新Chromium查看00/03/19/11，console/pageerror 0；未重跑已通過的全站尺寸與數值基線。"
+   },
+   "page_path": ""
+  },
+  {
+   "id": "FREEZE",
+   "scope": "受驗 dist 精確檔案 SHA256",
+   "status": "通過",
+   "evidence": {
+    "00-start.html": "a59fcbcaadbe6ffbc0afe170ca6e0002a86e34c6c0aadb2061d58a5a5b29359a",
+    "01-laws.html": "275a50e78eb4bea12511a774292716961535a468159ee76d211418a9f84f44b7",
+    "02-divider.html": "ce620a7c1ed6642a31b72a83a7497d903baddb7623c9531126b761bcdd8bb7ed",
+    "03-nodal.html": "9ac5abdbf4189c427e095b993376f6bb333c542439d3b90453205262fece32ea",
+    "04-mesh.html": "840e23a88ef1bcb06be04e61f2bfecf26ecda3e120c63afee09e5ae6c02523a6",
+    "05-controlled.html": "3fa8fe2a875f75d8e3cf09534f130a604acaace7c5783f5f2761a23a00e1c1f9",
+    "06-superposition.html": "0a0435cbc947cb35d2f959332b621c38df1d1bc25df70c6af36d581e7287ad22",
+    "07-equivalents.html": "c19c8170744ce1c6533b05a60ae9b5177c34d4cfd169582ce5fe66f1481db362",
+    "08-storage.html": "5467b5180cbdda691cf70abecf66cf38c4f079c62cbecd7d8702feef649af25c",
+    "09-rc.html": "3feac8e7b1c23500da84120ca8fd1e28c8fdcedcf4878ab6c02113ebb2cab7d1",
+    "10-rl.html": "d32fe6d03caefc3dbb87a69bbd4563a34b34a8407533eeb4234e972da0050717",
+    "11-rlc.html": "2b764f8286c10863467e2c26bb7d2a9210f78813a9bce938eb063ddbf0d3f5a8",
+    "12-laplace.html": "19ede0c909ee7bf8ec30334fbd6e16c7029aeaeb05040f8ce0dbb369175c3816",
+    "13-phasors.html": "98fdd080df305ceab7115f9a01523645a12eada10b9ea97f28d20e858376c71a",
+    "14-ac-power.html": "9ea265be87e2e0e5dba1148a35042f1e858c627e056f069a6fb45d985fa30d95",
+    "15-frequency.html": "7f00437b674b3ac553a65db03a206e0d75882f2180b9f5c5945dae65a6afe797",
+    "16-opamp.html": "a92988ad974ac092c5e978a518594a02ee880ef4fa21cd5b26d6569e736a88bc",
+    "17-twoport.html": "fc398a514b19a5a539f4d531ce80df858a441434c76ca287217f0d6e4215a724",
+    "18-coupling.html": "c220e09a68fd4ad8cf230eec586fd6ab0f08365621105123b68879461f4b9326",
+    "19-threephase.html": "a8cca9881f8f095c4cba5391b976d0effb6384ffe9d09c3bf1cc18a21629a9e5",
+    "app.js": "144dd427d50fb908fd658f344a02927041ffdaaee63e105d45dd00a1b36e1e8d",
+    "glossary.html": "ec4aa8ea4814acbae97e7f290c29d86a12f7ffcb223fbc3b9c60a7e3f2a2920f",
+    "index.html": "9df965a8cc866de1cf4e10046c4e7deb05afa3f6107755323769217d4a3eaacc",
+    "lab.css": "8dd6c19a71ca7db82be6b13e586ebcf29626503e4d422db3bd6f629d7fdf43ff",
+    "sources.html": "ff89c69e76a2e0e72353fcd9703dcd83490bc6cec71047cea63ca74af86be33b"
+   },
+   "page_path": ""
+  },
+  {
+   "id": "WF",
+   "scope": "工作流與資料格式",
+   "status": "通過",
+   "evidence": {
+    "global_lint": "沿用數學／來源審稿已執行的全域 wf-lint；broken=2，為 2026-09-26 歷史審稿既有連結；biglist=269、biglist_links=2、querycmd=3、residue{{=1。未重跑全域或改歷史檔。",
+    "delta_checks": {
+     "counts": {
+      "json": 8,
+      "md": 8,
+      "utf8": 43
+     },
+     "errors": []
+    },
+    "syntax": "node --check app.js 通過，後續 favicon delta 未變 JS。",
+    "style_family": "sync-styles.py --check exit 0；17相同、0漂移、0缺檔。本課獨立lab.css，不新增styles.css家族。"
+   },
+   "page_path": ""
+  },
+  {
+   "id": "LIMIT",
+   "scope": "驗收範圍",
+   "status": "未執行（範圍限制，非交付門檻）",
+   "evidence": {
+    "not_performed": "真實手機觸控、使用者本人視覺操作與真人學習實驗未執行；headless 截圖與鍵盤測試不冒稱人理解。",
+    "ownership": "本輪交付門檻為桌面優先、無頭瀏覽器手機尺寸、鍵盤及離線驗證；真人測試屬未執行的範圍限制，非交付門檻，不建立使用者待辦或批准流程。",
+    "semantic_review": "逐章公式與教學語義另由獨立數學驗收.md、教學驗收.md 記錄，本技術報告不取代兩者。"
+   },
+   "page_path": ""
+  }
+ ]
+}

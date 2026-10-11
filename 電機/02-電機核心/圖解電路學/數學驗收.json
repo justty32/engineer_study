@@ -1,0 +1,1542 @@
+{
+ "contract": "wf-table/1",
+ "source": "數學驗收.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "id",
+  "scope",
+  "checked",
+  "independent_calculation",
+  "diagram_check",
+  "interaction_check",
+  "finding",
+  "status"
+ ],
+ "rows": [
+  {
+   "id": "ORIG-NUM",
+   "scope": "原筆記上2.3、2.5、4.3–4.4；下5.1、6.2、7.2",
+   "checked": "原文全部含數值的電路算例獨立重算",
+   "independent_calculation": "三節點：[2(1.875)−.750,−1.875+3(.750)−.375,−.750+2(.375)]=[3,0,0] mA。戴維寧：R=4/3 kΩ、I=8/(4/3+2)=2.4 mA。RL：|Z|=sqrt(30²+40²)=50 Ω；角=53.130102°；I=2.4 A。功因修正：Qc=10000(tan acos .7−tan acos .95)=6915.199560 var；C=Qc/(2π50×230²)=416.101396 μF。RC：τ=1000×10⁻⁶=.001 s；5/s−5/(s+1000)反拉氏=5(1−e^(−1000t))。低通fc=1/(2π1000×10⁻⁷)=1591.549431 Hz。",
+   "diagram_check": "原筆記以拓撲文字描述；節點、端口與單位一致。",
+   "interaction_check": "不適用：原筆記無互動。",
+   "finding": "主要數值無誤；原文1.333 kΩ、53.1°為四捨五入值，教學頁應使用≈或說明取位，避免反覆使用已取位中間量。",
+   "status": "通過（原筆記算術範圍）"
+  },
+  {
+   "id": "SPEC-00",
+   "scope": "章節規格 00",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "KVL 6−IR=0，R=6 Ω得I=1 A；電阻入正端P=6 W，電源入正端電流−1 A故P=−6 W。R=2/12 Ω得I=3/.5 A，兩元件功率總和仍為零。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-01",
+   "scope": "章節規格 01",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "KVL Vs−2I−4I=0；Vs=12 V得I=2 A，兩壓降4及8 V；Vs=0/18 V得I=0/3 A。KCL另例3−1−2=0 A。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-02",
+   "scope": "章節規格 02",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "負載4 kΩ時對地兩支各4 kΩ，並聯2 kΩ；總電流12/(2+2)=3 mA，輸出6 V，各支1.5 mA。RL=1 kΩ得Rp=.8 kΩ、Vo=24/7 V；RL=12 kΩ得Rp=3 kΩ、Vo=7.2 V。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-03",
+   "scope": "章節規格 03",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "B節點KCL給Va=2Vb；A節點給(2Va−Vb)/2=Is，故Vb=2Is/3、Va=4Is/3。Is=6 mA時8及4 V，源供48 mW，三電阻耗32+8+8=48 mW。0/12 mA得兩節點(0,0)/(16,8) V。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-04",
+   "scope": "章節規格 04",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "右網目−2i1+6i2=0得i1=3i2；左代入12i2−2i2=Vs，Vs=12時i2=1.2 A、i1=3.6 A，共支向下2.4 A。超網目i1=i2+1；2(i2+1)+4i2=10得i2=4/3 A、i1=7/3 A。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-05",
+   "scope": "章節規格 05",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "超節點2Va+Vb=12且Va−Vb=Vs；相加3Va=12+Vs。Vs=6/9/12 V得(Va,Vb)=(6,0)/(7,−2)/(8,−4) V；負Vb對地支電流為向上。受控測試源1 V跨2 kΩ電阻與向地0.5 mS·v源：總入電流=.5+.5=1 mA，Rth=1 kΩ。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-06",
+   "scope": "章節規格 06",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "節點式(V−6)/2+V/2−Is=0（mA），故V=3+Is V；Is=3時V=6、P=6²/2=18 mW，兩獨立貢獻3 V各耗4.5 mW，不能疊加成總功率。Is=0/6時V=3/9 V。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-07",
+   "scope": "章節規格 07",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "開路Vo=8 V、源歸零後Rth=4/3 kΩ，短路I=12/2=6 mA。負載2 kΩ時I=8/(10/3)=2.4 mA、V=4.8 V、P=11.52 mW；P=64RL/(RL+4/3)²，導數正比4/3−RL，極大12 mW。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-08",
+   "scope": "章節規格 08",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "Q=Cv=2 μF×5 V=10 μC；1 ms線性斜坡dv/dt=5000 V/s，i=10 mA；W=.5×2 μF×25 V²=25 μJ。L=.01 H、Δi/Δt=2000 A/s得20 V，終能量.5×.01×4=.02 J。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-09",
+   "scope": "章節規格 09",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "KVL 5−1000i−v=0，i=10⁻⁶dv/dt；dv/dt=1000(5−v)。零初值解v=5−5e^(−1000t)。t=1 ms時3.160602794 V、1.839397206 mA；t=0/5 ms時v=0/4.966310265 V，初/終值及KVL成立。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-10",
+   "scope": "章節規格 10",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "10−10i−.01di/dt=0；i(0)=0得i=1−e^(−1000t)。t=1 ms時i=.632120559 A、vL=3.678794412 V；t=0時i=0、vL=10 V；t→∞時i=1 A、vL=0。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-11",
+   "scope": "章節規格 11",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "LC=10⁻⁶ s²、RC=.001 s於R=10 Ω；特徵根−500±j866.025404 s⁻¹。v=5+e^(−500t)(A cos866.025404t+B sin866.025404t)，v(0)=0得A=−5，v′(0)=0得B=−2.886751346。t=.002 s得4.247128174 V。R=2/20/30 Ω各得6.290351317/2.969970751/2.277521670 V；R20重根總解5−5(1+1000t)e^(−1000t)。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-12",
+   "scope": "章節規格 12",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "RC dv/dt+v=5且v(0−)=V0；拉氏.001(sV−V0)+V=5/s。由部分分式V=5/s+(V0−5)/(s+1000)，V0=2及t=1 ms得3.896361676 V；V0=0/8時3.160602794/6.103638324 V，初值各回V0、終值均5 V。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-13",
+   "scope": "章節規格 13",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "I=120/(30+j40)=1.44−j1.92 A；模sqrt(1.44²+1.92²)=2.4 A，相角−53.130102°。RMS轉時域峰值3.39411255 A；XL=0/80 Ω得I模4/1.404493766 A，相角0/−69.443955°。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-14",
+   "scope": "章節規格 14",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "S=100×(2∠−60°)*=200∠60° VA，P=100 W、Q=100sqrt3≈173.205081 var。θ=−80/+80°得P≈34.729636 W，Q≈∓196.961551 var。匹配例總Z=6 Ω，I=5/3 A，負載P=(5/3)²×3=25/3 W。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-15",
+   "scope": "章節規格 15",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "由Zc/(R+Zc)得H=1/(1+jωRC)。RC=10⁻⁴ s，fc=1591.549431 Hz；x=1得幅1/sqrt2、相−45°、−10log10(2)=−3.010299957 dB。x=.1/10得幅.995037190/.099503719。串RLCω0=1000 rad/s、Q=ω0L/R=1、B=R/L=1000 rad/s。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-16",
+   "scope": "章節規格 16",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "輸入端不取電流，反相節點負回授線性區為0 V；(0−Vin)/10+(0−Vo)/20=0（mA）得Vo=−2Vin。Vin=1得Vo=−2 V、電阻電流.1 mA；範圍±2 V對應輸出∓4 V仍在±5 V模型內。Vin=3時所求−6 V超範圍，不能續套虛短。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-17",
+   "scope": "章節規格 17",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "V1−V2=10I1，I1+I2=0；接RL=40 Ω得I1=10/(10+40)=.2 A，I2=−.2 A，V2=8 V。ABCD [1,10 Ω;0 S,1]作用[V2,−I2]ᵀ得[10,.2]ᵀ；串20 Ω後B=30 Ω。Y=.1[[1,−1],[−1,1]] S且det=0，Z無法存在。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-18",
+   "scope": "章節規格 18",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "n=2時Vs=nVp=24 V，IL=24/24=1 A，無損VpIp=VsIL得Ip=2 A、Rin=6 Ω；n=.5/3時(Vs,IL,Ip,Rin)=(6,.25,.125,96)/(36,1.5,4.5,8/3)。M=.5sqrt(.004×.009)=.003 H，兩流均入點且極性同點時di1/dt=1000、di2/dt=0得v1=4 V、v2=3 V。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "SPEC-19",
+   "scope": "章節規格 19",
+   "checked": "預設公式、數值及重要邊界的獨立核算",
+   "independent_calculation": "每相I=120/12=10 A；Va−Vb=120[1−(−.5−j sqrt3/2)]=180+j103.923048 V，幅120sqrt3=207.846097 V、相30°。總P=3×120×10=3600 W。Vp=50/230 V得I=25/6及115/6 A、總P=625及13225 W。",
+   "diagram_check": "待教學頁落盤後逐圖核對。",
+   "interaction_check": "目前只審數學規格，未讀實作或執行互動。",
+   "finding": "規格算術一致；尚未對產品判定通過。",
+   "status": "規格通過；產品待審"
+  },
+  {
+   "id": "PAGE-03",
+   "scope": "dist/03-nodal.html；SHA256 ae8e929fc2f660131e4ac53854900e5552afd251d517ea376e592863fdca9f1d",
+   "checked": "全部靜態主文、主例、近題、模型邊界及SVG語義；修正後 SHA256 38756b98a8e678eab52ccdbf938ad86a6cf23852508d521cc49b529228c7c561；最終凍結 SHA256 9ac5abdbf4189c427e095b993376f6bb333c542439d3b90453205262fece32ea",
+   "independent_calculation": "主例Va=8、Vb=4 V及48=32+8+8 mW正確。近題Is=9 mA：Va=12、Vb=6 V；IA=6、IAB=IB=3 mA；72+18+18=108 mW，源−108 mW。三節點延伸從V2=2V3、V1=5V3推得V3=.375、V2=.75、V1=1.875 V，各列殘差零。",
+   "diagram_check": "已讀原始SVG節點和路徑：source地→A、A→G、A→B、B→G，2 kΩ各接指定兩節點；RAB左正右負與Va−Vb相符。靜態圖軸0–12 mA對0–16 V、預設點(6,8)一致。 第二輪已補來源Vs=Va及上+/下−。新增消去圖兩列(2Va−Vb)=12 V及(−2Va+4Vb)=0 V，相加3Vb=12 V。反向參考J=B→A，J=(4V−8V)/(2kΩ)=−2mA，實際箭頭A→B及端極性一致。",
+   "interaction_check": "靜態預設值與range契約一致；app.js尚未提供，動態未驗。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "主例及新增負電流/消去圖正確，主例數值代入已帶單位；三節點延伸仍省單位，builder接管收修。；本輪修正複核：主例與近題首次代入保留物理單位，kΩ/mA/mW 前綴可追蹤；ODE 明示 SI 係數。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-10",
+   "scope": "dist/10-rl.html；SHA256 b3b1b4cb4e152775fcebf85f892730c5cf0dfc4c6fea840d02c0b558f5c5bb50",
+   "checked": "全部靜態主文、主例、近題、模型邊界及SVG語義；修正後 SHA256 1a288add4921c46da10db36edb8c8ffa0443b850f68bef105cc71d755ea039d7；最終凍結 SHA256 d32fe6d03caefc3dbb87a69bbd4563a34b34a8407533eeb4234e972da0050717",
+   "independent_calculation": "主例i=.6321205588 A、vL=3.678794412 V、vR=6.321205588 V，KVL合10 V。w=.5×.01×i²=.001997882005 J；PR=3.99576401 W、PL=2.32544158 W、源−6.32120559 W。近題關源後2 ms：i=e⁻²=.1353352832 A、vL=−1.353352832 V；w=5e⁻⁴=.0915781944 mJ，耗能4.9084218056 mJ。",
+   "diagram_check": "已讀SVG連線：左10 V源上正、上R左正、右L上正，順時針i流入R及L正端；節點A/B/0與vR=Va−Vb、vL=Vb相符。關源例保留同電流/電壓方向，因此vL負號正確。靜態曲線t1 ms之i=.63212與座標換算相符。",
+   "interaction_check": "靜態預設值與range契約一致；app.js尚未提供，動態未驗。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "本頁靜態數學與圖式一致。 依總隊長追加要求，數值代入須明示量與單位，避免只以段落預告單位後使用裸數；待作者全站收修。；本輪修正複核：主例與近題首次代入保留物理單位，kΩ/mA/mW 前綴可追蹤；ODE 明示 SI 係數。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-00",
+   "scope": "dist/00-start.html；SHA256 662d4328e058265ec537475feaacc2deed1f6ac279b4844b87f18eea04ae62a8",
+   "checked": "全部靜態主文、主例、反選方向例、近題及SVG語義；修正後 SHA256 dbb0f9030710090a2e67592839dd6bd33251be5af1042f790d84ae50bd5e55d2；最終凍結 SHA256 a59fcbcaadbe6ffbc0afe170ca6e0002a86e34c6c0aadb2061d58a5a5b29359a",
+   "independent_calculation": "主例6 V/6 Ω=1 A，電阻6 W，電源−6 W，10 s電荷10 C、能量60 J。反選向上電流i′=−1 A，v=−Ri′且p_abs=−vi′=6 W，正負號一致。近題3 Ω得2 A、±12 W、5 s耗60 J。",
+   "diagram_check": "SVG源上正下負；電阻上正下負；順時針閉路i進電阻+端、出源+端。上下導線各同節點A/G，圖與功率式一致。靜態曲線R2/6/12 Ω對I3/1/.5 A，預設點(6,1)與軸比例一致。",
+   "interaction_check": "range預設6 Ω及靜態結果一致；app.js尚未提供。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "靜態數學、量綱、參考方向及守恆均一致。 依總隊長追加要求，數值代入須明示量與單位，避免只以段落預告單位後使用裸數；待作者全站收修。；本輪修正複核：主例與近題首次代入保留物理單位，kΩ/mA/mW 前綴可追蹤；ODE 明示 SI 係數。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-11",
+   "scope": "dist/11-rlc.html；初審 SHA256 a770d8ec119612746bfc89857275046569d89bbc0eaccd8d5866dc398a8ee2d5",
+   "checked": "完整主文、三阻尼根、主例/近題、初始導數與終值、能量、SVG語義；修正後 SHA256 1800dd94192579156fe35a1c1338e23ba31f6ced2b2bdc9edfe72456da6acfaf；並聯增量 SHA256 79ccd9f205cd16595b99483b5444b44ef824189149d711c05229d70240e16385；最終凍結 SHA256 2b764f8286c10863467e2c26bb7d2a9210f78813a9bce938eb063ddbf0d3f5a8",
+   "independent_calculation": "獨立從v=5+vh求A=−5 V、B=−2.886751346 V。2 ms時v=4.247128174 V、i=.209639814833 A、vR=2.096398148 V、vL=−1.343526323 V；wL=.219744259816 mJ、wC=.901904886434 mJ，源累計2.123564087135 mJ、熱1.001914940885 mJ。第一峰t=π/ωd=3.627598728 ms、v=5.815167674 V。近題臨界R20：A=−5 V、B=−5000 V/s、v(2ms)=2.969970751 V、i=.135335283 A；v′(0)=0及v∞=5成立。；新增導數獨立重推：v′=5e^(−αt)(ωd+α²/ωd)sin(ωdt)，Cω0²=1/L 得 i=5/(Lωd)e^(−αt)sin(ωdt)。；並聯增量親算：初值v5V/iL0，由KCL得iC−.25A/v′−2500V/s。α250s^-1,ω0=1000rad/s,Q2；定振幅電流驅動時|Z|²/R峰值20（以1 Arms歸一），兩半功率根780.776406404/1280.776406404rad/s均給10，頻寬500rad/s=79.577471546Hz。R40Ω則α125/Q4/B250，固定v5V的熱功率由1.25W降.625W。",
+   "diagram_check": "SVG A→R→B→L→D→C→0同一順時針i；R及L左正右負、C上正下負，KVL每項與節点差相符。靜態橫軸R而非t，預設點(10Ω,4.247128V)、R20臨界線位置正確。；新增 10/20/30 Ω 時間曲線各 251 點用獨立解析解核，最大像素差 0.004998（SVG 座標取兩位小數）；時間 0–10 ms 映射 x=85+62t_ms，y=323.333333−(65/3)v。首峰(3.627599 ms,5.815168 V)、2 ms 三值及終值5 V通過。；parallel-rlc新增圖R/C/L均跨A/地，三箭頭向下為流出，與自然KCL三項及v上正相符。",
+   "interaction_check": "靜態預設與range一致；尚待app.js。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "根與取位係數近似號已修；完整解改保留ωd及500/ωd，精確等號成立。待數值代入單位收修。；本輪修正複核：主例與近題首次代入保留物理單位，kΩ/mA/mW 前綴可追蹤；ODE 明示 SI 係數。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "APP-NUMERIC",
+   "scope": "dist/app.js；SHA256 73398d8b4b7660b2f0505c7174febcdab76892e11f981fb6acd4453b772adb79",
+   "checked": "20章各預設/min/max，共60情境、180輸出純數值比對；另檢RLC臨界點；已複核00/01/04/06/12/14 why單位增量，三讀值計算式不變，既有數值驗證仍適用。；最終app.js SHA256 144dd427d50fb908fd658f344a02927041ffdaaee63e105d45dd00a1b36e1e8d",
+   "independent_calculation": "預期值在讀實作前由SPEC-00至SPEC-19的KCL/KVL、複數除法、SI單位與初條件各自推出；固定fixtures不調用產品算法建立期望。180輸出最大尺度化誤差1.1657341758564144e−15。RLC另用不同方法：直接積分物理狀態v′=i/C、i′=(5−Ri−v)/L，以RK4在2 ms上分20000步；R=2/10/20/30 Ω得v=6.290351317197747/4.247128174270589/2.969970751450792/2.277521669950698 V，與解析式在約3e−14 V內一致。",
+   "diagram_check": "動態圖的每點取同一受測calculate輸出，座標採線性換算；這僅證模型映射，實際排版與鍵盤操作由技術驗收負責。",
+   "interaction_check": "calculate可直接輸出所有預設/端點；另外讀update：非數值/空回預設、超範圍夾限，reset回cfg預設。尚未宣稱瀏覽器端實測。",
+   "finding": "數學數值全通過。case12及case17各一處簡體「電」已通知builder修。",
+   "status": "互動模型數值通過；瀏覽器操作由技術驗收"
+  },
+  {
+   "id": "PAGE-01",
+   "scope": "dist/01-laws.html；初審 SHA256 15960acecd81e5fe95d6b52a2f629720a2ad94f01f409b16b00af0b76b13c986",
+   "checked": "全文主例、近題、初終值或守恆、SVG語義；修正後 SHA256 863661f033d2c3513c07131d4be637e18f5667be1d6c2e2594e5c8ed0ae5b793；最終凍結 SHA256 275a50e78eb4bea12511a774292716961535a468159ee76d211418a9f84f44b7",
+   "independent_calculation": "主例2 A，壓降4/8 V；節點A/B/G為12/8/0 V，功率−24+8+16=0 W。近題Vs9 V得I1.5 A、V1=3 V、V2=6 V，功率−13.5+4.5+9=0 W。分支例KCL 3−1−Ix=0得Ix=2 A；反箭頭Ix′=−2 A，同一實際方向。",
+   "diagram_check": "SVG三節點三支路形成一圈；源G→A提升，R1 A→B左正、R2 B→G上正，圖式相符。分流圖標明局部接點，3 A入、1 A與Ix出，反解負號一致。",
+   "interaction_check": "已由APP-NUMERIC獨立fixtures涵蓋預設/min/max；瀏覽器由技術驗收。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "數學推導及數字一致；待全站代入單位收修，避免省略運算量前綴。；本輪修正複核：主例與近題首次代入保留物理單位，kΩ/mA/mW 前綴可追蹤；ODE 明示 SI 係數。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-12",
+   "scope": "dist/12-laplace.html；初審 SHA256 44c56b177437e910b7e012d9ce4834279bc25e4a38610ede2675011ad55a7010",
+   "checked": "全文主例、近題、初終值或守恆、SVG語義；修正後 SHA256 8664f54c693f652d8a63b802decf755343f2e57833d2cad4b441c41204c43766；最終凍結 SHA256 19ede0c909ee7bf8ec30334fbd6e16c7029aeaeb05040f8ce0dbb369175c3816",
+   "independent_calculation": "單邊拉氏初值項−V0使分式( V0 s+5000 )/[s(s+1000)]；係數A=5 V、B=V0−5。主例2 V初值：1 ms的v=3.896361676 V、i=1.103638324 mA；起初2 μJ、終12.5 μJ、源供15 μJ、熱4.5 μJ。近題8 V初值：v=6.103638324 V、i=−1.103638324 mA；32→12.5 μJ釋19.5，電阻4.5加源吸15守恆。FVT檢查sV唯一極點−1000 s⁻¹，反例cos未有終值說明正確。",
+   "diagram_check": "SVG源5 V上正、R左正、C上正與順時針i一致；初值標在C旁、沒有誤畫成串聯另一源。近題保持原箭頭，i負號正確表示回流。靜態圖橫軸V0、縱軸1 ms電壓，斜率e⁻¹與點(2,3.89636)一致。",
+   "interaction_check": "已由APP-NUMERIC獨立fixtures涵蓋預設/min/max；瀏覽器由技術驗收。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "數學推導及數字一致；待全站代入單位收修，避免省略運算量前綴。；本輪修正複核：主例與近題首次代入保留物理單位，kΩ/mA/mW 前綴可追蹤；ODE 明示 SI 係數。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "ORIG-POSTCHECK",
+   "scope": "兩原筆記限定八項小修；2026-10-11",
+   "checked": "與/tmp/circuits-original-notes兩檔逐行diff；8項建議落實、無額外主文修改，另兩行來源註記",
+   "independent_calculation": "N01–N08的官方頁與獨立反例已逐項核；小修保留原例與數值。對LaTeX負號、轉置/雙埠−I2、測試電流入正端、變壓器出/入點方向再次核對，皆與建議一致。",
+   "diagram_check": "原筆記無新增圖；只修改受核條件。",
+   "interaction_check": "不適用。",
+   "finding": "尾註已按要求縮為「本次補充的符號與適用條件」，未冒稱全冊全面驗證。UTF-8 strict解碼通過；06-電路學-上.md SHA256 c2af5cddda68429f4adc56e6d11e0eec8d9a468bd98629ad4c6e14da60ae588a；06-電路學-下.md SHA256 c465c460845eacc290306645ea3f1b0e21f17ce04e53aa3e466b119c7c53b127",
+   "status": "八項原文修訂複核通過"
+  },
+  {
+   "id": "PAGE-02",
+   "scope": "dist/02-divider.html；初審 SHA256 924ab41fda37d4a5629ef40716b71c559027514f5e136cdb96986af974df015d",
+   "checked": "全文、負載門檻不等式、近題分流與功率、SVG語義；修正後 SHA256 e2dccb86a5a0431af1c4652c6be6a4a31747c8a0e1f406f78d785d4380d304b2；最終凍結 SHA256 ce620a7c1ed6642a31b72a83a7497d903baddb7623c9531126b761bcdd8bb7ed",
+   "independent_calculation": "主例兩4 kΩ並聯2 kΩ，總4 kΩ得3 mA；Vo6 V、支流各1.5 mA；功率18+9+9=36 mW等源。Vo≥7 V：12Rp≥7(2+Rp)得Rp≥14/5 kΩ；4RL/(4+RL)≥14/5得RL≥28/3 kΩ，整kΩ滑桿首過10。近題RL2 kΩ：Rp4/3，I3.6 mA、Vo4.8 V；I2=1.2及IL=2.4 mA，功率25.92+5.76+11.52=43.2 mW。",
+   "diagram_check": "S→R1→O，O分R2與RL到G，兩下支同O/G即並聯；R1左正及兩下支上正，三箭頭符合KCL與各壓降。靜態曲線RL1/4/12時Vo24/7、6、7.2 V，圖點相符。",
+   "interaction_check": "APP-NUMERIC獨立預設/min/max數值已通過；此頁range主例與模型一致。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "公式、數值、圖式正確；有多處裸數代入，待全站單位收修。；本輪修正複核：主例與近題首次代入保留物理單位，kΩ/mA/mW 前綴可追蹤；ODE 明示 SI 係數。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-13",
+   "scope": "dist/13-phasors.html；初審 SHA256 77724c72ebcfe2b885679f85b254c0822936183e72ffdce41766c41ae9b8710e",
+   "checked": "全文主/近題、RMS與複數除法、KVL/功率、門檻與兩張SVG；修正後 SHA256 755e99d4f3fe652edeed1f3c259fb682362132d42c372e0159560aa7c187ad5e；最終凍結 SHA256 98fdd080df305ceab7115f9a01523645a12eada10b9ea97f28d20e858376c71a",
+   "independent_calculation": "I=120(30−j40)/2500=1.44−j1.92 A，模2.4、角−atan(4/3)。VR=43.2−j57.6 V、VL=76.8+j57.6 V，合120+j0 V；平均P=2.4²×30=172.8 W，波形峰2.4√2 A。I≤3 A得XL²≥700 Ω²，XL≥26.457513 Ω，5 Ω步距首過30 Ω。電容近題取Z=30−j40 Ω，I=1.44+j1.92 A、VC=76.8−j57.6 V，功率不變。",
+   "diagram_check": "回路圖拓撲與被動極性正確。阻抗三角形錯：O=(100,245)、Z=(340,65)，兩腿240/180 px代表角36.869898°，卻標R30Ω、XL40Ω及53.130102°；必須改兩腿比例3:4及角弧，已通知作者。 第二輪親讀修後SVG：O=(100,245)、Z=(235,65)，兩腿135:180=3:4，斜邊225 px對50 Ω，角atan(180/135)=53.130102°；角弧端點(150,245)→(130,205)亦正確。此圖缺陷已關閉。",
+   "interaction_check": "APP-NUMERIC已核預設/上下界；靜態實驗點XL40,I2.4與閾值3A正確。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "阻抗三角形幾何及角弧已修正並複核通過；主文數學一致。數值代入單位仍有遺漏，builder已接管補齊，待再核。；本輪修正複核：主例與近題首次代入保留物理單位，kΩ/mA/mW 前綴可追蹤；ODE 明示 SI 係數。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-04",
+   "scope": "dist/04-mesh.html；初審SHA256 a0dc43e20b7f79429685983406e562c9e03fe0c331d6bbd65f281c720e45b609",
+   "checked": "主/近題、超網目、中央耗散判準、圖式與靜動態觀察量；修正後 SHA256 a0dc43e20b7f79429685983406e562c9e03fe0c331d6bbd65f281c720e45b609；最終凍結 SHA256 840e23a88ef1bcb06be04e61f2bfecf26ecda3e120c63afee09e5ae6c02523a6",
+   "independent_calculation": "主例由右式i1=3i2，左得10Ω·i2=12V；i1=3.6A、i2=1.2A、ic=2.4A。P中央11.52W<15W，餘3.48W；總25.92+11.52+5.76=43.2W。超網目10V：i1−i2=1A、2Ω·i1+4Ω·i2=10V；i1=7/3A、i2=4/3A、Vx=16/3V，電流源吸16/3W。近題20V：i1=6A、i2=2A、ic=4A，中央32W>15W；72+32+16=120W等源。",
+   "diagram_check": "主圖中央/右同節點C/G，兩順時針網目中央反向，向下ic=i1−i2正確。超網目源箭頭C→G，源上+/下−，其1A入正端故吸功率正確。",
+   "interaction_check": "模型預設/上下界已由APP-NUMERIC驗；但靜態圖以Ic為縱軸（2.4A），app以首輸出i1作圖（3.6A），已回報統一觀察量。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "靜態數學及單位通過；需統一無JS/有JS主曲線的物理量。；graphIndex=2 已使中央電流靜態與互動曲線一致，results 次序保持。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "THEOREM-MILLER",
+   "scope": "附錄米勒條件與網站16短例",
+   "checked": "不依據來源員摘要，自行從KCL/端口方程/線性代數推導",
+   "independent_calculation": "給定同頻線性跨接支路Z及K=V2/V1，端點1流入支路I1=(V1−V2)/Z=(1−K)V1/Z；端點2同理I2=(1−1/K)V2/Z，得兩端對地Z/(1−K)及Z/(1−1/K)。這是既定電壓比下的端電流等效；不能把K當任意負載下皆固定。獨立數值：K=−2、Z=3kΩ、V1=1V、V2=−2V，原跨接支路端流1mA及−1mA，對地1kΩ/2kΩ亦同。K=1時跨接電流0，可採開路極限；K=0時第二式分母需另按原端流處理，不硬算1/K。；本站實例Z30 kΩ,K−2,V1=1 V,V2=−2 V，Z1=10 kΩ,Z2=20 kΩ，原/替代兩端電流均+.1/−.1mA；吸收功率.1+.2=.3mW等於跨支路(3V)^2/30kΩ。電容Z時Z1=1/[jωC(1−K)]，K−2、C10pF得C1=30pF。",
+   "diagram_check": "16圖外部維持K的框與跨支路皆明列；右側等效明示只替換跨支路，兩節點對地阻值正確。待箭頭子路徑分割；不影響公式正負。；各端電流箭頭已分路徑並複核。",
+   "interaction_check": "不適用：附錄定理短例不另建互動。",
+   "finding": "已新增直接官方證據實讀：/tmp/circuits-team-source-delta/mit-miller.pdf pp.7–8，p.8廣義米勒輸入等效Z/(1−A)，p.7若採CE近似增益須It≪gmVt；兩端式及本站數值仍自行推導。官方證據 https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-spring-2009/e6afee3d5cc0080ed7bf6f7fd9c2c223_MIT6_012S09_lec22.pdf；PDF pp.7–8：Miller Approximation 與 Generalized Miller Effect；已本地渲染目視p.8。更新後來源列已逐句複核通過。",
+   "status": "官方條件與本站獨立推導、圖式複核通過"
+  },
+  {
+   "id": "THEOREM-SUBSTITUTE",
+   "scope": "附錄替代條件與網站07替代短例",
+   "checked": "不依據來源員摘要，自行從KCL/端口方程/線性代數推導",
+   "independent_calculation": "成立前提：被替代子網與其餘網路只透過所接的一對端點互動，原/替代後解均唯一。已知原支路(v0,i0)，替換為v=v0的理想電壓源或i=i0的理想電流源，原解仍同時滿足全部KCL/KVL及未改元件式；要說新解就是原解，尚須新電路解唯一。獨立數值：12V經2kΩ接4kΩ負載，v0=8V、i0=2mA；以8V上正電壓源替4kΩ得(12−8)V/(2kΩ)=2mA，以向下2mA源替亦得v=12V−(2kΩ)(2mA)=8V。外源若改6V，原電阻負載v=4V而8V替代源仍強制8V，證明不是任意外部條件的端口等效。；本站實例另核：8 V串4/3 kΩ，原2 kΩ負載v4.8 V/i2.4 mA；替4.8 V源後I=(8−4.8)/(4/3)=2.4 mA。左源改10 V，原負載3 mA/6 V，替代源則(10−4.8)/(4/3)=3.9 mA，工作點非普遍端口等效。",
+   "diagram_check": "07替代兩回路親讀SVG：原負載2 kΩ與替代4.8 V源都上正下負，電流向右後下行入正端；原/替代網路皆正串阻、解唯一，無跨邊界耦合。",
+   "interaction_check": "不適用：附錄定理短例不另建互動。",
+   "finding": "已親讀NITC官方樣書PDF p.3內嵌原書p.176文字及頁圖，直接列出原/替代後解唯一及只透過一對端點互動，可線性或非線性。本站示例自行推導。官方證據 https://nitc.ac.in/imgserver/uploads/attachments/electric-layout_8e040550-fa23-4690-89f5-2be9b74837af_0.pdf；PDF p.3右上內嵌書p.176、Fig.5.3-8；已讀文字並渲染目視。更新後來源列已逐句複核通過。",
+   "status": "官方條件與本站獨立推導、圖式複核通過"
+  },
+  {
+   "id": "THEOREM-RECIPROCAL",
+   "scope": "附錄互易條件與網站17短例",
+   "checked": "不依據來源員摘要，自行從KCL/端口方程/線性代數推導",
+   "independent_calculation": "由無相依源之雙向線性電阻構成、選定參考地且可解的節點電導矩陣G對稱；(G⁻¹)ᵀ=(Gᵀ)⁻¹=G⁻¹，故交叉轉移阻抗相等。獨立數值G=[[2,−1],[−1,3]]mS，逆為Z=[[.6,.2],[.2,.4]]kΩ。向A注入1mA量B為.2V，改向B注1mA量A亦.2V；z11=.6≠z22=.4，互易不等於埠對稱。含相依源不一定不互易，但不能未驗證矩陣就直接套對稱。；本站另例G=[[1,−.5],[−.5,.75]]S，det=.5S²，逆Z=[[1.5,1],[1,2]]Ω。A注1A得[1.5,1]V，B注1A得[1,2]V；交叉1Ω相同而自阻不同。第一次電阻熱(1.5²/2+1²/4+.5²/2)W=1.5W，對上來源。",
+   "diagram_check": "17純R網路實際SVG與兩條KCL一致：A地2Ω、B地4Ω、AB2Ω；另埠只外部開路而盒內接地支路仍在。",
+   "interaction_check": "不適用：附錄定理短例不另建互動。",
+   "finding": "已親讀IIT Kharagpur實驗講義PDF p.3全文及圖3/4，直接以線性、雙向、被動兩埠的互換電壓激勵/短路電流量測比值說明互易；本站純R矩陣及z12=z21≠埠對稱仍自行推導。官方證據 https://ee.iitkgp.ac.in/assets/file/TeachingLabs/SigNet/MaxPowTrans_Recipro.pdf；PDF p.3：RECIPROCITY THEOREM、Fig.3–4；已讀完整頁及目視方向。更新後來源列已逐句複核通過。",
+   "status": "官方條件與本站獨立推導、圖式複核通過"
+  },
+  {
+   "id": "TWO-H",
+   "scope": "H參數定義與量綱（網站17待落盤）",
+   "checked": "不依據來源員摘要，自行從KCL/端口方程/線性代數推導",
+   "independent_calculation": "定義V1=h11 I1+h12 V2；I2=h21 I1+h22 V2，兩電流皆流入埠。第一列同V量綱迫使h11為Ω、h12無因次；第二列迫使h21無因次、h22為S。純串聯R兩埠V1=RI1+V2且I2=−I1，因此H=[[R,1],[−1,0S]]存在，即使其Z因Y奇異而不存在。",
+   "diagram_check": "17四參數方程與單位表已全文核：h11Ω,h22S,h12/h21無因次；純串聯實例h=[10Ω,1;−1,0S]與圖符號一致。",
+   "interaction_check": "不適用：附錄定理短例不另建互動。",
+   "finding": "推導條件成立；SRC45–47未取得官方直接定理段，這裡明確屬獨立推導，不冒稱官方已逐式證實。",
+   "status": "本站參數方程、量綱與例題複核通過"
+  },
+  {
+   "id": "PAGE-05",
+   "scope": "dist/05-controlled.html",
+   "checked": "全文、主例、近題、模型條件、SVG及單位；SHA256 008e989c8907973d1f56471b621bec645c32f4a9880737677bafd139674ab36b；最終凍結 SHA256 3fa8fe2a875f75d8e3cf09534f130a604acaace7c5783f5f2761a23a00e1c1f9",
+   "independent_calculation": "主例 Va=6 V,Vb=0；近題 Vs=9 V 時 Va=7 V,Vb=−2 V，跨源 A→B 電流−0.5 mA；功率24.5+1−21−4.5=0 mW。受控源測試1 V時，被動2 kΩ支路0.5 mA及gm支路0.5 mA同向流地，Rth=1 kΩ。",
+   "diagram_check": "超節點跨源 Va−Vb=Vs、各對地電阻與源注入方向逐項對回 KCL；測試源正端流入網路的電流與Rth定義一致。",
+   "interaction_check": "預設及min/max已在APP-NUMERIC獨立樣本核算，未代替瀏覽器實際操作驗收。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "未發現未處理的算術或符號錯誤。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-06",
+   "scope": "dist/06-superposition.html",
+   "checked": "全文、主例、近題、模型條件、SVG及單位；SHA256 9aafb04f4a953a312f9a21e87265adef4339f92ad9a1e1bb90f33345e085a21a；最終凍結 SHA256 0a0435cbc947cb35d2f959332b621c38df1d1bc25df70c6af36d581e7287ad22",
+   "independent_calculation": "主例兩貢獻各3 V，負載6 V、3 mA、18 mW；左源支路1.5−1.5=0 mA。近題5 mA注入得V8 V，IL4 mA,I6−1 mA，功率32+2+6−40=0 mW；分別負載功率17 mW加交叉項15 mW才是32 mW。",
+   "diagram_check": "親讀三張SVG路徑；電流源歸零為兩分離端點，電壓源歸零連通S=G；只電流源時上支路實際左行與主I6負貢獻相符。",
+   "interaction_check": "預設及min/max已在APP-NUMERIC獨立樣本核算，未代替瀏覽器實際操作驗收。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "未發現未處理的算術或符號錯誤。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-14",
+   "scope": "dist/14-ac-power.html",
+   "checked": "全文、主例、近題、模型條件、SVG及單位；SHA256 bd2f46c2b41295e64a42fb0ec664796e14b051ea2fbc8c24e7244f032c175330；最終凍結 SHA256 9ea265be87e2e0e5dba1148a35042f1e858c627e056f069a6fb45d985fa30d95",
+   "independent_calculation": "RMS S=VI*=100+j100√3 VA；PF=.5。P≥150 W門檻|θ|≤acos(.75)=41.409622°。共軛負載3−j4 Ω得I5/3 A,PL25/3 W，純電阻最優5 Ω得6.25 W。50 Hz並聯補償C=55.132890 μF,Is由1−j√3加j√3成1 A。近題+30°電流得P173.205081 W,Q−100var。",
+   "diagram_check": "功率三角形腿100:173.205081對60°；原座標軸交點差15px已修至(455,260)，與S/P/Q同原點。功率供受依電流入正端。",
+   "interaction_check": "預設及min/max已在APP-NUMERIC獨立樣本核算，未代替瀏覽器實際操作驗收。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "未發現未處理的算術或符號錯誤。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-15",
+   "scope": "dist/15-frequency.html",
+   "checked": "全文、主例、近題、模型條件、SVG及單位；SHA256 ca69972b12840f83c2704f6b1304d726276ca6f7c15bc37ae42c470ec46ee74e；Bode增量 SHA256 ca69972b12840f83c2704f6b1304d726276ca6f7c15bc37ae42c470ec46ee74e；最終凍結 SHA256 7f00437b674b3ac553a65db03a206e0d75882f2180b9f5c5945dae65a6afe797",
+   "independent_calculation": "RC=10^-4 s，fc=1591.549431 Hz；x1輸出1−j V，I1+j mA，PR2mW；x10輸出幅0.199007438 V,相位−84.289407°,−20.043214 dB。RLC帶通ω0=1000rad/s,Q1；半功率兩根500(√5∓1)=618.033989/1618.033989rad/s，差1000rad/s。；半功率新推導 |x−1/x|=1 分為x²+x−1=0與x²−x−1=0，僅保留正根，x2−x1=1。",
+   "diagram_check": "已讀低通跨C、高通跨R、RLC跨R及LC的SVG連線/極性，與分壓分子逐一相合。新增對數Bode圖待落盤再核。；新增真正log軸x=330+240log10(f/fc)，兩組各201點對−10log10(1+x²)與−atan(x)獨立核算；像素誤差<0.005，fc標記−3.0103dB/−45°與漸近線0/−20dB每decade正確。",
+   "interaction_check": "預設及min/max已在APP-NUMERIC獨立樣本核算，未代替瀏覽器實際操作驗收。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "未發現未處理的算術或符號錯誤。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-07",
+   "scope": "dist/07-equivalents.html",
+   "checked": "全文、主例、近題、替代例、圖式及單位；SHA256 5e750cf9f4fb8b9a957fe976e2e59738b3409657553e54f420c583b391fbdeb0；最終凍結 SHA256 c19c8170744ce1c6533b05a60ae9b5177c34d4cfd169582ce5fe66f1481db362",
+   "independent_calculation": "開路8 V，源歸零4/3 kΩ，短路6 mA；接2 kΩ得2.4 mA/4.8 V/11.52 mW，原源43.2 mW=25.92+5.76+11.52。匹配4/3 kΩ時負載12 mW，等效源24 mW效率50%，原源48 mW效率25%。近題4 kΩ得1.5 mA/6 V/9 mW。滑桿1.5 kΩ取3456/289=11.958477509 mW，比1 kΩ的11.755102041 mW高。",
+   "diagram_check": "原網路虛線分開內部4 kΩ與負載；戴維寧串阻、諾頓並阻及上行源流，端口極性一致。替代圖右支路源正端在上，2.4 mA流入其正端，吸收11.52 mW。",
+   "interaction_check": "預設與兩端點見APP-NUMERIC；最佳精確4/3不在0.5kΩ刻度，頁面已正確說明。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "平方不等式最大功率證明及替代定理唯一解/兩端作用條件通過，原創反例有效。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-16",
+   "scope": "dist/16-opamp.html",
+   "checked": "全文、主例、近題、非反相/主動低通/米勒短例及SVG；SHA256 3aa9b75c5ebbe7cc6044a6791e700305a178b504f91b95cb625915aade448f13；箭頭/輸入線增量SHA256 37cb241645098b951d28b5bf430371ec0cd1b45ba54655ca859269228f6d1e08；最終凍結 SHA256 a92988ad974ac092c5e978a518594a02ee880ef4fa21cd5b26d6569e736a88bc",
+   "independent_calculation": "反相VN0，1 V/10 kΩ=.1mA，Vo−2 V；Rin .1mW/Rf .2mW，輸入源供.1mW，輸出端供.2mW。近題−1.5 V得Vo3 V，兩參考電流−.15mA，兩R耗.225/.45mW。非反相1+20/10=3，分壓流.1mA；主動低通RfCf=.0002s，fc795.774715 Hz，fc時H−1+j，.5Vrms入得.70710678Vrms出、1V峰值，未超±5V。",
+   "diagram_check": "負回授接負端N、正端P接地，供電另列±5V；非反相分壓支路到地，主動低通Rf/Cf同跨N/O；米勒跨接/等效到地連線與文字方向一致。active-arrow及mil-arrow多子路徑待分割以逐箭頭顯示。；已複核active兩路/mil四路均獨立path。非反相輸入線改由y355繞過Rg再到P，沒有穿過接地電阻或誤連N。",
+   "interaction_check": "±2 V輸入全範圍對±4 V輸出，在±5 V供電線性候選區；APP-NUMERIC預設/兩端點已獨立核算。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "線性負回授、輸入零電流及超供電退出虛短均正確。待箭頭SVG機械修正。；上述圖修正已通過。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-08",
+   "scope": "dist/08-storage.html",
+   "checked": "全文、主例、近題、電感第二例、連續性條件及兩斜坡SVG；SHA256 4d469ca45ccbb4dfb24be7ef534c6a9c16051c07b57ff6dad74c5ef782c646fd；功率面積圖增量SHA256 a1fd5d189ff0887e20a3da4aef2a5149318efbd4400740bdfc26b4ddd07dae42；最終凍結 SHA256 5467b5180cbdda691cf70abecf66cf38c4f079c62cbecd7d8702feef649af25c",
+   "independent_calculation": "C2μF由0到5V/1ms：q10μC、i10mA、w25μJ；末功率50mW的三角積分25μJ，12mA上限最短5/6ms。L10mH電流0→2A/1ms：di/dt2000A/s、v20V、w20mJ；40W峰值乘半個ms亦20mJ。近題8V：q16μC,i16mA,w64μJ,Tmin4/3ms；96mW×(4/3ms)/2=64μJ。C2/3μF串聯1.2μF並聯5μF，無互感L10/20mH串30並20/3mH。",
+   "diagram_check": "C與斜坡電壓源並接同A/G，電流入C+；L與斜坡電流源同閉路，源上行/L下行入+。兩時圖x0到1ms同220px，縱軸分別0→5V/2A，終點後水平對零導數。；新增pC-t圖x=85→425對0→1ms，y245→65對0→50mW，三角面積25μJ；1ms前50mW用空心端點，1ms後p=0，與電壓連續而斜率跳變相符。",
+   "interaction_check": "APP-NUMERIC核終點0/5/10V電荷、能量與1ms斜坡電流；本文明示曲線x是終點電壓而非時間。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "有限iC/vL下連續並明示脈衝例外；初始能量與無磁耦合條件均正確。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "REPORT-CHECK",
+   "scope": "數學驗收.md、數學驗收.json、原筆記修正複核.json；wf全域lint",
+   "checked": "三檔UTF-8嚴格解碼通過；兩JSON tabledb check均[]。bash wf/tools/wf-lint.sh wf exit1。",
+   "independent_calculation": "不適用",
+   "diagram_check": "不適用",
+   "interaction_check": "不適用",
+   "finding": "wf全域摘要 broken=2,oversize=0,biglist=269,biglist_links=2,querycmd=3,residue{{=1。兩壞連結皆wf/reviews/2026-09-26既存檔案，無本次可寫領地，未改範圍外檔；不得宣稱全域lint通過。",
+   "status": "本報告格式/連結/UTF8通過；全域lint有既存告警"
+  },
+  {
+   "id": "PAGE-17",
+   "scope": "dist/17-twoport.html",
+   "checked": "全文、主/近題、Y奇異、四參數、串接/互易短例與三SVG；SHA256 23f3b34dac7127837cd0026efc0e49c4058fe5e5dbc4ff5a4bc610fde1a8a20b；最終凍結 SHA256 fc398a514b19a5a539f4d531ce80df858a441434c76ca287217f0d6e4215a724",
+   "independent_calculation": "主例I1=.2A,I2=−.2A,V2=8V；入盒2−1.6=.4W=I²10Ω。ABCD[1,10Ω;0S,1]、Y=.1S[1,−1;−1,1]奇異，h[10Ω,1;−1,0S]存在。串接20Ω得B30Ω，I1/7A,V2=40/7V,VM60/7V；近題單10Ω加60Ω負載得I1/7A,V2=60/7V，功率10/49+60/49=10/7W。互易G[1,−.5;−.5,.75]S逆為[1.5,1;1,2]Ω，交換1A注入的交叉電壓均1V，z11≠z22。",
+   "diagram_check": "四端上下電壓正負、I1右入/I2左入、IL下行清楚；ABCD右向電流−I2與串接交界匹配。互易圖A對地2Ω/B對地4Ω/橋2Ω，與G每項一致。",
+   "interaction_check": "APP-NUMERIC已核RL10/40/100Ω；負值I2為定義所得，無把負解視為錯誤。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "參數存在條件、矩陣量綱及非對稱互易均正確；首次代入單位完整。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-09",
+   "scope": "dist/09-rc.html",
+   "checked": "全文、主/近題、三切換狀態、時曲線、放電圖與單位；SHA256 b986c3e71219f7bcb049d06a459b5d96fbbbd451bc8393ba72acb32fc82c61c8；總/追加等待文字delta已讀；最終凍結 SHA256 3feac8e7b1c23500da84120ca8fd1e28c8fdcedcf4878ab6c02113ebb2cab7d1",
+   "independent_calculation": "τ1ms。充電v(1ms)=5(1−e^-1)=3.160602794V，i=5e^-1=1.839397206mA。90%門檻ln10 ms=2.302585093ms，2.3/2.4ms電壓4.498705781/4.546410234V。供源25μJ=電容12.5+R熱12.5。近題放電v1ms=1.839397206V，iR正1.839397206mA/iC負同量；剩12.5e^-2=1.691691040μJ，R熱10.808308960μJ。低於.5V同門檻，2.3/2.4ms為.501294219/.453589766V。",
+   "diagram_check": "0−開關分離且C初值0，0+閉路有限電流5mA/C仍0V，∞C5V/i0；三階段無偷換C極性。放電圖iR與iC都向下，實流由C上行供R，與KCL兩項和0一致。時圖τ位1ms，曲線3.16060V/終值5V相符。",
+   "interaction_check": "APP-NUMERIC已核充電t0/1/5ms；放電近題明示不同接法，不借滑桿充電值。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "分離變數先定無因次z再取ln，初值/終值/有限激勵條件與µ/k前綴皆正確。；已補自接通總2.302585ms、已等1ms後追加1.302585ms，數值與語意通過。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PAGE-18",
+   "scope": "dist/18-coupling.html",
+   "checked": "全文、主/近題、有限互感第二例、兩SVG點標/箭頭與單位；SHA256 2853ff878b8da08083c2389e571384008c32e63622e31410f403401d7fc95670；最終凍結 SHA256 c220e09a68fd4ad8cf230eec586fd6ab0f08365621105123b68879461f4b9326",
+   "independent_calculation": "兩入點且點端為電壓正：M=.5√(4×9)mH=3mH；di1=1000A/s,di2=0給v1=4V/v2=3V；能量交叉項+Mi1i2微分還原v1i1+v2i2，M²9≤36mH²。理想n2：Vs24Vrms、IL1A、I2−1A、Ip2A、Rin6Ω，24−24=0W。可行n區間[5/3,√5]，0.5步距只有2；近題n1.5得18V/.75A/−.75A/1.125A、32/3Ω及13.5W，電壓未達20V。",
+   "diagram_check": "兩側上點皆正端；主例Ip右行入點、IL右行出次點、I2左行入點與I2=−IL一致。有限互感圖兩電流都入上點，次側端口開路；磁耦合虛線不作導線，兩回路電壓參考分離。",
+   "interaction_check": "APP-NUMERIC已核n.5/2/3；文字額外回算Ip=n²Vp/RL，n3時4.5A超門檻。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "清楚分開有限互感與忽略磁化電流的理想變壓器，未把k1當充分條件；RMS/峰值、受供功率與反映阻抗方向均正確。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "APP-FIXTURES",
+   "scope": "20章瀏覽器讀值的獨立固定基準",
+   "checked": "60組固定數值由KCL/KVL/被動功率/相量代數及物理RLC狀態方程產生，未讀取或呼叫產品calculate/rlc。順序對應動態三讀值。",
+   "independent_calculation": {
+    "fixtures": [
+     {
+      "lesson": "00",
+      "scenario": "min",
+      "input": 2,
+      "expected_values": [
+       3.0,
+       18.0,
+       -18.0
+      ],
+      "units": [
+       "A",
+       "W",
+       "W"
+      ]
+     },
+     {
+      "lesson": "00",
+      "scenario": "default",
+      "input": 6,
+      "expected_values": [
+       1.0,
+       6.0,
+       -6.0
+      ],
+      "units": [
+       "A",
+       "W",
+       "W"
+      ]
+     },
+     {
+      "lesson": "00",
+      "scenario": "max",
+      "input": 12,
+      "expected_values": [
+       0.5,
+       3.0,
+       -3.0
+      ],
+      "units": [
+       "A",
+       "W",
+       "W"
+      ]
+     },
+     {
+      "lesson": "01",
+      "scenario": "min",
+      "input": 0,
+      "expected_values": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "units": [
+       "A",
+       "V",
+       "V"
+      ]
+     },
+     {
+      "lesson": "01",
+      "scenario": "default",
+      "input": 12,
+      "expected_values": [
+       2.0,
+       4.0,
+       8.0
+      ],
+      "units": [
+       "A",
+       "V",
+       "V"
+      ]
+     },
+     {
+      "lesson": "01",
+      "scenario": "max",
+      "input": 18,
+      "expected_values": [
+       3.0,
+       6.0,
+       12.0
+      ],
+      "units": [
+       "A",
+       "V",
+       "V"
+      ]
+     },
+     {
+      "lesson": "02",
+      "scenario": "min",
+      "input": 1,
+      "expected_values": [
+       3.428571428571429,
+       4.285714285714286,
+       0.8
+      ],
+      "units": [
+       "V",
+       "mA",
+       "kΩ"
+      ]
+     },
+     {
+      "lesson": "02",
+      "scenario": "default",
+      "input": 4,
+      "expected_values": [
+       6.0,
+       3.0,
+       2.0
+      ],
+      "units": [
+       "V",
+       "mA",
+       "kΩ"
+      ]
+     },
+     {
+      "lesson": "02",
+      "scenario": "max",
+      "input": 12,
+      "expected_values": [
+       7.199999999999999,
+       2.4,
+       3.0
+      ],
+      "units": [
+       "V",
+       "mA",
+       "kΩ"
+      ]
+     },
+     {
+      "lesson": "03",
+      "scenario": "min",
+      "input": 0,
+      "expected_values": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "units": [
+       "V",
+       "V",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "03",
+      "scenario": "default",
+      "input": 6,
+      "expected_values": [
+       8.0,
+       4.0,
+       2.0
+      ],
+      "units": [
+       "V",
+       "V",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "03",
+      "scenario": "max",
+      "input": 12,
+      "expected_values": [
+       16.0,
+       8.0,
+       4.0
+      ],
+      "units": [
+       "V",
+       "V",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "04",
+      "scenario": "min",
+      "input": 0,
+      "expected_values": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "units": [
+       "A",
+       "A",
+       "A"
+      ]
+     },
+     {
+      "lesson": "04",
+      "scenario": "default",
+      "input": 12,
+      "expected_values": [
+       3.5999999999999996,
+       1.2,
+       2.3999999999999995
+      ],
+      "units": [
+       "A",
+       "A",
+       "A"
+      ]
+     },
+     {
+      "lesson": "04",
+      "scenario": "max",
+      "input": 24,
+      "expected_values": [
+       7.199999999999999,
+       2.4,
+       4.799999999999999
+      ],
+      "units": [
+       "A",
+       "A",
+       "A"
+      ]
+     },
+     {
+      "lesson": "05",
+      "scenario": "min",
+      "input": 0,
+      "expected_values": [
+       4.0,
+       4.0,
+       1.0
+      ],
+      "units": [
+       "V",
+       "V",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "05",
+      "scenario": "default",
+      "input": 6,
+      "expected_values": [
+       6.0,
+       0.0,
+       0.0
+      ],
+      "units": [
+       "V",
+       "V",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "05",
+      "scenario": "max",
+      "input": 12,
+      "expected_values": [
+       8.0,
+       -4.0,
+       -1.0
+      ],
+      "units": [
+       "V",
+       "V",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "06",
+      "scenario": "min",
+      "input": 0,
+      "expected_values": [
+       3.0,
+       0.0,
+       4.5
+      ],
+      "units": [
+       "V",
+       "V",
+       "mW"
+      ]
+     },
+     {
+      "lesson": "06",
+      "scenario": "default",
+      "input": 3,
+      "expected_values": [
+       6.0,
+       3.0,
+       18.0
+      ],
+      "units": [
+       "V",
+       "V",
+       "mW"
+      ]
+     },
+     {
+      "lesson": "06",
+      "scenario": "max",
+      "input": 6,
+      "expected_values": [
+       9.0,
+       6.0,
+       40.5
+      ],
+      "units": [
+       "V",
+       "V",
+       "mW"
+      ]
+     },
+     {
+      "lesson": "07",
+      "scenario": "min",
+      "input": 0.5,
+      "expected_values": [
+       9.520661157024795,
+       4.363636363636364,
+       2.181818181818182
+      ],
+      "units": [
+       "mW",
+       "mA",
+       "V"
+      ]
+     },
+     {
+      "lesson": "07",
+      "scenario": "default",
+      "input": 2,
+      "expected_values": [
+       11.520000000000003,
+       2.4000000000000004,
+       4.800000000000001
+      ],
+      "units": [
+       "mW",
+       "mA",
+       "V"
+      ]
+     },
+     {
+      "lesson": "07",
+      "scenario": "max",
+      "input": 6,
+      "expected_values": [
+       7.140495867768596,
+       1.090909090909091,
+       6.545454545454547
+      ],
+      "units": [
+       "mW",
+       "mA",
+       "V"
+      ]
+     },
+     {
+      "lesson": "08",
+      "scenario": "min",
+      "input": 0,
+      "expected_values": [
+       0.0,
+       0,
+       0
+      ],
+      "units": [
+       "μJ",
+       "μC",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "08",
+      "scenario": "default",
+      "input": 5,
+      "expected_values": [
+       25.0,
+       10,
+       10
+      ],
+      "units": [
+       "μJ",
+       "μC",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "08",
+      "scenario": "max",
+      "input": 10,
+      "expected_values": [
+       100.0,
+       20,
+       20
+      ],
+      "units": [
+       "μJ",
+       "μC",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "09",
+      "scenario": "min",
+      "input": 0,
+      "expected_values": [
+       0.0,
+       5.0,
+       5.0
+      ],
+      "units": [
+       "V",
+       "mA",
+       "V"
+      ]
+     },
+     {
+      "lesson": "09",
+      "scenario": "default",
+      "input": 1,
+      "expected_values": [
+       3.1606027941427883,
+       1.8393972058572117,
+       1.8393972058572117
+      ],
+      "units": [
+       "V",
+       "mA",
+       "V"
+      ]
+     },
+     {
+      "lesson": "09",
+      "scenario": "max",
+      "input": 5,
+      "expected_values": [
+       4.966310265004573,
+       0.03368973499542734,
+       0.03368973499542734
+      ],
+      "units": [
+       "V",
+       "mA",
+       "V"
+      ]
+     },
+     {
+      "lesson": "10",
+      "scenario": "min",
+      "input": 0,
+      "expected_values": [
+       0.0,
+       10.0,
+       0.0
+      ],
+      "units": [
+       "A",
+       "V",
+       "V"
+      ]
+     },
+     {
+      "lesson": "10",
+      "scenario": "default",
+      "input": 1,
+      "expected_values": [
+       0.6321205588285577,
+       3.6787944117144233,
+       6.321205588285577
+      ],
+      "units": [
+       "A",
+       "V",
+       "V"
+      ]
+     },
+     {
+      "lesson": "10",
+      "scenario": "max",
+      "input": 5,
+      "expected_values": [
+       0.9932620530009146,
+       0.06737946999085467,
+       9.932620530009146
+      ],
+      "units": [
+       "A",
+       "V",
+       "V"
+      ]
+     },
+     {
+      "lesson": "11",
+      "scenario": "min",
+      "input": 2,
+      "expected_values": [
+       6.290351317197747,
+       0.1,
+       100.0
+      ],
+      "units": [
+       "V",
+       "",
+       "s⁻¹"
+      ]
+     },
+     {
+      "lesson": "11",
+      "scenario": "default",
+      "input": 10,
+      "expected_values": [
+       4.247128174270589,
+       0.5,
+       500.0
+      ],
+      "units": [
+       "V",
+       "",
+       "s⁻¹"
+      ]
+     },
+     {
+      "lesson": "11",
+      "scenario": "max",
+      "input": 30,
+      "expected_values": [
+       2.277521669950698,
+       1.5,
+       1500.0
+      ],
+      "units": [
+       "V",
+       "",
+       "s⁻¹"
+      ]
+     },
+     {
+      "lesson": "12",
+      "scenario": "min",
+      "input": 0,
+      "expected_values": [
+       3.1606027941427883,
+       -5,
+       1.8393972058572117
+      ],
+      "units": [
+       "V",
+       "V",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "12",
+      "scenario": "default",
+      "input": 2,
+      "expected_values": [
+       3.896361676485673,
+       -3,
+       1.103638323514327
+      ],
+      "units": [
+       "V",
+       "V",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "12",
+      "scenario": "max",
+      "input": 8,
+      "expected_values": [
+       6.103638323514327,
+       3,
+       -1.103638323514327
+      ],
+      "units": [
+       "V",
+       "V",
+       "mA"
+      ]
+     },
+     {
+      "lesson": "13",
+      "scenario": "min",
+      "input": 0,
+      "expected_values": [
+       4.0,
+       -0.0,
+       30.0
+      ],
+      "units": [
+       "A",
+       "°",
+       "Ω"
+      ]
+     },
+     {
+      "lesson": "13",
+      "scenario": "default",
+      "input": 40,
+      "expected_values": [
+       2.4,
+       -53.13010235415598,
+       50.0
+      ],
+      "units": [
+       "A",
+       "°",
+       "Ω"
+      ]
+     },
+     {
+      "lesson": "13",
+      "scenario": "max",
+      "input": 80,
+      "expected_values": [
+       1.4044937663535666,
+       -69.44395478041653,
+       85.44003745317531
+      ],
+      "units": [
+       "A",
+       "°",
+       "Ω"
+      ]
+     },
+     {
+      "lesson": "14",
+      "scenario": "min",
+      "input": -80,
+      "expected_values": [
+       34.72963553338608,
+       -196.9615506024416,
+       200.0
+      ],
+      "units": [
+       "W",
+       "var",
+       "VA"
+      ]
+     },
+     {
+      "lesson": "14",
+      "scenario": "default",
+      "input": 60,
+      "expected_values": [
+       100.00000000000003,
+       173.20508075688772,
+       200.0
+      ],
+      "units": [
+       "W",
+       "var",
+       "VA"
+      ]
+     },
+     {
+      "lesson": "14",
+      "scenario": "max",
+      "input": 80,
+      "expected_values": [
+       34.72963553338608,
+       196.9615506024416,
+       200.0
+      ],
+      "units": [
+       "W",
+       "var",
+       "VA"
+      ]
+     },
+     {
+      "lesson": "15",
+      "scenario": "min",
+      "input": 0.1,
+      "expected_values": [
+       0.9950371902099892,
+       -0.04321373782642559,
+       -5.710593137499643
+      ],
+      "units": [
+       "",
+       "dB",
+       "°"
+      ]
+     },
+     {
+      "lesson": "15",
+      "scenario": "default",
+      "input": 1,
+      "expected_values": [
+       0.7071067811865476,
+       -3.0102999566398116,
+       -45.0
+      ],
+      "units": [
+       "",
+       "dB",
+       "°"
+      ]
+     },
+     {
+      "lesson": "15",
+      "scenario": "max",
+      "input": 10,
+      "expected_values": [
+       0.09950371902099892,
+       -20.043213737826427,
+       -84.28940686250036
+      ],
+      "units": [
+       "",
+       "dB",
+       "°"
+      ]
+     },
+     {
+      "lesson": "16",
+      "scenario": "min",
+      "input": -2,
+      "expected_values": [
+       4.0,
+       -0.2,
+       0
+      ],
+      "units": [
+       "V",
+       "mA",
+       "V"
+      ]
+     },
+     {
+      "lesson": "16",
+      "scenario": "default",
+      "input": 1,
+      "expected_values": [
+       -2.0,
+       0.1,
+       0
+      ],
+      "units": [
+       "V",
+       "mA",
+       "V"
+      ]
+     },
+     {
+      "lesson": "16",
+      "scenario": "max",
+      "input": 2,
+      "expected_values": [
+       -4.0,
+       0.2,
+       0
+      ],
+      "units": [
+       "V",
+       "mA",
+       "V"
+      ]
+     },
+     {
+      "lesson": "17",
+      "scenario": "min",
+      "input": 10,
+      "expected_values": [
+       5.0,
+       0.5,
+       -0.5
+      ],
+      "units": [
+       "V",
+       "A",
+       "A"
+      ]
+     },
+     {
+      "lesson": "17",
+      "scenario": "default",
+      "input": 40,
+      "expected_values": [
+       8.0,
+       0.2,
+       -0.2
+      ],
+      "units": [
+       "V",
+       "A",
+       "A"
+      ]
+     },
+     {
+      "lesson": "17",
+      "scenario": "max",
+      "input": 100,
+      "expected_values": [
+       9.09090909090909,
+       0.09090909090909091,
+       -0.09090909090909091
+      ],
+      "units": [
+       "V",
+       "A",
+       "A"
+      ]
+     },
+     {
+      "lesson": "18",
+      "scenario": "min",
+      "input": 0.5,
+      "expected_values": [
+       6.0,
+       0.25,
+       96.0
+      ],
+      "units": [
+       "Vrms",
+       "Arms",
+       "Ω"
+      ]
+     },
+     {
+      "lesson": "18",
+      "scenario": "default",
+      "input": 2,
+      "expected_values": [
+       24,
+       1.0,
+       6.0
+      ],
+      "units": [
+       "Vrms",
+       "Arms",
+       "Ω"
+      ]
+     },
+     {
+      "lesson": "18",
+      "scenario": "max",
+      "input": 3,
+      "expected_values": [
+       36,
+       1.5,
+       2.6666666666666665
+      ],
+      "units": [
+       "Vrms",
+       "Arms",
+       "Ω"
+      ]
+     },
+     {
+      "lesson": "19",
+      "scenario": "min",
+      "input": 50,
+      "expected_values": [
+       625.0,
+       86.60254037844386,
+       4.166666666666667
+      ],
+      "units": [
+       "W",
+       "V",
+       "A"
+      ]
+     },
+     {
+      "lesson": "19",
+      "scenario": "default",
+      "input": 120,
+      "expected_values": [
+       3600.0,
+       207.84609690826525,
+       10.0
+      ],
+      "units": [
+       "W",
+       "V",
+       "A"
+      ]
+     },
+     {
+      "lesson": "19",
+      "scenario": "max",
+      "input": 230,
+      "expected_values": [
+       13225.0,
+       398.3716857408417,
+       19.166666666666668
+      ],
+      "units": [
+       "W",
+       "V",
+       "A"
+      ]
+     }
+    ],
+    "rlc_method": "對v′=i/C、i′=(5−Ri−v)/L，以RK4步長1e-7s積至2ms（20000步），零初值。",
+    "display_note": "產品顯示採6有效數字且最多6小數；瀏覽器比對容許該格式的捨入誤差，不能要求字串等於未捨入float。"
+   },
+   "diagram_check": "只供數值讀值基準；圖式證據另見PAGE列。",
+   "interaction_check": "min/default/max的range上下限與預設皆依章節規格逐項核。",
+   "finding": "提供technical_qa讀取的固定fixtures；不是使用產品演算法自驗。",
+   "status": "獨立固定基準完成"
+  },
+  {
+   "id": "PAGE-19",
+   "scope": "dist/19-threephase.html",
+   "checked": "全文、Y主例、Δ第二例、近題、三SVG與瞬時功率；SHA256 96b4fabeeaab246bb35a322bbfdc1684a25ae2baa55095931a6b67daa6d6742f；最終凍結 SHA256 a8cca9881f8f095c4cba5391b976d0effb6384ffe9d09c3bf1cc18a21629a9e5",
+   "independent_calculation": "正相序Van120∠0,Vbn120∠−120,Vcn120∠120；Y各12Ω電流10∠同角A，和0。Vab=(180+j60√3)V=120√3∠30°V，Vbc−90/Vca150；P3×120×10=3600W。t0瞬時功率2400+600+600=3600W，各雙頻項抵銷。Δ同三支12Ω：Iab=15+j5√3A,Ica=−15+j5√3A，Ia=Iab−Ica=30A，P10800W；等效Y12Ω需Δ36Ω。近題Vp100V得IL25/3A,Vab100√3∠30°V,P2500W。",
+   "diagram_check": "Y三電阻負端共N並回n，正線流入/中性流回，對應IN三相量和。相量圖原點(140,190)，Van向右120px，−Vbn由頭端加(60,−103.923)px，Vab長207.846097px且30°；原Vbn虛線−120°。Δ各分支電流ab/bc/ca與電壓首字母+末字母−一致；線a KCL用Ia+Ica=Iab。",
+   "interaction_check": "APP-NUMERIC/APP-FIXTURES已核Vp50/120/230的功率625/3600/13225W，線壓√3Vp及線流Vp/12；互動限Y。；最終靜態三讀值/單位已逐頁對獨立預設基準核，數值完全符合6有效位/最多6小數顯示。",
+   "finding": "數值/量綱/相量幾何正確。已回派將Δ『實際沿a→c』固定流向改為KCL參考方向敘述；反例ωt80°時Ia>0但Iab<0，AC不始終分成兩股流出。；已親讀修正為Ia+Ica=Iab之參考KCL並明示瞬時方向反轉，箭頭端相接圖說亦精確，問題已關閉。",
+   "status": "凍結版本數學複核通過"
+  },
+  {
+   "id": "PRE-FORMAT",
+   "scope": "20頁格式化前內容定位（排除待對齊lab-results）",
+   "checked": "HTMLParser去除空白、屬性排序，逐tag/text建立canonical SHA256；排除lab-results區。；void元素的自閉合拼法視為同義，略過其end token。；最終排除新增favicon與已另核readout後，20頁canonical均與此基準相同。",
+   "independent_calculation": {
+    "00-start.html": {
+     "sha256": "dbb0f9030710090a2e67592839dd6bd33251be5af1042f790d84ae50bd5e55d2",
+     "dom_excluding_readouts": "46ee7c22b76943f218015861d6cc286272b8b1f1be666dc75486ab0038e0300e"
+    },
+    "01-laws.html": {
+     "sha256": "863661f033d2c3513c07131d4be637e18f5667be1d6c2e2594e5c8ed0ae5b793",
+     "dom_excluding_readouts": "029eba7fe5bd30cab243e7e33bf9ec0bcd0f53d77e08f18e908f9b13323be0b0"
+    },
+    "02-divider.html": {
+     "sha256": "e2dccb86a5a0431af1c4652c6be6a4a31747c8a0e1f406f78d785d4380d304b2",
+     "dom_excluding_readouts": "dd516e91939d832040ea828023e6a5adc902af627909ccc9821e119a78ec69cb"
+    },
+    "03-nodal.html": {
+     "sha256": "38756b98a8e678eab52ccdbf938ad86a6cf23852508d521cc49b529228c7c561",
+     "dom_excluding_readouts": "156a76fc34827ddb0094137e5b115b4741c766681a571c2bcfb83b21dc8b831d"
+    },
+    "04-mesh.html": {
+     "sha256": "a0dc43e20b7f79429685983406e562c9e03fe0c331d6bbd65f281c720e45b609",
+     "dom_excluding_readouts": "b04b831a2b4c82fb9a584c67d811df33827cf9ab45b77073db7d2548391029cf"
+    },
+    "05-controlled.html": {
+     "sha256": "008e989c8907973d1f56471b621bec645c32f4a9880737677bafd139674ab36b",
+     "dom_excluding_readouts": "eeebb5e2060b626666a04cfd3358fd3e4abf574b3788048c64ef44d90814d90e"
+    },
+    "06-superposition.html": {
+     "sha256": "9aafb04f4a953a312f9a21e87265adef4339f92ad9a1e1bb90f33345e085a21a",
+     "dom_excluding_readouts": "e5a5ba01836d059812b2b1cd1778a864da1fcad1e5b0e30446e639193a6ab124"
+    },
+    "07-equivalents.html": {
+     "sha256": "238708afef4f260e0baef919418a0b4510d3cd1d16874638674b9b15168c3f97",
+     "dom_excluding_readouts": "35d867207794222c1ff51dd132fc6a969994bf0a7b6098087546f3cbc8eb1f03"
+    },
+    "08-storage.html": {
+     "sha256": "a1fd5d189ff0887e20a3da4aef2a5149318efbd4400740bdfc26b4ddd07dae42",
+     "dom_excluding_readouts": "2801e51a7a62e62eae67f0468eea2c5c4401279a5f91c81f8c801d43237f0ee9"
+    },
+    "09-rc.html": {
+     "sha256": "82ae889a4eec7dad8f6491a323c198d05aa8dc124bf51c255b11d9388b23d6d8",
+     "dom_excluding_readouts": "6698162c2fd03dcdf41ccc6773239ed4dd07d871a6994c062ed0d3202c210620"
+    },
+    "10-rl.html": {
+     "sha256": "1a288add4921c46da10db36edb8c8ffa0443b850f68bef105cc71d755ea039d7",
+     "dom_excluding_readouts": "9cc05e2d1854a248eb39f90b0983049223bcbcca2760fb0268c0573fad4ef58b"
+    },
+    "11-rlc.html": {
+     "sha256": "79ccd9f205cd16595b99483b5444b44ef824189149d711c05229d70240e16385",
+     "dom_excluding_readouts": "7a7cd54e26c450aa767fdddf4461b520e7ecf583f3388e0002993d27a38ed098"
+    },
+    "12-laplace.html": {
+     "sha256": "8664f54c693f652d8a63b802decf755343f2e57833d2cad4b441c41204c43766",
+     "dom_excluding_readouts": "17d33f7483054f3be1874d3e3663639c78ed048f17c85f4c6a74933ec0fe907d"
+    },
+    "13-phasors.html": {
+     "sha256": "755e99d4f3fe652edeed1f3c259fb682362132d42c372e0159560aa7c187ad5e",
+     "dom_excluding_readouts": "251c8740eb2a85555d27852b3bc68586b5a181cf9eed8a5ce7740d736587479d"
+    },
+    "14-ac-power.html": {
+     "sha256": "bd2f46c2b41295e64a42fb0ec664796e14b051ea2fbc8c24e7244f032c175330",
+     "dom_excluding_readouts": "f8ac15b36212b8515298c5e25c6b9a047496c897d4b1e3541d04d23eb6c4884c"
+    },
+    "15-frequency.html": {
+     "sha256": "b86064780bc7c0cb8c411313c33cba49009932e77b1ebaef107a82c466f8836a",
+     "dom_excluding_readouts": "af0002b25eeb49fe66dde8581f68eefc5582ef975915c1f22687924df6d1112b"
+    },
+    "16-opamp.html": {
+     "sha256": "37cb241645098b951d28b5bf430371ec0cd1b45ba54655ca859269228f6d1e08",
+     "dom_excluding_readouts": "c02b7a0a04ded57d3b51b202b8725e6152ee7ff254eed9ade2731e9d3b29f475"
+    },
+    "17-twoport.html": {
+     "sha256": "a2816dd410cf1d145c209f16fe968046ba5ef38c7e69715307edbb876cc00403",
+     "dom_excluding_readouts": "db08476b44d773397970a3c3fc97244435f231a30f1e424b1db55f05814c7f09"
+    },
+    "18-coupling.html": {
+     "sha256": "2853ff878b8da08083c2389e571384008c32e63622e31410f403401d7fc95670",
+     "dom_excluding_readouts": "f18596c3718fda39d92f0dcd37e3697d87f73b52a0243a044e504abd399cbc62"
+    },
+    "19-threephase.html": {
+     "sha256": "e4e3c364f3e4f28449613e0a349eb3c9f95f3d92935ee5c51c3b8ee9a7be06c3",
+     "dom_excluding_readouts": "b1fa280ee4e58ad74e8a7852099fd5f488a097c5d3e96fa738d6ceaf45b39b57"
+    }
+   },
+   "diagram_check": "包含SVG路徑/圖文字屬性，避免把格式整理誤認成無實質變更。",
+   "interaction_check": "靜態lab-results另按builder對齊表核，未在此雜湊範圍。",
+   "finding": "最終內容逐頁比較通過；全站新增空favicon僅head差異，20個readout集合已另對獨立固定基準核算。",
+   "status": "格式整理前後正文與圖式一致性複核通過"
+  },
+  {
+   "id": "FINAL-FREEZE",
+   "scope": "00–19全20教學頁、app.js、兩原筆記；33檔builder凍結快照已比對",
+   "checked": "逐檔bytes/SHA256對/tmp/circuits-builder-freeze.json全部相符；20頁排除新增favicon/讀值後canonical與格式化前一致。",
+   "independent_calculation": {
+    "products_sha256": {
+     "00-start.html": "a59fcbcaadbe6ffbc0afe170ca6e0002a86e34c6c0aadb2061d58a5a5b29359a",
+     "01-laws.html": "275a50e78eb4bea12511a774292716961535a468159ee76d211418a9f84f44b7",
+     "02-divider.html": "ce620a7c1ed6642a31b72a83a7497d903baddb7623c9531126b761bcdd8bb7ed",
+     "03-nodal.html": "9ac5abdbf4189c427e095b993376f6bb333c542439d3b90453205262fece32ea",
+     "04-mesh.html": "840e23a88ef1bcb06be04e61f2bfecf26ecda3e120c63afee09e5ae6c02523a6",
+     "05-controlled.html": "3fa8fe2a875f75d8e3cf09534f130a604acaace7c5783f5f2761a23a00e1c1f9",
+     "06-superposition.html": "0a0435cbc947cb35d2f959332b621c38df1d1bc25df70c6af36d581e7287ad22",
+     "07-equivalents.html": "c19c8170744ce1c6533b05a60ae9b5177c34d4cfd169582ce5fe66f1481db362",
+     "08-storage.html": "5467b5180cbdda691cf70abecf66cf38c4f079c62cbecd7d8702feef649af25c",
+     "09-rc.html": "3feac8e7b1c23500da84120ca8fd1e28c8fdcedcf4878ab6c02113ebb2cab7d1",
+     "10-rl.html": "d32fe6d03caefc3dbb87a69bbd4563a34b34a8407533eeb4234e972da0050717",
+     "11-rlc.html": "2b764f8286c10863467e2c26bb7d2a9210f78813a9bce938eb063ddbf0d3f5a8",
+     "12-laplace.html": "19ede0c909ee7bf8ec30334fbd6e16c7029aeaeb05040f8ce0dbb369175c3816",
+     "13-phasors.html": "98fdd080df305ceab7115f9a01523645a12eada10b9ea97f28d20e858376c71a",
+     "14-ac-power.html": "9ea265be87e2e0e5dba1148a35042f1e858c627e056f069a6fb45d985fa30d95",
+     "15-frequency.html": "7f00437b674b3ac553a65db03a206e0d75882f2180b9f5c5945dae65a6afe797",
+     "16-opamp.html": "a92988ad974ac092c5e978a518594a02ee880ef4fa21cd5b26d6569e736a88bc",
+     "17-twoport.html": "fc398a514b19a5a539f4d531ce80df858a441434c76ca287217f0d6e4215a724",
+     "18-coupling.html": "c220e09a68fd4ad8cf230eec586fd6ab0f08365621105123b68879461f4b9326",
+     "19-threephase.html": "a8cca9881f8f095c4cba5391b976d0effb6384ffe9d09c3bf1cc18a21629a9e5",
+     "app.js": "144dd427d50fb908fd658f344a02927041ffdaaee63e105d45dd00a1b36e1e8d"
+    },
+    "original_notes_sha256": {
+     "06-電路學-上.md": "c2af5cddda68429f4adc56e6d11e0eec8d9a468bd98629ad4c6e14da60ae588a",
+     "06-電路學-下.md": "c465c460845eacc290306645ea3f1b0e21f17ce04e53aa3e466b119c7c53b127"
+    },
+    "source_freeze": "/tmp/circuits-builder-freeze.json"
+   },
+   "diagram_check": "各PAGE列保存拓撲/參考方向/極性/幾何及修正關閉證據；11時間曲線、15log Bode均獨立逐點核。",
+   "interaction_check": "固定60情境/180數值於APP-FIXTURES；最終20靜態集合60個顯示數值對獨立預設完全吻合。瀏覽器本身由technical_qa另驗。",
+   "finding": "本次範圍沒有未處理數學缺陷；後續實質內容修改需依delta重核。",
+   "status": "數學驗收通過"
+  }
+ ]
+}

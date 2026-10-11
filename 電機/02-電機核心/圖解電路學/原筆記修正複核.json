@@ -1,0 +1,97 @@
+{
+ "contract": "wf-table/1",
+ "source": "數學驗收.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "id",
+  "scope",
+  "kind",
+  "original",
+  "suggested",
+  "official_evidence",
+  "independent_evidence",
+  "status"
+ ],
+ "rows": [
+  {
+   "id": "N01",
+   "scope": "上 2.6",
+   "kind": "缺條件（誤用會產生錯誤）",
+   "original": "線性電路中，多源的響應 = 各源單獨作用響應的代數和。處理時把其他源歸零（電壓源短路、電流源開路）。",
+   "suggested": "線性電路的電壓或電流響應，可由各獨立源單獨作用的響應代數相加；每次只將其他獨立源歸零（獨立電壓源短路、獨立電流源開路），相依源保留，功率不可直接疊加。",
+   "official_evidence": "已實讀 MIT 6.071/22.071 Dependent Sources PDF p.6：逐一保留獨立源，其他獨立源歸零，受控源保持；p.15 為測試源例。官方 URL：https://ocw.mit.edu/courses/6-071j-introduction-to-electronics-signals-and-measurement-spring-2006/6368191df1e351ef3d3677ee0312fefc_06_dep_source1.pdf；來源索引 SRC08。",
+   "independent_evidence": "反例：1 kΩ 對地電阻、向節點注入 1 mA 的獨立源及向節點注入 (0.5 mS)v 的相依源並聯。KCL：v/(1 kΩ)=1 mA+(0.5 mS)v，v=2 V；誤刪相依源得1 V。另同一1 Ω電阻兩電壓貢獻各1 V時，總功率(1+1)²/1=4 W，不等於1+1=2 W。",
+   "status": "原文落實並複核通過（對基線僅八項限定修訂；N07/N08為澄清）"
+  },
+  {
+   "id": "N02",
+   "scope": "下 5.1",
+   "kind": "缺條件（誤用會產生錯誤）",
+   "original": "R_th 是從儲能元件兩端看出去的戴維寧電阻（其餘源歸零）。",
+   "suggested": "R_th 是移去所求儲能元件、只將其餘獨立源歸零後，從該元件兩端看入的戴維寧電阻；相依源保留，必要時加測試源，由 R_th=V_test/I_test 求得。",
+   "official_evidence": "已實讀 MIT Dependent Sources PDF pp.10–11：獨立源歸零，受控源保留；pp.14–16：加測試電壓或電流求輸入電阻。官方 URL：https://ocw.mit.edu/courses/6-071j-introduction-to-electronics-signals-and-measurement-spring-2006/6368191df1e351ef3d3677ee0312fefc_06_dep_source1.pdf；來源索引 SRC09。",
+   "independent_evidence": "1 kΩ 電阻與向端點注入 (0.5 mS)v 的受控源並聯，施加1 V測試電壓時吸收電流=1 mA−0.5 mA=0.5 mA，R_th=2 kΩ。C=1 μF時 τ=2 ms；誤刪受控源得τ=1 ms。i_test 必須定為流入網路端點。",
+   "status": "原文落實並複核通過（對基線僅八項限定修訂；N07/N08為澄清）"
+  },
+  {
+   "id": "N03",
+   "scope": "下 6.1",
+   "kind": "真錯誤（操作順序）",
+   "original": "對直流步階而言，先以初始條件決定自然響應係數，再加上最後的直流穩態值。",
+   "suggested": "對具有穩定直流終值的步階響應，先將解寫成直流穩態值與自然響應之和，再把完整響應的初值與初始導數代入，求自然響應係數。",
+   "official_evidence": "已實讀 MIT 6.002 Lecture 15 PDF pp.12–17，先求特解、齊次解及總和，再將v(0)=0及i(0)=C dv/dt=0代入總解；p.17得0=V_I+A1+A2。官方 URL：https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/c794c9c9e067b6c16274ed844894ace7_6002_l15b.pdf；來源索引 SRC14。",
+   "independent_evidence": "若v_C(t)=5+A e^(−t)+B e^(−2t)，v_C(0)=0、v_C′(0)=0，則A+B=−5，−A−2B=0，A=−10、B=5；若先把零初值套入自然響應，會得A=B=0，完整解v_C(0)=5 V，違反給定初值。各指數係數單位s⁻¹。",
+   "status": "原文落實並複核通過（對基線僅八項限定修訂；N07/N08為澄清）"
+  },
+  {
+   "id": "N04",
+   "scope": "下 9.1",
+   "kind": "缺條件（原敘述過度一般化）",
+   "original": "四種可互換。",
+   "suggested": "各種參數描述可在相應參數存在且轉換所需分母非零時互換；例如 Z 與 Y 都存在且 Z 可逆時，Y=Z⁻¹。Z、Y、H 通常將兩埠電流都定為流入網路；採此方向時，ABCD 關係寫為 [V1,I1]ᵀ=T[V2,−I2]ᵀ。",
+   "official_evidence": "已實讀 University of Washington Two-Port Networks and Scattering Parameters PDF p.2：Y=Z⁻¹；p.3：端口電流慣例流入網路；p.15：ABCD使用−I2。逆矩陣存在條件由獨立線性代數補足。官方 URL：https://people.ece.uw.edu/darling/AgilentRFLab/Two-Port%20Measurements%20and%20S-ParametersRev0.1.pdf；來源索引 SRC20。",
+   "independent_evidence": "僅有跨兩埠上端的1 Ω串聯電阻時，Y=[[1,−1],[−1,1]] S，detY=0；任意v1=v2均得i1=i2=0，電流無法唯一決定端口電壓，因此Z不存在，不能說四者無條件互換。串聯電阻ABCD=[[1,1 Ω],[0 S,1]]仍存在。",
+   "status": "原文落實並複核通過（對基線僅八項限定修訂；N07/N08為澄清）"
+  },
+  {
+   "id": "N05",
+   "scope": "下 10",
+   "kind": "方向定義澄清",
+   "original": "變壓器（理想）：V2/V1=N2/N1、I2/I1=N1/N2。阻抗轉換 Z_ref=Z2(N1/N2)^2。",
+   "suggested": "理想變壓器若兩電壓均由點端量向非點端，則 V2/V1=N2/N1。若 I1 流入一次側點端、I2 流出二次側點端，I2/I1=N1/N2；若兩電流均流入點端，電流比多一個負號。負載阻抗折算到一次側為 Z_ref=Z2(N1/N2)^2。",
+   "official_evidence": "已實讀 MIT Electromagnetics and Applications §3.2.4 PDF pp.80–82：電壓匝比與點標同極性，p.82改變二次側電流方向後負載反射。已目視p.80–82頁圖確認點標及箭頭；不使用p.81式3.2.37及p.82式3.2.38的排印疑誤。官方 URL：https://ocw.mit.edu/courses/6-013-electromagnetics-and-applications-spring-2009/d3be4ea78b036a6362230fb41780cf54_MIT6_013S09_notes.pdf；來源索引 SRC23。",
+   "independent_evidence": "設N1:N2=2:1，V1=10 V、V2=5 V。兩電流若都流入點端，理想無損 p1+p2=0 得10I1+5I2=0，因此I2/I1=−2；改定二次側向外電流則為+2。若負載5 Ω，Iout=1 A、I1=.5 A，一次側等效10/.5=20 Ω=5×2²。",
+   "status": "原文落實並複核通過（對基線僅八項限定修訂；N07/N08為澄清）"
+  },
+  {
+   "id": "N06",
+   "scope": "上 1.1",
+   "kind": "缺條件（作用範圍不清）",
+   "original": "電感串聯相加、並聯倒數相加（後者假設彼此沒有磁耦合）。",
+   "suggested": "無磁耦合的電感串聯時相加、並聯時倒數相加；有磁耦合時須另計互感與點標方向。",
+   "official_evidence": "已直接實讀KTH William Sandqvist《Le_trafo_en》PDF p.25：各線圈不共享磁通才可串並聯比照電阻；pp.29–30從同支路電流推得L串=L1+L2±2M；p.33為含互感的並聯式。官方URL：https://www.kth.se/social/files/550c985df276545be1cbded7/Le_trafo_en.pdf",
+   "independent_evidence": "兩1 H線圈、互感M=.5 H，在串聯助磁方向v=(L1+M)di/dt+(L2+M)di/dt=3 H·di/dt；反向串聯等效1 H，均非無互感時的2 H。原句「後者」按語法僅限並聯，值得小補條件。",
+   "status": "原文落實並複核通過（對基線僅八項限定修訂；N07/N08為澄清）"
+  },
+  {
+   "id": "N07",
+   "scope": "上 2.5（來源候選 C06）",
+   "kind": "澄清（原句本身正確）",
+   "original": "R_th = 把所有獨立源歸零後從端口看入的等效電阻。",
+   "suggested": "R_th = 把所有獨立源歸零後從端口看入的等效電阻；相依源及其控制關係保留。若有相依源，可在端口加測試源，以流入端口正端的電流計算 R_th=V_test/I_test。",
+   "official_evidence": "已實讀及目視 MIT Dependent Sources PDF pp.10–16，尤其p.15圖21與式(1.27)–(1.29)明確畫測試電流流入a端；R_th=R1/(1−A)。官方 URL：https://ocw.mit.edu/courses/6-071j-introduction-to-electronics-signals-and-measurement-spring-2006/6368191df1e351ef3d3677ee0312fefc_06_dep_source1.pdf；來源索引SRC09。",
+   "independent_evidence": "沿官方圖21自行列式：測試端a=Vt、R1另一端=AVt，輸入電流i=(Vt−AVt)/R1，故Rth=R1/(1−A)。取A=.5、R1=1 kΩ、Vt=1 V，i=.5 mA，Rth=2 kΩ；若誤關相依源則只得1 kΩ。原句已限定獨立源，沒有錯，新增語句只補充操作。",
+   "status": "原文落實並複核通過（對基線僅八項限定修訂；N07/N08為澄清）"
+  },
+  {
+   "id": "N08",
+   "scope": "上 1.1公式前（隊長追加限定檢查）",
+   "kind": "缺條件澄清（公式本身正確）",
+   "original": "三個被動元件的v=iR、i=C dv/dt、v=L di/dt及P=vi公式前，未明示符號與定值假設。",
+   "suggested": "以下採定值理想元件，並以電流流入電壓正端為正方向（被動符號慣例）；p=vi為元件吸收的瞬時功率，p<0表示元件送出功率。",
+   "official_evidence": "已實讀及目視MIT 6.002 Lecture 2 PDF p.3，圖示i流入v正端，vi是元件消耗功率：https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/99b2a662083d1b1f487c55ea0f0d0220_6002_l2.pdf 。Lecture 12 PDF p.5理想線性電容從q=Cv、i=dq/dt推到i=C dv/dt，圖中i流入v正端：https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/84f4b553fc6a1ddd7007465041c4e213_6002_l12.pdf 。",
+   "independent_evidence": "6 V跨6 Ω正電阻，電壓上正下負：向下入正端電流為+1 A、吸收6 W；若電流參考改向上則i=−1 A，式子必改v=−Ri且吸收p=−vi=+6 W，證明方向條件不可省。另q=C(t)v(t)求導為i=C dv/dt+v dC/dt；只有C定值時才簡化成原式。",
+   "status": "原文落實並複核通過（對基線僅八項限定修訂；N07/N08為澄清）"
+  }
+ ]
+}

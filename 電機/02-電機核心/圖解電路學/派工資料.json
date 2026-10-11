@@ -1,0 +1,47 @@
+{
+ "contract": "wf-table/1",
+ "source": "派工計畫.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "role",
+  "scope",
+  "state"
+ ],
+ "rows": [
+  {
+   "role": "builder",
+   "scope": "brief/spec/shared assets/support pages/tests",
+   "state": "建置與契約完成；獨立驗收結果詳數學、教學與技術報告"
+  },
+  {
+   "role": "author_a",
+   "scope": "dist/00-start.html–09-rc.html，分波授權",
+   "state": "00–09 全部完成，作者已 final；交獨立驗收"
+  },
+  {
+   "role": "author_b",
+   "scope": "dist/10-rl.html–19-threephase.html，分波授權",
+   "state": "10–19 全部完成，作者已 final；交獨立驗收"
+  },
+  {
+   "role": "sources",
+   "scope": "教材查證.md、教材來源.json、原筆記修正候選.json",
+   "state": "47 列來源查證與原筆記八項局部修正完成，已獨立複核"
+  },
+  {
+   "role": "technical_qa",
+   "scope": "驗收紀錄.md、技術驗收.json 與 /tmp/circuits-qa 證據",
+   "state": "獨立技術驗收；結果以驗收紀錄為準"
+  },
+  {
+   "role": "math_review",
+   "scope": "數學驗收.json、數學驗收.md 與原筆記修正複核",
+   "state": "獨立數學驗收；結果以數學驗收紀錄為準"
+  },
+  {
+   "role": "pedagogy_review",
+   "scope": "教學驗收.json、教學驗收.md",
+   "state": "獨立教學驗收；結果以教學驗收紀錄為準"
+  }
+ ]
+}
