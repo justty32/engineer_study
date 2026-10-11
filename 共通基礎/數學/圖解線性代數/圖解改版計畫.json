@@ -1,0 +1,140 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-11",
+ "columns": [
+  "page",
+  "question",
+  "visual_steps",
+  "owner",
+  "status"
+ ],
+ "rows": [
+  {
+   "page": "index",
+   "question": "先讓讀者看懂課要幫什麼忙",
+   "visual_steps": "走到禮物三步圖；兩份指令送進規則得到新終點；方格剪切原/後；課程三階段路線",
+   "owner": "visual_builder",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "00-start",
+   "question": "給機器人一張能到禮物的路線",
+   "visual_steps": "右3→上2→直箭頭；交換指令；負號反方向；換起點同移動；直走與繞路；零移動",
+   "owner": "visual_builder/start_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "vectors",
+   "question": "先拿一份再拿一份，總共走到哪",
+   "visual_steps": "首尾接箭頭三步；把右2上1複製兩份；負倍數反向；兩種配方同終點；相加不看起點",
+   "owner": "visual_builder/start_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "basis",
+   "question": "兩種積木能拼到每個位置嗎",
+   "visual_steps": "只有左右軌道→加直向軌道；斜方向也可到達；平行兩支沒新方向；同終點換配方；不用第三支",
+   "owner": "visual_builder/start_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "matrices",
+   "question": "機器人的兩個按鈕改裝了，按完會到哪裡",
+   "visual_steps": "兩張路線卡；藍(2,1)一份→再一份(4,2)→橘(-1,1)到(3,3)；卡片收成直欄；1藍1橘與不按；同規則份數互動；壓扁資訊遺失",
+   "owner": "visual_builder/matrix_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "composition",
+   "question": "先轉身再推，會等於先推再轉嗎",
+   "visual_steps": "同一起點兩種順序四分鏡；不同結果並排；右邊規則先做；固定點原點；平移不保倍數反例",
+   "owner": "visual_builder/transform_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "systems",
+   "question": "兩條線索一起用，能找出幾杯飲料",
+   "visual_steps": "兩杯價錢天平→扣同樣份量→讀回答案；交叉/重疊/平行三圖；每步保留相同答案",
+   "owner": "visual_builder/transform_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "rank",
+   "question": "壓扁紙片以後，能找回原本的位置嗎",
+   "visual_steps": "紙面→線→點三種；兩個不同輸入同輸出；消失方向；剩下與消失合計；不能到達的目標",
+   "owner": "visual_builder/transform_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "determinant",
+   "question": "一格地磚被拉大，面積變幾倍",
+   "visual_steps": "原1格→寬2高3六格；斜推底高不變；翻面定向；壓成線無法倒帶；反向規則還原",
+   "owner": "visual_builder/transform_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "projection",
+   "question": "離鐵軌最近的位置在哪",
+   "visual_steps": "點→垂直落點→比較斜走距離；影子長度與方向；內積由水平贡献建立；反方向負投影；零方向不能投影",
+   "owner": "visual_builder/geometry_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "least-squares",
+   "question": "三個點排不直，線要放哪裡",
+   "visual_steps": "三點→垂直落差→平方小方塊；正負不能直接抵消；兩條候選線比較；最佳線與剩下誤差；線性參數模型",
+   "owner": "visual_builder/geometry_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "eigen",
+   "question": "哪支箭頭經機器後不會歪掉",
+   "visual_steps": "普通箭頭歪斜vs固定直線；拉長/縮短/反向/壓零四格；找特殊方向；旋轉90度沒有實方向",
+   "owner": "visual_builder/geometry_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "diagonalization",
+   "question": "一直做同個動作，能不能省力",
+   "visual_steps": "舊方向混合→換特殊方向→各自倍乘→換回；2次運算數字；方向不夠無法拆；有足夠獨立特徵方向条件",
+   "owner": "visual_builder/matrix_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "qr",
+   "question": "兩支斜尺怎麼整理成直角尺",
+   "visual_steps": "保留第一方向→第二支減影子→剩垂直→變單位長；原箭頭如何拼回；零剩餘不產生新方向；QR分工",
+   "owner": "visual_builder/matrix_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "svd",
+   "question": "一台複雜變形機能拆成三步嗎",
+   "visual_steps": "圓→換方向→拉橢圓→換方向；長短兩個拉伸量；只留最長方向的影子；零拉伸失資訊；方陣之外",
+   "owner": "visual_builder/matrix_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "engineering",
+   "question": "兩個聲音混在一起，怎麼拆回來",
+   "visual_steps": "兩人聲音→兩麥克風混合→兩條線索還原；步步更新向量；一張資料表保留主要方向；噪聲與近奇異放大",
+   "owner": "visual_builder/matrix_author",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "glossary",
+   "question": "忘記名字時回到哪幅圖",
+   "visual_steps": "箭頭路線小圖；規則前後小圖；影子小圖；各詞連對應圖解頁",
+   "owner": "visual_builder",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  },
+  {
+   "page": "sources",
+   "question": "圖像能解釋什麼，在哪裡要停下來",
+   "visual_steps": "平面示範與高維資料對照；示範模型→可保證→不可外推三段",
+   "owner": "visual_builder",
+   "status": "已完成；數學、圖解教學、技術三線驗收通過"
+  }
+ ]
+}

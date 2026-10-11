@@ -2,9 +2,9 @@
 (() => {
   const $ = id => document.getElementById(id);
   const machines = {
-    shear: { name: "剪切 S", A: [[1, 1], [0, 1]] },
-    rotate: { name: "旋轉 R", A: [[0, -1], [1, 0]] },
-    scale: { name: "拉伸 D", A: [[2, 0], [0, 1]] }
+    shear: { name: "往右斜推", A: [[1, 1], [0, 1]] },
+    rotate: { name: "轉四分之一圈", A: [[0, -1], [1, 0]] },
+    scale: { name: "左右變兩倍", A: [[2, 0], [0, 1]] }
   };
   function update() {
     const first = machines[$("first").value];
@@ -25,13 +25,13 @@
     $("result-secondary").textContent = (forward ? "BA = " : "AB = ") + LA.matrix(combined);
     $("feedback").textContent = "輸入 " + LA.vec(start) + " → 先做" + early.name + "得到 " + LA.vec(middle) + " → 再做" + late.name + "得到 " + LA.vec(end) + "。" + (sameMatrix ? "這一組操作可交換；比較兩個合成矩陣，結果相同。" : "這一組操作不能交換；把執行順序反過來，兩個合成矩陣不同。") + "連乘式中，最靠右、緊鄰向量的矩陣先做。";
     const panels = [
-      { cx: 140, v: start, title: "起點 v", color: "blue", note: "輸入 " + LA.vec(start) },
+      { cx: 140, v: start, title: "原來的箭頭", color: "blue", note: "輸入 " + LA.vec(start) },
       { cx: 410, v: middle, title: "先做 " + (forward ? "A" : "B"), color: "ink", note: early.name + " → " + LA.vec(middle) },
       { cx: 680, v: end, title: "再做 " + (forward ? "B" : "A"), color: "coral", note: late.name + " → " + LA.vec(end) }
     ];
-    let html = LA.text(410, 31, "右邊的矩陣先做：" + (forward ? "B(Av)" : "A(Bv)"), "svg-title", "middle");
+    let html = LA.text(410, 31, "先看中間，再看最後：" + (forward ? "B(Av)" : "A(Bv)"), "svg-title", "middle");
     panels.forEach(p => {
-      const q = LA.plane({ cx: p.cx, cy: 235, scale: 25, extent: 4 });
+      const q = LA.plane({ cx: p.cx, cy: 235, scale: 25, extent: 4, tickStep: 2, showOrigin: false });
       html += LA.text(p.cx, 84, p.title, "svg-label", "middle") + q.axes;
       html += LA.arrow(q.X(0), q.Y(0), q.X(p.v[0]), q.Y(p.v[1]), p.color);
       html += LA.text(p.cx, 378, p.note, "svg-label", "middle");

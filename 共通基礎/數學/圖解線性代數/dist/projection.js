@@ -22,15 +22,15 @@
       const q1 = p.map((t,i)=>t+along*u[i]), q2=p.map((t,i)=>t+along*u[i]+away*n[i]), q3=p.map((t,i)=>t+away*n[i]);
       g += `<path d="M${X(q1[0])} ${Y(q1[1])}L${X(q2[0])} ${Y(q2[1])}L${X(q3[0])} ${Y(q3[1])}" fill="none" stroke="#182849" stroke-width="2"/>`;
     }
-    g += LA.text(28,28,'藍色：原向量 v','svg-label') + LA.text(287,28,'珊瑚：投影 p','svg-label') + LA.text(557,28,'虛線：路與殘差 r','svg-label');
-    g += LA.text(34,76,'u = ' + LA.vec(u),'svg-label') + LA.text(34,102,'綠箭頭：u 的正向','svg-small');
+    g += LA.text(28,28,'藍色：整段移動 v','svg-label') + LA.text(287,28,'珊瑚：沿路移動 p','svg-label') + LA.text(557,28,'虛線：道路與離路移動','svg-label');
+    g += LA.text(34,76,'u = ' + LA.vec(u),'svg-label') + LA.text(34,102,'小綠箭頭：尺的正向','svg-small');
     g += LA.arrow(85,148,85+42*u[0],148-42*u[1],'green');
     g += LA.text(610,100,'v = ' + LA.vec(v),'svg-label') + LA.text(610,132,'p = ' + LA.vec(p),'svg-label') + LA.text(610,164,'r = ' + LA.vec(r),'svg-label');
     g += LA.text(410,431,'兩軸等比例；投影終點到 v 的殘差與路垂直。','svg-small','middle');
     $('drawing').innerHTML=g;
     $('result-primary').textContent='p = '+LA.vec(p)+'；v · u = '+LA.fmt(coefficient,3);
     $('result-secondary').textContent='r = '+LA.vec(r)+'；r · u = '+LA.fmt(orthogonal,6);
-    let why = Math.hypot(x,y) < .001 ? '原向量是零：投影與殘差也都是零；此時不談零箭頭的夾角。' : Math.abs(coefficient) < .000001 ? '原向量與路正交，所以沿路係數為零，投影落在原點。' : Math.hypot(...r) < .000001 ? '原向量就在路上，所以投影等於原向量，沒有剩餘殘差。' : 'r · u = 0：拿掉沿路的部分，剩下的殘差與路垂直。';
+    let why = Math.hypot(x,y) < .001 ? '原向量是零：投影與殘差也都是零；此時不談零箭頭的夾角。' : Math.abs(coefficient) < .000001 ? '公園與家的連線垂直道路：最近落點是家，沿路不必走。' : Math.hypot(...r) < .000001 ? '目的地就在路上：沿路就能到，不必再離開路，所以剩餘移動是零。' : '從最近落點到公園，這段剩餘移動與道路成直角；內積檢查 r · u = 0。';
     if(coefficient < -.000001) why += ' 係數為負，表示投影朝 u 的反方向；投影長度仍非負。';
     if(theta === 180) why += ' 這與 0° 是同一條投影直線，只是單位箭頭 u 反向。';
     $('feedback').textContent=why;

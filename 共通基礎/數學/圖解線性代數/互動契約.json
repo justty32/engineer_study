@@ -112,7 +112,7 @@
     {
      "id": "a",
      "type": "range",
-     "default": 1,
+     "default": -1,
      "min": -2,
      "max": 2,
      "step": 0.5
@@ -120,7 +120,7 @@
     {
      "id": "b",
      "type": "range",
-     "default": 1,
+     "default": 2,
      "min": -2,
      "max": 2,
      "step": 0.5
@@ -128,10 +128,10 @@
    ],
    "equation": "u=(1,0); v independent=(1,1),collinear=(2,0),zero=(0,0); w=a u+b v; rank=2 or1",
    "criterion": "非共線組可生成平面且座標唯一；共線/零欄只有x軸，換係數可能同結果",
-   "examples": "independent a=b=1→(2,1),rank2；collinear→(3,0),rank1；zero→(1,0),rank1",
+   "examples": "default independent a=-1,b=2→(1,2),rank2；同份數切collinear→(3,0),rank1；同份數切zero→(-1,0),rank1；independent a=b=1→(2,1)",
    "boundary": "圖上滑桿有界僅示範，完整span係數可任意實數；向量空間公理不能只寫封閉",
    "source": "原文§1",
-   "author": "A"
+   "author": "visual_builder/start_author"
   },
   {
    "id": "matrix",
@@ -139,9 +139,19 @@
    "page": "matrices",
    "controls": [
     {
+     "id": "input-preset",
+     "type": "select",
+     "default": "two-blue",
+     "options": [
+      "two-blue",
+      "one-blue",
+      "zero"
+     ]
+    },
+    {
      "id": "a",
      "type": "range",
-     "default": 1,
+     "default": 2,
      "min": -2,
      "max": 2,
      "step": 0.5
@@ -149,7 +159,7 @@
     {
      "id": "b",
      "type": "range",
-     "default": 1,
+     "default": -1,
      "min": -2,
      "max": 2,
      "step": 0.5
@@ -157,7 +167,7 @@
     {
      "id": "c",
      "type": "range",
-     "default": 0,
+     "default": 1,
      "min": -2,
      "max": 2,
      "step": 0.5
@@ -171,12 +181,12 @@
      "step": 0.5
     }
    ],
-   "equation": "A=[[a,b],[c,d]],x=(1,1); Ax=(a+b,c+d); e1 image=(a,c),e2 image=(b,d)",
-   "criterion": "每欄就是一支單位箭頭的去處，輸出=兩欄相加",
-   "examples": "default [[1,1],[0,1]] →(2,1); zero A→(0,0); I→(1,1)",
-   "boundary": "零/identity/negative/collinear；m×n將n個輸入送到m個輸出",
+   "equation": "A=[[a,b],[c,d]]; input-preset two-blue→x=(2,1), one-blue→x=(1,1), zero→x=(0,0); Ax=(a*x1+b*x2,c*x1+d*x2); each column is one route card",
+   "criterion": "每欄是一份路線；輸出＝藍路線取x1份＋橘路線取x2份。先看份數，改卡控制可選。",
+   "examples": "default A=[[2,-1],[1,1]],x=(2,1)→(3,3); one-blue→(1,2); zero→(0,0); zero A→(0,0); I with two-blue→(2,1)",
+   "boundary": "零輸入／零矩陣／identity／負數／同線欄；四滑桿放可選details，預設與reset均回故事同一規則及兩藍一橘",
    "source": "原文§2",
-   "author": "A"
+   "author": "visual_builder/matrix_author"
   },
   {
    "id": "composition",
@@ -328,18 +338,18 @@
     {
      "id": "d",
      "type": "range",
-     "default": 1,
-     "min": -2,
-     "max": 2,
+     "default": 3,
+     "min": -3,
+     "max": 3,
      "step": 0.5
     }
    ],
    "equation": "det=ad-bc; unit square image columns; inverse exists iff det!=0; inverse=1/det[[d,-b],[-c,a]]; fixed x=(1,1), y=A x, inverse y=x when possible",
    "criterion": "面積=abs(det)，定向正負；零不可逆，反算不除零",
-   "examples": "default det2,output(3,1),inverse[[.5,-.5],[0,1]]；swap axes det-1；zero det0",
+   "examples": "default A=[[2,1],[0,3]],det6,output(3,3),inverse[[.5,-1/6],[0,1/3]]；只改b、c0保持面積6；swap axes det-1；zero det0",
    "boundary": "實2×2方陣；秩不足不能唯一倒帶；數值近零會敏感但不等於精確零",
    "source": "原文§4,5",
-   "author": "B"
+   "author": "visual_builder/transform_author"
   },
   {
    "id": "projection",
@@ -386,7 +396,7 @@
     {
      "id": "middle",
      "type": "range",
-     "default": 2,
+     "default": 3,
      "min": -1,
      "max": 5,
      "step": 0.5
@@ -410,10 +420,10 @@
    ],
    "equation": "data (0,1),(1,h),(2,3); model y=m x+c; e_i=y_i-(m x_i+c); SSE=sum e²; optimal m*=1,c*=(h+1)/3; show optimal line and coefficients separately (no fit button).",
    "criterion": "殘差垂直線及平方小圖；顯示目前SSE與最佳線/最佳SSE；無fit按鈕避免range精確值契約衝突",
-   "examples": "h=2,m=1,c=1→SSE0,best c1,SSE0；h=3,m=1,c=1→SSE1,best c4/3,SSE2/3；h=2,m=0,c=0→SSE14",
+   "examples": "default h=3,m=1,c=1→SSE1,best c4/3,SSE2/3；h=3,m=1,c=1.5→SSE.75；h=2,m=1,c=1→SSE0；h=2,m=0,c=0→SSE14",
    "boundary": "三筆直線設計矩陣[1,x]滿欄秩，唯一最佳；h改變時目前旋鈕保持；最小平方總有解，滿欄秩才係數唯一；缺秩可用SVD偽逆取最小範數解",
    "source": "原文§10",
-   "author": "C"
+   "author": "visual_builder/geometry_author"
   },
   {
    "id": "eigen",
@@ -499,7 +509,7 @@
     {
      "id": "height",
      "type": "range",
-     "default": 1,
+     "default": 2,
      "min": 0,
      "max": 2,
      "step": 0.5
@@ -507,10 +517,10 @@
    ],
    "equation": "a1=(1,0,0),a2=(t,h,0); if h>0 q1=(1,0,0),q2=(0,1,0),R=[[1,t],[0,h]],thinQ3×2; projection=(t,0,0),residual=(0,h,0);h=0 columnsdependent GramSchmidt cannotnormalize zero, thin Q completion possible butnotunique",
    "criterion": "原欄→減影子→剩垂直部分→單位化；顯示Q^TQ=I2,Q Q^T≠I3；三維向量z=0畫xy切面",
-   "examples": "t1,h1→R[[1,1],[0,1]],rank2；t-2,h2→projection(-2,0,0),residual(0,2,0)；h0不可從殘差得到q2",
+   "examples": "default t1,h2→a2=(1,2,0),projection=(1,0,0),residual=(0,2,0),normalize→q2=(0,1,0),R[[1,1],[0,2]],rank2；t-2,h2→projection(-2,0,0),residual(0,2,0)；h0不可從殘差得到q2",
    "boundary": "不宣稱QR不存在；滿欄秩教學算法失效但可另補正交向量；QR完整/精簡尺寸解說",
    "source": "原文§9",
-   "author": "D"
+   "author": "visual_builder/matrix_author"
   },
   {
    "id": "svd",
@@ -520,7 +530,7 @@
     {
      "id": "phi",
      "type": "range",
-     "default": 30,
+     "default": 90,
      "min": -90,
      "max": 90,
      "step": 15
@@ -536,7 +546,7 @@
     {
      "id": "theta",
      "type": "range",
-     "default": -30,
+     "default": 90,
      "min": -90,
      "max": 90,
      "step": 15
@@ -554,11 +564,11 @@
     }
    ],
    "equation": "σ1=2,σ2=s; V=R(phi),U=R(theta);A=U diag(2,s) V^T; stages v=(1,1),V^Tv,ΣV^Tv,UΣV^Tv; unit circle→ellipse; singular values2,s; rank2 when s>0 else1",
-   "criterion": "先V^T轉輸入方向、再非負拉伸、再U轉輸出；不要把V和V^T順序寫反",
-   "examples": "phi0,theta0,s1→A diag(2,1),output(2,1)；phi30,theta-30,s1→output≈(2.549,-1.049)（QA重算）；s0 rank1",
+   "criterion": "四階段同屏追蹤同三個圓周點，stage只改高亮；先V^T換輸入方向、再非負拉伸、再U換輸出；不要把V和V^T順序寫反",
+   "examples": "default phi90,theta90,s1: v=(1,1)→V^Tv=(1,-1)→ΣV^Tv=(2,-1)→UΣV^Tv=(1,2), A=diag(1,2)；phi0,theta0,s1→A diag(2,1),output(2,1)；s0 rank1",
    "boundary": "s1 max2確保排序；s0塌成線，不能求逆；實矩陣皆有SVD，複數用共軛轉置；截斷是近似不是無損",
    "source": "原文§9",
-   "author": "D"
+   "author": "visual_builder/matrix_author"
   },
   {
    "id": "engineering",

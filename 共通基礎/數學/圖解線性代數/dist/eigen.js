@@ -22,7 +22,7 @@
     $('result-primary').textContent='v = '+LA.vec(v)+' → Av = '+LA.vec(w);
     $('result-secondary').textContent=isEigen?'是特徵方向；λ = '+LA.fmt(lambda,3):'不是特徵方向；輸出與原向量不共線';
     let why=isEigen?'Av = '+LA.fmt(lambda,3)+'v：變換後仍留在原直線。':'輸出不能寫成同一個數乘上 v，所以這支箭頭不是特徵向量。';
-    if(mode==='rotation')why='每支非零實箭頭都被轉了 90°，沒有任何實特徵方向；複數範圍仍有特徵值 i、−i。';
+    if(mode==='rotation')why='每支非零實箭頭都被轉了 90°，輸出永遠離開原直線，因此這台機器沒有實特徵方向。';
     if(mode==='shear'&&isEigen)why+=' 剪切的水平箭頭保持原樣，但它只有一個獨立特徵方向。';
     if(mode==='diagonal'&&!isEigen)why+=' 試試 0° 或 90°：水平與垂直的縮放倍率不同。';
     $('feedback').textContent=why;

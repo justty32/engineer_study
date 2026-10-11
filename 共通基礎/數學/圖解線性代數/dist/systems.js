@@ -34,7 +34,7 @@
     else if (coincident) explanation = "兩條線重疊，第二式沒有新限制。消去得到 0 = 0，所以 y 可以是任意實數 t，x = 3 − t。不能除以 k − 1 = 0；這裡有無限多解。";
     else explanation = "兩條線平行且不同。消去竟要求 " + key + "，這是不可能成立的條件，所以無解；不能除以 k − 1 = 0。";
     $("feedback").textContent = explanation;
-    const q = LA.plane({ cx: 225, cy: 232, scale: 32, extent: 5 });
+    const q = LA.plane({ cx: 225, cy: 232, scale: 32, extent: 5, tickStep: 2, showOrigin: false });
     let html = '<defs><clipPath id="system-clip"><rect x="65" y="72" width="320" height="320"/></clipPath></defs>';
     html += LA.text(22, 28, "藍：x + y = 3", "svg-label") + LA.text(22, 51, "珊瑚：" + equation(k, b), "svg-label");
     html += q.axes;
@@ -44,23 +44,28 @@
     if (visible) html += LA.dot(q.X(x), q.Y(y), "marker", 6);
     html += LA.text(225, 421, unique ? (visible ? "交點 " : "圖窗外的交點 ") + LA.vec([x, y]) : coincident ? "重疊：每一點都是共同答案" : "平行且不同：沒有共同答案", "svg-label", "middle");
     html += LA.line(426, 20, 426, 422);
-    html += LA.text(457, 30, "增廣矩陣 [係數 | 右側]", "svg-title");
-    html += LA.text(466, 64, "0  原始兩式", "svg-label") + matrix(483, 78, [[1, 1, 3], [1, k, b]]);
+    html += LA.text(457, 30, "把兩張條件卡一起算", "svg-title");
+    html += LA.text(466, 72, "① 原來的兩條條件", "svg-label");
+    html += LA.text(486, 112, "x + y = 3", "svg-title");
+    html += LA.text(486, 151, equation(k, b), "svg-title");
     if (step >= 1) {
-      html += LA.text(466, 178, "1  R₂ ← R₂ − R₁", "svg-label") + matrix(483, 190, [[1, 1, 3], [0, coefficient, right]]);
+      html += LA.text(466, 203, "② 第二條減第一條", "svg-label");
+      html += LA.text(466, 237, "相同的 x 抵消；第一條保留。", "svg-label");
+      html += LA.text(486, 274, key, "svg-title");
     } else {
-      html += LA.text(466, 194, "下一步：第二列減第一列", "svg-label");
-      html += LA.text(466, 222, "係數與右側，都要一起減。", "svg-small");
+      html += LA.text(466, 217, "下一步：第二條減第一條", "svg-label");
+      html += LA.text(466, 251, "左右兩邊，都要一起減。", "svg-label");
+      html += LA.text(466, 302, "把消去階段移到 1，看看。", "svg-label");
     }
     if (step === 2) {
       if (unique) {
-        html += LA.text(466, 284, "2  R₂ ÷ " + LA.fmt(coefficient) + "；R₁ ← R₁ − R₂", "svg-label");
-        html += matrix(483, 307, [[1, 0, x], [0, 1, y]]);
-        html += LA.text(466, 410, "兩列分別讀出 x、y 的值。", "svg-small");
+        html += LA.text(466, 321, "③ 兩邊同除 " + LA.fmt(coefficient) + "，得 y = " + LA.fmt(y), "svg-label");
+        html += LA.text(466, 358, "代回保留的 x + y = 3", "svg-label");
+        html += LA.text(466, 400, "x = 3 − (" + LA.fmt(y) + ") = " + LA.fmt(x), "svg-title");
       } else {
-        html += LA.text(466, 297, "2  此時不能除以 0", "svg-label");
-        html += LA.text(466, 336, coincident ? "0 = 0 → 留下一個自由變數" : "0 ≠ " + LA.fmt(right) + " → 條件矛盾", "svg-label");
-        html += LA.text(466, 369, coincident ? "令 y = t，x = 3 − t。" : "回代無法消除這個矛盾。", "svg-small");
+        html += LA.text(466, 325, "③ 此時不能除以 0", "svg-label");
+        html += LA.text(466, 365, coincident ? "0 = 0：第二條沒有新限制。" : "0 不等於 " + LA.fmt(right) + "：條件互相矛盾。", "svg-label");
+        html += LA.text(466, 405, coincident ? "只要兩數相加是 3 就行。" : "沒有任何一對數做得到。", "svg-label");
       }
     }
     $("drawing").innerHTML = html;

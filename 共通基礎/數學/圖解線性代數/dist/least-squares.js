@@ -27,8 +27,8 @@
       g+=`<circle cx="${X(x)}" cy="${Y(pred[x])}" r="5" fill="#fff" stroke="#345ce8" stroke-width="2"/>`;
       g+=`<circle cx="${X(x)}" cy="${Y(y)}" r="6" fill="#182849"/>`;
     });
-    g+=LA.text(30,28,'藍實線：目前的線','svg-label')+LA.text(274,28,'珊瑚虛線：最佳線','svg-label')+LA.text(542,28,'殘差平方：越大越吃重','svg-label');
-    g+=LA.text(670,82,'目前三筆殘差 e','svg-title','middle');
+    g+=LA.text(30,28,'藍實線：目前的線','svg-label')+LA.text(274,28,'珊瑚虛線：最佳線','svg-label')+LA.text(542,28,'把落差變成三個方塊','svg-label');
+    g+=LA.text(670,82,'三筆落差（殘差 e）','svg-title','middle');
     const squareScale=56/Math.max(1,...errors.map(Math.abs));
     errors.forEach((e,i)=>{
       const cx=570+i*93,side=Math.abs(e)*squareScale;
@@ -48,5 +48,5 @@
     $('feedback').textContent='目前殘差為 ('+errors.map(e=>LA.fmt(e,3)).join(', ')+')。'+(best?'這條線已達到此資料的最小誤差平方和。':'目前 SSE 比最佳值多 '+LA.fmt(sse-bestSSE,3)+'；移動中間點只改資料，你的斜率與截距旋鈕會保留原值。')+(bestSSE<1e-8?' 這三點共線，最佳線能全部穿過。':' 這三點不共線，所以最佳 SSE 仍大於 0。');
     $('plot-desc').textContent='資料點為 (0, 1)、(1, '+LA.fmt(h)+')、(2, 3)。目前斜率 '+LA.fmt(m)+'、截距 '+LA.fmt(c)+'，三筆殘差 '+errors.map(e=>LA.fmt(e,3)).join('、')+'，SSE '+LA.fmt(sse,3)+'。最佳斜率 1、截距 '+LA.fmt(bestC,3)+'、SSE '+LA.fmt(bestSSE,3)+'。';
   }
-  LA.bind(['middle','slope','intercept'],update,{middle:2,slope:1,intercept:1});
+  LA.bind(['middle','slope','intercept'],update,{middle:3,slope:1,intercept:1});
 })();

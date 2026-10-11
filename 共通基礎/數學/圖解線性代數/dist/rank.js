@@ -17,10 +17,10 @@
     $("result-secondary").textContent = model.rank + " + " + nullity + " = 2";
     const vanished = Math.hypot(...out) < 1e-9;
     $("feedback").textContent = "A = " + LA.matrix(model.A) + "。" + model.reach + "，所以秩是 " + model.rank + "。" + model.nullText + "，零化度是 " + nullity + "。目前輸入 " + LA.vec(v) + (vanished ? " 在零空間內，輸出為零。" : " 不在零空間內，輸出不為零。") + "秩數的是可達方向，零化度數的是消失方向；相加等於輸入維度 2。";
-    const input = LA.plane({ cx: 205, cy: 235, scale: 24, extentX: 7, extentY: 6 });
-    const output = LA.plane({ cx: 615, cy: 235, scale: 24, extentX: 7, extentY: 6 });
-    let html = LA.text(410, 31, "A = " + LA.matrix(model.A), "svg-title", "middle");
-    html += LA.text(205, 64, "輸入平面", "svg-label", "middle") + LA.text(615, 64, "可到達的輸出", "svg-label", "middle");
+    const input = LA.plane({ cx: 205, cy: 235, scale: 24, extentX: 7, extentY: 6, tickStep: 2, showOrigin: false });
+    const output = LA.plane({ cx: 615, cy: 235, scale: 24, extentX: 7, extentY: 6, tickStep: 2, showOrigin: false });
+    let html = LA.text(410, 31, "這台機器的路線卡：" + LA.matrix(model.A), "svg-title", "middle");
+    html += LA.text(205, 64, "原來的箭頭", "svg-label", "middle") + LA.text(615, 64, "機器做完的箭頭", "svg-label", "middle");
     if (mode === "zero") html += '<rect x="37" y="91" width="336" height="288" fill="#e5ef6860"/>';
     if (mode === "full") html += '<rect x="447" y="91" width="336" height="288" fill="#345ce821"/>';
     html += input.axes + output.axes;
