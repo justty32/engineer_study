@@ -72,10 +72,6 @@
 
 | 線 | 可寫目錄 | 唯讀 / 禁區 | 上線時間 |
 |----|---------|------------|---------|
-| iot-builder | `專題/IoT聯網裝置/圖解物聯網/`（不含驗收紀錄） | 舊站唯讀，子線依互斥檔分派 | 2026-10-11 |
-| iot-source-audit | `專題/IoT聯網裝置/` 頂層既有筆記（排除 index 與字典） | 全部網站唯讀 | 2026-10-11 |
-| iot-qa | `專題/IoT聯網裝置/圖解物聯網/驗收紀錄.md`、`/tmp/iot-eli5-qa/` | 全部產品唯讀，headless 驗證 | 2026-10-11 |
-| iot-reference | `/tmp/iot-eli5-references.txt` | repo 唯讀，四個一手來源研究 | 2026-10-11 |
 
 ### 保留給調度者，任何線都不得寫
 
@@ -90,6 +86,7 @@
 
 | 線 | 完成證據 | 收線時間 |
 |----|---------|---------|
+| iot-builder／iot-source-audit／iot-qa／iot-reference／iot-publish | [IoT ELI5 驗收與部署證據](../../handoffs/done/2026-10-11-iot-eli5.md) | 2026-10-11 |
 
 ## 內容
 

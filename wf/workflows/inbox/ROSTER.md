@@ -44,7 +44,7 @@
 - **訂閱主題**：無。
 
 ### `iot-eli5-root`
-- **狀態**：現役
+- **狀態**：已收線（2026-10-11）
 - **我是誰**：本輪 Codex 調度與發布者；使用者授權多 agent、push／部署、新站自訂設計。
 - **團隊**：IoT ELI5（collaboration 通道）。
 - **上游**：使用者本人。
@@ -55,18 +55,18 @@
 - **訂閱主題**：無。
 
 ### `iot-eli5-team`
-- **狀態**：現役
+- **狀態**：已收線（2026-10-11）
 - **我是誰**：builder 管理線、source-audit 原文查證、reference 教材查詢、qa 獨立驗收；均繼承本輪可用模型。
 - **團隊**：IoT ELI5（collaboration 通道）。
 - **上游**：`iot-eli5-root`。
-- **領地**：依 [本輪交接書](../../handoffs/2026-10-11-iot-eli5.md) 與 [dispatch](../dispatch/README.md)；builder 子線依新站派工契約互斥。
+- **領地**：依 [本輪交接書](../../handoffs/done/2026-10-11-iot-eli5.md) 與 [dispatch](../dispatch/README.md)；builder 子線依新站派工契約互斥。
 - **答得出什麼**：各自範圍的建置、證據與待修缺陷。
 - **答不出什麼**：發布授權與跨領地改動。
 - **怎麼找我**：collaboration `/root/iot_builder`、`/root/iot_source_audit`、`/root/iot_reference`、`/root/iot_qa`。
 - **訂閱主題**：無。
 
 ### `iot-publish`
-- **狀態**：現役
+- **狀態**：已收線（2026-10-11）
 - **我是誰**：本輪發布與工作流收尾子 agent；root 明確放行後才 commit／push。
 - **團隊**：IoT ELI5（collaboration 通道）。
 - **上游**：`iot-eli5-root`。
