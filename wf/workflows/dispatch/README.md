@@ -10,13 +10,13 @@
 ## Done when
 
 - 交接書檔案存在，且「驗收」段**條數 ≥ 1 且每條可觀察**。
-- 下方「現役」表有該線一列，「可寫目錄」非空。
+- [CLAIMS](CLAIMS.md)「現役」表有該線一列，「可寫目錄」非空。
 
 ## 流程
 
 <!-- wf-nav -->
 1. **切線**：按**獨立 repo** 或**明確列舉的檔案清單**切，**不按功能切**。**同一時間一個目錄只能有一條線持有寫入權**——兩條線寫同一處，先寫的一定被蓋掉。
-2. **登記領地**：在下方「現役」表加一列。**線只能追加自己那一格，不得改動既有內容**；收線移除與歷史整理歸調度者。落後於現實的領地表比沒有更危險。
+2. **登記領地**：在 [CLAIMS](CLAIMS.md)「現役」表加一列。**線只能追加自己那一格，不得改動既有內容**；收線移除與歷史整理歸調度者。落後於現實的領地表比沒有更危險。
 3. **寫交接書**：照 [TEMPLATE.handoff.md](../TEMPLATE.handoff.md)，最容易踩的六條見下一節。
 4. **啟動**：借現成通道——同機在線用 agent 工具內建的即時通道或子 agent（例：Claude Code 的 SendMessage、Agent），跨資料夾用 [inbox](../inbox/README.md) 寄 `REQUEST`；外部 CLI agent 的啟動、監看與收線七步見 [driving-cli-agents](driving-cli-agents.md)。給整條線的目標與邊界，不逐步替它重算。
 5. **監看**三個訊號，缺一不可：
@@ -66,29 +66,9 @@
 
 ## 領地登記
 
-下面三張表是 **project-owned 活狀態**，隨每輪派線增減；膨脹到難讀就照 [STRUCTURE](../../STRUCTURE.md) 拆成 `CLAIMS.md`，本檔只留流程與連結。
+領地登記為 **project-owned 活狀態**，隨每輪派線增減；依 [STRUCTURE](../../STRUCTURE.md) 分層，本檔只保留流程與入口。
 
-### 現役
-
-| 線 | 可寫目錄 | 唯讀 / 禁區 | 上線時間 |
-|----|---------|------------|---------|
-
-### 保留給調度者，任何線都不得寫
-
-| 目錄 | 理由 |
-|------|------|
-| `AGENTS.md`、`CLAUDE.md`、`wf/WORKFLOWS.md`、`wf/INDEX.md`、`wf/SESSION-LOG.md`、`wf/WAIT_USER.md` | 多條線同時動會互相打架；hub 與活狀態收線時由調度者統一更新 |
-| `.github/workflows/pages.yml`、`互動學習網站/index.html` | 掛站接線屬 Lead 收尾，一次一課 |
-| `專題/機器人運動學/互動課程/styles.css` | `styles.css` 正本，改它要走 sync 流程 |
-| 本表既有內容、交接書目錄 | 線只能追加自己那一格 |
-
-### 歷史（收線後移來，附完成證據）
-
-| 線 | 完成證據 | 收線時間 |
-|----|---------|---------|
-| iot-builder／iot-source-audit／iot-qa／iot-reference／iot-publish | [IoT ELI5 驗收與部署證據](../../handoffs/done/2026-10-11-iot-eli5.md) | 2026-10-11 |
-| calculus-builder／calculus-audit／calculus-qa／calculus-clarity／calculus-publish | [微積分 ELI5 驗收與部署證據](../../handoffs/done/2026-10-11-calculus-eli5.md) | 2026-10-11 |
-| linear-builder／linear-audit／linear-qa／linear-clarity／linear-publish | [線性代數 ELI5 驗收與部署證據](../../handoffs/done/2026-10-11-linear-algebra-eli5.md) | 2026-10-11 |
+現役、保留領地與收線歷史見 [CLAIMS](CLAIMS.md)；本頁保留派線流程。
 
 ## 內容
 

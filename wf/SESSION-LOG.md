@@ -11,6 +11,15 @@
 
 ## 最新進度
 
+- [interactive-study-site] 多隊圖解課程程序進行中：線代雙站已更新，微積分、工程數學與機器人數學現役；微積分部署後啟動電子學與電路學 → [總排程](handoffs/2026-10-11-course-program.md)。
+
+
+- [interactive-study-site] 微積分隊並行修訂逐步圖解、查官方教材並補足銜接電磁／電子／電路的深度 → [微積分交接](handoffs/2026-10-11-calculus-visual-revision.md)。
+
+- [interactive-study-site] 工程數學已立案另建圖解站，承接二階 ODE／RLC、複數相量、Laplace 初值／LTI、Fourier 與必要 PDE 邊界；微積分隊保留一階 RC／RL 與向量微積分 → [工程數學交接](handoffs/2026-10-11-engineering-math-visual.md)。
+
+- [interactive-study-site] 線代部署完成後已啟動機器人數學隊，新建獨立圖解站並保留舊站 → [機器人數學交接](handoffs/2026-10-11-robotics-math-visual.md)。
+
 - [interactive-study-site] 第二批三課（電力電子／馬達驅動與控制／數位通訊）已上線；第三批候選 DSP／IC1／A2 待派 → 立案前先看 [workflows/interactive-study-site/README.md](workflows/interactive-study-site/README.md) 與 [decisions](workflows/decisions.md) 的譯名裁決。
 - [審稿] 2026-09-26 全站審稿 52 份齊；電機（01–05、23–35）＋專題（20–22、38–47）兩輪修整完成並 push（2026-10-09，延後 165 條已全數結案，見 [fixes/延後彙整.csv](reviews/2026-09-26/fixes/延後彙整.csv)）；其餘學科 md、共通基礎 36–37、wf 49–52 的報告尚未修 → 待使用者決定是否續修。
 - [審稿] 下次：複審 10/09 第二輪新寫內容（新章節：電磁學 16、計組 10、電子學 14.5、通訊／電力新章；24 科碩博延伸；數百題新遷移題答案鍵獨立重算；新 SVG 與 TCP SYN 互動；通訊整併有無漏知識點；共用 styles.css 深色模式實機看）→ 依 [fixes/HANDOFF-2](reviews/2026-09-26/fixes/HANDOFF-2.md) 同分隊、審稿派 opus。
