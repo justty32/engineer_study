@@ -72,7 +72,6 @@
 
 | 線 | 可寫目錄 | 唯讀 / 禁區 | 上線時間 |
 |----|---------|------------|---------|
-| linear-algebra 團隊 | [本輪明確檔案領地](../../handoffs/2026-10-11-linear-algebra-eli5.md) | 舊站、nvim.log、其他來源筆記禁改 | 2026-10-11 |
 
 ### 保留給調度者，任何線都不得寫
 
@@ -89,6 +88,7 @@
 |----|---------|---------|
 | iot-builder／iot-source-audit／iot-qa／iot-reference／iot-publish | [IoT ELI5 驗收與部署證據](../../handoffs/done/2026-10-11-iot-eli5.md) | 2026-10-11 |
 | calculus-builder／calculus-audit／calculus-qa／calculus-clarity／calculus-publish | [微積分 ELI5 驗收與部署證據](../../handoffs/done/2026-10-11-calculus-eli5.md) | 2026-10-11 |
+| linear-builder／linear-audit／linear-qa／linear-clarity／linear-publish | [線性代數 ELI5 驗收與部署證據](../../handoffs/done/2026-10-11-linear-algebra-eli5.md) | 2026-10-11 |
 
 ## 內容
 
