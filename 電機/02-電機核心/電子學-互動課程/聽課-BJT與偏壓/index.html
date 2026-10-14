@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101a2a">
+  <title>BJT 與偏壓・電子學聽課室</title>
+  <link rel="stylesheet" href="audio-course.css">
+  <script defer src="lesson-data.js"></script>
+  <script defer src="audio-manifest.js"></script>
+  <script defer src="audio-course.js"></script>
+</head>
+<body>
+<header class="site-header"><a href="../index.html" class="back-link">← 電子學課程</a><span class="series">電路分析 → 電子學 → 電磁學</span></header>
+<main>
+  <section class="intro">
+    <p class="eyebrow">電子學 / 邊玩邊聽 · BJT</p>
+    <h1>小電流如何控制，<br class="mobile-break">工作點怎麼放穩？</h1>
+    <p class="lead">從薄基區的載子輸運，走到分壓與射極負回授。<br>需要看圖時會停下來，等你準備好。</p>
+    <div class="intro-notes"><span id="duration-estimate">時長依講稿估算</span><span>工程數學，遇到再學</span><span>圖像停靠另計</span></div>
+  </section>
+  <div class="workspace">
+    <aside class="listening-panel" aria-label="聽課播放器">
+      <div class="panel-top"><span class="eyebrow">現在聽到</span><span id="state-badge" class="badge">尚未開始</span></div>
+      <div class="audio-availability"><p id="audio-generation-count" role="status">正在確認課程音檔</p><p id="audio-generation-note">重新整理頁面可取得新增音檔；未生成的段落仍使用系統朗讀。</p></div>
+      <label class="field-label" for="lesson-select">選擇課程</label>
+      <select id="lesson-select"></select>
+      <h2 id="segment-title">載入課程中</h2>
+      <p id="lesson-summary" class="muted"></p>
+      <div class="progress-label"><span id="progress-label"></span><span>段落進度</span></div>
+      <progress id="lesson-progress" value="0" max="1" aria-label="課程段落進度"></progress>
+      <div id="course-audio-panel" class="course-audio-panel" hidden><p class="small-note">本段實際音檔 · 可拖曳進度</p><audio id="course-audio" controls preload="metadata" aria-label="目前課程段落音檔"></audio><div class="audio-meta"><output id="course-time">讀取音檔長度中</output><a id="course-download" download>下載本段 ↓</a></div><label class="sample-speed course-speed" for="course-rate">音檔倍速 <select id="course-rate"></select></label></div>
+      <p id="tts-seek-note" class="small-note">系統朗讀可暫停與重播；精確拖曳需正式音檔。</p>
+      <div class="main-controls"><button id="play-button" class="primary" type="button">開始聽課</button><button id="pause-button" type="button" disabled>暫停</button></div>
+      <div class="secondary-controls"><button id="replay-button" type="button">↺ 重播本段</button><button id="next-button" type="button">下一段 →</button></div>
+      <p id="player-status" class="status" role="status" aria-live="polite">不會自動發聲，請按開始。</p>
+      <div id="checkpoint-notice" class="checkpoint-notice" hidden><strong>先看一眼，再繼續。</strong><p id="checkpoint-text"></p><button id="show-figure" type="button">前往指定圖</button></div>
+      <details class="voice-settings"><summary>聲音與語速</summary><label class="field-label" for="voice-select">中文系統聲音</label><select id="voice-select"></select><label class="speed-label" for="speech-rate">系統朗讀語速 <output id="rate-value">0.9×</output></label><input id="speech-rate" type="range" min="0.7" max="1.2" step="0.05" value="0.9"><p id="voice-source" class="muted"></p><p class="small-note">尚未提供初音未來／胡桃角色音檔。系統中文語音不是角色聲音；可用聲音與背景播放能力依瀏覽器而異。頁首時長為正文估算，會受語速、音色與數字讀法影響。</p></details>
+      <details class="segment-list" open><summary>課程段落</summary><ol id="segment-list"></ol></details>
+    </aside>
+    <section class="visual-panel" aria-label="看圖停靠教材">
+      <div class="visual-heading"><div><p class="eyebrow">看圖停靠</p><h2>一眼抓住關係</h2></div><p class="muted">聽課不會自動捲動頁面</p></div>
+      <nav id="figure-tabs" class="figure-tabs" aria-label="選擇圖解"></nav>
+      <div id="figures"></div>
+      <details class="transcript"><summary>展開完整講稿與文字備援</summary><div class="transcript-toolbar"><p>可按段閱讀，也可複製本堂全文。</p><button id="copy-script" type="button">複製本堂講稿</button></div><p id="copy-status" role="status"></p><div id="transcript-content"></div></details>
+      <section class="further-reading"><h3>想再深入時</h3><p>本課只做 NPN 直流工作點；先驗作用區，再談之後的小訊號。來源：原筆記《電子學（中）》第 5 章。以下來源例題的電阻數值不同。</p><a href="../../圖解電子學/dist/05-bjt-bias.html">圖解：BJT 偏壓與工作區 ↗</a><a href="../06-BJT原理與工作區.html">原課：BJT 原理與工作區 ↗</a><a href="../07-BJT偏壓與Q點.html">原課：BJT 偏壓與 Q 點 ↗</a></section>
+    </section>
+  </div>
+</main>
+<footer>NPN · 直流穩態 · 固定 VBE = 0.7 V 近似 · 忽略 Early 效應 · 算後檢查接面偏壓</footer>
+<noscript><p>請啟用 JavaScript 使用圖解與播放器；完整講稿也保存在同目錄的「完整口語稿.md」。</p></noscript>
+</body>
+</html>

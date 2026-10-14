@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101a2a">
+  <title>相位與複數・電路學聽課室</title>
+  <link rel="stylesheet" href="audio-course.css">
+  <script defer src="lesson-data.js"></script>
+  <script defer src="audio-manifest.js"></script>
+  <script defer src="audio-course.js"></script>
+</head>
+<body>
+<header class="site-header"><a href="../index.html" class="back-link">← 電路學課程</a><span class="series">電路分析 → 電子學 → 電磁學</span></header>
+<main>
+  <section class="intro">
+    <p class="eyebrow">電路學 / 邊玩邊聽 · 01</p>
+    <h1>讓相位，<br class="mobile-break">有個畫面。</h1>
+    <p class="lead">先聽懂時間差，再讓複數替你算。<br>需要看圖時會停下來，等你準備好。</p>
+    <div class="intro-notes"><span id="duration-estimate">時長依講稿估算</span><span>工程數學，遇到再學</span><span>圖像停靠另計</span></div>
+  </section>
+  <details class="sample-preview"><summary>短試音與原音色比較 · 34.8 秒</summary>
+  <section class="sample-player" aria-labelledby="sample-title">
+    <div class="sample-copy"><p class="eyebrow">先試聽聲音</p><h2 id="sample-title">官方音色短試音</h2><p>34.8 秒短試音，非角色配音、非完整課程。可拖曳進度，或下載後用 VLC 等播放器開啟。</p></div>
+    <div class="sample-controls"><audio id="sample-audio" controls preload="metadata" aria-label="官方音色短試音"></audio><div class="audio-meta"><output id="sample-time">讀取音檔長度中</output><a id="sample-download" download="sample.mp3">下載 MP3 ↓</a></div><label class="sample-speed" for="sample-rate">播放速度 <select id="sample-rate"><option value="0.75">0.75×</option><option value="0.9">0.9×</option><option value="1" selected>1×</option><option value="1.1">1.1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option></select></label><p id="sample-status" class="small-note" role="status">試音與主課會互相暫停，保留各自播放位置。</p></div>
+  </section>
+  </details>
+  <div class="workspace">
+    <aside class="listening-panel" aria-label="聽課播放器">
+      <div class="panel-top"><span class="eyebrow">現在聽到</span><span id="state-badge" class="badge">尚未開始</span></div>
+      <div class="audio-availability"><p id="audio-generation-count" role="status">正在確認課程音檔</p><p id="audio-generation-note">重新整理頁面可取得新增音檔；未生成的段落仍使用系統朗讀。</p></div>
+      <label class="field-label" for="lesson-select">選擇課程</label>
+      <select id="lesson-select"></select>
+      <h2 id="segment-title">載入課程中</h2>
+      <p id="lesson-summary" class="muted"></p>
+      <div class="progress-label"><span id="progress-label"></span><span>段落進度</span></div>
+      <progress id="lesson-progress" value="0" max="1" aria-label="課程段落進度"></progress>
+      <div id="course-audio-panel" class="course-audio-panel" hidden><p class="small-note">本段實際音檔 · 可拖曳進度</p><audio id="course-audio" controls preload="metadata" aria-label="目前課程段落音檔"></audio><div class="audio-meta"><output id="course-time">讀取音檔長度中</output><a id="course-download" download>下載本段 ↓</a></div><label class="sample-speed course-speed" for="course-rate">音檔倍速 <select id="course-rate"></select></label></div>
+      <p id="tts-seek-note" class="small-note">本段使用系統朗讀，不支援精確逐秒拖曳；可暫停、重播或切換段落。</p>
+      <div class="main-controls"><button id="play-button" class="primary" type="button">開始聽課</button><button id="pause-button" type="button" disabled>暫停</button></div>
+      <div class="secondary-controls"><button id="replay-button" type="button">↺ 重播本段</button><button id="next-button" type="button">下一段 →</button></div>
+      <p id="player-status" class="status" role="status" aria-live="polite">不會自動發聲，請按開始。</p>
+      <div id="checkpoint-notice" class="checkpoint-notice" hidden><strong>先看一眼，再繼續。</strong><p id="checkpoint-text"></p><button id="show-figure" type="button">前往指定圖</button></div>
+      <details class="voice-settings"><summary>聲音與語速</summary><label class="field-label" for="voice-select">中文系統聲音</label><select id="voice-select"></select><label class="speed-label" for="speech-rate">系統朗讀語速 <output id="rate-value">0.9×</output></label><input id="speech-rate" type="range" min="0.7" max="1.2" step="0.05" value="0.9"><p id="voice-source" class="muted"></p><p class="small-note">尚未提供初音未來／胡桃角色音檔。已生成音檔沿用官方試音音色，系統中文語音也不是角色聲音。音檔齊全的課程會顯示原速實測總長；尚未齊全時仍顯示正文估算。</p></details>
+      <details class="segment-list" open><summary>課程段落</summary><ol id="segment-list"></ol></details>
+    </aside>
+    <section class="visual-panel" aria-label="看圖停靠教材">
+      <div class="visual-heading"><div><p class="eyebrow">看圖停靠</p><h2>一眼抓住關係</h2></div><p class="muted">聽課不會自動捲動頁面</p></div>
+      <nav id="figure-tabs" class="figure-tabs" aria-label="選擇圖解"></nav>
+      <div id="figures"></div>
+      <details class="transcript"><summary>展開完整講稿與文字備援</summary><div class="transcript-toolbar"><p>可按段閱讀，也可複製本堂全文。</p><button id="copy-script" type="button">複製本堂講稿</button></div><p id="copy-status" role="status"></p><div id="transcript-content"></div></details>
+      <details id="full-audio-downloads" class="transcript"><summary>下載完整音檔，用 VLC 等播放器聽</summary><p class="small-note">第一堂已完成；音訊生成已暫停，第二堂尚未完整。整堂下載版不會自動停靠，聽到看圖提醒時請手動暫停。上方逐段播放器仍會停下等你。</p><p><a href="audio/lesson-1-full.mp3" download>第一堂：相位與參考 · 17 分 15 秒 ↓</a></p></details>
+      <section class="further-reading"><h3>想再深入時</h3><p>主課已包含複數加減乘除；以下是原課的延伸推導。</p><a href="../09-弦波與相量.html">弦波與相量 ↗</a><a href="../10-阻抗與交流穩態.html">阻抗與交流穩態 ↗</a></section>
+    </section>
+  </div>
+</main>
+<footer>同頻正弦穩態 · 統一使用峰值相量 · 教學數值並非元件實測</footer>
+<noscript><p>請啟用 JavaScript 使用圖解與播放器；完整講稿也保存在同目錄的「完整口語稿.md」。</p></noscript>
+</body>
+</html>

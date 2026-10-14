@@ -44,3 +44,82 @@
 - **訂閱主題**：無。
 
 已收線成員見 [2026-10-11 ELI5 團隊歷史](ROSTER-HISTORY-2026-10-11.md)及[計算課程續篇](ROSTER-HISTORY-2026-10-11-2.md)。
+
+已收線聽課團隊見 [2026-10-14 聽課歷史](ROSTER-HISTORY-2026-10-14.md)。
+
+### `circuit-listening-production`
+- **狀態**：已收線（2026-10-14）
+- **我是誰**：電路聽課總製作隊長，現行模型，帶分課隊與獨立驗收。
+- **團隊**：circuit-listening-production（內建通道）
+- **上游**：root
+- **領地**：新課規格、wf 行政、聽課路線與原課最小導航；各子線互斥。
+- **答得出什麼**：電路核心覆蓋、產線進度與驗收。
+- **答不出什麼**：使用者聽感、角色聲線及發布。
+- **怎麼找我**：內建 agent /root/curriculum_production_lead。
+- **訂閱主題**：無。
+
+### `power-team`
+- **狀態**：已收線（2026-10-14；待上游新派工）
+- **我是誰**：交流功率與功率因數分課隊長及其互斥講稿／前端子線，現行模型。
+- **團隊**：circuit-listening-production（內建通道）
+- **上游**：curriculum_production_lead
+- **領地**：功率課已驗收收線；續製電路學-互動課程/聽課-暫態與微分方程/，驗收紀錄保留獨立 QA。
+- **答得出什麼**：本課內容、建置與進度。
+- **答不出什麼**：其他科目、語音生成、發布。
+- **怎麼找我**：內建 agent /root/curriculum_production_lead/power_team。
+- **訂閱主題**：無。
+
+### `network-team`
+- **狀態**：已收線（2026-10-14）
+- **我是誰**：節點分析與等效電路分課隊長及其互斥講稿／前端子線，現行模型。
+- **團隊**：circuit-listening-production（內建通道）
+- **上游**：curriculum_production_lead
+- **領地**：網路課已驗收收線；續製電路學-互動課程/聽課-頻率響應與共振/，驗收紀錄保留獨立 QA。
+- **答得出什麼**：本課內容、建置與進度。
+- **答不出什麼**：其他科目、語音生成、發布。
+- **怎麼找我**：內建 agent /root/curriculum_production_lead/network_team。
+- **訂閱主題**：無。
+
+### `transformer-team`
+- **狀態**：已收線（2026-10-14）
+- **我是誰**：變壓器與三相分課隊長及互斥講稿／前端子線，現行模型。
+- **團隊**：circuit-listening-production（內建通道）
+- **上游**：curriculum_production_lead
+- **領地**：電路學-互動課程/聽課-變壓器與三相/；驗收紀錄保留獨立 QA。
+- **答得出什麼**：本課範圍、數學與建置。
+- **答不出什麼**：語音生成、其他科目、發布。
+- **怎麼找我**：內建 agent /root/curriculum_production_lead/transformer_team。
+- **訂閱主題**：無。
+
+### `electronics-listening-production`
+- **狀態**：關機前暫停，已停止寫入；下次依使用者指示續作
+- **我是誰**：電子學聽課製作隊長；diode_author／rectifier_author／bjt_author 三條互斥作者線，qa_power／qa_network 獨立驗收，現行模型。
+- **團隊**：electronics-listening-production（內建通道）
+- **上游**：root
+- **領地**：電子學-互動課程新聽課目錄與最小入口；接手共用 wf 行政唯一寫權，含原相位音訊狀態整合。
+- **答得出什麼**：電子學核心路線、教學與建置。
+- **答不出什麼**：語音生成、角色聲線與發布。
+- **怎麼找我**：內建 agent /root/electronics_em_bridge。
+- **訂閱主題**：無。
+
+### `phase-full-audio`
+- **狀態**：關機前暫停，已停止寫入；下次依使用者指示續作
+- **我是誰**：原相位與複數十九段音訊生成及驗收線。
+- **團隊**：無
+- **上游**：root
+- **領地**：原相位與複數音訊、manifest 與音訊驗收；不碰其他課或共用 wf。
+- **答得出什麼**：原授權兩堂音檔的生成、速度與驗收。
+- **答不出什麼**：新課產音、角色音色。
+- **怎麼找我**：內建 agent /root/full_audio_generation。
+- **訂閱主題**：無。
+
+### `electromagnetics-listening-production`
+- **狀態**：關機前暫停，已停止寫入；下次依使用者指示續作
+- **我是誰**：電磁學聽課隊長curriculum_production_lead，兩作者與兩獨立QA。
+- **團隊**：electromagnetics-listening-production（內建通道）
+- **上游**：root
+- **領地**：電磁學-互動課程新聽課目錄、局部路線與最小入口；共用wf由電子學隊長代寫。
+- **答得出什麼**：場、向量數學與電磁聽課教材。
+- **答不出什麼**：音訊生成、角色聲線與發布。
+- **怎麼找我**：內建agent /root/curriculum_production_lead。
+- **訂閱主題**：無。

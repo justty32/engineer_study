@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101a2a">
+  <title>高斯定律與電容・電磁學聽課室</title>
+  <link rel="stylesheet" href="audio-course.css">
+  <script defer src="audio-manifest.js"></script>
+</head>
+<body>
+<header class="site-header"><a href="../index.html" class="back-link">← 電磁學課程</a><span class="series">電路分析 → 電子學 → 電磁學</span></header>
+<main>
+  <section class="intro">
+    <p role="status"><strong>草稿／未完成，尚不能播放。三堂講稿草稿已保存；圖解與播放器待續作。</strong></p>
+    <p class="eyebrow">電磁學 / 邊玩邊聽 · 02</p>
+    <h1>穿過一個面，<br class="mobile-break">能知道多少事？</h1>
+    <p class="lead">從通量、對稱，走回電容與儲能。<br>需要看圖時會停下來，等你準備好。</p>
+    <div class="intro-notes"><span id="duration-estimate">時長依講稿估算</span><span>工程數學，遇到再學</span><span>圖像停靠另計</span></div>
+  </section>
+  <div class="workspace" hidden inert>
+    <aside class="listening-panel" aria-label="聽課播放器">
+      <div class="panel-top"><span class="eyebrow">現在聽到</span><span id="state-badge" class="badge">尚未開始</span></div>
+      <div class="audio-availability"><p id="audio-generation-count" role="status">正在確認課程音檔</p><p id="audio-generation-note">重新整理頁面可取得新增音檔；未生成的段落仍使用系統朗讀。</p></div>
+      <label class="field-label" for="lesson-select">選擇課程</label>
+      <select id="lesson-select"></select>
+      <h2 id="segment-title">載入課程中</h2>
+      <p id="lesson-summary" class="muted"></p>
+      <div class="progress-label"><span id="progress-label"></span><span>段落進度</span></div>
+      <progress id="lesson-progress" value="0" max="1" aria-label="課程段落進度"></progress>
+      <div id="course-audio-panel" class="course-audio-panel" hidden><p class="small-note">本段實際音檔 · 可拖曳進度</p><audio id="course-audio" controls preload="metadata" aria-label="目前課程段落音檔"></audio><div class="audio-meta"><output id="course-time">讀取音檔長度中</output><a id="course-download" download>下載本段 ↓</a></div><label class="sample-speed course-speed" for="course-rate">音檔倍速 <select id="course-rate"></select></label></div>
+      <p id="tts-seek-note" class="small-note">系統朗讀可暫停與重播；精確拖曳需正式音檔。</p>
+      <div class="main-controls"><button id="play-button" class="primary" type="button">開始聽課</button><button id="pause-button" type="button" disabled>暫停</button></div>
+      <div class="secondary-controls"><button id="replay-button" type="button">↺ 重播本段</button><button id="next-button" type="button">下一段 →</button></div>
+      <p id="player-status" class="status" role="status" aria-live="polite">不會自動發聲，請按開始。</p>
+      <div id="checkpoint-notice" class="checkpoint-notice" hidden><strong>先看一眼，再繼續。</strong><p id="checkpoint-text"></p><button id="show-figure" type="button">前往指定圖</button></div>
+      <details class="voice-settings"><summary>聲音與語速</summary><label class="field-label" for="voice-select">中文系統聲音</label><select id="voice-select"></select><label class="speed-label" for="speech-rate">系統朗讀語速 <output id="rate-value">0.9×</output></label><input id="speech-rate" type="range" min="0.7" max="1.2" step="0.05" value="0.9"><p id="voice-source" class="muted"></p><p class="small-note">尚未提供初音未來／胡桃角色音檔。系統中文語音不是角色聲音；可用聲音與背景播放能力依瀏覽器而異。頁首時長為正文估算，會受語速、音色與數字讀法影響。</p></details>
+      <details class="segment-list" open><summary>課程段落</summary><ol id="segment-list"></ol></details>
+    </aside>
+    <section class="visual-panel" aria-label="看圖停靠教材">
+      <div class="visual-heading"><div><p class="eyebrow">看圖停靠</p><h2>一眼抓住關係</h2></div><p class="muted">聽課不會自動捲動頁面</p></div>
+      <nav id="figure-tabs" class="figure-tabs" aria-label="選擇圖解"></nav>
+      <div id="figures"></div>
+      <details class="transcript"><summary>展開完整講稿與文字備援</summary><div class="transcript-toolbar"><p>可按段閱讀，也可複製本堂全文。</p><button id="copy-script" type="button">複製本堂講稿</button></div><p id="copy-status" role="status"></p><div id="transcript-content"></div></details>
+      <section class="further-reading"><h3>想再深入時</h3><p>先理解面積分的意義，再用對稱找場。材料例限線性、均勻、各向同性且完全填滿板間。</p><a href="../../圖解電磁學/dist/05-gauss.html">圖解原課：高斯定律與對稱 ↗</a><a href="../../圖解電磁學/dist/07-conductors.html">導體與靜電平衡 ↗</a><a href="../../圖解電磁學/dist/08-dielectrics.html">介電質與電場邊界 ↗</a><a href="../../圖解電磁學/dist/09-capacitance.html">電容、能量與幾何 ↗</a></section>
+    </section>
+  </div>
+</main>
+<footer>靜電場 · 封閉面外法向 · 線性均勻介質 · 平行板忽略邊緣</footer>
+<noscript><p>請啟用 JavaScript 使用圖解與播放器；本課仍為草稿，尚無播放器與正式同源講稿。</p></noscript>
+</body>
+</html>

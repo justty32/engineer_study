@@ -11,7 +11,13 @@
 
 ## 最新進度
 
+- [interactive-study-site] 電子學聽課已依使用者關機要求暫停：二極體／整流／BJT三門六堂已驗收，MOS／小訊號草稿待續；其餘三門僅規格 → [交接](handoffs/2026-10-14-electronics-listening.md)，下次先讀各課STATE，不自動產音。
+- [interactive-study-site] 電磁學聽課已依關機要求暫停：場與位／高斯與電容草稿待續，成品未驗收；其餘六門未啟動 → [交接](handoffs/2026-10-14-electromagnetics-listening.md)，不掛完成入口。
+- [audio-course] 原相位音訊依使用者關機指示暫停於13/19段、56/84chunks，GPU模型已停止；下次等使用者要求續跑才啟GPU，不因新session自動恢復。接點p2-05，先實聽p2-04 c003尾音 → [音訊生成狀態](../電機/02-電機核心/電路學-互動課程/聽課-相位與複數/音訊生成狀態.md)。
+
+
 <!-- wf-nav -->
+
 
 - [interactive-study-site] 第二批三課（電力電子／馬達驅動與控制／數位通訊）已上線；第三批候選 DSP／IC1／A2 待派 → 立案前先看 [workflows/interactive-study-site/README.md](workflows/interactive-study-site/README.md) 與 [decisions](workflows/decisions.md) 的譯名裁決。
 - [審稿] 2026-09-26 全站審稿 52 份齊；電機（01–05、23–35）＋專題（20–22、38–47）兩輪修整完成並 push（2026-10-09，延後 165 條已全數結案，見 [fixes/延後彙整.csv](reviews/2026-09-26/fixes/延後彙整.csv)）；其餘學科 md、共通基礎 36–37、wf 49–52 的報告尚未修 → 待使用者決定是否續修。

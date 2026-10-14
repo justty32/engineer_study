@@ -1,0 +1,115 @@
+{
+ "contract": "wf-table/1",
+ "source": "聽課製作契約.md",
+ "extracted": "2026-10-14",
+ "columns": [
+  "id",
+  "batch",
+  "topic",
+  "status",
+  "lessons",
+  "prerequisite",
+  "math",
+  "coverage",
+  "deferred",
+  "target"
+ ],
+ "rows": [
+  {
+   "id": "em-field",
+   "batch": "1",
+   "topic": "電場與電位",
+   "status": "暫停：草稿待續",
+   "lessons": "3",
+   "prerequisite": "電路電壓與能量",
+   "math": "向量分量/投影、線積分、梯度",
+   "coverage": "電場疊加、電位差與功、等位與負梯度",
+   "deferred": "一般三維多電荷解析積分、完整邊值PDE",
+   "target": "聽課-電場與電位"
+  },
+  {
+   "id": "em-gauss",
+   "batch": "1",
+   "topic": "高斯定律與電容",
+   "status": "暫停：草稿待續",
+   "lessons": "3",
+   "prerequisite": "em-field",
+   "math": "面積向量與通量、曲面積分",
+   "coverage": "封閉面通量與電荷、對稱球面高斯、平行板電容儲能與介電質入門",
+   "deferred": "任意非對稱場解、完整介電邊界解",
+   "target": "聽課-高斯定律與電容"
+  },
+  {
+   "id": "em-magnetic",
+   "batch": "2",
+   "topic": "電流與磁場",
+   "status": "未啟動",
+   "lessons": "待切片",
+   "prerequisite": "em-field",
+   "math": "叉積、環流與線積分",
+   "coverage": "羅倫茲力、電流產磁、畢歐沙伐與安培對稱",
+   "deferred": "磁向量位與磁性材料完整模型",
+   "target": "聽課-電流與磁場"
+  },
+  {
+   "id": "em-induction",
+   "batch": "2",
+   "topic": "感應與電感",
+   "status": "未啟動",
+   "lessons": "待切片",
+   "prerequisite": "em-magnetic,em-gauss",
+   "math": "通量變化率、帶方向環路",
+   "coverage": "法拉第冷次、動生/感生邊界、自感磁能互感",
+   "deferred": "非線性磁滯與磁路設計",
+   "target": "聽課-感應與電感"
+  },
+  {
+   "id": "em-maxwell",
+   "batch": "3",
+   "topic": "位移電流與馬克士威方程式",
+   "status": "未啟動",
+   "lessons": "待切片",
+   "prerequisite": "em-induction",
+   "math": "散度、旋度、散度定理、斯托克斯",
+   "coverage": "電荷守恆與位移電流、四方程積分/局部意義",
+   "deferred": "全面曲線座標微分與邊值理論",
+   "target": "聽課-位移電流與馬克士威"
+  },
+  {
+   "id": "em-wave",
+   "batch": "3",
+   "topic": "電磁波與能量傳遞",
+   "status": "未啟動",
+   "lessons": "待切片",
+   "prerequisite": "em-maxwell,電路相量",
+   "math": "偏微分與波動方程、叉積",
+   "coverage": "無損平面波E/H相位與方向、波阻抗、坡印廷能流",
+   "deferred": "損耗介質完整傳播、偏振專題",
+   "target": "聽課-電磁波與能量"
+  },
+  {
+   "id": "em-interface",
+   "batch": "4",
+   "topic": "介面反射",
+   "status": "未啟動",
+   "lessons": "待切片",
+   "prerequisite": "em-wave",
+   "math": "邊界條件聯立與相量",
+   "coverage": "無損介質垂直入射、反透射振幅與功率",
+   "deferred": "斜入射、全反射、偏振",
+   "target": "聽課-介面反射"
+  },
+  {
+   "id": "em-line",
+   "batch": "4",
+   "topic": "傳輸線與駐波",
+   "status": "未啟動",
+   "lessons": "待切片",
+   "prerequisite": "em-interface,電路阻抗",
+   "math": "行波相加與相位距離",
+   "coverage": "無損線Z0、負載反射、駐波與輸入阻抗",
+   "deferred": "Smith圖全套、匹配設計、波導天線RF",
+   "target": "聽課-傳輸線與駐波"
+  }
+ ]
+}

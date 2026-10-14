@@ -1,0 +1,68 @@
+{
+ "contract": "wf-table/1",
+ "source": "BUILD-SPEC.md",
+ "extracted": "2026-10-14",
+ "link_columns": [],
+ "columns": [
+  "id",
+  "elements",
+  "observe",
+  "scale"
+ ],
+ "rows": [
+  {
+   "id": "emfield-vector",
+   "elements": "O/P位移三角形；另繪單源場箭頭與60/80分量",
+   "observe": "位置.18/.24/.30m；場60/80/100V/m",
+   "scale": "位置與場分圖各用同尺度"
+  },
+  {
+   "id": "emfield-superposition",
+   "elements": "左右兩源與P；P處兩支100V/m與合場160V/m",
+   "observe": "水平±60抵消，垂直80+80",
+   "scale": "位置另圖；場箭頭同尺度"
+  },
+  {
+   "id": "emfield-projection",
+   "elements": "單源E=(60,80)；水平與沿E探測軸",
+   "observe": "水平讀60，沿E讀100，逆水平讀-60",
+   "scale": "場箭頭與投影同尺度"
+  },
+  {
+   "id": "emfield-work",
+   "elements": "E=9/r²曲線及A=.30至B=.60塗色面積",
+   "observe": "端點100/25V/m，面積15V",
+   "scale": "橫軸m；縱軸V/m"
+  },
+  {
+   "id": "emfield-path",
+   "elements": "O/A(.30,0)/B(.60,0)/C(0,.30)/D(0,.60)；直路及弧徑弧繞路",
+   "observe": "兩弧零，C到D積分15V；直路15V",
+   "scale": "位置等比例，箭頭標路徑方向"
+  },
+  {
+   "id": "emfield-reference",
+   "elements": "兩組A/B電位柱30/15及10/-5；零線",
+   "observe": "全部減20V，差仍-15V",
+   "scale": "電位同尺度、負柱向下"
+  },
+  {
+   "id": "emfield-contours",
+   "elements": "四等位圓30/25/20/15V；半徑.30/.36/.45/.60m；向外箭頭",
+   "observe": "各差5V，近源較密",
+   "scale": "半徑按比例；場箭頭只示方向"
+  },
+  {
+   "id": "emfield-slope",
+   "elements": "V=9/r曲線，A/B割線-50，A切線-100",
+   "observe": "有限距離平均不等於A局部",
+   "scale": "橫軸m；縱軸V；各線公式生成"
+  },
+  {
+   "id": "emfield-gradient",
+   "elements": "P處梯度(-60,-80)與場(60,80)；切線、直角、分量",
+   "observe": "梯度向高電位，場反向；切向投影零",
+   "scale": "此為向量圖非位置圖；向量同尺度"
+  }
+ ]
+}

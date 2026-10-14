@@ -7,6 +7,8 @@
 <p class="lead">阻抗同時記錄電壓電流的大小比例與相位差，使電阻、電感、電容都能寫成 <strong>V</strong> = Z<strong>I</strong>。只要維持同頻弦波穩態，直流章節的 KCL、KVL、串並聯與等效方法便可原樣重用。</p>
 <p class="prereq"><strong>這章假設已懂：</strong><a href="09-弦波與相量.html">09 弦波與相量</a>、<a href="06-電容與電感.html">06 電容與電感</a>的微分關係，以及<a href="01-電阻與歐姆定律.html">01 歐姆定律</a>。</p>
 
+<p class="note">想慢慢聽阻抗公式怎麼來，再算一個完整 RC 電路？可到<a href="聽課-阻抗與交流分析/index.html">阻抗與交流分析聽課室</a>，用六張大圖對照兩堂口語講稿。</p>
+
 <h2>痛點：電容與電感沒有固定電阻，歐姆定律還能怎麼用？</h2>
 <p>電阻的 v = iR 是瞬時比例；電感的 v = L ⋅ di/dt 與電容的 i = C ⋅ dv/dt 卻含導數。若每遇到 L、C 就回時間域解微分方程，節點分析與戴維寧等工具似乎全得重學。交流穩態的突破是：同頻弦波微分後仍同頻，只改大小與相位，因此導數可由一個複數乘數 jω 取代。</p>
 <p><strong>阻抗（impedance）</strong>定義為同頻電壓相量與電流相量之比 Z = <strong>V</strong>/<strong>I</strong>，單位 Ω。Z 是複數，但不是相量，因為它不代表一條隨時間振盪的物理量。其直角式 Z = R + jX 中，實部 R 表示耗能部分，虛部 X 稱為<strong>電抗（reactance）</strong>；倒數 Y = 1/Z = G + jB 稱為<strong>導納（admittance）</strong>，單位 S。</p>

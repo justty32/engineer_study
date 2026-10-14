@@ -7,6 +7,14 @@
 | 線 | 可寫目錄 | 唯讀 / 禁區 | 上線時間 |
 |----|---------|------------|---------|
 
+### 關機暫停，保留接續範圍（非現役）
+
+| 線 | 保存範圍 | 接續條件 |
+|----|---------|---------|
+| phase-full-audio | 原相位音訊13/19段、56/84chunks；模型已停止 | 使用者要求續跑才啟GPU，先實聽p2-04 c003尾音再從p2-05續 |
+| electronics-listening-production | 三門已驗收，MOS／小訊號草稿；[交接](../../handoffs/2026-10-14-electronics-listening.md) | 使用者下次要求繼續教材；不自動產音 |
+| electromagnetics-listening-production | 首兩門草稿，其他未啟動；[交接](../../handoffs/2026-10-14-electromagnetics-listening.md) | 使用者下次要求繼續教材，先完成前端與獨立QA |
+
 ### 保留給調度者，任何線都不得寫
 
 | 目錄 | 理由 |
@@ -20,6 +28,15 @@
 
 | 線 | 完成證據 | 收線時間 |
 |----|---------|---------|
+| circuit-listening-production | [五門十三堂、行政交棒電子學](../../handoffs/done/2026-10-14-circuit-listening-production.md) | 2026-10-14 |
+| listening-frequency | [三堂頻響、九圖與27段驗收](../../handoffs/done/2026-10-14-listening-frequency.md) | 2026-10-14 |
+| listening-transformer | [兩堂變壓器三相、六圖與18段驗收](../../handoffs/done/2026-10-14-listening-transformer.md) | 2026-10-14 |
+| listening-transient | [三堂暫態、九圖與27段驗收](../../handoffs/done/2026-10-14-listening-transient.md) | 2026-10-14 |
+| listening-network（總產線續製頻響） | [三堂網路聽課、九圖與27段驗收](../../handoffs/done/2026-10-14-listening-network.md) | 2026-10-14 |
+| listening-power（總產線續製暫態） | [兩堂功率聽課、六圖與18段驗收](../../handoffs/done/2026-10-14-listening-power.md) | 2026-10-14 |
+| impedance-audio | [兩堂阻抗續篇、六圖與18段同源講稿驗收](../../handoffs/done/2026-10-14-impedance-audio.md) | 2026-10-14 |
+| audio-course-player | [原生播放器、真實seek與Range預覽服務](../../handoffs/done/2026-10-14-audio-player.md) | 2026-10-14 |
+| audio-course | [相位與複數聽課、39項狀態／互動及獨立驗收](../../handoffs/done/2026-10-14-audio-course.md) | 2026-10-14 |
 | operating_systems_team | [完整圖解演算、來源勘誤及 GitHub 部署](../../handoffs/done/2026-10-11-operating-systems-visual.md) | 2026-10-11 |
 | EM→OS 發布行政 | [電磁學與作業系統完整收線](../../handoffs/done/2026-10-11-em-os-program.md) | 2026-10-11 |
 | electromagnetics-visual 團隊／close 接手線 | [同版封版、公開部署與單課收線](../../handoffs/done/2026-10-11-electromagnetics-visual.md) | 2026-10-11 |

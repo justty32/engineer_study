@@ -1,0 +1,95 @@
+{
+ "contract": "wf-table/1",
+ "source": "聽課產線狀態.md",
+ "extracted": "2026-10-14",
+ "columns": [
+  "id",
+  "batch",
+  "topic",
+  "status",
+  "lessons",
+  "prerequisite",
+  "coverage",
+  "deferred",
+  "target"
+ ],
+ "rows": [
+  {
+   "id": "phase",
+   "batch": "0",
+   "topic": "相位與複數",
+   "status": "已驗收",
+   "lessons": "2",
+   "prerequisite": "歐姆與RLC基礎",
+   "coverage": "相位、複平面、四則、串RL",
+   "deferred": "複變函數",
+   "target": "聽課-相位與複數"
+  },
+  {
+   "id": "impedance",
+   "batch": "0",
+   "topic": "阻抗與交流分析",
+   "status": "已驗收",
+   "lessons": "2",
+   "prerequisite": "phase",
+   "coverage": "微分到jω、RLC阻抗、串RC",
+   "deferred": "非正弦傅立葉分析",
+   "target": "聽課-阻抗與交流分析"
+  },
+  {
+   "id": "power",
+   "batch": "1",
+   "topic": "交流功率與功率因數",
+   "status": "已驗收",
+   "lessons": "2",
+   "prerequisite": "impedance",
+   "coverage": "瞬時/平均功率、RMS、複功率、功因補償",
+   "deferred": "諧波失真與電力品質細節",
+   "target": "聽課-交流功率與功率因數"
+  },
+  {
+   "id": "network",
+   "batch": "1",
+   "topic": "節點分析與等效電路",
+   "status": "已驗收",
+   "lessons": "3",
+   "prerequisite": "impedance",
+   "coverage": "複數KCL聯立、疊加與受控源、測試源、戴維寧諾頓與負載",
+   "deferred": "超節點進階、多迴路大矩陣與完整最大功率專題",
+   "target": "聽課-節點分析與等效電路"
+  },
+  {
+   "id": "transient",
+   "batch": "2",
+   "topic": "暫態與微分方程",
+   "status": "已驗收",
+   "lessons": "3",
+   "prerequisite": "network",
+   "coverage": "RC/RL初終值與時間常數、一階ODE、二階RLC阻尼",
+   "deferred": "拉氏完整法與任意強迫輸入",
+   "target": "聽課-暫態與微分方程"
+  },
+  {
+   "id": "frequency",
+   "batch": "2",
+   "topic": "頻率響應與共振",
+   "status": "已驗收",
+   "lessons": "3",
+   "prerequisite": "impedance,power",
+   "coverage": "傳遞函數、幅相、dB/Bode、一階濾波與RLC共振Q頻寬",
+   "deferred": "高階濾波器設計與完整控制理論",
+   "target": "聽課-頻率響應與共振"
+  },
+  {
+   "id": "transformer",
+   "batch": "3",
+   "topic": "變壓器與三相",
+   "status": "已驗收",
+   "lessons": "2",
+   "prerequisite": "power,network",
+   "coverage": "理想變壓器、磁耦合與點標入門、平衡三相線相量與功率",
+   "deferred": "非理想等效參數測試、不平衡與對稱分量",
+   "target": "聽課-變壓器與三相"
+  }
+ ]
+}
