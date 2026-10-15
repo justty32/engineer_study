@@ -92,7 +92,7 @@
 - **訂閱主題**：無。
 
 ### `electronics-listening-production`
-- **狀態**：關機前暫停，已停止寫入；下次依使用者指示續作
+- **狀態**：electronics-resume 已接續完成（2026-10-15）
 - **我是誰**：電子學聽課製作隊長；diode_author／rectifier_author／bjt_author 三條互斥作者線，qa_power／qa_network 獨立驗收，現行模型。
 - **團隊**：electronics-listening-production（內建通道）
 - **上游**：root
@@ -123,3 +123,7 @@
 - **答不出什麼**：音訊生成、角色聲線與發布。
 - **怎麼找我**：內建agent /root/curriculum_production_lead。
 - **訂閱主題**：無。
+
+[電子續作收線名冊](ROSTER-ELECTRONICS-2026-10-15.md)
+
+[EM](ROSTER-EM.md)

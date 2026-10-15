@@ -36,35 +36,35 @@
    "title": "MOSFET與偏壓",
    "prerequisite": "工作區、電容電場與偏壓",
    "directory": "聽課-MOSFET與偏壓",
-   "status": "六檔草稿完整；待獨立QA"
+   "status": "兩堂圖稿與播放器通過獨立五類QA；音檔0/18"
   },
   {
    "id": "05",
    "title": "小訊號與跨導",
    "prerequisite": "BJT/MOS偏壓；導數與泰勒按需",
    "directory": "聽課-小訊號與跨導",
-   "status": "三堂講稿完成；前端未作、未QA"
+   "status": "三堂圖稿與播放器通過獨立五類QA；音檔0/27"
   },
   {
    "id": "06",
    "title": "單級放大與頻寬",
    "prerequisite": "小訊號、節點分析、頻率響應已驗收",
    "directory": "聽課-單級放大與頻寬",
-   "status": "僅規格；未開始製作"
+   "status": "兩堂圖稿與播放器通過獨立五類QA；音檔0/18"
   },
   {
    "id": "07",
    "title": "電流鏡與差動放大",
    "prerequisite": "偏壓、小訊號、輸出電阻",
    "directory": "聽課-電流鏡與差動放大",
-   "status": "僅規格；未開始製作"
+   "status": "兩堂圖稿與播放器通過獨立五類QA；音檔0/18"
   },
   {
    "id": "08",
    "title": "負回授與運算放大器",
    "prerequisite": "單級增益頻響、差模、相位",
    "directory": "聽課-負回授與運算放大器",
-   "status": "僅規格；未開始製作"
+   "status": "五堂圖稿與播放器通過獨立五類QA；音檔0/45"
   }
  ]
 }

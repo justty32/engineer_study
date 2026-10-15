@@ -1,0 +1,5 @@
+正文唯一來源：完整口語稿.md；build-course.py轉存至lesson-data.js，無摘要替換。
+物理來源：../../08-電磁學-上.md 第1章、../../08-電磁學-中.md 第13章。
+深入來源：../../圖解電磁學/dist/02-calculus.html、17-maxwell.html。
+前端模板：../聽課-電場與電位/，namespace與storageKey獨立。
+2026-10-15：不安裝TTS、不生成音訊；音訊manifest 0/27。

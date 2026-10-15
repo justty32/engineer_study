@@ -11,8 +11,6 @@
 
 ## 最新進度
 
-- [interactive-study-site] 電子學聽課已依使用者關機要求暫停：二極體／整流／BJT三門六堂已驗收，MOS／小訊號草稿待續；其餘三門僅規格 → [交接](handoffs/2026-10-14-electronics-listening.md)，下次先讀各課STATE，不自動產音。
-- [interactive-study-site] 電磁學聽課已依關機要求暫停：場與位／高斯與電容草稿待續，成品未驗收；其餘六門未啟動 → [交接](handoffs/2026-10-14-electromagnetics-listening.md)，不掛完成入口。
 - [audio-course] 原相位音訊依使用者關機指示暫停於13/19段、56/84chunks，GPU模型已停止；下次等使用者要求續跑才啟GPU，不因新session自動恢復。接點p2-05，先實聽p2-04 c003尾音 → [音訊生成狀態](../電機/02-電機核心/電路學-互動課程/聽課-相位與複數/音訊生成狀態.md)。
 
 

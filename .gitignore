@@ -1,3 +1,12 @@
 __pycache__/
 *.pyc
 wf/inbox/.state/
+
+# 本機生成音檔；既有追蹤檔不受影響，教材與播放器仍納入版本控制。
+*.mp3
+*.wav
+*.m4a
+*.aac
+*.ogg
+*.opus
+*.flac

@@ -4,6 +4,7 @@
 
 ### 現役
 
+
 | 線 | 可寫目錄 | 唯讀 / 禁區 | 上線時間 |
 |----|---------|------------|---------|
 
@@ -11,9 +12,8 @@
 
 | 線 | 保存範圍 | 接續條件 |
 |----|---------|---------|
+| electronics-resume | [五門十四堂、獨立驗收與接線](../../handoffs/done/2026-10-15-electronics-listening.md) | 2026-10-15 |
 | phase-full-audio | 原相位音訊13/19段、56/84chunks；模型已停止 | 使用者要求續跑才啟GPU，先實聽p2-04 c003尾音再從p2-05續 |
-| electronics-listening-production | 三門已驗收，MOS／小訊號草稿；[交接](../../handoffs/2026-10-14-electronics-listening.md) | 使用者下次要求繼續教材；不自動產音 |
-| electromagnetics-listening-production | 首兩門草稿，其他未啟動；[交接](../../handoffs/2026-10-14-electromagnetics-listening.md) | 使用者下次要求繼續教材，先完成前端與獨立QA |
 
 ### 保留給調度者，任何線都不得寫
 
@@ -28,6 +28,8 @@
 
 | 線 | 完成證據 | 收線時間 |
 |----|---------|---------|
+| em-remaining | [六門十八堂五十四圖、獨立驗收與關閉證據](../../handoffs/done/2026-10-15-em-remaining.md) | 2026-10-15 |
+| electromagnetics-resume | [兩門六堂、十八圖與獨立驗收](../../handoffs/done/2026-10-15-electromagnetics-listening.md) | 2026-10-15 |
 | circuit-listening-production | [五門十三堂、行政交棒電子學](../../handoffs/done/2026-10-14-circuit-listening-production.md) | 2026-10-14 |
 | listening-frequency | [三堂頻響、九圖與27段驗收](../../handoffs/done/2026-10-14-listening-frequency.md) | 2026-10-14 |
 | listening-transformer | [兩堂變壓器三相、六圖與18段驗收](../../handoffs/done/2026-10-14-listening-transformer.md) | 2026-10-14 |

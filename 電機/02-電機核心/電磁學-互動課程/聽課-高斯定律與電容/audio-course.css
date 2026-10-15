@@ -23,3 +23,9 @@
 
 /* 暫態圖的曲線與電路分層排列，手機保持單欄。 */
 .diagram svg{margin:0 auto 10px}.diagram svg .wire{fill:none;stroke:#8db8ff;stroke-width:3}.diagram svg .curve{fill:none;stroke:#78e2ca;stroke-width:3}.diagram svg .envelope{fill:none;stroke:#ffc67b;stroke-width:2;stroke-dasharray:7 6}.diagram svg .muted-text,.diagram svg .tiny-text{font-size:22px}.diagram svg .point{fill:#ffc67b}.formula-main{padding:0 24px 16px;font-size:15px;overflow-wrap:anywhere;color:var(--amber)}.diagram-caption{margin:6px 24px 12px;color:var(--muted);font-size:13px}.figure-takeaway strong{font-variant-numeric:tabular-nums}.figure-tabs{gap:7px}.figure-tabs button{font-size:12px}@media(max-width:760px){.diagram svg .muted-text,.diagram svg .tiny-text{font-size:22px}.formula-main{padding:0 18px 16px;font-size:14px}.diagram-caption{margin-left:18px;margin-right:18px}.figure-tabs button{font-size:11px}}
+
+/* 高斯圖：定量曲線與方向示意分開標示。 */
+.diagram svg .small-label{font-size:22px;fill:var(--muted)}.diagram svg .cell{fill:#17283b;stroke:#4a6276;stroke-width:1.5}.diagram svg .material{fill:#8db8ff18;stroke:#8db8ff55;stroke-width:1.5}.diagram svg .reference-point{fill:var(--panel);stroke:var(--blue);stroke-width:2}.comparison{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;padding:0 20px 18px}.comparison section{min-width:0;border:1px solid var(--line);border-radius:12px;padding:12px}.comparison h4{font-size:14px;margin:0 0 10px;color:var(--mint)}.comparison p{font-size:12px;line-height:2;overflow-wrap:anywhere;margin:0}.diagram svg .axis.dash{stroke-dasharray:6 5}.figure-head h3{overflow-wrap:anywhere}
+@media(max-width:760px){.comparison{padding:0 12px 15px;gap:8px}.comparison section{padding:8px}.comparison h4{font-size:12px}.comparison p{font-size:11px}.diagram svg .small-label{font-size:22px}}
+
+.diagram svg #gauss-projection{stroke-width:6;stroke-dasharray:8 6}
