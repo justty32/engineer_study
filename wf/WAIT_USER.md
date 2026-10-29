@@ -6,6 +6,8 @@
 
 條目格式：`- [工作流] 請使用者做什麼 → 做完我接著做什麼`，做完即刪。本檔已拆成 `wait-user/` 分頁，hub 只留下表；新條目先看有沒有對應類別，沒有才在本檔直接加一行或新開 `wait-user/<類別>.md`（照 [STRUCTURE](STRUCTURE.md)）。
 
+目前五類共 48 組：41 組真人實機驗收與 7 組對照表啟動／用語決策。可由 agent 補做的機械檢查另列於[互動課程進度](workflows/interactive-study-site/session-log.md)，本頁保留真人操作與回饋；拆分紀錄不代表檢查已執行。
+
 ## 待使用者項
 
 <!-- wf-nav -->

@@ -12,7 +12,6 @@
 
 | 線 | 保存範圍 | 接續條件 |
 |----|---------|---------|
-| electronics-resume | [五門十四堂、獨立驗收與接線](../../handoffs/done/2026-10-15-electronics-listening.md) | 2026-10-15 |
 | phase-full-audio | 原相位音訊13/19段、56/84chunks；模型已停止 | 使用者要求續跑才啟GPU，先實聽p2-04 c003尾音再從p2-05續 |
 
 ### 保留給調度者，任何線都不得寫
@@ -28,6 +27,8 @@
 
 | 線 | 完成證據 | 收線時間 |
 |----|---------|---------|
+| state-records-20261029 | [活狀態與真人／agent 分工校正證據](../../handoffs/done/2026-10-29-state-records.md) | 2026-10-29 |
+| electronics-resume | [五門十四堂、獨立驗收與接線](../../handoffs/done/2026-10-15-electronics-listening.md) | 2026-10-15 |
 | em-remaining | [六門十八堂五十四圖、獨立驗收與關閉證據](../../handoffs/done/2026-10-15-em-remaining.md) | 2026-10-15 |
 | electromagnetics-resume | [兩門六堂、十八圖與獨立驗收](../../handoffs/done/2026-10-15-electromagnetics-listening.md) | 2026-10-15 |
 | circuit-listening-production | [五門十三堂、行政交棒電子學](../../handoffs/done/2026-10-14-circuit-listening-production.md) | 2026-10-14 |

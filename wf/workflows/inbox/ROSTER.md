@@ -92,11 +92,11 @@
 - **訂閱主題**：無。
 
 ### `electronics-listening-production`
-- **狀態**：electronics-resume 已接續完成（2026-10-15）
+- **狀態**：已收線，electronics-resume 已接續完成（2026-10-15）
 - **我是誰**：電子學聽課製作隊長；diode_author／rectifier_author／bjt_author 三條互斥作者線，qa_power／qa_network 獨立驗收，現行模型。
 - **團隊**：electronics-listening-production（內建通道）
 - **上游**：root
-- **領地**：電子學-互動課程新聽課目錄與最小入口；接手共用 wf 行政唯一寫權，含原相位音訊狀態整合。
+- **領地**：當時負責電子學聽課與入口、共用 wf 行政及原相位音訊紀錄；現已釋放。
 - **答得出什麼**：電子學核心路線、教學與建置。
 - **答不出什麼**：語音生成、角色聲線與發布。
 - **怎麼找我**：內建 agent /root/electronics_em_bridge。
@@ -113,17 +113,18 @@
 - **怎麼找我**：內建 agent /root/full_audio_generation。
 - **訂閱主題**：無。
 
-### `electromagnetics-listening-production`
-- **狀態**：關機前暫停，已停止寫入；下次依使用者指示續作
-- **我是誰**：電磁學聽課隊長curriculum_production_lead，兩作者與兩獨立QA。
-- **團隊**：electromagnetics-listening-production（內建通道）
-- **上游**：root
-- **領地**：電磁學-互動課程新聽課目錄、局部路線與最小入口；共用wf由電子學隊長代寫。
-- **答得出什麼**：場、向量數學與電磁聽課教材。
-- **答不出什麼**：音訊生成、角色聲線與發布。
-- **怎麼找我**：內建agent /root/curriculum_production_lead。
-- **訂閱主題**：無。
+電磁原總製作隊與兩批續作隊均已收線（2026-10-15），詳見[電磁名冊與完成證據](ROSTER-EM.md)。
 
 [電子續作收線名冊](ROSTER-ELECTRONICS-2026-10-15.md)
 
-[EM](ROSTER-EM.md)
+
+### `state-records-20261029`
+- **狀態**：已收線（2026-10-29）
+- **我是誰**：wf_review 協調；course_rules_state／knowledge_rules 寫紀錄，現行模型。
+- **團隊**：內建通道。
+- **上游**：root；子線回報 wf_review。
+- **領地**：[限定檔案](../../handoffs/done/2026-10-29-state-records.md)。
+- **答得出什麼**：紀錄校正與驗收分工。
+- **答不出什麼**：未重驗的課程／音訊品質。
+- **怎麼找我**：內建 /root/wf_review。
+- **訂閱主題**：無。

@@ -1,0 +1,154 @@
+{
+ "contract": "wf-table/1",
+ "source": "session-log.md",
+ "extracted": "2026-10-29",
+ "link_columns": [
+  "source_path"
+ ],
+ "columns": [
+  "id",
+  "course",
+  "source_path",
+  "status",
+  "evidence_state",
+  "existing_evidence",
+  "target",
+  "viewport",
+  "pending_checks",
+  "human_boundary"
+ ],
+ "rows": [
+  {
+   "id": "core-microprocessors",
+   "course": "微處理機與匯流排（零基礎互動課）",
+   "source_path": "../../wait-user/實機驗收-電機核心.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "建置端自驗已以 Playwright 完成桌面/手機 34 次載入驗證與 64 項功能互動測試（尚無獨立驗收員複驗）；掛站時 agent 另做靜態檢查（相對連結 33 個目標全存在、`node --check` 通過、`sync-styles.py --check` 通過、無外部資源）",
+   "target": "[index](../../../電機/02-電機核心/微處理機與匯流排-互動課程/index.html)；`https://justty32.github.io/engineer_study/microprocessors/`",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "獨立複驗建置端自驗的桌面／手機 34 次載入與 64 項功能互動測試；沿既有驗收範圍確認：17 頁導覽（14 章＋60 詞字典＋42 題自我檢核＋index）、14 個自由實驗（含五階段管線逐拍、快取對映／替換／寫策略模擬、MESI 多核狀態序列、輪詢／中斷／DMA 的 CPU 占用比）、字典搜尋、自我檢核與 reset、鍵盤 focus 與空白鍵切換 checkbox 及主控台無錯誤、重疊或水平溢位；跨課連結（邏輯設計、電子學、信號與系統、計算機組織）經 `replacements` 改寫後可達。另查線上任一跨課連結（例如 08 章連往計算機組織），確認 slug 改寫後不 404。",
+   "human_boundary": "實機操作、真實觸控與實體鍵盤感受。"
+  },
+  {
+   "id": "core-control",
+   "course": "控制系統（零基礎互動課）",
+   "source_path": "../../wait-user/實機驗收-電機核心.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "agent 以獨立 sonnet 驗收員完成 37 關靜態／數值／假 DOM 驗證（182 個 id、36 題 QUIZ、12 組數值交叉驗算），但本機只有 firefox CLI 截圖（index／04／09 各兩種視埠共 6 張），**無法量測 `scrollWidth`，橫向溢出未驗**",
+   "target": "[index](../../../電機/02-電機核心/控制系統-互動課程/index.html)；`https://justty32.github.io/engineer_study/control-systems/`",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "量測頁面 scrollWidth 是否超出視埠，重點為 05 章 Routh 表與 07／08 章九點波德讀值表在 390px 下的橫向溢出；線上點任一跨課連結（信號與系統、電路學），確認 replacements／slug 改寫後不 404。",
+   "human_boundary": "手機寬表閱讀及實際橫向操作。"
+  },
+  {
+   "id": "core-machines",
+   "course": "電機機械（零基礎互動課）",
+   "source_path": "../../wait-user/實機驗收-電機核心.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "agent 以獨立 sonnet 驗收員完成 A–L 共 12 關（13 個 Calc 函式 342 項斷言零失敗、邊界 NaN 掃描數千組合），**本機無無頭瀏覽器，桌面／手機視覺、觸控、螢幕閱讀器完全未驗**（Gate M 待人工）",
+   "target": "[index](../../../電機/02-電機核心/電機機械-互動課程/index.html)；`https://justty32.github.io/engineer_study/electric-machines/`",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "補既有 Gate M 中可自動化的桌面／手機瀏覽器渲染與互動證據：16 頁導覽（13 章＋50 詞字典＋39 題自我檢核＋index）、13 個等效電路算數實驗（變壓器試驗、直流機轉矩–轉速線、感應機戴維寧轉矩曲線、同步機功率角與 V 曲線、起動比較）、字典搜尋、自我檢核與 reset、鍵盤 focus 及主控台無錯誤、重疊或水平溢位；跨課連結（電磁學、電路學、電子學、電力系統）經 `replacements` 改寫後可達。真人觸控與螢幕閱讀器不由此替代。",
+   "human_boundary": "全部原列實機操作、滑桿觸控手感與有條件時的螢幕閱讀器操作。"
+  },
+  {
+   "id": "comm-structure",
+   "course": "通訊系統（零基礎互動課）",
+   "source_path": "../../wait-user/實機驗收-共通通訊電力.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "agent 已以 headless Chrome（CDP 直連）完成 15 頁 × 2 視埠共 30 次載入量測（橫向溢出 0、console error 0）並實測 dbcalc、自我檢核對錯／空白／reset 與字典搜尋",
+   "target": "[index](../../../電機/03-通訊特化/通訊系統-互動課程/index.html)；`https://justty32.github.io/engineer_study/communication-systems/`",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "補跑 html-validate 結構驗證；原紀錄稱當時本機未安裝，執行時先確認已有工具，沒有就保留待辦，不在本輪新增依賴。",
+   "human_boundary": "觸控手感、觸控目標大小、NVDA／VoiceOver 操作自由實驗與自我檢核。"
+  },
+  {
+   "id": "digital-structure-motion",
+   "course": "數位通訊（零基礎互動課）",
+   "source_path": "../../wait-user/實機驗收-共通通訊電力.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "初驗＋複驗全過、headless Chrome 兩視埠 16 頁溢出 0",
+   "target": "[index](../../../電機/03-通訊特化/數位通訊-互動課程/index.html)；`https://justty32.github.io/engineer_study/digital-communications/`",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "補 prefers-reduced-motion 行為與 html-validate 結構驗證；沿原條件檢查，不追加新的驗收範圍。",
+   "human_boundary": "09 章路徑度量表、10 章交錯矩陣的手機橫向捲動與螢幕閱讀器操作。"
+  },
+  {
+   "id": "power-electronics-overflow",
+   "course": "電力電子（零基礎互動課）",
+   "source_path": "../../wait-user/實機驗收-共通通訊電力.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "sonnet 獨立驗收全過、本機 server＋6 張截圖",
+   "target": "[index](../../../電機/04-電力特化/P2-電力電子-互動課程/index.html)；`https://justty32.github.io/engineer_study/power-electronics/`",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "補量測頁面橫向溢出 scrollWidth；範圍為原列 12 章＋字典 50 卡＋自我檢核 36 題，沿原桌面／手機視埠條件。",
+   "human_boundary": "12 個滑桿觸控與 aria-live 回饋、自我檢核「全部清除」與 36 題手機可讀性。"
+  },
+  {
+   "id": "motor-crosslinks",
+   "course": "馬達驅動與控制（零基礎互動課）",
+   "source_path": "../../wait-user/實機驗收-共通通訊電力.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "初驗＋複驗兩線全過、headless Chrome 抽 2 頁",
+   "target": "[index](../../../電機/04-電力特化/P3-馬達驅動與控制-互動課程/index.html)；`https://justty32.github.io/engineer_study/motor-drives/`",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "查電力電子上線後是否已補 01／09 章連結，並確認連結可達；本項只登記連結檢查，若發現缺連結另記問題，不因此授權改課程。",
+   "human_boundary": "03 章 RK4 即時積分（N=50 時 60000 步）低階手機拖桿是否順、12 頁 widget 實體鍵盤操作與 focus 可見性。"
+  },
+  {
+   "id": "iot06-browser",
+   "course": "30 分鐘板級介面與工業匯流排網站",
+   "source_path": "../../wait-user/實機驗收-專題IoT.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "agent 目前僅完成靜態驗收，尚未取得實際瀏覽器渲染證據",
+   "target": "[index](../../../專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/index.html)、[硬體原理補課](../../../專題/IoT聯網裝置/知識群互動網站/06-板級介面與工業匯流排/hardware-principles.html)，以及 GPIO／I²C／SPI／RS-485／讀電路圖／做電路設計六個獨立頁；—",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "補本機 index、hardware-principles 與 GPIO／I²C／SPI／RS-485／讀電路圖／做電路設計六個獨立頁的實際瀏覽器渲染與互動證據：導覽、自由實驗、按鈕與文字沒有重疊或水平溢位。",
+   "human_boundary": "本機各頁的真人桌面與手機操作、觸控及閱讀。"
+  },
+  {
+   "id": "iot07-browser",
+   "course": "微控制器與韌體核心課程",
+   "source_path": "../../wait-user/實機驗收-專題IoT.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "agent 目前僅完成靜態驗收，尚未取得實際瀏覽器渲染證據",
+   "target": "[index](../../../專題/IoT聯網裝置/知識群互動網站/07-微控制器與韌體核心/index.html)；—",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "補實際瀏覽器渲染與互動證據：九頁導覽、零基礎 bit／clock 實驗、字典搜尋、startup／memory、register、interrupt／DMA、timer／ADC、狀態機與 fault 互動沒有重疊或水平溢位。",
+   "human_boundary": "真人桌面與手機操作、觸控及閱讀。"
+  },
+  {
+   "id": "ai-browser",
+   "course": "AI 理論白話（閱讀型導讀）",
+   "source_path": "../../wait-user/實機驗收-專題資安機器人AI.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "**本機沒有 chromium／playwright，agent 只做到靜態檢查（`build_html.py --check` 通過、`node --check app.js` 通過、278 條相對連結全部存在、外部資源只有可選的 Mermaid CDN），實際渲染完全未驗證**",
+   "target": "[index](../../../專題/AI理論白話/互動課程/index.html)；—",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "補實際瀏覽器渲染證據：22 頁導覽（20 章＋index＋206 詞字典）、topbar 橫向捲動、目錄高亮、主題切換、字典搜尋、自我檢核 `<details>` 展開、鍵盤 focus，以及沒有橫向溢位；重點為含 Mermaid 圖的 03、05、15、17 四章與大量長檔名連結的「2026 更新」節在 390px 下的表現。",
+   "human_boundary": "真人閱讀、導覽與實體鍵盤／觸控；含 Mermaid 圖及長檔名連結區域的手機可讀性。"
+  },
+  {
+   "id": "security-browser",
+   "course": "網路安全零基礎課程／常見攻擊手法細講／網路協定細講／從電晶體到 C++ 執行／逆向工程",
+   "source_path": "../../wait-user/實機驗收-專題資安機器人AI.md#待真人驗收清單",
+   "status": "待排程（本輪未執行）",
+   "evidence_state": "原紀錄明列待補驗",
+   "existing_evidence": "agent 目前僅完成靜態驗收，尚未以 headless Chrome 實測這批頁面",
+   "target": "[網路安全](../../../專題/網路安全/互動課程/index.html)、[攻擊手法細講](../../../專題/網路安全/攻擊手法細講/index.html)、[網路協定](../../../專題/網路協定/互動課程/index.html)、[計算機組織](../../../專題/計算機組織/互動課程/index.html)、[逆向工程](../../../專題/逆向工程/互動課程/index.html)；—",
+   "viewport": "桌面 1440×900、手機 390×844",
+   "pending_checks": "補網路安全零基礎課程、常見攻擊手法細講、網路協定細講、從電晶體到 C++ 執行、逆向工程五課的 headless Chrome 證據：導覽、字典搜尋、所有即時互動、原生展開追蹤、鍵盤焦點、桌面 `1440×900` 與手機 `390×844` 沒有錯誤、重疊或水平溢位。",
+   "human_boundary": "全部原列內容的真人實機操作、實體鍵盤與真實觸控。"
+  }
+ ]
+}

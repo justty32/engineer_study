@@ -25,6 +25,7 @@
 
 | 工作流 | session-log | open 摘要 |
 |--------|-------------|----------|
+| interactive-study-site | [機械補驗待辦](workflows/interactive-study-site/session-log.md) | 從實機待驗收頁分出 agent 可做項，尚未排程或執行；真人需求仍見 WAIT_USER。 |
 
 ## 不屬任何工作流的進度
 
