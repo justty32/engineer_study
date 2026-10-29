@@ -6,14 +6,20 @@ name: Deploy GitHub Pages
 # 課程目錄」被改動時也會觸發一次部署——該次部署的產出與前一次相同（組站步驟
 # 只認課程表），屬可接受的空跑。真正決定「什麼會被發布」的是下面的課程表，
 # 不是這裡的觸發條件。
-# 只列 html/css/js：規劃用 Markdown（PROJECT-BRIEF、BUILD-SPEC、驗收紀錄、
-# README）不發布，改動它們不應觸發部署。
+# 成品 html/css/js、聽課音檔及組站工具會觸發部署；規劃用 Markdown
+#（PROJECT-BRIEF、BUILD-SPEC、驗收紀錄、README）不發布、不觸發部署。
 on:
   push:
     branches:
       - main
     paths:
       - ".github/workflows/pages.yml"
+      - "wf/tools/publish_listening.py"
+      - "電機/02-電機核心/聽課總覽.html"
+      - "電機/02-電機核心/*互動課程/聽課-*/*.html"
+      - "電機/02-電機核心/*互動課程/聽課-*/*.css"
+      - "電機/02-電機核心/*互動課程/聽課-*/*.js"
+      - "電機/02-電機核心/*互動課程/聽課-*/audio/*.mp3"
       - "互動學習網站/*.html"
       - "互動學習網站/*.css"
       - "互動學習網站/*.js"
@@ -419,6 +425,9 @@ jobs:
                       text = text.replace(old, new)
                   page.write_text(text, encoding="utf-8")
           PY
+
+          # 聽課僅依總覽白名單補組 23 門與已追蹤、被引用的音訊。
+          python3 wf/tools/publish_listening.py --site _site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
