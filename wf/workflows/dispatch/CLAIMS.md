@@ -27,6 +27,7 @@
 
 | 線 | 完成證據 | 收線時間 |
 |----|---------|---------|
+| listening-publish-20261029 | [23門聽課發布與公開驗收](../../handoffs/done/2026-10-29-listening-publish.md) | 2026-10-29 |
 | state-records-20261029 | [活狀態與真人／agent 分工校正證據](../../handoffs/done/2026-10-29-state-records.md) | 2026-10-29 |
 | electronics-resume | [五門十四堂、獨立驗收與接線](../../handoffs/done/2026-10-15-electronics-listening.md) | 2026-10-15 |
 | em-remaining | [六門十八堂五十四圖、獨立驗收與關閉證據](../../handoffs/done/2026-10-15-em-remaining.md) | 2026-10-15 |

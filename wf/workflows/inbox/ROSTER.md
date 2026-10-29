@@ -118,13 +118,13 @@
 [電子續作收線名冊](ROSTER-ELECTRONICS-2026-10-15.md)
 
 
-### `state-records-20261029`
-- **狀態**：已收線（2026-10-29）
-- **我是誰**：wf_review 協調；course_rules_state／knowledge_rules 寫紀錄，現行模型。
+### `wf_review`
+- **狀態**：紀錄校正與聽課發布均已收線（2026-10-29）
+- **我是誰**：wf_review 協調；course_rules_state 建置、knowledge_rules 唯讀驗收。
 - **團隊**：內建通道。
 - **上游**：root；子線回報 wf_review。
-- **領地**：[限定檔案](../../handoffs/done/2026-10-29-state-records.md)。
-- **答得出什麼**：紀錄校正與驗收分工。
+- **領地**：[發布分工](../../handoffs/done/2026-10-29-listening-publish.md)。
+- **答得出什麼**：當輪發布與驗證。
 - **答不出什麼**：未重驗的課程／音訊品質。
 - **怎麼找我**：內建 /root/wf_review。
 - **訂閱主題**：無。
