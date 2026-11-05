@@ -26,7 +26,7 @@
   {
    "關卡": "語法／DOM／UTF-8／來源連結",
    "狀態": "通過",
-   "證據與範圍": "node --check；最終6HTML／90本地引用／92 DOM id，無缺失、重複、BOM、替換字元、控制碼、LaTeX殘留或外部執行期資源"
+   "證據與範圍": "node --check；最終6HTML／93本地引用／99 DOM id，無缺失、重複、BOM、替換字元、控制碼、LaTeX殘留或外部執行期資源"
   },
   {
    "關卡": "桌面／手機／深淺模式",
@@ -51,7 +51,7 @@
   {
    "關卡": "Pages組站",
    "狀態": "通過",
-   "證據與範圍": "執行pages.yml原始Assemble static site exit0；最終九成品、主站回連../index.html；JSON與QA工具不發布，既有聽課23門與15音檔保留"
+   "證據與範圍": "pages.yml原始組站步驟exit0；最終10成品、主站回連../index.html；JSON與QA工具不發布，既有聽課23門與15音檔保留"
   },
   {
    "關卡": "wf-lint",
@@ -61,7 +61,7 @@
   {
    "關卡": "公開部署／逐檔HTTP",
    "狀態": "通過",
-   "證據與範圍": "commit `6d5b2a1`，Actions41981831227 build/deploy success；中央HTML/CSS加新課六成品共8檔HTTP200，LF正規化雜湊全部吻合"
+   "證據與範圍": "第三批commit5ce558b、Actions41984881931 build/deploy success；中央2加課內9成品11檔HTTP200且內容吻合。最終導讀增量提交後另於正文記錄發布版本。"
   },
   {
    "關卡": "真人手機／其他瀏覽器",

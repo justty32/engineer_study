@@ -104,3 +104,9 @@
 持久化獨立重算：`python3 tools/verify_math.py`（在課程目錄執行），以Fraction法方程／支配不等式與Lagrange插值核對，無外部套件。
 
 量綱數值與失敗條件重現：`node tools/verify_units.cjs`，9個手算數值＋4個量綱／定義域條件，無新增依賴。
+
+## 首頁閱讀目的導航
+
+`guide.js`僅載於index。`reading-goal`為select，選項依序first/choice/physical，預設first。固定對映：first→00/01/02三入口；choice→01/03兩入口；physical→04/02兩入口。改選即更新`route-title/reason/links/action/question`，不計算新數值、不儲存狀態。驗收：first三連結首個00-start、choice兩連結首個01-search、physical兩連結首個04-units；ArrowUp由physical切到choice，文字與連結同步。無JS時HTML保留first路線，所有章節仍可直接點。
+
+研究遊樂場跨站連結固定使用GitHub Pages https://justty32.github.io/paper_readings_site/ ，只供使用者點閱，不是執行期資源。
