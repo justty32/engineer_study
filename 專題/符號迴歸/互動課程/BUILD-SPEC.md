@@ -60,6 +60,23 @@
 
 輸出 `train-error/validation-error/extrapolation-error/validation-why/validation-formula`，CSV 欄 `split,x,y,prediction,squared_error`，檔名帶 degree 與 noise。使用者改變次數、擾動或圖範圍會即時更新；無分數與答對解鎖。
 
+## 03 取捨前緣
+
+固定沿用第二章17乾淨點、前三基底與七候選，按mask1..7標A..G。`weightInterval`對每個候選解所有 `Eᵢ+λNᵢ≤Eⱼ+λNⱼ` 的半直線交集，λ≥0，不用抽樣掃描替代證明。區間含可平手端點；實際選擇時同分取較短者。
+
+| id | type | 範圍／步進 | 預設 | 計算／判準 | 數值實例 |
+|---|---|---|---|---|---|
+| pareto-lambda | range | 0..0.6 / .005 | .3 | 最小化MSE+λ×節點 | .1→G、.25→F、.35→C、.4→A |
+| pareto-budget | range | 1..11 / 1 | 7 | 節點≤上限，再最小化MSE | 1→A、5→C、7→E、9→F、11→G |
+| pareto-select | select | mask1..7，依序A..G | 5(E) | 檢視支配與可行λ區間 | E在前緣、λ區間空 |
+| pareto-pick-weight | button | 依檢視式 | E時停用 | 有界區間取中點；無上限取下限+.1 | C→λ約.355，實際選C |
+| pareto-data按鈕 | button | A..G | E高亮 | 同步select與圖橘環 | D被C支配 |
+| pareto-reset | button | 不適用 | 可按 | [.3,7,5] | 加權選F、預算選E |
+
+精確MSE A..G依序105/32、257/32、57/32、167/86、3/2、19/43、0；節點1、3、5、5、7、9、11。前緣A/C/E/F/G。λ區間：G=[0,19/86]，F=[19/86,1843/5504]，C=[1843/5504,3/8]，A=[3/8,∞)；B/D/E無。E對C要求λ≤9/64=.140625，對F要求λ≥91/172≈.5290697674，故無交集。輸出三指標、why、完整表與SVG；所有點代表公式。圖軸x=[0,12]、y=[−.4,9]，同分線經當前加權勝出式，虛直線標預算。
+
 ## 驗收與重現
 
 對照品質關卡做語法、ID、UTF-8、資源與相對連結檢查。數值 QA 另以 Python Lagrange 插值獨立重算八次式，避免只重跑同一 QR。Chrome CDP 驗1440×900／390×844、鍵盤箭頭、重設、空候選、正弦恢復、候選檢視、三個案例、固定驗證指標及CSV。樣式是獨立短課自訂家族；A 家族同步工具仍須 --check 無漂移。具體結果與證據路徑見驗收紀錄。
+
+持久化獨立重算：`python3 tools/verify_math.py`（在課程目錄執行），以Fraction法方程／支配不等式與Lagrange插值核對，無外部套件。

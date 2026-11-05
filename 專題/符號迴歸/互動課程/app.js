@@ -124,7 +124,65 @@
       const url=URL.createObjectURL(new Blob([rows.join('\n')+'\n'],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=`symbolic-regression-degree-${read('degree')}-noise-${read('validation-noise')}.csv`;a.click();URL.revokeObjectURL(url);
     };update();return update;
   }
-  const render=fitPage()||searchPage()||validationPage();if(render)window.addEventListener('resize',render);
+  // Intersect every pairwise score inequality; this covers all λ≥0 without a sampling grid.
+  function weightInterval(model,models){
+    let lo=0,hi=Infinity;
+    for(const other of models){
+      const delta=model.complexity-other.complexity,rhs=other.error-model.error;
+      if(Math.abs(delta)<1e-12){if(rhs<-1e-12)return null;}
+      else if(delta>0)hi=Math.min(hi,rhs/delta);
+      else lo=Math.max(lo,rhs/delta);
+    }
+    return hi>=lo-1e-12&&hi>=-1e-12?{lo:Math.max(0,lo),hi:Math.max(0,hi)}:null;
+  }
+  function paretoPage(){
+    if(!$('pareto-chart'))return;
+    const models=enumerate(points(17,-2,2,truth),termDefs.slice(0,3),0).sort((a,b)=>a.mask-b.mask);
+    models.forEach((m,i)=>{m.letter=String.fromCharCode(65+i);m.interval=weightInterval(m,models);m.dominatedBy=models.filter(o=>o!==m&&o.complexity<=m.complexity&&o.error<=m.error+1e-12&&(o.complexity<m.complexity||o.error<m.error-1e-12)).map(o=>String.fromCharCode(65+models.indexOf(o)));});
+    $('pareto-select').innerHTML=models.map(m=>`<option value="${m.mask}">${m.letter} · ${m.complexity} 節點 · MSE ${fmt(m.error)}</option>`).join('');$('pareto-select').value=5;
+    function intervalLabel(m){return m.interval?`${fmt(m.interval.lo)} ≤ λ${Number.isFinite(m.interval.hi)?' ≤ '+fmt(m.interval.hi):'，無上限'}`:'沒有這種 λ';}
+    function scatter(selected,winner,budget,lambda){
+      const svg=$('pareto-chart'),width=Math.max(280,svg.clientWidth),height=svg.clientHeight||300;
+      svg.setAttribute('viewBox',`0 0 ${width} ${height}`);
+      const p={l:42,r:18,t:20,b:43},w=width-p.l-p.r,h=height-p.t-p.b;
+      const X=x=>p.l+x/12*w,Y=y=>p.t+h-(y+.4)/9.4*h;
+      let html=`<title>公式取捨圖；${winner.letter}依加權分數勝出，正檢視${selected.letter}</title><desc>橫軸為節點數，縱軸為訓練均方誤差；越左越短，越下越準。圓點是前緣，叉號是被支配式。完整數值列於下表。</desc><defs><clipPath id="pareto-clip"><rect x="${p.l}" y="${p.t}" width="${w}" height="${h}"/></clipPath></defs>`;
+      for(let i=0;i<=4;i++){
+        const xx=i*3,yy=i*2;
+        html+=`<path d="M${X(xx)},${p.t}V${p.t+h} M${p.l},${Y(yy)}H${width-p.r}" class="grid-line"/><text x="${X(xx)}" y="${height-24}" text-anchor="middle" font-size="11" fill="var(--muted)">${xx}</text><text x="${p.l-8}" y="${Y(yy)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${yy}</text>`;
+      }
+      html+=`<text x="${width/2}" y="${height-5}" text-anchor="middle" font-size="11" fill="var(--muted)">節點數（向左更短）</text><text x="8" y="12" font-size="11" fill="var(--muted)">MSE</text><g clip-path="url(#pareto-clip)">`;
+      const score=winner.error+lambda*winner.complexity;
+      html+=`<path d="M${X(budget)},${p.t}V${p.t+h}" fill="none" stroke="var(--reference)" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M${X(0)},${Y(score)}L${X(12)},${Y(score-lambda*12)}" fill="none" stroke="var(--teal)" stroke-width="1.5"/>`;
+      for(const m of models){
+        const x=X(m.complexity),y=Y(m.error),offset=m.mask===3?17:-11;
+        html+=m.frontier?`<circle cx="${x}" cy="${y}" r="5" fill="var(--paper)" stroke="var(--teal)" stroke-width="2"/>`:`<path d="M${x-4},${y-4}L${x+4},${y+4}M${x-4},${y+4}L${x+4},${y-4}" stroke="var(--reference)" stroke-width="2"/>`;
+        if(m===selected)html+=`<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="var(--amber)" stroke-width="2"/>`;
+        if(m===winner)html+=`<path d="M${x},${y-8}L${x+8},${y}L${x},${y+8}L${x-8},${y}Z" fill="none" stroke="var(--teal)" stroke-width="2"/>`;
+        html+=`<text x="${x+10}" y="${y+offset}" font-size="12" font-weight="700" fill="var(--ink)">${m.letter}</text>`;
+      }
+      html+='</g>';svg.innerHTML=html;
+    }
+    function update(){
+      const lambda=read('pareto-lambda'),budget=read('pareto-budget'),selected=models.find(m=>m.mask===read('pareto-select'));
+      const ranked=[...models].sort((a,b)=>{const delta=a.error+lambda*a.complexity-b.error-lambda*b.complexity;return Math.abs(delta)>1e-12?delta:a.complexity-b.complexity;});
+      const winner=ranked[0],constrained=models.filter(m=>m.complexity<=budget).sort((a,b)=>Math.abs(a.error-b.error)>1e-12?a.error-b.error:a.complexity-b.complexity)[0];
+      $('pareto-lambda-value').textContent=lambda.toFixed(3);$('pareto-budget-value').textContent=budget;
+      $('pareto-weighted').textContent=`${winner.letter} · 分數 ${fmt(winner.error+lambda*winner.complexity)}`;
+      $('pareto-constrained').textContent=`${constrained.letter} · MSE ${fmt(constrained.error)}`;
+      $('pareto-status').textContent=selected.frontier?`${selected.letter} 在前緣`:`${selected.letter} 被 ${selected.dominatedBy.join('、')} 支配`;
+      $('pareto-pick-weight').disabled=!selected.interval;
+      $('pareto-why').textContent=!selected.frontier?`${selected.letter} 被 ${selected.dominatedBy.join('、')} 支配，已有不更長且不更差的替代式。λ 與預算只改選擇規則，七個擬合結果和支配關係不會跟著改。`:!selected.interval?`${selected.letter} 在前緣，但不存在能讓它排名第一的非負 λ。把節點上限設為 ${selected.complexity}，預算規則會選到它；加權與硬上限代表不同偏好。`:`${selected.letter} 在前緣，也能由某些權重選出：${intervalLabel(selected)}（端點可平手）。當前 λ 選到 ${winner.letter}，節點上限 ${budget} 則選到 ${constrained.letter}。`;
+      $('pareto-data').innerHTML=models.map(m=>`<tr class="${m===selected?'selected':''}"><td><button type="button" data-pareto-mask="${m.mask}" aria-pressed="${m===selected}">${m.letter}: ${m.formula}</button></td><td>${m.complexity}</td><td>${fmt(m.error)}</td><td>${m.dominatedBy.join('、')||'無（前緣）'}</td><td>${intervalLabel(m)}</td></tr>`).join('');
+      $('pareto-data').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('pareto-select').value=b.dataset.paretoMask;update();});
+      scatter(selected,winner,budget,lambda);
+    }
+    hook(['pareto-lambda','pareto-budget','pareto-select'],update);
+    $('pareto-pick-weight').onclick=()=>{const m=models.find(m=>m.mask===read('pareto-select'));if(!m.interval)return;const value=Number.isFinite(m.interval.hi)?(m.interval.lo+m.interval.hi)/2:m.interval.lo+.1;$('pareto-lambda').value=value;update();};
+    $('pareto-reset').onclick=()=>{$('pareto-lambda').value=.3;$('pareto-budget').value=7;$('pareto-select').value=5;update();};update();return update;
+  }
+
+  const render=fitPage()||searchPage()||validationPage()||paretoPage();if(render)window.addEventListener('resize',render);
   // Expose numerical primitives only for local deterministic verification; no browser state is persisted.
-  if(typeof module!=='undefined'&&module.exports)module.exports={leastSquares,mse,points,enumerate,termDefs,truth};
+  if(typeof module!=='undefined'&&module.exports)module.exports={leastSquares,mse,points,enumerate,termDefs,truth,weightInterval};
 })();
