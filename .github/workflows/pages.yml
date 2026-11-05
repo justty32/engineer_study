@@ -176,6 +176,7 @@ jobs:
           電機/04-電力特化/P3-馬達驅動與控制-互動課程|motor-drives
           電機/03-通訊特化/數位通訊-互動課程|digital-communications
           專題/論文速覽/互動網站|paper-briefs
+          專題/符號迴歸/互動課程|symbolic-regression
           COURSES
 
           python3 <<'PY'
@@ -410,6 +411,9 @@ jobs:
                   "../../../互動學習網站/index.html": "../index.html",
               },
               "ai-theory-primer": {
+                  "../../../互動學習網站/index.html": "../index.html",
+              },
+              "symbolic-regression": {
                   "../../../互動學習網站/index.html": "../index.html",
               },
               "paper-briefs": {

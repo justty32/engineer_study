@@ -1,0 +1,65 @@
+# BUILD-SPEC — 符號迴歸實驗室
+
+← [立案](PROJECT-BRIEF.md)｜[品質關卡](../../../wf/workflows/interactive-study-site/QUALITY-GATES.md)
+
+## 檔案與介面
+
+獨立作者維護 `index.html`、`00-start.html`、`01-search.html`、`02-validation.html`、`app.js`、`styles.css`。四頁共用 header、橫向手機章節列、主站連結與 pager；教學完整說明在工作台前，延伸說明可摺疊。各頁初始化先檢查對應圖表 DOM 是否存在，避免跨頁空元素例外。資料與狀態不持久化，重載與重設可重現。
+
+## 共用數值規則
+
+真值 f(x)=x²+x+1。擾動序列固定為 `[.4,-.8,.6,-.2,1,-.7,.3,-1,.5,.8,-.4,.2,-.9,.7,-.1,.9,-.5]`，觀測 y=f(x)+幅度×序列；幅度為最大偏移尺度，不是標準差。所有量無單位。MSE=Σ(預測−觀測)²/N。顯示小於 10⁻¹² 的數為 0；計算保留 double 原值。極大／極小數用科學記號。
+
+`leastSquares(data,bases)` 以 Householder QR 對設計矩陣與 y 做相同反射，再回代，無 ridge 正則化。輸入皆保證完整列秩；若 QR 主軸 norm <10⁻¹³，明確拋錯。每個候選含係數、可執行 fn、未化簡節點數、訓練 MSE、示範分數與前緣旗標。
+
+## 00 調係數
+
+| id | type | 範圍／步進 | 預設 | 計算／判準 | 數值實例 |
+|---|---|---|---|---|---|
+| coef-a | range | −2..3 / .1 | 0 | 二次項 a | a=1,b=c=1,noise=0 → MSE=0 |
+| coef-b | range | −2..3 / .1 | 1 | 一次項 b | a=0,b=c=1 → MSE=.3072916667 |
+| coef-c | range | −2..3 / .1 | 1 | 常數 c | a=b=c=0 → MSE=2.5572916667 |
+| fit-noise | range | 0..0.6 / .1 | 0 | y=f(x)+幅度×固定序列 | a=b=c=1,noise=.2 → MSE=.0179111111 |
+| fit-target | button | 不適用 | 可按 | a=b=c=1，保留 noise | noise=0 → 9 點全吻合 |
+| fit-reset | button | 不適用 | 可按 | [a,b,c,noise]=[0,1,1,0] | 逐點表重建 9 列 |
+
+訓練 x 共 9 點，含端點 −1 與 1，間隔 .25。公式 ax²+bx+c。輸出 `fit-equation/fit-error/fit-why/fit-data`、SVG `fit-chart`；逐點表可獨立核對平方誤差。圖 x=[−1,1], y=[−2,6]。正常吻合、係數太大／太小、擾動造成失配都有即時 why。單頁重設不改其他頁。
+
+## 01 有限搜尋
+
+| id | type | 範圍／步進 | 預設 | 計算／判準 | 數值實例 |
+|---|---|---|---|---|---|
+| search-truth | select | quadratic、sine（依序） | quadratic | 真值 x²+x+1 或 sin(x)+1 | sine 且允許常數/sin、λ=0 → MSE≈0 |
+| term-constant | checkbox | 開／關 | 開 | 基底 1，節點 1 | 單基底 → 1 候選 |
+| term-linear | checkbox | 開／關 | 開 | 基底 x，帶係數節點 3 | 兩基底 → 3 候選 |
+| term-square | checkbox | 開／關 | 開 | 基底 x²，帶係數節點 5 | 三基底 → 7 候選 |
+| term-sine | checkbox | 開／關 | 關 | 基底 sin(x)，帶係數節點 4 | 四基底 → 15 候選 |
+| complexity | range | 0..0.2 / .005 | .01 | score=MSE+λ×節點 | 真二次式節點11，score=.11 |
+| search-noise | range | 0..0.5 / .1 | 0 | 固定序列幅度 | 全關時0候選，不偷補基底 |
+| candidates 內按鈕 | button | 所有候選 | 排名第一 | 改目前檢視曲線，aria-pressed | 選末列→該列高亮、描述更新 |
+| search-reset | button | 不適用 | 可按 | 全部回上述預設 | 7 列候選，最優含1/x/x² |
+
+17 點 x∈[−2,2]，等距含端點。每個非空基底子集合用 QR 調係數；k 項的加法成本 k−1。排序按分數，再按節點數處理 10⁻¹² 內的分數差。前緣：不存在節點不更多且誤差不更高（誤差容差10⁻¹²）、其中一項嚴格較佳的其他候選。基底全關是正常可恢復的空狀態，圖明示青線僅零值參考。
+
+預設排名第一 y≈1+x+x²，11節點，訓練MSE≈0、score=.11。缺少原始規律基底時回饋搜尋空間限制；λ 增大說明成本取捨；擾動增大說明可能追逐擾動。輸出 `winner-formula/candidate-count/winner-error/search-why/candidates/search-selection`。圖 x=[−2,2], y=[−3,9]。
+
+## 02 保留驗證與外插
+
+| id | type | 範圍／步進 | 預設 | 計算／判準 | 數值實例 |
+|---|---|---|---|---|---|
+| degree | range | 0..8 / 1 | 2 | 基底 x⁰..xᵈ、QR擬合 | d=2、noise=0 → 三組MSE≈0 |
+| validation-noise | range | 0..0.6 / .1 | .2 | 只改訓練觀測 | d=8、noise=.2 → 外插MSE≈8008384.224429 |
+| test-end | range | 1..2 / .1 | 2 | 只改圖的 x 最大值 | 1與2的三組指標逐字相同 |
+| validation-reset | button | 不適用 | 可按 | [d,noise,end]=[2,.2,2] | 擬合係數回預設 |
+| data-case=clean | button | 不適用 | 可按 | [2,0,2] | 三組均顯示0 |
+| data-case=overfit | button | 不適用 | 可按 | [8,.2,2] | 訓練0、驗證.2353722147 |
+| data-case=underfit | button | 不適用 | 可按 | [1,.2,2] | 訓練非0、指出曲率限制 |
+| download-data | button | 不適用 | 可按 | Blob CSV，無上傳 | 表頭+89列，三split共9/40/40 |
+
+三組固定資料：train x=−1+i/4（i=0..8，帶擾動）；validation x=−1+(i+.5)/20（i=0..39）；extrapolation x=1+(i+1)/40（i=0..39）。後兩組 y 為無擾動真值，與訓練完全無重疊。三組分開算 MSE；視窗與裁切不改計分。圖 y=[−1,8]；若241個繪圖取樣有值超出，caption 明示裁切。線色與虛線、點型另有文字對照。
+
+輸出 `train-error/validation-error/extrapolation-error/validation-why/validation-formula`，CSV 欄 `split,x,y,prediction,squared_error`，檔名帶 degree 與 noise。使用者改變次數、擾動或圖範圍會即時更新；無分數與答對解鎖。
+
+## 驗收與重現
+
+對照品質關卡做語法、ID、UTF-8、資源與相對連結檢查。數值 QA 另以 Python Lagrange 插值獨立重算八次式，避免只重跑同一 QR。Chrome CDP 驗1440×900／390×844、鍵盤箭頭、重設、空候選、正弦恢復、候選檢視、三個案例、固定驗證指標及CSV。樣式是獨立短課自訂家族；A 家族同步工具仍須 --check 無漂移。具體結果與證據路徑見驗收紀錄。

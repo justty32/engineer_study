@@ -109,6 +109,10 @@
 
 - [論文速覽（paper_readings 全庫 627 條、五個 30 分鐘手機閱讀 deck）](專題/論文速覽/互動網站/index.html) · [線上](https://justty32.github.io/engineer_study/paper-briefs/)
 
+### 專題 — 符號迴歸
+
+- [符號迴歸實驗室](專題/符號迴歸/互動課程/index.html) · [線上](https://justty32.github.io/engineer_study/symbolic-regression/)：手調係數、有限候選搜尋與外插驗證。
+
 ## 目錄結構
 
 每個學科一個頂層資料夾，內含學習計畫、分階段的筆記子資料夾，以及中英名詞對照表；`人文社會/` 較特殊，底下再分「地理學類」「宗教學類」兩個子領域，各自擁有一份學習計畫：
